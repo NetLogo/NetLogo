@@ -19,9 +19,9 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   var validTag = false
   override def incrementalViewUpdate {results+="UPDATE"}
   override def sendOverrideList(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
-                                overrides: Map[Long, Any]) = true
+                                overrides: Map[java.lang.Long, AnyRef]) = true
   override def clearOverride(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
-                    overrides: Seq[Long]) = true
+                    overrides: Seq[java.lang.Long]) = true
   override def clearOverrideLists(client:String){}
   override def sendAgentPerspective(client: String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
    id:Long, radius:Double, serverMode:Boolean){}

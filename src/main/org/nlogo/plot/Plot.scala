@@ -9,8 +9,8 @@ import org.nlogo.api.PlotInterface
 // go into the PlotManager, so we have to allow it to just create a new plot.
 // its also nice for tests as well though.
 // JC - 12/20/10
-@serializable @SerialVersionUID(0)
-class Plot private[nlogo] (var name:String) extends PlotInterface {
+@SerialVersionUID(0)
+class Plot private[nlogo] (var name:String) extends PlotInterface with Serializable {
 
   import Plot._
 
@@ -23,7 +23,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
 
   var plotListener: Option[PlotListener] = None
   def setPlotListener(plotListener:PlotListener){
-    if(plotListener == null) error("null plotListener")
+    if(plotListener == null) sys.error("null plotListener")
     this.plotListener = Some(plotListener) 
   }
   def removePlotListener(){ this.plotListener = None }
@@ -272,7 +272,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
   private def readObject(in:java.io.ObjectInputStream){
-    getClass.getField("bitmap$0").set(this, -1)
     name = in.readObject().toString
     _autoPlotOn = in.readBoolean()
     _xMin = in.readDouble()

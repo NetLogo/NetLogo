@@ -14,9 +14,9 @@ object ProtocolLoader
 class ProtocolLoader(services: CompilerServices)
 {
   def loadOne(file: java.io.File):Protocol =
-    new Loader().load(file) match { case List(ps) => ps }
+    new Loader().load(file) match { case Seq(ps) => ps }
   def loadOne(xml: String):Protocol =
-    new Loader().load(xml) match { case List(ps) => ps }
+    new Loader().load(xml) match { case Seq(ps) => ps }
   def loadOne(file: java.io.File,name:String):Protocol =
     new Loader().load(file).find(_.name == name)
       .getOrElse(throw new IllegalStateException(

@@ -69,7 +69,7 @@ procedure GO:[]{O---}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_if_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
@@ -204,7 +204,7 @@ procedure GO:[]{O---}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -781,7 +781,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
         _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1010,7 +1010,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ARETURN
              L0
               ALOAD 0
-              GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.world : Lorg/nlogo/agent/World;
               INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
              L1
               ALOAD 0
@@ -1242,7 +1242,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
         _procedurevariable:NUM-LINKS => Object
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_while_11.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1334,14 +1334,14 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
       _asm_proceduresetupspatiallyclusterednetwork_turtles_13 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_turtles_13.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
       _asm_proceduresetupspatiallyclusterednetwork_links_14 "links" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_links_14.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
@@ -1746,7 +1746,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduredoviruschecks_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
@@ -2377,7 +2377,7 @@ procedure SETUP:[]{O---}:
         _asm_proceduresetup_turtles_5 "turtles" => AgentSet
              L0
               ALOAD 0
-              GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_proceduresetup_turtles_5.world : Lorg/nlogo/agent/World;
               INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
              L1
               ARETURN
@@ -2505,7 +2505,7 @@ procedure SETUP:[]{O---}:
       _links => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_8.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -2747,7 +2747,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
         _constdouble:100.0 => double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -2823,7 +2823,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             I2D
            L6
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L7
             ASTORE 2
@@ -2900,7 +2900,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
         _constdouble:100.0 => double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_5.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -2976,7 +2976,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             I2D
            L6
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_5.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L7
             ASTORE 2
@@ -3053,7 +3053,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
         _constdouble:100.0 => double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_8.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -3129,7 +3129,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             I2D
            L6
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateplot_mult_8.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L7
             ASTORE 2
@@ -3206,7 +3206,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
@@ -3668,7 +3668,7 @@ procedure SETUP-NODES:[]{O---}:
       _asm_proceduresetupnodes_turtles_0 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_turtles_0.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN

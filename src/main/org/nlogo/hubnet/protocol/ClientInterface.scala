@@ -5,7 +5,7 @@ import org.nlogo.api.{LogoList, CompilerServices, Shape}
 /**
  * Holds the specification for the client-side interface. 
  */
-@serializable @SerialVersionUID(0)
+@SerialVersionUID(0)
 class ClientInterface(
   // these are parsed and unparsed versions of the same strings.  ev 9/10/08
   // why the heck to we do this? why not just parse them in here?
@@ -14,7 +14,7 @@ class ClientInterface(
   var widgetDescriptions: Seq[String],
   var turtleShapes: Seq[Shape],
   var linkShapes: Seq[Shape],
-  @transient compiler: CompilerServices) {
+  @transient compiler: CompilerServices) extends Serializable {
 
   // this is pretty lame (old comment)
   // its also lame that its mutable and a var...its only a var for serialization JC - 9/28/10
@@ -62,7 +62,6 @@ class ClientInterface(
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
   private def readObject(in: java.io.ObjectInputStream) {
-    getClass.getField("bitmap$0").set(this, -1)
     widgets = in.readObject().asInstanceOf[List[List[String]]]
     widgetDescriptions = in.readObject().asInstanceOf[List[String]]
     turtleShapes = in.readObject().asInstanceOf[List[Shape]]

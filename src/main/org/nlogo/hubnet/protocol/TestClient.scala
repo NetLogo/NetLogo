@@ -21,7 +21,8 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   import org.nlogo.hubnet.protocol.{ViewUpdate => ViewUp}
 
   private val socket = new Socket(ip, port) {setSoTimeout(0)}
-  private val in = ClassLoaderObjectInputStream(currentThread.getContextClassLoader, socket.getInputStream)
+  private val in = ClassLoaderObjectInputStream(
+    Thread.currentThread.getContextClassLoader, socket.getInputStream)
   private val out = new ObjectOutputStream(socket.getOutputStream)
 
   // public api

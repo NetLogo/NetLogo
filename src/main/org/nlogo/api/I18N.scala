@@ -39,7 +39,7 @@ object I18N {
       val preformattedText = getFromBundle(defaultBundle).getOrElse{
         // fallback to english here.
         println("unable to find translation for: " + key + " in " + name + " for locale: " + defaultBundle.getLocale)
-        getFromBundle(englishBundle).getOrElse(error("coding error, bad translation key: " + key + " for " + name))
+        getFromBundle(englishBundle).getOrElse(sys.error("coding error, bad translation key: " + key + " for " + name))
       }
       //println(preformattedText)
       //println(args.mkString(","))
@@ -56,7 +56,7 @@ object I18N {
     // internal use only, get all the keys for the given locale.
     // use getKeys not keySet since keySet is new in Java 6 - ST 2/11/11
     def keys(locale:Locale) =
-      org.nlogo.util.JCL.toScalaIterable(getBundle(locale).getKeys).toSet
+      org.nlogo.util.JCL.enumerationToScalaIterable(getBundle(locale).getKeys)
     // internal use only, used to set the locale for error messages in the GUI only.
     def setLanguage(locale:Locale) { defaultBundle = getBundle(locale) }
     // for use in Java classes that we don't want to depend on I18N

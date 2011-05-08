@@ -31,7 +31,7 @@ procedure BENCHMARK:[]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2

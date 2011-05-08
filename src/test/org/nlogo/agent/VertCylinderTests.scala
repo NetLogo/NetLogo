@@ -1,7 +1,7 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import org.nlogo.util.JCL.toScalaIterable
+import org.nlogo.util.JCL._
 import util.Random
 import org.nlogo.util.WorldType
 

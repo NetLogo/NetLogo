@@ -15,7 +15,7 @@ trait ScalaVersionBumper extends Project {
 
   def bumpScalaVersion(newVersion: String) = task {
     val files = path(".") ** ("*.iml" | "Makefile" | "*.scala") +++
-                path("dist") / "proguard" * ("*.txt") +++
+                path("project") / "build" / "proguard" * ("*.txt") +++
                 path("bin") * ("scala*") +++
                 path(".idea") / "libraries" * ("*.xml") +++
                 path("bin") * ("release.sh")

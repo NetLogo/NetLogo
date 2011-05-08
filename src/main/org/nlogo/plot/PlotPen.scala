@@ -22,7 +22,7 @@ object PlotPen {
 // to assign them in readObject().  (It seems to me there must be a way to do the
 // serialization that doesn't infect everything with "var", but I'm not going to
 // tackle it right now.) - ST 3/1/10
-@serializable @SerialVersionUID(0)
+@SerialVersionUID(0)
 class PlotPen (
         var plot: Plot,
         var name: String,
@@ -39,7 +39,8 @@ class PlotPen (
         private var _mode:Int = PlotPen.LINE_MODE,
         var penModeChanged: Boolean = false,
         private var _isDown: Boolean = true,
-        private var _hidden: Boolean = false) extends org.nlogo.api.PlotPenInterface {
+        private var _hidden: Boolean = false)
+extends org.nlogo.api.PlotPenInterface with Serializable {
 
   hardReset()
   plot.addPen(this)
@@ -148,7 +149,6 @@ class PlotPen (
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
   private def readObject(in:java.io.ObjectInputStream) {
-    getClass.getField("bitmap$0").set(this, -1)
     name = in.readObject().asInstanceOf[String]
     temporary = in.readBoolean()
     x = in.readDouble()

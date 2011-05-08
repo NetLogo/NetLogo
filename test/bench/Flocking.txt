@@ -655,7 +655,7 @@ procedure GO:[]{O---}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -3222,7 +3222,7 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L6
           ALOAD 1

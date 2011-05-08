@@ -91,12 +91,6 @@ object SysInfo
     }
     // fail at least somewhat gracefully if we run into permissions problems
     catch { case ex: RuntimeException => null }
-  def getScalaVersionString = "Scala " +
-    (try scala.util.Properties.versionString
-     catch {
-       // The stuff in scala.util.Properties tries to find the jar that ScalaObject was loaded from,
-       // but that won't work in an unsigned applet, so we give up. - ST 6/30/10
-       case _: ExceptionInInitializerError =>
-         "version unknown"
-     })
+  def getScalaVersionString =
+    "Scala " + scala.util.Properties.versionString
 }

@@ -148,7 +148,7 @@ object App{
   }
 
   private def processCommandLineArguments(args: Array[String]) {
-    def printAndExit(s:String){ println(s); exit(0) }
+    def printAndExit(s:String){ println(s); sys.exit(0) }
     // note: this method is static so that it can be called from main()
     // before App is instantiated, which means we can use the --version
     // flags without the AWT ever being initialized, which is handy when
@@ -685,7 +685,8 @@ class App extends
         // that actually prints to stdout but I'm not really sure that's
         // important. ev 2/25/08
         if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
-          org.nlogo.awt.Utils.invokeLater(() => RuntimeErrorDialog.show("Runtime Error", null, null, currentThread, t))
+          org.nlogo.awt.Utils.invokeLater(() =>
+            RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
       }
       else {
         t.printStackTrace(System.err)
@@ -695,7 +696,8 @@ class App extends
           // previous one... for now, let's spit it to stdout but
           // otherwise ignore it - ST 6/10/02
           ! org.nlogo.window.RuntimeErrorDialog.alreadyVisible) {
-          org.nlogo.awt.Utils.invokeLater(() => RuntimeErrorDialog.show("Internal Error", null, null, currentThread, t))
+          org.nlogo.awt.Utils.invokeLater(() =>
+            RuntimeErrorDialog.show("Internal Error", null, null, Thread.currentThread, t))
         }
       }
     }

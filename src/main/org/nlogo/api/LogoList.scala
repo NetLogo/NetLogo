@@ -6,7 +6,7 @@ object LogoList {
   val Empty = new LogoList(Vector[AnyRef]())
   def apply(objs: AnyRef*) = new LogoList(Vector[AnyRef]() ++ objs)
   def fromJava(objs: java.lang.Iterable[_ <: AnyRef]) =
-    fromIterator(org.nlogo.util.JCL.toScalaIterator(objs.iterator))
+    fromIterator(org.nlogo.util.JCL.iteratorToScalaIterator(objs.iterator))
   def fromIterator(it: scala.Iterator[AnyRef]) =
     new LogoList(Vector[AnyRef]() ++ it)
   def fromVector(v: Vector[AnyRef]) =

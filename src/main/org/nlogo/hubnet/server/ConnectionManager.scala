@@ -357,13 +357,13 @@ class ConnectionManager(val connection: ConnectionInterface,
   /// view stuff
   @throws(classOf[LogoException])
   def sendOverrideList (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
-                                 varName: String, overrides:Map[Long, Any]) = {
+                                 varName: String, overrides:Map[java.lang.Long, AnyRef]) = {
     sendUserMessage(client, new OverrideMessage(new SendOverride(agentClass, varName, overrides), false))
   }
 
   @throws(classOf[LogoException])
   def clearOverride (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
-                              varName:String, overrides:Seq[Long]) = {
+                              varName:String, overrides:Seq[java.lang.Long]) = {
     sendUserMessage(client, new OverrideMessage(new ClearOverride(agentClass, varName, overrides), true))
   }
 

@@ -15,7 +15,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     workspace.setImporterErrorHandler(
       new org.nlogo.agent.Importer.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
-          error(title + " / " + errorDetails + " / " + fatalError)
+          sys.error(title + " / " + errorDetails + " / " + fatalError)
       })
   }
 

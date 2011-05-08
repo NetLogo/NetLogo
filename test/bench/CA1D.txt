@@ -4742,7 +4742,7 @@ procedure SHOW-RULES:[RULES]{O---}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
@@ -5074,7 +5074,7 @@ procedure SHOW-RULES:[RULES]{O---}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedureshowrules_ask_6.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0

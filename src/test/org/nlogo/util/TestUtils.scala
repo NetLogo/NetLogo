@@ -19,7 +19,9 @@ object TestUtils {
     val out = new ObjectOutputStream(bytes)
     out.writeObject(t)
     out.flush()
-    val in = ClassLoaderObjectInputStream(currentThread.getContextClassLoader, new ByteArrayInputStream(bytes.toByteArray))
+    val in = ClassLoaderObjectInputStream(
+      Thread.currentThread.getContextClassLoader,
+      new ByteArrayInputStream(bytes.toByteArray))
     in.readObject().asInstanceOf[T]
   }
 }

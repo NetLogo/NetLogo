@@ -453,7 +453,7 @@ procedure GO:[]{O---}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -624,7 +624,7 @@ procedure GO:[]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -714,7 +714,7 @@ procedure GO:[]{O---}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_8.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -893,7 +893,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -1032,7 +1032,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_5.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -1171,7 +1171,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclassplot_countwith_8.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -1267,7 +1267,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1578,7 +1578,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
@@ -1861,7 +1861,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetuppatches_ask_16.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -3662,7 +3662,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
               TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
              L6
               ALOAD 0
-              GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+              GETFIELD org/nlogo/prim/_asm_procedurerecolorturtles_turtlevariableof_1.world : Lorg/nlogo/agent/World;
               INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
              L7
               ASTORE 2
@@ -3778,7 +3778,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurerecolorturtles_ask_2.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -4727,7 +4727,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -4867,7 +4867,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_5.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -5007,7 +5007,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ARETURN
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedureupdateclasshistogram_countwith_8.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -5570,7 +5570,7 @@ procedure SETUP-TURTLES:[]{O---}:
       _asm_proceduresetupturtles_turtles_0 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetupturtles_turtles_0.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
@@ -6601,7 +6601,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_setprocedurevariable_7.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L7
           ASTORE 2
@@ -7664,7 +7664,7 @@ procedure HARVEST:[]{OTPL}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedureharvest_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -7884,7 +7884,7 @@ procedure HARVEST:[]{OTPL}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedureharvest_ask_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2

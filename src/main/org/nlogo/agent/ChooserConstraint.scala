@@ -22,7 +22,7 @@ extends ValueConstraint
     else acceptedValues.get(defaultIndex min acceptedValues.size)
 
   def indexForValue(value: AnyRef): Int =
-    acceptedValues.findIndexOf(Equality.equals(_, value))
+    acceptedValues.indexWhere(Equality.equals(_, value))
   
   @throws(classOf[ValueConstraint.Violation])
   def assertConstraint(value: AnyRef) {

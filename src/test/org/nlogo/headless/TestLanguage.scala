@@ -66,7 +66,7 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
       case "T" => classOf[Turtle]
       case "P" => classOf[Patch]
       case "L" => classOf[Link]
-      case x => error("unrecognized agent type: " + x)
+      case x => sys.error("unrecognized agent type: " + x)
     }
     class Tester(mode: TestMode) extends AbstractTestLanguage {
       // use a custom owner so we get fullName into the stack traces
@@ -142,7 +142,7 @@ object TestParser {
         else if (err startsWith "STACKTRACE")
           CommandWithStackTrace(agentType, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
-          error("error missing!")
+          sys.error("error missing!")
       case ReporterRegex(reporter, result) =>
         if (result startsWith "ERROR")
           ReporterWithError(reporter, result.substring("ERROR".length + 1))
@@ -153,7 +153,7 @@ object TestParser {
       case CommandRegex(agentType, command) =>
         Command(agentType, command)
       case OpenModelRegex(path) => OpenModel(path)
-      case _ => error("unrecognized line" + line)
+      case _ => sys.error("unrecognized line" + line)
     }
   }
 }
