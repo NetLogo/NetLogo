@@ -1,0 +1,85 @@
+-include common.txt
+
+# since this file is in the project/build/proguard directory, we need to get back up to the root
+-basedirectory ../../..
+
+# forcibly exclude the generator. at runtime, the code will notice it is missing
+# and do without it (it doesn't work in applets anyway because of the security
+# restrictions on class loading)
+-injars target/scala_2.8.1/classes(!org/nlogo/generator/**)
+
+# this is an injar, not a library jar, because we're going to stuff the Scala classes
+# we need directly into NetLogoLite.jar, so NetLogoLite.jar has no external dependencies
+-injars project/boot/scala-2.8.1/lib/scala-library.jar
+
+-injars resources(!**.svn**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty3d.nlogo,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!images/title.jpg,**)
+
+-outjar NetLogoLite.jar
+
+-keep public class org.nlogo.lite.Applet
+
+# the Event stuff works by reflection so we need to explicitly include these
+-keep public class * extends org.nlogo.window.Event
+
+# pull in all the prims (but not threed, hubnet, dead)
+-keep public class org.nlogo.prim._* {
+    *;
+}
+-keep public class org.nlogo.prim.etc.* {
+    *;
+}
+-keep public class org.nlogo.prim.gui.* {
+    *;
+}
+-keep public class org.nlogo.prim.plot.* {
+    *;
+}
+
+# pull in the extensions API
+-keep public class org.nlogo.api.* {
+    *;
+}
+-keep public class org.nlogo.nvm.ExtensionContext {
+    *;
+}
+-keep public class org.nlogo.nvm.Workspace {
+    *;
+}
+-keep public class org.nlogo.nvm.Argument {
+    *;
+}
+
+# this method is required by the widget extension
+-keep public class org.nlogo.window.GUIWorkspace {
+    public org.nlogo.window.WidgetContainer getWidgetContainer();
+}
+
+# pull in stuff we access only by reflection (for dependency injection)
+-keep class org.nlogo.render.Renderer {
+      Renderer(...);
+}
+-keep class org.nlogo.lex.Tokenizer?D {
+    *;
+}
+-keep class org.nlogo.lex.TokenReader {
+    *;
+}
+-keep class org.nlogo.sdm.AggregateManagerLite {
+    *;
+}
+-keep class org.nlogo.compiler.Compiler$ {
+    *;
+}
+-keep class org.nlogo.job.JobManager {
+    *;
+}
+
+# this is a bit of magic needed to make Java enums work, taken from the ProGuard manual
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep public class org.nlogo.widget.* {
+ *;
+}

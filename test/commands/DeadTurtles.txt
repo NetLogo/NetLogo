@@ -1,0 +1,58 @@
+# this needs the error-ok? thing because the error is a little different depending
+# on whether we use the generator or not - ST 2/10/09
+DeadTurtles1
+  to-report error-ok? [msg] report msg = "that turtle is dead" or msg = "That mouse is dead." end
+  O> create-mice 1 [ set glob1 self die ]
+  O> crt 1
+  [color] of glob1 => ERROR that turtle is dead
+  T> set glob2 "" carefully [ __ignore distance glob1 ] [ set glob2 error-message ]
+  error-ok? glob2 => true
+  T> set glob2 "" carefully [ __ignore distance-nowrap glob1 ] [ set glob2 error-message ]
+  error-ok? glob2 => true
+  T> set glob2 "" carefully [ __ignore towards glob1 ] [ set glob2 error-message ]
+  error-ok? glob2 => true
+  T> set glob2 "" carefully [ __ignore towards-nowrap glob1 ] [ set glob2 error-message ]
+  error-ok? glob2 => true
+
+DeadTurtles2
+  O> create-mice 1 [ set glob1 self die ]
+  O> inspect glob1 => ERROR That mouse is dead.
+  [color] of glob1 => ERROR that turtle is dead
+  O> ask glob1 [ set color red ] => ERROR that agent is dead
+  [pcolor] of glob1 => ERROR that turtle is dead
+  O> ask glob1 [ set pcolor red ] => ERROR that agent is dead
+  [age] of glob1 => ERROR that turtle is dead
+  O> ask glob1 [ set age 11 ] => ERROR that agent is dead
+
+DeadTurtles3
+  O> crt 2
+  O> ask turtle 0 [ ask turtle 1 [ ask turtle 0 [ die ] ] set glob1 5 ]
+  glob1 => 0
+
+DeadTurtles4
+  O> crt 1
+  T> hatch 1 [ ask myself [ die ] ] set glob1 5
+  glob1 => 0
+
+DeadTurtles5
+  to-report foo ask turtle 0 [ die ] report 5 end
+  O> crt 1
+  O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
+  glob1 => 0
+
+DeadTurtles6
+  to-report foo die report 5 end
+  O> crt 1
+  O> ask turtle 0 [ set glob1 foo ] => ERROR the FOO procedure failed to report a result
+  glob1 => 0
+
+DeadTurtles7
+  O> crt 1
+  T> without-interruption [ ask turtle 0 [ die ] ] set glob1 5
+  glob1 => 0
+
+DeadTurtles8
+  O> crt 1
+  O> set glob1 turtles with [true]
+  T> die
+  O> without-interruption [ ask glob1 [ die ] ]

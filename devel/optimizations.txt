@@ -1,0 +1,54 @@
+== Visitors
+
+reduce interpreter overhead by reducing arity:
+  _of(_turtle/patch/breedvariable) => _turtle/patch/breedvariableof  [SimpleOfVisitor]
+
+avoid constructing LetMap & Let objects:
+  _let/_setletvariable => _setprocedurevariable  [LocalsVisitor]
+  _letvariable => _procedurevariable             [LocalsVisitor]
+
+== Optimizer
+
+early loop exit:
+  _any(_with) => _anywith
+  _greatherthan(_countwith,_constdouble:0) => _anywith
+  _notequal(_countwith,_constdouble:0) => _anywith
+  _equal(_countwith,_constdouble:0) => _not(_anywith)
+@ _oneof(_with) => _oneofwith
+@ _any(_breedon) => _anybreedon
+@ _any(_turtleson) => _anyturtleson
+@ _equal(_count,_constdouble:0) => _not(_any)
+@ _greatherthan(_count,_constdouble:0) => _any
+@ _notequal(_count,_constdouble:0) => _any
+
+avoid constructing AgentSet:
+  _count(_with) => _countwith
+  _other(_with) => _otherwith
+  _any(_other) => _anyother
+  _any(_otherwith) => _anyotherwith
+  _count(_other) => _countother
+  _count(_otherwith) => _countotherwith
+@  _other(_turtleshere) => _otherturtleshere
+@  _other(_breedhere) => _otherbreedhere
+@  _count(_turtleshere) => _countturtleshere
+@  _count(_otherturtleshere) => _countotherturtleshere
+@  _count(_breedhere) => _countbreedhere
+@  _count(_otherbreedhere) => _countotherbreedhere
+
+generate simpler code when something about arguments is known:
+  _random(_constdouble) => _randomconst if arg is positive integer
+@@  _call => _tailcall
+@@ _callreport => _tailcallreport
+
+avoid extra work by optimizing special cases:
+  _fd(_constdouble:1) => _fd1
+  _patchat(-1/0/1,-1/0/1) => _patchnorth/south/etc.
+  _with(_patches,_equal1double(px/ycor)) => _patchcol/_patchrow
+  _with(_patches,_equal(px/ycor,_observer/procedurevariable)) => _patchcol/_patchrow
+
+avoid constructing list, avoid shuffling (and for some, reduce interpreter overhead):
+  _sum(_patchvariableof(_neighbors4)) => _nsum4
+  _sum(_patchvariableof(_neighbors)) => _nsum
+@ _max/mean/min/sum(_of) => _max/min/mean/sumof  // Flocking, GasLab, Ising
+@  _max/mean/min/sum(_patch/turtle/breedvariableof) => _max/mean/min/sumpatch/turtle/breedvariableof
+@  (uh oh, there's also "turtlevariabledouble", "turtleorlinkvariable", etc. this gets complicated)

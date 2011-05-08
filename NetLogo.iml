@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="scala" name="Scala">
+      <configuration>
+        <option name="compilerLibraryLevel" value="Project" />
+        <option name="compilerLibraryName" value="all" />
+        <option name="compilerOptions" value="-g -unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/out/production" />
+    <output-test url="file://$MODULE_DIR$/out/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/extensions/sound/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions/sample-scala/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions/matrix/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions/array/classes" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions/unit-test/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tools" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/project/build/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/resources" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/extensions/matrix/Jama-1.0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="all" level="project" />
+  </component>
+</module>
+

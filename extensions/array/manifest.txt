@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: array
+Class-Manager: org.nlogo.extensions.array.ArrayExtension
+NetLogo-Extension-API-Version: 5.0

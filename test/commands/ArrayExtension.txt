@@ -1,0 +1,44 @@
+ArraysBasic
+  extensions [ array ]
+  O> set glob1 array:from-list n-values 5 [0]
+  array:length glob1 => 5
+  array:to-list glob1 => [0 0 0 0 0]
+  O> set glob1 array:from-list [10 11 12 13]
+  array:item glob1 0 => 10
+  array:item glob1 1 => 11
+  array:item glob1 2 => 12
+  array:item glob1 3 => 13
+  O> array:set glob1 2 2892
+  array:item glob1 2 => 2892
+
+ArraysErrorChecking
+  extensions [ array ]
+  O> set glob1 10
+  array:length glob1 => ERROR Extension exception: not an array: 10
+  array:to-list glob1 => ERROR Extension exception: not an array: 10
+  array:item glob1 0 => ERROR Extension exception: not an array: 10
+  O> array:set glob1 5 6 => ERROR Extension exception: not an array: 10
+  array:from-list glob1 => ERROR Extension exception: Expected this input to be a list but got the number 10 instead.
+  O> set glob1 array:from-list [100 200]
+  array:item glob1 -1 => ERROR Extension exception: -1 is not a valid index into an array of length 2
+  array:item glob1 2 => ERROR Extension exception: 2 is not a valid index into an array of length 2
+
+ArraysEquality
+  extensions [ array ]
+  array:from-list [0] = 0 => false
+  array:from-list [0] = [0] => false
+  array:from-list [0] = array:from-list [0] => true
+  O> crt 1
+  O> set glob1 array:from-list (list turtle 0)
+  glob1 = array:from-list (list turtle 0) => true
+  O> ct
+  glob1 = array:from-list (list nobody) => true
+
+ArraysOfArrays
+  extensions [ array ]
+  O> set glob1 array:from-list (list array:from-list [1 2 3])
+  O> set glob2 array:item glob1 0
+  array:item glob2 0 => 1 
+  array:item glob2 1 => 2
+  array:item glob2 2 => 3
+  (word glob1) => "{{array: {{array: 1 2 3}}}}"

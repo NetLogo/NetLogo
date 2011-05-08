@@ -1,0 +1,591 @@
+########################################################################
+# this file contains strings from all-strings.txt that i've decided dont need globalization
+# its possible that i am incorrect on some. leaving them here for later review.
+########################################################################
+
+# looks like all the ArrayAgentSet strings are just devel error messages, not user error messages
+org/nlogo/agent/ArrayAgentSet.java-169-	{
+org/nlogo/agent/ArrayAgentSet.java-170-		throw new IllegalStateException
+org/nlogo/agent/ArrayAgentSet.java:171:			( "Cannot call remove() from an  ArrayAgentSet" ) ;
+org/nlogo/agent/ArrayAgentSet.java-172-	}
+org/nlogo/agent/ArrayAgentSet.java-173-
+org/nlogo/agent/ArrayAgentSet.java-178-		{
+org/nlogo/agent/ArrayAgentSet.java-179-			throw new IllegalStateException
+org/nlogo/agent/ArrayAgentSet.java:180:				( "Cannot call remove() on an AgentSet with removableAgents set to false" ) ;
+org/nlogo/agent/ArrayAgentSet.java-181-		}
+org/nlogo/agent/ArrayAgentSet.java-182-		capacity = initialCapacity ;
+org/nlogo/agent/ArrayAgentSet.java-327-	public String toString()
+org/nlogo/agent/ArrayAgentSet.java-328-	{
+org/nlogo/agent/ArrayAgentSet.java:329:		StringBuilder s = new StringBuilder( "AgentSet" ) ;
+org/nlogo/agent/ArrayAgentSet.java:330:		s = s.append( "\n...... type: " ) ;
+org/nlogo/agent/ArrayAgentSet.java:331:		s = s.append( type == null ? "null" : type.toString() ) ;
+org/nlogo/agent/ArrayAgentSet.java:332:		s = s.append( "\n...... size: " + size ) ;
+org/nlogo/agent/ArrayAgentSet.java:333:		s = s.append( "\n...... count(): " + count() ) ;
+org/nlogo/agent/ArrayAgentSet.java:334:		s = s.append( "\n...... capacity: " + capacity ) ;
+org/nlogo/agent/ArrayAgentSet.java:335:		s = s.append( "\n...... agents: " ) ;
+org/nlogo/agent/ArrayAgentSet.java-336-		for( AgentSet.Iterator iter = iterator() ; iter.hasNext() ; )
+org/nlogo/agent/ArrayAgentSet.java-337-		{
+org/nlogo/agent/ArrayAgentSet.java-360-		{
+org/nlogo/agent/ArrayAgentSet.java-361-			throw new UnsupportedOperationException
+org/nlogo/agent/ArrayAgentSet.java:362:				( "remove() not supported") ;
+org/nlogo/agent/ArrayAgentSet.java-363-		}
+org/nlogo/agent/ArrayAgentSet.java-364-	}
+
+# im highly doubting we need to do anything with strings in Version.java
+# but im putting them over here just in case
+org/nlogo/api/Version.java-6-{
+org/nlogo/api/Version.java-7-
+org/nlogo/api/Version.java:8:	private static final String PATH = "/system/version.txt" ;
+org/nlogo/api/Version.java-9-	private static final String NO_VERSION ;
+org/nlogo/api/Version.java-10-
+org/nlogo/api/Version.java-21-			org.nlogo.util.Utils.getResourceAsStringArray( PATH ) ;
+org/nlogo/api/Version.java-22-		buildDate = lines[ 1 ] ;
+org/nlogo/api/Version.java:23:		String [] lines2 = new String[] { "NetLogo 3D Preview 5" ,
+org/nlogo/api/Version.java:24:										  "NetLogo 3D Preview 4" ,
+org/nlogo/api/Version.java:25:										  "NetLogo 3D Preview 3" ,
+org/nlogo/api/Version.java:26:										  "NetLogo 3-D Preview 2" ,
+org/nlogo/api/Version.java:27:										  "NetLogo 3-D Preview 1" } ;
+org/nlogo/api/Version.java-28-		if( is3D() )
+org/nlogo/api/Version.java-29-		{
+org/nlogo/api/Version.java:30:			version = lines[ 0 ].replaceFirst( "NetLogo" , "NetLogo 3D" ) ;
+org/nlogo/api/Version.java-31-			knownVersions = new String[ (lines.length * 2) + lines2.length - 2 ] ;
+org/nlogo/api/Version.java-32-		}
+org/nlogo/api/Version.java-47-			for( int i = 2 ; i < lines.length ; i++ )
+org/nlogo/api/Version.java-48-			{
+org/nlogo/api/Version.java:49:				knownVersions[ j ] = "NetLogo 3D" + lines[ i ].substring( "NetLogo".length() )  ;
+org/nlogo/api/Version.java-50-				j ++ ;
+org/nlogo/api/Version.java-51-			}
+org/nlogo/api/Version.java-56-			}
+org/nlogo/api/Version.java-57-		}
+org/nlogo/api/Version.java:58:		NO_VERSION = is3D() ? "NetLogo 3D (no version)" : "NetLogo (no version)" ;
+org/nlogo/api/Version.java-59-		knownVersions[ knownVersions.length - 1 ] = NO_VERSION ;
+org/nlogo/api/Version.java-60-	}
+org/nlogo/api/Version.java-64-		if ( version != null )
+org/nlogo/api/Version.java-65-		{
+org/nlogo/api/Version.java:66:			return version.indexOf( "3D" ) != -1 ||
+org/nlogo/api/Version.java-67-				version.indexOf( "3-D" ) != -1 ;
+org/nlogo/api/Version.java-68-		}
+org/nlogo/api/Version.java-77-		try
+org/nlogo/api/Version.java-78-		{
+org/nlogo/api/Version.java:79:			return Boolean.getBoolean( "org.nlogo.is3d" ) ;
+org/nlogo/api/Version.java-80-		}
+org/nlogo/api/Version.java-81-		// can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+org/nlogo/api/Version.java-100-		try
+org/nlogo/api/Version.java-101-		{
+org/nlogo/api/Version.java:102:			return ! Boolean.getBoolean( "org.nlogo.noOptimizer" ) ;
+org/nlogo/api/Version.java-103-		}
+org/nlogo/api/Version.java-104-		// can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+org/nlogo/api/Version.java-114-		try
+org/nlogo/api/Version.java-115-		{
+org/nlogo/api/Version.java:116:			if( Boolean.getBoolean( "org.nlogo.noGenerator" ) )
+org/nlogo/api/Version.java-117-			{
+org/nlogo/api/Version.java-118-				return false ;
+org/nlogo/api/Version.java-119-			}
+org/nlogo/api/Version.java:120:			Class.forName( "org.nlogo.generator.Generator" ) ;
+org/nlogo/api/Version.java-121-			return true ;
+org/nlogo/api/Version.java-122-		}
+org/nlogo/api/Version.java-151-	public static String removeRev( String version )
+org/nlogo/api/Version.java-152-	{
+org/nlogo/api/Version.java:153:		if( version.lastIndexOf( " (Rev " ) == version.length() - 8 )
+org/nlogo/api/Version.java-154-		{
+org/nlogo/api/Version.java-155-			return version.substring( 0 , version.length() - 8 ) ;
+org/nlogo/api/Version.java-173-	public static String versionNumberOnly()
+org/nlogo/api/Version.java-174-	{
+org/nlogo/api/Version.java:175:		return version().substring( "NetLogo ".length() ) ;
+org/nlogo/api/Version.java-176-	}
+org/nlogo/api/Version.java-177-
+org/nlogo/api/Version.java-192-	static String versionNumber( String v )
+org/nlogo/api/Version.java-193-	{
+org/nlogo/api/Version.java:194:		if( v.startsWith( "NetLogo 3D Preview" ) )
+org/nlogo/api/Version.java-195-		{
+org/nlogo/api/Version.java:196:			return v.substring( "NetLogo 3D ".length() , "NetLogo 3D Preview 5".length() ) ;
+org/nlogo/api/Version.java-197-		}
+org/nlogo/api/Version.java:198:		else if( v.startsWith( "NetLogo 3D") )
+org/nlogo/api/Version.java-199-		{
+org/nlogo/api/Version.java:200:			return v.substring( "NetLogo 3D ".length() , "NetLogo 3D 4.0".length() ) ;
+org/nlogo/api/Version.java-201-		}
+org/nlogo/api/Version.java-202-		else
+org/nlogo/api/Version.java-203-		{
+org/nlogo/api/Version.java:204:			return v.substring( "NetLogo ".length() , "NetLogo 4.0".length() ) ;
+org/nlogo/api/Version.java-205-		}
+org/nlogo/api/Version.java-206-	}
+org/nlogo/api/Version.java-213-	public static String fullVersion()
+org/nlogo/api/Version.java-214-	{
+org/nlogo/api/Version.java:215:		return version + " (" + buildDate + ") " + SysInfo.getSVNInfoString() ;
+org/nlogo/api/Version.java-216-	}
+org/nlogo/api/Version.java-217-
+org/nlogo/api/Version.java-219-	{
+org/nlogo/api/Version.java-220-		return
+org/nlogo/api/Version.java:221:			version.startsWith( "NetLogo 1.0" ) ||
+org/nlogo/api/Version.java:222:			version.startsWith( "NetLogo 1.1" ) ||
+org/nlogo/api/Version.java:223:			version.startsWith( "NetLogo 1.2" ) ;
+org/nlogo/api/Version.java-224-	}
+org/nlogo/api/Version.java-225-
+org/nlogo/api/Version.java-227-	{
+org/nlogo/api/Version.java-228-		return
+org/nlogo/api/Version.java:229:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:230:			version.startsWith( "NetLogo 2.0pre" ) ;
+org/nlogo/api/Version.java-231-	}
+org/nlogo/api/Version.java-232-
+org/nlogo/api/Version.java-234-	{
+org/nlogo/api/Version.java-235-		return
+org/nlogo/api/Version.java:236:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:237:			version.startsWith( "NetLogo 2.0pre" ) ||
+org/nlogo/api/Version.java:238:			version.startsWith( "NetLogo 2.0alpha" ) ||
+org/nlogo/api/Version.java-239-			// this assumes we won't hit 2.0beta10... - ST 12/7/03
+org/nlogo/api/Version.java:240:			version.startsWith( "NetLogo 2.0beta1" ) ||
+org/nlogo/api/Version.java:241:			version.startsWith( "NetLogo 2.0beta2" ) ||
+org/nlogo/api/Version.java:242:			version.startsWith( "NetLogo 2.0beta3" ) ||
+org/nlogo/api/Version.java:243:			version.startsWith( "NetLogo 2.0beta4" ) ;
+org/nlogo/api/Version.java-244-	}
+org/nlogo/api/Version.java-245-
+org/nlogo/api/Version.java-247-	{
+org/nlogo/api/Version.java-248-		return
+org/nlogo/api/Version.java:249:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:250:			version.startsWith( "NetLogo 2.0" ) ||
+org/nlogo/api/Version.java-251-			// this assumes we won't hit 2.1beta10... - ST 11/2/04
+org/nlogo/api/Version.java:252:			version.startsWith( "NetLogo 2.1pre" ) ||
+org/nlogo/api/Version.java:253:			version.startsWith( "NetLogo 2.1beta1" ) ||
+org/nlogo/api/Version.java:254:			version.startsWith( "NetLogo 2.1beta2" ) ;
+org/nlogo/api/Version.java-255-	}
+org/nlogo/api/Version.java-256-
+org/nlogo/api/Version.java-258-	{
+org/nlogo/api/Version.java-259-		return
+org/nlogo/api/Version.java:260:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:261:			version.startsWith( "NetLogo 2.0" ) ||
+org/nlogo/api/Version.java:262:			version.startsWith( "NetLogo 2.1" ) ||
+org/nlogo/api/Version.java:263:			version.startsWith( "NetLogo 2.2pre1" ) ||
+org/nlogo/api/Version.java:264:			version.startsWith( "NetLogo 2.2pre2" ) ;
+org/nlogo/api/Version.java-265-	}
+org/nlogo/api/Version.java-266-
+org/nlogo/api/Version.java-268-	{
+org/nlogo/api/Version.java-269-		return
+org/nlogo/api/Version.java:270:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:271:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:272:			version.startsWith( "NetLogo 3.0pre1" ) ||
+org/nlogo/api/Version.java:273:			version.startsWith( "NetLogo 3.0pre2" ) ||
+org/nlogo/api/Version.java:274:			version.startsWith( "NetLogo 3.0pre3" ) ||
+org/nlogo/api/Version.java:275:			version.startsWith( "NetLogo 3.0pre4" ) ;
+org/nlogo/api/Version.java-276-	}
+org/nlogo/api/Version.java-277-
+org/nlogo/api/Version.java-279-	{
+org/nlogo/api/Version.java-280-		return
+org/nlogo/api/Version.java:281:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:282:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:283:			version.startsWith( "NetLogo 3.0pre" ) ;
+org/nlogo/api/Version.java-284-	}
+org/nlogo/api/Version.java-285-
+org/nlogo/api/Version.java-287-	{
+org/nlogo/api/Version.java-288-		return
+org/nlogo/api/Version.java:289:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:290:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:291:			version.startsWith( "NetLogo 3.0pre" ) ||
+org/nlogo/api/Version.java-292-			// this assumes we won't hit 3.0beta10... - AZS 6/16/05
+org/nlogo/api/Version.java:293:			version.startsWith( "NetLogo 3.0beta1" ) ;
+org/nlogo/api/Version.java-294-	}
+org/nlogo/api/Version.java-295-
+org/nlogo/api/Version.java-297-	{
+org/nlogo/api/Version.java-298-		return
+org/nlogo/api/Version.java:299:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:300:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:301:			version.startsWith( "NetLogo 3.0pre" ) ||
+org/nlogo/api/Version.java-302-			// this assumes we won't hit 3.0beta10... - AZS 6/16/05
+org/nlogo/api/Version.java:303:			version.startsWith( "NetLogo 3.0beta1" ) ||
+org/nlogo/api/Version.java:304:			version.startsWith( "NetLogo 3.0beta2" ) ||
+org/nlogo/api/Version.java:305:			version.startsWith( "NetLogo 3.0beta3" ) ;
+org/nlogo/api/Version.java-306-	}
+org/nlogo/api/Version.java-307-
+org/nlogo/api/Version.java-309-	{
+org/nlogo/api/Version.java-310-		return
+org/nlogo/api/Version.java:311:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:312:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:313:			version.startsWith( "NetLogo 3.0" ) ;
+org/nlogo/api/Version.java-314-	}
+org/nlogo/api/Version.java-315-
+org/nlogo/api/Version.java-317-	{
+org/nlogo/api/Version.java-318-		return
+org/nlogo/api/Version.java:319:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:320:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:321:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:322:			version.startsWith( "NetLogo 3.1pre1" ) ;
+org/nlogo/api/Version.java-323-	}
+org/nlogo/api/Version.java-324-
+org/nlogo/api/Version.java-326-	{
+org/nlogo/api/Version.java-327-		return
+org/nlogo/api/Version.java:328:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:329:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:330:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:331:			version.startsWith( "NetLogo 3.1pre" ) ||
+org/nlogo/api/Version.java:332:			version.startsWith( "NetLogo 3.1beta1" ) ||
+org/nlogo/api/Version.java:333:			version.startsWith( "NetLogo 3.1beta2" ) ||
+org/nlogo/api/Version.java:334:			version.startsWith( "NetLogo 3.1beta3" ) ||
+org/nlogo/api/Version.java:335:			version.startsWith( "NetLogo 3.1beta4" ) ;
+org/nlogo/api/Version.java-336-	}
+org/nlogo/api/Version.java-337-
+org/nlogo/api/Version.java-339-	{
+org/nlogo/api/Version.java-340-		return
+org/nlogo/api/Version.java:341:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:342:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:343:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:344:			version.startsWith( "NetLogo 3.1" ) ||
+org/nlogo/api/Version.java:345:			version.startsWith( "NetLogo 3.2pre1" ) ;
+org/nlogo/api/Version.java-346-	}
+org/nlogo/api/Version.java-347-
+org/nlogo/api/Version.java-349-	{
+org/nlogo/api/Version.java-350-		return
+org/nlogo/api/Version.java:351:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:352:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:353:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:354:			version.startsWith( "NetLogo 3.1" ) ||
+org/nlogo/api/Version.java:355:			version.startsWith( "NetLogo 3.2pre1" ) ||
+org/nlogo/api/Version.java:356:			version.startsWith( "NetLogo 3.2pre2" ) ;
+org/nlogo/api/Version.java-357-	}
+org/nlogo/api/Version.java-358-
+org/nlogo/api/Version.java-360-	{
+org/nlogo/api/Version.java-361-		return
+org/nlogo/api/Version.java:362:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:363:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:364:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:365:			version.startsWith( "NetLogo 3.1" ) ||
+org/nlogo/api/Version.java:366:			version.startsWith( "NetLogo 3.2pre1" ) ||
+org/nlogo/api/Version.java:367:			version.startsWith( "NetLogo 3.2pre2" ) ||
+org/nlogo/api/Version.java:368:			version.startsWith( "NetLogo 3.2pre3" ) ;
+org/nlogo/api/Version.java-369-	}
+org/nlogo/api/Version.java-370-
+org/nlogo/api/Version.java-372-	{
+org/nlogo/api/Version.java-373-		return
+org/nlogo/api/Version.java:374:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:375:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:376:			version.startsWith( "NetLogo 3.0" ) ||
+org/nlogo/api/Version.java:377:			version.startsWith( "NetLogo 3.1" ) ||
+org/nlogo/api/Version.java:378:			version.startsWith( "NetLogo 3.2pre1" ) ||
+org/nlogo/api/Version.java:379:			version.startsWith( "NetLogo 3.2pre2" ) ||
+org/nlogo/api/Version.java:380:			version.startsWith( "NetLogo 3.2pre3" ) ||
+org/nlogo/api/Version.java:381:			version.startsWith( "NetLogo 3.2pre4" ) ;
+org/nlogo/api/Version.java-382-	}
+org/nlogo/api/Version.java-383-
+org/nlogo/api/Version.java-385-	{
+org/nlogo/api/Version.java-386-		return
+org/nlogo/api/Version.java:387:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:388:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:389:			version.startsWith( "NetLogo 3." ) ;
+org/nlogo/api/Version.java-390-	}
+org/nlogo/api/Version.java-391-
+org/nlogo/api/Version.java-393-	{
+org/nlogo/api/Version.java-394-		return
+org/nlogo/api/Version.java:395:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:396:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:397:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:398:			version.startsWith( "NetLogo 4.0pre1" ) ||
+org/nlogo/api/Version.java:399:			version.startsWith( "NetLogo 4.0pre2" ) ;
+org/nlogo/api/Version.java-400-	}
+org/nlogo/api/Version.java-401-
+org/nlogo/api/Version.java-403-	{
+org/nlogo/api/Version.java-404-		return
+org/nlogo/api/Version.java:405:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:406:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:407:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:408:			version.startsWith( "NetLogo 4.0pre1" ) ||
+org/nlogo/api/Version.java:409:			version.startsWith( "NetLogo 4.0pre2" ) ||
+org/nlogo/api/Version.java:410:			version.startsWith( "NetLogo 4.0pre3" ) ;
+org/nlogo/api/Version.java-411-	}
+org/nlogo/api/Version.java-412-
+org/nlogo/api/Version.java-414-	{
+org/nlogo/api/Version.java-415-		return
+org/nlogo/api/Version.java:416:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:417:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:418:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:419:			version.startsWith( "NetLogo 4.0pre" ) ||
+org/nlogo/api/Version.java:420:			version.startsWith( "NetLogo 4.0alpha1" ) ||
+org/nlogo/api/Version.java:421:			version.startsWith( "NetLogo 4.0alpha2" ) ;
+org/nlogo/api/Version.java-422-	}
+org/nlogo/api/Version.java-423-
+org/nlogo/api/Version.java-425-	{
+org/nlogo/api/Version.java-426-		return
+org/nlogo/api/Version.java:427:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:428:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:429:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:430:			version.startsWith( "NetLogo 4.0pre" ) ||
+org/nlogo/api/Version.java:431:			version.startsWith( "NetLogo 4.0alpha" ) ||
+org/nlogo/api/Version.java:432:			version.startsWith( "NetLogo 4.0beta1" ) ;
+org/nlogo/api/Version.java-433-	}
+org/nlogo/api/Version.java-434-
+org/nlogo/api/Version.java-436-	{
+org/nlogo/api/Version.java-437-		return
+org/nlogo/api/Version.java:438:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:439:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:440:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:441:			version.startsWith( "NetLogo 4.0pre" ) ||
+org/nlogo/api/Version.java:442:			version.startsWith( "NetLogo 4.0alpha" ) ||
+org/nlogo/api/Version.java:443:			version.startsWith( "NetLogo 4.0beta1" ) ||
+org/nlogo/api/Version.java:444:			version.startsWith( "NetLogo 4.0beta2" ) ||
+org/nlogo/api/Version.java:445:			version.startsWith( "NetLogo 4.0beta3" ) ;
+org/nlogo/api/Version.java-446-	}
+org/nlogo/api/Version.java-447-
+org/nlogo/api/Version.java-449-	{
+org/nlogo/api/Version.java-450-		return
+org/nlogo/api/Version.java:451:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:452:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:453:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:454:			version.startsWith( "NetLogo 4.0pre" ) ||
+org/nlogo/api/Version.java:455:			version.startsWith( "NetLogo 4.0alpha" ) ||
+org/nlogo/api/Version.java:456:			version.startsWith( "NetLogo 4.0beta1" ) ||
+org/nlogo/api/Version.java:457:			version.startsWith( "NetLogo 4.0beta2" ) ||
+org/nlogo/api/Version.java:458:			version.startsWith( "NetLogo 4.0beta3" ) ||
+org/nlogo/api/Version.java:459:			version.startsWith( "NetLogo 4.0beta4" ) ;
+org/nlogo/api/Version.java-460-	}
+org/nlogo/api/Version.java-461-
+org/nlogo/api/Version.java-463-	{
+org/nlogo/api/Version.java-464-		return
+org/nlogo/api/Version.java:465:			version.startsWith( "NetLogo 1." ) ||
+org/nlogo/api/Version.java:466:			version.startsWith( "NetLogo 2." ) ||
+org/nlogo/api/Version.java:467:			version.startsWith( "NetLogo 3." ) ||
+org/nlogo/api/Version.java:468:            version.startsWith( "NetLogo 4.0" ) ||
+org/nlogo/api/Version.java:469:            version.startsWith( "NetLogo 4.1" );
+org/nlogo/api/Version.java-470-	}
+org/nlogo/api/Version.java-471-
+org/nlogo/api/Version.java-472-    public static boolean olderThan42pre2( String version )
+org/nlogo/api/Version.java-473-	{
+org/nlogo/api/Version.java:474:		return olderThan42pre1(version) || version.equals( "NetLogo 4.2pre1" );
+org/nlogo/api/Version.java-475-	}
+org/nlogo/api/Version.java-476-
+org/nlogo/api/Version.java-478-	{
+org/nlogo/api/Version.java-479-		return is3D( version ) &&
+org/nlogo/api/Version.java:480:			( version.startsWith( "NetLogo 3-D Preview 1" ) ||
+org/nlogo/api/Version.java:481:			  version.startsWith( "NetLogo 3-D Preview 2" ) ) ;
+org/nlogo/api/Version.java-482-	}
+org/nlogo/api/Version.java-483-
+org/nlogo/api/Version.java-485-	{
+org/nlogo/api/Version.java-486-		return is3D( version ) &&
+org/nlogo/api/Version.java:487:			( version.startsWith( "NetLogo 3-D Preview 1" ) ||
+org/nlogo/api/Version.java:488:			  version.startsWith( "NetLogo 3-D Preview 2" ) ||
+org/nlogo/api/Version.java:489:			  version.startsWith( "NetLogo 3D Preview 3" ) ) ;
+org/nlogo/api/Version.java-490-	}
+org/nlogo/api/Version.java-491-
+org/nlogo/api/Version.java-493-	{
+org/nlogo/api/Version.java-494-		return is3D( version ) &&
+org/nlogo/api/Version.java:495:			( version.startsWith( "NetLogo 3-D Preview 1" ) ||
+org/nlogo/api/Version.java:496:			  version.startsWith( "NetLogo 3-D Preview 2" ) ||
+org/nlogo/api/Version.java:497:			  version.startsWith( "NetLogo 3D Preview 3"  ) ||
+org/nlogo/api/Version.java:498:			  version.startsWith( "NetLogo 3D Preview 4"  ) ) ;
+org/nlogo/api/Version.java-499-	}
+org/nlogo/api/Version.java-500-
+
+# reasonably certain nothing needs to be done here:
+org/nlogo/app/InfoConverter.scala-25-  private val convertHeaders = {
+org/nlogo/app/InfoConverter.scala:26:    val anythingButLowercaseLetter = """[\p{Print}&&\P{Lower}]*"""
+org/nlogo/app/InfoConverter.scala-27-    // a header's a line that comes after a blank line and contains capital letters but no lower case letters.
+org/nlogo/app/InfoConverter.scala-28-    // (\A matches the beginning of input, to handle the special case where the first line is a header.)
+org/nlogo/app/InfoConverter.scala:29:    replace("""(?m)^(\s*\n|\A)(""" + anythingButLowercaseLetter + "[A-Z]" + anythingButLowercaseLetter + ")$",
+org/nlogo/app/InfoConverter.scala-30-            "$1## $2\n")
+
+# reasonably certain nothing needs to be done here:
+org/nlogo/workspace/ModelsLibrary.java-64-			}
+org/nlogo/workspace/ModelsLibrary.java-65-			String path = node.path.replace( java.io.File.separator.charAt( 0 ) , '/' ) ;
+org/nlogo/workspace/ModelsLibrary.java:66:			int loc = path.toUpperCase().lastIndexOf( "/" + targetName.toUpperCase() + ".NLOGO" ) ;
+org/nlogo/workspace/ModelsLibrary.java-67-			if( loc != -1 && loc == path.lastIndexOf( '/' ) )
+org/nlogo/workspace/ModelsLibrary.java-68-			{
+org/nlogo/workspace/ModelsLibrary.java-109-	 *
+org/nlogo/workspace/ModelsLibrary.java-110-	 * @param targetName the name of the model to scan for, not including the
+org/nlogo/workspace/ModelsLibrary.java:111:	 *     ".nlogo" extension.
+org/nlogo/workspace/ModelsLibrary.java-112-	 *
+org/nlogo/workspace/ModelsLibrary.java-113-	 * @return the path to the model, or null if no such model is in the
+org/nlogo/workspace/ModelsLibrary.java-123-				java.io.File.separator.charAt( 0 ) , '/' ) ;
+org/nlogo/workspace/ModelsLibrary.java-124-			if( path.toUpperCase().indexOf( "/" + targetName.toUpperCase()
+org/nlogo/workspace/ModelsLibrary.java:125:				+ ".NLOGO" ) == path.lastIndexOf( '/' ) )
+org/nlogo/workspace/ModelsLibrary.java-126-			{
+org/nlogo/workspace/ModelsLibrary.java-127-				return model.path ;
+org/nlogo/workspace/ModelsLibrary.java-144-		if( ! org.nlogo.api.Version.is3D() || ! exclusive )
+org/nlogo/workspace/ModelsLibrary.java-145-		{
+org/nlogo/workspace/ModelsLibrary.java:146:			java.io.File directoryRoot = new java.io.File( "models" , "" ) ;
+org/nlogo/workspace/ModelsLibrary.java:147:			rootNode = new Node( "models" , "" , true ) ;
+org/nlogo/workspace/ModelsLibrary.java-148-			scanDirectory( directoryRoot , null , rootNode , exclusive ) ;
+org/nlogo/workspace/ModelsLibrary.java-149-		}
+org/nlogo/workspace/ModelsLibrary.java-150-		else
+org/nlogo/workspace/ModelsLibrary.java-151-		{
+org/nlogo/workspace/ModelsLibrary.java:152:			java.io.File directoryRoot = new java.io.File( "models/3D" , "" ) ;
+org/nlogo/workspace/ModelsLibrary.java:153:			rootNode = new Node( "models/3D" , "" , true ) ;
+org/nlogo/workspace/ModelsLibrary.java-154-			scanDirectory( directoryRoot , null , rootNode , exclusive ) ;
+org/nlogo/workspace/ModelsLibrary.java-155-		}
+org/nlogo/workspace/ModelsLibrary.java-197-	public static String getImagePath( String filePath )
+org/nlogo/workspace/ModelsLibrary.java-198-	{
+org/nlogo/workspace/ModelsLibrary.java:199:		int index = filePath.indexOf( ".nlogo" ) ;
+org/nlogo/workspace/ModelsLibrary.java-200-		if( index != -1 )
+org/nlogo/workspace/ModelsLibrary.java-201-		{
+org/nlogo/workspace/ModelsLibrary.java-202-			filePath = filePath.substring( 0 , index ) ;
+org/nlogo/workspace/ModelsLibrary.java-203-		}
+org/nlogo/workspace/ModelsLibrary.java:204:		return filePath + ".png" ;
+org/nlogo/workspace/ModelsLibrary.java-205-	}
+org/nlogo/workspace/ModelsLibrary.java-206-
+org/nlogo/workspace/ModelsLibrary.java-243-			else
+org/nlogo/workspace/ModelsLibrary.java-244-			{
+org/nlogo/workspace/ModelsLibrary.java:245:				if( fileName.toUpperCase().endsWith( ".NLOGO" ) )
+org/nlogo/workspace/ModelsLibrary.java-246-				{
+org/nlogo/workspace/ModelsLibrary.java-247-					parent.add( child ) ;
+org/nlogo/workspace/ModelsLibrary.java-253-	private static String translateNameForDisplay( String name )
+org/nlogo/workspace/ModelsLibrary.java-254-	{
+org/nlogo/workspace/ModelsLibrary.java:255:		if( name.equalsIgnoreCase( "UNVERIFIED" ) )
+org/nlogo/workspace/ModelsLibrary.java-256-		{
+org/nlogo/workspace/ModelsLibrary.java:257:			return "(unverified)" ;
+org/nlogo/workspace/ModelsLibrary.java-258-		}
+org/nlogo/workspace/ModelsLibrary.java-259-		else
+org/nlogo/workspace/ModelsLibrary.java-266-	{
+org/nlogo/workspace/ModelsLibrary.java-267-		return
+org/nlogo/workspace/ModelsLibrary.java:268:			path.indexOf( "user community models" ) == -1 &&
+org/nlogo/workspace/ModelsLibrary.java:269:			path.indexOf( "under development" ) == -1 &&
+org/nlogo/workspace/ModelsLibrary.java:270:			path.indexOf( "benchmarks" ) == -1 ;
+org/nlogo/workspace/ModelsLibrary.java-271-	}
+org/nlogo/workspace/ModelsLibrary.java-272-
+org/nlogo/workspace/ModelsLibrary.java-273-	/// helpers
+org/nlogo/workspace/ModelsLibrary.java-274-
+org/nlogo/workspace/ModelsLibrary.java:275:	// we use this so that "Foo.nlogo" sorts before "Foo
+org/nlogo/workspace/ModelsLibrary.java-276-	// Alternate.nlogo", not after - ST 8/31/04
+org/nlogo/workspace/ModelsLibrary.java-277-	private static class CustomComparator
+org/nlogo/workspace/ModelsLibrary.java-286-		{
+org/nlogo/workspace/ModelsLibrary.java-287-			s = s.toUpperCase() ;
+org/nlogo/workspace/ModelsLibrary.java:288:			return s.endsWith( ".NLOGO" )
+org/nlogo/workspace/ModelsLibrary.java-289-				? s.substring( 0 , s.length() - 6 )
+org/nlogo/workspace/ModelsLibrary.java-290-				: s ;
+org/nlogo/workspace/ModelsLibrary.java-301-				if( exclusive )
+org/nlogo/workspace/ModelsLibrary.java-302-				{
+org/nlogo/workspace/ModelsLibrary.java:303:					orderednames = new String[] { "3D" } ;
+org/nlogo/workspace/ModelsLibrary.java-304-				}
+org/nlogo/workspace/ModelsLibrary.java-305-				{
+org/nlogo/workspace/ModelsLibrary.java-306-					orderednames = new String[] {
+org/nlogo/workspace/ModelsLibrary.java:307:						"3D" , "SAMPLE MODELS" , "CURRICULAR MODELS" , "CODE EXAMPLES" ,
+org/nlogo/workspace/ModelsLibrary.java:308:						"HUBNET ACTIVITIES" , "HUBNET CALCULATOR ACTIVITIES" ,
+org/nlogo/workspace/ModelsLibrary.java:309:						"USER COMMUNITY MODELS" , "UNDER DEVELOPMENT" , "BENCHMARKS" } ;
+org/nlogo/workspace/ModelsLibrary.java-310-				}
+org/nlogo/workspace/ModelsLibrary.java-311-			}
+org/nlogo/workspace/ModelsLibrary.java-313-			{
+org/nlogo/workspace/ModelsLibrary.java-314-				orderednames = new String[] {
+org/nlogo/workspace/ModelsLibrary.java:315:						"SAMPLE MODELS" , "CURRICULAR MODELS" , "CODE EXAMPLES" ,
+org/nlogo/workspace/ModelsLibrary.java:316:						"HUBNET ACTIVITIES" , "HUBNET CALCULATOR ACTIVITIES" ,
+org/nlogo/workspace/ModelsLibrary.java:317:						"USER COMMUNITY MODELS" , "UNDER DEVELOPMENT" , "BENCHMARKS" } ;
+org/nlogo/workspace/ModelsLibrary.java-318-			}
+org/nlogo/workspace/ModelsLibrary.java-319-		}
+org/nlogo/workspace/ModelsLibrary.java-349-			if( ! isBadName( temp ) )
+org/nlogo/workspace/ModelsLibrary.java-350-			{
+org/nlogo/workspace/ModelsLibrary.java:351:				if( temp.equals( "UNVERIFIED" ) )
+org/nlogo/workspace/ModelsLibrary.java-352-				{
+org/nlogo/workspace/ModelsLibrary.java-353-					unverified = names.get( i ) ;
+org/nlogo/workspace/ModelsLibrary.java-354-				}
+org/nlogo/workspace/ModelsLibrary.java:355:				else if( temp.equals( "UNDER DEVELOPMENT" ) )
+org/nlogo/workspace/ModelsLibrary.java-356-				{
+org/nlogo/workspace/ModelsLibrary.java-357-					underDevelopment = names.get( i ) ;
+org/nlogo/workspace/ModelsLibrary.java-381-			// if this is a CVS checkout, ignore the CVS
+org/nlogo/workspace/ModelsLibrary.java-382-			// subdirectories
+org/nlogo/workspace/ModelsLibrary.java:383:			name.equals( "CVS" ) ||
+org/nlogo/workspace/ModelsLibrary.java-386-			// ignore the directory containing the sample beats
+org/nlogo/workspace/ModelsLibrary.java-387-			// for the Beatbox model
+org/nlogo/workspace/ModelsLibrary.java:388:			name.equals( "BEATS" ) ||
+org/nlogo/workspace/ModelsLibrary.java-389-			// when we're not 3D ignore the 3D models.
+org/nlogo/workspace/ModelsLibrary.java-390-			( ! org.nlogo.api.Version.is3D() &&
+org/nlogo/workspace/ModelsLibrary.java:391:			  ( name.equals( "3D" ) ||
+org/nlogo/workspace/ModelsLibrary.java-392-			    // the vrml extension is our only 3D extension at present
+org/nlogo/workspace/ModelsLibrary.java-393-			    // so just special case it - ST 6/12/08
+org/nlogo/workspace/ModelsLibrary.java:394:			    name.equals( "VRML" ) ) ) ;
+org/nlogo/workspace/ModelsLibrary.java-395-	}
+org/nlogo/workspace/ModelsLibrary.java-396-
+
+# I think this stuff is just for us
+org/nlogo/workspace/Benchmarker.scala-6-  private val Z           = 2.3263  // z value for 98% confidence, according to the standard normal table
+org/nlogo/workspace/Benchmarker.scala-7-  private val TOLERANCE   = 0.003   // goal: get within 0.3%
+org/nlogo/workspace/Benchmarker.scala:8:  private val formatter   = new java.text.DecimalFormat("0.000")
+org/nlogo/workspace/Benchmarker.scala-9-  def benchmark(workspace:AbstractWorkspace,minTime:Int,maxTime:Int) {
+org/nlogo/workspace/Benchmarker.scala-10-    import Math._
+org/nlogo/workspace/Benchmarker.scala-11-    val times = new collection.mutable.ListBuffer[Double]
+org/nlogo/workspace/Benchmarker.scala:12:    val goProcedure = workspace.compileCommands("ca benchmark")
+org/nlogo/workspace/Benchmarker.scala:13:    val resultProcedure = workspace.compileReporter("result")
+org/nlogo/workspace/Benchmarker.scala-14-    def goOnce():Double = {
+org/nlogo/workspace/Benchmarker.scala-15-      workspace.runCompiledCommands(goProcedure)
+org/nlogo/workspace/Benchmarker.scala-24-    def runs = 2 max math.ceil(math.pow(Z * stddev / (TOLERANCE * average),2)).toInt
+org/nlogo/workspace/Benchmarker.scala-25-    def warmUp() {
+org/nlogo/workspace/Benchmarker.scala:26:      println("(" + workspace.modelNameForDisplay + ")")
+org/nlogo/workspace/Benchmarker.scala-27-      System.gc()
+org/nlogo/workspace/Benchmarker.scala-28-      val startTime = System.currentTimeMillis
+org/nlogo/workspace/Benchmarker.scala-35-      if(System.currentTimeMillis - lastChatterTime > 10000) { // every 10 seconds
+org/nlogo/workspace/Benchmarker.scala-36-        println(
+org/nlogo/workspace/Benchmarker.scala:37:          times.size + "/" + runs + " (mean=" + formatter.format(average) +
+org/nlogo/workspace/Benchmarker.scala:38:          ", stddev=" + formatter.format(stddev) + ")")
+org/nlogo/workspace/Benchmarker.scala-39-        lastChatterTime = System.currentTimeMillis
+org/nlogo/workspace/Benchmarker.scala-40-      }
+org/nlogo/workspace/Benchmarker.scala-43-      lastChatterTime = 0L
+org/nlogo/workspace/Benchmarker.scala-44-      chatter()
+org/nlogo/workspace/Benchmarker.scala:45:      println("@@@ " + workspace.modelNameForDisplay + ": " + formatter.format(average) +
+org/nlogo/workspace/Benchmarker.scala:46:              (if(times.size < runs) " (hit time limit)" else ""))
+org/nlogo/workspace/Benchmarker.scala-47-
+org/nlogo/workspace/Benchmarker.scala-48-    }
+
+# unlikely, and so i just removed all the other dummy widgets. 
+org/nlogo/window/DummyViewWidget.java:16:	public String classDisplayName() { return "View" ; }
+org/nlogo/window/DummyViewWidget.java-18-	public DummyViewWidget( org.nlogo.agent.World world )
+org/nlogo/window/DummyViewWidget.java-86-	{
+org/nlogo/window/DummyViewWidget.java-87-		return
+org/nlogo/window/DummyViewWidget.java:88:			"VIEW\n" +
+org/nlogo/window/DummyViewWidget.java-89-			getBoundsString() +
+org/nlogo/window/DummyViewWidget.java:90:			"0\n0\n" + // screen-edge-x/y
+org/nlogo/window/DummyViewWidget.java-91-			"0\n" + //7
+org/nlogo/window/DummyViewWidget.java:92:			"1\n1\n" + // 8 9
+org/nlogo/window/DummyViewWidget.java-93-			// old exactDraw settings, no longer used - ST 8/13/03
+org/nlogo/window/DummyViewWidget.java:94:			"1\n1\n1\n" +  // 10 11 12
+org/nlogo/window/DummyViewWidget.java-95-			// hooray for hex! - ST 6/16/04
+org/nlogo/window/DummyViewWidget.java-96-			 "0\n" + // 13
+org/nlogo/window/DummyViewWidget.java:97:			"1\n1\n" + // 14 15
+org/nlogo/window/DummyViewWidget.java-98-			"1\n" + // thin turtle pens are always on 16
+org/nlogo/window/DummyViewWidget.java-99-		    world.minPxcor() + "\n" + // 17
+
+# unlikely
+org/nlogo/util/Exceptions.scala-30-  def warn(t: Throwable) {
+org/nlogo/util/Exceptions.scala:31:    System.err.println("Warning -- Ignoring exception: " + t)
+org/nlogo/util/Exceptions.scala-32-    t.printStackTrace(System.err)
+org/nlogo/util/Exceptions.scala-33-  }
+
+# guessing we dont need to do these
+org/nlogo/agent/TreeAgentSet.java:217:		StringBuilder s = new StringBuilder( "TreeAgentSet" ) ;
+org/nlogo/agent/TreeAgentSet.java:218:		s = s.append( "\n...... type: " ) ;
+org/nlogo/agent/TreeAgentSet.java:219:		s = s.append( type == null ? "null" : type.toString() ) ;
+org/nlogo/agent/TreeAgentSet.java:220:		s = s.append( "\n...... count(): " + count() ) ;
+org/nlogo/agent/TreeAgentSet.java:221:		s = s.append( "\n...... agents: " ) ;
+org/nlogo/agent/TreeAgentSet.java-247-			throw new UnsupportedOperationException
+org/nlogo/agent/TreeAgentSet.java:248:				( "remove() not supported") ;
+
+# i dont think any of this stuff is user-visible
+org/nlogo/hubnet/protocol/ClientInterface.scala:5:object ClientInterface{ val VIEW_STRING = "View" }
+org/nlogo/hubnet/protocol/ClientInterface.scala-6-
+org/nlogo/hubnet/protocol/ClientInterface.scala:44:  def containsViewWidget = if( widgets != null ) widgets.exists(w=>w(0) == "VIEW") else false
+org/nlogo/hubnet/protocol/ClientInterface.scala-45-
+org/nlogo/hubnet/protocol/ClientInterface.scala-49-  private def cacheWidgetTags(compiler: CompilerServices) {
+org/nlogo/hubnet/protocol/ClientInterface.scala-50-    if (!widgets.isEmpty) {
+org/nlogo/hubnet/protocol/ClientInterface.scala:51:      clientWidgetTags = "ALL PLOTS" :: widgets.map{ widget =>
+org/nlogo/hubnet/protocol/ClientInterface.scala:52:        if (widget(0) == "VIEW") "VIEW"
+org/nlogo/hubnet/protocol/ClientInterface.scala-53-        else {
+org/nlogo/hubnet/protocol/ClientInterface.scala:54:          if (widget(0) == "CHOOSER") addChoices(widget, compiler)
+org/nlogo/hubnet/protocol/ClientInterface.scala-55-          widget(5)
+org/nlogo/hubnet/protocol/ClientInterface.scala-56-        }
+org/nlogo/hubnet/protocol/ClientInterface.scala-60-
+org/nlogo/hubnet/protocol/ClientInterface.scala-61-  private def addChoices(chooser:Seq[String], compiler:CompilerServices) {
+org/nlogo/hubnet/protocol/ClientInterface.scala:62:    chooserChoices += (chooser(5) -> compiler.readFromString("[ " + chooser(7) + " ]").asInstanceOf[LogoList])
+org/nlogo/hubnet/protocol/ClientInterface.scala-63-  }
+org/nlogo/hubnet/protocol/ClientInterface.scala-64-
+org/nlogo/hubnet/protocol/ClientInterface.scala-65-  override def toString =
+org/nlogo/hubnet/protocol/ClientInterface.scala:66:    "ClientInterface(\n\t" + "TURTLE SHAPES = " + turtleShapes + "\n\t" +
+org/nlogo/hubnet/protocol/ClientInterface.scala:67:    "LINK SHAPES = " + linkShapes + "\n\t" +
+org/nlogo/hubnet/protocol/ClientInterface.scala:68:    "WIDGETS = " + widgetDescriptions + ")"
+org/nlogo/hubnet/protocol/ClientInterface.scala-69-
+org/nlogo/hubnet/protocol/Handshake.java-30-
+org/nlogo/hubnet/protocol/Handshake.java-31-    public String toString(){
+org/nlogo/hubnet/protocol/Handshake.java:32:        return "Handshake(content=" + super.content() +
+org/nlogo/hubnet/protocol/Handshake.java:33:                ", activityName=" + activityName +
+org/nlogo/hubnet/protocol/Handshake.java:34:                ", interfaceSpec=" + interfaceSpec + ")";
+org/nlogo/hubnet/protocol/Handshake.java-35-    }
+org/nlogo/hubnet/protocol/Handshake.java-36-}
+
+org/nlogo/agent/AbstractExporter.java:41:		writer.println( Dump.csv.header( "export-" + type + " data ("
+org/nlogo/agent/AbstractExporter.java-42-			+ org.nlogo.api.Version.version() + ")" ) ) ;
+org/nlogo/agent/AbstractExporter.java-43-		writer.println( Dump.csv.header( modelFileName ) ) ;
+org/nlogo/agent/AbstractExporter.java-48-		// date & time
+org/nlogo/agent/AbstractExporter.java-49-		java.util.Date currentDate = new java.util.Date(); // Use Date to avoid month bug in GregorianCalendar
+org/nlogo/agent/AbstractExporter.java:50:		java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat ("MM/dd/yyyy HH:mm:ss:SSS Z");
+org/nlogo/agent/AbstractExporter.java-51-		writer.println( Dump.csv.header( dateFormatter.format( currentDate ) ) ) ;
+org/nlogo/agent/AbstractExporter.java-52-		writer.println();

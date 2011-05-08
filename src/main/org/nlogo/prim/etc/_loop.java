@@ -1,0 +1,29 @@
+package org.nlogo.prim.etc;
+
+import org.nlogo.nvm.Command;
+import org.nlogo.nvm.Context;
+import org.nlogo.nvm.Syntax;
+
+public final strictfp class _loop
+	extends Command
+	implements org.nlogo.nvm.CustomAssembled
+{
+	@Override
+	public void perform( final Context context )
+	{
+		// we get custom-assembled out of existence
+		throw new IllegalStateException() ;
+	}
+	@Override
+	public Syntax syntax()
+	{
+		return Syntax.commandSyntax
+			( new int[] { Syntax.TYPE_COMMAND_BLOCK } ) ;
+	}
+	public void assemble( org.nlogo.nvm.AssemblerAssistant a )
+	{
+		a.comeFrom() ;
+		a.block() ;
+		a.goTo() ;
+	}
+}

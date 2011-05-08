@@ -1,0 +1,13 @@
+# can't set turtle variable XCOR to non-number foo
+org.nlogo.agent.Agent.wrongTypeOnSetError = can''t set {0} variable {1} to non-{2} {3}
+org.nlogo.agent.Agent.rgbListSizeError.3 = An rgb list must contain 3 numbers 0-255
+org.nlogo.agent.Agent.rgbListSizeError.3or4 = An rgb list must contain 3 or 4 numbers 0-255
+org.nlogo.agent.Agent.rgbValueError = RGB values must be 0-255
+
+org.nlogo.agent.BooleanConstraint.bool = Value must be a boolean.
+org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world's edge.
+org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = The following file is not in a supported image format: {0}
+
+# Value must be one of: ["Hello" 5 [1 2 3]]
+org.nlogo.agent.ChooserConstraint.invalidValue = Value must be one of: {0}
+

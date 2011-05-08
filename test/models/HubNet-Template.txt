@@ -1,0 +1,8 @@
+Simple_Login_2D
+  OPEN> models/HubNet Activities/Code Examples/Template.nlogo
+  O> startup
+  O> setup
+  O> __hubnet-create-client
+  O> __hubnet-wait-for-messages 1 2000
+  O> go
+  count turtles => 1

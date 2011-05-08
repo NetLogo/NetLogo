@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: table
+Class-Manager: org.nlogo.extensions.table.TableExtension
+NetLogo-Extension-API-Version: 5.0

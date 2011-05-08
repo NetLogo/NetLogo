@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: bitmap
+Class-Manager: org.nlogo.extensions.bitmap.BitmapExtension
+NetLogo-Extension-API-Version: 5.0

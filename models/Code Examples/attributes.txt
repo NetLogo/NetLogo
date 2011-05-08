@@ -1,0 +1,10 @@
+1    1.2    red
+2    1.0    blue
+3    1.5    yellow
+4    2      green
+5    1.8    orange
+6    1.4    red
+7    2      blue
+8    1.5    yellow
+9    1      green
+10   1.2    orange

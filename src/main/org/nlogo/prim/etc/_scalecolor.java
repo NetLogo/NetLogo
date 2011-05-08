@@ -1,0 +1,76 @@
+package org.nlogo.prim.etc ;
+
+import org.nlogo.api.LogoException;
+import org.nlogo.nvm.Context;
+import org.nlogo.nvm.Reporter;
+import org.nlogo.nvm.Pure;
+import org.nlogo.nvm.Syntax;
+
+public final strictfp class _scalecolor extends Reporter implements Pure
+{
+	@Override public Syntax syntax()
+	{
+		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER ,
+						Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ;
+		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER ) ;
+	}
+	@Override public Object report( Context context ) throws LogoException
+	{
+		return report_1( context ,
+						 argEvalDoubleValue( context , 0 ) ,
+						 argEvalDoubleValue( context , 1 ) ,
+						 argEvalDoubleValue( context , 2 ) ,
+						 argEvalDoubleValue( context , 3 ) ) ;
+	}
+	public double report_1( Context context , double color , double var , double min , double max )
+		throws LogoException
+	{
+		// shade is irrelevant (i.e. black, white, and grey do same thing)
+		color = org.nlogo.api.Color.findCentralColorNumber( color ) - 5.0 ;
+		double perc = 0.0 ;
+		if( min > max )      // min and max are really reversed
+		{
+			if( var < max)
+			{
+				perc = 1.0 ;
+			}
+			else if ( var > min )
+			{
+				perc = 0.0 ;
+			}
+			else
+			{
+				double tempval = min - var ;
+				double tempmax = min - max;
+				perc = tempval / tempmax ;
+			}
+		}
+		else
+		{
+			if( var > max )
+			{
+				perc = 1.0 ;
+			}
+			else if ( var < min ) 
+			{
+				perc = 0.0 ;
+			}
+			else
+			{
+				double tempval = var - min ;
+				double tempmax = max - min ;
+				perc = tempval / tempmax ;
+			}
+		}
+		perc *= 10 ;
+		if( perc >= 9.9999 )
+		{
+			perc = 9.9999 ;
+		}
+		else if( perc < 0 )
+		{
+			perc = 0 ;
+		}
+		return validDouble( color + perc ) ;
+	}
+}

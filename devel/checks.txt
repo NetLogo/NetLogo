@@ -1,0 +1,143 @@
+As you work through these instructions, look for things which
+could be automated -- and automate them!
+
+The double-asterisk (**) syntax used throughout requires zsh.
+
+===
+critical checks, never to be skipped for any external release:
+===
+
+- did nightly.sh pass?
+- run tests:
+  - "make integrate" on a Mac
+  - "make integrate" on Windows
+  - (ok to skip Linux if Bitten passed)
+- add new team members if any to resources/system/about.txt
+- think: are there any legal issues around the release?  e.g. any
+  new third party software? any updated third party software whose
+  legal info might have changed? If you add something it goes in 3
+  places readme, about box, and copyright.html
+- make sure all models have proper entries in legal.txt, by doing a dry run
+  of bin/release.sh and making sure the bin/notarize.scala step doesn't
+  bomb out.  even if you skip this it'll happen anyway when you really
+  build, but you might want to run it now ahead of time just so you
+  don't get a nasty surprise later when time may be short.
+
+===
+the rest of these checks are less critical and can often be
+skipped for non-high-stakes, non-public releases
+===
+
+checks on code:
+- use "organize imports" in Eclipse
+- grep -r FIXMMH src
+  grep -r TODO src
+  grep -r zzz src
+- make sure all removeNotify methods do a thread check if necessary,
+  since in an applet context removeNotify won't necessarily be run
+  from the event thread, as it normally would
+- are there any classes/methods that now need to be explicitly listed in
+  proguard/lite.txt or proguard/hubnet.txt?  (or anything
+  that no longer needs to be, or shouldn't be, explicitly listed?)
+- check that any classes that have serial version IDs have had
+  those IDs changed if the classes have changed in ways that
+  break serialization (note that you must check all superclasses
+  as well)
+  grep serialVersionUID src/**/*.java
+- change the hubnet server discovery port number?
+- run bin/findbadmath.scala to see if any java files aren't
+  doing strict floating point
+- run bin/findbadsource.scala to find various problems with Scala
+  and Java source files
+- run bin/findbadcollections.scala to see if any java files
+  are using the old outdated collections classes
+- if you're really feeling ambitious, then
+  in Eclipse, turn on more compiler warnings, then see if any of
+  them catch stuff
+- if any of the above checks failed & you fixed it, return
+  to the top of the list and run them all again to make sure
+  your fixes didn't cause new problems
+
+checks on models:
+- make sure no models have this comment:
+  ;; DOESN'T COMPILE IN CURRENT BUILD
+  if any do, fix them so they do compile!
+  grep -ri "DOESN'T COMPILE" models
+- grep for deprecated prims:
+  grep -lrI -- -nowrap models
+- are any of the models marked as being created in later versions
+  (that we entered into version.txt but then never built)?
+  if so, fix (and make sure the model works!)
+- do any of the models use secret prims?
+  grep -r __\[a-z\] models
+- grep the models for non-integer patch sizes and fix them
+  (use bin/findbadpatchsizes.scala)
+- run bin/findbadshapes.scala to see if any models have empty
+  Polygon objects in them
+- run bin/findbadwhatisit.scala to find too-long first paragraphs
+  of info tabs
+- run bin/findtabsinmodels.scala to see if any models have tabs
+  characters in them
+- run bin/findindentedinfo.scala to see if any models use indentation
+  in the info tab (which won't show up in the HTML view)
+- run bin/findbadinfoheaders.scala to see if any models have
+  nonstandard info tab headers
+- run bin/findbadinterfaces.scala to see if any models have
+  malformed interface tab sections
+- run bin/findbadgraphicswindows.scala to see if any models
+  have wrongly sized graphics windows
+- don't do "set breed" if you can do hatch-BREED or sprout-BREED
+  instead
+- run bin/spellcheckmodels.scala to do just that; you can make
+  false positives go away by adding words to dist/modelwords.txt
+- do any models have any of these mistakes?
+  grep -rl Netlogo models
+  grep -rl Hubnet models
+  grep -rli "model name here" models
+  grep -rli "modelnamehere" models
+- make sure no models use "show", "type", or "print";
+  you can test this by removing _show, _type, and _print from
+  resources/system/tokens.txt, then running
+  make test1 TEST=headless.TestCompileAll
+- make test-checksums  [if Bitten did this already that's fine]
+- make test-checksums3d  [if Bitten did this already that's fine]
+
+checks on docs:
+- bin/findundocumentedprims.py
+- bin/spellcheckdocs.scala
+  (make false positives go away by adding to dist/docwords.txt)
+- bin/tidydocs.scala
+- make sure we don't use &[rl][sd]quo; or &[mn]dash; because they
+  won't show up in the PDF (I guess it's htmldoc's fault?)
+  grep squo docs/*.html
+  grep dquo docs/*.html
+  grep mdash docs/*.html
+  grep ndash docs/*.html
+- generally make sure the docs are in sync with the software
+- check the model count in tutorial1.html ("over 200 models"); also
+  see if the list of sections in the Models Library has changed
+
+checks on everything:
+- bin/findbadexecutebits.scala
+  to see if any execute bits are mis-set.  if it finds any, remove
+  the file and re-update.  if that doesn't fix it, then you'll need
+  to ssh to the server and fix the execute bits in the repository.
+  then locally you'll need to remove the files and re-update; only
+  updating isn't enough.
+
+checks on software:
+- have we regressed on speed since the last release?
+  (use "__bench -1", or "__bench 3" or something if you're in
+  a hurry)
+- does everything work? even extras like shapes editor,
+  BehaviorSpace, system dynamics modeler, 3D, sound...
+- build the jars (use "make alljars");
+  check lite jar to make sure it hasn't swollen unreasonably
+  in size since the last build (maybe even look at the contents
+  to see if there are class files there that shouldn't be there)
+
+other:
+- is there a newer java distribution we can bundle? you can change it
+directly in release.sh (we're using the @@@ notation in the install4j
+config file)
+- newer Quaqua, Log4j, JOGL, asm, JMF, PicoContainer, others?

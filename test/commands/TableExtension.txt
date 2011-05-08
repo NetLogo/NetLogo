@@ -1,0 +1,108 @@
+TablesBasics
+  extensions [ table ]
+  O> set glob1 table:make
+  O> table:put glob1 0 "testvalue"
+  O> table:put glob1 "testkey" 1
+  table:length glob1 => 2
+  table:get glob1 "testkey" => 1
+  table:get glob1 0 => "testvalue"
+  table:keys glob1 => [0 "testkey"]
+  table:has-key? glob1 0 => true
+  table:has-key? glob1 3 => false
+  table:has-key? glob1 "testkey" => true
+  table:has-key? glob1 "somestring" => false
+  O> table:clear glob1
+  table:length glob1 => 0
+
+TablesToFromList
+  extensions [ table ]
+  O> set glob1 [[1 2] ["key" "value"]]
+  O> set glob2 table:from-list glob1
+  table:get glob2 "key" => "value"
+  table:get glob2 1 => 2
+  table:get glob2 4 => ERROR Extension exception: No value for 4 in table.
+  glob1 = table:to-list glob2 => true
+
+TablesAllowableTypes
+  extensions [ table ]
+  O> set glob1 table:make
+  O> table:put glob1 0 "number"
+  O> table:put glob1 "foo" "string"
+  O> table:put glob1 true "boolean"
+  O> table:put glob1 false "boolean"
+  O> table:put glob1 nobody "nobody" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 turtles "turtle set" => ERROR Extension exception: turtles is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 patches "patch set" => ERROR Extension exception: patches is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 links "link set" => ERROR Extension exception: links is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 turtle 0 "nonexistent turtle" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> crt 1
+  O> table:put glob1 turtle 0 "turtle" => ERROR Extension exception: (turtle 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> ct
+  O> table:put glob1 turtle 0 "dead turtle" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 [] "list"
+  O> table:put glob1 [1] "1"
+  O> table:put glob1 [1] "2"
+  table:get glob1 [1] => "2"
+  O> table:put glob1 [[1] ["two" "three"] [4]] "uh huh"
+  table:get glob1 [[1] ["two" "three"] [4]] => "uh huh"
+
+TablesAllowableTypes_2D
+  extensions [ table ]
+  O> set glob1 table:make
+  O> crt 1
+  O> table:put glob1 [patch-here] of turtle 0 "patch" => ERROR Extension exception: (patch 0 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+
+TablesAllowableTypes_3D
+  extensions [ table ]
+  O> set glob1 table:make
+  O> crt 1
+  O> table:put glob1 patch 0 0 0 "patch" => ERROR Extension exception: (patch 0 0 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+
+TablesEquality
+  extensions [ table ]
+  O> set glob1 table:make
+  glob1 = 0 => false
+  0 = glob1 => false
+  glob1 = [] => false
+  [] = glob1 => false
+  glob1 = "" => false
+  "" = glob1 => false
+  glob1 = glob1 => true
+  table:make = table:make => true
+  O> table:put glob1 1 10
+  glob1 = table:make => false
+  table:make = glob1 => false
+  O> set glob2 table:make
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob2 1 5
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob2 1 10
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> crt 1
+  O> table:put glob2 0 turtle 0
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob1 0 turtle 0
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> ct
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> table:put glob1 0 nobody
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> crt 1
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> table:put glob2 0 turtle 0
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+
+
+TablesOfTables
+  extensions [ table ]
+  O> set glob1 table:from-list ( list (list 0 table:from-list [[1 2] [3 4]]) )
+  (word glob1) => "{{table: [[0 {{table: [[1 2] [3 4]]}}]]}}"

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ `uname -s` = Linux ] ; then
+  export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.24
+else
+  if [ `uname -s` = Darwin ] ; then
+    export JAVA_HOME=`/usr/libexec/java_home -F -v1.5+`
+  else
+    export JAVA_HOME=/usr
+  fi
+fi
+
+export PATH=$JAVA_HOME/bin:$PATH
+JAVA=$JAVA_HOME/bin/java
+
+# UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
+# add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
+$JAVA \
+  -Xss1M -Xmx1536M -XX:MaxPermSize=256M \
+  -Dfile.encoding=UTF-8 \
+  $JAVA_OPTS \
+  -Djava.awt.headless=true \
+  -Dapple.awt.graphics.UseQuartz=false \
+  -classpath $JAVA_HOME/lib/tools.jar:`dirname $0`/sbt-launch.jar \
+  xsbt.boot.Boot "$@"

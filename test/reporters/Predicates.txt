@@ -1,0 +1,60 @@
+IsBoolean1
+  is-boolean? true => true
+
+IsBoolean2
+  is-boolean? false => true
+
+IsBoolean3
+  is-boolean? 3 => false
+
+IsBoolean4
+  is-boolean? "foo" => false
+
+IsBoolean5
+  is-boolean? [] => false
+
+IsString1
+  is-string? true => false
+
+IsString2
+  is-string? false => false
+
+IsString3
+  is-string? 3 => false
+
+IsString4
+  is-string? "foo" => true
+
+IsString5
+  is-string? [] => false
+
+IsNumber1
+  is-number? true => false
+
+IsNumber2
+  is-number? false => false
+
+IsNumber3
+  is-number? 3 => true
+
+IsNumber4
+  is-number? "foo" => false
+
+IsNumber5
+  is-number? [] => false
+
+IsList1
+  is-list? true => false
+
+IsList2
+  is-list? false => false
+
+IsList3
+  is-list? 3 => false
+
+IsList4
+  is-list? "foo" => false
+
+IsList5
+  is-list? [] => true
+

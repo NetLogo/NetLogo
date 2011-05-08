@@ -1,0 +1,8 @@
+CommandProcedure
+  to p1 crt 1 end
+  O> p1
+  count turtles => 1
+
+ReporterProcedure
+  to-report r1 report 5 end
+  r1 => 5

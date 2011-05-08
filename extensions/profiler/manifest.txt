@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: profiler
+Class-Manager: org.nlogo.extensions.profiler.ProfilerExtension
+NetLogo-Extension-API-Version: 5.0

@@ -1,0 +1,16 @@
+;; This config was generated using ensime-config-gen. Feel free to customize its contents manually. 
+
+(
+
+:server-root "~/Dropbox/CCL/ensime/"
+
+:project-package "org.nlogo"
+
+:use-sbt t
+
+:sources ("src/main" "src/test")
+
+:formatting-prefs (:doubleIndentClassDeclaration t
+                   :alignParameters t)
+
+)

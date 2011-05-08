@@ -1,0 +1,13 @@
+sdm-order-of-operations_2D
+  OPEN> test/models/sdm-order-of-operations.nlogo
+  O> setup
+  O> repeat 2 [ go ]
+  stock => 33
+
+sdm-dt-increment_2D
+  OPEN> test/models/sdm-dt-increment.nlogo
+  O> setup
+  ticks => 0
+  O> repeat 50 [ go ]
+  ticks => 0.5
+  results = "t= 0 y= 3 y-exact= 3\nt= 0.1 y= 3.3 y-exact= 3.30517\nt= 0.2 y= 3.61 y-exact= 3.6214\nt= 0.3 y= 3.931 y-exact= 3.94986\nt= 0.4 y= 4.264 y-exact= 4.29182\nt= 0.5 y= 4.611 y-exact= 4.64872\n" => true

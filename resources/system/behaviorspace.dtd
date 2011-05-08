@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='us-ascii'?>
+
+<!--
+This is the format for the BehaviorSpace experiment setups
+section of a NetLogo model file.
+-->
+
+<!ELEMENT experiments (experiment*)>
+
+<!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,(steppedValueSet|enumeratedValueSet)*)>
+<!ATTLIST experiment
+  name CDATA ""
+  repetitions CDATA "1"
+  runMetricsEveryStep (true|false) "true">
+
+<!ELEMENT setup (#PCDATA)>
+<!ELEMENT go (#PCDATA)>
+<!ELEMENT final (#PCDATA)>
+
+<!ELEMENT timeLimit EMPTY>
+<!ATTLIST timeLimit steps CDATA #REQUIRED >
+
+<!ELEMENT exitCondition (#PCDATA)>
+
+<!ELEMENT metric (#PCDATA)>
+
+<!ELEMENT steppedValueSet EMPTY>
+<!ATTLIST steppedValueSet
+  variable CDATA #REQUIRED
+  first    CDATA #REQUIRED
+  step     CDATA #REQUIRED
+  last     CDATA #REQUIRED>
+
+<!ELEMENT enumeratedValueSet (value+)>
+<!ATTLIST enumeratedValueSet variable CDATA #REQUIRED>
+
+<!ELEMENT value EMPTY>
+<!ATTLIST value value CDATA #REQUIRED>

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: test
+Class-Manager: UnitTestExtension
+NetLogo-Extension-API-Version: 5.0

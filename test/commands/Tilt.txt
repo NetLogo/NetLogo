@@ -1,0 +1,26 @@
+TiltDownZeroDoesntChangePitchOrRoll_3D
+  O> crt 1
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 0
+  T> tilt-down 0
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 0
+
+TiltUpZeroDoesntChangePitchOrRoll_3D
+  O> crt 1
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 0
+  T> tilt-up 0
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 0
+
+TiltDownOne_3D
+  O> crt 1
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 0
+  T> tilt-down 1
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 359
+  T> tilt-down 1
+  [roll] of turtle 0 => 0
+  [pitch] of turtle 0 => 358

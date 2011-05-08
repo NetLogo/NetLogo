@@ -1,0 +1,14 @@
+-include common.txt
+
+# since this file is in the project/build/proguard directory, we need to get back up to the root
+-basedirectory ../../..
+
+# just keep everything. so we aren't even really using the functionality of ProGuard here
+# except just as a way to build the jar.
+-dontshrink
+
+-libraryjars NetLogo.jar
+-libraryjars project/boot/scala-2.8.1/lib/scala-library.jar
+-libraryjars lib_managed/scala_2.8.1/test/scalatest-1.3.jar
+-injars target/scala_2.8.1/classes(org/nlogo/lab/**)
+-outjar BehaviorSpace.jar

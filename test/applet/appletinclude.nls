@@ -1,0 +1,4 @@
+;; this is a comment (we had a bug relating to comment handling in include files)
+to-report includedReporter
+  report true
+end

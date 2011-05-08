@@ -1,0 +1,97 @@
+The Center for Connected Learning and Computer-Based Modeling at
+Northwestern University is pleased to announce the release of
+NetLogo 5.0beta2, available for free download from our site at
+http://ccl.northwestern.edu/netlogo/ .
+
+This is a BETA release of NetLogo. As such, there may be a few bugs.
+Please try it out and send us bug reports at bugs@ccl.northwestern.edu
+and other suggestions and comments at
+feedback@ccl.northwestern.edu. We really value your feedback and look
+forward to hearing from you. Please let us know about bugs you find,
+features you want, etc.
+
+Most models created in earlier versions of NetLogo will work in
+NetLogo 5.0beta2, perhaps with minor updates to the code. If you have
+any trouble, please consult:
+http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
+
+As befits the number 5.0, this release has major new features.  Among
+those major features are: support for internationalization, smart
+plot widgets which eliminate the need for plotting code in the
+procedures tab, rich formatting features for the information tab, and
+support for functions as first class objects.  We invite and welcome
+your comments on the features as well as reports on bugs that you
+find.  We are excited by the opportunities resulting from the
+internationalization of NetLogo.  The work on internationalization is
+not complete and may not be fully complete in version 5.0.  We will
+need help from the user community in helping us localize items such
+as the menus, error messages, etc.  We are hoping those of you in
+locales other than U.S. English will try using NetLogo in your locale
+with your local character set and report to us about successes or
+problems that you find.
+
+The following is a (partial) list of changes made since NetLogo
+5.0beta1:
+  
+features:
+- import-world is a lot faster now
+- Programming Guide now has preliminary documentation on tasks
+
+tweaks:
+- renamed Run tab back to Interface
+- plotting code inside plots is now wrapped in with-local-randomness
+- frame rates may now be floating point, and non-positive values are
+  rejected
+- enabled Github-flavored blank line handling in Info tab
+
+fixes:
+- fixed regression where autoconversion wasn't happening properly for
+  3D models
+- fixed bug where placement of crosshairs in Settings dialog was
+  incorrect
+- fixed bug where multiple plot pens couldn't be without names
+- fixed bug "Open in Transition Guide" button opened wrong version
+- fixed regression where NetLogo wouldn't open on Java 5 (e.g. on Mac
+  OS X 10.4)
+- fixed regression where HubNet clients couldn't use the mouse in the
+  view
+- fixed intermittent plotting bug
+- fixed plot-related error when running BehaviorSpace experiment
+- fixed problem with UTF-8 characters in the applet
+
+
+Please send bug reports to bugs@ccl.northwestern.edu and other
+suggestions and comments to feedback@ccl.northwestern.edu.
+
+We also have three mailing lists for NetLogo:
+- netlogo-announce: occasional release announcements only
+- netlogo-users: discussions about NetLogo
+- netlogo-educators: discussions about teaching with NetLogo
+http://ccl.northwestern.edu/netlogo/ has info on all three.
+
+Credits:
+
+NetLogo was designed and authored by Uri Wilensky, project leader and
+director of the CCL.  The lead developer is Seth Tisue.  Many others
+have contributed greatly.  HubNet was jointly designed by Uri Wilensky
+and Walter Stroup.
+
+The CCL gratefully acknowledges over a decade of support for our
+NetLogo work. Much of that support came from the National Science
+Foundation -- grant numbers REC-9814682 and REC-0126227, with further
+support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
+DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
+DRL-RED-9552950, and DRL-REC-9632612. Additional support came from the
+Spencer Foundation, Texas Instruments, the Brady Fund, and the
+Northwestern Institute for Complex Systems.
+
+Enjoy,
+
+--Uri
+ 
+
+Uri Wilensky
+Professor of Learning Sciences, Computer Science and Complex Systems
+Director, Center for Connected Learning and Computer-Based Modeling
+email: uri@northwestern.edu
+WWW: http://ccl.northwestern.edu/uri/

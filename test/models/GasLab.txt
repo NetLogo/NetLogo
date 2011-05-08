@@ -1,0 +1,7 @@
+gaslab-gas-in-a-box_2D
+  OPEN> models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogo
+  O> random-seed 571
+  O> setup
+  avg-speed => 10
+  O> repeat 50 [ go ]
+  avg-speed => 9.760082324073991

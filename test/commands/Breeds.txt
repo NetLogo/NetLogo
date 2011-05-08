@@ -1,0 +1,38 @@
+TestIsBreed
+  is-frog? nobody => false
+  is-frog? turtle 0 => false
+  O> create-turtles 1
+  is-frog? turtle 0 => false
+  O> create-frogs 1
+  is-frog? turtle 1 => true
+  is-mouse? turtle 1 => false
+  O> set glob1 turtle 1
+  O> ask glob1 [ die ]
+  is-frog? glob1 => false
+  is-mouse? glob1 => false
+  O> set glob1 55
+  is-frog? glob1 => false
+
+IsLinkBreed
+  is-directed-link? nobody => false
+  is-directed-link? link 0 1 => false
+  O> crt 2
+  O> ask turtle 0 [ create-directed-link-to turtle 1 ]
+  O> ask turtle 0 [ create-undirected-link-with turtle 1 ]
+  is-directed-link? link 0 1 => false
+  is-directed-link? directed-link 0 1 => true
+  is-undirected-link? directed-link 0 1 => false
+  is-directed-link? undirected-link 0 1 => false
+  is-undirected-link? undirected-link 0 1 => true
+  O> set glob1 directed-link 0 1
+  is-directed-link? glob1 => true
+  is-undirected-link? glob1 => false
+
+SetBreedToNonBreed
+  O> crt 1 [ set breed turtles ]
+  O> crt 1 [ set breed frogs ]
+  O> crt 1 [ set breed patches ] => ERROR can't set BREED to a non-breed agentset
+  O> crt 1 [ set breed turtles with [true] ] => ERROR can't set BREED to a non-breed agentset
+  O> crt 1 [ set breed links ] => ERROR can't set BREED to a non-breed agentset
+  O> crt 1 [ set breed directed-links ] => ERROR can't set BREED to a non-breed agentset
+

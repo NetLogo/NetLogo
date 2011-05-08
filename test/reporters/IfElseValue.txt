@@ -1,0 +1,9 @@
+IfelseReportT
+  ifelse-value (2 = 2) ["here"] ["there"] => "here"
+
+IfelseReportF
+  ifelse-value (2 = 3) ["here"] ["there"] => "there"
+
+Occurrences
+  reduce [ifelse-value (?2 = 1) [?1 + 1] [?1]] (fput 0 [1 2 1 3 1 2 3 1 1 4 5 1]) => 6
+

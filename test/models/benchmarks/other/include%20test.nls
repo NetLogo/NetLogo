@@ -1,0 +1,3 @@
+to foo2
+  show "it works!!!!!"
+end

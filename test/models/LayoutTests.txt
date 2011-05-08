@@ -1,0 +1,15 @@
+Spring_2D
+  OPEN> test/models/Preferential Attachment Tester.nlogo
+  O> random-seed 0
+  O> setup
+  O> repeat 100 [ go ]
+  O> repeat 2000 [ layout ]
+  any? links with [ any? other links with [ bad-intersections self myself ] ] => false
+
+MagSpring_2D
+  OPEN> test/models/Preferential Attachment Tester.nlogo
+  O> random-seed 2342
+  O> setup
+  O> repeat 50 [ go ]
+  O> repeat 5000 [ mag-layout ]
+  any? links with [ any? other links with [ bad-intersections self myself ] ] => false

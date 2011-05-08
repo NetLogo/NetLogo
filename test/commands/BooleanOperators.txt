@@ -1,0 +1,10 @@
+ShortCircuitAnd
+  O> set glob1 0
+  (glob1 = 3) and (1 / glob1 = 0) => false
+  (glob1 = 0) and (1 / glob1 = 0) => ERROR division by zero
+
+ShortCircuitOr
+  O> set glob1 0
+  (glob1 = 0) or (1 / glob1 = 0) => true
+  (glob1 = 3) or (1 / glob1 = 0) => ERROR division by zero
+

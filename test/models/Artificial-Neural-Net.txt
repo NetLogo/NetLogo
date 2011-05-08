@@ -1,0 +1,25 @@
+# takes a while (12 seconds or so) - ST 4/1/11
+
+artificial-neural-net-or_2D
+  OPEN> models/Sample Models/Computer Science/Unverified/Artificial Neural Net.nlogo
+  O> random-seed 571
+  O> setup
+  O> set target-function "or"
+  O> repeat 250 [ train ]
+  epoch-error < 0.1 => true
+  test-success? 0 0 => true
+  test-success? 0 1 => true
+  test-success? 1 0 => true
+  test-success? 1 1 => true
+
+artificial-neural-net-xor_2D
+  OPEN> models/Sample Models/Computer Science/Unverified/Artificial Neural Net.nlogo
+  O> random-seed 571
+  O> setup
+  O> set target-function "xor"
+  O> repeat 250 [ train ]
+  epoch-error < 0.1 => true
+  test-success? 0 0 => true
+  test-success? 0 1 => true
+  test-success? 1 0 => true
+  test-success? 1 1 => true

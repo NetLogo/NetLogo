@@ -1,0 +1,48 @@
+# This will probably fail if the way "ask" interacts with
+# the RNG changes.  If this fails, all the model checksums
+# are likely to change, too. - ST 1/9/07
+AskRNG_2D
+  O> random-seed 0
+  O> ask n-of 4 patches [ sprout 1 ]
+  [(list xcor ycor color heading)] of turtle 0 => [3 3 95 57]
+  [(list xcor ycor color heading)] of turtle 1 => [5 2 95 200]
+  [(list xcor ycor color heading)] of turtle 2 => [3 2 125 236]
+  [(list xcor ycor color heading)] of turtle 3 => [-4 3 25 215]
+
+AskRNG_3D
+  O> random-seed 0
+  O> ask n-of 4 patches [ sprout 1 ]
+  [(list xcor ycor zcor color heading)] of turtle 0 => [-2 -4 1 35 186]
+  [(list xcor ycor zcor color heading)] of turtle 1 => [5 3 4 25 115]
+  [(list xcor ycor zcor color heading)] of turtle 2 => [3 4 5 35 249]
+  [(list xcor ycor zcor color heading)] of turtle 3 => [-5 3 0 85 348]
+
+# version 1: use 1-input procedure to terminate the recursion
+RecursiveCallInsideAsk1
+  to go1 crt 1 go2 5 crt 1 end
+  to go2 [x] ask turtle 0 [ set glob1 glob1 + 1 if x > 0 [ go2 (x - 1) ] ] end
+  O> set glob1 0
+  O> go1
+  count turtles => 2
+  glob1 => 6
+
+# version 2: 0-input procedure, use RNG to terminate the recursion
+RecursiveCallInsideAsk2
+  to go1 crt 1 go2 crt 1 end
+  to go2 ask turtle 0 [ set glob1 glob1 + 1 if random 10 > 0 [ go2 ] ] end
+  O> set glob1 0
+  O> random-seed 0
+  O> go1
+  count turtles => 2
+  glob1 => 27
+
+AskInsideReporterProcedure
+  to-report foo ask turtle 1 [ set glob1 who ] report 10 end
+  O> crt 2
+  [foo] of turtle 0 => 10
+  glob1 => 1
+
+AskConcurrentDoesntWorkOnSingleAgent
+  O> crt 1 [ set glob1 self ]
+  O> ask-concurrent glob1 [ set pcolor red ] => ERROR ASK-CONCURRENT expected input to be an agentset but got the turtle (turtle 0) instead.
+

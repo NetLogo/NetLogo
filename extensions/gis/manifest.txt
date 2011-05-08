@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: gis
+Class-Manager: org.myworldgis.netlogo.GISExtension
+NetLogo-Extension-API-Version: 5.0

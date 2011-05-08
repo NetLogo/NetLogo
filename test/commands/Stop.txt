@@ -1,0 +1,62 @@
+StopFromDynamicallyNestedRepeat
+  to p1 repeat 5 [ crt 1 p2 crt 1 ] end
+  to p2 repeat 2 [ stop error "oops 1" ] error "oops 2" end
+  O> p1
+  count turtles => 10
+
+ReportFromDynamicallyNestedForeach
+  to p1 repeat 5 [ crt 1 set glob1 p2 ] end
+  to-report p2 foreach [1 2 3] [ report 9 error "oops 1" ] error "oops 2" end
+  O> p1
+  count turtles => 5
+  glob1 => 9
+
+StopFromForeach
+  O> foreach [1 2 3 4] [ set glob1 glob1 + ?  if ? = 3 [ stop ] ] error "oops"
+  glob1 => 6 
+
+StopFromForeachInsideReporterProcedure
+  to-report foo foreach [1 2 3] [ stop ] end
+  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT
+
+StopFromNestedForeachInsideReporterProcedure
+  to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] end
+  O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT
+
+StopTask1
+  O> set glob1 task [ stop ]
+  to foo foreach [1 2] [ foreach [3 4] [ set glob2 5 run glob1 error "1" ] error "2" ] error "3" end
+  O> foo
+  glob2 => 5
+
+#StopInsideWithoutInterruption1
+#  to go crt 1 [ foo ] end
+#  to foo without-interruption [ stop ] end
+#  O> go
+#
+#StopInsideWithoutInterruption2
+#  to go crt 1 [ foo set glob1 glob1 + 1 ] set glob1 glob1 + 2 end
+#  to foo without-interruption [ set glob1 glob1 + 4 stop set glob1 glob1 + 8 ] set glob1 glob1 + 16 end
+#  O> set glob1 0 go
+#  glob1 => 7
+#
+#StopInsideWithoutInterruption3
+#  to go ask patch 0 0 [ foo set glob1 glob1 + 1 ] set glob1 glob1 + 2 end
+#  to foo without-interruption [ set glob1 glob1 + 4 stop set glob1 glob1 + 8 ] set glob1 glob1 + 16 end
+#  O> set glob1 0 go
+#  glob1 => 7
+
+StopInsideAsk1
+  to go crt 1 ask turtles [ stop hatch 10 ] crt 1 end
+  O> go
+  count turtles => 2
+
+StopInsideAsk2
+  to-report foo crt 1 ask turtles [ stop hatch 10 ] report count turtles end
+  foo => 1
+
+FallOffEndOfReporterProcedure
+  to-report foo1 report 0 end
+  to-report foo2 end
+  foo1 => 0
+  foo2 => ERROR reached end of reporter procedure without REPORT being called

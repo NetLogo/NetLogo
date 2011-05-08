@@ -1,0 +1,15 @@
+fire_2D
+  OPEN> models/Sample Models/Earth Science/Fire.nlogo
+  O> random-seed 473
+  O> setup
+  O> repeat 10 [ go ]
+  burned-trees => 765
+
+fire-resized_2D
+  OPEN> models/Sample Models/Earth Science/Fire.nlogo
+  O> random-seed 473
+  O> resize-world -10 10 -10 10
+  count patches => 441
+  O> setup
+  O> repeat 5 [ go ]
+  burned-trees => 47

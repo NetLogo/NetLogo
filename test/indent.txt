@@ -1,0 +1,147 @@
+# leading + and - are spaces the indenter should add or remove
+# how to run:
+#   make test1 TEST=app.TestSmartIndenter
+
+End
+to go
+--end
+
+IfOneLine
+to go
+++if true
+++[ show 1 ]
+end
+
+IfMultilines
+to go
+++if true
+++[
+++++show 1
+++]
+end
+
+IfPreindented
+to go
+  if true
+    [show 1]
+end
+
+IfElseOneLine
+to go
+++ifelse true
+++[ show 1 ]
+++[ show 2 ]
+end
+
+IfElseMultiLines
+to go
+++ifelse true
+++[
+++++show 1
+++]
+++[
+++++show 2
+++]
+end
+
+Globals
+globals [
+++glob1
+++glob2
+]
+
+AskWithIf
+ask turtles with
+[color = red]
+[
+++set color blue
+]
+
+NestedLists
+let my-list
+[
+++[0 1]
+++[0 2]
+]
+
+Comments1
+ask turtles [ fd 1 ] ;; I am a comment
++++++++++++++++++++++;;me too
+
+Comments2
+to foo ; comment
++++++++; comment
++ ask turtles [ fd 1 ]
+end
+
+EndKeywordShouldCloseAllOpeners
+to foo
+++ask [ [ [ [
+end
+to bar
+
+MultiLineLiteralList1
+let triangle [[75]
+  [95 64] [17 47 82]]
+
+Hatch1
+if true
+[ ask turtles [ ]
+++hatch 1 [ ]
+++update ]
+
+# failing. should be same as Hatch1 but hatch-mice is handled differently
+# from hatch. ticket #931 - ST 12/4/09
+#Hatch2
+#if true
+#[ ask turtles [ ]
+#++hatch-mice 1 [ ]
+#++update ]
+
+#
+# Here's some test cases I think we ought to be able to handle but don't currently.
+#
+
+# before uncommenting this we'll need a way of including a totally blank line in a test
+#DontMessWithBlankLines
+#ask turtles [
+#    <-- totally blank line (no characters, no spaces)
+#    <-- line with only some spaces on it
+#++foo
+
+#IfElseYetAnotherStyle
+#to bar
+#++ifelse foo [
+#++++x
+#++] [
+#++++y
+#++]
+#end
+
+#MultiLineCommand
+#let digit-sum carry +
+#++read-from-string item ? n1 +
+#++read-from-string item ? n2
+
+#WayIndentedCommands
+#ask turtles [ fd 1
+#++++++++++++++fd 10
+#]
+
+#CommentLinesOneStandaloneOneNot
+#to eat-grass  ;; sheep procedure
+#++;; sheep eat grass, turn the patch brown
+
+#
+# These are even more ambitious.
+#
+
+#MultiLineLiteralList2 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#let triangle [[75]
+#              [95 64] [17 47 82]]
+
+#MultiLineLiteralList3 -- think though, if we do this would it mess up any cases of brackets around blocks?
+#let x [[1 2 [3 31 32
+#             4 5]
+#        6]
+#       7]

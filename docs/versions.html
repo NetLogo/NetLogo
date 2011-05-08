@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<title>
+      NetLogo User Manual: What's New?
+    </title>
+    <link rel="stylesheet" href="netlogo.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <h1>
+      What's New?
+    </h1>
+    <div class="version">
+      NetLogo User Manual&nbsp;&nbsp;&nbsp;
+    </div>
+    <p>
+      Feedback from users is very valuable to us in designing and improving
+      NetLogo. We'd like to hear from you. Please send comments,
+      suggestions, and questions to <a href=
+      "mailto:feedback@ccl.northwestern.edu">feedback@ccl.northwestern.edu</a>,
+      and bug reports to <a href=
+      "mailto:bugs@ccl.northwestern.edu">bugs@ccl.northwestern.edu</a>.
+    <h2>
+      Version 5.0 (coming soon)
+    </h2>
+    <ul>
+      <li>features:
+        <ul>
+          <li>Info tabs can now include images and rich formatting, using
+          the &quot;Markdown&quot; markup language (#816)
+          <li>Unicode is supported throughout the application (#1058)
+          <li>GUI is internationalized (but not localized yet except for
+          U.S. English and a preliminary Spanish localization) (#812)
+          <li>plotting code can now be removed from the Code tab and put
+          inside each plot instead (#9)
+          <li>the default speed of models is now authorable (via a target
+          frame rate setting) (#72)
+          <li>buttons can now optionally disable until the tick counter
+          starts (e.g., to disable &quot;go&quot; until &quot;setup&quot;
+          is pressed) (#1003)
+          </ul>
+      <li>language changes:
+        <ul>
+          <li>&quot;tasks&quot; let you store code to be run later (#1093)
+            <ul>
+              <li>also known as first-class functions, closures, and
+              lambdas
+              <li>two new types: command tasks and reporter tasks
+              <li>new primitives: <tt>task</tt>, <tt>is-command-task?</tt>,
+              <tt>is-reporter-task?</tt>
+              <li>these existing primitives now accept tasks: <tt>run</tt>,
+              <tt>runresult</tt>, <tt>foreach</tt>, <tt>map</tt>,
+              <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
+              <tt>sort-by</tt>
+              </ul>
+          <li>improved overall list performance. <tt>lput</tt>,
+          <tt>last</tt>, <tt>butlast</tt>, <tt>item</tt>,
+          <tt>replace-item</tt> now take near-constant time instead of
+          linear time. internally lists are now hash tries instead of
+          singly linked lists (#1211)
+          <li>you must now use <tt>reset-ticks</tt> to start the tick
+          counter before using <tt>tick</tt> or <tt>tick-advance</tt>; in
+          existing models, <tt>clear-all</tt> is converted to
+          <tt>__clear-all-and-reset-ticks</tt>; the <tt>reset-ticks</tt>
+          part should be moved to the end of your setup procedure (#966,
+          #1173)
+          <li>plotting code in plots is normally triggered by
+          <tt>reset-ticks</tt> and <tt>tick</tt>, but may also be triggered
+          by new primitives <tt>setup-plots</tt> and <tt>update-plots</tt>
+          (#9)
+          <li>new primitive <tt>sort-on</tt> lets you say e.g. <tt>sort-on
+          [size] turtles</tt> (#62)
+          <li>new primitive <tt>error</tt> lets you cause a runtime error
+          (#1243)
+          <li>
+            <tt>random-normal</tt> now rejects negative standard deviations
+            (#732)
+          </ul>
+      <li>HubNet:
+        <ul>
+          <li>activities can now be run headless (#1059)
+          <li>
+            <tt>hubnet-set-client-interface</tt> is no longer required
+            (#1130)
+          <li>theoretical support for multiple simultaneous client types
+          (undocumented) (#1131)
+          <li>removed obsolete <tt>hubnet-broadcast-view</tt> primitive
+          (#945)
+          </ul>
+      <li>other fixes and changes:
+        <ul>
+          <li>tabs renamed to Interface/Info/Code (formerly
+          Interface/Information/Procedures); this change is experimental
+          and may not survive till the final release; we are interested in
+          your feedback on this renaming (#1063)
+          <li>NetLogo 3D now uses a .nlogo3d file extension instead of
+          .nlogo (#1117)
+          <li>
+            <tt>import-world</tt> is a lot faster now (#1272)
+          <li>the <tt>startup</tt> procedure no longer runs automatically
+          when running headless, or in background BehaviorSpace runs
+          (#1202)
+          <li>BehaviorSpace now uses an official Scala release (2.8.1)
+          rather than a nightly build (#1039)
+          <li>on Mac OS X, the app now runs in 64 bit mode by default (on
+          64 bit machines) (#778)
+          <li>upgraded installer for Windows users that we hope will fix
+          some installation issues (#838)
+          </ul>
+      </ul>
+    <h2>
+      Version 4.1.3 (April 2011)
+    </h2>
+    <ul>
+      <li>improvements:
+        <ul>
+          <li>the GIS extension now works in applets
+          <li>new Code Example: Label Position Example
+          </ul>
+      <li>fixes:
+        <ul>
+          <li>fixed bug in <tt>diffuse</tt> primitive causing it to fail in
+          vertical cylinder worlds
+          <li>fixed bugs where aborting a BehaviorSpace experiment could
+          cause an error or memory leak
+          <li>fixed bug where a turtle forever button could fail if
+          multiple buttons were pressed quickly
+          <li>fixed bug in <tt>scale-color</tt> primitive where rounding
+          could cause an out-of-range color to be reported
+          <li>fixed matrix extension bug where matrix creation primitives
+          didn't sanity check their inputs
+          <li>fixed GoGo extension bug where failed initialization of GoGo
+          led to subsequent errors
+          <li>fixed intermittent plotting bug
+          </ul>
+      <li>API changes:
+        <ul>
+          <li>controlling API now allows a new model to be opened in an
+          existing InterfaceComponent
+          <li>controlling API now supports attaching listeners to receive
+          notifications of user actions
+          </ul>
+      </ul>
+    <h2>
+      Version 4.1.2 (December 2010)
+    </h2>
+    <ul>
+      <li>bugfixes
+      </ul>
+    <h2>
+      Version 4.1.1 (August 2010)
+    </h2>
+    <ul>
+      <li>matrix extension
+      <li>
+        <tt>behaviorspace-run-number</tt> reporter
+      </ul>
+    <h2>
+      Version 4.1 (December 2009)
+    </h2>
+    <ul>
+      <li>BehaviorSpace is now multi-threaded so runs happen in parallel
+      <li>Controlling API now supports embedding of models in a surrounding
+      application
+      <li>automatic indenter for code in the Procedures tab
+      <li>Models Library now searchable
+      <li>links, turtles, and the drawing may now be partially transparent
+      (RGB colors only, 2D view only)
+      <li>agent monitors now include a mini-view centered on the agent
+      <li>
+        <tt>resize-world</tt> and <tt>set-patch-size</tt> for changing the
+        dimensions of the patch grid
+      <li>new bitmap and QuickTime extensions allow importing image and
+      video data
+      <li>browser-based alternate HubNet client
+      <li>individualized HubNet client views via client overrides
+      (<tt>hubnet-send-override</tt>) and client perspectives
+      (<tt>hubnet-send-watch</tt>, <tt>hubnet-send-follow</tt>)
+      </ul>
+    <h2>
+      Version 4.0 (September 2007)
+    </h2>
+    <ul>
+      <li>models run faster (models partially compiled into Java byte code)
+      <li>link agents for network models, geometry models, etc.
+      <li>logging records student actions for analysis
+      <li>tick counter keeps track of model time
+      <li>view updates may be tick-based or continuous
+      <li>speed slider can now &quot;fast forward&quot; a model
+      <li>input boxes for entering text, numbers, colors, or code
+      <li>model code may be split into multiple source files
+      <li>agents may have RGB colors
+      <li>slider bounds may be reporters
+      <li>much easier HubNet client authoring
+      <li>Mathematica-NetLogo link for controlling runs and analyzing
+      results
+      <li>new extensions: array, table, profiler
+      <li>GIS extension (added in NetLogo 4.0.4)
+      </ul>
+    <h2>
+      Version 3.1 (April 2006)
+    </h2>
+    <ul>
+      <li>topologies (wrapping at world edges now optional)
+      <li>randomized agentset ordering
+      </ul>
+    <h2>
+      Version 3.0 (September 2005)
+    </h2>
+    <ul>
+      <li>3D view (for 2D models)
+      <li>formatted Information tabs
+      <li>System Dynamics Modeler
+      <li>
+        <tt>follow</tt>, <tt>ride</tt> and <tt>watch</tt> commands for
+        tracking agents
+      <li>&quot;drawing layer&quot; for marks left by turtles
+      <li>GoGo extension for robotics and devices
+      </ul>
+    <h2>
+      Version 2.1 (December 2004)
+    </h2>
+    <ul>
+      <li>&quot;headless&quot; mode for command line operation
+      <li>&quot;action keys&quot; to trigger buttons by keypresses
+      <li>makes QuickTime movies of models
+      <li>
+        <tt>let</tt> and <tt>carefully</tt>
+      </ul>
+    <h2>
+      Version 2.0.2 (August 2004)
+    </h2>
+    <ul>
+      <li>extensions API for writing commands and reporters in Java
+      <li>controlling API for controlling NetLogo from external Java code
+      <li>sound extension for making sounds and music
+      </ul>
+    <h2>
+      Version 2.0 (December 2003)
+    </h2>
+    <ul>
+      <li>fast, flicker-free, non-grid-based graphics
+      <li>strict math mode for identical results cross-platform
+      </ul>
+    <h2>
+      Version 1.3 (June 2003)
+    </h2>
+    <ul>
+      <li>view control strip
+      <li>
+        <tt>run</tt>, <tt>runresult</tt>, <tt>map</tt>, <tt>foreach</tt>,
+        <tt>filter</tt>, <tt>reduce</tt>
+      </ul>
+    <h2>
+      Version 1.2 (March 2003)
+    </h2>
+    <ul>
+      <li>computers as HubNet clients
+      </ul>
+    <h2>
+      Version 1.1 (July 2002)
+    </h2>
+    <ul>
+      <li>&quot;Save as Applet&quot;
+      </ul>
+    <h2>
+      Version 1.0 (April 2002)
+    </h2>
+    <ul>
+      <li>initial release (after a series of betas)
+      </ul>
+

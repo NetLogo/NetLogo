@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="true" />
+    <option name="OPTION_NAVIGATOR" value="true" />
+    <option name="OPTION_INDEX" value="true" />
+    <option name="OPTION_SEPARATE_INDEX" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
+    <option name="OPTION_DEPRECATED_LIST" value="true" />
+    <option name="OTHER_OPTIONS" value="" />
+    <option name="HEAP_SIZE" />
+    <option name="LOCALE" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+  </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="NetLogo" />
+  </component>
+  <component name="ProjectResources">
+    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches">
+                    <value>
+                      <list>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1261602382657" />
+                          <option name="revision" value="45212" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/4.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1261579319992" />
+                          <option name="revision" value="45201" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/4.0" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1257971284390" />
+                          <option name="revision" value="44818" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/4.2-plotting" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1256225209278" />
+                          <option name="revision" value="44663" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/plotting3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1204237529942" />
+                          <option name="revision" value="38413" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1198044374130" />
+                          <option name="revision" value="37345" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/3.0" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1198044353189" />
+                          <option name="revision" value="37344" />
+                          <option name="url" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches/2.0" />
+                        </SvnBranchItem>
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/branches" />
+                  <option value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn+ssh://monk.ccl.northwestern.edu/srv/svnrepos/netlogo/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>
+

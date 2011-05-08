@@ -1,0 +1,9 @@
+Nobody1
+  nobody => nobody
+
+Nobody2
+  is-agent? nobody => false
+
+Nobody3
+  nobody = nobody => true
+

@@ -1,0 +1,26 @@
+Matrix
+  extensions [matrix]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6]]
+  (word glob1) => "{{matrix:  [ [ 1 2 3 ][ 4 5 6 ] ]}}"
+  matrix:pretty-print-text glob1 => "[[ 1  2  3 ]\n [ 4  5  6 ]]"
+  matrix:dimensions glob1 => [2 3]
+  matrix:get glob1 1 2 => 6
+  O> matrix:set glob1 1 2 10
+  (word glob1) => "{{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}"
+  O> set glob2 matrix:make-identity 3
+  (word glob2) => "{{matrix:  [ [ 1 0 0 ][ 0 1 0 ][ 0 0 1 ] ]}}"
+  (word matrix:times glob1 glob2) => "{{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}"
+  O> set glob3 (matrix:set-and-report glob2 1 1 -1)
+  (word glob3) => "{{matrix:  [ [ 1 0 0 ][ 0 -1 0 ][ 0 0 1 ] ]}}"
+  (word matrix:times glob1 glob3) => "{{matrix:  [ [ 1 -2 3 ][ 4 -5 10 ] ]}}"
+  matrix:to-row-list (matrix:plus glob2 glob3) => [[2 0 0] [0 0 0] [0 0 2]]
+
+Dimensions
+  extensions [matrix]
+  matrix:dimensions matrix:from-row-list [[1 2 3] [4 5 6]] => [2 3]
+
+Regress
+  extensions [matrix]
+  O> set glob1 [20 25 28 32 35 39]
+  O> set glob2 n-values length glob1 [?]
+  matrix:regress matrix:from-column-list (list glob1 glob2) => [[20.619047619047638 3.6857142857142824] [0.9953743395474031 238.83333333333331 1.1047619047619044]]

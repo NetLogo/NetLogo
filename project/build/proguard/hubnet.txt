@@ -1,0 +1,52 @@
+-include common.txt
+
+# since this file is in the project/build/proguard directory, we need to get back up to the root
+-basedirectory ../../..
+
+# pulling in ordinary Scala objects costs very little in size, but
+# when we starting pulling in stuff from the Scala standard library,
+# the costs escalate somewhat, so be careful - ST 2/21/09, 8/12/09
+-libraryjars project/boot/scala-2.8.1/lib/scala-library.jar
+
+-injars target/scala_2.8.1/classes
+
+-injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/svnversion.txt,system/color-translation.txt)
+
+-outjar HubNet.jar
+
+-keep public class org.nlogo.hubnet.client.App {
+     public static void main(...);
+}
+
+# this alternate main method isn't used in production, but we use it in testing sometimes
+-keep public class org.nlogo.hubnet.client.ClientApplet {
+     public static void main(...);
+}
+
+# the Event stuff works by reflection so we need to explicitly include these
+-keep public class * extends org.nlogo.window.Event
+
+# this is a bit of magic needed to make Java enums work, taken from the ProGuard manual
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# HubNet uses java.io.Serializable, so we need this, taken from the ProGuard manual
+-keepclassmembers class org.nlogo.** implements java.io.Serializable {
+    static final long serialVersionUID;
+    static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+-keep public class org.nlogo.hubnet.mirroring.* {
+ *;
+}
+
+-keep public class org.nlogo.widget.* {
+ *;
+}

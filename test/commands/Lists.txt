@@ -1,0 +1,33 @@
+ModesTurtles1
+  O> crt 2
+  length modes (list turtle 0 turtle 1 turtle 0) => 1
+  [who] of first modes (list turtle 0 turtle 1 turtle 0) => 0
+  O> ask turtles [ die ]
+  modes (list 5 5 5 5 turtle 0 turtle 1 turtle 2 nobody) => [5 nobody]
+
+ForeachInsideRecursiveProcedure1
+  to-report foo [l] let ret [] foreach l [ ifelse is-list? ? [ let nlist foo ? set ret lput nlist ret ] [ set ret lput ? ret ] ] report ret end
+  foo [[1 2] [[3 4] 5]] => [[1 2] [[3 4] 5]]
+
+NValuesComplex
+  O> random-seed 478932
+  map [(list (first ? + 1))] n-values 10 [ifelse-value (random 2 = 0) [[1]] [[2]]] => [[2] [3] [3] [3] [2] [3] [2] [3] [2] [3]]
+
+RemoveBug997FirstArgMustBeStringIfSecondArgIsString
+  remove [] "" => ERROR REMOVE expected input to be a string but got the list [] instead.
+
+Remove
+  remove 7 [2 7 4 7 "Bob"] => [2 4 "Bob"]
+  remove "to" "phototonic" => "phonic"
+
+RemoveDuplicatesNegativeZero1
+  remove-duplicates list 0 (- count turtles) => [0]
+
+RemoveDuplicatesNegativeZero2
+  remove-duplicates list [0] (list (- count turtles)) => [[0]]
+
+FilterTypeError
+  to-report foo [x] report 5 end
+  filter [foo ?] [] => []
+  filter [foo ?] [1] => ERROR FILTER expected input to be a TRUE/FALSE but got the number 5 instead.
+

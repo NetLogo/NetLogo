@@ -1,0 +1,49 @@
+package org.nlogo.prim.etc ;
+
+import org.nlogo.api.LogoException;
+import org.nlogo.api.LogoList;
+import org.nlogo.nvm.ArgumentTypeException;
+import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.Reporter;
+import org.nlogo.nvm.Syntax;
+
+public final strictfp class _last
+	extends Reporter
+	implements org.nlogo.nvm.Pure
+{
+	@Override
+	public Syntax syntax()
+	{
+		int[] right = { Syntax.TYPE_LIST | Syntax.TYPE_STRING} ;
+		int ret = Syntax.TYPE_WILDCARD ;
+		return Syntax.reporterSyntax( right , ret ) ;
+	}
+	@Override
+	public Object report( final org.nlogo.nvm.Context context ) throws LogoException
+	{
+		Object obj = args[ 0 ].report( context ) ;
+		if( obj instanceof LogoList )
+		{
+			LogoList list = (LogoList) obj ;
+			if( list.size() == 0 )
+			{
+				throw new EngineException( context , this , "list is empty" ) ;
+			}
+			return list.get( list.size() - 1 ) ;
+		}
+		else if( obj instanceof String )
+		{
+			String string = ( String ) obj ;
+			if( string.length() == 0 )
+			{
+				throw new EngineException( context , this , "string is empty" ) ;
+			}
+			return string.substring( string.length() - 1 ) ;
+		}
+		else
+		{
+			throw new ArgumentTypeException
+				( context , this , 0 , Syntax.TYPE_LIST | Syntax.TYPE_STRING , obj ) ;
+		}
+	}
+}

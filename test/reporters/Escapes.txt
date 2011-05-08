@@ -1,0 +1,15 @@
+EscapeSequence1
+  "\"" => "\""
+
+EscapeSequence2
+  "\n" => "\n"
+
+EscapeSequence3
+  "\t" => "\t"
+
+EscapeSequence4
+  "\\" => "\\"
+
+AllEscapes
+  "\"\n\t\\" => "\"\n\t\\"
+

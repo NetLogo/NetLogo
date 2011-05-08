@@ -1,0 +1,76 @@
+And1
+  true and true => true
+
+And2
+  true and false => false
+
+And3
+  false and true => false
+
+And4
+  false and false => false
+
+And5
+  true and __boom => ERROR boom!
+
+And6
+  false and __boom => false
+
+And7
+  __boom and true => ERROR boom!
+
+Or1
+  true or true => true
+
+Or2
+  true or false => true
+
+Or3
+  false or true => true
+
+Or4
+  false or false => false
+
+Or5
+  false or __boom => ERROR boom!
+
+Or6
+  true or __boom => true
+
+Or7
+  __boom or true => ERROR boom!
+
+Or8
+  __boom or false => ERROR boom!
+
+Not1
+  not true => false
+
+Not2
+  not false => true
+
+Not3
+  not __boom => ERROR boom!
+
+Xor1
+  true xor true => false
+
+Xor2
+  true xor false => true
+
+Xor3
+  false xor true => true
+
+Xor4
+  false xor false => false
+
+Xor5
+  true xor __boom => ERROR boom!
+
+Xor6
+  __boom xor false => ERROR boom!
+
+*Xor7
+  __boom xor false => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure __EVALUATOR

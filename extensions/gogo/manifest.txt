@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: gogo
+Class-Manager: org.nlogo.extensions.gogo.GoGoExtension
+NetLogo-Extension-API-Version: 5.0

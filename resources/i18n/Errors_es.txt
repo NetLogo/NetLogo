@@ -1,0 +1,12 @@
+# No se puede establecer XCOR tortuga variable foo no-número
+org.nlogo.agent.Agent.wrongTypeOnSetError = no se puede almacenar variable {1} de {0} al valor no-{2}, {3}
+org.nlogo.agent.Agent.rgbListSizeError.3 = Una lista rgb debe contener tres números entre 0 y 255
+org.nlogo.agent.Agent.rgbListSizeError.3or4 = Una lista rgb debe contener 3 o 4 números entre 0 y 255
+org.nlogo.agent.Agent.rgbValueError = Los valores RGB deben ser entre 0 y 255
+
+org.nlogo.agent.BooleanConstraint.bool = Este valor debe ser un valor booleano.
+org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = Una tortuga no puede irse más allá del borde del mundo.
+org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = El siguiente archivo no tiene un formato reconocido de imágenes: {0}
+
+# Value must be one of: ["Hello" 5 [1 2 3]]
+org.nlogo.agent.ChooserConstraint.invalidValue = El valor debe ser uno de los siguientes: {0}

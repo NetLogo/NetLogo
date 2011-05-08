@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: sample-scala
+Class-Manager: SampleScalaExtension
+NetLogo-Extension-API-Version: 5.0

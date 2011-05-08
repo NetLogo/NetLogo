@@ -1,0 +1,135 @@
+*StackTraces-Simple
+  O> print __boom => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure __EVALUATOR
+
+*StackTraces-Simple2
+  to go print __boom end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Other-Calls
+  to nothing end
+  to go nothing nothing print __boom end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Before-Other-Calls
+  to nothing end
+  to go print __boom nothing nothing end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Surrounded-By-Other-Calls
+  to nothing end
+  to go nothing nothing print __boom nothing nothing end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Before-Tick
+  to go print __boom tick end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Tick
+  to go reset-ticks tick print __boom end
+  O> go => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Other-Calls-Nested
+  to nothing end
+  to go2 go end
+  to go nothing nothing print __boom end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Other-Calls-Nested-2
+  to nothing end
+  to go2 nothing go nothing end
+  to go nothing nothing print __boom end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Before-Other-Calls-Nested
+  to nothing end
+  to go2 go end
+  to go print __boom nothing nothing end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Surrounded-By-Other-Calls-Nested
+  to nothing end
+  to go2 go end
+  to go nothing nothing print __boom nothing nothing end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Before-Tick-Nested
+  to go2 go end
+  to go print __boom tick end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-Before-Tick-Nested-2
+  to go2 go tick end
+  to go print __boom tick end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Tick-Nested
+  to go2 go end
+  to go reset-ticks tick print __boom end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Tick-Nested-2
+  to go2 go tick end
+  to go reset-ticks tick print __boom end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+
+*StackTraces-Error-After-Tick-Nested-3
+  to go2 reset-ticks tick go tick end
+  to go reset-ticks tick print __boom end
+  O> go2 => STACKTRACE boom!\
+  error while observer running __BOOM\
+    called by procedure GO\
+    called by procedure GO2\
+    called by procedure __EVALUATOR
+

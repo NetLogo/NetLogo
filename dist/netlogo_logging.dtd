@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT eventSet (event*)>
+<!ATTLIST eventSet
+  username                CDATA #REQUIRED
+  ipaddress               CDATA #REQUIRED
+  modelName               CDATA #REQUIRED
+  version                 CDATA #REQUIRED
+>
+
+<!ELEMENT event (action?, name?, value?, parameters?, errorMessage?, releaseType? agentType?, code?, message?) >
+
+<!ATTLIST event
+    logger     CDATA #REQUIRED
+    level      CDATA #REQUIRED
+    timestamp  CDATA #REQUIRED
+    type   (slider|switch|button|chooser|code|globals|speed|widget|turtle|link|ticks) #REQUIRED
+>
+
+<!ELEMENT action (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT releaseType ("once"|"user"|"code")>
+<!ELEMENT errorMessage (#PCDATA)>
+<!ATTLIST errorMessage
+    startPos CDATA #REQUIRED
+    endPos   CDATA #REQUIRED
+>
+<!ELEMENT agentType ("O"|"T"|"P"|"L")>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT message (#PCDATA)>
+
+<!ELEMENT parameters (min, max, increment)>
+
+<!ELEMENT min (#PCDATA)>
+<!ELEMENT max (#PCDATA)>
+<!ELEMENT increment (#PCDATA)>
