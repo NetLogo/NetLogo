@@ -96,14 +96,14 @@ org.nlogo.prim.etc.$common.cantTakeLogarithmOf = Can''t take logarithm of {0}.
 org.nlogo.prim.etc._log.notAValidBase = {0} isn''t a valid base for a logarithm.
 
 org.nlogo.prim.etc.$common.emptyListInput = {0} got an empty list as input.
-org.nlogo.prim.etc.$common.emptyStringInput = {0} got an empty String as input.
+org.nlogo.prim.etc.$common.emptyStringInput = {0} got an empty string as input.
 
 org.nlogo.prim.etc.$common.firstInputCantBeNegative = First input to {0} can''t be negative.
 org.nlogo.prim.etc.$common.requestMoreItemsThanInList = Requested {0} random items from a list of length {1}.
 
 org.nlogo.prim.etc.$common.negativeIndex = {0} isn''t greater than or equal to zero.
-org.nlogo.prim.etc.$common.indexExceedsListSize = Can''t find element {0} of the list {1} which is only of length {2}.
-org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of the String {1} which is only of length {2}.
+org.nlogo.prim.etc.$common.indexExceedsListSize = Can''t find element {0} of the list {1}, which is only of length {2}.
+org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of the string {1}, which is only of length {2}.
 
 org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}
 

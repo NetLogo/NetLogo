@@ -2,7 +2,7 @@ NumberFormats
   [3 -3 3. -3. -.3 -0.3 .3 0.3] => [3 -3 3 -3 -0.3 -0.3 0.3 0.3]
 
 Sqrt1
-  sqrt -1 => ERROR the square root of -1.0 is an imaginary number
+  sqrt -1 => ERROR The square root of -1.0 is an imaginary number.
 
 Sqrt2
   sqrt 0.0 => 0
@@ -11,7 +11,7 @@ Sqrt3
   sqrt 0 => 0
 
 Sqrt4
-  sqrt -0.1 => ERROR the square root of -0.1 is an imaginary number
+  sqrt -0.1 => ERROR The square root of -0.1 is an imaginary number.
 
 Sqrt5
   sqrt 25 => 5
@@ -29,22 +29,22 @@ Round
   map [round ?] [-1.5 -1 -0.5 0 0.5 1 1.5] => [-1 -1 0 0 1 1 2]
 
 DivByZero1
-  3 / 0 => ERROR division by zero
+  3 / 0 => ERROR Division by zero.
 
 DivByZero2
-  0 / 0 => ERROR division by zero
+  0 / 0 => ERROR Division by zero.
 
 DivByZero3
-  -1 / 0 => ERROR division by zero
+  -1 / 0 => ERROR Division by zero.
 
 DivByZero4
-  3 / 0.0 => ERROR division by zero
+  3 / 0.0 => ERROR Division by zero.
 
 DivByZero5
-  0 / 0.0 => ERROR division by zero
+  0 / 0.0 => ERROR Division by zero.
 
 DivByZero6
-  -1 / 0.0 => ERROR division by zero
+  -1 / 0.0 => ERROR Division by zero.
 
 Acos1
   map [acos ?] [0 1 -1] => [90 0 180]
@@ -74,7 +74,7 @@ Atan3
   atan 3 0 => 90
 
 Atan4
-  atan 0 0 => ERROR atan is undefined when both inputs are zero
+  atan 0 0 => ERROR atan is undefined when both inputs are zero.
 
 Atan5
   atan -3 0 => 270
@@ -224,10 +224,10 @@ Log4
   log 1 10.0 => 0
 
 Log5
-  log 9 0 => ERROR 0.0 isn't a valid base for a logarithm
+  log 9 0 => ERROR 0.0 isn't a valid base for a logarithm.
 
 Log6
-  log 9 -2 => ERROR -2.0 isn't a valid base for a logarithm
+  log 9 -2 => ERROR -2.0 isn't a valid base for a logarithm.
 
 Log7
   log 100 10 + 2 => 4
@@ -236,7 +236,7 @@ Log8
   log 216 6 => 3.0000000000000004
 
 Max1
-  max [] => ERROR can't find the maximum of a list with no numbers: []
+  max [] => ERROR Can't find the maximum of a list with no numbers: []
 
 Max2
   max [3] => 3
@@ -254,7 +254,7 @@ Max6
   max [373 37 373733 337.0 37] => 373733
 
 Min1
-  min [] => ERROR can't find the minimum of a list with no numbers: []
+  min [] => ERROR Can't find the minimum of a list with no numbers: []
 
 Min2
   min [3] => 3
@@ -293,16 +293,16 @@ StdDev2
   standard-deviation [4 4 4 4] => 0
 
 StdDev3
-  standard-deviation [] => ERROR can't find the standard deviation of a list without at least two numbers: []
+  standard-deviation [] => ERROR Can't find the standard deviation of a list without at least two numbers: []
 
 StdDev4
-  standard-deviation [1] => ERROR can't find the standard deviation of a list without at least two numbers: [1]
+  standard-deviation [1] => ERROR Can't find the standard deviation of a list without at least two numbers: [1]
 
 Variance1
-  variance [] => ERROR can't find the variance of a list without at least two numbers: []
+  variance [] => ERROR Can't find the variance of a list without at least two numbers: [].
 
 Variance2
-  variance [5] => ERROR can't find the variance of a list without at least two numbers: [5]
+  variance [5] => ERROR Can't find the variance of a list without at least two numbers: [5].
 
 Variance3
   variance [3 3 3 3] => 0
@@ -335,7 +335,7 @@ Tan5
   tan 315 => -1.0000000000000004
 
 Median1
-  median [] => ERROR can't find the median of a list with no numbers: []
+  median [] => ERROR Can't find the median of a list with no numbers: [].
 
 Median2
   median [1] => 1

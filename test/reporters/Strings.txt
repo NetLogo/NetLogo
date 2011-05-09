@@ -2,13 +2,13 @@ StrButFirst1
   bf "string" => "tring"
 
 StrButFirst2
-  bf "" => ERROR bf got an empty string as input
+  bf "" => ERROR bf got an empty string as input.
 
 StrButLast1
   bl "string" => "strin"
 
 StrButLast2
-  bl "" => ERROR bl got an empty string as input
+  bl "" => ERROR bl got an empty string as input.
 
 StrEmpty1
   empty? "" => true
@@ -74,13 +74,13 @@ StrRemoveItem3
   remove-item 2 "123" => "12"
 
 StrRemoveItem4
-  remove-item 3 "123" => ERROR can't find element 3 of the string 123, which is only of length 3
+  remove-item 3 "123" => ERROR Can't find element 3 of the string 123, which is only of length 3.
 
 StrRemoveItem5
-  remove-item -1 "123" => ERROR -1 isn't greater than or equal to zero
+  remove-item -1 "123" => ERROR -1 isn't greater than or equal to zero.
 
 StrRemoveItem6
-  remove-item 0 "" => ERROR can't find element 0 of the string , which is only of length 0
+  remove-item 0 "" => ERROR Can't find element 0 of the string , which is only of length 0.
 
 StrReplaceItem
   replace-item 3 "string" "o" => "strong"
