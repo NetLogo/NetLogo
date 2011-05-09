@@ -40,13 +40,7 @@
 /extensions/gis/jai_core-1.1.3.jar
 /extensions/gis/jscience-4.2.jar
 /extensions/gis/jts-1.9.jar
-/extensions/gogo/Makefile
-/extensions/gogo/build
-/extensions/gogo/classes
-/extensions/gogo/gogo.jar
-/extensions/gogo/gogo.zip
-/extensions/gogo/RXTXcomm.jar
-/extensions/gogo/lib
+/extensions/gogo
 /extensions/matrix
 /extensions/profiler/Makefile
 /extensions/profiler/build
