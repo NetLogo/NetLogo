@@ -50,6 +50,7 @@ GRAPHICS-WINDOW
 0
 0
 ticks
+30.0
 
 BUTTON
 105
@@ -88,10 +89,10 @@ NIL
 BUTTON
 71
 204
-227
+237
 237
 NIL
-set size size + 0.00001
+set size size + 0.0001
 T
 1
 T
@@ -105,10 +106,10 @@ NIL
 BUTTON
 71
 238
-227
+237
 271
 NIL
-set size size - 0.00001
+set size size - 0.0001
 T
 1
 T
@@ -503,7 +504,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta3
 @#$#@#$#@
 setup
 @#$#@#$#@
