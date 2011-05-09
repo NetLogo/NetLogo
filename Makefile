@@ -141,8 +141,7 @@ clean:
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
 realclean:
-	if [ -d .svn ]; then svn status --no-ignore | grep '^[?I]' | cut -c 9- | tr '\n' '\0' | xargs -0 rm -rf ; fi
-	if [ -d .git ]; then git clean -fdX ; fi
+	git clean -fdX
 
 # benchmarking
 .PHONY: benches
