@@ -53,7 +53,7 @@ strictfp class ShapeManager
 				
 		quadric = glu.gluNewQuadric() ;
         glu.gluQuadricNormals( quadric , GLU.GLU_SMOOTH ) ;
-		lastList = Builtins.add( gl , glu , shapes , shapeMap , quadric ) ;
+		lastList = new Builtins(gl, glu, quadric).add( shapes , shapeMap ) ;
 		this.turtleShapeList = turtleShapeList ;
 		this.linkShapeList = linkShapeList ;
 		addModelShapes( gl , glu ) ;
