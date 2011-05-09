@@ -34,7 +34,7 @@ public final strictfp class _git
 		}
 		try
 		{
-			java.io.File git = new java.io.File( ".git" ) ) ;
+			java.io.File git = new java.io.File( ".git" ) ;
 			if( ! git.exists() || ! git.isDirectory() )
 			{
 				throw new EngineException
