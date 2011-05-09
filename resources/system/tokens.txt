@@ -11,6 +11,7 @@ C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __fire etc._fire
 C __foreverbuttonend etc._foreverbuttonend
+C __git etc._git
 C __hubnet-broadcast-user-message hubnet._hubnetbroadcastusermessage
 C __hubnet-clear-plot hubnet._hubnetclearplot
 C __hubnet-create-client hubnet._hubnetcreateclient
@@ -59,7 +60,6 @@ C __set-line-thickness etc._setlinethickness
 C __spanish etc._spanish
 C __stderr etc._stderr
 C __stdout etc._stdout
-C __svn etc._svn
 C __thunk-did-finish etc._thunkdidfinish
 C __turtlecode etc._turtlecode
 C __updatemonitor gui._updatemonitor
