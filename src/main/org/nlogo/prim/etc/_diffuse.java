@@ -3,6 +3,7 @@ package org.nlogo.prim.etc ;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.PatchException;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -37,8 +38,9 @@ public final strictfp class _diffuse
 		double diffuseparam = argEvalDoubleValue( context , 0 ) ;
 		if( diffuseparam < 0.0 || diffuseparam > 1.0 )
 		{
-			throw new EngineException
-				( context , this , diffuseparam + " is not in the range 0.0 to 1.0" ) ;
+            throw new EngineException
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.$common.paramOutOfBounds",
+                        new String [] {new Double(diffuseparam).toString()})) ;
 		}
 		try
 	    {

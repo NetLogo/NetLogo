@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -32,7 +33,7 @@ public final strictfp class _butlast
 			if( list.isEmpty() )
 			{
 				throw new EngineException
-					( context , this , displayName() + " got an empty list as input" ) ;
+                        ( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyListInput", new String [] {displayName()}));
 			}
 			return list.butLast() ;
 		}
@@ -42,7 +43,7 @@ public final strictfp class _butlast
 			if( string.length() == 0 )
 			{
 				throw new EngineException
-					( context , this , token().name() + " got an empty string as input" ) ;
+                        ( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyStringInput", new String [] {token().name()}));
 			}
 			return string.substring( 0 , string.length() - 1 ) ;
 		}

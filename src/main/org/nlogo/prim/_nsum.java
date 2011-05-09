@@ -51,7 +51,7 @@ public final strictfp class _nsum extends Reporter
 				throw new EngineException
 					( context , this , 
 					  "can't find the sum of a list that contains non-numbers " 
-					  + Dump.logoObject( value ) 
+					  + Dump.logoObject( value )
 					  + " is a " + Syntax.typeName( value ) + "." ) ;
 			}
 

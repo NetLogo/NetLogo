@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -41,12 +42,8 @@ public final strictfp class _setxy
         catch( org.nlogo.api.AgentException e )
         {
 			throw new EngineException
-				( context , this ,
-				  "The point [ "
-				  + newx.doubleValue() + " , "
-				  + newy.doubleValue() + " ] "
-				  + "is outside of the boundaries of the world "
-				  + "and wrapping is not permitted in one or both directions." ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._setxy.pointOutsideWorld",
+                        new String [] {new Double(newx.doubleValue()).toString(), new Double(newy.doubleValue()).toString()}));
         }
         context.ip = next ;
 	}
@@ -62,12 +59,8 @@ public final strictfp class _setxy
         catch( org.nlogo.api.AgentException e )
         {
 			throw new EngineException
-				( context , this ,
-				  "The point [ "
-				  + xvalue + " , "
-				  + yvalue + " ] "
-				  + "is outside of the boundaries of the world "
-				  + "and wrapping is not permitted in one or both directions." ) ;
+				  		( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._setxy.pointOutsideWorld",
+                        new String [] {new Double(xvalue).toString(), new Double(yvalue).toString()}));
         }
         context.ip = next ;
 	}

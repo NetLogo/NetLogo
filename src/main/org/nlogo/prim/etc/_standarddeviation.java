@@ -3,6 +3,7 @@ package org.nlogo.prim.etc ;
 import java.util.Iterator;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -41,8 +42,9 @@ public final strictfp class _standarddeviation extends Reporter implements Pure
 		if( listSize - badElts < 2 )
 		{
 			throw new EngineException
-				( context , this , "can't find the standard deviation of a list without at least two numbers: " +
-				  Dump.logoObject( list ) ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem",
+                        new String [] { Dump.logoObject( list )})
+                ) ;
 		}
 		double mean = sum / (listSize - badElts) ;
 		double squareOfDifference = 0 ;

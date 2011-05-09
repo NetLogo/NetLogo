@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -24,12 +25,11 @@ public final strictfp class _distance extends Reporter
 		if( otherAgent instanceof org.nlogo.agent.Link )
 		{
 			throw new EngineException
-				( context , this ,
-				  "expected this to be a turtle or a patch but got a link instead" ) ;
+				( context , this , I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink")) ;
 		}		
 		if( otherAgent.id == -1 )
 		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead") ) ;
 		}
 		return world.protractor().distance( context.agent , otherAgent , true ) ; // true = wrap
 	}

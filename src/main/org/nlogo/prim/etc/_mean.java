@@ -3,6 +3,7 @@ package org.nlogo.prim.etc ;
 import java.util.Iterator;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -31,11 +32,9 @@ public final strictfp class _mean extends Reporter implements Pure
 			Object elt = it.next() ;
 			if( ! ( elt instanceof Double ) )
 			{
-				throw new EngineException
-					( context , this , 
-					  "can't find the mean of a list that contains non-numbers " 
-					  + Dump.logoObject( elt ) 
-					  + " is a " + Syntax.typeName( elt ) + "." ) ;
+                throw new EngineException
+					( context , this , I18N.errors().getNJava("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
+                            new String [] {Dump.logoObject( elt ) , Syntax.typeName( elt )}));
 			}
 			sum += ( (Double) elt ).doubleValue() ;
 		}

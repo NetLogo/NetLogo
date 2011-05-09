@@ -398,29 +398,29 @@ public strictfp class WidgetPanel
 	protected void doPopup( java.awt.event.MouseEvent e )
 	{
         javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
-        menu.add(new WidgetCreationMenuItem("Button", e.getX(), e.getY()));
-        menu.add(new WidgetCreationMenuItem("Slider", e.getX(), e.getY()));
-        menu.add(new WidgetCreationMenuItem("Switch", e.getX(), e.getY()));
-        menu.add(new WidgetCreationMenuItem("Chooser", e.getX(), e.getY()));
-        menu.add(new WidgetCreationMenuItem("Input", e.getX(), e.getY()));
-        menu.add(new WidgetCreationMenuItem("Monitor", e.getX(), e.getY()));
-        WidgetCreationMenuItem plot = new WidgetCreationMenuItem("Plot", e.getX(), e.getY());
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
+        WidgetCreationMenuItem plot = new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY());
         // if there are no plots in this model, then you can't have a plot in a hubnet client.
         if(workspace.plotManager().plots().size() == 0)
 		{
 			plot.setEnabled(false);
 		}
         menu.add(plot);
-        menu.add(new WidgetCreationMenuItem("Note", e.getX(), e.getY()));
+        menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
         menu.show(this, e.getX(), e.getY());
 	}
 
 	protected class WidgetCreationMenuItem
 		extends javax.swing.JMenuItem
 	{
-		WidgetCreationMenuItem( final String name , final int x , final int y )
+        WidgetCreationMenuItem( final String displayName , final String name, final int x , final int y )
 		{
-			super( name ) ;
+			super( displayName ) ;
 			addActionListener
 				( new java.awt.event.ActionListener() {
 						public void actionPerformed( java.awt.event.ActionEvent e ) {
@@ -1006,11 +1006,11 @@ public strictfp class WidgetPanel
 
 	public boolean canAddWidget( String widget )
 	{
-		if( widget.equals( "View" ) )
+		if( widget.equals( I18N.gui().get("tabs.run.widgets.view")  ) )
 		{
 			return ! hasView() ;
 		}
-		else if( widget.equals( "Plot" ) )
+		else if( widget.equals( I18N.gui().get("tabs.run.widgets.plot") ) )
 		{
 			// you can't add a plot to the client interface unless
 			// there are plots in the server interface so enable the 

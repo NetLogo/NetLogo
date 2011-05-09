@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc ;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -20,7 +21,8 @@ public final strictfp class _removeitem
 		if( index < 0 )
 		{
 			throw new EngineException
-				( context , this  , index + " isn't greater than or equal to zero" ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc.$common.negativeIndex",
+                  new String[] {Integer.toString(index)}));
 		}
 		if( obj instanceof LogoList )
 		{
@@ -28,9 +30,9 @@ public final strictfp class _removeitem
 			if( index >= list.size() )
 			{
 				throw new EngineException
-					( context , this  , "can't find element " + index + " of the list " +
-					  Dump.logoObject( list ) + ", which is only of length " +
-					  list.size() ) ;
+					( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc.$common.indexExceedsListSize",
+                      new String []{Integer.toString(index), Dump.logoObject(list), Integer.toString(list.size())}));
+
 			}
 			return list.removeItem( index ) ;
 		}
@@ -40,9 +42,9 @@ public final strictfp class _removeitem
 			if( index >= string.length() )
 			{
 				throw new EngineException
-					( context , this  , "can't find element " + index + " of the string " +
-					  Dump.logoObject( string ) +
-					  ", which is only of length " + string.length() ) ;
+					( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc.$common.indexExceedsStringSize",
+                      new String [] {Integer.toString(index), Dump.logoObject(string), Integer.toString(string.length())}));
+
 			}
 			StringBuilder buf = new StringBuilder() ;
 			buf.append( string.substring( 0 , index ) ) ;

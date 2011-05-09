@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -24,8 +25,8 @@ public final strictfp class _setdefaultshape
 		String shape = argEvalString( context , 1 ) ;
 		if( breed.type() == org.nlogo.agent.Patch.class )
 		{
-			throw new EngineException
-				( context , this  , "cannot set the default shape of patches, because patches do not have shapes" ) ;
+			throw new EngineException( context , this  ,
+              I18N.errors().get("org.nlogo.prim.etc._setdefaultshape.cantSetDefaultShapeOfPatch") ) ;
 		}
 		if( breed.type() == org.nlogo.agent.Observer.class )
 		{
@@ -35,16 +36,17 @@ public final strictfp class _setdefaultshape
 		if( breed != world.turtles() && ! world.isBreed( breed ) &&
 			breed != world.links() && ! world.isLinkBreed( breed ) )
 		{
-			throw new EngineException
-				( context , this  , "can only set the default shape of all turtles , all links, or an entire breed" ) ;
+			throw new EngineException( context , this  ,
+              I18N.errors().get("org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed") ) ;
 		}
 		if( breed.type() == org.nlogo.agent.Turtle.class )
 		{
 			String checkedShape = world.checkTurtleShapeName( shape ) ;
 			if( checkedShape == null )
 			{
-				throw new EngineException
-					( context , this  , "\"" + shape + "\" is not a currently defined turtle shape" ) ;
+				throw new EngineException( context , this  ,
+                  I18N.errors().getNJava("org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape",
+                    new String [] {shape.toString()}) ) ;
 			}
 			world.turtleBreedShapes.setBreedShape( breed , checkedShape ) ;
 		}
@@ -53,8 +55,9 @@ public final strictfp class _setdefaultshape
 			String checkedShape = world.checkLinkShapeName( shape ) ;
 			if( checkedShape == null )
 			{
-				throw new EngineException
-					( context , this  , "\"" + shape + "\" is not a currently defined link shape" ) ;
+				throw new EngineException( context , this  ,
+                  I18N.errors().getNJava("org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape",
+                    new String [] {shape.toString()}) ) ;
 			}
 			world.linkBreedShapes.setBreedShape( breed , checkedShape ) ;
 		}

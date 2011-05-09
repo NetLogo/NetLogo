@@ -17,16 +17,15 @@ strictfp class ViewControlToolBar
 	private final javax.swing.JToggleButton interactButton ;
 	
 	private final javax.swing.AbstractAction ORBIT_ACTION = 
-		new MovementAction( "Orbit" , View.Mode.ORBIT ) ;
+		new MovementAction( I18N.gui().get("view.3d.orbit") , View.Mode.ORBIT ) ;
 	private final javax.swing.AbstractAction ZOOM_ACTION = 
-		new MovementAction( "Zoom" , View.Mode.ZOOM ) ;
+		new MovementAction( I18N.gui().get("view.3d.zoom") , View.Mode.ZOOM ) ;
 	private final javax.swing.AbstractAction MOVE_ACTION = 
-		new MovementAction( "Move" , View.Mode.TRANSLATE ) ;
+		new MovementAction( I18N.gui().get("view.3d.move") , View.Mode.TRANSLATE ) ;
 	private final javax.swing.AbstractAction INTERACT_ACTION = 
-		new MovementAction( "Interact" , View.Mode.INTERACT ) ;
+		new MovementAction( I18N.gui().get("view.3d.interact") , View.Mode.INTERACT ) ;
 
-	private static final String FULLSCREEN_WARNING = 
-		"On some systems, fullscreen mode may cause Windows to lock up." ;
+	private static final String FULLSCREEN_WARNING = I18N.gui().get("view.3d.fullScreenWarning") ;
 
 	public ViewControlToolBar( final View view, MouseMotionHandler inputHandler )
 	{
@@ -66,7 +65,7 @@ strictfp class ViewControlToolBar
 		add( javax.swing.Box.createHorizontalGlue() ) ; 
 		add( javax.swing.Box.createHorizontalStrut( 8 ) ) ; 
 		
-		final javax.swing.JButton resetButton = new javax.swing.JButton( "Reset Perspective" ) ; 
+		final javax.swing.JButton resetButton = new javax.swing.JButton( I18N.gui().get("view.3d.resetPerspective") ) ;
 		resetButton.addActionListener( new java.awt.event.ActionListener() {
 				public void actionPerformed( java.awt.event.ActionEvent e ) 
 				{
@@ -77,7 +76,7 @@ strictfp class ViewControlToolBar
 		
 		add( javax.swing.Box.createHorizontalStrut( 8 ) ) ; 
 		
-		final javax.swing.JButton fullscreenButton = new javax.swing.JButton( "Full Screen" ) ; 
+		final javax.swing.JButton fullscreenButton = new javax.swing.JButton( I18N.gui().get("view.3d.fullScreen")) ;
 		fullscreenButton.addActionListener( new java.awt.event.ActionListener() {
 				public void actionPerformed( java.awt.event.ActionEvent e ) 
 				{
@@ -125,7 +124,7 @@ strictfp class ViewControlToolBar
 					break;
 	
 				case WATCH:
-					status.setText( "watching " + agent.toString() ) ;
+					status.setText( I18N.gui().get("view.3d.watching") + agent.toString() ) ;
 					ORBIT_ACTION.setEnabled( true ) ;
 					ZOOM_ACTION.setEnabled( true ) ;
 					MOVE_ACTION.setEnabled( false ) ;
@@ -136,7 +135,7 @@ strictfp class ViewControlToolBar
 					break;
 	
 				case RIDE:
-					status.setText( "riding " + agent.toString() ) ;
+					status.setText( I18N.gui().get("view.3d.riding") + agent.toString() ) ;
 					setButtonsEnabled( false ) ;
 					ZOOM_ACTION.setEnabled( true ) ;
 					if ( ( ! interactButton.isSelected() ) &&
@@ -147,7 +146,7 @@ strictfp class ViewControlToolBar
 					break;
 	
 				case FOLLOW:
-					status.setText( "following " + agent.toString() ) ;
+					status.setText( I18N.gui().get("view.3d.following") + agent.toString() ) ;
 					setButtonsEnabled( false ) ;
 					ZOOM_ACTION.setEnabled( true ) ;
 					if ( ( ! interactButton.isSelected() ) &&

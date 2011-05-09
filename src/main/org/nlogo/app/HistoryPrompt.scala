@@ -3,6 +3,7 @@ package org.nlogo.app
 // pulled this out of CommandLine.java so I could translate it separately to Scala - ST 8/19/10
 
 import org.nlogo.agent.{Observer, Turtle, Patch, Link}
+import org.nlogo.api.I18N
 
 class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
 
@@ -25,7 +26,7 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
   override def getInsets = new java.awt.Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
 
   private def doPopupMenu() {
-    val popMenu = new javax.swing.JPopupMenu("History")
+    val popMenu = new javax.swing.JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
     import org.nlogo.util.JCL._
     for(ex <- commandLine.getExecutionList) {
       val str =
@@ -51,16 +52,16 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
       popMenu.add(item)
     }
     if(commandLine.getExecutionList.isEmpty) {
-      val noHistoryItem = new javax.swing.JMenuItem("<No History>")
+      val noHistoryItem = new javax.swing.JMenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))
       noHistoryItem.setEnabled(false)
       popMenu.add(noHistoryItem)
     }
     else {
       popMenu.add(new javax.swing.JPopupMenu.Separator)
-      val hintItem = new javax.swing.JMenuItem("or use up and down arrow keys")
+      val hintItem = new javax.swing.JMenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))
       hintItem.setEnabled(false)
       popMenu.add(hintItem)
-      val clearHistoryItem = new javax.swing.JMenuItem("Clear History")
+      val clearHistoryItem = new javax.swing.JMenuItem(I18N.gui.get("tabs.run.commandcenter.clearHistory"))
       val clearActionListener = new java.awt.event.ActionListener() {
         override def actionPerformed(e: java.awt.event.ActionEvent) {
           commandLine.clearList() }}

@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -20,11 +21,11 @@ public final strictfp class _towardsnowrap extends Reporter
 		{
 			throw new EngineException
 				( context , this , 
-				  "expected this to be a turtle or a patch but got a link instead" ) ;
+				  I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink") ) ;
 		}
 		if( agent.id == -1 )
 		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 		}
 		try
 		{

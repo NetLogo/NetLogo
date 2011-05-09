@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -23,8 +24,7 @@ public final strictfp class _ticks extends Reporter
 		if(result == -1)
 		{
 			throw new EngineException(
-				context , this ,
-				"The tick counter has not been started yet. Use RESET-TICKS." ) ;
+				context , this ,  I18N.errors().get("org.nlogo.prim.etc.$common.tickCounterNotStarted")) ;
 		}
 		return result ;
 	}

@@ -1,6 +1,7 @@
 package org.nlogo.agent ;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.I18N;
 
 public strictfp class Protractor
 	implements org.nlogo.api.Protractor
@@ -260,7 +261,7 @@ public strictfp class Protractor
 		if( fromAgent == toAgent )
 		{
 			throw new AgentException
-				( "no heading is defined from an agent to itself" ) ;
+				(I18N.errors().get("org.nlogo.agent.Protractor.noHeadingFromAgentToSelf"));
 		}
 		if( toAgent instanceof Turtle )
 		{
@@ -331,8 +332,7 @@ public strictfp class Protractor
 		if( fromX == toX && fromY == toY )
 		{
 			throw new AgentException
-				( "no heading is defined from a point (" +
-				  fromX + "," + fromY + ") to that same point" ) ;
+				(I18N.errors().getNJava("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", new String [] {new Double(fromX).toString() , new Double(fromY).toString()}));
 		}
 		double dx = toX - fromX ;
 		double dy = toY - fromY ;

@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.nlogo.api.CompilerException;
-import org.nlogo.api.Dump;
-import org.nlogo.api.Editable;
-import org.nlogo.api.LogoList;
-import org.nlogo.api.Property;
-import org.nlogo.api.CompilerServices;
+import org.nlogo.api.*;
 
 public strictfp class DummyChooserWidget
 	extends Chooser
@@ -29,7 +24,7 @@ public strictfp class DummyChooserWidget
 	}
 	
 	@Override
-	public String classDisplayName() { return "Chooser" ; }
+	public String classDisplayName() { return I18N.gui().get("tabs.run.widgets.chooser") ; }
 
 	public List<Property> propertySet()
 	{

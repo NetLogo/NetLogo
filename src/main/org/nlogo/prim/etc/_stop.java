@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -37,7 +38,8 @@ public final strictfp class _stop
 				context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER )
 		    {
 				throw new EngineException
-					( context , this , displayName() + " is not allowed inside TO-REPORT" ) ;
+					( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._stop.notAllowedInsideToReport",
+                            new String [] {displayName()})) ;
 		    }
 			context.stop() ;
 	    }
@@ -56,8 +58,8 @@ public final strictfp class _stop
 				context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER )
 		    {
 				throw new EngineException
-					( context , this , displayName() + " is not allowed inside TO-REPORT" ) ;
-		    }
+                    ( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._stop.notAllowedInsideToReport",
+                            new String [] {displayName()})) ;		    }
 			workspace.profilingTracer().closeCallRecord(context, context.activation) ;
 			context.stop() ;
 	    }

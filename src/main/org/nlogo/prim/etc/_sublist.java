@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.EngineException;
@@ -20,18 +21,21 @@ public final strictfp class _sublist
 		if( start < 0 )
 		{
 			throw new EngineException
-				( context , this  , start + " is less than zero" ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc._sublist.startIsLessThanZero",
+                        new String [] {new Integer(start).toString()})) ;
 		}
 		else if( stop < start )
 		{
 			throw new EngineException
-				( context , this  , stop + " is less than " + start ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc._sublist.endIsLessThanStart",
+                        new String [] {new Integer(stop).toString(), new Integer(start).toString()})) ;
+
 		}
 		else if( stop > size )
 		{
 			throw new EngineException
-				( context , this  , stop + " is greater than the length of the input list (" +
-				  size + ")" ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize",
+                        new String [] {new Integer(stop).toString(), new Integer(size).toString()})) ;
 		}
 		return list.logoSublist( start , stop ) ;
 	}

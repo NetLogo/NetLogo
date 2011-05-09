@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nlogo.api.Editable;
+import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
 
 public strictfp class DummyButtonWidget
@@ -47,8 +48,8 @@ public strictfp class DummyButtonWidget
 	/// editability
 
 	@Override
-	public String classDisplayName() { return "Button" ; }
-		
+	public String classDisplayName() { return I18N.gui().get("tabs.run.widgets.button"); }
+
 	private String name = "" ;
 	public void name( String name )
 	{

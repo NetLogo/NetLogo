@@ -1,6 +1,7 @@
 package org.nlogo.prim ;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -31,12 +32,12 @@ public final strictfp class _askconcurrent
 			if( agentset == world.turtles() )
 			{
 				throw new EngineException
-					( context , this , "only the observer can ASK the set of all turtles" ) ;
+                        ( context , this , I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles") ) ;
 			}
 			if( agentset == world.patches() )
 			{
 				throw new EngineException
-					( context , this , "only the observer can ASK the set of all patches" ) ;
+                        ( context , this , I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches") ) ;
 			}
 		}
 		if( context.makeChildrenExclusive() )

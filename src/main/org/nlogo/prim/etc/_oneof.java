@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -22,8 +23,8 @@ public final strictfp class _oneof
 			int size = list.size() ;
 			if( size == 0 )
 			{
-				throw new EngineException
-					( context , this , displayName() + " got an empty list as input" ) ;
+				throw new EngineException( context , this ,
+                  I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyListInput", new String [] {displayName()}));
 			}
 			return list.get( context.job.random.nextInt( size ) ) ;
 		}
@@ -71,7 +72,7 @@ public final strictfp class _oneof
 		if( size == 0 )
 		{
 			throw new EngineException
-				( context , this , displayName() + " got an empty list as input" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyListInput", new String [] {displayName()}));
 		}
 		return list.get( context.job.random.nextInt( size ) ) ;
 	}
@@ -84,8 +85,8 @@ public final strictfp class _oneof
 			int size = list.size() ;
 			if( size == 0 )
 			{
-				throw new EngineException( context , this , displayName()
-						+ " got an empty list as input" ) ;
+				throw new EngineException
+                        ( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyListInput", new String [] {displayName()}));
 			}
 			return list.get( context.job.random.nextInt( size ) ) ;
 		}

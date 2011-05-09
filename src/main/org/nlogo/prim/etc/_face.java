@@ -2,6 +2,7 @@ package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -29,11 +30,12 @@ public final strictfp class _face
 	{
 		if( target instanceof org.nlogo.agent.Link )
 		{
-			throw new EngineException( context , this , "expected a turtle or a patch but got a link" ) ;
+			throw new EngineException
+				( context , this , I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink")) ;
 		}
 		if( target.id == -1 )
 		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead") ) ;
 		}
 		if( context.agent instanceof Turtle )
 		{

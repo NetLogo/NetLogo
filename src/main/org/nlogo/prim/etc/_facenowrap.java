@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -23,7 +24,7 @@ public final strictfp class _facenowrap
 		org.nlogo.agent.Agent agentToFace = argEvalAgent( context , 0 ) ;
 		if( agentToFace.id == -1 )
 		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead") ) ;
 		}
 		org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle ) context.agent ;	
 		turtle.face( agentToFace, false ) ; 

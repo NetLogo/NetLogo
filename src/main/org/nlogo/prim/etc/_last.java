@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -27,7 +28,7 @@ public final strictfp class _last
 			LogoList list = (LogoList) obj ;
 			if( list.size() == 0 )
 			{
-				throw new EngineException( context , this , "list is empty" ) ;
+				throw new EngineException( context , this ,  I18N.errors().get("org.nlogo.prim.etc.$common.emptyList") ) ;
 			}
 			return list.get( list.size() - 1 ) ;
 		}
@@ -36,7 +37,7 @@ public final strictfp class _last
 			String string = ( String ) obj ;
 			if( string.length() == 0 )
 			{
-				throw new EngineException( context , this , "string is empty" ) ;
+				throw new EngineException( context , this ,  I18N.errors().get("org.nlogo.prim.etc.$common.emptyString") ) ;
 			}
 			return string.substring( string.length() - 1 ) ;
 		}

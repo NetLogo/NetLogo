@@ -9,6 +9,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.I18N;
 
 public strictfp class Link
 	extends Agent
@@ -311,7 +312,7 @@ public strictfp class Link
 						AgentSet breed = (AgentSet) value ;					   
 						if( breed != world.links() && ! world.isLinkBreed( breed ) )
 						{
-							throw new AgentException( "can't set BREED to a non-link-breed agentset" ) ;
+							throw new AgentException(I18N.errors().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet") );
 						}
 						if( world.getLink( end1.agentKey() , end2.agentKey() , breed ) != null )
 						{
@@ -323,7 +324,7 @@ public strictfp class Link
 						if( ! world.linkManager.checkBreededCompatibility( breed == world.links() ) )
 						{
 							throw new AgentException
-								( "You cannot have both breeded and unbreeded links in the same world." ) ;
+								( I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks") ) ;
 						}
 						setBreed( breed ) ;
 					}
@@ -351,7 +352,7 @@ public strictfp class Link
 						if( newShape == null )
 						{
 							throw new AgentException
-								( "\"" + (String) value + "\" is not a currently defined shape" ) ;
+                                (I18N.errors().getNJava("org.nlogo.agent.Agent.shapeUndefined", new String [] {(String) value}));
 						}
 						shape( newShape ) ;
 					}
@@ -467,7 +468,8 @@ public strictfp class Link
 		if( name != null && ! world.linkBreedOwns( getBreed() , name ) )
 		{
 			throw new AgentException
-				( getBreed().printName() + " breed does not own variable " + name ) ;
+				(I18N.errors().getNJava("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+                                    new String [] {getBreed().printName(), name} ))  ;
 		}
 	}
 

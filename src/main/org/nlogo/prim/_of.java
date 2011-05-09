@@ -2,6 +2,7 @@ package org.nlogo.prim ;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
@@ -34,7 +35,7 @@ public final strictfp class _of
 			Agent agent = (Agent) agentOrSet ;
 			if( agent.id == -1 )
 			{
-				throw new EngineException( context , this , "that turtle is dead" ) ;
+                throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 			}
 			args[ 0 ].checkAgentClass( agent , context ) ;
 			return new Context( context , agent ).evaluateReporter( agent , args[ 0 ] ) ;

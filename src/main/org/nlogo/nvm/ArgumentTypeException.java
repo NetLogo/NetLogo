@@ -31,21 +31,19 @@ public strictfp class ArgumentTypeException
 	public String getMessage()
 	{
 		String result = "";
-		String positionPhrase = "input";
-		
+
 		if (instruction != null)
 		{
 			result += instruction.displayName() ;
 		}
-		result += " expected " + positionPhrase 
-					+ " to be " + Syntax.aTypeName( wantedType ); 
+		result += " expected input to be " + Syntax.aTypeName( wantedType );
 
 		// if badValue is a Class object, then it's not REALLY
 		// a value at all -- it's just something to tell us what
 		// kind of bad value was returned.
 		if (badValue instanceof Class<?>)
 		{
-			result += " but got " + Syntax.aTypeName( Syntax.getTypeConstant( (Class<?>) badValue) ) + " instead.";
+			result += " but got " + Syntax.aTypeName( Syntax.getTypeConstant( (Class<?>) badValue) ) + " instead";
 		}
 		else if (badValue != null)
 		{
@@ -54,12 +52,10 @@ public strictfp class ArgumentTypeException
 			result += " but got " + ( badValue instanceof org.nlogo.api.Nobody
 					? "NOBODY"
 					: "the " + Syntax.typeName(badValue) + " " + badValueStr ) 
-					+ " instead." ;
+					+ " instead" ;
 		}
-		else
-		{
-			result += ".";
-		}
+
+		result += ".";
 
 		return result ;
 		

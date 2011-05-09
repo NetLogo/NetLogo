@@ -13,6 +13,7 @@ import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -35,8 +36,7 @@ public final strictfp class _atpoints
 			if( ! validateListEntry( it.next() ) )
 			{
 				throw new EngineException
-					( context , this , 
-					  "invalid list of points: " + Dump.logoObject( points ) ) ;
+					( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints", new String [] {Dump.logoObject( points )})) ;
 			}
 		}
 			
@@ -163,26 +163,27 @@ public final strictfp class _atpoints
 						if( ! is3D )
 					    {
 							throw new EngineException
-								( context , this , 
-									"invalid list of points: " +
-									Dump.logoObject( points ) ) ;
+                                    ( context , this ,
+                                      I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                                                                    new String [] {Dump.logoObject( points )})) ;
+
 					    }
 						z = (Double) it2.next() ;
 						break ;
 				    default :
 						throw new EngineException
-							( context , this , 
-							  "invalid list of points: " +
-							  Dump.logoObject( points ) ) ;
+			             ( context , this ,
+                             I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                                         new String [] {Dump.logoObject( points )})) ;
 				}
 				j++ ;
 			}
 			if( x == null || y == null )
 			{
 				throw new EngineException
-					( context , this , 
-					  "invalid list of points: " +
-					  Dump.logoObject( points ) ) ;
+					( context , this ,
+                         I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                                         new String [] {Dump.logoObject( points )})) ;
 			}
 			try
 			{

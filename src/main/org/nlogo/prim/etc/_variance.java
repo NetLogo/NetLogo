@@ -3,6 +3,7 @@ package org.nlogo.prim.etc ;
 import java.util.Iterator;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -41,8 +42,8 @@ public final strictfp class _variance extends Reporter implements Pure
 		{
 			throw new EngineException
 				( context , this  ,
-				  "can't find the variance of a list without at least two numbers: " +
-				  Dump.logoObject( list ) ) ;
+                        I18N.errors().getNJava("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber",
+                                new String [] {Dump.logoObject(list)})) ;
 		}
 		double mean = sum / (listSize - badElts) ;
 		double squareOfDifference = 0 ;
