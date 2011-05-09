@@ -38,7 +38,6 @@ object SysInfo
   }
   var getJOGLInfoString = "JOGL: (3D View not initialized)" 
   var getGLInfoString = "OpenGL Graphics: (3D View not initialized)" 
-  def getVersionControlInfoString = "N/A"
   def getBrowserInfoString =
     try {
       var nulls = 0

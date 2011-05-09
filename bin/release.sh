@@ -95,27 +95,11 @@ fi
 # clean
 $MAKE -s clean
 
-# create svnversion.txt
-rm -rf resources/system/svnversion.txt
-if [ -d .svn ]; then
-  SVN="svn"
-  svnversion > resources/system/svnversion.txt
-else
-  SVN="git svn"
-  $SVN info | grep ^Revision: | sed -e "s/Revision: //" > resources/system/svnversion.txt
-fi
-$SVN info | perl -0 -p -i -e 's|\n||gs' | perl -0 -p -i -e 's|Path: .URL: https:\/\/subversion.assembla.com\/svn\/nlogo\/||gs' | perl -p -e 's/Repository Root: .*$//gs' | sed -e "s/\000//g" >> resources/system/svnversion.txt
-
 # compile, build jars etc.
 bin/sbt update
 $MAKE -s
 bin/sbt behaviorspace-sources
 # zzz TODO $MAKE -s javadoc-public
-
-# we don't want to keep the svnversion.txt around cause if we do then it gets used instead of querying the 
-# system when we're running directly from svn
-
-rm -rf resources/system/svnversion.txt
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -163,7 +147,7 @@ $RM -rf extensions/*/classes
 # include models
 $CP -rp ../../models .
 
-# blow away Subversion and Mac junk
+# blow away version control and Mac junk
 $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
@@ -257,7 +241,7 @@ $CP -p ../../dist/netlogo-3D.sh .
 $CP -p ../../dist/hubnet.sh .
 $CP -p ../../dist/icon.ico .
 
-# blow away Subversion and Mac junk
+# blow away version control and Mac junk
 $FIND . \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 $FIND . -path \*/.svn -prune -o -empty -print
@@ -315,7 +299,7 @@ $MV NetLogo\ Logging.app NetLogo\ Logging\ "$VERSION".app
 $MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
 $MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
 
-# blow away Subversion and Mac junk again
+# blow away version control and Mac junk again
 $FIND . \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 

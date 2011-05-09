@@ -12,9 +12,6 @@ object Shell {
       .takeWhile(_ != null)
   }
 
-  val greeting =
-    Version.version + " (" + Version.buildDate + ") " + SysInfo.getVersionControlInfoString
-
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     val workspace = HeadlessWorkspace.newInstance
@@ -22,7 +19,7 @@ object Shell {
       workspace.initForTesting(-5, 5, -5, 5, HeadlessWorkspace.TEST_DECLARATIONS)
     else
       workspace.open(argv(0))
-    System.err.println(greeting)
+    System.err.println(Version.fullVersion)
     input.foreach(run(workspace, _))
     workspace.dispose()
   }
