@@ -9,6 +9,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.I18N;
 
 public strictfp class Patch
 	extends Agent
@@ -132,7 +133,7 @@ public strictfp class Patch
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a turtle variable without specifying which turtle" ) ;
+			( I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle") ) ;
 	}
 
 
@@ -141,28 +142,27 @@ public strictfp class Patch
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a link variable without specifying which link" ) ;
+			( I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink")) ;
 	}
 	@Override
 	public Object getTurtleOrLinkVariable  ( String varName )
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a turtle or link variable without specifying which agent" ) ;
-	}
-
+			( I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent") ) ;
+    }
 	@Override
 	public Object getLinkBreedVariable  ( String name )
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a link variable without specifying which link" ) ;
+			(I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink") ) ;
 	}
 	@Override
 	public Object getBreedVariable( String name )
 		throws AgentException
 	{
-		throw new AgentException( "a patch can't access a turtle variable without specifying which turtle" ) ;
+		throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle") ) ;
 	}
 
 	@Override
@@ -182,21 +182,21 @@ public strictfp class Patch
 	public void setTurtleVariable( int vn , Object value )
 		throws AgentException
 	{
-		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
+		throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle")) ;
 	}
 
 	@Override
 	public void setTurtleVariable( int vn , double value )
 		throws AgentException
 	{
-		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
+		throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle")) ;
 	}
 
 	@Override
 	public void setBreedVariable( String name , Object value )
 		throws AgentException
 	{
-		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
+		throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle") ) ;
 	}
 
 	@Override
@@ -204,14 +204,14 @@ public strictfp class Patch
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a link variable without specifying which link" ) ;
+			( I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink") ) ;
 	}
 	@Override
 	public void setLinkVariable  ( int vn , double value )
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a link variable without specifying which link" ) ;
+			( I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink")) ;
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public strictfp class Patch
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a turtle or link variable without specifying which agent" ) ;
+			(I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent")) ;
 	}
 
 	@Override
@@ -227,7 +227,7 @@ public strictfp class Patch
 		throws AgentException
 	{
 		throw new AgentException
-			( "a patch can't access a link variable without specifying which link" ) ;
+			(I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink") ) ;
 	}
 
 	@Override
@@ -287,10 +287,11 @@ public strictfp class Patch
 				
 				case VAR_PXCOR :
 				case VAR_PYCOR :
-					throw new AgentException( "you can't change a patch's coordinates" ) ;
+					throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates")) ;
 				
 				default:
-					throw new IllegalStateException( "unknown variable " + vn ) ;
+					throw new IllegalStateException( I18N.errors().getNJava("org.nlogo.agent.Agent.cantSetUnknownVariable",
+                                                                            new String [] {new Integer (vn).toString()}));
 			}
 		}
 	}
@@ -302,12 +303,12 @@ public strictfp class Patch
 		switch( vn )
 		{
 		    case VAR_PXCOR:
-				throw new AgentException( "you can't change a patch's coordinates" ) ;
+				throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates")) ;
 		    case VAR_PYCOR:
-				throw new AgentException( "you can't change a patch's coordinates" ) ;
+				throw new AgentException( I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates")) ;
 			default :
 				throw new IllegalArgumentException
-					( vn + " is not a double variable" ) ;
+					( I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String [] {new Integer (vn).toString() })) ;
 		}
 	}
 
@@ -332,7 +333,7 @@ public strictfp class Patch
 				return pycor ;
 			default :
 				throw new IllegalArgumentException
-					( vn + " is not a double variable" ) ;
+					( I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String [] {new Integer (vn).toString()})) ;
 		}
 	}
 
@@ -343,7 +344,7 @@ public strictfp class Patch
 		Patch target = world.getTopology().getPatchAt( pxcor + dx , pycor + dy ) ;
         if( target == null )
         {
-            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
+            throw new AgentException( I18N.errors().get("org.nlogo.agent.Turtle.patchBeyondLimits") ) ;
         }
 		return target;
 	}
@@ -392,7 +393,7 @@ public strictfp class Patch
 		{
 			return pcolor ;
 		}
-		throw new IllegalStateException( "pcolor is not a double" ) ;
+		throw new IllegalStateException( I18N.errors().get("org.nlogo.agent.Patch.pcolorNotADouble")) ;
 	}
 	
 	public Object pcolor()

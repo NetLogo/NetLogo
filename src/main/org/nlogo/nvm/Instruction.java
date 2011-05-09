@@ -9,6 +9,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.util.Thunk;
@@ -275,8 +276,7 @@ public abstract strictfp class Instruction
 		if( ! world.linkManager.checkBreededCompatibility( breed == world.links() ) )
 		{
 			throw new EngineException
-				( context , this , 
-				  "You cannot have both breeded and unbreeded links in the same world." ) ;
+				( context , this , I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks")) ;
 		}
 	}
 

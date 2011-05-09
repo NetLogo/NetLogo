@@ -2,6 +2,7 @@ package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -27,7 +28,7 @@ public final strictfp class _otherend
 			if( ! ( context.myself() instanceof Turtle ) )
 			{
 				throw new EngineException( context , this , 
-										   "Only a turtle can get the OTHER-END of a link" ) ;
+                  I18N.errors().get("org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd")) ;
 			}
 			node = (Turtle) context.myself() ;
 		}
@@ -37,7 +38,7 @@ public final strictfp class _otherend
 			if( ! ( context.myself() instanceof Link ) )
 			{
 				throw new EngineException( context , this , 
-										   "Only a link can get the OTHER-END from a turtle." ) ;
+				  I18N.errors().get("org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd"));
 			}
 			link = (Link) context.myself() ;
 		}
@@ -54,7 +55,7 @@ public final strictfp class _otherend
 		}
 		
 		throw new EngineException( context , this ,
-								   node.toString() + " is not linked by " + 
-								   link.toString() + ".");
+          I18N.errors().getNJava("org.nlogo.prim.etc._otherend.incorrectLink",
+            new String [] {node.toString(), link.toString()}));
 	}
 }

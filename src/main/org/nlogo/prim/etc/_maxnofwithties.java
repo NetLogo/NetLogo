@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -35,17 +36,16 @@ public final strictfp class _maxnofwithties
 		if( n < 0 )
 		{
 			throw new EngineException
-				( context , this , "first input to " + displayName() +
-				  " can't be negative" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
+                        new String [] {displayName()}));
 		}
 		AgentSet sourceSet = argEvalAgentSet( context , 0 ) ;
 		int count = sourceSet.count() ;
 		if( n > count )
 		{
 			throw new EngineException
-				( context , this , "requested " + n +
-				  " random agents from a set of only " +
-				  count + " agents" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist ",
+                        new String [] {Integer.toString(n), Integer.toString(count)}));
 		}
 		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
 		TreeMap<Object,LinkedList<Agent>> resultAgents =

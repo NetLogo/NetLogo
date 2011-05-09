@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -28,18 +29,17 @@ public final strictfp class _maxnof
 		int n = argEvalIntValue( context , 0 ) ;
 		if( n < 0 )
 		{
-			throw new EngineException
-				( context , this , "first input to " + displayName() +
-				  " can't be negative" ) ;
+			throw new EngineException( context , this ,
+              I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
+                new String [] {displayName()})) ;
 		}
 		AgentSet sourceSet = argEvalAgentSet( context , 1 ) ;
 		int count = sourceSet.count() ;
 		if( n > count )
 		{
 			throw new EngineException
-				( context , this , "requested " + n +
-				  " random agents from a set of only " +
-				  count + " agents" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
+                        new String [] {new Integer(n).toString(), new Integer(count).toString()}));
 		}
 		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
 		TreeMap<Object,LinkedList<Agent>> resultAgents =

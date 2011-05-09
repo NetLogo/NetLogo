@@ -55,7 +55,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   // Kicks a client and notifies it.
   def kickClient(clientId: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
-    server.removeClient(clientId, true, "Removed via Control Center.")
+    server.removeClient(clientId, true, I18N.gui.get("menu.tools.hubnetControlCenter.removedViaControlCenter"))
     clientsPanel.removeClientEntry(clientId)
   }
 
@@ -69,12 +69,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   def addClient(clientId: String, remoteAddress: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     clientsPanel.addClientEntry(clientId)
-    messagePanel.logMessage("\'" + clientId + "\' joined from: " + remoteAddress + "\n")
+    messagePanel.logMessage( I18N.gui.getNJava("menu.tools.hubnetControlCenter.messagePanel.clientJoined" , Array(clientId, remoteAddress)) + "\n")
   }
 
   def clientDisconnect(clientId: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
-    messagePanel.logMessage("\'" + clientId + "\' disconnected.\n")
+    messagePanel.logMessage(I18N.gui.getNJava("menu.tools.hubnetControlCenter.messagePanel.clientDisconnected" , Array(clientId)) + "\n")
     clientsPanel.removeClientEntry(clientId)
   }
 
@@ -90,16 +90,16 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       putClientProperty("Quaqua.List.style", "striped")
       setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
       addListSelectionListener(ClientsPanel.this)
-      setPrototypeCellValue("CLIENT NAME")
+      setPrototypeCellValue(I18N.gui.get("menu.tools.hubnetControlCenter.clientName"))
     }
-    private val kickButton = new JButton("Kick") {addActionListener(ClientsPanel.this); setEnabled(false)}
-    private val newClientButton = new JButton("Local") {addActionListener(ClientsPanel.this)}
-    private val reloadButton = new JButton("Reset") {addActionListener(ClientsPanel.this)}
+    private val kickButton = new JButton( I18N.gui.get("menu.tools.hubnetControlCenter.kick")) {addActionListener(ClientsPanel.this); setEnabled(false)}
+    private val newClientButton = new JButton(I18N.gui.get("menu.tools.hubnetControlCenter.local")) {addActionListener(ClientsPanel.this)}
+    private val reloadButton = new JButton(I18N.gui.get("menu.tools.hubnetControlCenter.reset")) {addActionListener(ClientsPanel.this)}
 
     locally {
       setBorder(new EmptyBorder(12, 12, 12, 12))
       setLayout(new BorderLayout(0, 4))
-      add(new JLabel("Clients:") {setAlignmentY(0)}, BorderLayout.NORTH)
+      add(new JLabel(I18N.gui.get("menu.tools.hubnetControlCenter.clients")) {setAlignmentY(0)}, BorderLayout.NORTH)
       add(new JScrollPane(clientsList), BorderLayout.CENTER)
       val gridbag = new GridBagLayout()
       add(new JPanel(gridbag) {
@@ -167,10 +167,10 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     }
 
     // Format for message timestamp
-    private val dateFormatter = new SimpleDateFormat("h:mm:ss")
+    private val dateFormatter = new SimpleDateFormat(I18N.gui.get("menu.tools.hubnetControlCenter.dateFormat"))
 
     locally {
-      val broadcastButton = new JButton("Broadcast Message") {addActionListener(MessagePanel.this)}
+      val broadcastButton = new JButton(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage")) {addActionListener(MessagePanel.this)}
       val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton) {
         addRequiredField(inputField)
       }
@@ -215,10 +215,10 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    */
   class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends JPanel with ItemListener {
 
-    private val mirrorViewCheckBox = new JCheckBox("Mirror 2D view on clients", mirrorView) {
+    private val mirrorViewCheckBox = new JCheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorViewOn2dClients"), mirrorView) {
       addItemListener(ServerOptionsPanel.this)
     }
-    private val mirrorPlotsCheckBox = new JCheckBox("Mirror plots on clients (experimental)", mirrorPlots) {
+    private val mirrorPlotsCheckBox = new JCheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorPlotsOnClients"), mirrorPlots) {
       addItemListener(ServerOptionsPanel.this)
     }
 
@@ -226,15 +226,16 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       setBorder(new EmptyBorder(12, 12, 12, 12))
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       add(new TextFieldBox(SwingConstants.RIGHT, null, new JLabel().getFont.deriveFont(Font.BOLD)) {
-        addField("Name:", new SelectableJLabel(serverId))
-        addField("Activity:", new SelectableJLabel(activityName))
+        addField(I18N.gui.get("menu.tools.hubnetControlCenter.name"), new SelectableJLabel(serverId))
+        addField(I18N.gui.get("menu.tools.hubnetControlCenter.activity"), new SelectableJLabel(activityName))
         add(Box.createVerticalStrut(12))
-        val serverIP = try InetAddress.getLocalHost.getHostAddress catch {case e: UnknownHostException => "UNKNOWN"}
-        addField("Server address:", new SelectableJLabel(serverIP))
-        addField("Port number:", new SelectableJLabel(server.port.toString))
+        val serverIP = try InetAddress.getLocalHost.getHostAddress catch {case e: UnknownHostException =>
+            I18N.gui.get("menu.tools.hubnetControlCenter.unknown")}
+        addField(I18N.gui.get("menu.tools.hubnetControlCenter.serverAddress"), new SelectableJLabel(serverIP))
+        addField(I18N.gui.get("menu.tools.hubnetControlCenter.portNumber"), new SelectableJLabel(server.port.toString))
       })
       add(Box.createVerticalStrut(30))
-      add(new JLabel("Settings:"))
+      add(new JLabel(I18N.gui.get("menu.tools.hubnetControlCenter.settings")))
       add(Box.createVerticalStrut(4))
       add(mirrorViewCheckBox)
       add(mirrorPlotsCheckBox)

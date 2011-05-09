@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nlogo.api.Editable;
+import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
 
 public strictfp class DummyMonitorWidget
@@ -42,8 +43,8 @@ public strictfp class DummyMonitorWidget
 	}
 	
 	@Override
-	public String classDisplayName() { return "Monitor" ; }
-	
+
+	public String classDisplayName() { return I18N.gui().get("tabs.run.widgets.monitor") ; }
 	public List<Property> propertySet()
 	{
 		return Properties.dummyMonitor() ;

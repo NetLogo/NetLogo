@@ -134,6 +134,9 @@ tabs.run.commandcenter.clearButton = Clear
 tabs.run.commandcenter.nohistory = No History
 tabs.run.commandcenter.orusetabkey = or use Tab key
 tabs.run.commandcenter.exporting = Exporting
+tabs.run.commandcenter.history = History
+tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
+tabs.run.commandcenter.clearHistory = Clear History
 
 tabs.info = Info
 tabs.info.edit = Edit
@@ -274,7 +277,7 @@ edit.viewSettings.2D.fontSize.info = of labels on agents
 edit.viewSettings.2D.wrapX = World wraps horizontally
 edit.viewSettings.2D.wrapY = World wraps vertically
 edit.viewSettings.2D.frameRate = Frame rate
-edit.viewSettings.2D.frameRate.info = frames per second at normal speed
+edit.viewSettings.2D.frameRate.info = Frames per second at normal speed
 
 edit.viewSettings.2D.minPxcor = minimum x coordinate for patches
 edit.viewSettings.2D.maxPxcor = maximum x coordinate for patches
@@ -370,3 +373,35 @@ modelsLibrary.clear = Clear
 modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library...
+
+
+# CONTROL CENTER
+menu.tools.hubnetControlCenter.removedViaControlCenter = Removed via Control Center.
+menu.tools.hubnetControlCenter.kick = Kick
+menu.tools.hubnetControlCenter.local = Local
+menu.tools.hubnetControlCenter.reset = Reset
+menu.tools.hubnetControlCenter.clientName = CLIENT NAME
+menu.tools.hubnetControlCenter.clients = Clients:
+menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
+menu.tools.hubnetControlCenter.broadcastMessage = Broadcast Message
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Mirror 2D view on clients
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Mirror plots on clients (experimental)
+menu.tools.hubnetControlCenter.name = Name:
+menu.tools.hubnetControlCenter.activity = Activity:
+menu.tools.hubnetControlCenter.unknown = UNKNOWN
+menu.tools.hubnetControlCenter.serverAddress = Server address:
+menu.tools.hubnetControlCenter.portNumber = Port number:
+menu.tools.hubnetControlCenter.settings = Settings:
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' joined from: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' disconnected.
+
+view.3d.orbit = Orbit
+view.3d.zoom = Zoom
+view.3d.move = Move
+view.3d.interact = Interact
+view.3d.watching = Watching
+view.3d.riding = Riding
+view.3d.following = Following
+view.3d.fullScreen = Full Screen
+view.3d.resetPerspective = Reset Perspective
+view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.

@@ -5,6 +5,7 @@ import java.util.List;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -38,22 +39,26 @@ public final strictfp class _incone
 		if( sourceSet.type() == org.nlogo.agent.Link.class )
 		{
 			throw new EngineException
-				( context , this , "expected a turtle or a patch but got a link" ) ;
+				( context , this , "" ) ;
 		}
 		if( radius < 0 )
 		{
 			throw new EngineException
-				( context , this , displayName() + " cannot take a negative radius" ) ;	
+				( context , this ,
+            I18N.errors().getNJava("org.nlogo.prim.etc.$common.noNegativeRadius", new String [] {displayName()} ));
 		}
 		if( angle < 0 )
 		{
 			throw new EngineException
-				( context , this , displayName() + " cannot take a negative angle" ) ;	
+				( context , this ,
+            I18N.errors().getNJava("org.nlogo.prim.etc.$common.noNegativeAngle", new String [] {displayName()})) ;
 		}
 		if( angle > 360 )
 		{
 			throw new EngineException
-				( context , this , displayName() + " cannot take an angle greater than 360" ) ;
+				( context , this ,
+            I18N.errors().getNJava("org.nlogo.prim.etc.$common.noAngleGreaterThan360", new String [] {displayName()}) ) ;
+
 		}
 		List<Agent> result = 
 			world.inRadiusOrCone.inCone( (Turtle) context.agent , sourceSet , radius , angle , true ) ;

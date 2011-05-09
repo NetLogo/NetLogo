@@ -3,6 +3,7 @@ package org.nlogo.prim.etc ;
 import java.util.Iterator;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -23,8 +24,8 @@ public final strictfp class _nof
 		if( n < 0 )
 		{
 			throw new EngineException
-				( context , this , "first input to " + displayName() +
-				  " can't be negative" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
+                        new String [] {displayName()}));
 		}
 		Object obj = args[ 1 ].report( context ) ;
 		if( obj instanceof LogoList )
@@ -33,9 +34,8 @@ public final strictfp class _nof
 			if( n > list.size() )
 			{
 				throw new EngineException
-					( context , this , "requested " + n +
-					  " random items from a list of length " +
-					  list.size() ) ;
+					(context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.requestMoreItemsThanInList",
+                            new String [] {new Integer(n).toString(),new Integer(list.size()).toString()}));
 			}
 			if( n == list.size() )
 			{
@@ -52,9 +52,8 @@ public final strictfp class _nof
 			if( n > count )
 			{
 				throw new EngineException
-					( context , this , "requested " + n +
-					  " random agents from a set of only " +
-					  count + " agents" ) ;
+					(context , this , I18N.errors().getNJava("org.nlogo.prim.etc._nof.requestMoreItemsThanInList",
+                            new String [] {new Integer(n).toString(),new Integer(count).toString()}));
 			}
 			return agents.randomSubset( n , count , context.job.random ) ;
 		}

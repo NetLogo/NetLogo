@@ -10,6 +10,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.I18N;
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
 // product of the topology.  But we also have the old "-nowrap" primitives
@@ -167,7 +168,8 @@ public strictfp class Turtle
 		Patch target = world.getTopology().getPatchAt( xcor + dx , ycor + dy ) ;
         if( target == null )
         {
-            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
+            // Cannot get patch beyond limits of current world.
+            throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.patchBeyondLimits")) ;
         }
 		return target ;
 	}
@@ -289,7 +291,8 @@ public strictfp class Turtle
 	{
 		if( name != null && ! world.breedOwns( getBreed() , name ) )
 		{
-			throw new AgentException( getBreed().printName() + " breed does not own variable " + name ) ;
+			throw new AgentException(I18N.errors().getNJava("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+                                    new String [] {getBreed().printName(), name} )) ;
 		}
 	}
 
@@ -370,7 +373,7 @@ public strictfp class Turtle
 				return penSize() ;
 			default :
 				throw new IllegalArgumentException
-					( vn + " is not a double variable" ) ;
+					(I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String []{new Integer(vn).toString()}));
 		}
 	}
 
@@ -379,7 +382,7 @@ public strictfp class Turtle
 		throws AgentException
 	{
 		throw new AgentException
-			( "a turtle can't access a link variable without specifying which link" ) ;
+			(I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
 	}
 
 	@Override
@@ -411,7 +414,7 @@ public strictfp class Turtle
 		{
 			return getTurtleVariable( vn ) ;
 		}
-		throw new AgentException( this + " does not own " + name + " variable.");
+		throw new AgentException( I18N.errors().getNJava("org.nlogo.agent.Agent.breedDoesNotOwnVariable",new  String [] {this.toString(),name}));
 	}
 	
 	@Override
@@ -419,8 +422,7 @@ public strictfp class Turtle
 		throws AgentException
 	{
 		throw new AgentException
-			( "a turtle can't access a link variable without specifying which link" ) ;
-	}
+            (I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));	}
 	@Override
 	public Object getPatchVariable( int vn )
 	{
@@ -465,10 +467,10 @@ public strictfp class Turtle
 			   penSize( value ) ;
 			   break ;
 		   case VAR_WHO:
-			   throw new AgentException( "you can't change a turtle's who number" ) ;
+			   throw new AgentException( I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho")) ;
 		default :
 			throw new IllegalArgumentException
-				( vn + " is not a double variable" ) ;
+				(I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String []{new Integer(vn).toString()}));
 		}
 	}
 
@@ -539,7 +541,7 @@ public strictfp class Turtle
 						if( newShape == null )
 						{
 							throw new AgentException
-								( "\"" + (String) value + "\" is not a currently defined shape" ) ;
+                                    (I18N.errors().getNJava("org.nlogo.agent.Agent.shapeUndefined", new String [] {(String) value}));
 						}
 						shape( newShape ) ;
 					}
@@ -573,7 +575,7 @@ public strictfp class Turtle
 						AgentSet breed = (AgentSet) value ;
 						if( breed != world.turtles() && ! world.isBreed( breed ) )
 						{
-							throw new AgentException( "can't set BREED to a non-breed agentset" ) ;
+							throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet")) ;
 						}
 						setBreed( breed ) ;
 					}
@@ -631,9 +633,10 @@ public strictfp class Turtle
 					break;
 
 				case VAR_WHO:
-					throw new AgentException( "you can't change a turtle's ID number" ) ;
+					throw new AgentException( I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho") ) ;
 				default:
-					throw new IllegalStateException( "unknown variable " + vn ) ;
+					throw new IllegalStateException( I18N.errors().getNJava("org.nlogo.agent.Agent.cantSetUnknownVariable",
+                                new String [] {Integer.toString(vn)} ));
 					
 			}
 		}

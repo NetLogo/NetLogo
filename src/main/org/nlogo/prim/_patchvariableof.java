@@ -2,6 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -27,8 +28,7 @@ public final strictfp class _patchvariableof
 			Agent agent = (Agent) agentOrSet ;
 			if( agent.id == -1 )
 			{
-				throw new EngineException
-					( context , this , "that turtle is dead" ) ;
+                throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 			}
 			try
 			{
@@ -93,8 +93,7 @@ public final strictfp class _patchvariableof
 			Agent agent = (Agent) agentOrSet ;
 			if( agent.id == -1 )
 			{
-				throw new EngineException
-					( context , this , "that turtle is dead" ) ;
+                throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 			}
 			try
 			{
@@ -154,8 +153,8 @@ public final strictfp class _patchvariableof
 	{
 		if( agent.id == -1 )
 		{
-			throw new EngineException
-				( context , this , "that turtle is dead" ) ;
+            throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
+
 		}
 		try
 		{

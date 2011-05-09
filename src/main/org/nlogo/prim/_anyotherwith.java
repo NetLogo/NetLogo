@@ -3,6 +3,7 @@ package org.nlogo.prim ;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -39,9 +40,8 @@ public final strictfp class _anyotherwith extends Reporter
 			if( ! ( value instanceof Boolean ) )
 			{
 				throw new EngineException
-					( context , this , displayName() + " expected a true/false value from " +
-					  Dump.logoObject( tester ) +
-					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
+			        ( context , this , I18N.errors().getNJava("org.nlogo.prim.$common.expectedBooleanValue",
+                            new String [] {displayName(),  Dump.logoObject( tester ),Dump.logoObject( value ) }));
 			}
 			if( ( ( Boolean ) value ).booleanValue() )
 			{

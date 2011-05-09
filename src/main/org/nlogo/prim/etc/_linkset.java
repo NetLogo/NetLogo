@@ -6,6 +6,7 @@ import java.util.Set;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -80,11 +81,10 @@ public final strictfp class _linkset
 				AgentSet tempSet = (AgentSet) obj ;
 				if( tempSet.type() != org.nlogo.agent.Link.class )
 				{
-					throw new EngineException( context , this , "List inputs to " + this.displayName() 
-											   + " must only contain link, link agentset, or list elements.  The list " 
-											   +  Dump.logoObject( tempList , true , false) 
-											   + " contained a different type agentset: " 
-											   + Dump.logoObject( obj , true , false)); 
+					throw new EngineException( context , this ,
+                      I18N.errors().getNJava("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
+                        new String [] {this.displayName(), Dump.logoObject(tempList, true, false),
+                          Dump.logoObject(obj, true, false)}));
 				}
 				for( AgentSet.Iterator iter2 = tempSet.iterator() ;
 					 iter2.hasNext() ; )
@@ -98,11 +98,10 @@ public final strictfp class _linkset
 			}
 			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
 			{
-				throw new EngineException( context , this , "List inputs to " + this.displayName() 
-										   + " must only contain link, link agentset, or list elements.  The list " 
-										   +  Dump.logoObject( tempList , true , false) 
-										   + " contained " + Dump.logoObject( obj , true , false) 
-										   + " which is NOT a link or link agentset") ;
+				throw new EngineException( context , this ,
+                  I18N.errors().getNJava("org.nlogo.prim.etc._linkset.invalidListInputs",
+                    new String [] { this.displayName() , Dump.logoObject( tempList , true , false) ,
+                        Dump.logoObject( obj , true , false) }  ));
 			}
 		}
 	}

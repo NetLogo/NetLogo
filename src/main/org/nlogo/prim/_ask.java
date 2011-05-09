@@ -4,6 +4,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.ArrayAgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
@@ -46,12 +47,12 @@ public final strictfp class _ask
 				if( agentset == world.turtles() )
 				{
 					throw new EngineException
-						( context , this , "only the observer can ASK the set of all turtles" ) ;
+						( context , this , I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles") ) ;
 				}
 				if( agentset == world.patches() )
 				{
 					throw new EngineException
-						( context , this , "only the observer can ASK the set of all patches" ) ;
+						( context , this , I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches") ) ;
 				}
 			}
 		}
@@ -61,7 +62,7 @@ public final strictfp class _ask
 			if( agent.id == -1 )
 			{
 				throw new EngineException
-					( context , this , "that agent is dead" ) ;
+					( context , this , I18N.errors().get("org.nlogo.$common.thatAgentIsDead")) ;
 			}
 			agentset = new ArrayAgentSet( agent.getAgentClass() , 1, false , world ) ;
 			agentset.add( agent ) ;
@@ -81,12 +82,12 @@ public final strictfp class _ask
 			if( agentset == world.turtles() )
 			{
 				throw new EngineException
-					( context , this , "only the observer can ASK the set of all turtles" ) ;
+					( context , this , I18N.errors().get("org.nlogo.prim.ask.onlyObserverCanAskAllTurtles")) ;
 			}
 			if( agentset == world.patches() )
 			{
 				throw new EngineException
-					( context , this , "only the observer can ASK the set of all patches" ) ;
+					( context , this , I18N.errors().get("org.nlogo.prim.ask.onlyObserverCanAskAllPatches") ) ;
 			}
 		}
 		context.runExclusiveJob( agentset , next ) ;
@@ -98,7 +99,7 @@ public final strictfp class _ask
 		if( agent.id == -1 )
 		{
 			throw new EngineException
-				( context , this , "that agent is dead" ) ;
+                    ( context , this , I18N.errors().get("org.nlogo.$common.thatAgentIsDead")) ;
 		}
 		AgentSet agentset = new ArrayAgentSet( agent.getAgentClass() , 1, false , world ) ;
 		agentset.add( agent ) ;

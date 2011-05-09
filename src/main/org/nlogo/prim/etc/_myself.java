@@ -2,6 +2,7 @@ package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Observer;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -24,7 +25,7 @@ public final strictfp class _myself
 		if( myself == null || myself instanceof Observer )
 		{
 			throw new EngineException
-				( context , this , "no agent for MYSELF to refer to" ) ;
+				( context , this , I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself")) ;
 		}
 		return myself ;
 	}
@@ -34,7 +35,7 @@ public final strictfp class _myself
 		if( myself == null || myself instanceof Observer )
 		{
 			throw new EngineException
-				( context , this , "no agent for MYSELF to refer to" ) ;
+				( context , this , I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself") ) ;
 		}
 		return myself ;
 	}

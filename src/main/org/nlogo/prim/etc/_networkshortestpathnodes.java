@@ -2,6 +2,7 @@ package org.nlogo.prim.etc ;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -37,7 +38,7 @@ public final strictfp class _networkshortestpathnodes extends Reporter
 
 		if( destNode.id == -1 )
 		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
+            throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 		}
 		return world.linkManager.networkMetrics.networkShortestPathNodes
 			(context.job.random, (Turtle) context.agent , destNode , linkBreed) ;

@@ -589,3 +589,127 @@ org/nlogo/agent/AbstractExporter.java-49-		java.util.Date currentDate = new java
 org/nlogo/agent/AbstractExporter.java:50:		java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat ("MM/dd/yyyy HH:mm:ss:SSS Z");
 org/nlogo/agent/AbstractExporter.java-51-		writer.println( Dump.csv.header( dateFormatter.format( currentDate ) ) ) ;
 org/nlogo/agent/AbstractExporter.java-52-		writer.println();
+
+## Turtle 1435
+@Override
+	public String toString()
+	{
+		return "observer" ;
+	}
+
+	@Override
+	public String classDisplayName()
+	{
+		return "observer" ;
+	}
+
+
+org/nlogo/prim/etc/_moveto.java-16-	{
+org/nlogo/prim/etc/_moveto.java-17-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
+org/nlogo/prim/etc/_moveto.java:18:		return Syntax.commandSyntax( right , "OT--" , true ) ;
+org/nlogo/prim/etc/_moveto.java-19-	}
+
+
+org/nlogo/prim/etc/_towards.java-13-	{
+org/nlogo/prim/etc/_towards.java-14-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
+org/nlogo/prim/etc/_towards.java:15:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
+org/nlogo/prim/etc/_towards.java-16-	}
+
+
+org/nlogo/prim/etc/_towardsxy.java-14-						Syntax.TYPE_NUMBER } ;
+org/nlogo/prim/etc/_towardsxy.java-15-		int ret = Syntax.TYPE_NUMBER ;
+org/nlogo/prim/etc/_towardsxy.java:16:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
+org/nlogo/prim/etc/_towardsxy.java-17-	}
+org/nlogo/prim/etc/_towardsxy.java-18-	@Override public Object report( Context context ) throws LogoException
+
+
+org/nlogo/prim/etc/_incone.java-22-			  new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } , // right
+org/nlogo/prim/etc/_incone.java-23-			  Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET ,          // return
+org/nlogo/prim/etc/_incone.java:24:			  Syntax.NORMAL_PRECEDENCE + 2 , false , "OTPL" , "-T--" ) ;
+org/nlogo/prim/etc/_incone.java-25-	}
+org/nlogo/prim/etc/_incone.java-26-	@Override
+
+org/nlogo/prim/etc/_inconenowrap.java-21-		int ret = Syntax.TYPE_AGENTSET ;
+org/nlogo/prim/etc/_inconenowrap.java-22-		return Syntax.reporterSyntax( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ,
+org/nlogo/prim/etc/_inconenowrap.java:23:									  false , "OTPL" , "-T--" ) ;
+org/nlogo/prim/etc/_inconenowrap.java-24-	}
+
+
+org/nlogo/prim/_createlinkfrom.java-34-	public String toString()
+org/nlogo/prim/_createlinkfrom.java-35-	{
+org/nlogo/prim/_createlinkfrom.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinkfrom.java-37-	}
+org/nlogo/prim/_createlinkfrom.java-38-	@Override
+org/nlogo/prim/_createlinksfrom.java-34-	public String toString()
+org/nlogo/prim/_createlinksfrom.java-35-	{
+org/nlogo/prim/_createlinksfrom.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinksfrom.java-37-	}
+org/nlogo/prim/_createlinksfrom.java-38-	@Override
+org/nlogo/prim/_createlinksto.java-34-	public String toString()
+org/nlogo/prim/_createlinksto.java-35-	{
+org/nlogo/prim/_createlinksto.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinksto.java-37-	}
+org/nlogo/prim/_createlinksto.java-38-	@Override
+org/nlogo/prim/_createlinkswith.java-34-	public String toString()
+org/nlogo/prim/_createlinkswith.java-35-	{
+org/nlogo/prim/_createlinkswith.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinkswith.java-37-	}
+org/nlogo/prim/_createlinkswith.java-38-	@Override
+org/nlogo/prim/_createlinkto.java-34-	public String toString()
+org/nlogo/prim/_createlinkto.java-35-	{
+org/nlogo/prim/_createlinkto.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinkto.java-37-	}
+org/nlogo/prim/_createlinkto.java-38-	@Override
+org/nlogo/prim/_createlinkwith.java-34-	public String toString()
+org/nlogo/prim/_createlinkwith.java-35-	{
+org/nlogo/prim/_createlinkwith.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createlinkwith.java-37-	}
+org/nlogo/prim/_createlinkwith.java-38-	@Override
+org/nlogo/prim/_createorderedturtles.java-34-	public String toString()
+org/nlogo/prim/_createorderedturtles.java-35-	{
+org/nlogo/prim/_createorderedturtles.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createorderedturtles.java-37-	}
+org/nlogo/prim/_createorderedturtles.java-38-	@Override
+org/nlogo/prim/_createturtles.java-32-	public String toString()
+org/nlogo/prim/_createturtles.java-33-	{
+org/nlogo/prim/_createturtles.java:34:		return super.toString() + ":" + breedName + ",+" + offset ;
+org/nlogo/prim/_createturtles.java-35-	}
+org/nlogo/prim/_createturtles.java-36-	@Override
+
+
+org/nlogo/api/AgentVariables.java-67-	public static String[] getImplicitTurtleVariables( boolean is3D ) {
+org/nlogo/api/AgentVariables.java-68-		return is3D
+org/nlogo/api/AgentVariables.java:69:			? new String[] { "WHO","COLOR","HEADING","PITCH", "ROLL","XCOR","YCOR","ZCOR","SHAPE" ,
+org/nlogo/api/AgentVariables.java:70:							 "LABEL","LABEL-COLOR","BREED","HIDDEN?","SIZE","PEN-SIZE","PEN-MODE" }
+org/nlogo/api/AgentVariables.java:71:		    : new String[] { "WHO","COLOR","HEADING","XCOR","YCOR","SHAPE","LABEL","LABEL-COLOR","BREED" ,
+org/nlogo/api/AgentVariables.java:72:                             "HIDDEN?","SIZE","PEN-SIZE","PEN-MODE"} ;
+org/nlogo/api/AgentVariables.java-73-	}
+org/nlogo/api/AgentVariables.java-74-	public static String[] getImplicitPatchVariables( boolean is3D ) {
+org/nlogo/api/AgentVariables.java-75-		return is3D
+org/nlogo/api/AgentVariables.java:76:		    ? new String[] { "PXCOR","PYCOR","PZCOR","PCOLOR","PLABEL","PLABEL-COLOR" }
+org/nlogo/api/AgentVariables.java:77:			: new String[] { "PXCOR","PYCOR","PCOLOR","PLABEL","PLABEL-COLOR" } ;
+org/nlogo/api/AgentVariables.java-78-	}
+org/nlogo/api/AgentVariables.java-79-	public static String[] getImplicitLinkVariables() {
+org/nlogo/api/AgentVariables.java:80:		return new String[] { "END1","END2","COLOR","LABEL","LABEL-COLOR","HIDDEN?","BREED",
+org/nlogo/api/AgentVariables.java:81:							  "THICKNESS","SHAPE","TIE-MODE" } ;
+
+org/nlogo/api/Color.java-27-	{
+org/nlogo/api/Color.java-28-		// the 13 base hues
+org/nlogo/api/Color.java:29:		"gray" , "red" , "orange" , "brown" ,
+org/nlogo/api/Color.java:30:		"yellow" , "green" , "lime" , "turquoise" , "cyan" , "sky" ,
+org/nlogo/api/Color.java:31:		"blue" , "violet" , "magenta" , "pink" ,
+org/nlogo/api/Color.java-32-		// plus two special cases
+org/nlogo/api/Color.java:33:		"black" , "white"
+org/nlogo/api/Color.java:595:			throw new IllegalStateException( "Can't get RGB color" ) ;
+
+
+
+org/nlogo/prim/etc/_life.java-35-		double fgcolor =
+org/nlogo/prim/etc/_life.java-36-			( (Double) world.observer().variables
+org/nlogo/prim/etc/_life.java:37:			  [ world.program().globals.indexOf( "FGCOLOR" ) ] )
+org/nlogo/prim/etc/_life.java-38-			.doubleValue() ;
+org/nlogo/prim/etc/_life.java-39-		double bgcolor =
+org/nlogo/prim/etc/_life.java-40-			( (Double) world.observer().variables
+org/nlogo/prim/etc/_life.java:41:			  [ world.program().globals.indexOf( "BGCOLOR" ) ] )
+org/nlogo/prim/etc/_life.java-42-			.doubleValue() ;
+org/nlogo/prim/etc/_life.java-43-		for( int i = 0 ; i < patchCount ; i++ )

@@ -5,6 +5,7 @@ import java.util.List;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -36,22 +37,22 @@ public final strictfp class _inconenowrap
 		if( sourceSet.type() == org.nlogo.agent.Link.class )
 		{
 			throw new EngineException
-				( context , this , "expected a turtle or a patch but got a link" ) ;
+				( context , this , I18N.errors().get("org.nlogo.$comomon.expectedTurtleOrPatchButGotLink") ) ;
 		}
 		if( radius < 0 )
 		{
-			throw new EngineException
-				( context , this , displayName() + " cannot take a negative radius" ) ;	
+			throw new EngineException( context , this ,
+              I18N.errors().getNJava("org.nlogo.prim.etc.$common.noNegativeRadius", new String [] {displayName()} ));
 		}
 		if( angle < 0 )
 		{
-			throw new EngineException
-				( context , this , displayName() + " cannot take a negative angle" ) ;	
+			throw new EngineException( context , this ,
+              I18N.errors().getNJava("org.nlogo.prim.etc.$common.noNegativeAngle", new String [] {displayName()})) ;
 		}
 		if( angle > 360 )
 		{
-			throw new EngineException
-				( context , this , displayName() + " cannot take an angle greater than 360" ) ;
+			throw new EngineException( context , this ,
+              I18N.errors().getNJava("org.nlogo.prim.etc.$common.noAngleGreaterThan360", new String [] {displayName()}) ) ;
 		}
 
 		List<Agent> result =

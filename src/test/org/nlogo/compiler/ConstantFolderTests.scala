@@ -49,7 +49,7 @@ class ConstantFolderTests extends FunSuite {
       try compile("1 / 0")
       catch {
         case ex: CompilerException =>
-          expect("Runtime error: division by zero")(ex.getMessage)
+          expect("Runtime error: Division by zero.")(ex.getMessage)
           throw ex
       }
     }

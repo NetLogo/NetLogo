@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nlogo.api.Editable;
+import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
 import org.nlogo.window.Widget;
 
@@ -13,7 +14,7 @@ public strictfp class DummySwitchWidget
 {
 
 	@Override
-	public String classDisplayName() { return "Switch" ; }
+	public String classDisplayName() { return I18N.gui().get("tabs.run.widgets.switch") ; }
 
 	public List<Property> propertySet()
 	{

@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
@@ -20,7 +21,7 @@ public final strictfp class _importdrawing
 		if( world.program().is3D )
 		{
 			throw new EngineException( context , this ,
-									   "you can't import drawing in 3D" ) ;
+          I18N.errors().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D")) ;
 		}
 		try
 		{

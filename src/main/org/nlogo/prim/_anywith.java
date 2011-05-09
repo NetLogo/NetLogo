@@ -3,6 +3,7 @@ package org.nlogo.prim ;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -34,8 +35,8 @@ public final strictfp class _anywith
 			if( ! ( value instanceof Boolean ) )
 			{
 				throw new EngineException
-					( context , this , "WITH expected a true/false value from " + Dump.logoObject( tester ) + ", " +
-					  "but got "+ Dump.logoObject( value ) + " instead" ) ;
+					( context , this , I18N.errors().getNJava("org.nlogo.prim.$common.withExpectedBooleanValue",
+                            new String [] {Dump.logoObject(tester), Dump.logoObject(value)}));
 			}
 			if( ( ( Boolean ) value ).booleanValue() )
 			{

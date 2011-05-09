@@ -3,6 +3,7 @@ package org.nlogo.prim ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -60,7 +61,7 @@ public final strictfp class _createlinksto
 				{
 					throw new EngineException
 						( context , this ,
-						  "A turtle cannot link to itself." ) ; 
+						  I18N.errors().get("org.nlogo.prim.$common.turtleCantLinkToSelf") ) ;
 				}
 				if( src.id != -1 && dest.id != -1 )
 				{

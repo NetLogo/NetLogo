@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nlogo.api.Editable;
+import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
 
 public strictfp class DummyViewWidget
@@ -13,8 +14,7 @@ public strictfp class DummyViewWidget
 	private final org.nlogo.agent.World world ;
 
 	@Override
-	public String classDisplayName() { return "View" ; }
-
+	public String classDisplayName() { return I18N.gui().get("tabs.run.widgets.view") ; }
 	public DummyViewWidget( org.nlogo.agent.World world )
 	{
 		this.world = world ;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
@@ -32,7 +33,7 @@ public final strictfp class _turtleson
 			Turtle turtle = (Turtle) agentOrSet ;
 			if( turtle.id == -1 )
 			{
-				throw new EngineException( context , this , "that turtle is dead" ) ;
+                throw new EngineException( context , this , I18N.errors().get("org.nlogo.$common.thatTurtleIsDead")) ;
 			}
 			addAll( resultList , turtle.getPatchHere().turtlesHere() ) ;
 		}

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.nlogo.api.CompilerException;
+import org.nlogo.api.I18N;
 
 public final strictfp class DefaultFileManager
 	implements org.nlogo.nvm.FileManager
@@ -211,7 +212,7 @@ public final strictfp class DefaultFileManager
 	{
 		if ( !hasCurrentFile() )
 		{
-			throw new java.io.IOException( "No file has been opened" ) ;
+			throw new java.io.IOException( I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile") ) ;
 		}
 
 		if ( currentFile.getMode() == org.nlogo.api.File.Mode.NONE )
@@ -266,7 +267,7 @@ public final strictfp class DefaultFileManager
 		java.io.File checkFile = new java.io.File( filePath ) ;
 		if ( ! checkFile.exists() )
 		{
-			throw new java.io.IOException( "You cannot delete a non-existent file." ) ;
+			throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile")) ;
 		}
 		if ( ! checkFile.canWrite() )
 		{
@@ -274,7 +275,7 @@ public final strictfp class DefaultFileManager
 		}
 		if ( ! checkFile.isFile() )
 		{
-			throw new java.io.IOException( "You can only delete files." ) ;
+			throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles")) ;
 		}
 
 		if ( ! checkFile.delete() )

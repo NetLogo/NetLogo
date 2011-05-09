@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -25,8 +26,8 @@ public final strictfp class _randomgamma extends Reporter
 		if( alpha <= 0 || lambda <= 0 )
 		{
 			throw new EngineException
-				( context , this , "both inputs to " + displayName() +
-				  " must be positive" ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._randomgamma.noNegativeInputs",
+                        new String [] {displayName()}));
 		}
 		return validDouble
 			( org.nlogo.agent.Gamma.nextDouble

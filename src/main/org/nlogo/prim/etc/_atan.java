@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Context;
@@ -24,7 +25,7 @@ public final strictfp class _atan extends Reporter implements Pure
 	{
 		if( d1 == 0 && d2 == 0 )
 		{
-			throw new EngineException( context , this , "atan is undefined when both inputs are zero" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.prim.etc.atan.bothInputsCannotBeZero") ) ;
 		}
 		if( d1 == 0 )
 		{

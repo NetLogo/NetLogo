@@ -45,10 +45,7 @@ org/nlogo/agent/Link.java-247-				throw new IllegalArgumentException
 org/nlogo/agent/Link.java:248:					( vn + " is not a double variable" ) ;
 org/nlogo/agent/Link.java-249-		}
 org/nlogo/agent/Link.java-250-	}
-org/nlogo/agent/Link.java-312-						if( breed != world.links() && ! world.isLinkBreed( breed ) )
-org/nlogo/agent/Link.java-313-						{
-org/nlogo/agent/Link.java:314:							throw new AgentException( "can't set BREED to a non-link-breed agentset" ) ;
-org/nlogo/agent/Link.java-315-						}
+
 org/nlogo/agent/Link.java-316-						if( world.getLink( end1.agentKey() , end2.agentKey() , breed ) != null )
 org/nlogo/agent/Link.java-317-						{
 org/nlogo/agent/Link.java:318:							throw new AgentException( "there is already a " 
@@ -56,77 +53,8 @@ org/nlogo/agent/Link.java-319-													  + world.getLinkBreedSingular( breed
 org/nlogo/agent/Link.java:320:													  + " with endpoints " 
 org/nlogo/agent/Link.java:321:													  + end1.toString() + " and " + end2.toString() ) ;
 org/nlogo/agent/Link.java-322-						}
-org/nlogo/agent/Link.java-323-						if( ! world.linkManager.checkBreededCompatibility( breed == world.links() ) )
-org/nlogo/agent/Link.java-324-						{
-org/nlogo/agent/Link.java-325-							throw new AgentException
-org/nlogo/agent/Link.java:326:								( "You cannot have both breeded and unbreeded links in the same world." ) ;
-org/nlogo/agent/Link.java-327-						}
-org/nlogo/agent/Link.java-328-						setBreed( breed ) ;
-org/nlogo/agent/Link.java-352-						{
-org/nlogo/agent/Link.java-353-							throw new AgentException
-org/nlogo/agent/Link.java:354:								( "\"" + (String) value + "\" is not a currently defined shape" ) ;
-org/nlogo/agent/Link.java-355-						}
-org/nlogo/agent/Link.java-356-						shape( newShape ) ;
-org/nlogo/agent/Link.java-375-				case VAR_END1 :
-org/nlogo/agent/Link.java-376-				case VAR_END2 :
-org/nlogo/agent/Link.java:377:					throw new AgentException( "you can't change a link's endpoints" ) ;
-org/nlogo/agent/Link.java-378-				default:
-org/nlogo/agent/Link.java-379-					return ;
-org/nlogo/agent/Link.java-388-	{
-org/nlogo/agent/Link.java-389-		throw new AgentException
-org/nlogo/agent/Link.java:390:			( "a link can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-391-	}
-org/nlogo/agent/Link.java-392-	@Override
-org/nlogo/agent/Link.java-395-	{
-org/nlogo/agent/Link.java-396-		throw new AgentException
-org/nlogo/agent/Link.java:397:			( "a link can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-398-	}
-org/nlogo/agent/Link.java-399-	@Override
-org/nlogo/agent/Link.java-410-	{
-org/nlogo/agent/Link.java-411-		throw new AgentException
-org/nlogo/agent/Link.java:412:			( "a link can't access a patch variable without specifying which patch" ) ;
-org/nlogo/agent/Link.java-413-	}
-org/nlogo/agent/Link.java-414-	@Override
-org/nlogo/agent/Link.java-417-	{
-org/nlogo/agent/Link.java-418-		throw new AgentException
-org/nlogo/agent/Link.java:419:			( "a link can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-420-	}
-org/nlogo/agent/Link.java-421-	@Override
-org/nlogo/agent/Link.java-424-	{
-org/nlogo/agent/Link.java-425-		throw new AgentException
-org/nlogo/agent/Link.java:426:			( "a link can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-427-	}
-org/nlogo/agent/Link.java-428-	@Override
-org/nlogo/agent/Link.java-431-	{
-org/nlogo/agent/Link.java-432-		throw new AgentException
-org/nlogo/agent/Link.java:433:			( "a link can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-434-	}
-org/nlogo/agent/Link.java-435-	public void setBreedVariable( int vn , double value )
-org/nlogo/agent/Link.java-437-	{
-org/nlogo/agent/Link.java-438-		throw new AgentException
-org/nlogo/agent/Link.java:439:			( "a link can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-440-	}
-org/nlogo/agent/Link.java-441-	@Override
-org/nlogo/agent/Link.java-452-	{
-org/nlogo/agent/Link.java-453-		throw new AgentException
-org/nlogo/agent/Link.java:454:			( "a link can't set a patch variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-455-	}
-org/nlogo/agent/Link.java-456-	@Override
-org/nlogo/agent/Link.java-459-	{
-org/nlogo/agent/Link.java-460-		throw new AgentException
-org/nlogo/agent/Link.java:461:			( "a link can't set a patch variable without specifying which turtle" ) ;
-org/nlogo/agent/Link.java-462-	}
-org/nlogo/agent/Link.java-463-
-org/nlogo/agent/Link.java-468-		{
-org/nlogo/agent/Link.java-469-			throw new AgentException
-org/nlogo/agent/Link.java:470:				( getBreed().printName() + " breed does not own variable " + name ) ;
-org/nlogo/agent/Link.java-471-		}
-org/nlogo/agent/Link.java-472-	}
-org/nlogo/agent/Link.java-556-	}
-org/nlogo/agent/Link.java-557-
-org/nlogo/agent/Link.java:558:	public static final String MODE_NONE = "none" ;
-org/nlogo/agent/Link.java:559:	public static final String MODE_FREE = "free" ;
-org/nlogo/agent/Link.java:560:	public static final String MODE_FIXED = "fixed" ;
+
+
 org/nlogo/agent/Link.java-561-
 org/nlogo/agent/Link.java-562-	public String mode()
 org/nlogo/agent/Link.java-621-	{
@@ -135,53 +63,7 @@ org/nlogo/agent/Link.java:623:			( "links can't access patches via relative coor
 org/nlogo/agent/Link.java-624-	}
 org/nlogo/agent/Link.java-625-
 
-org/nlogo/agent/Observer.java:67:		throw new AgentException( "the observer can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java-73-		throw new AgentException
-org/nlogo/agent/Observer.java:80:		throw new AgentException( "the observer can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:87:			( "the observer can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Observer.java:94:			( "the observer can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Observer.java:100:		throw new AgentException( "the observer can't access a patch variable without specifying which patch" ) ;
-org/nlogo/agent/Observer.java:133:			( "the observer can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:139:		throw new AgentException( "the observer can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:145:		throw new AgentException( "the observer can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:151:		throw new AgentException( "the observer can't set a patch variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:157:		throw new AgentException( "the observer can't set a patch variable without specifying which turtle" ) ;
-org/nlogo/agent/Observer.java:165:			( "the observer can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Observer.java:172:			( "the observer can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Observer.java:179:			( "the observer can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Observer.java:186:			( "the observer can't access a turtle or link variable without specifying which agent" ) ;
-org/nlogo/agent/Observer.java:404:			throw new AgentException( "you can't move-to a link" ) ;
-org/nlogo/agent/Observer.java-540-	public String toString()
-org/nlogo/agent/Observer.java:542:		return "observer" ;
-org/nlogo/agent/Observer.java-543-	}
-org/nlogo/agent/Observer.java-546-	public String classDisplayName()
-org/nlogo/agent/Observer.java-547-	{
-org/nlogo/agent/Observer.java:548:		return "observer" ;
-org/nlogo/agent/Observer.java-549-	}
-org/nlogo/agent/Observer.java-550-
 
-org/nlogo/agent/Patch.java:135:			( "a patch can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Patch.java:144:			( "a patch can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Patch.java:151:			( "a patch can't access a turtle or link variable without specifying which agent" ) ;
-org/nlogo/agent/Patch.java:159:			( "a patch can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Patch.java:165:		throw new AgentException( "a patch can't access a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Patch.java:185:		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Patch.java:192:		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Patch.java:199:		throw new AgentException( "a patch can't set a turtle variable without specifying which turtle" ) ;
-org/nlogo/agent/Patch.java:207:			( "a patch can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Patch.java:214:			( "a patch can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Patch.java:222:			( "a patch can't access a turtle or link variable without specifying which agent" ) ;
-org/nlogo/agent/Patch.java:230:			( "a patch can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Patch.java:290:					throw new AgentException( "you can't change a patch's coordinates" ) ;
-org/nlogo/agent/Patch.java:293:					throw new IllegalStateException( "unknown variable " + vn ) ;
-org/nlogo/agent/Patch.java:305:				throw new AgentException( "you can't change a patch's coordinates" ) ;
-org/nlogo/agent/Patch.java:307:				throw new AgentException( "you can't change a patch's coordinates" ) ;
-org/nlogo/agent/Patch.java:310:					( vn + " is not a double variable" ) ;
-org/nlogo/agent/Patch.java:335:					( vn + " is not a double variable" ) ;
-org/nlogo/agent/Patch.java:346:            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
-org/nlogo/agent/Patch.java:395:		throw new IllegalStateException( "pcolor is not a double" ) ;
-org/nlogo/agent/Patch.java:561:		return "patch " + pxcor + " " + pycor ;
-org/nlogo/agent/Patch.java:567:		return "patch" ;
 
 org/nlogo/agent/Patch3D.java:123:					throw new AgentException( "you can't change a patch's coordinates" ) ;
 org/nlogo/agent/Patch3D.java:138:				throw new AgentException( "you can't change a patch's coordinates" ) ;
@@ -193,10 +75,7 @@ org/nlogo/agent/Patch3D.java:184:            throw new AgentException( "Cannot g
 org/nlogo/agent/Patch3D.java:195:            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
 org/nlogo/agent/Patch3D.java:386:		return "patch " + pxcor + " " + pycor + " " + pzcor ;
 
-org/nlogo/agent/Protractor.java:263:				( "no heading is defined from an agent to itself" ) ;
-org/nlogo/agent/Protractor.java:318:			throw new IllegalStateException("In towards: fromAgent must not be a link") ;
-org/nlogo/agent/Protractor.java:334:				( "no heading is defined from a point (" +
-org/nlogo/agent/Protractor.java:335:				  fromX + "," + fromY + ") to that same point" ) ;
+
 org/nlogo/agent/Protractor.java:365:				( "no pitch is defined from an agent to itself" ) ;
 org/nlogo/agent/Protractor.java:407:			throw new IllegalStateException("In towardsPitch: fromAgent must be the observer") ;
 org/nlogo/agent/Protractor.java-418-			throw new AgentException
@@ -222,21 +101,8 @@ org/nlogo/agent/SliderConstraint.scala:89:      case ex: ClassCastException => t
 org/nlogo/agent/Turtle.java:47:	public static final String PEN_UP = "up" ;
 org/nlogo/agent/Turtle.java:48:	public static final String PEN_DOWN = "down" ;
 org/nlogo/agent/Turtle.java:49:	public static final String PEN_ERASE = "erase" ;
-org/nlogo/agent/Turtle.java:170:            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
-org/nlogo/agent/Turtle.java:292:			throw new AgentException( getBreed().printName() + " breed does not own variable " + name ) ;
-org/nlogo/agent/Turtle.java:373:					( vn + " is not a double variable" ) ;
-org/nlogo/agent/Turtle.java:382:			( "a turtle can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Turtle.java:414:		throw new AgentException( this + " does not own " + name + " variable.");
-org/nlogo/agent/Turtle.java:422:			( "a turtle can't access a link variable without specifying which link" ) ;
-org/nlogo/agent/Turtle.java:468:			   throw new AgentException( "you can't change a turtle's who number" ) ;
-org/nlogo/agent/Turtle.java:471:				( vn + " is not a double variable" ) ;
-org/nlogo/agent/Turtle.java:542:								( "\"" + (String) value + "\" is not a currently defined shape" ) ;
-org/nlogo/agent/Turtle.java:576:							throw new AgentException( "can't set BREED to a non-breed agentset" ) ;
-org/nlogo/agent/Turtle.java:634:					throw new AgentException( "you can't change a turtle's ID number" ) ;
-org/nlogo/agent/Turtle.java:636:					throw new IllegalStateException( "unknown variable " + vn ) ;
-org/nlogo/agent/Turtle.java:670:			( "a turtle can't set a link variable without specifying which link" ) ;
-org/nlogo/agent/Turtle.java:677:			( "a turtle can't set a link variable without specifying which link" ) ;
-org/nlogo/agent/Turtle.java:685:			( "a turtle can't set a link variable without specifying which link" ) ;
+
+
 org/nlogo/agent/Turtle.java:829:			throw new AgentException( "you can't move-to a link" ) ;
 
 org/nlogo/agent/Turtle3D.java:137:            throw new AgentException( "Cannot get patch beyond limits of current world." ) ;
@@ -302,31 +168,6 @@ org/nlogo/agent/World3D.java:372:		else if( variableName.equalsIgnoreCase( "MAX-
 org/nlogo/agent/World3D.java:376:		else if( variableName.equalsIgnoreCase( "WORLD-WIDTH" ) )
 org/nlogo/agent/World3D.java:381:		else if( variableName.equalsIgnoreCase( "WORLD-HEIGHT" ) )
 org/nlogo/agent/World3D.java:386:		else if( variableName.equalsIgnoreCase( "WORLD-DEPTH" ) )
-
-org/nlogo/api/AgentVariables.java-67-	public static String[] getImplicitTurtleVariables( boolean is3D ) {
-org/nlogo/api/AgentVariables.java-68-		return is3D
-org/nlogo/api/AgentVariables.java:69:			? new String[] { "WHO","COLOR","HEADING","PITCH", "ROLL","XCOR","YCOR","ZCOR","SHAPE" ,
-org/nlogo/api/AgentVariables.java:70:							 "LABEL","LABEL-COLOR","BREED","HIDDEN?","SIZE","PEN-SIZE","PEN-MODE" }
-org/nlogo/api/AgentVariables.java:71:		    : new String[] { "WHO","COLOR","HEADING","XCOR","YCOR","SHAPE","LABEL","LABEL-COLOR","BREED" ,
-org/nlogo/api/AgentVariables.java:72:                             "HIDDEN?","SIZE","PEN-SIZE","PEN-MODE"} ;
-org/nlogo/api/AgentVariables.java-73-	}
-org/nlogo/api/AgentVariables.java-74-	public static String[] getImplicitPatchVariables( boolean is3D ) {
-org/nlogo/api/AgentVariables.java-75-		return is3D
-org/nlogo/api/AgentVariables.java:76:		    ? new String[] { "PXCOR","PYCOR","PZCOR","PCOLOR","PLABEL","PLABEL-COLOR" }
-org/nlogo/api/AgentVariables.java:77:			: new String[] { "PXCOR","PYCOR","PCOLOR","PLABEL","PLABEL-COLOR" } ;
-org/nlogo/api/AgentVariables.java-78-	}
-org/nlogo/api/AgentVariables.java-79-	public static String[] getImplicitLinkVariables() {
-org/nlogo/api/AgentVariables.java:80:		return new String[] { "END1","END2","COLOR","LABEL","LABEL-COLOR","HIDDEN?","BREED",
-org/nlogo/api/AgentVariables.java:81:							  "THICKNESS","SHAPE","TIE-MODE" } ;
-
-org/nlogo/api/Color.java-27-	{
-org/nlogo/api/Color.java-28-		// the 13 base hues
-org/nlogo/api/Color.java:29:		"gray" , "red" , "orange" , "brown" ,
-org/nlogo/api/Color.java:30:		"yellow" , "green" , "lime" , "turquoise" , "cyan" , "sky" ,
-org/nlogo/api/Color.java:31:		"blue" , "violet" , "magenta" , "pink" ,
-org/nlogo/api/Color.java-32-		// plus two special cases
-org/nlogo/api/Color.java:33:		"black" , "white"
-org/nlogo/api/Color.java:595:			throw new IllegalStateException( "Can't get RGB color" ) ;
 
 org/nlogo/api/CompilerException.java:9:	public static final String RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX = "Runtime error: " ;
 org/nlogo/api/CompilerException.java:33:		return getMessage() + " at position " + startPos + " in " + fileName ;
@@ -992,21 +833,6 @@ org/nlogo/app/CommandLine.java:243:					  ( "" , "ERROR: " + error().getMessage(
 org/nlogo/app/CommandLine.java-244-					  true , true ).raise( this ) ;
 org/nlogo/app/CommandLine.java-245-			}
 
-org/nlogo/app/DirtyMonitor.scala-5-object DirtyMonitor {
-org/nlogo/app/DirtyMonitor.scala-6-  val autoSaveFileName = {
-org/nlogo/app/DirtyMonitor.scala:7:    val df = new java.text.SimpleDateFormat("yyyy-MM-dd.HH_mm_ss",
-org/nlogo/app/DirtyMonitor.scala-8-                                            java.util.Locale.US)
-org/nlogo/app/DirtyMonitor.scala:9:    System.getProperty("java.io.tmpdir") +
-org/nlogo/app/DirtyMonitor.scala:10:      System.getProperty("file.separator") + "autosave_" +
-org/nlogo/app/DirtyMonitor.scala:11:      df.format(new java.util.Date()) + ".nlogo"
-org/nlogo/app/DirtyMonitor.scala-12-  }
-org/nlogo/app/DirtyMonitor.scala-13-}
-org/nlogo/app/DirtyMonitor.scala-32-      // to indicate that the document has unsaved changes, as documented at
-org/nlogo/app/DirtyMonitor.scala-33-      // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
-org/nlogo/app/DirtyMonitor.scala:34:      frame.getRootPane().putClientProperty("windowModified", dirty)
-org/nlogo/app/DirtyMonitor.scala-35-    }
-org/nlogo/app/DirtyMonitor.scala-36-  }
-
 org/nlogo/app/FileMenu.java-70-		{
 org/nlogo/app/FileMenu.java-71-			addSeparator() ;
 org/nlogo/app/FileMenu.java-103-				javax.swing.JOptionPane.showMessageDialog
@@ -1310,13 +1136,6 @@ org/nlogo/app/HelpMenu.scala-41-    addMenuItem(
 org/nlogo/app/HelpMenu.scala:42:      action("About " + Version.version + "...",
 org/nlogo/app/HelpMenu.scala-43-             app.showAboutWindow _))
 org/nlogo/app/HelpMenu.scala-44-}
-org/nlogo/app/HistoryPrompt.scala-26-
-org/nlogo/app/HistoryPrompt.scala-27-  private def doPopupMenu() {
-org/nlogo/app/HistoryPrompt.scala:28:    val popMenu = new javax.swing.JPopupMenu("History")
-org/nlogo/app/HistoryPrompt.scala:54:      val noHistoryItem = new javax.swing.JMenuItem("<No History>")
-org/nlogo/app/HistoryPrompt.scala:60:      val hintItem = new javax.swing.JMenuItem("or use up and down arrow keys")
-org/nlogo/app/HistoryPrompt.scala:63:      val clearHistoryItem = new javax.swing.JMenuItem("Clear History")
-
 org/nlogo/app/IncludesMenu.scala-4-
 org/nlogo/app/IncludesMenu.scala-5-class IncludesMenu(target: ProceduresTab)
 org/nlogo/app/IncludesMenu.scala:6:extends org.nlogo.swing.ToolBarMenu("Includes")
@@ -1508,30 +1327,6 @@ org/nlogo/app/ToolsMenu.scala-53-      case ex: org.nlogo.window.JOGLLoadingExce
 org/nlogo/app/ToolsMenu.scala:54:        org.nlogo.swing.Utils.alert("3D", ex.getMessage, "" + ex.getCause)     
 org/nlogo/app/ToolsMenu.scala-55-    }        
 org/nlogo/app/ToolsMenu.scala-56-  }
-org/nlogo/app/WidgetPanel.java-152-		}
-org/nlogo/app/WidgetPanel.java-153-		if( ! savingAsApplet &&
-org/nlogo/app/WidgetPanel.java:154:			System.getProperty( "os.name" ).startsWith( "Mac" ) &&
-org/nlogo/app/WidgetPanel.java:155:			System.getProperty( "os.version" ).startsWith( "10.2" ) )
-org/nlogo/app/WidgetPanel.java-156-		{
-org/nlogo/app/WidgetPanel.java-157-			// allow for the intrusion of the window grow box into the
-org/nlogo/app/WidgetPanel.java-395-		javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu() ;
-org/nlogo/app/WidgetPanel.java-396-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:397:				  ( "Button" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-398-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:399:				  ( "Slider" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-400-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:401:				  ( "Switch" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-402-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:403:				  ( "Chooser" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-404-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:405:				  ( "Input" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-406-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:407:				  ( "Monitor" ,e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-408-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:409:				  ( "Plot" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-410-		menu.add( new WidgetCreationMenuItem
-org/nlogo/app/WidgetPanel.java:411:				  ( "Note" , e.getX() , e.getY() ) ) ;
-org/nlogo/app/WidgetPanel.java-412-				  
 org/nlogo/app/WidgetPanel.java-413-		menu.show( this , e.getX() , e.getY() ) ;
 org/nlogo/app/WidgetPanel.java-450-	public Widget makeWidget( String type , boolean loading )
 org/nlogo/app/WidgetPanel.java-451-	{
@@ -3901,10 +3696,6 @@ org/nlogo/hubnet/connection/MessageEnvelope.scala:37:                "Use hubnet
 org/nlogo/hubnet/connection/SocketListener.scala:73:      new Thread("SocketListener disconnect") {
 org/nlogo/hubnet/connection/SocketListener.scala:111:  private class WritingThread(name: String) extends Thread("WritingThread:" + name) {
 
-org/nlogo/hubnet/HubNetClientEditor.scala:78:      title + " - " + I18N.gui.get("menu.tools.hubNetClientEditor")
-org/nlogo/hubnet/HubNetClientEditor.scala:82:      I18N.gui.get("menu.tools.hubNetClientEditor") + " " + 8212.toChar + " " + title
-org/nlogo/hubnet/HubNetClientEditor.scala:85:    if (mt == ModelType.NORMAL) t + " {" + directory + "}" else t
-
 org/nlogo/hubnet/HubNetManager.scala-26-  val NO_DATA_WAITING =
 org/nlogo/hubnet/HubNetManager.scala:27:          "There is no data waiting.  Always check for data using " +
 org/nlogo/hubnet/HubNetManager.scala:28:                  "HUBNET-MESSAGE-WAITING? before fetching data with " +
@@ -4083,82 +3874,6 @@ org/nlogo/hubnet/server/ConnectionManager.scala-227-  override def send (node:St
 org/nlogo/hubnet/server/ConnectionManager.scala:228:    if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
 org/nlogo/hubnet/server/ConnectionManager.scala-229-    sendUserMessage(node, new WidgetControl(message.asInstanceOf[Serializable], tag))
 org/nlogo/hubnet/server/ConnectionManager.scala-230-  }
-org/nlogo/hubnet/server/ControlCenter.scala-22-class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String,
-org/nlogo/hubnet/server/ControlCenter.scala-23-                    activityName: String, clientIds: Iterable[String])
-org/nlogo/hubnet/server/ControlCenter.scala:24:        extends JFrame(I18N.gui.get("menu.tools.hubNetControlCenter")) {
-org/nlogo/hubnet/server/ControlCenter.scala-25-  private val clientsPanel: ClientsPanel = new ClientsPanel(clientIds)
-org/nlogo/hubnet/server/ControlCenter.scala-26-  private val messagePanel: MessagePanel = new MessagePanel()
-org/nlogo/hubnet/server/ControlCenter.scala-68-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
-org/nlogo/hubnet/server/ControlCenter.scala-69-    clientsPanel.addClientEntry(clientId)
-org/nlogo/hubnet/server/ControlCenter.scala:70:    messagePanel.logMessage("\'" + clientId + "\' joined from: " + remoteAddress + "\n")
-org/nlogo/hubnet/server/ControlCenter.scala-71-  }
-org/nlogo/hubnet/server/ControlCenter.scala-72-
-org/nlogo/hubnet/server/ControlCenter.scala-73-  def clientDisconnect(clientId: String) {
-org/nlogo/hubnet/server/ControlCenter.scala-74-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
-org/nlogo/hubnet/server/ControlCenter.scala:75:    messagePanel.logMessage("\'" + clientId + "\' disconnected.\n")
-org/nlogo/hubnet/server/ControlCenter.scala-76-    clientsPanel.removeClientEntry(clientId)
-org/nlogo/hubnet/server/ControlCenter.scala-77-  }
-org/nlogo/hubnet/server/ControlCenter.scala-91-    private val listData = new DefaultListModel()
-org/nlogo/hubnet/server/ControlCenter.scala-92-    private val clientsList = new JList(listData) {
-org/nlogo/hubnet/server/ControlCenter.scala:93:      putClientProperty("Quaqua.List.style", "striped")
-org/nlogo/hubnet/server/ControlCenter.scala-94-      setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-org/nlogo/hubnet/server/ControlCenter.scala-95-      addListSelectionListener(ClientsPanel.this)
-org/nlogo/hubnet/server/ControlCenter.scala:96:      setPrototypeCellValue("CLIENT NAME")
-org/nlogo/hubnet/server/ControlCenter.scala-97-    }
-org/nlogo/hubnet/server/ControlCenter.scala:98:    private val kickButton = new JButton("Kick") {addActionListener(ClientsPanel.this); setEnabled(false)}
-org/nlogo/hubnet/server/ControlCenter.scala:99:    private val newClientButton = new JButton("Local") {addActionListener(ClientsPanel.this)}
-org/nlogo/hubnet/server/ControlCenter.scala:100:    private val reloadButton = new JButton("Reset") {addActionListener(ClientsPanel.this)}
-org/nlogo/hubnet/server/ControlCenter.scala-101-
-org/nlogo/hubnet/server/ControlCenter.scala-102-    locally {
-org/nlogo/hubnet/server/ControlCenter.scala-103-      setBorder(new EmptyBorder(12, 12, 12, 12))
-org/nlogo/hubnet/server/ControlCenter.scala-104-      setLayout(new BorderLayout(0, 4))
-org/nlogo/hubnet/server/ControlCenter.scala:105:      add(new JLabel("Clients:") {setAlignmentY(0)}, BorderLayout.NORTH)
-org/nlogo/hubnet/server/ControlCenter.scala-106-      add(new JScrollPane(clientsList), BorderLayout.CENTER)
-org/nlogo/hubnet/server/ControlCenter.scala-107-      val gridbag = new GridBagLayout()
-org/nlogo/hubnet/server/ControlCenter.scala-171-
-org/nlogo/hubnet/server/ControlCenter.scala-172-    // Format for message timestamp
-org/nlogo/hubnet/server/ControlCenter.scala:173:    private val dateFormatter = new SimpleDateFormat("h:mm:ss")
-org/nlogo/hubnet/server/ControlCenter.scala-174-
-org/nlogo/hubnet/server/ControlCenter.scala-175-    locally {
-org/nlogo/hubnet/server/ControlCenter.scala:176:      val broadcastButton = new JButton("Broadcast Message") {addActionListener(MessagePanel.this)}
-org/nlogo/hubnet/server/ControlCenter.scala-177-      val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton) {
-org/nlogo/hubnet/server/ControlCenter.scala-178-        addRequiredField(inputField)
-org/nlogo/hubnet/server/ControlCenter.scala-195-      val message = inputField.getText
-org/nlogo/hubnet/server/ControlCenter.scala-196-      if (!message.isEmpty) {
-org/nlogo/hubnet/server/ControlCenter.scala:197:        logMessage("<Leader> " + message + "\n")
-org/nlogo/hubnet/server/ControlCenter.scala-198-        val currentTime = dateFormatter.format(new java.util.Date())
-org/nlogo/hubnet/server/ControlCenter.scala:199:        broadcastMessage("" + currentTime + "   " + message)
-org/nlogo/hubnet/server/ControlCenter.scala-200-        inputField.setText("")
-org/nlogo/hubnet/server/ControlCenter.scala-201-      }
-org/nlogo/hubnet/server/ControlCenter.scala-207-    def logMessage(message: String) {
-org/nlogo/hubnet/server/ControlCenter.scala-208-      val currentTime = dateFormatter.format(new java.util.Date())
-org/nlogo/hubnet/server/ControlCenter.scala:209:      val newMessage = "" + currentTime + "   " + message
-org/nlogo/hubnet/server/ControlCenter.scala-210-      // we use setText instead of append to ensure scrolling
-org/nlogo/hubnet/server/ControlCenter.scala-211-      messageTextArea.setText(
-org/nlogo/hubnet/server/ControlCenter.scala:212:        messageTextArea.getText() + (if (newMessage.endsWith("\n")) newMessage else newMessage) + "\n")
-org/nlogo/hubnet/server/ControlCenter.scala-213-    }
-org/nlogo/hubnet/server/ControlCenter.scala-214-  }
-org/nlogo/hubnet/server/ControlCenter.scala-219-  class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends JPanel with ItemListener {
-org/nlogo/hubnet/server/ControlCenter.scala-220-
-org/nlogo/hubnet/server/ControlCenter.scala:221:    private val mirrorViewCheckBox = new JCheckBox("Mirror 2D view on clients", mirrorView) {
-org/nlogo/hubnet/server/ControlCenter.scala-222-      addItemListener(ServerOptionsPanel.this)
-org/nlogo/hubnet/server/ControlCenter.scala-223-    }
-org/nlogo/hubnet/server/ControlCenter.scala:224:    private val mirrorPlotsCheckBox = new JCheckBox("Mirror plots on clients (experimental)", mirrorPlots) {
-org/nlogo/hubnet/server/ControlCenter.scala-225-      addItemListener(ServerOptionsPanel.this)
-org/nlogo/hubnet/server/ControlCenter.scala-226-    }
-org/nlogo/hubnet/server/ControlCenter.scala-230-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-org/nlogo/hubnet/server/ControlCenter.scala-231-      add(new TextFieldBox(SwingConstants.RIGHT, null, new JLabel().getFont.deriveFont(Font.BOLD)) {
-org/nlogo/hubnet/server/ControlCenter.scala:232:        addField("Name:", new SelectableJLabel(serverId))
-org/nlogo/hubnet/server/ControlCenter.scala:233:        addField("Activity:", new SelectableJLabel(activityName))
-org/nlogo/hubnet/server/ControlCenter.scala-234-        add(Box.createVerticalStrut(12))
-org/nlogo/hubnet/server/ControlCenter.scala:235:        val serverIP = try InetAddress.getLocalHost.getHostAddress catch {case e: UnknownHostException => "UNKNOWN"}
-org/nlogo/hubnet/server/ControlCenter.scala:236:        addField("Server address:", new SelectableJLabel(serverIP))
-org/nlogo/hubnet/server/ControlCenter.scala:237:        addField("Port number:", new SelectableJLabel(server.port.toString))
-org/nlogo/hubnet/server/ControlCenter.scala-238-      })
-org/nlogo/hubnet/server/ControlCenter.scala-239-      add(Box.createVerticalStrut(30))
-org/nlogo/hubnet/server/ControlCenter.scala:240:      add(new JLabel("Settings:"))
-org/nlogo/hubnet/server/ControlCenter.scala-241-      add(Box.createVerticalStrut(4))
-org/nlogo/hubnet/server/ControlCenter.scala-242-      add(mirrorViewCheckBox)
 org/nlogo/hubnet/server/DiscoveryAnnouncer.scala-22-  override def run(): Unit = {
 org/nlogo/hubnet/server/DiscoveryAnnouncer.scala-23-    def dump(err: String, ex: Exception) {
 org/nlogo/hubnet/server/DiscoveryAnnouncer.scala:24:      System.err.println("@ " + new java.util.Date() + " : ")
@@ -5640,12 +5355,6 @@ org/nlogo/plot/PlotLoader.scala-101-    def isCloseQuote(tok: String) =
 org/nlogo/plot/PlotLoader.scala:102:      tok.endsWith("\"") && !tok.endsWith("\\\"")
 org/nlogo/plot/PlotLoader.scala-103-    def recurse(toks: List[String]): List[String] =
 org/nlogo/plot/PlotLoader.scala-104-      if(toks.isEmpty) Nil
-org/nlogo/plot/PlotManager.scala-16-  @throws(classOf[PlotException])
-org/nlogo/plot/PlotManager.scala-17-  def currentPlotOrBust = currentPlotOption.getOrElse({
-org/nlogo/plot/PlotManager.scala:18:    throw new PlotException("There is no current plot. Please select a current plot using " +
-org/nlogo/plot/PlotManager.scala:19:            "the set-current-plot command.")})
-org/nlogo/plot/PlotManager.scala-20-
-org/nlogo/plot/PlotManager.scala-21-  def setCurrentPlot(plot: Plot) {currentPlotOption = Some(plot)}
 org/nlogo/plot/PlotManager.scala-41-  // used for letting the user choose which plot to export
 org/nlogo/plot/PlotManager.scala-42-  def getPlotNames: Array[String] = _plots.map(_.name).toArray
 org/nlogo/plot/PlotManager.scala:43:  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
@@ -5686,109 +5395,7 @@ org/nlogo/plot/PlotPen.scala-88-    import org.nlogo.api.StringUtils.escapeStrin
 org/nlogo/plot/PlotPen.scala:89:    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
 org/nlogo/plot/PlotPen.scala-90-  }
 org/nlogo/plot/PlotPen.scala-91-
-org/nlogo/prim/_anyother.java-15-			( new int[] { Syntax.TYPE_AGENTSET } ,
-org/nlogo/prim/_anyother.java-16-			  Syntax.TYPE_BOOLEAN ,
-org/nlogo/prim/_anyother.java:17:			  "-TPL" ) ;
-org/nlogo/prim/_anyother.java-18-	}
-org/nlogo/prim/_anyother.java-19-	@Override public Object report( Context context )
-org/nlogo/prim/_anyotherwith.java-16-		return Syntax.reporterSyntax
-org/nlogo/prim/_anyotherwith.java-17-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/_anyotherwith.java:18:			  Syntax.TYPE_BOOLEAN , "-TPL" ,
-org/nlogo/prim/_anyotherwith.java-19-			  "?" ) ;  // takes reporter block of unknown agent type
-org/nlogo/prim/_anyotherwith.java-20-	}
-org/nlogo/prim/_anyotherwith.java-40-			{
-org/nlogo/prim/_anyotherwith.java-41-				throw new EngineException
-org/nlogo/prim/_anyotherwith.java:42:					( context , this , displayName() + " expected a true/false value from " +
-org/nlogo/prim/_anyotherwith.java-43-					  Dump.logoObject( tester ) +
-org/nlogo/prim/_anyotherwith.java:44:					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/_anyotherwith.java-45-			}
-org/nlogo/prim/_anyotherwith.java-46-			if( ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/_anywith.java-17-		return Syntax.reporterSyntax
-org/nlogo/prim/_anywith.java-18-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/_anywith.java:19:			  Syntax.TYPE_BOOLEAN , "OTPL" , "?" ) ;
-org/nlogo/prim/_anywith.java-20-	}
-org/nlogo/prim/_anywith.java-21-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/_anywith.java-35-			{
-org/nlogo/prim/_anywith.java-36-				throw new EngineException
-org/nlogo/prim/_anywith.java:37:					( context , this , "WITH expected a true/false value from " + Dump.logoObject( tester ) + ", " +
-org/nlogo/prim/_anywith.java:38:					  "but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/_anywith.java-39-			}
-org/nlogo/prim/_anywith.java-40-			if( ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/_ask.java-22-			( new int[] { Syntax.TYPE_AGENTSET | Syntax.TYPE_AGENT ,
-org/nlogo/prim/_ask.java-23-						  Syntax.TYPE_COMMAND_BLOCK } ,
-org/nlogo/prim/_ask.java:24:				"OTPL" , "?" , true ) ;
-org/nlogo/prim/_ask.java-25-	}
-org/nlogo/prim/_ask.java-26-	@Override
-org/nlogo/prim/_ask.java-47-				{
-org/nlogo/prim/_ask.java-48-					throw new EngineException
-org/nlogo/prim/_ask.java:49:						( context , this , "only the observer can ASK the set of all turtles" ) ;
-org/nlogo/prim/_ask.java-50-				}
-org/nlogo/prim/_ask.java-51-				if( agentset == world.patches() )
-org/nlogo/prim/_ask.java-52-				{
-org/nlogo/prim/_ask.java-53-					throw new EngineException
-org/nlogo/prim/_ask.java:54:						( context , this , "only the observer can ASK the set of all patches" ) ;
-org/nlogo/prim/_ask.java-55-				}
-org/nlogo/prim/_ask.java-56-			}
-org/nlogo/prim/_ask.java-62-			{
-org/nlogo/prim/_ask.java-63-				throw new EngineException
-org/nlogo/prim/_ask.java:64:					( context , this , "that agent is dead" ) ;
-org/nlogo/prim/_ask.java-65-			}
-org/nlogo/prim/_ask.java-66-			agentset = new ArrayAgentSet( agent.getAgentClass() , 1, false , world ) ;
-org/nlogo/prim/_ask.java-82-			{
-org/nlogo/prim/_ask.java-83-				throw new EngineException
-org/nlogo/prim/_ask.java:84:					( context , this , "only the observer can ASK the set of all turtles" ) ;
-org/nlogo/prim/_ask.java-85-			}
-org/nlogo/prim/_ask.java-86-			if( agentset == world.patches() )
-org/nlogo/prim/_ask.java-87-			{
-org/nlogo/prim/_ask.java-88-				throw new EngineException
-org/nlogo/prim/_ask.java:89:					( context , this , "only the observer can ASK the set of all patches" ) ;
-org/nlogo/prim/_ask.java-90-			}
-org/nlogo/prim/_ask.java-91-		}
-org/nlogo/prim/_ask.java-99-		{
-org/nlogo/prim/_ask.java-100-			throw new EngineException
-org/nlogo/prim/_ask.java:101:				( context , this , "that agent is dead" ) ;
-org/nlogo/prim/_ask.java-102-		}
-org/nlogo/prim/_ask.java-103-		AgentSet agentset = new ArrayAgentSet( agent.getAgentClass() , 1, false , world ) ;
-org/nlogo/prim/_askconcurrent.java-16-		return Syntax.commandSyntax
-org/nlogo/prim/_askconcurrent.java-17-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_COMMAND_BLOCK } ,
-org/nlogo/prim/_askconcurrent.java:18:			  "OTPL" , "?" , true ) ;
-org/nlogo/prim/_askconcurrent.java-19-	}
-org/nlogo/prim/_askconcurrent.java-20-	@Override
-org/nlogo/prim/_askconcurrent.java-32-			{
-org/nlogo/prim/_askconcurrent.java-33-				throw new EngineException
-org/nlogo/prim/_askconcurrent.java:34:					( context , this , "only the observer can ASK the set of all turtles" ) ;
-org/nlogo/prim/_askconcurrent.java-35-			}
-org/nlogo/prim/_askconcurrent.java-36-			if( agentset == world.patches() )
-org/nlogo/prim/_askconcurrent.java-37-			{
-org/nlogo/prim/_askconcurrent.java-38-				throw new EngineException
-org/nlogo/prim/_askconcurrent.java:39:					( context , this , "only the observer can ASK the set of all patches" ) ;
-org/nlogo/prim/_askconcurrent.java-40-			}
-org/nlogo/prim/_askconcurrent.java-41-		}
-org/nlogo/prim/_breedat.java-19-			( new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-org/nlogo/prim/_breedat.java-20-			  Syntax.TYPE_TURTLESET ,
-org/nlogo/prim/_breedat.java:21:			  "-TP-" ) ;
-org/nlogo/prim/_breedat.java-22-	}
-org/nlogo/prim/_breedat.java-23-	@Override
-org/nlogo/prim/_breedhere.java-19-	@Override public Syntax getSyntax()
-org/nlogo/prim/_breedhere.java-20-	{
-org/nlogo/prim/_breedhere.java:21:		return Syntax.reporterSyntax( Syntax.TYPE_TURTLESET , "-TP-" ) ;
-org/nlogo/prim/_breedhere.java-22-	}
 org/nlogo/prim/_breedhere.java-23-	@Override public String toString()
-org/nlogo/prim/_breedon.java-49-			if( turtle.id == -1 )
-org/nlogo/prim/_breedon.java-50-			{
-org/nlogo/prim/_breedon.java:51:				throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_breedon.java-52-			}
-org/nlogo/prim/_breedon.java-53-			for( Turtle t : turtle.getPatchHere().turtlesHere() )
-org/nlogo/prim/_breedon.java-162-			if( turtle.id == -1 )
-org/nlogo/prim/_breedon.java-163-			{
-org/nlogo/prim/_breedon.java:164:				throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_breedon.java-165-			}
-org/nlogo/prim/_breedon.java-166-			for( Turtle t : turtle.getPatchHere().turtlesHere() )
-org/nlogo/prim/_breedon.java-200-		if( turtle.id == -1 )
-org/nlogo/prim/_breedon.java-201-		{
-org/nlogo/prim/_breedon.java:202:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_breedon.java-203-		}
-org/nlogo/prim/_breedon.java-204-		for( Turtle t : turtle.getPatchHere().turtlesHere() )
 org/nlogo/prim/_breedsingular.java-39-		{
 org/nlogo/prim/_breedsingular.java-40-			throw new EngineException
 org/nlogo/prim/_breedsingular.java:41:				( context , this , idDouble + " is not an integer" ) ;
@@ -5799,11 +5406,6 @@ org/nlogo/prim/_breedsingular.java-52-				( context , this ,
 org/nlogo/prim/_breedsingular.java:53:				  turtle + " is not a " + world.getBreedSingular( breed ) ) ;
 org/nlogo/prim/_breedsingular.java-54-		}
 org/nlogo/prim/_breedsingular.java-55-		return turtle ;
-org/nlogo/prim/_breedvariableof.java-37-			{
-org/nlogo/prim/_breedvariableof.java-38-				throw new EngineException
-org/nlogo/prim/_breedvariableof.java:39:					( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_breedvariableof.java-40-			}
-org/nlogo/prim/_breedvariableof.java-41-			try
 org/nlogo/prim/_call.java-8-import org.nlogo.nvm.Context;
 org/nlogo/prim/_call.java-9-
 org/nlogo/prim/_callreport.java-9-import org.nlogo.nvm.Context;
@@ -5817,111 +5419,7 @@ org/nlogo/prim/_conststring.java-20-	{
 org/nlogo/prim/_conststring.java:21:		return super.toString() + ":\"" + value + "\"" ;
 org/nlogo/prim/_conststring.java-22-	}
 org/nlogo/prim/_conststring.java-23-	@Override public Object report( Context context )
-org/nlogo/prim/_countother.java-13-		return Syntax.reporterSyntax
-org/nlogo/prim/_countother.java-14-			( new int[] { Syntax.TYPE_AGENTSET } ,
-org/nlogo/prim/_countother.java:15:			  Syntax.TYPE_NUMBER , "-TPL" ) ;
-org/nlogo/prim/_countother.java-16-	}
 org/nlogo/prim/_countother.java-17-	@Override public Object report( Context context )
-org/nlogo/prim/_countotherwith.java-17-		return Syntax.reporterSyntax
-org/nlogo/prim/_countotherwith.java-18-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/_countotherwith.java:19:			  Syntax.TYPE_NUMBER , "-TPL" ,
-org/nlogo/prim/_countotherwith.java-20-			  "?" ) ;  // takes reporter block of unknown agent type
-org/nlogo/prim/_countotherwith.java-21-	}
-org/nlogo/prim/_countotherwith.java-41-			{
-org/nlogo/prim/_countotherwith.java-42-				throw new EngineException
-org/nlogo/prim/_countotherwith.java:43:					( context , this , displayName() + " expected a true/false value from " +
-org/nlogo/prim/_countotherwith.java-44-					  Dump.logoObject( tester ) +
-org/nlogo/prim/_countotherwith.java:45:					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/_countotherwith.java-46-			}
-org/nlogo/prim/_countotherwith.java-47-			if( ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/_countwith.java-16-		return Syntax.reporterSyntax
-org/nlogo/prim/_countwith.java-17-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/_countwith.java:18:			  Syntax.TYPE_NUMBER , "OTPL" , "?" ) ;
-org/nlogo/prim/_countwith.java-19-	}
-org/nlogo/prim/_countwith.java-20-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/_countwith.java-38-				throw new EngineException
-org/nlogo/prim/_countwith.java-39-					( context , this ,
-org/nlogo/prim/_countwith.java:40:					  displayName() + " expected a true/false value from " +
-org/nlogo/prim/_countwith.java-41-					  Dump.logoObject( tester ) + ", " +
-org/nlogo/prim/_countwith.java:42:					  "but got "+ Dump.logoObject( value ) +
-org/nlogo/prim/_countwith.java:43:					  " instead" ) ;
-org/nlogo/prim/_countwith.java-44-			}
-org/nlogo/prim/_countwith.java-45-			if( ( (Boolean) value ).booleanValue() )
-org/nlogo/prim/_createlinkfrom.java-34-	public String toString()
-org/nlogo/prim/_createlinkfrom.java-35-	{
-org/nlogo/prim/_createlinkfrom.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinkfrom.java-37-	}
-org/nlogo/prim/_createlinkfrom.java-38-	@Override
-org/nlogo/prim/_createlinkfrom.java-54-				throw new EngineException
-org/nlogo/prim/_createlinkfrom.java-55-					( context , this ,
-org/nlogo/prim/_createlinkfrom.java:56:					  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinkfrom.java-57-			}
-org/nlogo/prim/_createlinkfrom.java-58-			if( src.id != -1 && dest.id != -1 )
-org/nlogo/prim/_createlinksfrom.java-34-	public String toString()
-org/nlogo/prim/_createlinksfrom.java-35-	{
-org/nlogo/prim/_createlinksfrom.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinksfrom.java-37-	}
-org/nlogo/prim/_createlinksfrom.java-38-	@Override
-org/nlogo/prim/_createlinksfrom.java-61-					throw new EngineException
-org/nlogo/prim/_createlinksfrom.java-62-						( context , this ,
-org/nlogo/prim/_createlinksfrom.java:63:						  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinksfrom.java-64-				}
-org/nlogo/prim/_createlinksfrom.java-65-				if( src.id != -1 && dest.id != -1 )
-org/nlogo/prim/_createlinksto.java-34-	public String toString()
-org/nlogo/prim/_createlinksto.java-35-	{
-org/nlogo/prim/_createlinksto.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinksto.java-37-	}
-org/nlogo/prim/_createlinksto.java-38-	@Override
-org/nlogo/prim/_createlinksto.java-61-					throw new EngineException
-org/nlogo/prim/_createlinksto.java-62-						( context , this ,
-org/nlogo/prim/_createlinksto.java:63:						  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinksto.java-64-				}
-org/nlogo/prim/_createlinksto.java-65-				if( src.id != -1 && dest.id != -1 )
-org/nlogo/prim/_createlinkswith.java-34-	public String toString()
-org/nlogo/prim/_createlinkswith.java-35-	{
-org/nlogo/prim/_createlinkswith.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinkswith.java-37-	}
-org/nlogo/prim/_createlinkswith.java-38-	@Override
-org/nlogo/prim/_createlinkswith.java-61-					throw new EngineException
-org/nlogo/prim/_createlinkswith.java-62-					( context , this ,
-org/nlogo/prim/_createlinkswith.java:63:					  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinkswith.java-64-				}
-org/nlogo/prim/_createlinkswith.java-65-				if( src.id != -1 && dest.id != -1 )
-org/nlogo/prim/_createlinkto.java-34-	public String toString()
-org/nlogo/prim/_createlinkto.java-35-	{
-org/nlogo/prim/_createlinkto.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinkto.java-37-	}
-org/nlogo/prim/_createlinkto.java-38-	@Override
-org/nlogo/prim/_createlinkto.java-56-				throw new EngineException
-org/nlogo/prim/_createlinkto.java-57-					( context , this ,
-org/nlogo/prim/_createlinkto.java:58:					  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinkto.java-59-			}
-org/nlogo/prim/_createlinkto.java-60-			if( src.id != -1 && dest.id != -1 )
-org/nlogo/prim/_createlinkwith.java-34-	public String toString()
-org/nlogo/prim/_createlinkwith.java-35-	{
-org/nlogo/prim/_createlinkwith.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createlinkwith.java-37-	}
-org/nlogo/prim/_createlinkwith.java-38-	@Override
-org/nlogo/prim/_createlinkwith.java-54-				throw new EngineException
-org/nlogo/prim/_createlinkwith.java-55-					( context , this ,
-org/nlogo/prim/_createlinkwith.java:56:					  "A turtle cannot link to itself." ) ; 
-org/nlogo/prim/_createlinkwith.java-57-			}
-org/nlogo/prim/_createlinkwith.java-58-			if( src.id > dest.id )
-org/nlogo/prim/_createorderedturtles.java-34-	public String toString()
-org/nlogo/prim/_createorderedturtles.java-35-	{
-org/nlogo/prim/_createorderedturtles.java:36:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createorderedturtles.java-37-	}
-org/nlogo/prim/_createorderedturtles.java-38-	@Override
-org/nlogo/prim/_createturtles.java-32-	public String toString()
-org/nlogo/prim/_createturtles.java-33-	{
-org/nlogo/prim/_createturtles.java:34:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_createturtles.java-35-	}
-org/nlogo/prim/_createturtles.java-36-	@Override
-org/nlogo/prim/_diffuse.java-41-		{
-org/nlogo/prim/_diffuse.java-42-			throw new EngineException
-org/nlogo/prim/_diffuse.java:43:				( context , this , diffuseparam + " is not in the range 0.0 to 1.0" ) ;
-org/nlogo/prim/_diffuse.java-44-		}
-org/nlogo/prim/_diffuse.java-45-		try
 org/nlogo/prim/_diffuse.java-56-			throw new EngineException
 org/nlogo/prim/_diffuse.java-57-				( context , this , 
 org/nlogo/prim/_diffuse.java:58:				  ex.patch() + " should contain a number in the " + world.patchesOwnNameAt( vn ) +
@@ -5932,11 +5430,6 @@ org/nlogo/prim/_diffuse.java:62:					: "the " + Syntax.typeName(value) + " " + D
 org/nlogo/prim/_diffuse.java:63:				  " instead" ) ;
 org/nlogo/prim/_diffuse.java-64-		}
 org/nlogo/prim/_diffuse.java-65-		context.ip = next ;
-org/nlogo/prim/_diffuse4.java-40-		{
-org/nlogo/prim/_diffuse4.java-41-			throw new EngineException
-org/nlogo/prim/_diffuse4.java:42:				( context , this , diffuseparam + " is not in the range 0.0 to 1.0" ) ;
-org/nlogo/prim/_diffuse4.java-43-		}
-org/nlogo/prim/_diffuse4.java-44-		try
 org/nlogo/prim/_diffuse4.java-52-		catch( UnsupportedOperationException e )
 org/nlogo/prim/_diffuse4.java-53-		{
 org/nlogo/prim/_diffuse4.java:54:			throw new EngineException( context , this , "Diffuse4 is not supported in 3D" ) ;
@@ -5952,11 +5445,6 @@ org/nlogo/prim/_diffuse4.java:64:					: "the " + Syntax.typeName(value) + " " + 
 org/nlogo/prim/_diffuse4.java:65:				  " instead" ) ;
 org/nlogo/prim/_diffuse4.java-66-		}
 org/nlogo/prim/_diffuse4.java-67-		context.ip = next ;
-org/nlogo/prim/_extern.java-66-			LogoException le =
-org/nlogo/prim/_extern.java-67-				new EngineException
-org/nlogo/prim/_extern.java:68:				( context , this , "Extension exception: " + ex.getMessage() ) ;
-org/nlogo/prim/_extern.java-69-			// it might be better to use the Java 1.4 setCause() stuff, for
-org/nlogo/prim/_extern.java-70-			// the long term... but then i think the handler would have to
 org/nlogo/prim/_externreport.java-62-		{
 org/nlogo/prim/_externreport.java-63-			EngineException ee =
 org/nlogo/prim/_externreport.java:64:				new EngineException( context , this , "Extension exception: "
@@ -5974,68 +5462,11 @@ org/nlogo/prim/_foreach.java:19:		+ "Use WITHOUT-INTERRUPTION around the FOREACH
 org/nlogo/prim/_foreach.java:20:		+ "or place the FOREACH in a separate procedure." ;
 org/nlogo/prim/_foreach.java-21-	public int vn ;
 org/nlogo/prim/_foreach.java-22-	@Override
-org/nlogo/prim/_foreach.java-35-	public String toString()
-org/nlogo/prim/_foreach.java-36-	{
-org/nlogo/prim/_foreach.java:37:		return super.toString() + ":" + vn + ",+" + offset ;
-org/nlogo/prim/_foreach.java-38-	}
-org/nlogo/prim/_foreach.java-39-	@Override
 org/nlogo/prim/_foreach.java-61-				throw new EngineException
 org/nlogo/prim/_foreach.java-62-					( context , this ,
 org/nlogo/prim/_foreach.java:63:					  "All the list arguments to FOREACH must be the same length." ) ;
 org/nlogo/prim/_foreach.java-64-			}
-org/nlogo/prim/_foreach.java-65-			iters[ i ] = list.iterator() ;
-org/nlogo/prim/_greaterthan.java-54-		throw new EngineException
-org/nlogo/prim/_greaterthan.java-55-			( context , this , 
-org/nlogo/prim/_greaterthan.java:56:			  "the > operator can only be used on two numbers, " 
-org/nlogo/prim/_greaterthan.java:57:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_greaterthan.java:58:			  "but not on " + Syntax.aTypeName( o1 ) + " and " + Syntax.aTypeName( o2 ) ) ;
-org/nlogo/prim/_greaterthan.java-59-	}
-org/nlogo/prim/_greaterthan.java-60-	public boolean report_2( Context context , String arg0 , String arg1 )
-org/nlogo/prim/_greaterthan.java-86-		throw new EngineException
-org/nlogo/prim/_greaterthan.java-87-			( context , this , 
-org/nlogo/prim/_greaterthan.java:88:			  "the > operator can only be used on two numbers, " 
-org/nlogo/prim/_greaterthan.java:89:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_greaterthan.java:90:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/_greaterthan.java-91-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/_greaterthan.java-92-	}
-org/nlogo/prim/_greaterthan.java-99-		throw new EngineException
-org/nlogo/prim/_greaterthan.java-100-			( context , this , 
-org/nlogo/prim/_greaterthan.java:101:			  "the > operator can only be used on two numbers, " 
-org/nlogo/prim/_greaterthan.java:102:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_greaterthan.java:103:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/_greaterthan.java-104-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/_greaterthan.java-105-	}
-org/nlogo/prim/_hatch.java-32-	public String toString()
-org/nlogo/prim/_hatch.java-33-	{
-org/nlogo/prim/_hatch.java:34:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_hatch.java-35-	}
-org/nlogo/prim/_hatch.java-36-	@Override
-org/nlogo/prim/_lessthan.java-54-		throw new EngineException
-org/nlogo/prim/_lessthan.java-55-			( context , this , 
-org/nlogo/prim/_lessthan.java:56:			  "the < operator can only be used on two numbers, " 
-org/nlogo/prim/_lessthan.java:57:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_lessthan.java:58:			  "but not on " + Syntax.aTypeName( o1 ) + " and " + Syntax.aTypeName( o2 ) ) ;
-org/nlogo/prim/_lessthan.java-59-	}
-org/nlogo/prim/_lessthan.java-60-	public boolean report_2( Context context , String arg0 , String arg1 )
-org/nlogo/prim/_lessthan.java-86-		throw new EngineException
-org/nlogo/prim/_lessthan.java-87-			( context , this , 
-org/nlogo/prim/_lessthan.java:88:			  "the < operator can only be used on two numbers, " 
-org/nlogo/prim/_lessthan.java:89:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_lessthan.java:90:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/_lessthan.java-91-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/_lessthan.java-92-	}
-org/nlogo/prim/_lessthan.java-99-		throw new EngineException
-org/nlogo/prim/_lessthan.java-100-			( context , this , 
-org/nlogo/prim/_lessthan.java:101:			  "the < operator can only be used on two numbers, " 
-org/nlogo/prim/_lessthan.java:102:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/_lessthan.java:103:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/_lessthan.java-104-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/_lessthan.java-105-	}
-org/nlogo/prim/_letvariable.java-22-	@Override public String toString()
-org/nlogo/prim/_letvariable.java-23-	{
-org/nlogo/prim/_letvariable.java:24:		return super.toString() + "(" + name + ")";
-org/nlogo/prim/_letvariable.java-25-	}
-org/nlogo/prim/_letvariable.java-26-	@Override public Object report( Context context )
+org/nlogo/prim/_foreach.java-65-			iters[ i ] = list.iterator()
 org/nlogo/prim/_linkbreedvariableof.java-27-			{
 org/nlogo/prim/_linkbreedvariableof.java-28-				throw new EngineException
 org/nlogo/prim/_linkbreedvariableof.java:29:					( context , this , "that link is dead" ) ;
@@ -6056,43 +5487,6 @@ org/nlogo/prim/_linkvariableof.java-136-			throw new EngineException
 org/nlogo/prim/_linkvariableof.java:137:				( context , this , "that link is dead" ) ;
 org/nlogo/prim/_linkvariableof.java-138-		}
 org/nlogo/prim/_linkvariableof.java-139-		try
-org/nlogo/prim/_map.java-45-				throw new EngineException
-org/nlogo/prim/_map.java-46-					( context , this ,
-org/nlogo/prim/_map.java:47:					  "All the list arguments to MAP must be the same length." ) ;
-org/nlogo/prim/_map.java-48-			}
-org/nlogo/prim/_map.java-49-			iters[ i ] = list.iterator() ;
-org/nlogo/prim/_max.java-39-		{
-org/nlogo/prim/_max.java-40-			throw new EngineException
-org/nlogo/prim/_max.java:41:				( context , this , "can't find the maximum of a list with no numbers: " +
-org/nlogo/prim/_max.java-42-				  Dump.logoObject( list ) ) ;
-org/nlogo/prim/_max.java-43-		}
-org/nlogo/prim/_mean.java-34-				throw new EngineException
-org/nlogo/prim/_mean.java-35-					( context , this , 
-org/nlogo/prim/_mean.java:36:					  "can't find the mean of a list that contains non-numbers " 
-org/nlogo/prim/_mean.java-37-					  + Dump.logoObject( elt ) 
-org/nlogo/prim/_mean.java:38:					  + " is a " + Syntax.typeName( elt ) + "." ) ;
-org/nlogo/prim/_mean.java-39-			}
-org/nlogo/prim/_mean.java-40-			sum += ( (Double) elt ).doubleValue() ;
-org/nlogo/prim/_min.java-42-		{
-org/nlogo/prim/_min.java-43-			throw new EngineException
-org/nlogo/prim/_min.java:44:				( context , this , "can't find the minimum of a list with no numbers: " +
-org/nlogo/prim/_min.java-45-				  Dump.logoObject( list ) ) ;
-org/nlogo/prim/_min.java-46-		}
-org/nlogo/prim/_neighbors.java-13-	@Override public Syntax getSyntax()
-org/nlogo/prim/_neighbors.java-14-	{
-org/nlogo/prim/_neighbors.java:15:		return Syntax.reporterSyntax( Syntax.TYPE_PATCHSET , "-TP-" ) ;
-org/nlogo/prim/_neighbors.java-16-	}
-org/nlogo/prim/_neighbors.java-17-	@Override public Object report( Context context )
-org/nlogo/prim/_neighbors4.java-13-	@Override public Syntax getSyntax()
-org/nlogo/prim/_neighbors4.java-14-	{
-org/nlogo/prim/_neighbors4.java:15:		return Syntax.reporterSyntax( Syntax.TYPE_PATCHSET , "-TP-" ) ;
-org/nlogo/prim/_neighbors4.java-16-	}
-org/nlogo/prim/_neighbors4.java-17-	@Override public Object report( Context context )
-org/nlogo/prim/_nsum.java-18-		return Syntax.reporterSyntax
-org/nlogo/prim/_nsum.java-19-			( new int[] { Syntax.TYPE_REFERENCE } ,
-org/nlogo/prim/_nsum.java:20:			  Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/_nsum.java-21-	}
-org/nlogo/prim/_nsum.java-22-	@Override public String toString()
 org/nlogo/prim/_nsum.java-51-				throw new EngineException
 org/nlogo/prim/_nsum.java-52-					( context , this , 
 org/nlogo/prim/_nsum.java:53:					  "can't find the sum of a list that contains non-numbers " 
@@ -6100,11 +5494,6 @@ org/nlogo/prim/_nsum.java-54-					  + Dump.logoObject( value )
 org/nlogo/prim/_nsum.java:55:					  + " is a " + Syntax.typeName( value ) + "." ) ;
 org/nlogo/prim/_nsum.java-56-			}
 org/nlogo/prim/_nsum.java-57-
-org/nlogo/prim/_nsum4.java-18-		return Syntax.reporterSyntax
-org/nlogo/prim/_nsum4.java-19-			( new int[] { Syntax.TYPE_REFERENCE } ,
-org/nlogo/prim/_nsum4.java:20:			  Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/_nsum4.java-21-	}
-org/nlogo/prim/_nsum4.java-22-	@Override public String toString()
 org/nlogo/prim/_nsum4.java-51-				throw new EngineException
 org/nlogo/prim/_nsum4.java-52-					( context , this , 
 org/nlogo/prim/_nsum4.java:53:					  "can't find the sum of a list that contains non-numbers " 
@@ -6117,161 +5506,6 @@ org/nlogo/prim/_nvalues.java-33-			throw new EngineException
 org/nlogo/prim/_nvalues.java:34:				( context , this , displayName() + " cannot take a negative number" ) ;	
 org/nlogo/prim/_nvalues.java-35-		}
 org/nlogo/prim/_nvalues.java-36-
-org/nlogo/prim/_of.java-22-			  Syntax.NORMAL_PRECEDENCE + 1 ,
-org/nlogo/prim/_of.java-23-			  true , // right associative
-org/nlogo/prim/_of.java:24:			  "OTPL" ,
-org/nlogo/prim/_of.java-25-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/_of.java-26-				) ;
-org/nlogo/prim/_of.java-35-			if( agent.id == -1 )
-org/nlogo/prim/_of.java-36-			{
-org/nlogo/prim/_of.java:37:				throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_of.java-38-			}
-org/nlogo/prim/_of.java-39-			args[ 0 ].checkAgentClass( agent , context ) ;
-org/nlogo/prim/_other.java-11-	extends Reporter
-org/nlogo/prim/_other.java-12-{
-org/nlogo/prim/_other.java:13:	// super( "TPL" ) ;
-org/nlogo/prim/_other.java-14-	@Override
-org/nlogo/prim/_other.java-15-	public Syntax getSyntax()
-org/nlogo/prim/_otherwith.java-21-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/_otherwith.java-22-			  Syntax.TYPE_AGENTSET ,
-org/nlogo/prim/_otherwith.java:23:			  "OTPL" , "?" ) ;
-org/nlogo/prim/_otherwith.java-24-	}
-org/nlogo/prim/_otherwith.java-25-	@Override public Object report( final Context context )
-org/nlogo/prim/_otherwith.java-46-			{
-org/nlogo/prim/_otherwith.java-47-				throw new EngineException
-org/nlogo/prim/_otherwith.java:48:					( context , this , displayName() + " expected a true/false value from " +
-org/nlogo/prim/_otherwith.java-49-					  Dump.logoObject( tester ) +
-org/nlogo/prim/_otherwith.java:50:					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/_otherwith.java-51-			}
-org/nlogo/prim/_otherwith.java-52-			if( ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/_parallelupdate.java-18-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_REFERENCE ,
-org/nlogo/prim/_parallelupdate.java-19-						  Syntax.TYPE_REPORTER_BLOCK } ,
-org/nlogo/prim/_parallelupdate.java:20:				"OTPL" , "?" , true ) ;
-org/nlogo/prim/_parallelupdate.java-21-	}
-org/nlogo/prim/_parallelupdate.java-22-	@Override
-org/nlogo/prim/_patch.java-21-	}
-org/nlogo/prim/_patch.java-22-	// I've tried to rejigger this and the result gets past TryCatchSafeChecker but then
-org/nlogo/prim/_patch.java:23:	// doesn't work at runtime ("Inconsistent stack height") - ST 2/10/09
-org/nlogo/prim/_patch.java-24-	@Override
-org/nlogo/prim/_patch.java-25-	public Object report( final Context context ) throws LogoException
-org/nlogo/prim/_patchat.java-16-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/_patchat.java-17-		int ret = Syntax.TYPE_PATCH ;
-org/nlogo/prim/_patchat.java:18:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-org/nlogo/prim/_patchat.java-19-	}
-org/nlogo/prim/_patchat.java-20-	// I've tried to rejigger this and the result gets past TryCatchSafeChecker but then
-org/nlogo/prim/_patchat.java:21:	// doesn't work at runtime ("Inconsistent stack height") - ST 2/10/09
-org/nlogo/prim/_patchat.java-22-	@Override
-org/nlogo/prim/_patchat.java-23-	public Object report( final Context context ) throws LogoException
-org/nlogo/prim/_patcheast.java-14-	{
-org/nlogo/prim/_patcheast.java-15-		return Syntax.reporterSyntax
-org/nlogo/prim/_patcheast.java:16:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patcheast.java-17-	}
-org/nlogo/prim/_patcheast.java-18-	@Override public Object report( Context context )
-org/nlogo/prim/_patchhereinternal.java-15-	{
-org/nlogo/prim/_patchhereinternal.java-16-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchhereinternal.java:17:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchhereinternal.java-18-	}
-org/nlogo/prim/_patchhereinternal.java-19-	@Override public Object report( Context context )
-org/nlogo/prim/_patchne.java-14-	{
-org/nlogo/prim/_patchne.java-15-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchne.java:16:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchne.java-17-	}
-org/nlogo/prim/_patchne.java-18-	@Override public Object report( Context context )
-org/nlogo/prim/_patchnorth.java-13-	{
-org/nlogo/prim/_patchnorth.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchnorth.java:15:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchnorth.java-16-	}
-org/nlogo/prim/_patchnorth.java-17-	@Override public Object report( Context context )
-org/nlogo/prim/_patchnw.java-13-	{
-org/nlogo/prim/_patchnw.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchnw.java:15:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchnw.java-16-	}
-org/nlogo/prim/_patchnw.java-17-	@Override public Object report( Context context )
-org/nlogo/prim/_patchse.java-12-	@Override public Syntax getSyntax()
-org/nlogo/prim/_patchse.java-13-	{
-org/nlogo/prim/_patchse.java:14:		return Syntax.reporterSyntax( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchse.java-15-	}
-org/nlogo/prim/_patchse.java-16-	@Override public Object report( Context context )
-org/nlogo/prim/_patchsouth.java-12-	@Override public Syntax getSyntax()
-org/nlogo/prim/_patchsouth.java-13-	{
-org/nlogo/prim/_patchsouth.java:14:		return Syntax.reporterSyntax( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchsouth.java-15-	}
-org/nlogo/prim/_patchsouth.java-16-	@Override public Object report( Context context )
-org/nlogo/prim/_patchsw.java-14-	{
-org/nlogo/prim/_patchsw.java-15-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchsw.java:16:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchsw.java-17-	}
-org/nlogo/prim/_patchsw.java-18-	@Override public Object report( Context context )
-org/nlogo/prim/_patchvariable.java-23-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchvariable.java-24-			( Syntax.TYPE_WILDCARD | Syntax.TYPE_REFERENCE ,
-org/nlogo/prim/_patchvariable.java:25:			  "-TP-" ) ;
-org/nlogo/prim/_patchvariable.java-26-	}
-org/nlogo/prim/_patchvariable.java-27-	@Override public String toString()
-org/nlogo/prim/_patchvariabledouble.java-15-	@Override public Syntax getSyntax()
-org/nlogo/prim/_patchvariabledouble.java-16-	{
-org/nlogo/prim/_patchvariabledouble.java:17:		return Syntax.reporterSyntax( Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/_patchvariabledouble.java-18-	}
-org/nlogo/prim/_patchvariabledouble.java-19-	@Override public String toString()
-org/nlogo/prim/_patchvariableof.java-28-			{
-org/nlogo/prim/_patchvariableof.java-29-				throw new EngineException
-org/nlogo/prim/_patchvariableof.java:30:					( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_patchvariableof.java-31-			}
-org/nlogo/prim/_patchvariableof.java-32-			try
-org/nlogo/prim/_patchvariableof.java-94-			{
-org/nlogo/prim/_patchvariableof.java-95-				throw new EngineException
-org/nlogo/prim/_patchvariableof.java:96:					( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_patchvariableof.java-97-			}
-org/nlogo/prim/_patchvariableof.java-98-			try
-org/nlogo/prim/_patchvariableof.java-155-		{
-org/nlogo/prim/_patchvariableof.java-156-			throw new EngineException
-org/nlogo/prim/_patchvariableof.java:157:				( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_patchvariableof.java-158-		}
-org/nlogo/prim/_patchvariableof.java-159-		try
-org/nlogo/prim/_patchwest.java-14-	{
-org/nlogo/prim/_patchwest.java-15-		return Syntax.reporterSyntax
-org/nlogo/prim/_patchwest.java:16:			( Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/_patchwest.java-17-	}
-org/nlogo/prim/_patchwest.java-18-	@Override public Object report( Context context )
-org/nlogo/prim/_reduce.java-27-		{
-org/nlogo/prim/_reduce.java-28-			throw new EngineException
-org/nlogo/prim/_reduce.java:29:				( context , this , "The list argument to 'reduce' must not be empty." ) ;
-org/nlogo/prim/_reduce.java-30-		}
-org/nlogo/prim/_reduce.java-31-		Iterator<Object> it = list.iterator() ;
-org/nlogo/prim/_reference.java-25-	public String toString()
-org/nlogo/prim/_reference.java-26-	{
-org/nlogo/prim/_reference.java:27:		return super.toString() + ":" + agentClass.getName() + "," + vn ;
-org/nlogo/prim/_reference.java-28-	}
-org/nlogo/prim/_reference.java-29-	@Override
-org/nlogo/prim/_repeatlocal.java-25-	public String toString()
-org/nlogo/prim/_repeatlocal.java-26-	{
-org/nlogo/prim/_repeatlocal.java:27:		return super.toString() + ":" + vn + ",+" + offset ;
-org/nlogo/prim/_repeatlocal.java-28-	}
-org/nlogo/prim/_repeatlocal.java-29-	@Override
-org/nlogo/prim/_repeatlocalinternal.java-22-	public String toString()
-org/nlogo/prim/_repeatlocalinternal.java-23-	{
-org/nlogo/prim/_repeatlocalinternal.java:24:		return super.toString() + ":" + offset + "," + vn ;
-org/nlogo/prim/_repeatlocalinternal.java-25-	}
-org/nlogo/prim/_repeatlocalinternal.java-26-	@Override
-org/nlogo/prim/_report.java-23-		{
-org/nlogo/prim/_report.java-24-			throw new EngineException
-org/nlogo/prim/_report.java:25:				( context , this  , displayName() + " can only be used inside TO-REPORT" ) ;
-org/nlogo/prim/_report.java-26-		}
-org/nlogo/prim/_report.java-27-		if( ! context.atTopActivation() )
-org/nlogo/prim/_report.java-31-			// maybe you should be able to, but at least for now, you can't
-org/nlogo/prim/_report.java-32-			throw new EngineException
-org/nlogo/prim/_report.java:33:				( context , this  , displayName() + " must be immediately inside a TO-REPORT" ) ;
-org/nlogo/prim/_report.java-34-		}
-org/nlogo/prim/_report.java-35-		context.job.result = args[ 0 ].report( context ) ;
-org/nlogo/prim/_report.java-42-		{
-org/nlogo/prim/_report.java-43-			throw new EngineException
-org/nlogo/prim/_report.java:44:				( context , this  , displayName() + " can only be used inside TO-REPORT" ) ;
-org/nlogo/prim/_report.java-45-		}
-org/nlogo/prim/_report.java-46-		if( ! context.atTopActivation() )
-org/nlogo/prim/_report.java-50-			// maybe you should be able to, but at least for now, you can't
-org/nlogo/prim/_report.java-51-			throw new EngineException
-org/nlogo/prim/_report.java:52:				( context , this  , displayName() + " must be immediately inside a TO-REPORT" ) ;
-org/nlogo/prim/_report.java-53-		}
-org/nlogo/prim/_report.java-54-		context.job.result = arg0 ;
 org/nlogo/prim/_return.java-13-	@Override public String displayName()
 org/nlogo/prim/_return.java-14-	{
 org/nlogo/prim/_return.java:15:		return "END" ; // for use in error messages
@@ -6287,21 +5521,6 @@ org/nlogo/prim/_returnreport.java-26-			( context , this ,
 org/nlogo/prim/_returnreport.java:27:			  "reached end of reporter procedure without REPORT being called" ) ;
 org/nlogo/prim/_returnreport.java-28-    }
 org/nlogo/prim/_returnreport.java-29-}
-org/nlogo/prim/_setpatchvariable.java-20-		return Syntax.commandSyntax
-org/nlogo/prim/_setpatchvariable.java-21-			( new int[] { Syntax.TYPE_WILDCARD } ,
-org/nlogo/prim/_setpatchvariable.java:22:			  "-TP-" , true ) ;
-org/nlogo/prim/_setpatchvariable.java-23-	}
-org/nlogo/prim/_setpatchvariable.java-24-	@Override
-org/nlogo/prim/_sortby.java-22-		int[] right = { Syntax.TYPE_BOOLEAN_BLOCK ,
-org/nlogo/prim/_sortby.java-23-						Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET } ;
-org/nlogo/prim/_sortby.java:24:		return Syntax.reporterSyntax( right , Syntax.TYPE_LIST , "OTPL" , "?" ) ;
-org/nlogo/prim/_sortby.java-25-	}
-org/nlogo/prim/_sortby.java-26-	public void setLeftVarIndex( int vn1 )
-org/nlogo/prim/_sprout.java-35-	public String toString()
-org/nlogo/prim/_sprout.java-36-	{
-org/nlogo/prim/_sprout.java:37:		return super.toString() + ":" + breedName + ",+" + offset ;
-org/nlogo/prim/_sprout.java-38-	}
-org/nlogo/prim/_sprout.java-39-	@Override
 org/nlogo/prim/_templatevariable.java-47-		{
 org/nlogo/prim/_templatevariable.java-48-			throw new EngineException
 org/nlogo/prim/_templatevariable.java:49:				( context , this , "? can only be used inside map and foreach" ) ;
@@ -6333,81 +5552,6 @@ org/nlogo/prim/_turtleorlinkvariableof.java:137:				  ( agent instanceof org.nlo
 org/nlogo/prim/_turtleorlinkvariableof.java:138:				  + " is dead" ) ;
 org/nlogo/prim/_turtleorlinkvariableof.java-139-		}
 org/nlogo/prim/_turtleorlinkvariableof.java-140-		try
-org/nlogo/prim/_turtlevariableof.java-28-			{
-org/nlogo/prim/_turtlevariableof.java-29-				throw new EngineException
-org/nlogo/prim/_turtlevariableof.java:30:					( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_turtlevariableof.java-31-			}
-org/nlogo/prim/_turtlevariableof.java-32-			try
-org/nlogo/prim/_turtlevariableof.java-92-			{
-org/nlogo/prim/_turtlevariableof.java-93-				throw new EngineException
-org/nlogo/prim/_turtlevariableof.java:94:					( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_turtlevariableof.java-95-			}
-org/nlogo/prim/_turtlevariableof.java-96-			try
-org/nlogo/prim/_turtlevariableof.java-135-		{
-org/nlogo/prim/_turtlevariableof.java-136-			throw new EngineException
-org/nlogo/prim/_turtlevariableof.java:137:				( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/_turtlevariableof.java-138-		}
-org/nlogo/prim/_turtlevariableof.java-139-		try
-org/nlogo/prim/_unknownidentifier.java-1-package org.nlogo.prim ;
-org/nlogo/prim/_unknownidentifier.java-2-
-org/nlogo/prim/_unknownidentifier.java:3:// This is used by IdentifierParser's "forgiving" mode, used by
-org/nlogo/prim/_unknownidentifier.java-4-// AutoConverter, in which unknown identifiers are assumed to be
-org/nlogo/prim/_unknownidentifier.java-5-// references to global variables that the compiler doesn't know
-org/nlogo/prim/_with.java-25-			  Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/_with.java-26-			  false , // left associative
-org/nlogo/prim/_with.java:27:			  "OTPL" ,
-org/nlogo/prim/_with.java-28-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/_with.java-29-				) ;
-org/nlogo/prim/_with.java-49-			{
-org/nlogo/prim/_with.java-50-				throw new EngineException
-org/nlogo/prim/_with.java:51:					( context , this , displayName() + " expected a true/false value from " +
-org/nlogo/prim/_with.java-52-					  Dump.logoObject( tester ) +
-org/nlogo/prim/_with.java:53:					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/_with.java-54-			}
-org/nlogo/prim/_with.java-55-			if( ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/dead/_randomorrandomfloat.scala-4-
-org/nlogo/prim/dead/_randomorrandomfloat.scala-5-/**
-org/nlogo/prim/dead/_randomorrandomfloat.scala:6: * This primitive never existed; we convert "random" (in very, very old models) or
-org/nlogo/prim/dead/_randomorrandomfloat.scala:7: * "random-int-or-float" (in more recent models) to this to force the user to change it; we need to
-org/nlogo/prim/dead/_randomorrandomfloat.scala-8- * have a class for it so the tokenizer and parser can parse it.
-org/nlogo/prim/dead/_randomorrandomfloat.scala-9- */
-org/nlogo/prim/etc/_all.java-18-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_all.java-19-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-org/nlogo/prim/etc/_all.java:20:			  Syntax.TYPE_BOOLEAN , "OTPL" , "?" ) ;
-org/nlogo/prim/etc/_all.java-21-	}
-org/nlogo/prim/etc/_all.java-22-	@Override
-org/nlogo/prim/etc/_all.java-41-			{
-org/nlogo/prim/etc/_all.java-42-				throw new EngineException
-org/nlogo/prim/etc/_all.java:43:					( context , this , displayName() + " expected a true/false value from " +
-org/nlogo/prim/etc/_all.java-44-					  Dump.logoObject( tester ) +
-org/nlogo/prim/etc/_all.java:45:					  ", but got "+ Dump.logoObject( value ) + " instead" ) ;
-org/nlogo/prim/etc/_all.java-46-			}
-org/nlogo/prim/etc/_all.java-47-			if( ! ( ( Boolean ) value ).booleanValue() )
-org/nlogo/prim/etc/_atan.java-25-		if( d1 == 0 && d2 == 0 )
-org/nlogo/prim/etc/_atan.java-26-		{
-org/nlogo/prim/etc/_atan.java:27:			throw new EngineException( context , this , "atan is undefined when both inputs are zero" ) ;
-org/nlogo/prim/etc/_atan.java-28-		}
-org/nlogo/prim/etc/_atan.java-29-		if( d1 == 0 )
-org/nlogo/prim/etc/_atpoints.java-37-				throw new EngineException
-org/nlogo/prim/etc/_atpoints.java-38-					( context , this , 
-org/nlogo/prim/etc/_atpoints.java:39:					  "invalid list of points: " + Dump.logoObject( points ) ) ;
-org/nlogo/prim/etc/_atpoints.java-40-			}
-org/nlogo/prim/etc/_atpoints.java-41-		}
-org/nlogo/prim/etc/_atpoints.java-165-							throw new EngineException
-org/nlogo/prim/etc/_atpoints.java-166-								( context , this , 
-org/nlogo/prim/etc/_atpoints.java:167:									"invalid list of points: " +
-org/nlogo/prim/etc/_atpoints.java-168-									Dump.logoObject( points ) ) ;
-org/nlogo/prim/etc/_atpoints.java-169-					    }
-org/nlogo/prim/etc/_atpoints.java-173-						throw new EngineException
-org/nlogo/prim/etc/_atpoints.java-174-							( context , this , 
-org/nlogo/prim/etc/_atpoints.java:175:							  "invalid list of points: " +
-org/nlogo/prim/etc/_atpoints.java-176-							  Dump.logoObject( points ) ) ;
-org/nlogo/prim/etc/_atpoints.java-177-				}
-org/nlogo/prim/etc/_atpoints.java-182-				throw new EngineException
-org/nlogo/prim/etc/_atpoints.java-183-					( context , this , 
-org/nlogo/prim/etc/_atpoints.java:184:					  "invalid list of points: " +
-org/nlogo/prim/etc/_atpoints.java-185-					  Dump.logoObject( points ) ) ;
-org/nlogo/prim/etc/_atpoints.java-186-			}
 org/nlogo/prim/etc/_averagepathlength.java-33-		{
 org/nlogo/prim/etc/_averagepathlength.java-34-			throw new EngineException
 org/nlogo/prim/etc/_averagepathlength.java:35:				( context , this , "expected last input to be a link breed." ) ;
@@ -6418,46 +5562,6 @@ org/nlogo/prim/etc/_boom.java-22-	{
 org/nlogo/prim/etc/_boom.java:23:		throw new EngineException( context , this , "boom!" ) ;
 org/nlogo/prim/etc/_boom.java-24-	}
 org/nlogo/prim/etc/_boom.java-25-}
-org/nlogo/prim/etc/_butfirst.java-33-			{
-org/nlogo/prim/etc/_butfirst.java-34-				throw new EngineException
-org/nlogo/prim/etc/_butfirst.java:35:					( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_butfirst.java-36-			}
-org/nlogo/prim/etc/_butfirst.java-37-			return list.butFirst() ;
-org/nlogo/prim/etc/_butfirst.java-43-			{
-org/nlogo/prim/etc/_butfirst.java-44-				throw new EngineException
-org/nlogo/prim/etc/_butfirst.java:45:					( context , this , token().name() + " got an empty string as input" ) ;
-org/nlogo/prim/etc/_butfirst.java-46-			}
-org/nlogo/prim/etc/_butfirst.java-47-			return string.substring( 1 ) ;
-org/nlogo/prim/etc/_butfirst.java-60-		{
-org/nlogo/prim/etc/_butfirst.java-61-			throw new EngineException
-org/nlogo/prim/etc/_butfirst.java:62:				( context , this , token().name() + " got an empty string as input" ) ;
-org/nlogo/prim/etc/_butfirst.java-63-		}
-org/nlogo/prim/etc/_butfirst.java-64-		return arg0.substring( 1 ) ;
-org/nlogo/prim/etc/_butfirst.java-71-		{
-org/nlogo/prim/etc/_butfirst.java-72-			throw new EngineException
-org/nlogo/prim/etc/_butfirst.java:73:				( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_butfirst.java-74-		}
-org/nlogo/prim/etc/_butfirst.java-75-		return arg0.butFirst() ;
-org/nlogo/prim/etc/_butlast.java-33-			{
-org/nlogo/prim/etc/_butlast.java-34-				throw new EngineException
-org/nlogo/prim/etc/_butlast.java:35:					( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_butlast.java-36-			}
-org/nlogo/prim/etc/_butlast.java-37-			return list.butLast() ;
-org/nlogo/prim/etc/_butlast.java-43-			{
-org/nlogo/prim/etc/_butlast.java-44-				throw new EngineException
-org/nlogo/prim/etc/_butlast.java:45:					( context , this , token().name() + " got an empty string as input" ) ;
-org/nlogo/prim/etc/_butlast.java-46-			}
-org/nlogo/prim/etc/_butlast.java-47-			return string.substring( 0 , string.length() - 1 ) ;
-org/nlogo/prim/etc/_butlast.java-60-		{
-org/nlogo/prim/etc/_butlast.java-61-			throw new EngineException
-org/nlogo/prim/etc/_butlast.java:62:				( context , this , token().name() + " got an empty string as input" ) ;
-org/nlogo/prim/etc/_butlast.java-63-		}
-org/nlogo/prim/etc/_butlast.java-64-		return arg0.substring( 0 , arg0.length() - 1 ) ;
-org/nlogo/prim/etc/_butlast.java-71-		{
-org/nlogo/prim/etc/_butlast.java-72-			throw new EngineException
-org/nlogo/prim/etc/_butlast.java:73:				( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_butlast.java-74-		}
-org/nlogo/prim/etc/_butlast.java-75-		return arg0.butLast() ;
 org/nlogo/prim/etc/_createnetworkpreferential.java-38-		if ( linkBreed.isDirected() )
 org/nlogo/prim/etc/_createnetworkpreferential.java-39-		{
 org/nlogo/prim/etc/_createnetworkpreferential.java:40:			throw new EngineException(context, "This command only supports undirected link breeds.");
@@ -6477,119 +5581,6 @@ org/nlogo/prim/etc/_createnetworkpreferential.java-64-				throw new EngineExcept
 org/nlogo/prim/etc/_createnetworkpreferential.java:65:					(context, "You can only create links between turtles!");
 org/nlogo/prim/etc/_createnetworkpreferential.java-66-			}
 org/nlogo/prim/etc/_createnetworkpreferential.java-67-			nodes[i] = (Turtle) agt;
-org/nlogo/prim/etc/_distance.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_distance.java-15-			( new int[] { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ,
-org/nlogo/prim/etc/_distance.java:16:			  Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_distance.java-17-	}
-org/nlogo/prim/etc/_distance.java-18-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_distance.java-26-			throw new EngineException
-org/nlogo/prim/etc/_distance.java-27-				( context , this ,
-org/nlogo/prim/etc/_distance.java:28:				  "expected this to be a turtle or a patch but got a link instead" ) ;
-org/nlogo/prim/etc/_distance.java-29-		}		
-org/nlogo/prim/etc/_distance.java-30-		if( otherAgent.id == -1 )
-org/nlogo/prim/etc/_distance.java-31-		{
-org/nlogo/prim/etc/_distance.java:32:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_distance.java-33-		}
-org/nlogo/prim/etc/_distance.java-34-		return world.protractor.distance( context.agent , otherAgent , true ) ; // true = wrap
-org/nlogo/prim/etc/_distancenowrap.java-13-	{
-org/nlogo/prim/etc/_distancenowrap.java-14-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
-org/nlogo/prim/etc/_distancenowrap.java:15:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_distancenowrap.java-16-	}
-org/nlogo/prim/etc/_distancenowrap.java-17-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_distancenowrap.java-24-		{
-org/nlogo/prim/etc/_distancenowrap.java-25-			throw new EngineException
-org/nlogo/prim/etc/_distancenowrap.java:26:				( context , this , "expected this to be a turtle or a patch but got a link instead" ) ;
-org/nlogo/prim/etc/_distancenowrap.java-27-		}		
-org/nlogo/prim/etc/_distancenowrap.java-28-		if( arg0.id == -1 )
-org/nlogo/prim/etc/_distancenowrap.java-29-		{
-org/nlogo/prim/etc/_distancenowrap.java:30:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_distancenowrap.java-31-		}
-org/nlogo/prim/etc/_distancenowrap.java-32-		return world.protractor.distance( context.agent , arg0 , false ) ; // false = don't wrap
-org/nlogo/prim/etc/_distancexy.java-11-	{
-org/nlogo/prim/etc/_distancexy.java-12-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/etc/_distancexy.java:13:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_distancexy.java-14-	}
-org/nlogo/prim/etc/_distancexy.java-15-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_distancexynowrap.java-11-	{
-org/nlogo/prim/etc/_distancexynowrap.java-12-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/etc/_distancexynowrap.java:13:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_distancexynowrap.java-14-	}
-org/nlogo/prim/etc/_distancexynowrap.java-15-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_div.java-28-		if( arg1 == 0 )
-org/nlogo/prim/etc/_div.java-29-		{
-org/nlogo/prim/etc/_div.java:30:			throw new EngineException( context , this , "division by zero" ) ;
-org/nlogo/prim/etc/_div.java-31-		}
-org/nlogo/prim/etc/_div.java-32-		return arg0 / arg1 ;
-org/nlogo/prim/etc/_edit.java-31-        }
-org/nlogo/prim/etc/_edit.java-32-        workspace.outputObject
-org/nlogo/prim/etc/_edit.java:33:                ("Now editing: " + path,
-org/nlogo/prim/etc/_edit.java-34-                        context.agent, true, false,
-org/nlogo/prim/etc/_edit.java-35-                        Workspace.OutputDestination.NORMAL);
-org/nlogo/prim/etc/_every.java-37-								   ( argEvalDoubleValue( context , 0 ) * 1000000000 ) ) ;
-org/nlogo/prim/etc/_every.java-38-			
-org/nlogo/prim/etc/_every.java:39:		// follow parentContext links to go backwards through the chain of "asks"
-org/nlogo/prim/etc/_every.java:40:		// until we are at the top level "ask" (or button press etc.)
-org/nlogo/prim/etc/_every.java-41-		WeakHashMap<Agent,WeakHashMap<Command,MutableLong>> runTimes =
-org/nlogo/prim/etc/_every.java-42-			workspace.lastRunTimes().get( context.job ) ;
-org/nlogo/prim/etc/_exportdrawing.java-20-								( workspace.fileManager().attachPrefix
-org/nlogo/prim/etc/_exportdrawing.java-21-								  ( filePath ) ,
-org/nlogo/prim/etc/_exportdrawing.java:22:								  "png" ) ;
-org/nlogo/prim/etc/_exportdrawing.java-23-						}
-org/nlogo/prim/etc/_exportdrawing.java-24-						catch( java.io.IOException ex )
-org/nlogo/prim/etc/_exportoutput.java-16-		{
-org/nlogo/prim/etc/_exportoutput.java-17-			throw new EngineException
-org/nlogo/prim/etc/_exportoutput.java:18:				( context , this , "can't export to empty pathname" ) ;
-org/nlogo/prim/etc/_exportoutput.java-19-		}
-org/nlogo/prim/etc/_exportoutput.java-20-		final org.nlogo.nvm.Command comm = this ;
-org/nlogo/prim/etc/_exportview.java-20-								( workspace.fileManager().attachPrefix
-org/nlogo/prim/etc/_exportview.java-21-								  ( filePath ) ,
-org/nlogo/prim/etc/_exportview.java:22:								  "png" ) ;
-org/nlogo/prim/etc/_exportview.java-23-						}
-org/nlogo/prim/etc/_exportview.java-24-						catch( java.io.IOException ex )
-org/nlogo/prim/etc/_extracthsb.java-30-			{
-org/nlogo/prim/etc/_extracthsb.java-31-				throw new org.nlogo.nvm.EngineException
-org/nlogo/prim/etc/_extracthsb.java:32:					( context , this , displayName() + " an rgb list must have 3 elements" ) ;
-org/nlogo/prim/etc/_extracthsb.java-33-			}
-org/nlogo/prim/etc/_extracthsb.java-34-			try
-org/nlogo/prim/etc/_extracthsb.java-47-			{
-org/nlogo/prim/etc/_extracthsb.java-48-				throw new org.nlogo.nvm.EngineException
-org/nlogo/prim/etc/_extracthsb.java:49:					( context , this , displayName() + " an rgb list must contain only numbers" ) ;
-org/nlogo/prim/etc/_extracthsb.java-50-			}
-org/nlogo/prim/etc/_extracthsb.java-51-		}
-org/nlogo/prim/etc/_extracthsb.java-85-		{
-org/nlogo/prim/etc/_extracthsb.java-86-			throw new org.nlogo.nvm.EngineException
-org/nlogo/prim/etc/_extracthsb.java:87:				( context , this , displayName() + " an rgb list must have 3 elements" ) ;
-org/nlogo/prim/etc/_extracthsb.java-88-		}
-org/nlogo/prim/etc/_extracthsb.java-89-		try
-org/nlogo/prim/etc/_extracthsb.java-102-		{
-org/nlogo/prim/etc/_extracthsb.java-103-			throw new org.nlogo.nvm.EngineException
-org/nlogo/prim/etc/_extracthsb.java:104:				( context , this , displayName() + " an rgb list must contain only numbers" ) ;
-org/nlogo/prim/etc/_extracthsb.java-105-		}
-org/nlogo/prim/etc/_extracthsb.java-106-	}
-org/nlogo/prim/etc/_face.java-17-		return Syntax.commandSyntax
-org/nlogo/prim/etc/_face.java-18-			( new int[] { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ,
-org/nlogo/prim/etc/_face.java:19:			  "OT--" , true ) ;
-org/nlogo/prim/etc/_face.java-20-	}
-org/nlogo/prim/etc/_face.java-21-	@Override
-org/nlogo/prim/etc/_face.java-30-		if( target instanceof org.nlogo.agent.Link )
-org/nlogo/prim/etc/_face.java-31-		{
-org/nlogo/prim/etc/_face.java:32:			throw new EngineException( context , this , "expected a turtle or a patch but got a link" ) ;
-org/nlogo/prim/etc/_face.java-33-		}
-org/nlogo/prim/etc/_face.java-34-		if( target.id == -1 )
-org/nlogo/prim/etc/_face.java-35-		{
-org/nlogo/prim/etc/_face.java:36:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_face.java-37-		}
-org/nlogo/prim/etc/_face.java-38-		if( context.agent instanceof Turtle )
-org/nlogo/prim/etc/_facenowrap.java-24-		if( agentToFace.id == -1 )
-org/nlogo/prim/etc/_facenowrap.java-25-		{
-org/nlogo/prim/etc/_facenowrap.java:26:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_facenowrap.java-27-		}
-org/nlogo/prim/etc/_facenowrap.java-28-		org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle ) context.agent ;	
-org/nlogo/prim/etc/_facexy.java-15-		return Syntax.commandSyntax
-org/nlogo/prim/etc/_facexy.java-16-			( new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-org/nlogo/prim/etc/_facexy.java:17:			  "OT--" , true ) ;
-org/nlogo/prim/etc/_facexy.java-18-	}
-org/nlogo/prim/etc/_facexy.java-19-	@Override
 org/nlogo/prim/etc/_filedelete.java-25-			throw new EngineException
 org/nlogo/prim/etc/_filedelete.java-26-				( context , _filedelete.this ,
 org/nlogo/prim/etc/_filedelete.java:27:				  argEvalString( context , 0 ) + " is not a valid path name: " + ex.getMessage() );
@@ -6615,117 +5606,6 @@ org/nlogo/prim/etc/_filereadline.java-19-		{
 org/nlogo/prim/etc/_filereadline.java:20:			throw new EngineException( context , this , "The end of file has been reached" ) ;
 org/nlogo/prim/etc/_filereadline.java-21-		}
 org/nlogo/prim/etc/_filereadline.java-22-		catch( java.io.IOException ex )
-org/nlogo/prim/etc/_first.java-32-			if( list.isEmpty() )
-org/nlogo/prim/etc/_first.java-33-			{
-org/nlogo/prim/etc/_first.java:34:				throw new EngineException( context , this , "list is empty" ) ;
-org/nlogo/prim/etc/_first.java-35-			}
-org/nlogo/prim/etc/_first.java-36-			return list.first() ;
-org/nlogo/prim/etc/_first.java-41-			if( string.length() == 0 )
-org/nlogo/prim/etc/_first.java-42-			{
-org/nlogo/prim/etc/_first.java:43:				throw new EngineException( context , this , "string is empty" ) ;
-org/nlogo/prim/etc/_first.java-44-			}
-org/nlogo/prim/etc/_first.java-45-			return string.substring( 0 , 1 ) ;
-org/nlogo/prim/etc/_first.java-56-		if( list.isEmpty() )
-org/nlogo/prim/etc/_first.java-57-		{
-org/nlogo/prim/etc/_first.java:58:			throw new EngineException( context , this , "list is empty" ) ;
-org/nlogo/prim/etc/_first.java-59-		}
-org/nlogo/prim/etc/_first.java-60-		return list.first() ;
-org/nlogo/prim/etc/_first.java-65-		if( string.length() == 0 )
-org/nlogo/prim/etc/_first.java-66-		{
-org/nlogo/prim/etc/_first.java:67:			throw new EngineException( context , this , "string is empty" ) ;
-org/nlogo/prim/etc/_first.java-68-		}
-org/nlogo/prim/etc/_first.java-69-		return string.substring( 0 , 1 ) ;
-org/nlogo/prim/etc/_follow.java-27-		{
-org/nlogo/prim/etc/_follow.java-28-			throw new EngineException
-org/nlogo/prim/etc/_follow.java:29:				( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_follow.java-30-		}
-org/nlogo/prim/etc/_follow.java-31-		world.observer().setPerspective( Perspective.FOLLOW , turtle ) ;
-org/nlogo/prim/etc/_foreverbuttonend.java-21-		// flag on contexts is for the forever button stopped
-org/nlogo/prim/etc/_foreverbuttonend.java-22-		// because the procedure invoked by the button used the
-org/nlogo/prim/etc/_foreverbuttonend.java:23:		// "stop" command to exit
-org/nlogo/prim/etc/_foreverbuttonend.java-24-		if( context.job.stopping || context.stopping )
-org/nlogo/prim/etc/_foreverbuttonend.java-25-		{
-org/nlogo/prim/etc/_greaterorequal.java-54-		throw new EngineException
-org/nlogo/prim/etc/_greaterorequal.java-55-			( context , this , 
-org/nlogo/prim/etc/_greaterorequal.java:56:			  "the >= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_greaterorequal.java:57:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_greaterorequal.java:58:			  "but not on " + Syntax.aTypeName( o1 ) + " and " + Syntax.aTypeName( o2 ) ) ;
-org/nlogo/prim/etc/_greaterorequal.java-59-	}
-org/nlogo/prim/etc/_greaterorequal.java-60-	public boolean report_2( Context context , String arg0 , String arg1 )
-org/nlogo/prim/etc/_greaterorequal.java-86-		throw new EngineException
-org/nlogo/prim/etc/_greaterorequal.java-87-			( context , this , 
-org/nlogo/prim/etc/_greaterorequal.java:88:			  "the >= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_greaterorequal.java:89:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_greaterorequal.java:90:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/etc/_greaterorequal.java-91-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/etc/_greaterorequal.java-92-	}
-org/nlogo/prim/etc/_greaterorequal.java-99-		throw new EngineException
-org/nlogo/prim/etc/_greaterorequal.java-100-			( context , this , 
-org/nlogo/prim/etc/_greaterorequal.java:101:			  "the >= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_greaterorequal.java:102:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_greaterorequal.java:103:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/etc/_greaterorequal.java-104-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/etc/_greaterorequal.java-105-	}
-org/nlogo/prim/etc/_ignore.java-8-// This is only used for testing purposes.  It's better not to
-org/nlogo/prim/etc/_ignore.java-9-// rejigger this, because when we test the bytecode generator, we get
-org/nlogo/prim/etc/_ignore.java:10:// the disassembly for a reporter r by compiling "__ignore r" and
-org/nlogo/prim/etc/_ignore.java-11-// we don't want extra stuff in the output. - ST 2/6/09
-org/nlogo/prim/etc/_ignore.java-12-
-org/nlogo/prim/etc/_importdrawing.java-21-		{
-org/nlogo/prim/etc/_importdrawing.java-22-			throw new EngineException( context , this ,
-org/nlogo/prim/etc/_importdrawing.java:23:									   "you can't import drawing in 3D" ) ;
-org/nlogo/prim/etc/_importdrawing.java-24-		}
-org/nlogo/prim/etc/_importdrawing.java-25-		try
-org/nlogo/prim/etc/_incone.java-22-			  new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } , // right
-org/nlogo/prim/etc/_incone.java-23-			  Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET ,          // return
-org/nlogo/prim/etc/_incone.java:24:			  Syntax.NORMAL_PRECEDENCE + 2 , false , "OTPL" , "-T--" ) ;
-org/nlogo/prim/etc/_incone.java-25-	}
-org/nlogo/prim/etc/_incone.java-26-	@Override
-org/nlogo/prim/etc/_incone.java-39-		{
-org/nlogo/prim/etc/_incone.java-40-			throw new EngineException
-org/nlogo/prim/etc/_incone.java:41:				( context , this , "expected a turtle or a patch but got a link" ) ;
-org/nlogo/prim/etc/_incone.java-42-		}
-org/nlogo/prim/etc/_incone.java-43-		if( radius < 0 )
-org/nlogo/prim/etc/_incone.java-44-		{
-org/nlogo/prim/etc/_incone.java-45-			throw new EngineException
-org/nlogo/prim/etc/_incone.java:46:				( context , this , displayName() + " cannot take a negative radius" ) ;	
-org/nlogo/prim/etc/_incone.java-47-		}
-org/nlogo/prim/etc/_incone.java-48-		if( angle < 0 )
-org/nlogo/prim/etc/_incone.java-49-		{
-org/nlogo/prim/etc/_incone.java-50-			throw new EngineException
-org/nlogo/prim/etc/_incone.java:51:				( context , this , displayName() + " cannot take a negative angle" ) ;	
-org/nlogo/prim/etc/_incone.java-52-		}
-org/nlogo/prim/etc/_incone.java-53-		if( angle > 360 )
-org/nlogo/prim/etc/_incone.java-54-		{
-org/nlogo/prim/etc/_incone.java-55-			throw new EngineException
-org/nlogo/prim/etc/_incone.java:56:				( context , this , displayName() + " cannot take an angle greater than 360" ) ;
-org/nlogo/prim/etc/_incone.java-57-		}
-org/nlogo/prim/etc/_incone.java-58-		List<Agent> result = 
-org/nlogo/prim/etc/_inconenowrap.java-21-		int ret = Syntax.TYPE_AGENTSET ;
-org/nlogo/prim/etc/_inconenowrap.java-22-		return Syntax.reporterSyntax( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_inconenowrap.java:23:									  false , "OTPL" , "-T--" ) ;
-org/nlogo/prim/etc/_inconenowrap.java-24-	}
-org/nlogo/prim/etc/_inconenowrap.java-25-	@Override
-org/nlogo/prim/etc/_inconenowrap.java-37-		{
-org/nlogo/prim/etc/_inconenowrap.java-38-			throw new EngineException
-org/nlogo/prim/etc/_inconenowrap.java:39:				( context , this , "expected a turtle or a patch but got a link" ) ;
-org/nlogo/prim/etc/_inconenowrap.java-40-		}
-org/nlogo/prim/etc/_inconenowrap.java-41-		if( radius < 0 )
-org/nlogo/prim/etc/_inconenowrap.java-42-		{
-org/nlogo/prim/etc/_inconenowrap.java-43-			throw new EngineException
-org/nlogo/prim/etc/_inconenowrap.java:44:				( context , this , displayName() + " cannot take a negative radius" ) ;	
-org/nlogo/prim/etc/_inconenowrap.java-45-		}
-org/nlogo/prim/etc/_inconenowrap.java-46-		if( angle < 0 )
-org/nlogo/prim/etc/_inconenowrap.java-47-		{
-org/nlogo/prim/etc/_inconenowrap.java-48-			throw new EngineException
-org/nlogo/prim/etc/_inconenowrap.java:49:				( context , this , displayName() + " cannot take a negative angle" ) ;	
-org/nlogo/prim/etc/_inconenowrap.java-50-		}
-org/nlogo/prim/etc/_inconenowrap.java-51-		if( angle > 360 )
-org/nlogo/prim/etc/_inconenowrap.java-52-		{
-org/nlogo/prim/etc/_inconenowrap.java-53-			throw new EngineException
-org/nlogo/prim/etc/_inconenowrap.java:54:				( context , this , displayName() + " cannot take an angle greater than 360" ) ;
-org/nlogo/prim/etc/_inconenowrap.java-55-		}
-org/nlogo/prim/etc/_inconenowrap.java-56-
 org/nlogo/prim/etc/_innetworkradius.java-44-		{
 org/nlogo/prim/etc/_innetworkradius.java-45-			throw new EngineException
 org/nlogo/prim/etc/_innetworkradius.java:46:				( context , this , "expected last input to be a link breed." ) ;
@@ -6735,671 +5615,28 @@ org/nlogo/prim/etc/_innetworkradius.java-49-		{
 org/nlogo/prim/etc/_innetworkradius.java-50-			throw new EngineException
 org/nlogo/prim/etc/_innetworkradius.java:51:				( context , this , displayName() + " should not be given a negative radius" ) ;	
 org/nlogo/prim/etc/_innetworkradius.java-52-		}
-org/nlogo/prim/etc/_innetworkradius.java-53-		
-org/nlogo/prim/etc/_inradius.java-23-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_inradius.java-24-			( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_inradius.java:25:			  false , "-TP-" , null ) ;
-org/nlogo/prim/etc/_inradius.java-26-	}
-org/nlogo/prim/etc/_inradius.java-27-	@Override
-org/nlogo/prim/etc/_inradius.java-37-		{
-org/nlogo/prim/etc/_inradius.java-38-			throw new EngineException
-org/nlogo/prim/etc/_inradius.java:39:				( context , this , "expected a turtle or a patch but got a link" ) ;
-org/nlogo/prim/etc/_inradius.java-40-		}
-org/nlogo/prim/etc/_inradius.java-41-		if( radius < 0 )
-org/nlogo/prim/etc/_inradius.java-42-		{
-org/nlogo/prim/etc/_inradius.java-43-			throw new EngineException
-org/nlogo/prim/etc/_inradius.java:44:				( context , this , displayName() + " cannot take a negative radius" ) ;	
-org/nlogo/prim/etc/_inradius.java-45-		}
-org/nlogo/prim/etc/_inradius.java-46-		List<Agent> result =
-org/nlogo/prim/etc/_inradiusnowrap.java-22-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_inradiusnowrap.java-23-			( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_inradiusnowrap.java:24:			  false , "-TP-" , null ) ;
-org/nlogo/prim/etc/_inradiusnowrap.java-25-	}
-org/nlogo/prim/etc/_inradiusnowrap.java-26-	@Override
-org/nlogo/prim/etc/_inradiusnowrap.java-36-		{
-org/nlogo/prim/etc/_inradiusnowrap.java-37-			throw new EngineException
-org/nlogo/prim/etc/_inradiusnowrap.java:38:				( context , this , "expected a turtle or a patch but got a link" ) ;
-org/nlogo/prim/etc/_inradiusnowrap.java-39-		}
-org/nlogo/prim/etc/_inradiusnowrap.java-40-		if( radius < 0 )
-org/nlogo/prim/etc/_inradiusnowrap.java-41-		{
-org/nlogo/prim/etc/_inradiusnowrap.java-42-			throw new EngineException
-org/nlogo/prim/etc/_inradiusnowrap.java:43:				( context , this , displayName() + " cannot take a negative radius" ) ;	
-org/nlogo/prim/etc/_inradiusnowrap.java-44-		}
-org/nlogo/prim/etc/_inradiusnowrap.java-45-		List<Agent> result =
-org/nlogo/prim/etc/_inrect.java-26-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_inrect.java-27-			( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_inrect.java:28:			  false , "-TP-" , null ) ;
-org/nlogo/prim/etc/_inrect.java-29-	}
-org/nlogo/prim/etc/_inrect.java-30-	@Override
-org/nlogo/prim/etc/_item.java-21-		{
-org/nlogo/prim/etc/_item.java-22-			throw new EngineException
-org/nlogo/prim/etc/_item.java:23:				( context , this , index + " isn't greater than or equal to zero " ) ;
-org/nlogo/prim/etc/_item.java-24-		}
-org/nlogo/prim/etc/_item.java-25-		if ( obj instanceof LogoList )
-org/nlogo/prim/etc/_item.java-29-			{
-org/nlogo/prim/etc/_item.java-30-				throw new EngineException
-org/nlogo/prim/etc/_item.java:31:					( context , this , "can't find element " + index + " of the list " +
-org/nlogo/prim/etc/_item.java:32:					  Dump.logoObject( list ) + ", which is only of length " + list.size() ) ;
-org/nlogo/prim/etc/_item.java-33-			}
-org/nlogo/prim/etc/_item.java-34-			return list.get( index ) ;
-org/nlogo/prim/etc/_item.java-40-			{
-org/nlogo/prim/etc/_item.java-41-				throw new EngineException
-org/nlogo/prim/etc/_item.java:42:					( context , this , "can't find element " + index + " of the string " +
-org/nlogo/prim/etc/_item.java:43:					  Dump.logoObject( string ) + ", which is only of length " + string.length() ) ;
-org/nlogo/prim/etc/_item.java-44-			}
-org/nlogo/prim/etc/_item.java-45-			return string.substring( index, index + 1 ) ;
-org/nlogo/prim/etc/_last.java-28-			if( list.size() == 0 )
-org/nlogo/prim/etc/_last.java-29-			{
-org/nlogo/prim/etc/_last.java:30:				throw new EngineException( context , this , "list is empty" ) ;
-org/nlogo/prim/etc/_last.java-31-			}
-org/nlogo/prim/etc/_last.java-32-			return list.get( list.size() - 1 ) ;
-org/nlogo/prim/etc/_last.java-37-			if( string.length() == 0 )
-org/nlogo/prim/etc/_last.java-38-			{
-org/nlogo/prim/etc/_last.java:39:				throw new EngineException( context , this , "string is empty" ) ;
-org/nlogo/prim/etc/_last.java-40-			}
-org/nlogo/prim/etc/_last.java-41-			return string.substring( string.length() - 1 ) ;
-org/nlogo/prim/etc/_layoutcircle.java-40-					throw new EngineException
-org/nlogo/prim/etc/_layoutcircle.java-41-						( context , this ,
-org/nlogo/prim/etc/_layoutcircle.java:42:						  "Patches are immovable." ) ;
-org/nlogo/prim/etc/_layoutcircle.java-43-				}
-org/nlogo/prim/etc/_layoutcircle.java-44-				org.nlogo.agent.Layouts.circle( set , radius , context.job.random ) ;
-org/nlogo/prim/etc/_lessorequal.java-54-		throw new EngineException
-org/nlogo/prim/etc/_lessorequal.java-55-			( context , this , 
-org/nlogo/prim/etc/_lessorequal.java:56:			  "the <= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_lessorequal.java:57:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_lessorequal.java:58:			  "but not on " + Syntax.aTypeName( o1 ) + " and " + Syntax.aTypeName( o2 ) ) ;
-org/nlogo/prim/etc/_lessorequal.java-59-	}
-org/nlogo/prim/etc/_lessorequal.java-60-	public boolean report_2( Context context , String arg0 , String arg1 )
-org/nlogo/prim/etc/_lessorequal.java-86-		throw new EngineException
-org/nlogo/prim/etc/_lessorequal.java-87-			( context , this , 
-org/nlogo/prim/etc/_lessorequal.java:88:			  "the <= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_lessorequal.java:89:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_lessorequal.java:90:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/etc/_lessorequal.java-91-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/etc/_lessorequal.java-92-	}
-org/nlogo/prim/etc/_lessorequal.java-99-		throw new EngineException
-org/nlogo/prim/etc/_lessorequal.java-100-			( context , this , 
-org/nlogo/prim/etc/_lessorequal.java:101:			  "the <= operator can only be used on two numbers, " 
-org/nlogo/prim/etc/_lessorequal.java:102:			  + "two strings, or two agents of the same type, " +
-org/nlogo/prim/etc/_lessorequal.java:103:			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-org/nlogo/prim/etc/_lessorequal.java-104-			  Syntax.aTypeName( arg1 ) ) ;
-org/nlogo/prim/etc/_lessorequal.java-105-	}
-org/nlogo/prim/etc/_life.java-35-		double fgcolor =
-org/nlogo/prim/etc/_life.java-36-			( (Double) world.observer().variables
-org/nlogo/prim/etc/_life.java:37:			  [ world.program().globals.indexOf( "FGCOLOR" ) ] )
-org/nlogo/prim/etc/_life.java-38-			.doubleValue() ;
-org/nlogo/prim/etc/_life.java-39-		double bgcolor =
-org/nlogo/prim/etc/_life.java-40-			( (Double) world.observer().variables
-org/nlogo/prim/etc/_life.java:41:			  [ world.program().globals.indexOf( "BGCOLOR" ) ] )
-org/nlogo/prim/etc/_life.java-42-			.doubleValue() ;
-org/nlogo/prim/etc/_life.java-43-		for( int i = 0 ; i < patchCount ; i++ )
-org/nlogo/prim/etc/_linkheading.java-29-			throw new org.nlogo.nvm.EngineException
-org/nlogo/prim/etc/_linkheading.java-30-				( context , this , 
-org/nlogo/prim/etc/_linkheading.java:31:				  "there is no heading of a link whose endpoints are in the same position" ) ;
-org/nlogo/prim/etc/_linkheading.java-32-		}
-org/nlogo/prim/etc/_linkheading.java-33-	}
-org/nlogo/prim/etc/_linkset.java-81-				if( tempSet.type() != org.nlogo.agent.Link.class )
-org/nlogo/prim/etc/_linkset.java-82-				{
-org/nlogo/prim/etc/_linkset.java:83:					throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_linkset.java:84:											   + " must only contain link, link agentset, or list elements.  The list " 
-org/nlogo/prim/etc/_linkset.java-85-											   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_linkset.java:86:											   + " contained a different type agentset: " 
-org/nlogo/prim/etc/_linkset.java-87-											   + Dump.logoObject( obj , true , false)); 
-org/nlogo/prim/etc/_linkset.java-88-				}
-org/nlogo/prim/etc/_linkset.java-99-			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
-org/nlogo/prim/etc/_linkset.java-100-			{
-org/nlogo/prim/etc/_linkset.java:101:				throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_linkset.java:102:										   + " must only contain link, link agentset, or list elements.  The list " 
-org/nlogo/prim/etc/_linkset.java-103-										   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_linkset.java:104:										   + " contained " + Dump.logoObject( obj , true , false) 
-org/nlogo/prim/etc/_linkset.java:105:										   + " which is NOT a link or link agentset") ;
-org/nlogo/prim/etc/_linkset.java-106-			}
-org/nlogo/prim/etc/_linkset.java-107-		}
-org/nlogo/prim/etc/_linkshapes.java-14-	public Object report( final org.nlogo.nvm.Context context )
-org/nlogo/prim/etc/_linkshapes.java-15-	{
-org/nlogo/prim/etc/_linkshapes.java:16:		// obLisp: oh, for "mapcar"... - ST 11/30/04
-org/nlogo/prim/etc/_linkshapes.java-17-		List<Shape> shapes = world.linkShapeList().getShapes() ;
-org/nlogo/prim/etc/_linkshapes.java-18-		LogoList result = new LogoList() ;
-org/nlogo/prim/etc/_ln.java-23-		if( d <= 0 )
-org/nlogo/prim/etc/_ln.java-24-		{
-org/nlogo/prim/etc/_ln.java:25:			throw new EngineException( context , this , "can't take the logarithm of " + d ) ;
-org/nlogo/prim/etc/_ln.java-26-		}
-org/nlogo/prim/etc/_ln.java-27-		return validDouble( StrictMath.log( d ) ) ;
-org/nlogo/prim/etc/_log.java-28-		{
-org/nlogo/prim/etc/_log.java-29-			throw new EngineException
-org/nlogo/prim/etc/_log.java:30:				( context , this , "can't take the logarithm of " + n ) ;
-org/nlogo/prim/etc/_log.java-31-		}
-org/nlogo/prim/etc/_log.java-32-		if( base <= 0 )
-org/nlogo/prim/etc/_log.java-33-		{
-org/nlogo/prim/etc/_log.java-34-			throw new EngineException
-org/nlogo/prim/etc/_log.java:35:				( context , this , base + " isn't a valid base for a logarithm" ) ;
-org/nlogo/prim/etc/_log.java-36-		}
-org/nlogo/prim/etc/_log.java-37-		return validDouble( StrictMath.log( n ) / StrictMath.log( base ) ) ;
-org/nlogo/prim/etc/_maxnof.java-21-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK } ;
-org/nlogo/prim/etc/_maxnof.java-22-		int ret = Syntax.TYPE_AGENTSET ;
-org/nlogo/prim/etc/_maxnof.java:23:		return Syntax.reporterSyntax( right , ret , "OTPL" , "?" ) ;
-org/nlogo/prim/etc/_maxnof.java-24-	}
-org/nlogo/prim/etc/_maxnof.java-25-	@Override
-org/nlogo/prim/etc/_maxnof.java-30-		{
-org/nlogo/prim/etc/_maxnof.java-31-			throw new EngineException
-org/nlogo/prim/etc/_maxnof.java:32:				( context , this , "first input to " + displayName() +
-org/nlogo/prim/etc/_maxnof.java:33:				  " can't be negative" ) ;
-org/nlogo/prim/etc/_maxnof.java-34-		}
-org/nlogo/prim/etc/_maxnof.java-35-		AgentSet sourceSet = argEvalAgentSet( context , 1 ) ;
-org/nlogo/prim/etc/_maxnof.java-38-		{
-org/nlogo/prim/etc/_maxnof.java-39-			throw new EngineException
-org/nlogo/prim/etc/_maxnof.java:40:				( context , this , "requested " + n +
-org/nlogo/prim/etc/_maxnof.java:41:				  " random agents from a set of only " +
-org/nlogo/prim/etc/_maxnof.java:42:				  count + " agents" ) ;
-org/nlogo/prim/etc/_maxnof.java-43-		}
-org/nlogo/prim/etc/_maxnof.java-44-		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
-org/nlogo/prim/etc/_maxnofwithties.java-25-			  Syntax.NORMAL_PRECEDENCE ,
-org/nlogo/prim/etc/_maxnofwithties.java-26-			  false , // left associative
-org/nlogo/prim/etc/_maxnofwithties.java:27:			  "OTPL" ,
-org/nlogo/prim/etc/_maxnofwithties.java-28-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/etc/_maxnofwithties.java-29-				) ;
-org/nlogo/prim/etc/_maxnofwithties.java-36-		{
-org/nlogo/prim/etc/_maxnofwithties.java-37-			throw new EngineException
-org/nlogo/prim/etc/_maxnofwithties.java:38:				( context , this , "first input to " + displayName() +
-org/nlogo/prim/etc/_maxnofwithties.java:39:				  " can't be negative" ) ;
-org/nlogo/prim/etc/_maxnofwithties.java-40-		}
-org/nlogo/prim/etc/_maxnofwithties.java-41-		AgentSet sourceSet = argEvalAgentSet( context , 0 ) ;
-org/nlogo/prim/etc/_maxnofwithties.java-44-		{
-org/nlogo/prim/etc/_maxnofwithties.java-45-			throw new EngineException
-org/nlogo/prim/etc/_maxnofwithties.java:46:				( context , this , "requested " + n +
-org/nlogo/prim/etc/_maxnofwithties.java:47:				  " random agents from a set of only " +
-org/nlogo/prim/etc/_maxnofwithties.java:48:				  count + " agents" ) ;
-org/nlogo/prim/etc/_maxnofwithties.java-49-		}
-org/nlogo/prim/etc/_maxnofwithties.java-50-		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
-org/nlogo/prim/etc/_maxoneof.java-18-		int[] right = { Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK } ;
-org/nlogo/prim/etc/_maxoneof.java-19-		int ret = Syntax.TYPE_AGENT ;
-org/nlogo/prim/etc/_maxoneof.java:20:		return Syntax.reporterSyntax( right , ret , "OTPL" , "?" ) ;
-org/nlogo/prim/etc/_maxoneof.java-21-	}
-org/nlogo/prim/etc/_maxoneof.java-22-	@Override
-org/nlogo/prim/etc/_median.java-37-		{
-org/nlogo/prim/etc/_median.java-38-			throw new EngineException
-org/nlogo/prim/etc/_median.java:39:				( context , this , "can't find the median of a list with no numbers: " +
-org/nlogo/prim/etc/_median.java-40-				  Dump.logoObject( list ) ) ;
-org/nlogo/prim/etc/_median.java-41-		}
-org/nlogo/prim/etc/_minnof.java-20-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK } ;
-org/nlogo/prim/etc/_minnof.java-21-		int ret = Syntax.TYPE_AGENTSET ;
-org/nlogo/prim/etc/_minnof.java:22:		return Syntax.reporterSyntax( right , ret , "OTPL" , "?" ) ;
-org/nlogo/prim/etc/_minnof.java-23-	}
-org/nlogo/prim/etc/_minnof.java-24-	@Override
-org/nlogo/prim/etc/_minnof.java-29-		{
-org/nlogo/prim/etc/_minnof.java-30-			throw new EngineException
-org/nlogo/prim/etc/_minnof.java:31:				( context , this , "first input to " + displayName() +
-org/nlogo/prim/etc/_minnof.java:32:				  " can't be negative" ) ;
-org/nlogo/prim/etc/_minnof.java-33-		}
-org/nlogo/prim/etc/_minnof.java-34-		AgentSet sourceSet = argEvalAgentSet( context , 1 ) ;
-org/nlogo/prim/etc/_minnof.java-37-		{
-org/nlogo/prim/etc/_minnof.java-38-			throw new EngineException
-org/nlogo/prim/etc/_minnof.java:39:				( context , this , "requested " + n +
-org/nlogo/prim/etc/_minnof.java:40:				  " random agents from a set of only " +
-org/nlogo/prim/etc/_minnof.java:41:				  count + " agents" ) ;
-org/nlogo/prim/etc/_minnof.java-42-		}
-org/nlogo/prim/etc/_minnof.java-43-		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
-org/nlogo/prim/etc/_minnofwithties.java-24-			  Syntax.NORMAL_PRECEDENCE ,
-org/nlogo/prim/etc/_minnofwithties.java-25-			  false , // left associative
-org/nlogo/prim/etc/_minnofwithties.java:26:			  "OTPL" ,
-org/nlogo/prim/etc/_minnofwithties.java-27-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/etc/_minnofwithties.java-28-				) ;
-org/nlogo/prim/etc/_minnofwithties.java-35-		{
-org/nlogo/prim/etc/_minnofwithties.java-36-			throw new EngineException
-org/nlogo/prim/etc/_minnofwithties.java:37:				( context , this , "first input to " + displayName() +
-org/nlogo/prim/etc/_minnofwithties.java:38:				  " can't be negative" ) ;
-org/nlogo/prim/etc/_minnofwithties.java-39-		}
-org/nlogo/prim/etc/_minnofwithties.java-40-		AgentSet sourceSet = argEvalAgentSet( context , 0 ) ;
-org/nlogo/prim/etc/_minnofwithties.java-43-		{
-org/nlogo/prim/etc/_minnofwithties.java-44-			throw new EngineException
-org/nlogo/prim/etc/_minnofwithties.java:45:				( context , this , "requested " + n +
-org/nlogo/prim/etc/_minnofwithties.java:46:				  " random agents from a set of only " +
-org/nlogo/prim/etc/_minnofwithties.java:47:				  count + " agents" ) ;
-org/nlogo/prim/etc/_minnofwithties.java-48-		}
-org/nlogo/prim/etc/_minnofwithties.java-49-		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
-org/nlogo/prim/etc/_minoneof.java-19-		int[] right = { Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK } ;
-org/nlogo/prim/etc/_minoneof.java-20-		int ret = Syntax.TYPE_AGENT ;
-org/nlogo/prim/etc/_minoneof.java:21:		return Syntax.reporterSyntax( right , ret , "OTPL" , "?" ) ;
-org/nlogo/prim/etc/_minoneof.java-22-	}
-org/nlogo/prim/etc/_minoneof.java-23-	@Override
-org/nlogo/prim/etc/_mod.java-27-		if( d1 == 0 )
-org/nlogo/prim/etc/_mod.java-28-		{
-org/nlogo/prim/etc/_mod.java:29:			throw new EngineException( context , this , "division by zero" ) ;
-org/nlogo/prim/etc/_mod.java-30-		}
-org/nlogo/prim/etc/_mod.java-31-		return validDouble( d0 - ( StrictMath.floor( d0 / d1 ) * d1 ) ) ;
-org/nlogo/prim/etc/_moveto.java-16-	{
-org/nlogo/prim/etc/_moveto.java-17-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
-org/nlogo/prim/etc/_moveto.java:18:		return Syntax.commandSyntax( right , "OT--" , true ) ;
-org/nlogo/prim/etc/_moveto.java-19-	}
-org/nlogo/prim/etc/_moveto.java-20-	@Override
-org/nlogo/prim/etc/_moveto.java-25-		if( otherAgent.id == -1 )
-org/nlogo/prim/etc/_moveto.java-26-		{
-org/nlogo/prim/etc/_moveto.java:27:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_moveto.java-28-		}
-org/nlogo/prim/etc/_moveto.java-29-		if( otherAgent instanceof org.nlogo.agent.Link )
-org/nlogo/prim/etc/_moveto.java-30-		{
-org/nlogo/prim/etc/_moveto.java:31:			throw new EngineException( context , this , "you can't move-to a link" ) ;
-org/nlogo/prim/etc/_moveto.java-32-		}
-org/nlogo/prim/etc/_moveto.java-33-		try
-org/nlogo/prim/etc/_myself.java-16-	{
-org/nlogo/prim/etc/_myself.java-17-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_myself.java:18:			( Syntax.TYPE_AGENT , "-TPL" ) ;
-org/nlogo/prim/etc/_myself.java-19-	}
-org/nlogo/prim/etc/_myself.java-20-	@Override
-org/nlogo/prim/etc/_myself.java-25-		{
-org/nlogo/prim/etc/_myself.java-26-			throw new EngineException
-org/nlogo/prim/etc/_myself.java:27:				( context , this , "no agent for MYSELF to refer to" ) ;
-org/nlogo/prim/etc/_myself.java-28-		}
-org/nlogo/prim/etc/_myself.java-29-		return myself ;
-org/nlogo/prim/etc/_myself.java-35-		{
-org/nlogo/prim/etc/_myself.java-36-			throw new EngineException
-org/nlogo/prim/etc/_myself.java:37:				( context , this , "no agent for MYSELF to refer to" ) ;
-org/nlogo/prim/etc/_myself.java-38-		}
-org/nlogo/prim/etc/_myself.java-39-		return myself ;
+org/nlogo/prim/etc/_innetworkradius.java-53-
 org/nlogo/prim/etc/_networkdistance.java-29-		{
 org/nlogo/prim/etc/_networkdistance.java-30-			throw new EngineException
 org/nlogo/prim/etc/_networkdistance.java:31:				( context , this , "expected the last input to be a link breed." ) ;
 org/nlogo/prim/etc/_networkdistance.java-32-		}
-org/nlogo/prim/etc/_networkdistance.java-33-		if( destNode.id == -1 )
-org/nlogo/prim/etc/_networkdistance.java-34-		{
-org/nlogo/prim/etc/_networkdistance.java:35:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_networkdistance.java-36-		}
-org/nlogo/prim/etc/_networkdistance.java-37-		return world.linkManager.networkMetrics.networkDistance
 org/nlogo/prim/etc/_networkshortestpathlinks.java-30-		{
 org/nlogo/prim/etc/_networkshortestpathlinks.java-31-			throw new EngineException
 org/nlogo/prim/etc/_networkshortestpathlinks.java:32:				( context , this , "expected the last input to be a link breed." ) ;
 org/nlogo/prim/etc/_networkshortestpathlinks.java-33-		}
 org/nlogo/prim/etc/_networkshortestpathlinks.java-34-
-org/nlogo/prim/etc/_networkshortestpathlinks.java-35-		if( destNode.id == -1 )
-org/nlogo/prim/etc/_networkshortestpathlinks.java-36-		{
-org/nlogo/prim/etc/_networkshortestpathlinks.java:37:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_networkshortestpathlinks.java-38-		}
 org/nlogo/prim/etc/_networkshortestpathlinks.java-39-		return world.linkManager.networkMetrics.networkShortestPathLinks(context.job.random, (Turtle) context.agent , destNode , linkBreed) ;
 org/nlogo/prim/etc/_networkshortestpathnodes.java-33-		{
 org/nlogo/prim/etc/_networkshortestpathnodes.java-34-			throw new EngineException
 org/nlogo/prim/etc/_networkshortestpathnodes.java:35:				( context , this , "expected the last input to be a link breed." ) ;
 org/nlogo/prim/etc/_networkshortestpathnodes.java-36-		}
 org/nlogo/prim/etc/_networkshortestpathnodes.java-37-
-org/nlogo/prim/etc/_networkshortestpathnodes.java-38-		if( destNode.id == -1 )
-org/nlogo/prim/etc/_networkshortestpathnodes.java-39-		{
-org/nlogo/prim/etc/_networkshortestpathnodes.java:40:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_networkshortestpathnodes.java-41-		}
-org/nlogo/prim/etc/_networkshortestpathnodes.java-42-		return world.linkManager.networkMetrics.networkShortestPathNodes
-org/nlogo/prim/etc/_nof.java-23-		{
-org/nlogo/prim/etc/_nof.java-24-			throw new EngineException
-org/nlogo/prim/etc/_nof.java:25:				( context , this , "first input to " + displayName() +
-org/nlogo/prim/etc/_nof.java:26:				  " can't be negative" ) ;
-org/nlogo/prim/etc/_nof.java-27-		}
-org/nlogo/prim/etc/_nof.java-28-		Object obj = args[ 1 ].report( context ) ;
-org/nlogo/prim/etc/_nof.java-33-			{
-org/nlogo/prim/etc/_nof.java-34-				throw new EngineException
-org/nlogo/prim/etc/_nof.java:35:					( context , this , "requested " + n +
-org/nlogo/prim/etc/_nof.java:36:					  " random items from a list of length " +
-org/nlogo/prim/etc/_nof.java-37-					  list.size() ) ;
-org/nlogo/prim/etc/_nof.java-38-			}
-org/nlogo/prim/etc/_nof.java-52-			{
-org/nlogo/prim/etc/_nof.java-53-				throw new EngineException
-org/nlogo/prim/etc/_nof.java:54:					( context , this , "requested " + n +
-org/nlogo/prim/etc/_nof.java:55:					  " random agents from a set of only " +
-org/nlogo/prim/etc/_nof.java:56:					  count + " agents" ) ;
-org/nlogo/prim/etc/_nof.java-57-			}
-org/nlogo/prim/etc/_nof.java-58-			return agents.randomSubset( n , count , context.job.random ) ;
-org/nlogo/prim/etc/_oneof.java-24-			{
-org/nlogo/prim/etc/_oneof.java-25-				throw new EngineException
-org/nlogo/prim/etc/_oneof.java:26:					( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_oneof.java-27-			}
-org/nlogo/prim/etc/_oneof.java-28-			return list.get( context.job.random.nextInt( size ) ) ;
-org/nlogo/prim/etc/_oneof.java-72-		{
-org/nlogo/prim/etc/_oneof.java-73-			throw new EngineException
-org/nlogo/prim/etc/_oneof.java:74:				( context , this , displayName() + " got an empty list as input" ) ;
-org/nlogo/prim/etc/_oneof.java-75-		}
-org/nlogo/prim/etc/_oneof.java-76-		return list.get( context.job.random.nextInt( size ) ) ;
-org/nlogo/prim/etc/_oneof.java-86-			{
-org/nlogo/prim/etc/_oneof.java-87-				throw new EngineException( context , this , displayName()
-org/nlogo/prim/etc/_oneof.java:88:						+ " got an empty list as input" ) ;
-org/nlogo/prim/etc/_oneof.java-89-			}
-org/nlogo/prim/etc/_oneof.java-90-			return list.get( context.job.random.nextInt( size ) ) ;
-org/nlogo/prim/etc/_otherend.java-28-			{
-org/nlogo/prim/etc/_otherend.java-29-				throw new EngineException( context , this , 
-org/nlogo/prim/etc/_otherend.java:30:										   "Only a turtle can get the OTHER-END of a link" ) ;
-org/nlogo/prim/etc/_otherend.java-31-			}
-org/nlogo/prim/etc/_otherend.java-32-			node = (Turtle) context.myself() ;
-org/nlogo/prim/etc/_otherend.java-38-			{
-org/nlogo/prim/etc/_otherend.java-39-				throw new EngineException( context , this , 
-org/nlogo/prim/etc/_otherend.java:40:										   "Only a link can get the OTHER-END from a turtle." ) ;
-org/nlogo/prim/etc/_otherend.java-41-			}
-org/nlogo/prim/etc/_otherend.java-42-			link = (Link) context.myself() ;
-org/nlogo/prim/etc/_otherend.java-55-		
-org/nlogo/prim/etc/_otherend.java-56-		throw new EngineException( context , this ,
-org/nlogo/prim/etc/_otherend.java:57:								   node.toString() + " is not linked by " + 
-org/nlogo/prim/etc/_otherend.java-58-								   link.toString() + ".");
-org/nlogo/prim/etc/_otherend.java-59-	}
-org/nlogo/prim/etc/_patchatheadinganddistance.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_patchatheadinganddistance.java-15-			( new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-org/nlogo/prim/etc/_patchatheadinganddistance.java:16:			  Syntax.TYPE_PATCH , "-TP-" ) ;
-org/nlogo/prim/etc/_patchatheadinganddistance.java-17-	}
-org/nlogo/prim/etc/_patchatheadinganddistance.java-18-	@Override
-org/nlogo/prim/etc/_patchset.java-85-				if( tempSet.type() != org.nlogo.agent.Patch.class )
-org/nlogo/prim/etc/_patchset.java-86-				{
-org/nlogo/prim/etc/_patchset.java:87:					throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_patchset.java:88:											   + " must only contain patch, patch agentset, or list elements.  The list " 
-org/nlogo/prim/etc/_patchset.java-89-											   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_patchset.java:90:											   + " contained a different type agentset: " 
-org/nlogo/prim/etc/_patchset.java-91-											   + Dump.logoObject( obj , true , false)); 
-org/nlogo/prim/etc/_patchset.java-92-				}
-org/nlogo/prim/etc/_patchset.java-103-			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
-org/nlogo/prim/etc/_patchset.java-104-			{
-org/nlogo/prim/etc/_patchset.java:105:				throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_patchset.java:106:										   + " must only contain patch, patch agentset, or list elements.  The list " 
-org/nlogo/prim/etc/_patchset.java-107-										   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_patchset.java:108:										   + " contained " + Dump.logoObject( obj , true , false) 
-org/nlogo/prim/etc/_patchset.java:109:										   + " which is NOT a patch or patch agentset") ;
-org/nlogo/prim/etc/_patchset.java-110-			}
-org/nlogo/prim/etc/_patchset.java-111-		}
 org/nlogo/prim/etc/_pwd.java-24-		if( path == null )
 org/nlogo/prim/etc/_pwd.java-25-	    {
 org/nlogo/prim/etc/_pwd.java:26:			path = "no model loaded!" ;
 org/nlogo/prim/etc/_pwd.java-27-	    }
 org/nlogo/prim/etc/_pwd.java-28-		workspace.outputObject
-org/nlogo/prim/etc/_randomgamma.java-26-		{
-org/nlogo/prim/etc/_randomgamma.java-27-			throw new EngineException
-org/nlogo/prim/etc/_randomgamma.java:28:				( context , this , "both inputs to " + displayName() +
-org/nlogo/prim/etc/_randomgamma.java:29:				  " must be positive" ) ;
-org/nlogo/prim/etc/_randomgamma.java-30-		}
-org/nlogo/prim/etc/_randomgamma.java-31-		return validDouble
-org/nlogo/prim/etc/_reloadextensions.java-14-	public Syntax getSyntax()
-org/nlogo/prim/etc/_reloadextensions.java-15-	{
-org/nlogo/prim/etc/_reloadextensions.java:16:		return Syntax.commandSyntax( "OTPL" , true ) ;
-org/nlogo/prim/etc/_reloadextensions.java-17-	}
-org/nlogo/prim/etc/_reloadextensions.java-18-	@Override
-org/nlogo/prim/etc/_remainder.java-27-		if( d2 == 0 )
-org/nlogo/prim/etc/_remainder.java-28-		{
-org/nlogo/prim/etc/_remainder.java:29:			throw new EngineException( context , this , "division by zero" ) ;
-org/nlogo/prim/etc/_remainder.java-30-		}
-org/nlogo/prim/etc/_remainder.java-31-		return validDouble( d1 % d2 ) ;
-org/nlogo/prim/etc/_removeitem.java-21-		{
-org/nlogo/prim/etc/_removeitem.java-22-			throw new EngineException
-org/nlogo/prim/etc/_removeitem.java:23:				( context , this  , index + " isn't greater than or equal to zero" ) ;
-org/nlogo/prim/etc/_removeitem.java-24-		}
-org/nlogo/prim/etc/_removeitem.java-25-		if( obj instanceof LogoList )
-org/nlogo/prim/etc/_removeitem.java-29-			{
-org/nlogo/prim/etc/_removeitem.java-30-				throw new EngineException
-org/nlogo/prim/etc/_removeitem.java:31:					( context , this  , "can't find element " + index + " of the list " +
-org/nlogo/prim/etc/_removeitem.java:32:					  Dump.logoObject( list ) + ", which is only of length " +
-org/nlogo/prim/etc/_removeitem.java-33-					  list.size() ) ;
-org/nlogo/prim/etc/_removeitem.java-34-			}
-org/nlogo/prim/etc/_removeitem.java-41-			{
-org/nlogo/prim/etc/_removeitem.java-42-				throw new EngineException
-org/nlogo/prim/etc/_removeitem.java:43:					( context , this  , "can't find element " + index + " of the string " +
-org/nlogo/prim/etc/_removeitem.java-44-					  Dump.logoObject( string ) +
-org/nlogo/prim/etc/_removeitem.java:45:					  ", which is only of length " + string.length() ) ;
-org/nlogo/prim/etc/_removeitem.java-46-			}
-org/nlogo/prim/etc/_removeitem.java-47-			StringBuilder buf = new StringBuilder() ;
-org/nlogo/prim/etc/_replaceitem.java-22-		{
-org/nlogo/prim/etc/_replaceitem.java-23-			throw new EngineException
-org/nlogo/prim/etc/_replaceitem.java:24:				( context , this  , index + " isn't greater than or equal to zero" ) ;
-org/nlogo/prim/etc/_replaceitem.java-25-		}
-org/nlogo/prim/etc/_replaceitem.java-26-		if( obj instanceof LogoList )
-org/nlogo/prim/etc/_replaceitem.java-31-			{
-org/nlogo/prim/etc/_replaceitem.java-32-				throw new EngineException
-org/nlogo/prim/etc/_replaceitem.java:33:					( context , this  , "can't find element " + index + " of the list " +
-org/nlogo/prim/etc/_replaceitem.java:34:					  Dump.logoObject( list ) + ", which is only of length " + list.size() ) ;
-org/nlogo/prim/etc/_replaceitem.java-35-			}
-org/nlogo/prim/etc/_replaceitem.java-36-			return result ;
-org/nlogo/prim/etc/_replaceitem.java-47-			{
-org/nlogo/prim/etc/_replaceitem.java-48-				throw new EngineException
-org/nlogo/prim/etc/_replaceitem.java:49:					( context , this  , "can't find element " + index + " of the string " +
-org/nlogo/prim/etc/_replaceitem.java:50:					  Dump.logoObject( string ) + ", which is only of length " + string.length() ) ;
-org/nlogo/prim/etc/_replaceitem.java-51-			}
-org/nlogo/prim/etc/_replaceitem.java-52-			return string.substring( 0 , index ) + ( String ) elt + string.substring( index + 1 ) ;
-org/nlogo/prim/etc/_resetperspective.java-11-	public Syntax getSyntax()
-org/nlogo/prim/etc/_resetperspective.java-12-	{
-org/nlogo/prim/etc/_resetperspective.java:13:		return Syntax.commandSyntax( "OTPL" , true ) ;
-org/nlogo/prim/etc/_resetperspective.java-14-	}
-org/nlogo/prim/etc/_resetperspective.java-15-	@Override
-org/nlogo/prim/etc/_resizeworld.java-34-		{
-org/nlogo/prim/etc/_resizeworld.java-35-			throw new EngineException
-org/nlogo/prim/etc/_resizeworld.java:36:				( context , this , "You must include the point (0, 0) in the world." ) ;
-org/nlogo/prim/etc/_resizeworld.java-37-		}
-org/nlogo/prim/etc/_resizeworld.java-38-		
-org/nlogo/prim/etc/_ride.java-24-		if( turtle.id == -1 )
-org/nlogo/prim/etc/_ride.java-25-		{
-org/nlogo/prim/etc/_ride.java:26:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_ride.java-27-		}
-org/nlogo/prim/etc/_ride.java-28-		world.observer().setPerspective( Perspective.RIDE , turtle ) ;
-org/nlogo/prim/etc/_run.java-43-		{
-org/nlogo/prim/etc/_run.java-44-			throw new EngineException
-org/nlogo/prim/etc/_run.java:45:				( context , this , "syntax error: " + error.getMessage() ) ;
-org/nlogo/prim/etc/_run.java-46-		}
-org/nlogo/prim/etc/_run.java-47-	}
-org/nlogo/prim/etc/_runresult.java-27-			if( result == null )
-org/nlogo/prim/etc/_runresult.java-28-			{
-org/nlogo/prim/etc/_runresult.java:29:				throw new EngineException( context , this , "failed to report a result" ) ;
-org/nlogo/prim/etc/_runresult.java-30-			}
-org/nlogo/prim/etc/_runresult.java-31-			return result ;
-org/nlogo/prim/etc/_runresult.java-34-		{
-org/nlogo/prim/etc/_runresult.java-35-			throw new EngineException
-org/nlogo/prim/etc/_runresult.java:36:				( context , this , "syntax error: " + error.getMessage() ) ;
-org/nlogo/prim/etc/_runresult.java-37-		}
-org/nlogo/prim/etc/_runresult.java-38-		catch( LogoException ex )
-org/nlogo/prim/etc/_self.java-13-	{
-org/nlogo/prim/etc/_self.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_self.java:15:			( Syntax.TYPE_AGENT , "-TPL" ) ;
-org/nlogo/prim/etc/_self.java-16-	}
-org/nlogo/prim/etc/_self.java-17-	@Override
-org/nlogo/prim/etc/_setdefaultshape.java-26-		{
-org/nlogo/prim/etc/_setdefaultshape.java-27-			throw new EngineException
-org/nlogo/prim/etc/_setdefaultshape.java:28:				( context , this  , "cannot set the default shape of patches, because patches do not have shapes" ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-29-		}
-org/nlogo/prim/etc/_setdefaultshape.java-30-		if( breed.type() == org.nlogo.agent.Observer.class )
-org/nlogo/prim/etc/_setdefaultshape.java-31-		{
-org/nlogo/prim/etc/_setdefaultshape.java-32-			throw new EngineException
-org/nlogo/prim/etc/_setdefaultshape.java:33:				( context , this  , "cannot set the default shape of the observer, because the observer does not have a shape" ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-34-		}
-org/nlogo/prim/etc/_setdefaultshape.java-35-		if( breed != world.turtles() && ! world.isBreed( breed ) &&
-org/nlogo/prim/etc/_setdefaultshape.java-37-		{
-org/nlogo/prim/etc/_setdefaultshape.java-38-			throw new EngineException
-org/nlogo/prim/etc/_setdefaultshape.java:39:				( context , this  , "can only set the default shape of all turtles , all links, or an entire breed" ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-40-		}
-org/nlogo/prim/etc/_setdefaultshape.java-41-		if( breed.type() == org.nlogo.agent.Turtle.class )
-org/nlogo/prim/etc/_setdefaultshape.java-45-			{
-org/nlogo/prim/etc/_setdefaultshape.java-46-				throw new EngineException
-org/nlogo/prim/etc/_setdefaultshape.java:47:					( context , this  , "\"" + shape + "\" is not a currently defined turtle shape" ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-48-			}
-org/nlogo/prim/etc/_setdefaultshape.java-49-			world.turtleBreedShapes.setBreedShape( breed , checkedShape ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-55-			{
-org/nlogo/prim/etc/_setdefaultshape.java-56-				throw new EngineException
-org/nlogo/prim/etc/_setdefaultshape.java:57:					( context , this  , "\"" + shape + "\" is not a currently defined link shape" ) ;
-org/nlogo/prim/etc/_setdefaultshape.java-58-			}
-org/nlogo/prim/etc/_setdefaultshape.java-59-			world.linkBreedShapes.setBreedShape( breed , checkedShape ) ;
-org/nlogo/prim/etc/_setxy.java-43-			throw new EngineException
-org/nlogo/prim/etc/_setxy.java-44-				( context , this ,
-org/nlogo/prim/etc/_setxy.java:45:				  "The point [ "
-org/nlogo/prim/etc/_setxy.java-46-				  + newx.doubleValue() + " , "
-org/nlogo/prim/etc/_setxy.java-47-				  + newy.doubleValue() + " ] "
-org/nlogo/prim/etc/_setxy.java:48:				  + "is outside of the boundaries of the world "
-org/nlogo/prim/etc/_setxy.java:49:				  + "and wrapping is not permitted in one or both directions." ) ;
-org/nlogo/prim/etc/_setxy.java-50-        }
-org/nlogo/prim/etc/_setxy.java-51-        context.ip = next ;
-org/nlogo/prim/etc/_setxy.java-64-			throw new EngineException
-org/nlogo/prim/etc/_setxy.java-65-				( context , this ,
-org/nlogo/prim/etc/_setxy.java:66:				  "The point [ "
-org/nlogo/prim/etc/_setxy.java-67-				  + xvalue + " , "
-org/nlogo/prim/etc/_setxy.java-68-				  + yvalue + " ] "
-org/nlogo/prim/etc/_setxy.java:69:				  + "is outside of the boundaries of the world "
-org/nlogo/prim/etc/_setxy.java:70:				  + "and wrapping is not permitted in one or both directions." ) ;
-org/nlogo/prim/etc/_setxy.java-71-        }
-org/nlogo/prim/etc/_setxy.java-72-        context.ip = next ;
-org/nlogo/prim/etc/_sqrt.java-23-		if( arg0 < 0 )
-org/nlogo/prim/etc/_sqrt.java-24-		{
-org/nlogo/prim/etc/_sqrt.java:25:			throw new EngineException( context , this , "the square root of " + arg0
-org/nlogo/prim/etc/_sqrt.java:26:					+ " is an imaginary number" ) ;
-org/nlogo/prim/etc/_sqrt.java-27-		}
-org/nlogo/prim/etc/_sqrt.java-28-		return StrictMath.sqrt( arg0 ) ;
-org/nlogo/prim/etc/_standarddeviation.java-42-		{
-org/nlogo/prim/etc/_standarddeviation.java-43-			throw new EngineException
-org/nlogo/prim/etc/_standarddeviation.java:44:				( context , this , "can't find the standard deviation of a list without at least two numbers: " +
-org/nlogo/prim/etc/_standarddeviation.java-45-				  Dump.logoObject( list ) ) ;
-org/nlogo/prim/etc/_standarddeviation.java-46-		}
-org/nlogo/prim/etc/_stop.java-25-		if( ! context.atTopActivation() )
-org/nlogo/prim/etc/_stop.java-26-	    {
-org/nlogo/prim/etc/_stop.java-29-			context.finished = true ;
-org/nlogo/prim/etc/_stop.java-31-		else
-org/nlogo/prim/etc/_stop.java-32-	    {
-org/nlogo/prim/etc/_stop.java-37-		    {
-org/nlogo/prim/etc/_stop.java-38-				throw new EngineException
-org/nlogo/prim/etc/_stop.java:39:					( context , this , displayName() + " is not allowed inside TO-REPORT" ) ;
-org/nlogo/prim/etc/_stop.java-40-		    }
-org/nlogo/prim/etc/_stop.java-41-			if( context.activation.procedure.topLevel )
-org/nlogo/prim/etc/_stop.java-85-		    {
-org/nlogo/prim/etc/_stop.java-86-				throw new EngineException
-org/nlogo/prim/etc/_stop.java:87:					( context , this , displayName() + " is not allowed inside TO-REPORT" ) ;
-org/nlogo/prim/etc/_stop.java-88-		    }
-org/nlogo/prim/etc/_sublist.java-21-		{
-org/nlogo/prim/etc/_sublist.java-22-			throw new EngineException
-org/nlogo/prim/etc/_sublist.java:23:				( context , this  , start + " is less than zero" ) ;
-org/nlogo/prim/etc/_sublist.java-24-		}
-org/nlogo/prim/etc/_sublist.java-25-		else if( stop < start )
-org/nlogo/prim/etc/_sublist.java-26-		{
-org/nlogo/prim/etc/_sublist.java-27-			throw new EngineException
-org/nlogo/prim/etc/_sublist.java:28:				( context , this  , stop + " is less than " + start ) ;
-org/nlogo/prim/etc/_sublist.java-29-		}
-org/nlogo/prim/etc/_sublist.java-30-		else if( stop > size )
-org/nlogo/prim/etc/_sublist.java-31-		{
-org/nlogo/prim/etc/_sublist.java-32-			throw new EngineException
-org/nlogo/prim/etc/_sublist.java:33:				( context , this  , stop + " is greater than the length of the input list (" +
-org/nlogo/prim/etc/_sublist.java-34-				  size + ")" ) ;
-org/nlogo/prim/etc/_sublist.java-35-		}
-org/nlogo/prim/etc/_substring.java-20-		{
-org/nlogo/prim/etc/_substring.java-21-			throw new EngineException
-org/nlogo/prim/etc/_substring.java:22:				( context , this  , start + " isn't greater than or equal to zero " ) ;
-org/nlogo/prim/etc/_substring.java-23-		}
-org/nlogo/prim/etc/_substring.java-24-		else if( start > stop )
-org/nlogo/prim/etc/_substring.java-25-		{
-org/nlogo/prim/etc/_substring.java-26-			throw new EngineException
-org/nlogo/prim/etc/_substring.java:27:				( context , this  , start + " is greater than " + stop ) ;
-org/nlogo/prim/etc/_substring.java-28-		}
-org/nlogo/prim/etc/_substring.java-29-		else if( stop > string.length() )
-org/nlogo/prim/etc/_substring.java-30-		{
-org/nlogo/prim/etc/_substring.java-31-			throw new EngineException
-org/nlogo/prim/etc/_substring.java:32:				( context , this  , stop + " is too big for " + Dump.logoObject( string ) + 
-org/nlogo/prim/etc/_substring.java:33:				  ", which is only of length " + string.length() ) ;
-org/nlogo/prim/etc/_substring.java-34-		}
-org/nlogo/prim/etc/_substring.java-35-		return string.substring( start , stop ) ;
-org/nlogo/prim/etc/_tickadvance.scala-12-      throw new EngineException(
-org/nlogo/prim/etc/_tickadvance.scala-13-        context, this,
-org/nlogo/prim/etc/_tickadvance.scala:14:        "Cannot advance the tick counter by a negative amount")
-org/nlogo/prim/etc/_tickadvance.scala-15-    if(world.tickCounter.ticks == -1)
-org/nlogo/prim/etc/_tickadvance.scala-16-      throw new EngineException(
-org/nlogo/prim/etc/_tickadvance.scala-17-        context, this,
-org/nlogo/prim/etc/_tickadvance.scala:18:        "The tick counter has not been started yet. Use RESET-TICKS." )
-org/nlogo/prim/etc/_tickadvance.scala-19-    world.tickCounter.tick(amount)
-org/nlogo/prim/etc/_tickadvance.scala-20-    workspace.requestDisplayUpdate(false)
-org/nlogo/prim/etc/_ticks.java-25-			throw new EngineException(
-org/nlogo/prim/etc/_ticks.java-26-				context , this ,
-org/nlogo/prim/etc/_ticks.java:27:				"The tick counter has not been started yet. Use RESET-TICKS." ) ;
-org/nlogo/prim/etc/_ticks.java-28-		}
-org/nlogo/prim/etc/_ticks.java-29-		return result ;
-org/nlogo/prim/etc/_time.java-19-	public String report_1( final org.nlogo.nvm.Context context )
-org/nlogo/prim/etc/_time.java-20-	{
-org/nlogo/prim/etc/_time.java:21:		return new java.text.SimpleDateFormat( "hh:mm:ss.SSS a dd-MMM-yyyy" )
-org/nlogo/prim/etc/_time.java-22-			.format( new java.util.Date() ) ;
-org/nlogo/prim/etc/_time.java-23-	}
-org/nlogo/prim/etc/_towards.java-13-	{
-org/nlogo/prim/etc/_towards.java-14-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
-org/nlogo/prim/etc/_towards.java:15:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_towards.java-16-	}
-org/nlogo/prim/etc/_towards.java-17-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_towards.java-21-		{
-org/nlogo/prim/etc/_towards.java-22-			throw new EngineException
-org/nlogo/prim/etc/_towards.java:23:				( context , this , "expected this to be a turtle or a patch but got a link instead" ) ;
-org/nlogo/prim/etc/_towards.java-24-		}
-org/nlogo/prim/etc/_towards.java-25-		if( agent.id == -1 )
-org/nlogo/prim/etc/_towards.java-26-		{
-org/nlogo/prim/etc/_towards.java:27:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_towards.java-28-		}
-org/nlogo/prim/etc/_towards.java-29-		try
-org/nlogo/prim/etc/_towardsnowrap.java-12-	{
-org/nlogo/prim/etc/_towardsnowrap.java-13-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
-org/nlogo/prim/etc/_towardsnowrap.java:14:		return Syntax.reporterSyntax( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_towardsnowrap.java-15-	}
-org/nlogo/prim/etc/_towardsnowrap.java-16-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_towardsnowrap.java-21-			throw new EngineException
-org/nlogo/prim/etc/_towardsnowrap.java-22-				( context , this , 
-org/nlogo/prim/etc/_towardsnowrap.java:23:				  "expected this to be a turtle or a patch but got a link instead" ) ;
-org/nlogo/prim/etc/_towardsnowrap.java-24-		}
-org/nlogo/prim/etc/_towardsnowrap.java-25-		if( agent.id == -1 )
-org/nlogo/prim/etc/_towardsnowrap.java-26-		{
-org/nlogo/prim/etc/_towardsnowrap.java:27:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_towardsnowrap.java-28-		}
-org/nlogo/prim/etc/_towardsnowrap.java-29-		try
-org/nlogo/prim/etc/_towardsxy.java-14-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/etc/_towardsxy.java-15-		int ret = Syntax.TYPE_NUMBER ;
-org/nlogo/prim/etc/_towardsxy.java:16:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-org/nlogo/prim/etc/_towardsxy.java-17-	}
-org/nlogo/prim/etc/_towardsxy.java-18-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_towardsxynowrap.java-13-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/etc/_towardsxynowrap.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_towardsxynowrap.java:15:			( right , Syntax.TYPE_NUMBER , "-TP-" ) ;
-org/nlogo/prim/etc/_towardsxynowrap.java-16-	}
-org/nlogo/prim/etc/_towardsxynowrap.java-17-	@Override public Object report( Context context ) throws LogoException
-org/nlogo/prim/etc/_turtlesat.java-14-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_turtlesat.java-15-			( new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-org/nlogo/prim/etc/_turtlesat.java:16:			  Syntax.TYPE_TURTLESET , "-TP-" ) ;
-org/nlogo/prim/etc/_turtlesat.java-17-	}
-org/nlogo/prim/etc/_turtlesat.java-18-	@Override
-org/nlogo/prim/etc/_turtleset.java-86-				if( tempSet.type() != org.nlogo.agent.Turtle.class )
-org/nlogo/prim/etc/_turtleset.java-87-				{
-org/nlogo/prim/etc/_turtleset.java:88:					throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_turtleset.java:89:											   + " must only contain turtle or turtle agentset elements.  The list " 
-org/nlogo/prim/etc/_turtleset.java-90-											   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_turtleset.java:91:											   + " contained a different type agentset: " 
-org/nlogo/prim/etc/_turtleset.java-92-											   + Dump.logoObject( obj , true , false)); 
-org/nlogo/prim/etc/_turtleset.java-93-				}
-org/nlogo/prim/etc/_turtleset.java-104-			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
-org/nlogo/prim/etc/_turtleset.java-105-			{
-org/nlogo/prim/etc/_turtleset.java:106:				throw new EngineException( context , this , "List inputs to " + this.displayName() 
-org/nlogo/prim/etc/_turtleset.java:107:										   + " must only contain turtle or turtle agentset elements.  The list " 
-org/nlogo/prim/etc/_turtleset.java-108-										   +  Dump.logoObject( tempList , true , false) 
-org/nlogo/prim/etc/_turtleset.java:109:										   + " contained " + Dump.logoObject( obj , true , false) 
-org/nlogo/prim/etc/_turtleset.java:110:										   + " which is NOT a turtle or turtle agentset") ;
-org/nlogo/prim/etc/_turtleset.java-111-			}
-org/nlogo/prim/etc/_turtleset.java-112-		}
-org/nlogo/prim/etc/_turtleshere.java-17-	{
-org/nlogo/prim/etc/_turtleshere.java-18-		return Syntax.reporterSyntax
-org/nlogo/prim/etc/_turtleshere.java:19:			( Syntax.TYPE_TURTLESET , "-TP-" ) ;
-org/nlogo/prim/etc/_turtleshere.java-20-	}
-org/nlogo/prim/etc/_turtleshere.java-21-	@Override
-org/nlogo/prim/etc/_turtleson.java-33-			if( turtle.id == -1 )
-org/nlogo/prim/etc/_turtleson.java-34-			{
-org/nlogo/prim/etc/_turtleson.java:35:				throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_turtleson.java-36-			}
-org/nlogo/prim/etc/_turtleson.java-37-			addAll( resultList , turtle.getPatchHere().turtlesHere() ) ;
-org/nlogo/prim/etc/_variance.java-42-			throw new EngineException
-org/nlogo/prim/etc/_variance.java-43-				( context , this  ,
-org/nlogo/prim/etc/_variance.java:44:				  "can't find the variance of a list without at least two numbers: " +
-org/nlogo/prim/etc/_variance.java-45-				  Dump.logoObject( list ) ) ;
-org/nlogo/prim/etc/_variance.java-46-		}
-org/nlogo/prim/etc/_watch.java-23-		if( agent.id == -1 )
-org/nlogo/prim/etc/_watch.java-24-		{
-org/nlogo/prim/etc/_watch.java:25:			throw new EngineException( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/etc/_watch.java-26-		}
-org/nlogo/prim/etc/_watch.java-27-		world.observer().home() ;
-org/nlogo/prim/etc/_watchme.java-11-	public Syntax getSyntax()
-org/nlogo/prim/etc/_watchme.java-12-	{
-org/nlogo/prim/etc/_watchme.java:13:		return Syntax.commandSyntax( "-TPL" , true ) ;
-org/nlogo/prim/etc/_watchme.java-14-	}
-org/nlogo/prim/etc/_watchme.java-15-	@Override
-org/nlogo/prim/etc/_withmax.java-23-			  Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_withmax.java-24-			  false , // left associative
-org/nlogo/prim/etc/_withmax.java:25:			  "OTPL" ,
-org/nlogo/prim/etc/_withmax.java-26-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/etc/_withmax.java-27-				) ;
-org/nlogo/prim/etc/_withmin.java-23-			  Syntax.NORMAL_PRECEDENCE + 2 ,
-org/nlogo/prim/etc/_withmin.java-24-			  false , // left associative
-org/nlogo/prim/etc/_withmin.java:25:			  "OTPL" ,
-org/nlogo/prim/etc/_withmin.java-26-			  "?"    // takes reporter block of unknown agent type
-org/nlogo/prim/etc/_withmin.java-27-				) ;
+
 org/nlogo/prim/gui/_bench.java-20-		final int minTime = argEvalIntValue( context , 0 ) ;
 org/nlogo/prim/gui/_bench.java-21-		final int maxTime = argEvalIntValue( context , 1 ) ;
 org/nlogo/prim/gui/_bench.java:22:		new Thread( "__bench" ) {
@@ -7410,11 +5647,6 @@ org/nlogo/prim/gui/_exportinterface.java-23-			throw new EngineException(
 org/nlogo/prim/gui/_exportinterface.java:24:				context , this , token().name() + " can only be used in the GUI" ) ;
 org/nlogo/prim/gui/_exportinterface.java-25-		}
 org/nlogo/prim/gui/_exportinterface.java-26-		( (GUIWorkspace) workspace).forceDisplayAndTicksUpdates() ;
-org/nlogo/prim/gui/_inspect.java-15-		{
-org/nlogo/prim/gui/_inspect.java-16-			throw new EngineException
-org/nlogo/prim/gui/_inspect.java:17:				( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/gui/_inspect.java-18-		}
-org/nlogo/prim/gui/_inspect.java-19-		org.nlogo.awt.Utils.invokeLater
 org/nlogo/prim/gui/_inspectwithradius.java-16-		{
 org/nlogo/prim/gui/_inspectwithradius.java-17-			throw new EngineException
 org/nlogo/prim/gui/_inspectwithradius.java:18:				( context , this , "that turtle is dead" ) ;
@@ -7773,26 +6005,6 @@ org/nlogo/prim/plot/_plotprims.scala-193-      throw new EngineException(
 org/nlogo/prim/plot/_plotprims.scala:194:        c, this, "There is no pen named \"" + penName + "\" in the current plot"))
 org/nlogo/prim/plot/_plotprims.scala-195-  }
 org/nlogo/prim/plot/_plotprims.scala-196-}
-org/nlogo/prim/threed/_breedat.java-24-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/threed/_breedat.java-25-		int ret = Syntax.TYPE_TURTLESET ;
-org/nlogo/prim/threed/_breedat.java:26:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-org/nlogo/prim/threed/_breedat.java-27-	}
-org/nlogo/prim/threed/_breedat.java-28-	@Override
-org/nlogo/prim/threed/_distancexyz.java-15-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/threed/_distancexyz.java-16-		int ret = Syntax.TYPE_NUMBER ;
-org/nlogo/prim/threed/_distancexyz.java:17:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-org/nlogo/prim/threed/_distancexyz.java-18-	}
-org/nlogo/prim/threed/_distancexyz.java-19-	@Override
-org/nlogo/prim/threed/_distancexyznowrap.java-16-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/threed/_distancexyznowrap.java-17-		int ret = Syntax.TYPE_NUMBER ;
-org/nlogo/prim/threed/_distancexyznowrap.java:18:		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-org/nlogo/prim/threed/_distancexyznowrap.java-19-	}
-org/nlogo/prim/threed/_distancexyznowrap.java-20-	@Override
-org/nlogo/prim/threed/_facexyz.java-17-						  Syntax.TYPE_NUMBER ,
-org/nlogo/prim/threed/_facexyz.java-18-						  Syntax.TYPE_NUMBER } ,
-org/nlogo/prim/threed/_facexyz.java:19:			  "OT--" , true ) ;
-org/nlogo/prim/threed/_facexyz.java-20-	}
-org/nlogo/prim/threed/_facexyz.java-21-	@Override
 org/nlogo/prim/threed/_layoutsphere.java-32-			throw new EngineException
 org/nlogo/prim/threed/_layoutsphere.java-33-				( context , this ,
 org/nlogo/prim/threed/_layoutsphere.java:34:				  "Patches are immovable." ) ;
@@ -7823,10 +6035,6 @@ org/nlogo/prim/threed/_resizeworld.java-39-			throw new EngineException
 org/nlogo/prim/threed/_resizeworld.java:40:				( context , this , "You must include the point (0, 0, 0) in the world." ) ;
 org/nlogo/prim/threed/_resizeworld.java-41-		}
 org/nlogo/prim/threed/_resizeworld.java-42-		if( oldMinX != newMinX || oldMaxX != newMaxX ||
-org/nlogo/prim/threed/_setxyz.java-15-						Syntax.TYPE_NUMBER , 
-org/nlogo/prim/threed/_setxyz.java-16-						Syntax.TYPE_NUMBER } ;
-org/nlogo/prim/threed/_setxyz.java:17:		return Syntax.commandSyntax( right , "OT--" , true ) ;
-org/nlogo/prim/threed/_setxyz.java-18-	}
 org/nlogo/prim/threed/_setxyz.java-19-	@Override
 org/nlogo/prim/threed/_setxyz.java-53-				throw new EngineException
 org/nlogo/prim/threed/_setxyz.java-54-					( context , this ,
@@ -9227,9 +7435,7 @@ org/nlogo/workspace/DefaultFileManager.java:225:				throw new java.io.IOExceptio
 org/nlogo/workspace/DefaultFileManager.java:234:			String mode = ( currentFile.getMode() == org.nlogo.api.File.Mode.READ ) ? "READING" : "WRITING" ;
 org/nlogo/workspace/DefaultFileManager.java:236:			throw new java.io.IOException( "You can only use " + mode + " primitives with this file" ) ;
 org/nlogo/workspace/DefaultFileManager.java:264:			throw new java.io.IOException( "You need to close the file before deletion" ) ;
-org/nlogo/workspace/DefaultFileManager.java:269:			throw new java.io.IOException( "You cannot delete a non-existent file." ) ;
 org/nlogo/workspace/DefaultFileManager.java:273:			throw new java.io.IOException( "Modification to this file is denied." ) ;
-org/nlogo/workspace/DefaultFileManager.java:277:			throw new java.io.IOException( "You can only delete files." ) ;
 org/nlogo/workspace/DefaultFileManager.java:282:			throw new java.io.IOException( "Deletion failed." ) ;
 org/nlogo/workspace/DefaultFileManager.java:295:			throw new java.io.IOException( "This filename is illegal, " + newFileName ) ;
 org/nlogo/workspace/DefaultFileManager.java:320:			throw new java.io.IOException( "There is no file to file" ) ;

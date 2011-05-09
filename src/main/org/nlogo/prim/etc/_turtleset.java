@@ -7,6 +7,7 @@ import java.util.Set;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -85,11 +86,8 @@ public final strictfp class _turtleset
 				AgentSet tempSet = (AgentSet) obj ;
 				if( tempSet.type() != org.nlogo.agent.Turtle.class )
 				{
-					throw new EngineException( context , this , "List inputs to " + this.displayName() 
-											   + " must only contain turtle or turtle agentset elements.  The list " 
-											   +  Dump.logoObject( tempList , true , false) 
-											   + " contained a different type agentset: " 
-											   + Dump.logoObject( obj , true , false)); 
+					throw new EngineException( context , this ,  I18N.errors().getNJava("org.nlogo.prim.etc ._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
+                            new String [] {this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj,true,false)}));
 				}
 				for( AgentSet.Iterator iter2 = tempSet.iterator() ;
 					 iter2.hasNext() ; )
@@ -103,11 +101,9 @@ public final strictfp class _turtleset
 			}
 			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
 			{
-				throw new EngineException( context , this , "List inputs to " + this.displayName() 
-										   + " must only contain turtle or turtle agentset elements.  The list " 
-										   +  Dump.logoObject( tempList , true , false) 
-										   + " contained " + Dump.logoObject( obj , true , false) 
-										   + " which is NOT a turtle or turtle agentset") ;
+				throw new EngineException( context , this ,
+                        I18N.errors().getNJava("org.nlogo.prim.etc._turtleset.incorrectInputType",
+                                new String [] {this.displayName(), Dump.logoObject( tempList , true , false) , Dump.logoObject( obj , true , false) })) ;
 			}
 		}
 	}

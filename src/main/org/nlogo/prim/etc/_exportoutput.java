@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
@@ -15,7 +16,7 @@ public final strictfp class _exportoutput
 		if( filename.equals( "" ) )
 		{
 			throw new EngineException
-				( context , this , "can't export to empty pathname" ) ;
+				( context , this , I18N.errors().get("org.nlogo.prim.etc._exportoutput.emptyPath") ) ;
 		}
 		final org.nlogo.nvm.Command comm = this ;
 		workspace.waitFor

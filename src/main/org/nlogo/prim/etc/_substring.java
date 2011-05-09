@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc ;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -19,18 +20,20 @@ public final strictfp class _substring
 		if( start < 0 )
 		{
 			throw new EngineException
-				( context , this  , start + " isn't greater than or equal to zero " ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc._sublist.startIsLessThanZero",
+                        new String[] {new Integer (start).toString()})) ;
 		}
 		else if( start > stop )
 		{
 			throw new EngineException
-				( context , this  , start + " is greater than " + stop ) ;
+				( context , this  , I18N.errors().getNJava("org.nlogo.prim.etc._sublist.endIsLessThanStart",
+                        new String[] {new Integer(stop).toString(), new Integer(start).toString()})) ;
 		}
 		else if( stop > string.length() )
 		{
 			throw new EngineException
-				( context , this  , stop + " is too big for " + Dump.logoObject( string ) + 
-				  ", which is only of length " + string.length() ) ;
+				( context , this  ,  I18N.errors().getNJava("org.nlogo.prim.etc._substring.endIsGreaterThanListSize",
+                        new String[] {Integer.toString(stop), Dump.logoObject(string), Integer.toString(string.length())}));
 		}
 		return string.substring( start , stop ) ;
 	}

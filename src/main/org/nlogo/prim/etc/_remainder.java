@@ -1,5 +1,6 @@
 package org.nlogo.prim.etc ;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -26,7 +27,7 @@ public final strictfp class _remainder extends Reporter implements Pure
 	{
 		if( d2 == 0 )
 		{
-			throw new EngineException( context , this , "division by zero" ) ;
+			throw new EngineException( context , this , I18N.errors().get("org.nlogo.prim.etc.$common.divByZero") ) ;
 		}
 		return validDouble( d1 % d2 ) ;
 	}

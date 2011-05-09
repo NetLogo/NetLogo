@@ -4,6 +4,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -52,10 +53,8 @@ public final strictfp class _lessorequal
 			}
 		}
 		throw new EngineException
-			( context , this , 
-			  "the <= operator can only be used on two numbers, " 
-			  + "two strings, or two agents of the same type, " +
-			  "but not on " + Syntax.aTypeName( o1 ) + " and " + Syntax.aTypeName( o2 ) ) ;
+			( context , this , I18N.errors().getNJava("org.nlogo.prim._lessorequal.cannotCompareParameters",
+                    new String[] {Syntax.aTypeName(o1), Syntax.aTypeName(o2)})) ;
 	}
 	public boolean report_2( Context context , String arg0 , String arg1 )
 	{
@@ -84,11 +83,8 @@ public final strictfp class _lessorequal
 			return arg0 <= ( (Double) arg1 ).doubleValue() ;
 		}
 		throw new EngineException
-			( context , this , 
-			  "the <= operator can only be used on two numbers, " 
-			  + "two strings, or two agents of the same type, " +
-			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-			  Syntax.aTypeName( arg1 ) ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim._lessorequal.cannotCompareParameters",
+                    new String[] {Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)})) ;
 	}
 	public boolean report_8( Context context , Object arg0 , double arg1 ) throws LogoException
 	{
@@ -97,10 +93,7 @@ public final strictfp class _lessorequal
 			return ( (Double) arg0 ).doubleValue() <= arg1 ;
 		}
 		throw new EngineException
-			( context , this , 
-			  "the <= operator can only be used on two numbers, " 
-			  + "two strings, or two agents of the same type, " +
-			  "but not on a " + Syntax.aTypeName( arg0 ) + " and " +
-			  Syntax.aTypeName( arg1 ) ) ;
+				( context , this , I18N.errors().getNJava("org.nlogo.prim._lessorequal.cannotCompareParameters",
+                    new String[] {Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)})) ;
 	}
 }
