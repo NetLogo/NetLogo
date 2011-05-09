@@ -329,6 +329,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+10.0
 
 BUTTON
 8
@@ -345,6 +346,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 8
@@ -384,6 +386,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 8
@@ -500,44 +503,42 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is a multiplayer version of the iterated prisoner's dilemma. It is intended to explore the strategic implications that emerge when the world consists entirely of prisoner's dilemma like interactions. If you are unfamiliar with the basic concepts of the prisoner's dilemma or the iterated prisoner's dilemma, please refer to the PD BASIC and PD TWO PERSON ITERATED models found in the PRISONER'S DILEMMA suite.
 
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The PD TWO PERSON ITERATED model demonstrates an interesting concept: When interacting with someone over time in a prisoner's dilemma scenario, it is possible to tune your strategy to do well with theirs. Each possible strategy has unique strengths and weaknesses that appear through the course of the game. For instance, always defect does best of any against the random strategy, but poorly against itself. Tit-for-tat does poorly with the random strategy, but well with itself.
 
 This makes it difficult to determine a single "best" strategy. One such approach to doing this is to create a world with multiple agents playing a variety of strategies in repeated prisoner's dilemma situations. This model does just that. The turtles with different strategies wander around randomly until they find another turtle to play with. (Note that each turtle remembers their last interaction with each other turtle. While some strategies don't make use of this information, other strategies do.)
 
 Payoffs
--------
+
 When two turtles interact, they display their respective payoffs as labels.
 
 Each turtle's payoff for each round will determined as follows:
 
-|             | Partner's Action
-|  Turtle's   |
-|   Action    |   C       D
-| ------------|-----------------
-|       C     |   3       0
-| ------------|-----------------
-|       D     |   5       1
-| ------------|-----------------
-|  (C = Cooperate, D = Defect)
+                 | Partner's Action
+      Turtle's   |
+       Action    |   C       D
+     ------------|-----------------
+           C     |   3       0
+     ------------|-----------------
+           D     |   5       1
+     ------------|-----------------
+      (C = Cooperate, D = Defect)
 
 (Note: This way of determining payoff is the opposite of how it was done in the PD BASIC model. In PD BASIC, you were awarded something bad- jail time. In this model, something good is awarded- money.)
 
 
+## HOW TO USE IT
 
-HOW TO USE IT
---------------
-
-Buttons:
+### Buttons
 
 SETUP: Setup the world to begin playing the multi-person iterated prisoner's dilemma. The number of turtles and their strategies are determined by the slider values.
 
@@ -545,11 +546,11 @@ GO: Have the turtles walk around the world and interact.
 
 GO ONCE: Same as GO except the turtles only take one step.
 
-Sliders:
+### Sliders
 
 N-STRATEGY: Multiple sliders exist with the prefix N- then a strategy name (e.g., n-cooperate). Each of these determines how many turtles will be created that use the STRATEGY. Strategy descriptions are found below:
 
-Strategies:
+### Strategies
 
 RANDOM - randomly cooperate or defect
 
@@ -563,13 +564,12 @@ UNFORGIVING - Cooperate until an opponent defects once, then always defect in ea
 
 UNKNOWN - This strategy is included to help you try your own strategies. It currently defaults to Tit-for-Tat.
 
-Plots:
+### Plots
 
 AVERAGE-PAYOFF - The average payoff of each strategy in an interaction vs. the number of iterations. This is a good indicator of how well a strategy is doing relative to the maximum possible average of 5 points per interaction.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Set all the number of player for each strategy to be equal in distribution.  For which strategy does the average-payoff seem to be highest?  Do you think this strategy is always the best to use or will there be situations where other strategy will yield a higher average-payoff?
 
 Set the number of n-cooperate to be high, n-defects to be equivalent to that of n-cooperate, and all other players to be 0.  Which strategy will yield the higher average-payoff?
@@ -578,19 +578,16 @@ Set the number of n-tit-for-tat to be high, n-defects to be equivalent to that o
 
 Set the number n-tit-for-tat to be equal to the number of n-cooperate.  Set all other players to be 0.  Which strategy will yield the higher average-payoff?  Why do you suppose that one strategy will lead to higher or equal payoff?
 
+## THINGS TO TRY
 
+1. Observe the results of running the model with a variety of populations and population sizes. For example, can you get cooperate's average payoff to be higher than defect's? Can you get Tit-for-Tat's average payoff higher than cooperate's? What do these experiments suggest about an optimal strategy?
 
-THINGS TO TRY
---------------
-1.  Observe the results of running the model with a variety of populations and population sizes. For example, can you get cooperate's average payoff to be higher than defect's? Can you get Tit-for-Tat's average payoff higher than cooperate's? What do these experiments suggest about an optimal strategy?
+2. Currently the UNKNOWN strategy defaults to TIT-FOR-TAT. Modify the UNKOWN and UNKNOWN-HISTORY-UPDATE procedures to execute a strategy of your own creation. Test it in a variety of populations.  Analyze its strengths and weaknesses. Keep trying to improve it.
 
-2.  Currently the UNKNOWN strategy defaults to TIT-FOR-TAT. Modify the UNKOWN and UNKNOWN-HISTORY-UPDATE procedures to execute a strategy of your own creation. Test it in a variety of populations.  Analyze its strengths and weaknesses. Keep trying to improve it.
+3. Relate your observations from this model to real life events. Where might you find yourself in a similar situation? How might the knowledge obtained from the model influence your actions in such a situation? Why?
 
-3.  Relate your observations from this model to real life events. Where might you find yourself in a similar situation? How might the knowledge obtained from the model influence your actions in such a situation? Why?
+## EXTENDING THE MODEL
 
-
-EXTENDING THE MODEL
----------------------
 Relative payoff table - Create a table which displays the average payoff of each strategy when interacting with each of the other strategies.
 
 Complex strategies using lists of lists - The strategies defined here are relatively simple, some would even say naive.  Create a strategy that uses the PARTNER-HISTORY variable to store a list of history information pertaining to past interactions with each turtle.
@@ -603,24 +600,17 @@ Spatial Relations - Allow turtles to choose not to interact with a partner.  All
 
 Environmental resources - include an environmental (patch) resource and incorporate it into the interactions.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
-Note the use of the TO-REPORT primitive in the function CALC-SCORE to return a number
+Note the use of the `to-report` keyword in the `calc-score` procedure to report a number.
 
-Note the use of lists and turtle ID's to keep a running history of interactions in the PARTNER-HISTORY turtle variable.
+Note the use of lists and turtle ID's to keep a running history of interactions in the `partner-history` turtle variable.
 
-Note how agent sets that will be used repeatedly are stored when created and reused to increase speed.
+Note how agentsets that will be used repeatedly are stored when created and reused to increase speed.
 
+## RELATED MODELS
 
-RELATED MODELS
----------------
-PD Basic
-
-PD Two Person Iterated
-
-PD Basic Evolutionary
-
+PD Basic, PD Two Person Iterated, PD Basic Evolutionary
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -907,7 +897,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
