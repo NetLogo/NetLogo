@@ -1,29 +1,13 @@
-package org.nlogo.prim.gui ;
+package org.nlogo.prim.gui
 
-import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.LogoException
+import org.nlogo.nvm.{ Command, Context, Syntax }
 
-public final strictfp class _ziplogfiles
-	extends Command
-{
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.commandSyntax
-			( new int[] { Syntax.TYPE_STRING } ,
-			  "O---" , true ) ;
-	}
-	@Override
-	public void perform( final Context context )
-		throws LogoException
-	{
-		perform_1( context , argEvalString( context , 0 ) ) ;
-	}
-	public void perform_1( final Context context , String name )
-	{
-		workspace.zipLogFiles( name ) ;
-		context.ip = next ;
-	}
+class _ziplogfiles extends Command {
+  override def syntax =
+    Syntax.commandSyntax(Array(Syntax.TYPE_STRING), "O---", true)
+  override def perform(context: Context) {
+    workspace.zipLogFiles(argEvalString(context, 0))
+    context.ip = next
+  }
 }
