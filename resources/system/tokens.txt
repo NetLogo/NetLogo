@@ -14,8 +14,8 @@ C __foreverbuttonend etc._foreverbuttonend
 C __hubnet-broadcast-user-message hubnet._hubnetbroadcastusermessage
 C __hubnet-clear-plot hubnet._hubnetclearplot
 C __hubnet-create-client hubnet._hubnetcreateclient
-C __hubnet-kick-client hubnet._hubnetkickclient
 C __hubnet-kick-all-clients hubnet._hubnetkickallclients
+C __hubnet-kick-client hubnet._hubnetkickclient
 C __hubnet-make-plot-narrowcast hubnet._hubnetmakeplotnarrowcast
 C __hubnet-plot hubnet._hubnetplot
 C __hubnet-plot-pen-down hubnet._hubnetplotpendown
@@ -23,11 +23,11 @@ C __hubnet-plot-pen-up hubnet._hubnetplotpenup
 C __hubnet-plot-point hubnet._hubnetplotxy
 C __hubnet-plotxy hubnet._hubnetplotxy
 C __hubnet-robo-client hubnet._hubnetroboclient
-C __hubnet-send-user-message hubnet._hubnetsendusermessage
 C __hubnet-send-from-local-client hubnet._hubnetsendfromlocalclient
+C __hubnet-send-user-message hubnet._hubnetsendusermessage
 C __hubnet-set-histogram-num-bars hubnet._hubnetsethistogramnumbars
-C __hubnet-set-plot-pen-interval hubnet._hubnetsetplotpeninterval
 C __hubnet-set-plot-mirroring hubnet._hubnetsetplotmirroring
+C __hubnet-set-plot-pen-interval hubnet._hubnetsetplotpeninterval
 C __hubnet-set-plot-pen-mode hubnet._hubnetsetplotpenmode
 C __hubnet-set-view-mirroring hubnet._hubnetsetviewmirroring
 C __hubnet-wait-for-clients hubnet._hubnetwaitforclients
@@ -275,9 +275,9 @@ R __dump etc._dump
 R __dump-extension-prims etc._dumpextensionprims
 R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
+R __hubnet-clients-list hubnet._hubnetclientslist
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
-R __hubnet-clients-list hubnet._hubnetclientslist
 R __in-network-radius etc._innetworkradius
 R __in-rectangle etc._inrect
 R __max-n-of-with-ties etc._maxnofwithties
