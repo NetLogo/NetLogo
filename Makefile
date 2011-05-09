@@ -132,7 +132,6 @@ endif
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
-	rm -f resources/system/svnversion.txt
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
 	rm -f $(EXTENSIONS) $(EXTENSION_MAKEFILES)

@@ -191,7 +191,6 @@ public strictfp class RuntimeErrorDialog
 			org.nlogo.util.SysInfo.getScalaVersionString() + "\n" +
 			org.nlogo.util.SysInfo.getJOGLInfoString() + "\n" + 
 			org.nlogo.util.SysInfo.getGLInfoString() + "\n" +
-			org.nlogo.util.SysInfo.getSVNInfoString() + "\n" +
 			"model: " + modelName + "\n\n" +
 			eventTrace ;
 		if( ! AbstractWorkspace.isApp() )

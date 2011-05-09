@@ -362,11 +362,6 @@ public strictfp class ModelsLibrary
 		return
 			// ignore invisible stuff
 			name.startsWith( "." ) ||
-			// if this is a CVS checkout, ignore the CVS
-			// subdirectories
-			name.equals( "CVS" ) ||
-   		    // if this is an svn working copy, ignore .svn subdirs
-		  	name.equals( ".svn" ) ||
 			// ignore the directory containing the sample beats
 			// for the Beatbox model
 			name.equals( "BEATS" ) ||

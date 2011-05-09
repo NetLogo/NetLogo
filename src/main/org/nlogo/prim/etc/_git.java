@@ -6,7 +6,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
 
-public final strictfp class _svn
+public final strictfp class _git
 	extends Command
 {
 	@Override
@@ -34,11 +34,11 @@ public final strictfp class _svn
 		}
 		try
 		{
-			java.io.File svn = new java.io.File( workspace.attachModelDir( ".svn" ) ) ;
-			if( ! svn.exists() || ! svn.isDirectory() )
+			java.io.File git = new java.io.File( ".git" ) ;
+			if( ! git.exists() || ! git.isDirectory() )
 			{
 				throw new EngineException
-					( context , this , "no .svn directory found" ) ;
+					( context , this , "no .git directory found" ) ;
 			}
 			Runtime.getRuntime().exec
 				( new String[]
@@ -47,7 +47,7 @@ public final strictfp class _svn
 					  "-e" , "activate" ,
 					  // the /dev/null here is to suppress the output of chpwd
 					  "-e" , "do script with command \"cd \\\"" + dir + "\\\" > /dev/null ; " +
-					  "svn " + command + " \\\"" + workspace.getModelFileName()  + "\\\" ; exit\"" , 
+					  "git " + command + " \\\"" + workspace.getModelFileName()  + "\\\" ; exit\"" , 
 					  "-e" , "end tell" } ) ;
 		}
 		catch( java.io.IOException ex )

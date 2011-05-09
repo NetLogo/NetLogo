@@ -80,7 +80,6 @@
 /resources/GUI_Strings_es.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
-/resources/system/svnversion.txt
 /src/main/org/nlogo/agent/ImportLexer.java
 /src/main/org/nlogo/app/Events.java
 /src/main/org/nlogo/lex/TokenLexer.java
