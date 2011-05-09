@@ -180,3 +180,8 @@ org.nlogo.prim._report.mustImmediatelyBeUsedInToReport = Se necesita usar {0} im
 org.nlogo.prim.etc.$common.syntaxError = Error de Syntax: {0}
 org.nlogo.prim.etc._runresult.failedToReportResult = No reportaba un resulto.
 org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} no esta permitido entre TO-REPORT.
+
+
+org.nlogo.$common.thatTurtleIsDead = Ese tortuga es muerte.
+org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = S\u00f3lo se pueden eliminar los archivos.
+org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = No se puede eliminar un archivo inexistente.

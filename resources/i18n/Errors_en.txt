@@ -67,7 +67,7 @@ org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Expected this to be
 org.nlogo.prim.etc.$common.noNegativeRadius ={0} cannot take a negative radius.
 org.nlogo.prim.etc.$common.noNegativeAngle ={0} cannot take a negative angle.
 org.nlogo.prim.etc.$common.noAngleGreaterThan360 ={0} cannot take an angle greater than 360.
-org.nlogo.prim.$common.turtleCantLinkToSelf = A turtle cannot link to itself;
+org.nlogo.prim.$common.turtleCantLinkToSelf = A turtle cannot link to itself.
 
 org.nlogo.prim.$common.onlyObserverCanAskAllTurtles = Only the observer can ASK the set of all turtles.
 org.nlogo.prim.$common.onlyObserverCanAskAllPatches = Only the observer can ASK the set of all patches.
@@ -128,7 +128,7 @@ org.nlogo.prim.etc._sublist.endIsLessThanStart = {0} is less than {1}.
 org.nlogo.prim.etc._sublist.endIsGreaterThanListSize =  {0} is greater than the length of the input list ({1}).
 org.nlogo.prim.etc._substring.endIsGreaterThanListSize = {0} is too big for {1}, which is only of length {2}.
 
-org.nlogo.prim.etc.$common.divByZero = Division by Zero.
+org.nlogo.prim.etc.$common.divByZero = Division by zero.
 org.nlogo.prim.etc._myself.noAgentMyself = There is no agent for MYSELF to refer to.
 org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd = Only a turtle can get the OTHER-END of a link.
 org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd = Only a link can get the OTHER-END from a turtle.
@@ -172,3 +172,7 @@ org.nlogo.prim.etc._runresult.failedToReportResult = Failed to report a result.
 org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} is not allowed inside TO-REPORT.
 
 org.nlogo.prim._askconcurrent.onlyObserverCanAskAllTurtles only the observer can ASK the set of all turtles
+
+org.nlogo.$common.thatTurtleIsDead = That turtle is dead.
+org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
+org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.

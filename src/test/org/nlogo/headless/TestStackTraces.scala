@@ -108,7 +108,7 @@ error while observer running __BOOM
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> "go1"}
-      assert(trace === """division by zero
+      assert(trace === """Division by zero.
 error while observer running /
   called by procedure EXPLODE
   called by procedure DO-IT
