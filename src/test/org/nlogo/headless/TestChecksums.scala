@@ -101,7 +101,7 @@ class ChecksumTester(info: String => Unit) {
         exportWorld(workspace, model)
       }
       else {
-        info("SVN revision mismatch, ignoring: " + message)
+        info("version mismatch, ignoring: " + message)
         workspace.dispose()
         return
       }
@@ -115,7 +115,7 @@ class ChecksumTester(info: String => Unit) {
         info("\n" + message)
       }
       else {
-        info("SVN revision mismatch, ignoring: " + message)
+        info("version mismatch, ignoring: " + message)
         workspace.dispose()
         return
       }

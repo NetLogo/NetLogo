@@ -275,9 +275,10 @@ public abstract strictfp class AbstractWorkspace
 	public String convertToNormal()
 		throws java.io.IOException
 	{
-		java.io.File svn = new java.io.File( attachModelDir( ".svn" ) ) ;
-		if( ! svn.exists() || ! svn.isDirectory() ){
-			throw new java.io.IOException( "no SVN directory found" ) ;
+		java.io.File git = new java.io.File( ".git" ) ;
+		if( ! git.exists() || ! git.isDirectory() )
+		{
+			throw new java.io.IOException( "no .git directory found" ) ;
 		}
 		modelType = ModelType.NORMAL ;
         return getModelPath();

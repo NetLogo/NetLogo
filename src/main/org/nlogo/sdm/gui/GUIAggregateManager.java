@@ -64,7 +64,7 @@ public strictfp class GUIAggregateManager
 			output.writeStorable( editor.view().drawing() ) ;
 			output.close() ;
             // JHotDraw has an annoying habit of including spaces at the end of lines.
-			// we have stripped those out of the models in Subversion, so to prevent
+			// we have stripped those out of the models in version control, so to prevent
 			// spurious diffs, we need to keep them from coming back - ST 3/10/09
 			return s.toString().replaceAll( " *\n" , "\n" ).trim() ;
 		}

@@ -229,7 +229,8 @@ public final strictfp class Version
 
 	public static String fullVersion()
 	{
-		return version + " (" + buildDate + ") " + SysInfo.getSVNInfoString() ;
+		return version + " (" + buildDate + ") " +
+			SysInfo.getVersionControlInfoString() ;
 	}
 
 	public static boolean olderThan13pre1( String version )

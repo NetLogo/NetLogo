@@ -13,7 +13,7 @@ object Shell {
   }
 
   val greeting =
-    Version.version + " (" + Version.buildDate + ") " + SysInfo.getSVNInfoString
+    Version.version + " (" + Version.buildDate + ") " + SysInfo.getVersionControlInfoString
 
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
