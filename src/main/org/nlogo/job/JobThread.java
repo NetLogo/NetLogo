@@ -133,7 +133,6 @@ final strictfp class JobThread
     }
   }
 
-  // code is formatted compactly so it'll all fit on one screen;
   // this and runSecondaryJobs() differ only in a few details
   private void runPrimaryJobs() {
     for (int i = 0; i < primaryJobs.size(); i++) {
@@ -186,8 +185,6 @@ final strictfp class JobThread
     }
   }
 
-
-  // Code is formatted compactly so it'll all fit on one screen.
   // This and runPrimaryJobs() differ only in two details:
   //  - secondary jobs do not cause display updates
   //  - here we don't need all the buttonTurnIsOver/activeButton stuff that makes
