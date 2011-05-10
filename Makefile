@@ -72,7 +72,6 @@ $(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 
 JAVA_EXTENSIONS=\
 	extensions/array/array.jar \
-	extensions/bitmap/bitmap.jar \
 	extensions/gis/gis.jar \
 	extensions/profiler/profiler.jar \
 	extensions/sample/sample.jar \
@@ -81,6 +80,7 @@ SCALA_EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/test/test.jar
 GITHUB_EXTENSIONS=\
+	extensions/bitmap/bitmap.jar \
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
 	extensions/sound/sound.jar \
@@ -111,6 +111,7 @@ $(SCALA_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/sc
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
 $(GITHUB_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/scala-library-trimmed.jar extensions/qtj/QTJava.jar
+	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
