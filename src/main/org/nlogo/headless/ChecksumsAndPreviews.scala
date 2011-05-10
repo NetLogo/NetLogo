@@ -5,9 +5,15 @@ import org.nlogo.workspace.ModelsLibrary
 
 object ChecksumsAndPreviews {
 
+  val allBenchmarks =
+    List("Ants", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc", 
+         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach", 
+         "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
+
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean) =
+      (if(Version.is3D) Nil else allBenchmarks.map("test/models/benchmarks/" + _ + " Benchmark.nlogo")) ++
       ModelsLibrary.getModelPaths(true).filter(fn).map(p => p.substring(p.indexOf("models/"))).toList
     // The option names correspond to target names in the Makefile - ST 2/12/09
     argv match {
