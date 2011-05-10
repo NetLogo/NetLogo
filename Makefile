@@ -73,7 +73,6 @@ $(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 JAVA_EXTENSIONS=\
 	extensions/array/array.jar \
 	extensions/gis/gis.jar \
-	extensions/profiler/profiler.jar \
 	extensions/sample/sample.jar \
 	extensions/table/table.jar
 SCALA_EXTENSIONS=\
@@ -83,6 +82,7 @@ GITHUB_EXTENSIONS=\
 	extensions/bitmap/bitmap.jar \
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
+	extensions/profiler/profiler.jar \
 	extensions/sound/sound.jar \
 	extensions/qtj/qtj.jar
 EXTENSIONS=$(JAVA_EXTENSIONS) $(SCALA_EXTENSIONS) $(GITHUB_EXTENSIONS)
@@ -115,6 +115,7 @@ $(GITHUB_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/s
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
+	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
