@@ -1,5 +1,4 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface TurtleStamp3D extends Turtle3D
-{
+public interface TurtleStamp3D extends Turtle3D {
 }

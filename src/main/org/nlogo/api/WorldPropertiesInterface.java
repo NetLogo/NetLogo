@@ -1,6 +1,5 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface WorldPropertiesInterface
-{
-	int fontSize() ;
+public interface WorldPropertiesInterface {
+  int fontSize();
 }

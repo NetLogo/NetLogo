@@ -11,153 +11,115 @@ import org.nlogo.window.Events.InterfaceGlobalEvent;
 import org.nlogo.window.Events.JobRemovedEvent;
 
 public strictfp class NetLogoListenerManager
-	implements 
-		AddJobEvent.Handler ,
-		InterfaceGlobalEvent.Handler , 
-		BeforeLoadEvent.Handler , 
-		JobRemovedEvent.Handler ,
-	    CompiledEvent.Handler
-{
-	private final List<NetLogoListener> listeners =
-		new ArrayList<NetLogoListener>();
+    implements
+    AddJobEvent.Handler,
+    InterfaceGlobalEvent.Handler,
+    BeforeLoadEvent.Handler,
+    JobRemovedEvent.Handler,
+    CompiledEvent.Handler {
+  private final List<NetLogoListener> listeners =
+      new ArrayList<NetLogoListener>();
 
-	public void handle( BeforeLoadEvent e )
-	{
-		for( NetLogoListener listener : listeners ) 
-		{
-			listener.modelOpened( e.modelPath ) ;
-		}
-	}
+  public void handle(BeforeLoadEvent e) {
+    for (NetLogoListener listener : listeners) {
+      listener.modelOpened(e.modelPath);
+    }
+  }
 
-	public void handle( AddJobEvent e )
-	{
-		if ( e.owner instanceof ButtonWidget )
-		{
-			for( NetLogoListener listener : listeners )
-			{
-				listener.buttonPressed
-					( ( (ButtonWidget) e.owner ).displayName() ) ;
-			}
-		}
-	}
+  public void handle(AddJobEvent e) {
+    if (e.owner instanceof ButtonWidget) {
+      for (NetLogoListener listener : listeners) {
+        listener.buttonPressed
+            (((ButtonWidget) e.owner).displayName());
+      }
+    }
+  }
 
-	public void handle( InterfaceGlobalEvent e )
-	{
-		if( ! e.updating )
-		{
-			for( NetLogoListener listener : listeners )
-			{
-				if( e.widget instanceof SliderWidget )
-				{
-					SliderWidget slider = (SliderWidget) e.widget ;
-					listener.sliderChanged
-						( e.widget.name() ,
-						  slider.value() ,
-						  slider.minimum(),
-						  slider.increment(),
-						  slider.maximum(),
-						  e.valueChanged , e.buttonReleased ) ;
-				}
-				else if( e.widget.classDisplayName().equals( "Switch" ) )
-				{
-					listener.switchChanged
-						( e.widget.name() ,
-						  ( (Boolean) e.widget.valueObject() )
-						  .booleanValue() , e.valueChanged ) ;
-				}
-				else if( e.widget instanceof ChooserWidget )
-				{
-					listener.chooserChanged
-						( e.widget.name() ,
-						  e.widget.valueObject() , e.valueChanged ) ;
-				}
-				else if( e.widget instanceof InputBoxWidget )
-				{
-					listener.inputBoxChanged
-						( e.widget.name() ,
-						  e.widget.valueObject() , e.valueChanged ) ;
-				}
-				else
-				{
-					throw new IllegalStateException
-						( "unknown widget type: " + e.widget ) ;
-				}
-			}
-		}
-	}
+  public void handle(InterfaceGlobalEvent e) {
+    if (!e.updating) {
+      for (NetLogoListener listener : listeners) {
+        if (e.widget instanceof SliderWidget) {
+          SliderWidget slider = (SliderWidget) e.widget;
+          listener.sliderChanged
+              (e.widget.name(),
+                  slider.value(),
+                  slider.minimum(),
+                  slider.increment(),
+                  slider.maximum(),
+                  e.valueChanged, e.buttonReleased);
+        } else if (e.widget.classDisplayName().equals("Switch")) {
+          listener.switchChanged
+              (e.widget.name(),
+                  ((Boolean) e.widget.valueObject())
+                      .booleanValue(), e.valueChanged);
+        } else if (e.widget instanceof ChooserWidget) {
+          listener.chooserChanged
+              (e.widget.name(),
+                  e.widget.valueObject(), e.valueChanged);
+        } else if (e.widget instanceof InputBoxWidget) {
+          listener.inputBoxChanged
+              (e.widget.name(),
+                  e.widget.valueObject(), e.valueChanged);
+        } else {
+          throw new IllegalStateException
+              ("unknown widget type: " + e.widget);
+        }
+      }
+    }
+  }
 
-	public void handle( JobRemovedEvent e )
-	{
-		if( e.owner instanceof ButtonWidget )
-		{
-			for( NetLogoListener listener : listeners )
-			{
-				listener.buttonStopped
-					( ( (ButtonWidget) e.owner ).displayName() ) ;
-			}
-		}
-	}
+  public void handle(JobRemovedEvent e) {
+    if (e.owner instanceof ButtonWidget) {
+      for (NetLogoListener listener : listeners) {
+        listener.buttonStopped
+            (((ButtonWidget) e.owner).displayName());
+      }
+    }
+  }
 
-	public void handle( CompiledEvent e )
-	{
-		if( e.sourceOwner instanceof org.nlogo.api.JobOwner &&
-			( (org.nlogo.api.JobOwner) e.sourceOwner ).isCommandCenter() )
-		{
-			char agentType = 'O' ;
-			if( e.sourceOwner.agentClass() == org.nlogo.agent.Turtle.class )
-			{
-				agentType = 'T' ;
-			}
-			else if( e.sourceOwner.agentClass() == org.nlogo.agent.Patch.class )
-			{
-				agentType = 'P' ;
-			}
-			else if( e.sourceOwner.agentClass() == org.nlogo.agent.Link.class )
-			{
-				agentType = 'L' ;
-			}
-			else if( e.sourceOwner.agentClass() != org.nlogo.agent.Observer.class )
-			{
-				throw new IllegalStateException
-					( "unexpected agent class: " + e.sourceOwner.agentClass() ) ;
-			}
-			for( NetLogoListener listener : listeners ) 
-			{
-				listener.commandEntered
-					( e.sourceOwner.classDisplayName() , e.sourceOwner.innerSource() ,
-					  agentType , e.error ) ; 
-			}
-		}
-	}
+  public void handle(CompiledEvent e) {
+    if (e.sourceOwner instanceof org.nlogo.api.JobOwner &&
+        ((org.nlogo.api.JobOwner) e.sourceOwner).isCommandCenter()) {
+      char agentType = 'O';
+      if (e.sourceOwner.agentClass() == org.nlogo.agent.Turtle.class) {
+        agentType = 'T';
+      } else if (e.sourceOwner.agentClass() == org.nlogo.agent.Patch.class) {
+        agentType = 'P';
+      } else if (e.sourceOwner.agentClass() == org.nlogo.agent.Link.class) {
+        agentType = 'L';
+      } else if (e.sourceOwner.agentClass() != org.nlogo.agent.Observer.class) {
+        throw new IllegalStateException
+            ("unexpected agent class: " + e.sourceOwner.agentClass());
+      }
+      for (NetLogoListener listener : listeners) {
+        listener.commandEntered
+            (e.sourceOwner.classDisplayName(), e.sourceOwner.innerSource(),
+                agentType, e.error);
+      }
+    }
+  }
 
-	public void tickCounterChanged( double ticks )
-	{
-		for( NetLogoListener listener : listeners ) 
-		{
-			listener.tickCounterChanged( ticks ) ;
-		}
-	}
+  public void tickCounterChanged(double ticks) {
+    for (NetLogoListener listener : listeners) {
+      listener.tickCounterChanged(ticks);
+    }
+  }
 
-	public void possibleViewUpdate()
-	{
-		for( NetLogoListener listener : listeners ) 
-		{
-			listener.possibleViewUpdate() ;
-		}
-	}		
+  public void possibleViewUpdate() {
+    for (NetLogoListener listener : listeners) {
+      listener.possibleViewUpdate();
+    }
+  }
 
-	public void addListener( NetLogoListener listener )
-	{
-		listeners.add( listener ) ;
-	}
+  public void addListener(NetLogoListener listener) {
+    listeners.add(listener);
+  }
 
-	public void removeListener( NetLogoListener listener )
-	{
-		listeners.remove( listener ) ;
-	}
+  public void removeListener(NetLogoListener listener) {
+    listeners.remove(listener);
+  }
 
-	public void clearListeners( NetLogoListener listener )
-	{
-		listeners.clear() ;
-	}
+  public void clearListeners(NetLogoListener listener) {
+    listeners.clear();
+  }
 }

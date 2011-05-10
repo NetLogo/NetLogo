@@ -1,11 +1,9 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
 public strictfp class AgentException
-	extends Exception
-{
-	public AgentException( String message )
-	{
-		super( message ) ;
-	}
+    extends Exception {
+  public AgentException(String message) {
+    super(message);
+  }
 }
 

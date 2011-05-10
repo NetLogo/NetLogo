@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
@@ -9,47 +9,44 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _breedhere
-	extends Reporter
-{
-	final String breedName ;
-	public _breedhere( String breedName )
-	{
-		this.breedName = breedName;
-	}
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax( Syntax.TYPE_TURTLESET , "-TP-" ) ;
-	}
-	@Override public String toString()
-	{
-		return super.toString() + ":" + breedName ;
-	}
-	@Override public Object report( Context context )
-	{
-		return report_1( context ) ;
-	}
-	public AgentSet report_1( Context context )
-	{
-		Patch patch ;
-		if( context.agent instanceof Turtle )
-		{
-			patch = ( (Turtle) context.agent ).getPatchHere() ;
-		}
-		else
-		{
-			patch = (Patch) context.agent ;
-		}
-		AgentSet agentset =
-			new ArrayAgentSet( Turtle.class , patch.turtleCount() ,
-							   false , world ) ;
-		AgentSet breed = world.getBreed( breedName ) ;
-		for( Turtle turtle : patch.turtlesHere() )
-		{
-			if( turtle.getBreed() == breed )
-			{
-				agentset.add( turtle ) ;
-			}
-		}
-		return agentset ;
-	}
+    extends Reporter {
+  final String breedName;
+
+  public _breedhere(String breedName) {
+    this.breedName = breedName;
+  }
+
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax(Syntax.TYPE_TURTLESET, "-TP-");
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ":" + breedName;
+  }
+
+  @Override
+  public Object report(Context context) {
+    return report_1(context);
+  }
+
+  public AgentSet report_1(Context context) {
+    Patch patch;
+    if (context.agent instanceof Turtle) {
+      patch = ((Turtle) context.agent).getPatchHere();
+    } else {
+      patch = (Patch) context.agent;
+    }
+    AgentSet agentset =
+        new ArrayAgentSet(Turtle.class, patch.turtleCount(),
+            false, world);
+    AgentSet breed = world.getBreed(breedName);
+    for (Turtle turtle : patch.turtlesHere()) {
+      if (turtle.getBreed() == breed) {
+        agentset.add(turtle);
+      }
+    }
+    return agentset;
+  }
 }

@@ -1,5 +1,5 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
 public strictfp class WorldDimensionException
-extends Exception
-{}
+    extends Exception {
+}

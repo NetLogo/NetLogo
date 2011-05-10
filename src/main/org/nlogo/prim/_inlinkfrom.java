@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
@@ -9,37 +9,35 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _inlinkfrom
-	extends Reporter
-{
-	private final String breedName ;
-	public _inlinkfrom()
-	{
-		breedName = null ;
-	}
-	public _inlinkfrom( String breedName )
-	{
-		this.breedName = breedName ;
-	}
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( new int[] { Syntax.TYPE_AGENT } ,
-			  Syntax.TYPE_AGENT , "-T--" ) ;
-	}
-	@Override
-	public Object report( final Context context )
-		throws LogoException
-	{
-		org.nlogo.agent.LinkManager linkManager = world.linkManager ;
-		AgentSet breed = breedName == null ? world.links() : world.getLinkBreed( breedName ) ;
-		mustNotBeUndirected( breed , context ) ;
-		Turtle target = argEvalTurtle( context , 0 ) ;
-		Link link = linkManager.findLinkFrom( target, (Turtle) context.agent , breed , true ) ;
-		if( link == null )
-		{
-			return org.nlogo.api.Nobody.NOBODY;
-		}
-		return link ;
-	}
+    extends Reporter {
+  private final String breedName;
+
+  public _inlinkfrom() {
+    breedName = null;
+  }
+
+  public _inlinkfrom(String breedName) {
+    this.breedName = breedName;
+  }
+
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (new int[]{Syntax.TYPE_AGENT},
+            Syntax.TYPE_AGENT, "-T--");
+  }
+
+  @Override
+  public Object report(final Context context)
+      throws LogoException {
+    org.nlogo.agent.LinkManager linkManager = world.linkManager;
+    AgentSet breed = breedName == null ? world.links() : world.getLinkBreed(breedName);
+    mustNotBeUndirected(breed, context);
+    Turtle target = argEvalTurtle(context, 0);
+    Link link = linkManager.findLinkFrom(target, (Turtle) context.agent, breed, true);
+    if (link == null) {
+      return org.nlogo.api.Nobody.NOBODY;
+    }
+    return link;
+  }
 }

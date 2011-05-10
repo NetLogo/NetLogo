@@ -1,4 +1,4 @@
-package org.nlogo.agent ;
+package org.nlogo.agent;
 
 import java.util.Observable;
 
@@ -11,136 +11,148 @@ import org.nlogo.api.ValueConstraint;
 
 public abstract strictfp class Agent
     extends Observable
-	implements org.nlogo.api.Agent , Comparable<Agent>
-{
+    implements org.nlogo.api.Agent, Comparable<Agent> {
 
-	final World world ;
-	public World world() { return world ; }
+  final World world;
 
-    public long id = 0 ;
-    public long id() { return id ; }
-    public Object[] variables = null ; // public ONLY for __fire
-	ValueConstraint[] variableConstraints = null ;
+  public World world() {
+    return world;
+  }
 
-	Object agentKey()
-	{
-		return Double.valueOf( id ) ;
-	}
+  public long id = 0;
 
-	public Agent( World world )
-	{
-		this.world = world ;
-	}
+  public long id() {
+    return id;
+  }
 
-	// implement Comparable
-	public int compareTo( Agent a )
-	{
-		long otherId = a.id ;
-		return id < otherId
-			? -1
-			: ( id > otherId ? 1 : 0 ) ;
-	}
+  public Object[] variables = null; // public ONLY for __fire
+  ValueConstraint[] variableConstraints = null;
 
-    abstract Agent realloc( boolean forRecompile )
-		throws AgentException ;
+  Object agentKey() {
+    return Double.valueOf(id);
+  }
 
-	public int getVariableCount() { return variables.length ; }
+  public Agent(World world) {
+    this.world = world;
+  }
 
-    public abstract Object getVariable( int vn ) ;
-    public abstract void setVariable( int vn , Object value )
-		throws AgentException, LogoException ;
+  // implement Comparable
+  public int compareTo(Agent a) {
+    long otherId = a.id;
+    return id < otherId
+        ? -1
+        : (id > otherId ? 1 : 0);
+  }
 
-	public ValueConstraint variableConstraint( int vn )
-	{
-		return variableConstraints[ vn ] ;
-	}
+  abstract Agent realloc(boolean forRecompile)
+      throws AgentException;
 
-	public void variableConstraint( int vn, ValueConstraint con )
-	{
-		variableConstraints[ vn ] = con ;
-	}
-  
-	public abstract Object getObserverVariable( int vn ) ;
-	public abstract Object getTurtleVariable  ( int vn )
-		throws AgentException ;
-	public abstract Object getBreedVariable   ( String name )
-		throws AgentException ;
-	public abstract Object getLinkBreedVariable   ( String name )
-		throws AgentException ;
-	public abstract Object getLinkVariable  ( int vn )
-		throws AgentException ;
-	public abstract Object getPatchVariable   ( int vn )
-		throws AgentException ;
-	public abstract Object getTurtleOrLinkVariable  ( String varName )
-		throws AgentException ;
+  public int getVariableCount() {
+    return variables.length;
+  }
 
-	public abstract void setObserverVariable( int vn , Object value ) 
-		throws AgentException, LogoException ;
-	public abstract void setTurtleVariable  ( int vn , Object value )
-		throws AgentException ;
-	public abstract void setTurtleVariable  ( int vn , double value )
-		throws AgentException ;
-	public abstract void setLinkVariable  ( int vn , Object value )
-		throws AgentException ;
-	public abstract void setLinkVariable  ( int vn , double value )
-		throws AgentException ;
-	public abstract void setBreedVariable   ( String name , Object value )
-		throws AgentException ;
-	public abstract void setLinkBreedVariable   ( String name , Object value )
-		throws AgentException ;
-	public abstract void setPatchVariable   ( int vn , Object value )
-		throws AgentException ;
-	public abstract void setPatchVariable   ( int vn , double value )
-		throws AgentException ;
-	public abstract void setTurtleOrLinkVariable  ( String varName , Object value )
-		throws AgentException ;
+  public abstract Object getVariable(int vn);
 
-	public abstract Patch getPatchAtOffsets( double dx , double dy ) throws AgentException ;
+  public abstract void setVariable(int vn, Object value)
+      throws AgentException, LogoException;
 
-	void wrongTypeForVariable( String name , Class<?> expectedClass , Object value )
-		throws AgentException
-	{
-        throw new AgentException(I18N.errors().getNJava("org.nlogo.agent.Agent.wrongTypeOnSetError",
-                new String[]{classDisplayName(), name, Dump.typeName( expectedClass ), Dump.logoObject( value )}));
-	}
+  public ValueConstraint variableConstraint(int vn) {
+    return variableConstraints[vn];
+  }
 
-	void validRGBList( LogoList rgb , boolean allowAlpha)
-		throws AgentException
-	{
-		if( rgb.size() == 3 || (allowAlpha && rgb.size() == 4) )
-		{
-			try
-			{
-				for( int i = 0 ; i < rgb.size() ; i ++ )
-				{
-					validRGB( ((Double)rgb.get( i )).intValue() ) ;
-				}
-				return ; 
-			}
-			catch( ClassCastException e )
-			{
-				// just fall through and throw the error below
-				org.nlogo.util.Exceptions.ignore( e ) ;
-			}
-		}
-        String key =
-            allowAlpha
-			? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
-			: "org.nlogo.agent.Agent.rgbListSizeError.3";
-		throw new AgentException(I18N.errors().get(key));
-	}
-	
-	private void validRGB( int c )
-		throws AgentException
-	{
-		if( c < 0 || c > 255 )
-		{
-			throw new AgentException( I18N.errors().get("org.nlogo.agent.Agent.rgbValueError") ) ;
-		}
-	}
+  public void variableConstraint(int vn, ValueConstraint con) {
+    variableConstraints[vn] = con;
+  }
 
-	public abstract String classDisplayName() ;
-	public abstract Class<? extends Agent> getAgentClass() ;
-	public abstract int getAgentBit() ;
+  public abstract Object getObserverVariable(int vn);
+
+  public abstract Object getTurtleVariable(int vn)
+      throws AgentException;
+
+  public abstract Object getBreedVariable(String name)
+      throws AgentException;
+
+  public abstract Object getLinkBreedVariable(String name)
+      throws AgentException;
+
+  public abstract Object getLinkVariable(int vn)
+      throws AgentException;
+
+  public abstract Object getPatchVariable(int vn)
+      throws AgentException;
+
+  public abstract Object getTurtleOrLinkVariable(String varName)
+      throws AgentException;
+
+  public abstract void setObserverVariable(int vn, Object value)
+      throws AgentException, LogoException;
+
+  public abstract void setTurtleVariable(int vn, Object value)
+      throws AgentException;
+
+  public abstract void setTurtleVariable(int vn, double value)
+      throws AgentException;
+
+  public abstract void setLinkVariable(int vn, Object value)
+      throws AgentException;
+
+  public abstract void setLinkVariable(int vn, double value)
+      throws AgentException;
+
+  public abstract void setBreedVariable(String name, Object value)
+      throws AgentException;
+
+  public abstract void setLinkBreedVariable(String name, Object value)
+      throws AgentException;
+
+  public abstract void setPatchVariable(int vn, Object value)
+      throws AgentException;
+
+  public abstract void setPatchVariable(int vn, double value)
+      throws AgentException;
+
+  public abstract void setTurtleOrLinkVariable(String varName, Object value)
+      throws AgentException;
+
+  public abstract Patch getPatchAtOffsets(double dx, double dy) throws AgentException;
+
+  void wrongTypeForVariable(String name, Class<?> expectedClass, Object value)
+      throws AgentException {
+    throw new AgentException(I18N.errors().getNJava("org.nlogo.agent.Agent.wrongTypeOnSetError",
+        new String[]{classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)}));
+  }
+
+  void validRGBList(LogoList rgb, boolean allowAlpha)
+      throws AgentException {
+    if (rgb.size() == 3 || (allowAlpha && rgb.size() == 4)) {
+      try {
+        for (int i = 0; i < rgb.size(); i++) {
+          validRGB(((Double) rgb.get(i)).intValue());
+        }
+        return;
+      } catch (ClassCastException e) {
+        // just fall through and throw the error below
+        org.nlogo.util.Exceptions.ignore(e);
+      }
+    }
+    String key =
+        allowAlpha
+            ? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
+            : "org.nlogo.agent.Agent.rgbListSizeError.3";
+    throw new AgentException(I18N.errors().get(key));
+  }
+
+  private void validRGB(int c)
+      throws AgentException {
+    if (c < 0 || c > 255) {
+      throw new AgentException(I18N.errors().get("org.nlogo.agent.Agent.rgbValueError"));
+    }
+  }
+
+  public abstract String classDisplayName();
+
+  public abstract Class<? extends Agent> getAgentClass();
+
+  public abstract int getAgentBit();
 }
 

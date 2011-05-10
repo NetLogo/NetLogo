@@ -1,6 +1,5 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface ReporterRunnable<T>
-{
-	T run() throws LogoException ;
+public interface ReporterRunnable<T> {
+  T run() throws LogoException;
 }

@@ -1,5 +1,4 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface Lambda
-{
+public interface Lambda {
 }

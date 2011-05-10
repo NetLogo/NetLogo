@@ -1,12 +1,14 @@
-package org.nlogo.nvm ;
+package org.nlogo.nvm;
 
 import org.nlogo.api.JobOwner;
 
-public interface JobManagerOwner
-{
-	void runtimeError( JobOwner owner , Context context ,
-					   Instruction instruction , Exception ex ) ;
-	void ownerFinished( JobOwner owner ) ;
-	void updateDisplay( boolean haveWorldLockAlready ) ;
-	void periodicUpdate() ;
+public interface JobManagerOwner {
+  void runtimeError(JobOwner owner, Context context,
+                    Instruction instruction, Exception ex);
+
+  void ownerFinished(JobOwner owner);
+
+  void updateDisplay(boolean haveWorldLockAlready);
+
+  void periodicUpdate();
 }

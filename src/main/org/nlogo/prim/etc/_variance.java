@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import java.util.Iterator;
 
@@ -12,50 +12,45 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
 
-public final strictfp class _variance extends Reporter implements Pure
-{
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( new int[] { Syntax.TYPE_LIST } ,
-			  Syntax.TYPE_NUMBER ) ;
-	}
-	@Override public Object report( Context context ) throws LogoException
-	{
-		return report_1( context , argEvalList( context , 0 ) ) ;
-	}
-	public double report_1( Context context , LogoList list ) throws LogoException
-	{
-		double sum = 0 , badElts = 0 ;
-		int listSize = list.size() ;
-		for( Iterator<Object> it = list.iterator() ; it.hasNext() ; )
-		{
-			Object elt = it.next() ;
-			if( ! ( elt instanceof Double ) )
-			{
-				++badElts ;
-				continue ;
-			}
-			sum += ( (Double) elt ).doubleValue() ;
-		}
-		if( listSize - badElts < 2 )
-		{
-			throw new EngineException
-				( context , this  ,
-                        I18N.errors().getNJava("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber",
-                                new String [] {Dump.logoObject(list)})) ;
-		}
-		double mean = sum / (listSize - badElts) ;
-		double squareOfDifference = 0 ;
-		for( Iterator<Object> it = list.iterator() ; it.hasNext() ; )
-		{
-			Object elt = it.next() ;
-			if( elt instanceof Double )
-			{
-				squareOfDifference +=
-					StrictMath.pow( ( (Number) elt ).doubleValue() - mean , 2) ;
-			}
-		}
-		return validDouble( squareOfDifference / ( listSize - badElts - 1 ) ) ;
-	}
+public final strictfp class _variance extends Reporter implements Pure {
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (new int[]{Syntax.TYPE_LIST},
+            Syntax.TYPE_NUMBER);
+  }
+
+  @Override
+  public Object report(Context context) throws LogoException {
+    return report_1(context, argEvalList(context, 0));
+  }
+
+  public double report_1(Context context, LogoList list) throws LogoException {
+    double sum = 0, badElts = 0;
+    int listSize = list.size();
+    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+      Object elt = it.next();
+      if (!(elt instanceof Double)) {
+        ++badElts;
+        continue;
+      }
+      sum += ((Double) elt).doubleValue();
+    }
+    if (listSize - badElts < 2) {
+      throw new EngineException
+          (context, this,
+              I18N.errors().getNJava("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber",
+                  new String[]{Dump.logoObject(list)}));
+    }
+    double mean = sum / (listSize - badElts);
+    double squareOfDifference = 0;
+    for (Iterator<Object> it = list.iterator(); it.hasNext();) {
+      Object elt = it.next();
+      if (elt instanceof Double) {
+        squareOfDifference +=
+            StrictMath.pow(((Number) elt).doubleValue() - mean, 2);
+      }
+    }
+    return validDouble(squareOfDifference / (listSize - badElts - 1));
+  }
 }

@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
@@ -11,15 +11,15 @@ import org.nlogo.nvm.Syntax;
 // those test cases). - ST 2/6/09
 
 public final strictfp class _boom
-	extends Reporter
-{
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax( Syntax.TYPE_WILDCARD ) ;
-	}
-	@Override public Object report( Context context )
-		throws LogoException
-	{
-		throw new EngineException( context , this , "boom!" ) ;
-	}
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax(Syntax.TYPE_WILDCARD);
+  }
+
+  @Override
+  public Object report(Context context)
+      throws LogoException {
+    throw new EngineException(context, this, "boom!");
+  }
 }
