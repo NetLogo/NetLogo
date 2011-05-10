@@ -1,4 +1,4 @@
-package org.nlogo.editor ;
+package org.nlogo.editor;
 
 import javax.swing.Timer;
 import javax.swing.undo.CannotRedoException;
@@ -11,203 +11,167 @@ import javax.swing.undo.UndoableEdit;
 // compound edit stuff copied from My World GIS - ER 4/11/08
 
 public strictfp class UndoManager extends javax.swing.undo.UndoManager
-		implements java.awt.event.ActionListener
-{
+    implements java.awt.event.ActionListener {
 
-	// Edits that happen less than this number of milliseconds
-	// apart will be coalesced into a single CompoundEdit for 
-	// the purposes of undo and redo - ER 4/11/08
-	private static final int EDIT_COMPOSITION_THRESHOLD = 200 ;
-	
-	private static UndoAction undoAction = new UndoAction() ;
+  // Edits that happen less than this number of milliseconds
+  // apart will be coalesced into a single CompoundEdit for
+  // the purposes of undo and redo - ER 4/11/08
+  private static final int EDIT_COMPOSITION_THRESHOLD = 200;
 
-	public static UndoAction undoAction()
-	{
-		return undoAction ;
-	}
+  private static UndoAction undoAction = new UndoAction();
 
-	private static RedoAction redoAction = new RedoAction() ;
+  public static UndoAction undoAction() {
+    return undoAction;
+  }
 
-	public static javax.swing.Action redoAction()
-	{
-		return redoAction ;
-	}
+  private static RedoAction redoAction = new RedoAction();
 
-	private static UndoManager currentManager = null ;
+  public static javax.swing.Action redoAction() {
+    return redoAction;
+  }
 
-	public static void setCurrentManager( UndoManager manager )
-	{
-		currentManager = manager ;
-		undoAction.updateUndoState() ;
-		redoAction.updateRedoState() ;
-	}
+  private static UndoManager currentManager = null;
 
-	private final Timer _timer ;
-	private CompoundEdit _editInProgress ;
-	private long _lastEditTime ;
-	private Object _lastEditSource ;
-	// Keeping a hard reference to the last event's source could 
-	// potentially lead to memory leaks, but the _lastEditSource 
-	// is always set to null in response to action events from the 
-	// timer, so any leaks that do occur won't last longer than 
-	// EDIT_COMPOSITION_THRESHOLD milliseconds. - ER 4/11/08
+  public static void setCurrentManager(UndoManager manager) {
+    currentManager = manager;
+    undoAction.updateUndoState();
+    redoAction.updateRedoState();
+  }
 
-	public UndoManager()
-	{
-		_timer = new Timer( EDIT_COMPOSITION_THRESHOLD , this ) ;
-		_editInProgress = null ;
-		_lastEditTime = 0 ;
-		_lastEditSource = null ;
-	}
+  private final Timer _timer;
+  private CompoundEdit _editInProgress;
+  private long _lastEditTime;
+  private Object _lastEditSource;
+  // Keeping a hard reference to the last event's source could
+  // potentially lead to memory leaks, but the _lastEditSource
+  // is always set to null in response to action events from the
+  // timer, so any leaks that do occur won't last longer than
+  // EDIT_COMPOSITION_THRESHOLD milliseconds. - ER 4/11/08
 
-	@Override
-	public synchronized void undo() throws CannotUndoException
-	{
-		closeEditInProgress( true ) ;
-		super.undo() ;
-	}
+  public UndoManager() {
+    _timer = new Timer(EDIT_COMPOSITION_THRESHOLD, this);
+    _editInProgress = null;
+    _lastEditTime = 0;
+    _lastEditSource = null;
+  }
 
-	@Override
-	public synchronized void redo() throws CannotRedoException
-	{
-		closeEditInProgress( false ) ;
-		super.redo() ;
-	}
+  @Override
+  public synchronized void undo() throws CannotUndoException {
+    closeEditInProgress(true);
+    super.undo();
+  }
 
-	@Override
-	public void undoableEditHappened( javax.swing.event.UndoableEditEvent e )
-	{
-		_timer.stop() ;
-		long currentTime = System.currentTimeMillis() ;
-		Object currentSource = e.getSource() ;
-		if( _editInProgress == null )
-		{
-			_editInProgress = new CompoundEdit() ;
-		}
-		else if( ( _lastEditSource != currentSource )
-				|| ( ( currentTime - _lastEditTime ) > EDIT_COMPOSITION_THRESHOLD ) )
-		{
-			closeEditInProgress( false ) ;
-			_editInProgress = new CompoundEdit() ;
-		}
-		_editInProgress.addEdit( e.getEdit() ) ;
-		_lastEditTime = currentTime ;
-		_lastEditSource = currentSource ;
-		_timer.restart() ;
-	}
+  @Override
+  public synchronized void redo() throws CannotRedoException {
+    closeEditInProgress(false);
+    super.redo();
+  }
 
-	public void actionPerformed( java.awt.event.ActionEvent evt )
-	{
-		if( evt.getSource() == _timer )
-		{
-			closeEditInProgress( true ) ;
-		}
-	}
+  @Override
+  public void undoableEditHappened(javax.swing.event.UndoableEditEvent e) {
+    _timer.stop();
+    long currentTime = System.currentTimeMillis();
+    Object currentSource = e.getSource();
+    if (_editInProgress == null) {
+      _editInProgress = new CompoundEdit();
+    } else if ((_lastEditSource != currentSource)
+        || ((currentTime - _lastEditTime) > EDIT_COMPOSITION_THRESHOLD)) {
+      closeEditInProgress(false);
+      _editInProgress = new CompoundEdit();
+    }
+    _editInProgress.addEdit(e.getEdit());
+    _lastEditTime = currentTime;
+    _lastEditSource = currentSource;
+    _timer.restart();
+  }
 
-	private void closeEditInProgress( boolean perform )
-	{
-		if( _editInProgress != null )
-		{
-			_editInProgress.end() ;
-			if( perform )
-			{
-				addEdit( _editInProgress ) ;
-			}
-			else
-			{	
-				_editInProgress.die() ;
-			}
-			_editInProgress = null ;
-			_lastEditTime = 0 ;
-			_lastEditSource = null ;
-			_timer.stop() ;
-		}
-	}
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+    if (evt.getSource() == _timer) {
+      closeEditInProgress(true);
+    }
+  }
 
-	@Override
-	public boolean addEdit( UndoableEdit anEdit )
-	{
-		boolean result = super.addEdit( anEdit ) ;
-		if( this == currentManager )
-		{
-			undoAction.updateUndoState() ;
-			redoAction.updateRedoState() ;
-		}
-		return result ;
-	}
+  private void closeEditInProgress(boolean perform) {
+    if (_editInProgress != null) {
+      _editInProgress.end();
+      if (perform) {
+        addEdit(_editInProgress);
+      } else {
+        _editInProgress.die();
+      }
+      _editInProgress = null;
+      _lastEditTime = 0;
+      _lastEditSource = null;
+      _timer.stop();
+    }
+  }
 
-	@Override
-	public void discardAllEdits()
-	{
-		closeEditInProgress( false ) ;
-		super.discardAllEdits() ;
-		if( this == currentManager )
-		{
-			undoAction.updateUndoState() ;
-			redoAction.updateRedoState() ;
-		}
-	}
+  @Override
+  public boolean addEdit(UndoableEdit anEdit) {
+    boolean result = super.addEdit(anEdit);
+    if (this == currentManager) {
+      undoAction.updateUndoState();
+      redoAction.updateRedoState();
+    }
+    return result;
+  }
 
-	static strictfp class UndoAction extends javax.swing.AbstractAction
-	{
+  @Override
+  public void discardAllEdits() {
+    closeEditInProgress(false);
+    super.discardAllEdits();
+    if (this == currentManager) {
+      undoAction.updateUndoState();
+      redoAction.updateRedoState();
+    }
+  }
 
-		public UndoAction()
-		{
-			super( "Undo" ) ;
-			setEnabled( false ) ;
-		}
+  static strictfp class UndoAction extends javax.swing.AbstractAction {
 
-		public void actionPerformed( java.awt.event.ActionEvent e )
-		{
-			currentManager.undo() ;
-			updateUndoState() ;
-			redoAction.updateRedoState() ;
-		}
+    public UndoAction() {
+      super("Undo");
+      setEnabled(false);
+    }
 
-		protected void updateUndoState()
-		{
-			if( currentManager != null && currentManager.canUndo() )
-			{
-				setEnabled( true ) ;
-				putValue( NAME , currentManager.getUndoPresentationName() ) ;
-			}
-			else
-			{
-				setEnabled( false ) ;
-				putValue( NAME , "Undo" ) ;
-			}
-		}
-	}
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      currentManager.undo();
+      updateUndoState();
+      redoAction.updateRedoState();
+    }
 
-	static strictfp class RedoAction extends javax.swing.AbstractAction
-	{
+    protected void updateUndoState() {
+      if (currentManager != null && currentManager.canUndo()) {
+        setEnabled(true);
+        putValue(NAME, currentManager.getUndoPresentationName());
+      } else {
+        setEnabled(false);
+        putValue(NAME, "Undo");
+      }
+    }
+  }
 
-		public RedoAction()
-		{
-			super( "Redo" ) ;
-			setEnabled( false ) ;
-		}
+  static strictfp class RedoAction extends javax.swing.AbstractAction {
 
-		public void actionPerformed( java.awt.event.ActionEvent e )
-		{
-			currentManager.redo() ;
-			updateRedoState() ;
-			undoAction.updateUndoState() ;
-		}
+    public RedoAction() {
+      super("Redo");
+      setEnabled(false);
+    }
 
-		protected void updateRedoState()
-		{
-			if( currentManager != null && currentManager.canRedo() )
-			{
-				setEnabled( true ) ;
-				putValue( NAME , currentManager.getRedoPresentationName() ) ;
-			}
-			else
-			{
-				setEnabled( false ) ;
-				putValue( NAME , "Redo" ) ;
-			}
-		}
-	}
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      currentManager.redo();
+      updateRedoState();
+      undoAction.updateUndoState();
+    }
+
+    protected void updateRedoState() {
+      if (currentManager != null && currentManager.canRedo()) {
+        setEnabled(true);
+        putValue(NAME, currentManager.getRedoPresentationName());
+      } else {
+        setEnabled(false);
+        putValue(NAME, "Redo");
+      }
+    }
+  }
 
 }

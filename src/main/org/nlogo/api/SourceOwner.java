@@ -1,11 +1,15 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface SourceOwner
-{
-	String classDisplayName() ;
-	String headerSource() ;
-	String innerSource() ;
-	String source() ;
-	void innerSource( String s ) ;
-	Class<?> agentClass() ;
+public interface SourceOwner {
+  String classDisplayName();
+
+  String headerSource();
+
+  String innerSource();
+
+  String source();
+
+  void innerSource(String s);
+
+  Class<?> agentClass();
 }

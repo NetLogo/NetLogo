@@ -5,6 +5,8 @@ package org.nlogo.api;
  * model opened normally (e.g. via Open on the File menu),
  * LIBRARY a models library model.
  */
-public enum ModelType { NEW , NORMAL , LIBRARY }
+public enum ModelType {
+  NEW, NORMAL, LIBRARY
+}
 
 

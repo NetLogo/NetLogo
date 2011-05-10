@@ -5,36 +5,40 @@ import org.nlogo.api.ViewSettings;
 
 public interface TopologyRenderer {
 
-    double wrapX(double pos);
-    double wrapY(double pos);
+  double wrapX(double pos);
 
-    double graphicsX(double xcor, double patchSize);
-    double graphicsY(double ycor, double patchSize);
-    double graphicsX(double xcor, double patchSize, double viewOffsetX);
-    double graphicsY(double ycor, double patchSize, double viewOffsetY);
+  double wrapY(double pos);
 
-    void prepareToPaint(ViewSettings settings, int width, int height);
+  double graphicsX(double xcor, double patchSize);
 
-    void paintViewImage(GraphicsInterface g, java.awt.Image image);
+  double graphicsY(double ycor, double patchSize);
 
-    void wrapDrawable(Drawable obj, GraphicsInterface g,
-                      double xcor, double ycor, double turtleSize, double cellSize);
+  double graphicsX(double xcor, double patchSize, double viewOffsetX);
 
-    void drawWrappedRect(GraphicsInterface g, java.awt.Color color, final float stroke,
-                         double xcor, double ycor, double agentSize, double patchSize, final boolean fill);
+  double graphicsY(double ycor, double patchSize, double viewOffsetY);
 
-    void fillBackground(GraphicsInterface g);
+  void prepareToPaint(ViewSettings settings, int width, int height);
 
-    void paintAllPatchesBlack(GraphicsInterface g);
+  void paintViewImage(GraphicsInterface g, java.awt.Image image);
 
-    /// Links
-    void drawLink(GraphicsInterface g, org.nlogo.api.Link link, LinkDrawer.LinkDrawable drawer,
-                  double patchSize, java.awt.Color color, double lineThickness);
+  void wrapDrawable(Drawable obj, GraphicsInterface g,
+                    double xcor, double ycor, double turtleSize, double cellSize);
 
-    /// Drawing
-    void drawLine(GraphicsInterface tg, double startX, double startY,
-                  double endX, double endY, double penSize);
+  void drawWrappedRect(GraphicsInterface g, java.awt.Color color, final float stroke,
+                       double xcor, double ycor, double agentSize, double patchSize, final boolean fill);
 
-    void drawLabelHelper(GraphicsInterface g, double xcor, double ycor, String label,
-						 Object color, double patchSize, double size);
+  void fillBackground(GraphicsInterface g);
+
+  void paintAllPatchesBlack(GraphicsInterface g);
+
+  /// Links
+  void drawLink(GraphicsInterface g, org.nlogo.api.Link link, LinkDrawer.LinkDrawable drawer,
+                double patchSize, java.awt.Color color, double lineThickness);
+
+  /// Drawing
+  void drawLine(GraphicsInterface tg, double startX, double startY,
+                double endX, double endY, double penSize);
+
+  void drawLabelHelper(GraphicsInterface g, double xcor, double ycor, String label,
+                       Object color, double patchSize, double size);
 }

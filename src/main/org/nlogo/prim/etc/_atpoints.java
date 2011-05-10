@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,202 +22,160 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _atpoints
-	extends Reporter
-{
-	@Override
-	public Object report( final Context context ) throws LogoException
-	{
-		// part 1: get arguments, context.checked validity
-		AgentSet sourceSet = argEvalAgentSet( context , 0 ) ;
-		List<Agent> result = new ArrayList<Agent>() ;
-		LogoList points = argEvalList( context , 1 ) ;
-		for( Iterator<Object> it = points.iterator() ; it.hasNext() ; )
-		{
-			if( ! validateListEntry( it.next() ) )
-			{
-				throw new EngineException
-					( context , this , I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints", new String [] {Dump.logoObject( points )})) ;
-			}
-		}
-			
-		// part 2: figure out which patches are at the given points
-		Set<Patch> patches =
-			getPatchesAtPoints( context , context.agent , points ) ;
-			
-		// part 3: construct a new agentset and return it
-		if( sourceSet.type() == Patch.class )
-		{
-			if( sourceSet != world.patches() )
-			{   //sourceSet is not the entire set of patches
-				for( Iterator<Patch> iter = patches.iterator() ; iter.hasNext() ; )
-				{
-					Patch patch = iter.next() ;
-					if( sourceSet.contains( patch ) )
-					{
-						result.add( patch ) ;
-					}
-				}
-			}
-			else
-			{  //sourceSet is the entire set of patches
-				result.addAll( patches ) ;
-			}
-		}
-		else if( sourceSet.type() == Turtle.class )
-		{
-			if (sourceSet != world.turtles())
-			{  //sourceSet is not the entire set of turtles
-				if( world.isBreed( sourceSet) )
-				{  //source set is a breed
-					for( Iterator<Patch> iter = patches.iterator() ; iter.hasNext() ; )
-					{
-						Patch otherPatch = iter.next() ;
-						for( Turtle tempTurtle : otherPatch.turtlesHere() )
-						{
-							if( sourceSet == tempTurtle.getBreed() )
-							{
-								result.add( tempTurtle ) ;
-							}
-						}
-					}
-				} else
-				{  //sourceSet not the entire set of turtles and is not a breed
-					for( Iterator<Patch> iter = patches.iterator() ; iter.hasNext() ; )
-					{
-						Patch otherPatch = iter.next() ;
-						for( Turtle tempTurtle : otherPatch.turtlesHere() )
-						{
-							if( sourceSet.contains( tempTurtle ) )
-							{
-								result.add( tempTurtle ) ;
-							}
-						}
-					}
-				}
-			}
-			else
-			{   //sourceSet is the entire set of turtles
-				for( Patch p : patches )
-				{
-					for( Turtle t : p.turtlesHere() )
-					{
-						result.add( t ) ;
-					}
-				}
-			}
-				
-		}
-		return new ArrayAgentSet
-			( sourceSet.type() , result.toArray( new Agent[ result.size() ] ) ,
-			  world ) ;
-	}
+    extends Reporter {
+  @Override
+  public Object report(final Context context) throws LogoException {
+    // part 1: get arguments, context.checked validity
+    AgentSet sourceSet = argEvalAgentSet(context, 0);
+    List<Agent> result = new ArrayList<Agent>();
+    LogoList points = argEvalList(context, 1);
+    for (Iterator<Object> it = points.iterator(); it.hasNext();) {
+      if (!validateListEntry(it.next())) {
+        throw new EngineException
+            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints", new String[]{Dump.logoObject(points)}));
+      }
+    }
 
-	private boolean validateListEntry( Object entry )
-	{
-		if( entry instanceof LogoList )
-		{
-			LogoList entryList = (LogoList) entry ;
-			if( entryList.size() == 2 ||
-				( ( world.program().is3D )
-				  && ( entryList.size() == 3 ) ) )
-			{
-				for( Iterator<Object> iter = entryList.iterator() ; iter.hasNext() ; )
-				{
-					if( ! ( iter.next() instanceof Double ) )
-					{
-						return false ;
-					}
-				}
-				return true ;
-			}
-		}
-		return false ;
-	}
+    // part 2: figure out which patches are at the given points
+    Set<Patch> patches =
+        getPatchesAtPoints(context, context.agent, points);
 
-	private Set<Patch> getPatchesAtPoints( Context context , Agent agent , LogoList points )
-		throws LogoException
-	{
-		// use LinkedHashSet here because we want fast lookup, but we also need
-		// predictable ordering so runs are reproducible - ST 8/13/03
-		LinkedHashSet<Patch> result =
-			new LinkedHashSet<Patch>() ;
-		boolean is3D = world.program().is3D ;
-		for( Iterator<Object> it = points.iterator() ; it.hasNext() ; )
-		{
-			LogoList entry = (LogoList) it.next() ;
-			Double x = null ;
-			Double y = null ;
-			Double z = org.nlogo.agent.World.ZERO ;
-			int j = 0 ;
-			for( Iterator<Object> it2 = entry.iterator() ; it2.hasNext() ; )
-			{
-				switch( j )
-				{
-					case 0 :
-						x = (Double) it2.next() ;
-						break ;
-					case 1 :
-						y = (Double) it2.next() ;
-						break ;
-				    case 2 :
-						if( ! is3D )
-					    {
-							throw new EngineException
-                                    ( context , this ,
-                                      I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
-                                                                    new String [] {Dump.logoObject( points )})) ;
+    // part 3: construct a new agentset and return it
+    if (sourceSet.type() == Patch.class) {
+      if (sourceSet != world.patches()) {   //sourceSet is not the entire set of patches
+        for (Iterator<Patch> iter = patches.iterator(); iter.hasNext();) {
+          Patch patch = iter.next();
+          if (sourceSet.contains(patch)) {
+            result.add(patch);
+          }
+        }
+      } else {  //sourceSet is the entire set of patches
+        result.addAll(patches);
+      }
+    } else if (sourceSet.type() == Turtle.class) {
+      if (sourceSet != world.turtles()) {  //sourceSet is not the entire set of turtles
+        if (world.isBreed(sourceSet)) {  //source set is a breed
+          for (Iterator<Patch> iter = patches.iterator(); iter.hasNext();) {
+            Patch otherPatch = iter.next();
+            for (Turtle tempTurtle : otherPatch.turtlesHere()) {
+              if (sourceSet == tempTurtle.getBreed()) {
+                result.add(tempTurtle);
+              }
+            }
+          }
+        } else {  //sourceSet not the entire set of turtles and is not a breed
+          for (Iterator<Patch> iter = patches.iterator(); iter.hasNext();) {
+            Patch otherPatch = iter.next();
+            for (Turtle tempTurtle : otherPatch.turtlesHere()) {
+              if (sourceSet.contains(tempTurtle)) {
+                result.add(tempTurtle);
+              }
+            }
+          }
+        }
+      } else {   //sourceSet is the entire set of turtles
+        for (Patch p : patches) {
+          for (Turtle t : p.turtlesHere()) {
+            result.add(t);
+          }
+        }
+      }
 
-					    }
-						z = (Double) it2.next() ;
-						break ;
-				    default :
-						throw new EngineException
-			             ( context , this ,
-                             I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
-                                         new String [] {Dump.logoObject( points )})) ;
-				}
-				j++ ;
-			}
-			if( x == null || y == null )
-			{
-				throw new EngineException
-					( context , this ,
-                         I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
-                                         new String [] {Dump.logoObject( points )})) ;
-			}
-			try
-			{
-				Patch patch = null ;
-				if( ! is3D )
-				{
-					patch =
-						agent.getPatchAtOffsets( x.doubleValue() ,
-												 y.doubleValue() ) ;
-				}
-				else
-				{
-					patch =
-						((org.nlogo.agent.Agent3D)agent).getPatchAtOffsets( x.doubleValue() ,
-																			y.doubleValue() , 
-																			z.doubleValue() ) ;
-					
-				}
-				if ( patch != null )
-				{
-					result.add( patch ) ;
-				}
-			}
-			catch( AgentException e ) { } // NOPMD
-		}
-		return result ;
-	}
+    }
+    return new ArrayAgentSet
+        (sourceSet.type(), result.toArray(new Agent[result.size()]),
+            world);
+  }
 
-	@Override
-	public Syntax syntax()
-	{
-		int left = Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET ;
-		int[] right = { Syntax.TYPE_LIST } ;
-		int ret = Syntax.TYPE_AGENTSET ;
-		return Syntax.reporterSyntax( left , right , ret , Syntax.NORMAL_PRECEDENCE + 2 ) ;
-	}
+  private boolean validateListEntry(Object entry) {
+    if (entry instanceof LogoList) {
+      LogoList entryList = (LogoList) entry;
+      if (entryList.size() == 2 ||
+          ((world.program().is3D)
+              && (entryList.size() == 3))) {
+        for (Iterator<Object> iter = entryList.iterator(); iter.hasNext();) {
+          if (!(iter.next() instanceof Double)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private Set<Patch> getPatchesAtPoints(Context context, Agent agent, LogoList points)
+      throws LogoException {
+    // use LinkedHashSet here because we want fast lookup, but we also need
+    // predictable ordering so runs are reproducible - ST 8/13/03
+    LinkedHashSet<Patch> result =
+        new LinkedHashSet<Patch>();
+    boolean is3D = world.program().is3D;
+    for (Iterator<Object> it = points.iterator(); it.hasNext();) {
+      LogoList entry = (LogoList) it.next();
+      Double x = null;
+      Double y = null;
+      Double z = org.nlogo.agent.World.ZERO;
+      int j = 0;
+      for (Iterator<Object> it2 = entry.iterator(); it2.hasNext();) {
+        switch (j) {
+          case 0:
+            x = (Double) it2.next();
+            break;
+          case 1:
+            y = (Double) it2.next();
+            break;
+          case 2:
+            if (!is3D) {
+              throw new EngineException
+                  (context, this,
+                      I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                          new String[]{Dump.logoObject(points)}));
+
+            }
+            z = (Double) it2.next();
+            break;
+          default:
+            throw new EngineException
+                (context, this,
+                    I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                        new String[]{Dump.logoObject(points)}));
+        }
+        j++;
+      }
+      if (x == null || y == null) {
+        throw new EngineException
+            (context, this,
+                I18N.errors().getNJava("org.nlogo.prim.etc._atpoints.invalidListOfPoints",
+                    new String[]{Dump.logoObject(points)}));
+      }
+      try {
+        Patch patch = null;
+        if (!is3D) {
+          patch =
+              agent.getPatchAtOffsets(x.doubleValue(),
+                  y.doubleValue());
+        } else {
+          patch =
+              ((org.nlogo.agent.Agent3D) agent).getPatchAtOffsets(x.doubleValue(),
+                  y.doubleValue(),
+                  z.doubleValue());
+
+        }
+        if (patch != null) {
+          result.add(patch);
+        }
+      } catch (AgentException e) {
+      } // NOPMD
+    }
+    return result;
+  }
+
+  @Override
+  public Syntax syntax() {
+    int left = Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET;
+    int[] right = {Syntax.TYPE_LIST};
+    int ret = Syntax.TYPE_AGENTSET;
+    return Syntax.reporterSyntax(left, right, ret, Syntax.NORMAL_PRECEDENCE + 2);
+  }
 }

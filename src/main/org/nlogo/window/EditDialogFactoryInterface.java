@@ -1,7 +1,7 @@
-package org.nlogo.window ;
+package org.nlogo.window;
 
-import org.nlogo.api.TokenType ;
-import org.nlogo.api.CompilerServices ;
+import org.nlogo.api.TokenType;
+import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Editable;
 import org.nlogo.editor.Colorizer;
 
@@ -17,8 +17,8 @@ import org.nlogo.editor.Colorizer;
 // There are two different methods because the JDialog created needs a parent, and JDialog has
 // two different constructors for the two different possible parent types. - ST 2/24/10
 
-public interface EditDialogFactoryInterface
-{
-	boolean canceled( java.awt.Frame frame , Editable target ) ;
-	boolean canceled( java.awt.Dialog dialog , Editable target ) ;
+public interface EditDialogFactoryInterface {
+  boolean canceled(java.awt.Frame frame, Editable target);
+
+  boolean canceled(java.awt.Dialog dialog, Editable target);
 }

@@ -1,6 +1,5 @@
-package org.nlogo.window ;
+package org.nlogo.window;
 
-public interface ExternalFileManager
-{
-	String getSource( String filename ) ;
+public interface ExternalFileManager {
+  String getSource(String filename);
 }

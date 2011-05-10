@@ -1,3 +1,3 @@
 package org.nlogo.window;
 
-public enum PlotWidgetExportType { PROMPT , ALL , ARGUMENT }
+public enum PlotWidgetExportType {PROMPT, ALL, ARGUMENT}

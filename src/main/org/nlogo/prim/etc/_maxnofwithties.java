@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -14,99 +14,82 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _maxnofwithties
-	extends Reporter
-{
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( Syntax.TYPE_AGENTSET ,
-			  new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER_BLOCK } ,
-			  Syntax.TYPE_AGENTSET ,
-			  Syntax.NORMAL_PRECEDENCE ,
-			  false , // left associative
-			  "OTPL" ,
-			  "?"    // takes reporter block of unknown agent type
-				) ;
-	}
-	@Override
-	public Object report( final org.nlogo.nvm.Context context ) throws LogoException
-	{
-		int n = argEvalIntValue( context , 1 ) ;
-		if( n < 0 )
-		{
-			throw new EngineException
-				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
-                        new String [] {displayName()}));
-		}
-		AgentSet sourceSet = argEvalAgentSet( context , 0 ) ;
-		int count = sourceSet.count() ;
-		if( n > count )
-		{
-			throw new EngineException
-				( context , this , I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist ",
-                        new String [] {Integer.toString(n), Integer.toString(count)}));
-		}
-		args[ 2 ].checkAgentSetClass( sourceSet , context ) ;
-		TreeMap<Object,LinkedList<Agent>> resultAgents =
-			new TreeMap<Object,LinkedList<Agent>>
-			( new Comparator<Object>()
-				{
-					public int compare( Object o1 , Object o2 )
-					{
-						if( o1.equals( o2 ) )
-						{
-							return 0 ;
-						}
-						if( o1 instanceof Double && o2 instanceof Double )
-						{
-							if( ( (Double) o1 ).doubleValue() > ( (Double) o2 ).doubleValue() )
-							{
-								return -1 ;
-							}
-							else
-							{
-								return 1 ;
-							}
-						}
-						throw new ClassCastException() ;
-					}
-				} ) ;
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (Syntax.TYPE_AGENTSET,
+            new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER_BLOCK},
+            Syntax.TYPE_AGENTSET,
+            Syntax.NORMAL_PRECEDENCE,
+            false, // left associative
+            "OTPL",
+            "?"    // takes reporter block of unknown agent type
+        );
+  }
 
-		org.nlogo.nvm.Context freshContext =
-			new org.nlogo.nvm.Context( context , sourceSet ) ;
-		for( AgentSet.Iterator iter = sourceSet.shufflerator( context.job.random ) ;
-			 iter.hasNext() ; )
-		{			
-			org.nlogo.agent.Agent tester = iter.next() ;
-			Object result = freshContext.evaluateReporter( tester , args[ 2 ] ) ;
-			if( ! ( result instanceof Double ) )
-			{
-				continue ;
-			}
-			LinkedList<Agent> resultList = resultAgents.get( result )
-				 ;
-			if( resultList == null )
-			{
-				resultList = new LinkedList<Agent>() ;
-				resultAgents.put( result , resultList ) ;
-			}
-			resultList.add( tester ) ;
-		}
+  @Override
+  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+    int n = argEvalIntValue(context, 1);
+    if (n < 0) {
+      throw new EngineException
+          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
+              new String[]{displayName()}));
+    }
+    AgentSet sourceSet = argEvalAgentSet(context, 0);
+    int count = sourceSet.count();
+    if (n > count) {
+      throw new EngineException
+          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist ",
+              new String[]{Integer.toString(n), Integer.toString(count)}));
+    }
+    args[2].checkAgentSetClass(sourceSet, context);
+    TreeMap<Object, LinkedList<Agent>> resultAgents =
+        new TreeMap<Object, LinkedList<Agent>>
+            (new Comparator<Object>() {
+              public int compare(Object o1, Object o2) {
+                if (o1.equals(o2)) {
+                  return 0;
+                }
+                if (o1 instanceof Double && o2 instanceof Double) {
+                  if (((Double) o1).doubleValue() > ((Double) o2).doubleValue()) {
+                    return -1;
+                  } else {
+                    return 1;
+                  }
+                }
+                throw new ClassCastException();
+              }
+            });
 
-		AgentSet resultSet = new org.nlogo.agent.ArrayAgentSet
-			( sourceSet.type() , n , false , world ) ;
+    org.nlogo.nvm.Context freshContext =
+        new org.nlogo.nvm.Context(context, sourceSet);
+    for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+         iter.hasNext();) {
+      org.nlogo.agent.Agent tester = iter.next();
+      Object result = freshContext.evaluateReporter(tester, args[2]);
+      if (!(result instanceof Double)) {
+        continue;
+      }
+      LinkedList<Agent> resultList = resultAgents.get(result);
+      if (resultList == null) {
+        resultList = new LinkedList<Agent>();
+        resultAgents.put(result, resultList);
+      }
+      resultList.add(tester);
+    }
 
-		for( Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator() ;
-			 n > 0 && iter.hasNext() ; )
-		{
-			for( Agent a : iter.next() )
-			{
-				resultSet.add( a ) ;
-				n-- ;
-			}
-		}
-		
-		return resultSet ;
-	}
+    AgentSet resultSet = new org.nlogo.agent.ArrayAgentSet
+        (sourceSet.type(), n, false, world);
+
+    for (Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator();
+         n > 0 && iter.hasNext();) {
+      for (Agent a : iter.next()) {
+        resultSet.add(a);
+        n--;
+      }
+    }
+
+    return resultSet;
+  }
 }

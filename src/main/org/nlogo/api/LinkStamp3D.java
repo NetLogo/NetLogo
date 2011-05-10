@@ -1,5 +1,4 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface LinkStamp3D extends Link3D
-{
+public interface LinkStamp3D extends Link3D {
 }

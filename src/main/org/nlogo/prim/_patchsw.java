@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -8,36 +8,30 @@ import org.nlogo.agent.Patch;
 import org.nlogo.api.Nobody;
 
 public final strictfp class _patchsw
-	extends Reporter
-{
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( Syntax.TYPE_PATCH , "-TP-" ) ;
-	}
-	@Override public Object report( Context context )
-	{
-		return report_1( context ) ;
-	}
-	public Object report_1( Context context )
-	{
-		Patch patch ;
-		if( context.agent instanceof Patch )
-		{
-			patch = ( (Patch) context.agent ).getPatchSouthWest() ;
-		}
-		else if( context.agent instanceof Turtle )
-		{
-			patch = ( (Turtle) context.agent ).getPatchHere().getPatchSouthWest() ;
-		}
-		else
-		{
-			patch = world.fastGetPatchAt( -1 , -1 ) ;
-		}
-		if( patch == null )
-		{
-			return Nobody.NOBODY ; 
-		}
-		return patch ;
-	}
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (Syntax.TYPE_PATCH, "-TP-");
+  }
+
+  @Override
+  public Object report(Context context) {
+    return report_1(context);
+  }
+
+  public Object report_1(Context context) {
+    Patch patch;
+    if (context.agent instanceof Patch) {
+      patch = ((Patch) context.agent).getPatchSouthWest();
+    } else if (context.agent instanceof Turtle) {
+      patch = ((Turtle) context.agent).getPatchHere().getPatchSouthWest();
+    } else {
+      patch = world.fastGetPatchAt(-1, -1);
+    }
+    if (patch == null) {
+      return Nobody.NOBODY;
+    }
+    return patch;
+  }
 }

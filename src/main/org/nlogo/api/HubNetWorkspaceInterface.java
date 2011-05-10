@@ -1,9 +1,10 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
 public interface HubNetWorkspaceInterface
-	extends CompilerServices
-{
-	WorldPropertiesInterface getPropertiesInterface() ;
-	void hubNetRunning( boolean running ) ;
-	String modelNameForDisplay() ;
+    extends CompilerServices {
+  WorldPropertiesInterface getPropertiesInterface();
+
+  void hubNetRunning(boolean running);
+
+  String modelNameForDisplay();
 }

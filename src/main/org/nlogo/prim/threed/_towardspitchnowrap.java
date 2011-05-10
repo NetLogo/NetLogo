@@ -6,32 +6,26 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _towardspitchnowrap
-	extends Reporter
-{
-	@Override
-	public Syntax syntax()
-	{
-		int[] right = { Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH } ;
-		int ret = Syntax.TYPE_NUMBER ;
-		return Syntax.reporterSyntax( right , ret , "-TP-" ) ;
-	}
-	@Override
-	public Object report( final org.nlogo.nvm.Context context ) throws LogoException
-	{
-		org.nlogo.agent.Agent agent = argEvalAgent( context , 0 ) ;
-		if( agent.id == -1 )
-		{
-			throw new EngineException( context , this , "that turtle is dead" ) ;
-		}
-		try
-		{
-			return newValidDouble
-				( world.protractor().towardsPitch
-				  ( context.agent , agent , false ) ) ; // false = don't wrap
-		}
-		catch( org.nlogo.api.AgentException ex )
-		{
-			throw new EngineException( context , this , ex.getMessage() ) ;
-		}
-	}
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH};
+    int ret = Syntax.TYPE_NUMBER;
+    return Syntax.reporterSyntax(right, ret, "-TP-");
+  }
+
+  @Override
+  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+    org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
+    if (agent.id == -1) {
+      throw new EngineException(context, this, "that turtle is dead");
+    }
+    try {
+      return newValidDouble
+          (world.protractor().towardsPitch
+              (context.agent, agent, false)); // false = don't wrap
+    } catch (org.nlogo.api.AgentException ex) {
+      throw new EngineException(context, this, ex.getMessage());
+    }
+  }
 }

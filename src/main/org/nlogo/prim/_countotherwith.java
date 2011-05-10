@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
@@ -11,44 +11,40 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _countotherwith
-	extends Reporter
-{
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( new int[] { Syntax.TYPE_AGENTSET , Syntax.TYPE_BOOLEAN_BLOCK } ,
-			  Syntax.TYPE_NUMBER , "-TPL" ,
-			  "?" ) ;  // takes reporter block of unknown agent type
-	}
-	@Override public Object report( Context context ) throws LogoException
-	{
-		return report_1( context , argEvalAgentSet( context , 0 ) , args[ 1 ] ) ;
-	}
-	public double report_1( Context context , AgentSet sourceSet , Reporter reporterBlock )
-		throws LogoException
-	{
-		Context freshContext = new Context( context , sourceSet ) ;
-		int result = 0 ;
-		reporterBlock.checkAgentSetClass( sourceSet , context ) ;
-		for( AgentSet.Iterator iter = sourceSet.iterator() ; iter.hasNext() ; )
-		{
-			Agent tester = iter.next() ;
-			if( tester == context.agent )
-			{
-				continue ;
-			}
-			Object value = freshContext.evaluateReporter( tester , reporterBlock ) ;
-			if( ! ( value instanceof Boolean ) )
-			{
-				throw new EngineException
-					( context , this , I18N.errors().getNJava("org.nlogo.prim.$common.expectedBooleanValue",
-                            new String [] {displayName(),  Dump.logoObject( tester ),Dump.logoObject( value ) }));
-			}
-			if( ( ( Boolean ) value ).booleanValue() )
-			{
-				result++ ;
-			}
-		}
-		return result ;
-	}
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (new int[]{Syntax.TYPE_AGENTSET, Syntax.TYPE_BOOLEAN_BLOCK},
+            Syntax.TYPE_NUMBER, "-TPL",
+            "?");  // takes reporter block of unknown agent type
+  }
+
+  @Override
+  public Object report(Context context) throws LogoException {
+    return report_1(context, argEvalAgentSet(context, 0), args[1]);
+  }
+
+  public double report_1(Context context, AgentSet sourceSet, Reporter reporterBlock)
+      throws LogoException {
+    Context freshContext = new Context(context, sourceSet);
+    int result = 0;
+    reporterBlock.checkAgentSetClass(sourceSet, context);
+    for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+      Agent tester = iter.next();
+      if (tester == context.agent) {
+        continue;
+      }
+      Object value = freshContext.evaluateReporter(tester, reporterBlock);
+      if (!(value instanceof Boolean)) {
+        throw new EngineException
+            (context, this, I18N.errors().getNJava("org.nlogo.prim.$common.expectedBooleanValue",
+                new String[]{displayName(), Dump.logoObject(tester), Dump.logoObject(value)}));
+      }
+      if (((Boolean) value).booleanValue()) {
+        result++;
+      }
+    }
+    return result;
+  }
 }

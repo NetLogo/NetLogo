@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -17,96 +17,74 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _patchset
-	extends Reporter
-{
-	@Override
-	public Syntax syntax()
-	{
-		int[] right = { Syntax.TYPE_REPEATABLE | Syntax.TYPE_PATCH
-						| Syntax.TYPE_PATCHSET | Syntax.TYPE_NOBODY 
-						| Syntax.TYPE_LIST } ;
-		int ret = Syntax.TYPE_PATCHSET;
-		return Syntax.reporterSyntax( right , ret , 1 , 0 ) ;
-	}
-	@Override
-	public Object report( final Context context )
-		throws LogoException
-	{
-		LinkedHashSet<Patch> resultSet =
-			new LinkedHashSet<Patch>() ;
-		for( int i = 0 ; i < args.length ; i ++ )
-		{
-			Object elt = args[ i ].report( context ) ;
-			if( elt instanceof AgentSet )
-			{
-				AgentSet tempSet = (AgentSet) elt ;
-				if( tempSet.type() != org.nlogo.agent.Patch.class )
-				{
-					throw new ArgumentTypeException
-						( context , this , i , Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET , elt ) ;
-				}
-				for( AgentSet.Iterator iter = tempSet.iterator() ; iter.hasNext() ; )
-				{
-					resultSet.add( (Patch) iter.next() ) ;
-				}
-			}
-			else if( elt instanceof LogoList )
-			{
-				descendList( context , (LogoList) elt , resultSet ) ;
-			}
-			else if (elt instanceof Patch)
-			{
-				resultSet.add( (Patch) elt ) ;
-			}
-			else if( ! ( elt instanceof org.nlogo.api.Nobody ) )
-			{
-				throw new ArgumentTypeException
-					( context , this , i , Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET , elt ) ;
-			}
-		}
-        return new org.nlogo.agent.ArrayAgentSet(
-					org.nlogo.agent.Patch.class ,
-					resultSet.toArray( new org.nlogo.agent.Patch[ resultSet.size() ] ) ,
-					world ) ;
-	}
-	private void descendList( Context context , LogoList tempList , Set<Patch> result )
-		throws LogoException
-	{
-		for( Iterator<Object> iter = tempList.iterator() ;
-			iter.hasNext() ; )
-		{
-			Object obj = iter.next();
-			if( obj instanceof Patch )
-			{
-				result.add( (Patch) obj ) ;
-			}
-			else if( obj instanceof AgentSet )
-			{
-				AgentSet tempSet = (AgentSet) obj ;
-				if( tempSet.type() != org.nlogo.agent.Patch.class )
-				{
-					throw new EngineException( context , this ,
-                      I18N.errors().getNJava("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
-                        new String[] {this.displayName(), Dump.logoObject( tempList , true , false),
-                          Dump.logoObject( obj , true , false)}));
-				}
-				for( AgentSet.Iterator iter2 = tempSet.iterator() ;
-					 iter2.hasNext() ; )
-				{
-					result.add( (Patch) iter2.next() ) ;
-				}
-			}
-			else if( obj instanceof LogoList )
-			{
-				descendList( context , (LogoList) obj , result ) ;
-			}
-			else if( ! ( obj instanceof org.nlogo.api.Nobody ) )
-			{
-				throw new EngineException( context , this ,
-                  I18N.errors().getNJava("org.nlogo.prim.etc._patchset.listInputNonPatch",
-                    new String [] {this.displayName(), Dump.logoObject( tempList , true , false),
-                      Dump.logoObject( obj , true , false)})) ;
-			}
-		}
-	}
+    extends Reporter {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_PATCH
+        | Syntax.TYPE_PATCHSET | Syntax.TYPE_NOBODY
+        | Syntax.TYPE_LIST};
+    int ret = Syntax.TYPE_PATCHSET;
+    return Syntax.reporterSyntax(right, ret, 1, 0);
+  }
+
+  @Override
+  public Object report(final Context context)
+      throws LogoException {
+    LinkedHashSet<Patch> resultSet =
+        new LinkedHashSet<Patch>();
+    for (int i = 0; i < args.length; i++) {
+      Object elt = args[i].report(context);
+      if (elt instanceof AgentSet) {
+        AgentSet tempSet = (AgentSet) elt;
+        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+          throw new ArgumentTypeException
+              (context, this, i, Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET, elt);
+        }
+        for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
+          resultSet.add((Patch) iter.next());
+        }
+      } else if (elt instanceof LogoList) {
+        descendList(context, (LogoList) elt, resultSet);
+      } else if (elt instanceof Patch) {
+        resultSet.add((Patch) elt);
+      } else if (!(elt instanceof org.nlogo.api.Nobody)) {
+        throw new ArgumentTypeException
+            (context, this, i, Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET, elt);
+      }
+    }
+    return new org.nlogo.agent.ArrayAgentSet(
+        org.nlogo.agent.Patch.class,
+        resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]),
+        world);
+  }
+
+  private void descendList(Context context, LogoList tempList, Set<Patch> result)
+      throws LogoException {
+    for (Iterator<Object> iter = tempList.iterator();
+         iter.hasNext();) {
+      Object obj = iter.next();
+      if (obj instanceof Patch) {
+        result.add((Patch) obj);
+      } else if (obj instanceof AgentSet) {
+        AgentSet tempSet = (AgentSet) obj;
+        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+          throw new EngineException(context, this,
+              I18N.errors().getNJava("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
+                  new String[]{this.displayName(), Dump.logoObject(tempList, true, false),
+                      Dump.logoObject(obj, true, false)}));
+        }
+        for (AgentSet.Iterator iter2 = tempSet.iterator();
+             iter2.hasNext();) {
+          result.add((Patch) iter2.next());
+        }
+      } else if (obj instanceof LogoList) {
+        descendList(context, (LogoList) obj, result);
+      } else if (!(obj instanceof org.nlogo.api.Nobody)) {
+        throw new EngineException(context, this,
+            I18N.errors().getNJava("org.nlogo.prim.etc._patchset.listInputNonPatch",
+                new String[]{this.displayName(), Dump.logoObject(tempList, true, false),
+                    Dump.logoObject(obj, true, false)}));
+      }
+    }
+  }
 }

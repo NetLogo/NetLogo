@@ -10,5 +10,5 @@ package org.nlogo.api;
 // be a Double.) - ST 7/11/06
 
 public interface ReporterLogoThunk {
-	Object call() throws LogoException ;
+  Object call() throws LogoException;
 }

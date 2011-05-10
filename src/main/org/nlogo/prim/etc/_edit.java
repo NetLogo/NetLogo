@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
@@ -12,27 +12,24 @@ import org.nlogo.nvm.Workspace;
  * to commit changes to library models.
  */
 public final strictfp class _edit
-	extends Command
-{
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.commandSyntax( "O---" , false ) ;
-	}
+    extends Command {
+  @Override
+  public Syntax syntax() {
+    return Syntax.commandSyntax("O---", false);
+  }
 
-    @Override
-    public void perform(final Context context) throws LogoException {
-        String path = null;
-        try {
-            path = workspace.convertToNormal();
-        }
-        catch (java.io.IOException ex) {
-            throw new EngineException(context, this, ex.getMessage());
-        }
-        workspace.outputObject
-                ("Now editing: " + path,
-                        context.agent, true, false,
-                        Workspace.OutputDestination.NORMAL);
-        context.ip = next;
+  @Override
+  public void perform(final Context context) throws LogoException {
+    String path = null;
+    try {
+      path = workspace.convertToNormal();
+    } catch (java.io.IOException ex) {
+      throw new EngineException(context, this, ex.getMessage());
     }
+    workspace.outputObject
+        ("Now editing: " + path,
+            context.agent, true, false,
+            Workspace.OutputDestination.NORMAL);
+    context.ip = next;
+  }
 }

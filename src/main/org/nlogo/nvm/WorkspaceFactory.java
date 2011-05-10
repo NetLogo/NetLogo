@@ -1,6 +1,5 @@
-package org.nlogo.nvm ;
+package org.nlogo.nvm;
 
-public interface WorkspaceFactory
-{
-	Workspace newInstance() ;
+public interface WorkspaceFactory {
+  Workspace newInstance();
 }

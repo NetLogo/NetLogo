@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Let;
@@ -11,20 +11,19 @@ import org.nlogo.nvm.Syntax;
 // around.) - ST 2/6/09
 
 public final strictfp class _let
-	extends Command
-{
-	public Let let ;
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.commandSyntax
-			( new int[] { Syntax.TYPE_WILDCARD , Syntax.TYPE_WILDCARD } ) ;
-	}
-	@Override
-	public void perform( final Context context )
-		throws LogoException
-	{
-		context.let( let , args[ 1 ].report( context ) ) ;
-		context.ip = next ;
-	}
+    extends Command {
+  public Let let;
+
+  @Override
+  public Syntax syntax() {
+    return Syntax.commandSyntax
+        (new int[]{Syntax.TYPE_WILDCARD, Syntax.TYPE_WILDCARD});
+  }
+
+  @Override
+  public void perform(final Context context)
+      throws LogoException {
+    context.let(let, args[1].report(context));
+    context.ip = next;
+  }
 }

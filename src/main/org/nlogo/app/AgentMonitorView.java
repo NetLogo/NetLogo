@@ -1,4 +1,4 @@
-package org.nlogo.app ;
+package org.nlogo.app;
 
 // leaving this in Java for now since our superclass is in Java - ST 8/13/10
 
@@ -8,171 +8,156 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Perspective;
 
-import org.nlogo.window.GUIWorkspace ;
+import org.nlogo.window.GUIWorkspace;
 
 public strictfp class AgentMonitorView
-	extends org.nlogo.window.View
-{ 
-	public AgentMonitorView( GUIWorkspace workspace )
-	{
-		super( workspace ) ;
-		radius = (workspace.world.worldWidth() - 1) / 2 ;
-		addMouseListener( popupListener ) ;
-	}
+    extends org.nlogo.window.View {
+  public AgentMonitorView(GUIWorkspace workspace) {
+    super(workspace);
+    radius = (workspace.world.worldWidth() - 1) / 2;
+    addMouseListener(popupListener);
+  }
 
-	private Perspective perspective = Perspective.OBSERVE ;
+  private Perspective perspective = Perspective.OBSERVE;
 
-	@Override public boolean isDead() { return (agent != null && agent.id == -1) ; }
+  @Override
+  public boolean isDead() {
+    return (agent != null && agent.id == -1);
+  }
 
-	private Agent agent ;
-	
-	public Agent agent() { return agent ; }
-	public void agent( Agent agent )
-	{
-		this.agent = agent ;
-		perspective = Perspective.FOLLOW ;
-	}
+  private Agent agent;
 
-	private double radius ;
-	public double radius() { return radius ; }
-	public void radius( double radius ) 
-	{ 
-		this.radius = radius ;
-		patchSize( (viewWidth * patchSize) / ( ( radius * 2 ) + 1 ) ) ;
-		this.viewWidth = (radius * 2) + 1 ;
-		this.viewHeight = (radius * 2) + 1 ;
-		incrementalUpdateFromEventThread() ;
-	}
+  public Agent agent() {
+    return agent;
+  }
 
-	public void patchSize( double patchSize )
-	{
-		java.awt.Font font = getFont() ; 
-		int newFontSize = StrictMath.max( 1 , (int) (patchSize * fontSizeRatio) ) ;
-		setFont( new java.awt.Font( font.getName() , font.getStyle() , newFontSize ) ) ;
-		this.patchSize = patchSize ;
-	}
+  public void agent(Agent agent) {
+    this.agent = agent;
+    perspective = Perspective.FOLLOW;
+  }
 
-	@Override
-	public Perspective perspective() 
-	{
-		return perspective ;
-	}
+  private double radius;
 
-	@Override
-	public double viewOffsetX()
-	{		
-		if( perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink )
-		{
-			return 0 ;
-		}
+  public double radius() {
+    return radius;
+  }
 
-		double x = 0 ;
-		if( agent instanceof Turtle )
-		{
-			x = ( (Turtle) agent ).xcor() ;
-		}
-		else if ( agent instanceof Patch )
-		{
-			x = ( (Patch) agent ).pxcor ;
-		}
-		else
-		{
-			x = ( (Link) agent ).midpointX() ;
-		}
-		return x - radius - workspace.world.minPxcor() ; 
-	}
+  public void radius(double radius) {
+    this.radius = radius;
+    patchSize((viewWidth * patchSize) / ((radius * 2) + 1));
+    this.viewWidth = (radius * 2) + 1;
+    this.viewHeight = (radius * 2) + 1;
+    incrementalUpdateFromEventThread();
+  }
 
-	@Override
-	public double viewOffsetY()
-	{
-		if( perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink )
-		{
-			return 0 ;
-		}
+  public void patchSize(double patchSize) {
+    java.awt.Font font = getFont();
+    int newFontSize = StrictMath.max(1, (int) (patchSize * fontSizeRatio));
+    setFont(new java.awt.Font(font.getName(), font.getStyle(), newFontSize));
+    this.patchSize = patchSize;
+  }
 
-		double y = 0 ;
-		if( agent instanceof Turtle )
-		{
-			y = ( (Turtle) agent ).ycor() ;
-		}
-		else if ( agent instanceof Patch )
-		{
-			y = ( (Patch) agent ).pycor ;
-		}
-		else
-		{
-			y = ( (Link) agent ).midpointY() ;
-		}
+  @Override
+  public Perspective perspective() {
+    return perspective;
+  }
 
-		return y + ( ( viewHeight - 1 ) / 2 ) - workspace.world.maxPycor() ; 
-	}
+  @Override
+  public double viewOffsetX() {
+    if (perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
+      return 0;
+    }
 
-	@Override
-	public double patchSize()
-	{
-		return patchSize ;
-	}
+    double x = 0;
+    if (agent instanceof Turtle) {
+      x = ((Turtle) agent).xcor();
+    } else if (agent instanceof Patch) {
+      x = ((Patch) agent).pxcor;
+    } else {
+      x = ((Link) agent).midpointX();
+    }
+    return x - radius - workspace.world.minPxcor();
+  }
 
-	private double fontSizeRatio ;
-	
-	@Override
-	public void applyNewFontSize( int newFontSize , int zoom )
-	{
-		fontSizeRatio = newFontSize / workspace.world.patchSize() ;		
-		super.applyNewFontSize( newFontSize , zoom ) ;
-	}
+  @Override
+  public double viewOffsetY() {
+    if (perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
+      return 0;
+    }
 
-	@Override
-	public void setSize( int worldWidth , int worldHeight , double patchSize )
-	{
-		patchSize( patchSize ) ;
-		this.viewWidth = worldWidth ;
-		this.viewHeight = worldHeight ;
-	}
+    double y = 0;
+    if (agent instanceof Turtle) {
+      y = ((Turtle) agent).ycor();
+    } else if (agent instanceof Patch) {
+      y = ((Patch) agent).pycor;
+    } else {
+      y = ((Link) agent).midpointY();
+    }
 
-	@Override
-	public void setSize( int width , int height )
-	{
-		super.setSize( width , height ) ;
-		patchSize ( width / ( radius * 2 + 1 ) ) ;		
-	}
+    return y + ((viewHeight - 1) / 2) - workspace.world.maxPycor();
+  }
 
-	@Override
-	public void setBounds( int x , int y , int width , int height )
-	{
-		super.setBounds( x , y , width , height ) ;
-		patchSize ( width / ( radius * 2  + 1 ) ) ;
-	}
+  @Override
+  public double patchSize() {
+    return patchSize;
+  }
 
-	@Override public boolean drawSpotlight() { return false ; }
+  private double fontSizeRatio;
 
-	private final java.awt.event.MouseListener popupListener =
-	new java.awt.event.MouseAdapter() {
-		@Override
-		public void mousePressed( java.awt.event.MouseEvent e ) {
-			if( e.isPopupTrigger() )
-			{
-				doPopup( e ) ;
-			}
-		}
-		@Override
-		public void mouseReleased( java.awt.event.MouseEvent e ) {
-			if( e.isPopupTrigger() )
-			{
-				doPopup( e ) ;
-			}
-		}
-	} ;
+  @Override
+  public void applyNewFontSize(int newFontSize, int zoom) {
+    fontSizeRatio = newFontSize / workspace.world.patchSize();
+    super.applyNewFontSize(newFontSize, zoom);
+  }
 
-	private void doPopup( java.awt.event.MouseEvent e )
-	{
-		javax.swing.JPopupMenu menu = new org.nlogo.swing.WrappingPopupMenu() ;
-		java.awt.Point p = e.getPoint() ;
-		p = populateContextMenu( menu , p , (java.awt.Component)e.getSource() ) ;
-		if( menu.getSubElements().length > 0 )
-		{
-			menu.show( (java.awt.Component) e.getSource() , p.x , p.y ) ;
-		}
-		e.consume() ;
-	}	
+  @Override
+  public void setSize(int worldWidth, int worldHeight, double patchSize) {
+    patchSize(patchSize);
+    this.viewWidth = worldWidth;
+    this.viewHeight = worldHeight;
+  }
+
+  @Override
+  public void setSize(int width, int height) {
+    super.setSize(width, height);
+    patchSize(width / (radius * 2 + 1));
+  }
+
+  @Override
+  public void setBounds(int x, int y, int width, int height) {
+    super.setBounds(x, y, width, height);
+    patchSize(width / (radius * 2 + 1));
+  }
+
+  @Override
+  public boolean drawSpotlight() {
+    return false;
+  }
+
+  private final java.awt.event.MouseListener popupListener =
+      new java.awt.event.MouseAdapter() {
+        @Override
+        public void mousePressed(java.awt.event.MouseEvent e) {
+          if (e.isPopupTrigger()) {
+            doPopup(e);
+          }
+        }
+
+        @Override
+        public void mouseReleased(java.awt.event.MouseEvent e) {
+          if (e.isPopupTrigger()) {
+            doPopup(e);
+          }
+        }
+      };
+
+  private void doPopup(java.awt.event.MouseEvent e) {
+    javax.swing.JPopupMenu menu = new org.nlogo.swing.WrappingPopupMenu();
+    java.awt.Point p = e.getPoint();
+    p = populateContextMenu(menu, p, (java.awt.Component) e.getSource());
+    if (menu.getSubElements().length > 0) {
+      menu.show((java.awt.Component) e.getSource(), p.x, p.y);
+    }
+    e.consume();
+  }
 }

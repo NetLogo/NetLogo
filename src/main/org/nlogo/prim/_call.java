@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Activation;
@@ -15,29 +15,31 @@ import org.nlogo.nvm.Context;
 // CustomGenerator.generateCallReport). - ST 5/18/10
 
 public final strictfp class _call
-	extends Command
-	implements org.nlogo.nvm.CustomGenerated
-{
-	public final Procedure procedure ;
-	public _call( Procedure procedure )
-	{
-		this.procedure = procedure ;
-	}
-	@Override public Syntax syntax()
-	{
-		return procedure.syntax() ;
-	}
-	@Override public String toString()
-	{
-		return super.toString() + ":" + procedure.name ;
-	}
-	@Override public void perform( Context context ) throws LogoException
-	{
-		Activation newActivation = new Activation( procedure , context.activation , next ) ;
-		for( int i = 0 ; i < (procedure.args.size() - procedure.localsCount ) ; i++ ){
-			newActivation.args[ i ] = args[ i ].report( context ) ;
-		}
-		context.activation = newActivation ;
-		context.ip = 0 ;
-	}
+    extends Command
+    implements org.nlogo.nvm.CustomGenerated {
+  public final Procedure procedure;
+
+  public _call(Procedure procedure) {
+    this.procedure = procedure;
+  }
+
+  @Override
+  public Syntax syntax() {
+    return procedure.syntax();
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ":" + procedure.name;
+  }
+
+  @Override
+  public void perform(Context context) throws LogoException {
+    Activation newActivation = new Activation(procedure, context.activation, next);
+    for (int i = 0; i < (procedure.args.size() - procedure.localsCount); i++) {
+      newActivation.args[i] = args[i].report(context);
+    }
+    context.activation = newActivation;
+    context.ip = 0;
+  }
 }

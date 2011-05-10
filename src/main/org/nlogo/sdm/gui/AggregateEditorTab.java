@@ -1,29 +1,27 @@
-package org.nlogo.sdm.gui ;
+package org.nlogo.sdm.gui;
 
 import java.awt.BorderLayout;
 
 import org.nlogo.window.ErrorLabel;
 
 strictfp class AggregateEditorTab
-	extends javax.swing.JPanel
-{
+    extends javax.swing.JPanel {
 
-	AggregateEditorTab( AggregateModelEditor editor, java.awt.Component contents )
-	{
-		setAlignmentX( LEFT_ALIGNMENT ) ;
-		setAlignmentY( TOP_ALIGNMENT ) ;
-		setLayout( new BorderLayout( ) ) ;
-		
-		AggregateModelEditorToolBar toolbar = 
-			new AggregateModelEditorToolBar( editor ) ;
-		editor.setToolbar( toolbar ) ;
-		add( toolbar, BorderLayout.NORTH ) ;
+  AggregateEditorTab(AggregateModelEditor editor, java.awt.Component contents) {
+    setAlignmentX(LEFT_ALIGNMENT);
+    setAlignmentY(TOP_ALIGNMENT);
+    setLayout(new BorderLayout());
 
-		javax.swing.JPanel codePanel = new javax.swing.JPanel( new java.awt.BorderLayout() ) ; 
-		ErrorLabel errorLabel = new ErrorLabel() ;
-		codePanel.add( errorLabel , BorderLayout.NORTH ) ; 
-		codePanel.add( new javax.swing.JScrollPane( contents ) , BorderLayout.CENTER ) ;
+    AggregateModelEditorToolBar toolbar =
+        new AggregateModelEditorToolBar(editor);
+    editor.setToolbar(toolbar);
+    add(toolbar, BorderLayout.NORTH);
 
-		add( codePanel, java.awt.BorderLayout.CENTER ) ; 
-	}
+    javax.swing.JPanel codePanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+    ErrorLabel errorLabel = new ErrorLabel();
+    codePanel.add(errorLabel, BorderLayout.NORTH);
+    codePanel.add(new javax.swing.JScrollPane(contents), BorderLayout.CENTER);
+
+    add(codePanel, java.awt.BorderLayout.CENTER);
+  }
 }

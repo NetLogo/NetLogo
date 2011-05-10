@@ -1,8 +1,8 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
 /**
  * <p>A runtime error that has occurred in NetLogo code.
- *
+ * <p/>
  * <p>As with any Exception, use the getMessage() method to get the error message.
  */
 
@@ -13,17 +13,14 @@ package org.nlogo.api ;
 // a concrete subclass like EngineException. - ST 5/4/10
 
 public abstract strictfp class LogoException
-	extends Exception
-{
+    extends Exception {
 
-	public LogoException( String message )
-	{
-		super( message ) ;
-	}
+  public LogoException(String message) {
+    super(message);
+  }
 
-    public LogoException( String message, Throwable cause )
-	{
-		super( message, cause ) ;
-	}
+  public LogoException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
 }
