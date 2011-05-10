@@ -108,32 +108,31 @@
     <pre>
 import org.nlogo.app.App;
 public class Example1 {
-    public static void main(String[] argv) {
-        App.main(argv);
-        try {
-            java.awt.EventQueue.invokeAndWait
-                ( new Runnable()
-                    { public void run() {
-                        try {
-                          App.app().open
-                              (&quot;models/Sample Models/Earth Science/&quot;
-                               + &quot;Fire.nlogo&quot;);
-                        }
-                        catch( java.io.IOException ex ) {
-                          ex.printStackTrace();
-                        }
-                    } } );
-            App.app().command(&quot;set density 62&quot;);
-            App.app().command(&quot;random-seed 0&quot;);
-            App.app().command(&quot;setup&quot;);
-            App.app().command(&quot;repeat 50 [ go ]&quot;);
-            System.out.println
-                (App.app().report(&quot;burned-trees&quot;));
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+  public static void main(String[] argv) {
+    App.main(argv);
+    try {
+      java.awt.EventQueue.invokeAndWait(
+        new Runnable() {
+          public void run() {
+            try {
+              App.app().open(
+                &quot;models/Sample Models/Earth Science/&quot;
+                + &quot;Fire.nlogo&quot;);
+            }
+            catch(java.io.IOException ex) {
+              ex.printStackTrace();
+            }}});
+      App.app().command(&quot;set density 62&quot;);
+      App.app().command(&quot;random-seed 0&quot;);
+      App.app().command(&quot;setup&quot;);
+      App.app().command(&quot;repeat 50 [ go ]&quot;);
+      System.out.println(
+        App.app().report(&quot;burned-trees&quot;));
     }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
 </pre>
     <p>
@@ -198,25 +197,25 @@ object Example1 {
     <pre>
 import org.nlogo.headless.HeadlessWorkspace;
 public class Example2 {
-    public static void main(String[] argv) {
-        HeadlessWorkspace workspace =
-            HeadlessWorkspace.newInstance() ;
-        try {
-            workspace.open
-                (&quot;models/Sample Models/Earth Science/&quot;
-                 + &quot;Fire.nlogo&quot;);
-            workspace.command(&quot;set density 62&quot;);
-            workspace.command(&quot;random-seed 0&quot;);
-            workspace.command(&quot;setup&quot;);
-            workspace.command(&quot;repeat 50 [ go ]&quot;) ;
-            System.out.println
-                (workspace.report(&quot;burned-trees&quot;));
-            workspace.dispose();
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+  public static void main(String[] argv) {
+    HeadlessWorkspace workspace =
+        HeadlessWorkspace.newInstance() ;
+    try {
+      workspace.open(
+        &quot;models/Sample Models/Earth Science/&quot;
+        + &quot;Fire.nlogo&quot;);
+      workspace.command(&quot;set density 62&quot;);
+      workspace.command(&quot;random-seed 0&quot;);
+      workspace.command(&quot;setup&quot;);
+      workspace.command(&quot;repeat 50 [ go ]&quot;) ;
+      System.out.println(
+        workspace.report(&quot;burned-trees&quot;));
+      workspace.dispose();
     }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
 </pre>
     <p>
@@ -299,29 +298,26 @@ object Example2 {
       can set it from within Java by using <tt>System.setProperty</tt> as
       follows:
     <pre>
-public static void main( String [] args )
-{
-  org.nlogo.awt.Utils.invokeLater
-    ( new Runnable() {
+public static void main(String[] args) {
+  org.nlogo.awt.Utils.invokeLater(
+    new Runnable() {
       public void run() {
-            System.setProperty( &quot;org.nlogo.is3d&quot; , &quot;true&quot; ) ;
-                HeadlessWorkspace workspace =
-                  HeadlessWorkspace.newInstance() ;
-                try {
-                  workspace.open
-            (&quot;models/3D/Sample Models/&quot;
-             + &quot;DLA 3D.nlogo&quot;);
+        System.setProperty(&quot;org.nlogo.is3d&quot;, &quot;true&quot;);
+        HeadlessWorkspace workspace = HeadlessWorkspace.newInstance() ;
+        try {
+          workspace.open(&quot;models/3D/Sample Models/&quot;
+            + &quot;DLA 3D.nlogo&quot;);
           workspace.command(&quot;set wiggle-angle 70&quot;);
           workspace.command(&quot;random-seed 0&quot;);
           workspace.command(&quot;setup&quot;);            
           workspace.command(&quot;repeat 50 [ go ]&quot;) ;
-          System.out.println(workspace.report(&quot;count patches with [pcolor = green]&quot;));            
+          System.out.println(workspace.report(
+            &quot;count patches with [pcolor = green]&quot;));            
           workspace.dispose();        
         }        
         catch(Exception ex) {
           ex.printStackTrace();        
-        }
-    } } ) ;
+        }}});
 }
 </pre>
     <p>
@@ -337,24 +333,24 @@ public static void main( String [] args )
       <code>setup</code> commands, and then runs the <code>go</code>
       command in a loop, forever.
     <pre>
-<code>import org.nlogo.headless.HeadlessWorkspace;
+import org.nlogo.headless.HeadlessWorkspace;
 
 class HubNetHeadlessServerExample {
   static public void main(String[] args) {
-    HeadlessWorkspace workspace = org.nlogo.headless.HeadlessWorkspace.newInstance();
-    try{
+    HeadlessWorkspace workspace = HeadlessWorkspace.newInstance();
+    try {
       workspace.open(&quot;models/HubNet Activities/Code Examples/Template.nlogo&quot;);
       workspace.command(&quot;hubnet-reset&quot;);
       workspace.command(&quot;setup&quot;);
       while(true) {
         workspace.command(&quot;go&quot;);
       }
-    } catch(Exception ex) {
-        ex.printStackTrace();
+    }
+    catch(Exception ex) {
+      ex.printStackTrace();
     }
   }
 }
-</code>
 </pre>
     <p>
       The next example shows not only how to run HubNet headlessly, but
@@ -362,65 +358,68 @@ class HubNetHeadlessServerExample {
       commands entered by the while the <code>go</code> command is
       executing will be run immediately after it finishes.
     <pre>
-<code>class HubNetHeadlessServerExample {
+class HubNetHeadlessServerExample {
 
-    static public void main(String[] args) {
-        HeadlessWorkspace workspace = org.nlogo.headless.HeadlessWorkspace.newInstance();
-        CommandLineThread commandLine = new CommandLineThread(workspace);
-        commandLine.start();
+  static public void main(String[] args) {
+    HeadlessWorkspace workspace = HeadlessWorkspace.newInstance();
+    CommandLineThread commandLine = new CommandLineThread(workspace);
+    commandLine.start();
+    try {
+      workspace.open(
+        &quot;models/HubNet Activities/Code Examples/Template.nlogo&quot;);
+      workspace.command(&quot;hubnet-reset&quot;);
+      workspace.command(&quot;setup&quot;);
+      while (true) {
+        workspace.command(&quot;go&quot;);
+        commandLine.runCommands();
+      }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  static class CommandLineThread extends Thread {
+    private final HeadlessWorkspace workspace;
+    private ArrayBlockingQueue&lt;String&gt; queuedCommands =
+        new ArrayBlockingQueue&lt;String&gt;(10);
+    public CommandLineThread(HeadlessWorkspace workspace) {
+      super(&quot;Command Line Thread&quot;);
+      this.workspace = workspace;
+    }
+    public void run() {
+      System.out.println(&quot;enter command&gt; &quot;);
+      while (true) {
         try {
-            workspace.open(&quot;models/HubNet Activities/Code Examples/Template.nlogo&quot;);
-            workspace.command(&quot;hubnet-reset&quot;);
-            workspace.command(&quot;setup&quot;);
-            while (true) {
-                workspace.command(&quot;go&quot;);
-                commandLine.runCommands();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+          queuedCommands.put(readLine());
         }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
     }
 
-    static class CommandLineThread extends Thread {
-        private final HeadlessWorkspace workspace;
-        private ArrayBlockingQueue&lt;String&gt; queuedCommands = new ArrayBlockingQueue&lt;String&gt;(10);
-
-        public CommandLineThread(HeadlessWorkspace workspace) {
-            super(&quot;Command Line Thread&quot;);
-            this.workspace = workspace;
+    private void runCommands() {
+      for (String command : queuedCommands) {
+        System.out.println(&quot;executing command: &quot; + command);
+        try {
+          workspace.command(command);
         }
-
-        public void run() {
-            System.out.println(&quot;enter command&gt; &quot;);
-            while (true) {
-                try {
-                    queuedCommands.put(readLine());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        catch (Exception e) {
+          e.printStackTrace();
         }
-
-        private void runCommands() {
-            for (String command : queuedCommands) {
-                System.out.println(&quot;executing command: &quot; + command);
-                try {
-                    workspace.command(command);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                System.out.print(&quot;enter command&gt; &quot;);
-            }
-            queuedCommands.clear();
-        }
-
-        private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        private String readLine() throws IOException {
-            return reader.readLine();
-        }
+        System.out.print(&quot;enter command&gt; &quot;);
+      }
+      queuedCommands.clear();
     }
+
+    private BufferedReader reader =
+        new BufferedReader(new InputStreamReader(System.in));
+    private String readLine() throws IOException {
+        return reader.readLine();
+    }
+  }
 }
-</code>
 </pre>
     <h2>
       <a name="example-embedding" id="example-embedding">Example
@@ -443,36 +442,34 @@ class HubNetHeadlessServerExample {
     <pre>
 import org.nlogo.lite.InterfaceComponent;
 public class Example3 {
-    public static void main(String[] argv) {
-        try 
-        {
-            final javax.swing.JFrame frame = new javax.swing.JFrame();
-            final InterfaceComponent comp = new InterfaceComponent(frame);
-            java.awt.EventQueue.invokeAndWait
-                ( new Runnable()
-                    { public void run() {
-                        frame.setSize(1000,700);
-                        frame.add(comp);
-                        frame.setVisible(true);
-                        try {
-                          comp.open
-                              (&quot;models/Sample Models/Earth Science/&quot;
-                               + &quot;Fire.nlogo&quot;);
-                        }
-                        catch(Exception ex) {
-                          ex.printStackTrace();
-                        }
-                    } } ) ;
-            comp.command(&quot;set density 62&quot;);
-            comp.command(&quot;random-seed 0&quot;);
-            comp.command(&quot;setup&quot;);
-            comp.command(&quot;repeat 50 [ go ]&quot;);
-            System.out.println(comp.report(&quot;burned-trees&quot;));
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+  public static void main(String[] argv) {
+    try {
+      final javax.swing.JFrame frame = new javax.swing.JFrame();
+      final InterfaceComponent comp = new InterfaceComponent(frame);
+      java.awt.EventQueue.invokeAndWait(
+        new Runnable() {
+          public void run() {
+            frame.setSize(1000,700);
+            frame.add(comp);
+            frame.setVisible(true);
+            try {
+              comp.open
+                  (&quot;models/Sample Models/Earth Science/&quot;
+                   + &quot;Fire.nlogo&quot;);
+            }
+            catch(Exception ex) {
+              ex.printStackTrace();
+            }}});
+      comp.command(&quot;set density 62&quot;);
+      comp.command(&quot;random-seed 0&quot;);
+      comp.command(&quot;setup&quot;);
+      comp.command(&quot;repeat 50 [ go ]&quot;);
+      System.out.println(comp.report(&quot;burned-trees&quot;));
     }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
 </pre>
     <p>
