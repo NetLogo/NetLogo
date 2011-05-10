@@ -61,9 +61,9 @@ InconePatchWhoseCentreIamOn_3D
 
 InconeInvalidInputs
   O> crt 1
-  T> ask patches in-cone -1 0 [set pcolor red] => ERROR IN-CONE cannot take a negative radius
-  T> ask patches in-cone 0 -1 [set pcolor red] => ERROR IN-CONE cannot take a negative angle
-  T> ask patches in-cone 0 361 [set pcolor red] => ERROR IN-CONE cannot take an angle greater than 360
+  T> ask patches in-cone -1 0 [set pcolor red] => ERROR IN-CONE cannot take a negative radius.
+  T> ask patches in-cone 0 -1 [set pcolor red] => ERROR IN-CONE cannot take a negative angle.
+  T> ask patches in-cone 0 361 [set pcolor red] => ERROR IN-CONE cannot take an angle greater than 360.
 
 InconeLargeRadiusDuplicationCheck
   O> crt 1

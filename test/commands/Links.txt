@@ -540,7 +540,7 @@ LinkCantChangeBreeds
   O> crt 2
   O> ask turtle 0 [ create-link-to turtle 1 [ set glob1 self ] ]
   [breed] of glob1 = links => true
-  O> ask glob1 [ set breed frogs ] => ERROR can't set BREED to a non-link-breed agentset
+  O> ask glob1 [ set breed frogs ] => ERROR You can't set BREED to a non-link-breed agentset.
 
 LinkEquality
   O> crt 3 [ create-links-with other turtles ]
@@ -593,10 +593,10 @@ LinkNeighborsUnbreeded
 
 LinksNotAllowed
  O> crt 2 [ create-links-with other turtles [ set glob1 self ] ]
- [towards glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead
- [towards-nowrap glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead
- [distance glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead
- [distance-nowrap glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead
+ [towards glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead.
+ [towards-nowrap glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead.
+ [distance glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead.
+ [distance-nowrap glob1] of turtle 0 => ERROR expected this to be a turtle or a patch but got a link instead.
  [distance turtle 0] of glob1 => ERROR this code can't be run by a link
  [neighbors] of glob1 => ERROR this code can't be run by a link
  O> move-to glob1 => ERROR you can't move-to a link

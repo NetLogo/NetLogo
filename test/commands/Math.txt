@@ -45,7 +45,7 @@ NotEqualBugsIFoundWhileTryingToPlayFrogger
   count turtles with [(tvar or tvar) != true] => 0
 
 DivideByZero
-  3 / count turtles => ERROR division by zero
+  3 / count turtles => ERROR Division by zero.
 
 IntegerExponentiation
   O> set glob1 2
