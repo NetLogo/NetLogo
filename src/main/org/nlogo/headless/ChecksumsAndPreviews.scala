@@ -124,18 +124,11 @@ object ChecksumsAndPreviews {
       fw.close()
     }
     def getRevisionNumber(modelPath: String): String = {
-      val revisionString = "Last Changed Rev: "
-      val cmds = Array("svn", "info", modelPath)
+      val cmds = Array("git", "log", "--pretty=format:%h", modelPath)
       val stdInput = new java.io.BufferedReader(
         new java.io.InputStreamReader(
           Runtime.getRuntime().exec(cmds).getInputStream))
-      var line = stdInput.readLine()
-      while(line != null) {
-        if (line.startsWith(revisionString))
-          return line.substring(revisionString.length)
-        line = stdInput.readLine()
-      }
-      "n/a"
+      stdInput.readLine().trim
     }
   }
 }
