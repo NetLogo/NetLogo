@@ -69,7 +69,7 @@ public final strictfp class _turtleset
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.type() != org.nlogo.agent.Turtle.class) {
-          throw new EngineException(context, this, I18N.errors().getNJava("org.nlogo.prim.etc ._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
+          throw new EngineException(context, this, I18N.errors().getNJava("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
               new String[]{this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)}));
         }
         for (AgentSet.Iterator iter2 = tempSet.iterator();

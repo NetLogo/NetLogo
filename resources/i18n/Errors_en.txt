@@ -60,7 +60,7 @@ org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet = You can''t set BREED t
 org.nlogo.agent.Protractor.noHeadingFromPointToSelf = No heading is defined from a point ({0},{1}) to that same point.
 org.nlogo.agent.Protractor.noHeadingFromAgentToSelf = No heading is defined from an agent to itself.
 
-org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Expected this to be a turtle or a patch but got a link instead.
+org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Expected a turtle or a patch but got a link.
 
 
 
@@ -155,8 +155,6 @@ org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inpu
 org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = You can't import drawing in 3D.
 
 
-org.nlogo.$comomon.expectedTurtleOrPatchButGotLink = Expected a turtle or a patch but got a link.
-
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = There is no heading of a link whose endpoints are in the same position.
 
 org.nlogo.prim.etc.$common.notThatManyAgentsExist = Requested {0} random agents from a set of only {1} agents.
@@ -176,3 +174,4 @@ org.nlogo.prim._askconcurrent.onlyObserverCanAskAllTurtles only the observer can
 org.nlogo.$common.thatTurtleIsDead = That turtle is dead.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.
+org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.

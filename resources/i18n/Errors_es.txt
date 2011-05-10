@@ -163,11 +163,7 @@ org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = entradas 
 
 org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = No se puede importar un dibujo en 3D.
 
-org.nlogo.$comomon.expectedTurtleOrPatchButGotLink = Se esperaba una tortuga o un patch, pero tiene un link.
-
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = No hay un heading de un link que tiene endpoints en el mismo lugar.
-
-
 
 org.nlogo.prim.etc.$common.notThatManyAgentsExist = Pidió a {0} agentes azar de un conjunto de sólo {1} agentes.
 org.nlogo.prim.etc._otherend.incorrectLink = {0} no esta vinculado con {1}.
@@ -185,3 +181,4 @@ org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} no esta permitido entre 
 org.nlogo.$common.thatTurtleIsDead = Ese tortuga es muerte.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = S\u00f3lo se pueden eliminar los archivos.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = No se puede eliminar un archivo inexistente.
+org.nlogo.workspace.DefaultFileManager.noOpenFile = No hay un archivo que esta abierto.

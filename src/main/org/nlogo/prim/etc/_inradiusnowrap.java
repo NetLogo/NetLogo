@@ -33,7 +33,7 @@ public final strictfp class _inradiusnowrap
       throws LogoException {
     if (sourceSet.type() == org.nlogo.agent.Link.class) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.$comomon.expectedTurtleOrPatchButGotLink"));
+          (context, this, I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
 
     }
     if (radius < 0) {

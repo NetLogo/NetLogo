@@ -96,7 +96,7 @@ RandomNOfWithLists
   n-of -1 [1 2 3] => ERROR First input to N-OF can't be negative.
   n-of 0 [] => []
   n-of 0 [1 2 3] => []
-  n-of 1 [] => ERROR requested 1 random items from a list of length 0
+  n-of 1 [] => ERROR Requested 1 random items from a list of length 0.
   n-of 1 [99] => [99]
   n-of 2 [1 2] => [1 2]
   sum n-values 20 [sum n-of 10 n-values 10 [?]] => 900

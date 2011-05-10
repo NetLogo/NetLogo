@@ -1,5 +1,6 @@
 package org.nlogo.prim.gui;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
@@ -12,7 +13,7 @@ public final strictfp class _inspectwithradius
     final double radius = argEvalDouble(context, 1);
     if (agent.id == -1) {
       throw new EngineException
-          (context, this, "that turtle is dead");
+          (context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
     }
     if (radius < 0 || radius > ((world.worldWidth() - 1) / 2)) {
       throw new EngineException

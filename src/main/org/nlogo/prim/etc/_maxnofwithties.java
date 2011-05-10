@@ -40,7 +40,7 @@ public final strictfp class _maxnofwithties
     int count = sourceSet.count();
     if (n > count) {
       throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist ",
+          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist",
               new String[]{Integer.toString(n), Integer.toString(count)}));
     }
     args[2].checkAgentSetClass(sourceSet, context);

@@ -1,5 +1,6 @@
 package org.nlogo.prim.threed;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -18,7 +19,7 @@ public final strictfp class _towardspitchnowrap
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     if (agent.id == -1) {
-      throw new EngineException(context, this, "that turtle is dead");
+      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
     }
     try {
       return newValidDouble
