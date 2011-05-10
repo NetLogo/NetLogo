@@ -14,14 +14,14 @@ class _userinput extends Reporter {
     val inputMessage = args(0).report(context)
     workspace match {
       case gw: GUIWorkspace =>
-	gw.updateUI()
-	val result = workspace.waitForResult(
+        gw.updateUI()
+        val result = workspace.waitForResult(
           new ReporterRunnable[String] {
-	    override def run() = {
-	      gw.view.mouseDown(false)
-	      new org.nlogo.swing.InputDialog(
+            override def run() = {
+              gw.view.mouseDown(false)
+              new org.nlogo.swing.InputDialog(
                 gw.getFrame, "User Input", Dump.logoObject(inputMessage),
-	        I18N.gui.fn).showInputDialog()
+                I18N.gui.fn).showInputDialog()
             }})
         Option(result).getOrElse(
           throw new org.nlogo.nvm.HaltException(true))
