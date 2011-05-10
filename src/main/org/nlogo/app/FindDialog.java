@@ -93,7 +93,7 @@ public strictfp class FindDialog
 
   /// INSTANCE CODE
 
-  //	 the text component to search
+  //     the text component to search
   protected javax.swing.text.JTextComponent target;
 
   // gui compoenents

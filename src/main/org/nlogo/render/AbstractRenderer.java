@@ -35,12 +35,12 @@ So, two conclusions:
     the issue in this code
 
   - but, more importantly, *DON'T* be careless about it yourself.  In
-	the most important parts of the code, for example the sizing and
-	positioning of turtles, the code is now very careful to do it
-	right.  (I hope I got it right!)  So don't break it.  And whenever
-	you are modifying or adding anything, please be very conscientious
-	about getting the calculations exactly right.  Let's only move
-	towards perfection... never away.
+    the most important parts of the code, for example the sizing and
+    positioning of turtles, the code is now very careful to do it
+    right.  (I hope I got it right!)  So don't break it.  And whenever
+    you are modifying or adding anything, please be very conscientious
+    about getting the calculations exactly right.  Let's only move
+    towards perfection... never away.
 
 ST 8/19/05
 

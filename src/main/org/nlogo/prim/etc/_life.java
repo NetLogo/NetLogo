@@ -10,12 +10,12 @@ to go
   ask patches
     [ set live-neighbors count neighbors with [living?] ] ]
   ask patches
-	[ ifelse live-neighbors = 3
-		[ set living? true
-		  set pcolor fgcolor ]
-		[ if live-neighbors != 2
-			[ set living? false
-			  set pcolor bgcolor ] ] ] ]
+    [ ifelse live-neighbors = 3
+        [ set living? true
+          set pcolor fgcolor ]
+        [ if live-neighbors != 2
+            [ set living? false
+              set pcolor bgcolor ] ] ] ]
 */
 
 public final strictfp class _life
