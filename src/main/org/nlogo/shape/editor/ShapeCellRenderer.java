@@ -96,4 +96,4 @@ strictfp class ShapeCellRenderer
     return this;
   }
 
-}		
+}       

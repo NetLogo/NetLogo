@@ -308,7 +308,7 @@ public strictfp class VectorShape
     // ellipses aren't supported right now - SAB/ST 6/11/04
     //else if( line.startsWith( "Ellipse" ) )
     //{
-    //	element = Ellipse.parseEllipse( line ) ;
+    //  element = Ellipse.parseEllipse( line ) ;
     //}
     else {
       throw new IllegalStateException

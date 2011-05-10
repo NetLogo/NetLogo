@@ -27,15 +27,15 @@ strictfp class AggregateDrawingView
     // I had tried to do this to control the z-ordering of the
     // items on screen, but it didn't work... not sure why...
     // - ST 12/14/04, 10/11/05
-    // 		if( figure instanceof ConnectorConnection ||
-    // 			figure instanceof BindingConnection )
-    // 		{
-    // 			drawing().sendToLayer( figure , -1 ) ;
-    // 		}
-    // 		else
-    // 		{
-    // 			drawing().sendToLayer( figure , Integer.MAX_VALUE ) ;
-    // 		}
+    //      if( figure instanceof ConnectorConnection ||
+    //          figure instanceof BindingConnection )
+    //      {
+    //          drawing().sendToLayer( figure , -1 ) ;
+    //      }
+    //      else
+    //      {
+    //          drawing().sendToLayer( figure , Integer.MAX_VALUE ) ;
+    //      }
 
     return figure;
   }

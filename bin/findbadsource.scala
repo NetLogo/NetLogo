@@ -23,7 +23,7 @@ for{path <- shell("find . -name \\*.java -or -name \\*.scala")
     problems += "Missing newline at eof"
   if(contents.contains('\r'))
     problems += "Carriage return character(s) found"
-  if(path.endsWith(".scala") && contents.contains('\t'))
+  if(contents.contains('\t'))
     problems += "Tab character(s) found"
   if(problems.nonEmpty) {
     println(path)

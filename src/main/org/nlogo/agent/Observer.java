@@ -32,7 +32,7 @@ public strictfp class Observer
           // We do not populate the value constraints again.  When the widgets get compiled
           // they will be repopulated by the Workspace.  Otherwise, we end up with old
           // constraints around if you swap names of variables -- CLB
-          //			newcons[ newpos ] = oldcons[ i ];
+          //            newcons[ newpos ] = oldcons[ i ];
         }
       }
     }

@@ -49,4 +49,4 @@ strictfp class ColorCellRenderer
     return this;
   }
 
-}		
+}       

@@ -12,14 +12,14 @@ import org.nlogo.nvm.Syntax;
 /*
 to go
   if not any patches with [burning?]
-	[ stop ]
+    [ stop ]
   ask patches with [pcolor = green]
-	[ if any neighbors4 with [burned?]
-		[ set pcolor red
-		  set burned-trees burned-trees + 1 ] ]
+    [ if any neighbors4 with [burned?]
+        [ set pcolor red
+          set burned-trees burned-trees + 1 ] ]
   ask patches with [burning?]
-	[ set burned? true
-	  set pcolor pcolor - 0.3 ]
+    [ set burned? true
+      set pcolor pcolor - 0.3 ]
 end
 
 to-report burning? ;; patch procedure

@@ -439,16 +439,16 @@ strictfp class ShapeView
       }
       // curves are not currently supported - ST 6/11/04
       //case VectorShape.CURVE:
-      //	return new Curve
-      //		( start, last, editorDialog.getElementColor() ) ;
+      //    return new Curve
+      //        ( start, last, editorDialog.getElementColor() ) ;
       else if (editorDialog.getElementType() == Polygon.class) {
         return new Polygon
             (start, editorDialog.getElementColor());
       }
       // ellipses are not currently supported - ST 6/11/04
       //case VectorShape.ELLIPSE:
-      //	return new Ellipse
-      //		( start, last, editorDialog.getElementColor() ) ;
+      //    return new Ellipse
+      //        ( start, last, editorDialog.getElementColor() ) ;
     }
     return null;
   }

@@ -405,9 +405,9 @@ public final strictfp class DefaultFileManager
   // see ticket #964 - ST 6/9/10
   // @SuppressWarnings("deprecation")
   // private static java.net.URL toURL( java.io.File file )
-  // 	throws java.net.MalformedURLException
+  //    throws java.net.MalformedURLException
   // {
-  // 	return file.toURL() ;
+  //    return file.toURL() ;
   // }
 
 }

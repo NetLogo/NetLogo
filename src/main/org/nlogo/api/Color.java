@@ -201,9 +201,9 @@ public final strictfp class Color {
   // input: any
   // output: 0.0 or 5.0 or 15.0 or ... or 135.0
   public static double findCentralColorNumber(double color)   /* all shades of a color return the same color
-															* i.e.  blue, blue - 5, blue + 4.9999 will return
-															* the same thing
-															*/ {
+                                                            * i.e.  blue, blue - 5, blue + 4.9999 will return
+                                                            * the same thing
+                                                            */ {
     if (color < 0 || color >= MAX_COLOR) {
       color = modulateDouble(color);
     }
