@@ -1,176 +1,124 @@
-package org.nlogo.gl.view;
+package org.nlogo.gl.view
 
-import org.nlogo.api.Agent;
-import org.nlogo.api.I18N;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.{ Agent, I18N, Perspective }
+import java.awt.event.{ ActionEvent, ActionListener }
 
-strictfp class ViewControlToolBar
+class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     extends javax.swing.JToolBar {
 
-  private final MouseMotionHandler inputHandler;
+  val orbitAction =
+    new MovementAction(I18N.gui.get("view.3d.orbit"), View.Mode.ORBIT)
+  val zoomAction =
+    new MovementAction(I18N.gui.get("view.3d.zoom"), View.Mode.ZOOM)
+  val moveAction =
+    new MovementAction(I18N.gui.get("view.3d.move"), View.Mode.TRANSLATE)
+  val interactAction =
+    new MovementAction(I18N.gui.get("view.3d.interact"), View.Mode.INTERACT)
 
-  private final javax.swing.JTextField status;
-  private final javax.swing.JToggleButton orbitButton;
-  private final javax.swing.JToggleButton zoomButton;
-  private final javax.swing.JToggleButton moveButton;
-  private final javax.swing.JToggleButton interactButton;
+  val fullScreenWarning = I18N.gui.get("view.3d.fullScreenWarning")
 
-  private final javax.swing.AbstractAction ORBIT_ACTION =
-      new MovementAction(I18N.gui().get("view.3d.orbit"), View.Mode.ORBIT);
-  private final javax.swing.AbstractAction ZOOM_ACTION =
-      new MovementAction(I18N.gui().get("view.3d.zoom"), View.Mode.ZOOM);
-  private final javax.swing.AbstractAction MOVE_ACTION =
-      new MovementAction(I18N.gui().get("view.3d.move"), View.Mode.TRANSLATE);
-  private final javax.swing.AbstractAction INTERACT_ACTION =
-      new MovementAction(I18N.gui().get("view.3d.interact"), View.Mode.INTERACT);
+  val status = new org.nlogo.swing.SelectableJLabel("")
+  status.setFont(status.getFont.deriveFont(java.awt.Font.BOLD))
 
-  private static final String FULLSCREEN_WARNING = I18N.gui().get("view.3d.fullScreenWarning");
-
-  public ViewControlToolBar(final View view, MouseMotionHandler inputHandler) {
-    super();
-
-    this.inputHandler = inputHandler;
-
-    setFloatable(false);
-
-    javax.swing.ButtonGroup group = new javax.swing.ButtonGroup();
-
-    orbitButton = new javax.swing.JToggleButton(ORBIT_ACTION);
-    add(orbitButton);
-    group.add(orbitButton);
-
-    zoomButton = new javax.swing.JToggleButton(ZOOM_ACTION);
-    add(zoomButton);
-    group.add(zoomButton);
-
-    moveButton = new javax.swing.JToggleButton(MOVE_ACTION);
-    add(moveButton);
-    group.add(moveButton);
-
-    interactButton = new javax.swing.JToggleButton(INTERACT_ACTION);
-    if (!view.viewManager.workspace.world.program().is3D) {
-      add(interactButton);
-      group.add(interactButton);
+  setFloatable(false)
+  val group = new javax.swing.ButtonGroup
+  val orbitButton = new javax.swing.JToggleButton(orbitAction)
+  add(orbitButton)
+  group.add(orbitButton)
+  val zoomButton = new javax.swing.JToggleButton(zoomAction)
+  add(zoomButton)
+  group.add(zoomButton)
+  val moveButton = new javax.swing.JToggleButton(moveAction)
+  add(moveButton)
+  group.add(moveButton)
+  val interactButton = new javax.swing.JToggleButton(interactAction)
+  if (!view.viewManager.workspace.world.program.is3D) {
+    add(interactButton)
+    group.add(interactButton)
+  }
+  add(javax.swing.Box.createHorizontalStrut(8))
+  add(status)
+  add(javax.swing.Box.createHorizontalGlue)
+  add(javax.swing.Box.createHorizontalStrut(8))
+  val resetButton = new javax.swing.JButton(I18N.gui.get("view.3d.resetPerspective"))
+  resetButton.addActionListener(new ActionListener {
+    override def actionPerformed(e: ActionEvent) {
+      view.resetPerspective()
     }
-
-    add(javax.swing.Box.createHorizontalStrut(8));
-
-    status = new org.nlogo.swing.SelectableJLabel("");
-    status.setFont(status.getFont().deriveFont(java.awt.Font.BOLD));
-    add(status);
-
-    add(javax.swing.Box.createHorizontalGlue());
-    add(javax.swing.Box.createHorizontalStrut(8));
-
-    final javax.swing.JButton resetButton = new javax.swing.JButton(I18N.gui().get("view.3d.resetPerspective"));
-    resetButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent e) {
-        view.resetPerspective();
-      }
-    });
-    add(resetButton);
-
-    add(javax.swing.Box.createHorizontalStrut(8));
-
-    final javax.swing.JButton fullscreenButton = new javax.swing.JButton(I18N.gui().get("view.3d.fullScreen"));
-    fullscreenButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent e) {
-        String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
-        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
-
-        if (!isWindows || view.viewManager.warned() ||
-            (0 == org.nlogo.swing.OptionDialog.show
-                (view, I18N.gui().get("common.messages.warning"), FULLSCREEN_WARNING,
-                    options))) {
-          view.viewManager.setFullscreen(true);
-          view.viewManager.warned(true);
+  })
+  add(resetButton)
+  add(javax.swing.Box.createHorizontalStrut(8))
+  val fullScreenButton = new javax.swing.JButton(I18N.gui.get("view.3d.fullScreen"))
+  fullScreenButton.addActionListener(
+    new ActionListener {
+      override def actionPerformed(e: ActionEvent) {
+        val options = Array[AnyRef](I18N.gui.get("common.buttons.continue"),
+                                    I18N.gui.get("common.buttons.cancel"))
+        val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
+        if (!isWindows || view.viewManager.warned ||
+          (0 == org.nlogo.swing.OptionDialog.show(
+            view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options))) {
+          view.viewManager.setFullscreen(true)
+          view.viewManager.warned(true)
         }
       }
-    });
-    add(fullscreenButton);
+    })
+  add(fullScreenButton)
+  add(javax.swing.Box.createHorizontalStrut(16))
+  orbitButton.doClick
+  add(javax.swing.Box.createHorizontalStrut(8))
+  setButtonsEnabled(true)
 
-    add(javax.swing.Box.createHorizontalStrut(16));
+  private var perspective: Perspective = null
+  private var agent: Agent = null
 
-    orbitButton.doClick();
-
-
-    add(javax.swing.Box.createHorizontalStrut(8));
-
-    setButtonsEnabled(true);
-  }
-
-  private Perspective perspective;
-  private Agent agent;
-
-  void setStatus(Perspective perspective, Agent agent) {
+  def setStatus(perspective: Perspective, agent: Agent) {
     // don't update if perspective didn't change
-    if (this.perspective != perspective ||
-        (agent != null && !agent.equals(this.agent))) {
-      this.perspective = perspective;
-      this.agent = agent;
-      switch (perspective) {
-        case OBSERVE:
-          status.setText("");
-          setButtonsEnabled(true);
-          break;
-
-        case WATCH:
-          status.setText(I18N.gui().get("view.3d.watching") + agent.toString());
-          ORBIT_ACTION.setEnabled(true);
-          ZOOM_ACTION.setEnabled(true);
-          MOVE_ACTION.setEnabled(false);
-          if (moveButton.isSelected()) {
-            orbitButton.doClick();
+    if (this.perspective != perspective || (agent != null && agent != this.agent)) {
+      this.perspective = perspective
+      this.agent = agent
+      perspective match {
+        case Perspective.OBSERVE =>
+          status.setText("")
+          setButtonsEnabled(true)
+        case Perspective.WATCH =>
+          status.setText(I18N.gui.get("view.3d.watching") + agent.toString)
+          orbitAction.setEnabled(true)
+          zoomAction.setEnabled(true)
+          moveAction.setEnabled(false)
+          if (moveButton.isSelected)
+            orbitButton.doClick()
+        case Perspective.RIDE =>
+          status.setText(I18N.gui.get("view.3d.riding") + agent.toString)
+          setButtonsEnabled(false)
+          zoomAction.setEnabled(true)
+          if (!interactButton.isSelected && !zoomButton.isSelected)
+            zoomButton.doClick()
+        case Perspective.FOLLOW =>
+          status.setText(I18N.gui.get("view.3d.following") + agent.toString)
+          setButtonsEnabled(false)
+          zoomAction.setEnabled(true)
+          if (!interactButton.isSelected && !zoomButton.isSelected) {
+            zoomButton.doClick()
           }
-          break;
-
-        case RIDE:
-          status.setText(I18N.gui().get("view.3d.riding") + agent.toString());
-          setButtonsEnabled(false);
-          ZOOM_ACTION.setEnabled(true);
-          if ((!interactButton.isSelected()) &&
-              (!zoomButton.isSelected())) {
-            zoomButton.doClick();
-          }
-          break;
-
-        case FOLLOW:
-          status.setText(I18N.gui().get("view.3d.following") + agent.toString());
-          setButtonsEnabled(false);
-          ZOOM_ACTION.setEnabled(true);
-          if ((!interactButton.isSelected()) &&
-              (!zoomButton.isSelected())) {
-            zoomButton.doClick();
-          }
-          break;
-
-        default:
-          throw new IllegalStateException();
       }
     }
   }
 
-  private void setButtonsEnabled(boolean enabled) {
-    ORBIT_ACTION.setEnabled(enabled);
-    ZOOM_ACTION.setEnabled(enabled);
-    MOVE_ACTION.setEnabled(enabled);
+  private def setButtonsEnabled(enabled: Boolean) {
+    orbitAction.setEnabled(enabled)
+    zoomAction.setEnabled(enabled)
+    moveAction.setEnabled(enabled)
   }
 
-  private void setMovementMode(View.Mode mode) {
-    inputHandler.setMovementMode(mode);
+  private def setMovementMode(mode: View.Mode) {
+    inputHandler.setMovementMode(mode)
   }
 
-  private final class MovementAction
-      extends javax.swing.AbstractAction {
-    final View.Mode mode;
-
-    public MovementAction(String label, View.Mode mode) {
-      super(label);
-      this.mode = mode;
-    }
-
-    public void actionPerformed(java.awt.event.ActionEvent e) {
-      setMovementMode(mode);
+  class MovementAction(label: String, mode: View.Mode)
+      extends javax.swing.AbstractAction(label) {
+    override def actionPerformed(e: ActionEvent) {
+      setMovementMode(mode)
     }
   }
 }
