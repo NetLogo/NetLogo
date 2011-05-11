@@ -103,15 +103,15 @@ $(SCALA_EXTENSION_MAKEFILES): extensions/Makefile-scala.mk
 	@echo "@@@ building" $@
 	cp extensions/Makefile-scala.mk $@
 
-$(JAVA_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/scala-library-trimmed.jar
+$(JAVA_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar tmp/scala-library-trimmed.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
-$(SCALA_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/scala-library-trimmed.jar
+$(SCALA_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar tmp/scala-library-trimmed.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
-$(GITHUB_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar BehaviorSpace.jar tmp/scala-library-trimmed.jar extensions/qtj/QTJava.jar
+$(GITHUB_EXTENSIONS): $(EXTENSION_MAKEFILES) NetLogo.jar tmp/scala-library-trimmed.jar extensions/qtj/QTJava.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
