@@ -93,7 +93,6 @@ extensions: $(EXTENSIONS)
 
 JAVA_EXTENSION_MAKEFILES=$(patsubst %,%Makefile,$(foreach foo,$(JAVA_EXTENSIONS),$(dir $(foo))))
 SCALA_EXTENSION_MAKEFILES=$(patsubst %,%Makefile,$(foreach foo,$(SCALA_EXTENSIONS),$(dir $(foo))))
-EXTENSION_MAKEFILES=$(JAVA_EXTENSION_MAKEFILES) $(SCALA_EXTENSION_MAKEFILES)
 
 $(JAVA_EXTENSION_MAKEFILES): extensions/Makefile-java.mk
 	@echo "@@@ building" $@
@@ -103,15 +102,15 @@ $(SCALA_EXTENSION_MAKEFILES): extensions/Makefile-scala.mk
 	@echo "@@@ building" $@
 	cp extensions/Makefile-scala.mk $@
 
-$(JAVA_EXTENSIONS): $(EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
+$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
-$(SCALA_EXTENSIONS): $(EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
+$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
 
-$(GITHUB_EXTENSIONS): $(EXTENSION_MAKEFILES) extensions/qtj/QTJava.jar | NetLogo.jar tmp/scala-library-trimmed.jar
+$(GITHUB_EXTENSIONS): extensions/qtj/QTJava.jar | NetLogo.jar tmp/scala-library-trimmed.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
@@ -137,7 +136,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
-	rm -f $(EXTENSIONS) $(EXTENSION_MAKEFILES)
+	rm -f $(EXTENSIONS) $(JAVA_EXTENSION_MAKEFILES) $(SCALA_EXTENSION_MAKEFILES)
 	rm -rf extensions/*/build extensions/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/javadoc
