@@ -21,6 +21,7 @@ tmp/
 # subprojects
 /Mathematica-Link/
 /extensions/bitmap/
+/extensions/gis/
 /extensions/gogo/
 /extensions/matrix/
 /extensions/profiler/
@@ -40,7 +41,6 @@ tmp/
 /docs/Perspective Example.png
 /docs/dict/
 /docs/infotab.html
-/extensions/gis/gis-dist.zip
 /lib/
 /models/index.txt
 /out/
