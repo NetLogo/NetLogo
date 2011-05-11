@@ -110,22 +110,15 @@ $(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-librar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
-$(GITHUB_EXTENSIONS): extensions/qtj/QTJava.jar | NetLogo.jar tmp/scala-library-trimmed.jar
+$(GITHUB_EXTENSIONS): | NetLogo.jar tmp/scala-library-trimmed.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
+	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
+	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
-
-extensions/qtj/QTJava.jar:
-	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
-ifneq (,$(findstring Darwin,$(shell uname)))
-	if [ ! -f extensions/qtj/QTJava.jar ] ; then cp /System/Library/Java/Extensions/QTJava.zip extensions/qtj/QTJava.jar ; fi
-else
-	if [ ! -f extensions/qtj/QTJava.jar ] ; then cp ~/QTJava.jar extensions/qtj/QTJava.jar ; fi
-endif
 
 ### misc targets
 
