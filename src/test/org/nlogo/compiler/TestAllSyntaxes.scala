@@ -428,9 +428,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_moviestart string,OTPL,null,0,1,1
                     |_nodisplay ,OTPL,null,0,0,0
                     |_observercode ,O---,null,0,0,0
-                    |_openindex ,O---,null,0,0,0 *
-                    |_opennext ,O---,null,0,0,0 *
-                    |_openprevious ,O---,null,0,0,0 *
                     |_outputprint anything,OTPL,null,0,1,1
                     |_outputshow anything,OTPL,null,0,1,1
                     |_outputtype anything,OTPL,null,0,1,1

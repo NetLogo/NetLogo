@@ -45,9 +45,6 @@ C __magic-open etc._magicopen
 C __make-preview etc._makepreview
 C __mkdir etc._mkdir
 C __observercode etc._observercode
-C __open-index gui._openindex
-C __open-next gui._opennext
-C __open-previous gui._openprevious
 C __parallel-update etc._parallelupdate
 C __patchcode etc._patchcode
 C __plot-pen-hide plot._plotpenhide
