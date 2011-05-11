@@ -88,7 +88,7 @@ public strictfp class ViewManager
 
     try {
       observerView = new ObserverView(this, null);
-      observerView.canvas.addKeyListener(keyListener);
+      observerView.canvas().addKeyListener(keyListener);
       currentView = observerView;
       org.nlogo.awt.Utils.moveNextTo
           (observerView, appWindow);
@@ -125,8 +125,8 @@ public strictfp class ViewManager
       }
       currentView.setVisible(true);
       appWindow.setVisible(false);
-      fullscreenView = new FullscreenView(this, currentView.renderer);
-      fullscreenView.canvas.addKeyListener(keyListener);
+      fullscreenView = new FullscreenView(this, currentView.renderer());
+      fullscreenView.canvas().addKeyListener(keyListener);
       fullscreenView.init();
       observerView.setVisible(false);
       currentView = fullscreenView;
@@ -213,7 +213,7 @@ public strictfp class ViewManager
     this.antiAliasing = antiAliasing;
     if (currentView != null) {
       world.markPatchColorsDirty();
-      observerView = new ObserverView(this, currentView.renderer, currentView.getBounds());
+      observerView = new ObserverView(this, currentView.renderer(), currentView.getBounds());
       currentView.dispose();
       currentView = observerView;
       currentView.setVisible(true);
@@ -297,33 +297,33 @@ public strictfp class ViewManager
 
   public double mouseXCor() {
     if (currentView != null) {
-      return currentView.renderer.mouseXCor();
+      return currentView.renderer().mouseXCor();
     }
     return 0.0f;
   }
 
   public double mouseYCor() {
     if (currentView != null) {
-      return currentView.renderer.mouseYCor();
+      return currentView.renderer().mouseYCor();
     }
     return 0.0f;
   }
 
   public void resetMouseCors() {
     if (currentView != null) {
-      currentView.renderer.resetMouseCors();
+      currentView.renderer().resetMouseCors();
     }
   }
 
   public boolean mouseDown() {
     if (currentView != null) {
-      return currentView.renderer.mouseDown();
+      return currentView.renderer().mouseDown();
     }
     return false;
   }
 
   public boolean mouseInside() {
-    return currentView.renderer.mouseInside();
+    return currentView.renderer().mouseInside();
   }
 
   public void shapeChanged(org.nlogo.api.Shape shape) {
@@ -340,7 +340,7 @@ public strictfp class ViewManager
   public void addCustomShapes(String filename)
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
-    currentView.renderer.addCustomShapes(filename);
+    currentView.renderer().addCustomShapes(filename);
   }
 
   public void displaySwitch(boolean on) {

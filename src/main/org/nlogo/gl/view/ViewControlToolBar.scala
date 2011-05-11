@@ -2,18 +2,19 @@ package org.nlogo.gl.view
 
 import org.nlogo.api.{ Agent, I18N, Perspective }
 import java.awt.event.{ ActionEvent, ActionListener }
+import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
 
 class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     extends javax.swing.JToolBar {
 
   val orbitAction =
-    new MovementAction(I18N.gui.get("view.3d.orbit"), View.Mode.ORBIT)
+    new MovementAction(I18N.gui.get("view.3d.orbit"), OrbitMode)
   val zoomAction =
-    new MovementAction(I18N.gui.get("view.3d.zoom"), View.Mode.ZOOM)
+    new MovementAction(I18N.gui.get("view.3d.zoom"), ZoomMode)
   val moveAction =
-    new MovementAction(I18N.gui.get("view.3d.move"), View.Mode.TRANSLATE)
+    new MovementAction(I18N.gui.get("view.3d.move"), TranslateMode)
   val interactAction =
-    new MovementAction(I18N.gui.get("view.3d.interact"), View.Mode.INTERACT)
+    new MovementAction(I18N.gui.get("view.3d.interact"), InteractMode)
 
   val fullScreenWarning = I18N.gui.get("view.3d.fullScreenWarning")
 
@@ -111,11 +112,11 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     moveAction.setEnabled(enabled)
   }
 
-  private def setMovementMode(mode: View.Mode) {
+  private def setMovementMode(mode: Mode) {
     inputHandler.setMovementMode(mode)
   }
 
-  class MovementAction(label: String, mode: View.Mode)
+  class MovementAction(label: String, mode: Mode)
       extends javax.swing.AbstractAction(label) {
     override def actionPerformed(e: ActionEvent) {
       setMovementMode(mode)

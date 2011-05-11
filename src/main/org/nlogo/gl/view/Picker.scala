@@ -122,7 +122,6 @@ class Picker(view: View) extends PickListener with ActionListener {
     val observer = view.viewManager.world.observer
     def update() {
       view.signalViewUpdate()
-      view.updatePerspectiveLabel()
     }
     item.action match {
       case Inspect =>

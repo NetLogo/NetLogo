@@ -1,25 +1,34 @@
 package org.nlogo.gl.view
 
-import View.Mode
 import org.nlogo.api.Perspective
 import java.awt.event.{ MouseEvent, MouseWheelEvent }
 import org.nlogo.awt.Utils.button1Mask
+
+object MouseMotionHandler {
+  sealed trait Mode
+  case object OrbitMode extends Mode
+  case object ZoomMode extends Mode
+  case object TranslateMode extends Mode
+  case object InteractMode extends Mode
+}
 
 class MouseMotionHandler(view: View)
 extends java.awt.event.MouseListener
 with java.awt.event.MouseMotionListener
 with java.awt.event.MouseWheelListener {
 
-  private var movementMode = Mode.ORBIT
+  import MouseMotionHandler._
+
+  private var movementMode: Mode = OrbitMode
   private var prevMouseX, prevMouseY = 0
   val world = view.viewManager.world
 
   def setMovementMode(mode: Mode) {
-    if (mode == Mode.INTERACT) {
+    if (mode == InteractMode) {
       view.renderer.setMouseMode(true)
       view.signalViewUpdate()
     }
-    else if (movementMode == Mode.INTERACT)
+    else if (movementMode == InteractMode)
       view.renderer.setMouseMode(false)
     movementMode = mode
   }
@@ -27,19 +36,19 @@ with java.awt.event.MouseWheelListener {
   // MouseListener
 
   def mouseEntered(evt: MouseEvent) {
-    if (movementMode == Mode.INTERACT)
+    if (movementMode == InteractMode)
       view.renderer.mouseInside(evt.getX, evt.getY)
   }
 
   def mouseExited(evt: MouseEvent) {
-    if (movementMode == Mode.INTERACT)
+    if (movementMode == InteractMode)
       view.renderer.mouseInside(evt.getX, evt.getY)
   }
 
   def mousePressed(evt: MouseEvent) {
     prevMouseX = evt.getX
     prevMouseY = evt.getY
-    if (!evt.isPopupTrigger && movementMode == Mode.INTERACT && button1Mask(evt))
+    if (!evt.isPopupTrigger && movementMode == InteractMode && button1Mask(evt))
       view.renderer.mouseDown(true)
     else {
       if (evt.isPopupTrigger)
@@ -50,7 +59,7 @@ with java.awt.event.MouseWheelListener {
 
   def mouseReleased(evt: MouseEvent) {
     view.renderer.showCrossHairs(false)
-    if (!evt.isPopupTrigger && (movementMode == Mode.INTERACT) && button1Mask(evt))
+    if (!evt.isPopupTrigger && (movementMode == InteractMode) && button1Mask(evt))
       view.renderer.mouseDown(false)
     else if (evt.isPopupTrigger)
       view.doPopup(evt)
@@ -81,7 +90,7 @@ with java.awt.event.MouseWheelListener {
   /// Implementation of java.awt.event.MouseMotionListener
 
   def mouseDragged(evt: MouseEvent) {
-    if (movementMode == Mode.INTERACT) {
+    if (movementMode == InteractMode) {
       // we skip all the unnecessary computations below because it drastically slows down the
       // mouse updates jrn 5/20/05
       view.renderer.mouseDown(true)
@@ -93,8 +102,8 @@ with java.awt.event.MouseWheelListener {
 
   private def handleDrag(evt: MouseEvent) {
     val mode =
-      if (evt.isAltDown) Mode.TRANSLATE
-      else if (evt.isShiftDown) Mode.ZOOM
+      if (evt.isAltDown) TranslateMode
+      else if (evt.isShiftDown) ZoomMode
       else movementMode
     val x = evt.getX
     val y = evt.getY
@@ -117,23 +126,25 @@ with java.awt.event.MouseWheelListener {
     }
     else {
       mode match {
-        case Mode.ORBIT =>
+        case OrbitMode =>
           observer.orbitRight(-thetaX)
           observer.orbitUp(-thetaY)
-        case Mode.ZOOM =>
+        case ZoomMode =>
           if (thetaY < dist)
             observer.oxyandzcor(oxcor + (thetaY * observer.dx),
                                 oycor + (thetaY * observer.dy),
                                 ozcor - (thetaY * observer.dz))
-        case Mode.TRANSLATE =>
+        case TranslateMode =>
           observer.translate(thetaX, thetaY)
+        case InteractMode =>
+          // do nothing
       }
       view.signalViewUpdate()
     }
   }
 
   def mouseMoved(evt: MouseEvent) {
-    if (movementMode == Mode.INTERACT) {
+    if (movementMode == InteractMode) {
       view.renderer.setMouseCors(evt.getPoint)
       view.renderer.mouseInside(evt.getX, evt.getY)
     }
