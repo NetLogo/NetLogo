@@ -1773,8 +1773,15 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 1
           ALOAD 0
           INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
-          LDC "org.nlogo.$common.thatTurtleIsDead"
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
+          LDC "org.nlogo.$common.thatAgentIsDead"
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
@@ -2409,8 +2416,15 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 1
           ALOAD 0
           INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
-          LDC "org.nlogo.$common.thatTurtleIsDead"
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
+          LDC "org.nlogo.$common.thatAgentIsDead"
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
@@ -3268,8 +3282,15 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           ALOAD 0
           INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
-          LDC "org.nlogo.$common.thatTurtleIsDead"
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
+          LDC "org.nlogo.$common.thatAgentIsDead"
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
@@ -5065,8 +5086,15 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           ALOAD 0
           INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
-          LDC "org.nlogo.$common.thatTurtleIsDead"
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
+          LDC "org.nlogo.$common.thatAgentIsDead"
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
