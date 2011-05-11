@@ -26,6 +26,7 @@ trait Jars extends DefaultProject {
   // it would be nicer if these were separate tasks - ST 3/29/11
   lazy val alljars =
     fileTask(jarPaths from (Set(java5Path) ++ ("project" / "build" / "proguard" * "*.txt").get)) {
+      jarPaths.map(_.asFile.delete()) // don't risk updating existing, just start fresh
       build("main"); addManifest("NetLogo", "manifest")
       build("hubnet"); addManifest("HubNet", "manifesthubnet")
       build("lite")
