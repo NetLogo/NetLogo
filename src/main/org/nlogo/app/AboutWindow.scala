@@ -107,8 +107,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       system.setText(staticInfo
               + SysInfo.getMemoryInfoString + "\n\n"
               + SysInfo.getJOGLInfoString + "\n"
-              + SysInfo.getGLInfoString + "\n"
-              + "SVN revision: " + SysInfo.getSVNInfoString + "\n")
+              + SysInfo.getGLInfoString + "\n")
       graphicsInfo = newGraphicsInfo
       system.setSelectionStart(start)
       system.setSelectionEnd(end)

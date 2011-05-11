@@ -7,43 +7,39 @@ import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _turtleorlinkvariable
-	extends Reporter
-{
-	public String varName = "" ;
-	public _turtleorlinkvariable( String varName )
-	{
-		this.varName = varName ;
-	}
-	@Override public Syntax syntax()
-	{
-		return Syntax.reporterSyntax
-			( Syntax.TYPE_WILDCARD | Syntax.TYPE_REFERENCE ,
-			  "-T-L" ) ;
-	}
-	@Override public String toString()
-	{
-		if( world != null )
-		{
-			return super.toString() + ":" + varName ;
-		}
-		else
-		{
-			return super.toString() + ":" + varName ;
-		}
-	}
-	@Override public Object report( Context context ) throws LogoException
-	{
-		return report_1( context ) ;
-	}
-	public Object report_1( Context context ) throws LogoException
-	{
-		try
-		{
-			return context.agent.getTurtleOrLinkVariable( varName ) ;
-		}
-		catch( org.nlogo.api.AgentException ex )
-		{
-			throw new EngineException( context , this , ex.getMessage() ) ;
-		}
-	}
+    extends Reporter {
+  public String varName = "";
+
+  public _turtleorlinkvariable(String varName) {
+    this.varName = varName;
+  }
+
+  @Override
+  public Syntax syntax() {
+    return Syntax.reporterSyntax
+        (Syntax.TYPE_WILDCARD | Syntax.TYPE_REFERENCE,
+            "-T-L");
+  }
+
+  @Override
+  public String toString() {
+    if (world != null) {
+      return super.toString() + ":" + varName;
+    } else {
+      return super.toString() + ":" + varName;
+    }
+  }
+
+  @Override
+  public Object report(Context context) throws LogoException {
+    return report_1(context);
+  }
+
+  public Object report_1(Context context) throws LogoException {
+    try {
+      return context.agent.getTurtleOrLinkVariable(varName);
+    } catch (org.nlogo.api.AgentException ex) {
+      throw new EngineException(context, this, ex.getMessage());
+    }
+  }
 }

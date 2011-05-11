@@ -31,8 +31,8 @@ IsLinkBreed
 SetBreedToNonBreed
   O> crt 1 [ set breed turtles ]
   O> crt 1 [ set breed frogs ]
-  O> crt 1 [ set breed patches ] => ERROR can't set BREED to a non-breed agentset
-  O> crt 1 [ set breed turtles with [true] ] => ERROR can't set BREED to a non-breed agentset
-  O> crt 1 [ set breed links ] => ERROR can't set BREED to a non-breed agentset
-  O> crt 1 [ set breed directed-links ] => ERROR can't set BREED to a non-breed agentset
+  O> crt 1 [ set breed patches ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed turtles with [true] ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed links ] => ERROR You can't set BREED to a non-breed agentset.
+  O> crt 1 [ set breed directed-links ] => ERROR You can't set BREED to a non-breed agentset.
 

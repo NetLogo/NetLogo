@@ -17,7 +17,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       testCommand("ask turtle 0 [ __ignore [who] of frogs with [age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
-    expect("that turtle is dead")(ex.getMessage)
+    expect("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
     expect("frog 1")(ex.context.agent.toString)

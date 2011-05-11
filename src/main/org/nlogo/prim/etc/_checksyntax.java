@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
@@ -14,27 +14,21 @@ import org.nlogo.nvm.Syntax;
  * in the same block of code.
  */
 public final strictfp class _checksyntax
-	extends Reporter
-{
-	@Override
-	public Object report( final org.nlogo.nvm.Context context ) throws LogoException
-	{
-		try
-		{
-			workspace.compileForRun
-				( argEvalString( context , 0 ) , context , false ) ;
-		}
-		catch( CompilerException error )
-		{
-			return error.getMessage() ;
-		}
-		return "" ;
-	}
+    extends Reporter {
+  @Override
+  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+    try {
+      workspace.compileForRun
+          (argEvalString(context, 0), context, false);
+    } catch (CompilerException error) {
+      return error.getMessage();
+    }
+    return "";
+  }
 
-	@Override
-	public Syntax syntax()
-	{
-		int[] right = { Syntax.TYPE_STRING } ;
-		return Syntax.reporterSyntax( right , Syntax.TYPE_STRING ) ;
-	}
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.TYPE_STRING};
+    return Syntax.reporterSyntax(right, Syntax.TYPE_STRING);
+  }
 }

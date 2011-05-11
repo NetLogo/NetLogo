@@ -1,513 +1,413 @@
-package org.nlogo.workspace ;
+package org.nlogo.workspace;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.nlogo.api.CompilerException;
+import org.nlogo.api.I18N;
 
 public final strictfp class DefaultFileManager
-	implements org.nlogo.nvm.FileManager
-{
+    implements org.nlogo.nvm.FileManager {
 
-	private final List<org.nlogo.api.File> openFiles =
-		new ArrayList<org.nlogo.api.File>() ;
-	private org.nlogo.api.File currentFile ;
-	private String prefix ;
-	private final AbstractWorkspace workspace ;
+  private final List<org.nlogo.api.File> openFiles =
+      new ArrayList<org.nlogo.api.File>();
+  private org.nlogo.api.File currentFile;
+  private String prefix;
+  private final AbstractWorkspace workspace;
 
-	public DefaultFileManager( AbstractWorkspace workspace )
-	{
-		this.workspace = workspace ;
-		if ( AbstractWorkspace.isApp() )
-		{
-			setPrefix( System.getProperty( "user.home" ) ) ;
-		}
-	}
+  public DefaultFileManager(AbstractWorkspace workspace) {
+    this.workspace = workspace;
+    if (AbstractWorkspace.isApp()) {
+      setPrefix(System.getProperty("user.home"));
+    }
+  }
 
-	public String getErrorInfo()
-		throws java.io.IOException
-	{
-		long position = currentFile.pos ;
+  public String getErrorInfo()
+      throws java.io.IOException {
+    long position = currentFile.pos;
 
-		currentFile.close( true ) ;
-		currentFile.open( org.nlogo.api.File.Mode.READ ) ;
+    currentFile.close(true);
+    currentFile.open(org.nlogo.api.File.Mode.READ);
 
-		int lineNumber = 1 ;
-		long prevPosition = 0 ;
-		String lastLine = readLine() ;
+    int lineNumber = 1;
+    long prevPosition = 0;
+    String lastLine = readLine();
 
-		while ( currentFile.pos < position )
-		{
-			lineNumber ++ ;
-			prevPosition = currentFile.pos ;
-			lastLine = readLine() ;
-		}
+    while (currentFile.pos < position) {
+      lineNumber++;
+      prevPosition = currentFile.pos;
+      lastLine = readLine();
+    }
 
-		int charPos = (int) (position - prevPosition) ;
+    int charPos = (int) (position - prevPosition);
 
-		// This will happen if we are at the end of a line
-		if ( charPos >= lastLine.length() && ! eof() )
-		{
-			lastLine = readLine() ;
-			charPos = 0 ;
-			lineNumber ++ ;
-		}
+    // This will happen if we are at the end of a line
+    if (charPos >= lastLine.length() && !eof()) {
+      lastLine = readLine();
+      charPos = 0;
+      lineNumber++;
+    }
 
-		closeCurrentFile() ;
+    closeCurrentFile();
 
-		return
-			" (line number " + lineNumber +
-			", character " + ( charPos + 1 ) + ")" ;
-	}
+    return
+        " (line number " + lineNumber +
+            ", character " + (charPos + 1) + ")";
+  }
 
-	public String getPrefix()
-	{
-		return prefix ;
-	}
+  public String getPrefix() {
+    return prefix;
+  }
 
-	public org.nlogo.api.File getFile( String fileName )
-	{
-		
-		if( AbstractWorkspace.isApplet() ) {
-			return new org.nlogo.api.RemoteFile( fileName ) ;
-		}
-		else
-		{
-			return new org.nlogo.api.LocalFile( fileName ) ;
-		}
-	}
-	
-	public void setPrefix( String newPrefix )
-	{
-		if( AbstractWorkspace.isApplet() )
-		{
-			return ;
-		}
-		// Ensure a slash so it isAbsolute() won't get mixed up with getModelDir()
-		if ( newPrefix.charAt( newPrefix.length() - 1 ) != java.io.File.separatorChar )
-		{
-			newPrefix += java.io.File.separatorChar ;
-		}
+  public org.nlogo.api.File getFile(String fileName) {
 
-		if ( new java.io.File( newPrefix ).isAbsolute() )
-		{
-			prefix = newPrefix ;
-		}
-		else
-		{
-			prefix = relativeToAbsolute( newPrefix ) ;
-			if ( prefix.charAt( prefix.length() - 1 ) != java.io.File.separatorChar )
-			{
-				prefix += java.io.File.separatorChar ;
-			}
-		}
-	}
-	
-	public void setPrefix( java.net.URL newPrefix )
-	{
-		prefix = newPrefix.toString() ;
-	}
+    if (AbstractWorkspace.isApplet()) {
+      return new org.nlogo.api.RemoteFile(fileName);
+    } else {
+      return new org.nlogo.api.LocalFile(fileName);
+    }
+  }
 
-	public String attachPrefix( String filename )
-		throws java.net.MalformedURLException
-	{
+  public void setPrefix(String newPrefix) {
+    if (AbstractWorkspace.isApplet()) {
+      return;
+    }
+    // Ensure a slash so it isAbsolute() won't get mixed up with getModelDir()
+    if (newPrefix.charAt(newPrefix.length() - 1) != java.io.File.separatorChar) {
+      newPrefix += java.io.File.separatorChar;
+    }
 
-		if( AbstractWorkspace.isApplet() )
-		{
-			try {
-				return new java.net.URL
-					( new java.net.URL(prefix) ,
-					  filename ).toString();
-			}
-			catch ( java.net.MalformedURLException ex)
-			{
-				throw new IllegalStateException( ex ) ;
-			}
-		}
-		else
-		{
-			// Check to see if we were given an absolute File Path
-			java.io.File fileForm = new java.io.File( filename ) ;
-			
-			if ( fileForm.isAbsolute() || prefix == null )
-			{
-				return filename ;
-			}
-			else
-			{
-				return relativeToAbsolute( filename ) ;
-			}
-		}
-	}
-	// Automatically parses relative file names
-	private String relativeToAbsolute( String newPath )
-	{
-		try
-		{
-			return new java.io.File( prefix + java.io.File.separatorChar + newPath )
-				.getCanonicalPath() ;
-		}
-		catch( java.io.IOException ex )
-		{
-			throw new IllegalStateException( ex ) ;
-		}
-	}
+    if (new java.io.File(newPrefix).isAbsolute()) {
+      prefix = newPrefix;
+    } else {
+      prefix = relativeToAbsolute(newPrefix);
+      if (prefix.charAt(prefix.length() - 1) != java.io.File.separatorChar) {
+        prefix += java.io.File.separatorChar;
+      }
+    }
+  }
 
-	public boolean hasCurrentFile()
-	{
-		return ( currentFile != null && isFileOpen( currentFile.getAbsolutePath() ) ) ;
-	}
-	
-	private boolean isFileOpen( String fileName )
-	{
-		return ( findOpenFile( fileName ) != null ) ;
-	}
+  public void setPrefix(java.net.URL newPrefix) {
+    prefix = newPrefix.toString();
+  }
 
-	private org.nlogo.api.File findOpenFile( String fileName )
-	{
-		
-		if( AbstractWorkspace.isApplet() ) {
-			for( org.nlogo.api.File nextFile : openFiles ) 
-			{
-				if ( fileName.equals( nextFile.getPath() ) )
-				{
-					return nextFile ;
-				}
-			}
-		}
-		else
-		{
-			java.io.File newFile = new java.io.File( fileName ) ;
-			
-			Iterator<org.nlogo.api.File> files = openFiles.iterator() ;
-			while ( files.hasNext() )
-			{
-				org.nlogo.api.File nextFile = files.next() ;
-				if ( newFile.getAbsolutePath().equals( nextFile.getAbsolutePath() ) )
-				{
-					return nextFile ;
-				}
-			}
-		}
-		return null ;
-	}
+  public String attachPrefix(String filename)
+      throws java.net.MalformedURLException {
 
-	private boolean isFileCurrent( org.nlogo.api.File checkFile )
-	{
-		return ( currentFile == checkFile ) ;
-	}
+    if (AbstractWorkspace.isApplet()) {
+      try {
+        return new java.net.URL
+            (new java.net.URL(prefix),
+                filename).toString();
+      } catch (java.net.MalformedURLException ex) {
+        throw new IllegalStateException(ex);
+      }
+    } else {
+      // Check to see if we were given an absolute File Path
+      java.io.File fileForm = new java.io.File(filename);
 
-	public void setCurrentFile( org.nlogo.api.File newFile )
-	{
-		if ( !isFileCurrent( newFile ) )
-		{
-			currentFile = newFile ;
-		}
-	}
+      if (fileForm.isAbsolute() || prefix == null) {
+        return filename;
+      } else {
+        return relativeToAbsolute(filename);
+      }
+    }
+  }
 
-	public void ensureMode( org.nlogo.api.File.Mode openMode )
-		throws java.io.IOException
-	{
-		if ( !hasCurrentFile() )
-		{
-			throw new java.io.IOException( "No file has been opened" ) ;
-		}
+  // Automatically parses relative file names
+  private String relativeToAbsolute(String newPath) {
+    try {
+      return new java.io.File(prefix + java.io.File.separatorChar + newPath)
+          .getCanonicalPath();
+    } catch (java.io.IOException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
 
-		if ( currentFile.getMode() == org.nlogo.api.File.Mode.NONE )
-		{
-			try
-			{
-				currentFile.open( openMode ) ;
-			}
-			catch ( java.io.FileNotFoundException ex )
-			{
-				throw new java.io.IOException( "The file " + currentFile.getAbsolutePath() + " cannot be found" ) ;
-			}
-			catch( java.io.IOException ex )
-			{
-				throw new java.io.IOException( ex.getMessage() ) ;
-			}
-		}
-		else if ( currentFile.getMode() != openMode )
-		{
-			String mode = ( currentFile.getMode() == org.nlogo.api.File.Mode.READ ) ? "READING" : "WRITING" ;
-	
-			throw new java.io.IOException( "You can only use " + mode + " primitives with this file" ) ;
-		}
-	}
-	
-	public boolean fileExists( String filePath )
-	{
-		if( AbstractWorkspace.isApplet() ) {
-			try {
-				return org.nlogo.api.RemoteFile.exists( attachPrefix( filePath ) ) ;
-			}
-			catch ( java.net.MalformedURLException ex )
-			{
-				return false ;
-			}
-		}
-		else
-		{
-			return new java.io.File( filePath ).exists() ;
-		}
-	}
+  public boolean hasCurrentFile() {
+    return (currentFile != null && isFileOpen(currentFile.getAbsolutePath()));
+  }
 
-	public void deleteFile( String filePath )
-		throws java.io.IOException
-	{
-		org.nlogo.api.File file = findOpenFile( filePath );
+  private boolean isFileOpen(String fileName) {
+    return (findOpenFile(fileName) != null);
+  }
 
-		if ( file != null )
-		{
-			throw new java.io.IOException( "You need to close the file before deletion" ) ;
-		}
-		java.io.File checkFile = new java.io.File( filePath ) ;
-		if ( ! checkFile.exists() )
-		{
-			throw new java.io.IOException( "You cannot delete a non-existent file." ) ;
-		}
-		if ( ! checkFile.canWrite() )
-		{
-			throw new java.io.IOException( "Modification to this file is denied." ) ;
-		}
-		if ( ! checkFile.isFile() )
-		{
-			throw new java.io.IOException( "You can only delete files." ) ;
-		}
+  private org.nlogo.api.File findOpenFile(String fileName) {
 
-		if ( ! checkFile.delete() )
-		{
-			throw new java.io.IOException( "Deletion failed." ) ;
-		}
-	}
+    if (AbstractWorkspace.isApplet()) {
+      for (org.nlogo.api.File nextFile : openFiles) {
+        if (fileName.equals(nextFile.getPath())) {
+          return nextFile;
+        }
+      }
+    } else {
+      java.io.File newFile = new java.io.File(fileName);
 
-	public void openFile( String newFileName )
-		throws java.io.IOException
-	{
-		
-		// Check to see if we already opened the file
-		String fullFileName = attachPrefix( newFileName ) ;
+      Iterator<org.nlogo.api.File> files = openFiles.iterator();
+      while (files.hasNext()) {
+        org.nlogo.api.File nextFile = files.next();
+        if (newFile.getAbsolutePath().equals(nextFile.getAbsolutePath())) {
+          return nextFile;
+        }
+      }
+    }
+    return null;
+  }
 
-		if (fullFileName == null )
-		{
-			throw new java.io.IOException( "This filename is illegal, " + newFileName ) ;
-		}
-		
-		org.nlogo.api.File newFile = findOpenFile( fullFileName) ;
+  private boolean isFileCurrent(org.nlogo.api.File checkFile) {
+    return (currentFile == checkFile);
+  }
 
-		if ( newFile == null )
-		{
-			if( AbstractWorkspace.isApplet() ) {
-				newFile = new org.nlogo.api.RemoteFile( fullFileName ) ;
-			}
-			else
-			{
-				newFile = new org.nlogo.api.LocalFile( fullFileName ) ;
-			}
-			openFiles.add( newFile ) ;
-		}
-		
-		setCurrentFile( newFile ) ;
-	}
+  public void setCurrentFile(org.nlogo.api.File newFile) {
+    if (!isFileCurrent(newFile)) {
+      currentFile = newFile;
+    }
+  }
 
-	public void flushCurrentFile()
-		throws java.io.IOException
-	{
-		if ( !hasCurrentFile() )
-		{
-			throw new java.io.IOException( "There is no file to file" ) ;
-		}
-		flushFile( currentFile.getAbsolutePath() ) ;
-	}
+  public void ensureMode(org.nlogo.api.File.Mode openMode)
+      throws java.io.IOException {
+    if (!hasCurrentFile()) {
+      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
+    }
 
-	public void flushFile( String flushFileName )
-	{
-		org.nlogo.api.File flushFile = findOpenFile( flushFileName ) ;
-		flushFile.flush() ;
-	}
-	
-	public void closeCurrentFile()
-		throws java.io.IOException
-	{
-		if ( !hasCurrentFile() )
-		{
-			closeAllFiles() ;
-			throw new java.io.IOException( "There is no file to close" ) ;
-		}
-		closeFile( currentFile.getAbsolutePath() ) ;
-		setCurrentFile( null ) ;
-	}
+    if (currentFile.getMode() == org.nlogo.api.File.Mode.NONE) {
+      try {
+        currentFile.open(openMode);
+      } catch (java.io.FileNotFoundException ex) {
+        throw new java.io.IOException("The file " + currentFile.getAbsolutePath() + " cannot be found");
+      } catch (java.io.IOException ex) {
+        throw new java.io.IOException(ex.getMessage());
+      }
+    } else if (currentFile.getMode() != openMode) {
+      String mode = (currentFile.getMode() == org.nlogo.api.File.Mode.READ) ? "READING" : "WRITING";
 
-	// currently needs absolute file name
-	private void closeFile( String closeFileName )
-		throws java.io.IOException
-	{
-		org.nlogo.api.File closeFile = findOpenFile( closeFileName ) ;
-		closeFile.close( true ) ;
-		openFiles.remove( closeFile ) ;
-	}
+      throw new java.io.IOException("You can only use " + mode + " primitives with this file");
+    }
+  }
+
+  public boolean fileExists(String filePath) {
+    if (AbstractWorkspace.isApplet()) {
+      try {
+        return org.nlogo.api.RemoteFile.exists(attachPrefix(filePath));
+      } catch (java.net.MalformedURLException ex) {
+        return false;
+      }
+    } else {
+      return new java.io.File(filePath).exists();
+    }
+  }
+
+  public void deleteFile(String filePath)
+      throws java.io.IOException {
+    org.nlogo.api.File file = findOpenFile(filePath);
+
+    if (file != null) {
+      throw new java.io.IOException("You need to close the file before deletion");
+    }
+    java.io.File checkFile = new java.io.File(filePath);
+    if (!checkFile.exists()) {
+      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile"));
+    }
+    if (!checkFile.canWrite()) {
+      throw new java.io.IOException("Modification to this file is denied.");
+    }
+    if (!checkFile.isFile()) {
+      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles"));
+    }
+
+    if (!checkFile.delete()) {
+      throw new java.io.IOException("Deletion failed.");
+    }
+  }
+
+  public void openFile(String newFileName)
+      throws java.io.IOException {
+
+    // Check to see if we already opened the file
+    String fullFileName = attachPrefix(newFileName);
+
+    if (fullFileName == null) {
+      throw new java.io.IOException("This filename is illegal, " + newFileName);
+    }
+
+    org.nlogo.api.File newFile = findOpenFile(fullFileName);
+
+    if (newFile == null) {
+      if (AbstractWorkspace.isApplet()) {
+        newFile = new org.nlogo.api.RemoteFile(fullFileName);
+      } else {
+        newFile = new org.nlogo.api.LocalFile(fullFileName);
+      }
+      openFiles.add(newFile);
+    }
+
+    setCurrentFile(newFile);
+  }
+
+  public void flushCurrentFile()
+      throws java.io.IOException {
+    if (!hasCurrentFile()) {
+      throw new java.io.IOException("There is no file to file");
+    }
+    flushFile(currentFile.getAbsolutePath());
+  }
+
+  public void flushFile(String flushFileName) {
+    org.nlogo.api.File flushFile = findOpenFile(flushFileName);
+    flushFile.flush();
+  }
+
+  public void closeCurrentFile()
+      throws java.io.IOException {
+    if (!hasCurrentFile()) {
+      closeAllFiles();
+      throw new java.io.IOException("There is no file to close");
+    }
+    closeFile(currentFile.getAbsolutePath());
+    setCurrentFile(null);
+  }
+
+  // currently needs absolute file name
+  private void closeFile(String closeFileName)
+      throws java.io.IOException {
+    org.nlogo.api.File closeFile = findOpenFile(closeFileName);
+    closeFile.close(true);
+    openFiles.remove(closeFile);
+  }
 
 
-	public String readLine()
-		throws java.io.IOException
-	{
-		if ( eof() )
-		{
-			throw new java.io.EOFException() ;
-		}
+  public String readLine()
+      throws java.io.IOException {
+    if (eof()) {
+      throw new java.io.EOFException();
+    }
 
-		// Needed to write my own version to keep track of the File's Position
-		java.io.BufferedReader buffReader = currentFile.getBufferedReader() ;
-		String retString = "" ;
-		char charbuff[] = new char[80] ;
-		int charsRead = 80;
-		int skip = 1 ;
+    // Needed to write my own version to keep track of the File's Position
+    java.io.BufferedReader buffReader = currentFile.getBufferedReader();
+    String retString = "";
+    char charbuff[] = new char[80];
+    int charsRead = 80;
+    int skip = 1;
 
-		while ( charsRead == 80 )
-		{
-			buffReader.mark( 82 ) ;
-			charsRead = buffReader.read( charbuff, 0, 80 ) ;
-			for( int i = 0 ; i < charsRead ; i ++ )
-			{
-				// 'i' will never be 80
-				if ( charbuff[i] == '\r' )
-				{
-					if ( ( i < 79 && charbuff[i + 1] == '\n' ) ||
-						 ( i == 79 && buffReader.read() == '\n' ) )
-					{
-						skip = 2 ;
-					}
-					charsRead = i ;
-				}
-				else if ( charbuff[i] == '\n' )
-				{
-					charsRead = i ;
-				}
-			}
-			currentFile.pos += charsRead ;
-			retString += new String( charbuff, 0, charsRead ) ;
-		}
-		buffReader.reset();
+    while (charsRead == 80) {
+      buffReader.mark(82);
+      charsRead = buffReader.read(charbuff, 0, 80);
+      for (int i = 0; i < charsRead; i++) {
+        // 'i' will never be 80
+        if (charbuff[i] == '\r') {
+          if ((i < 79 && charbuff[i + 1] == '\n') ||
+              (i == 79 && buffReader.read() == '\n')) {
+            skip = 2;
+          }
+          charsRead = i;
+        } else if (charbuff[i] == '\n') {
+          charsRead = i;
+        }
+      }
+      currentFile.pos += charsRead;
+      retString += new String(charbuff, 0, charsRead);
+    }
+    buffReader.reset();
 
-		// Doesn't include 'skip' when at the end of file
-		currentFile.pos += buffReader.skip( charsRead + skip ) - charsRead ;
+    // Doesn't include 'skip' when at the end of file
+    currentFile.pos += buffReader.skip(charsRead + skip) - charsRead;
 
-		return retString ;
-	}
+    return retString;
+  }
 
-	public String readChars( int num )
-		throws java.io.IOException
-	{
-		if ( eof() )
-		{
-			throw new java.io.EOFException() ;
-		}
+  public String readChars(int num)
+      throws java.io.IOException {
+    if (eof()) {
+      throw new java.io.EOFException();
+    }
 
-		char charbuff[] = new char[ num ] ;
-		java.io.BufferedReader buffReader = currentFile.getBufferedReader() ;
-		currentFile.pos += buffReader.read( charbuff, 0, num ) ;
-		return String.valueOf( charbuff ) ;
-	}
+    char charbuff[] = new char[num];
+    java.io.BufferedReader buffReader = currentFile.getBufferedReader();
+    currentFile.pos += buffReader.read(charbuff, 0, num);
+    return String.valueOf(charbuff);
+  }
 
-	public String readRemainder()
-		throws java.io.IOException
-	{
-		if ( eof() )
-		{
-			throw new java.io.EOFException() ;
-		}
+  public String readRemainder()
+      throws java.io.IOException {
+    if (eof()) {
+      throw new java.io.EOFException();
+    }
 
-		// Reads remainder of file
-		String remainder = "" ;
-		String line = readLine();
+    // Reads remainder of file
+    String remainder = "";
+    String line = readLine();
 
-		while ( line != null )
-		{
-			remainder += line ;
-			line = readLine() ;
-			currentFile.pos += line.length() ;
-		}
-		return remainder ;
-	}
+    while (line != null) {
+      remainder += line;
+      line = readLine();
+      currentFile.pos += line.length();
+    }
+    return remainder;
+  }
 
-	public Object read( org.nlogo.agent.World world )
-		throws java.io.IOException, CompilerException
-	{
-		if( eof() )
-		{
-			throw new java.io.EOFException() ;
-		}
-		return workspace.compiler().readFromFile
-			( currentFile, world , workspace.getExtensionManager() ) ;
-	}
+  public Object read(org.nlogo.agent.World world)
+      throws java.io.IOException, CompilerException {
+    if (eof()) {
+      throw new java.io.EOFException();
+    }
+    return workspace.compiler().readFromFile
+        (currentFile, world, workspace.getExtensionManager());
+  }
 
-	public boolean eof()
-		throws java.io.IOException
-	{
-		ensureMode( org.nlogo.api.File.Mode.READ ) ;
-		if( ! currentFile.eof )
-		{
-			java.io.BufferedReader buffReader = currentFile.getBufferedReader() ;
-			buffReader.mark( 2 ) ;
-			currentFile.eof = ( buffReader.read() == -1 ) ;
-			buffReader.reset() ;
-		}
-		return currentFile.eof ;
-	}
+  public boolean eof()
+      throws java.io.IOException {
+    ensureMode(org.nlogo.api.File.Mode.READ);
+    if (!currentFile.eof) {
+      java.io.BufferedReader buffReader = currentFile.getBufferedReader();
+      buffReader.mark(2);
+      currentFile.eof = (buffReader.read() == -1);
+      buffReader.reset();
+    }
+    return currentFile.eof;
+  }
 
-	public void closeAllFiles()
-		throws java.io.IOException
-	{
-		Iterator<org.nlogo.api.File> files = openFiles.iterator() ;
-		while ( files.hasNext() )
-		{
-			org.nlogo.api.File nextFile = files.next() ;
-			closeFile( nextFile.getAbsolutePath() ) ;
-			files = openFiles.iterator() ;
-		}
-		setCurrentFile( null ) ;
-	}
+  public void closeAllFiles()
+      throws java.io.IOException {
+    Iterator<org.nlogo.api.File> files = openFiles.iterator();
+    while (files.hasNext()) {
+      org.nlogo.api.File nextFile = files.next();
+      closeFile(nextFile.getAbsolutePath());
+      files = openFiles.iterator();
+    }
+    setCurrentFile(null);
+  }
 
-	public void writeOutputObject( org.nlogo.agent.OutputObject oo )
-	{
-		java.io.PrintWriter w = currentFile.getPrintWriter() ;
-		w.print( oo.get() ) ;
-	}
+  public void writeOutputObject(org.nlogo.agent.OutputObject oo) {
+    java.io.PrintWriter w = currentFile.getPrintWriter();
+    w.print(oo.get());
+  }
 
-	public void handleModelChange() 
-	{
-		if( workspace.getModelDir() != null )
-		{
-			setPrefix( workspace.getModelDir() ) ;
-		}
-		else if( AbstractWorkspace.isApp() )
-		{
-			setPrefix( System.getProperty( "user.home" ) ) ;
-		}
-		try
-		{
-			closeAllFiles() ;
-		}
-		catch( java.io.IOException ex )
-		{
-			throw new IllegalStateException( ex ) ;
-		}
-	}
+  public void handleModelChange() {
+    if (workspace.getModelDir() != null) {
+      setPrefix(workspace.getModelDir());
+    } else if (AbstractWorkspace.isApp()) {
+      setPrefix(System.getProperty("user.home"));
+    }
+    try {
+      closeAllFiles();
+    } catch (java.io.IOException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
 
-	// for 4.1 we have too much fragile, difficult-to-understand,
-	// under-tested code involving URLs -- we can't get rid of our
-	// uses of toURL() until 4.2, the risk of breakage is too high.
-	// so for now, at least we make this a separate method so the
-	// SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-	// commented out for now, need to resolve for 4.2 final,
-	// see ticket #964 - ST 6/9/10
-	// @SuppressWarnings("deprecation")
-	// private static java.net.URL toURL( java.io.File file )
-	// 	throws java.net.MalformedURLException
-	// {
-	// 	return file.toURL() ;
-	// }
+  // for 4.1 we have too much fragile, difficult-to-understand,
+  // under-tested code involving URLs -- we can't get rid of our
+  // uses of toURL() until 4.2, the risk of breakage is too high.
+  // so for now, at least we make this a separate method so the
+  // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
+  // commented out for now, need to resolve for 4.2 final,
+  // see ticket #964 - ST 6/9/10
+  // @SuppressWarnings("deprecation")
+  // private static java.net.URL toURL( java.io.File file )
+  //    throws java.net.MalformedURLException
+  // {
+  //    return file.toURL() ;
+  // }
 
 }

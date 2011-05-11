@@ -1,7 +1,7 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
+import org.nlogo.api.{I18N, CompilerException, LogoThunkFactory, CommandLogoThunk}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -18,8 +18,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   private var currentPlotOption: Option[Plot] = None
   @throws(classOf[PlotException])
   def currentPlotOrBust = currentPlotOption.getOrElse({
-    throw new PlotException(
-      "There is no current plot. Please select a current plot using the set-current-plot command.")})
+    throw new PlotException(I18N.errors.get("org.nlogo.plot.noPlotSelected"))})
   def setCurrentPlot(plot: Plot) {currentPlotOption = Some(plot)}
 
   // plot creation

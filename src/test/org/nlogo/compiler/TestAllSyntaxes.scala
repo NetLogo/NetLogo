@@ -352,6 +352,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_followme ,-T--,null,0,0,0 *
                     |_foreach list/command task,OTPL,null,0,2,2
                     |_foreverbuttonend ,OTPL,null,0,0,0 *
+                    |_git string,O---,null,0,1,1
                     |_hatch number/command block (optional),-T--,-T--,0,2,2 *
                     |_hidelink ,---L,null,0,0,0 *
                     |_hideturtle ,-T--,null,0,0,0 *
@@ -427,9 +428,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_moviestart string,OTPL,null,0,1,1
                     |_nodisplay ,OTPL,null,0,0,0
                     |_observercode ,O---,null,0,0,0
-                    |_openindex ,O---,null,0,0,0 *
-                    |_opennext ,O---,null,0,0,0 *
-                    |_openprevious ,O---,null,0,0,0 *
                     |_outputprint anything,OTPL,null,0,1,1
                     |_outputshow anything,OTPL,null,0,1,1
                     |_outputtype anything,OTPL,null,0,1,1
@@ -487,7 +485,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_stderr anything,OTPL,null,0,1,1
                     |_stdout anything,OTPL,null,0,1,1
                     |_stop ,OTPL,null,0,0,0
-                    |_svn string,O---,null,0,1,1
                     |_thunkdidfinish ,OTPL,null,0,0,0
                     |_tick ,O---,null,0,0,0 *
                     |_tickadvance number,O---,null,0,1,1 *

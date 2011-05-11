@@ -137,6 +137,9 @@ tabs.run.commandcenter.clearButton = Borrar
 tabs.run.commandcenter.nohistory = No Hay Antecedentes
 tabs.run.commandcenter.orusetabkey = o utilizar la tecla Tab
 tabs.run.commandcenter.exporting = Exportando
+tabs.run.commandcenter.history = Historia
+tabs.run.commandcenter.useArrowKeys = Usa las teclas de abajo y ariiba
+tabs.run.commandcenter.clearHistory = Borrar la historia
 
 tabs.info = Info
 tabs.info.edit = Edición
@@ -276,6 +279,8 @@ edit.viewSettings.2D.fontSize = Tamaño de la fuente
 edit.viewSettings.2D.fontSize.info = de las etiquetas de los agentes
 edit.viewSettings.2D.wrapX = El mundo envuelve horizontalmente
 edit.viewSettings.2D.wrapY = El mundo envuelve verticalmente
+edit.viewSettings.2D.frameRate = Velocidad de los cuadros
+edit.viewSettings.2D.frameRate.info = cuadros por segundo a una velocidad normal
 
 edit.viewSettings.2D.minPxcor = mínima coordenada x para los parches
 edit.viewSettings.2D.maxPxcor = máxima coordenada x para los parches
@@ -371,3 +376,37 @@ modelsLibrary.clear = Borrar
 modelsLibrary.community = Ir a la página web de los Modelos de la Comunidad de Usuarios
 modelsLibrary.open = Abrir
 modelsLibrary.loading = Cargando Biblioteca de Modelos...
+
+
+menu.tools.hubnetControlCenter.removedViaControlCenter = Eliminado a través del Centro de control.
+menu.tools.hubnetControlCenter.kick = Patada
+menu.tools.hubnetControlCenter.local = Local
+menu.tools.hubnetControlCenter.reset = Restablecer
+menu.tools.hubnetControlCenter.clientName = CLIENTE NOMBRE
+menu.tools.hubnetControlCenter.clients = Clientes:
+menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
+menu.tools.hubnetControlCenter.broadcastMessage = Mensaje de Difusión
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Espejo vista 2D en los clientes
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Parcelas espejo en los clientes (experimental)
+menu.tools.hubnetControlCenter.name = Nombre:
+menu.tools.hubnetControlCenter.activity = Actividad:
+menu.tools.hubnetControlCenter.unknown = DESCONOCIDO
+menu.tools.hubnetControlCenter.serverAddress = Dirección del servidor:
+menu.tools.hubnetControlCenter.portNumber = Número de puerto:
+menu.tools.hubnetControlCenter.settings = Configuración:
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' se unió a: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' ha desconnectado.
+
+
+view.3d.orbit = órbita
+view.3d.zoom = Zoom
+view.3d.move = Moverse
+view.3d.interact = Interactuar
+view.3d.watching = Mirando
+view.3d.riding = Montando
+view.3d.following = Vigilando
+view.3d.fullScreen = Pantalla completa
+view.3d.resetPerspective = Restablecer Perspectiva
+view.3d.fullScreenWarning = En algunos sistemas, el modo de pantalla completa puede hacer que Windows se bloquee.
+
+

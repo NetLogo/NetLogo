@@ -12,9 +12,9 @@ TicksBasic
 
 TicksNonNegative
   O> reset-ticks
-  O> tick-advance -1 => ERROR Cannot advance the tick counter by a negative amount
+  O> tick-advance -1 => ERROR Cannot advance the tick counter by a negative amount.
   O> tick
-  O> tick-advance -0.1 => ERROR Cannot advance the tick counter by a negative amount
+  O> tick-advance -0.1 => ERROR Cannot advance the tick counter by a negative amount.
 
 TicksNeedReset
   ticks => ERROR The tick counter has not been started yet. Use RESET-TICKS.

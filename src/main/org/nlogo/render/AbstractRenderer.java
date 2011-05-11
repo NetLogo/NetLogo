@@ -1,4 +1,4 @@
-package org.nlogo.render ;
+package org.nlogo.render;
 
 /*
 
@@ -35,12 +35,12 @@ So, two conclusions:
     the issue in this code
 
   - but, more importantly, *DON'T* be careless about it yourself.  In
-	the most important parts of the code, for example the sizing and
-	positioning of turtles, the code is now very careful to do it
-	right.  (I hope I got it right!)  So don't break it.  And whenever
-	you are modifying or adding anything, please be very conscientious
-	about getting the calculations exactly right.  Let's only move
-	towards perfection... never away.
+    the most important parts of the code, for example the sizing and
+    positioning of turtles, the code is now very careful to do it
+    right.  (I hope I got it right!)  So don't break it.  And whenever
+    you are modifying or adding anything, please be very conscientious
+    about getting the calculations exactly right.  Let's only move
+    towards perfection... never away.
 
 ST 8/19/05
 
@@ -52,194 +52,174 @@ import org.nlogo.api.ViewSettings;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.GraphicsInterface;
 
-public abstract strictfp class AbstractRenderer 
-	implements org.nlogo.api.RendererInterface
-{
-    // made these all public because ClientRenderer in hubnet was bombing.
-    // i think this is a bug in scala 2.8.1. 
-	public final org.nlogo.api.World world ;
-	public final LinkDrawer linkDrawer ;
-	public final TurtleDrawer turtleDrawer ;
-	private final TrailDrawer _trailDrawer ;
-	public TrailDrawerInterface trailDrawer() { return _trailDrawer ; }
-	// These next two were originally declared protected, but we ran afoul
-	// of a Scala 2.8 bug; see http://trac.assembla.com/nlogo/ticket/1113
-	// for details.  Once we upgrade to Scala 2.9, these could be returned
-	// to protected. - ST 1/23/11
-	public TopologyRenderer topology ;
-	public final SpotlightDrawer spotlightDrawer = new SpotlightDrawer() ;
+public abstract strictfp class AbstractRenderer
+    implements org.nlogo.api.RendererInterface {
+  // made these all public because ClientRenderer in hubnet was bombing.
+  // i think this is a bug in scala 2.8.1.
+  public final org.nlogo.api.World world;
+  public final LinkDrawer linkDrawer;
+  public final TurtleDrawer turtleDrawer;
+  private final TrailDrawer _trailDrawer;
 
-	public AbstractRenderer( org.nlogo.api.World world , ShapeList turtleShapeList , ShapeList linkShapeList )
-	{
-		this.world = world ;
-		linkDrawer = new LinkDrawer( linkShapeList ) ;
-		turtleDrawer = new TurtleDrawer( turtleShapeList ) ;
-		_trailDrawer = new TrailDrawer( world , turtleDrawer , linkDrawer ) ;
-		changeTopology( world.wrappingAllowedInX() , world.wrappingAllowedInY() ) ;
-	}
+  public TrailDrawerInterface trailDrawer() {
+    return _trailDrawer;
+  }
 
-	///
+  // These next two were originally declared protected, but we ran afoul
+  // of a Scala 2.8 bug; see http://trac.assembla.com/nlogo/ticket/1113
+  // for details.  Once we upgrade to Scala 2.9, these could be returned
+  // to protected. - ST 1/23/11
+  public TopologyRenderer topology;
+  public final SpotlightDrawer spotlightDrawer = new SpotlightDrawer();
 
-	public void changeTopology( boolean wrapX , boolean wrapY )
-	{
-		if( wrapX )
-		{
-			if( wrapY )
-			{
-				topology = new TorusRenderer( world ) ;
-			}
-			else
-			{
-				topology = new VertCylinderRenderer( world ) ;
-			}
-		}
-		else
-		{
-			if( wrapY )
-			{
-				topology = new HorizCylinderRenderer( world ) ;
-			}
-			else
-			{
-				topology = new BoxRenderer( world ) ;
-			}
-		}
-		_trailDrawer.setTopology( topology ) ;
-	}
+  public AbstractRenderer(org.nlogo.api.World world, ShapeList turtleShapeList, ShapeList linkShapeList) {
+    this.world = world;
+    linkDrawer = new LinkDrawer(linkShapeList);
+    turtleDrawer = new TurtleDrawer(turtleShapeList);
+    _trailDrawer = new TrailDrawer(world, turtleDrawer, linkDrawer);
+    changeTopology(world.wrappingAllowedInX(), world.wrappingAllowedInY());
+  }
 
-	public int getWidth( double patchSize )
-	{
-		return (int) StrictMath.round( world.worldWidth() * patchSize ) ;
-	}
+  ///
 
-	public int getHeight( double patchSize )
-	{
-		return (int) StrictMath.round( world.worldHeight() * patchSize ) ;
-	}
+  public void changeTopology(boolean wrapX, boolean wrapY) {
+    if (wrapX) {
+      if (wrapY) {
+        topology = new TorusRenderer(world);
+      } else {
+        topology = new VertCylinderRenderer(world);
+      }
+    } else {
+      if (wrapY) {
+        topology = new HorizCylinderRenderer(world);
+      } else {
+        topology = new BoxRenderer(world);
+      }
+    }
+    _trailDrawer.setTopology(topology);
+  }
 
-	private static final boolean WINDOWS =
-		System.getProperty( "os.name" ).startsWith( "Windows" ) ;
+  public int getWidth(double patchSize) {
+    return (int) StrictMath.round(world.worldWidth() * patchSize);
+  }
 
-	org.nlogo.api.Agent outlineAgent ;
-	public void outlineAgent( org.nlogo.api.Agent agent ) { outlineAgent = agent ; }
+  public int getHeight(double patchSize) {
+    return (int) StrictMath.round(world.worldHeight() * patchSize);
+  }
 
-	///
+  private static final boolean WINDOWS =
+      System.getProperty("os.name").startsWith("Windows");
 
-	protected abstract void paintPatchLabels( GraphicsInterface g , double patchSize ) ;
-	protected abstract void paintTurtles( GraphicsInterface g , double patchSize ) ;
-	protected abstract void paintLinks( GraphicsInterface g , double patchSize ) ;
-	
-	protected abstract java.awt.image.BufferedImage getSpotlightImage( ViewSettings settings ) ;
+  org.nlogo.api.Agent outlineAgent;
 
-	protected abstract boolean anyTurtles() ;
+  public void outlineAgent(org.nlogo.api.Agent agent) {
+    outlineAgent = agent;
+  }
 
-	public void prepareToPaint( ViewSettings settings , int width  , int height )
-	{
-		topology.prepareToPaint( settings , width , height ) ;
-	}
+  ///
 
-	///
+  protected abstract void paintPatchLabels(GraphicsInterface g, double patchSize);
 
-	public void paint( GraphicsInterface g , ViewSettings settings )
-	{
-		topology.prepareToPaint
-			( settings , getWidth( settings.patchSize() ) , getHeight( settings.patchSize() ) ) ;
-		// now paint turtles & labels
-		topology.fillBackground( g ) ;
-		paintPatches( g , settings.patchSize() ) ;
-		// Since the drawing scales when we zoom, even drawing a blank
-		// gets expensive very fast. -- 10/06/05 CLB
-		// but for some reason on Windows some models run a lot
-		// faster on some machines if we uselessly draw the blank
-		// layer -- go figure! it's only worth doing if there
-		// are turtles though - ST 11/23/05
-		if( ! _trailDrawer.drawingBlank || ( WINDOWS && anyTurtles() && ! settings.isHeadless()) )
-		{
-			topology.paintViewImage
-				( g , _trailDrawer.getAndCreateDrawing( false ) ) ;
-		}
-		// Turn on accurate stroking for precise subpixel
-		// positioning.  On Mac this seems to be the default,
-		// but on Windows we need to ask for it. - ST 8/19/05
-		g.setStrokeControl() ;
-		paintLinks( g , settings.patchSize() ) ;
-		paintTurtles( g , settings.patchSize() ) ;
-		if( settings.drawSpotlight() && spotlightAgent( settings.perspective() ) )
-		{
-			g.drawImage( getSpotlightImage( settings ) ) ;
-		}
-	}
+  protected abstract void paintTurtles(GraphicsInterface g, double patchSize);
 
-	private void paintPatches( GraphicsInterface g , double patchSize )
-	{
-		g.antiAliasing( false ) ;
-		// first draw the patch colors
-		if( world.patchesAllBlack() )
-		{
-			topology.paintAllPatchesBlack( g ) ;
-		}
-		else
-		{
-			setUpPatchImage() ;
-			topology.paintViewImage( g , patchImage ) ;
-		}
-		// turn on anti-aliasing
-		g.antiAliasing( true ) ;
-		paintPatchLabels( g , patchSize ) ;
-	}
+  protected abstract void paintLinks(GraphicsInterface g, double patchSize);
 
-	private int[] patchColors ;
-	private java.awt.Image patchImage ;
+  protected abstract java.awt.image.BufferedImage getSpotlightImage(ViewSettings settings);
 
-	// we're gambling that this will be fast on all systems - ST 11/2/03
-	private static final java.awt.image.ColorModel COLOR_MODEL =
-		new java.awt.image.DirectColorModel
-		( 32 , 0xff << 16 , 0xff << 8 , 0xff ) ;
+  protected abstract boolean anyTurtles();
 
-	private void setUpPatchImage()
-	{
-		if( patchColors != world.patchColors() )
-		{
-			patchColors = world.patchColors() ;
-			patchImage = new java.awt.image.BufferedImage
-				( COLOR_MODEL ,
-				  java.awt.image.Raster.createWritableRaster
-				  ( COLOR_MODEL.createCompatibleSampleModel( world.worldWidth() ,
-															 world.worldHeight() ) ,
-					new java.awt.image.DataBufferInt( patchColors ,
-													  patchColors.length ) ,
-					new java.awt.Point( 0 , 0 ) ) ,
-				  true ,
-				  new java.util.Hashtable<String,Object>() ) ;
-		}
-	}
+  public void prepareToPaint(ViewSettings settings, int width, int height) {
+    topology.prepareToPaint(settings, width, height);
+  }
 
-	/// manage the cache
+  ///
 
-	public void resetCache( double patchSize )
-	{
-		turtleDrawer.shapes.resetCache( patchSize ) ;
-	}
+  public void paint(GraphicsInterface g, ViewSettings settings) {
+    topology.prepareToPaint
+        (settings, getWidth(settings.patchSize()), getHeight(settings.patchSize()));
+    // now paint turtles & labels
+    topology.fillBackground(g);
+    paintPatches(g, settings.patchSize());
+    // Since the drawing scales when we zoom, even drawing a blank
+    // gets expensive very fast. -- 10/06/05 CLB
+    // but for some reason on Windows some models run a lot
+    // faster on some machines if we uselessly draw the blank
+    // layer -- go figure! it's only worth doing if there
+    // are turtles though - ST 11/23/05
+    if (!_trailDrawer.drawingBlank || (WINDOWS && anyTurtles() && !settings.isHeadless())) {
+      topology.paintViewImage
+          (g, _trailDrawer.getAndCreateDrawing(false));
+    }
+    // Turn on accurate stroking for precise subpixel
+    // positioning.  On Mac this seems to be the default,
+    // but on Windows we need to ask for it. - ST 8/19/05
+    g.setStrokeControl();
+    paintLinks(g, settings.patchSize());
+    paintTurtles(g, settings.patchSize());
+    if (settings.drawSpotlight() && spotlightAgent(settings.perspective())) {
+      g.drawImage(getSpotlightImage(settings));
+    }
+  }
 
-	public void replaceTurtleShapes( java.util.List<org.nlogo.api.Shape> shapes )
-	{
-		turtleDrawer.shapes.shapeList.replaceShapes( shapes ) ;
-	}
+  private void paintPatches(GraphicsInterface g, double patchSize) {
+    g.antiAliasing(false);
+    // first draw the patch colors
+    if (world.patchesAllBlack()) {
+      topology.paintAllPatchesBlack(g);
+    } else {
+      setUpPatchImage();
+      topology.paintViewImage(g, patchImage);
+    }
+    // turn on anti-aliasing
+    g.antiAliasing(true);
+    paintPatchLabels(g, patchSize);
+  }
 
-	public void replaceLinkShapes( java.util.List<org.nlogo.api.Shape> shapes )
-	{
-		linkDrawer.linkShapes.replaceShapes( shapes ) ;
-	}
+  private int[] patchColors;
+  private java.awt.Image patchImage;
 
-	protected boolean darkenPeripheral( ViewSettings settings )
-	{
-		return (settings.perspective() == Perspective.WATCH) && settings.renderPerspective() ;
-	}
+  // we're gambling that this will be fast on all systems - ST 11/2/03
+  private static final java.awt.image.ColorModel COLOR_MODEL =
+      new java.awt.image.DirectColorModel
+          (32, 0xff << 16, 0xff << 8, 0xff);
 
-	protected boolean spotlightAgent( Perspective perspective )
-	{
-		return ( perspective == Perspective.WATCH || 
-				 perspective == Perspective.FOLLOW || 
-				 perspective == Perspective.RIDE ) ;
-	}
+  private void setUpPatchImage() {
+    if (patchColors != world.patchColors()) {
+      patchColors = world.patchColors();
+      patchImage = new java.awt.image.BufferedImage
+          (COLOR_MODEL,
+              java.awt.image.Raster.createWritableRaster
+                  (COLOR_MODEL.createCompatibleSampleModel(world.worldWidth(),
+                      world.worldHeight()),
+                      new java.awt.image.DataBufferInt(patchColors,
+                          patchColors.length),
+                      new java.awt.Point(0, 0)),
+              true,
+              new java.util.Hashtable<String, Object>());
+    }
+  }
+
+  /// manage the cache
+
+  public void resetCache(double patchSize) {
+    turtleDrawer.shapes.resetCache(patchSize);
+  }
+
+  public void replaceTurtleShapes(java.util.List<org.nlogo.api.Shape> shapes) {
+    turtleDrawer.shapes.shapeList.replaceShapes(shapes);
+  }
+
+  public void replaceLinkShapes(java.util.List<org.nlogo.api.Shape> shapes) {
+    linkDrawer.linkShapes.replaceShapes(shapes);
+  }
+
+  protected boolean darkenPeripheral(ViewSettings settings) {
+    return (settings.perspective() == Perspective.WATCH) && settings.renderPerspective();
+  }
+
+  protected boolean spotlightAgent(Perspective perspective) {
+    return (perspective == Perspective.WATCH ||
+        perspective == Perspective.FOLLOW ||
+        perspective == Perspective.RIDE);
+  }
 }

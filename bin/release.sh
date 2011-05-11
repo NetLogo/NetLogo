@@ -28,6 +28,7 @@ XARGS=xargs
 
 # other
 SCALA=2.9.0.RC5
+SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server
@@ -43,9 +44,7 @@ fi
 
 # maybe we should be using the "submodules" feature of git for this? - ST 5/7/11
 if [ ! -d "Mathematica-Link" ]; then
-  echo "do this first:"
-  echo "git clone git@github.com:NetLogo/Mathematica-Link.git"
-  exit 1
+  git clone git@github.com:NetLogo/Mathematica-Link.git
 fi
 
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
@@ -95,32 +94,16 @@ fi
 # clean
 $MAKE -s clean
 
-# create svnversion.txt
-rm -rf resources/system/svnversion.txt
-if [ -d .svn ]; then
-  SVN="svn"
-  svnversion > resources/system/svnversion.txt
-else
-  SVN="git svn"
-  $SVN info | grep ^Revision: | sed -e "s/Revision: //" > resources/system/svnversion.txt
-fi
-$SVN info | perl -0 -p -i -e 's|\n||gs' | perl -0 -p -i -e 's|Path: .URL: https:\/\/subversion.assembla.com\/svn\/nlogo\/||gs' | perl -p -e 's/Repository Root: .*$//gs' | sed -e "s/\000//g" >> resources/system/svnversion.txt
-
 # compile, build jars etc.
 bin/sbt update
 $MAKE -s
 bin/sbt behaviorspace-sources
 # zzz TODO $MAKE -s javadoc-public
 
-# we don't want to keep the svnversion.txt around cause if we do then it gets used instead of querying the 
-# system when we're running directly from svn
-
-rm -rf resources/system/svnversion.txt
-
 # remember version number
-export VERSION=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
-export DATE=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --builddate`
-export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # eject any leftover dmg's from last run
 $OSASCRIPT -e "tell application \"Finder\"" -e "eject disk \"NetLogo\"" -e "end" > /dev/null 2>&1 || true
@@ -142,12 +125,11 @@ $CP ../../NetLogoLite.jar .
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.11.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/pegdown-0.9.1.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
 $CP -p ../../BehaviorSpace.jar ../../BehaviorSpace-src.zip lib
-$CP -p ../../tmp/scala-library-trimmed.jar lib/scala-library.jar
+$CP -p ../../$SCALA_JAR lib/scala-library.jar
 
-# NLink stuff
-(cd ../../Mathematica-Link; NETLOGO=.. SCALA_JAR=../tmp/scala-library-trimmed.jar make)
-$MKDIR Mathematica\ Link
-$CP -rp ../../Mathematica-Link/* Mathematica\ Link
+# Mathematica link stuff
+$CP -rp ../../Mathematica-Link Mathematica\ Link
+(cd Mathematica\ Link; NETLOGO=.. make)
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
@@ -163,7 +145,7 @@ $RM -rf extensions/*/classes
 # include models
 $CP -rp ../../models .
 
-# blow away Subversion and Mac junk
+# blow away version control and Mac junk
 $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
@@ -257,7 +239,7 @@ $CP -p ../../dist/netlogo-3D.sh .
 $CP -p ../../dist/hubnet.sh .
 $CP -p ../../dist/icon.ico .
 
-# blow away Subversion and Mac junk
+# blow away version control and Mac junk
 $FIND . \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 $FIND . -path \*/.svn -prune -o -empty -print
@@ -315,7 +297,7 @@ $MV NetLogo\ Logging.app NetLogo\ Logging\ "$VERSION".app
 $MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
 $MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
 
-# blow away Subversion and Mac junk again
+# blow away version control and Mac junk again
 $FIND . \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 

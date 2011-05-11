@@ -1,4 +1,4 @@
-package org.nlogo.prim ;
+package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Activation;
@@ -17,35 +17,35 @@ import org.nlogo.nvm.Context;
 
 public final strictfp class _callreport
     extends Reporter
-    implements org.nlogo.nvm.CustomGenerated
-{
-    public final Procedure procedure ;
-    public _callreport( Procedure procedure )
-    {
-		this.procedure = procedure ;
+    implements org.nlogo.nvm.CustomGenerated {
+  public final Procedure procedure;
+
+  public _callreport(Procedure procedure) {
+    this.procedure = procedure;
+  }
+
+  @Override
+  public Syntax syntax() {
+    return procedure.syntax();
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ":" + procedure.name;
+  }
+
+  @Override
+  public Object report(Context context) throws LogoException {
+    Activation newActivation =
+        new Activation(procedure, context.activation, context.ip);
+    for (int i = 0; i < (procedure.args.size() - procedure.localsCount); i++) {
+      newActivation.args[i] = args[i].report(context);
     }
-    @Override public Syntax syntax()
-    {
-		return procedure.syntax() ;
+    Object result = context.callReporterProcedure(newActivation);
+    if (result == null) {
+      throw new EngineException
+          (context, this, "the " + procedure.name + " procedure failed to report a result");
     }
-    @Override public String toString()
-    {
-		return super.toString() + ":" + procedure.name ;
-    }
-    @Override public Object report( Context context ) throws LogoException
-    {
-		Activation newActivation =
-			new Activation( procedure , context.activation , context.ip ) ;
-		for( int i = 0 ; i < (procedure.args.size() - procedure.localsCount ) ; i++ )
-	    {
-			newActivation.args[ i ] = args[ i ].report( context ) ;
-	    }
-		Object result = context.callReporterProcedure( newActivation ) ;
-		if( result == null )
-	    {
-			throw new EngineException
-				( context , this , "the " + procedure.name + " procedure failed to report a result" ) ;
-	    }
-		return result ;
-    }
+    return result;
+  }
 }

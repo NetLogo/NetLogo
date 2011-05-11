@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
@@ -7,32 +7,27 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _facexy
-	extends Command
-{
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.commandSyntax
-			( new int[] { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-			  "OT--" , true ) ;
-	}
-	@Override
-	public void perform( final Context context )
-		throws LogoException
-	{
-		if ( context.agent instanceof org.nlogo.agent.Turtle )
-		{
-			Turtle turtle = (Turtle ) context.agent ;	
-			turtle.face( argEvalDoubleValue( context , 0 ) ,
-						 argEvalDoubleValue( context , 1 ) ,
-						 true ) ; 
-		}
-		else
-		{
-			world.observer().
-				face( argEvalDoubleValue( context , 0 ) , 
-					  argEvalDoubleValue( context , 1 ) ) ;
-		}
-		context.ip = next ;
-	}
+    extends Command {
+  @Override
+  public Syntax syntax() {
+    return Syntax.commandSyntax
+        (new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
+            "OT--", true);
+  }
+
+  @Override
+  public void perform(final Context context)
+      throws LogoException {
+    if (context.agent instanceof org.nlogo.agent.Turtle) {
+      Turtle turtle = (Turtle) context.agent;
+      turtle.face(argEvalDoubleValue(context, 0),
+          argEvalDoubleValue(context, 1),
+          true);
+    } else {
+      world.observer().
+          face(argEvalDoubleValue(context, 0),
+              argEvalDoubleValue(context, 1));
+    }
+    context.ip = next;
+  }
 }

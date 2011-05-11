@@ -1,4 +1,4 @@
-package org.nlogo.agent ;
+package org.nlogo.agent;
 
 import org.nlogo.api.CompilerException;
 
@@ -11,10 +11,9 @@ import org.nlogo.api.CompilerException;
 // we ask for one.  (In the case of SliderConstraint the object should
 // be a Double.) - ST 7/11/06
 
-public interface Evaluator
-{
-    boolean isConstant( String src ) ;
+public interface Evaluator {
+  boolean isConstant(String src);
 
-    Object readFromString( String src ) throws CompilerException ;
+  Object readFromString(String src) throws CompilerException;
 }
 

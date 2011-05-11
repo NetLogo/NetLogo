@@ -1,6 +1,5 @@
-package org.nlogo.window ;
+package org.nlogo.window;
 
 public interface ProceduresInterface
-	extends org.nlogo.api.SourceOwner
-{
+    extends org.nlogo.api.SourceOwner {
 }

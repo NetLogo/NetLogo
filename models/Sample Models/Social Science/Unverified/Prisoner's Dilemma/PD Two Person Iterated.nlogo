@@ -182,6 +182,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 6
@@ -198,6 +199,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 22
@@ -255,6 +257,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 183
@@ -271,6 +274,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 59
@@ -322,15 +326,13 @@ OUTPUT
 12
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This model is an iterated version of the prisoner's dilemma.  If you are unfamiliar with the basic concepts of the prisoner's dilemma, please refer to the PD BASIC model found in the PRISONER'S DILEMMA suite.
+## WHAT IS IT?
 
+This model is an iterated version of the prisoner's dilemma.  If you are unfamiliar with the basic concepts of the prisoner's dilemma, please refer to the PD Basic model found in the Prisoner's Dilemma suite.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The PD BASIC model presents an interesting problem: In order to minimize the overall jail time you would cooperate with your partner and remain silent and not confess.  However, the rational choice is to defect against your partner by confessing.  If your partner does not confess you will go free.  If your partner confesses, you will go to jail for three years, much better than the five you would have earned had you refused to confess.  Unfortunately, your partner is in the same position.  Acting rationally, you will both be worse off.
+The PD Basic model presents an interesting problem: In order to minimize the overall jail time you would cooperate with your partner and remain silent and not confess.  However, the rational choice is to defect against your partner by confessing.  If your partner does not confess you will go free.  If your partner confesses, you will go to jail for three years, much better than the five you would have earned had you refused to confess.  Unfortunately, your partner is in the same position.  Acting rationally, you will both be worse off.
 
 The dilemma is made more interesting when you know you will interact with the person again.  Let us consider the case where you and a friend are chosen for a research study to play the prisoner's dilemma game; only instead of the payoffs being years of jail time, they are money.
 
@@ -342,22 +344,18 @@ The researchers separate you and your friend into separate rooms allowing commun
 
 3.  Your payoff for each round will determined by the actions as follows:
 
-|          | Partner's Action
-|   Your   |
-|   Action |   C       D
-|   -------|-----------------
-|       C  |   3       0
-|   -------|-----------------
-|       D  |   5       1
-|   -------|-----------------
+<table border>
+<tr><th><th colspan=2>partner's action
+<tr><th>your action<th>C<th>D
+<tr><td>C<td>3<td>0
+<tr><td>D<td>5<td>1
+</table>
 
-(Note: This way of determining your payoff is the opposite of the PD BASIC model. In PD BASIC, you were awarded something bad- jail time. In this model, you are awarded something good- money.)
+(Note: This way of determining your payoff is the opposite of the PD Basic model. In PD Basic, you were "awarded" something bad --- jail time. In this model, you are awarded something good --- money.)
 
 Your partner has an identical payoff matrix.
 
-
-HOW TO USE IT
--------------
+## HOW TO USE IT
 
 Buttons:
 
@@ -383,12 +381,12 @@ COMPUTER STRATEGY - Select the computer's strategy from the list below.
 
 Strategies:
 
-Random - randomly cooperate or defect
-Cooperate - cooperate always
-Defect - defect always
-Tit-for-Tat - If the opponent cooperates this round cooperate next round.  If the opponent defects this round, defect next round.  Initially cooperate.
-Tit-for-Two-Tats - If the opponent cooperates this round cooperate next round.  If the opponent defects two rounds in a row, defect the next round.  Initially cooperate.
-Unforgiving - Cooperate always unless the opponent defects once.  Upon opponent defection retaliate by defecting always.
+Random - randomly cooperate or defect  
+Cooperate - cooperate always  
+Defect - defect always  
+Tit-for-Tat - If the opponent cooperates this round cooperate next round.  If the opponent defects this round, defect next round.  Initially cooperate.  
+Tit-for-Two-Tats - If the opponent cooperates this round cooperate next round.  If the opponent defects two rounds in a row, defect the next round.  Initially cooperate.  
+Unforgiving - Cooperate always unless the opponent defects once.  Upon opponent defection retaliate by defecting always.  
 Custom-Strategy - This strategy is intended to be written by you.  It currently defaults to Tit-for-Tat.
 
 Monitors:
@@ -403,49 +401,41 @@ Plots:
 
 AVERAGE SCORE: The average scores of you and the computer each round vs. the number of iterations.  This is a good indicator of how well you are doing relative to the maximum possible average of $5 per round.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Should the computer always plays strategy #1 (cooperate), then which strategy for the user results in the highest score?
 
 If the computer always plays strategy #2 (defect), then what is the nature of the average score plot when the user plays strategy #3 - #6 (Tit-for-Tat, Tit-for-Two-Tat, Unforgiving, and Custom Strategy, respectively)?  Why does such a nature arise for these combination of strategies?
 
 What is the nature of the plot for average score when the computer always plays strategy #3 and the user plays every startegy except strategy #2 (defect) and strategy #0 (random)?  Why does such a curve arise?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
-1.  Turn the SELECT-COMPUTER-STRATEGY? switch off.  Setup the model and play the iterated prisoner's dilemma against the computer.  You may choose between selecting your strategy each round using the PLAY ONCE button, or automating your choices each round using the PLAY REPEATEDLY button.  What approach wins you the most money?
+1. Turn the SELECT-COMPUTER-STRATEGY? switch off.  Setup the model and play the iterated prisoner's dilemma against the computer.  You may choose between selecting your strategy each round using the PLAY ONCE button, or automating your choices each round using the PLAY REPEATEDLY button.  What approach wins you the most money?
 
-2.  Turn the SELECT-COMPUTER-STRATEGY? switch on.  Experiment with playing different strategies against one another.  Which strategies do the best?  Which do the worst?  Why?
+2. Turn the SELECT-COMPUTER-STRATEGY? switch on.  Experiment with playing different strategies against one another.  Which strategies do the best?  Which do the worst?  Why?
 
-3.  Repeat task 1 several times.  How does the best strategy vary?  Based on you experience in task 2, why might this be so?
+3. Repeat task 1 several times.  How does the best strategy vary?  Based on you experience in task 2, why might this be so?
 
-4.  The researchers now tell you that they will double the amount of money the person with the most points gets at the end, but the other person will get nothing.  In the event of a tie, each person still receives $1 per point.  How does this change your strategy?  Why?
+4. The researchers now tell you that they will double the amount of money the person with the most points gets at the end, but the other person will get nothing.  In the event of a tie, each person still receives $1 per point.  How does this change your strategy?  Why?
 
-5.  Describe a real life scenario that is similar to the iterated prisoner's dilemma, preferably one you have experienced.  How might the strategies examined here relate to actions taken in that scenario?
+5. Describe a real life scenario that is similar to the iterated prisoner's dilemma, preferably one you have experienced.  How might the strategies examined here relate to actions taken in that scenario?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Even the most complex strategies in this model are relatively simple.  Surely you can do better.  Redefine the CUSTOM-STRATEGY procedure attempting to develop a strategy that can earn a higher score than those presented in the model or a human player.  Test it against the other strategies and yourself.  What are its strengths?  What are its weaknesses?  Try to keep improving it.
 
 Examine the PD N-PERSON ITERATED model
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note the use of the turtle variable LABEL to display each turtle's average score in the View.
+Note the use of the turtle variable `label` to display each turtle's average score in the view.
 
-Note that the SET-ACTION [STRATEGY] procedure uses "[]" to define a parameter that must be passed through when it is called.
+Note that the `set-action` procedure takes an input that must be supplied when the procedure is called.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-PD Basic
-PD N-Person Iterated
-PD Basic Evolutionary
-
+PD Basic, PD N-Person Iterated, PD Basic Evolutionary
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -743,7 +733,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 @#$#@#$#@

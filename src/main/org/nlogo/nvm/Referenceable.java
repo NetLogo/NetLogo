@@ -1,7 +1,6 @@
 package org.nlogo.nvm;
 
 
-public interface Referenceable
-{
-    Reference makeReference() ;
+public interface Referenceable {
+  Reference makeReference();
 }

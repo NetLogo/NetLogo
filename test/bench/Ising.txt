@@ -55,7 +55,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "only the observer can ASK the set of all turtles"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -68,7 +70,9 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "only the observer can ASK the set of all patches"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -87,7 +91,16 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "that agent is dead"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.$common.thatAgentIsDead"
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          ALOAD 4
+          INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -739,21 +752,22 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
+          ICONST_2
+          ANEWARRAY java/lang/String
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
-          LDC "the <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on a "
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          ICONST_0
           ALOAD 2
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " and "
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          AASTORE
+          DUP
+          ICONST_1
           DLOAD 3
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -788,21 +802,22 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
+          ICONST_2
+          ANEWARRAY java/lang/String
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
-          LDC "the > operator can only be used on two numbers, two strings, or two agents of the same type, but not on a "
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          ICONST_0
           ALOAD 2
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " and "
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+          AASTORE
+          DUP
+          ICONST_1
           DLOAD 3
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -879,7 +894,9 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "division by zero"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.etc.$common.divByZero"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L28
@@ -983,7 +1000,9 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "only the observer can ASK the set of all turtles"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.ask.onlyObserverCanAskAllTurtles"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -996,7 +1015,9 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "only the observer can ASK the set of all patches"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.ask.onlyObserverCanAskAllPatches"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1068,14 +1089,15 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.etc.$common.emptyListInput"
+          ICONST_1
+          ANEWARRAY java/lang/String
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+          ICONST_0
           LDC "ONE-OF"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " got an empty list as input"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -1380,7 +1402,9 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
+            INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -1476,7 +1500,9 @@ procedure MAGNETIZATION:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          LDC "division by zero"
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim.etc.$common.divByZero"
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -1518,14 +1544,15 @@ procedure MAGNETIZATION:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim._report.canOnlyUseInToReport"
+          ICONST_1
+          ANEWARRAY java/lang/String
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+          ICONST_0
           LDC "REPORT"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " can only be used inside TO-REPORT"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
@@ -1536,14 +1563,15 @@ procedure MAGNETIZATION:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
+          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
+          ICONST_1
+          ANEWARRAY java/lang/String
           DUP
-          INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+          ICONST_0
           LDC "REPORT"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " must be immediately inside a TO-REPORT"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11

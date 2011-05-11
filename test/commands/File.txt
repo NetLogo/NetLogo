@@ -4,14 +4,14 @@ FileIO
   O> file-close
   O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" ) 
   O> if ( file-exists? glob1 ) [ file-delete glob1 ]
-  file-at-end? => ERROR No file has been opened
-  file-read => ERROR No file has been opened
-  file-read-line => ERROR No file has been opened
-  file-read-characters 5 => ERROR No file has been opened
-  O> file-print 0 => ERROR No file has been opened
-  O> file-type 0 => ERROR No file has been opened
-  O> file-show 0 => ERROR No file has been opened
-  O> file-write 0 => ERROR No file has been opened  
+  file-at-end? => ERROR No file has been opened.
+  file-read => ERROR No file has been opened.
+  file-read-line => ERROR No file has been opened.
+  file-read-characters 5 => ERROR No file has been opened.
+  O> file-print 0 => ERROR No file has been opened.
+  O> file-type 0 => ERROR No file has been opened.
+  O> file-show 0 => ERROR No file has been opened.
+  O> file-write 0 => ERROR No file has been opened.  
   O> file-open glob1
   O> file-print "first line"
   file-read => ERROR You can only use WRITING primitives with this file

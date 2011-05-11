@@ -81,7 +81,9 @@ abstract class AbstractTestLanguage extends Assertions {
           expect(CompilerException.RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX + expectedError)(
             ex.getMessage)
         else
-          expect(expectedError)(actualError)
+          withClue(mode + ": reporter: " + reporter) {
+            expect(expectedError)(actualError)
+          }
     }
   }
   def testReporterError(reporter: String, error: String, mode: TestMode) {

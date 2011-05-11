@@ -10,7 +10,7 @@
 
 -injars target/scala_2.9.0.RC5/classes
 
--injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/svnversion.txt,system/color-translation.txt)
+-injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/color-translation.txt)
 
 -outjar HubNet.jar
 

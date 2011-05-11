@@ -62,7 +62,7 @@ Lput5
   lput 2 first [1] => ERROR LPUT expected input to be a list but got the number 1 instead.
 
 ListFirst1
-  first [] => ERROR list is empty
+  first [] => ERROR List is empty.
 
 ListFirst2
   first [8] => 8
@@ -77,7 +77,7 @@ ListReplaceIt1
   replace-item 3 [7 10 "Bob" [3 0 -2]] (replace-item 2 (item 3 [7 10 "Bob" [3 0 -2]]) 9) => [7 10 "Bob" [3 0 9]]
 
 ListReplaceIt2
-  replace-item 0 [] [] => ERROR can't find element 0 of the list [], which is only of length 0
+  replace-item 0 [] [] => ERROR Can't find element 0 of the list [], which is only of length 0.
 
 ReduceMinus
   reduce [?1 - ?2] [1 2 3] => -4
@@ -95,7 +95,7 @@ ReduceSingle
   reduce [?1 + ?2] [1] => 1
 
 ReduceEmpty
-  reduce [?1 + ?2] [] => ERROR The list argument to 'reduce' must not be empty.
+  reduce [?1 + ?2] [] => ERROR The list argument to reduce must not be empty.
 
 MapEmpty
   map [round ?] [] => []
@@ -170,10 +170,10 @@ ListEmpty
   map [empty? ?] [[] [1]] => [true false]
 
 ListItem1
-  item 0 [] => ERROR can't find element 0 of the list [], which is only of length 0
+  item 0 [] => ERROR Can't find element 0 of the list [], which is only of length 0.
 
 ListItem2
-  item 1 [1] => ERROR can't find element 1 of the list [1], which is only of length 1
+  item 1 [1] => ERROR Can't find element 1 of the list [1], which is only of length 1.
 
 ListItem3
   item 0 [1] => 1
@@ -182,7 +182,7 @@ ListItem4
   item 1 [1 []] => []
 
 ListLast1
-  last [] => ERROR list is empty
+  last [] => ERROR List is empty.
 
 ListLast2
   last [1] => 1
@@ -278,13 +278,13 @@ ListRemoveItem3
   remove-item 2 [1 2 3] => [1 2]
 
 ListRemoveItem4
-  remove-item 3 [1 2 3] => ERROR can't find element 3 of the list [1 2 3], which is only of length 3
+  remove-item 3 [1 2 3] => ERROR Can't find element 3 of the list [1 2 3], which is only of length 3.
 
 ListRemoveItem5
-  remove-item -1 [1 2 3] => ERROR -1 isn't greater than or equal to zero
+  remove-item -1 [1 2 3] => ERROR -1 isn't greater than or equal to zero.
 
 ListRemoveItem6
-  remove-item 0 [] => ERROR can't find element 0 of the list [], which is only of length 0
+  remove-item 0 [] => ERROR Can't find element 0 of the list [], which is only of length 0.
 
 ListRemDups1
   remove-duplicates [2 7 4 7 "Bob" 7] => [2 7 4 "Bob"]
@@ -302,10 +302,10 @@ ListReplItem1
   replace-item 2 [2 7 4 5] 15 => [2 7 15 5]
 
 ListReplItem2
-  replace-item -1 [2 7 4 5] 15 => ERROR -1 isn't greater than or equal to zero
+  replace-item -1 [2 7 4 5] 15 => ERROR -1 isn't greater than or equal to zero.
 
 ListReplItem3
-  replace-item 4 [2 7 4 5] 15 => ERROR can't find element 4 of the list [2 7 4 5], which is only of length 4
+  replace-item 4 [2 7 4 5] 15 => ERROR Can't find element 4 of the list [2 7 4 5], which is only of length 4.
 
 ListReplItem4
   replace-item 0 [[[]]] [] => [[]]
@@ -326,7 +326,7 @@ ListButFirst2
   bf [1] => []
 
 ListButFirst3
-  bf [] => ERROR BF got an empty list as input
+  bf [] => ERROR BF got an empty list as input.
 
 ListButLast1
   bl [1 2 3 4] => [1 2 3]
@@ -335,7 +335,7 @@ ListButLast2
   bl [1] => []
 
 ListButLast3
-  bl [] => ERROR BL got an empty list as input
+  bl [] => ERROR BL got an empty list as input.
 
 ListSubList1
   sublist [1 2 3] 0 0 => []
@@ -353,16 +353,16 @@ ListSubList5
   sublist [] 0 0 => []
 
 ListSubList6
-  sublist [1 2] 1 0 => ERROR 0 is less than 1
+  sublist [1 2] 1 0 => ERROR 0 is less than 1.
 
 ListSubList7
   sublist [1 2] 0 2 => [1 2]
 
 ListSubList8
-  sublist [1 2] 0 3 => ERROR 3 is greater than the length of the input list (2)
+  sublist [1 2] 0 3 => ERROR 3 is greater than the length of the input list (2).
 
 ListSubList9
-  sublist [1 2 3] -1 0 => ERROR -1 is less than zero
+  sublist [1 2 3] -1 0 => ERROR -1 is less than zero.
 
 ListSubList10
   sublist [99 88 77 66] 1 3 => [88 77]
@@ -371,7 +371,7 @@ ListSubList11
   sublist [0 1] 2 2 => []
 
 ListSubList12
-  sublist [0 1] 10 15 => ERROR 15 is greater than the length of the input list (2)
+  sublist [0 1] 10 15 => ERROR 15 is greater than the length of the input list (2).
 
 ListMultiOps1
   first sublist [9 8 7] 1 2 => 8

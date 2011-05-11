@@ -1,5 +1,6 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -7,49 +8,49 @@ import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _resizeworld
-	extends Command
-{
-	@Override
-	public Syntax syntax()
-	{
-		return Syntax.commandSyntax(
-			new int[] { Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER, 
-						Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ,
-			"O---" , true ) ;
-	}
-	@Override
-	public void perform( final Context context ) throws LogoException
-	{
-		final int newMinX = argEvalIntValue( context , 0 ) ;
-		final int newMaxX = argEvalIntValue( context , 1 ) ;
-		final int newMinY = argEvalIntValue( context , 2 ) ;
-		final int newMaxY = argEvalIntValue( context , 3 ) ;
-		
-		final int oldMinX = workspace.world().minPxcor() ;
-		final int oldMaxX = workspace.world().maxPxcor() ;
-		final int oldMinY = workspace.world().minPycor() ;
-		final int oldMaxY = workspace.world().maxPycor() ;
+    extends Command {
+  @Override
+  public Syntax syntax() {
+    return Syntax.commandSyntax(
+        new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER,
+            Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
+        "O---", true);
+  }
 
-		if( newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0 )
-		{
-			throw new EngineException
-				( context , this , "You must include the point (0, 0) in the world." ) ;
-		}
-		
-		if( oldMinX != newMinX || oldMaxX != newMaxX ||
-			oldMinY != newMinY || oldMaxY != newMaxY  )
-		{
-			workspace.waitFor
-				( new org.nlogo.api.CommandRunnable() {
-						public void run() {
-							workspace.setDimensions
-								( new org.nlogo.api.WorldDimensions( newMinX , newMaxX ,
-																	 newMinY , newMaxY ) ) ;
-						} } ) ;
-			workspace.waitFor
-				( new org.nlogo.api.CommandRunnable() {
-						public void run() { workspace.resizeView() ; } } ) ;
-		}
-		context.ip = next ;
-	}
+  @Override
+  public void perform(final Context context) throws LogoException {
+    final int newMinX = argEvalIntValue(context, 0);
+    final int newMaxX = argEvalIntValue(context, 1);
+    final int newMinY = argEvalIntValue(context, 2);
+    final int newMaxY = argEvalIntValue(context, 3);
+
+    final int oldMinX = workspace.world().minPxcor();
+    final int oldMaxX = workspace.world().maxPxcor();
+    final int oldMinY = workspace.world().minPycor();
+    final int oldMaxY = workspace.world().maxPycor();
+
+    if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
+      throw new EngineException
+          (context, this, I18N.errors().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
+    }
+
+    if (oldMinX != newMinX || oldMaxX != newMaxX ||
+        oldMinY != newMinY || oldMaxY != newMaxY) {
+      workspace.waitFor
+          (new org.nlogo.api.CommandRunnable() {
+            public void run() {
+              workspace.setDimensions
+                  (new org.nlogo.api.WorldDimensions(newMinX, newMaxX,
+                      newMinY, newMaxY));
+            }
+          });
+      workspace.waitFor
+          (new org.nlogo.api.CommandRunnable() {
+            public void run() {
+              workspace.resizeView();
+            }
+          });
+    }
+    context.ip = next;
+  }
 }

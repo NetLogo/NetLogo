@@ -1,6 +1,7 @@
-package org.nlogo.prim.etc ;
+package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -8,67 +9,49 @@ import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _setxy
-	extends Command
-{
-	@Override
-	public Syntax syntax()
-	{
-		int[] right = { Syntax.TYPE_NUMBER , Syntax.TYPE_NUMBER } ;
-		return Syntax.commandSyntax( right , "-T--" , true ) ;
-	}
-	@Override
-	public void perform( final Context context ) throws LogoException
-	{
-		Turtle turtle = (Turtle) context.agent ;
-		Double newx = argEvalDouble( context , 0 ) ;
-		Double newy = argEvalDouble( context , 1 ) ;
-        try
-        {
-			double xvalue = newx.doubleValue() ;
-			double yvalue = newy.doubleValue() ;
-			double x = turtle.shortestPathX( xvalue ) ;
-			double y = turtle.shortestPathY( yvalue ) ;
-			if( x != xvalue )
-			{
-				newx = Double.valueOf( x ) ;
-			}
-			if( y != yvalue )
-			{
-				newy = Double.valueOf( y ) ;
-			}
-            turtle.xandycor( newx , newy ) ;
-		}
-        catch( org.nlogo.api.AgentException e )
-        {
-			throw new EngineException
-				( context , this ,
-				  "The point [ "
-				  + newx.doubleValue() + " , "
-				  + newy.doubleValue() + " ] "
-				  + "is outside of the boundaries of the world "
-				  + "and wrapping is not permitted in one or both directions." ) ;
-        }
-        context.ip = next ;
-	}
-	public void perform_1( final Context context , double xvalue , double yvalue )
-		throws LogoException
-	{
-		Turtle turtle = (Turtle) context.agent ;
-        try
-        {
-            turtle.xandycor( turtle.shortestPathX( xvalue ) ,
-							 turtle.shortestPathY( yvalue ) ) ;
-		}
-        catch( org.nlogo.api.AgentException e )
-        {
-			throw new EngineException
-				( context , this ,
-				  "The point [ "
-				  + xvalue + " , "
-				  + yvalue + " ] "
-				  + "is outside of the boundaries of the world "
-				  + "and wrapping is not permitted in one or both directions." ) ;
-        }
-        context.ip = next ;
-	}
+    extends Command {
+  @Override
+  public Syntax syntax() {
+    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER};
+    return Syntax.commandSyntax(right, "-T--", true);
+  }
+
+  @Override
+  public void perform(final Context context) throws LogoException {
+    Turtle turtle = (Turtle) context.agent;
+    Double newx = argEvalDouble(context, 0);
+    Double newy = argEvalDouble(context, 1);
+    try {
+      double xvalue = newx.doubleValue();
+      double yvalue = newy.doubleValue();
+      double x = turtle.shortestPathX(xvalue);
+      double y = turtle.shortestPathY(yvalue);
+      if (x != xvalue) {
+        newx = Double.valueOf(x);
+      }
+      if (y != yvalue) {
+        newy = Double.valueOf(y);
+      }
+      turtle.xandycor(newx, newy);
+    } catch (org.nlogo.api.AgentException e) {
+      throw new EngineException
+          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._setxy.pointOutsideWorld",
+              new String[]{new Double(newx.doubleValue()).toString(), new Double(newy.doubleValue()).toString()}));
+    }
+    context.ip = next;
+  }
+
+  public void perform_1(final Context context, double xvalue, double yvalue)
+      throws LogoException {
+    Turtle turtle = (Turtle) context.agent;
+    try {
+      turtle.xandycor(turtle.shortestPathX(xvalue),
+          turtle.shortestPathY(yvalue));
+    } catch (org.nlogo.api.AgentException e) {
+      throw new EngineException
+          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._setxy.pointOutsideWorld",
+              new String[]{new Double(xvalue).toString(), new Double(yvalue).toString()}));
+    }
+    context.ip = next;
+  }
 }

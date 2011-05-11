@@ -1,3 +1,3 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public enum Nobody { NOBODY }
+public enum Nobody {NOBODY}

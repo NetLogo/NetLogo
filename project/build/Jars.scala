@@ -6,12 +6,11 @@ trait Jars extends DefaultProject {
 
   private val java5Path = "devel" / "java5" / "classes.jar"
   lazy val java5 = fileTask(Seq(java5Path)) {
-    ("curl -o " + java5Path.asFile.toString + " http://ccl.northwestern.edu/devel/java5-classes.jar").!
+    ("curl -s -o " + java5Path.asFile.toString + " http://ccl.northwestern.edu/devel/java5-classes.jar").!
     None
   }
 
   private val jarPaths: List[Path] =
-    ("tmp" / "scala-library-trimmed.jar") ::
     List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar", "BehaviorSpace.jar").map(path)
 
   private def build(config: String) {
@@ -27,11 +26,11 @@ trait Jars extends DefaultProject {
   // it would be nicer if these were separate tasks - ST 3/29/11
   lazy val alljars =
     fileTask(jarPaths from (Set(java5Path) ++ ("project" / "build" / "proguard" * "*.txt").get)) {
+      jarPaths.map(_.asFile.delete()) // don't risk updating existing, just start fresh
       build("main"); addManifest("NetLogo", "manifest")
       build("hubnet"); addManifest("HubNet", "manifesthubnet")
       build("lite")
       build("lab")
-      build("scala")
       None
     }.dependsOn(compile)
 

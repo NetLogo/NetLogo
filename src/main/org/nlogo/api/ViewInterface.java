@@ -1,21 +1,29 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface ViewInterface
-{
-	boolean viewIsVisible() ;
-	void framesSkipped() ;
+public interface ViewInterface {
+  boolean viewIsVisible();
 
-	boolean isDead() ;
-	void paintImmediately( boolean force ) ;
-	void incrementalUpdateFromEventThread() ;
-	void repaint() ;
+  void framesSkipped();
 
-	double mouseXCor() ;
-	double mouseYCor() ;
-	boolean mouseDown() ;
-	boolean mouseInside() ; 
-	void resetMouseCors() ;
+  boolean isDead();
 
-	void shapeChanged( org.nlogo.api.Shape shape ) ;
-	void applyNewFontSize( int fontSize , int zoom ) ;
+  void paintImmediately(boolean force);
+
+  void incrementalUpdateFromEventThread();
+
+  void repaint();
+
+  double mouseXCor();
+
+  double mouseYCor();
+
+  boolean mouseDown();
+
+  boolean mouseInside();
+
+  void resetMouseCors();
+
+  void shapeChanged(org.nlogo.api.Shape shape);
+
+  void applyNewFontSize(int fontSize, int zoom);
 }

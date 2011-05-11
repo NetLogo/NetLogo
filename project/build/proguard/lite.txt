@@ -16,7 +16,7 @@
 
 -outjar NetLogoLite.jar
 
--keep public class org.nlogo.lite.Applet
+-keep public class org.nlogo.lite.*
 
 # the Event stuff works by reflection so we need to explicitly include these
 -keep public class * extends org.nlogo.window.Event
@@ -49,9 +49,10 @@
     *;
 }
 
-# this method is required by the widget extension
+# some methods used by extensions
 -keep public class org.nlogo.window.GUIWorkspace {
     public org.nlogo.window.WidgetContainer getWidgetContainer();
+    public void waitFor(java.lang.Runnable);
 }
 
 # pull in stuff we access only by reflection (for dependency injection)
@@ -71,6 +72,11 @@
     *;
 }
 -keep class org.nlogo.job.JobManager {
+    *;
+}
+
+# needed or extensions written in Scala won't build
+-keep class scala.reflect.ScalaSignature {
     *;
 }
 

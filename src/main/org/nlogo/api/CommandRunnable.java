@@ -1,6 +1,5 @@
-package org.nlogo.api ;
+package org.nlogo.api;
 
-public interface CommandRunnable
-{
-	void run() throws LogoException ;
+public interface CommandRunnable {
+  void run() throws LogoException;
 }

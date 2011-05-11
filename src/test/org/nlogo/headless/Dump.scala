@@ -9,10 +9,6 @@ import org.nlogo.api.SimpleJobOwner
 // the whole models library to tmp/dumps. - ST 2/11/09
 
 object Dump {
-  val allBenchmarks =
-    List("Ants","BZ","CA1D","Erosion","Fire","FireBig","Flocking","GasLabCirc",
-         "GasLabNew","GasLabOld","GridWalk","Heatbugs","Ising","Life","PrefAttach",
-         "Team","Termites","VirusNet","Wealth","Wolf","ImportWorld")
   def main(argv:Array[String]) {
     argv match {
       case Array() => println("usage: dump all, dump bench, dump Fire, dump foo/bar/Fire.nlogo")
@@ -35,7 +31,7 @@ object Dump {
   }
   def benchPath(name:String) = "test/models/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
-    for(name <- allBenchmarks)
+    for(name <- ChecksumsAndPreviews.allBenchmarks)
       writeFile("test/bench/" + name + ".txt",
                 dump(benchPath(name)))
   }

@@ -3,6 +3,7 @@ package org.nlogo.window
 import org.nlogo.agent.ConstantSliderConstraint
 import org.nlogo.api.Dump
 import org.nlogo.api.Editable
+import org.nlogo.api.I18N
 
 // This widget works iff the slider has a ConstantSliderConstraint
 // object.  Since this is only being used to construct HubNet client
@@ -12,7 +13,7 @@ import org.nlogo.api.Editable
 class DummySliderWidget extends AbstractSliderWidget with Editable {
   setBorder( widgetBorder )
 
-  override def classDisplayName = "Slider"
+  override def classDisplayName =  I18N.gui.get("tabs.run.widgets.slider")
 
   def propertySet = Properties.dummySlider
 
