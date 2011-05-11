@@ -23,6 +23,7 @@ tmp/
 /extensions/bitmap/
 /extensions/gogo/
 /extensions/matrix/
+/extensions/profiler/
 /extensions/qtj/
 /extensions/sound/
 

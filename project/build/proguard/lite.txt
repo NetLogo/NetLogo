@@ -49,9 +49,10 @@
     *;
 }
 
-# this method is required by the widget extension
+# some methods used by extensions
 -keep public class org.nlogo.window.GUIWorkspace {
     public org.nlogo.window.WidgetContainer getWidgetContainer();
+    public void waitFor(java.lang.Runnable);
 }
 
 # pull in stuff we access only by reflection (for dependency injection)
@@ -71,6 +72,11 @@
     *;
 }
 -keep class org.nlogo.job.JobManager {
+    *;
+}
+
+# needed or extensions written in Scala won't build
+-keep class scala.reflect.ScalaSignature {
     *;
 }
 
