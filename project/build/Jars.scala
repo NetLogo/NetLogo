@@ -11,7 +11,6 @@ trait Jars extends DefaultProject {
   }
 
   private val jarPaths: List[Path] =
-    ("tmp" / "scala-library-trimmed.jar") ::
     List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar", "BehaviorSpace.jar").map(path)
 
   private def build(config: String) {
@@ -31,7 +30,6 @@ trait Jars extends DefaultProject {
       build("hubnet"); addManifest("HubNet", "manifesthubnet")
       build("lite")
       build("lab")
-      build("scala")
       None
     }.dependsOn(compile)
 

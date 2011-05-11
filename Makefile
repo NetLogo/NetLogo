@@ -17,8 +17,9 @@ endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -server -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.8.1
+SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 LIBS = lib_managed/scala_$(SCALA_VERSION)/compile
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar:$(LIBS)/asm-all-3.3.1.jar:$(LIBS)/picocontainer-2.11.1.jar:$(LIBS)/log4j-1.2.16.jar
+CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):$(LIBS)/asm-all-3.3.1.jar:$(LIBS)/picocontainer-2.11.1.jar:$(LIBS)/log4j-1.2.16.jar
 
 ### common prerequisites
 tmp:
@@ -61,7 +62,7 @@ models/index.txt:
 ### JAR building
 ###
 
-JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar tmp/scala-library-trimmed.jar
+JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 	bin/sbt alljars
@@ -110,7 +111,7 @@ $(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
-$(GITHUB_EXTENSIONS): | NetLogo.jar tmp/scala-library-trimmed.jar
+$(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
@@ -118,7 +119,7 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar tmp/scala-library-trimmed.jar
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) $(MAKE) -s $(notdir $@)
 
 ### misc targets
 

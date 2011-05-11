@@ -28,6 +28,7 @@ XARGS=xargs
 
 # other
 SCALA=2.8.1
+SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server
@@ -100,9 +101,9 @@ bin/sbt behaviorspace-sources
 # zzz TODO $MAKE -s javadoc-public
 
 # remember version number
-export VERSION=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
-export DATE=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --builddate`
-export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:tmp/scala-library-trimmed.jar org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # eject any leftover dmg's from last run
 $OSASCRIPT -e "tell application \"Finder\"" -e "eject disk \"NetLogo\"" -e "end" > /dev/null 2>&1 || true
@@ -124,12 +125,11 @@ $CP ../../NetLogoLite.jar .
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.11.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/pegdown-0.9.1.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
 $CP -p ../../BehaviorSpace.jar ../../BehaviorSpace-src.zip lib
-$CP -p ../../tmp/scala-library-trimmed.jar lib/scala-library.jar
+$CP -p ../../$SCALA_JAR lib/scala-library.jar
 
-# NLink stuff
-(cd ../../Mathematica-Link; NETLOGO=.. SCALA_JAR=../tmp/scala-library-trimmed.jar make)
-$MKDIR Mathematica\ Link
-$CP -rp ../../Mathematica-Link/* Mathematica\ Link
+# Mathematica link stuff
+$CP -rp ../../Mathematica-Link Mathematica\ Link
+(cd Mathematica\ Link; NETLOGO=.. make)
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
