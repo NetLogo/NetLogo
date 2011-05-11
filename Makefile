@@ -107,10 +107,11 @@ $(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
-$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar
+$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
+# most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi

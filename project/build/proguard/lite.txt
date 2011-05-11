@@ -75,6 +75,11 @@
     *;
 }
 
+# needed or extensions written in Scala won't build
+-keep class scala.reflect.ScalaSignature {
+    *;
+}
+
 # this is a bit of magic needed to make Java enums work, taken from the ProGuard manual
 -keepclassmembers enum * {
     public static **[] values();
