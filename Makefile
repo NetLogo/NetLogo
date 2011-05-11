@@ -102,11 +102,11 @@ $(SCALA_EXTENSION_MAKEFILES): extensions/Makefile-scala.mk
 	@echo "@@@ building" $@
 	cp extensions/Makefile-scala.mk $@
 
-$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
+$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogo.jar
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
-$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
+$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
