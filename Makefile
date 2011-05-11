@@ -28,6 +28,7 @@ bin/sbt-launch.jar:
 	curl 'http://ccl.northwestern.edu/devel/sbt-launch-0.7.6.RC0.jar' > bin/sbt-launch.jar
 project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar: bin/sbt-launch.jar
 	bin/sbt update
+	touch project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 
 ### targets for running
 goshell:
