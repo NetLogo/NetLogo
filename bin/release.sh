@@ -27,7 +27,7 @@ TOUCH=touch
 XARGS=xargs
 
 # other
-SCALA=2.9.0.RC4
+SCALA=2.9.0.RC5
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server

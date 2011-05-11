@@ -3,8 +3,8 @@
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 
--injars project/boot/scala-2.9.0.RC4/lib/scala-library.jar
--injars target/scala_2.9.0.RC4/classes
+-injars project/boot/scala-2.9.0.RC5/lib/scala-library.jar
+-injars target/scala_2.9.0.RC5/classes
 
 -keep class org.nlogo.** {
     *;

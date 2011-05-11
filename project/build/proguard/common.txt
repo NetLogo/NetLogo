@@ -8,7 +8,7 @@
 
 # pull in both managed and unmanaged libraries
 -libraryjars ../../../lib
--libraryjars ../../../lib_managed/scala_2.9.0.RC4/compile
+-libraryjars ../../../lib_managed/scala_2.9.0.RC5/compile
 
 # we need to remove these before 5.0 final. see ticket #1186 - ST 2/11/11
 -dontwarn java.lang.String

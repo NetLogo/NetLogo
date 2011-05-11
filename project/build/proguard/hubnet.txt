@@ -6,9 +6,9 @@
 # pulling in ordinary Scala objects costs very little in size, but
 # when we starting pulling in stuff from the Scala standard library,
 # the costs escalate somewhat, so be careful - ST 2/21/09, 8/12/09
--libraryjars project/boot/scala-2.9.0.RC4/lib/scala-library.jar
+-libraryjars project/boot/scala-2.9.0.RC5/lib/scala-library.jar
 
--injars target/scala_2.9.0.RC4/classes
+-injars target/scala_2.9.0.RC5/classes
 
 -injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/svnversion.txt,system/color-translation.txt)
 
