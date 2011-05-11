@@ -31,7 +31,8 @@ public final strictfp class _of
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       args[0].checkAgentClass(agent, context);
       return new Context(context, agent).evaluateReporter(agent, args[0]);

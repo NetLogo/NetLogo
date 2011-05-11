@@ -359,8 +359,8 @@ public abstract strictfp class Instruction
     try {
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
       if (agent.id == -1) {
-        throw new EngineException
-            (context, this, "That " + agent.classDisplayName() + " is dead.");
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       return agent;
     } catch (ClassCastException ex) {

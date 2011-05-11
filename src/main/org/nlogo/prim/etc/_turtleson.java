@@ -29,7 +29,8 @@ public final strictfp class _turtleson
     if (agentOrSet instanceof Turtle) {
       Turtle turtle = (Turtle) agentOrSet;
       if (turtle.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
       }
       addAll(resultList, turtle.getPatchHere().turtlesHere());
     } else if (agentOrSet instanceof Patch) {

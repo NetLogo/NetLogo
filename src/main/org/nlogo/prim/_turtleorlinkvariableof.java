@@ -2,6 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -24,10 +25,8 @@ public final strictfp class _turtleorlinkvariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException
-            (context, this, "that " +
-                (agent instanceof org.nlogo.agent.Link ? "link" : "turtle")
-                + " is dead");
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getTurtleOrLinkVariable(varName);
@@ -71,10 +70,8 @@ public final strictfp class _turtleorlinkvariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException
-            (context, this, "that " +
-                (agent instanceof org.nlogo.agent.Link ? "link" : "turtle")
-                + " is dead");
+        throw new EngineException(context, this,
+            I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getTurtleOrLinkVariable(varName);
@@ -105,10 +102,8 @@ public final strictfp class _turtleorlinkvariableof
   public Object report_2(final Context context, Agent agent)
       throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException
-          (context, this, "that " +
-              (agent instanceof org.nlogo.agent.Link ? "link" : "turtle")
-              + " is dead");
+      throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     try {
       return agent.getTurtleOrLinkVariable(varName);

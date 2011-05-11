@@ -31,7 +31,8 @@ public final strictfp class _networkdistance extends Reporter {
           (context, this, "expected the last input to be a link breed.");
     }
     if (destNode.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{destNode.classDisplayName()}));
     }
     return world.linkManager.networkMetrics.networkDistance
         ((Turtle) context.agent, destNode, linkBreed);

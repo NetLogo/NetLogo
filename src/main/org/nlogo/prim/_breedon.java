@@ -49,7 +49,8 @@ public final strictfp class _breedon
     if (agentOrSet instanceof Turtle) {
       Turtle turtle = (Turtle) agentOrSet;
       if (turtle.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
       }
       for (Turtle t : turtle.getPatchHere().turtlesHere()) {
         if (t.getBreed() == breed) {
@@ -130,7 +131,8 @@ public final strictfp class _breedon
     if (agent instanceof Turtle) {
       Turtle turtle = (Turtle) agent;
       if (turtle.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
       }
       for (Turtle t : turtle.getPatchHere().turtlesHere()) {
         if (t.getBreed() == breed) {
@@ -159,7 +161,8 @@ public final strictfp class _breedon
     List<Turtle> resultList = new ArrayList<Turtle>();
     AgentSet breed = world.getBreed(breedName);
     if (turtle.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
     }
     for (Turtle t : turtle.getPatchHere().turtlesHere()) {
       if (t.getBreed() == breed) {

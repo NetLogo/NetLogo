@@ -37,8 +37,8 @@ Agentsets2
 Agentsets3
   O> random-seed 18174
   count (n-of 0 turtles) => 0
-  count (n-of 1 turtles) => ERROR requested 1 random agents from a set of only 0 agents
-  count (n-of -1 patches) => ERROR first input to N-OF can't be negative
+  count (n-of 1 turtles) => ERROR Requested 1 random agents from a set of only 0 agents.
+  count (n-of -1 patches) => ERROR First input to N-OF can't be negative.
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
   count (n-of 50 patches) => 50
@@ -297,7 +297,7 @@ LinkAgentsetDeadLinks
   count glob1 => 0
   any? glob1 => false
   one-of glob1 = nobody => true
-  n-of 5 glob1 => ERROR requested 5 random agents from a set of only 0 agents
+  n-of 5 glob1 => ERROR Requested 5 random agents from a set of only 0 agents.
 
 RemoveDuplicates
   O> set glob1 one-of patches

@@ -25,7 +25,8 @@ public final strictfp class _turtlevariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getTurtleVariable(vn);
@@ -72,7 +73,8 @@ public final strictfp class _turtlevariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getTurtleVariable(vn);
@@ -102,7 +104,8 @@ public final strictfp class _turtlevariableof
   public Object report_2(final Context context, Agent agent)
       throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     try {
       return agent.getTurtleVariable(vn);

@@ -25,7 +25,8 @@ public final strictfp class _patchvariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getPatchVariable(vn);
@@ -74,7 +75,8 @@ public final strictfp class _patchvariableof
     if (agentOrSet instanceof Agent) {
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       try {
         return agent.getPatchVariable(vn);
@@ -118,8 +120,8 @@ public final strictfp class _patchvariableof
 
   public Object report_3(Context context, Agent agent) throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
-
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     try {
       return agent.getPatchVariable(vn);

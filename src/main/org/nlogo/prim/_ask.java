@@ -52,8 +52,8 @@ public final strictfp class _ask
     } else if (target instanceof Agent) {
       Agent agent = (Agent) target;
       if (agent.id == -1) {
-        throw new EngineException
-            (context, this, I18N.errors().get("org.nlogo.$common.thatAgentIsDead"));
+        throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
       }
       agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
       agentset.add(agent);
@@ -83,8 +83,8 @@ public final strictfp class _ask
   public void perform_3(Context context, Agent agent)
       throws LogoException {
     if (agent.id == -1) {
-      throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.$common.thatAgentIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     AgentSet agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
     agentset.add(agent);

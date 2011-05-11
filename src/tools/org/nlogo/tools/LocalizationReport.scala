@@ -143,7 +143,7 @@ object LocalizationReport {
   (KeyAndArgs("org.nlogo.prim.$common.expectedBooleanValue", "COUNT", "(turtle 0)", "(turtle 1)"),
             Some("COUNT expected a true/false value from (turtle 0), but got (turtle 1) instead.")),
   (KeyAndArgs("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset", "TURTLE-SET", "[(patch 1 1) turtles]", "(patch 1 1)"),
-            Some("List inputs to TURTLE-SET must only contain turtle or turtle agentset elements. The list [(patch 1 1) turtles] contained a different type agentset: (patch 1 1).")),
+            Some("List inputs to TURTLE-SET must only contain turtle or turtle agentset elements.  The list [(patch 1 1) turtles] contained a different type agentset: (patch 1 1).")),
   (KeyAndArgs("org.nlogo.prim.etc.$common.notThatManyAgentsExist", "4", "2"),
             Some("Requested 4 random agents from a set of only 2 agents.")),
   (KeyAndArgs("org.nlogo.prim.etc._otherend.incorrectLink", "(turtle 1)", "(link 7 8)"),

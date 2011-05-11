@@ -43,7 +43,7 @@ public final strictfp class _nof
       int count = agents.count();
       if (n > count) {
         throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.requestMoreItemsThanInList",
+            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist",
                 new String[]{new Integer(n).toString(), new Integer(count).toString()}));
       }
       return agents.randomSubset(n, count, context.job.random);

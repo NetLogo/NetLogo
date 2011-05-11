@@ -22,7 +22,8 @@ public final strictfp class _moveto
       throws LogoException {
     Agent otherAgent = argEvalAgent(context, 0);
     if (otherAgent.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{otherAgent.classDisplayName()}));
     }
     if (otherAgent instanceof org.nlogo.agent.Link) {
       throw new EngineException(context, this, "you can't move-to a link");

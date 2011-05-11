@@ -12,8 +12,8 @@ public final strictfp class _inspectwithradius
     final org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     final double radius = argEvalDouble(context, 1);
     if (agent.id == -1) {
-      throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     if (radius < 0 || radius > ((world.worldWidth() - 1) / 2)) {
       throw new EngineException

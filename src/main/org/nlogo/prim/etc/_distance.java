@@ -27,7 +27,8 @@ public final strictfp class _distance extends Reporter {
           (context, this, I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (otherAgent.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{otherAgent.classDisplayName()}));
     }
     return world.protractor().distance(context.agent, otherAgent, true); // true = wrap
   }

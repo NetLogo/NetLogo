@@ -11,9 +11,8 @@ public final strictfp class _inspect
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     final org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     if (agent.id == -1) {
-      throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
-
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
     }
     org.nlogo.awt.Utils.invokeLater
         (new Runnable() {

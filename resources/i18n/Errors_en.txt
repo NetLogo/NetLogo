@@ -108,7 +108,6 @@ org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of t
 org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}
 
 org.nlogo.$common.tooBigForInt = {0} is too large to be represented exactly as an integer in NetLogo.
-org.nlogo.$common.thatAgentIsDead = That Agent is dead.
 
 # diffuse
 org.nlogo.prim.$common.paramOutOfBounds = {0} is not in the range 0.0 to 1.0
@@ -151,7 +150,7 @@ org.nlogo.prim.$common.withExpectedBooleanValue = WITH expected a true/false val
 org.nlogo.prim.$common.expectedBooleanValue = {0} expected a true/false value from {1}, but got {2} instead.
 
 
-org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle or turtle agentset elements. The list {1} contained a different type agentset: {2}.
+org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained a different type agentset: {2}.
 org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = You can't import drawing in 3D.
 
 
@@ -171,7 +170,7 @@ org.nlogo.prim.etc._stop.notAllowedInsideToReport = {0} is not allowed inside TO
 
 org.nlogo.prim._askconcurrent.onlyObserverCanAskAllTurtles only the observer can ASK the set of all turtles
 
-org.nlogo.$common.thatTurtleIsDead = That turtle is dead.
+org.nlogo.$common.thatAgentIsDead = That {0} is dead.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.
 org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.

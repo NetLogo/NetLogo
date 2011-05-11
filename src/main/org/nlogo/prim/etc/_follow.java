@@ -23,8 +23,8 @@ public final strictfp class _follow
       throws LogoException {
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id == -1) {
-      throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
     }
     world.observer().setPerspective(Perspective.FOLLOW, turtle);
     // the following code is duplicated in _follow and _followme - ST 6/28/05

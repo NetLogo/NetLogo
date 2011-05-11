@@ -26,7 +26,8 @@ public final strictfp class _distancenowrap extends Reporter {
           (context, this, I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (arg0.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{arg0.classDisplayName()}));
     }
     return world.protractor().distance(context.agent, arg0, false); // false = don't wrap
   }

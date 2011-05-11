@@ -34,7 +34,8 @@ public final strictfp class _networkshortestpathnodes extends Reporter {
     }
 
     if (destNode.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{destNode.classDisplayName()}));
     }
     return world.linkManager.networkMetrics.networkShortestPathNodes
         (context.job.random, (Turtle) context.agent, destNode, linkBreed);

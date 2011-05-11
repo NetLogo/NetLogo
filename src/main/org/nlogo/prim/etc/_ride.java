@@ -21,7 +21,8 @@ public final strictfp class _ride
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
     }
     world.observer().setPerspective(Perspective.RIDE, turtle);
     world.observer().followDistance(0);

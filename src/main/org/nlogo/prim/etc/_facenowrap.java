@@ -21,7 +21,8 @@ public final strictfp class _facenowrap
       throws LogoException {
     org.nlogo.agent.Agent agentToFace = argEvalAgent(context, 0);
     if (agentToFace.id == -1) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.$common.thatTurtleIsDead"));
+      throw new EngineException(context, this,
+        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agentToFace.classDisplayName()}));
     }
     org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) context.agent;
     turtle.face(agentToFace, false);
