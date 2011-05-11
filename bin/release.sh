@@ -43,9 +43,7 @@ fi
 
 # maybe we should be using the "submodules" feature of git for this? - ST 5/7/11
 if [ ! -d "Mathematica-Link" ]; then
-  echo "do this first:"
-  echo "git clone git@github.com:NetLogo/Mathematica-Link.git"
-  exit 1
+  git clone git@github.com:NetLogo/Mathematica-Link.git
 fi
 
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
