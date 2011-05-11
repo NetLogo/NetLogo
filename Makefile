@@ -102,7 +102,7 @@ $(SCALA_EXTENSION_MAKEFILES): extensions/Makefile-scala.mk
 	@echo "@@@ building" $@
 	cp extensions/Makefile-scala.mk $@
 
-$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogo.jar
+$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
