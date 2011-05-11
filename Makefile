@@ -108,7 +108,7 @@ $(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-
 
 $(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogo.jar tmp/scala-library-trimmed.jar
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../tmp/scala-library-trimmed.jar $(MAKE) -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
 $(GITHUB_EXTENSIONS): extensions/qtj/QTJava.jar | NetLogo.jar tmp/scala-library-trimmed.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
