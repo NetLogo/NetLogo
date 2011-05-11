@@ -125,7 +125,7 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 ### misc targets
 
 # cleaning
-.PHONY: clean realclean
+.PHONY: clean clean-github realclean
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
@@ -137,6 +137,8 @@ clean:
 	rm -rf tmp target docs/javadoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
+clean-github:
+	rm -rf $(foreach foo,$(GITHUB_EXTENSIONS),$(dir $(foo)))
 realclean:
 	git clean -fdX
 

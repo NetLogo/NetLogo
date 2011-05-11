@@ -5,7 +5,7 @@
 
 make bin/sbt-launch.jar
 bin/sbt update
-make clean
+make clean clean-github
 make
 
 rm -rf tmp/nightly
