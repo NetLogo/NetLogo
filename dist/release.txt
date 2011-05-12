@@ -16,19 +16,18 @@ any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
 As befits the number 5.0, this release has major new features.  Among
-those major features are: support for internationalization, smart
-plot widgets which eliminate the need for plotting code in the
-procedures tab, rich formatting features for the info tab, and
-support for functions as first class objects.  We invite and welcome
-your comments on the features as well as reports on bugs that you
-find.  We are excited by the opportunities resulting from the
-internationalization of NetLogo.  The work on internationalization is
-not complete and may not be fully complete in version 5.0.  We will
-need help from the user community in helping us localize items such
-as the menus, error messages, etc.  We are hoping those of you in
-locales other than U.S. English will try using NetLogo in your locale
-with your local character set and report to us about successes or
-problems that you find.
+those major features are: support for internationalization, smart plot
+widgets which eliminate the need for plotting code in the Code tab,
+rich formatting features for the Info tab, and support for functions
+as first class objects.  We invite and welcome your comments on the
+features as well as reports on bugs that you find.  We are excited by
+the opportunities resulting from the internationalization of NetLogo.
+The work on internationalization is not complete and may not be fully
+complete in version 5.0.  We will need help from the user community in
+helping us localize items such as the menus, error messages, etc.  We
+are hoping those of you in locales other than U.S. English will try
+using NetLogo in your locale with your local character set and report
+to us about successes or problems that you find.
 
 The following is a (partial) list of changes made since NetLogo
 5.0beta1:

@@ -80,7 +80,7 @@ class Tabs(val workspace: GUIWorkspace,
       // on null error, clear all errors, as we only get one event for all the files
       if(e.error == null) clearErrors() else recolorTab(tab, e.error != null) 
       // I don't really know why this is necessary when you delete a slider (by using the menu
-      // item *not* the button) which causes an error in the procedures tab the focus gets lost,
+      // item *not* the button) which causes an error in the Code tab the focus gets lost,
       // so request the focus by a known component 7/18/07
       requestFocus()
     }

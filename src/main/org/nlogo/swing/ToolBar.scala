@@ -38,7 +38,7 @@ abstract class ToolBar extends JToolBar {
       org.nlogo.awt.Utils.adjustDefaultFont(comp) 
     }
     // kinda kludgy but we don't want to have the text below
-    // the checker in the checkbox in the procedures tab ev 8/24/06
+    // the checker in the checkbox in the Code tab ev 8/24/06
     for(comp<-getComponents.collect{case b:AbstractButton => b}; if(!comp.isInstanceOf[JCheckBox])){
       comp.setVerticalTextPosition(SwingConstants.BOTTOM)
       comp.setHorizontalTextPosition(SwingConstants.CENTER)

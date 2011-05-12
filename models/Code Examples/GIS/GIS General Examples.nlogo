@@ -572,11 +572,11 @@ Select a map projection from the projection menu, then click the setup button. Y
 
 ## THINGS TO TRY
 
-Most of the commands in the procedures tab can be easily modified to display slightly different information. For example, you could modify `display-cities` to label cities with their population instead of their name. Or you could modify `highlight-large-cities` to highlight small cities instead, by replacing `gis:find-greater-than` with `gis:find-less-than`.
+Most of the commands in the Code tab can be easily modified to display slightly different information. For example, you could modify `display-cities` to label cities with their population instead of their name. Or you could modify `highlight-large-cities` to highlight small cities instead, by replacing `gis:find-greater-than` with `gis:find-less-than`.
 
 ## EXTENDING THE MODEL
 
-This model doesn't do anything particularly interesting, but you can easily copy some of the code from the procedures tab into a new model that uses your own data, or does something interesting with the included data. See the other GIS code example, GIS Gradient Example, for an example of this technique.
+This model doesn't do anything particularly interesting, but you can easily copy some of the code from the Code tab into a new model that uses your own data, or does something interesting with the included data. See the other GIS code example, GIS Gradient Example, for an example of this technique.
 
 ## RELATED MODELS
 

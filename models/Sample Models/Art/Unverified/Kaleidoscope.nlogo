@@ -272,7 +272,7 @@ You also should notice how COLOR-SEP (or really CURR-COLOR-SEP) alters the appea
 
 ## THINGS TO TRY
 
-Try changing the code in the Procedures tab. Increase the size of the circles drawn by each of the turtles, or try changing the size of the angle each of the turtles turns through.
+Try changing the code in the Code tab. Increase the size of the circles drawn by each of the turtles, or try changing the size of the angle each of the turtles turns through.
 
 Instead of each turtle moving or turning a given amount, what about having it move a small random amount (as in the changes to curr-color-sep from COLOR-SHIFT). How much randomness can you add and still maintain some kind of overall structure?
 

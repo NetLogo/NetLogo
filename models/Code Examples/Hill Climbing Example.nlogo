@@ -114,7 +114,7 @@ If there is a tie between neighboring patches, NetLogo breaks the tie randomly.
 
 ## THINGS TO TRY
 
-In the `go` procedure in the Procedures tab, change `uphill` to `uphill4`, `downhill`, or `downhill4` and observe the results.
+In the `go` procedure in the Code tab, change `uphill` to `uphill4`, `downhill`, or `downhill4` and observe the results.
 
 ## NETLOGO FEATURES
 

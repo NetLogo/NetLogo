@@ -75,7 +75,7 @@ public strictfp class CompilerManager
   private void compileAll() {
     new org.nlogo.window.Events.RemoveAllJobsEvent().raise(this);
     workspace.world.displayOn(true);
-    // We can't compile the procedures tab until the contents of
+    // We can't compile the Code tab until the contents of
     // InterfaceGlobals is known, which won't happen until the
     // widgets are loaded, which happens later.  So the isLoading
     // flag is used to suppress compilation now.  Later,

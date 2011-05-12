@@ -230,7 +230,7 @@ NIL
 
 In some models, you want to allow only one turtle per patch.  This example demonstrates a few different techniques for achieving this.  This code example includes three strategies for moving turtles around while keeping the one turtle per patch satisfied.
 
-It also demonstrates how to create turtles so they are only one turtle per patch.  Your choice of strategy should be dependent on the behavior you want to exhibit in your model.  To learn more about the strategies and their behaviors, read through the comments in the procedures tab.
+It also demonstrates how to create turtles so they are only one turtle per patch.  Your choice of strategy should be dependent on the behavior you want to exhibit in your model.  To learn more about the strategies and their behaviors, read through the comments in the Code tab.
 
 ## RELATED MODELS
 

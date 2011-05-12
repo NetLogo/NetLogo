@@ -675,7 +675,7 @@ Move the plants and seeds into different areas of the screen to conduct differen
 
 ## EXTENDING THE MODEL
 
-This section could give some ideas of things to add or change in the procedures tab to make the model more complicated, detailed, and accurate, etc.
+This section could give some ideas of things to add or change in the Code tab to make the model more complicated, detailed, and accurate, etc.
 
 Plants could drop multiple seeds (e.g. four or five) like in a pea pod of a pea plant.
 

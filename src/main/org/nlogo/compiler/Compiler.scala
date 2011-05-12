@@ -21,13 +21,13 @@ object Compiler extends CompilerInterface {
   private val noProcedures: ProceduresMap = java.util.Collections.emptyMap[String, Procedure]
   private def tokenizer(is3D: Boolean) = if(is3D) Tokenizer3D else Tokenizer2D
 
-  // used to compile the procedures tab, including declarations
+  // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
     new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager), 
                         program)
 
-  // used to compile a single procedures only, from outside the procedures tab
+  // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
   def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager):CompilerResults =
     new CompilerResults(CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager), program)

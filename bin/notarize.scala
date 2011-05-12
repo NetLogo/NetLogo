@@ -111,9 +111,9 @@ def munge(path: String): String = {
     else
       "Copyright " + year + " Uri Wilensky. All rights reserved."
   }
-  def mungeProcedures(path: String, code: String) = {
+  def mungeCode(path: String, code: String) = {
     require(code == code.trim + "\n",
-            path + ": extra whitespace at beginning or end of procedures tab")
+            path + ": extra whitespace at beginning or end of Code tab")
     code + "\n\n" +
       (if(path.containsSlice("Code Examples/") && !keywords.contains("specialCE")) {
         require(!year2.isDefined, "can't specify two years for code examples")
@@ -288,9 +288,9 @@ def munge(path: String): String = {
     }
     builder.toString
   }
-  val newProcedures = mungeProcedures(path, sections(0))
+  val newCode = mungeCode(path, sections(0))
   val newInfo = if(path.containsSlice("Code Examples/")) sections(2)
                 else mungeInfo(path, sections(2))
-  val newSections = newProcedures :: sections(1) :: newInfo :: sections.drop(3)
+  val newSections = newCode :: sections(1) :: newInfo :: sections.drop(3)
   newSections.mkString("@#$#@#$#@\n")
 }

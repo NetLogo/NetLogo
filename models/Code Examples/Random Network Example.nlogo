@@ -158,7 +158,7 @@ SETUP-ERDOS-RENYI can also be written using the same idiom:
       ask turtles [ create-links-with other turtles ]
       ask links with [random-float 1.0 > probability] [ die ]
 
-Compared to the code in the Procedures tab, this avoids the potentially confusing use of `self > myself`, but runs somewhat slower, especially if the linking probability is small.
+Compared to the code in the Code tab, this avoids the potentially confusing use of `self > myself`, but runs somewhat slower, especially if the linking probability is small.
 
 ## EXTENDING THE MODEL
 

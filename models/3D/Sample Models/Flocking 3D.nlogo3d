@@ -423,7 +423,7 @@ Are there other interesting ways you can make the birds different from each othe
 NETLOGO FEATURES
 ----------------
 Compare this model to the 2D version in the NetLogo Models Library. Notice how similar
-the procedures tab is to the other model but also notice the use of pitch-related primitives as well.
+the Code tab is to the other model but also notice the use of pitch-related primitives as well.
 
 Notice the need for the SUBTRACT-HEADINGS primitive and special procedure for averaging groups of headings.  Just subtracting the numbers, or averaging the numbers, doesn't give you the results you'd expect, because of the discontinuity where headings wrap back to 0 once they reach 360.
 

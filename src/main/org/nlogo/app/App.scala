@@ -797,13 +797,13 @@ class App extends
   }
 
   /**
-   * Returns the contents of the Procedures tab.
-   * @return contents of Procedures tab
+   * Returns the contents of the Code tab.
+   * @return contents of Code tab
    */
   def getProcedures: String = dispatchThreadOrBust(tabs.proceduresTab.innerSource)
 
   /**
-   * Replaces the contents of the Procedures tab.
+   * Replaces the contents of the Code tab.
    * Does not recompile the model.
    * @param source new contents
    * @see #compile
@@ -820,7 +820,7 @@ class App extends
   /**
    * Switches tabs.
    * @param number which tab to switch to.  0 is the Interface tab,
-   *        1 the Info tab, 2 the Procedures tab, 3 the
+   *        1 the Info tab, 2 the Code tab, 3 the
    *        Errors tab.
    */
   def selectTab(number:Int){  // zero-indexed

@@ -386,7 +386,7 @@ Try having a lattice of targets, and vary the targets' spacing.
 
 Notice that the procedure `move-particle` is all turtle commands.
 
-When you examine the procedures tab, note that standard turtle movement commands such as `fd 1` aren't used.  Instead the x-coordinates and y-coordinates of the turtles are manipulated directly.
+When you examine the Code tab, note that standard turtle movement commands such as `fd 1` aren't used.  Instead the x-coordinates and y-coordinates of the turtles are manipulated directly.
 
 ## RELATED MODELS
 

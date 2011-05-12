@@ -514,7 +514,7 @@ Play with the NUM-GRAIN-GROWN slider, and see how this affects the distribution 
 
 How much does the LIFE-EXPECTANCY-MAX matter?
 
-Change the value of the MAX-GRAIN variable (in the `setup` procedure in the procedures tab).  Do outcomes differ?
+Change the value of the MAX-GRAIN variable (in the `setup` procedure in the Code tab).  Do outcomes differ?
 
 Experiment with the PERCENT-BEST-LAND and NUM-PEOPLE sliders.  How do these affect the outcome of the distribution of wealth?
 

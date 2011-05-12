@@ -182,7 +182,7 @@ Suppose we call state 0 "healthy", max-state "sick", and anything in between "in
 
 1 is the negative feedback; 2 and 3 are the positive feedback.
 
-These are only qualitative descriptions.  To see the actual math used, look at the FIND-NEW-STATE procedure in the Procedures tab.
+These are only qualitative descriptions.  To see the actual math used, look at the FIND-NEW-STATE procedure in the Code tab.
 
 ## HOW TO USE IT
 

@@ -240,7 +240,7 @@ public strictfp class Logger
           (owner.toLowerCase(), "compiled", text, Character.toString(agentType),
               error.getMessage(), error.startPos(), error.endPos());
     }
-    if (owner.equals("Procedures")) {
+    if (owner.equals("Code")) {
       CODE.debug(compileMsg);
     } else if (!owner.startsWith("Slider")) {
       CODE.info(compileMsg);

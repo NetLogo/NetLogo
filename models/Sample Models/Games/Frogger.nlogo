@@ -801,7 +801,7 @@ If you take just as many jumps with obstacles as without, why does it take diffe
 
 ## EXTENDING THE MODEL
 
-Write your own levels by altering the code in the Procedures tab.
+Write your own levels by altering the code in the Code tab.
 
 Add some bonuses or additional hazards.
 

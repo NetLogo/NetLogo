@@ -233,7 +233,7 @@ Set the SPACING to 1.  (You'll have to edit the slider, since the normal minimum
 
 ## EXTENDING THE MODEL
 
-In the procedures tab, notice the variable `spout-space`.  Try changing the number of spouts at the top of the view by changing `spout-space`.
+In the Code tab, notice the variable `spout-space`.  Try changing the number of spouts at the top of the view by changing `spout-space`.
 
 Does this model accurately reflect how sand behaves?  If not what rules could you devise to more accurately model sand's behavior?  How could they be incorporated into the model?
 
