@@ -174,3 +174,4 @@ org.nlogo.$common.thatAgentIsDead = That {0} is dead.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.
 org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.
+
