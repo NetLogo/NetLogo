@@ -1,5 +1,8 @@
 -include common.txt
 
+# play it safe. could be removed if we start caring more about jar size?
+-dontoptimize
+
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 

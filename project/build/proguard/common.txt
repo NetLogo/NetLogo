@@ -14,10 +14,6 @@
 -dontwarn java.lang.String
 -dontwarn org.nlogo.nvm.NonLocalExit$
 
-# I tried this but got a weird error at runtime.  maybe try again sometime and report
-# the bug to the ProGuard author
--dontoptimize
-
 # we definitely don't want this
 -dontobfuscate
 
