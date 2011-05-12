@@ -74,7 +74,6 @@ $(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 
 JAVA_EXTENSIONS=\
 	extensions/array/array.jar \
-	extensions/gis/gis.jar \
 	extensions/sample/sample.jar \
 	extensions/table/table.jar
 SCALA_EXTENSIONS=\
@@ -82,6 +81,7 @@ SCALA_EXTENSIONS=\
 	extensions/test/test.jar
 GITHUB_EXTENSIONS=\
 	extensions/bitmap/bitmap.jar \
+	extensions/gis/gis.jar \
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
 	extensions/profiler/profiler.jar \
@@ -114,6 +114,7 @@ $(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
+	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
