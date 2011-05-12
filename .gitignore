@@ -1,7 +1,6 @@
 # common directory names
 javadoc/
 scaladoc/
-build/
 classes/
 target/
 tmp/
@@ -36,6 +35,7 @@ tmp/
 /src/main/org/nlogo/window/Events.java
 
 # other
+/build/
 /.idea/workspace.xml
 /BehaviorSpace-src.zip
 /devel/depend.ddf
@@ -53,3 +53,15 @@ tmp/
 /resources/GUI_Strings_es.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
+/test/applet/array/
+/test/applet/matrix/
+/test/applet/qtj/
+/test/applet/sample-scala/
+/test/applet/sample/
+/test/applet/sound/
+/test/applet/table/
+/test/applet/test/
+test/applet/bitmap/
+test/applet/gis/
+test/applet/gogo/
+test/applet/profiler/
