@@ -21,8 +21,10 @@ GRAPHICS-WINDOW
 -16
 16
 0
+0
 1
-30
+ticks
+30.0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -62,6 +64,12 @@ GRAPHICS-WINDOW
 (a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 @#$#@#$#@
-NetLogo (no version)
+NetLogo 5.0beta3
 @#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+@#$#@#$#@
+0
 @#$#@#$#@
