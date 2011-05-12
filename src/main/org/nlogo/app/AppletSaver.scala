@@ -153,7 +153,8 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
               "to that one central copy.  This will save disk space for",
               "you and download time for your users.)")
     applet("org.nlogo.lite.Applet", "NetLogoLite.jar", width, height, 
-           List(("DefaultModel", org.nlogo.util.Utils.escapeSpacesInURL(fileName))),
+           List(("DefaultModel", org.nlogo.util.Utils.escapeSpacesInURL(fileName)),
+                ("java_arguments", "-Djnlp.packEnabled=true")),
            additionalJars)
     line("<p>powered by")
     line(siteLink + "</p>")
