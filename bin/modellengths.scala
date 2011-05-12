@@ -5,7 +5,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // mode: scala
 // End:
 
-/// print and histogram the lengths of the procedures tabs of all Sample Models
+/// print and histogram the lengths of the Code tabs of all Sample Models
 import Scripting.{shell,read}
 println("Counting lines containing something besides a bracket or paren and/or a comment.")
 println("Of the GasLab suite, only Circular Particles and Gas in a Box are included.")

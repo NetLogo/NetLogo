@@ -202,7 +202,7 @@ This is a puzzle game where you try to untangle a graph. (A graph is a collectio
 
 ## HOW IT WORKS
 
-The game knows how to generate solvable graphs, and it also knows how to detect whether any lines intersect. The details are in the Procedures tab.
+The game knows how to generate solvable graphs, and it also knows how to detect whether any lines intersect. The details are in the Code tab.
 
 ## HOW TO USE IT
 
@@ -212,7 +212,7 @@ Every level is solvable. One you find a solution, you will automatically be take
 
 ## THINGS TO NOTICE
 
-The game only gives you solvable graphs. How might the game be able to guarantee this?  (One answer is in the Procedures tab.)
+The game only gives you solvable graphs. How might the game be able to guarantee this?  (One answer is in the Code tab.)
 
 Can you draw an example of an unsolvable graph on a piece of paper?  How many nodes are in the smallest unsolvable graph?
 

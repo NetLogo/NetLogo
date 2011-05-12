@@ -803,7 +803,7 @@ show mean [sum assets] of turtles
     <p>
       You define turtle breeds using the <a href=
       "dictionary.html#breed"><tt>breed</tt></a> keyword, at the top of the
-      Procedures tab, before any procedures:
+      Code tab, before any procedures:
     <pre>
 breed [wolves wolf]
 breed [sheep a-sheep]
@@ -996,7 +996,7 @@ ask one-of friendships [ set breed links ] ;; produces a runtime error
       Normally, a button is labeled with the code that it runs. For
       example, a button that says &quot;go&quot; on it usually contains the
       code &quot;go&quot;, which means &quot;run the go procedure&quot;.
-      (Procedures are defined in the Procedures tab; see below.) But you
+      (Procedures are defined in the Code tab; see below.) But you
       can also edit a button and enter a &quot;display name&quot; for the
       button, which is a text that appears on the button instead of the
       code. You might use this feature if you think the actual code would
@@ -1354,7 +1354,7 @@ show (list)
       order first by <a href="dictionary.html#end1"><tt>end1</tt></a> then
       by <a href="dictionary.html#end2"><tt>end2</tt></a> any remaining
       ties are resolved by breed in the order they are declared in the
-      procedures tab.
+      Code tab.
     <p>
       If you need descending order instead, you can combine <a href=
       "dictionary.html#reverse"><tt>reverse</tt></a> with <a href=
@@ -3395,12 +3395,12 @@ while [any? turtles with [steps &gt; 0]] [
       menu will appear in the toolbar. From the includes menu you can
       select from the files included in this model.
     <p>
-      When you open included files they appear in additional procedures
+      When you open included files they appear in additional 
       tabs. See the <a href="interface.html#includes">Interface Guide</a>
       for more details.
     <p>
       You can have anything in external source files (<tt>.nls</tt>) that
-      you would normally put in the procedures tab: <a href=
+      you would normally put in the Code tab: <a href=
       "dictionary.html#globals"><tt>globals</tt></a>, <a href=
       "dictionary.html#breed"><tt>breed</tt></a>, <a href=
       "dictionary.html#turtles-own"><tt>turtles-own</tt></a>, <a href=
@@ -3408,7 +3408,7 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#breeds-own"><tt>breeds-own</tt></a>, procedure
       definitions, etc. Note though that these declarations all share the
       same namespace. That is, if you declare a global <tt>my-global</tt>
-      in the procedures tab you cannot declare a global (or anything else)
+      in the Code tab you cannot declare a global (or anything else)
       with the name <tt>my-global</tt> in any file that is included in the
       model. <tt>my-global</tt> will be accessible from all the included
       files. The same would be true if <tt>my-global</tt> were declared in
@@ -3420,7 +3420,7 @@ while [any? turtles with [steps &gt; 0]] [
       Colors
     </h3>
     <p>
-      In the Procedures tab and elsewhere in the NetLogo user interface,
+      In the Code tab and elsewhere in the NetLogo user interface,
       program code is color-coded by the following scheme:
     <ul>
       <li>Keywords are green
@@ -3586,7 +3586,7 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#or"><tt>or</tt></a> reporters are special forms, not
       ordinary functions, and they &quot;short circuit&quot;, that is, they
       only evaluate their second input if necessary.
-      <li>Procedures can only be defined in the Procedures tab, not
+      <li>Procedures can only be defined in the Code tab, not
       interactively in the Command Center.
       <li>Reporter procedures, that is, procedures that &quot;report&quot;
       (return) a value, must be defined with <a href=

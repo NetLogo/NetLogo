@@ -22,7 +22,7 @@
       In Tutorial #2, you learned how to use the command center and agent
       monitors to inspect and modify agents and make them do things. Now
       you're ready to learn about the real heart of a NetLogo model:
-      the Procedures tab.
+      the Code tab.
     <p>
       You've already used types of agents you can give commands to in
       NetLogo: patches, turtles, links, and the observer. Patches are
@@ -74,7 +74,7 @@
       message will go away:
     <blockquote>
       <ul>
-        <li>Switch to the Procedures tab.
+        <li>Switch to the Code tab.
         <li>Type the following:
           <pre>
 to setup
@@ -86,7 +86,7 @@ end
         </ul>
     </blockquote>
     <p>
-      When you're done, the Procedures tab looks like this:
+      When you're done, the Code tab looks like this:
     <p class="screenshot">
       <img alt="screen shot" src="images/tutorial3/setupcode.gif">
     <p>
@@ -176,7 +176,7 @@ end
       pressed, so its commands run over and over again, not just once.
     <blockquote>
       <ul>
-        <li>Then add a go procedure to the Procedures tab:
+        <li>Then add a go procedure to the Code tab:
           <pre>
 to go
   move-turtles
@@ -364,7 +364,7 @@ end
       "dictionary.html#color"><tt>color</tt></a>. To make a new turtle
       variable, we add a <a href=
       "dictionary.html#turtles-own"><tt>turtles-own</tt></a> declaration at
-      the top of the Procedures tab, before all the procedures. Call it
+      the top of the Code tab, before all the procedures. Call it
       <tt>energy</tt>:
     <pre>
 turtles-own [energy]
@@ -379,7 +379,7 @@ end
       the turtles to eat.
     <blockquote>
       <ul>
-        <li>Switch to the Procedures tab.
+        <li>Switch to the Code tab.
         <li>Rewrite the <tt>go</tt> procedure as follows:
           <pre>
 to go
@@ -541,7 +541,7 @@ end
       <img alt="screen shot" src="images/tutorial3/switch.gif">
     <blockquote>
       <ul>
-        <li>Now go back to the 'go' procedure using the Procedures
+        <li>Now go back to the 'go' procedure using the Code
         tab with the Toolbar.
         <li>Rewrite the <tt>eat-grass</tt> procedure as follows:
           <pre>
@@ -600,7 +600,7 @@ end
       one for each behavior.
     <blockquote>
       <ul>
-        <li>Go to the Procedures tab.
+        <li>Go to the Code tab.
         <li>Rewrite the <tt>go</tt> procedure as follows:
           <pre>
 to go
@@ -688,10 +688,10 @@ end
     <p>
       To make plotting work, we'll need to create a plot in the
       Interface tab, and set some settings in it. Then we'll add one
-      more procedure to the Procedures tab, which will update the plot for
+      more procedure to the Code tab, which will update the plot for
       us.
     <p>
-      Let's do the Procedures tab part first.
+      Let's do the Code tab part first.
     <blockquote>
       <ul>
         <li>Change <tt>setup</tt> to call the new procedure,
@@ -987,7 +987,7 @@ end
       in with the code itself. You might use comments to help others
       understand your model, or you might use them as notes to yourself.
     <p>
-      In the Procedures tab, comments are gray, so your eyes can pick them
+      In the Code tab, comments are gray, so your eyes can pick them
       out easily.
     <pre>
 turtles-own [energy] ;; for keeping track of when the turtle is ready

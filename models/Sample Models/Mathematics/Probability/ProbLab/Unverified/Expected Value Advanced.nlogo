@@ -1053,7 +1053,7 @@ Run the model under different setting of the switches. Does it take longer for t
 Change the height and width of the selection area.  Run the experiment, looking at the MEAN VALUE OVER TIME plot. Does this plot behave differently for different height and width settings?
 
 As noted above, the relative ratios of the $1-fish, $2-fish, etc. in the lake are determined by relative values of all of the sliders on the left.  In other words, if you set the ratio units to 1 : 1 : 1 : 1 : 1, it is going to mean the same to the computer as the setting of 2 : 2 : 2 : 2 : 2 or 5 : 5 : 5 : 5 : 5.  The sliders are designed to allow an exploration of a rich range of proportions of the different fish.  Try extending the maximum value of the ratio sliders, to obtain an even richer range of proportions of fish populations.
-In the Procedures tab, go to the 'setup-misc-globals' procedure and change the color value assigned to the 'c-color' local variable.  This will change the fish base color.
+In the Code tab, go to the 'setup-misc-globals' procedure and change the color value assigned to the 'c-color' local variable.  This will change the fish base color.
 
 
 EXTENDING THE MODEL

@@ -226,9 +226,9 @@ public abstract class AppletPanel
   }
 
   /**
-   * Returns the contents of the Procedures tab.
+   * Returns the contents of the Code tab.
    *
-   * @return contents of Procedures tab
+   * @return contents of Code tab
    */
   public String getProcedures() {
     org.nlogo.awt.Utils.mustBeEventDispatchThread();
@@ -236,7 +236,7 @@ public abstract class AppletPanel
   }
 
   /**
-   * Replaces the contents of the Procedures tab.
+   * Replaces the contents of the Code tab.
    * Does not recompile the model.
    *
    * @param source new contents

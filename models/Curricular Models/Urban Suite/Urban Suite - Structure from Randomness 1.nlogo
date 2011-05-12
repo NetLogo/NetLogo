@@ -182,7 +182,7 @@ Extend the model by adding agents that move around on the grid, searching for hi
 
 ## NETLOGO FEATURES
 
-Notice how simple it is to create a distribution plot in NetLogo, using lists.  Look at the UPDATE-PLOT procedure in the Procedures tab.  It simply resets the plot pen (to clear the plot), and then sorts the activity values of each of the patches from greatest to least, and then plots them each.
+Notice how simple it is to create a distribution plot in NetLogo, using lists.  Look at the UPDATE-PLOT procedure in the Code tab.  It simply resets the plot pen (to clear the plot), and then sorts the activity values of each of the patches from greatest to least, and then plots them each.
 
 ## RELATED MODELS
 

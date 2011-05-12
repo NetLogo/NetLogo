@@ -3,8 +3,8 @@ package org.nlogo.app
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.api.{I18N, ModelSection}
 
-// This is THE procedures tab.  Certain settings and things that are only accessible here.
-// Other procedures tabs come and go.
+// This is THE Code tab.  Certain settings and things that are only accessible here.
+// Other Code tabs come and go.
 
 class MainProceduresTab(workspace: AbstractWorkspace)
 extends ProceduresTab(workspace)

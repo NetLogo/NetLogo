@@ -175,7 +175,7 @@ This code example demonstrates how to find out what patch a turtle would cross i
 
 Note that NetLogo doesn't actually have continuous motion; turtles can only move by "jumping" a finite amount.  So it's rare that you need the code in this code example; normally a turtle can just use the `patch-ahead` primitive to find out where it would land if it jumped a certain distance.
 
-See the Procedures tab for further commentary.
+See the Code tab for further commentary.
 
 ## RELATED MODELS
 

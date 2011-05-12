@@ -47,11 +47,11 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
   // be autoconverted.  But it's not straightforwardly possible to
   // compile them because they can refer to each other.  In the
   // ordinary loading code, the cycle is broken by delaying
-  // compilation of the procedures tab until LoadEndEvent time.  But
+  // compilation of the Code tab until LoadEndEvent time.  But
   // now that AutoConverter invokes the parser, we need a smarter
   // solution, because we can't parse the code in the widgets
   // without the information in the Program object (put there when
-  // StructureParser runs on the contents of the procedures tab).
+  // StructureParser runs on the contents of the Code tab).
   // So here's what we do.  At the time the procedures section
   // loads, convertValueAndValuesFrom invokes IdentifierParser in
   // "forgiving" mode, which means that any unknown identifier in

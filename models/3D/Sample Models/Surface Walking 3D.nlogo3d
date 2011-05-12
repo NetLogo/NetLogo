@@ -335,7 +335,7 @@ Rule 2 enables the turtles to travel along that edge while maintaining their cur
 
 Finally, Rule 3 reduces the 'weaving' effects produced by turtles moving toward surface and non-surface patches in order to remain close to the edge by having turtles actually point only halfway to the patch of interest.
 
-In 3D versions of this surface-walking algorithm, the same rules are used as in the 2D version, but the way to determine the angle between a turtle's current heading and the nearest opposite patch is a little more complicated. Because there are two angle measures, heading and pitch, we use the inverse dot product to determine the angle between a turtle's heading and a given patch. For more detail, it may help to look through the "Trig for Angle Calculations" section of the procedures tab or visit the "Geometric Interpretation" of the dot product entry at Wikipedia: http://en.wikipedia.org/wiki/Dot_product.
+In 3D versions of this surface-walking algorithm, the same rules are used as in the 2D version, but the way to determine the angle between a turtle's current heading and the nearest opposite patch is a little more complicated. Because there are two angle measures, heading and pitch, we use the inverse dot product to determine the angle between a turtle's heading and a given patch. For more detail, it may help to look through the "Trig for Angle Calculations" section of the Code tab or visit the "Geometric Interpretation" of the dot product entry at Wikipedia: http://en.wikipedia.org/wiki/Dot_product.
 
 HOW TO USE IT
 -------------

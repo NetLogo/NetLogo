@@ -50,7 +50,7 @@ private class StructureParser(originalTokens:Seq[Token],displayName:Option[Strin
     // simpler just to store the strings of the paths we want to load, but if we can't find one of
     // the paths, we want to report an error that refers to the original __include statement, so we
     // store paths paired with tokens.  But sometimes we don't have a real token, because some code
-    // isn't in an include file at all; it's in the main procedures tab (or button or whatever) or
+    // isn't in an include file at all; it's in the main Code tab (or button or whatever) or
     // it comes from the system dynamics modeler.  In those cases the token is null and the path is
     // the special string "" (tab or widget) or "aggregate" (for the SDM).  Also confusing is that
     // we're iterating over usingFiles at the same time that we're adding entries to it; that's

@@ -15,7 +15,7 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
            |""".stripMargin)(
       convert("to foo\n  crt 10\nend"))
   }
-  // very long procedures tabs shouldn't blow the stack
+  // very long Code tabs shouldn't blow the stack
   test("don't blow stack") {
     val path = "test/applet/Really Long Procedures.nls"
     expect(1014842)(convert(file2String(path)).size)

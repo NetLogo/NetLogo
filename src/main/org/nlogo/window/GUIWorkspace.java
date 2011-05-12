@@ -415,6 +415,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // called from the job thread
   @Override
   public void changeLanguage() {
+    new org.nlogo.window.Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
   }
 
 
@@ -1185,7 +1186,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       // we're already on the event thread.  But without using it, at least on
       // Mac 142U1DP3 (and maybe other Mac VMs, and maybe other platforms too,
       // I don't know), the error dialog didn't wind up with the keyboard focus
-      // if the procedures tab came forward... probably because something that
+      // if the Code tab came forward... probably because something that
       // the call to select() in ProceduresTab was doing was doing invokeLater()
       // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
       org.nlogo.awt.Utils.invokeLater

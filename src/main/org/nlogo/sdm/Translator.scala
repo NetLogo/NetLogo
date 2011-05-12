@@ -4,7 +4,7 @@ import org.nlogo.api.{CompilerException,CompilerServices}
  * Turns an Model into a NetLogo source fragment
  * Parse from stocks out, calculating only the dependencies.  Build a
  * concise textual explanation of the execution model as a comment in
- * procedures tab. */
+ * Code tab. */
 class Translator(model:Model,compiler:CompilerServices) {
   val stocks = new collection.mutable.ListBuffer[Stock]
   val rates = new collection.mutable.ListBuffer[Rate]

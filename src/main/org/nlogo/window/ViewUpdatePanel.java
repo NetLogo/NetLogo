@@ -86,7 +86,7 @@ public strictfp class ViewUpdatePanel
       org.nlogo.awt.Utils.adjustDefaultFont(comps[i]);
       if (comps[i] instanceof javax.swing.AbstractButton &&
           // kinda kludgy but we don't want to have the text below
-          // the checker in the checkbox in the procedures tab ev 8/24/06
+          // the checker in the checkbox in the Code tab ev 8/24/06
           !(comps[i] instanceof javax.swing.JCheckBox)) {
         ((javax.swing.AbstractButton) comps[i])
             .setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

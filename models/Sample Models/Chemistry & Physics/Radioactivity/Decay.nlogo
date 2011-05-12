@@ -246,7 +246,7 @@ Try the extremes of the initial conditions: many or few nuclei, high or low deca
 
 What does the plot do when very few nuclei are left?
 
-What instructions would you give each turtle be to make it behave like an unstable nucleus?  Check the code in the Procedures tab and see if it's what you thought it should be.
+What instructions would you give each turtle be to make it behave like an unstable nucleus?  Check the code in the Code tab and see if it's what you thought it should be.
 
 Carbon-14 dating involves comparing the ratio of a stable (C-12) to an unstable (C-14) nucleus.  Explain that method in terms of this model.
 

@@ -11,7 +11,7 @@ import org.nlogo.window.{ Event, Events, ProceduresInterface }
 class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends ProceduresInterface
 with Event.LinkChild with Events.LoadSectionEvent.Handler
 {
-  override def classDisplayName = "Procedures"
+  override def classDisplayName = "Code"
   override def agentClass = classOf[Observer]
   private var text = ""
   override def headerSource = ""

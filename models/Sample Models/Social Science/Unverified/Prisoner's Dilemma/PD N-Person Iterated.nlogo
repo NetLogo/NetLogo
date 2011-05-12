@@ -198,7 +198,7 @@ end
 ;;;Strategies;;;
 ;;;;;;;;;;;;;;;;
 
-;;All the strategies are described in the Information Tab.
+;;All the strategies are described in the Info tab.
 
 to act-randomly
   set num-random-games num-random-games + 1

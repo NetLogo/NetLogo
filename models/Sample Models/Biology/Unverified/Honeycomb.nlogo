@@ -159,7 +159,7 @@ Experiment with the effect of varying the number of bees.
 
 ## EXTENDING THE MODEL
 
-There are a lot of arbitrarily chosen numbers in the Procedures tab.  Experiment with the effect of varying them.
+There are a lot of arbitrarily chosen numbers in the Code tab.  Experiment with the effect of varying them.
 
 In this version of the models, the bees wrap around the edges of the world.  Try modifying the model so the bees are clustered near the center of the world, to prevent wrapping.  What happens?
 

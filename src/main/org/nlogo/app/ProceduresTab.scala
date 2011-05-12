@@ -136,7 +136,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
 
   def select(startPos: Int, endPos: Int) { text.select(startPos, endPos) }
 
-  def classDisplayName = "Procedures"
+  def classDisplayName = "Code"
 
   /// printing
 

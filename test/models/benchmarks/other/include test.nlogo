@@ -63,49 +63,6 @@ NIL
 NIL
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This section could give a general understanding of what the model is trying to show or explain.
-
-
-HOW IT WORKS
-------------
-This section could explain what rules the agents use to create the overall behavior of the model.
-
-
-HOW TO USE IT
--------------
-This section could explain how to use the model, including a description of each of the items in the interface tab.
-
-
-THINGS TO NOTICE
-----------------
-This section could give some ideas of things for the user to notice while running the model.
-
-
-THINGS TO TRY
--------------
-This section could give some ideas of things for the user to try to do (move sliders, switches, etc.) with the model.
-
-
-EXTENDING THE MODEL
--------------------
-This section could give some ideas of things to add or change in the procedures tab to make the model more complicated, detailed, accurate, etc.
-
-
-NETLOGO FEATURES
-----------------
-This section could point out any especially interesting or unusual features of NetLogo that the model makes use of, particularly in the Procedures tab.  It might also point out places where workarounds were needed because of missing features.
-
-
-RELATED MODELS
---------------
-This section could give the names of models in the NetLogo Models Library or elsewhere which are of related interest.
-
-
-CREDITS AND REFERENCES
-----------------------
-This section could contain a reference to the model's URL on the web if it has one, as well as any other necessary credits or references.
 @#$#@#$#@
 default
 true

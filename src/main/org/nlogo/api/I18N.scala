@@ -4,32 +4,58 @@ import java.util.{MissingResourceException, Locale, ResourceBundle}
 
 object I18N {
 
+  def availableLocales: Array[Locale] = {
+    def availble(locale:Locale) = try {
+      val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
+      rb.getLocale == locale
+    }
+    catch { case m: MissingResourceException => false }
+    Locale.getAvailableLocales.filter(availble)
+  }
+
   case class Prefix(name:String)
 
   class BundleKind(name:String){
 
     val defaultLocale = {
       import java.util.prefs._
-      val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-      def getPref(p:String): Option[String] = Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
-      val prefLocale = (getPref("user.language"), getPref("user.region")) match {
-        case (Some(l), Some(r)) => Some(new Locale(l,r))
-        case (Some(l), _) => Some(new Locale(l))
+      def getPref(p:String): Option[String] =
+        try {
+          val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+          Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
+        }
+        catch {
+          case _: java.security.AccessControlException =>
+            None  // we must be in the applet
+        }
+      // loads the locale data from the users preferences
+      // but only if that locale is available. 
+      val localeFromPreferences: Option[Locale] = (getPref("user.language"), getPref("user.region")) match {
+        case (Some(l), Some(r)) => availableLocales.find(_ == new Locale(l,r))
+        case (Some(l), _) => availableLocales.find(_ == new Locale(l))
         case _ => None
       }
-      prefLocale.getOrElse(Locale.getDefault)
-    }
 
-    private var defaultBundle = getBundle(defaultLocale)
-    private val englishBundle = getBundle(Locale.US)
-    def getBundle(locale:Locale) = {
-      try ResourceBundle.getBundle(name, locale)
-      catch {
-        case m:MissingResourceException =>
-          println("language unsupported: " + Locale.getDefault + ", falling back to English")
-          ResourceBundle.getBundle(name, Locale.US)
+      localeFromPreferences match {
+        // if the users locale from the preferences is available, use it.
+        case Some(l) => l
+        case None =>
+          // if not, see if the default (from the OS or JVM) is available. if so, use it.
+          if(availableLocales.contains(Locale.getDefault)) Locale.getDefault
+          // finally, fall back.
+          else Locale.US
       }
     }
+
+    // here we get both bundles (both of which should be available)
+    // we get both because the default bundle might not contain all the keys
+    // maybe some got left out in translation. if that happens
+    // we need to fall back and use the english string instead of erroring.
+    // its very possible (and in fact in most cases, likely) that the
+    // defaultBundle IS the english bundle, but that is ok.
+    private var defaultBundle = getBundle(defaultLocale)
+    private val englishBundle = getBundle(Locale.US)
+    def getBundle(locale:Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key:String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
     def get(key:String) = getN(key)
     def getNJava(key:String, args:Array[String]) = getN(key, args:_*)
@@ -72,5 +98,3 @@ object I18N {
   object Prims extends BundleKind("Primitives")
   def prims = Prims // so java can call this easily.
 }
-
-//val allBundles = DateFormat.getAvailableLocales.map(getBundle).toSet

@@ -742,7 +742,7 @@ You also should notice how COLOR-SEP (known in the code as 'curr-color-sep') alt
 
 Try playing around with the DIRECTION slider on PATTERN-1 AND PATTERN-3 and the EXPANDER slider on PATTERN-5.  Observe what happens to the pattern as you change the values of each. GEOMETRON-TOP-DOWN is meant to be a visually pleasing model just to watch. See what different values of COLOR-SEP produce, and explore how COLOR-SHIFT changes the appearance of the kaleidoscope. What seems the best to you?
 
-Try changing the code in the Procedures tab. Increase the size of the shapes drawn by each of the turtles, or try changing the size of the angle each of the turtles turns through.
+Try changing the code in the Code tab. Increase the size of the shapes drawn by each of the turtles, or try changing the size of the angle each of the turtles turns through.
 
 Instead of each turtle moving or turning a given amount, what about having it move a small random amount (as in the changes to curr-color-sep from COLOR-SHIFT). How much randomness can you add to 'kaleidoscope' and still maintain some kind of overall structure?
 

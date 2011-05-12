@@ -233,7 +233,7 @@ public abstract strictfp class WorldViewSettings
 
   public void wireframe(boolean on) {
     if (on != wireframe()) {
-      workspace.glView.wireframeOn(on);
+      workspace.glView.wireframeOn_$eq(on);
       workspace.glView.repaint();
     }
   }

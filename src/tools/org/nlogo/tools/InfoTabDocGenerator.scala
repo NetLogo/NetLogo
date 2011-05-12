@@ -97,19 +97,19 @@ object InfoTabDocGenerator {
   <a name="information" id="information">Info Tab</a>
 </h1>
 <p>
-  The Information tab provides an introduction to the model and an
+  The Info tab provides an introduction to the model and an
   explanation of how to use it, things to explore, ways to extend the
   model, and NetLogo features.
 <p class="screenshot">
   <img alt="screen shot" src="images/interface/image019.gif">
 <p>
-  We recommend reading the Information tab before starting the model.
-  The Information tab explains what system is being modeled and how the
+  We recommend reading the Info tab before starting the model.
+  The Info tab explains what system is being modeled and how the
   model was created.
 <h2>
-  <a name="info-editing" id="information">Editing the Information tab</a>
+  <a name="info-editing" id="information">Editing the Info tab</a>
 </h2>
-<p>The normal view of the Information tab is not
+<p>The normal view of the Info tab is not
   editable. To make edits, click the
   &quot;Edit&quot; button.  When done editing, click the &quot;Edit&quot;
   button again.

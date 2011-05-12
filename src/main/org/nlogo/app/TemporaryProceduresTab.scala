@@ -63,7 +63,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     compileAction.setEnabled(e.error != null)
     if((e.sourceOwner.isInstanceOf[org.nlogo.window.ExternalFileInterface] &&
         e.sourceOwner.asInstanceOf[org.nlogo.window.ExternalFileInterface].getFileName == filename)
-        // if the procedures tab compiles then get rid of the error ev 7/26/07
+        // if the Code tab compiles then get rid of the error ev 7/26/07
         || (e.sourceOwner.isInstanceOf[ProceduresTab] && e.error == null))
       errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
   }

@@ -98,7 +98,7 @@ end
 to-report estimated-arrest-probability
   let C count cops-on neighborhood
   let A 1 + count (agents-on neighborhood) with [active?]
-  ;; See Information tab for a discussion of the following formula
+  ;; See Info tab for a discussion of the following formula
   report 1 - exp (- k * floor (C / A))
 end
 

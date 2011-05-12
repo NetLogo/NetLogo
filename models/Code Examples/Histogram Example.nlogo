@@ -98,7 +98,7 @@ PENS
 
 This shows all of the code needed to create a histogram.
 
-The actual histogram code is in the plot in the Interface tab. The code in the Procedures tab just creates some turtles to be plotted.
+The actual histogram code is in the plot in the Interface tab. The code in the Code tab just creates some turtles to be plotted.
 
 ## RELATED MODELS
 

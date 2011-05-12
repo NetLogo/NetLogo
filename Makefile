@@ -73,13 +73,13 @@ $(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 ###
 
 JAVA_EXTENSIONS=\
-	extensions/array/array.jar \
 	extensions/sample/sample.jar \
 	extensions/table/table.jar
 SCALA_EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/test/test.jar
 GITHUB_EXTENSIONS=\
+	extensions/array/array.jar \
 	extensions/bitmap/bitmap.jar \
 	extensions/gis/gis.jar \
 	extensions/gogo/gogo.jar \
@@ -113,6 +113,7 @@ $(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
@@ -122,6 +123,18 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) $(MAKE) -s $(notdir $@)
+
+# pull down versions core devel has rights to push to - ST 5/12/11
+.PHONY: github
+github:
+	-git clone git@github.com:/NetLogo/Array-Extension.git extensions/array
+	-git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap
+	-git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis
+	-git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo
+	-git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix
+	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
+	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
+	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
 
 ### misc targets
 

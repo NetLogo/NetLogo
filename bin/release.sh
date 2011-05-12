@@ -154,7 +154,7 @@ $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
 grep -rw ^VERSION models && echo "no VERSION sections please; exiting" && exit 1
 grep -rw \\\$Id models && echo "no \$Id please; exiting" && exit 1
 
-# put copyright notices in procedures and/or info tabs
+# put copyright notices in code and/or info tabs
 ln -s ../../dist        # notarize script needs this
 ln -s ../../resources   # and this
 ln -s ../../scala       # and this

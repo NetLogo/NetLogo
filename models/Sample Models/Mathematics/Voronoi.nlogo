@@ -259,7 +259,7 @@ The core procedure for drawing the polygons is called `recolor`. It is only one 
 
 The `mouse-down?`, `mouse-xcor`, and `mouse-ycor` primitives are used so the user can interact with the model.
 
-Because the number of patches is so large, it takes a while to update them all when a point moves.  So we use moving turtles to recolor the patches; the moving turtles start where the mouse is, and move outwards in a square, since near the mouse is where the user will be looking first.  See the Procedures tab for the details on how it works.
+Because the number of patches is so large, it takes a while to update them all when a point moves.  So we use moving turtles to recolor the patches; the moving turtles start where the mouse is, and move outwards in a square, since near the mouse is where the user will be looking first.  See the Code tab for the details on how it works.
 
 ## RELATED MODELS
 

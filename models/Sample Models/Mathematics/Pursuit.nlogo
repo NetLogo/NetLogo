@@ -671,7 +671,7 @@ If you know a leader's formula and are trying to guess the pattern of the follow
 
 ## EXTENDING THE MODEL
 
-To add your own formulas, you need to add a new Leader Procedure to the model (the others are declared at the bottom of the procedures tab.
+To add your own formulas, you need to add a new Leader Procedure to the model (the others are declared at the bottom of the Code tab.
 
 Add your formula to the current list.  
 - Within the set of commands you may need to scale the y-axis to keep the leader from wrapping.  (See for example, the cubic function.)  

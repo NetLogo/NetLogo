@@ -197,7 +197,7 @@ to update-lorenz-and-gini
 
   ;; now actually plot the Lorenz curve -- along the way, we also
   ;; calculate the Gini index.
-  ;; (see the Information tab for a description of the curve and measure)
+  ;; (see the Info tab for a description of the curve and measure)
   repeat num-people [
     set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths)
     set lorenz-points lput ((wealth-sum-so-far / total-wealth) * 100) lorenz-points
@@ -514,7 +514,7 @@ Play with the NUM-GRAIN-GROWN slider, and see how this affects the distribution 
 
 How much does the LIFE-EXPECTANCY-MAX matter?
 
-Change the value of the MAX-GRAIN variable (in the `setup` procedure in the procedures tab).  Do outcomes differ?
+Change the value of the MAX-GRAIN variable (in the `setup` procedure in the Code tab).  Do outcomes differ?
 
 Experiment with the PERCENT-BEST-LAND and NUM-PEOPLE sliders.  How do these affect the outcome of the distribution of wealth?
 

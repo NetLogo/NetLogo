@@ -460,7 +460,7 @@ If you don't like the color scheme of the fractal you can change it by modifying
 - INIT-COLOR controls the initial color of the first turtle.  
 - The value of COLOR-INC is added to the turtles color anytime a new turtle hatches.
 
-The example buttons and the SETUP button choose the rules for a fractal.  Each of the example buttons sets up the world to draw the fractal of the same name.  The SETUP button sets up the world for drawing the rules found in the applyRules procedure in the Procedures tab.
+The example buttons and the SETUP button choose the rules for a fractal.  Each of the example buttons sets up the world to draw the fractal of the same name.  The SETUP button sets up the world for drawing the rules found in the applyRules procedure in the Code tab.
 
 ## THINGS TO NOTICE
 
