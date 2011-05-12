@@ -200,7 +200,7 @@ procedure SETUP:[]{O---}:
         _patches => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_oneof_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
            L1
             ASTORE 2
@@ -359,7 +359,7 @@ procedure GO:[]{O---}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2

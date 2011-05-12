@@ -12,5 +12,5 @@ include config.mk
 
 $(NAME).jar: $(SRCS) manifest.txt Makefile
 	mkdir -p classes
-	$(SCALA_HOME)/bin/scalac -g -deprecation -unchecked -encoding us-ascii -classpath $(NETLOGO)/NetLogoLite.jar -d classes $(SRCS)
+	$(SCALA_HOME)/bin/scalac -deprecation -unchecked -encoding us-ascii -classpath $(NETLOGO)/NetLogoLite.jar -d classes $(SRCS)
 	jar cmf manifest.txt $(NAME).jar -C classes .

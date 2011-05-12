@@ -14,7 +14,7 @@ procedure GO:[]{O---}:
         _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -983,7 +983,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1210,7 +1210,7 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
          L8
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_8.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L9
           ASTORE 2
@@ -1482,7 +1482,7 @@ procedure MAGNETIZATION:[]{OTPL}:
           ATHROW
          L4
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduremagnetization_report_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L5
           ASTORE 2

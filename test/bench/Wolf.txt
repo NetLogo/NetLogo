@@ -519,7 +519,7 @@ procedure GO:[]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_16.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -656,7 +656,7 @@ procedure GO:[]{O---}:
         _constdouble:0.0 => double
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_if_21.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -1657,7 +1657,7 @@ procedure GRAPH:[]{OTPL}:
         _constdouble:4.0 => double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduregraph_div_6.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
            L1
             ALOAD 0
@@ -2081,7 +2081,7 @@ procedure SETUP:[]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -2210,7 +2210,7 @@ procedure SETUP:[]{O---}:
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_5.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2

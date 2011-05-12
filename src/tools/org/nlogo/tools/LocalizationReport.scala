@@ -226,7 +226,7 @@ object LocalizationReport {
     def buildReport(title: String, arg: BundleAndKeysAndArgsAndExpectations) = {
       def resultsForSingleTestKey(kaa: KeyAndArgs, expectedEnglishResult: Option[String]) = {
         def testKey(locale: Locale, kaa: KeyAndArgs) = {
-          val exists = arg.bundle.keys(locale).contains(kaa.key)
+          val exists = arg.bundle.keys(locale).toSeq.contains(kaa.key)
           // if the key is not in the file, well, then its missing. simple as that.
           if (!exists) Missing(kaa.key)
           else {
@@ -290,8 +290,10 @@ object LocalizationReport {
         case m@(_, _, Missing(_)) => m
       }
 
-      val keysMissingFromOtherLanguageFile = arg.bundle.keys(english) -- arg.bundle.keys(otherLanguageLocale)
-      val extraKeysInOtherLanguageFile = arg.bundle.keys(otherLanguageLocale) -- arg.bundle.keys(english)
+      val keysMissingFromOtherLanguageFile: Set[String] =
+        arg.bundle.keys(english).collect{case s: String => s}.toSet.filterNot(arg.bundle.keys(otherLanguageLocale).toSet.contains)
+      val extraKeysInOtherLanguageFile: Set[String] =
+        arg.bundle.keys(otherLanguageLocale).collect{case s: String => s}.toSet.filterNot(arg.bundle.keys(english).toList.contains)
 
       Report(
         title, 

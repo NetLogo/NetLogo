@@ -139,13 +139,13 @@ class TurtleTestsDrawer extends MockSuite {
     def lineThickness = 0
     def hasLabel = label!=""
     def labelString = label
-    def world: World = error("unimplemented")
-    def setVariable(vn:Int,value:Object) = error("unimplemented")
-    def getVariable(vn:Int) = error("unimplemented")
-    def heading( d:Double ) = error("unimplemented")
-    def getBreed: AgentSet = error("unimplemented")
-    def getBreedIndex = error("unimplemented")
-    def getPatchHere = error("unimplemented")
-    def jump(distance:Double) = error("unimplemented")
+    def world: World = sys.error("unimplemented")
+    def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
+    def getVariable(vn:Int) = sys.error("unimplemented")
+    def heading( d:Double ) = sys.error("unimplemented")
+    def getBreed: AgentSet = sys.error("unimplemented")
+    def getBreedIndex = sys.error("unimplemented")
+    def getPatchHere = sys.error("unimplemented")
+    def jump(distance:Double) = sys.error("unimplemented")
   }
 }

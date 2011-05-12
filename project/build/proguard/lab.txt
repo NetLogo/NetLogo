@@ -8,7 +8,7 @@
 -dontshrink
 
 -libraryjars NetLogo.jar
--libraryjars project/boot/scala-2.8.1/lib/scala-library.jar
--libraryjars lib_managed/scala_2.8.1/test/scalatest-1.3.jar
--injars target/scala_2.8.1/classes(org/nlogo/lab/**)
+-libraryjars project/boot/scala-2.9.0/lib/scala-library.jar
+-libraryjars lib_managed/scala_2.9.0/test/scalatest_2.9.0.RC4-1.4.RC4.jar
+-injars target/scala_2.9.0/classes(org/nlogo/lab/**)
 -outjar BehaviorSpace.jar

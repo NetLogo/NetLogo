@@ -38,7 +38,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   }
 
   def choicesWrapper = {
-    import org.nlogo.util.JCL.toScalaIterable
+    import org.nlogo.util.JCL.iterableToScalaIterable
     constraint.acceptedValues.map(v => Dump.logoObject(v, true, false)).mkString("\n")
   }
 

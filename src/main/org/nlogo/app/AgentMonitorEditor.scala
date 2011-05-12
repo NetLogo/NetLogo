@@ -46,7 +46,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
     editorConstraints.weightx = 1.0
     editorConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER
     // add components
-    for(variableName <- org.nlogo.util.JCL.toScalaIterable(vars)) {
+    for(variableName <- org.nlogo.util.JCL.iterableToScalaIterable(vars)) {
       val label = new javax.swing.JLabel(variableName.toLowerCase)
       label.setFont(
         new java.awt.Font(org.nlogo.awt.Utils.platformFont,

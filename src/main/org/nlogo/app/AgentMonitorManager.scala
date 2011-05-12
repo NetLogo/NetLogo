@@ -54,7 +54,7 @@ with org.nlogo.window.Event.LinkParent
 
   /// Event.LinkParent -- lets events pass through us to MonitorWindows
   def getLinkChildren = {
-    val list = collection.mutable.ListBuffer[AnyRef](monitorWindows.values.toList: _*)
+    val list = collection.mutable.ListBuffer[AnyRef](monitorWindows.values.toSeq: _*)
     if(emptyTurtleMonitorWindow != null)
       list += emptyTurtleMonitorWindow
     if(emptyPatchMonitorWindow != null)

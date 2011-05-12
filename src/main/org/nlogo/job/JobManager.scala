@@ -5,7 +5,7 @@ import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.api.{LogoException, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
-import org.nlogo.util.JCL.{toJavaList, toScalaIterable}
+import org.nlogo.util.JCL._
 import org.nlogo.util.Exceptions.ignoring
 
 class JobManager(jobManagerOwner: JobManagerOwner,
