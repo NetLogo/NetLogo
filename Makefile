@@ -124,6 +124,18 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) $(MAKE) -s $(notdir $@)
 
+# pull down versions core devel has rights to push to - ST 5/12/11
+.PHONY: github
+github:
+	-git clone git@github.com:/NetLogo/Array-Extension.git extensions/array
+	-git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap
+	-git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis
+	-git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo
+	-git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix
+	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
+	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
+	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
+
 ### misc targets
 
 # cleaning
