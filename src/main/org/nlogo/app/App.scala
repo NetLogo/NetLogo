@@ -820,7 +820,7 @@ class App extends
   /**
    * Switches tabs.
    * @param number which tab to switch to.  0 is the Interface tab,
-   *        1 the Information tab, 2 the Procedures tab, 3 the
+   *        1 the Info tab, 2 the Procedures tab, 3 the
    *        Errors tab.
    */
   def selectTab(number:Int){  // zero-indexed

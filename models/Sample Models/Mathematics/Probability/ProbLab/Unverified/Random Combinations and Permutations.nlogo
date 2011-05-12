@@ -178,12 +178,12 @@ to assign-color-or-image
              make-dice
           ]
           [
-            ;; see NETLOGO FEATURE in the Information tab.
+            ;; see NETLOGO FEATURE in the Info tab.
             ask dice-here [ set shape item ( ( 1 + position shape dice-rotation ) mod num-choices ) dice-rotation ]
           ]
         ]
         [
-         ;; see NETLOGO FEATURE in the Information tab.
+         ;; see NETLOGO FEATURE in the Info tab.
          set pcolor item ( ( 1 + position pcolor color-rotation ) mod num-choices ) color-rotation
         ]
        wait 0.3  ;; this wait gives the user a chance to lift the finger after clicking
@@ -219,7 +219,7 @@ end
 
 ;; Creates a new list with items from the color-list. For instance, if #choices is 3, then the
 ;; new list will contain the first 3 color names from the color-list
-;; See also NETLOGO FEATURE in the Information tab.
+;; See also NETLOGO FEATURE in the Info tab.
 to set-color-rotation
   let color-list-counter 0
   ifelse length color-rotation = num-choices [ stop ] [set color-rotation [] ]
@@ -230,7 +230,7 @@ to set-color-rotation
   ]
 end
 
-;; Creates list from part of the dice-list. See also NETLOGO FEATURE in the Information tab.
+;; Creates list from part of the dice-list. See also NETLOGO FEATURE in the Info tab.
 to set-dice-rotation
  let dice-list-counter 0
  ifelse length dice-rotation = num-choices [ stop ] [ set dice-rotation [] ]

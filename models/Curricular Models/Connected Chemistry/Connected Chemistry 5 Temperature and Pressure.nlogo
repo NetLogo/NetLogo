@@ -23,7 +23,7 @@ globals
   temperature
   collide?
   show-dark?                 ;; hides or shows the dark particles in the simulation.
-                             ;; see NetLogo features information tab for full explanation of
+                             ;; see NetLogo features Info tab for full explanation of
                              ;; what dark-particles are and why they are used.
 ]
 

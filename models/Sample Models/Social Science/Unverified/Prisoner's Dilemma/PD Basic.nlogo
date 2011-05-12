@@ -25,7 +25,7 @@ to answer
   setup  ;;clears variables away so that setup doesn't need to be pressed every time.
 
   ;;next the four possible combinations of choices are dealt with.
-  ;;the result corresponds to the tables in the interface and information tabs.
+  ;;the result corresponds to the tables in the interface and Info tabs.
   ;;first check to see if your partner was silent.
   ifelse partner-is-silent? [
       ;;now go through your two possible choices

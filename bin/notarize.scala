@@ -121,7 +121,7 @@ def munge(path: String): String = {
         "; altered, or otherwise used by anyone for any legal purpose.\n"
       }
       else
-        "; " + copyright + "\n" + "; The full copyright notice is in the Information tab.\n"
+        "; " + copyright + "\n" + "; The full copyright notice is in the Info tab.\n"
      )
   }
   def mungeInfo(path: String, info: String) = {

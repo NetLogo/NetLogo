@@ -51,7 +51,7 @@ dice-own [
 to startup
     initialize
     ask patches [ set pcolor white ]
-    set instructions "Hi! Please read the Information tab to learn about this model, or just press Setup."
+    set instructions "Hi! Please read the Info tab to learn about this model, or just press Setup."
 end
 
 to initialize

@@ -18,7 +18,7 @@ http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 As befits the number 5.0, this release has major new features.  Among
 those major features are: support for internationalization, smart
 plot widgets which eliminate the need for plotting code in the
-procedures tab, rich formatting features for the information tab, and
+procedures tab, rich formatting features for the info tab, and
 support for functions as first class objects.  We invite and welcome
 your comments on the features as well as reports on bugs that you
 find.  We are excited by the opportunities resulting from the

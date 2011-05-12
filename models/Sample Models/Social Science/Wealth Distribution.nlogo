@@ -197,7 +197,7 @@ to update-lorenz-and-gini
 
   ;; now actually plot the Lorenz curve -- along the way, we also
   ;; calculate the Gini index.
-  ;; (see the Information tab for a description of the curve and measure)
+  ;; (see the Info tab for a description of the curve and measure)
   repeat num-people [
     set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths)
     set lorenz-points lput ((wealth-sum-so-far / total-wealth) * 100) lorenz-points
