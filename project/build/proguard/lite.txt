@@ -3,10 +3,6 @@
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 
-# this knocks off 400K or so - ST 5/12/11
--optimizationpasses 2 
--optimizations !code/allocation/variable 
-
 # forcibly exclude the generator. at runtime, the code will notice it is missing
 # and do without it (it doesn't work in applets anyway because of the security
 # restrictions on class loading)
