@@ -19,9 +19,15 @@ object I18N {
 
     val defaultLocale = {
       import java.util.prefs._
-      val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-      def getPref(p:String): Option[String] = Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
-
+      def getPref(p:String): Option[String] =
+        try {
+          val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+          Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
+        }
+        catch {
+          case _: java.security.AccessControlException =>
+            None  // we must be in the applet
+        }
       // loads the locale data from the users preferences
       // but only if that locale is available. 
       val localeFromPreferences: Option[Locale] = (getPref("user.language"), getPref("user.region")) match {
