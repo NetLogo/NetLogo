@@ -4,7 +4,7 @@ import java.net.URL
 
 trait Jars extends DefaultProject {
 
-  private val java5Path = "devel" / "java5" / "classes.jar"
+  private val java5Path = "dist" / "java5" / "classes.jar"
   lazy val java5 = fileTask(Seq(java5Path)) {
     ("curl -s -o " + java5Path.asFile.toString + " http://ccl.northwestern.edu/devel/java5-classes.jar").!
     None

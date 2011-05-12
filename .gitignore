@@ -15,8 +15,8 @@ tmp/
 /extensions/*/Makefile
 
 # exceptions
-!/devel/java5/java6.jar
-!/devel/java5/ui.jar
+!/dist/java5/java6.jar
+!/dist/java5/ui.jar
 
 # subprojects
 /Mathematica-Link/
