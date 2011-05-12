@@ -14,7 +14,7 @@ case "`uname`" in
 esac
 
 # hardcode this - ST 9/25/09
-SCALA_HOME=`dirname "$0"`/../project/boot/scala-2.9.0.RC5
+SCALA_HOME=`dirname "$0"`/../project/boot/scala-2.9.0
 
 # Remove spaces from SCALA_HOME on windows
 if $cygwin; then
