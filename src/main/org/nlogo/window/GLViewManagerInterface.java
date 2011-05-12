@@ -15,7 +15,7 @@ public interface GLViewManagerInterface
 
   boolean antiAliasingOn();
 
-  void wireframeOn(boolean on);
+  void wireframeOn_$eq(boolean on);
 
   boolean wireframeOn();
 

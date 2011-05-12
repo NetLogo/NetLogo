@@ -60,7 +60,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
           (0 == org.nlogo.swing.OptionDialog.show(
             view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options))) {
           view.viewManager.setFullscreen(true)
-          view.viewManager.warned(true)
+          view.viewManager.warned = true
         }
       }
     })
