@@ -515,6 +515,7 @@ class App extends
       case DELETE_LOG_FILES =>
         if(logger==null) Logger.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
         else logger.deleteSessionFiles()
+      case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
   }
@@ -542,6 +543,21 @@ class App extends
         org.nlogo.awt.Utils.invokeLater(() => openFromSource(source, path, ModelType.LIBRARY))
       }
     }
+  }
+
+  def changeLanguage() {
+    val locales = I18N.availableLocales
+    val languages = locales.map{l => l.getDisplayName(l) }
+    val index = org.nlogo.swing.OptionDialog.showAsList(frame,
+      "Change Language", "Choose a new language.", languages.asInstanceOf[Array[Object]])
+    if(index > -1) {
+      val chosenLocale = locales(index)
+      val netLogoPrefs = java.util.prefs.Preferences.userRoot.node("/org/nlogo/NetLogo")
+      netLogoPrefs.put("user.language", chosenLocale.getLanguage)
+      netLogoPrefs.put("user.country", chosenLocale.getCountry)
+    }
+    val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
+    org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
   }
 
   private def openIndex() {
