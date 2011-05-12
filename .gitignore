@@ -20,6 +20,7 @@ tmp/
 
 # subprojects
 /Mathematica-Link/
+/extensions/array/
 /extensions/bitmap/
 /extensions/gis/
 /extensions/gogo/
