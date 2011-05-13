@@ -72,8 +72,7 @@ $(JARS): | $(SCALA_JAR)
 ###
 
 JAVA_EXTENSIONS=\
-	extensions/sample/sample.jar \
-	extensions/table/table.jar
+	extensions/sample/sample.jar
 SCALA_EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/test/test.jar
@@ -85,6 +84,7 @@ GITHUB_EXTENSIONS=\
 	extensions/matrix/matrix.jar \
 	extensions/profiler/profiler.jar \
 	extensions/sound/sound.jar \
+	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
 EXTENSIONS=$(JAVA_EXTENSIONS) $(SCALA_EXTENSIONS) $(GITHUB_EXTENSIONS)
 
@@ -120,6 +120,7 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
+	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) $(MAKE) -s $(notdir $@)
 
@@ -134,6 +135,7 @@ github:
 	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
 	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
 	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
+	-git clone git@github.com:/NetLogo/Table-Extension.git extensions/table
 
 ### misc targets
 
