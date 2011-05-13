@@ -61,7 +61,7 @@ tmp/
 /test/applet/sound/
 /test/applet/table/
 /test/applet/test/
-test/applet/bitmap/
-test/applet/gis/
-test/applet/gogo/
-test/applet/profiler/
+/test/applet/bitmap/
+/test/applet/gis/
+/test/applet/gogo/
+/test/applet/profiler/
