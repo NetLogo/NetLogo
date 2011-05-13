@@ -20,8 +20,7 @@ public final strictfp class _fd1
   public void perform_1(Context context) {
     try {
       ((Turtle) context.agent).jump(1);
-    } catch (org.nlogo.api.AgentException e) {
-    } // NOPMD
+    } catch (org.nlogo.api.AgentException e) { } // NOPMD
     context.ip = next;
   }
 }

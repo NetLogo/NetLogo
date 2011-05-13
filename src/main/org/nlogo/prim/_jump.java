@@ -22,8 +22,7 @@ public final strictfp class _jump
   public void perform_1(Context context, double distance) {
     try {
       ((Turtle) context.agent).jump(distance);
-    } catch (org.nlogo.api.AgentException e) {
-    } // NOPMD
+    } catch (org.nlogo.api.AgentException e) { } // NOPMD
     context.ip = next;
   }
 }

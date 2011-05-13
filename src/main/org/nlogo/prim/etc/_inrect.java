@@ -75,8 +75,7 @@ public final strictfp class _inrect
         Patch patch = null;
         try {
           patch = startPatch.getPatchAtOffsets(dx, dy);
-        } catch (AgentException e) {
-        } // NOPMD
+        } catch (AgentException e) { } // NOPMD
         if (patch != null) {
           if (sourceSet.type() == Patch.class) {
             if (startTurtle == null) {
