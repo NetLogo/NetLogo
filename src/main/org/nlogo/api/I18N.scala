@@ -35,16 +35,13 @@ object I18N {
         case (Some(l), _) => availableLocales.find(_ == new Locale(l))
         case _ => None
       }
-
-      localeFromPreferences match {
-        // if the users locale from the preferences is available, use it.
-        case Some(l) => l
-        case None =>
-          // if not, see if the default (from the OS or JVM) is available. if so, use it.
-          if(availableLocales.contains(Locale.getDefault)) Locale.getDefault
-          // finally, fall back.
-          else Locale.US
-      }
+      // if the users locale from the preferences is available, use it.
+      localeFromPreferences.getOrElse(
+        // if not, see if the default (from the OS or JVM) is available. if so, use it.
+        if(availableLocales.contains(Locale.getDefault)) Locale.getDefault
+        // finally, fall back.
+        else Locale.US
+      )
     }
 
     // here we get both bundles (both of which should be available)
