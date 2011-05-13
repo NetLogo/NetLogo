@@ -43,8 +43,8 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
         val oldx = x
         val oldy = y
         val oldz = z
-        x = x - distance * StrictMath.sin(StrictMath.toRadians(heading))
-        y = y - distance * StrictMath.cos(StrictMath.toRadians(heading))
+        x = x - distance * math.sin(math.toRadians(heading))
+        y = y - distance * math.cos(math.toRadians(heading))
         z = distance * 0.5
         pitch = 
           try -world.protractor.towardsPitch(x, y, z, oldx, oldy, oldz, false)
@@ -55,8 +55,8 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)
     gl.glRotated(pitch, 
-                 StrictMath.cos(StrictMath.toRadians(heading)), 
-                 -StrictMath.sin(StrictMath.toRadians(heading)), 0.0)
+                 math.cos(math.toRadians(heading)), 
+                 -math.sin(math.toRadians(heading)), 0.0)
     gl.glRotated(-roll, -dx, -dy, dz)
     gl.glTranslated(-(x * Renderer.WORLD_SCALE), 
                     -(y * Renderer.WORLD_SCALE), 

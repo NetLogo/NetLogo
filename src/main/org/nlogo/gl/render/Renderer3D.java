@@ -17,7 +17,7 @@ import org.nlogo.api.ViewSettings;
 import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.AgentException;
 
-public strictfp class Renderer3D
+public class Renderer3D
     extends org.nlogo.gl.render.Renderer {
   public Renderer3D(World world,
                     ViewSettings graphicsSettings,
@@ -164,9 +164,9 @@ public strictfp class Renderer3D
     // detect any patches in the pick-ray ( ( Renderer.WORLD_SCALE / 2 )
     // is the offset of the patches plane in the z-axis - jrn)
     double scale = (1 / WORLD_SCALE);
-    double deltaz = StrictMath.abs(ray[0][2] - ray[1][2]);
-    double deltay = StrictMath.abs(ray[0][1] - ray[1][1]);
-    double deltax = StrictMath.abs(ray[0][0] - ray[1][0]);
+    double deltaz = Math.abs(ray[0][2] - ray[1][2]);
+    double deltay = Math.abs(ray[0][1] - ray[1][1]);
+    double deltax = Math.abs(ray[0][0] - ray[1][0]);
 
     double xi = ray[0][0] * scale;
     double yi = ray[0][1] * scale;

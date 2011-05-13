@@ -3,7 +3,7 @@ package org.nlogo.gl.render;
 import javax.media.opengl.GL;
 import org.nlogo.api.World;
 
-strictfp class TextureRenderer {
+class TextureRenderer {
   int texture = 0;
   int textureSize = 0;
   boolean newTexture = false;
@@ -71,8 +71,8 @@ strictfp class TextureRenderer {
     // bigger than the world or the other way around and we use them in calculations
     // it's different from tileHeight and Width in that it doesn't change per
     // tile.
-    float tw = StrictMath.min((width), textureSize);
-    float th = StrictMath.min((height), textureSize);
+    float tw = Math.min((width), textureSize);
+    float th = Math.min((height), textureSize);
 
     // when world size is less than the size of a texture scale down
     // by screen-size otherwise scale down by texture size * ( ratio of screen size
@@ -91,16 +91,16 @@ strictfp class TextureRenderer {
 
     int i = 0;
     // keep track of the width and height of the current tile
-    int tileWidth = StrictMath.min(width, textureSize);
-    int tileHeight = StrictMath.min(height, textureSize);
+    int tileWidth = Math.min(width, textureSize);
+    int tileHeight = Math.min(height, textureSize);
 
     // It easier for the yOffset to just count down since we are rendering the tiles
     // from top to bottom anyway - jrn 6/8/05
     for (int yOffset = height; yOffset > 0;) {
       gl.glPushMatrix();
       for (int xOffset = 0; xOffset < width;) {
-        tileWidth = StrictMath.min((width - xOffset), textureSize);
-        tileHeight = StrictMath.min(yOffset, textureSize);
+        tileWidth = Math.min((width - xOffset), textureSize);
+        tileHeight = Math.min(yOffset, textureSize);
         // refill the texture as rarely as possible.  However, if we have more
         // than one tile we have to do it all the time.  it might be better to have lots of
         // textures too but managing that seemed even more complicated + using more
@@ -194,7 +194,7 @@ strictfp class TextureRenderer {
         gl.glPopMatrix();
 
         xOffset += textureSize;
-        tileWidth = StrictMath.min((width - xOffset), textureSize);
+        tileWidth = Math.min((width - xOffset), textureSize);
         // move to the location for the next tile
         // I figured this out somewhat by knowing the answers to the two important cases
         // ( tileSize = textureWidth and tileSize < textureWidth ) and intuition
@@ -212,7 +212,7 @@ strictfp class TextureRenderer {
       gl.glPopMatrix();
 
       yOffset -= textureSize;
-      tileHeight = StrictMath.min(yOffset, textureSize);
+      tileHeight = Math.min(yOffset, textureSize);
       // y is reversed
       gl.glTranslatef(0.0f,
           -(scale * (1 - ((((float) textureSize - (float) tileHeight) /

@@ -32,7 +32,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
     val xd = x1 - x2
     val yd = y2 - y1
     val zd = z1 - z2
-    val size = StrictMath.sqrt(xd * xd + yd * yd + zd * zd) 
+    val size = math.sqrt(xd * xd + yd * yd + zd * zd) 
     val ycomp = xd / size
     val xcomp = yd / size
     val zcomp = zd / size
@@ -67,7 +67,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
       val xd = x1 - x2
       val yd = y2 - y1
       val zd = z1 - z2
-      val size = StrictMath.sqrt(xd * xd + yd * yd + zd * zd) 
+      val size = math.sqrt(xd * xd + yd * yd + zd * zd) 
       val ycomp = (xd / size) * xcor * stroke * Renderer.WORLD_SCALE 
       val xcomp = (yd / size) * xcor * stroke * Renderer.WORLD_SCALE 
       val zcomp = (zd / size) * xcor * stroke * Renderer.WORLD_SCALE 

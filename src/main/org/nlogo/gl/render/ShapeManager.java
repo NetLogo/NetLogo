@@ -19,7 +19,7 @@ import org.nlogo.shape.VectorShape;
 // the use of "@@@" in here is ugly. maybe put the patch shape and
 // wireframe code in a diff. class? - ST 3/3/05
 
-strictfp class ShapeManager {
+class ShapeManager {
   public static final int SMOOTHNESS = 16;
 
   GLUquadric quadric;
@@ -562,7 +562,7 @@ strictfp class ShapeManager {
     float normX = (vectY1 * vectZ2 - vectY2 * vectZ1);
     float normY = (vectX2 * vectZ1 - vectX1 * vectZ2);
     float normZ = (vectX1 * vectY2 - vectX2 * vectY1);
-    double leng = StrictMath.sqrt((normX * normX) +
+    double leng = Math.sqrt((normX * normX) +
         (normY * normY) + (normZ * normZ));
     gl.glNormal3d((normX / leng) * -1, (normY / leng) * -1,
         (normZ / leng) * -1);

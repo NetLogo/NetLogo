@@ -34,7 +34,7 @@ extends DrawingRendererInterface {
         else world.observer.dist 
       var lineScale: Double = 0
       if(distance != 0)
-        lineScale = (StrictMath.max(world.worldWidth, world.worldHeight)) * 1.5 / distance
+        lineScale = (math.max(world.worldWidth, world.worldHeight)) * 1.5 / distance
       linkRenderer.renderWrappedLink(gl, stamp, 0, world.patchSize, false, lineScale)
     }
     // Turtle stamps

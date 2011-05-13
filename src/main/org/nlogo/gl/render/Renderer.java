@@ -34,7 +34,7 @@ import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.ShapeList;
 
-public strictfp class Renderer
+public class Renderer
     implements GLEventListener {
   final World world;
   final ViewSettings renderer;
@@ -330,7 +330,7 @@ public strictfp class Renderer
 
     // make the z-clip proportional to the max screen edge so the world doesn't
     // just disappear before you can see the whole thing ev 1/15/05
-    double zClip = StrictMath.max
+    double zClip = Math.max
         (world.worldWidth(),
             world.worldHeight()) * 4;
 
@@ -819,11 +819,11 @@ public strictfp class Renderer
       double width = world.worldWidth();
       double height = world.worldHeight();
 
-      double maxDimension = StrictMath.max(width, height);
+      double maxDimension = Math.max(width, height);
 
       if (world instanceof World3D) {
         double depth = ((World3D) world).worldDepth();
-        maxDimension = StrictMath.max(maxDimension, depth);
+        maxDimension = Math.max(maxDimension, depth);
       }
 
       return 1.5 * maxDimension / distance;
@@ -948,9 +948,9 @@ public strictfp class Renderer
         double crossX = (uy * vz - uz * vy);
         double crossY = (uz * vx - ux * vz);
         double crossZ = (ux * vy - uy * vx);
-        double lengt = StrictMath.sqrt((crossX * crossX) +
+        double lengt = Math.sqrt((crossX * crossX) +
             (crossY * crossY) + (crossZ * crossZ));
-        double lengb = StrictMath.sqrt((ux * ux) + (uy * uy) +
+        double lengb = Math.sqrt((ux * ux) + (uy * uy) +
             (uz * uz));
 
         double dist = (lengt / lengb);
@@ -1028,8 +1028,8 @@ public strictfp class Renderer
     }
 
     // finally do the division to get sc and tc
-    sc = StrictMath.abs(sN) < World.INFINITESIMAL ? 0.0 : sN / sD;
-    tc = StrictMath.abs(tN) < World.INFINITESIMAL ? 0.0 : tN / tD;
+    sc = Math.abs(sN) < World.INFINITESIMAL ? 0.0 : sN / sD;
+    tc = Math.abs(tN) < World.INFINITESIMAL ? 0.0 : tN / tD;
 
     // get the difference of the two closest points
     Vect dP = new Vect((u.x() * sc) - (v.x() * tc) + w.x(),
