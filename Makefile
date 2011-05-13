@@ -27,9 +27,8 @@ tmp:
 	mkdir -p tmp
 bin/sbt-launch.jar:
 	curl -s 'http://ccl.northwestern.edu/devel/sbt-launch-0.7.6.RC0.jar' -o bin/sbt-launch.jar
-project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar: bin/sbt-launch.jar
+$(SCALA_JAR): | bin/sbt-launch.jar
 	bin/sbt update
-	touch project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 
 ### targets for running
 goshell:
@@ -64,7 +63,7 @@ models/index.txt:
 
 JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
-$(JARS): project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
+$(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
 
 
@@ -162,6 +161,6 @@ benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
 
 ### Scala scripting library
-bin/Scripting.class: bin/Scripting.scala project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
+bin/Scripting.class: bin/Scripting.scala | $(SCALA_JAR)
 	@echo "@@@ building bin/Scripting.class"
 	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
