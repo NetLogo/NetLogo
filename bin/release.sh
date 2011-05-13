@@ -121,6 +121,7 @@ $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
+pack200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.11.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/pegdown-0.9.1.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
@@ -370,7 +371,7 @@ fi
 
 # make directory with web pages and so on
 cd ..
-$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar $COMPRESSEDVERSION
+$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar netlogo-$COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
 if [ $WINDOWS -eq 1 ]
@@ -381,9 +382,11 @@ $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
 $CP -rp ../test/applet $COMPRESSEDVERSION
-$CP ../NetLogoLite.jar $COMPRESSEDVERSION/applet
+$CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
+$FIND $COMPRESSEDVERSION/applet \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
+  | $XARGS -0 $RM -rf
 $RM -r $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
