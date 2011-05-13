@@ -383,7 +383,7 @@ $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
 $CP -rp ../test/applet $COMPRESSEDVERSION
 $CP ../NetLogoLite.jar $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
-$CP -rp ../extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
+$CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
 $RM -r $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
