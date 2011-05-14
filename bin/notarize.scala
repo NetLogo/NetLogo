@@ -21,6 +21,10 @@ JAVA_OPTS=-Dfile.encoding=UTF-8 exec bin/scala -classpath bin -deprecation -noco
 import Scripting.{read, readChars, shell}
 import java.io.File
 
+// Bomb if previews are missing?
+
+val requirePreviews = args.nonEmpty && args(0).trim == "1"
+
 // Read version.txt, legal.txt, models directory.
 
 val netlogo = read("resources/system/version.txt").next  // for example "NetLogo 7.8"
@@ -49,15 +53,20 @@ require(bogusEntries.isEmpty,
 
 // Handle each model.
 
+var missingPreviews = false
 for(path <- paths) {
   val preview = path.reverse.dropWhile(_ != '.').reverse + "png"
-  if(!new java.io.File("models/" + preview).exists)
+  if(!new java.io.File("models/" + preview).exists) {
     println("MISSING PREVIEW: " + preview)
+    missingPreviews = true
+  }
   val munged = munge(path)
   new java.io.PrintStream(
     new java.io.FileOutputStream(new File("models/" + path)))
   .print(munged)
 }
+
+require(!(requirePreviews && missingPreviews), "missing previews")
 
 def validateYear(y:Int) {
   require(y >= 1996 && y <= 2011,

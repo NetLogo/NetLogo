@@ -109,6 +109,31 @@ if [ $WINDOWS -eq 1 ]; then
   $MAKE -s clean
 fi
 
+until [ -n "$REQUIRE_PREVIEWS" ]
+do
+  read -p "Require model preview images be present? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    REQUIRE_PREVIEWS=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    REQUIRE_PREVIEWS=0
+  fi
+done
+
+until [ -n "$RSYNC" ]
+do
+  read -p "Rsync to CCL server when done? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    RSYNC=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    RSYNC=0
+  fi
+done
+
+
 # compile, build jars etc.
 bin/sbt update
 $MAKE -s
@@ -175,7 +200,7 @@ ln -s ../../dist        # notarize script needs this
 ln -s ../../resources   # and this
 ln -s ../../scala       # and this
 ln -s ../../bin         # and this
-../../bin/notarize.scala || exit 1
+../../bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
 rm dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
@@ -433,5 +458,9 @@ cd ../..
 $FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store \) -print0 | $XARGS -0 $RM -rf
 
 # done
-echo "now upload to ccl, like this:"
-echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+if [ $RSYNC -eq 1 ]; then
+  rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
+else
+  echo "to upload to CCL server, do:"
+  echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+fi
