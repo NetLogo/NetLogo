@@ -16,6 +16,13 @@
 
 -outjar NetLogoLite.jar
 
+# ProGuard doc recommends keeping Exceptions,InnerClasses,Signature
+# for libraries.  we keep SourceFile and LineNumberTable so we get
+# nice stack traces.  but we get significant space savings (10% or so)
+# by not keeping ScalaSignature - ST 5/13/11
+-keepnames class * { *; }
+-keepattributes Exceptions,InnerClasses,Signature,SourceFile,LineNumberTable
+
 -keep public class org.nlogo.lite.*
 
 # the Event stuff works by reflection so we need to explicitly include these

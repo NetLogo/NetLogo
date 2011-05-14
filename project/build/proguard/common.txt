@@ -18,9 +18,6 @@
 # the bug to the ProGuard author
 -dontoptimize
 
-# we definitely don't want this
--dontobfuscate
-
 # ProGuard complains about all sorts of stuff in the Scala standard library.
 -dontwarn scala.**
 
