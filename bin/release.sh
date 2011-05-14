@@ -91,8 +91,23 @@ else
   echo "OK, no Windows, just Mac and Linux/Unix"
 fi
 
+# ask user whether to make clean (yes for real releases, no when testing this script)
+until [ -n "$CLEAN" ]
+do
+  read -p "Do you want to run 'make clean' first? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    CLEAN=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    CLEAN=0
+  fi
+done
+
 # clean
-$MAKE -s clean
+if [ $WINDOWS -eq 1 ]; then
+  $MAKE -s clean
+fi
 
 # compile, build jars etc.
 bin/sbt update
