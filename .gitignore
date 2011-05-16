@@ -7,17 +7,19 @@ tmp/
 
 # wildcards
 *.class
-*.jar
 *.tmp
 *_managed/
 *~
+.#*
+\#*
 /extensions/*/Makefile
 
-# exceptions
+# no jars, except these small ones
+*.jar
 !/dist/java5/java6.jar
 !/dist/java5/ui.jar
 
-# subprojects
+# subprojects from separate GitHub repos
 /Mathematica-Link/
 /extensions/array/
 /extensions/bitmap/
