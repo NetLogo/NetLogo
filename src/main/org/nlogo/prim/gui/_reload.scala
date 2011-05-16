@@ -1,0 +1,19 @@
+package org.nlogo.prim.gui
+
+import org.nlogo.nvm.{ Context, Command, EngineException, Syntax }
+import org.nlogo.window.GUIWorkspace
+
+class _reload extends Command {
+  override def syntax =
+    Syntax.commandSyntax("O---", true)
+  override def perform(context: Context) {
+    workspace match {
+      case gw: GUIWorkspace =>
+        gw.reload()
+        context.ip = next
+      case _ =>
+        throw new EngineException(
+          context, this, token.name + " can only be used in the GUI")
+    }
+  }
+}
