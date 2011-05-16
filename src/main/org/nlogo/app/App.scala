@@ -371,8 +371,6 @@ class App extends
   }
 
   private def finishStartup() {
-    //import org.nlogo.util.JCL._
-    //pico.getComponents.foreach(println)
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
