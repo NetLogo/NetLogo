@@ -17,6 +17,7 @@ class DummyCompilerServices extends CompilerServices {
   def readNumberFromString(source: String) = source
   def checkReporterSyntax(source: String) { }
   def checkCommandSyntax(source: String) { }
+  def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def tokenizeForColorization(s: String): Array[Token] = unsupported
   def getTokenAtPosition(source: String, position: Int): Token = unsupported

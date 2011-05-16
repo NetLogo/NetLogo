@@ -21,6 +21,8 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
                                 null, true)
   def readFromString(source: String) =
     compiler.readFromString(source, false)
+  def isConstant(s: String) = 
+    compiler.isValidIdentifier(s, false)
   def isValidIdentifier(s: String) = 
     compiler.isValidIdentifier(s, false)
   def tokenizeForColorization(source: String) =

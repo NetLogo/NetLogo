@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.nlogo.api.Color;
+import org.nlogo.api.CompilerServices;
 import org.nlogo.api.LogoException;
 import org.nlogo.util.MersenneTwisterFast;
 import org.nlogo.api.Nobody;
@@ -1338,13 +1339,13 @@ public strictfp class World
         ("\"" + var + "\" not found");
   }
 
-  private Evaluator defaultEvaluator;
+  private CompilerServices _compiler;
 
-  public void setDefaultEvaluator(Evaluator eval) {
-    defaultEvaluator = eval;
+  public void compiler_$eq(CompilerServices compiler) {
+    _compiler = compiler;
   }
 
-  public Evaluator defaultEvaluator() {
-    return defaultEvaluator;
+  public CompilerServices compiler() {
+    return _compiler;
   }
 }

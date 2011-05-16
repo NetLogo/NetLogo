@@ -204,8 +204,6 @@ object AbstractWorkspaceTraits {
       evaluator.runCompiledCommands(owner, procedure)
     def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
       evaluator.runCompiledReporter(owner, procedure)
-    def isConstant(string: String) =
-      evaluator.isConstant(string)
     @throws(classOf[CompilerException])
     def readFromString(string: String): AnyRef =
       evaluator.readFromString(string)

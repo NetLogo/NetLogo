@@ -236,6 +236,10 @@ public strictfp class ClientApplet
       return true;
     }
 
+    public boolean isConstant(String s) {
+      throw new UnsupportedOperationException();
+    }
+
     public Token[] tokenizeForColorization(String s) {
       throw new UnsupportedOperationException();
     }
