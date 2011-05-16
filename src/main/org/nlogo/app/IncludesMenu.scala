@@ -1,7 +1,5 @@
 package org.nlogo.app 
 
-import org.nlogo.util.JCL._
-
 class IncludesMenu(target: ProceduresTab)
 extends org.nlogo.swing.ToolBarMenu("Includes")
 with org.nlogo.window.Events.CompiledEvent.Handler 
@@ -24,7 +22,8 @@ with org.nlogo.window.Events.CompiledEvent.Handler
   }
   
   override def populate(menu: javax.swing.JPopupMenu) {
-    includesTable = target.getIncludesTable.toMap
+    import collection.JavaConverters._
+    includesTable = target.getIncludesTable.asScala.toMap
     if(includesTable.isEmpty) {
       val nullItem = new javax.swing.JMenuItem("<No Includes Defined>")
       nullItem.setEnabled(false)
@@ -34,7 +33,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler
       val includes = new java.util.ArrayList[String]
       includesTable.keys.foreach(includes.add)
       java.util.Collections.sort(includes, String.CASE_INSENSITIVE_ORDER)
-      for(include <- includes if include.endsWith(".nls") && include.size > 4)
+      for(include <- includes.asScala if include.endsWith(".nls") && include.size > 4)
         if(new java.io.File(includesTable(include)).exists) {
           val item = new javax.swing.JMenuItem(include)
           item.addActionListener(

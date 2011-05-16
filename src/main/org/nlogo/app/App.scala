@@ -526,7 +526,8 @@ class App extends
   }
 
   private def magicOpen(name: String) {
-    val matches = org.nlogo.util.JCL.toScalaSeq(org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name))
+    import collection.JavaConverters._
+    val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
       val fullName =
