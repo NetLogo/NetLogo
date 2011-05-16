@@ -1,4 +1,4 @@
-breed [ moths moth ] ;; might extend the model with other breeds: birds, bugs, etc.
+breed [moths moth] ;; might extend the model with other breeds: birds, bugs, etc.
 
 moths-own [
   age               ;; moth's age: 0, 1 = young (can't reproduce), 2, 3 = mature (can reproduce), > 3 = old (can't reproduce)
@@ -196,6 +196,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+15.0
 
 SLIDER
 4
@@ -248,6 +249,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 4
@@ -297,6 +299,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 4
@@ -354,6 +357,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 65
@@ -370,6 +374,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 92
@@ -409,18 +414,20 @@ cycle-pollution?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This project models a classic example of natural selection - the peppered moths of Manchester, England. The peppered moths use their coloration as camouflage from the birds that would eat them. (Note that in this model, the birds act invisibly.) Historically, light-colored moths predominated because they blended in well against the white bark of the trees they rested on.
 
 However, due to the intense pollution caused by the Industrial Revolution, Manchester's trees became discolored with soot, and the light-colored moths began to stick out, while the dark-colored moths blended in. Consequently, the darker moths began to predominate.
 
 Now, in the past few decades, pollution controls have helped clean up the environment, and the trees are returning to their original color. Hence, the lighter moths are once again thriving at expense of their darker cousins.
 
+## HOW IT WORKS
+
 This model simulates these environmental changes, and how a population of moths, initially of all different colors, changes under the pressures of natural selection.
 
-HOW TO USE IT
--------------
+## HOW TO USE IT
+
 The NUM-MOTHS slider controls how many moths are initially present in the world. Their coloration is randomly distributed over the possible colors of the world (white to black). Simply select how many moths you'd like to begin with (around 200 is good), and press the SETUP button. Then press the GO button to begin the simulation.
 
 The MUTATION slider controls the rate of mutation at birth. For the purposes of the simulation, the mutation rate is much higher than it might be in real life. When MUTATION is set to 0, moths are exactly the same as the parent that hatched them. When it is set to 100, there is no correlation between a parent's color and the color of its children. (Best results are seen when MUTATION is set to around 10 or 15, but experiment with the rate and watch what happens.)
@@ -431,35 +438,36 @@ The POLLUTE and CLEAN UP once-buttons, along with the CYCLE-POLLUTION? switch, c
 
 The SPEED slider controls just how rapidly pollution levels change. As you might guess, 1 is slow, and 100 is fast. A good speed to start with is 10.
 
-Finally, 'Peppered Moths' uses six monitors, all of which are straightforward. TICKS reports how much time has elapsed. TOTAL MOTHS displays how many moths are present in the world. LIGHT MOTHS, MEDIUM MOTHS, and DARK MOTHS report the total numbers of moths with each color gradation. The moth population is just divided into thirds over the range of colors. POLLUTION reports the pollution level in the environment on a scale from 0% (no pollution) to 100% (maximum pollution).
+Finally, there are six monitors, all of which are straightforward. TICKS reports how much time has elapsed. TOTAL MOTHS displays how many moths are present in the world. LIGHT MOTHS, MEDIUM MOTHS, and DARK MOTHS report the total numbers of moths with each color gradation. The moth population is just divided into thirds over the range of colors. POLLUTION reports the pollution level in the environment on a scale from 0% (no pollution) to 100% (maximum pollution).
 
-THINGS TO NOTICE
-----------------
+## THINGS TO NOTICE
+
 The most important thing to watch is how the entire set of moths seems to change color over time. Let the model run by itself the first time - watch the world change from white to black back to white. Then see how manipulating the sliders effects the populations of moths.
 
-Notice that during the first few initial time-steps, the moth population booms. You might then see the moth population fluctuate between different levels, some of which are quite large. The moths give birth to many offspring, but the world in which they live is finite - it has finite space and resources. If the population exceeds the available resources (carrying capacity), the moths tend die a lot faster than they would otherwise. Under normal circumstances, the average population will tend to stay constant, at a level dependent on the speed and selection rates.
+Notice that during the first few initial time-steps, the moth population booms. You might then see the moth population fluctuate between different levels, some of which are quite large. The moths give birth to many offspring, but the world in which they live is finite --- it has finite space and resources. If the population exceeds the available resources (carrying capacity), the moths tend die a lot faster than they would otherwise. Under normal circumstances, the average population will tend to stay constant, at a level dependent on the speed and selection rates.
 
 Watch what happens when a drastic change in the environment occurs. (You can force this with the POLLUTE-WORLD and CLEAN-UP-WORLD buttons.) Can you kill off all of the moths in a matter of a few time-steps?
 
 You can watch the ratios between the types of moths change either in the monitors, or graphically in the plot. The yellow line represents the lighter-colored moths, the green line represents the intermediate moths, and the blue line represents the darker-colored moths.
 
-THINGS TO TRY
--------------
+## THINGS TO TRY
+
 How do different levels of mutation and selection change the population? How does the speed of the model effect the rate at which the moths change? Is there a speed at which the moths can't keep up, i.e. the world changes faster than small pockets of discolored moths or mutants can help keep the population up to size?
 
-The upper-bound for the moth population is defined as a global variable, 'upper-bound'. It is initially set to 4 * the moth population, but you can change it and watch what happens.
+The upper-bound for the moth population is defined as a global variable, `upper-bound`. It is initially set to 4 * the moth population, but you can change it and watch what happens.
 
-EXTENDING THE MODEL
--------------------
+## EXTENDING THE MODEL
+
 'Peppered Moths' is a nice introduction into modeling genetic and evolutionary phenomena. The code is fairly simple, and divided up into several small procedures that handle the different stages of each generation. This makes it easy for other extensions to be added to the model.
 
 Each moth has one gene that effectively determines its survivability under current conditions. This is a turtle variable, simply the turtle's color. Add the concept of the recessive gene to 'Peppered Moths'- each moth might have two color genes (additional turtle variables), that together determine its color. Moths will then need to seek out mates, and use sexual reproduction as opposed to the unnatural asexual reproduction we see here.
 
-NETLOGO FEATURES
------------------
-Note that all of the commands given to the moths are in a block of code that begins 'ask moths [...]'. This is because each moth is given a breed, 'moths'. This makes the code far easier to modify, especially if you want to add a different kind of animal, say, the birds that eat the moths. You would then add a new breed, 'birds', and put all code that birds are to execute in the body of 'ask birds [...]'.
+## NETLOGO FEATURES
+
+Note that all of the commands given to the moths are in a block of code that begins `ask moths`. This is because each moth is given a breed, `moths`. This makes the code far easier to modify, especially if you want to add a different kind of animal, say, the birds that eat the moths. You would then add a new breed, `birds`, and put all code that birds are to execute in the body of `ask birds`.
 
 ## CREDITS AND REFERENCES
+
 The peppered moths of Manchester, England as a case study in natural selection were originally studied by British scientist H. B. D. Kettlewell.
 
 In 1998, Michael Majerus of the University of Cambridge re-examined Kettlewell's work and found that though his experimental design was questionable in some respects, his conclusions were likely correct nonetheless.  In any case, the mechanism of natural selection illustrated by this model is not in doubt.
@@ -828,7 +836,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
