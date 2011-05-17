@@ -141,12 +141,12 @@ public class Renderer3D
   @Override
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>();
-    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
     pickPatches(agents, ray);
-    pickListener.pick(mousePt, agents);
-    pickRequest = false;
+    pickListener.pick(mouseState.point(), agents);
+    mouseState.pickRequest_$eq(false);
   }
 
   double wrapZ(double z) {
