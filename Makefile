@@ -123,7 +123,7 @@ github:
 ### misc targets
 
 # cleaning
-.PHONY: clean clean-github realclean
+.PHONY: clean clean-extensions realclean
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
