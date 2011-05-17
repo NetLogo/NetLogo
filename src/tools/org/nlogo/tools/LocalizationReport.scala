@@ -151,7 +151,10 @@ object LocalizationReport {
   (KeyAndArgs("org.nlogo.prim.etc.$common.syntaxError", "Nothing named REM has been defined error while observer running RUN"),
             Some("Syntax Error: Nothing named REM has been defined error while observer running RUN")),
   (KeyAndArgs("org.nlogo.prim.etc._stop.notAllowedInsideToReport", "STOP"),
-            Some("STOP is not allowed inside TO-REPORT."))
+            Some("STOP is not allowed inside TO-REPORT.")),
+  (KeyAndArgs("org.nlogo.prim.$common.noSumOfListWithNonNumbers", "A", "String"),
+            Some("Can't find the sum of a list that contains non-numbers A is a String."))
+
 
 
 

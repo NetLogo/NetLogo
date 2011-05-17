@@ -27,8 +27,8 @@ public final strictfp class _networkdistance extends Reporter {
   public double report_1(Context context, Turtle destNode, AgentSet linkBreed)
       throws LogoException {
     if (linkBreed != world.links() && !world.isLinkBreed(linkBreed)) {
-      throw new EngineException
-          (context, this, "expected the last input to be a link breed.");
+      throw new EngineException (context, this,
+              I18N.errors().get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"));
     }
     if (destNode.id == -1) {
       throw new EngineException(context, this,

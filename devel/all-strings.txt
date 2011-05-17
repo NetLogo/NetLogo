@@ -5395,7 +5395,6 @@ org/nlogo/plot/PlotPen.scala-88-    import org.nlogo.api.StringUtils.escapeStrin
 org/nlogo/plot/PlotPen.scala:89:    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
 org/nlogo/plot/PlotPen.scala-90-  }
 org/nlogo/plot/PlotPen.scala-91-
-org/nlogo/prim/_breedhere.java-23-	@Override public String toString()
 org/nlogo/prim/_breedsingular.java-39-		{
 org/nlogo/prim/_breedsingular.java-40-			throw new EngineException
 org/nlogo/prim/_breedsingular.java:41:				( context , this , idDouble + " is not an integer" ) ;
@@ -5406,8 +5405,6 @@ org/nlogo/prim/_breedsingular.java-52-				( context , this ,
 org/nlogo/prim/_breedsingular.java:53:				  turtle + " is not a " + world.getBreedSingular( breed ) ) ;
 org/nlogo/prim/_breedsingular.java-54-		}
 org/nlogo/prim/_breedsingular.java-55-		return turtle ;
-org/nlogo/prim/_call.java-8-import org.nlogo.nvm.Context;
-org/nlogo/prim/_call.java-9-
 org/nlogo/prim/_callreport.java-9-import org.nlogo.nvm.Context;
 org/nlogo/prim/_callreport.java-45-	    {
 org/nlogo/prim/_callreport.java-46-			throw new EngineException
@@ -5449,63 +5446,7 @@ org/nlogo/prim/_externreport.java-62-		{
 org/nlogo/prim/_externreport.java-63-			EngineException ee =
 org/nlogo/prim/_externreport.java:64:				new EngineException( context , this , "Extension exception: "
 org/nlogo/prim/_externreport.java-65-									 + ex.getMessage() ) ;
-org/nlogo/prim/_externreport.java-66-			// it might be better to use the Java 1.4 setCause() stuff, for
-org/nlogo/prim/_fastrecurse.java-36-		{
-org/nlogo/prim/_fastrecurse.java-37-			// if we're inside an ask inside the current procedure, then we have
-org/nlogo/prim/_fastrecurse.java:38:			// to do normal recursion, not "fast" tail recursion - ST 11/17/04
-org/nlogo/prim/_fastrecurse.java-39-			original.perform( context ) ;
-org/nlogo/prim/_fastrecurse.java-40-		}
-org/nlogo/prim/_foreach.java-16-{
-org/nlogo/prim/_foreach.java-17-	private static final String FOREACH_SPANS_AGENTS =
-org/nlogo/prim/_foreach.java:18:		"FOREACH is not allowed directly inside a concurrent ask.  "
-org/nlogo/prim/_foreach.java:19:		+ "Use WITHOUT-INTERRUPTION around the FOREACH, "
-org/nlogo/prim/_foreach.java:20:		+ "or place the FOREACH in a separate procedure." ;
-org/nlogo/prim/_foreach.java-21-	public int vn ;
-org/nlogo/prim/_foreach.java-22-	@Override
-org/nlogo/prim/_foreach.java-61-				throw new EngineException
-org/nlogo/prim/_foreach.java-62-					( context , this ,
-org/nlogo/prim/_foreach.java:63:					  "All the list arguments to FOREACH must be the same length." ) ;
-org/nlogo/prim/_foreach.java-64-			}
-org/nlogo/prim/_foreach.java-65-			iters[ i ] = list.iterator()
-org/nlogo/prim/_linkbreedvariableof.java-27-			{
-org/nlogo/prim/_linkbreedvariableof.java-28-				throw new EngineException
-org/nlogo/prim/_linkbreedvariableof.java:29:					( context , this , "that link is dead" ) ;
-org/nlogo/prim/_linkbreedvariableof.java-30-			}
-org/nlogo/prim/_linkbreedvariableof.java-31-			try
-org/nlogo/prim/_linkvariableof.java-28-			{
-org/nlogo/prim/_linkvariableof.java-29-				throw new EngineException
-org/nlogo/prim/_linkvariableof.java:30:					( context , this , "that link is dead" ) ;
-org/nlogo/prim/_linkvariableof.java-31-			}
-org/nlogo/prim/_linkvariableof.java-32-			try
-org/nlogo/prim/_linkvariableof.java-92-			{
-org/nlogo/prim/_linkvariableof.java-93-				throw new EngineException
-org/nlogo/prim/_linkvariableof.java:94:					( context , this , "that link is dead" ) ;
-org/nlogo/prim/_linkvariableof.java-95-			}
-org/nlogo/prim/_linkvariableof.java-96-			try
-org/nlogo/prim/_linkvariableof.java-135-		{
-org/nlogo/prim/_linkvariableof.java-136-			throw new EngineException
-org/nlogo/prim/_linkvariableof.java:137:				( context , this , "that link is dead" ) ;
-org/nlogo/prim/_linkvariableof.java-138-		}
-org/nlogo/prim/_linkvariableof.java-139-		try
-org/nlogo/prim/_nsum.java-51-				throw new EngineException
-org/nlogo/prim/_nsum.java-52-					( context , this , 
-org/nlogo/prim/_nsum.java:53:					  "can't find the sum of a list that contains non-numbers " 
-org/nlogo/prim/_nsum.java-54-					  + Dump.logoObject( value ) 
-org/nlogo/prim/_nsum.java:55:					  + " is a " + Syntax.typeName( value ) + "." ) ;
-org/nlogo/prim/_nsum.java-56-			}
-org/nlogo/prim/_nsum.java-57-
-org/nlogo/prim/_nsum4.java-51-				throw new EngineException
-org/nlogo/prim/_nsum4.java-52-					( context , this , 
-org/nlogo/prim/_nsum4.java:53:					  "can't find the sum of a list that contains non-numbers " 
-org/nlogo/prim/_nsum4.java-54-					  + Dump.logoObject( value ) 
-org/nlogo/prim/_nsum4.java:55:					  + " is a " + Syntax.typeName( value ) + "." ) ;
-org/nlogo/prim/_nsum4.java-56-			}
-org/nlogo/prim/_nsum4.java-57-
-org/nlogo/prim/_nvalues.java-32-		{
-org/nlogo/prim/_nvalues.java-33-			throw new EngineException
-org/nlogo/prim/_nvalues.java:34:				( context , this , displayName() + " cannot take a negative number" ) ;	
-org/nlogo/prim/_nvalues.java-35-		}
-org/nlogo/prim/_nvalues.java-36-
+org/nlogo/prim/_externreport.java-66-			// it might be better to use the Java 1.4 setCause() stuff, fororg/nlogo/prim/_nvalues.java-32-		{
 org/nlogo/prim/_return.java-13-	@Override public String displayName()
 org/nlogo/prim/_return.java-14-	{
 org/nlogo/prim/_return.java:15:		return "END" ; // for use in error messages
@@ -5515,12 +5456,6 @@ org/nlogo/prim/_returnreport.java-15-	@Override public String displayName()
 org/nlogo/prim/_returnreport.java-16-	{
 org/nlogo/prim/_returnreport.java:17:		return "END" ; // for use in error messages
 org/nlogo/prim/_returnreport.java-18-	}
-org/nlogo/prim/_returnreport.java-19-	@Override public void perform( Context context ) throws LogoException
-org/nlogo/prim/_returnreport.java-25-		throw new EngineException
-org/nlogo/prim/_returnreport.java-26-			( context , this ,
-org/nlogo/prim/_returnreport.java:27:			  "reached end of reporter procedure without REPORT being called" ) ;
-org/nlogo/prim/_returnreport.java-28-    }
-org/nlogo/prim/_returnreport.java-29-}
 org/nlogo/prim/_templatevariable.java-47-		{
 org/nlogo/prim/_templatevariable.java-48-			throw new EngineException
 org/nlogo/prim/_templatevariable.java:49:				( context , this , "? can only be used inside map and foreach" ) ;
@@ -5530,34 +5465,7 @@ org/nlogo/prim/_turtle.java-28-		{
 org/nlogo/prim/_turtle.java-29-			throw new EngineException
 org/nlogo/prim/_turtle.java:30:				( context , this , idDouble + " is not an integer" ) ;
 org/nlogo/prim/_turtle.java-31-		}
-org/nlogo/prim/_turtle.java-32-		Turtle turtle = world.getTurtle( id ) ;
-org/nlogo/prim/_turtleorlinkvariableof.java-28-			{
-org/nlogo/prim/_turtleorlinkvariableof.java-29-				throw new EngineException
-org/nlogo/prim/_turtleorlinkvariableof.java:30:					( context , this , "that " + 
-org/nlogo/prim/_turtleorlinkvariableof.java:31:					  ( agent instanceof org.nlogo.agent.Link ? "link" : "turtle" )
-org/nlogo/prim/_turtleorlinkvariableof.java:32:					  + " is dead" ) ;
-org/nlogo/prim/_turtleorlinkvariableof.java-33-			}
-org/nlogo/prim/_turtleorlinkvariableof.java-34-			try
-org/nlogo/prim/_turtleorlinkvariableof.java-88-			{
-org/nlogo/prim/_turtleorlinkvariableof.java-89-				throw new EngineException
-org/nlogo/prim/_turtleorlinkvariableof.java:90:					( context , this , "that " + 
-org/nlogo/prim/_turtleorlinkvariableof.java:91:					  ( agent instanceof org.nlogo.agent.Link ? "link" : "turtle" )
-org/nlogo/prim/_turtleorlinkvariableof.java:92:					  + " is dead" ) ;
-org/nlogo/prim/_turtleorlinkvariableof.java-93-			}
-org/nlogo/prim/_turtleorlinkvariableof.java-94-			try
-org/nlogo/prim/_turtleorlinkvariableof.java-134-		{
-org/nlogo/prim/_turtleorlinkvariableof.java-135-			throw new EngineException
-org/nlogo/prim/_turtleorlinkvariableof.java:136:				( context , this , "that " + 
-org/nlogo/prim/_turtleorlinkvariableof.java:137:				  ( agent instanceof org.nlogo.agent.Link ? "link" : "turtle" )
-org/nlogo/prim/_turtleorlinkvariableof.java:138:				  + " is dead" ) ;
-org/nlogo/prim/_turtleorlinkvariableof.java-139-		}
-org/nlogo/prim/_turtleorlinkvariableof.java-140-		try
-org/nlogo/prim/etc/_averagepathlength.java-33-		{
-org/nlogo/prim/etc/_averagepathlength.java-34-			throw new EngineException
-org/nlogo/prim/etc/_averagepathlength.java:35:				( context , this , "expected last input to be a link breed." ) ;
-org/nlogo/prim/etc/_averagepathlength.java-36-		}
-org/nlogo/prim/etc/_averagepathlength.java-37-		return world.linkManager.networkMetrics
-org/nlogo/prim/etc/_boom.java-21-		throws LogoException
+org/nlogo/prim/_turtle.java-32-		Turtle turtle = world.getTurtle( id ) ;org/nlogo/prim/etc/_boom.java-21-		throws LogoException
 org/nlogo/prim/etc/_boom.java-22-	{
 org/nlogo/prim/etc/_boom.java:23:		throw new EngineException( context , this , "boom!" ) ;
 org/nlogo/prim/etc/_boom.java-24-	}
@@ -5616,41 +5524,16 @@ org/nlogo/prim/etc/_innetworkradius.java-50-			throw new EngineException
 org/nlogo/prim/etc/_innetworkradius.java:51:				( context , this , displayName() + " should not be given a negative radius" ) ;	
 org/nlogo/prim/etc/_innetworkradius.java-52-		}
 org/nlogo/prim/etc/_innetworkradius.java-53-
-org/nlogo/prim/etc/_networkdistance.java-29-		{
-org/nlogo/prim/etc/_networkdistance.java-30-			throw new EngineException
-org/nlogo/prim/etc/_networkdistance.java:31:				( context , this , "expected the last input to be a link breed." ) ;
-org/nlogo/prim/etc/_networkdistance.java-32-		}
-org/nlogo/prim/etc/_networkshortestpathlinks.java-30-		{
-org/nlogo/prim/etc/_networkshortestpathlinks.java-31-			throw new EngineException
-org/nlogo/prim/etc/_networkshortestpathlinks.java:32:				( context , this , "expected the last input to be a link breed." ) ;
-org/nlogo/prim/etc/_networkshortestpathlinks.java-33-		}
-org/nlogo/prim/etc/_networkshortestpathlinks.java-34-
-org/nlogo/prim/etc/_networkshortestpathlinks.java-39-		return world.linkManager.networkMetrics.networkShortestPathLinks(context.job.random, (Turtle) context.agent , destNode , linkBreed) ;
-org/nlogo/prim/etc/_networkshortestpathnodes.java-33-		{
-org/nlogo/prim/etc/_networkshortestpathnodes.java-34-			throw new EngineException
-org/nlogo/prim/etc/_networkshortestpathnodes.java:35:				( context , this , "expected the last input to be a link breed." ) ;
-org/nlogo/prim/etc/_networkshortestpathnodes.java-36-		}
-org/nlogo/prim/etc/_networkshortestpathnodes.java-37-
 org/nlogo/prim/etc/_pwd.java-24-		if( path == null )
 org/nlogo/prim/etc/_pwd.java-25-	    {
 org/nlogo/prim/etc/_pwd.java:26:			path = "no model loaded!" ;
 org/nlogo/prim/etc/_pwd.java-27-	    }
 org/nlogo/prim/etc/_pwd.java-28-		workspace.outputObject
-
-org/nlogo/prim/gui/_bench.java-20-		final int minTime = argEvalIntValue( context , 0 ) ;
-org/nlogo/prim/gui/_bench.java-21-		final int maxTime = argEvalIntValue( context , 1 ) ;
-org/nlogo/prim/gui/_bench.java:22:		new Thread( "__bench" ) {
-org/nlogo/prim/gui/_bench.java-23-			@Override public void run() {
-org/nlogo/prim/gui/_bench.java-24-				Benchmarker.benchmark( (AbstractWorkspace) workspace , minTime , maxTime ) ;
 org/nlogo/prim/gui/_exportinterface.java-22-		{
 org/nlogo/prim/gui/_exportinterface.java-23-			throw new EngineException(
 org/nlogo/prim/gui/_exportinterface.java:24:				context , this , token().name() + " can only be used in the GUI" ) ;
 org/nlogo/prim/gui/_exportinterface.java-25-		}
 org/nlogo/prim/gui/_exportinterface.java-26-		( (GUIWorkspace) workspace).forceDisplayAndTicksUpdates() ;
-org/nlogo/prim/gui/_inspectwithradius.java-16-		{
-org/nlogo/prim/gui/_inspectwithradius.java-17-			throw new EngineException
-org/nlogo/prim/gui/_inspectwithradius.java:18:				( context , this , "that turtle is dead" ) ;
-org/nlogo/prim/gui/_inspectwithradius.java-19-		}
 org/nlogo/prim/gui/_inspectwithradius.java-20-		if( radius < 0 || radius > ( ( world.worldWidth() - 1 ) / 2 ) )
 org/nlogo/prim/gui/_inspectwithradius.java-21-	    {
 org/nlogo/prim/gui/_inspectwithradius.java-22-			throw new EngineException

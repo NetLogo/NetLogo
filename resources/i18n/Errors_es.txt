@@ -58,6 +58,7 @@ org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Preve una tortuga o
 
 
 org.nlogo.prim.etc.$common.noNegativeRadius = {0} no puede tomar un radius negativo.
+org.nlogo.prim.etc.$common.noNegativeNumber = {0} no puede tomar un numero negativo.
 org.nlogo.prim.etc.$common.noNegativeAngle = {0} no puede tomar un angulo negativo.
 org.nlogo.prim.etc.$common.noAngleGreaterThan360 = {0} no puede tomar un angulo mas de 360.
 
@@ -181,3 +182,8 @@ org.nlogo.$common.thatAgentIsDead = Ese {0} es muerte.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = S\u00f3lo se pueden eliminar los archivos.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = No se puede eliminar un archivo inexistente.
 org.nlogo.workspace.DefaultFileManager.noOpenFile = No hay un archivo que esta abierto.
+
+org.nlogo.prim.etc._foreach.listsMustBeSameLength = Todos los argumentos lista para foreach debe tener la misma longitud.
+org.nlogo.prim.$common.noSumOfListWithNonNumbers = No se puede encontrar la suma de una lista que contiene elementos que no son números, {0} esta un {1}.
+org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Llego al terminacion del procedimiento de reporter sin llamando REPORT.
+org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Se esperaba la última entrada a una raza enlace.
