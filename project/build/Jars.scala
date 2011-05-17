@@ -13,12 +13,18 @@ trait Jars extends DefaultProject {
   private val jarPaths: List[Path] =
     List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar", "BehaviorSpace.jar").map(path)
 
-  private def build(config: String) {
+  private def build(config: String): Option[String] = {
     // ProGuard prints stuff straight to stdout, so we do the same
     println("building " + config + " jar")
-    TrapExit(
-      proguard.ProGuard.main(Array("@project/build/proguard/" + config + ".txt")),
-      log)
+    def doIt() {
+      proguard.ProGuard.main(Array("@project/build/proguard/" + config + ".txt"))
+    }
+    TrapExit(doIt(), log) match {
+      case 0 =>
+        None
+      case exitCode =>
+        Some("exit code: " + exitCode.toString)
+    }
   }
 
   private def addManifest(name: String, manifest: String) {
@@ -33,31 +39,31 @@ trait Jars extends DefaultProject {
   lazy val mainJar =
     fileTask(Seq(path("NetLogo.jar")) from Set(java5Path) ++ configs) {
       path("NetLogo.jar").asFile.delete()
-      build("main")
-      addManifest("NetLogo", "manifest")
-      None
+      build("main") orElse {
+        addManifest("NetLogo", "manifest")
+        None
+      }
     }.dependsOn(compile)
 
   lazy val hubnetJar =
     fileTask(Seq(path("HubNet.jar")) from Set(java5Path) ++ configs) {
       path("HubNet.jar").asFile.delete()
-      build("hubnet")
-      addManifest("HubNet", "manifesthubnet")
-      None
+      build("hubnet") orElse {
+        addManifest("HubNet", "manifesthubnet")
+        None
+      }
     }.dependsOn(compile)
 
   lazy val liteJar =
     fileTask(Seq(path("NetLogoLite.jar")) from Set(java5Path) ++ configs) {
       path("NetLogoLite.jar").asFile.delete()
-      build("lite")
-      None
+      build("lite") orElse { None }
     }.dependsOn(compile)
 
   lazy val labJar =
     fileTask(Seq(path("BehaviorSpace.jar")) from Set(java5Path) ++ configs) {
       path("BehaviorSpace.jar").asFile.delete()
-      build("lab")
-      None
+      build("lab") orElse { None }
     }.dependsOn(mainJar)
 
   lazy val alljars =
