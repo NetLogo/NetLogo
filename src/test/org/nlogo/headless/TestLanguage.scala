@@ -9,18 +9,29 @@ import org.nlogo.util.SlowTest
 
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
-abstract class TestLanguage(directory: String) extends FunSuite with SlowTest {
-  val files = new File(directory).listFiles.filter(_.getName.endsWith(".txt")).toList
-  for(t:LanguageTest <- TestParser.parseFiles(files))
-    if(t.shouldRun)
-      test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
-        t.run
-      }
+abstract class TestLanguage(testFinder: TestFinder) extends FunSuite with SlowTest {
+  for(t:LanguageTest <- TestParser.parseFiles(testFinder.files); if(t.shouldRun))
+    test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
+      t.run
+    }
 }
 
-class TestCommands extends TestLanguage("test/commands")
-class TestReporters extends TestLanguage("test/reporters")
-class TestModels extends TestLanguage("test/models")
+trait TestFinder{ def files: Iterable[File] }
+case class TxtsInDir(dir:String) extends TestFinder {
+  def files: Iterable[File] = new File(dir).listFiles.filter(_.getName.endsWith(".txt"))
+}
+case object ExtensionTestsDotTxt extends TestFinder {
+  def files: Iterable[File] = {
+    def filesInDir(parent:File): Iterable[File] =
+      parent.listFiles.flatMap{f => if(f.isDirectory) filesInDir(f) else List(f)}
+    filesInDir(new File("extensions")).filter(_.getName == "tests.txt")
+  }
+}
+
+class TestCommands extends TestLanguage(TxtsInDir("test/commands"))
+class TestReporters extends TestLanguage(TxtsInDir("test/reporters"))
+class TestModels extends TestLanguage(TxtsInDir("test/models"))
+class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 
 // The output of the parser is lists of instances of these classes:
 
@@ -106,7 +117,7 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
 // This is the parser:
 
 object TestParser {
-  def parseFiles(files: List[File]): List[LanguageTest] = {
+  def parseFiles(files: Iterable[File]): Iterable[LanguageTest] = {
     (for (f <- files; if (!f.isDirectory)) yield parseFile(f)).flatten
   }
   def parseFile(f: File): List[LanguageTest] = {

@@ -73,6 +73,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val tc = singleTestTask("org.nlogo.headless.TestCommands")
   lazy val tr = singleTestTask("org.nlogo.headless.TestReporters")
   lazy val tm = singleTestTask("org.nlogo.headless.TestModels")
+  lazy val te = singleTestTask("org.nlogo.headless.TestExtensions")
 
   lazy val testSlow = runSubclassesOf("org.nlogo.util.SlowTest")
   lazy val testFast = runEverythingButSubclassesOf("org.nlogo.util.SlowTest")
