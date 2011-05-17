@@ -129,8 +129,7 @@ class PlotTests extends SimplePlotTest {
     expect(3)(plot.pens.size)
     expect(pen1)(plot.pens.head)
     // pens should come back in same order inserted
-    import org.nlogo.util.JCL._
-    expect(List("pen1", "pen2", "pen3"))(plot.pens.toList.map(_.name))
+    expect(List("pen1", "pen2", "pen3"))(plot.pens.map(_.name))
   }
   testPlot("Get") { plot =>
     plot.pens = Nil
