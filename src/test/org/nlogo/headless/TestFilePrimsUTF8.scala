@@ -13,6 +13,7 @@ to write-out
  if file-exists? f [ file-delete f ]
  file-open f
  file-write utf-string
+ file-print ""
  file-close
 end
 

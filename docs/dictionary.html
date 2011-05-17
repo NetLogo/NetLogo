@@ -168,7 +168,7 @@ Go figure! - ST 12/2/04
       "#sprout">sprout</a> <a href=
       "#sprout-breeds">sprout-<i>&lt;breeds&gt;</i></a> <a href=
       "#subject">subject</a> 
-	  <a href= "#turtles-here">turtles-here</a>
+      <a href= "#turtles-here">turtles-here</a>
       <!-- ======================================== -->
     <h3>
       <a name="agentsetgroup" id="agentsetgroup">Agentset</a>
@@ -2125,7 +2125,7 @@ ask links
         error <i>value</i>
       </h4>
       <p>
-	Causes a runtime error to occur.
+    Causes a runtime error to occur.
       <p>The given value is converted to a string
         (if it isn't one already) and used as the error message.
       <p>
@@ -3159,11 +3159,11 @@ histogram [color] of turtles
         hubnet-broadcast-clear-output
       </h4>
       <p>
-		This clears all messages printed to the text area on every client.
+        This clears all messages printed to the text area on every client.
       <p>
         See
         also: <a href="#hubnet-broadcast-message">hubnet-broadcast-message</a>,
-		<a href="#hubnet-send-clear-output">hubnet-send-clear-output</a>
+        <a href="#hubnet-send-clear-output">hubnet-send-clear-output</a>
       </div>
     <div class="dict_entry">
       <h3>
@@ -3197,8 +3197,8 @@ histogram [color] of turtles
         Remove overrides from the override list on <i>client</i>.
         <tt>hubnet-clear-override</tt> removes only the override for the
         specified variable for the specified agent or agentset. 
-		<tt>hubnet-clear-overrides</tt> removes all overrides from the 
-		specified client.
+        <tt>hubnet-clear-overrides</tt> removes all overrides from the 
+        specified client.
       <p>
         See also: <a href="#hubnet-send-override">hubnet-send-override</a>
       </div>
@@ -3383,12 +3383,12 @@ histogram [color] of turtles
         hubnet-send-clear-output <i>list-of-strings</i>
       </h4>
       <p>
-		This clears all messages printed to the text area on the given
-		client or clients (specified in the <i>string</i> or <i>list-of-strings</i>.
+        This clears all messages printed to the text area on the given
+        client or clients (specified in the <i>string</i> or <i>list-of-strings</i>.
       <p>
         See
         also: <a href="#hubnet-send-message">hubnet-send-message</a>,
-		<a href="#hubnet-broadcast-clear-output">hubnet-broadcast-clear-output</a>
+        <a href="#hubnet-broadcast-clear-output">hubnet-broadcast-clear-output</a>
       </div>
     <div class="dict_entry">
       <h3>
@@ -3800,7 +3800,7 @@ ask turtle 0 [ create-link-to turtle 1 ]
 ask turtle 1 [ show in-link-from turtle 0 ] ;; shows link 0 1
 ask turtle 0 [ show in-link-from turtle 1 ] ;; shows nobody
 </pre>
-	  <p>See also: <a href="#out-breed-to">out-link-to</a> <a href="#breed-with">link-with</a>
+      <p>See also: <a href="#out-breed-to">out-link-to</a> <a href="#breed-with">link-with</a>
     </div>
     <div class="dict_entry">
       <h3>
@@ -5809,7 +5809,7 @@ ask turtle 1
   show out-link-to turtle 0 ;; shows nobody
 ]
 </pre>
-	  <p>See also: <a href="#in-breed-from">in-link-from</a> <a href="#breed-with">link-with</a>
+      <p>See also: <a href="#in-breed-from">in-link-from</a> <a href="#breed-with">link-with</a>
     </div>
     <div class="dict_entry">
       <h3>
@@ -7711,7 +7711,7 @@ show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quo
         Reports a list of agents, sorted according to each agent's value for <i>reporter</i>.
         Ties are broken randomly.
       <p>
-	The values must be all numbers, all strings, or all agents of the same type.
+    The values must be all numbers, all strings, or all agents of the same type.
       <pre>
 crt 3
 show sort-on [who] [turtles]
@@ -7816,8 +7816,8 @@ sprout-sheep 1 [ set color black ]
         Reports the sample standard deviation of a
         <i>list</i> of numbers. Ignores other types of items. 
       <p>
-	(Note that this estimates the standard deviation for a 
-	<i>sample</i>, rather than for a whole <i>population</i>, using Bessel's correction.)
+    (Note that this estimates the standard deviation for a 
+    <i>sample</i>, rather than for a whole <i>population</i>, using Bessel's correction.)
       <pre>
 show standard-deviation [1 2 3 4 5 6]
 =&gt; 1.8708286933869707
@@ -8675,8 +8675,8 @@ if user-yes-or-no? &quot;Set up the model?&quot;
         Reports the sample variance of a <i>list</i> of numbers. Ignores
         other types of items.
       <p>
-	(Note that this computes an unbiased estimate of the variance for a 
-	<i>sample</i>, rather than for a whole <i>population</i>, using Bessel's correction.)
+    (Note that this computes an unbiased estimate of the variance for a 
+    <i>sample</i>, rather than for a whole <i>population</i>, using Bessel's correction.)
       <p>
         The sample variance is the sum of the squares of the deviations of
         the numbers from their mean, divided by one less than the number of
@@ -8839,8 +8839,8 @@ ask turtle 0 [
   show link-with turtle 1 ;; prints link 0 1
 ]
 </pre>
-	  <p>See
-	  also: <a href="#in-breed-from">in-link-from</a>, <a href="#out-breed-to">out-link-to</a>
+      <p>See
+      also: <a href="#in-breed-from">in-link-from</a>, <a href="#out-breed-to">out-link-to</a>
     </div>
     <div class="dict_entry">
       <h3>

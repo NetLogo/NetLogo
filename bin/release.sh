@@ -84,8 +84,8 @@ if [ $WINDOWS -eq 1 ]; then
   fi
   if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.8 (build 5311), built on 2011-04-13" ; 
   then
-	  echo "install4j " $IJDIR/$IJ "not found"
-	  exit 1
+    echo "install4j " $IJDIR/$IJ "not found"
+    exit 1
   fi
 else
   echo "OK, no Windows, just Mac and Linux/Unix"

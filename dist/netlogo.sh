@@ -1,5 +1,5 @@
 #!/bin/sh
-cd "`dirname "$0"`"		# the copious quoting is for handling paths with spaces
+cd "`dirname "$0"`"             # the copious quoting is for handling paths with spaces
 # -server                       use server VM for highest performance
 # -Djava.library.path=./lib     ensure JOGL can find native libraries 
 # -Djava.ext.dirs=              ignore any existing JOGL installation

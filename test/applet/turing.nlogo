@@ -3,9 +3,9 @@ patches-own [on?]
 __includes [ "appletinclude.nls" ]
 
 to startup
-	setup 
-	repeat 500 [ go ]
-	if ( not includedReporter ) [ error "include file definition not read" ]
+  setup 
+  repeat 500 [ go ]
+  if ( not includedReporter ) [ error "include file definition not read" ]
 end
 
 to setup

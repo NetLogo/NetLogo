@@ -36,7 +36,7 @@ to go
   ask particles [ move ]
   if collisions?
     [ ask particles
-	[ check-for-collision ] ]
+      [ check-for-collision ] ]
   set old-clock clock
   set clock clock + tick-length
   ;; we need to check this down here as well, because if there are no
@@ -130,14 +130,14 @@ to collide-with [ other-particle ] ;; particle procedure
     ;; local copies of other-particle's relevant quantities
     let mass2 0
     let speed2 0
-	let heading2 0 
+    let heading2 0 
 
     ;; quantities used in the collision itself
     let theta 0   ;; heading of vector from my center to the center of other-particle.
     let v1t 0     ;; velocity of self along direction theta
     let v1l 0     ;; velocity of self perpendicular to theta
     let v2t 0
-	let v2l 0    ;; velocity of other-particle, represented in the same way
+    let v2l 0    ;; velocity of other-particle, represented in the same way
     let vcm 0    ;; velocity of the center of mass of the colliding particles,
                  ;;   along direction theta
 

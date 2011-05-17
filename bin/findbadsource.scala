@@ -5,7 +5,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // mode: scala
 // End:
 
-// Check for problems with our Scala & Java source files including:
+// Check for problems with plain text files including:
 // 1) No newline at end of file
 // 2) Tab characters
 // 3) Carriage return characters
@@ -19,8 +19,13 @@ def ignore(path: String) =
   path.contains("/tmp/") ||
   path.endsWith("Lexer.java")
 
+// probably there are a lot more that could be here
+val extensions =
+  List("java", "scala", "py", "txt", "sh", "nlogo", "nlogo3d", "html", "css",
+       "properties", "md", "csv", "asc", "prj", "xml")
+
 def paths =
-  shell("find . -name \\*.java -or -name \\*.scala")  
+  shell("find . " + extensions.map("-name \\*." + _).mkString(" -or "))
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString

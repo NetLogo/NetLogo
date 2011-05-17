@@ -1,5 +1,5 @@
 #!/bin/sh
-cd "`dirname "$0"`"		# the copious quoting is for handling paths with spaces
+cd "`dirname "$0"`"             # the copious quoting is for handling paths with spaces
 # -server                       use server VM for highest performance
 # -Xms16m -Xmx1024m             use up to 1GB RAM (edit to increase)
 # -Dfile.encoding=UTF-8         ensure Unicode characters in model files are compatible cross-platform

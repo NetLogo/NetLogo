@@ -113,26 +113,26 @@ def makeHTMLFile(anchorName, snippet):
 # taking the first anchor-name (e.g. "clear-patches"), and turning it into
 # a file name (e.g. "clear_patches.html").
 def findEntrySnippets(primEntryChecks, suffix):
-	entrySnippets = {}
-	for i in range(len(primEntryChunks)):
-		# get whatever is inside the <a>XXXX</a> tags.
-		myregex = re.compile(r'<a.*?name[\w]*=.*?>(.*?)</a>', re.DOTALL | re.IGNORECASE)
-		l = myregex.findall(primEntryChunks[i])
-		# trim whitespace from each item
-		l = [ unescapeHTML(x.strip()) for x in l ]  
-		if (len(l) > 0):
+        entrySnippets = {}
+        for i in range(len(primEntryChunks)):
+                # get whatever is inside the <a>XXXX</a> tags.
+                myregex = re.compile(r'<a.*?name[\w]*=.*?>(.*?)</a>', re.DOTALL | re.IGNORECASE)
+                l = myregex.findall(primEntryChunks[i])
+                # trim whitespace from each item
+                l = [ unescapeHTML(x.strip()) for x in l ]  
+                if (len(l) > 0):
                     validFileName = makeValidFileName(l[0])
                     if (len(validFileName) > 0):
                         entrySnippets[validFileName + suffix] = [ primEntryChunks[i] , l ]
-	return entrySnippets
+        return entrySnippets
 
 # we create a file that we contains the information to
 # match each anchor name to the html file that
 # contains information about it
 def createIndex(indexFile, entrySnippets):
-	sortedKeys = entrySnippets.keys()
-	sortedKeys.sort()
-	for fname in sortedKeys:
+        sortedKeys = entrySnippets.keys()
+        sortedKeys.sort()
+        for fname in sortedKeys:
             for anchor in entrySnippets[fname][1]:
                 if ( isOkayPrimName( anchor ) ) :
                     indexFile.write(anchor + " " + fname + "\n")
@@ -141,10 +141,10 @@ def createIndex(indexFile, entrySnippets):
 
 # now we create each of the HTML files, one for each <div> chunk.
 def createWeeFiles(sortedKeys, entrySnippets):
-	for fname in sortedKeys:
-		f = file("docs/dict/"+fname, "w")
-		f.write(makeHTMLFile(entrySnippets[fname][1][0], entrySnippets[fname][0]))
-		f.close()
+        for fname in sortedKeys:
+                f = file("docs/dict/"+fname, "w")
+                f.write(makeHTMLFile(entrySnippets[fname][1][0], entrySnippets[fname][0]))
+                f.close()
 
 #
 # start main program
@@ -163,9 +163,9 @@ entries = findEntrySnippets( primEntryChunks, ".html" )
 sortedKeys = createIndex(file("resources/system/dict.txt", "w"), entries)
 
 try:
-	os.mkdir("docs/dict")
+        os.mkdir("docs/dict")
 except OSError:
-	pass
+        pass
 
 createWeeFiles(sortedKeys, entries)
 

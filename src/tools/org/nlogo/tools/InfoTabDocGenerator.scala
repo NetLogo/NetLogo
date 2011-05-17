@@ -8,10 +8,6 @@ import java.io.{IOException, FileInputStream, FileOutputStream}
  * inputs: models/Code Examples/Info Tab Example.nlogo
  * outputs: docs/infotab.html
  * really.
- *
- * also, i should figure out a way to get this guy out of the main source tree.
- * but it relies on classes in the main source tree...so, its not as easy as it seems.
- * JC - 11/19/10
  */
 object InfoTabDocGenerator {
   def main(args:Array[String]) {
@@ -22,7 +18,7 @@ object InfoTabDocGenerator {
     val post = Postprocessor.convert(html)
     //println(start + post)
     println("writing ./docs/infotab.html")
-    FileIO.writeFile("./docs/infotab.html", start + post)
+    FileIO.writeFile("./docs/infotab.html", start + post + "\n")
 
     def copy(from: String, to: String) {
       val (in, out) = (new FileInputStream(from), new FileOutputStream(to))
