@@ -177,13 +177,6 @@ class Evaluator(workspace: AbstractWorkspace) {
     results.head
   }
 
-  def isConstant(string: String): Boolean =
-    try {
-      workspace.compiler.readFromString(string, workspace.world.program.is3D)
-      true
-    }
-    catch { case e: CompilerException => false }
-
   @throws(classOf[CompilerException])
   def readFromString(string: String) =
     workspace.compiler.readFromString(

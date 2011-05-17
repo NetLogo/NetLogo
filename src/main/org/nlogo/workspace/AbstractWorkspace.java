@@ -23,8 +23,7 @@ import org.nlogo.util.Femto;
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
     org.nlogo.api.LogoThunkFactory,
-    org.nlogo.api.HubNetWorkspaceInterface,
-    org.nlogo.agent.Evaluator {
+    org.nlogo.api.HubNetWorkspaceInterface {
 
   /// globals
   /// (some of these probably should be changed not to be public - ST 12/11/01)
@@ -107,7 +106,7 @@ public abstract strictfp class AbstractWorkspace
     this.hubNetManagerFactory = hubNetManagerFactory;
     modelType = ModelType.NEW;
     evaluator = new Evaluator(this);
-    world.setDefaultEvaluator(this);
+    world.compiler_$eq(this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     fileManager = new DefaultFileManager(this);
@@ -726,6 +725,16 @@ public abstract strictfp class AbstractWorkspace
       throws CompilerException {
     compiler().checkCommandSyntax
         (source, world.program(), getProcedures(), getExtensionManager(), false);
+  }
+
+  public boolean isConstant(String s) {
+    try {
+      compiler().readFromString(s, world.program().is3D);
+      return true;
+    }
+    catch(CompilerException e) {
+      return false;
+    }
   }
 
   public boolean isValidIdentifier(String s) {

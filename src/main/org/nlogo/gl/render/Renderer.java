@@ -41,6 +41,7 @@ public class Renderer
   final WorldRenderer worldRenderer;
   final LinkRenderer linkRenderer;
   final ShapeRenderer shapeRenderer;
+  final MouseState mouseState = new MouseState() ;
 
   int width;
   int height;
@@ -64,19 +65,7 @@ public class Renderer
   private final PriorityQueue<Agent> transparentAgents ;
 
   final GLU glu = new GLU();
-
   ShapeManager shapeManager;
-
-  // current mouse coordinates/status
-  private boolean mouseOn;
-  private boolean mouseInside;
-  private double mouseXCor;
-  private double mouseYCor;
-  private boolean mouseDown;
-
-  // object pick/selection request for context menu
-  boolean pickRequest;
-  java.awt.Point mousePt;
   PickListener pickListener;
 
   // we need to save the last matricies for mouse-x/ycor;
@@ -97,10 +86,6 @@ public class Renderer
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
                   ShapeRenderer shapeRenderer) {
-    mouseOn = false;
-    mouseInside = false;
-    pickRequest = false;
-    mousePt = null;
     modelMatrix = DoubleBuffer.wrap(new double[16]);
     projMatrix = DoubleBuffer.wrap(new double[16]);
     viewPort = IntBuffer.wrap(new int[4]);
@@ -319,82 +304,6 @@ public class Renderer
   }
 
   /**
-   * If there is at least one partially transparent turtle, patch, or link
-   * present in the scene, this function will return true. This is used to
-   * determine whether it is necessary to sort the objects by their distance
-   * to the observer before rendering, which is necessary for transparency
-   * to work in OpenGL.
-   *
-   * @return True if the scene has at least one partially transparent object.
-   */
-  boolean sceneHasPartiallyTransparentObjects() {
-    for (Agent agent : world.turtles().agents()) {
-      if (agentIsPartiallyTransparent(agent)) {
-        return true;
-      }
-    }
-
-    for (Agent agent : world.patches().agents()) {
-      if (agentIsPartiallyTransparent(agent)) {
-        return true;
-      }
-    }
-
-    for (Agent agent : world.links().agents()) {
-      if (agentIsPartiallyTransparent(agent)) {
-        return true;
-      }
-    }
-
-    //
-    // Turtle and link stamps
-    //
-    if (world instanceof World3D) {
-      for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
-        if (agentIsPartiallyTransparent(stamp)) {
-          return true;
-        }
-      }
-
-      for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
-        if (agentIsPartiallyTransparent(stamp)) {
-          return true;
-        }
-      }
-    }
-
-    // In the 3D view in 2D, stamps are rasterized on the drawing layer,
-    // so they're not agents and we don't need to check for them here.
-
-    return false;
-  }
-
-  boolean agentIsPartiallyTransparent(Agent agent) {
-    return getAlpha(agent) < 255;
-  }
-
-  static double getAlpha(Agent agent) {
-    Object color;
-    if (agent instanceof Turtle) {
-      color = ((Turtle) agent).color();
-    } else if (agent instanceof Patch) {
-      color = ((Patch) agent).pcolor();
-    } else if (agent instanceof Link) {
-      color = ((Link) agent).color();
-    } else {
-      return 255;
-    }
-    // special case black, non-RGB 3D patches to be invisible.  it's a
-    // kinda janky to have a special case like that, but until
-    // we have an alpha variable, it seems like the least bad
-    // design. - ST 4/20/11
-    if (agent instanceof Patch3D && color.equals(org.nlogo.api.Color.BOXED_BLACK)) {
-      return 0;
-    }
-    return org.nlogo.api.Color.getColor(color).getAlpha();
-  }
-
-  /**
    * Returns true if this agent should be rendered (i.e., it is not hidden, nor fully transparent,
    * and the observer is not riding this agent). Note: if this agent has a label, the agent will
    * be regarded as "visible".
@@ -407,16 +316,16 @@ public class Renderer
           && (world.observer().targetAgent() == turtle);
 
       return !riding_agent && !turtle.hidden()
-          && (getAlpha(turtle) > 0.0 || turtle.hasLabel());
+          && (Alpha.getAlpha(turtle) > 0.0 || turtle.hasLabel());
     } else if (agent instanceof Link) {
       Link link = (Link) agent;
-      return !link.hidden() && (getAlpha(link) > 0.0 || link.hasLabel());
+      return !link.hidden() && (Alpha.getAlpha(link) > 0.0 || link.hasLabel());
     } else if (agent instanceof Patch3D) {
       // Patch3D supports the alpha variable, so check Patch3D
       // before checking the regular Patch.
 
       Patch3D patch = (Patch3D) agent;
-      return getAlpha(patch) > 0.0 || patch.hasLabel();
+      return Alpha.getAlpha(patch) > 0.0 || patch.hasLabel();
     } else if (agent instanceof Patch) {
       // We will assume all patches are visible. However, perhaps
       // we should only return true for non-black patches.
@@ -520,7 +429,7 @@ public class Renderer
       // as well as link stamps.
       double lineScale = calculateLineScale();
 
-      boolean sortingNeeded = sceneHasPartiallyTransparentObjects();
+      boolean sortingNeeded = Alpha.sceneHasPartiallyTransparentObjects(world);
 
       if (!sortingNeeded) {
         worldRenderer.renderPatchShapes
@@ -556,7 +465,7 @@ public class Renderer
 
         for (Agent agent : world.turtles().agents()) {
           if (agentIsVisible(agent)) {
-            if (agentIsPartiallyTransparent(agent)) {
+            if (Alpha.agentIsPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -566,7 +475,7 @@ public class Renderer
 
         for (Agent agent : world.patches().agents()) {
           if (agentIsVisible(agent)) {
-            if (agentIsPartiallyTransparent(agent)) {
+            if (Alpha.agentIsPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -576,7 +485,7 @@ public class Renderer
 
         for (Agent agent : world.links().agents()) {
           if (agentIsVisible(agent)) {
-            if (agentIsPartiallyTransparent(agent)) {
+            if (Alpha.agentIsPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -594,7 +503,7 @@ public class Renderer
           // Link stamps
           for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
             if (agentIsVisible(stamp)) {
-              if (agentIsPartiallyTransparent(stamp)) {
+              if (Alpha.agentIsPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -605,7 +514,7 @@ public class Renderer
           // Turtle stamps
           for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
             if (agentIsVisible(stamp)) {
-              if (agentIsPartiallyTransparent(stamp)) {
+              if (Alpha.agentIsPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -669,15 +578,15 @@ public class Renderer
         patchRenderer.renderHightlight(gl, (Patch) targetAgent);
       }
 
-      if (mouseOn || pickRequest) {
+      if (mouseState.on() || mouseState.pickRequest()) {
         storeMatricies(gl);
 
-        if (pickRequest) {
+        if (mouseState.pickRequest()) {
           performPick();
         }
 
         if ((perspective != Perspective.OBSERVE)
-            && mouseInside && (mousePt != null)) {
+            && mouseState.inside() && (mouseState.point() != null)) {
           updateMouseCors();
         }
       }
@@ -776,20 +685,20 @@ public class Renderer
 
   // queue a request for object selection/pick
   public void queuePick(java.awt.Point mousePt, PickListener pickListener) {
-    pickRequest = true;
-    this.mousePt = mousePt;
+    mouseState.pickRequest_$eq(true);
+    mouseState.point_$eq(mousePt);
     this.pickListener = pickListener;
   }
 
   // pick/select objects for context menu
   void performPick() {
     List<Agent> agents = new ArrayList<Agent>(5);
-    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(agents, ray);
     pickTurtles(agents, ray);
     pickLinks(agents, ray);
-    pickListener.pick(mousePt, agents);
-    pickRequest = false;
+    pickListener.pick(mouseState.point(), agents);
+    mouseState.pickRequest_$eq(false);
   }
 
   // saves current transformation matricies and viewport
@@ -843,8 +752,8 @@ public class Renderer
       xi = wrapX(xi + world.followOffsetX());
       yi = wrapY(yi + world.followOffsetY());
 
-      mouseXCor = xi;
-      mouseYCor = yi;
+      mouseState.xcor_$eq(xi);
+      mouseState.ycor_$eq(yi);
 
       if (agents != null) {
         try {
@@ -901,72 +810,13 @@ public class Renderer
         double[] end1 = getTurtleCoords(link.end1(), 0);
         double[] end2 = getTurtleCoords(link.end2(), 0);
 
-        double dist = distanceFromRayToSegment(ray, end1, end2);
+        double dist = Picker.distanceFromRayToSegment(ray, end1, end2);
 
         if (dist <= PICK_THRESHOLD) {
           agents.add(link);
         }
       }
     }
-  }
-
-  // adapted from code at http://softsurfer.com/Archive/algorithm_0106/algorithm_0106.htm
-  // Copyright 2001, softSurfer (www.softsurfer.com)
-  // This code may be freely used and modified for any purpose
-  // providing that this copyright notice is included with it.
-  // SoftSurfer makes no warranty for this code, and cannot be held
-  // liable for any real or imagined damage resulting from its use.
-  // Users of this code must verify correctness for their application.
-  private static double distanceFromRayToSegment(double[][] ray, double[] end1, double[] end2) {
-    Vect u = new Vect((end2[0] - end1[0]),
-        (end2[1] - end1[1]),
-        (end2[2] - end1[2]));
-    Vect v = new Vect((ray[1][0] - ray[0][0]),
-        (ray[1][1] - ray[0][1]),
-        (ray[1][2] - ray[0][2]));
-    Vect w = new Vect((end1[0] - ray[0][0]),
-        (end1[1] - ray[0][1]),
-        (end1[2] - ray[0][2]));
-
-    double a = u.dot(u); // always >= 0
-    double b = u.dot(v);
-    double c = v.dot(v);  // always >= 0
-    double d = u.dot(w);
-    double e = v.dot(w);
-    double D = a * c - b * b;       // always >= 0
-    double sc, sN, sD = D;        // sc = sN / sD, default sD = D >= 0
-    double tc, tN, tD = D;        // tc = tN / tD, default tD = D >= 0
-
-    // compute the line parameters of the two closest points
-    if (D < World.INFINITESIMAL) { // the lines are almost parallel
-      sN = 0.0;        // force using point P0 on segment S1
-      sD = 1.0;        // to prevent possible division by 0.0 later
-      tN = e;
-      tD = c;
-    } else {  // get the closest points on the infinite lines
-      sN = (b * e - c * d);
-      tN = (a * e - b * d);
-      if (sN < 0.0) { // sc < 0 => the s=0 edge is visible
-        sN = 0.0;
-        tN = e;
-        tD = c;
-      } else if (sN > sD) {  // sc > 1 => the s=1 edge is visible
-        sN = sD;
-        tN = e + b;
-        tD = c;
-      }
-    }
-
-    // finally do the division to get sc and tc
-    sc = Math.abs(sN) < World.INFINITESIMAL ? 0.0 : sN / sD;
-    tc = Math.abs(tN) < World.INFINITESIMAL ? 0.0 : tN / tD;
-
-    // get the difference of the two closest points
-    Vect dP = new Vect((u.x() * sc) - (v.x() * tc) + w.x(),
-        (u.y() * sc) - (v.y() * tc) + w.y(),
-        (u.z() * sc) - (v.z() * tc) + w.z()); // = S1(sc) - S2(tc)
-
-    return dP.magnitude();   // return the closest distance
   }
 
   double[] getTurtleCoords(Turtle turtle, double height) {
@@ -978,42 +828,42 @@ public class Renderer
   /// Mouse interaction
 
   public void setMouseMode(boolean mode) {
-    mouseOn = mode;
+    mouseState.on_$eq(mode);
   }
 
   public double mouseXCor() {
-    return mouseXCor;
+    return mouseState.xcor();
   }
 
   public double mouseYCor() {
-    return mouseYCor;
+    return mouseState.ycor();
   }
 
   public boolean mouseDown() {
-    return mouseDown;
+    return mouseState.down();
   }
 
   public void mouseDown(boolean mouseDown) {
-    this.mouseDown = mouseDown;
+    mouseState.down_$eq(mouseDown);
   }
 
   public boolean mouseInside() {
-    return mouseInside;
+    return mouseState.inside();
   }
 
   public void resetMouseCors() {
-    mouseXCor = 0;
-    mouseYCor = 0;
+    mouseState.xcor_$eq(0);
+    mouseState.ycor_$eq(0);
   }
 
   public void setMouseCors(java.awt.Point mousePt) {
-    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(null, ray);
-    this.mousePt = mousePt;
+    mouseState.point_$eq(mousePt);
   }
 
   public void updateMouseCors() {
-    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
+    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
     pickPatches(null, ray);
   }
 
@@ -1025,12 +875,9 @@ public class Renderer
     double xi = scale * (ray[0][0] + (ray[1][0] - ray[0][0]) * t);
     double yi = scale * (ray[0][1] + (ray[1][1] - ray[0][1]) * t);
 
-    if ((xi < world.maxPxcor() + 0.5) && (xi >= world.minPxcor() - 0.5) &&
-        (yi < world.maxPycor() + 0.5) && (yi >= world.minPycor() - 0.5)) {
-      mouseInside = true;
-    } else {
-      mouseInside = false;
-    }
+    mouseState.inside_$eq(
+      (xi < world.maxPxcor() + 0.5) && (xi >= world.minPxcor() - 0.5) &&
+      (yi < world.maxPycor() + 0.5) && (yi >= world.minPycor() - 0.5));
   }
 
   /// Crosshairs

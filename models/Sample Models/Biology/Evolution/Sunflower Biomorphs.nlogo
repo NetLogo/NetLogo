@@ -167,6 +167,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 11
@@ -183,6 +184,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 97
@@ -199,6 +201,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 10
@@ -268,57 +271,49 @@ controlled-mutation?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 A model of evolution where the user provides the selective pressure.  The user picks one or two flowers from a grid of randomly generated animated flowers.  The selected flowers become the "parents" of the next generation.  Over time, the user's selections cause the characteristics of the population to change.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Each flower has four genes that determine its form.  For example, one flower may have bigger petals or be more colorful than another.  When the user  selects the parent or parents of the next generation, and the screen is then cleared and the flowers repopulated with genes based on the genes of their parent(s).  The user can exert selection pressure towards colorful flowers, for example, by choosing the most colorful flower(s) available.
 
 At the center of every "flower" is an invisible "spawner".  It remains in the center continuously hatching "petals" that move outward.  Each spawner holds the four variables: num-colors, step-size, size-modifier, and turn-increment.  (Since each petal needs to know how far forward to move each time and how large to grow, they have their own step-size and size-modifier that is identical to the spawner's value that spawned them.)  Each turn, each spawner hatches a new petal and turns and sets its color appropriately (based on the values for num-colors and turn-increment.)  Once the spawners have all hatched a new petal, each petal simply moves forward its step-size and adjusts its size based on the distance its traveled and its size-modifier.  If a petal moves outside the box for that flower, it dies.
 
 The user may choose between asexual (one parent) and sexual (two parents) reproduction.  The next generation is created by mutating the values of the parent(s) for the four variables.  The existing petals are then killed off, and the next generation is created.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Before clicking SETUP, set the ROWS and COLUMNS to the desired values.  These determine how many flowers are present in the model.
 
 Then set the mutation rate appropriately.  The higher the mutation rate, the less flowers in the next generation will resemble their parents.  If CONTROLLED-MUTATION? is on, then the model controls the mutation by varying it within the population; in this mode, mutation varies among the individuals in the population; where the amount of MUTATION increases in each individual that is to the right of the previous one (or in the next row).  Thus, flowers near the top-left of the model will tend to more closely resemble their parents than flowers in the bottom right.
 
 If asexual selection is selected (the ASEXUAL? switch is on), then every click will repopulate the flowers based on the values of the spawner nearest your click.  If sexual selection is selected, then the first click selects the first parent (and colors its background grey.)  When you click again, the two clicked spawners "mate" and populate the next generation.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try and get certain flowers patterns to emerge; for example, try to selectively breed towards a very tight spiral, a non-rotating "starfish", or a straight line.
 
 Remember a particularly pleasing flower, then clear all of the flowers, and see if you can evolve your favorite flower again.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 It might be neat to allow the user to change the number of flowers while the model is running.  For example, changing the model from a 2x2 grid to a 3x3 grid might put five new flowers into the population, all based on the previously selected parent.
 
 Change the way the parents' genes are passed on in sexual reproduction and how they are expressed.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-This model uses invisible spawners to keep track of each flower.
+This model uses a breed of invisible spawners to keep track of each flower.
 
-There is a little geometry trickiness in correctly spacing the flowers in the setup procedure.
+## RELATED MODELS
 
-
-RELATED MODELS
---------------
 Sunflower
 
-
 ## CREDITS AND REFERENCES
-This model is loosely based on the Biomorphs discussed at length in Richard Dawkins' "The Blind Watchmaker" (1986).
+
+This model is loosely based on the Biomorphs discussed at length in Richard Dawkins' _The Blind Watchmaker_ (1986).
 
 In Dawkins' original model, the user was presented with a series of "insects" that were drawn based on nine separate values.  For example, if insect A has a "leg-length" value of 2 and insect B has a "leg-length" value of 1, then insect A would be drawn with longer legs.  These 9 variables were thus the genotype of each insect-like creature, and the drawing based on those numbers was the phenotype.  If the user clicked on an insect (or "biomorph"), then all the insects would be erased and the chosen biomorph would be used as the basis for a new population of biomorphs.  Each variable would be mutated slightly in the new generation (representing the inheriting of a slightly higher or lower value for the genotype), and these mutated values would be used in the new population of the biomorphs.  In this manner, the new generation of  biomorphs resembled the previously chosen biomorph, with some variation.  For example, if you chose a biomorph with an exceptionally long abdomen, then, because they are all modified versions of the chosen biomorph, biomorphs in the next generation would tend to have longer abdomens than previously.
 
@@ -609,7 +604,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

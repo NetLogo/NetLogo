@@ -1,7 +1,7 @@
 package org.nlogo.app
 
+import collection.JavaConverters._
 import org.scalatest.FunSuite
-import org.nlogo.util.JCL.toJavaList
 import org.nlogo.api.{FileIO, Version}
 
 class AppletSaverTests extends FunSuite {
@@ -38,7 +38,7 @@ class AppletSaverTests extends FunSuite {
          |end""".stripMargin
     val buf = new StringBuilder
     new AppletSaver(mockConverter, buf).build(
-      "logistic","logistic.nlogo",805,422,info,code,toJavaList(Nil), toJavaList(Nil))
+      "logistic","logistic.nlogo",805,422,info,code,List[String]().asJava, List[String]().asJava)
     test("logistic.html",buf.toString)
   }
 
@@ -46,8 +46,8 @@ class AppletSaverTests extends FunSuite {
     val buf = new StringBuilder
     new AppletSaver(mockConverter, buf).build(
       "MatrixExample","MatrixExample.nlogo",670,480,"","",
-      toJavaList(List("matrix/matrix.jar","matrix/Jama-1.0.2.jar")),
-      toJavaList(Nil))
+      List("matrix/matrix.jar","matrix/Jama-1.0.2.jar").asJava,
+      List[String]().asJava)
     test("MatrixExample.html",buf.toString)
   }
 
@@ -57,13 +57,13 @@ class AppletSaverTests extends FunSuite {
     val appletSaver = new AppletSaver(mockConverter, buf)
     appletSaver.build(
       "MatrixExample","MatrixExample.nlogo",670,480,"","",
-      toJavaList(List("matrix/matrix.jar","matrix/Jama-1.0.2.jar")),
-      toJavaList(Nil))
+      List("matrix/matrix.jar","matrix/Jama-1.0.2.jar").asJava,
+      List[String]().asJava)
     test("MatrixExample.html",buf.toString)
     appletSaver.build(
       "MatrixExample","MatrixExample.nlogo",670,480,"","",
-      toJavaList(List("matrix/matrix.jar","matrix/Jama-1.0.2.jar")),
-      toJavaList(Nil))
+      List("matrix/matrix.jar","matrix/Jama-1.0.2.jar").asJava,
+      List[String]().asJava)
     test("MatrixExample.html",buf.toString)
   }
 
@@ -79,8 +79,8 @@ class AppletSaverTests extends FunSuite {
     val buf = new StringBuilder
     new AppletSaver(mockConverter, buf).build(
       "LocalLinksAndImages","LocalLinksAndImages.nlogo",675,480,infoText,"",
-      toJavaList(Nil),
-      toJavaList(Nil))
+      List[String]().asJava,
+      List[String]().asJava)
     test("LocalLinksAndImages.html",buf.toString)
   }
 
