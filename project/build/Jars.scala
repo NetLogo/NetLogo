@@ -25,15 +25,42 @@ trait Jars extends DefaultProject {
     ("jar umf project/build/proguard/" + manifest + ".txt " + name + ".jar").!
   }
 
-  // it would be nicer if these were separate tasks - ST 3/29/11
-  lazy val alljars =
-    fileTask(jarPaths from (Set(java5Path) ++ ("project" / "build" / "proguard" * "*.txt").get)) {
-      jarPaths.map(_.asFile.delete()) // don't risk updating existing, just start fresh
-      build("main"); addManifest("NetLogo", "manifest")
-      build("hubnet"); addManifest("HubNet", "manifesthubnet")
-      build("lite")
-      build("lab")
+  private val configs = ("project" / "build" / "proguard" * "*.txt").get
+
+  // ProGuard will update an existing jar, but let's not risk that,
+  // let's always use delete() first - ST 5/17/11
+
+  lazy val mainJar =
+    fileTask(Seq(path("NetLogo.jar")) from Set(java5Path) ++ configs) {
+      path("NetLogo.jar").asFile.delete()
+      build("main")
+      addManifest("NetLogo", "manifest")
       None
     }.dependsOn(compile)
+
+  lazy val hubnetJar =
+    fileTask(Seq(path("HubNet.jar")) from Set(java5Path) ++ configs) {
+      path("HubNet.jar").asFile.delete()
+      build("hubnet")
+      addManifest("HubNet", "manifesthubnet")
+      None
+    }.dependsOn(compile)
+
+  lazy val liteJar =
+    fileTask(Seq(path("NetLogoLite.jar")) from Set(java5Path) ++ configs) {
+      path("NetLogoLite.jar").asFile.delete()
+      build("lite")
+      None
+    }.dependsOn(compile)
+
+  lazy val labJar =
+    fileTask(Seq(path("BehaviorSpace.jar")) from Set(java5Path) ++ configs) {
+      path("BehaviorSpace.jar").asFile.delete()
+      build("lab")
+      None
+    }.dependsOn(mainJar)
+
+  lazy val alljars =
+    task { None }.dependsOn(mainJar, hubnetJar, liteJar, labJar)
 
 }
