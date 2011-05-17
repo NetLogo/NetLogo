@@ -73,8 +73,6 @@ $(JARS): | $(SCALA_JAR)
 
 JAVA_EXTENSIONS=\
 	extensions/sample/sample.jar
-SCALA_EXTENSIONS=\
-	extensions/sample-scala/sample-scala.jar
 GITHUB_EXTENSIONS=\
 	extensions/array/array.jar \
 	extensions/bitmap/bitmap.jar \
@@ -82,30 +80,22 @@ GITHUB_EXTENSIONS=\
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
 	extensions/profiler/profiler.jar \
+	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
-EXTENSIONS=$(JAVA_EXTENSIONS) $(SCALA_EXTENSIONS) $(GITHUB_EXTENSIONS)
+EXTENSIONS=$(JAVA_EXTENSIONS) $(GITHUB_EXTENSIONS)
 
 .PHONY: extensions
 extensions: $(EXTENSIONS)
 
 JAVA_EXTENSION_MAKEFILES=$(patsubst %,%Makefile,$(foreach foo,$(JAVA_EXTENSIONS),$(dir $(foo))))
-SCALA_EXTENSION_MAKEFILES=$(patsubst %,%Makefile,$(foreach foo,$(SCALA_EXTENSIONS),$(dir $(foo))))
 
 $(JAVA_EXTENSION_MAKEFILES): extensions/Makefile-java.mk
 	@echo "@@@ building" $@
 	cp extensions/Makefile-java.mk $@
 
-$(SCALA_EXTENSION_MAKEFILES): extensions/Makefile-scala.mk
-	@echo "@@@ building" $@
-	cp extensions/Makefile-scala.mk $@
-
 $(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogoLite.jar
-	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
-
-$(SCALA_EXTENSIONS): $(SCALA_EXTENSION_MAKEFILES) | NetLogoLite.jar
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
 
@@ -118,6 +108,7 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
+	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/qtj ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
 	@echo "@@@ building" $(notdir $@)
@@ -133,6 +124,7 @@ github:
 	-git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix
 	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
 	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
+	-git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala
 	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
 	-git clone git@github.com:/NetLogo/Table-Extension.git extensions/table
 
