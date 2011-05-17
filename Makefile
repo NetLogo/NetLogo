@@ -71,36 +71,25 @@ $(JARS): | $(SCALA_JAR)
 ### extensions
 ###
 
-JAVA_EXTENSIONS=\
-	extensions/sample/sample.jar
-GITHUB_EXTENSIONS=\
+EXTENSIONS=\
 	extensions/array/array.jar \
 	extensions/bitmap/bitmap.jar \
 	extensions/gis/gis.jar \
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
 	extensions/profiler/profiler.jar \
+	extensions/sample/sample.jar \
 	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
-EXTENSIONS=$(JAVA_EXTENSIONS) $(GITHUB_EXTENSIONS)
 
 .PHONY: extensions
 extensions: $(EXTENSIONS)
 
-JAVA_EXTENSION_MAKEFILES=$(patsubst %,%Makefile,$(foreach foo,$(JAVA_EXTENSIONS),$(dir $(foo))))
-
-$(JAVA_EXTENSION_MAKEFILES): extensions/Makefile-java.mk
-	@echo "@@@ building" $@
-	cp extensions/Makefile-java.mk $@
-
-$(JAVA_EXTENSIONS): $(JAVA_EXTENSION_MAKEFILES) | NetLogoLite.jar
-	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) $(MAKE) -s $(notdir $@)
-
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
-$(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
 	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
@@ -108,15 +97,17 @@ $(GITHUB_EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
+	if [ ! -d extensions/sample/src ] ; then git clone http://github.com/NetLogo/Sample-Extension.git extensions/sample ; fi
 	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) $(MAKE) -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
 .PHONY: github
 github:
+	mkdir -p extensions
 	-git clone git@github.com:/NetLogo/Array-Extension.git extensions/array
 	-git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap
 	-git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis
@@ -124,6 +115,7 @@ github:
 	-git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix
 	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
 	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
+	-git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample
 	-git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala
 	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
 	-git clone git@github.com:/NetLogo/Table-Extension.git extensions/table
@@ -137,14 +129,13 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
-	rm -f $(EXTENSIONS) $(JAVA_EXTENSION_MAKEFILES) $(SCALA_EXTENSION_MAKEFILES)
-	rm -rf extensions/*/build extensions/*/classes
+	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/javadoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
-clean-github:
-	rm -rf $(foreach foo,$(GITHUB_EXTENSIONS),$(dir $(foo)))
+clean-extensions:
+	rm -rf $(foreach foo,$(EXTENSIONS),$(dir $(foo)))
 realclean:
 	git clean -fdX
 
