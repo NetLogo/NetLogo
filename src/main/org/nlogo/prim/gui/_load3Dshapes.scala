@@ -18,6 +18,8 @@ class _load3Dshapes extends Command {
           case e: InvalidShapeDescriptionException =>
             throw new EngineException(context, this, "Invalid shape file")
         }
+      case _ =>
+        // ok to just ignore, I guess - ST 5/17/11
     }
     context.ip = next
   }
