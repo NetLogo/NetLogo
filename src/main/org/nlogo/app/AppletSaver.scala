@@ -5,7 +5,7 @@ package org.nlogo.app
 
 // should use Scala collections once we get FileMenu converted to Scala - ST 8/6/10
 import java.util.{List => JList}
-import org.nlogo.util.JCL._
+import collection.JavaConversions._
 import org.nlogo.api.{I18N, FileIO, Version}
 
 class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilder) {
