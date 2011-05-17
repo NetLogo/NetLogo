@@ -118,18 +118,3 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   }
 
 }
-
-
-/*
-Targets from the makefile that we need to add to sbt:
-.PHONY: go m goheadless golite gohubnet goshell
- - example usage: make m M=life
-m: netlogo
- $(JAVA) $(BIGHEAP) -classpath $(RUNCLASSPATH) $(call DOCK,NetLogo) $(GUI_ARGS) $(COMPILER_OPTIONS) $(THREED) org.nlogo.app.App --magic $(M) $(ARGS)
-goheadless: netlogo
- $(JAVA) $(BIGHEAP) -classpath $(RUNCLASSPATH) $(COMPILER_OPTIONS) $(THREED) org.nlogo.headless.Main $(ARGS)
-golite: NetLogoLite.jar
- $(JAVA) $(BIGHEAP) -classpath NetLogoLite.jar $(COMPILER_OPTIONS) $(call DOCK,NetLogo Lite) $(GUI_ARGS) org.nlogo.lite.AppletPanel $(ARGS)
-gohubnetapplet: HubNet.jar
- $(JAVA) $(BIGHEAP) -classpath HubNet.jar $(COMPILER_OPTIONS) $(call DOCK,HubNet Lite) $(GUI_ARGS) org.nlogo.hubnet.client.ClientApplet $(ARGS)
-*/
