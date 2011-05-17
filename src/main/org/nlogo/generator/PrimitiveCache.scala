@@ -15,7 +15,7 @@ private object PrimitiveCache {
   def getClassReader(c: Class[_]) =
     synchronized { // be threadsafe - ST 2/25/08
       def read = {
-        val in = currentThread
+        val in = Thread.currentThread
           .getContextClassLoader
           .getResourceAsStream(c.getName.replace('.', '/') + ".class")
         require(in != null)

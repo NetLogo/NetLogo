@@ -27,7 +27,7 @@ object PlotLoader {
           plot.updateCode = convert(update)
         case _ =>
           // 1, or 3 or more bits of code...error.
-          error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
+          sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
       }
     }
 
@@ -74,10 +74,10 @@ object PlotLoader {
     moreTokens.filter(_.trim.nonEmpty) match {
       case List(interval, mode, color, inLegend, _*) =>
         if (!PlotPen.isValidPlotPenMode(mode.toInt))
-          error(mode + " is not a valid plot pen mode")
+          sys.error(mode + " is not a valid plot pen mode")
         (interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean)
       case _ =>
-        error("bad line: \"" + s + "\"")
+        sys.error("bad line: \"" + s + "\"")
     }
 
     val codeString = moreTokens.dropWhile(!_.startsWith("\"")).mkString.trim

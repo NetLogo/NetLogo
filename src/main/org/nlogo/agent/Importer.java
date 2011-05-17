@@ -190,8 +190,7 @@ public strictfp class Importer
                 "The plot \"" + plotName + "\" does not exist.",
                 false);
             // gobble up remaining lines of this section
-            while (hasMoreLines(false)) {
-            } // NOPMD empty while loop OK
+            while (hasMoreLines(false)) { } // NOPMD empty while loop OK
             return;
           } else {
             int numPens = importIntro(plot);

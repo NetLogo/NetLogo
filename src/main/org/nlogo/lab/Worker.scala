@@ -35,7 +35,7 @@ class Worker(val protocol: Protocol)
         (for((settings, runNumber) <- protocol.elements zip Stream.from(1).iterator)
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures =
-        org.nlogo.util.JCL.toScalaIterable(
+        org.nlogo.util.JCL.iterableToScalaIterable(
           executor.invokeAll(
             org.nlogo.util.JCL.toJavaList[Callable[Unit]](
               runners)))

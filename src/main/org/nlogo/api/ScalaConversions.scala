@@ -57,7 +57,7 @@ object ScalaConversions {
     case ll: LogoList => toLogoList(ll)
     
     // unconvertible type
-    case _ => error("don't know how to convert: " + a)
+    case _ => sys.error("don't know how to convert: " + a)
   }
 
 }

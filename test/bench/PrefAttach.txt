@@ -13,7 +13,7 @@ procedure GO:[]{O---}:
       _links => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -629,14 +629,14 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
       _asm_procedurelayout_turtles_1 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedurelayout_turtles_1.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
       _asm_procedurelayout_links_2 "links" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_procedurelayout_links_2.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.links ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
@@ -715,7 +715,7 @@ procedure SETUP:[]{O---}:
       _asm_proceduresetup_turtles_1 "turtles" => AgentSet
            L0
             ALOAD 0
-            GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_turtles_1.world : Lorg/nlogo/agent/World;
             INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
            L1
             ARETURN
@@ -874,7 +874,7 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             _asm_procedurefindpartner_turtles_2 "turtles" => AgentSet
                  L0
                   ALOAD 0
-                  GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+                  GETFIELD org/nlogo/prim/_asm_procedurefindpartner_turtles_2.world : Lorg/nlogo/agent/World;
                   INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
                  L1
                   ARETURN
@@ -976,7 +976,7 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
       _turtles => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/nvm/Instruction.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurefindpartner_ask_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2

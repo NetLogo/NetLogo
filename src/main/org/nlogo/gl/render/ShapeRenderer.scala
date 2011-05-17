@@ -29,7 +29,7 @@ private class ShapeRenderer(world: World) {
     val worldHeight = world.worldHeight
     var wrapXRight = false
     var wrapXLeft = false
-    val stroke = StrictMath.max(1, (patchSize * lineThickness)).toFloat
+    val stroke = math.max(1, (patchSize * lineThickness)).toFloat
     renderAgent(gl, shape3D, color, size, x, y, z,
       stroke, outline, orientation)
     if (world.wrappingAllowedInX) {
@@ -234,8 +234,8 @@ private class ShapeRenderer(world: World) {
     // this is adopted from the 2D spotlight stretch algorithm
     val stretch =
       // Don't let the spotlight be smaller than 10% of total view height / width
-      if (diameter < StrictMath.max(width / 10.0, height / 10.0))
-        StrictMath.max(width / 10.0, height / 10.0) / diameter
+      if (diameter < math.max(width / 10.0, height / 10.0))
+        math.max(width / 10.0, height / 10.0) / diameter
       else 1.0
     // force these things to be rendered so they don't get cutoff by the world
     gl.glDepthFunc(GL.GL_ALWAYS)

@@ -1,10 +1,9 @@
 package org.nlogo.app
 
-import java.util.{List => JList}
-
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
 import org.nlogo.api.{I18N, AgentVariables, Dump, Nobody, TokenType}
+import collection.JavaConverters._
 
 class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
 {
@@ -46,7 +45,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
     editorConstraints.weightx = 1.0
     editorConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER
     // add components
-    for(variableName <- org.nlogo.util.JCL.toScalaIterable(vars)) {
+    for(variableName <- vars.asScala) {
       val label = new javax.swing.JLabel(variableName.toLowerCase)
       label.setFont(
         new java.awt.Font(org.nlogo.awt.Utils.platformFont,

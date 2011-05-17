@@ -123,9 +123,9 @@ extends TextureRenderer(world) {
       if(newTexture) {
         if(texture != 0)
           gl.glDeleteTextures(1, java.nio.IntBuffer.wrap(Array[Int](texture)))
-        texture = TextureRenderer.genTexture(gl)
+        texture = TextureUtils.genTexture(gl)
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
-        makeTexture(gl, textureSize)
+        TextureUtils.makeTexture(gl, textureSize)
         world.markPatchColorsDirty()
         newTexture = false
       }
@@ -133,13 +133,13 @@ extends TextureRenderer(world) {
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
     }
     gl.glPushMatrix()
-    setParameters(gl, world.patchesAllBlack)
     // now scale up to fill the world
     if(world.patchesAllBlack) {
       gl.glScalef(world.worldWidth, world.worldHeight, 1)
-      renderEmptyPlane(gl, 1f, 1f, 1f)
+      TextureUtils.renderEmptyPlane(gl, 1f, 1f, 1f)
     }
     else {
+      TextureUtils.setParameters(gl)
       renderTextureTiles(gl, world.worldWidth, world.worldHeight, textureSize,
                          world.patchColors, world.patchColorsDirty)
       world.markPatchColorsClean()
@@ -155,11 +155,12 @@ extends TextureRenderer(world) {
   private def calculateTextureSize(gl: GL, patchesBlank: Boolean) {
     // generate new textures
     if(!patchesBlank || textureSize == 0) {
-      val newSize = calculateTextureSize(gl, world.worldWidth, world.worldHeight)
+      val newSize = TextureUtils.calculateTextureSize(
+        gl, world.worldWidth, world.worldHeight)
       if(textureSize != newSize) {
         newTexture = true
         textureSize = newSize
-        tiles = createTileArray(world.worldWidth, world.worldHeight, textureSize)
+        tiles = TextureUtils.createTileArray(world.worldWidth, world.worldHeight, textureSize)
       }
     }
   }

@@ -9,7 +9,7 @@ object ModelReader {
   val SEPARATOR = "@#$#@#$#@"
 
   val sections =
-    JCL.toScalaIterable(
+    JCL.iterableToScalaIterable(
       java.util.EnumSet.allOf(classOf[ModelSection]))
 
   lazy val defaultShapes =

@@ -63,7 +63,8 @@ object ThreadUtils {
       // - ST 8/13/03
       while (!result.done) {
         workspace.world.synchronized {workspace.world.wait(50)}
-        if (currentThread.isInterrupted) throw new InterruptedException()
+        if (Thread.currentThread.isInterrupted)
+          throw new InterruptedException()
       }
       if(result.ex != null)
         throw result.ex
@@ -71,7 +72,7 @@ object ThreadUtils {
     }
     catch {
       case ex: InterruptedException =>
-        currentThread.interrupt()
+        Thread.currentThread.interrupt()
         throw new org.nlogo.nvm.HaltException(false)
     }
   }

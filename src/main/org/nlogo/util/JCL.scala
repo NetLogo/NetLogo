@@ -15,17 +15,19 @@ package org.nlogo.util
 // All of the conversions here return unmodifiable views of the original collections, no copying.
 
 object JCL {
-  implicit def toScalaIterable[T](i: java.lang.Iterable[T]): scala.Iterable[T] =
+  // annoying we have to give these next three separate names, but the Scala 2.9 compiler
+  // tells us "parameterized overloaded implicit methods are not visible as view bounds" - ST 2/11/11
+  implicit def iterableToScalaIterable[T](i: java.lang.Iterable[T]): scala.Iterable[T] =
     new scala.Iterable[T] {
       def iterator = new scala.Iterator[T] {
         val it = i.iterator; def next() = it.next(); def hasNext = it.hasNext
       }
     }
-  implicit def toScalaIterator[T](it: java.util.Iterator[T]): scala.Iterator[T] =
+  implicit def iteratorToScalaIterator[T](it: java.util.Iterator[T]): scala.Iterator[T] =
     new scala.Iterator[T] {
       def next() = it.next(); def hasNext = it.hasNext
     }
-  implicit def toScalaIterable[T](e: java.util.Enumeration[T]): scala.Iterable[T] =
+  implicit def enumerationToScalaIterable[T](e: java.util.Enumeration[T]): scala.Iterable[T] =
     new scala.Iterable[T] {
       def iterator = new scala.Iterator[T] {
         def next() = e.nextElement(); def hasNext = e.hasMoreElements
@@ -53,7 +55,7 @@ object JCL {
   implicit def toScalaMap[A,B](m: java.util.Map[A,B]): collection.immutable.Map[A,B] =
     new collection.immutable.Map[A,B] {
       def get(key: A): Option[B] = Option(m.get(key))
-      def iterator = toScalaIterable(m.keySet).iterator.map(key => (key, m.get(key)))
+      def iterator = iterableToScalaIterable(m.keySet).iterator.map(key => (key, m.get(key)))
       def +[B1 >: B](kv: (A, B1)): Map[A, B1] = throw new UnsupportedOperationException
       def -(key: A): Map[A, B] = throw new UnsupportedOperationException
       override def size = m.size

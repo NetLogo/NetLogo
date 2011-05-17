@@ -95,10 +95,10 @@ to update-and-plot-successes
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-240
-30
-495
-68
+243
+10
+498
+48
 17
 0
 7.0
@@ -119,12 +119,13 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
-99
-55
-178
-101
+102
+35
+181
+81
 Go
 go
 T
@@ -138,10 +139,10 @@ NIL
 1
 
 BUTTON
-4
-55
-83
-101
+7
+35
+86
+81
 Setup
 setup
 NIL
@@ -155,10 +156,10 @@ NIL
 1
 
 PLOT
-201
-55
-543
-238
+204
+35
+546
+218
 m/n convergence to limiting value
 Attempts
 Successes per Attempts
@@ -173,10 +174,10 @@ PENS
 "default" 1.0 0 -16777216 true "" ""
 
 PLOT
-201
-239
-543
-399
+204
+219
+546
+379
 Attempts-until-Success Distribution
 Run Length
 Frequency
@@ -191,10 +192,10 @@ PENS
 "default" 1.0 1 -16777216 true "" ""
 
 SLIDER
-6
-199
-181
-232
+9
+179
+184
+212
 sample-space-size
 sample-space-size
 1
@@ -206,10 +207,10 @@ NIL
 HORIZONTAL
 
 PLOT
-201
-398
-543
-559
+204
+378
+546
+539
 Successes-per-Sample Distribution
 Successes
 Frequency
@@ -224,10 +225,10 @@ PENS
 "default" 1.0 1 -16777216 true "" ""
 
 SLIDER
-9
-481
-181
-514
+12
+461
+184
+494
 sample-size
 sample-size
 0
@@ -239,10 +240,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-7
-395
-181
-428
+10
+375
+184
+408
 how-many-samples?
 how-many-samples?
 0
@@ -254,10 +255,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-547
-132
-646
-177
+550
+112
+649
+157
 NIL
 total-attempts
 3
@@ -265,10 +266,10 @@ total-attempts
 11
 
 MONITOR
-677
-86
-734
-131
+680
+66
+737
+111
 rate
 total-successes / total-attempts
 3
@@ -276,10 +277,10 @@ total-successes / total-attempts
 11
 
 MONITOR
-547
-55
-646
-100
+550
+35
+649
+80
 total-successes
 total-successes
 0
@@ -287,20 +288,20 @@ total-successes
 11
 
 TEXTBOX
-548
-109
-674
-127
+551
+89
+677
+107
 ________________     =
 11
 0.0
 0
 
 MONITOR
-546
-399
-693
-444
+549
+379
+696
+424
 NIL
 successes-this-sample
 3
@@ -308,10 +309,10 @@ successes-this-sample
 11
 
 MONITOR
-9
-515
-181
-560
+12
+495
+184
+540
 NIL
 attempts-this-sample
 3
@@ -319,10 +320,10 @@ attempts-this-sample
 11
 
 MONITOR
-546
-239
-603
-284
+549
+219
+606
+264
 NIL
 counter
 3
@@ -330,10 +331,10 @@ counter
 11
 
 MONITOR
-8
-429
-181
-474
+11
+409
+184
+454
 NIL
 samples-counter
 3
@@ -341,10 +342,10 @@ samples-counter
 11
 
 MONITOR
-442
-560
-543
-605
+445
+540
+546
+585
 max
 max successes-per-sample-list
 3
@@ -352,10 +353,10 @@ max successes-per-sample-list
 11
 
 MONITOR
-201
-560
-305
-605
+204
+540
+308
+585
 min
 min successes-per-sample-list
 3
@@ -363,10 +364,10 @@ min successes-per-sample-list
 11
 
 MONITOR
-322
-560
-426
-605
+325
+540
+429
+585
 mean
 mean successes-per-sample-list
 3
@@ -374,41 +375,31 @@ mean successes-per-sample-list
 11
 
 TEXTBOX
-6
-107
-136
-198
+9
+87
+139
+178
 The program will record and plot the random occurrence of the event \"1\" among other integers in the sample space of size...
 11
 0.0
 0
 
 MONITOR
-546
-290
-603
-335
+549
+270
+606
+315
 mean
 mean counter-list
 3
 1
 11
 
-TEXTBOX
-312
-10
-402
-28
-speed slider
-11
-0.0
-0
-
 MONITOR
-140
-118
-190
-163
+143
+98
+193
+143
 NIL
 event
 3
@@ -416,8 +407,8 @@ event
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Prob Graphs Basic is a basic introduction to probability and statistics.
 
 A sample space is the collection of all possible outcomes in an experiment. An example of a sample space is the numbers "1, 2, 3, 4, 5, 6, 7."  An event is what you get when you run an experiment. For example, if I am running an experiment that randomly selects a single number out of the sample space "1, 2, 3, 4, 5, 6, 7," then an event might be "5." A sample is a collection of events that occur in an experiment. You could have a sample of size 1 that contains just 1 event, but you could have a sample of size 4 that contains 4 events, e.g., "5, 3, 3, 7."
@@ -426,11 +417,11 @@ In this model, 3 graphs monitor a single experiment as it unfolds. The experimen
 
 The top graph, "m/n convergence to limiting value," shows how the rate settles down to the expected- or mathematical probability. For instance, the limiting value of a coin falling on "heads" is .5 because it happens 1/2 of the time. So, the unit of analysis is a single trial and the rate is always informed by all previous trials. To explain this further, lets think of "batting average." The sample space in batting is a 'hit' or a 'no hit,' which is much the same as whether a coin falls on "heads" or on "tails" (only of course batting is not random like tossing a coin or otherwise Babe Ruth's average would have been the same as anyone's). So there are exactly 2 possible outcomes. The "batting average" keeps track, over time, of how many "hits" occurred out of all attempts to hit, known as "at bats." So the "batting average" is calculated as
 
-|                       Hits / At-Bats  =  Batting Average
+> Hits / At-Bats  =  Batting Average
 
 For instance, using "H" for hit and "N" for no-hit, a baseball player's at-bat events may look like this, over 20 attempts:
 
-|                       N N N H H N N N N H N H N N H H H N N H
+    N N N H H N N N N H N H N N H H H N N H
 
 'Hits' are called 'favored events' because when we do the statistics, what we care about, count, and calculate is all about how often 'hits' occurred out of all the at-bat events. The m/n interpretation (favored events / total events) would interpret this string of events as 8 hits / 20 at bats, .4 probability (the same as .400), or a score of 400 (out of 1000).
 
@@ -438,13 +429,13 @@ You may be familiar with the fact that as the baseball season progresses, it is 
 
 The middle graph, "Attempts-until-Success Distribution" counts how many trials it takes for the favored event to occur. For instance, if you're tossing a coin, it takes on average 2 tosses to get "heads," and if you're rolling a die it takes on average 6 rolls to get a "5." This graph is tracking the exact same experiment as the top graph; only it is "parsing" the events differently, that is, it is using a different rule to divide up the sequence of events over time. (We will continue using "N" and "H" but you can think of the coin with 2 sides or of the die with as many sides as you want.)
 
-|                      N N N H    H    N N N N H    N H    N N H    H    H    N N H
+    N N N H    H    N N N N H    N H    N N H    H    H    N N H
 
 So the unit of analysis in this interpretation of the experiment's results is the number of events leading up to and including a hit. As you see, the number of events per unit changes. In this example the string of numbers is [4; 1; 5; 2; 3; 1; 1; 3]. Note that in this string the numeral "1" appears 3 times, the numeral "2" appears 1 time, the numeral "3" appears 2 times, the numeral "4" appears 1 time, and the numeral "5" appears 1 time. The histogram of this string would peak over '1' (this peak will be of height 3), then go down to '2' (frequency of 1), etc.  Perhaps this interpretation is a bit like what a batter's fans feel -- their suspense grows over failed hits until there is a hit, they are relieved and happy, and then they start counting again. So according to the context you are in -- what you're interested in finding, how you're feeling -- the world can appear different.
 
 The bottom graph, "Successes-per-Sample distribution," takes yet another perspective on the experiment, namely a sampling perspective. The sampling perspective is used in statistics. Lets analyze the same string of events from our experiment, this time chopping it up into samples of equal size, say size 5.
 
-|                     N N N H H   N N N N H   N H N N H   H H N N H
+    N N N H H   N N N N H   N H N N H   H H N N H
 
 See that in the first sample there are 2 hits, in the second sample there is 1 hit, in the third sample there are 2 hits, and in the last sample there are 3 hits. This observation could be summed up as [2; 1; 2; 3]. A histogram of this result would show a frequency of 0 (y axis) over the 0 (x axis), because all samples had at least a single 'H.' Then over the '1' there will be a column of height 1, over the '2' there will be a column of height 2, and over the '3' there will be a column of height 1.
 
@@ -452,78 +443,76 @@ Understanding the differences and relations between these 3 graphs will give you
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at the CCL. For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The model first generates a random value between 1 and sample-space-size inclusive.  The number of attempts (trials) is increased by one.  If the random value is equal to 1, then the number of successes (favored events or "hits") is also increased by one.  The number of attempts and the number of successes are interpreted in three different ways with each way shown in a graph as follows: (1) single attempt (trial) and single success; (2) trials (attempts) thru to each success; or (3) successes in each sample (fixed number of trials).  Each of the graphs comes to be associated with typical shapes.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Begin with the default settings. If you have changed them, then do the following: set the sample-space-size to 2 (so outcomes are either '1' or '2'), set the sample-size to '10' (so each sample will be a string of 10 events), and set the 'how-many-samples?' slider to 300 (so that the experiment will run a total of 300 samples of size 10 each, making a total of 3,000 trials). Press 'setup' to be sure all the variables are initialized, so that you will not have leftover values from a previous experiment). Press 'go.' Watch the 'event' monitor to see the number that the randomized procedure has reported. It will be either '1' or '2' because you have set the value to 2.
 
-You may want to use the speed slider in the control strip at the top of the view to slow down the simulation. As you become more comfortable with understanding what you are seeing, you can speed up the simulation by moving the slider farther right.
+You may want to use the speed slider above the view to slow down the simulation. As you become more comfortable with understanding what you are seeing, you can speed up the simulation by moving the slider farther right.
 
 Note how the event does not necessarily alternate between '1' and '2' according to any particular pattern.  Rather, only in the long run do you see what the constant is in the phenomenon you are observing. "In the long run" is precisely what this experiment shows. You can control how long this run will be by increasing or decreasing both the 'sample-size' and/or the 'how-many-samples?' slider.
 
-Button:
-'setup' -- initializes all variables. Press this button to begin a new experiment.
+### Buttons
+
+'setup' -- initializes all variables. Press this button to begin a new experiment.  
 'go' -- begins the simulation running. You can press it again to pause the model.
 
-Sliders:
-'sample-space-size' - set the size of the sample space (in integers).
-'sample-size' - set the number of trials per sample.
+### Sliders
+
+'sample-space-size' - set the size of the sample space (in integers).  
+'sample-size' - set the number of trials per sample.  
 'how-many-samples?'- set the number of samples you wish to run in the experiment.
 
-Monitors:
-'event' -- the number that the randomized procedure has generated this trial.
-'total-successes' -- total number of favored events over all trials.
-'total-attempts' -- total number of trials.
-'rate' -- total-successes / total-attempts.
-'counter' -- shows how many trials have passed since last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).
-'attempts-this-sample' -- counts how many trials there have been since the last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).
-'successes-this-sample' -- counts how many successes there have been since the last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).
-'samples counter' -- counts how many samples there have been since the beginning of this experiment
+### Monitors
+
+'event' -- the number that the randomized procedure has generated this trial.  
+'total-successes' -- total number of favored events over all trials.  
+'total-attempts' -- total number of trials.  
+'rate' -- total-successes / total-attempts.  
+'counter' -- shows how many trials have passed since last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).  
+'attempts-this-sample' -- counts how many trials there have been since the last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).  
+'successes-this-sample' -- counts how many successes there have been since the last success (or, if you've only just set up and run the model, then it will show how many trials have passed since the model began running).  
+'samples counter' -- counts how many samples there have been since the beginning of this experiment  
 'min', 'mean', 'max' -- the minimum, mean, and maximum values of the Successes-per-Sample distribution
 
-Plots:
-m/n convergence to limiting value -- cumulative rate of successes (hits or favored events) per total trials.
-Attempts-until-Success Distribution -- histogram of number of trials it takes until each success.
+### Plots
+
+m/n convergence to limiting value -- cumulative rate of successes (hits or favored events) per total trials.  
+Attempts-until-Success Distribution -- histogram of number of trials it takes until each success.  
 Successes-per-Sample Distribution -- histogram of number of successes within each sample.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 What are the characteristic shapes of each graph?
 
 Look at the 'rate' monitor. What can you say about the fluctuation of numbers? What can you say about the value it settles on? What other settings in the model can you relate to this rate value?
 
-The "Attempts-until-Success Distribution" never has values for 0, whereas the other plots sometimes do. Why is that?
+The "Attempts-until-Success Distribution" never has values for 0, whereas the other plots sometimes do. Why is that?  
 Also, what can you say about the mean of this distribution? Does this make sense to you?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 A sample-size of 10 that is run 300 times and a sample-size of 300 that is run 10 times both produce 3000 trials, because 10 and 300 are the factors of 3000 regardless of their order in a context. Run the experiment under both combination conditions. Did this make any difference? If so, which of the three graphs did it affect and which did it not affect? Run the experiment under other pairs of combination conditions. How different do the factors have to be to cause any difference in the graphs? How does the sample-space-size play in with all this?
 
 By now you may have noticed the typically bell-shaped histogram of the Successes-per-Sample distribution.  Try to find settings that do not create this shape and analyze why this is the case.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 As a beginning, try adding monitors to show values from variables you are interested in tracking. For instance, you may want to know the minimum, mean, and maximum values of the "Attempts-until-Success Distribution." Also, you may want to change parameters of the sliders.
 
 Challenge: Add to the "Attempt-until-Success" plot a line that indicates the mean.
 
 Challenge: Think of modification that keeps the 'random' reporter, but "helps" the program have more hits. Of course, this will change completely the nature of the simulation, so you can think of what you have created, and give the program a new name.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This model is unusual in that it doesn't use the view at all.  Everything that happens visually happens in the plots and monitors.
 
-
 ## CREDITS AND REFERENCES
+
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
@@ -809,7 +798,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@

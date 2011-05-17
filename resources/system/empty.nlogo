@@ -64,7 +64,7 @@ ticks
 (a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 @#$#@#$#@
-NetLogo 5.0beta3
+NetLogo (no version)
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

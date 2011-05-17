@@ -14,6 +14,8 @@ trait Jars extends DefaultProject {
     List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar", "BehaviorSpace.jar").map(path)
 
   private def build(config: String) {
+    // ProGuard prints stuff straight to stdout, so we do the same
+    println("building " + config + " jar")
     TrapExit(
       proguard.ProGuard.main(Array("@project/build/proguard/" + config + ".txt")),
       log)

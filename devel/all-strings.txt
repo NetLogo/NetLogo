@@ -5530,7 +5530,7 @@ org/nlogo/prim/etc/_pwd.java:26:			path = "no model loaded!" ;
 org/nlogo/prim/etc/_pwd.java-27-	    }
 org/nlogo/prim/etc/_pwd.java-28-		workspace.outputObject
 org/nlogo/prim/gui/_exportinterface.java-22-		{
-org/nlogo/prim/gui/_exportinterface.java-23-			throw new EngineException(
+org/nlogo/prim/gui/_exportinterface.java-23-			throw new EngineExceptioan(
 org/nlogo/prim/gui/_exportinterface.java:24:				context , this , token().name() + " can only be used in the GUI" ) ;
 org/nlogo/prim/gui/_exportinterface.java-25-		}
 org/nlogo/prim/gui/_exportinterface.java-26-		( (GUIWorkspace) workspace).forceDisplayAndTicksUpdates() ;

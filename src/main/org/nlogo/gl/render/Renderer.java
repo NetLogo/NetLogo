@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Comparator;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -18,7 +17,6 @@ import javax.media.opengl.glu.GLU;
 import org.nlogo.api.Agent;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Turtle;
-import org.nlogo.api.Turtle3D;
 import org.nlogo.api.TurtleStamp3D;
 import org.nlogo.api.Patch;
 import org.nlogo.api.Patch3D;
@@ -34,7 +32,7 @@ import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.ShapeList;
 
-public strictfp class Renderer
+public class Renderer
     implements GLEventListener {
   final World world;
   final ViewSettings renderer;
@@ -52,76 +50,6 @@ public strictfp class Renderer
   public static final float PICK_THRESHOLD = 0.23f;
 
   /*
-  * Sorts agents based on their distance from the observer.
-  */
-  final Comparator<Agent> agentComparator =
-      new Comparator<Agent>() {
-        public int compare(Agent a1, Agent a2) {
-          double dist1 = euclideanSquaredDistance(a1);
-          double dist2 = euclideanSquaredDistance(a2);
-          if (dist1 < dist2) {
-            return 1;
-          } else if (dist1 > dist2) {
-            return -1;
-          } else {
-            return 0;
-          }
-        }
-      };
-
-  /*
-  * Computes the Euclidean Squared distance between the given renderable object
-  * and the observer. This is like ordinary distance, but without the square root.
-  * We're using it for two reasons:
-  *     1. It ought to be quicker to compute than ordinary Euclidean distance, which
-  *        is important if we're performing this operation for every renderable object
-  *        in the scene each frame.
-  *     2. It turns out that using ordinary Euclidean distance results in much more
-  *        flickering. I'm not sure why this is.
-  */
-  private double euclideanSquaredDistance(Agent agent) {
-    double x = 0.0;
-    double y = 0.0;
-    double z = 0.0;
-
-    if (agent instanceof Turtle) {
-      Turtle turtle = (Turtle) agent;
-      x = turtle.xcor();
-      y = turtle.ycor();
-
-      if (turtle instanceof Turtle3D) {
-        z = ((Turtle3D) turtle).zcor();
-      }
-    } else if (agent instanceof Patch) {
-      Patch patch = (Patch) agent;
-      x = patch.pxcor();
-      y = patch.pycor();
-
-      if (patch instanceof Patch3D) {
-        z = ((Patch3D) patch).pzcor();
-      }
-    } else if (agent instanceof Link) {
-      Link link = (Link) agent;
-      x = (link.x1() + link.x2()) / 2;
-      y = (link.y1() + link.y2()) / 2;
-
-      if (link instanceof Link3D) {
-        z = (((Link3D) link).z1() + ((Link3D) link).z2()) / 2;
-      }
-    } else {
-      throw new IllegalStateException("Agent must be an instance of Turtle, Patch, or Link.");
-    }
-
-    double oxcor = world.observer().oxcor();
-    double oycor = world.observer().oycor();
-    double ozcor = world.observer().ozcor();
-
-    return (x - oxcor) * (x - oxcor)
-        + (y - oycor) * (y - oycor)
-        + (z - ozcor) * (z - ozcor);
-  }
-
-  /*
   * Collection of all opaque agents that will be rendered each frame. These
   * can be rendered in any order, as long as they are rendered before any
   * transparent objects.
@@ -133,7 +61,7 @@ public strictfp class Renderer
   * frame, ordered by their distance from the observer. (Rendering with transparency
   * requires that we sort these objects back to front).
   */
-  private final PriorityQueue<Agent> transparentAgents = new PriorityQueue<Agent>(100, agentComparator);
+  private final PriorityQueue<Agent> transparentAgents ;
 
   final GLU glu = new GLU();
 
@@ -178,6 +106,7 @@ public strictfp class Renderer
     viewPort = IntBuffer.wrap(new int[4]);
 
     this.world = world;
+    transparentAgents = new PriorityQueue<Agent>(100, new Euclidean(world.observer()));
     renderer = graphicsSettings;
     this.shapeRenderer = shapeRenderer;
     turtleRenderer = createTurtleRenderer(world);
@@ -189,6 +118,7 @@ public strictfp class Renderer
 
   public Renderer(Renderer glrenderer) {
     world = glrenderer.world;
+    transparentAgents = new PriorityQueue<Agent>(100, new Euclidean(world.observer()));
     renderer = glrenderer.renderer;
     worldRenderer = glrenderer.worldRenderer;
     turtleRenderer = glrenderer.turtleRenderer;
@@ -330,7 +260,7 @@ public strictfp class Renderer
 
     // make the z-clip proportional to the max screen edge so the world doesn't
     // just disappear before you can see the whole thing ev 1/15/05
-    double zClip = StrictMath.max
+    double zClip = Math.max
         (world.worldWidth(),
             world.worldHeight()) * 4;
 
@@ -819,11 +749,11 @@ public strictfp class Renderer
       double width = world.worldWidth();
       double height = world.worldHeight();
 
-      double maxDimension = StrictMath.max(width, height);
+      double maxDimension = Math.max(width, height);
 
       if (world instanceof World3D) {
         double depth = ((World3D) world).worldDepth();
-        maxDimension = StrictMath.max(maxDimension, depth);
+        maxDimension = Math.max(maxDimension, depth);
       }
 
       return 1.5 * maxDimension / distance;
@@ -948,9 +878,9 @@ public strictfp class Renderer
         double crossX = (uy * vz - uz * vy);
         double crossY = (uz * vx - ux * vz);
         double crossZ = (ux * vy - uy * vx);
-        double lengt = StrictMath.sqrt((crossX * crossX) +
+        double lengt = Math.sqrt((crossX * crossX) +
             (crossY * crossY) + (crossZ * crossZ));
-        double lengb = StrictMath.sqrt((ux * ux) + (uy * uy) +
+        double lengb = Math.sqrt((ux * ux) + (uy * uy) +
             (uz * uz));
 
         double dist = (lengt / lengb);
@@ -1028,8 +958,8 @@ public strictfp class Renderer
     }
 
     // finally do the division to get sc and tc
-    sc = StrictMath.abs(sN) < World.INFINITESIMAL ? 0.0 : sN / sD;
-    tc = StrictMath.abs(tN) < World.INFINITESIMAL ? 0.0 : tN / tD;
+    sc = Math.abs(sN) < World.INFINITESIMAL ? 0.0 : sN / sD;
+    tc = Math.abs(tN) < World.INFINITESIMAL ? 0.0 : tN / tD;
 
     // get the difference of the two closest points
     Vect dP = new Vect((u.x() * sc) - (v.x() * tc) + w.x(),

@@ -35,7 +35,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
           stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size,l.let.varName))
           stmt.command.token(stmt.command.token)
           stmt.removeArgument(0)
-          procedure.alteredLets(l.let) = procedure.args.size
+          procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args.add(l.let.varName)
           procedure.lets.remove(l.let)

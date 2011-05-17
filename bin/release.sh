@@ -27,7 +27,7 @@ TOUCH=touch
 XARGS=xargs
 
 # other
-SCALA=2.8.1
+SCALA=2.9.0
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
@@ -91,8 +91,48 @@ else
   echo "OK, no Windows, just Mac and Linux/Unix"
 fi
 
+# ask user whether to make clean (yes for real releases, no when testing this script)
+until [ -n "$CLEAN" ]
+do
+  read -p "Do you want to run 'make clean' first? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    CLEAN=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    CLEAN=0
+  fi
+done
+
 # clean
-$MAKE -s clean
+if [ $WINDOWS -eq 1 ]; then
+  $MAKE -s clean
+fi
+
+until [ -n "$REQUIRE_PREVIEWS" ]
+do
+  read -p "Require model preview images be present? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    REQUIRE_PREVIEWS=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    REQUIRE_PREVIEWS=0
+  fi
+done
+
+until [ -n "$RSYNC" ]
+do
+  read -p "Rsync to CCL server when done? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    RSYNC=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    RSYNC=0
+  fi
+done
+
 
 # compile, build jars etc.
 bin/sbt update
@@ -121,6 +161,7 @@ $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
+pack200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.11.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/pegdown-0.9.1.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
@@ -159,7 +200,7 @@ ln -s ../../dist        # notarize script needs this
 ln -s ../../resources   # and this
 ln -s ../../scala       # and this
 ln -s ../../bin         # and this
-../../bin/notarize.scala || exit 1
+../../bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
 rm dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
@@ -370,7 +411,7 @@ fi
 
 # make directory with web pages and so on
 cd ..
-$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar $COMPRESSEDVERSION
+$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar netlogo-$COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
 if [ $WINDOWS -eq 1 ]
@@ -379,11 +420,14 @@ then
 fi
 $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
+$CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
 $CP -rp ../test/applet $COMPRESSEDVERSION
-$CP ../NetLogoLite.jar $COMPRESSEDVERSION/applet
+$CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
-$CP -rp ../extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
+$CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
+$FIND $COMPRESSEDVERSION/applet \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
+  | $XARGS -0 $RM -rf
 $RM -r $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
@@ -414,5 +458,9 @@ cd ../..
 $FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store \) -print0 | $XARGS -0 $RM -rf
 
 # done
-echo "now upload to ccl, like this:"
-echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+if [ $RSYNC -eq 1 ]; then
+  rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
+else
+  echo "to upload to CCL server, do:"
+  echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+fi

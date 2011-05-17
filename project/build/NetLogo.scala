@@ -44,7 +44,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   // its possible that this is an sbt bug, but I don't have the time to look into it. - JC 3/8/11
   override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, java5, nativeJoglLibs)
   override def compileOptions =
-    "-g -unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit "
+    "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
      .split(" ").map(CompileOption).toSeq ++ super.compileOptions
   override def javaCompileOptions =
     "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
@@ -73,6 +73,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val tc = singleTestTask("org.nlogo.headless.TestCommands")
   lazy val tr = singleTestTask("org.nlogo.headless.TestReporters")
   lazy val tm = singleTestTask("org.nlogo.headless.TestModels")
+  lazy val te = singleTestTask("org.nlogo.headless.TestExtensions")
 
   lazy val testSlow = runSubclassesOf("org.nlogo.util.SlowTest")
   lazy val testFast = runEverythingButSubclassesOf("org.nlogo.util.SlowTest")

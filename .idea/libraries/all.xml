@@ -1,16 +1,16 @@
 <component name="libraryTable">
   <library name="all">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.8.1/test" />
-      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.8.1/compile" />
-      <root url="file://$PROJECT_DIR$/project/boot/scala-2.8.1/lib" />
+      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.0/test" />
+      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.0/compile" />
+      <root url="file://$PROJECT_DIR$/project/boot/scala-2.9.0/lib" />
       <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.8.1/compile" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.8.1/test" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/project/boot/scala-2.8.1/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.0/compile" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.0/test" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/project/boot/scala-2.9.0/lib" recursive="false" />
   </library>
 </component>

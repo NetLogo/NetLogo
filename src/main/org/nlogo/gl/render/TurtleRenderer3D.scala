@@ -13,19 +13,19 @@ extends TurtleRenderer(world, shapeRenderer) {
   
   override def getXYandZComponents(agent: Agent, dist: Double): Array[Double] = {
     val t = agent.asInstanceOf[Turtle3D]
-    val headingRadians = StrictMath.toRadians(t.heading)
-    var cosHeading = StrictMath.cos(headingRadians)
-    var sinHeading = StrictMath.sin(headingRadians)
-    val pitchRadians = StrictMath.toRadians(t.pitch)
-    var cosPitch = StrictMath.cos(pitchRadians)
-    var sinPitch = StrictMath.sin(pitchRadians)
-    if(StrictMath.abs(cosHeading) < World.INFINITESIMAL)
+    val headingRadians = math.toRadians(t.heading)
+    var cosHeading = math.cos(headingRadians)
+    var sinHeading = math.sin(headingRadians)
+    val pitchRadians = math.toRadians(t.pitch)
+    var cosPitch = math.cos(pitchRadians)
+    var sinPitch = math.sin(pitchRadians)
+    if(math.abs(cosHeading) < World.INFINITESIMAL)
       cosHeading = 0
-    if(StrictMath.abs(sinHeading) < World.INFINITESIMAL)
+    if(math.abs(sinHeading) < World.INFINITESIMAL)
       sinHeading = 0
-    if(StrictMath.abs(cosPitch) < World.INFINITESIMAL)
+    if(math.abs(cosPitch) < World.INFINITESIMAL)
       cosPitch = 0
-    if(StrictMath.abs(sinPitch) < World.INFINITESIMAL)
+    if(math.abs(sinPitch) < World.INFINITESIMAL)
       sinPitch = 0
     Array(dist * sinHeading * cosPitch * Renderer.WORLD_SCALE,
           dist * cosHeading * cosPitch * Renderer.WORLD_SCALE,

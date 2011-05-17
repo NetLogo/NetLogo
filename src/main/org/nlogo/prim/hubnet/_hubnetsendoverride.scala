@@ -30,11 +30,11 @@ class _hubnetsendoverride extends org.nlogo.nvm.Command {
     args(3).checkAgentSetClass(set, context)
 
     // ugh..set.iterator is not a real iterator.
-    val overrides = new collection.mutable.HashMap[Long,Any]()
+    val overrides = new collection.mutable.HashMap[java.lang.Long,AnyRef]()
     val it = set.iterator
     while(it.hasNext) {
       val agent = it.next
-      overrides += (agent.id -> freshContext.evaluateReporter(agent, args(3)))
+      overrides(agent.id) = freshContext.evaluateReporter(agent, args(3))
     }
 
     workspace.waitFor(new CommandRunnable() {

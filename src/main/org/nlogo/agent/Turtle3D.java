@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariables;
@@ -347,7 +348,7 @@ public final strictfp class Turtle3D
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.turtles() && !world.isBreed(breed)) {
-              throw new AgentException("can't set BREED to a non-breed agentset");
+              throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
             }
             setBreed(breed);
           } else {

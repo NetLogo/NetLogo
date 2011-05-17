@@ -49,12 +49,12 @@ extends AgentRenderer(world, shapeRenderer) {
 
   def getXYandZComponents(agent: Agent, dist: Double): Array[Double] = {
     val turtle = agent.asInstanceOf[Turtle]
-    val headingRadians = StrictMath.toRadians(turtle.heading)
-    var cos = StrictMath.cos(headingRadians)
-    var sin = StrictMath.sin(headingRadians)
-    if(StrictMath.abs(cos) < org.nlogo.api.World.INFINITESIMAL)
+    val headingRadians = math.toRadians(turtle.heading)
+    var cos = math.cos(headingRadians)
+    var sin = math.sin(headingRadians)
+    if(math.abs(cos) < org.nlogo.api.World.INFINITESIMAL)
       cos = 0
-    if(StrictMath.abs(sin) < org.nlogo.api.World.INFINITESIMAL)
+    if(math.abs(sin) < org.nlogo.api.World.INFINITESIMAL)
       sin = 0
     Array(dist * sin * Renderer.WORLD_SCALE,
           dist * cos * Renderer.WORLD_SCALE,

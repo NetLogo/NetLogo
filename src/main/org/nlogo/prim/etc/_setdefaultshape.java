@@ -39,7 +39,7 @@ public final strictfp class _setdefaultshape
       if (checkedShape == null) {
         throw new EngineException(context, this,
             I18N.errors().getNJava("org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape",
-                new String[]{shape.toString()}));
+                new String[]{shape}));
       }
       world.turtleBreedShapes.setBreedShape(breed, checkedShape);
     } else if (breed.type() == org.nlogo.agent.Link.class) {
@@ -47,7 +47,7 @@ public final strictfp class _setdefaultshape
       if (checkedShape == null) {
         throw new EngineException(context, this,
             I18N.errors().getNJava("org.nlogo.prim.etc._setDefaultShape.notADefinedLinkShape",
-                new String[]{shape.toString()}));
+                new String[]{shape}));
       }
       world.linkBreedShapes.setBreedShape(breed, checkedShape);
     }

@@ -23,7 +23,7 @@ private class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {
     var wrapXLeft = false
     var wrapYTop = false
     var wrapYBottom = false
-    val stroke = StrictMath.max(1, (patchSize * lineScale)).toFloat
+    val stroke = math.max(1, (patchSize * lineScale)).toFloat
     renderAgent(gl, shape3D, color, size, x, y, z,
       stroke, outline, orientation)
     if (x + size / 2 > maxx) {

@@ -44,8 +44,7 @@ public final strictfp class _fdinternal
     if (distanceMagnitude <= 1.0) {
       try {
         turtle.jump(distance);
-      } catch (AgentException e) {
-      } // NOPMD
+      } catch (AgentException e) { } // NOPMD
       context.ip = next;
     } else {
       int stepDistance = (distance > 0) ? 1 : -1;
