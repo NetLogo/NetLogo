@@ -1,4 +1,3 @@
-
 org.nlogo.agent.Agent.breedDoesNotOwnVariable = {0} breed does not own variable {1}
 org.nlogo.agent.Agent.cantMoveToLink = You can''t move-to a link.
 # can't set turtle variable XCOR to non-number foo
@@ -65,6 +64,7 @@ org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink = Expected a turtle o
 
 
 org.nlogo.prim.etc.$common.noNegativeRadius ={0} cannot take a negative radius.
+org.nlogo.prim.etc.$common.noNegativeNumber ={0} cannot take a negative number.
 org.nlogo.prim.etc.$common.noNegativeAngle ={0} cannot take a negative angle.
 org.nlogo.prim.etc.$common.noAngleGreaterThan360 ={0} cannot take an angle greater than 360.
 org.nlogo.prim.$common.turtleCantLinkToSelf = A turtle cannot link to itself.
@@ -174,3 +174,8 @@ org.nlogo.$common.thatAgentIsDead = That {0} is dead.
 org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles = You can only delete files.
 org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile = You cannot delete a non-existent file.
 org.nlogo.workspace.DefaultFileManager.noOpenFile = No file has been opened.
+
+org.nlogo.prim.etc._foreach.listsMustBeSameLength = All the list arguments to FOREACH must be the same length.
+org.nlogo.prim.$common.noSumOfListWithNonNumbers =  Can''t find the sum of a list that contains non-numbers {0} is a {1}.
+org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of reporter procedure without REPORT being called.
+org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.

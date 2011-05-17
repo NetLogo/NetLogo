@@ -2,6 +2,10 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.nvm.{Context, EngineException, Reporter, Syntax}
+import org.nlogo.api.I18N
+import org.nlogo.nvm.EngineException
+import org.nlogo.nvm.Reporter
+import org.nlogo.nvm.Syntax
 
 class _nvalues extends Reporter {
 
@@ -13,8 +17,9 @@ class _nvalues extends Reporter {
     // get the first argument...
     val n = argEvalIntValue(context, 0)
     if (n < 0)
-      throw new EngineException(
-        context, this, displayName + " cannot take a negative number")
+      throw new EngineException( context, this,
+        I18N.errors.getNJava("org.nlogo.prim.etc.$common.noNegativeNumber",
+          Array [String] (displayName)))
     // make the result list.
     val result = new LogoListBuilder
     val lambda = argEvalReporterLambda(context, 1)

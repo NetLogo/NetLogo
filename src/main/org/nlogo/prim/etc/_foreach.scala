@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.{I18N, LogoException}
 
 class _foreach extends Command {
   override def syntax =
@@ -14,7 +14,8 @@ class _foreach extends Command {
       val list = argEvalList(context, i)
       if (i == 0) size = list.size
       else if (size != list.size)
-        throw new EngineException(context, this, "All the list arguments to FOREACH must be the same length.")
+        throw new EngineException(context, this,
+          I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.iterator
     }
     val lambda = argEvalCommandLambda(context, n)
