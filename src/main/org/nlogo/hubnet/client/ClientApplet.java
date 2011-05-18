@@ -116,15 +116,14 @@ public strictfp class ClientApplet
 
   private void login(final String userid, final String hostip, final int port) {
     final String[] exs = new String[]{null};
-    new org.nlogo.swing.ModalProgressTask
-        (org.nlogo.awt.Utils.getFrame(ClientApplet.this),
-            new Runnable() {
-              public void run() {
-                exs[0] = clientPanel.login(userid, hostip, port);
-                clientPanel.requestFocus();
-              }
-            }, "Entering...");
-
+    org.nlogo.swing.ModalProgressTask.apply(
+      org.nlogo.awt.Utils.getFrame(ClientApplet.this),
+      "Entering...",
+      new Runnable() {
+        public void run() {
+          exs[0] = clientPanel.login(userid, hostip, port);
+          clientPanel.requestFocus();
+        }});
     if (exs[0] != null) {
       clientPanel.disconnect(exs[0]);
       handleLoginFailure(exs[0]);

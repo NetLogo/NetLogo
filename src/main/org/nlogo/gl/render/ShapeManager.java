@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
+import javax.media.opengl.glu.GLUtessellator;
 
 import org.nlogo.api.ShapeList;
 import org.nlogo.api.Shape;
@@ -33,13 +34,13 @@ class ShapeManager {
   private final Map<String, GLShape> modelShapes = new HashMap<String, GLShape>();
   final Map<String, GLLinkShape> linkShapes = new HashMap<String, GLLinkShape>();
   private final Tessellator tessellator = new Tessellator();
-  final javax.media.opengl.glu.GLUtessellator tess;
+  final GLUtessellator tess;
 
   ShapeManager(GL gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList,
                Map<String, List<String>> customShapes)
 
   {
-    // tesselation for concave polygons in model shapes
+    // tessellation for concave polygons in model shapes
     tess = glu.gluNewTess();
     glu.gluTessCallback(tess, GLU.GLU_TESS_BEGIN_DATA, tessellator);
     glu.gluTessCallback(tess, GLU.GLU_TESS_EDGE_FLAG_DATA, tessellator);
@@ -252,8 +253,8 @@ class ShapeManager {
             (gl, i,
                 (org.nlogo.shape.Rectangle) element, rotatable);
       } else if (element instanceof org.nlogo.shape.Polygon) {
-        renderPolygon(gl, glu, i,
-            (org.nlogo.shape.Polygon) element, rotatable);
+        Polygons.renderPolygon(gl, glu, tessellator, tess, i,
+          (org.nlogo.shape.Polygon) element, rotatable, this instanceof ShapeManager3D);
       } else if (element instanceof org.nlogo.shape.Circle) {
         renderCircle(gl, glu, i,
             (org.nlogo.shape.Circle) element, rotatable);
@@ -305,95 +306,6 @@ class ShapeManager {
                        float z0, float z1, boolean filled, boolean rotatable) {
     Rectangle.renderRectangularPrism(gl, x0, x1, y0, y1,
         z0, z1, filled, false, rotatable);
-  }
-
-  private void renderPolygon(GL gl, GLU glu, int offset,
-                             org.nlogo.shape.Polygon poly,
-                             boolean rotatable) {
-    float zDepth = 0.01f + offset * 0.0001f;
-
-    // this is more complex than it looks, primarily because OpenGL cannot
-    // render concave polygons directly but must "tesselate" the polygon
-    // into simple convex triangles first - jrn 6/13/05
-
-    if (!poly.marked()) {
-      float[] rgb = poly.getColor().getRGBColorComponents(null);
-      gl.glPushAttrib(GL.GL_CURRENT_BIT);
-      gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb));
-    }
-
-    if (!poly.filled()) {
-      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-    }
-
-    // It appears that polys go in arbitrary winding.  I don't know what is
-    // a better approach disabling back-facked culling or redrawing the
-    // object in reverse winding (or some better alternative) ... too lazy
-    // right now - jrn 6/13/05
-
-    gl.glDisable(GL.GL_CULL_FACE);
-
-    Tessellator.TessDataObject data = tessellator.createTessDataObject(gl);
-
-    List<Integer> xcoords = poly.getXcoords();
-    List<Integer> ycoords = poly.getYcoords();
-
-    renderPolygon(gl, data, glu, xcoords, ycoords, zDepth, rotatable);
-
-    if (!poly.filled()) {
-      gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-    }
-
-    // no need to "pancake" if it is always facing the user
-    if (rotatable) {
-      // render sides
-      for (int i = 0; i < xcoords.size(); i++) {
-        float coords[] =
-            {
-                xcoords.get(i).intValue() * 0.001f - 0.15f,
-                (300 - ycoords.get(i).intValue()) * .001f - 0.15f,
-                xcoords.get((i + 1) % xcoords.size()).intValue() * .001f - 0.15f,
-                (300 - ycoords.get((i + 1) % xcoords.size()).intValue()) * .001f - 0.15f
-            };
-
-        gl.glBegin(GL.GL_QUADS);
-        findNormal(gl, coords[0], coords[1], -zDepth,
-            coords[0], coords[1], zDepth,
-            coords[2], coords[3], zDepth);
-
-        gl.glVertex3f(coords[0], coords[1], -zDepth);
-        gl.glVertex3f(coords[0], coords[1], zDepth);
-        gl.glVertex3f(coords[2], coords[3], zDepth);
-        gl.glVertex3f(coords[2], coords[3], -zDepth);
-        gl.glEnd();
-      }
-    }
-
-    gl.glEnable(GL.GL_CULL_FACE);
-
-    if (!poly.marked()) {
-      gl.glPopAttrib();
-    }
-  }
-
-  void renderPolygon(GL gl, Tessellator.TessDataObject data, GLU glu,
-                     List<Integer> xcoords,
-                     List<Integer> ycoords,
-                     float zDepth, boolean rotatable) {
-    glu.gluTessBeginPolygon(tess, data);
-    glu.gluTessBeginContour(tess);
-
-    // render top
-    for (int i = 0; i < xcoords.size(); i++) {
-      double coords[] =
-          {xcoords.get(i).intValue() * .001 - 0.15,
-              (300 - ycoords.get(i).intValue()) * .001 - 0.15,
-              zDepth};
-      glu.gluTessVertex(tess, coords, 0, coords);
-    }
-
-    glu.gluTessEndContour(tess);
-    glu.gluTessEndPolygon(tess);
   }
 
   private void renderCircle(GL gl, GLU glu, int offset,
@@ -548,24 +460,6 @@ class ShapeManager {
     }
     gl.glEndList();
     customShapes.put(shape.name(), shape.lines());
-  }
-
-  private void findNormal(GL gl, float x1, float y1, float z1,
-                          float x2, float y2, float z2,
-                          float x3, float y3, float z3) {
-    float vectX1 = x1 - x2;
-    float vectY1 = y1 - y2;
-    float vectZ1 = z1 - z2;
-    float vectX2 = x3 - x2;
-    float vectY2 = y3 - y2;
-    float vectZ2 = z3 - z2;
-    float normX = (vectY1 * vectZ2 - vectY2 * vectZ1);
-    float normY = (vectX2 * vectZ1 - vectX1 * vectZ2);
-    float normZ = (vectX1 * vectY2 - vectX2 * vectY1);
-    double leng = Math.sqrt((normX * normX) +
-        (normY * normY) + (normZ * normZ));
-    gl.glNormal3d((normX / leng) * -1, (normY / leng) * -1,
-        (normZ / leng) * -1);
   }
 
 }

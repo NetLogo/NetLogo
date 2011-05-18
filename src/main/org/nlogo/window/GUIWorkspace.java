@@ -684,15 +684,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void halt() {
     jobManager.interrupt();
-    new org.nlogo.swing.ModalProgressTask
-        (getFrame(),
-            new Runnable() {
-              public void run() {
-                GUIWorkspace.super.halt();
-                view.dirty();
-                view.repaint();
-              }
-            }, "Halting...");
+    org.nlogo.swing.ModalProgressTask.apply(
+      getFrame(), "Halting...",
+      new Runnable() {
+        public void run() {
+          GUIWorkspace.super.halt();
+          view.dirty();
+          view.repaint();
+        }});
   }
 
   // for notification of a changed shape
@@ -1013,18 +1012,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                   guessExportName("view.png"));
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
-      new org.nlogo.swing.ModalProgressTask
-          (getFrame(),
-              new Runnable() {
-                public void run() {
-                  try {
-                    exportView(exportee, exportPath, "png");
-                  } catch (java.io.IOException ex) {
-                    exception[0] = ex;
-                  }
-                }
-              },
-              "Exporting...");
+      org.nlogo.swing.ModalProgressTask.apply(
+        getFrame(),
+        "Exporting...",
+        new Runnable() {
+          public void run() {
+            try {
+              exportView(exportee, exportPath, "png");
+            } catch (java.io.IOException ex) {
+              exception[0] = ex;
+            }}});
       if (exception[0] != null) {
         throw exception[0];
       }

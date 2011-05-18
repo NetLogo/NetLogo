@@ -113,16 +113,14 @@ strictfp class ModelsLibraryDialog
 
     final SearchableModelTree[] smt = new SearchableModelTree[1];
     if (ModelsLibrary.needsModelScan() || smt[0] == null) {
-      new org.nlogo.swing.ModalProgressTask
-          (parent,
-              new Runnable() {
-                public void run() {
-                  ModelsLibrary.scanForModels(false);
-                  smt[0] = new SearchableModelTree
-                      (new Node(ModelsLibrary.rootNode, ModelsLibraryIndexReader.readInfoMap()));
-                }
-              },
-              I18N.gui().get("modelsLibrary.loading"));
+      org.nlogo.swing.ModalProgressTask.apply(
+        parent, I18N.gui().get("modelsLibrary.loading"),
+        new Runnable() {
+          public void run() {
+            ModelsLibrary.scanForModels(false);
+            smt[0] = new SearchableModelTree
+              (new Node(ModelsLibrary.rootNode, ModelsLibraryIndexReader.readInfoMap()));
+          }});
     }
     tree = new javax.swing.JTree(smt[0]);
     tree.getSelectionModel().setSelectionMode
