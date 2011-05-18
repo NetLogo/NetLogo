@@ -16,8 +16,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   with PMD
   with Classycle
   with ModelIndex
-  with BehaviorSpaceSources
-  with eu.getintheloop.Native2AsciiPlugin {
+  with BehaviorSpaceSources {
 
   // we tried this out for a while, but it suppresses too much.  better for now
   // to accept the default (Level.Info) - ST 6/8/10
@@ -34,9 +33,6 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   override def testJavaSourcePath =  "src" / "test"
   override def testSourceRoots = super.testSourceRoots +++ ("src" / "tools")
   override def mainResourcesPath = "resources"
-
-  //override def translationInputExtension: String = "txt"
-  override def translationInputPath: Path = mainResourcesPath / "i18n"
 
   /// compiling
   override def copyResourcesAction = super.copyResourcesAction dependsOn(native2ascii)

@@ -8,7 +8,10 @@ import sbt._
   which takes two arguments, the language and the country.
   Currently we only only support en_ES (Spanish) anyway, but that will likely change soon.
  */
-trait Internationalization { this: DefaultProject =>
+trait Internationalization extends eu.getintheloop.Native2AsciiPlugin { this: DefaultProject =>
+
+  //override def translationInputExtension: String = "txt"
+  override def translationInputPath: Path = "dist" / "i18n"
 
   lazy val setLang = task { args =>
     if (args.length == 2) langSetter(args(0), args(1))
