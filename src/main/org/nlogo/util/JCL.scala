@@ -1,18 +1,6 @@
 package org.nlogo.util
 
-// In Scala 2.7 scala.collection.jcl ("Java Compatibility Library") was huge, so in order not to
-// bloat NetLogoLite.jar, we have this object which defines only the conversions on Java collections
-// that we really need.
-
-// In Scala 2.8, scala.collection.jcl is gone and instead there is scala.collection.JavaConversions
-// which is lot more lightweight.  So arguably we don't need this anymore, though I kind of like
-// that our conversions disallow mutation, which JavaConversions supports.
-
-// In Scala 2.8.1, scala.collection.JavaConverters was added, which is like JavaConversions
-// but requires an explicit .asScala or .asJava call every time you want to convert.  If we
-// change over, we should consider using JavaConverters instead of JavaConversions.
-
-// All of the conversions here return unmodifiable views of the original collections, no copying.
+// In the process of getting rid of this, using collection.JavaConverters instead. - ST 5/18/11
 
 object JCL {
   // annoying we have to give these next three separate names, but the Scala 2.9 compiler

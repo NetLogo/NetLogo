@@ -27,8 +27,8 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
 
   private def doPopupMenu() {
     val popMenu = new javax.swing.JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
-    import org.nlogo.util.JCL._
-    for(ex <- commandLine.getExecutionList) {
+    import collection.JavaConverters._
+    for(ex <- commandLine.getExecutionList.asScala) {
       val str =
         if(commandLine.agent != null)          // if we're in an agent monitor
           CommandLine.PROMPT + " " + ex.string
