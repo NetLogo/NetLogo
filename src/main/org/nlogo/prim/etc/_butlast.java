@@ -38,7 +38,7 @@ public final strictfp class _butlast
       if (string.length() == 0) {
         throw new EngineException (context, this,
                 I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyStringInput",
-                        new String[]{token().name().toUpperCase()}));
+                        new String[]{token().name()}));
       }
       return string.substring(0, string.length() - 1);
     } else {
@@ -52,7 +52,7 @@ public final strictfp class _butlast
     if (arg0.length() == 0) {
          throw new EngineException (context, this,
                 I18N.errors().getNJava("org.nlogo.prim.etc.$common.emptyStringInput",
-                        new String[]{token().name().toUpperCase()}));
+                        new String[]{token().name()}));
     }
     return arg0.substring(0, arg0.length() - 1);
   }
