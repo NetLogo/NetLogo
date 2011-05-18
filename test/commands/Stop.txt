@@ -59,4 +59,4 @@ FallOffEndOfReporterProcedure
   to-report foo1 report 0 end
   to-report foo2 end
   foo1 => 0
-  foo2 => ERROR reached end of reporter procedure without REPORT being called
+  foo2 => ERROR Reached end of reporter procedure without REPORT being called.
