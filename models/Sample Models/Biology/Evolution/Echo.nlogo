@@ -26,14 +26,12 @@ end
 
 ;; Creates a list of all possible tags (of length 1, 2, or 3)
 to setup-all-tags-list
-  ;; we use FPUT to build up the lists since it's more efficient
-  ;; than LPUT
   set all-tags []
   let tag-elements ["a" "b" "c"]
   foreach tag-elements
   [
     let i ?
-    set all-tags fput (list ?) all-tags
+    set all-tags lput (list ?) all-tags
     foreach tag-elements [
       let j ?
       set all-tags fput (list i ?) all-tags
@@ -41,8 +39,6 @@ to setup-all-tags-list
         [ set all-tags fput (list i j ?) all-tags ]
     ]
   ]
-  ;; as a result of using FPUT the result is in backwards order
-  set all-tags reverse all-tags
 end
 
 to setup-patches
@@ -247,6 +243,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 12
@@ -473,96 +470,91 @@ count turtles
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
-Echo is a model about the evolution of fitness, adapted from John Holland's book "Hidden Order" (1995).  It can be used to facilitate experiments in a variety of domains where an agent's fitness varies with its context.  This particular adaptation of Echo  has a biological flavor and refers to the agents as "creatures", and groups of agents with identical mating preferences as "species."
+## WHAT IS IT?
 
-With Echo, Holland attempted to codify intuitions about complex adaptive systems into a more rigorous and abstract model.  Holland was inspired by notions from ecological systems research, especially with regards to the dynamics of niches.  How does a change in the population dynamics of an ecosystem create new niches and destroy old ones?  Echo was an attempt to create an abstract model that could facilitate understanding of the interplay of evolutionary and ecological processes.  In Echo, different niches are created where creatures can consume, transform, and exchange resources, but this model is not necessarily just a biological model -- it can also be viewed as a model of other phenomena like the emergence of new markets.
+Echo is a model about the evolution of fitness, adapted from John Holland's book _Hidden Order_ (1995).  It can be used to facilitate experiments in a variety of domains where an agent's fitness varies with its context.  This particular adaptation of Echo  has a biological flavor and refers to the agents as "creatures", and groups of agents with identical mating preferences as "species."
 
-It should be noted that Echo as laid out in "Hidden Order" is not meant to be a specific model, but rather a framework for building models.  There are a number of mechanisms that are not fully specified in "Hidden Order" and the description includes multiple different mechanisms that can be implemented.  As a result, there is no model which is "the Echo model" there can only be "an Echo model."  This NetLogo Echo model is one particular instantiation of this framework.
+With Echo, Holland attempted to codify intuitions about complex adaptive systems into a more rigorous and abstract model.  Holland was inspired by notions from ecological systems research, especially with regards to the dynamics of niches.  How does a change in the population dynamics of an ecosystem create new niches and destroy old ones?  Echo was an attempt to create an abstract model that could facilitate understanding of the interplay of evolutionary and ecological processes.  In Echo, different niches are created where creatures can consume, transform, and exchange resources, but this model is not necessarily just a biological model --- it can also be viewed as a model of other phenomena like the emergence of new markets.
 
+It should be noted that Echo as laid out in _Hidden Order_ is not meant to be a specific model, but rather a framework for building models.  There are a number of mechanisms that are not fully specified in _Hidden Order_ and the description includes multiple different mechanisms that can be implemented.  As a result, there is no model which is "the Echo model" there can only be "an Echo model."  This NetLogo Echo model is one particular instantiation of this framework.
 
-HOW IT WORKS
-------------
+## HOW IT WORKS
+
 Each agent, or creature, has two components -- a reservoir to keep resources it collects, and a chromosome that contains its genetic material and defines its capabilities.
 
 A creature expends resources moving around the world looking for resources.  A creature can gain resources either directly from its environment, or from another creature at its current location.
 
 The amount of resources gained from its environment depends on the amount of available resources and the number of other creatures at its current location.
 
-The amount of resources gained from another creature depends on the match between the creatures' chromosomes.  More precisely, a creature's chromosome is compromised of three "tags" -- an offense tag, a defense tag, and a mating condition tag -- which are represented by strings of "a's", "b's" and "c's".  The amount transferred from one creature to another depends on how closely the first creature's offense tag matches the second creature's defense tag.  However, all interactions, or "fights", between creatures are two-way exchanges -- i.e., both agents match their offense tags to the other's defense tag.  Consequently, resources can be either gained or lost on any given interaction with another agent.  For example, offense tag "aaa" of creature 1 to defense tag "aaa" of creature 2 would be a perfect match. It would entitle creature 1 to all of creature 2 resources, but the second creature could possibly get some, or even all of the resources back based on the match of his offense tag to the other agent's defense tag.
+The amount of resources gained from another creature depends on the match between the creatures' chromosomes.  More precisely, a creature's chromosome is compromised of three "tags" --- an offense tag, a defense tag, and a mating condition tag -- which are represented by strings of "a's", "b's" and "c's".  The amount transferred from one creature to another depends on how closely the first creature's offense tag matches the second creature's defense tag.  However, all interactions, or "fights", between creatures are two-way exchanges --- i.e., both agents match their offense tags to the other's defense tag.  Consequently, resources can be either gained or lost on any given interaction with another agent.  For example, offense tag "aaa" of creature 1 to defense tag "aaa" of creature 2 would be a perfect match. It would entitle creature 1 to all of creature 2 resources, but the second creature could possibly get some, or even all of the resources back based on the match of his offense tag to the other agent's defense tag.
 
 If an agent's resource level drops below a minimum threshold, it dies.
 
 An agent can reproduce only if it has acquired a minimum level of resources.  Reproduction occurs in two ways:  1) simple replication, as determined by the REPLICATE-CHANCE slider, in which case the replicated agent is identical to the parent, and 2) mating with other agents.  By default, an agent can mate with any other agent, resulting in an offspring that contains a mixed set of elements, or a "cross", of both parent's chromosomes.  If the SELECTIVE-MATING? switch is enabled, an agent will not mate with just anyone, but instead only mate with agents whose offense tags match its own mating condition tag.  The similarity between the mating tag and offense tag necessary for a match to occur is determined by the MATING-SELECTIVITY slider.  With either process, it is possible that the characteristics of offspring are not an exact copy or cross of the parent's chromosomes.  Mutations can occur at a rate determined by the MUTATION-RATE slider.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Click the SETUP button to setup the world, then click the GO button.  The agents will begin to move, exchange resources, and reproduce.  The sliders allow you to change each of the parameters of the model as described below.  The plots provide an update on the composition of the populations of agents.
 
 The agents are colored by mating tags.  Identical mating tags share the same color; mating tags that are close are similar in color; and so on.  Each creature has its offense and defense tags as its label in the format "offense-tag.defense-tag".  For example, a label of "aab.bcc" represents a creature with an offense tag of "aab" and defense tag of "bcc."
 
 The model includes the following parameters:
 
-NUM-CREATURES - The number of agents with which to start the simulation.
+NUM-CREATURES --- The number of agents with which to start the simulation.
 
-REPLENISH-SPEED - The speed at which the resources in the environment replenish.
+REPLENISH-SPEED --- The speed at which the resources in the environment replenish.
 
-REPLICATE-CHANCE - The chance that a creature with sufficient energy will replicate.
+REPLICATE-CHANCE --- The chance that a creature with sufficient energy will replicate.
 
-SELECTIVE-MATING? - If 'Off' it is possible for agents to mate with any other agent that has enough energy to reproduce.  If 'On' agents will only mate with other agents whose offense tag matches their own mating tag.
+SELECTIVE-MATING? --- If 'Off' it is possible for agents to mate with any other agent that has enough energy to reproduce.  If 'On' agents will only mate with other agents whose offense tag matches their own mating tag.
 
-MATING-SELECTIVITY?  - Determines how similar a mating tag and offense tag must be in order for two agents to mate.  Higher, positive numbers are more selective.  '0' is the midpoint.
+MATING-SELECTIVITY? --- Determines how similar a mating tag and offense tag must be in order for two agents to mate.  Higher, positive numbers are more selective.  '0' is the midpoint.
 
-MUTATION-RATE - The rate at which a letter in the offense or defense tags of offspring may change during replication.
+MUTATION-RATE --- The rate at which a letter in the offense or defense tags of offspring may change during replication.
 
 Here are descriptions of all the plots in the model:
 
-"Offense Tags" - A histogram of the number of each offense tag currently in existence.
+"Offense Tags" --- A histogram of the number of each offense tag currently in existence.
 
-"Defense Tags" - A histogram of the number of each defense tag currently in existence.
+"Defense Tags" --- A histogram of the number of each defense tag currently in existence.
 
-"Species Counts" - A histogram of the number of each species currently alive.  A species is defined as a group of agents that share an identical mating tag.
+"Species Counts" --- A histogram of the number of each species currently alive.  A species is defined as a group of agents that share an identical mating tag.
 
-"Populations" - This shows the number of creatures in the two largest species currently in the world.
+"Populations" --- This shows the number of creatures in the two largest species currently in the world.
 
-"Speciation" - This shows the current total number of different species, the total number of different offense tags, and the total number of different defense tags in the world.
+"Speciation" --- This shows the current total number of different species, the total number of different offense tags, and the total number of different defense tags in the world.
 
 Some other options are described below in THINGS TO TRY.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Populations often become dynamically stable with several species at oscillating population levels.
 
 Increasing the initial NUM-CREATURES slider does not necessarily result in a larger stable population, indeed the opposite may occur as creatures compete for limited resources.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Change REPLENISH-SPEED to examine the impact of making resources more scarce.
 
 See what impact increasing or lowering the MUTATION-RATE and/or switching SELECTIVE-MATING? 'On' has on the number of species that ultimately survive in situation with dynamically stable populations.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Add a mechanism that allows selective interaction for the exchange of resources, in addition to selective mating.
 
 Resources could be more nuanced than the simple "energy" variable.  Certain locations in the environment could give off certain resources.  For example, every creature might need at least one "c" resource to live, but only certain wells might give resources of type "c".  Furthermore, resources could be transformed.  For example, one "a" and two "b's" could be turned into a "c" for some cost.
 
-Currently the exchange of resources between two agents is a fight -  a zero-sum exchange.  However, this interaction could be changed to an interaction where both parties can become better off -- a situation that resembles a trade more than a fight.
+Currently the exchange of resources between two agents is a fight --- a zero-sum exchange.  However, this interaction could be changed to an interaction where both parties can become better off --- a situation that resembles a trade more than a fight.
 
-Holland describes several additional extensions in some detail in Chapter 3 of Hidden Order.
+Holland describes several additional extensions in some detail in Chapter 3 of _Hidden Order_.
 
+## EXTENDING THE MODEL (CATERPILLAR-FLY-ANT)
 
-EXTENDING THE MODEL (CATERPILLAR-FLY-ANT)
------------------------------------------
 Holland discusses an interesting example from nature that can be imitated in Echo -- the Caterpillar-Fly-Ant triangle.  The triangle refers to the stable, triangular relation between the three different species: Species 1 --  Flies lay eggs on caterpillars and become prey through their larva.  Species 2 -- Ants are aggressive predators on the flies, but not of caterpillars.  Species 3 -- Caterpillars produce nectar on their skin which ants find very attractive.  The more ants around a caterpillar the less likely it is to be attacked by a predatory fly.  This can be represented in Echo with the following tags:
-| ant - offense: aaa, defense: cb
-| fly - offense: aab, defense: aaa
-| caterpillar - offense: c, defense: aab
+
+     ant - offense: aaa, defense: cb
+     fly - offense: aab, defense: aaa
+     caterpillar - offense: c, defense: aab
 
 Notice that the ants' offense tag matches perfectly with the fly's defense tag, making it a perfect predatory on the fly.  Likewise, the fly's offense tag matches perfectly on the caterpillar making it a perfect predator on the caterpillar.  The ant consumes the nectar of the caterpillar but does not prey on the caterpillar; thus, the ant and caterpillar have tags that result in an exchange of resources.
 
@@ -570,44 +562,43 @@ Try replicating this scenario.  You'll probably want to set SELECTIVE-MATING? to
 
 To get you started, here's some code for creating a roughly equal number of the three species.  (You may want to experiment with different initial proportions.)  The mating tags are completely different, to discourage interspecies mating.
 
-|   create-turtles init-num-creatures
-|   [
-|     let choice random 3
-|     if choice = 0  ; ant
-|     [
-|       set offense ["a" "a" "a"]
-|       set defense ["c" "b"]
-|       set mating  ["a" "a" "a"]
-|     ]
-|     if choice = 1  ; fly
-|     [
-|       set offense ["a" "a" "b"]
-|       set defense ["a" "a" "a"]
-|       set mating  ["b" "b" "b"]
-|     ]
-|     if choice = 2  ; caterpillar
-|     [
-|       set offense ["c"]
-|       set defense ["a" "a" "b"]
-|       set mating  ["c" "c" "c"]
-|     ]
-|  ]
+     create-turtles init-num-creatures
+     [
+       let choice random 3
+       if choice = 0  ; ant
+       [
+         set offense ["a" "a" "a"]
+         set defense ["c" "b"]
+         set mating  ["a" "a" "a"]
+       ]
+       if choice = 1  ; fly
+       [
+         set offense ["a" "a" "b"]
+         set defense ["a" "a" "a"]
+         set mating  ["b" "b" "b"]
+       ]
+       if choice = 2  ; caterpillar
+       [
+         set offense ["c"]
+         set defense ["a" "a" "b"]
+         set mating  ["c" "c" "c"]
+       ]
+     ]
 
 
-NETLOGO FEATURES
-----------------
-Tags are represented by lists of strings, so the code is heavily dependent on lists.  MAP, REDUCE, and FOREACH are used to do list processing.
+## NETLOGO FEATURES
 
+Tags are represented by lists of strings, so the code is heavily dependent on lists. `map`, `reduce`, and `foreach` are used to do list processing.
 
-RELATED MODELS
---------------
-Sample Models > Biology > Evolution > (entire section)
-Sample Models > Biology > Rabbits Grass Weeds
+## RELATED MODELS
+
+Sample Models > Biology > Evolution > (entire section)  
+Sample Models > Biology > Rabbits Grass Weeds  
 Sample Models > Biology > Wolf Sheep Predation
 
-
 ## CREDITS AND REFERENCES
-Holland, J. (1995). Hidden Order: How Adaptation Builds Complexity. Addison-Wesley, Reading, Massachusetts.
+
+Holland, J. (1995). _Hidden Order: How Adaptation Builds Complexity_. Addison-Wesley, Reading, Massachusetts.
 @#$#@#$#@
 default
 true
@@ -892,7 +883,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
