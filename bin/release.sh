@@ -74,6 +74,7 @@ if [ $WINDOWS -eq 1 ]; then
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "$IJDIR/jres/$VM.tar.gz not found"
     echo "You'll need to have Install4j installed. Seth has the license key."
+    echo "The Windows Edition is sufficient (Windows here refers to the target platform)."
     echo "as for the VM pack, you can grab it from http://ccl.northwestern.edu/devel/ using curl -O"
     echo "or if we don't have one for this Java version yet,"
     echo "you can make it from inside install4j, but only on a windows machine"
