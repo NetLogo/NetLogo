@@ -140,12 +140,6 @@ public class Renderer
     return new LinkRenderer(world, shapeRenderer);
   }
 
-  ShapeManager createShapeManager(GL gl, GLU glu, ShapeList turtleShapeList,
-                                  ShapeList linkShapeList,
-                                  Map<String, List<String>> customShapes) {
-    return new ShapeManager(gl, glu, turtleShapeList, linkShapeList, customShapes);
-  }
-
   public ExportRenderer createExportRenderer() {
     return new ExportRenderer2D(this);
   }
@@ -212,14 +206,9 @@ public class Renderer
 
     // Initalize ShapesManager
 
-    if (shapeManager == null) {
-      shapeManager = createShapeManager(gl, glu, world.turtleShapeList(),
-          world.linkShapeList(), null);
-    } else {
-      shapeManager = createShapeManager(gl, glu, world.turtleShapeList(), world.linkShapeList(),
-          shapeManager.customShapes);
-    }
-
+    shapeManager = new ShapeManager(gl, glu, world.turtleShapeList(), world.linkShapeList(),
+                                    shapeManager == null ? null : shapeManager.customShapes,
+                                    this instanceof Renderer3D);
     worldRenderer.init(gl, shapeManager);
     shapeRenderer.shapeManager_$eq(shapeManager);
 

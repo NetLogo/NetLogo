@@ -83,13 +83,6 @@ public class Renderer3D
   }
 
   @Override
-  ShapeManager createShapeManager(GL gl, GLU glu, org.nlogo.api.ShapeList turtleShapeList,
-                                  org.nlogo.api.ShapeList linkShapeList,
-                                  Map<String, List<String>> customShapes) {
-    return new ShapeManager3D(gl, glu, turtleShapeList, linkShapeList, customShapes);
-  }
-
-  @Override
   public ExportRenderer createExportRenderer() {
     return new ExportRenderer3D(this);
   }
