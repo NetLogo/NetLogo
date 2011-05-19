@@ -49,6 +49,7 @@ fi
 
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
   echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
+  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
   exit 1
 fi
 
