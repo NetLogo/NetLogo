@@ -3,7 +3,6 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Frame }
 import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, SwingConstants }
 import org.nlogo.awt.Utils.{ center, mustBeEventDispatchThread }
-import org.nlogo.util.Exceptions.ignoring
 
 object ModalProgressTask {
 
@@ -42,16 +41,17 @@ object ModalProgressTask {
   private class Boss(dialog: JDialog, r: Runnable)
   extends Thread("ModalProgressTask#Boss") {
     override def run() {
-      ignoring(classOf[InterruptedException]) {
-        try {
-          while (!dialog.isVisible)
-            Thread.sleep(50)
-          org.nlogo.awt.Utils.invokeAndWait(r)
-        }
-        finally {
-          dialog.setVisible(false)
-          dialog.dispose()
-        }
+      try {
+        while (!dialog.isVisible)
+        Thread.sleep(50)
+        org.nlogo.awt.Utils.invokeAndWait(r)
+      }
+      catch {
+        case _: InterruptedException => //ignore
+      }
+      finally {
+        dialog.setVisible(false)
+        dialog.dispose()
       }
     }
   }
