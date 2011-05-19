@@ -4,7 +4,7 @@ import java.util.{ List => JList, ArrayList }
 import javax.media.opengl.GL
 
 object Tessellator {
-  // see javax.media.opengl.glu.GLUtesselatorCallback
+  // see javax.media.opengl.glu.GLUtessellatorCallback
   class TessDataObject(val gl: GL) {
     var tyype: Int = _
     val shapeData: JList[AnyRef] = new ArrayList[AnyRef]

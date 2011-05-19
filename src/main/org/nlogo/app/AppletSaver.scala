@@ -53,8 +53,9 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
   }
 
   private def doSave(frame: java.awt.Frame, path: String) {
-    new org.nlogo.swing.ModalProgressTask(
-      frame, new Runnable() { def run() {
+    org.nlogo.swing.ModalProgressTask(
+      frame, "Saving...",
+      new Runnable() { def run() {
         try {
           FileIO.writeFile(path, buf.toString)
           org.nlogo.swing.OptionDialog.show(
@@ -69,7 +70,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
             javax.swing.JOptionPane.showMessageDialog(
               frame, ex.getMessage, I18N.gui.get("common.messages.error"),
               javax.swing.JOptionPane.ERROR_MESSAGE)
-        } } }, "Saving...")
+        } } } )
   }
 
   def buildClient(modelName: String, width: Int, height: Int) {

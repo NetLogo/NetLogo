@@ -12,7 +12,7 @@ import org.nlogo.api.{I18N, CompilerServices}
 
 /**
  * The HubNet client. 
- **/
+ */
 object ClientApp {
   private var localClientIndex = 0
 
@@ -123,7 +123,9 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   private def login(userid: String, hostip: String, port: Int) {
     val exs = Array[String](null)
-    new ModalProgressTask(Utils.getFrame(this), () => exs(0) = clientPanel.login(userid, hostip, port), "Entering...")
+    ModalProgressTask(
+      Utils.getFrame(this), "Entering...",
+      () => exs(0) = clientPanel.login(userid, hostip, port))
     if (exs(0) != null) {
       handleLoginFailure(exs(0))
       clientPanel.disconnect(exs(0).toString)

@@ -56,7 +56,7 @@ object ChecksumsAndPreviews {
     case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
         path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-      override def toString = List(path, worldSum, graphicsSum, revision).mkString("\t")
+      override def toString = List(path, worldSum, graphicsSum, revision).mkString(" - ")
     }
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
     def okPath(path: String) =
@@ -110,14 +110,14 @@ object ChecksumsAndPreviews {
         else "* Changed"
       m.put(model, newEntry)
       if(action != "Didn't change")
-        println(action + ": \"" + model + "\t" + newCheckSum 
-                + "\t" + newGraphicsChecksum + "\t" + revision + "\"")
+        println(action + ": \"" + model + " - " + newCheckSum 
+                + " - " + newGraphicsChecksum + " - " + revision + "\"")
     }
     def load(path: String): ChecksumMap = {
       val m = new ChecksumMap
       for(line <- io.Source.fromFile(path).getLines.map(_.trim))
         if(!line.startsWith("#") && !line.isEmpty) {
-          val strs = line.split("\t")
+          val strs = line.split(" - ")
           if(strs.size != 4)
             throw new IllegalStateException("bad line: " + line)
           m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3)))

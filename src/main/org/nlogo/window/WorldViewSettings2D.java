@@ -106,8 +106,8 @@ public strictfp class WorldViewSettings2D
       }
     };
     if (showProgress) {
-      new org.nlogo.swing.ModalProgressTask
-          (org.nlogo.awt.Utils.getFrame(gWidget), runnable, "Resizing...");
+      org.nlogo.swing.ModalProgressTask.apply(
+        org.nlogo.awt.Utils.getFrame(gWidget), "Resizing...", runnable);
     } else {
       runnable.run();
     }

@@ -354,18 +354,16 @@ strictfp class InterfacePanel
                   workspace.guessExportName("interface.png"));
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
-      new org.nlogo.swing.ModalProgressTask
-          (org.nlogo.awt.Utils.getFrame(this),
-              new Runnable() {
-                public void run() {
-                  try {
-                    workspace.exportInterface(exportPath);
-                  } catch (java.io.IOException ex) {
-                    exception[0] = ex;
-                  }
-                }
-              },
-              "Exporting...");
+      org.nlogo.swing.ModalProgressTask.apply(
+        org.nlogo.awt.Utils.getFrame(this),
+        "Exporting...",
+        new Runnable() {
+          public void run() {
+            try {
+              workspace.exportInterface(exportPath);
+            } catch (java.io.IOException ex) {
+              exception[0] = ex;
+            }}});
       if (exception[0] != null) {
         throw exception[0];
       }

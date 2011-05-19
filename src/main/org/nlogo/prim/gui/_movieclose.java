@@ -28,16 +28,16 @@ public final strictfp class _movieclose
                       "Must call MOVIE-START first");
             }
 
-            new org.nlogo.swing.ModalProgressTask
-                (((GUIWorkspace) workspace).getFrame(),
-                    new Runnable() {
-                      public void run() {
-                        ((GUIWorkspace) workspace)
-                            .movieEncoder.stop();
-                        ((GUIWorkspace) workspace).movieEncoder = null;
-                      }
-                    },
-                    "Exporting movie...");
+            org.nlogo.swing.ModalProgressTask.apply(
+              ((GUIWorkspace) workspace).getFrame(),
+              "Exporting movie...",
+              new Runnable() {
+                public void run() {
+                  ((GUIWorkspace) workspace)
+                    .movieEncoder.stop();
+                  ((GUIWorkspace) workspace).movieEncoder = null;
+                }
+              });
           }
         });
     context.ip = next;
