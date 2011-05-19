@@ -2,8 +2,7 @@ package org.nlogo.app
 
 import org.nlogo.api.{ModelReader, Shape, Version}
 import org.nlogo.workspace.AbstractWorkspaceScala
-
-import org.nlogo.util.JCL._
+import collection.JavaConverters._
 
 class ModelSaver(app: App) {
 
@@ -26,7 +25,7 @@ class ModelSaver(app: App) {
 
     // widgets
     section {
-      for(w <- app.tabs.interfaceTab.iP.getWidgetsForSaving)
+      for(w <- app.tabs.interfaceTab.iP.getWidgetsForSaving.asScala)
         buf ++= (w.save + "\n")
     }
 
@@ -37,7 +36,7 @@ class ModelSaver(app: App) {
     
     // turtle shapes
     section {
-      for(shape <- app.tabs.workspace.world.turtleShapeList().getShapes) {
+      for(shape <- app.tabs.workspace.world.turtleShapeList.getShapes.asScala) {
         buf ++= shape.asInstanceOf[Shape].toString
         buf ++= "\n\n"
       }
@@ -77,7 +76,7 @@ class ModelSaver(app: App) {
 
     //link shapes
     section {
-      for(shape <- app.tabs.workspace.world.linkShapeList().getShapes()) {
+      for(shape <- app.tabs.workspace.world.linkShapeList.getShapes.asScala) {
         buf ++= shape.asInstanceOf[Shape].toString
         buf ++= "\n\n"
       }
