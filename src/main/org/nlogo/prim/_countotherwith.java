@@ -4,6 +4,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -38,8 +39,8 @@ public final strictfp class _countotherwith
       Object value = freshContext.evaluateReporter(tester, reporterBlock);
       if (!(value instanceof Boolean)) {
         throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.$common.expectedBooleanValue",
-                new String[]{displayName(), Dump.logoObject(tester), Dump.logoObject(value)}));
+            (context, this, I18NJava.errors().getN("org.nlogo.prim.$common.expectedBooleanValue",
+                displayName(), Dump.logoObject(tester), Dump.logoObject(value)));
       }
       if (((Boolean) value).booleanValue()) {
         result++;

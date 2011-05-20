@@ -4,6 +4,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -33,8 +34,8 @@ public final strictfp class _anywith
       Object value = freshContext.evaluateReporter(tester, arg1);
       if (!(value instanceof Boolean)) {
         throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.$common.withExpectedBooleanValue",
-                new String[]{Dump.logoObject(tester), Dump.logoObject(value)}));
+            (context, this, I18NJava.errors().getN("org.nlogo.prim.$common.withExpectedBooleanValue",
+                Dump.logoObject(tester), Dump.logoObject(value)));
       }
       if (((Boolean) value).booleanValue()) {
         return true;

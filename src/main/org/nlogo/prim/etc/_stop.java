@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -31,9 +32,8 @@ public final strictfp class _stop
       // and not a reporter procedure.
       if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
           context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
-        throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._stop.notAllowedInsideToReport",
-                new String[]{displayName()}));
+        throw new EngineException(context, this,
+            I18NJava.errors().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
       context.stop();
     }
@@ -46,9 +46,8 @@ public final strictfp class _stop
     } else {
       if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
           context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
-        throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._stop.notAllowedInsideToReport",
-                new String[]{displayName()}));
+        throw new EngineException(context, this,
+            I18NJava.errors().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
       workspace.profilingTracer().closeCallRecord(context, context.activation);
       context.stop();

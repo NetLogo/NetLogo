@@ -9,6 +9,7 @@ import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
@@ -50,7 +51,7 @@ public final strictfp class _breedon
       Turtle turtle = (Turtle) agentOrSet;
       if (turtle.id == -1) {
         throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
+          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
       }
       for (Turtle t : turtle.getPatchHere().turtlesHere()) {
         if (t.getBreed() == breed) {
@@ -132,7 +133,7 @@ public final strictfp class _breedon
       Turtle turtle = (Turtle) agent;
       if (turtle.id == -1) {
         throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
+          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
       }
       for (Turtle t : turtle.getPatchHere().turtlesHere()) {
         if (t.getBreed() == breed) {
@@ -162,7 +163,7 @@ public final strictfp class _breedon
     AgentSet breed = world.getBreed(breedName);
     if (turtle.id == -1) {
       throw new EngineException(context, this,
-        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
+        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
     for (Turtle t : turtle.getPatchHere().turtlesHere()) {
       if (t.getBreed() == breed) {

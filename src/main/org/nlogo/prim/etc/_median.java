@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -31,9 +32,8 @@ public final strictfp class _median
     }
     int listSize = list.size();
     if (listSize == badElts) {
-      throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers",
-              new String[]{Dump.logoObject(list)}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers", Dump.logoObject(list)));
     }
     Collections.sort(nums);
     int medianPos = (listSize - badElts) / 2;

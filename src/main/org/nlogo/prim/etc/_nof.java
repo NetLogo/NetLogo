@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -20,17 +21,15 @@ public final strictfp class _nof
       throws LogoException {
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
-      throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
-              new String[]{displayName()}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (n > list.size()) {
-        throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.requestMoreItemsThanInList",
-                new String[]{new Integer(n).toString(), new Integer(list.size()).toString()}));
+        throw new EngineException(context, this,
+            I18NJava.errors().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
       }
       if (n == list.size()) {
         return list;
@@ -42,9 +41,8 @@ public final strictfp class _nof
       // on some turtlesets - ST 11/5/03
       int count = agents.count();
       if (n > count) {
-        throw new EngineException
-            (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist",
-                new String[]{new Integer(n).toString(), new Integer(count).toString()}));
+        throw new EngineException(context, this,
+            I18NJava.errors().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
       }
       return agents.randomSubset(n, count, context.job.random);
     } else {

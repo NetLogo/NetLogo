@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -31,16 +32,14 @@ public final strictfp class _minnofwithties
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     int n = argEvalIntValue(context, 1);
     if (n < 0) {
-      throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
-              new String[]{displayName()}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     AgentSet sourceSet = argEvalAgentSet(context, 0);
     int count = sourceSet.count();
     if (n > count) {
-      throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.notThatManyAgentsExist",
-              new String[]{Integer.toString(n), Integer.toString(count)}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
     }
     args[2].checkAgentSetClass(sourceSet, context);
     TreeMap<Object, LinkedList<Agent>> resultAgents =

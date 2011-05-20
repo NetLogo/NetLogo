@@ -3,6 +3,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.EngineException;
@@ -24,7 +25,7 @@ public final strictfp class _linkbreedvariableof
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
+          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getLinkBreedVariable(name);

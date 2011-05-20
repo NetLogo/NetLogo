@@ -3,6 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -46,7 +47,6 @@ public final strictfp class _otherend
     }
 
     throw new EngineException(context, this,
-        I18N.errors().getNJava("org.nlogo.prim.etc._otherend.incorrectLink",
-            new String[]{node.toString(), link.toString()}));
+        I18NJava.errors().getN("org.nlogo.prim.etc._otherend.incorrectLink", node.toString(), link.toString()));
   }
 }

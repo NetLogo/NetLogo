@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -22,8 +23,8 @@ public final strictfp class _sqrt extends Reporter implements Pure {
 
   public double report_1(Context context, double arg0) throws LogoException {
     if (arg0 < 0) {
-      throw new EngineException(context, this, I18N.errors().getNJava("org.nlogo.prim.etc._sqrt.squareRootIsImaginary",
-          new String[]{new Double(arg0).toString()}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc._sqrt.squareRootIsImaginary", arg0));
     }
     return StrictMath.sqrt(arg0);
   }

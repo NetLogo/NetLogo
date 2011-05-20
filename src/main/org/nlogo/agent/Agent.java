@@ -5,6 +5,7 @@ import java.util.Observable;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.ValueConstraint;
@@ -118,8 +119,8 @@ public abstract strictfp class Agent
 
   void wrongTypeForVariable(String name, Class<?> expectedClass, Object value)
       throws AgentException {
-    throw new AgentException(I18N.errors().getNJava("org.nlogo.agent.Agent.wrongTypeOnSetError",
-        new String[]{classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)}));
+    throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
+        classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)));
   }
 
   void validRGBList(LogoList rgb, boolean allowAlpha)

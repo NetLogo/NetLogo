@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -30,14 +31,13 @@ public final strictfp class _report
       throw NonLocalExit$.MODULE$;
     } else if (context.activation.procedure.tyype != Procedure.Type.REPORTER) {
       throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.prim._report.canOnlyUseInToReport", new String[]{displayName()}));
+          I18NJava.errors().getN("org.nlogo.prim._report.canOnlyUseInToReport", displayName()));
     } else if (!context.atTopActivation()) {
       // you can't report from inside an ask.  you can't write code like
       //   to-report foo ask turtle 0 [ report 5 ] end
       // maybe you should be able to, but at least for now, you can't
       throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.prim._report.mustImmediatelyBeUsedInToReport",
-              new String[]{displayName()}));
+          I18NJava.errors().getN("org.nlogo.prim._report.mustImmediatelyBeUsedInToReport", displayName()));
     }
   }
 }

@@ -5,6 +5,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
@@ -53,7 +54,7 @@ public final strictfp class _ask
       Agent agent = (Agent) target;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
+          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
       agentset.add(agent);
@@ -84,7 +85,7 @@ public final strictfp class _ask
       throws LogoException {
     if (agent.id == -1) {
       throw new EngineException(context, this,
-        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{agent.classDisplayName()}));
+        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     AgentSet agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
     agentset.add(agent);

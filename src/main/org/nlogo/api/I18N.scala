@@ -55,7 +55,8 @@ object I18N {
     def getBundle(locale:Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key:String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
     def get(key:String) = getN(key)
-    def getNJava(key:String, args:Array[String]) = getN(key, args:_*)
+    def getNJava(key:String, args:Array[Object]): String = getNJava(key, args.map(_.toString))
+    def getNJava(key:String, args:Array[String]): String = getN(key, args:_*)
     def getN(key:String, args: AnyRef*) = {
       def getFromBundle(bundle: ResourceBundle): Option[String] =
         try Some(bundle.getString(key)) catch { case m:MissingResourceException => None }

@@ -6,6 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -33,12 +34,12 @@ public final strictfp class _inradius
   public AgentSet report_1(final Context context, AgentSet sourceSet, double radius)
       throws LogoException {
     if (sourceSet.type() == org.nlogo.agent.Link.class) {
-      throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
+      throw new EngineException(context, this,
+          I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (radius < 0) {
-      throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc.$common.noNegativeRadius", new String[]{displayName()}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
     }
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, true);

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
@@ -299,8 +300,7 @@ public strictfp class Link
           if (value instanceof String) {
             String newShape = world.checkLinkShapeName((String) value);
             if (newShape == null) {
-              throw new AgentException
-                  (I18N.errors().getNJava("org.nlogo.agent.Agent.shapeUndefined", new String[]{(String) value}));
+              throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.shapeUndefined", value));
             }
             shape(newShape);
           } else {
@@ -407,9 +407,8 @@ public strictfp class Link
   void mustOwn(String name)
       throws AgentException {
     if (name != null && !world.linkBreedOwns(getBreed(), name)) {
-      throw new AgentException
-          (I18N.errors().getNJava("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
-              new String[]{getBreed().printName(), name}));
+      throw new AgentException(
+          I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
     }
   }
 

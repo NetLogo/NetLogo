@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 
 public strictfp class ImportPatchColors {
   public static void importPatchColors(org.nlogo.api.File imageFile, World world,
@@ -24,8 +25,8 @@ public strictfp class ImportPatchColors {
     // sometime we have to throw the exception ourselves,
     // because we just get back null. Booo.  -CLB
     if (image == null) {
-      throw new java.io.IOException(I18N.errors().getNJava(
-          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", new String[]{fileName}));
+      throw new java.io.IOException(I18NJava.errors().getN(
+          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", fileName));
     }
 
     doImport(image, world, asNetLogoColors);

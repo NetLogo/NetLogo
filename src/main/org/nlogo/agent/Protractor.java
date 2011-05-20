@@ -2,6 +2,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 
 public strictfp class Protractor
     implements org.nlogo.api.Protractor {
@@ -270,7 +271,7 @@ public strictfp class Protractor
       throws AgentException {
     if (fromX == toX && fromY == toY) {
       throw new AgentException
-          (I18N.errors().getNJava("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", new String[]{new Double(fromX).toString(), new Double(fromY).toString()}));
+          (I18NJava.errors().getN("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", fromX, fromY));
     }
     double dx = toX - fromX;
     double dy = toY - fromY;

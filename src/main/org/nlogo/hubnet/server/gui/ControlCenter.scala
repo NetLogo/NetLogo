@@ -69,12 +69,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   def addClient(clientId: String, remoteAddress: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     clientsPanel.addClientEntry(clientId)
-    messagePanel.logMessage( I18N.gui.getNJava("menu.tools.hubnetControlCenter.messagePanel.clientJoined" , Array(clientId, remoteAddress)) + "\n")
+    messagePanel.logMessage( I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientJoined" , clientId, remoteAddress) + "\n")
   }
 
   def clientDisconnect(clientId: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
-    messagePanel.logMessage(I18N.gui.getNJava("menu.tools.hubnetControlCenter.messagePanel.clientDisconnected" , Array(clientId)) + "\n")
+    messagePanel.logMessage(I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientDisconnected" , clientId) + "\n")
     clientsPanel.removeClientEntry(clientId)
   }
 

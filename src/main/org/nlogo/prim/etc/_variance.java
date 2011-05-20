@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -37,10 +38,8 @@ public final strictfp class _variance extends Reporter implements Pure {
       sum += ((Double) elt).doubleValue();
     }
     if (listSize - badElts < 2) {
-      throw new EngineException
-          (context, this,
-              I18N.errors().getNJava("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber",
-                  new String[]{Dump.logoObject(list)}));
+      throw new EngineException(context, this,
+          I18NJava.errors().getN("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber", Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);
     double squareOfDifference = 0;

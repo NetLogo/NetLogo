@@ -18,8 +18,7 @@ class _nvalues extends Reporter {
     val n = argEvalIntValue(context, 0)
     if (n < 0)
       throw new EngineException( context, this,
-        I18N.errors.getNJava("org.nlogo.prim.etc.$common.noNegativeNumber",
-          Array [String] (displayName)))
+        I18N.errors.getN("org.nlogo.prim.etc.$common.noNegativeNumber", displayName))
     // make the result list.
     val result = new LogoListBuilder
     val lambda = argEvalReporterLambda(context, 1)

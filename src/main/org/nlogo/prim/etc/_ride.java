@@ -2,6 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -22,7 +23,7 @@ public final strictfp class _ride
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id == -1) {
       throw new EngineException(context, this,
-        I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{turtle.classDisplayName()}));
+        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
     world.observer().setPerspective(Perspective.RIDE, turtle);
     world.observer().followDistance(0);

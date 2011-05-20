@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.EngineException;
@@ -18,17 +19,14 @@ public final strictfp class _sublist
     int size = list.size();
     if (start < 0) {
       throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._sublist.startIsLessThanZero",
-              new String[]{new Integer(start).toString()}));
+          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.startIsLessThanZero", start));
     } else if (stop < start) {
       throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._sublist.endIsLessThanStart",
-              new String[]{new Integer(stop).toString(), new Integer(start).toString()}));
+          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.endIsLessThanStart", stop, start));
 
     } else if (stop > size) {
       throw new EngineException
-          (context, this, I18N.errors().getNJava("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize",
-              new String[]{new Integer(stop).toString(), new Integer(size).toString()}));
+          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize", stop, size));
     }
     return list.logoSublist(start, stop);
   }

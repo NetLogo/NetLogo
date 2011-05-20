@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
@@ -265,8 +266,7 @@ public strictfp class Patch
           throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
 
         default:
-          throw new IllegalStateException(I18N.errors().getNJava("org.nlogo.agent.Agent.cantSetUnknownVariable",
-              new String[]{new Integer(vn).toString()}));
+          throw new IllegalStateException(I18NJava.errors().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
   }
@@ -280,8 +280,7 @@ public strictfp class Patch
       case VAR_PYCOR:
         throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
       default:
-        throw new IllegalArgumentException
-            (I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String[]{new Integer(vn).toString()}));
+        throw new IllegalArgumentException(I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -301,8 +300,8 @@ public strictfp class Patch
       case VAR_PYCOR:
         return pycor;
       default:
-        throw new IllegalArgumentException
-            (I18N.errors().getNJava("org.nlogo.agent.Agent.notADoubleVariable", new String[]{new Integer(vn).toString()}));
+        throw new IllegalArgumentException(
+            I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", Integer.toString(vn)));
     }
   }
 

@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -23,8 +24,7 @@ public final strictfp class _ln extends Reporter implements Pure {
   public double report_1(Context context, double d) throws LogoException {
     if (d <= 0) {
       throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.prim.etc.$common.cantTakeLogarithmOf",
-              new String[]{new Double(d).toString()}));
+          I18NJava.errors().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", d));
     }
     return validDouble(StrictMath.log(d));
   }

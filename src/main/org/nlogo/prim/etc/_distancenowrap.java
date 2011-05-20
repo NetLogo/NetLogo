@@ -2,6 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.api.I18N;
+import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -27,7 +28,7 @@ public final strictfp class _distancenowrap extends Reporter {
     }
     if (arg0.id == -1) {
       throw new EngineException(context, this,
-          I18N.errors().getNJava("org.nlogo.$common.thatAgentIsDead", new String[]{arg0.classDisplayName()}));
+          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", arg0.classDisplayName()));
     }
     return world.protractor().distance(context.agent, arg0, false); // false = don't wrap
   }
