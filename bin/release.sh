@@ -431,7 +431,7 @@ $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
 $FIND $COMPRESSEDVERSION/applet \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
-$RM -r $COMPRESSEDVERSION/applet/*/classes
+$RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
 
