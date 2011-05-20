@@ -198,49 +198,35 @@ public strictfp class Observer
 
   ///
 
-  double oxcor;
+  private double _oxcor;
+  public double oxcor() { return _oxcor; }
+  public void oxcor(double oxcor) { _oxcor = oxcor; }
 
-  public double oxcor() {
-    return oxcor;
-  }
+  private double _oycor;
+  public double oycor() { return _oycor; }
+  public void oycor(double oycor) { _oycor = oycor; }
 
-  public void oxcor(double oxcor) {
-    this.oxcor = oxcor;
-  }
+  private double _ozcor;
+  public double ozcor() { return _ozcor; }
+  public void ozcor(double ozcor) { _ozcor = ozcor; }
 
-  double oycor;
-
-  public double oycor() {
-    return oycor;
-  }
-
-  public void oycor(double oycor) {
-    this.oycor = oycor;
-  }
-
-  double ozcor;
-
-  public double ozcor() {
-    return ozcor;
-  }
-
-  public void ozcor(double ozcor) {
-    this.ozcor = ozcor;
+  public void oxyandzcor(double oxcor, double oycor, double ozcor) {
+    _oxcor = oxcor;
+    _oycor = oycor;
+    _ozcor = ozcor;
   }
 
   public double followOffsetX() {
     if (perspective == Perspective.FOLLOW || perspective == Perspective.RIDE) {
-      return oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
+      return _oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
     }
-
     return 0.0;
   }
 
   public double followOffsetY() {
     if (perspective == Perspective.FOLLOW || perspective == Perspective.RIDE) {
-      return oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
+      return _oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
     }
-
     return 0.0;
   }
 
@@ -277,9 +263,9 @@ public strictfp class Observer
   Vect rotationPoint;
 
   public double dist() {
-    return StrictMath.sqrt((rotationPoint.x() - oxcor) * (rotationPoint.x() - oxcor)
-        + (rotationPoint.y() - oycor) * (rotationPoint.y() - oycor)
-        + ((rotationPoint.z() - ozcor) * (rotationPoint.z() - ozcor)));
+    return StrictMath.sqrt((rotationPoint.x() - _oxcor) * (rotationPoint.x() - _oxcor)
+        + (rotationPoint.y() - _oycor) * (rotationPoint.y() - _oycor)
+        + ((rotationPoint.z() - _ozcor) * (rotationPoint.z() - _ozcor)));
   }
 
   public void setRotationPoint(Vect v) {
@@ -315,12 +301,6 @@ public strictfp class Observer
 
   public void followDistance(int followDistance) {
     this.followDistance = followDistance;
-  }
-
-  public void oxyandzcor(double oxcor, double oycor, double ozcor) {
-    this.oxcor = oxcor;
-    this.oycor = oycor;
-    this.ozcor = ozcor;
   }
 
   public void setOrientation(double heading, double pitch, double roll) {
@@ -452,7 +432,7 @@ public strictfp class Observer
       x = ((Turtle) agent).xcor();
       y = ((Turtle) agent).ycor();
     } else if (agent instanceof Link) {
-      return world.protractor().distance(agent, oxcor, oycor, true);
+      return world.protractor().distance(agent, _oxcor, _oycor, true);
     } else {
       x = ((Patch) agent).pxcor;
       y = ((Patch) agent).pycor;
@@ -467,9 +447,9 @@ public strictfp class Observer
   }
 
   double distance(double x, double y) {
-    return StrictMath.sqrt((x - oxcor) * (x - oxcor)
-        + (y - oycor) * (y - oycor)
-        + ozcor * ozcor);
+    return StrictMath.sqrt((x - _oxcor) * (x - _oxcor)
+        + (y - _oycor) * (y - _oycor)
+        + _ozcor * _ozcor);
   }
 
   public void resetPerspective() {
@@ -478,23 +458,23 @@ public strictfp class Observer
   }
 
   public void home() {
-    oxcor = world.minPxcor() + ((world.maxPxcor() - world.minPxcor()) / 2.0);
-    oycor = world.minPycor() + ((world.maxPycor() - world.minPycor()) / 2.0);
-    ozcor = StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5;
+    _oxcor = world.minPxcor() + ((world.maxPxcor() - world.minPxcor()) / 2.0);
+    _oycor = world.minPycor() + ((world.maxPycor() - world.minPycor()) / 2.0);
+    _ozcor = StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5;
     heading = 0;
     pitch = 90;
     roll = 0;
-    setRotationPoint(oxcor, oycor, 0);
+    setRotationPoint(_oxcor, _oycor, 0);
   }
 
   public boolean atHome2D() {
-    return (perspective == Perspective.OBSERVE) && (oxcor == 0) && (oycor == 0);
+    return (perspective == Perspective.OBSERVE) && (_oxcor == 0) && (_oycor == 0);
   }
 
   // This is a hack for now, there is prob. a better way of doing this - jrn 6/9/05
   public boolean atHome3D() {
-    return (perspective == Perspective.OBSERVE) && (oxcor == 0) && (oycor == 0) &&
-        (ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
+    return (perspective == Perspective.OBSERVE) && (_oxcor == 0) && (_oycor == 0) &&
+        (_ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
         (heading == 0) && (pitch == 90) && (roll == 0) &&
         (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
   }
@@ -544,7 +524,7 @@ public strictfp class Observer
     double x = -dxy * StrictMath.sin(StrictMath.toRadians(newHeading));
     double y = -dxy * StrictMath.cos(StrictMath.toRadians(newHeading));
 
-    oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), ozcor);
+    oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), _ozcor);
     heading(newHeading);
   }
 
@@ -569,10 +549,8 @@ public strictfp class Observer
     double sinH = StrictMath.sin(headingR);
     double cosH = StrictMath.cos(headingR);
 
-    oxcor -= ((cosH * thetaX + sinH * thetaY) * 0.1);
-
-
-    oycor += ((sinH * thetaX - cosH * thetaY) * 0.1);
+    _oxcor -= ((cosH * thetaX + sinH * thetaY) * 0.1);
+    _oycor += ((sinH * thetaX - cosH * thetaY) * 0.1);
 
     rotationPoint = new Vect(rotationPoint.x() - ((cosH * thetaX + sinH * thetaY) * 0.1),
         rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),

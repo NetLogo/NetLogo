@@ -35,11 +35,13 @@ class ShapeManager {
   final Map<String, GLLinkShape> linkShapes = new HashMap<String, GLLinkShape>();
   private final Tessellator tessellator = new Tessellator();
   final GLUtessellator tess;
+  private final boolean is3D;
 
   ShapeManager(GL gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList,
-               Map<String, List<String>> customShapes)
+               Map<String, List<String>> customShapes, boolean is3D)
 
   {
+    this.is3D = is3D;
     // tessellation for concave polygons in model shapes
     tess = glu.gluNewTess();
     glu.gluTessCallback(tess, GLU.GLU_TESS_BEGIN_DATA, tessellator);
@@ -202,13 +204,13 @@ class ShapeManager {
     }
   }
 
-  void addLinkShape(GL gl, GLU glu, org.nlogo.shape.LinkShape shape,
-                    int index) {
+  private void addLinkShape(GL gl, GLU glu, LinkShape shape, int index) {
     VectorShape vShape = (VectorShape) shape.getDirectionIndicator();
-    linkShapes.put(shape.getName(),
-        new GLLinkShape(shape, new GLShape(vShape.getName(), index,
-            vShape.isRotatable())));
-
+    GLLinkShape gShape =
+      is3D
+      ? new GLLinkShape3D(shape, new GLShape(vShape.getName(), index, vShape.isRotatable()))
+      : new GLLinkShape  (shape, new GLShape(vShape.getName(), index, vShape.isRotatable()));
+    linkShapes.put(shape.getName(), gShape);
     compileShape(gl, glu, vShape, index, vShape.isRotatable());
   }
 
@@ -254,7 +256,7 @@ class ShapeManager {
                 (org.nlogo.shape.Rectangle) element, rotatable);
       } else if (element instanceof org.nlogo.shape.Polygon) {
         Polygons.renderPolygon(gl, glu, tessellator, tess, i,
-          (org.nlogo.shape.Polygon) element, rotatable, this instanceof ShapeManager3D);
+          (org.nlogo.shape.Polygon) element, rotatable, is3D);
       } else if (element instanceof org.nlogo.shape.Circle) {
         renderCircle(gl, glu, i,
             (org.nlogo.shape.Circle) element, rotatable);
@@ -305,7 +307,7 @@ class ShapeManager {
   void renderRectangle(GL gl, float x0, float x1, float y0, float y1,
                        float z0, float z1, boolean filled, boolean rotatable) {
     Rectangle.renderRectangularPrism(gl, x0, x1, y0, y1,
-        z0, z1, filled, false, rotatable);
+        z0, z1, filled, is3D && rotatable, rotatable);
   }
 
   private void renderCircle(GL gl, GLU glu, int offset,
@@ -366,10 +368,15 @@ class ShapeManager {
     }
   }
 
-  void renderCircle(GL gl, GLU glu,
-                    float innerRadius, float outerRadius, float zDepth,
-                    boolean rotatable) {
+  private void renderCircle(GL gl, GLU glu,
+                            float innerRadius, float outerRadius, float zDepth,
+                            boolean rotatable) {
     glu.gluDisk(quadric, innerRadius, outerRadius, SMOOTHNESS, 1);
+    if(is3D && rotatable) {
+      gl.glRotatef(180f, 1f, 0f, 0f);
+      gl.glTranslatef(0f, 0f, zDepth * 2);
+      glu.gluDisk(quadric, innerRadius, outerRadius, SMOOTHNESS, 1);
+    }
   }
 
   private void renderLine(GL gl, int offset, org.nlogo.shape.Line line) {
