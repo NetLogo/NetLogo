@@ -11,7 +11,7 @@ public class I18NJava {
   }
 
   static public class BundleKindWrapper {
-    private I18N.BundleKind bk;
+    private final I18N.BundleKind bk;
     public BundleKindWrapper(I18N.BundleKind bk){
       this.bk = bk;
     }
