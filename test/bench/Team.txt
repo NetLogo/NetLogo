@@ -460,10 +460,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
@@ -474,7 +474,7 @@ procedure GO:[]{O---}:
           ALOAD 3
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -1051,16 +1051,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+              INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
               LDC "org.nlogo.$common.thatAgentIsDead"
               ICONST_1
-              ANEWARRAY java/lang/String
+              ANEWARRAY java/lang/Object
               DUP
               ICONST_0
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L0
@@ -1115,16 +1115,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+              INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
               LDC "org.nlogo.$common.thatAgentIsDead"
               ICONST_1
-              ANEWARRAY java/lang/String
+              ANEWARRAY java/lang/Object
               DUP
               ICONST_0
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L5
@@ -1218,10 +1218,10 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "WITH"
@@ -1236,7 +1236,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -1387,16 +1387,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
@@ -1451,16 +1451,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -1579,16 +1579,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L0
@@ -1643,16 +1643,16 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -1938,10 +1938,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterorequal.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           DLOAD 2
@@ -1953,7 +1953,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 4
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2185,10 +2185,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 DUP
                 ALOAD 1
                 ALOAD 0
-                INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+                INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
                 LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
                 ICONST_2
-                ANEWARRAY java/lang/String
+                ANEWARRAY java/lang/Object
                 DUP
                 ICONST_0
                 ALOAD 6
@@ -2199,7 +2199,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 ALOAD 7
                 INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
                 AASTORE
-                INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L14
@@ -2263,10 +2263,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           DLOAD 2
@@ -2278,7 +2278,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 4
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2324,10 +2324,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 6
@@ -2338,7 +2338,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 7
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -2511,10 +2511,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 DUP
                 ALOAD 1
                 ALOAD 0
-                INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+                INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
                 LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
                 ICONST_2
-                ANEWARRAY java/lang/String
+                ANEWARRAY java/lang/Object
                 DUP
                 ICONST_0
                 ALOAD 6
@@ -2525,7 +2525,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 ALOAD 7
                 INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
                 AASTORE
-                INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+                INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L16
@@ -2596,10 +2596,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "WITH"
@@ -2614,7 +2614,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -2784,10 +2784,10 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "WITH"
@@ -2802,7 +2802,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -2926,16 +2926,16 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -4085,15 +4085,15 @@ procedure EXPLORE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.etc._stop.notAllowedInsideToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -4499,10 +4499,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "COUNT"
@@ -4517,7 +4517,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -4759,10 +4759,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "COUNT"
@@ -4777,7 +4777,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -5019,10 +5019,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "COUNT"
@@ -5037,7 +5037,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -5279,10 +5279,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "COUNT"
@@ -5297,7 +5297,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -5572,10 +5572,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+            INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
             LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
             ICONST_2
-            ANEWARRAY java/lang/String
+            ANEWARRAY java/lang/Object
             DUP
             ICONST_0
             ALOAD 6
@@ -5586,7 +5586,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             ALOAD 6
             INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L7
@@ -5692,10 +5692,10 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "WITH"
@@ -5710,7 +5710,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -5858,10 +5858,10 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+            INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
             LDC "org.nlogo.prim.$common.expectedBooleanValue"
             ICONST_3
-            ANEWARRAY java/lang/String
+            ANEWARRAY java/lang/Object
             DUP
             ICONST_0
             LDC "OTHER"
@@ -5876,7 +5876,7 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             ALOAD 8
             INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+            INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L5
@@ -6253,10 +6253,10 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.$common.expectedBooleanValue"
           ICONST_3
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "WITH"
@@ -6271,7 +6271,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 8
           INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -6408,15 +6408,15 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.etc._stop.notAllowedInsideToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -6521,16 +6521,16 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -6682,10 +6682,10 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
@@ -6696,7 +6696,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 3
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6

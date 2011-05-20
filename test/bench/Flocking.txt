@@ -204,15 +204,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -223,15 +223,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
@@ -334,10 +334,10 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
@@ -348,7 +348,7 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 3
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -469,15 +469,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -488,15 +488,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -613,15 +613,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -632,15 +632,15 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -983,10 +983,10 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 6
@@ -997,7 +997,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -1059,10 +1059,10 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 6
@@ -1073,7 +1073,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -1186,15 +1186,15 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L25
@@ -1205,15 +1205,15 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
@@ -1538,16 +1538,16 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               DUP
               ALOAD 1
               ALOAD 0
-              INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+              INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
               LDC "org.nlogo.$common.thatAgentIsDead"
               ICONST_1
-              ANEWARRAY java/lang/String
+              ANEWARRAY java/lang/Object
               DUP
               ICONST_0
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+              INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L5
@@ -1841,27 +1841,21 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.etc._setxy.pointOutsideWorld"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
-          NEW java/lang/Double
-          DUP
           DLOAD 2
-          INVOKESPECIAL java/lang/Double.<init> (D)V
-          INVOKEVIRTUAL java/lang/Double.toString ()Ljava/lang/String;
+          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           AASTORE
           DUP
           ICONST_1
-          NEW java/lang/Double
-          DUP
           DLOAD 4
-          INVOKESPECIAL java/lang/Double.<init> (D)V
-          INVOKEVIRTUAL java/lang/Double.toString ()Ljava/lang/String;
+          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -1983,10 +1977,10 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           DLOAD 2
@@ -1998,7 +1992,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -2049,10 +2043,10 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
@@ -2064,7 +2058,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -2343,16 +2337,16 @@ procedure SEPARATE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -2590,10 +2584,10 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 6
@@ -2604,7 +2598,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -2666,10 +2660,10 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 6
@@ -2680,7 +2674,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 6
           INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -2793,15 +2787,15 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.canOnlyUseInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L25
@@ -2812,15 +2806,15 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._report.mustImmediatelyBeUsedInToReport"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L26
@@ -3002,16 +2996,16 @@ procedure FLOCK:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.$common.thatAgentIsDead"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -3051,10 +3045,10 @@ procedure FLOCK:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
           ICONST_2
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           DLOAD 2
@@ -3066,7 +3060,7 @@ procedure FLOCK:[]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L14
@@ -3336,15 +3330,15 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errors ()Lorg/nlogo/api/I18N$Errors$;
+          INVOKESTATIC org/nlogo/api/I18NJava.errors ()Lorg/nlogo/api/I18NJava$BundleKindWrapper;
           LDC "org.nlogo.prim.etc.$common.noNegativeRadius"
           ICONST_1
-          ANEWARRAY java/lang/String
+          ANEWARRAY java/lang/Object
           DUP
           ICONST_0
           LDC "IN-RADIUS"
           AASTORE
-          INVOKEVIRTUAL org/nlogo/api/I18N$Errors$.getNJava (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18NJava$BundleKindWrapper.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L10
