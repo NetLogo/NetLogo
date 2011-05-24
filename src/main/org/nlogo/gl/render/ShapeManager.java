@@ -21,9 +21,9 @@ import org.nlogo.shape.VectorShape;
 // wireframe code in a diff. class? - ST 3/3/05
 
 class ShapeManager {
-  public static final int SMOOTHNESS = 16;
+  static final int SMOOTHNESS = 16;
 
-  GLUquadric quadric;
+  private final GLUquadric quadric;
   private int lastList;
   private final Map<String, GLShape> shapes = new HashMap<String, GLShape>();
   private final List<AddShapeRequest> queue = new LinkedList<AddShapeRequest>();
@@ -32,9 +32,9 @@ class ShapeManager {
   private final ShapeList turtleShapeList;
   private final ShapeList linkShapeList;
   private final Map<String, GLShape> modelShapes = new HashMap<String, GLShape>();
-  final Map<String, GLLinkShape> linkShapes = new HashMap<String, GLLinkShape>();
+  private final Map<String, GLLinkShape> linkShapes = new HashMap<String, GLLinkShape>();
   private final Tessellator tessellator = new Tessellator();
-  final GLUtessellator tess;
+  private final GLUtessellator tess;
   private final boolean is3D;
 
   ShapeManager(GL gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList,
@@ -136,7 +136,7 @@ class ShapeManager {
     }
   }
 
-  private boolean isVertex(String line)
+  private static boolean isVertex(String line)
       throws InvalidShapeDescriptionException {
     String[] floats = line.split(" ");
     if (floats.length != 3) {

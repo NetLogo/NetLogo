@@ -204,7 +204,7 @@ public class Renderer
     gl.glCullFace(GL.GL_BACK);
     gl.glEnable(GL.GL_CULL_FACE);
 
-    // Initalize ShapesManager
+    // Initialize ShapesManager
 
     shapeManager = new ShapeManager(gl, glu, world.turtleShapeList(), world.linkShapeList(),
                                     shapeManager == null ? null : shapeManager.customShapes,

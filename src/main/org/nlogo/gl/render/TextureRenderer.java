@@ -21,7 +21,7 @@ class TextureRenderer {
   }
 
   // as I've been commenting I realize it may have been easier to just have different cases
-  // for different tile arrangments rather than this massive crazy generalized method.
+  // for different tile arrangements rather than this massive crazy generalized method.
   // oh well.  ev 6/3/05
   void renderTextureTiles(GL gl, int width, int height, int textureSize,
                           int[] colors, boolean dirty) {
