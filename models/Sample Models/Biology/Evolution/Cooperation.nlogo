@@ -120,6 +120,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 218
@@ -136,6 +137,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 38
@@ -152,6 +154,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 7
@@ -380,20 +383,18 @@ count cooperative-cows
 14
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This model (and Altruism and Divide the Cake) are part of the EACH unit ("Evolution of Altruistic and Cooperative Habits: Learning About Complexity in Evolution").  See http://ccl.northwestern.edu/cm/EACH/ for more information on the EACH unit. The EACH unit is embedded within the BEAGLE (Biological Experiments in Adaptation, Genetics, Learning and Evolution) evolution curriculum. (See http://ccl.northwestern.edu/curriculum/simevolution/beagle.shtml).
+## WHAT IS IT?
+
+This model (and Altruism and Divide the Cake) are part of the EACH unit ("Evolution of Altruistic and Cooperative Habits: Learning About Complexity in Evolution").  See http://ccl.northwestern.edu/cm/EACH/ for more information on the EACH unit. The EACH unit is embedded within the BEAGLE (Biological Experiments in Adaptation, Genetics, Learning and Evolution) evolution curriculum. (See http://ccl.northwestern.edu/curriculum/simevolution/beagle.shtml .)
 
 This is an evolutionary biology model.  In it, agents (cows) compete for natural resources (grass).  Cows that are more successful in getting grass reproduce more often, and will thus be more evolutionarily successful.  This model includes two kinds of cows, greedy and cooperative.  It shows how these two different strategies do when competing against each other within a population that evolves over time.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Every turn, each cow looks at the patch that it is currently on, and eats a unit of grass.  The greedy cows eat the grass regardless of the length of the grass on the current patch.  The cooperative cows won't eat the grass below a certain height.  This behavior is significant because below a certain height (called the "growth threshold"), the grass grows at a far slower rate than above it.  Thus, the cooperative agents leave more food for the overall population at a cost to their individual well-being, while the greedy agents eat the grass down to the nub, regardless of the effect on the overall population.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 GO: Starts and stops the model.
 
 SETUP: Resets the simulation according to the parameters set by the sliders.
@@ -420,14 +421,12 @@ MAX-GRASS-HEIGHT:  This value sets the highest length to which the grass can gro
 
 LOW-HIGH-THRESHOLD:  This value sets the grass growth threshold.  At, or above this value, the grass grows back with HIGH-GROWTH-CHANCE.  Below this value, the grass grows back with LOW-GROWTH-CHANCE.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Run the model with the default settings.  Watch the different growth curves on the population plot.  Which population expands first?  Which population wins in the end?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Slowly decrease the STRIDE-LENGTH slider. What happens to the populations?
 
 At what value of STRIDE-LENGTH do the populations' growth rates change dramatically?  What does this indicate about the evolutionary advantages of cooperating versus being greedy?  What are the important environmental factors?
@@ -440,27 +439,24 @@ How does the LOW-HIGH-THRESHOLD value affect the growth of the populations?
 
 Can you find settings that maximize the advantage of the cooperative cows?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 This model explores only one type of cooperative behavior, namely eating the grass above the growth threshold (the LOW-HIGH-THRESHOLD value).  What other cooperative, or altruistic, behaviors could be modeled that hurt individual fitness, while helping the group overall?  What environmental conditions other than grass length could be used to affect the health of a population?
 
 This model relies primarily upon population "viscosity" (the STRIDE-LENGTH slider) to alter the behavior of the cows to allow for the success of the cooperative agents.  What other variables could have such a drastic effect on the evolutionary success of populations?
 
 Also, consider that in this model the behaviors are fixed.  What would happen if the agents learned, or changed their behavior based on food availability?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Breeds are used to represent the two different kinds of agents.  The TURTLES primitive is used to refer to both breeds together.
+Breeds are used to represent the two different kinds of agents.  The `turtles` primitive is used to refer to both breeds together.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Altruism
 
-
 ## CREDITS AND REFERENCES
+
 This model and the Altruism model are part of the EACH unit "Evolution of Altruistic and Cooperative Habits: Learning About Complexity in Evolution".  See http://ccl.northwestern.edu/cm/EACH/ for more information. EACH is embedded with the BEAGLE (Biological Experiments in Adaptation, Genetics, Learning and Evolution) evolution curriculum. See http://ccl.northwestern.edu/curriculum/simevolution/beagle.shtml .
 
 Thanks to Damon Centola, Eamon McKenzie, Josh Mitteldorf, and Scott Styles.
@@ -748,7 +744,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
