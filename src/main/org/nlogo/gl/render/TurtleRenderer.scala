@@ -25,8 +25,8 @@ extends AgentRenderer(world, shapeRenderer) {
     if (world.turtles == null)
       return
     for(turtle <- world.turtles.agents.map(_.asInstanceOf[Turtle]))
-      if (world.observer.perspective != Perspective.RIDE || 
-          (world.observer.targetAgent != turtle && !turtle.hidden))
+      if ((world.observer.perspective != Perspective.RIDE || world.observer.targetAgent != turtle)
+          && !turtle.hidden)
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)
   }
 
