@@ -4,7 +4,7 @@ import org.nlogo.api.Editable
 import org.nlogo.api.I18N
 import org.nlogo.window.{Events, Widget, InterfaceGlobalWidget}
 
-class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
+class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget 
   with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
 
   override def classDisplayName= I18N.gui.get("tabs.run.widgets.switch")
@@ -13,34 +13,34 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   def valueObject: AnyRef = constraint.defaultValue
   def valueObject(value: AnyRef) {
     if (value.isInstanceOf[Boolean]) {
-      isOn(value.asInstanceOf[Boolean])
+      isOn = value.asInstanceOf[Boolean]
     }
   }
 
-  def nameWrapper = name()
+  def nameWrapper = this._name
   def nameWrapper(newName: String) {
-    nameChanged = newName != name() || nameChanged
+    nameChanged = newName != this._name || nameChanged
     name(newName, false)
   }
 
   override def editFinished(): Boolean = {
     super.editFinished()
-    name(name(), nameChanged)
+    name(this._name, nameChanged)
     updateConstraints()
     nameChanged = false
     true
   }
 
   def name(newName: String, sendEvent: Boolean) {
-    super.name(newName)
+    super.name = newName
     if (sendEvent) {
       new Events.InterfaceGlobalEvent(this, true, true, false, false).raise(this)
     }
   }
 
-  override def isOn(on: Boolean) {
+  override def isOn_=(on: Boolean) {
     if (on != super.isOn) {
-      super.isOn(on)
+      super.isOn = on
       new Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
@@ -55,7 +55,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     s.append(getBoundsString)
     if ((null != displayName) && (!displayName.trim.equals(""))) s.append(displayName + "\n")
     else s.append("NIL\n")
-    if ((null != name()) && (!name().trim.equals(""))) s.append(name() + "\n")
+    if ((null != this._name) && (!this._name.trim.equals(""))) s.append(this._name + "\n")
     else s.append("NIL\n")
     if (isOn) s.append(0 + "\n")
     else s.append(1 + "\n")
@@ -66,7 +66,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
 
   def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef = {
     name(org.nlogo.api.File.restoreLines(strings(6)), true)
-    isOn(strings(7).toDouble == 0)
+    isOn = strings(7).toDouble == 0
     val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
     setSize(x2 - x1, y2 - y1)
     this
