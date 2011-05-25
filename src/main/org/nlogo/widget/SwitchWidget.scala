@@ -1,137 +1,76 @@
-package org.nlogo.widget;
+package org.nlogo.widget
 
-import java.util.ArrayList;
-import java.util.List;
+import org.nlogo.api.Editable
+import org.nlogo.api.I18N
+import org.nlogo.window.{Events, Widget, InterfaceGlobalWidget}
 
-import org.nlogo.api.Editable;
-import org.nlogo.api.I18N;
-import org.nlogo.api.Property;
-import org.nlogo.window.Widget;
-import org.nlogo.window.InterfaceGlobalWidget;
+class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
+  with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
 
-public strictfp class SwitchWidget
-    extends Switch
-    implements Editable, InterfaceGlobalWidget,
-    org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
+  override def classDisplayName= I18N.gui.get("tabs.run.widgets.switch")
+  override def propertySet = Properties.swiitch
 
-  @Override
-  public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.switch");
-  }
-
-  public List<Property> propertySet() {
-    return Properties.swiitch();
-  }
-
-  public Object valueObject() {
-    return constraint.defaultValue();
-  }
-
-  public void valueObject(Object value) {
-    if (value instanceof Boolean) {
-      isOn(((Boolean) value).booleanValue());
+  def valueObject: AnyRef = constraint.defaultValue
+  def valueObject(value: AnyRef) {
+    if (value.isInstanceOf[Boolean]) {
+      isOn(value.asInstanceOf[Boolean])
     }
   }
 
-  public String nameWrapper() {
-    return name();
+  def nameWrapper = name()
+  def nameWrapper(newName: String) {
+    nameChanged = newName != name() || nameChanged
+    name(newName, false)
   }
 
-  public void nameWrapper(String name) {
-    nameChanged = !name.equals(name()) || nameChanged;
-    // don't send an InterfaceGlobalEvent, wait until editFinished() for that, we don't
-    // want to recompile yet
-    name(name, false);
+  override def editFinished(): Boolean = {
+    super.editFinished()
+    name(name(), nameChanged)
+    updateConstraints()
+    nameChanged = false
+    true
   }
 
-  @Override
-  public boolean editFinished() {
-    super.editFinished();
-    name(name(), nameChanged);
-    updateConstraints();
-    nameChanged = false;
-    return true;
-  }
-
-
-  // don't send an event unless the name of the variable
-  // defined changes, which is the only case in which we
-  // want a recompile. ev 6/15/05
-  @Override
-  public String name() {
-    return name;
-  }
-
-  public void name(String name, boolean sendEvent) {
-    super.name(name);
-
+  def name(newName: String, sendEvent: Boolean) {
+    super.name(newName)
     if (sendEvent) {
-      new org.nlogo.window.Events.InterfaceGlobalEvent
-          (this, true, true, false, false)
-          .raise(this);
+      new Events.InterfaceGlobalEvent(this, true, true, false, false).raise(this)
     }
   }
 
-  @Override
-  public void isOn(boolean on) {
-    if (on != isOn()) {
-      super.isOn(on);
-      new org.nlogo.window.Events.InterfaceGlobalEvent
-          (this, false, false, true, false)
-          .raise(this);
+  override def isOn(on: Boolean) {
+    if (on != super.isOn) {
+      super.isOn(on)
+      new Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
 
-  public void handle(org.nlogo.window.Events.PeriodicUpdateEvent e) {
-    new org.nlogo.window.Events.InterfaceGlobalEvent
-        (this, false, true, false, false)
-        .raise(this);
+  def handle(e: Events.PeriodicUpdateEvent) {
+    new Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
   }
 
-  @Override
-  public String save() {
-    StringBuilder s = new StringBuilder();
-    s.append("SWITCH\n");
-    s.append(getBoundsString());
-    if ((null != displayName()) && (!displayName().trim().equals(""))) {
-      s.append(displayName() + "\n");
-    } else {
-      s.append("NIL\n");
-    }
-    if ((null != name()) && (!name().trim().equals(""))) {
-      s.append(name() + "\n");
-    } else {
-      s.append("NIL\n");
-    }
-
-    if (isOn()) {
-      s.append(0 + "\n");
-    } else {
-      s.append(1 + "\n");
-    }
-
-    s.append(1 + "\n");  // for compatibility
-    s.append(-1000 + "\n"); // for compatibility
-
-    return s.toString();
+  def save: String = {
+    val s: StringBuilder = new StringBuilder
+    s.append("SWITCH\n")
+    s.append(getBoundsString)
+    if ((null != displayName) && (!displayName.trim.equals(""))) s.append(displayName + "\n")
+    else s.append("NIL\n")
+    if ((null != name()) && (!name().trim.equals(""))) s.append(name() + "\n")
+    else s.append("NIL\n")
+    if (isOn) s.append(0 + "\n")
+    else s.append(1 + "\n")
+    s.append(1 + "\n")
+    s.append(-1000 + "\n")
+    s.toString
   }
 
-  @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    name(org.nlogo.api.File.restoreLines(strings[6]), true);
-    isOn(Double.valueOf(strings[7]).doubleValue() == 0);
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
-    setSize(x2 - x1, y2 - y1);
-    return this;
+  def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef = {
+    name(org.nlogo.api.File.restoreLines(strings(6)), true)
+    isOn(strings(7).toDouble == 0)
+    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
+    setSize(x2 - x1, y2 - y1)
+    this
   }
 
-
-  public void handle(org.nlogo.window.Events.AfterLoadEvent e) {
-    updateConstraints();
-  }
-
-
+  def handle(e: Events.AfterLoadEvent) { updateConstraints() }
 }
