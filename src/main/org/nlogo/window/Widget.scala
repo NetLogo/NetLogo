@@ -52,7 +52,7 @@ abstract class Widget extends JPanel {
   def zoomSubcomponents = false
   def getDefaultExportName = "output.txt"
   def export(exportPath: String): Unit = {}
-  def updateConstraints: Unit = {}
+  def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
   def addExtraMenuItems(menu:JPopupMenu): Unit = {
     for(i<-extraMenuItems) menu.add(i)

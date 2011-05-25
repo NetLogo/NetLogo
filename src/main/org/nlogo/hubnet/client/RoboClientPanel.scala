@@ -74,8 +74,8 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
             (s.nameWrapper, Some(s.value))
           case b: ButtonWidget => (widget.displayName, Some(if(b.foreverOn) true else false))
           case s: SwitchWidget =>
-            s.isOn(!s.isOn())
-            (widget.displayName, Some(s.isOn()))
+            s.isOn = !s.isOn
+            (widget.displayName, Some(s.isOn))
           case _ => ("", None)
         }
         // need to check if we are still connected since we could
