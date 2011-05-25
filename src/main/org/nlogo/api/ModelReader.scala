@@ -1,6 +1,7 @@
 package org.nlogo.api
 
-import org.nlogo.util.{JCL,Utils}
+import org.nlogo.util.Utils
+import collection.JavaConverters._
 
 object ModelReader {
 
@@ -9,8 +10,7 @@ object ModelReader {
   val SEPARATOR = "@#$#@#$#@"
 
   val sections =
-    JCL.iterableToScalaIterable(
-      java.util.EnumSet.allOf(classOf[ModelSection]))
+    java.util.EnumSet.allOf(classOf[ModelSection]).asScala
 
   lazy val defaultShapes =
     Utils.getResourceAsStringArray("/system/defaultShapes.txt")
@@ -37,7 +37,7 @@ object ModelReader {
       else
         sectionContents += line
     sectionDone()
-    JCL.toJavaMap(map)
+    map.asJava
   }
   
   def parseVersion(map: ModelMap): String =
@@ -56,7 +56,7 @@ object ModelReader {
       }
     if(!widget.isEmpty)
       widgets += widget.toList
-    JCL.toJavaList(widgets.map(JCL.toJavaList(_)))
+    widgets.map(_.asJava).asJava
   }
 
 }

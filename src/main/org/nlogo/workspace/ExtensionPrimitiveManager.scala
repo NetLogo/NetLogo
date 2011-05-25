@@ -1,7 +1,6 @@
 package org.nlogo.workspace
 
 import org.nlogo.api.Primitive
-import org.nlogo.util.JCL._
 
 class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.PrimitiveManager {
   private val importedPrimitives = collection.mutable.HashMap[String, Primitive]()
@@ -12,8 +11,10 @@ class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.Primitiv
   /**
    * Returns the names of all imported primitives. 
    */
-  def getPrimitiveNames(): java.util.Iterator[String] =
-   importedPrimitives.keySet.iterator
+  def getPrimitiveNames(): java.util.Iterator[String] = {
+    import collection.JavaConverters._
+    importedPrimitives.keySet.iterator.asJava
+  }
   /**
    * Returns the primitive associated with a name.
    * @param name  the name of the primitive

@@ -1,9 +1,9 @@
 package org.nlogo.agent
 
 import org.scalatest.FunSuite
-import org.nlogo.util.JCL._
 import util.Random
 import org.nlogo.util.WorldType
+import collection.JavaConverters._
 
 class VertCylinderTests extends FunSuite {
 
@@ -13,7 +13,8 @@ class VertCylinderTests extends FunSuite {
     test("diffuse, worldType: " + worldType + ", worldSize: " + (x,y)){
       val world = new World
       world.createPatches(-x, x, -y, y)
-      world.patches.agents.foreach{ a => a.setVariable(Patch.VAR_PLABEL, random.nextInt(100).toDouble) }
+      for(a <- world.patches.agents.asScala)
+        a.setVariable(Patch.VAR_PLABEL, random.nextInt(100).toDouble)
       world.diffuse(0.5, Patch.VAR_PLABEL)
     }
   }

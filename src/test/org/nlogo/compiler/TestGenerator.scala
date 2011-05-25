@@ -3,11 +3,13 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program, Version }
 import org.nlogo.nvm.Procedure
-import org.nlogo.util.JCL._
 
 class TestGenerator extends FunSuite {
 
-  val program = new Program(toJavaList(List("glob1")), false)
+  val program = {
+    import collection.JavaConverters._
+    new Program(List("glob1").asJava, false)
+  }
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")
   def compile(source: String, preamble: String) =

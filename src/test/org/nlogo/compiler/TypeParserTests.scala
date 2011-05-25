@@ -15,8 +15,8 @@ class TypeParserTests extends FunSuite {
       new DummyExtensionManager)
       .parse(false)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
-    import org.nlogo.util.JCL._ // results.procedures.values is a java.util.Collection
-    for (procedure <- results.procedures.values) {
+    import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
+    for (procedure <- results.procedures.asScala.values) {
       val tokens =
         new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
           results.procedures, false)

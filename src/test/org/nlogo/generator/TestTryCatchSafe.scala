@@ -40,7 +40,6 @@ class TestTryCatchSafe extends FunSuite {
   }
   def processClass(c: ReporterClass) {
     val reader = PrimitiveCache.getClassReader(c)
-    import org.nlogo.util.JCL._
     for(method <- BytecodeUtils.getMethods(c))
       reader.accept(new MethodExtractorClassAdapter(method),
                     ClassReader.SKIP_DEBUG)

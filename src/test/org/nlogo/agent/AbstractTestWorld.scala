@@ -19,7 +19,6 @@ abstract class AbstractTestWorld extends Assertions {
   }
 
   private def checkTurtles(world: World, size: Int) {
-    import org.nlogo.util.JCL._
     expect(size)(world.turtles.count)
     expect(size)(world.turtles.toLogoList.size)
     assert(world.turtles.toLogoList.forall(_ != null))

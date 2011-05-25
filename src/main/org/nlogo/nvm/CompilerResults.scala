@@ -1,6 +1,9 @@
 package org.nlogo.nvm
 
-case class CompilerResults(procedures: Seq[Procedure], program: org.nlogo.api.Program){
-  def proceduresMap = org.nlogo.util.JCL.toJavaMap(procedures.map(proc => (proc.name, proc)).toMap)
+import org.nlogo.api.Program
+import collection.JavaConverters._
+
+case class CompilerResults(procedures: Seq[Procedure], program: Program) {
+  def proceduresMap = procedures.map(proc => (proc.name, proc)).toMap.asJava
   def head = procedures.head
 }

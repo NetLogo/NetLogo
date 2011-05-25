@@ -8,7 +8,10 @@ class IdentifierParserTests extends FunSuite {
 
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"
-    val interfaceGlobals = org.nlogo.util.JCL.toJavaList(List("X"))
+    val interfaceGlobals = {
+      import collection.JavaConverters._
+      List("X").asJava
+    }
     val program = new Program(interfaceGlobals, false)
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
