@@ -147,6 +147,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 MONITOR
 57
@@ -174,6 +175,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 68
@@ -190,6 +192,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 4
@@ -314,8 +317,8 @@ flee?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a natural/artificial selection model that shows the result of two competing forces on natural selection of the speed of prey.  Which force dominates depends on the behavior of predators.
 
 One force is that predators that chase prey, tend to catch slower moving prey more often, thereby selecting for prey that are faster over many generations of offspring.
@@ -324,9 +327,8 @@ Another force is that predators who wait for their prey without moving, tend to 
 
 By also adjusting whether bugs try to avoid the predator and the predictability of their motion, a different one of these competing forces will tend to dominate the selective pressure on the population.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 You assume the role of a predator amongst a population of bugs.  To begin your pursuit of bugs as a predator, press SETUP to create a population of bugs, determined by six times the INITIAL-BUGS-EACH-SPEED slider.  These bugs that are created are randomly distributed around the world and assigned a speed.
 
 When you press GO the bugs begin to move at their designated speeds.  As they move around, try to eat as many bugs as fast as you can by clicking on them.  Alternatively, you may hold the mouse button down and move the predator over the bugs.
@@ -335,14 +337,13 @@ The six different speeds that a bug might move at are distributed amongst six di
 
 Initially there are equal numbers of each sub-population of bug (e.g. ten bugs at each of the 6 speeds).  Over time, however, as you eat bugs, the distribution of the bugs will change as shown in the "Number of bugs" histogram.  In the histogram, you might see the distribution shift to the left (showing that more slow bugs are surviving) or to the right (showing that more fast bugs are surviving).  Sometimes one sub-population of a single speed of bug will be exterminated.  At this point, no other bugs of this speed can be created in the population.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 INITIAL-BUGS-EACH-SPEED is the number of bugs you start with in each of the six sub-populations.  The overall population of bugs is determined by multiplying this value by 6.
 
 SPEED-COLOR-MAP settings help you apply or remove color visualization to the speed of the bugs:
 
-- The "all green" setting does not show a different color for each bug based on its speed".  Keeping the color settings switched to something besides "all green" can tend to result in the predator (the user) unconsciously selecting bugs based on color instead of speed.
+- The "all green" setting does not show a different color for each bug based on its speed.  Keeping the color settings switched to something besides "all green" can tend to result in the predator (the user) unconsciously selecting bugs based on color instead of speed.
 
 - The "rainbow" setting shows 6 distinct colors for the 6 different speeds a bug might have.  These color settings correspond to the plot pen colors in the graphs.
 
@@ -356,35 +357,31 @@ WIGGLE?, when set to "on" adds a small amount of random twist in the motion of t
 
 FLEE?, when set to "on" has bugs turn around (to face in the opposite direction) when they detect your mouse click (as a predator) in their detection cone (an arc of 120 degrees that has a range of 2 units).  Bugs can detect the predator only in this arc in front of them, and so will not react when caught from behind.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The CURRENT BUGS histogram tends to shift right (increasing average speed) if you assume the role of chasing easy prey.
 
 The CURRENT BUGS histogram tends to shift left (decreasing average speed) if you assume the role of waiting for prey come to you.  The same effect can also be achieved by moving the predator around the world randomly.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Set the model up with INITIAL-BUGS-EACH-SPEED set to 1.  Slow the model down and watch where new bugs come from when you eat a bug.  You should see a new bug hatch from one of the five remaining and it should be moving at the same speed as its parent.
 
 Wait in one location for the bugs to come to you by placing the predator in one location and holding down the mouse button.  All bugs that run into you will be eaten.
 
 Chase bugs around trying to catch the bug nearest you at any one time by holding the mouse button down and moving the predator around the view after the nearest bug.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 A HubNet version of the model with adjustable starting populations of bugs would help show what happens when two or more competitors assume similar vs. different hunting strategies on the same population at the same time.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Bug Hunt Camouflage
 
-
 ## CREDITS AND REFERENCES
-Inspired by EvoDots software:
+
+Inspired by EvoDots software:  
 http://faculty.washington.edu/~herronjc/SoftwareFolder/EvoDots.html
 @#$#@#$#@
 default
@@ -683,7 +680,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 repeat 17

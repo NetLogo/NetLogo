@@ -293,6 +293,7 @@ GRAPHICS-WINDOW
 1
 1
 time
+30.0
 
 BUTTON
 1
@@ -309,6 +310,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 57
@@ -325,6 +327,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 13
@@ -392,6 +395,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 257
@@ -408,6 +412,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 318
@@ -450,6 +455,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 280
@@ -466,6 +472,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 5
@@ -476,7 +483,7 @@ max-mutation-step
 max-mutation-step
 0
 100
-25
+26
 1
 1
 NIL
@@ -668,15 +675,14 @@ PENS
 "default" 1.0 0 -16777216 true "" "plotxy ticks vector-difference"
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a model of natural/artificial selection that shows how a population hunted by a predator can develop camouflaging.  For example, in a forest with green leaves, green bugs may emerge as the predominant bug color.
 
 When a predator uses color and shape to identify the location of prey in an environment, then the colors and patterns in the environment provide additional selective pressure on the prey.  If some prey tend to blend into the background better, they tend to survive longer and reproduce more often.  If this continues over many generations, the distribution of colors in a population may shift to become better camouflaged in the surrounding environment.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 You assume the role of a predator bird.  After you press GO, click on bugs as fast as you can using your mouse.  You may also keep the mouse button depressed, and move the cursor around the world.
 
 You can watch your consumption by watching the "Bugs Caught vs. Time" plot.  As its slope decreases, you efficiency (or, in other words, your rate of bug consumption) is decreasing.  Also, the time to catch a batch of bugs is plotted in the "Time to Catch 10 Bugs" plot.
@@ -687,9 +693,8 @@ Bugs have 3 genes that determine their phenotype for color.  One gene is RED-PIG
 
 With each bug you eat, a new bug is randomly chosen to reproduce one offspring.  The offspring's gene-frequency for each of the three pigment genes may be different than the parent (as determined by the MUTATION-STEP slider).
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 CARRYING-CAPACITY determines the size of the population on SETUP, and how many bugs are in the world at one time when GO is pressed and bugs are being eaten.
 
 MAX-MUTATION-STEP determines how much the pigment genes can drift from their current values in each new generation.  For example, a MUTATION-STEP of 1 means that the gene frequency for any of the three pigments could go up 1, down 1, or not change at all in the offspring.
@@ -720,9 +725,8 @@ The histograms of "CURRENT BRIGHTNESSES" and "INITIAL BRIGHTNESSES" shows a dist
 
 The plot of "VECTOR DIFFERENCE IN AVERAGE GENOTYPE" shows how the average values the genotype of the population change overtime.  The plot shows the vector difference between the average value of red gene frequency, green gene frequency, and blue gene frequency for the current population as compared to the initial population.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The first thing that you will notice is that, over time, bugs will become harder and harder to detect in the environment.  The completely random mutation process is pushed in a particular direction due to selective pressure which you unintentionally exert on the bugs.
 
 Camouflaging emerges from the interaction of genes that encode for color, selective pressure, and small random changes (mutations) that accumulate in the offspring of survivors.
@@ -735,52 +739,50 @@ Larger numbers of bugs tend to take longer to start camouflaging.
 
 In environments that have two distinct areas (such as a ground and sky), each with their own patterns and background colors, you might see two distinct populations of different camouflaging outcomes.  Often, while hunting in one area, you will be surprised to look over at the other area (after they hadn't been paying attention to that area in a while) and notice that now there are a bunch of bugs in that background that blend in this new area very well, but whose colors are distinctly different than those that blend into the original area you were hunting in.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try this model with a user who has never seen it.  A common response from the user (within about 1 minute of interaction with the model) is "where did the bugs all go?"  If you keep playing with the model, the user might get better at finding the bugs, but if s/he keeps trying to catch bugs quickly, even an experienced user will find that the creatures will become very hard to find in certain environments.
 
 Once you reach a point where you are having trouble finding the bugs, it is useful to either press FLASH to show where they are (and how they are camouflaged), or press CLEAR-BACKGROUND to enable you to study their color distribution and location.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 What if you could eat a batch of bugs (e.g. 5 or 10) before they reproduced?
 
 What if bugs reproduced sexually and recombined gene frequencies in their offspring?
 
 What if bugs moved?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-IMPORT-DRAWING is the primitive that loads the image into the drawing, which in this case is merely a backdrop instead of something agents actually draw in.
+`import-drawing` is the primitive that loads the image into the drawing, which in this case is merely a backdrop instead of something agents actually draw in.
 
-Because this model depends on interaction with the user, we measure the passage of time in seconds.  We use TIMER to measure how much time passes each time through GO, and we use TICK-ADVANCE to advance the clock by that amount.  (A simpler approach would have been to not use the tick counter at all and only use TIMER, but the problem with TIMER is that it keeps advancing even when GO isn't pressed.)
+Because this model depends on interaction with the user, we measure the passage of time in seconds.  We use `timer` to measure how much time passes each time through `go`, and we use `tick-advance` to advance the clock by that amount.  (A simpler approach would have been to not use the tick counter at all and only use `timer`, but the problem with `timer` is that it keeps advancing even when `go` isn't pressed.)
 
-In the code for flashing the bugs, we use ASK-CONCURRENT.  We could have avoided it as follows, but the downside is that an extra turtle variable would have been required.
-|  turtles-own [old-color]
-|
-|  ask bugs [ set old-color color ]
-|  repeat 3 [
-|    ask bugs [ set color black ]
-|    display
-|    wait 0.1
-|    ask turtles [ set color white ]
-|    display
-|    wait 0.1
-|  ]
-|  ask bugs [ set color old-color ]
-|  display
+In the code for flashing the bugs, we use `ask-concurrent`.  We could have avoided it as follows, but the downside is that an extra turtle variable would have been required.
+
+      turtles-own [old-color]
+    
+      ask bugs [ set old-color color ]
+      repeat 3 [
+        ask bugs [ set color black ]
+        display
+        wait 0.1
+        ask turtles [ set color white ]
+        display
+        wait 0.1
+      ]
+      ask bugs [ set color old-color ]
+      display
 
 
-RELATED MODELS
---------------
-Bug Hunt Speeds
+## RELATED MODELS
+
+Bug Hunt Speeds  
 Peppered Moths
 
-
 ## CREDITS AND REFERENCES
+
 Inspired by this: BugHunt! Macintosh freeware: http://bcrc.bio.umass.edu/BugHunt/
 @#$#@#$#@
 default
@@ -1117,7 +1119,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 @#$#@#$#@

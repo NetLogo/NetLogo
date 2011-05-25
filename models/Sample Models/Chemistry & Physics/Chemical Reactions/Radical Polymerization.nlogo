@@ -9,7 +9,7 @@ turtles-own [
 ]
 
 to setup
-  ca
+  clear-all
   set-default-shape turtles "circle"
   ;; make molecules
   create-monomers 200
@@ -104,6 +104,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 62
@@ -120,6 +121,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 134
@@ -136,6 +138,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 62
@@ -237,33 +240,29 @@ PENS
 "num-chains" 1.0 1 -13345367 true "" "every 0.5 [ do-histogram ]"
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model explains kinetics of radical polymerization.  Radical polymerization can be thought of as the process of agglomeration of small molecules (monomers) into chains (polymer chains) initiated by active particles (radicals).
 
 An example of radical polymerization would be industrial polymerization of ethylene into polyethylene (PET):
 
-|        n C H  --------> ~C  H~
-|          2 4           2n 4n
+    n C H  --------> ~C  H~
+      2 4           2n 4n
 
 A gaseous mixture of ethylene and oxygen (used as a catalyst), is pumped through a mile-long heated pipe.  As the mixture moves along the pipe, the molecules of ethylene polymerize into chains.  At the end of the pipe, the polymer is collected and co-products with low molecular mass are recycled.
 
-
 Molecules of oxygen turn into bi-radicals under the influence of high temperature:
 
-|        O --------> *O-O*
-|         2
+    O --------> *O-O*
+     2
 
 here the asterisk denotes a free electron.  These bi-radicals react with pi-bonds in ethylene and start the process of chain growth according to the scheme:
 
-
-|        *O-O* + C H --------> *O-O-CH-CH*
-|                 2 4                 2  2
-
-
-|        *O-O-CH-CH* + CH-CH --------> *O-O-CH-CH-CH-CH*
-|               2  2     2  2                 2  2  2  2
-
+     *O-O* + C H --------> *O-O-CH-CH*
+              2 4                 2  2
+     
+     *O-O-CH-CH* + CH-CH --------> *O-O-CH-CH-CH-CH*
+            2  2     2  2                 2  2  2  2
 
 We can thus think of radical polymerization as interaction between (bi-) radicals and monomers.
 
@@ -271,96 +270,89 @@ Notice that if two radicals react with each other, they will form an inert compo
 
 Let us assume that we run polymerization using AIBN as an initiator which we denote by I.  We thus have the following kinetically distinct particles in the system:
 
-(i) Initiator molecules;
-(ii) Radicals;
-(iii) Monomers;
+(i) Initiator molecules;  
+(ii) Radicals;  
+(iii) Monomers;  
 (iv) "Dead" chains;
 
 A radical can react with a monomer, in which case it absorbs the monomer and increases its chain-length by 1.  Alternatively, a radical can react with another radical forming a "dead" molecule which does not react with other particles.  Let us denote by R(n) radicals which have reacted n times with monomers.  Let M stand for monomers and C(k) for "dead" chains of length k.  Then schematically we can describe the reactions by the following system of equations:
 
-|        I --------> 2 R(1)              (initiation)
-|
-|        R(n) + M --------> R(n+1)       (growth)
-|
-|     R(n) + R(m) --------> C(n+m)       (termination)
+            I --------> 2 R(1)              (initiation)
+    
+            R(n) + M --------> R(n+1)       (growth)
+    
+         R(n) + R(m) --------> C(n+m)       (termination)
 
-In this model, there are four breeds of turtles:
-- initiators (yellow turtles);
-- monomers (green turtles);
-- radicals (red turtles);
+In this model, there are four breeds of turtles:  
+- initiators (yellow turtles);  
+- monomers (green turtles);  
+- radicals (red turtles);  
 - polymers (blue turtles).
 
 Each turtle carries a variable, chain-length.  Initially there are 200 turtles of monomer breed with chain-length set to 1.  There is also a user-defined number (Io) of initiator breed with chain-length set to 0.
 
 The rules are quite simple:
 
-(i) All turtles move around randomly.
-(ii) Yellow turtles (initiators) spontaneously break up into two red turtles (radicals) with probability Ki;
-(iii) Green turtles (monomers) react with red turtles (radicals) with probability Km.  If there is at least one radical on the same patch as the given monomer, the monomer dies and the chain-length of the radical which "killed" it is incremented by 1;
+(i) All turtles move around randomly.  
+(ii) Yellow turtles (initiators) spontaneously break up into two red turtles (radicals) with probability Ki;  
+(iii) Green turtles (monomers) react with red turtles (radicals) with probability Km.  If there is at least one radical on the same patch as the given monomer, the monomer dies and the chain-length of the radical which "killed" it is incremented by 1;  
 (iv) Red turtles (radicals) react with each other pairwise.  If there is a pair of radicals on the same patch, they annihilate each other with probability Kr forming a polymer chain (a blue turtle);
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-With sliders one can control the initial number of initiators (Io) and reaction probabilities
-- Ki (initiator): probability of an initiator (yellow) creating two radicals (red);
-- Km (monomer): probability of reaction between monomers (green) and radicals (red), forming a radical with a longer chain length;
+With sliders one can control the initial number of initiators (Io) and reaction probabilities  
+- Ki (initiator): probability of an initiator (yellow) creating two radicals (red);  
+- Km (monomer): probability of reaction between monomers (green) and radicals (red), forming a radical with a longer chain length;  
 - Kr (radical): probability of two radicals (red)  reacting to form a polymer chain (blue).
 
 Select the initial number of initiators Io and press the "setup" button.  To start the simulation press the GO button.  You can set the probabilities Ki, Km and Kr before or after you do setup.  You can also modify this constants on the fly during the execution of the GO procedure.
 
 One plot shows the number of initiators, monomers, radicals, and polymers.  The distribution of chain-lengths of polymers (blue) is shown in the second plot in the form of a histogram.  Each chain is labeled with its length.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Distribution of chain-length drastically depends on the mode of initiation.  If you select low values of Io and Ki, then the life expectancy of radicals will rise leading to longer chains.  However in this case the simulation will have to run too long in order to produce a sizable amount of long-length chains.   If you start the simulation with a lot of initiator which decomposes rapidly, radicals will tend to react with themselves and form low molecular oligomers.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try to find the optimum values for which the distribution is tight and the simulation runs at a reasonable pace.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------
 Try to implement the model of industrial production of polyethylene (PET) described above.  Are you going to have "dead" chains in this model?
 
 Can you modify the model so that visible "chains" of turtles actually form, like in the Follower model?
 
+## ADDITIONAL INFORMATION
 
-ADDITIONAL INFORMATION
-----------------------
 Note that in real polymerization reactions, the outcomes are affected by the position and shapes of the chains in three-dimensional space.  This aspect of the reactions is not presented in this model.
 
 Although oxygen is widely used in industry as initiator of radical polymerization, scientists prefer to use other initiators in the lab, especially when the reaction has to be performed under conditions of atmospheric pressure and room temperature.  Two of the most frequently used lab initiators are benzoyl peroxide and 2-2'-azo-bis-isobutyrylnitrile (AIBN):
 
-|        C H-C(O)O-O(O)C-H C
-|     6 5             5 6
-|
-|            CH     CH
-|        | 3    | 3
-|        CH -C--N=N-C- CH
-|      3 |      |    3
-|        CN     CN
+        C H-C(O)O-O(O)C-H C
+     6 5             5 6
+     
+                CH     CH
+            | 3    | 3
+            CH -C--N=N-C- CH
+          3 |      |    3
+            CN     CN
 
 
 Peroxydes and azo-compounds are extremely unstable and tend to break up into radicals very easily if exposed to moderate heat or light.  Here is the reaction of decomposition of AIBN:
 
-|            CH     CH                     CH
-|        | 3    | 3                    | 3     ^
-|        CH -C--N=N-C- CH  --------> 2 CH -C* + N  |
-|      3 |      |    3               3 |     2
-|        CN     CN                     CN
+                CH     CH                     CH
+            | 3    | 3                    | 3     ^
+            CH -C--N=N-C- CH  --------> 2 CH -C* + N  |
+          3 |      |    3               3 |     2
+            CN     CN                     CN
 
 
 This reaction is irreversible because of the escape of nitrogen.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-See also the series of "Simple Kinetics" models.  Also see "Polymer Dynamics".
-
+Simple Kinetics series, Polymer Dynamics
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -647,7 +639,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
