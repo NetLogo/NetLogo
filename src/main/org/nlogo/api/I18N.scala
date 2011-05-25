@@ -4,14 +4,16 @@ import java.util.{MissingResourceException, Locale, ResourceBundle}
 
 object I18N {
 
-  def availableLocales: Array[Locale] = {
-    def availble(locale:Locale) = try {
+  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(availble)
+
+  def availble(locale:Locale) =
+    try {
       val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
       rb.getLocale == locale
     }
     catch { case m: MissingResourceException => false }
-    Locale.getAvailableLocales.filter(availble)
-  }
+
+  def localeIfAvailable(loc:Locale): Option[Locale] = if(availble(loc)) Some(loc) else None
 
   case class Prefix(name:String)
 
@@ -31,16 +33,15 @@ object I18N {
       // loads the locale data from the users preferences
       // but only if that locale is available. 
       val localeFromPreferences: Option[Locale] = (getPref("user.language"), getPref("user.region")) match {
-        case (Some(l), Some(r)) => availableLocales.find(_ == new Locale(l,r))
-        case (Some(l), _) => availableLocales.find(_ == new Locale(l))
+        case (Some(l), Some(r)) => localeIfAvailable(new Locale(l,r))
+        case (Some(l), _) => localeIfAvailable(new Locale(l))
         case _ => None
       }
       // if the users locale from the preferences is available, use it.
       localeFromPreferences.getOrElse(
         // if not, see if the default (from the OS or JVM) is available. if so, use it.
-        if(availableLocales.contains(Locale.getDefault)) Locale.getDefault
-        // finally, fall back.
-        else Locale.US
+        // otherwise, fall back.
+        localeIfAvailable(Locale.getDefault).getOrElse(Locale.US)
       )
     }
 
