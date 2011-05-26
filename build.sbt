@@ -2,8 +2,6 @@ scalaVersion := "2.9.0-1"
 
 name := "NetLogo"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
-
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
