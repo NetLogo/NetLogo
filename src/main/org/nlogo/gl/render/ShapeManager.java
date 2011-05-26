@@ -61,7 +61,7 @@ class ShapeManager {
     addModelShapes(gl, glu);
     addLinkShapes(gl, glu);
     if (customShapes != null) {
-      updateShapes(gl, customShapes);
+      lastList = Shapes.updateShapes(gl, lastList, shapes, customShapes);
     }
   }
 
@@ -111,53 +111,16 @@ class ShapeManager {
   public void addShape(String filename)
       throws java.io.IOException,
       InvalidShapeDescriptionException {
-    java.io.File shapeFile = new java.io.File(filename);
-    java.io.BufferedReader shapeReader =
-        new java.io.BufferedReader(new java.io.FileReader(shapeFile));
-    String line = shapeReader.readLine();
-    int shapeCount = Integer.parseInt(line);
-    for (int i = 0; i < shapeCount; i++) {
-      String shapeName = shapeReader.readLine();
-      String next = shapeReader.readLine();
-      CustomShapeDescription shape = new CustomShapeDescription(shapeName);
-      while (!next.equals("end-shape")) {
-        if (next.equals("tris") ||
-            next.equals("quads") ||
-            next.equals("stop") ||
-            next.startsWith("normal:") ||
-            isVertex(next)) {
-          shape.lines().add(next);
-        } else {
-          throw new InvalidShapeDescriptionException();
-        }
-        next = shapeReader.readLine();
-      }
+    for(CustomShapeDescription shape : Shapes.readShapes(filename)) {
       queue.add(new AddShapeRequest(AddShapeRequestType.IMPORT, shape));
     }
   }
-
-  private static boolean isVertex(String line)
-      throws InvalidShapeDescriptionException {
-    String[] floats = line.split(" ");
-    if (floats.length != 3) {
-      throw new InvalidShapeDescriptionException();
-    }
-    try {
-      Float.parseFloat(floats[0]);
-      Float.parseFloat(floats[1]);
-      Float.parseFloat(floats[2]);
-    } catch (NumberFormatException e) {
-      throw new InvalidShapeDescriptionException();
-    }
-
-    return true;
-  }
-
+      
   // Need to do it this way because we need the GL
   void checkQueue(GL gl, GLU glu) {
     for (AddShapeRequest req : queue) {
       if (req.type == AddShapeRequestType.IMPORT) {
-        addNewShape(gl, (CustomShapeDescription) req.data);
+        lastList = Shapes.addNewShape(gl, shapes, customShapes, (CustomShapeDescription) req.data);
       } else if (req.type == AddShapeRequestType.LIBRARY_TURTLE) {
         List<Shape> modelShapeList = turtleShapeList.getShapes();
 
@@ -410,63 +373,6 @@ class ShapeManager {
     if (!line.marked()) {
       gl.glPopAttrib();
     }
-  }
-
-  private void updateShapes(GL gl, Map<String, List<String>> oldCustomShapes) {
-    for (String shapeName : oldCustomShapes.keySet()) {
-      lastList++;
-      shapes.put(shapeName, new GLShape(shapeName, lastList));
-      List<String> lines = oldCustomShapes.get(shapeName);
-      customShapes.put(shapeName, lines);
-      gl.glNewList(lastList, GL.GL_COMPILE);
-      for (String next : lines) {
-        if (next.equals("tris")) {
-          gl.glBegin(GL.GL_TRIANGLES);
-        } else if (next.equals("quads")) {
-          gl.glBegin(GL.GL_QUADS);
-        } else if (next.equals("stop")) {
-          gl.glEnd();
-        } else if (next.startsWith("normal: ")) {
-          String[] floats = next.substring(8).split(" ");
-          gl.glNormal3f(Float.parseFloat(floats[0]),
-              Float.parseFloat(floats[1]),
-              Float.parseFloat(floats[2]));
-        } else {
-          String[] floats = next.split(" ");
-          gl.glVertex3f(Float.parseFloat(floats[0]),
-              Float.parseFloat(floats[1]),
-              Float.parseFloat(floats[2]));
-        }
-      }
-      gl.glEndList();
-    }
-  }
-
-  private void addNewShape(GL gl, CustomShapeDescription shape) {
-    lastList = gl.glGenLists(1);
-    shapes.put(shape.name(), new GLShape(shape.name(), lastList));
-    gl.glNewList(lastList, GL.GL_COMPILE);
-    for (String next : shape.lines()) {
-      if (next.equals("tris")) {
-        gl.glBegin(GL.GL_TRIANGLES);
-      } else if (next.equals("quads")) {
-        gl.glBegin(GL.GL_QUADS);
-      } else if (next.equals("stop")) {
-        gl.glEnd();
-      } else if (next.startsWith("normal: ")) {
-        String[] floats = next.substring(8).split(" ");
-        gl.glNormal3f(Float.parseFloat(floats[0]),
-            Float.parseFloat(floats[1]),
-            Float.parseFloat(floats[2]));
-      } else {
-        String[] floats = next.split(" ");
-        gl.glVertex3f(Float.parseFloat(floats[0]),
-            Float.parseFloat(floats[1]),
-            Float.parseFloat(floats[2]));
-      }
-    }
-    gl.glEndList();
-    customShapes.put(shape.name(), shape.lines());
   }
 
 }
