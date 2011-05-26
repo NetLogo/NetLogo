@@ -39,7 +39,7 @@ public strictfp class TurtleDrawer {
       java.awt.Color turtleColor = org.nlogo.api.Color.getColor(turtle.color());
       // if the shape isn't recolorable, then there's no need to consider
       // the turtle's color as part of the cache key, so just always
-      // use white as a dummy key in that case - ST 9/3/`03
+      // use white as a dummy key in that case - ST 9/3/03
 
       // but we do need to consider the turtles transparency.
       // the good news is that transparency isnt used as part of the key
