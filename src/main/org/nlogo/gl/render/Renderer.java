@@ -880,7 +880,7 @@ public class Renderer
   public void addCustomShapes(String filename)
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
-    shapeManager.addShape(filename);
+    shapeManager.addCustomShapes(filename);
   }
 
   public void invalidateTurtleShape(String shape) {

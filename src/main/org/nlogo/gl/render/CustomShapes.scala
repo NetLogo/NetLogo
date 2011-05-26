@@ -7,103 +7,73 @@ import collection.JavaConverters._
 
 private object CustomShapes {
 
-  def addNewShape(gl: GL, shapes: JMap[String, GLShape], customShapes: JMap[String, JList[String]],
-                  shape: CustomShapeDescription): Int = {
+  case class Description(name: String, lines: List[String]) {
+    def javaLines = lines.asJava
+  }
+
+  def addNewShape(gl: GL, shapes: JMap[String, GLShape],
+                  shape: Description): Int = {
     val lastList = gl.glGenLists(1)
     shapes.put(shape.name, new GLShape(shape.name, lastList))
     gl.glNewList(lastList, GL.GL_COMPILE)
-    for (next <- shape.lines.asScala)
-      if (next == "tris")
-        gl.glBegin(GL.GL_TRIANGLES)
-      else if (next == "quads")
-        gl.glBegin(GL.GL_QUADS)
-      else if (next == "stop")
-        gl.glEnd()
-      else if (next.startsWith("normal: "))
-        next.substring(8).split(" ") match {
-          case Array(f0, f1, f2) =>
-            gl.glNormal3f(f0.toFloat, f1.toFloat, f2.toFloat)
-        }
-      else next.split(" ") match {
-        case Array(f0, f1, f2) =>
-          gl.glVertex3f(f0.toFloat, f1.toFloat, f2.toFloat)
-      }
+    for (line <- shape.lines)
+      lineHandler(line).get(gl)
     gl.glEndList()
-    customShapes.put(shape.name, shape.lines)
     lastList
   }
 
-  private def isVertex(line: String): Boolean =
+  // serves the dual purpose of checking whether the line is valid (if it isn't None is returned)
+  // and associating valid lines with actions
+  private def lineHandler(line: String): Option[GL => Unit] =
     try line.split(" ") match {
-      case fs @ Array(_, _, _) =>
-        fs.foreach(_.toFloat)
-        true
-      case _ => false
+      case Array("tris") =>
+        Some(_.glBegin(GL.GL_TRIANGLES))
+      case Array("quads") =>
+        Some(_.glBegin(GL.GL_QUADS))
+      case Array("stop") =>
+        Some(_.glEnd())
+      case Array("normal:", s0, s1, s2) =>
+        val (f0, f1, f2) = (s0.toFloat, s1.toFloat, s2.toFloat)
+        Some(_.glNormal3f(f0, f1, f2))
+      case Array(s0, s1, s2) =>
+        val (f0, f1, f2) = (s0.toFloat, s1.toFloat, s2.toFloat)
+        Some(_.glVertex3f(f0, f1, f2))
+      case _ =>
+        None
     }
-    catch {
-      case e: NumberFormatException =>
-        false
-    }
+    catch { case _: NumberFormatException => None }
 
   def updateShapes(gl: GL, lastList: Int,
                    shapes: JMap[String, GLShape],
                    customShapes: JMap[String, JList[String]]): Int = {
-    import collection.JavaConverters._
-    var more = 0
-    for (shapeName <- customShapes.keySet.asScala) {
-      more += 1
-      shapes.put(shapeName, new GLShape(shapeName, lastList + more))
-      val lines = customShapes.get(shapeName)
+    for (((shapeName, lines), index) <- customShapes.asScala.zipWithIndex) {
+      shapes.put(shapeName, new GLShape(shapeName, lastList + index))
       customShapes.put(shapeName, lines)
-      gl.glNewList(lastList + more, GL.GL_COMPILE)
-      for (next <- lines.asScala)
-        if (next == "tris")
-          gl.glBegin(GL.GL_TRIANGLES)
-        else if (next == "quads")
-          gl.glBegin(GL.GL_QUADS)
-        else if (next == "stop")
-          gl.glEnd()
-        else if (next.startsWith("normal: "))
-          next.substring(8).split(" ") match {
-            case Array(f0, f1, f2) =>
-              gl.glNormal3f(f0.toFloat, f1.toFloat, f2.toFloat)
-          }
-        else next.split(" ") match {
-          case Array(f0, f1, f2) =>
-            gl.glVertex3f(f0.toFloat, f1.toFloat, f2.toFloat)
-        }
+      gl.glNewList(lastList + index, GL.GL_COMPILE)
+      for (line <- lines.asScala)
+        lineHandler(line).get(gl)
       gl.glEndList()
     }
-    lastList + more
+    lastList + customShapes.size
   }
 
-  @throws(classOf[java.io.IOException])
-  @throws(classOf[InvalidShapeDescriptionException])
-  def readShapes(filename: String): JList[CustomShapeDescription] = {
-    import java.io._
-    val shapeFile = new File(filename)
-    val shapeReader = new BufferedReader(new FileReader(shapeFile))
-    val line = shapeReader.readLine()
-    var shapeCount = line.toInt
-    val result = new java.util.ArrayList[CustomShapeDescription]
-    for(i <- 0 until shapeCount) {
-      val shapeName = shapeReader.readLine()
-      var next = shapeReader.readLine()
-      val shape = new CustomShapeDescription(shapeName)
-      while (next != "end-shape") {
-        if (next == "tris" ||
-            next == "quads" ||
-            next == "stop" ||
-            next.startsWith("normal:") ||
-            isVertex(next))
-          shape.lines.add(next)
-        else
-          throw new InvalidShapeDescriptionException
-        next = shapeReader.readLine()
-      }
-      result.add(shape)
+  def readShapes(filename: String): JList[Description] = {
+    val lines: Iterator[String] = {
+      import java.io.{ File, FileReader, BufferedReader }
+      val shapeFile = new File(filename)
+      val shapeReader = new BufferedReader(new FileReader(shapeFile))
+      Iterator.continually(shapeReader.readLine().trim)
     }
-    result
+    def readShape(): Description = {
+      val name = lines.next()
+      val shapeLines = lines.takeWhile(_ != "end-shape").toList
+      if(!shapeLines.forall(lineHandler(_).isDefined))
+        throw new InvalidShapeDescriptionException
+      Description(name, shapeLines)
+    }
+    (0 until lines.next().toInt)
+      .map(_ => readShape())
+      .asJava
   }
 
 }

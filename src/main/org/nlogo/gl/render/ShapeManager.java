@@ -108,10 +108,10 @@ class ShapeManager {
     queue.add(new AddShapeRequest(AddShapeRequestType.LIBRARY_LINK, shape));
   }
 
-  public void addShape(String filename)
+  public void addCustomShapes(String filename)
       throws java.io.IOException,
       InvalidShapeDescriptionException {
-    for(CustomShapeDescription shape : CustomShapes.readShapes(filename)) {
+    for(CustomShapes.Description shape : CustomShapes.readShapes(filename)) {
       queue.add(new AddShapeRequest(AddShapeRequestType.IMPORT, shape));
     }
   }
@@ -120,7 +120,9 @@ class ShapeManager {
   void checkQueue(GL gl, GLU glu) {
     for (AddShapeRequest req : queue) {
       if (req.type == AddShapeRequestType.IMPORT) {
-        lastList = CustomShapes.addNewShape(gl, shapes, customShapes, (CustomShapeDescription) req.data);
+        CustomShapes.Description shape = (CustomShapes.Description) req.data;
+        lastList = CustomShapes.addNewShape(gl, shapes, shape);
+        customShapes.put(shape.name(), shape.javaLines());
       } else if (req.type == AddShapeRequestType.LIBRARY_TURTLE) {
         List<Shape> modelShapeList = turtleShapeList.getShapes();
 
