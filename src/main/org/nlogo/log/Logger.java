@@ -229,22 +229,31 @@ public strictfp class Logger
     }
   }
 
-  private static LogMessage compileMsg = LogMessage.createCompileMessage();
+  private static LogMessage commandMsg = LogMessage.createCommandMessage();
 
   public void commandEntered(String owner, String text, char agentType, CompilerException error) {
     if (error == null) {
-      compileMsg.updateCompileMessage
+      commandMsg.updateCommandMessage
           (owner.toLowerCase(), "compiled", text, Character.toString(agentType), "success", 0, 0);
     } else {
-      compileMsg.updateCompileMessage
+      commandMsg.updateCommandMessage
           (owner.toLowerCase(), "compiled", text, Character.toString(agentType),
               error.getMessage(), error.startPos(), error.endPos());
     }
-    if (owner.equals("Code")) {
-      CODE.debug(compileMsg);
-    } else if (!owner.startsWith("Slider")) {
-      CODE.info(compileMsg);
+    if (!owner.startsWith("Slider")) {
+      CODE.info(commandMsg);
     }
+  }
+
+  private static LogMessage codeTabMsg = LogMessage.createCodeTabMessage();
+
+  public void codeTabCompiled(String text, CompilerException error) {
+    codeTabMsg.updateCodeTabMessage("compiled",
+                                    text,
+                                    error == null ? "success" : error.getMessage(),
+                                    error == null ? 0 : error.startPos(),
+                                    error == null ? 0 : error.endPos());
+    CODE.info(codeTabMsg);
   }
 
   private static LogMessage globalMsg = LogMessage.createGlobalMessage("globals");

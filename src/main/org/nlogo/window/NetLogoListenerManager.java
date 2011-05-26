@@ -78,8 +78,7 @@ public strictfp class NetLogoListenerManager
   }
 
   public void handle(CompiledEvent e) {
-    if (e.sourceOwner instanceof org.nlogo.api.JobOwner &&
-        ((org.nlogo.api.JobOwner) e.sourceOwner).isCommandCenter()) {
+    if (e.sourceOwner instanceof org.nlogo.api.JobOwner ) {
       char agentType = 'O';
       if (e.sourceOwner.agentClass() == org.nlogo.agent.Turtle.class) {
         agentType = 'T';
@@ -92,9 +91,17 @@ public strictfp class NetLogoListenerManager
             ("unexpected agent class: " + e.sourceOwner.agentClass());
       }
       for (NetLogoListener listener : listeners) {
-        listener.commandEntered
-            (e.sourceOwner.classDisplayName(), e.sourceOwner.innerSource(),
-                agentType, e.error);
+        if(((org.nlogo.api.JobOwner) e.sourceOwner).isCommandCenter()) {
+          listener.commandEntered
+              (e.sourceOwner.classDisplayName(), e.sourceOwner.innerSource(),
+                  agentType, e.error);
+        }
+      }
+    }
+    else if(e.sourceOwner instanceof ProceduresInterface) {
+      for (NetLogoListener listener : listeners) {
+        listener.codeTabCompiled
+          (e.sourceOwner.innerSource(), e.error);
       }
     }
   }
