@@ -86,9 +86,17 @@ public interface NetLogoListener
    * @param text      the text the user entered
    * @param agentType O, T, or P depending whether the user was
    *                  addressing the observer, turtles, or patches
-   * @param errorMsg  message the user receives if there is a compiler error
+   * @param errorMsg  message the user receives if there is a compiler error, or null
    */
   void commandEntered(String owner, String text, char agentType, CompilerException errorMsg);
+
+  /**
+   * Called when the Code tab is recompiled.
+   *
+   * @param text      the contents of the Code tab
+   * @param errorMsg  message the user receives if there is a compiler error, or null
+   */
+  void codeTabCompiled(String text, CompilerException errorMsg);
 
   /**
    * Called when the tick counter changes, either by being advanced,

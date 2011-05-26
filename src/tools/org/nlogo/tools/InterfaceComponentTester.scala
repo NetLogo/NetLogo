@@ -217,6 +217,8 @@ class NoisyListener extends NetLogoListener {
     hey("inputBoxChanged", name, value, valueChanged)
   override def commandEntered(owner: String, text: String, agentType: Char, errorMsg: CompilerException) =
     hey("commandEntered", owner, text, agentType, errorMsg)
+  override def codeTabCompiled(text: String, errorMsg: CompilerException) =
+    hey("codeTabCompiled", text, errorMsg)
   override def tickCounterChanged(ticks: Double) =
     hey("tickCounterChanged", ticks)
   override def possibleViewUpdate() =

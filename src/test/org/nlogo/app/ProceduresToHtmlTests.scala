@@ -17,7 +17,7 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
   }
   // very long Code tabs shouldn't blow the stack
   test("don't blow stack") {
-    val path = "test/applet/Really Long Procedures.nls"
+    val path = "test/applet/Really Long Code.nls"
     expect(1014842)(convert(file2String(path)).size)
   }
 }
