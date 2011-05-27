@@ -12,15 +12,28 @@ object ChecksumsAndPreviews {
 
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
-    def paths(fn: String => Boolean) =
-      (if(Version.is3D) Nil else allBenchmarks.map("test/models/benchmarks/" + _ + " Benchmark.nlogo")) ++
-      ModelsLibrary.getModelPaths(true).filter(fn).map(p => p.substring(p.indexOf("models/"))).toList
+    def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
+      val benchmarks = allBenchmarks.map("test/models/benchmarks/" + _ + " Benchmark.nlogo")
+      val library =
+        ModelsLibrary.getModelPaths(true)
+          .filter(fn)
+          .map(p => p.substring(p.indexOf("models/")))
+          .toList
+      if (includeBenchmarks)
+        benchmarks ::: library
+      else
+        library
+    }
     // The option names correspond to target names in the Makefile - ST 2/12/09
     argv match {
-      case Array("--checksum", path) => Checksums.update(List(path))
-      case Array("--checksums")      => Checksums.update(paths(Checksums.okPath))
-      case Array("--preview", path)  => Previews.remake(path)
-      case Array("--previews")       => paths(Previews.okPath).foreach(Previews.remake)
+      case Array("--checksum", path) =>
+        Checksums.update(List(path))
+      case Array("--checksums") =>
+        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+      case Array("--preview", path) =>
+        Previews.remake(path)
+      case Array("--previews") =>
+        paths(Previews.okPath, false).foreach(Previews.remake)
     }
     println("done")
   }
