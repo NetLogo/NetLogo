@@ -19,15 +19,16 @@ PREREQUISITES:
   The release building script expects to find it in /Applications.
   The script checks to be sure you have the right version.
   The folder can be copied from machine to machine.
-- You must have htmldoc 1.8.23 in your path.  release.sh will test
-  for this and complain if it doesn't find it.  If it doesn't find it,
-  then here's how to install it.  (The URL below should work, but if
-  you need to look up htmldoc on the web yourself, be aware that the
-  same company offers both a commercial version and a free, open
-  source version.  They make the free one a bit hard to find, in
-  an effort to steer you towards the version that costs money.)
+- You must have the exact right version of htmldoc in your path.
+  release.sh will test for this and complain if it doesn't find it.
+  If it doesn't find it, then here's how to install it.  (The URL
+  below should work, but if you need to look up htmldoc on the web
+  yourself, be aware that the same company offers both a commercial
+  version and a free, open source version.  They make the free one a
+  bit hard to find, in an effort to steer you towards the version that
+  costs money.)
   - go to http://htmldoc.org/software.php
-  - download an 1.8.23 source tarball
+  - download a source tarball
   - untar the tarball
   - from the command line, cd into the untarred source tree, then do:
       ./configure --prefix=/usr/local
@@ -36,15 +37,15 @@ PREREQUISITES:
 
 ahead of time:
 - ask Seth for the NetLogo change list
-  or construct it yourself using subversion and/or Trac and/or
+  or construct it yourself using git and/or Trac and/or
   the ltps-cvs archives; for details see:
   https://ccl.northwestern.edu/mailman/private/ccl-devel/2008/030764.html
   in Trac, you might look both at the Timeline, and at the "Roadmap"
   where you can get a list of closed tickets for a given target.
   sometimes other people can supply pieces of the change list, for
   example, Josh/HubNet.  the change list will be used to construct
-  both the internal and external release announcement, so it should
-  include even stuff like changes to secret prims.
+  the release announcement, so it should include even stuff like changes
+  to secret prims.
 - ask Michelle (or Seth?) for the models change list (or construct it
   yourself using trac, https://trac.assembla.com/nlogo/timeline)
 - decide if you need to upgrade the bundled java with the windows
@@ -62,12 +63,6 @@ ahead of time:
   just to make sure something doesn't fail. this avoids nasty
   surprises later when you might be in a hurry
  
-SVN freeze:
-- E-mail ccl-devel and tell them SVN is frozen and not to commit
-  anything -- or don't, if you're prepared to be careful about
-  what revision number you're doing the build from, so you don't
-  accidentally include unwanted fresh commits
-
 misc:
 - build all of the model previews (takes quite a while!)
 - do all of the checks in netlogo/devel/checks.txt
@@ -90,26 +85,20 @@ misc:
   (this doesn't need to track the specific version number,
   so e.g. 4.1, 4.1.1, 4.1beta1, etc all should use a URL 
   that just says 4.1)
-- update the internal web page
-  https://trac.assembla.com/nlogo/wiki/NetLogoInternalReleases
-  to list the new version and change information in the "Coming Soon"
-  section (make sure this includes models and HubNet change info)
-- update versions.html (consider: if the release is on a SVN branch,
+- update versions.html (consider: if the release is on a branch,
   does the trunk need to be updated as well?)
 - update issues.html (remove anything that was fixed, and consider
   whether more entries should be added) and also the known issues
   lists in hubnet.html and arraystables.html
 - update requirements.html.  
-- update the Scala version in dist/lab-readme.txt
-- write an internal release announcement (take the last announcement
+- update the Scala version in dist/lab-readme.txt, dist/lab-build.sh,
+  docs/controlling.html, docs/extensions.html, docs/versions.html
+- write the release announcement (take the last announcement
   and insert the change list from the wiki. see instructions in next
   section about how to generate a nicely formatted E-mail from an HTML
   change list)
 
 release.txt bullets:
-- you only need to update dist/release.txt if it's an external
-  release; internal release bullets just go in the wiki and
-  the internal release announcement
 - where do you get the change list?
   if it's a full (non-beta) release (e.g. 3.0, 3.1, etc.) then
   the change list should be since the last full release, so it'll
@@ -143,14 +132,9 @@ release.txt bullets:
   like = or + or - , whatever isn't already being used.
 
 tagging:
-- make sure any uncommitted changes have been committed
-  (by doing "svn st")
-- tag the release in SVN:
-  svn copy https://subversion.assembla.com/svn/nlogo/trunk \
-           https://subversion.assembla.com/svn/nlogo/tags/4.1.1 \
-           -m "tag 4.1.1 release"
-  (substitute appropriate version for '4.1.1')
-  remember if you are working on a branch the first URL will be .../netlogo/branches/BRANCHNAME
+- make sure any uncommitted changes have been committed and pushed
+  (by doing "git st")
+- tag the release in git
 
 building installers:
 - you may want to do a fresh checkout instead of using an old one
@@ -164,10 +148,7 @@ building installers:
   to copy it to the server
 - ssh ccl.northwestern.edu chmod -R go+rX /var/www/netlogo/4.1.1
 - ssh ccl.northwestern.edu chgrp -R web /var/www/netlogo/4.1.1
-- In the wiki, at:
-  https://trac.assembla.com/nlogo/wiki/NetLogoInternalReleases
-  add link to download page, move it from "coming soon"
-  to "latest" and move old from "latest" to "old"
+- on the CCL wiki main page, update the link to the latest version
 
 testing:
 - look at the Windows install log, were there errors?
@@ -217,7 +198,7 @@ IF PUBLIC:
   # Other extensions (currently Speech and Palette, should be put up in
   # the extensions directory and linked to from extensionss.shtml with a
   # short description.
-  # if external, make sure the Models Library and Community Models pages
+  # make sure the Models Library and Community Models pages
   # is still OK -- change symoblic links
   # ln -s ../4.1/models models/models
   # ln -s ../4.1/NetLogoLite.jar models/NetLogoLite.jar
@@ -233,12 +214,8 @@ IF PUBLIC:
 
 announcements & web pages:
 - DID YOU TAG THE RELEASE YET?
-- tell ccl-devel it's OK to do SVN commits again
 - mark the milestone as closed in Trac
-- after it's built, update the internal web page again and move
-  the new version from "Coming Soon" to "Latest", and uncomment
-  the download link so people can download it
-- if external, update the NetLogo pages (including the download forms
+- if public, update the NetLogo pages (including the download forms
   -- be sure to actually grep for the old version number, because if
   you don't, you're almost certain to miss some) and PartSims home page,
   including the what's new notice in the Models Library
@@ -248,10 +225,10 @@ announcements & web pages:
   Note: don't replace the old versions, keep the
   old versions available since people may still be using those
   NetLogo versions.
-- send the internal release announcement to ccl@ccl.northwestern.edu
+- send the release bullets to ccl@ccl.northwestern.edu
   (make sure it includes known issues, that is, regressions, even
   if they are carried over from a previous prerelease)
-- send the external release announcement to Uri for him to send
+- send the public release announcement to Uri for him to send
   to whoever he wants.
 - copy the sound extension into the models/Sample Models/Art
   and models/Sample Models/Games folders on the server so that
@@ -268,14 +245,15 @@ post-release:
 - bump the version number again in version.txt
   and change BUILD_DATE back to "INTERIM DEVEL BUILD"
 - maybe run benchmarks
-- maybe update architecture page, svn page, and others in wiki
+- maybe update architecture page, devel requirements page, and others
+  in wiki
 - if public, announce on the netlogo account on Twitter
 - if public, announce to: LogoForum, Apple site, comp.simulation,
   maintainer of the Logo implementation,
   http://www.macupdate.com/info.php/id/21469/netlogo ,
   list know elsewhere?
-- if Uri made changes to the external announcement, make sure you
-  put his changes into SVN.
+- if Uri made changes to the release announcement when he sent it,
+  make sure you get his changes into git.
 
 ************************************
 *** DID YOU TAG THE RELEASE YET? ***
