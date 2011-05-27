@@ -45,7 +45,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
   private val editorPane = new JEditorPane() { self =>
     addFocusListener(new FocusListener() {
       def focusGained(fe: FocusEvent) { FindDialog.watch(self) }
-      def focusLost(fe: FocusEvent) { if (!fe.isTemporary()) { FindDialog.dontWatch(self) } }
+      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatch(self) } }
     })
     setDragEnabled(false)
     setEditable(false)
@@ -93,7 +93,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     // may affect the answer returned by textArea.getPreferredScrollableViewportSize, causing the
     // layout to jump around - ST 10/7/09
     resetBorders()
-    val extraWidth = StrictMath.max(7, getWidth() - textArea.getPreferredScrollableViewportSize.width - 7)
+    val extraWidth = StrictMath.max(7, getWidth - textArea.getPreferredScrollableViewportSize.width - 7)
     textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
     editorPane.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
     super.doLayout()

@@ -53,6 +53,22 @@ there"""
     assert(innerHtml.contains("World"))
   }
 
+  // see https://trac.assembla.com/nlogo/ticket/1278
+  test("< characters get converted to &lt;"){
+    val x = """
+is 5<6?
+is 5 < 6?
+is 5 < x?
+    """.trim
+    val innerHtml = toInnerHtml(x)
+    println(innerHtml)
+    assert(innerHtml === """
+<p>is 5&lt;<6?<br/>
+is 5 &lt;< 6?<br/>
+is 5 &lt;< x?</p>
+""".trim)
+  }
+
   test("table parsing makes no changes and isn't outrageously slow"){
     val content = """|<table border>
                      |<tr> <th>Your action <th>Partner's action <th>Your jail time <th>Partner's jail time
