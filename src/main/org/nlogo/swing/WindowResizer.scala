@@ -2,8 +2,11 @@ package org.nlogo.swing
 
 import java.awt.{ Dimension, Point }
 import javax.swing.JWindow
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ MouseAdapter, MouseMotionAdapter, MouseEvent }
 import org.nlogo.awt.Utils.convertPointToScreen
+
+// In Java 6 you can just use a single MouseAdapter for everything, but for Java 5 you need a
+// separate MouseMotionAdapter. - ST 5/27/11
 
 class WindowResizer(window: JWindow)
 extends javax.swing.JPanel {
@@ -18,6 +21,8 @@ extends javax.swing.JPanel {
       convertPointToScreen(mousePressAbsLoc, WindowResizer.this)
       sizeWhenPressed = window.getSize
     }
+  }
+  private val motionAdapter = new MouseMotionAdapter {
     override def mouseDragged(e: MouseEvent) {
       val dragAbsLoc = new java.awt.Point(e.getPoint)
       convertPointToScreen(dragAbsLoc, WindowResizer.this)
@@ -28,6 +33,6 @@ extends javax.swing.JPanel {
   }
 
   addMouseListener(adapter)
-  addMouseMotionListener(adapter)
+  addMouseMotionListener(motionAdapter)
 
 }
