@@ -1,6 +1,6 @@
 #!/bin/sh -e -v
 
-SCALAC=/usr/local/scala-2.9.0.final/bin/scalac
+SCALAC=/usr/local/scala-2.9.0.1/bin/scalac
 
 rm -f BehaviorSpace.jar
 rm -rf build

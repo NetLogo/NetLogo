@@ -30,10 +30,10 @@ User-contributed code is welcome.
 
 HOW TO BUILD
 
-Make sure you are using Scala 2.9.0.
+Make sure you are using Scala 2.9.0.1.
 
 The build script expects to find the unzipped Scala distribution
-directory at /usr/local/scala-2.9.0.final.  If you have it in another
+directory at /usr/local/scala-2.9.0.1.  If you have it in another
 location, edit the build script to point the location you are using.
 
 Unjar the sources jar.  cd into the resulting BehaviorSpace directory
