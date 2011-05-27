@@ -38,7 +38,7 @@ The following is a (partial) list of changes made since NetLogo
 features:
 - alpha/transparency is now supported in the 3D view and in NetLogo 3D
   (if you use RGBA colors)
-- some compiler and runtime error message are now internationalized
+- some compiler and runtime error messages are now internationalized
 
 tweaks:
 - enabled Pack200 support in the applet for faster loading
