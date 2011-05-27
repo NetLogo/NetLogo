@@ -1,6 +1,6 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0beta2, available for free download from our site at
+NetLogo 5.0beta3, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
 This is a BETA release of NetLogo. As such, there may be a few bugs.
@@ -11,53 +11,49 @@ forward to hearing from you. Please let us know about bugs you find,
 features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0beta2, perhaps with minor updates to the code. If you have
+NetLogo 5.0beta3, perhaps with minor updates to the code. If you have
 any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
 As befits the number 5.0, this release has major new features.  Among
 those major features are: support for internationalization, smart plot
 widgets which eliminate the need for plotting code in the Code tab,
-rich formatting features for the Info tab, and support for functions
-as first class objects.  We invite and welcome your comments on the
-features as well as reports on bugs that you find.  We are excited by
-the opportunities resulting from the internationalization of NetLogo.
-The work on internationalization is not complete and may not be fully
-complete in version 5.0.  We will need help from the user community in
-helping us localize items such as the menus, error messages, etc.  We
-are hoping those of you in locales other than U.S. English will try
-using NetLogo in your locale with your local character set and report
-to us about successes or problems that you find.
+rich formatting features for the Info tab, transparency in 3D, and
+support for functions as first class objects.  We invite and welcome
+your comments on the features as well as reports on bugs that you
+find.
+
+We are excited by the opportunities resulting from the
+internationalization of NetLogo.  The work on internationalization is
+not complete and may not be fully complete in version 5.0.  We will
+need help from the user community in helping us localize items such as
+the menus, error messages, etc.  We are hoping those of you in locales
+other than U.S. English will try using NetLogo in your locale with
+your local character set and report to us about successes or problems
+that you find.
 
 The following is a (partial) list of changes made since NetLogo
-5.0beta1:
+5.0beta2:
   
 features:
-- import-world is a lot faster now
-- Programming Guide now has preliminary documentation on tasks
+- alpha/transparency is now supported in the 3D view and in NetLogo 3D
+  (if you use RGBA colors)
+- some compiler and runtime error message are now internationalized
 
 tweaks:
-- renamed Run tab back to Interface
-- plotting code inside plots is now wrapped in with-local-randomness
-- frame rates may now be floating point, and non-positive values are
-  rejected
-- enabled Github-flavored blank line handling in Info tab
+- enabled Pack200 support in the applet for faster loading
 
 fixes:
-- fixed regression where autoconversion wasn't happening properly for
-  3D models
-- fixed bug where placement of crosshairs in Settings dialog was
-  incorrect
-- fixed bug where multiple plot pens couldn't be without names
-- fixed bug "Open in Transition Guide" button opened wrong version
-- fixed regression where NetLogo wouldn't open on Java 5 (e.g. on Mac
-  OS X 10.4)
-- fixed regression where HubNet clients couldn't use the mouse in the
-  view
-- fixed intermittent plotting bug
-- fixed plot-related error when running BehaviorSpace experiment
-- fixed problem with UTF-8 characters in the applet
-
+- fixed logging regression in 4.1.3 where changes to the Code tab
+  weren't logged
+- fixed 5.0-only regression where the '<' character would disappear
+  from info tabs
+- fixed 5.0-only regression where the tick counter wasn't visible in
+  new models (#1315)
+- fixed 5.0-only regression where the Shift Left and Shift Right
+  menu items did the opposite
+- fixed 5.0-only matrix extension regression where matrix:regress
+  wasn't working
 
 Please send bug reports to bugs@ccl.northwestern.edu and other
 suggestions and comments to feedback@ccl.northwestern.edu.
