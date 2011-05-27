@@ -283,8 +283,11 @@ Go figure! - ST 12/2/04
       "#hubnet-broadcast-message">hubnet-broadcast-message</a> <a href=
       "#hubnet-clear-override">hubnet-clear-override</a> <a href=
       "#hubnet-clear-overrides">hubnet-clear-overrides</a> <a href=
+      "#hubnet-clients-list">hubnet-clients-list</a> <a href=
       "#hubnet-enter-message">hubnet-enter-message?</a> <a href=
       "#hubnet-exit-message">hubnet-exit-message?</a> <a href=
+      "#hubnet-kick-all-clients">hubnet-kick-all-clients</a> <a href=
+      "#hubnet-kick-client">hubnet-kick-client</a> <a href=
       "#hubnet-fetch-message">hubnet-fetch-message</a> <a href=
       "#hubnet-message">hubnet-message</a> <a href=
       "#hubnet-message-source">hubnet-message-source</a> <a href=
@@ -3204,6 +3207,18 @@ histogram [color] of turtles
       </div>
     <div class="dict_entry">
       <h3>
+        <a name="hubnet-clients-list" id=
+        "hubnet-clients-list">hubnet-clients-list</a>
+      </h3>
+      <h4>
+        hubnet-clients-list
+      </h4>
+      <p>
+	Reports a list containing the names of all the clients
+	currently connected to the HubNet server.
+      </div>
+    <div class="dict_entry">
+      <h3>
         <a name="hubnet-enter-message" id=
         "hubnet-enter-message">hubnet-enter-message?</a>
       </h3>
@@ -3254,6 +3269,32 @@ histogram [color] of turtles
       <p>
         See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a>
         for details.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="hubnet-kick-client" id=
+        "hubnet-kick-client">hubnet-kick-client</a>
+      </h3>
+      <h4>
+        hubnet-kick-client <i>client-name</i>
+      </h4>
+      <p>
+	Kicks the client with the given client-name. This is
+	equivalent to clicking the client name in the HubNet
+	Control Center and pressing the Kick button.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="hubnet-kick-all-clients" id=
+        "hubnet-kick-client">hubnet-kick-all-clients</a>
+      </h3>
+      <h4>
+        hubnet-kick-all-clients
+      </h4>
+      <p>
+	Kicks out all currently connected HubNet clients.
+        This is equivalent to selecting all clients in the HubNet 
+	Control Center and pressing the Kick button.
       </div>
     <div class="dict_entry">
       <h3>

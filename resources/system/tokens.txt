@@ -15,8 +15,6 @@ C __git etc._git
 C __hubnet-broadcast-user-message hubnet._hubnetbroadcastusermessage
 C __hubnet-clear-plot hubnet._hubnetclearplot
 C __hubnet-create-client hubnet._hubnetcreateclient
-C __hubnet-kick-all-clients hubnet._hubnetkickallclients
-C __hubnet-kick-client hubnet._hubnetkickclient
 C __hubnet-make-plot-narrowcast hubnet._hubnetmakeplotnarrowcast
 C __hubnet-plot hubnet._hubnetplot
 C __hubnet-plot-pen-down hubnet._hubnetplotpendown
@@ -139,6 +137,8 @@ C hubnet-broadcast-message hubnet._hubnetbroadcastmessage
 C hubnet-clear-override hubnet._hubnetclearoverride
 C hubnet-clear-overrides hubnet._hubnetclearoverrides
 C hubnet-fetch-message hubnet._hubnetfetchmessage
+C hubnet-kick-all-clients hubnet._hubnetkickallclients
+C hubnet-kick-client hubnet._hubnetkickclient
 C hubnet-reset hubnet._hubnetreset
 C hubnet-reset-perspective hubnet._hubnetresetperspective
 C hubnet-send hubnet._hubnetsend
@@ -272,7 +272,6 @@ R __dump etc._dump
 R __dump-extension-prims etc._dumpextensionprims
 R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
-R __hubnet-clients-list hubnet._hubnetclientslist
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
 R __in-network-radius etc._innetworkradius
@@ -348,6 +347,7 @@ R first etc._first
 R floor etc._floor
 R fput etc._fput
 R hsb etc._hsb
+R hubnet-clients-list hubnet._hubnetclientslist
 R hubnet-enter-message? hubnet._hubnetentermessage
 R hubnet-exit-message? hubnet._hubnetexitmessage
 R hubnet-message hubnet._hubnetmessage

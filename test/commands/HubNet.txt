@@ -2,35 +2,35 @@ HubNet-SimpleConnection
   O> hubnet-reset
   O> __hubnet-create-client
   O> __hubnet-wait-for-clients 1 2000
-  __hubnet-clients-list => ["Local 0"]
+  hubnet-clients-list => ["Local 0"]
 
 HubNet-ClientsList
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
   O> __hubnet-wait-for-clients 5 10000
-  length __hubnet-clients-list => 5
-  sort __hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3" "Local 4"]
+  length hubnet-clients-list => 5
+  sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3" "Local 4"]
 
 HubNet-KickClient
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
   O> __hubnet-wait-for-clients 5 10000
-  O> __hubnet-kick-client "Local 4"
-  sort __hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3"]
+  O> hubnet-kick-client "Local 4"
+  sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3"]
 
 HubNet-KickClient2
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
   O> __hubnet-wait-for-clients 5 10000
-  O> foreach __hubnet-clients-list [ __hubnet-kick-client ? ]
-  __hubnet-clients-list => []
+  O> foreach hubnet-clients-list [ hubnet-kick-client ? ]
+  hubnet-clients-list => []
 
 HubNet-KickAllClients
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
   O> __hubnet-wait-for-clients 5 10000
-  O> __hubnet-kick-all-clients
-  __hubnet-clients-list => []
+  O> hubnet-kick-all-clients
+  hubnet-clients-list => []
 
 HubNet-enter-message
   O> hubnet-reset
