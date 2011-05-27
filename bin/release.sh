@@ -108,7 +108,7 @@ do
 done
 
 # clean
-if [ $WINDOWS -eq 1 ]; then
+if [ $CLEAN -eq 1 ]; then
   $MAKE -s clean
 fi
 
