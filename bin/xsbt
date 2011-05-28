@@ -1,7 +1,7 @@
 #!/bin/sh
 
-LAUNCH=`dirname $0`/sbt-launch-0.9.8.jar
-URL='http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.9.8/sbt-launch.jar'
+LAUNCH=`dirname $0`/sbt-launch-0.9.9-SNAPSHOT-20110528.jar
+URL='http://ccl.northwestern.edu/devel/sbt-launch-0.9.9-SNAPSHOT-20110528.jar'
 
 if [ ! -f $LAUNCH ] ; then
   curl $URL -o $LAUNCH

@@ -2,6 +2,17 @@ scalaVersion := "2.9.0-1"
 
 name := "NetLogo"
 
+// doesn't work. emailed group - ST 5/28/11
+resourceDirectory := file("resources")
+
+scalacOptions ++=
+  "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
+  .split(" ").toSeq
+
+javacOptions ++=
+  "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+  .split(" ").toSeq
+
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
