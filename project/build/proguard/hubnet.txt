@@ -10,6 +10,10 @@
 
 -injars target/scala_2.9.0-1/classes
 
+# this is an injar, not a library jar, because we're going to stuff the Scala classes
+# we need directly into NetLogoLite.jar, so NetLogoLite.jar has no external dependencies
+-injars project/boot/scala-2.9.0-1/lib/scala-library.jar
+
 -injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/color-translation.txt)
 
 -outjar HubNet.jar
@@ -49,4 +53,9 @@
 
 -keep public class org.nlogo.widget.* {
  *;
+}
+
+# needed or extensions written in Scala won't build
+-keep class scala.reflect.ScalaSignature {
+    *;
 }
