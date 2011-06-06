@@ -28,10 +28,12 @@ class Tabs(val workspace: GUIWorkspace,
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
 
-  def init() {
+  def init(moreTabs: (String, java.awt.Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
+    for((name, tab) <- moreTabs)
+      addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
   }
 
@@ -68,7 +70,7 @@ class Tabs(val workspace: GUIWorkspace,
   val errorColor = java.awt.Color.RED
   
   def handle(e: CompiledEvent) {
-    def clearErrors() { for(i <- 2 until getTabCount) setForegroundAt(i, null) }
+    def clearErrors() { for(i <- 3 until getTabCount) setForegroundAt(i, null) }
     def recolorTab(component: java.awt.Component, hasError: Boolean) {
       setForegroundAt(indexOfComponent(component), if(hasError) errorColor else null)
     }

@@ -6,7 +6,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.Pico
+import org.nlogo.util.{ Femto, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
@@ -380,7 +380,8 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    tabs.init()
+    tabs.init(Plugins.load(pico): _*)
+
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
     workspace.init(viewManager)
     frame.addLinkComponent(viewManager)    

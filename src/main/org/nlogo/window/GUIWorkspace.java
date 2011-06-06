@@ -58,7 +58,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private final ExternalFileManager externalFileManager;
   // for movie capture
   public org.nlogo.awt.MovieEncoder movieEncoder = null;
-  private final NetLogoListenerManager listenerManager;
+  public final NetLogoListenerManager listenerManager;
 
   // for grid snap
   private boolean snapOn = false;

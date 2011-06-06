@@ -68,7 +68,7 @@ $(JARS): | $(SCALA_JAR)
 
 
 ###
-### extensions
+### extensions (and plugins too)
 ###
 
 EXTENSIONS=\
@@ -82,7 +82,8 @@ EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
-	extensions/qtj/qtj.jar
+	extensions/qtj/qtj.jar \
+	plugins/ReviewTab/ReviewTab.jar
 
 .PHONY: extensions
 extensions: $(EXTENSIONS)
@@ -101,6 +102,7 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
+	if [ ! -d plugins/ReviewTab/src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
@@ -119,6 +121,8 @@ github:
 	-git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala
 	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
 	-git clone git@github.com:/NetLogo/Table-Extension.git extensions/table
+	mkdir -p plugins
+	-git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab
 
 ### misc targets
 
@@ -129,7 +133,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
-	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes
+	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/javadoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
