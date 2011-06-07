@@ -62,6 +62,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 650
@@ -78,6 +79,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 646
@@ -109,6 +111,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 15
@@ -124,8 +127,9 @@ own-state
 1.0
 true
 false
+"" ""
 PENS
-"own-state" 1.0 0 -13345367 true
+"own-state" 1.0 0 -13345367 true "" ""
 
 SWITCH
 643
@@ -146,7 +150,7 @@ true
 Polygon -7500403 true true 150 5 40 250 150 205 260 250
 
 @#$#@#$#@
-NetLogo 4.1RC5
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

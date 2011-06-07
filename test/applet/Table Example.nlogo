@@ -42,7 +42,6 @@ to test1
   if table:length t != 0 [ user-message "should have no entries" ]
   
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 265
@@ -69,6 +68,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 BUTTON
 85
@@ -85,6 +85,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 OUTPUT
 7
@@ -378,7 +379,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1beta4pre1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

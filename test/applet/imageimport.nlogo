@@ -43,6 +43,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 BUTTON
 17
@@ -59,6 +60,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 CHOOSER
 17
@@ -107,6 +109,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 13
@@ -123,6 +126,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 17
@@ -139,6 +143,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 17
@@ -155,6 +160,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 16
@@ -201,6 +207,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 20
@@ -217,31 +224,29 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This code example shows how to use the IMPORT-PCOLORS primitive.  It also uses IMPORT-DRAWING to illustrate the differences between the two primitives.
 
 ?Agents cannot sense the drawing, so they cannot interact with or process images imported by IMPORT-DRAWING.  If you need an image agents can sense, you must use IMPORT-PCOLORS.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Select the sample image you want to import with the FILENAME chooser, and then press either button below the chooser.
 
 If you want to use your own image file, use the buttons that use USER-CHOOSE-FILE to let you pick a file.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The drawing appears in front of the patch colors.
 
 Images imported by IMPORT-PCOLORS are scaled to fit the world.  Their colors may be distorted since NetLogo supports only a limited color set for PCOLOR values.  (We plan to lift this limitation in a future version of NetLogo.)  See the Color section of the Programming Guide in the NetLogo User Manual for information on NetLogo's color space.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try loading the different images into the patches to get an idea of the type of color distortion to expect.
 
 Try importing an image with IMPORT-PCOLORS and then import the same image with IMPORT-DRAWING.  How does handling of the image differ?
@@ -529,7 +534,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1RC5
+NetLogo 5.0beta3
 @#$#@#$#@
 import-pcolors "paulofreire.png"
 @#$#@#$#@

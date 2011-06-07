@@ -107,6 +107,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 BUTTON
 20
@@ -123,6 +124,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 20
@@ -139,6 +141,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 8
@@ -155,6 +158,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 10
@@ -167,8 +171,8 @@ By default, the only valid file is File IO Patch Data.txt in the model's directo
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This code example shows how to read in information from a file directly from NetLogo code.
 
 In this example, we use the data to make a complicated patch maze. LOAD-PATCH-DATA will load in patch data from a file to a list, where SHOW-PATH-DATA will display all the data that was loaded in the view.  By default, there is only one file that is included that can be loaded in.  It is called "File IO Patch Data.txt" and it is located in the code example's directory.  You can use LOAD-OWN-PATCH-DATA to see how one would let the user decide which file to choose.  The function SAVE-PATCH-DATA is in the procedures if you wish to see how the file "File IO Patch Data.txt" was created.  For more information about File Output, see the appropriate code example.
@@ -460,7 +464,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1beta4pre1
+NetLogo 5.0beta3
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@

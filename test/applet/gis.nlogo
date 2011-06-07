@@ -262,6 +262,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
+30.0
 
 BUTTON
 5
@@ -278,6 +279,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 5
@@ -294,6 +296,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 5
@@ -310,6 +313,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 5
@@ -348,6 +352,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 5
@@ -375,6 +380,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 5
@@ -391,6 +397,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 185
@@ -407,6 +414,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 185
@@ -423,6 +431,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 CHOOSER
 5
@@ -449,6 +458,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 395
@@ -465,6 +475,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 395
@@ -481,6 +492,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 395
@@ -497,6 +509,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 590
@@ -513,6 +526,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 590
@@ -529,6 +543,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 185
@@ -545,12 +560,12 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-VERSION
--------
-$Id: GIS General Examples.nlogo 47711 2011-01-20 15:50:16Z russell734 $
+## VERSION
 
+$Id: GIS General Examples.nlogo 47711 2011-01-20 15:50:16Z russell734 $
 
 @#$#@#$#@
 default
@@ -836,7 +851,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.3
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 display-cities

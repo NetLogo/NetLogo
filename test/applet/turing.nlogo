@@ -9,7 +9,7 @@ to startup
 end
 
 to setup
-  ca
+  clear-all
   crt heads
   [
     set size 5
@@ -170,6 +170,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 262
@@ -246,6 +247,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 125
@@ -262,6 +264,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 369
@@ -378,6 +381,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 7
@@ -409,6 +413,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 17
@@ -491,46 +496,42 @@ on-1-turn
 3
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 A Turing machine, first proposed by Alan Turing in 1936, is a simple computing machine capable of doing anything a modern computer can do.  A traditional Turing machine has a single processor, or "head," with a limited number of internal states that change depending on the data that is read by the head.  As the Turing machine computes, the head moves back and forth across the tape, changing its internal state and the value of the current cell.
 
 This is a model of a multi-headed Turing machine on a 2 dimensional tape (2D MTM), which is an extension of the original machine proposed by Turing in 1936. 2D MTMs can be emulated on a single headed one dimensional Turing machine (TM), but the rules of a 2D MTM may be significantly simpler than those of a traditional TM emulating a 2D MTM.  In the model, there can be up to 256 "heads" which all follow the same set of basic rules.  In this 2-state 2D MTM, the head may change its state, the value of its current cell, and move either north, east, west, or south, depending on whether or not the current cell is on or off and its current state.
 
 This model demonstrates how multiple processors may interact with each other to complete complex processing tasks. It also shows that these machines can be heavily dependent on the number of processing agents. In addition to exploring the complexity of parallel computation, this model also demonstrates some of the caveats of parallel algorithms.
 
+## HOW IT WORKS
 
-HOW IT WORKS
--------------
 On each turn, each head moves forward. Depending on whether the patch ("cell") it's over is "on" (showing color) or "off" (invisible), the head will use the rule which transitions from its current state to the new state. In other words, if head A (which is in state 1, with position 2) is over cell B (which is on), then the on-1-state will show what the next state will be, the on-1-position slider will show what the next position will be for that head (0: North, 1: East, 2: South, 3: West), and if on-1-on? is true, then it will remain on. If on-1-on? is false, then it will turn off, becoming invisible.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 HEADS: the number of heads used by the Turing machine
 
 COLOR-PATHS?: Tells the heads to write color information onto the cell. This feature allows the user to analyze both the information written and the process in which it was written. It is only a device to keep track of which cell had been most recently turned on by a particular head; it does not affect on/off data written on the tape: colored cells are on, black cells are off.
 
 HEAD-SIZE: How large the head, or turtle appears.
 
-The rules of all heads are given by three parameters:
+The rules of all heads are given by three parameters:  
 [cell state]-[head state]-state [cell state]-[head state]-position [cell state]-[head state]-on?
 
 The prefix of each slider/toggle refers to the current state of the machine and the cell it is on.
 
-First prefix  - current cell state: on/off
+First prefix  - current cell state: on/off  
 Second prefix - current state of head, which may be either 0 or 1
-
 
 These prefixes specify the initial state which the following rules are applied to:
 
-Turn- specifies what direction the head will turn before moving forward 1 cell
-New Head State- specifies the new head state
+Turn- specifies what direction the head will turn before moving forward 1 cell  
+New Head State- specifies the new head state  
 New Cell State- specifies the state to apply to the current cell
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Here are some interesting phenomena that occur with the example setups:
 
 Example 1: In the first example, the machine does nothing with only one head. With two or more heads, the heads cooperate with each other to fill the tape with data in a repetitive fashion forming a shape similar to a square rotated by 45 degrees.  When the heads wrap around and converge with the written data, they get stuck in a loop and do not write any more data. If the tape was infinite, the growth of the square would be unbounded. 
@@ -543,9 +544,8 @@ Example 4: This particular type of Turing machine is commonly known as Langton's
 
 Example 5: The rules of this machine is very similar to that of Langton's vants, and its behavior is similar but has more stable properties. With two processors, there is a tight loop that doesn't seem to go anywhere.  Larger even numbers of heads create a 1-bit path which stably oscillates back and forth.  The processing of data remains constrained.  Odd numbers of heads start off similarly to even numbers of heads, but unwind as they oscillate.  Their growth is unconstrained and chaotic, with behavior very similar to vants.  When the number of heads is even and exceeds 128 processors (the tape has 256x256 cells), the end of the path being drawn hits the point of origin of the path and behaves similarly to configurations with larger odd numbers of heads.  This model demonstrates that pairs of "chaotic" heads can produce very stable behavior given the proper initial conditions.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Start by tinkering around with the number of heads in the example models, and consider the following:
 
 How do the heads interact with each other? 
@@ -554,22 +554,20 @@ What can you conclude about the number of heads in relation to the complexity of
 
 Can you find any other configurations that will yield interesting results?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Change the starting position of the heads.  How does this affect the execution of the 2D MTM?
 
 What happens to the execution of configurations when they start with random bits of data on the tape?
 
 Try adding more states to the cells and/or heads to the model.  Do different types of complexities emerge?  Are there more states that yield complex behavior?
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
------------------------
-Langton, C. 1984. Self-reproduction in cellular automata. Physica D 10, 134-144
-Langton, C. 1986. Studying artificial life with cellular automata. Physica D 22, 120-149
-Sipser, M. 1997. Introduction to the Theory of Computation. PWS Publishing 125-147.
-Wolfram, S. 2002. A New Kind of Science. Wolfram Media Inc.  Champaign, IL. 
+Langton, C. 1984. Self-reproduction in cellular automata. Physica D 10, 134-144  
+Langton, C. 1986. Studying artificial life with cellular automata. Physica D 22, 120-149  
+Sipser, M. 1997. Introduction to the Theory of Computation. PWS Publishing 125-147.  
+Wolfram, S. 2002. A New Kind of Science. Wolfram Media Inc.  Champaign, IL.   
 Pegg, E. 2002. Turmite. http://mathworld.wolfram.com/Turmite.html.
 
 Thanks to Ethan Bakshy for his work on this model.
@@ -781,7 +779,7 @@ Polygon -6459832 true true 46 128 33 120 21 118 11 123 3 138 5 160 13 178 9 192 
 Polygon -6459832 true true 67 122 96 126 63 144
 
 @#$#@#$#@
-NetLogo 4.1RC5
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 repeat 525 [ go ]

@@ -20,7 +20,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set max-tick-delta 0.1073
   make-particles
@@ -282,6 +282,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 8
@@ -298,6 +299,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 8
@@ -314,6 +316,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 97
@@ -516,56 +519,52 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
 The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
 
 This model is the simplest gas model in the suite of GasLab models.  The particles are moving and colliding with each other with no external constraints, such as gravity or containers. In this model, particles are modeled as perfectly elastic ones with no energy except their kinetic energy -- which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to their speed -- blue for slow, green for medium, and red for high.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The basic principle of all GasLab models is the following algorithm (for more details, see the model "GasLab Gas in a Box"):
 
-1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.
-3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.
-4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.
+1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.  
+3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.  
+4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.  
 5) Each particle is assigned its new speed, heading and energy.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- NUMBER-OF-PARTICLES: the number of gas particles.
-- TRACE?: Draws the path of one individual particle.
-- COLLIDE?: Turns collisions between particles on and off.
-- INIT-PARTICLE-SPEED: the initial speed of each particle -- they all start with the same speed.
+Initial settings:  
+- NUMBER-OF-PARTICLES: the number of gas particles.  
+- TRACE?: Draws the path of one individual particle.  
+- COLLIDE?: Turns collisions between particles on and off.  
+- INIT-PARTICLE-SPEED: the initial speed of each particle -- they all start with the same speed.  
 - PARTICLE-MASS: the mass of each particle -- they all have the same mass.
 
-
-As in most NetLogo models, the first step is to press SETUP. It puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.
+As in most NetLogo models, the first step is to press SETUP. It puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.  
 The GO button runs the models again and again.  This is a "forever" button.
 
-Monitors:
-- PERCENT FAST, PERCENT MEDIUM, PERCENT SLOW monitors: percent of particles with different speeds: fast (red), medium (green), and slow (blue).
-- AVERAGE SPEED: average speed of the particles.
+Monitors:  
+- PERCENT FAST, PERCENT MEDIUM, PERCENT SLOW monitors: percent of particles with different speeds: fast (red), medium (green), and slow (blue).  
+- AVERAGE SPEED: average speed of the particles.  
 - AVERAGE ENERGY: average kinetic energy of the particles.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed (fast, medium or slow).
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  The displayed values for speed are ten times the actual values.
+Plots:  
+- SPEED COUNTS: plots the number of particles in each range of speed (fast, medium or slow).  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  The displayed values for speed are ten times the actual values.  
 - ENERGY HISTOGRAM: the distribution of energies of all the particles, calculated as (m*v^2)/2.  The gray line is the average value, and the black line is the initial average.
 
 Initially, all the particles have the same speed but random directions. Therefore the first histogram plots of speed and energy should show only one column each.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed -- some particles get faster, some get slower, and the plot will show that change.
 
-
-THINGS TO NOTICE
-----------------
+## THINGS TO NOTICE
 
 What is happening to the numbers of particles of different colors?  Why are there more blue particles than red ones?
 
@@ -579,9 +578,8 @@ Watch the particle whose path is traced in the drawing. Notice how the path "wra
 
 In what ways is this model an "idealization" of the real world?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Set all the particles in part of the world, or with the same heading -- what happens?  Does this correspond to a physical possibility?
 
 Try different settings, especially the extremes.   Are the histograms different?  Does the trace pattern change?
@@ -592,9 +590,8 @@ Look up or calculate the REAL number, size, mass and speed of particles in a typ
 
 We often say outer space is a vacuum.  Is that really true?  How many particles would there be in a space the size of this computer?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Could you find a way to measure or express the "temperature" of this imaginary gas?  Try to construct a thermometer.
 
 What happens if there are particles of different masses?  (See "GasLab Two Gas" model.)
@@ -619,15 +616,14 @@ If MORE than two particles arrive on the same patch, the current code says they 
 
 Is this model valid for fluids in any aspect?  How could it be made to be fluid-like?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
 Notice the use of the histogram primitive.
 
 Notice how collisions are detected by the turtles and how the code guarantees that the same two particles do not collide twice.  What happens if we let the patches detect them?
 
+## ## CREDITS AND REFERENCES
 
-## CREDITS AND REFERENCES
 This was one of the original Connection Machine StarLogo applications (under the name GPCEE) and is now ported to NetLogo as part of the Participatory Simulations project.
 @#$#@#$#@
 default
@@ -920,7 +916,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.2pre1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

@@ -238,6 +238,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 11
@@ -254,6 +255,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 696
@@ -285,6 +287,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 11
@@ -346,6 +349,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 74
@@ -362,6 +366,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 74
@@ -378,6 +383,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 205
@@ -394,6 +400,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 20
@@ -425,6 +432,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 113
@@ -441,6 +449,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 96
@@ -457,6 +466,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 11
@@ -483,6 +493,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 39
@@ -499,6 +510,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 137
@@ -515,6 +527,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 205
@@ -531,6 +544,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 56
@@ -547,6 +561,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 691
@@ -656,15 +671,14 @@ select:
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model shows one way turtles can make interesting and varied sounds, or if you like, music.  It uses some simple physics to make "machines" that twist, spin, turn, twitch, and bounce.  When a part of the machine touches a wall, ceiling, or floor, it makes a sound.  The pitch of the sound depends on the location of the touch.
 
 You can start with a standard machine, or generate a random one.  You can change and build machines yourself, by changing the characteristics of each part.  You can sit back and let the machines play themselves, or you can use the mouse to move them around to control the sound yourself.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The machines are made up of levers.  Levers can be different sizes and are pulled down by gravity (in proportion to their size) and subject to friction.
 
 Each lever has one or two "hooks" to connect it to adjacent levers.  Each lever rather simple-mindedly tries to move and rotate to keep its hooks attached (or at least pointing towards) its neighbors' hooks.
@@ -673,9 +687,8 @@ Some levers have additional constraints.  A lever can be fixed in position so it
 
 The rules aren't perfect; for example, sometimes the levers separate.  Nonetheless, the behavior is often surprisingly realistic, and is rich enough to generate interesting motion which generates interesting sounds.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Press one of the SETUP... buttons to create a machine.  If you want, change NUM-LEVERS first to get more or fewer levers.
 
 Press GO to start the machine going.  You should start hearing sounds, although if your machine never touches the wall (or ceiling or floor), you won't hear anything.
@@ -690,16 +703,14 @@ You can use the INSTRUMENT slider to pick a different musical instrument for the
 
 If you make a machine you especially like, you can use Export World and Import World on the File menu to save it out and load it back in again.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The simple rules followed by the levers produce some quite realistic-looking behavior.
 
 Some machines don't do anything.  Other machines make simple, repetitive motions.  And others are wildly chaotic.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try all of the different SETUP buttons.
 
 Try all of the lever controls on the left.
@@ -710,37 +721,33 @@ See if you can make machines which are somewhat repetitive, but also somewhat un
 
 Using the command center, tell the turtles to put their pens down (using the PEN-DOWN command, abbreviated PD).  This generates some pleasing patterns.  Use CLEAR-DRAWING (abbreviated CD) to start a new drawing.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
-There are endless possibilities for how the same basic physics engine could be used to generate sound.  The levers could:
-- Play different instruments, instead of all the same one.
-- Make percussion sounds in addition pitched sounds.
-- Make sounds even when they don't hit the wall
-- Make sounds that depend on their characteristics
+There are endless possibilities for how the same basic physics engine could be used to generate sound.  The levers could:  
+- Play different instruments, instead of all the same one.  
+- Make percussion sounds in addition pitched sounds.  
+- Make sounds even when they don't hit the wall  
+- Make sounds that depend on their characteristics  
 And so on.
 
 How "normal" and "musical" can you make the model sound?  Currently the rules of the model aren't based on scales or tonality; by choosing pitches more carefully, you might be able to produce music which is less strange, more like music composed by humans.  You could also try to produce more regular rhythms by timing sounds to coincide with a regular beat.
 
 Or, you could take the opposite approach, and see how wild, different, and unusual can you make the sounds.  Make something that doesn't sound like anything you've ever heard before!
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 The model uses NetLogo's sound extension.  The sound extension is described in the Sound section of the NetLogo User Manual.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-Beatbox
-Composer
-GasLab With Sound
-Sound Workbench
+Beatbox  
+Composer  
+GasLab With Sound  
+Sound Workbench  
 Percussion Workbench
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
 This model is a streamlined variant of the Machines 2005 model created and submitted to the NetLogo User Community Models repository by James Steiner.  Machines 2005 is available from http://ccl.northwestern.edu/netlogo/models/community/machines-2005.
 
 Thanks to James for creating an earlier version which was silent; Seth Tisue for first adding sound to it; and James again for his further improvements, and for releasing the model under a Creative Commons License.
@@ -1205,7 +1212,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 set scale 2.5
 random-seed 2

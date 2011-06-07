@@ -138,6 +138,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 3
@@ -244,6 +245,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 92
@@ -260,6 +262,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 8
@@ -275,9 +278,10 @@ pop.
 100.0
 true
 true
+"" ""
 PENS
-"sheep" 1.0 0 -13345367 true
-"wolves" 1.0 0 -2674135 true
+"sheep" 1.0 0 -13345367 true "" ""
+"wolves" 1.0 0 -2674135 true "" ""
 
 MONITOR
 67
@@ -346,9 +350,10 @@ pop.
 100.0
 true
 true
+"" ""
 PENS
-"wolfStock" 1.0 0 -2674135 true
-"sheepStock" 1.0 0 -13345367 true
+"wolfStock" 1.0 0 -2674135 true "" ""
+"sheepStock" 1.0 0 -13345367 true "" ""
 
 BUTTON
 759
@@ -365,6 +370,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 762
@@ -403,6 +409,7 @@ NIL
 N
 NIL
 NIL
+1
 
 BUTTON
 758
@@ -419,6 +426,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 917
@@ -480,6 +488,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 902
@@ -540,6 +549,7 @@ NIL
 C
 NIL
 NIL
+1
 
 BUTTON
 458
@@ -556,6 +566,7 @@ NIL
 S
 NIL
 NIL
+1
 
 TEXTBOX
 104
@@ -588,67 +599,61 @@ Compare Agent/Aggregate Models\n
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model explores the relationship between two different models of predator-prey ecosystems: an agent-based model and a aggregate model.  Each of the models can be run separately, or docked side-by-side for comparison.
 
 In the agent model, wolves and sheep wander randomly around the landscape, while the wolves look for sheep to prey on. Each step costs the wolves energy, and they must eat sheep in order to replenish their energy - when they run out of energy they die. To allow the population to continue, each wolf or sheep has a fixed probability of reproducing at each time step.
 
 The aggregate model is a System Dynamics model of the relationship between populations our wolves and sheep.  It is based on a version of the famous Lotka-Volterra model of interactions between two species in an ecosystem.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-1. Adjust the slider parameters (see below), or use the default settings.
-3. Press the SETUP-COMPARISON button.
-4. Press the COMPARE button to begin the simulation.
-5. View the POPULATIONS and AGENT-POPULATIONS plots to watch the populations fluctuate     over time
+1. Adjust the slider parameters (see below), or use the default settings.  
+3. Press the SETUP-COMPARISON button.  
+4. Press the COMPARE button to begin the simulation.  
+5. View the POPULATIONS and AGENT-POPULATIONS plots to watch the populations fluctuate
+     over time
 
-Parameters shared between agent and aggregate models:
-INITIAL-NUMBER-SHEEP: The initial size of sheep population
-INITIAL-NUMBER-WOLVES: The initial size of wolf population
+Parameters shared between agent and aggregate models:  
+INITIAL-NUMBER-SHEEP: The initial size of sheep population  
+INITIAL-NUMBER-WOLVES: The initial size of wolf population  
 SHEEP-REPRODUCE: The probability of a sheep reproducing at each time step
 
-Parameters for agent model:
-SHEEP-MAX-INITIAL-ENERGY: At setup time, sheep are given an energy between 1 and this value
-WOLF-GAIN-FROM-FOOD: The amount of energy wolves get for every sheep eaten
+Parameters for agent model:  
+SHEEP-MAX-INITIAL-ENERGY: At setup time, sheep are given an energy between 1 and this value  
+WOLF-GAIN-FROM-FOOD: The amount of energy wolves get for every sheep eaten  
 WOLF-REPRODUCE: The probability of a wolf reproducing at each time step
 
-Parameters for aggregate model:
-WOLVES-DEATH-RATE: The rate at which wolves die.
-PREDATION-RATE: The rate at which wolves eat sheep.
+Parameters for aggregate model:  
+WOLVES-DEATH-RATE: The rate at which wolves die.  
+PREDATION-RATE: The rate at which wolves eat sheep.  
 PREDATOR-EFFICIENCY: The efficiency of the wolves in extracting energy to reproduce from the prey they eat.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Why do you suppose that some variations of the model might be stable while others are not?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try adjusting the parameters under various settings. How sensitive is the stability of the model to the particular parameters?
 
 Notice that under stable settings, the populations tend to fluctuate at a predictable pace. Can you find any parameters that will speed this up or slow it down?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 There are a number ways to alter the model so that it will be stable with only wolves and sheep (no grass). Some will require new elements to be coded in or existing behaviors to be changed. Can you develop such a version?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Note the use of the System Dynamics Modeler to create the aggregate model.
 
+## RELATED MODELS
 
-RELATED MODELS
----------------
 Look at the Wolf Sheep Predation model for an example of an agent model which can produce a stable model of predator-prey ecosystems.
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
 Lotka, A.J. (1956) Elements of Mathematical Biology.  New York: Dover.
 
 Wilensky, U. & Reisman, K. (1999). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (This model is a slightly extended version of the model described in the paper.)
@@ -965,7 +970,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1beta4pre1
+NetLogo 5.0beta3
 @#$#@#$#@
 setup
 setup-aggregate
