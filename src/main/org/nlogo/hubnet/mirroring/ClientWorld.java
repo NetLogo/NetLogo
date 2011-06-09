@@ -61,6 +61,14 @@ public strictfp class ClientWorld
     linkKeys = new HashMap<Long, LinkKey>();
   }
 
+  // temporary hack for the review tab experiments
+  public void reset(){
+    sortedTurtles = new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
+    turtleKeys = new HashMap<Long, TurtleKey>();
+    sortedLinks = new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
+    linkKeys = new HashMap<Long, LinkKey>();
+  }
+
   public ClientWorld(int numPatches, boolean printErrors) {
     this(printErrors);
     createPatches(numPatches);
