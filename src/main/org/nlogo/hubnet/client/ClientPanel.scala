@@ -120,7 +120,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
     else if (widgetName=="ALL PLOTS") {
       plotManager.clearAll()
-      for (pw <- clientGUI.getInterfaceComponents.collect { case pw: PlotWidget => pw}) {
+      for (pw <- clientGUI.getInterfaceComponents.collect { case pw: PlotWidget => pw }) {
         pw.makeDirty()
         pw.repaintIfNeeded()
       }
