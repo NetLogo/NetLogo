@@ -1,5 +1,6 @@
 package org.nlogo.app
 
+import org.nlogo.api.APIVersion
 import org.nlogo.util.Pico
 import java.awt.Component
 
@@ -18,15 +19,24 @@ object Plugins {
       jar = new java.io.File(dir, name + ".jar")
       if jar.exists
     } yield {
-      val loader = new java.net.URLClassLoader(
-        Array(jar.toURI.toURL),
+      val url = new java.net.URL("jar", "", "file:" + jar.getAbsolutePath + "!/");
+      val jarConnection = url.openConnection().asInstanceOf[java.net.JarURLConnection]
+      val manifest = jarConnection.getManifest()
+      require(manifest != null, "manifest not found")
+      val attributes = manifest.getMainAttributes()
+      require(attributes.getValue("NetLogo-API-Version") == APIVersion.version,
+              "NetLogo-API-Version in manifest must be " + APIVersion.version)
+      val tabName = Option(attributes.getValue("Tab-Name")).getOrElse(
+        sys.error("Tab-Name not found in manifest"))
+      val className = Option(attributes.getValue("Class-Name")).getOrElse(
+        sys.error("Class-Name not found in manifest"))
+      val loader = new java.net.URLClassLoader(Array(url),
         Thread.currentThread.getContextClassLoader) {
           def load(x: String) = findClass(x)  // findClass is protected
         }
-      val className = "org.nlogo.review.ReviewTab" // zzz TODO don't hardcode
       pico.addComponent(className, loader.load(className))
-      val tabName = "Review" // zzz TODO don't hardcode
       val component = pico.getComponent(className).asInstanceOf[java.awt.Component]
       (tabName, component)
     }
+
 }
