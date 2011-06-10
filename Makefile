@@ -110,19 +110,31 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 .PHONY: github
 github:
 	mkdir -p extensions
-	-git clone git@github.com:/NetLogo/Array-Extension.git extensions/array
-	-git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap
-	-git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis
-	-git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo
-	-git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix
-	-git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler
-	-git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj
-	-git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample
-	-git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala
-	-git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound
-	-git clone git@github.com:/NetLogo/Table-Extension.git extensions/table
+	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
+	cd extensions/array; git pull; git st
+	if [ ! -d extensions/bitmap/src ] ; then git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
+	cd extensions/bitmap; git pull; git st
+	if [ ! -d extensions/gis/src ] ; then git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis ; fi
+	cd extensions/gis; git pull; git st
+	if [ ! -d extensions/gogo/src ] ; then git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo ; fi
+	cd extensions/gogo; git pull; git st
+	if [ ! -d extensions/matrix/src ] ; then git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix ; fi
+	cd extensions/matrix; git pull; git st
+	if [ ! -d extensions/profiler/src ] ; then git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler ; fi
+	cd extensions/profiler; git pull; git st
+	if [ ! -d extensions/qtj/src ] ; then git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj ; fi
+	cd extensions/qtj; git pull; git st
+	if [ ! -d extensions/sample/src ] ; then git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample ; fi
+	cd extensions/sample; git pull; git st
+	if [ ! -d extensions/sample-scala/src ] ; then git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
+	cd extensions/sample-scala; git pull; git st
+	if [ ! -d extensions/sound/src ] ; then git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound ; fi
+	cd extensions/sound; git pull; git st
+	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
+	cd extensions/table; git pull; git st
 	mkdir -p plugins
-	-git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab
+	if [ ! -d plugins/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
+	cd plugins/ReviewTab; git pull; git st
 
 ### misc targets
 
