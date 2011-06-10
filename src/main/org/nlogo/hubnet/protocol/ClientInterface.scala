@@ -62,10 +62,10 @@ class ClientInterface(
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
   private def readObject(in: java.io.ObjectInputStream) {
-    widgets = in.readObject().asInstanceOf[List[List[String]]]
-    widgetDescriptions = in.readObject().asInstanceOf[List[String]]
-    turtleShapes = in.readObject().asInstanceOf[List[Shape]]
-    linkShapes = in.readObject().asInstanceOf[List[Shape]]
+    widgets = in.readObject().asInstanceOf[Seq[Seq[String]]]
+    widgetDescriptions = in.readObject().asInstanceOf[Seq[String]]
+    turtleShapes = in.readObject().asInstanceOf[Seq[Shape]]
+    linkShapes = in.readObject().asInstanceOf[Seq[Shape]]
     chooserChoices = collection.mutable.HashMap[String, LogoList]()
     chooserChoices ++= in.readObject().asInstanceOf[Map[String, LogoList]]
   }
