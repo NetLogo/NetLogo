@@ -1,6 +1,7 @@
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{I18N, ModelType}
+import org.nlogo.api.{WidgetIO, I18N, ModelType}
+import org.nlogo.api.WidgetIO.WidgetSpec
 import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 import java.awt.{Dimension, BorderLayout, Component}
 import java.io.{IOException, StringReader, BufferedReader}
@@ -64,8 +65,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
   }
 
-  def load(lines: Array[String], version:String) {
-    interfacePanel.loadWidgets(lines, version)
+  def loadClientInterface(specs: Iterable[WidgetSpec], version:String) {
+    interfacePanel.loadWidgets(WidgetIO.dumpWidgets(specs), version)
     setSize (getPreferredSize)
   }
 

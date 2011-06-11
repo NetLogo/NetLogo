@@ -55,7 +55,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   // Kicks a client and notifies it.
   def kickClient(clientId: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
-    server.removeClient(clientId, true, I18N.gui.get("menu.tools.hubnetControlCenter.removedViaControlCenter"))
+    server.removeParticipantClient(clientId, true, I18N.gui.get("menu.tools.hubnetControlCenter.removedViaControlCenter"))
     clientsPanel.removeClientEntry(clientId)
   }
 

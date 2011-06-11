@@ -431,6 +431,11 @@ public strictfp class ViewWidget
   }
 
   @Override
+  public scala.Option<org.nlogo.api.WidgetIO.WidgetSpec> saveSpec() {
+    return settings.saveSpec();
+  }
+
+  @Override
   public Object load(String[] strings, Widget.LoadHelper helper) {
     return settings.load(strings, helper.version());
   }

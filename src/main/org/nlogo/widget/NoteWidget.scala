@@ -95,6 +95,9 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.toString
   }
 
+  override def saveSpec = org.nlogo.api.WidgetIO.noteOption(getLoc, text, fontSize,
+    org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB), transparency)
+
   def load(strings: Array[String], helper: Widget.LoadHelper) = {
     text = if (strings(5) == "NIL") "" else org.nlogo.api.File.restoreLines(strings(5))
     if (strings.length >= 7) fontSize = strings(6).toInt

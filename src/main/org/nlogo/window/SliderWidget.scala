@@ -253,4 +253,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     if (vertical) s.append("VERTICAL\n") else s.append("HORIZONTAL\n")
     s.toString
   }
+
+  override def saveSpec: Option[WidgetIO.SliderSpec] =
+    Some(WidgetIO.SliderSpec(getLoc, name, minimumCode, maximumCode, value, incrementCode,
+      if (units.trim == "") None else Some(units), vertical))
 }

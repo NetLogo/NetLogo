@@ -63,4 +63,5 @@ extends AbstractWorkspaceScala(
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles(): Unit = unsupported
   override def compiler: CompilerInterface = unsupported
+  override def serverWidgetSpecs: Iterable[org.nlogo.api.WidgetIO.WidgetSpec] = unsupported
 }

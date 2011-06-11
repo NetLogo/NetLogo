@@ -4,7 +4,7 @@ import java.awt.{List=>AWTList, _}
 import event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
 import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
-import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler}
+import org.nlogo.api.{WidgetIO, MultiErrorHandler, SingleErrorHandler}
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 object Widget {
@@ -34,6 +34,7 @@ abstract class Widget extends JPanel {
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
   def widgetWrapperOpaque = true
   def save: String
+  def saveSpec: Option[WidgetIO.WidgetSpec] = None
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
@@ -80,7 +81,7 @@ abstract class Widget extends JPanel {
 
   private def doPopup(e: MouseEvent): Unit = {
     if (hasContextMenu) {
-      var menu: JPopupMenu = new JPopupMenu
+      val menu: JPopupMenu = new JPopupMenu
       populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
       if (menu.getSubElements.length > 0) {
         menu.show(e.getSource.asInstanceOf[Component], e.getX, e.getY)
@@ -105,13 +106,13 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    var g2d: Graphics2D = g.asInstanceOf[Graphics2D]
+    val g2d: Graphics2D = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     super.paintComponent(g)
   }
 
   override def toString: String = {
-    var sup: String = super.toString
+    val sup: String = super.toString
     if (displayName != null && !displayName.equals("")) sup + "(" + displayName + ")"
     else sup
   }
@@ -139,6 +140,21 @@ abstract class Widget extends JPanel {
       buf.append((r.x + r.width) + "\n")
       buf.append((r.y + r.height) + "\n")
       buf.toString
+    }
+  }
+
+  // TODO
+  // the if branch here is a big hack
+  // we should probably have a getLoc(widget) method on any WidgetContainer
+  // instead of calling getBoundsString and then parsing that.
+  def getLoc: WidgetIO.Loc = {
+    if (findWidgetContainer != null) {
+      val Array(x1, y1, x2, y2) = findWidgetContainer.getBoundsString(this).split("\n").map(_.toInt)
+      WidgetIO.Loc(x1, y1, x2, y2)
+    }
+    else {
+      val r: Rectangle = getBounds
+      WidgetIO.Loc(r.x, r.y, (r.x + r.width), (r.y + r.height))
     }
   }
 

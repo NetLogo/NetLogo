@@ -64,6 +64,8 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     s.toString
   }
 
+  override def saveSpec = org.nlogo.api.WidgetIO.switchOption(getLoc,_name,isOn);
+
   def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef = {
     name(org.nlogo.api.File.restoreLines(strings(6)), true)
     isOn = strings(7).toDouble == 0

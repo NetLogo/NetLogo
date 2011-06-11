@@ -1,7 +1,9 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.api.{
+  PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+  CompilerException, JobOwner, SimpleJobOwner, WidgetIO}
 import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
 import org.nlogo.plot.{PlotExporter,PlotException,PlotManager}
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
@@ -56,6 +58,8 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     plotManager.clearAll()
     extensionManager.clearAll()
   }
+
+  def serverWidgetSpecs: Iterable[WidgetIO.WidgetSpec] 
 }
 
 object AbstractWorkspaceTraits {

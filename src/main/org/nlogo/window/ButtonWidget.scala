@@ -9,7 +9,7 @@ import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.awt.Utils.button1Mask
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{I18N, Editable, Options, Version}
+import org.nlogo.api.{WidgetIO, I18N, Editable, Options, Version}
 
 object ButtonWidget {
 
@@ -415,60 +415,27 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   // saving and loading
-  override def save = {
-    val s = new StringBuilder()
-    s.append("BUTTON\n")
-    s.append(getBoundsString)
+  override def saveSpec: Option[WidgetIO.ButtonSpec] =
+    Some(WidgetIO.ButtonSpec(
+      loc = getLoc,
+      displayName = if (name.trim != "") Some(name) else None,
+      source = innerSource,
+      forever = forever,
+      agentType = buttonType.name.toUpperCase,
+      actionKey = if (actionKey == 0) None else Some(actionKey),
+      goTime = goTime))
 
-    if(name.trim != "") s.append(name + "\n") else s.append("NIL\n")
-
-    import org.nlogo.api.File.stripLines
-    if(innerSource() != null  && innerSource().trim != "") s.append(stripLines(innerSource()) + "\n")
-    else s.append("NIL\n")
-
-    if(forever) s.append("T\n") else s.append("NIL\n")
-    
-    s.append(1 + "\n") // for compatability
-    s.append("T\n")  // show display name
-
-    // agent type
-    s.append(buttonType.name.toUpperCase + "\n")
-  
-    // former autoUpdate flag
-    s.append("NIL\n")
-
-    if(actionKey == 0 || actionKey == ' ') s.append("NIL\n")
-    else s.append(actionKey + "\n")
-
-    s.append("NIL\n") // intermediateupdates were optional for a short time
-    s.append("NIL\n") // being affected by the speed slider was optional for a short time
-
-    // go time only button. 
-    s.append((if(goTime) 0 else 1) + "\n")
-
-    s.toString
-  }
+  override def save = WidgetIO.ButtonSpec.toString(saveSpec.get)
 
   override def load(strings:Array[String], helper: Widget.LoadHelper) = {
-    forever = strings(7) == "T"
-    // ButtonType handles converting the saved button type name into a ButtonType object.
-    if (10 < strings.length) buttonType = ButtonType(strings(10).toLowerCase)
-
-    // strings[11] used to control the autoUpdate flag,
-    // but that's now a global setting
-    if(strings.length > 12 && strings(12) != "NIL") actionKey = strings(12).charAt(0)
-
-    if(strings.length > 15) goTime = strings(15) == "0"
-
-    // strings[13] and strings[14] were temporarily added, then gotten rid of,
-    // so we just skip those lines
-    name = if(strings(5) != "NIL") strings(5) else ""
-
-    val source = org.nlogo.api.File.restoreLines(strings(6))
-    wrapSource(helper.convert(if(source=="NIL") "" else source, false))
-
-    val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1)
+    val spec = WidgetIO.ButtonSpec.parse(strings)
+    forever = spec.forever
+    buttonType = ButtonType(spec.agentType.toLowerCase)
+    _actionKey = spec.actionKey
+    goTime = spec.goTime
+    name = spec.displayName.getOrElse("")
+    wrapSource(helper.convert(if (spec.source == "NIL") "" else spec.source, false))
+    setSize(spec.width, spec.height)
     chooseDisplayName
     this
   }

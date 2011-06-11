@@ -1,6 +1,5 @@
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.JCL.toScalaSeq
@@ -8,6 +7,8 @@ import org.nlogo.util.Femto
 import org.nlogo.api._
 import org.nlogo.awt.Utils.invokeLater
 import org.nlogo.swing.Implicits._
+import org.nlogo.hubnet.connection.{ClientRoles , HubNetException} 
+import org.nlogo.api.WidgetIO.WidgetSpec 
 
 import java.net.InetAddress
 import org.nlogo.window._
@@ -47,16 +48,18 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
-    clientApp.startup(editorFactory, "", host.orNull, connectionManager.port, true,
-      isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+    clientApp.startup(editorFactory, "", host.getOrElse(null), connectionManager.port,
+ 		  ClientRoles.Participant, true, isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
   }
 
   /// client editor
-  def getClientInterface: Array[String] = _clientEditor.getWidgetsAsStrings.toArray
+  def getClientInterface: Iterable[WidgetSpec] = WidgetIO.parseWidgets(_clientEditor.getWidgetsAsStrings)
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(lines:Array[String], version: String) { _clientEditor.load(lines, version) }
+  def loadClientInterface(specs:Iterable[WidgetSpec], version: String) {
+ 	  _clientEditor.loadClientInterface(specs, version)
+ 	}
   def save(buf:scala.collection.mutable.StringBuilder) { _clientEditor.save(buf) }
 
 
@@ -69,7 +72,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions
     val widgets = parsedFile.get(if (client) ModelSection.CLIENT else ModelSection.WIDGETS)
-    _clientEditor.load(widgets, parsedFile.get(ModelSection.VERSION)(0))
+    _clientEditor.loadClientInterface(WidgetIO.parseWidgets(widgets), parsedFile.get(ModelSection.VERSION)(0))
     openClientEditor()
   }
 

@@ -3,6 +3,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.connection.HubNetException
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.api.ModelType
+import org.nlogo.api.WidgetIO.WidgetSpec 
 import org.nlogo.hubnet.protocol.TestClient
 import collection.mutable.ListBuffer
 import java.util.concurrent.{Executors, ExecutorService}
@@ -18,9 +19,10 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
   // and is now running it in headless.
   // load is called from HeadlessModelOpener
   // save should never be called.
-  var widgets: Array[String] = Array()
-  def load(lines:Array[String], version: String) { widgets = lines }
-  def getClientInterface: Array[String] = widgets
+  var clientWidgets: Iterable[WidgetSpec] = _
+ 	def loadClientInterface(lines:Iterable[WidgetSpec], version: String) { clientWidgets = lines }
+ 	def getClientInterface: Iterable[WidgetSpec] = clientWidgets
+
   def save(buf:scala.collection.mutable.StringBuilder) {}
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10

@@ -1,7 +1,7 @@
 package org.nlogo.hubnet.client 
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.hubnet.protocol.{HandshakeFromServer, ActivityCommand}
+import org.nlogo.hubnet.protocol.{WidgetTypes, HandshakeFromServer, ActivityCommand}
 
 private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                               errorHandler:ErrorHandler, waitTime:Long, workspace:CompilerServices)
@@ -68,20 +68,22 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       // over a whole slew of widget events all at once.  they 
       // will always be at least waitTime apart.
       invokeAndWait(() => {
-        val (name, value) = widget match {
+        val (widgetType, name, value) = widget match {
           case s:SliderWidget =>
             if(s.value == s.maximum) s.value = s.minimum else s.value = s.value + s.increment
-            (s.nameWrapper, Some(s.value))
-          case b: ButtonWidget => (widget.displayName, Some(if(b.foreverOn) true else false))
+            (WidgetTypes.Slider, s.nameWrapper, Some(s.value))
+          case b: ButtonWidget =>
+            (WidgetTypes.Button, widget.displayName, Some(if(b.foreverOn) true else false))
           case s: SwitchWidget =>
             s.isOn = !s.isOn
-            (widget.displayName, Some(s.isOn))
-          case _ => ("", None)
+            (WidgetTypes.Switch, widget.displayName, Some(s.isOn()))
+          case _ => (WidgetTypes.Other, "", None)
         }
         // need to check if we are still connected since we could
         // have shutdown while we were waiting to be called.
         // --mag 8/26/03
-        if (connected && value.isDefined) sendDataAndWait(new ActivityCommand(name, value.get.asInstanceOf[AnyRef]))
+        if (connected && value.isDefined) sendDataAndWait(
+ 		      new ActivityCommand(widgetType, name, value.get.asInstanceOf[AnyRef]))
       })
     }
   }

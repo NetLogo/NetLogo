@@ -15,9 +15,12 @@ import org.nlogo.api.Perspective;
 import org.nlogo.api.ModelType;
 import org.nlogo.api.ModelSection;
 import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.api.WidgetIO;
+import org.nlogo.app.WidgetPanel;
 import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
+import org.nlogo.util.JCL;
 import org.nlogo.workspace.BufferedReaderImporter;
 
 import java.util.HashMap;
@@ -1270,7 +1273,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// preview commands & aggregate
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
+  public void handle(final org.nlogo.window.Events.LoadSectionEvent e) {
     if (e.section == ModelSection.PREVIEW_COMMANDS &&
         e.text.trim().length() > 0) {
       previewCommands_$eq(e.text);
@@ -1278,7 +1281,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (e.section == ModelSection.CLIENT &&
         e.lines.length > 0 &&
         !isApplet()) {
-      getHubNetManager().load(e.lines, e.version);
+      java.util.List<String> strings = new java.util.ArrayList<String>(e.lines.length) {{
+        for (String s : e.lines) { add(s); }
+      }};
+      getHubNetManager().loadClientInterface(WidgetIO.parseWidgets(JCL.toScalaSeq(strings)), e.version);
     }
     if (e.section == ModelSection.SHAPES) {
       world.turtleShapeList().replaceShapes
@@ -1310,6 +1316,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       source = super.getSource(filename);
     }
     return source;
+  }
+
+  public scala.collection.Iterable<WidgetIO.WidgetSpec> serverWidgetSpecs() {
+    WidgetPanel wp = (WidgetPanel) getWidgetContainer();
+    java.util.List<WidgetIO.WidgetSpec> widgets = new java.util.ArrayList<WidgetIO.WidgetSpec>(wp.getComponentCount());
+    for (int i = 0; i < wp.getComponentCount(); i += 1) {
+      java.awt.Component c = wp.getComponent(i);
+      if (c instanceof org.nlogo.app.WidgetWrapper) {
+        scala.Option<WidgetIO.WidgetSpec> specOption = ((org.nlogo.app.WidgetWrapper) c).widget().saveSpec();
+        if (specOption.isDefined())
+          widgets.add(specOption.get());
+      }
+    }
+    JCL.toScalaSeq(widgets);
   }
 
 }

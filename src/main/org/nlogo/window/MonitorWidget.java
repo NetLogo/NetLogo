@@ -302,6 +302,12 @@ public strictfp class MonitorWidget
   }
 
   @Override
+  public scala.Option<org.nlogo.api.WidgetIO.WidgetSpec> saveSpec() {
+    return org.nlogo.api.WidgetIO.monitorOption(
+        getLoc(), name().equals("") ? "NIL" : name(), innerSource, decimalPlaces, fontSize);
+  }
+
+  @Override
   public Object load(String[] strings, Widget.LoadHelper helper) {
     String displayName = strings[5];
     String source = org.nlogo.api.File.restoreLines(strings[6]);

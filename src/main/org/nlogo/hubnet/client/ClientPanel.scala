@@ -13,9 +13,10 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.Utils.{getFrame, invokeLater}
 import org.nlogo.swing.Implicits._
 import org.nlogo.util.JCL._
-import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
-import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
+import org.nlogo.widget.SwitchWidget
+import org.nlogo.window.{InputBoxWidget, ChooserWidget, SliderWidget, PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
+import org.nlogo.api.{WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -43,7 +44,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def sendMouseMessage(mouseXCor: Double, mouseYCor: Double, down: Boolean) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     val coords = LogoList(mouseXCor.asInstanceOf[AnyRef], mouseYCor.asInstanceOf[AnyRef])
-    sendDataAndWait(new ActivityCommand(if (down) "View" else "Mouse Up", coords))
+   sendDataAndWait(new ActivityCommand(WidgetTypes.MouseCommand, if (down) "View" else "Mouse Up", coords)) 
   }
 
   def handlePlotUpdate(msg: PlotInterface) {
@@ -80,7 +81,8 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def handle(e: org.nlogo.window.Events.AddJobEvent) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     val button = e.owner.asInstanceOf[ButtonWidget]
-    sendDataAndWait(new ActivityCommand(button.displayName, button.foreverOn.asInstanceOf[AnyRef]))
+    sendDataAndWait(new ActivityCommand(WidgetTypes.Button,
+      button.displayName, button.foreverOn.asInstanceOf[AnyRef]))
     button.popUpStoppingButton()
   }
 
@@ -101,7 +103,15 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handle(e: org.nlogo.window.Events.InterfaceGlobalEvent) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
-    sendDataAndWait(new ActivityCommand(e.widget.name, e.widget.valueObject))
+    val widgetType = e.widget match {
+      case b: ButtonWidget => WidgetTypes.Button
+      case s: SliderWidget => WidgetTypes.Slider
+      case s: SwitchWidget => WidgetTypes.Switch
+      case c: ChooserWidget => WidgetTypes.Chooser
+      case i: InputBoxWidget => WidgetTypes.Input
+      case _ => WidgetTypes.Other
+    }
+    sendDataAndWait(new ActivityCommand(widgetType, e.widget.name, e.widget.valueObject))
   }
 
   def handle(e: org.nlogo.window.Events.AddSliderConstraintEvent) {
@@ -228,14 +238,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.first.asInstanceOf[ClientInterface]
-    val widgets = clientInterface.widgetDescriptions
+    val widgets = WidgetIO.dumpWidgets(clientInterface.widgets)
     new LoadSectionEvent("HubNet", ModelSection.WIDGETS, widgets.toArray, widgets.mkString("\n")).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
-    clientGUI.setChoices(clientInterface.chooserChoices.toMap)
+    clientGUI.setChoices(clientInterface.chooserChoices(compiler)) 
     viewWidget.renderer.replaceTurtleShapes(toJavaList(clientInterface.turtleShapes))
     viewWidget.renderer.replaceLinkShapes(toJavaList(clientInterface.linkShapes))
-    sendDataAndWait(EnterMessage)
     connected = true
     invokeLater(() => {
       getFrame(ClientPanel.this).pack()
@@ -272,11 +281,12 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private var userid: String = null
   private var hostip: String = null
   private var port: Int = 0
+  private var role: ClientRoles.Value = ClientRoles.Participant
   private var activityName: String = null
   private var listener: Listener = null
   var connected:Boolean = false
 
-  def login(userid: String, hostip: String, port: Int): String = {
+  def login(userid: String, hostip: String, port: Int, role: ClientRoles.Value): String = {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     // there used to be a flag called loggingIn
     // to "ensure that we only execute this one at a time"
@@ -287,6 +297,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     this.userid = userid
     this.hostip = hostip
     this.port = port
+    this.role = role 
 
     try {
       val socket = new java.net.Socket(hostip, port)
@@ -405,13 +416,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     } else System.err.println("Attempted to send data on a shutdown listener, ignoring.")
   }
 
-  private def receiveData(a: Any): Unit = {
+  private def receiveData(a: Any) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     a match {
       case m: Message => handleProtocolMessage(m)
       case info: String => if (!connected) {
         if (info == Version.version)
-          sendDataAndWait(new HandshakeFromClient(listener.clientId, ConnectionTypes.COMP_CONNECTION))
+          sendDataAndWait(new EnterMessage(listener.clientId, ConnectionTypes.COMP_CONNECTION, role))
         else handleLoginFailure("The version of the HubNet Client" +
                 " you are using does not match the version of the " +
                 "server. Please use the HubNet Client that comes with " + info)

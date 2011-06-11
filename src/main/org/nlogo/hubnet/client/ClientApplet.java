@@ -1,6 +1,7 @@
 package org.nlogo.hubnet.client;
 
 import org.nlogo.api.I18N;
+import org.nlogo.hubnet.connection.ClientRoles;
 import org.nlogo.hubnet.connection.Ports;
 import org.nlogo.window.EditorFactory;
 
@@ -8,6 +9,7 @@ import java.awt.Frame;
 
 import org.nlogo.window.VMCheck;
 import org.nlogo.api.Token;
+import scala.Enumeration;
 
 public strictfp class ClientApplet
     extends javax.swing.JApplet
@@ -109,19 +111,21 @@ public strictfp class ClientApplet
     if (attemptLogin && !loginDialog.isVisible()) {
       loginDialog.doLogin();
       if (attemptLogin) {
-        login(loginDialog.getUserName(), loginDialog.getServer(), loginDialog.getPort());
+        login(
+          loginDialog.getUserName(), loginDialog.getServer(),
+          loginDialog.getPort(), loginDialog.getClientRole());
       }
     }
   }
 
-  private void login(final String userid, final String hostip, final int port) {
+  private void login(final String userid, final String hostip, final int port, final Enumeration.Value role) {
     final String[] exs = new String[]{null};
     org.nlogo.swing.ModalProgressTask.apply(
       org.nlogo.awt.Utils.getFrame(ClientApplet.this),
       "Entering...",
       new Runnable() {
         public void run() {
-          exs[0] = clientPanel.login(userid, hostip, port);
+          exs[0] = clientPanel.login(userid, hostip, port, role);
           clientPanel.requestFocus();
         }});
     if (exs[0] != null) {

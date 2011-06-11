@@ -30,6 +30,10 @@ public abstract strictfp class WorldViewSettings
 
   public abstract String save();
 
+  public scala.Option<org.nlogo.api.WidgetIO.WidgetSpec> saveSpec() {
+    return org.nlogo.api.WidgetIO.viewOption(save().split("\n"));
+  }
+
   public abstract void addWrappingProperties();
 
   public abstract void addDimensionProperties();

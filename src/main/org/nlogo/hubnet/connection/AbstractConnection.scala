@@ -28,7 +28,7 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
 
   protected val output = connectionStreams.getOutputStream
   private val input = connectionStreams.getInputStream
-  private var keepListening = true
+  @volatile private var keepListening = true
   @volatile private var keepWriting = true
 
   override def run() {

@@ -109,4 +109,10 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     s.append(index() + "\n")
     s.toString
   }
+
+  override def saveSpec = Some(org.nlogo.api.WidgetIO.ChooserSpec(
+    getLoc,
+    name(),
+    choicesWrapper.trim.replaceAll("\n", " ") + "\n",
+    index = index()))
 }

@@ -97,7 +97,10 @@ trait HubNetInterface extends ViewInterface {
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef
-  def load(lines: Array[String], version: String)
+  // this used to be called load, but all its doing is loading the client interface
+ 	// so it has been renamed. if it ever does more, we can rename it back to load.
+ 	def loadClientInterface(widgets: Iterable[org.nlogo.api.WidgetIO.WidgetSpec], version: String)
+
   @throws(classOf[java.io.IOException])
   def importClientInterface(path: String, client: Boolean)
   def setTitle(title: String, directory: String, modelType: ModelType)

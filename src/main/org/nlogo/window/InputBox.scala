@@ -298,6 +298,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     s.toString
   }
 
+  // TODO
+  // its debatable that we should be doing the stripping and dumping and replacing here
+  // maybe we should do that in WidgetIO instead
+  // JC - 2/22/11
+  override def saveSpec = Some(org.nlogo.api.WidgetIO.InputBoxSpec(
+    getLoc, name, stripLines(Dump.logoObject(value).replaceAll("\r\n", "\n")), multiline, inputType.saveName))
+
   override def load(strings:Array[String], helper:Widget.LoadHelper) = {
     val displayName = strings(5)
     if(displayName ==  "NIL") name("") else name(displayName)

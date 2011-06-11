@@ -68,24 +68,49 @@ public strictfp class ServerWorld {
 
   /**
    * updates all local world data to match world, constructing diffs in the
-   * process. This is synchronized because it inspects, modifies and may
-   * overwrite patches and turtles. This should be fine since it should
-   * only ever be called from a single thread.
-   * <p/>
-   * This method MUST be called from the event thread, and it must be safe
-   * for us to get a lock on the world.
+   * process.
+   *
+   * This method needs to acquire a lock on the world. It also needs to use
+   * synchronized( this ) because it inspects, modifies and may overwrite
+   * patches and turtles stored on the ServerWorld.
+   *
+   * The two locks MUST be acquired in this order - first on World, then on
+   * ServerWorld - otherwise, a deadlock can occur when the controller client
+   * attempts to log in. Specifically, if the order were reversed, the deadlock
+   * occurs under the following conditions:
+   *
+   * Thread #1 is a ServerSideConnection which just accepted an EnterMessage
+   * from a new controller client in ServerSideConnection.receiveData(). In response,
+   * it sends a view update, which calls into here. If the locks are acquired in
+   * the wrong order, we would first acquire the lock on ServerWorld, and then
+   * attempt to acquire a lock on World - however, it's possible that Thread #2
+   * already has this lock and is stuck waiting for this thread to release the
+   * lock on ServerWorld.
+   *
+   * Thread #2 is a JobThread which acquires a lock on World inside
+   * JobThread.runPrimaryJobs(), and later sends a view update, which calls into
+   * here. If we try to get the locks in the wrong order, this thread will attempt
+   * to acquire a lock on ServerWorld, but Thread #1 already has it - but Thread #1
+   * is stuck waiting for this thread to release the lock on World that it got
+   * inside runPrimaryJobs().
+   *
+   * This results in a deadlock. We can resolve this deadlock by acquiring the locks
+   * on World and ServerWorld in a consistent order (first on World, then on
+   * ServerWorld).
    *
    * @return a new DiffBuffer containing the differences between local world
-   *         data and that in world.
+   *    data and that in world.
    */
-  public synchronized DiffBuffer updateWorld(World world, boolean resetWorld) {
+  public DiffBuffer updateWorld(World world, boolean resetWorld) {
     DiffBuffer buf = new DiffBuffer();
     synchronized (world) {
-      updateGeneral(world, buf);
-      updatePatches(world, buf);
-      updateTurtles(world, buf);
-      updateLinks(world, buf);
-      updateDrawing(world, buf, resetWorld);
+      synchronized (this) {
+        updateGeneral(world, buf);
+        updatePatches(world, buf);
+        updateTurtles(world, buf);
+        updateLinks(world, buf);
+        updateDrawing(world, buf, resetWorld);
+      }
     }
     return buf;
   }

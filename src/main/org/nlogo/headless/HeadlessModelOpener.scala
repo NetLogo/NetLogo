@@ -1,11 +1,9 @@
 package org.nlogo.headless
 
-import org.nlogo.agent.Observer
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList, SimpleJobOwner,
-                      ModelReader, ModelSection, Program, ValueConstraint, Version, File}
-import org.nlogo.nvm.CompilerResults
-import org.nlogo.plot.{Plot,PlotLoader}
+import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList,
+                      ModelReader, ModelSection, Program, ValueConstraint, Version, File, WidgetIO}
+import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
 
@@ -66,7 +64,11 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     parseShapes(map.get(ModelSection.SHAPES), map.get(ModelSection.LINK_SHAPES), netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.CLIENT), netLogoVersion)
+    ws.getHubNetManager.loadClientInterface(WidgetIO.parseWidgets(map.get(ModelSection.CLIENT)), netLogoVersion)
+    // this only happens for headless.
+    // GUI gets the widget specs from the widgets on the GUI themselves.
+    // but headless cant do that, so it gets the widgets once, here.
+    ws.loadServerInterface(WidgetIO.parseWidgets(map.get(ModelSection.WIDGETS)))
 
     ws.init()
     ws.world.program(results.program)
@@ -195,6 +197,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         }
         buttons +=
           (widget(10) match {
+            // zzz TODO What about links? 
             case "TURTLE" => "ask turtles [" + buttonSource + "\n]" // newline to protect against comments
             case "PATCH"  => "ask patches [" + buttonSource + "\n]" // newline to protect against comments
             case "OBSERVER" => buttonSource

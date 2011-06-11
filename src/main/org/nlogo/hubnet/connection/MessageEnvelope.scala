@@ -6,7 +6,7 @@ object MessageEnvelope {
   case object Enter extends MessageType
   case object Exit extends MessageType
 
-  case class ActivityMessageEnvelope(source: String, tag: String, message: Any)
+  case class ActivityMessageEnvelope(source: String, widgetType: String, tag: String, message: Any)
           extends MessageEnvelope(Normal, source, Some(tag), Some(message))
   // Represents a HubNet node entering the simulation. The message source is the new client id.
   case class EnterMessageEnvelope(source: String) extends MessageEnvelope(Enter, source, null, null)

@@ -15,6 +15,7 @@ import org.nlogo.api.JobOwner;
 import org.nlogo.api.Version;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.WidgetIO;
 import org.nlogo.api.WorldDimensions;
 import org.nlogo.api.WorldDimensions3D;
 import org.nlogo.api.AggregateManagerInterface;
@@ -874,5 +875,13 @@ public strictfp class HeadlessWorkspace
     // writing that (despite pmd's whining) lets us provide
     // javadoc on the method - ST 6/1/05
     super.halt();
+  }
+
+  private scala.collection.Iterable<WidgetIO.WidgetSpec> serverWidgetSpecs = null;
+  public scala.collection.Iterable<WidgetIO.WidgetSpec> serverWidgetSpecs() {
+    return serverWidgetSpecs;
+  }
+  public void loadServerInterface(scala.collection.Iterable<WidgetIO.WidgetSpec> specs) {
+    this.serverWidgetSpecs = specs;
   }
 }

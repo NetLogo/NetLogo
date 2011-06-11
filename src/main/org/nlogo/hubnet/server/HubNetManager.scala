@@ -1,7 +1,8 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.api.{LogoList, HubNetInterface}
+import org.nlogo.api.{WidgetIO, LogoList, HubNetInterface}
+import org.nlogo.api.WidgetIO.WidgetSpec
 import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
@@ -143,6 +144,8 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
     resetPlotManager()
   }
   
+  def getControllerClientInterface: Iterable[WidgetSpec] = workspace.serverWidgetSpecs 
+
   /// Individualized client views
 
   @throws(classOf[org.nlogo.api.LogoException])

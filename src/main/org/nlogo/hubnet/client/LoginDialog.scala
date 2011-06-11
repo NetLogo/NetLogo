@@ -2,6 +2,7 @@ package org.nlogo.hubnet.client
 
 import org.nlogo.swing.{NonemptyTextFieldButtonEnabler, TextField, TextFieldBox}
 import org.nlogo.swing.Implicits._
+import org.nlogo.hubnet.connection.ClientRoles
 import javax.swing._
 import event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
 import java.awt.event.{ActionEvent, MouseEvent, MouseAdapter, ActionListener}
@@ -24,6 +25,15 @@ class LoginDialog(parent: Frame, userid: String, server: String, port: Int, getS
   def getUserName = nameField.getText
   def getServer = serverField.getText
   def getPort = portField.getText.toInt
+  def getClientRole = if(participantRadioButton.isSelected) ClientRoles.Participant else ClientRoles.Controller
+
+  private val participantRadioButton = new JRadioButton("Enter as a regular participant") {setSelected(true)}
+  private val controllerRadioButton = new JRadioButton("Enter as the controller")
+  private val clientRoleRadioGroup = new ButtonGroup() {
+    add(participantRadioButton)
+    add(controllerRadioButton)
+  }
+
 
   private val enterButton = new JButton("Enter") {addActionListener(LoginDialog.this)}
   private val serverTable = new ServerTable()
@@ -46,6 +56,9 @@ class LoginDialog(parent: Frame, userid: String, server: String, port: Int, getS
         }
         addField("Port:", portField)
       })
+      add(Box.createVerticalStrut(12))
+      add(participantRadioButton)
+      add(controllerRadioButton)
     }
     add(centerPanel, java.awt.BorderLayout.CENTER)
 
