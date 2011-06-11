@@ -9,8 +9,13 @@ import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride
 import org.nlogo.agent.AgentSet
 import org.nlogo.util.JCL._
 import java.net.{BindException, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface, LogoException}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
+import org.nlogo.hubnet.connection.MessageEnvelope._
+import org.nlogo.api._
+import org.nlogo.api.WidgetIO._
+import actors.Actor
+import org.nlogo.nvm.Procedure
+import collection.mutable.{HashMap, ListBuffer}
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
@@ -27,12 +32,17 @@ trait ClientEventListener {
 trait ConnectionManagerInterface {
   def isSupportedClientType(clientType: String): Boolean
   def finalizeConnection(c: ServerSideConnection, desiredClientId: String): Boolean
+  def finalizeControllerClientConnection(c: ServerSideConnection)
   def createHandshakeMessage(clientType: String): HandshakeFromServer
+  def createControllerClientHandshakeMessage: HandshakeFromServer
+  def handleControllerClientMessage(c: ServerSideConnection, message: ActivityCommand)
   def fullViewUpdate(): Unit
   def putClientData(messageEnvelope: MessageEnvelope)
-  def removeClient(userid: String, notifyClient: Boolean, reason: String): Boolean
+  def removeParticipantClient(userid: String, notifyClient: Boolean, reason: String): Boolean
+  def removeControllerClient(c: ServerSideConnection, notifyClient: Boolean, reason: String): Boolean
   def logMessage(message:String)
   def sendPlots(clientId:String)
+  def sendControllerClientMessage(message:Message)
 }
 
 class ConnectionManager(val connection: ConnectionInterface,
@@ -41,7 +51,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   val VALID_SEND_TYPES_MESSAGE =
     "You can only send strings, booleans (true or false), numbers, and lists of these types."
 
-  private val world = workspace.world()
+  private val world = workspace.world
   private var worldBuffer = new ServerWorld(worldProps)
   private def worldProps =
     if(workspace.getPropertiesInterface != null) workspace.getPropertiesInterface
@@ -146,7 +156,7 @@ class ConnectionManager(val connection: ConnectionInterface,
         }
       }
       clients.synchronized {
-        for (conn <- clients.values) {disconnectClient(conn, true, "Shutting Down.")}
+        for (conn <- clients.values) {disconnectParticipantClient(conn, true, "Shutting Down.")}
         clients.clear()
       }
     }
@@ -162,7 +172,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    */
   def enqueueMessage(message:MessageEnvelope) { connection.enqueueMessage(message) }
 
-  def run: Unit = {
+  def run {
     try {
       while (serverOn) {
         try waitForConnection()
@@ -211,9 +221,15 @@ class ConnectionManager(val connection: ConnectionInterface,
       else {
         clients.put(desiredClientId, c)
         clientEventListener.addClient(desiredClientId, c.remoteAddress)
+        putClientData(EnterMessageEnvelope(desiredClientId))
         true
       }
     }
+  }
+
+  val controllerClients = new ListBuffer[ServerSideConnection]()
+  def finalizeControllerClientConnection(c: ServerSideConnection) {
+    controllerClients += c
   }
 
   /// client Interface code
@@ -234,14 +250,11 @@ class ConnectionManager(val connection: ConnectionInterface,
       clientInterfaceMap += (interfaceType -> interfaceInfo)
   }
 
-  private def createClientInterfaceSpec: ClientInterface = {
-    val widgetDescriptions = connection.getClientInterface
-    val widgets = toScalaSeq(ModelReader.parseWidgets(widgetDescriptions)).toList.map(toScalaSeq(_).toList).toList
-    val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
-      toScalaSeq(world.turtleShapeList.getShapes),
-      toScalaSeq(world.linkShapeList.getShapes), workspace)
-    clientInterfaceSpec
-  }
+  // calling toList in 3 places here because things in JCL arent serializble
+  private def createClientInterfaceSpec: ClientInterface = new ClientInterface(
+    connection.getClientInterface.toList,
+    toScalaSeq(world.turtleShapeList.getShapes).toList,
+    toScalaSeq(world.linkShapeList.getShapes).toList)
 
   /**
    * Enqueues a message from the client to the manager.
@@ -253,7 +266,44 @@ class ConnectionManager(val connection: ConnectionInterface,
    * Called by ServerSideConnection.
    */
   def createHandshakeMessage(clientType:ClientType) = {
-    new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(clientType))
+    if(!isSupportedClientType(clientType))
+      new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(ConnectionTypes.COMP_CONNECTION))
+    else
+      new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(clientType))
+  }
+
+  // calling toList in 3 places here because things in JCL arent serializble
+  def createControllerClientHandshakeMessage: HandshakeFromServer = {
+    new HandshakeFromServer(workspace.modelNameForDisplay, LogoList(
+      new ClientInterface(
+        connection.getControllerClientInterface.toList,
+        toScalaSeq(world.turtleShapeList.getShapes).toList,
+        toScalaSeq(world.linkShapeList.getShapes).toList)))
+  }
+
+  def handleControllerClientMessage(c: ServerSideConnection, message: ActivityCommand) = {
+    import WidgetTypes._
+    try {
+      message.widget match {
+        case Slider | Switch =>
+          execute("set " + message.tag.toString + " " + message.content.toString)
+        case Chooser | Input =>
+          execute("set " + message.tag.toString + " \"" + message.content.toString + "\"")
+        case Button =>
+          // Find matching button based on display name or source code. Note: we are currently
+          // not supporting forever buttons.
+          workspace.serverWidgetSpecs.
+                  collect{case b:ButtonSpec => b}.
+                  find(b => b.displayName.getOrElse(b.source) == message.tag.toString).
+                  foreach(b =>
+                    if(b.forever) c.sendData(new Text("Forever buttons are not supported.", Text.MessageType.TEXT))
+                    else execute(b.source))
+        case _ =>
+      }
+    } catch {
+      case e: CompilerException =>
+        removeControllerClient(c, notifyClient=true, reason=e.getMessage)
+    }
   }
 
   def isSupportedClientType(clientType:String): Boolean = clientInterfaceMap.containsKey(clientType)
@@ -317,71 +367,90 @@ class ConnectionManager(val connection: ConnectionInterface,
     c.isDefined
   }
 
+  def sendControllerClientMessage(message:Message) = {
+    controllerClients.foreach(_.sendData(message))
+  }
+
   def broadcastUserMessage(text:String) { broadcastMessage(new Text(text, Text.MessageType.USER)) }
 
   // called from control center
   def removeAllClients() {
-    clients.synchronized {
-      for(conn <- clients.values){
-        disconnectClient(conn, true, "Kicked from Control Center.")
-      }
-      clients.clear()
-    }
+    val conns = clients.synchronized { clients.values }
+    clients.clear()
+    for (conn <- conns) {disconnectParticipantClient(conn, true, "Kicked from Control Center.")}
   }
 
   /**
    * Removes a client. Deletes the client from the client map and disconnects it.
    */
-  def removeClient(userid: String, notifyClient: Boolean, reason:String): Boolean = {
+  def removeParticipantClient(userid: String, notifyClient: Boolean, reason:String): Boolean = {
     // only synchronize when we are removing from clients since we
     // could get stuck for a long time disconnecting -- mag 12/4/02
     val c = clients.synchronized { clients.remove(userid) }
     c match {
       case Some(client) =>
-        disconnectClient(client, notifyClient, reason);
+        putClientData(ExitMessageEnvelope(userid))
+        disconnectParticipantClient(client, notifyClient, reason)
         true
       case _ => false // false means there was no client to disconnect
+    }
+  }
+
+  def removeControllerClient(c: ServerSideConnection, notifyClient: Boolean, reason: String): Boolean = {
+    if(controllerClients.contains(c)) {
+      disconnectControllerClient(c, notifyClient, reason)
+      controllerClients -= c
+      true
+    } else {
+      // false means there was no client to disconnect
+      false
     }
   }
 
   /**
    * Disconnects the client and removes it from the control center.
    */
-  private def disconnectClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) {
+  private def disconnectParticipantClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) {
     if (c != null) {
-      c.disconnect(notifyClient, reason)
       clientEventListener.clientDisconnect(c.clientId)
+      c.finalizeDisconnect(notifyClient, reason)
+    }
+  }
+
+  private def disconnectControllerClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) {
+    if (c != null) {
+      c.finalizeDisconnect(notifyClient, reason)
     }
   }
 
   /// view stuff
   @throws(classOf[LogoException])
-  def sendOverrideList (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
-                                 varName: String, overrides:Map[java.lang.Long, AnyRef]) = {
+  def sendOverrideList(client: String, agentClass: Class[_ <: org.nlogo.api.Agent],
+                       varName: String, overrides: Map[java.lang.Long, AnyRef]) = {
     sendUserMessage(client, new OverrideMessage(new SendOverride(agentClass, varName, overrides), false))
   }
 
   @throws(classOf[LogoException])
-  def clearOverride (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
-                              varName:String, overrides:Seq[java.lang.Long]) = {
+  def clearOverride(client: String, agentClass: Class[_ <: org.nlogo.api.Agent],
+                    varName: String, overrides: Seq[java.lang.Long]) = {
     sendUserMessage(client, new OverrideMessage(new ClearOverride(agentClass, varName, overrides), true))
   }
 
   def clearOverrideLists(client:String) { sendUserMessage(client, ClearOverrideMessage) }
 
-  def sendAgentPerspective(client:String, perspective:Int, agentClass: Class[_ <: org.nlogo.api.Agent],
-                                    id: Long, radius: Double, serverMode: Boolean) {
+  def sendAgentPerspective(client: String, perspective: Int, agentClass: Class[_ <: org.nlogo.api.Agent],
+                           id: Long, radius: Double, serverMode: Boolean) {
     sendUserMessage(client, new AgentPerspectiveMessage(
       new AgentPerspective(agentClass, id, perspective, radius, serverMode).toByteArray))
   }
 
   private var lastPatches: AgentSet = null
 
-  def fullViewUpdate(): Unit = {
+  def fullViewUpdate() {
     doViewUpdate(true) /* reset the world before sending the update */
   }
 
-  def incrementalViewUpdate(): Unit = {
+  def incrementalViewUpdate() {
     // update the entire world if the patches have changed (do to a world resizing)
     doViewUpdate(lastPatches != world.patches())
   }
@@ -393,7 +462,59 @@ class ConnectionManager(val connection: ConnectionInterface,
       lastPatches = world.patches()
     }
     val buf = worldBuffer.updateWorld(world, resetWorld)
-    if (!buf.isEmpty) broadcastMessage(new ViewUpdate(buf.toByteArray))
+    if (!buf.isEmpty) {
+      val viewUpdate = new ViewUpdate(buf.toByteArray)
+      broadcastMessage(viewUpdate)
+      sendControllerClientMessage(viewUpdate)
+    }
+
+    ControllerClientActor ! "go"
+  }
+
+  private val widgetReporterProcedures = new HashMap[String, Procedure]
+
+  private val widgetValues = new HashMap[String, AnyRef]
+
+  private def getNewWidgetValue(reporter:String) : AnyRef = {
+    val procedure = widgetReporterProcedures.getOrElseUpdate(reporter,
+      workspace.compileReporter(reporter))
+    workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
+  }
+
+  private def updateControllerClientWidgets() {
+    if(!controllerClients.isEmpty) {
+      workspace.serverWidgetSpecs.foreach(widget =>
+        widget match {
+          case i: InterfaceGlobalWidgetSpec =>
+            val newValue = getNewWidgetValue(i.name)
+            if(!widgetValues.contains(i.name) || widgetValues(i.name) != newValue) {
+              controllerClients.foreach(_.sendData(WidgetControl(newValue, i.name)))
+            }
+            widgetValues.put(i.name, newValue)
+          case m:MonitorSpec =>
+            // m.source is an option because for hubnet, the regular hubnet client monitors dont have source.
+            // there might be a better way to handle this, but its ok for now.
+            m.source.foreach{ source =>
+              val newValue = getNewWidgetValue(source)
+              if(!widgetValues.contains(source) || widgetValues(source) != newValue) {
+                controllerClients.foreach(_.sendData(WidgetControl(newValue, m.displayName.getOrElse(source))))
+              }
+            }
+          case _ =>
+        }
+      )
+    }
+  }
+
+  object ControllerClientActor extends Actor {
+    start()
+    def act() {
+      loop {
+        react {
+          case "go" => updateControllerClientWidgets()
+        }
+      }
+    }
   }
 
   def setViewEnabled(mirror:Boolean) {
@@ -409,5 +530,9 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   def clientSendQueueSizes: Iterable[Int] = clients.synchronized{ clients.values.map(_.getSendQueueSize)}
 
-  def logMessage(message:String) = clientEventListener.logMessage(message)
+  def logMessage(message:String) { clientEventListener.logMessage(message) }
+
+  def execute(code:String) = workspace.evaluateCommands(owner, code)
+  // TODO: better evaluate wtf is going on here. ask seth.
+  lazy val owner = new SimpleJobOwner("ConnectionManager", workspace.world.mainRNG, classOf[Observer])
 }

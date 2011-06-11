@@ -1329,7 +1329,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           widgets.add(specOption.get());
       }
     }
-    JCL.toScalaSeq(widgets);
+    return JCL.toScalaSeq(widgets);
   }
 
 }

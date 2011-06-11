@@ -4,7 +4,7 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import java.util.Date
 import org.nlogo.api.{I18N, Version}
-import org.nlogo.hubnet.connection.{Streamable, AbstractConnection}
+import org.nlogo.hubnet.connection.{ClientRoles , Streamable , AbstractConnection}
 
 // TODO remove die hard. fix ALL of this business.
 // the multiple disconnect methds
@@ -24,133 +24,165 @@ import org.nlogo.hubnet.connection.{Streamable, AbstractConnection}
 // enter message
 // activity commands
 // exit message
+
+object ConnectionStates extends Enumeration {
+  val Disconnected, AwaitingVersionNumber, AwaitingEnterMessage,
+      ControllerClientLoggedOn, ParticipantClientLoggedOn = Value
+}
+
 class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: String, server:ConnectionManagerInterface)
         extends AbstractConnection("ServerSideConnection", connectionStreams) {
 
-  private var validClientVersion = false
+  import ConnectionStates._
+
+  // When a new client connects, they immediately go into the AwaitingVersionNumber state.
+  private var currentConnectionState = AwaitingVersionNumber
+  def getCurrentState : ConnectionStates.Value = currentConnectionState
+
   @volatile private var disconnecting = false
   var clientId: String = null
 
-  override def receiveData(a:AnyRef) {
-    a match {
-      // note: if clientId is null, that means that we haven't yet had a successful login yet.
-      // so, this string we received must be the version of the client.
-      case s:String =>
-        if(clientId == null) {
-          if (s == Version.version) validClientVersion = true
+
+  override def receiveData(message:AnyRef) {
+
+    currentConnectionState = (currentConnectionState, message) match {
+
+      case (Disconnected, _) =>
+        // TODO: Not really sure what to do here.
+        Disconnected
+
+      case (AwaitingVersionNumber, message:String) =>
+        if(message == Version.version) {
           sendData(Version.version)
-        }
-        else {
-          // TODO: handle the client sending another string after theyve already logged in
-          // probably should just send them an ExitMessage and disconnect.
-          // TODO: is disconnect the right call here?
-          dieHard(reason="Received message out of order: " + a)
-        }
-      case m:Message => handleMessage(m)
-      // TODO: is disconnect the right call here?
-      case _ => dieHard(reason="Unknown message type: " + a.getClass)
-    }
-  }
-
-  trait MessageHandler{
-    def handleMessage(message:Message)
-  }
-
-  /**
-   * I just realized that this stuff is quite broken.
-   * Clients can just send enter messages, activity commands, and exit messages
-   * without ever having sent a handshake message! thinks will break in
-   * undesirable ways on the server. this happened to work when we wrote the only clients.
-   * it wont work now that we want to allow other people to write them.
-   * we ought to have a nice state machine here.
-   * JC 1/1/11
-   */
-  private def handleMessage(message:Message) {
-    message match {
-      case HandshakeFromClient(userId, clientType) => {
-        if (!validClientVersion) {
+          AwaitingEnterMessage
+        } else {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "
                   + "match the version of the server. Please use the HubNet Client that comes with " + Version.version))
+          disconnect(false, "")
+          Disconnected
         }
-        else if(!server.isSupportedClientType(clientType)){
-          sendData(new LoginFailure("The HubNet model you are connected to does not support your client type: " + clientType))
-        }
-        else try output.synchronized {
-          if (server.finalizeConnection(this, desiredClientId = userId)){
-            clientId = userId
-            sendData(server.createHandshakeMessage(clientType))
-            // make sure clients get current view mirroring state.
-            // ideally we'd only send this full update to the client that
-            // just joined, rather than broadcasting it to everyone. - ST 12/5/09
-            if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
-            if (HubNetUtils.plotMirroring) server.sendPlots(userId)
-          }
-          else {
-            sendData(new LoginFailure("\"" + clientId + "\" is already taken by another user. Please choose another name."))
-          }
-        }
-        catch { case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex) }
-      }
-      // TODO
-      // its possible that the server doesnt even know who this client is!
-      // they might not have sent a proper handshake yet.
-      case EnterMessage => server.putClientData(EnterMessageEnvelope(clientId))
-      // TODO
-      // its possible that the server doesnt even know who this client is!
-      // they might not have sent a proper handshake yet. 
-      case m: ActivityCommand => server.putClientData(ActivityMessageEnvelope(clientId, m.tag, m.content))
-      // my guess on notifyClient=false here is that the client is requesting the exit
-      // so theres no reason to notify them. JC 1/3/11
-      case ExitMessage(reason) => server.removeClient(clientId, notifyClient=false, reason)
-      case _ =>
-        // TODO
-        // this is another argument for a proper state machine here.
-        // if the server didnt know about the client (was unable to remove it),
-        // then that means the never client hasnt yet sent a valid HandshakeFromClient
-        // (and possibly not a version number either)
-        // yet here, the client is sending something that we dont even know about.
-        // we need to ask the server to remove it, and if so, we're done because it would have
-        // been sent a message. if not...that means we should disconnect it ourselves here.
-        // fortunately, this shouldn't happen. we control the main client (in hubnet.client)
-        // and the android client we are building i have some control over.
-        // but, this stuff still needs cleaning up
-        // JC 1/6/11
-        dieHard(reason="Unknown message type: " + message.getClass)
-    }
-  }
 
-  // TODO...this absolutely HAS to be cleaned up before 4.2 final.
-  // also, its not even really dying hard, its dying hard if it needs to.
-  // but whatever, it will all be ripped out soon.
-  private def dieHard(reason:String) = {
-    if(! server.removeClient(clientId, notifyClient=true, reason)){
-      waitForSendData(ExitMessage(reason))
-      stopWriting()
-      // this call really goes to the super class, not to the disconnect method here.
-      // i hate myself for having to do this. the disconnect stuff here desparately needs cleaning up.
-      super.disconnect(reason)
+      case (AwaitingVersionNumber, _) =>
+        sendData(InvalidMessage)
+        disconnect(notifyClient=true, reason="Received invalid message from client: " + message)
+        Disconnected
+
+      case (AwaitingEnterMessage, EnterMessage(userId, clientType, clientRole)) =>
+        clientRole match {
+          case ClientRoles.Participant =>
+            try output.synchronized {
+              if (server.finalizeConnection(this, desiredClientId = userId)){
+                clientId = userId
+                sendData(server.createHandshakeMessage(clientType))
+
+                // make sure clients get current view mirroring state.
+                // ideally we'd only send this full update to the client that
+                // just joined, rather than broadcasting it to everyone. - ST 12/5/09
+                if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
+                if (HubNetUtils.plotMirroring) server.sendPlots(userId)
+                ParticipantClientLoggedOn
+              }
+              else {
+                sendData(new LoginFailure("\"" + clientId + "\" is already taken by another user. Please choose another name."))
+                disconnect(notifyClient=false, reason="")
+                Disconnected
+              }
+            }
+            catch {
+              case ex: RuntimeException =>
+                org.nlogo.util.Exceptions.handle(ex)
+                Disconnected
+            }
+          case ClientRoles.Controller =>
+            try output.synchronized {
+              server.finalizeControllerClientConnection(this)
+              sendData(server.createControllerClientHandshakeMessage)
+              if (HubNetUtils.viewMirroring) server.fullViewUpdate() else sendData(DisableView)
+              ControllerClientLoggedOn
+            }
+            catch {
+              case ex: RuntimeException =>
+                org.nlogo.util.Exceptions.handle(ex)
+                Disconnected
+            }
+          case _ =>
+            disconnect(true, "Invalid client role: " + clientRole)
+            Disconnected
+        }
+
+      case (AwaitingEnterMessage, _) =>
+        sendData(InvalidMessage)
+        disconnect(false, "")
+        Disconnected
+
+      case (ParticipantClientLoggedOn, message: ActivityCommand) =>
+        server.putClientData(ActivityMessageEnvelope(clientId, message.widget, message.tag, message.content))
+        ParticipantClientLoggedOn
+
+      case (ParticipantClientLoggedOn, ExitMessage(reason)) =>
+        disconnect(false, reason)
+        Disconnected
+
+      case (ParticipantClientLoggedOn, _) =>
+        sendData(InvalidMessage)
+        disconnect(false, "")
+        Disconnected
+
+      case (ParticipantClientLoggedOn, _) =>
+        sendData(InvalidMessage)
+        disconnect(false, "")
+        Disconnected
+
+      case (ControllerClientLoggedOn, message: ActivityCommand) => {
+        server.handleControllerClientMessage(this, message)
+        ControllerClientLoggedOn
+      }
+
+      case (ControllerClientLoggedOn, ExitMessage(reason)) =>
+        disconnect(false, reason)
+        Disconnected
+
+      case _ =>
+        disconnect(true, reason="Unknown connection state or message type. Connection state: "
+                + currentConnectionState.toString
+                + ". Message type: " + message.getClass.getCanonicalName
+                + ". Message: " + message.toString)
+        Disconnected
     }
   }
 
   override def disconnect(reason:String) {
-    if(!disconnecting) {
-      disconnecting = true
-      server.removeClient(clientId, false, reason)
-    }
+    val notifyClient = reason != null && reason != ""
+    disconnect(notifyClient, reason)
   }
 
   def disconnect(notifyClient:Boolean, reason:String) {
-    disconnecting = true
-    server.putClientData(ExitMessageEnvelope(clientId))
+    currentConnectionState match {
+      case Disconnected =>
+      case AwaitingVersionNumber | AwaitingEnterMessage =>
+        finalizeDisconnect(notifyClient, reason)
+      case ParticipantClientLoggedOn =>
+        server.removeParticipantClient(clientId, notifyClient=false, reason=reason)
+        // Note: server.removeParticipantClient() is responsible for calling finalizeDisconnect()
+      case ControllerClientLoggedOn =>
+        server.removeControllerClient(this, notifyClient, reason)
+        // Note: server.removeControllerClient() is responsible for calling finalizeDisconnect()
+    }
+  }
+
+  def finalizeDisconnect(notifyClient:Boolean, reason:String) {
     if(notifyClient) sendData(ExitMessage(reason))
     stopWriting()
+    currentConnectionState = Disconnected
     super.disconnect(reason)
   }
 
   override def handleEx(e:Exception, sendingEx:Boolean) {
     if(!disconnecting) {
       disconnecting = true
-      if(clientId != null) server.removeClient(clientId, ! sendingEx, e.toString)
+      if(clientId != null) {
+        disconnect(!sendingEx, e.toString)
+      }
       else{
         stopWriting()
         super.disconnect(e.toString)

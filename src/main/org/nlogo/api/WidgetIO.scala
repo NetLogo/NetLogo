@@ -377,7 +377,7 @@ object WidgetIO {
               case Nil => (None, None)// old style model, no new plot code. this is ok.
               case _ =>
                 // 1, or 3 or more bits of code...error.
-                error("Plot '" + plotName + "' contains invalid setup and/or update code: " + plotLines(14))
+                sys.error("Plot '" + plotName + "' contains invalid setup and/or update code: " + plotLines(14))
             }
           } else (None, None)
 
@@ -427,7 +427,7 @@ object WidgetIO {
         moreTokens.filter(_.trim.nonEmpty) match {
           case List(interval, mode, color, inLegend, _*) =>
             (interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean)
-          case _ => error("bad line: \"" + s + "\"")
+          case _ => sys.error("bad line: \"" + s + "\"")
         }
 
         val codeString = moreTokens.dropWhile(!_.startsWith("\"")).mkString.trim

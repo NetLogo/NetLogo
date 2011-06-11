@@ -216,7 +216,11 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   }
 
   def clients:Iterable[String] = connectionManager.clients.keys
-  def kick(userId:String){ connectionManager.removeClient(userId, true, "Kicked out.") }
+  // TODO: kick now just kicks participant clients...
+  // should we have a way to kick controller clients?
+  // or kick by client type?
+  // certainly, the way it is is ok for now.
+  def kick(userId:String){ connectionManager.removeParticipantClient(userId, true, "Kicked out.") }
   def kickAll(){ connectionManager.removeAllClients() }
   def setViewMirroring(onOff:Boolean){ HubNetUtils.viewMirroring = onOff }
   def setPlotMirroring(onOff:Boolean){ HubNetUtils.plotMirroring = onOff }

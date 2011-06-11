@@ -1,13 +1,13 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.protocol._
-import org.nlogo.util.MockTest
+import org.nlogo.util.MockSuite
 import org.nlogo.api.{LogoList, Version}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.{ClientRoles , ConnectionTypes , Streamable}
 
 // tests for the hubnet session behavior on the server side.
-class ServerSideConnectionTests extends MockTest {
+class ServerSideConnectionTests extends MockSuite {
 
   val clientId = "test-user"
 
@@ -48,7 +48,7 @@ class ServerSideConnectionTests extends MockTest {
 
     expecting {
       one(server).finalizeConnection(arg(conn), arg(clientId)); willReturn(true)
-      one(server).createHandshakeMessage(ConnectionTypes.COMP_CONNECTION); willReturn(HandshakeFromServer("test-model", new LogoList()))
+      one(server).createHandshakeMessage(ConnectionTypes.COMP_CONNECTION); willReturn(HandshakeFromServer("test-model", LogoList()))
     }
 
     conn.receiveData(Version.version)
@@ -58,7 +58,7 @@ class ServerSideConnectionTests extends MockTest {
     conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION,
       ClientRoles.Participant))
 
-    assert(conn.nextOutgoingMessage === HandshakeFromServer("test-model", new LogoList()))
+    assert(conn.nextOutgoingMessage === HandshakeFromServer("test-model", LogoList()))
   }
 
 
@@ -66,8 +66,8 @@ class ServerSideConnectionTests extends MockTest {
   // this tests makes sure that a if a client sends messages in the correct order
   // that things go smoothly.
   mockTest("complete session"){
-    CompUtils.viewMirroring = true
-    CompUtils.plotMirroring = false
+    HubNetUtils.viewMirroring = true
+    HubNetUtils.plotMirroring = false
 
     val server = mock[ConnectionManagerInterface]
     val conn = newConnection(server)
@@ -78,7 +78,7 @@ class ServerSideConnectionTests extends MockTest {
       one(server).finalizeConnection(arg(conn), arg(clientId)); willReturn(true)
       // ServerSideConnection then asks the ConnectionManager to create the handshake
       // which it will send back to the client.
-      one(server).createHandshakeMessage("COMPUTER"); willReturn(HandshakeFromServer("test-model", new LogoList()))
+      one(server).createHandshakeMessage("COMPUTER"); willReturn(HandshakeFromServer("test-model", LogoList()))
       // after a successful login, ServerSideConnection asks the ConnectionManager
       // to do a fullViewUpdate, which sends a ViewUpdate to the client
       // (actually, all clients...but it shouldn't do that.)
@@ -116,15 +116,15 @@ class ServerSideConnectionTests extends MockTest {
   }
 
   mockTest("Controller client logging in") {
-    CompUtils.viewMirroring = true
-    CompUtils.plotMirroring = false
+    HubNetUtils.viewMirroring = true
+    HubNetUtils.plotMirroring = false
 
     val server = mock[ConnectionManagerInterface]
     val conn = newConnection(server)
 
     expecting {
       one(server).finalizeControllerClientConnection(arg(conn))
-      one(server).createControllerClientHandshakeMessage; willReturn(HandshakeFromServer("test-model", new LogoList()))
+      one(server).createControllerClientHandshakeMessage; willReturn(HandshakeFromServer("test-model", LogoList()))
       one(server).fullViewUpdate()
     }
     when {
@@ -135,13 +135,13 @@ class ServerSideConnectionTests extends MockTest {
 
     conn.nextOutgoingMessage  // should be the version number, but that's tested elsewhere, so ignore
 
-    assert(conn.nextOutgoingMessage === HandshakeFromServer("test-model", new LogoList()))
+    assert(conn.nextOutgoingMessage === HandshakeFromServer("test-model", LogoList()))
   }
 
   // error: a mock with name streamable already exists
   mockTest("Multiple controller clients logging in") {
-    CompUtils.viewMirroring = true
-    CompUtils.plotMirroring = false
+    HubNetUtils.viewMirroring = true
+    HubNetUtils.plotMirroring = false
 
     val server = mock[ConnectionManagerInterface]
 
@@ -153,7 +153,7 @@ class ServerSideConnectionTests extends MockTest {
     expecting {
       conns.foreach(conn => one(server).finalizeControllerClientConnection(arg(conn)))
       exactly(numControllers).of(server).createControllerClientHandshakeMessage;
-        willReturn(HandshakeFromServer("test-model", new LogoList()))
+        willReturn(HandshakeFromServer("test-model", LogoList()))
       exactly(numControllers).of(server).fullViewUpdate()
     }
 
@@ -164,7 +164,7 @@ class ServerSideConnectionTests extends MockTest {
     for( i <- 0 to (numControllers-1) ) {
       conns(i).receiveData(EnterMessage(clientIds(i), ConnectionTypes.COMP_CONNECTION,
         ClientRoles.Controller))
-      assert(conns(i).nextOutgoingMessage === HandshakeFromServer("test-model", new LogoList()))
+      assert(conns(i).nextOutgoingMessage === HandshakeFromServer("test-model", LogoList()))
     }
   }
 

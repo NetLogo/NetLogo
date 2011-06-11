@@ -4,9 +4,9 @@ import org.nlogo.api.WidgetIO.{PlotSpec, ChooserSpec, ViewSpec, WidgetSpec}
 import org.nlogo.api.{WidgetIO, CompilerServices, LogoList, Shape}
 
 @SerialVersionUID(0)
-case class ClientInterface(widgets: List[WidgetSpec],
-                           turtleShapes: List[Shape],
-                           linkShapes: List[Shape]) extends Serializable {
+case class ClientInterface(widgets: Iterable[WidgetSpec],
+                           turtleShapes: Iterable[Shape],
+                           linkShapes: Iterable[Shape]) {
   def containsWidget(tag: String) = {
     def widgetNames(widgetSpecs: Iterable[WidgetSpec]): Iterable[String] = {
       import WidgetIO._

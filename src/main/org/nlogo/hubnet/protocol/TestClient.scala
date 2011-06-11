@@ -6,6 +6,7 @@ import java.io.{IOException, ObjectOutputStream}
 import org.nlogo.util.JCL._
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}
+import org.nlogo.hubnet.connection.ClientRoles
 
 object TestClient{
   implicit val pool = Executors.newCachedThreadPool()
@@ -30,7 +31,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   lazy val messagesReceived = new LinkedBlockingQueue[Message]
 
   def sendActivityCommand(message:String, content: Any){
-    send(new ActivityCommand(message, content.asInstanceOf[AnyRef]))
+    send(new ActivityCommand(WidgetTypes.Button, message, content.asInstanceOf[AnyRef]))
   }
 
   def close(reason:String){ send(ExitMessage(reason)) }
@@ -49,7 +50,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
     }
     try{
       val version = sendAndReceive(Version.version)
-      val response = sendAndReceive(new HandshakeFromClient(userId, clientType))
+      val response = sendAndReceive(new EnterMessage(userId, clientType, ClientRoles.Participant))
       val result = response match {
         case h: HandshakeFromServer =>
           send(EnterMessage)

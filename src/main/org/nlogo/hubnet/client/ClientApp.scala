@@ -10,6 +10,7 @@ import org.nlogo.awt.Utils
 import org.nlogo.hubnet.connection.{ClientRoles , Ports}
 import org.nlogo.api.{I18N, CompilerServices}
 
+
 /**
  * The HubNet client. 
  */
@@ -131,7 +132,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def completeLogin() {setVisible(true)}
 
-  private def login(userid: String, hostip: String, port: Int) {
+  private def login(userid: String, hostip: String, port: Int, role: ClientRoles.Value) {
     val exs = Array[String](null)
     ModalProgressTask(
       Utils.getFrame(this), "Entering...",

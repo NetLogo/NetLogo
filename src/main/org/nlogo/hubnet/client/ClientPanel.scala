@@ -13,10 +13,10 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.Utils.{getFrame, invokeLater}
 import org.nlogo.swing.Implicits._
 import org.nlogo.util.JCL._
-import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.{InputBoxWidget, ChooserWidget, SliderWidget, PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
 import org.nlogo.api.{WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
+import org.nlogo.hubnet.connection.{ClientRoles, Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
