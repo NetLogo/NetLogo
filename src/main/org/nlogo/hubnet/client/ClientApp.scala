@@ -7,7 +7,7 @@ import java.awt.event.{WindowAdapter, WindowEvent}
 import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.Utils
-import org.nlogo.hubnet.connection.Ports
+import org.nlogo.hubnet.connection.{ClientRoles , Ports}
 import org.nlogo.api.{I18N, CompilerServices}
 
 /**
@@ -29,6 +29,7 @@ object ClientApp {
       var userid = ""
       var hostip = ""
       var port = Ports.DEFAULT_PORT_NUMBER
+      var role = ClientRoles.Participant
 
       for (i <- 0 until args.length) {
         if (args(i).equalsIgnoreCase("--robo")) {
@@ -44,8 +45,17 @@ object ClientApp {
         else if (args(i).equalsIgnoreCase("--id")) userid = args(i + 1)
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
         else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
+        else if (args(i).equalsIgnoreCase("--role")) {
+          role = args(i + 1).toLowerCase match {
+            case "participant" => ClientRoles.Participant
+            case "controller" => ClientRoles.Controller
+            case _ => throw new RuntimeException("Invalid client role specified in " +
+                    "the \"--role\" parameter. Client role must be either \"participant\" " +
+                    "or \"controller\".")
+          }
+        }
       }
-      app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
+      app.startup(editorFactory, userid, hostip, port, role, false, isRoboClient, waitTime, workspace)
     } catch {
       case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)
     }
@@ -65,7 +75,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
+              port: Int, role: ClientRoles.Value, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
     Utils.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {
@@ -98,7 +108,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         // started in rapid succession they might collide
         // ev 7/30/08
         localClientIndex += 1
-        login("Local " + localClientIndex, hostip, port)
+        login("Local " + localClientIndex, hostip, port, role)
       }
       else {
         addWindowListener(() => handleExit())
@@ -115,7 +125,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (!isLocal) {
       dispose()
       loginDialog.doLogin()
-      login(loginDialog.getUserName, loginDialog.getServer, loginDialog.getPort)
+      login(loginDialog.getUserName, loginDialog.getServer, loginDialog.getPort, loginDialog.getClientRole)
     }
   }
 
@@ -125,7 +135,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     val exs = Array[String](null)
     ModalProgressTask(
       Utils.getFrame(this), "Entering...",
-      () => exs(0) = clientPanel.login(userid, hostip, port))
+      () => exs(0) = clientPanel.login(userid, hostip, port, role))
     if (exs(0) != null) {
       handleLoginFailure(exs(0))
       clientPanel.disconnect(exs(0).toString)
