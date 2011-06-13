@@ -373,7 +373,14 @@ strictfp class InterfacePanel
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.WIDGETS) {
+    if (e.section == ModelSection.WIDGETS &&
+        // (hopefully) temporary hack for ReviewTab
+        // ReviewTab needs to fire LoadSectionEvent so that its
+        // InterfacePanelLite can load the widgets. But the main
+        // InterfacePanel (this) needs to ignore that so it doesn't
+        // also load the widgets. - JC 6/13/11
+        ! e.version.equals("Review")
+        ) {
       loadWidgets(e.lines, e.version);
     }
   }
