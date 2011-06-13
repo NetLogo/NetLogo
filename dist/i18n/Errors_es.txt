@@ -187,3 +187,5 @@ org.nlogo.prim.etc._foreach.listsMustBeSameLength = Todos los argumentos lista p
 org.nlogo.prim.$common.noSumOfListWithNonNumbers = No se puede encontrar la suma de una lista que contiene elementos que no son números, {0} esta un {1}.
 org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Llego al terminacion del procedimiento de reporter sin llamando REPORT.
 org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Se esperaba la última entrada a una raza enlace.
+
+org.nlogo.prim.etc._randomNormal.secondInputNotNegative = El segundo input de random-normal no puede ser negativo.

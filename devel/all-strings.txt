@@ -2359,7 +2359,6 @@ src/main/org/nlogo/prim/etc/_makepreview.java:37:          (context, this, "synt
 src/main/org/nlogo/prim/etc/_map.scala:32:        throw new EngineException(context, this, "All the list arguments to MAP must be the same length.")
 src/main/org/nlogo/prim/etc/_moveto.java:29:      throw new EngineException(context, this, "you can't move-to a link");
 src/main/org/nlogo/prim/etc/_pwd.java:23:      path = "no model loaded!";
-src/main/org/nlogo/prim/etc/_randomnormal.java:27:          "random-normal's second input can't be negative");
 src/main/org/nlogo/prim/etc/_run.scala:19:            token.name + " doesn't accept further inputs if the first is a string")
 src/main/org/nlogo/prim/etc/_runresult.scala:20:            token.name + " doesn't accept further inputs if the first is a string")
 src/main/org/nlogo/prim/etc/_runresult.scala:29:            throw new EngineException(context, this, "failed to report a result")
