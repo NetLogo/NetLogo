@@ -62,4 +62,4 @@ libraryDependencies += "org.jmock" % "jmock-legacy" % "2.5.1" % "test"
 
 libraryDependencies += "org.scala-tools.testing" % "scalacheck_2.9.0" % "1.9" % "test"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
+libraryDependencies += "org.scalatest" % "scalatest_2.9.0" % "1.6.1" % "test"
