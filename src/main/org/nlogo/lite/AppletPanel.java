@@ -80,7 +80,9 @@ public abstract class AppletPanel
       }
     });
     iP = new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager(),
-        new LiteEditorFactory(workspace));
+        new LiteEditorFactory(workspace),
+        // for ReviewTab. See InterfacePanelLite for details. - JC 6/13/11
+        false);
     workspace.setWidgetContainer(iP);
 
     defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, Observer.class);

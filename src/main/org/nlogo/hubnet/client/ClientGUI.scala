@@ -15,7 +15,10 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
 
   private val statusPanel = new StatusPanel()
   private val messagePanel = new MessagePanel(new JTextArea(4,3))
-  private val interfacePanel = new InterfacePanelLite(clientView,compiler,new DummyRandomServices(),plotManager,editorFactory) {
+  private val interfacePanel =
+    new InterfacePanelLite(clientView,compiler,new DummyRandomServices(),plotManager,editorFactory,
+      // for ReviewTab. See InterfacePanelLite for details. - JC 6/13/11
+      false) {
     sliderEventOnReleaseOnly(true)
 
     // override in order to throttle messages when a hubnet client is holding down a key

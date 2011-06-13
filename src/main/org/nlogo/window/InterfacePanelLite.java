@@ -30,16 +30,26 @@ public strictfp class InterfacePanelLite
   private final org.nlogo.plot.PlotManager plotManager;
   private final EditorFactory editorFactory;
 
+  // (Hopefully) temporary hack for ReviewTab.
+  // When the ReviewTab is live, it uses an IPL.
+  // We need to make sure that this IPL doesn't load
+  // widgets when new models are opened in NetLogo.
+  // So this flag is used to tell this IPL that it is in the ReviewTab.
+  // - JC 6/13/11
+  private boolean isReview;
+
   public InterfacePanelLite(ViewWidgetInterface viewWidget,
                             CompilerServices compiler,
                             RandomServices random,
                             org.nlogo.plot.PlotManager plotManager,
-                            EditorFactory editorFactory) {
+                            EditorFactory editorFactory,
+                            boolean isReview) {
     this.viewWidget = viewWidget;
     this.compiler = compiler;
     this.random = random;
     this.plotManager = plotManager;
     this.editorFactory = editorFactory;
+    this.isReview = isReview;
     widgets = new HashMap<String, Widget>();
     setOpaque(true);
     setBackground(java.awt.Color.WHITE);
@@ -371,8 +381,14 @@ public strictfp class InterfacePanelLite
     }
   }
 
+  private boolean shouldLoadWidgets(String version){
+    return
+        (version.equals("Review") && isReview) ||
+        (! version.equals("Review") && ! isReview);
+  }
+
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.WIDGETS) {
+    if (e.section == ModelSection.WIDGETS && shouldLoadWidgets(e.version)) {
       try {
         List<List<String>> v =
             ModelReader.parseWidgets(e.lines);
