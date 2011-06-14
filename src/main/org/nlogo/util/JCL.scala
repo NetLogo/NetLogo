@@ -1,6 +1,7 @@
 package org.nlogo.util
 
 // In the process of getting rid of this, using collection.JavaConverters instead. - ST 5/18/11
+import scala.collection.JavaConverters._
 
 object JCL {
   // annoying we have to give these next three separate names, but the Scala 2.9 compiler
@@ -32,14 +33,7 @@ object JCL {
     }
   // most of the time toScalaIterable gets us the methods we need, but some useful methods are only
   // on Seq or Map, so we have these as backups - ST 4/6/10, 8/20/10
-  implicit def toScalaSeq[T](list: java.util.List[T]): scala.Seq[T] =
-    new scala.Seq[T] {
-      def apply(idx: Int) = list.get(idx)
-      def length = list.size
-      def iterator = new scala.Iterator[T] {
-        val it = list.iterator; def next() = it.next(); def hasNext = it.hasNext
-      }
-    }
+  implicit def toScalaSeq[T](list: java.util.List[T]): scala.Seq[T] = list.asScala
   implicit def toScalaMap[A,B](m: java.util.Map[A,B]): collection.immutable.Map[A,B] =
     new collection.immutable.Map[A,B] {
       def get(key: A): Option[B] = Option(m.get(key))
