@@ -43,15 +43,15 @@ class DummyPlotWidget(plot:Plot, plotManager: PlotManager) extends AbstractPlotW
     nameOptions
   }
 
-  override def savePens(s: StringBuilder): Unit = {
-    var p: Plot = plotManager.getPlot(plot.name)
-    for(pen <- p.pens){
-      if (!pen.temporary) {
-        s.append("\"" + org.nlogo.api.StringUtils.escapeString(pen.name) + "\" " +
-                pen.defaultInterval + " " + pen.defaultMode + " " + pen.defaultColor + " " + pen.inLegend + "\n")
-      }
-    }
-  }
+//  override def savePens(s: StringBuilder): Unit = {
+//    var p: Plot = plotManager.getPlot(plot.name)
+//    for(pen <- p.pens){
+//      if (!pen.temporary) {
+//        s.append("\"" + org.nlogo.api.StringUtils.escapeString(pen.name) + "\" " +
+//                pen.defaultInterval + " " + pen.defaultMode + " " + pen.defaultColor + " " + pen.inLegend + "\n")
+//      }
+//    }
+//  }
 
   override def propertySet = {
     nameOptions = createNameOptions

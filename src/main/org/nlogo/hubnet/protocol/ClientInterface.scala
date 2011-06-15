@@ -12,12 +12,13 @@ case class ClientInterface(widgets: Iterable[WidgetSpec],
       import WidgetIO._
       (for (w <- widgetSpecs.toList) yield w match {
         case b: ButtonSpec => b.displayName.getOrElse(b.source)
+        case m: MonitorSpec =>
+          m.displayName.getOrElse(m.source.getOrElse(throw new IllegalStateException("bad monitor")))
         case s: SliderSpec => s.name
-        case m: MonitorSpec => m.displayName.getOrElse(m.source.getOrElse(throw new IllegalStateException("bad monitor")))
         case s: SwitchSpec => s.name
         case c: ChooserSpec => c.name
-        case o: OutputSpec => "OUTPUT"
         case i: InputBoxSpec => i.name
+        case o: OutputSpec => "OUTPUT"
         case n: NoteSpec => "NOTE"
         case p: PlotSpec => p.name
         case v: ViewSpec => "VIEW"

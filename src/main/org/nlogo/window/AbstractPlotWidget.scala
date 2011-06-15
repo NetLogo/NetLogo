@@ -3,13 +3,14 @@ package org.nlogo.window
 import javax.swing.JLabel
 import org.nlogo.swing.VTextIcon
 
-import org.nlogo.api.{I18N, Editable}
 import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
 
 import java.awt.GridBagConstraints.{REMAINDER,RELATIVE}
 import java.awt.{List=>AWTList, _}
 import image.BufferedImage
 import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
+import org.nlogo.api.{WidgetIO, I18N, Editable}
+import org.nlogo.api.WidgetIO.PlotPenSpec
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
         extends Widget with Editable with Plot.DirtyListener with
@@ -214,33 +215,25 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def getMaximumSize: Dimension = null
 
   /// saving and loading
-  override def save: String = {
-    val s: StringBuilder = new StringBuilder
-    s.append("PLOT\n")
-    s.append(getBoundsString)
-    s.append((if (null != plotName && plotName.trim != "") plotName else "NIL") + "\n")
-    s.append((if (null != xLabel && xLabel.trim != "") xLabel else "NIL") + "\n")
-    s.append((if (null != yLabel && yLabel.trim != "") yLabel else "NIL") + "\n")
-    s.append(plot.defaultXMin + "\n")
-    s.append(plot.defaultXMax + "\n")
-    s.append(plot.defaultYMin + "\n")
-    s.append(plot.defaultYMax + "\n")
-    s.append(plot.defaultAutoPlotOn + "\n")
-    s.append(legend.open + "\n")
-    s.append(plot.saveString + "\n")
-    s.append("PENS\n")
-    savePens(s)
-    s.toString
-  }
+  override def saveSpec: Option[WidgetIO.PlotSpec] =
+    Some(WidgetIO.PlotSpec(
+      loc = getLoc, name = plotName.trim,
+      xLabel = Option(xLabel.trim).filter(_.nonEmpty),
+      yLabel = Option(yLabel.trim).filter(_.nonEmpty),
+      defaultXMin = defaultXMin, defaultXMax = defaultXMax,
+      defaultYMin = defaultYMin, defaultYMax = defaultYMax,
+      autoScaleOn = defaultAutoPlotOn, legendOn = legend.open,
+      setupCode = Option(setupCode.trim).filter(_.nonEmpty),
+      updateCode = Option(updateCode.trim).filter(_.nonEmpty),
+      pens = for(p <- plot.pens) yield PlotPenSpec(
+        name = p.name, interval = p.interval, mode = p.mode,
+        color = p.color, inLegend = p.inLegend,
+        setupCode = Option(p.setupCode.trim).filter(_.nonEmpty),
+        updateCode = Option(p.updateCode.trim).filter(_.nonEmpty)
+      )
+    ))
 
-  def savePens(s: StringBuilder){
-    import org.nlogo.api.StringUtils.escapeString
-    for (pen <- plot.pens; if (!pen.temporary)) {
-      s.append("\"" + escapeString(pen.name) + "\" " +
-              pen.defaultInterval + " " + pen.defaultMode + " " +
-              pen.defaultColor + " " + pen.inLegend + " " + pen.saveString + "\n")
-    }
-  }
+  override def save: String = WidgetIO.PlotSpec.toString(saveSpec.get)
 
   def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
@@ -394,3 +387,42 @@ object AbstractPlotWidget {
   }
 
 }
+
+
+//  override def save: String = {
+//    val s: StringBuilder = new StringBuilder
+//    s.append("PLOT\n")
+//    s.append(getBoundsString)
+//    s.append((if (null != plotName && plotName.trim != "") plotName else "NIL") + "\n")
+//    s.append((if (null != xLabel && xLabel.trim != "") xLabel else "NIL") + "\n")
+//    s.append((if (null != yLabel && yLabel.trim != "") yLabel else "NIL") + "\n")
+//    s.append(plot.defaultXMin + "\n")
+//    s.append(plot.defaultXMax + "\n")
+//    s.append(plot.defaultYMin + "\n")
+//    s.append(plot.defaultYMax + "\n")
+//    s.append(plot.defaultAutoPlotOn + "\n")
+//    s.append(legend.open + "\n")
+//    s.append(plot.saveString + "\n")
+//    s.append("PENS\n")
+//    savePens(s)
+//    s.toString
+//  }
+//
+//  def savePens(s: StringBuilder){
+//    import org.nlogo.api.StringUtils.escapeString
+//    for (pen <- plot.pens; if (!pen.temporary)) {
+//      s.append("\"" + escapeString(pen.name) + "\" " +
+//              pen.defaultInterval + " " + pen.defaultMode + " " +
+//              pen.defaultColor + " " + pen.inLegend + " " + pen.saveString + "\n")
+//    }
+//  }
+
+
+//  case class PlotSpec(loc: Loc, name: String, xLabel: String, yLabel: String,
+//                      defaultXMin: Double, defaultXMax: Double, defaultYMin: Double, defaultYMax: Double,
+//                      autoScaleOn: Boolean, legendOn: Boolean,
+//                      setupCode: Option[String], updateCode: Option[String],
+//                      pens: List[PlotPenSpec]) extends WidgetSpec
+//
+//  case class PlotPenSpec(name: String, interval: Double, mode: Int, color: Int, inLegend: Boolean,
+//                         setupCode: Option[String], updateCode: Option[String])

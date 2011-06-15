@@ -3,7 +3,6 @@ package org.nlogo.api
 import org.nlogo.api.File.{restoreLines, stripLines}
 import org.nlogo.api.StringUtils.unEscapeString
 import collection.mutable.ArrayBuffer
-import java.io.Serializable
 
 // TODO handle default values better. sometimes we are using .get on an
 // option, but maybe we should get rid of the option and set the default value here instead.
@@ -17,11 +16,11 @@ object WidgetIO {
       Loc(x1, y1, x2, y2)
     }
   }
-  case class Loc(x1: Int, y1: Int, x2: Int, y2: Int) extends Serializable {
+  case class Loc(x1: Int, y1: Int, x2: Int, y2: Int) {
     def toStringArray = Array(x1.toString, y1.toString, x2.toString, y2.toString)
   }
 
-  sealed trait WidgetSpec extends Serializable{
+  sealed trait WidgetSpec extends java.io.Serializable{
     val loc: Loc
     def width = loc.x2 - loc.x1
     def height = loc.y2 - loc.y1
@@ -66,14 +65,14 @@ object WidgetIO {
                  color: Double, transparency: Boolean):Option[WidgetSpec] =
     Some(NoteSpec(loc, text, Some(fontSize), Some(color), transparency))
 
-  case class PlotSpec(loc: Loc, name: String, xLabel: String, yLabel: String,
+  case class PlotSpec(loc: Loc, name: String, xLabel: Option[String], yLabel: Option[String],
                       defaultXMin: Double, defaultXMax: Double, defaultYMin: Double, defaultYMax: Double,
                       autoScaleOn: Boolean, legendOn: Boolean,
                       setupCode: Option[String], updateCode: Option[String],
                       pens: List[PlotPenSpec]) extends WidgetSpec
 
   case class PlotPenSpec(name: String, interval: Double, mode: Int, color: Int, inLegend: Boolean,
-                         setupCode: Option[String], updateCode: Option[String]) extends Serializable
+                         setupCode: Option[String], updateCode: Option[String])
 
   // View stuff is such a disaster that I can't even begin to disentangle it now.
   // We we just have to stick with the raw strings. This is, of course, very telling
@@ -390,22 +389,13 @@ object WidgetIO {
 
         val pens = doubleCheckedPenLines.map(parsePen)
 
-        PlotSpec(Loc(strings), plotName, xLabel, yLabel,
-                 defaultXMin, defaultXMax, defaultYMin, defaultYMax,
-                 defaultAutoScaleOn, legendOn, setupCode, updateCode, pens)
+        PlotSpec(
+          Loc(strings), plotName,
+          if(xLabel == "NIL") None else Some(xLabel),
+          if(yLabel == "NIL") None else Some(yLabel),
+          defaultXMin, defaultXMax, defaultYMin, defaultYMax,
+          defaultAutoScaleOn, legendOn, setupCode, updateCode, pens)
       }
-
-//      def toArray(spec: PlotSpec) = {
-//        val s = ArrayBuffer[String]()
-//        s += "PLOT"
-////        s ++= spec.loc.toStringArray
-////        s += (if (spec.text.trim == "") "NIL" else stripLines(spec.text))
-////        s += spec.fontSize.get.toString // NoteWidget will always give us back a fontSize
-////        s += spec.color.get.toString // NoteWidget will always give us back a color
-////        s += (if (spec.transparency) "1" else "0")
-//        s.toArray
-//      }
-
 
       // example pen line: "My Pen" 1.0 0 -16777216 true
       // name, default interval, mode, color, legend
@@ -445,11 +435,9 @@ object WidgetIO {
       private def parseStringLiterals(s: String): List[Option[String]] = {
         def toCodeOption(s: String) = {
           val code = unEscapeString(s.trim.drop(1).dropRight(1))
-          if (code.nonEmpty) Some(code)
-          else None
+          if (code.nonEmpty) Some(code) else None
         }
-        def isCloseQuote(tok: String) =
-          tok.endsWith("\"") && !tok.endsWith("\\\"")
+        def isCloseQuote(tok: String) = tok.endsWith("\"") && !tok.endsWith("\\\"")
         def recurse(toks: List[String]): List[String] =
           if(toks.isEmpty) Nil
           else {
@@ -478,6 +466,35 @@ object WidgetIO {
           case (xs, Nil) => (xs, Nil)
         }
     }
+
+    def toArray(spec: PlotSpec) = {
+      val s = ArrayBuffer[String]()
+      s += "PLOT"
+      s ++= spec.loc.toStringArray
+      s += spec.name
+      s += spec.xLabel.getOrElse("NIL")
+      s += spec.xLabel.getOrElse("NIL")
+      s += spec.defaultXMin.toString
+      s += spec.defaultXMax.toString
+      s += spec.defaultYMin.toString
+      s += spec.defaultYMax.toString
+      s += spec.autoScaleOn.toString
+      s += spec.legendOn.toString
+      import org.nlogo.api.StringUtils.escapeString
+      def quotedS(s:String): String = "\"" + escapeString(s) + "\""
+      def quotedOS(os:Option[String]): String = quotedS(os.getOrElse(""))
+      s += quotedOS(spec.setupCode) +  " " + quotedOS(spec.updateCode)
+      s += "PENS"
+      for(pen <- spec.pens) {
+        s += quotedS(pen.name) + " " + 
+             pen.interval + " " + pen.mode + " " +
+             pen.color + " " + pen.inLegend + " " +
+             quotedOS(pen.setupCode) +  " " + quotedOS(pen.updateCode)
+      }
+      s.toArray
+    }
+
+    def toString(spec:PlotSpec) = toArray(spec).mkString("\n") + "\n"
   }
 
   // simply takes the pre 4.2 widget lines and turns them into WidgetSpecs
@@ -522,7 +539,7 @@ object WidgetIO {
       case o:OutputSpec   => OutputSpec.toArray(o)
       case i:InputBoxSpec => InputBoxSpec.toArray(i)
       case n:NoteSpec     => NoteSpec.toArray(n)
-      case p:PlotSpec     => Array[String]()
+      case p:PlotSpec     => PlotSpec.toArray(p)
       case v:ViewSpec     => ViewSpec.toArray(v)
     }).filterNot(_.isEmpty).map(_:+"").flatten.toArray
   }

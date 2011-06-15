@@ -71,7 +71,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   protected var running = false
   val clients = collection.mutable.HashMap[String, ServerSideConnection]()
   val plotManager = new ServerPlotManager(workspace, this,
-    // these two arguments are by name params,
+    // these two arguments are by-name params,
     // as they need be evaluated each time.
     // i wanted to avoid giving the entire plot manager to ServerPlotManager
     // JC - 12/20/10
@@ -172,7 +172,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    */
   def enqueueMessage(message:MessageEnvelope) { connection.enqueueMessage(message) }
 
-  def run {
+  def run() {
     try {
       while (serverOn) {
         try waitForConnection()
@@ -193,7 +193,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   @throws(classOf[IOException])
-  private def waitForConnection(): Unit = {
+  private def waitForConnection() {
     val newSocket = socket.accept()
     newSocket.setSoTimeout(0)
     /**
@@ -281,7 +281,7 @@ class ConnectionManager(val connection: ConnectionInterface,
         toScalaSeq(world.linkShapeList.getShapes).toList)))
   }
 
-  def handleControllerClientMessage(c: ServerSideConnection, message: ActivityCommand) = {
+  def handleControllerClientMessage(c: ServerSideConnection, message: ActivityCommand) {
     import WidgetTypes._
     try {
       message.widget match {
@@ -367,7 +367,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     c.isDefined
   }
 
-  def sendControllerClientMessage(message:Message) = {
+  def sendControllerClientMessage(message:Message) {
     controllerClients.foreach(_.sendData(message))
   }
 
@@ -532,7 +532,7 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   def logMessage(message:String) { clientEventListener.logMessage(message) }
 
-  def execute(code:String) = workspace.evaluateCommands(owner, code)
+  def execute(code:String) { workspace.evaluateCommands(owner, code) }
   // TODO: better evaluate wtf is going on here. ask seth.
-  lazy val owner = new SimpleJobOwner("ConnectionManager", workspace.world.mainRNG, classOf[Observer])
+  lazy val owner = new SimpleJobOwner("ConnectionManager", workspace.world.auxRNG, classOf[Observer])
 }
