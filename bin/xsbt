@@ -25,6 +25,7 @@ $JAVA \
   -Djava.library.path= \
   -Djava.ext.dirs= \
   -Dfile.encoding=UTF-8 \
+  -Dsbt.boot.directory=$HOME/.sbt/boot/ \
   $JAVA_OPTS \
   -classpath $LAUNCH \
   xsbt.boot.Boot "$@"
