@@ -52,11 +52,11 @@ class MockSuiteTests extends MockSuite{
         x.a("not an int")
       }
     }
-    val errorMessage = """|unexpected invocation: x.a("not an int")
+    val errorMessage = """|unexpected invocation: interface org.nlogo.util.MockSuiteTests$X1.a("not an int")
                           |expectations:
-                          |  expected once, never invoked: x.a(<int>); returns a default value
+                          |  expected once, never invoked: interface org.nlogo.util.MockSuiteTests$X1.a(<int>); returns a default value
                           |what happened before this: nothing!""".stripMargin
-    assert(e.toString === errorMessage)
+    verboseAssert(e.toString, errorMessage)
   }
 
   mockTest("test primitive arguments (more error cases)"){
@@ -69,11 +69,11 @@ class MockSuiteTests extends MockSuite{
         x.a("not an char")
       }
     }
-    val errorMessage = """|unexpected invocation: x.a("not an char")
+    val errorMessage = """|unexpected invocation: interface org.nlogo.util.MockSuiteTests$X2.a("not an char")
                           |expectations:
-                          |  expected once, never invoked: x.a(<char>); returns a default value
+                          |  expected once, never invoked: interface org.nlogo.util.MockSuiteTests$X2.a(<char>); returns a default value
                           |what happened before this: nothing!""".stripMargin
-    assert(e.toString === errorMessage)
+    verboseAssert(e.toString, errorMessage)
   }
 
 }

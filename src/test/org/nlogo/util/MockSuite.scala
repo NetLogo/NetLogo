@@ -56,8 +56,10 @@ trait MockSuite extends FunSuite {
     }
   }
 
+  private val count = Iterator.from(0)
+
   // use this method to create a mock object
-  def mock[T : ClassManifest]: T = context.mock(erasure[T])
+  def mock[T : ClassManifest]: T = context.mock(erasure[T], erasure[T].toString + count.next())
 
   // use this method to set up expectations on the mock objects
   def expecting(f: => Unit) {
@@ -212,4 +214,16 @@ trait MockSuite extends FunSuite {
     else throw new IllegalStateException("must be inside mockTest(testname){...} to make this call.")
   }
   private def erasure[T](implicit mf: ClassManifest[T]): Class[T] = mf.erasure.asInstanceOf[Class[T]]
+
+
+  def verboseAssert(actual:Any, expected:Any){
+    if( actual != expected ){
+      println("assertion error. expected followed by actual:")
+      println("================")
+      println(expected)
+      println(actual)
+      println("================")
+    }
+    assert(actual === expected)
+  }
 }
