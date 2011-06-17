@@ -223,7 +223,7 @@ public final strictfp class PatchData
   }
 
   public static int getOverrideIndex(String varName) {
-    return getOverrideIndex(OVERRIDE_VARIABLES, varName);
+    return Overridable.getOverrideIndex(OVERRIDE_VARIABLES, varName);
   }
 
   @Override
