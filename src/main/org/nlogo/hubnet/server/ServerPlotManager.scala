@@ -79,11 +79,11 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def autoPlotOn(flag: Boolean) {if (flag) broadcastToClients('n') else broadcastToClients('f')}
   // Sends a java.lang.Short, which is the current plot-pen-mode
   def plotPenMode(plotPenMode: Int) {broadcastToClients(plotPenMode.toShort)}
-  def plot(x: Double, y: Double) {broadcastToClients(new PlotPoint(x, y))}
+  def plot(x: Double, y: Double) {broadcastToClients(PlotPoint(Some(x), y))}
   // Sends the org.nlogo.hubnet.PlotPoint plotted to a single client
-  def narrowcastPlot(clientId: String, y: Double) {sendToClient(clientId, new PlotPoint(y))}
+  def narrowcastPlot(clientId: String, y: Double) {sendToClient(clientId, PlotPoint(None, y))}
   // Sends the org.nlogo.hubnet.PlotPoint plotted to a single client
-  def narrowcastPlot(clientId: String, x: Double, y: Double) {sendToClient(clientId, new PlotPoint(x, y))}
+  def narrowcastPlot(clientId: String, x: Double, y: Double) {sendToClient(clientId, PlotPoint(Some(x), y))}
   def narrowcastClear(clientId: String) {sendToClient(clientId, 'c')}
   // Sends a java.lang.Boolean, which is the value of penDown
   def narrowcastPenDown(clientId: String, penDown: Boolean) {sendToClient(clientId, penDown)}

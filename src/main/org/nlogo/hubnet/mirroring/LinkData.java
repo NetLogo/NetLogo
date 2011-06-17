@@ -70,18 +70,18 @@ public strictfp class LinkData
 
   public LinkData(LinkStamp link) {
     mask = COMPLETE;
-    x1 = link.x1;
-    y1 = link.y1;
-    x2 = link.x2;
-    y2 = link.y2;
-    shape = link.shape;
-    color(link.color);
-    hidden = link.hidden;
-    lineThickness = link.lineThickness;
-    directedLink = link.directedLink;
-    destSize = link.destSize;
-    heading = link.heading;
-    size = link.size;
+    x1 = link.x1();
+    y1 = link.y1();
+    x2 = link.x2();
+    y2 = link.y2();
+    shape = link.shape();
+    color(link.color());
+    hidden = link.hidden();
+    lineThickness = link.lineThickness();
+    directedLink = link.directed();
+    destSize = link.destSize();
+    heading = link.heading();
+    size = link.size();
   }
 
   /**

@@ -167,12 +167,16 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       // This instance is a point to plot
       case p: PlotPoint =>
         // points may or may not contain a specific X coordinate.
+        // if not, we'll just let the plot use the next one.
         // however, this is only the case in narrowcast plotting
         // plot mirroring always sends both coordinates even if
         // auto-plot is on. ev 8/18/08
-        if (p.specifiesXCor) plotWidget.plot.currentPenOrBust.plot(p.xcor, p.ycor)
-        // if not, we'll just let the plot use the next one.
-        else plotWidget.plot.currentPenOrBust.plot(p.ycor)
+        p.xcor match {
+          case Some(x) =>
+            plotWidget.plot.currentPenOrBust.plot(x, p.ycor)
+          case None =>
+            plotWidget.plot.currentPenOrBust.plot(p.ycor)
+        }
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // These instances do various plotting commands
