@@ -8,11 +8,7 @@ turtles-own
 ;;; ABOUT THE PROBLEM
 ;;;
 ;;; In some cases, you have a group of turtles that you wish to divide into
-;;; groups of roughly the same size. In general, it's important that these
-;;; groups be randomly composed, to minimize the possible effects of agent
-;;; scheduling.  (In other words you don't want a group to be composed entirely
-;;; of turtles with low who numbers, since "ask turtles" always gives the
-;;; turtles turns in order by who number.)
+;;; groups of roughly the same size.
 ;;;
 ;;; Note that if you have a fixed number of groups known in advance, there are
 ;;; probably better ways to do this, using breeds, for instance. The
