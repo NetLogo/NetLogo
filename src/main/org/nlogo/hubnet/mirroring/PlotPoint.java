@@ -1,6 +1,6 @@
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetPlotPoint
+public strictfp class PlotPoint
     implements java.io.Serializable {
   static final long serialVersionUID = 0L;
 
@@ -14,13 +14,13 @@ public strictfp class HubNetPlotPoint
   private double xcor = 0;
   private double ycor = 0;
 
-  public HubNetPlotPoint(double x, double y) {
+  public PlotPoint(double x, double y) {
     specifiesXCor = true;
     xcor(x);
     ycor(y);
   }
 
-  public HubNetPlotPoint(double y) {
+  public PlotPoint(double y) {
     specifiesXCor = false;
     ycor(y);
   }

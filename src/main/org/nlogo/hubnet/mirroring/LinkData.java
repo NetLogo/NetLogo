@@ -68,7 +68,7 @@ public strictfp class LinkData
     return "link " + id + " " + breedIndex;
   }
 
-  public LinkData(HubNetLinkStamp link) {
+  public LinkData(LinkStamp link) {
     mask = COMPLETE;
     x1 = link.x1;
     y1 = link.y1;

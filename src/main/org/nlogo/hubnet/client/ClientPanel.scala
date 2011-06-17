@@ -6,7 +6,7 @@ import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
 import java.io.{IOException, PrintWriter}
 import org.nlogo.window.Events.{AfterLoadEvent, LoadSectionEvent}
 import org.nlogo.swing.OptionDialog
-import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp}
+import org.nlogo.hubnet.mirroring.{OverrideList, LinkStamp, PlotPoint, Line, TurtleStamp}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._
@@ -123,9 +123,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private def handleWidgetControlMessage(value: Any, widgetName: String) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
-      case t: HubNetTurtleStamp => viewWidget.renderer.stamp(t)
-      case ls: HubNetLinkStamp => viewWidget.renderer.stamp(ls)
-      case l: HubNetLine => viewWidget.renderer.drawLine(l)
+      case t: TurtleStamp => viewWidget.renderer.stamp(t)
+      case ls: LinkStamp => viewWidget.renderer.stamp(ls)
+      case l: Line => viewWidget.renderer.drawLine(l)
       case _ => viewWidget.renderer.clearDrawing()
     }
     else if (widgetName=="ALL PLOTS") {
@@ -165,7 +165,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // This instance is a point to plot
-      case p: HubNetPlotPoint =>
+      case p: PlotPoint =>
         // points may or may not contain a specific X coordinate.
         // however, this is only the case in narrowcast plotting
         // plot mirroring always sends both coordinates even if

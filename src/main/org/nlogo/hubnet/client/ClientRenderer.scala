@@ -33,14 +33,14 @@ class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new Sha
                              world.targetAgent.spotlightSize,
                              darkenPeripheral(settings), 
                              world.targetAgent.wrapSpotlight)
-  def drawLine(line: HubNetLine) {
+  def drawLine(line: Line) {
     trailDrawer.drawLine(line.x1, line.y1, line.x2, line.y2,
                          line.color, line.size, line.mode)
   }
-  def stamp(turtle: HubNetTurtleStamp) {
+  def stamp(turtle: TurtleStamp) {
     trailDrawer.stamp(new TurtleData(turtle), turtle.erase)
   }
-  def stamp(link: HubNetLinkStamp) {
+  def stamp(link: LinkStamp) {
     trailDrawer.stamp(new LinkData(link), link.erase)
   }
   def clearDrawing() {

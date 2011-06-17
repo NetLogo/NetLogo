@@ -1,7 +1,7 @@
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetLinkStamp
-    extends HubNetDrawingMessage {
+public strictfp class LinkStamp
+    extends DrawingMessage {
   static final long serialVersionUID = 0L;
 
   public double x1;
@@ -18,12 +18,12 @@ public strictfp class HubNetLinkStamp
   public double heading;
   public double size;
 
-  public HubNetLinkStamp() {
-    super(HubNetDrawingMessage.Type.STAMP);
+  public LinkStamp() {
+    super(DrawingMessage.Type.STAMP);
   }
 
-  public HubNetLinkStamp(org.nlogo.api.Link link, boolean erase) {
-    super(HubNetDrawingMessage.Type.STAMP);
+  public LinkStamp(org.nlogo.api.Link link, boolean erase) {
+    super(DrawingMessage.Type.STAMP);
     x1 = link.x1();
     y1 = link.y1();
     x2 = link.x2();
