@@ -1,6 +1,6 @@
 package org.nlogo.hubnet.mirroring;
 
-import org.nlogo.hubnet.mirroring.Agent.AgentType;
+import org.nlogo.hubnet.mirroring.AgentType;
 
 public strictfp class OverrideList
     implements java.io.Serializable {

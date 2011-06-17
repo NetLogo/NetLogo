@@ -552,14 +552,14 @@ public strictfp class ClientWorld
   }
 
   AgentData getAgent(Agent agent) {
-    if (agent.type == Agent.AgentType.TURTLE) {
-      return getTurtle(Long.valueOf(agent.id));
+    if (agent.tyype() == AgentType.TURTLE) {
+      return getTurtle(Long.valueOf(agent.id()));
     }
-    if (agent.type == Agent.AgentType.PATCH) {
-      return patches[(int) agent.id];
+    if (agent.tyype() == AgentType.PATCH) {
+      return patches[(int) agent.id()];
     }
-    if (agent.type == Agent.AgentType.LINK) {
-      return getLink(Long.valueOf(agent.id));
+    if (agent.tyype() == AgentType.LINK) {
+      return getLink(Long.valueOf(agent.id()));
     }
     return null;
   }
@@ -572,15 +572,15 @@ public strictfp class ClientWorld
   }
 
   public void updateOverrides(SendOverride list) {
-    if (list.type == Agent.AgentType.TURTLE) {
+    if (list.type == AgentType.TURTLE) {
       for (Long id : toJavaList(list.overrides().keySet())) {
         addOverride(getTurtle(id), list.variable, list.overrides().apply(id));
       }
-    } else if (list.type == Agent.AgentType.PATCH) {
+    } else if (list.type == AgentType.PATCH) {
       for (Long id : toJavaList(list.overrides().keySet())) {
         addOverride(patches[id.intValue()], list.variable, list.overrides().apply(id));
       }
-    } else if (list.type == Agent.AgentType.LINK) {
+    } else if (list.type == AgentType.LINK) {
       for (Long id : toJavaList(list.overrides().keySet())) {
         addOverride(getLink(id), list.variable, list.overrides().apply(id));
       }
@@ -597,15 +597,15 @@ public strictfp class ClientWorld
   }
 
   public void updateOverrides(ClearOverride list) {
-    if (list.type == Agent.AgentType.TURTLE) {
+    if (list.type == AgentType.TURTLE) {
       for (Long id : toJavaList(list.agents())) {
         removeOverride(getTurtle(id), list.variable);
       }
-    } else if (list.type == Agent.AgentType.PATCH) {
+    } else if (list.type == AgentType.PATCH) {
       for (Long id : toJavaList(list.agents())) {
         removeOverride(patches[id.intValue()], list.variable);
       }
-    } else if (list.type == Agent.AgentType.LINK) {
+    } else if (list.type == AgentType.LINK) {
       for (Long id : toJavaList(list.agents())) {
         removeOverride(getLink(id), list.variable);
       }
