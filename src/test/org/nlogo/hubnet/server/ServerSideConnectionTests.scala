@@ -43,6 +43,7 @@ class ServerSideConnectionTests extends MockSuite {
   }
 
   mockTest("send correct version, but invalid client type - server should still allow you to log in"){
+    HubNetUtils.viewMirroring = false
     val server = mock[ConnectionManagerInterface]
     val conn = newConnection(server)
 
@@ -90,7 +91,7 @@ class ServerSideConnectionTests extends MockSuite {
       for(i<-1 to 10) {
         one(server).putClientData(ActivityMessageEnvelope(clientId, WidgetTypes.Button, "test-content", "test-tag"))
       }
-      
+
       one(server).removeParticipantClient(clientId, notifyClient = false, "no-reason")
 
     }
@@ -194,10 +195,14 @@ class ServerSideConnectionTests extends MockSuite {
 
   def newConnection(server:ConnectionManagerInterface=mock[ConnectionManagerInterface]) = {
     val streamable=mock[Streamable]
-    expecting{
+
+    ignoring (streamable).close()
+
+    expecting {
       one(streamable).getOutputStream
       one(streamable).getInputStream
     }
+
     new ServerSideConnection(streamable, "test:4242", server){
       def nextOutgoingMessage = {
         val m = this.writeQueue.poll()
