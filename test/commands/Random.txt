@@ -300,4 +300,4 @@ random-normal-2
   precision (standard-deviation n-values 10000 [random-normal 10 1]) 1 => 1
 
 random-normal-3
-  random-normal 10 -1 => ERROR random-normal's second input can't be negative
+  random-normal 10 -1 => ERROR random-normal's second input can't be negative.
