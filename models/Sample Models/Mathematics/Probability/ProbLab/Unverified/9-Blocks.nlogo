@@ -62,6 +62,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 51
@@ -166,9 +167,9 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
-9-Blocks accompanies classroom work on the Combinations Tower, the giant bell-shaped histogram of all the 512 different green/blue combinations of the 3-by-3 array.  Whereas building the Combinations Tower is a form of theoretical probability -- combinatorial analysis -- the 9-Block model complements with empirical probability of the same 3-by-3 object.  In the plot window, a tall histogram grows that has the same shape as the Combinations Tower.  How can that be?  That is the theme question of this model.
+## WHAT IS IT?
+
+9-Blocks accompanies classroom work on the Combinations Tower, the giant bell-shaped histogram of all the 512 different green/blue combinations of the 3-by-3 array.  Whereas building the Combinations Tower is a form of theoretical probability --- combinatorial analysis --- the 9-Block model complements with empirical probability of the same 3-by-3 object.  In the plot window, a tall histogram grows that has the same shape as the Combinations Tower.  How can that be?  That is the theme question of this model.
 
 To better see the resemblance between the Combinations Tower and 9-Blocks histogram, you can either open another NetLogo window in the 9-Block Stalagmite model or open a JPEG of the 9-Block Stalagmite model as it looks when the entire sample space has been found.  (This JPEG will be available with ProbLab curricular material.)  Place this JPEG alongside the 9-Blocks histogram, to its right, editing the .jpg's dimensions as necessary to maximize the resemblance between the histogram and the .jpg.
 
@@ -176,54 +177,48 @@ The 9-Blocks model is a simplified version of the Stochastic Patchwork model.  H
 
 This model is a part of the ProbLab curriculum.  The ProbLab Curriculum is currently under development at the CCL.  For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 At every iteration through Go, each patch "flips a coin" to decide whether it should be green or blue.  This "coin" works as follows: The patch chooses randomly between "0" and "1."  If it got "1," it becomes green on this run, but if it got "0," it becomes blue on this run.  At every run through Go, the number of green patches in the block is counted up.  This number is added to a list that grows in length from run to run.  The entire list is plotted as a histogram at each run.  The columns or bars in this histogram represent how many 9-blocks have occurred with 0 green squares, 1 green square, 2 green squares, ..., 8 green squares, and 9 green squares (for a total of 10 possible columns).
 
 Over many runs, the histogram begins to look bell-shaped, just like the Combinations Tower that you may have built in your classroom and just like the tower in the 9-Block Stalagmite model.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Buttons:
-'Setup; - initializes the variables and erases the plot.
-'Go' - activates the procedures just once.  So you will get a single 9-block and a short column in the histogram.
+Buttons:  
+'Setup; - initializes the variables and erases the plot.  
+'Go' - activates the procedures just once.  So you will get a single 9-block and a short column in the histogram.  
 'Go'  - activates the procedures.  It is set to work "forever," that is, it will repeat until you press it again.
 
-Switches:
+Switches:  
 'one-by-one-choices?' - when On, each square will settle on its color at a different moment. Also, there will be a pause between 9-blocks, as though the lights were switched off for a moment. This is meant to remind us that even though we are looking at 9-blocks, actually each square chooses its color independently of other squares. Notice how the monitor '# target color' updates per each target color that is added.
 
-Monitors:
-'# target color' - shows how many patches are green.
+Monitors:  
+'# target color' - shows how many patches are green.  
 'how many trials' - shows how many times the model has chosen random 9-blocks in this experiment (so it's also showing how many items we have in the list that is being plotted every run).
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 As you run this model, the histogram grows.  Pretty soon, the central columns grow taller than other columns.  This shows us that there is a higher chance of getting 9-blocks that have 4 or 5 green squares as compared to 9-blocks that have 3 or 6 green squares.  Likewise, there is a higher chance of getting 9-blocks that have 3 or 6 green squares as compared to 9-blocks that have 2 or 7 green squares.  Also, there is a higher chance of getting 9-blocks that have 2 or 7 green squares as compared to 9-blocks that have 1 or 8 green squares.  Finally, there is a higher chance of getting 9-blocks that have 1 or 8 green squares as compared to 9-blocks that have 0 or 9 green squares.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Compare between the histogram you are getting and the Combinations Tower.  Why is it that they are the same shape?
 
 How many 9-blocks do you need to sample before the histogram begins to look like the Combinations Tower?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Look at the histogram as it grows.  What happens when it reaches the top?  More and more combinations are coming but there is no room to count them.  Instead of leaping out of the box, the number at the top-left corner of the plot -- the value of the y-axis -- updates and the histogram is redrawn for a larger scale. This helps us attend to whether and how the shape of the histogram changes after the number of combinations exceeds the range of values on the original histogram.
+Look at the histogram as it grows.  What happens when it reaches the top?  More and more combinations are coming but there is no room to count them.  Instead of leaping out of the box, the number at the top-left corner of the plot --- the value of the y-axis --- updates and the histogram is redrawn for a larger scale. This helps us attend to whether and how the shape of the histogram changes after the number of combinations exceeds the range of values on the original histogram.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
-In many ways, the Stochastic Patchwork model extends this model.  However, there are other ways of extending this model.  For instance, you may want to plot different aspects of the probabilistic experiment, to answer such questions as:
-- how often do we get the same combinations twice one after the other?
+In many ways, the Stochastic Patchwork model extends this model.  However, there are other ways of extending this model.  For instance, you may want to plot different aspects of the probabilistic experiment, to answer such questions as:  
+- how often do we get the same combinations twice one after the other?  
 - are there particular combinations you like?  You could add code to see how long it takes the model to find these combinations (as in the Random Combinations and Permutations model).
 
-
 ## CREDITS AND REFERENCES
+
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
@@ -517,7 +512,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 set one-by-one-choices? false
 setup
