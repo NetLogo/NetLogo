@@ -22,6 +22,7 @@ JAVA=$JAVA_HOME/bin/java
 
 $JAVA \
   -Xss1M -Xmx1536M -XX:MaxPermSize=256M \
+  -Dsbt.boot.directory=$HOME/.sbt/boot/ \
   -Djava.library.path= \
   -Djava.ext.dirs= \
   -Dfile.encoding=UTF-8 \
