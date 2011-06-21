@@ -34,11 +34,10 @@ class Worker(val protocol: Protocol)
       runners =
         (for((settings, runNumber) <- protocol.elements zip Stream.from(1).iterator)
          yield new Runner(runNumber, settings, fn)).toSeq
-      val futures =
-        org.nlogo.util.JCL.iterableToScalaIterable(
-          executor.invokeAll(
-            org.nlogo.util.JCL.toJavaList[Callable[Unit]](
-              runners)))
+      val futures = {
+        import collection.JavaConverters._
+        executor.invokeAll(runners.asJava).asScala
+      }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
       listeners.foreach(_.experimentCompleted())

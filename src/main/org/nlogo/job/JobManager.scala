@@ -5,8 +5,8 @@ import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.api.{LogoException, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
-import org.nlogo.util.JCL._
 import org.nlogo.util.Exceptions.ignoring
+import collection.JavaConverters._
 
 class JobManager(jobManagerOwner: JobManagerOwner,
                  private val world: World, lock: Object) extends org.nlogo.nvm.JobManagerInterface {
@@ -52,7 +52,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     // we only allow one secondary job per owner -- this is so MonitorWidgets
     // don't wind up with multiple jobs -- it's a bit of a kludge - ST 9/19/01
     val found = thread.secondaryJobs.synchronized {
-      thread.secondaryJobs.exists{ s => s != null && s.owner == owner && s.state == Job.RUNNING }
+      thread.secondaryJobs.asScala.exists{ s => s != null && s.owner == owner && s.state == Job.RUNNING }
     }
     if(!found)
       add(new ConcurrentJob(owner, agents, procedure, 0, null, owner.random),
@@ -77,11 +77,13 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     agent match {
       case t: Turtle =>
         thread.turtleForeverButtonJobs.synchronized {
-          for (job <- thread.turtleForeverButtonJobs) job.newAgentJoining(agent, -1, 0)
+          for (job <- thread.turtleForeverButtonJobs.asScala)
+            job.newAgentJoining(agent, -1, 0)
         }
       case t: Link =>
         thread.linkForeverButtonJobs.synchronized {
-          for (job <- thread.linkForeverButtonJobs) job.newAgentJoining(agent, -1, 0)
+          for (job <- thread.linkForeverButtonJobs.asScala)
+            job.newAgentJoining(agent, -1, 0)
         }
       case _ =>
         // this shouldn't happen because patches shouldn't be joining.
@@ -101,8 +103,8 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   // this is for the resize-world primitive - ST 4/6/09
   def haltNonObserverJobs() {
     val goners = thread.primaryJobs.synchronized {
-      thread.primaryJobs.filter {j => j != null && j.agentset.`type` != classOf[Observer]}
-    }
+      thread.primaryJobs.asScala.filter {j => j != null && j.agentset.`type` != classOf[Observer]}
+    }.asJava
     finishJobs(goners, null)
     waitForFinishedJobs(goners)
   }
@@ -124,7 +126,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   def stoppingJobs(owner: JobOwner) {
     thread.primaryJobs.synchronized {
-      for (job <- thread.primaryJobs; if (job != null && (owner == null || job.owner == owner))) {
+      for (job <- thread.primaryJobs.asScala; if (job != null && (owner == null || job.owner == owner))) {
         job.stopping = true
       }
     }
@@ -157,9 +159,10 @@ class JobManager(jobManagerOwner: JobManagerOwner,
 
   def finishJobs(jobs: List[Job], owner: JobOwner) {
     jobs.synchronized {
-      for (job <- jobs; if (job != null && (owner == null || job.owner == owner))) {
-        job.finish()
-      }
+      for {
+        job <- jobs.asScala
+        if (job != null && (owner == null || job.owner == owner))
+      } job.finish()
     }
   }
 
@@ -175,7 +178,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
     // method is never called from a loop.
     // - ST 12/17/02
     while (thread.isAlive) {
-      val jobToWaitFor = jobs.synchronized {jobs.find(_ != null)}
+      val jobToWaitFor = jobs.synchronized {jobs.asScala.find(_ != null)}
       jobToWaitFor match {
         case Some(j) => waitFor(j, true)
         case _ => return // ick

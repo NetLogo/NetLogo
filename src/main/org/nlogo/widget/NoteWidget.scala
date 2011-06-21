@@ -75,12 +75,9 @@ class NoteWidget extends SingleErrorWidget with Editable {
     val stringAscent: Int = metrics.getMaxAscent
     val lines = org.nlogo.awt.Utils.breakLines(_text, metrics, _width)
     g.setColor(color)
-    // import collection.JavaConverters
-    // weird error...value asScala is not a member of java.util.List[java.lang.String]
-    import org.nlogo.util.JCL._
-    for((line, i) <- lines.zipWithIndex){
+    import collection.JavaConverters._
+    for((line, i) <- lines.asScala.zipWithIndex)
       g.drawString(line, 0, i * stringHeight + stringAscent)
-    }
   }
 
   def save: String = {
