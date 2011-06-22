@@ -38,7 +38,7 @@ CarefullyNested
   is-string? glob1 => true
 
 ErrorMessageOutsideCarefully
-  O> carefully [ __ignore error-message ] [ ] => COMPILER ERROR error-message cannot be used outside of CAREFULLY
+  O> carefully [ __ignore error-message ] [ ] => COMPILER ERROR error-message cannot be used outside of CAREFULLY.
 
 error-string
   O> error "foo" => ERROR foo

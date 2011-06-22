@@ -1016,13 +1016,6 @@ src/main/org/nlogo/awt/Utils.java:488:            System.out.println("oppositeCo
 src/main/org/nlogo/awt/Utils.java:507:        "<font color=\""
 src/main/org/nlogo/awt/Utils.java:512:            + "</font>";
 src/main/org/nlogo/compiler/Assembler.scala:25:    ret.token(new Token("END", TokenType.KEYWORD, ret)(proc.endPos, proc.endPos, proc.fileName))
-src/main/org/nlogo/compiler/AstNode.scala:69: * not necessarily a "block" of statements, as block means something specific
-src/main/org/nlogo/compiler/AstNode.scala:103:  override def toString = command.toString + "[" + args.mkString(", ") + "]"
-src/main/org/nlogo/compiler/AstNode.scala:117:  override def toString = "[" + statements.toString + "]"
-src/main/org/nlogo/compiler/AstNode.scala:126: * the expression it contains... Its "blockness" is significant.
-src/main/org/nlogo/compiler/AstNode.scala:129:  override def toString = "[" + app.toString() + "]"
-src/main/org/nlogo/compiler/AstNode.scala:152: * expression, things like "round 5" and "3 + 4". However, this class also
-src/main/org/nlogo/compiler/AstNode.scala:170:  override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:22:                case s:String => s == "DIRECTED-LINK-BREED" } )
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:27:                case s:String => s == "UNDIRECTED-LINK-BREED" } ) 
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:32:    turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
@@ -1054,9 +1047,6 @@ src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:68:    undirectedLink("
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:69:    undirectedLink("*-WITH", REPORTER, true,classOf[_linkwith]),
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:70:    undirectedLink("*-NEIGHBOR?", REPORTER, true,classOf[_linkneighbor]) 
 src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:78:    val pattern = Pattern.compile("\\A"+patternString.replaceAll("\\?","\\\\?").replaceAll("\\*","(.+)")+"\\Z")
-src/main/org/nlogo/compiler/CarefullyVisitor.scala:6: * This is an AstVisitor that connects "error-message" reporters to
-src/main/org/nlogo/compiler/CarefullyVisitor.scala:7: * their enclosing "carefully" commands.
-src/main/org/nlogo/compiler/CarefullyVisitor.scala:26:        if(stack.isEmpty) exception(em.token.name + " cannot be used outside of CAREFULLY",app)
 src/main/org/nlogo/compiler/Compiler.scala:15:  val Tokenizer2D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer2D")
 src/main/org/nlogo/compiler/Compiler.scala:16:  val Tokenizer3D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer3D")
 src/main/org/nlogo/compiler/Compiler.scala:17:  val TokenMapper2D = Femto.scalaSingleton(classOf[TokenMapperInterface], "org.nlogo.lex.TokenMapper2D")

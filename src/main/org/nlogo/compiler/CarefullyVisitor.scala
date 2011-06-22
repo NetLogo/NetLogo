@@ -1,11 +1,15 @@
 package org.nlogo.compiler
+
+import org.nlogo.api.I18N
 import org.nlogo.compiler.CompilerExceptionThrowers._
 import org.nlogo.nvm.{Command,Reporter}
 import org.nlogo.prim._
+
 /**
  * This is an AstVisitor that connects "error-message" reporters to
  * their enclosing "carefully" commands.
  */
+
 private class CarefullyVisitor extends DefaultAstVisitor {
   private val stack = new collection.mutable.Stack[_carefully]
   override def visitStatement(stmt:Statement) {
@@ -22,8 +26,9 @@ private class CarefullyVisitor extends DefaultAstVisitor {
   }
   override def visitReporterApp(app:ReporterApp) {
     app.reporter match {
-      case em:_errormessage =>
-        if(stack.isEmpty) exception(em.token.name + " cannot be used outside of CAREFULLY",app)
+      case em: _errormessage =>
+        if(stack.isEmpty)
+          exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.name), app)
         em.let = stack.top.let
       case _ => super.visitReporterApp(app)
     }
