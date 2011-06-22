@@ -139,7 +139,10 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   def saveExternalFiles() {
-    for(i <- 3 until getTabCount) getComponentAt(i).asInstanceOf[TemporaryProceduresTab].doSave()
+    (3 until getTabCount)
+      .map(getComponentAt)
+      .collect{case tab: TemporaryProceduresTab => tab}
+      .foreach(_.doSave())
   }
 
   def saveTemporaryFile(tab: TemporaryProceduresTab, filename: String) {
@@ -148,7 +151,8 @@ class Tabs(val workspace: GUIWorkspace,
     tabsMenu.getItem(index).setText(filename)
   }
 
-  def getIndexOfComponent(tab: ProceduresTab): Int = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
+  def getIndexOfComponent(tab: ProceduresTab): Int =
+    (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
   def closeTemporaryFile(tab: TemporaryProceduresTab) {
     val index = getIndexOfComponent(tab)
