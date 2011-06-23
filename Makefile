@@ -68,7 +68,7 @@ $(JARS): | $(SCALA_JAR)
 
 
 ###
-### extensions (and plugins too)
+### extensions
 ###
 
 EXTENSIONS=\
@@ -82,8 +82,7 @@ EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
-	extensions/qtj/qtj.jar \
-	plugins/ReviewTab/ReviewTab.jar
+	extensions/qtj/qtj.jar
 
 .PHONY: extensions
 extensions: $(EXTENSIONS)
@@ -102,7 +101,6 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
-	if [ ! -d plugins/ReviewTab/src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
@@ -132,9 +130,6 @@ github:
 	cd extensions/sound; git pull; git status
 	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
 	cd extensions/table; git pull; git status
-	mkdir -p plugins
-	if [ ! -d plugins/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
-	cd plugins/ReviewTab; git pull; git status
 
 ### misc targets
 
