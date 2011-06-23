@@ -1,12 +1,11 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers.cAssert
-import org.nlogo.api.Let
+import org.nlogo.api.{ I18N, Let }
 import org.nlogo.nvm.{ Procedure, Reporter }
 import org.nlogo.prim.{_lambda, _lambdareport, _letvariable, _lambdavariable}
 
 private class LambdaVisitor extends DefaultAstVisitor {
-  val OutOfScope = "this special variable is not defined here"
   private var lambda = Option.empty[_lambdareport]
   private var procedure = Option.empty[Procedure]
   override def visitProcedureDefinition(procdef: ProcedureDefinition) {
@@ -23,7 +22,8 @@ private class LambdaVisitor extends DefaultAstVisitor {
       case lv: _lambdavariable =>
         lambda match {
           case None =>
-            cAssert(procedure.get.isLambda, OutOfScope, expr)
+            cAssert(procedure.get.isLambda,
+                    I18N.errors.get("compiler.LambdaVisitor.notDefined"), expr)
             val formal: Let = procedure.get.getLambdaFormal(lv.varNumber, lv.token)
             expr.reporter = new _letvariable(formal, formal.varName)
             expr.reporter.token(lv.token)

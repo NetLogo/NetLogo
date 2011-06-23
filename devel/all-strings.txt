@@ -32,13 +32,6 @@ src/main/org/nlogo/agent/AgentSet.java:68:      throw new IllegalStateException(
 src/main/org/nlogo/agent/ArrayAgentSet.java:144:        ("Cannot call remove() from an  ArrayAgentSet");
 src/main/org/nlogo/agent/ArrayAgentSet.java:152:          ("Cannot call remove() on an AgentSet with removableAgents set to false");
 src/main/org/nlogo/agent/ArrayAgentSet.java:273:    StringBuilder s = new StringBuilder("AgentSet");
-src/main/org/nlogo/agent/ArrayAgentSet.java:274:    s = s.append("\n...... type: ");
-src/main/org/nlogo/agent/ArrayAgentSet.java:275:    s = s.append(type == null ? "null" : type.toString());
-src/main/org/nlogo/agent/ArrayAgentSet.java:276:    s = s.append("\n...... size: " + size);
-src/main/org/nlogo/agent/ArrayAgentSet.java:277:    s = s.append("\n...... count(): " + count());
-src/main/org/nlogo/agent/ArrayAgentSet.java:278:    s = s.append("\n...... capacity: " + capacity);
-src/main/org/nlogo/agent/ArrayAgentSet.java:279:    s = s.append("\n...... agents: ");
-src/main/org/nlogo/agent/ArrayAgentSet.java:301:          ("remove() not supported");
 src/main/org/nlogo/agent/BreedShapes.java:45:                  ? "__default"
 src/main/org/nlogo/agent/BreedShapes.java:51:                ? "default"
 src/main/org/nlogo/agent/BreedShapes.java:63:            breedShapePair.setValue("__default");
@@ -110,7 +103,6 @@ src/main/org/nlogo/agent/Exporter3D.scala:139:                  + csv.data(if(wo
 src/main/org/nlogo/agent/Exporter3D.scala:140:                                   if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
 src/main/org/nlogo/agent/Exporter3D.scala:154:    println(csv.encode("TURTLES"))
 src/main/org/nlogo/agent/Exporter3D.scala:177:      if (!key.equals("TURTLES")) {
-src/main/org/nlogo/agent/Gamma.java:12:suitability of this software for any purpose.  It is provided "as is"
 src/main/org/nlogo/agent/HorizCylinder.java:20:      throw new AgentException("Cannot move turtle beyond the world's edge.");
 src/main/org/nlogo/agent/Importer.java:32:  static final String SCREEN_EDGE_X_HEADER = "SCREEN-EDGE-X";
 src/main/org/nlogo/agent/Importer.java:33:  static final String SCREEN_EDGE_Y_HEADER = "SCREEN-EDGE-Y";
@@ -123,11 +115,6 @@ src/main/org/nlogo/agent/Importer.java:41:  static final String SUBJECT_HEADER =
 src/main/org/nlogo/agent/Importer.java:42:  static final String NEXT_INDEX_HEADER = "NEXTINDEX";
 src/main/org/nlogo/agent/Importer.java:43:  static final String DIRECTED_LINKS_HEADER = "DIRECTED-LINKS";
 src/main/org/nlogo/agent/Importer.java:44:  static final String TICKS_HEADER = "TICKS";
-src/main/org/nlogo/agent/Importer.java:97:        versionNumber.startsWith("2.2pre1") ||
-src/main/org/nlogo/agent/Importer.java:98:        versionNumber.startsWith("2.2pre2")) {
-src/main/org/nlogo/agent/Importer.java:114:        versionNumber.startsWith("4.0pre") ||
-src/main/org/nlogo/agent/Importer.java:115:        versionNumber.startsWith("4.0alpha") ||
-src/main/org/nlogo/agent/Importer.java:116:        versionNumber.startsWith("4.0beta1")) {
 src/main/org/nlogo/agent/Importer.java:128:        String versionHeader = "export-world data (NetLogo ";
 src/main/org/nlogo/agent/Importer.java:134:        if (line[0].trim().equals("RANDOM STATE")) {
 src/main/org/nlogo/agent/Importer.java:152:      if (nextLine != null && nextLine.indexOf("DRAWING") != -1) {
@@ -544,15 +531,6 @@ src/main/org/nlogo/api/Primitive.java:15:   * Turtle use "T", and to specify Pat
 src/main/org/nlogo/api/Primitive.java:20:   * <pre> String getAgentClassString() { return "OTP"; }</pre>
 src/main/org/nlogo/api/PrimitiveManager.java:21:   * to in NetLogo code as "extensionname:primitive".  If true, they
 src/main/org/nlogo/api/PrimitiveManager.java:22:   * may also optionally be referred to simply as "primitive".  The
-src/main/org/nlogo/api/Program.java:52:    buf.append("globals " + Dump.list(globals) + "\n");
-src/main/org/nlogo/api/Program.java:53:    buf.append("interfaceGlobals " +
-src/main/org/nlogo/api/Program.java:55:    buf.append("turtles-own " + Dump.list(turtlesOwn) + "\n");
-src/main/org/nlogo/api/Program.java:56:    buf.append("patches-own " + Dump.list(patchesOwn) + "\n");
-src/main/org/nlogo/api/Program.java:57:    buf.append("links-own " + Dump.list(linksOwn) + "\n");
-src/main/org/nlogo/api/Program.java:58:    buf.append("breeds " + Dump.map(breeds) + "\n");
-src/main/org/nlogo/api/Program.java:59:    buf.append("breeds-own " + Dump.map(breedsOwn) + "\n");
-src/main/org/nlogo/api/Program.java:60:    buf.append("link-breeds " + Dump.map(linkBreeds) + "\n");
-src/main/org/nlogo/api/Program.java:61:    buf.append("link-breeds-own " + Dump.map(linkBreedsOwn) + "\n");
 src/main/org/nlogo/api/RemoteFile.java:71:      throw new java.io.IOException("Attempted to open an already open file");
 src/main/org/nlogo/api/RemoteFile.java:86:        throw new java.io.IOException("Cannot write to remote files.");
 src/main/org/nlogo/api/RemoteFile.java:88:        throw new java.io.IOException("Cannot append to remote files.");
@@ -993,7 +971,6 @@ src/main/org/nlogo/awt/JMFMovieEncoder.java:229:        throw new IOException("J
 src/main/org/nlogo/awt/JMFMovieEncoder.java:243:        throw new IOException("The mux does not support the input format: " + tcs[0].getFormat());
 src/main/org/nlogo/awt/JMFMovieEncoder.java:258:        throw new IOException("Failed to realize processor");
 src/main/org/nlogo/awt/JMFMovieEncoder.java:273:      throw new IOException("Cannot setup movie: " + ex);
-src/main/org/nlogo/awt/JMFMovieEncoder.java:432:  @SuppressWarnings("deprecation")
 src/main/org/nlogo/awt/JMFMovieEncoder.java:580:        System.out.println("ugh.");
 src/main/org/nlogo/awt/Utils.java:26:                        "bounds: " + comp.getBounds());
 src/main/org/nlogo/awt/Utils.java:368:    if (System.getProperty("os.name").startsWith("Mac")) {
@@ -1125,7 +1102,6 @@ src/main/org/nlogo/compiler/IdentifierParser.scala:129:    "an integer (e.g. 4),
 src/main/org/nlogo/compiler/IdentifierParser.scala:130:    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:131:    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:132:    "a floating point result."
-src/main/org/nlogo/compiler/LambdaVisitor.scala:9:  val OutOfScope = "this special variable is not defined here"
 src/main/org/nlogo/compiler/LocalsVisitor.scala:7: * This is an AstVisitor that optimizes "let" variables by converting them to "locals" variables
 src/main/org/nlogo/compiler/LocalsVisitor.scala:9: * "Whenever possible" is "whenever it's not inside an ask". We must find and convert two prims:
 src/main/org/nlogo/compiler/LocalsVisitor.scala:12: * We also do the same thing with "repeat", which by default uses the "let" mechanism, but must be
@@ -1133,9 +1109,6 @@ src/main/org/nlogo/compiler/LocalsVisitor.scala:13: * changed to use the "locals
 src/main/org/nlogo/compiler/LocalsVisitor.scala:33:        val exempt = l.token.name.equalsIgnoreCase("__LET")
 src/main/org/nlogo/compiler/LocalsVisitor.scala:53:          procedure.args.add("_repeatlocal:" + vn)
 src/main/org/nlogo/compiler/LocalsVisitor.scala:69:                "Nothing named " + l.token.name + " has been defined",l.token)
-src/main/org/nlogo/compiler/SetVisitor.scala:7: * "_set(var, value)" into more specific things like
-src/main/org/nlogo/compiler/SetVisitor.scala:8: * "_setprocedurevariable(value)" or whatever, where the new set* command 
-src/main/org/nlogo/compiler/SetVisitor.scala:12:  private val INVALID_SET = "This isn't something you can use \"set\" on"
 src/main/org/nlogo/compiler/StructureParser.scala:64:    if(!subprogram) usingFiles += (("aggregate", null))
 src/main/org/nlogo/compiler/StructureParser.scala:76:        if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
 src/main/org/nlogo/compiler/StructureParser.scala:81:            if(java.lang.Boolean.getBoolean("org.nlogo.lang.requireSingularBreedArgument"))
@@ -2075,7 +2048,6 @@ src/main/org/nlogo/log/Logger.java:297:          (path + System.getProperty("fil
 src/main/org/nlogo/log/Logger.java:312:            return name.startsWith("logfile_") && name.endsWith(".xml");
 src/main/org/nlogo/log/Logger.java:327:            return name.startsWith("logfile_") && name.endsWith(".xml");
 src/main/org/nlogo/log/Logger.java:336:          String file = path + System.getProperty("file.separator") + files[i];
-src/main/org/nlogo/log/Logger.java:364:  @SuppressWarnings("deprecation")
 src/main/org/nlogo/log/LogMessage.scala:5:    val msg = new LogMessage("event")
 src/main/org/nlogo/log/LogMessage.scala:6:    msg.attributes = Array(Array("type", tyype))
 src/main/org/nlogo/log/LogMessage.scala:7:    msg.elements = Array(new LogMessage("name"),
@@ -3100,7 +3072,6 @@ src/main/org/nlogo/workspace/AbstractWorkspace.java:110:    jobManager = Femto.g
 src/main/org/nlogo/workspace/AbstractWorkspace.java:160:    System.err.println("WARNING: " + message);
 src/main/org/nlogo/workspace/AbstractWorkspace.java:260:      path = System.getProperty("user.home")
 src/main/org/nlogo/workspace/AbstractWorkspace.java:261:          + java.io.File.separatorChar + "dummy.txt";
-src/main/org/nlogo/workspace/AbstractWorkspace.java:276:  @SuppressWarnings("deprecation")
 src/main/org/nlogo/workspace/AbstractWorkspace.java:289:    java.io.File git = new java.io.File(".git");
 src/main/org/nlogo/workspace/AbstractWorkspace.java:291:      throw new java.io.IOException("no .git directory found");
 src/main/org/nlogo/workspace/AbstractWorkspace.java:334:   * We need to do a "save as" if the model is new, from the
@@ -3140,17 +3111,12 @@ src/main/org/nlogo/workspace/DefaultFileManager.java:231:      throw new java.io
 src/main/org/nlogo/workspace/DefaultFileManager.java:251:      throw new java.io.IOException("There is no file to file");
 src/main/org/nlogo/workspace/DefaultFileManager.java:265:      throw new java.io.IOException("There is no file to close");
 src/main/org/nlogo/workspace/DefaultFileManager.java:390:      setPrefix(System.getProperty("user.home"));
-src/main/org/nlogo/workspace/Evaluator.scala:38:   * @return whether the code did a "stop" at the top level
 src/main/org/nlogo/workspace/Evaluator.scala:95:    if(source.trim.isEmpty) throw new IllegalStateException("empty reporter source")
 src/main/org/nlogo/workspace/Evaluator.scala:126:    else new MyLogoThunk(source + "\n__thunk-did-finish", agent, owner, true) with CommandLogoThunk {
 src/main/org/nlogo/workspace/Evaluator.scala:155:      "to-report __runresult " +
 src/main/org/nlogo/workspace/Evaluator.scala:157:        agentTypeHint + " report ( " + source + " \n) __done end"
 src/main/org/nlogo/workspace/Evaluator.scala:159:      "to __run " + vars.toString.replace(',', ' ') + " " + agentTypeHint + " " + source + "\nend"
 src/main/org/nlogo/workspace/Evaluator.scala:162:      Some(if(reporter) "runresult" else "run"),
-src/main/org/nlogo/workspace/Evaluator.scala:191:    classOf[Observer] -> "__observercode",
-src/main/org/nlogo/workspace/Evaluator.scala:192:    classOf[Turtle] -> "__turtlecode",
-src/main/org/nlogo/workspace/Evaluator.scala:193:    classOf[Patch] -> "__patchcode",
-src/main/org/nlogo/workspace/Evaluator.scala:194:    classOf[Link] -> "__linkcode")
 src/main/org/nlogo/workspace/Evaluator.scala:198:    if(commands) "to __evaluator [] " + hint + " "
 src/main/org/nlogo/workspace/Evaluator.scala:204:      "to-report __evaluator [] " + hint + " report ( "
 src/main/org/nlogo/workspace/Evaluator.scala:208:    if(commands) "\n__done end" else "\n) __done end"
@@ -3211,7 +3177,6 @@ src/main/org/nlogo/workspace/ExtensionManager.java:701:      errors.signalError(
 src/main/org/nlogo/workspace/ExtensionManager.java:704:      throw new IllegalStateException("this code is unreachable");
 src/main/org/nlogo/workspace/ExtensionManager.java:709:    writer.println(Dump.csv.encode("EXTENSIONS"));
 src/main/org/nlogo/workspace/ExtensionManager.java:728:      throw new org.nlogo.api.ExtensionException("there is no extension named " + name + "in this model");
-src/main/org/nlogo/workspace/ExtensionManager.java:784:  @SuppressWarnings("deprecation")
 src/main/org/nlogo/workspace/ModelsLibrary.java:57:      int loc = path.toUpperCase().lastIndexOf("/" + targetName.toUpperCase() + ".NLOGO");
 src/main/org/nlogo/workspace/ModelsLibrary.java:95:   *                   ".nlogo" extension.
 src/main/org/nlogo/workspace/ModelsLibrary.java:106:          + ".NLOGO") == path.lastIndexOf('/')) {
@@ -3236,9 +3201,3 @@ src/main/org/nlogo/workspace/ModelsLibrary.java:279:        if (temp.equals("UNV
 src/main/org/nlogo/workspace/ModelsLibrary.java:298:            name.equals("BEATS") ||
 src/main/org/nlogo/workspace/ModelsLibrary.java:301:                (name.equals("3D") ||
 src/main/org/nlogo/workspace/ModelsLibrary.java:304:                    name.equals("VRML")));
-src/main/org/nlogo/workspace/ModelsLibrary.java:308:    if (reference.endsWith(".nlogo")) {
-src/main/org/nlogo/workspace/ModelsLibrary.java:309:      return reference.substring(0, reference.lastIndexOf(".nlogo"));
-src/main/org/nlogo/workspace/ModelsLibrary.java:311:    if (reference.endsWith(".nlogo3d")) {
-src/main/org/nlogo/workspace/ModelsLibrary.java:312:      return reference.substring(0, reference.lastIndexOf(".nlogo3d"));
-src/main/org/nlogo/workspace/WorldLoader.scala:128:       (version.containsSlice("3-D Preview 1") ||
-src/main/org/nlogo/workspace/WorldLoader.scala:129:        version.containsSlice("3-D Preview 2"))) {

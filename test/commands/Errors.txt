@@ -49,3 +49,9 @@ error-non-string
 carefully-with-error-and-message
   O> carefully [ error "foo" ] [ set glob1 error-message ]
   glob1 => "foo"
+
+NotSettable
+  O> set timer 5 => COMPILER ERROR This isn't something you can use "set" on.
+
+lambda-variable-not-in-lambda
+  O> __ignore ?1 => COMPILER ERROR This special variable isn't defined here.
