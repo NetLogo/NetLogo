@@ -181,3 +181,5 @@ org.nlogo.prim._returnreport.reportNotCalledInReportProcedure = Reached end of r
 org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed = Expected the last input to be a link breed.
 
 org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
+
+compiler.CarefullyVisitor.badNesting = {0} cannot be used outside of CAREFULLY.
