@@ -11,7 +11,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 import Scripting.{shell,read}
 
 for{path <- shell("find docs -name \\*.html")
-    if !path.startsWith("docs/javadoc/")
+    if !path.startsWith("docs/scaladoc/")
     lines = shell("ispell -H -l -p dist/docwords.txt < " + path)
     if lines.hasNext}
 {

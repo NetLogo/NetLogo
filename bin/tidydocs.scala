@@ -12,7 +12,7 @@ import Scripting.{shell,read}
 
 shell("tidy -version").foreach(println(_))
 for{file <- shell("""find docs -name \*.html""")
-    if !file.containsSlice("/javadoc/")
+    if !file.containsSlice("/scaladoc/")
     if !file.containsSlice("/dict")}
 {
   println(file + ":")

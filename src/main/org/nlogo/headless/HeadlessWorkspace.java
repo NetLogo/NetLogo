@@ -1,6 +1,6 @@
 package org.nlogo.headless;
 
-// Note that in the javadoc we distribute to the public, this class
+// Note that in the scaladoc we distribute to the public, this class
 // is included, but Workspace and AbstractWorkspace are not, so if you
 // want to document a method for the public, you need to override
 // that method here and document it here.  It's fine for the overriding

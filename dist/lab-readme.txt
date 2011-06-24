@@ -19,9 +19,37 @@ other JVM languages.
 
 The code is divided into two packages.  The core code is in
 org.nlogo.lab, where the main class is Lab, and the GUI is in
-org.nlogo.lab.gui, where the main class is LabManager.  Some
-further documentation on the code is in the package.html file
-in src/main/org/nlogo/lab.
+org.nlogo.lab.gui, where the main class is LabManager.
+Nothing in lab depends on anything in lab.gui.
+
+Here's how the classes in org.nlogo.lab interrelate:
+
+- The specification for how to run an experiment is called a Protocol.
+  In the GUI, this is called an "experiment setup".  Among other
+  things, a Protocol may contain one or more ValueSets; each ValueSet
+  specifies what series or range of values a particular variable
+  should take.
+
+- The class that actually runs the experiment, Worker, makes Runner
+  objects, one per model run, and runs them using a thread pool.
+  Worker and its Runners notify a ProgressListener of how things are
+  going.  Off in the org.nlogo.lab.gui package, ProgressDialog
+  implements this interface and displays the progress in the GUI.
+
+- TableExporter and SpreadsheetExporter are also ProgressListeners.  A
+  listener can hang on to the generated results if it wants; that's
+  how SpreadsheetExporter writes all the data out at once at the end.
+
+- Also off in the org.nlogo.lab.gui package, there exists a Supervisor
+  thread.  Supervisor takes care of creating a Worker and reporting
+  errors to the user in the GUI.
+
+- When running headless, headless.Main uses lab.Lab, which knows how
+  to use ProtocolLoader to load experiment setups from the model file
+  or a separate XML file.
+
+- Protocols can be written back to disk in XML format by
+  ProtocolSaver.
 
 Feel free to write us at feedback@ccl.northwestern.edu with any
 questions, comments, or concerns about the source code.

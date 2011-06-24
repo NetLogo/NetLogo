@@ -141,7 +141,7 @@ done
 bin/sbt update
 $MAKE -s
 bin/sbt behaviorspace-sources
-# zzz TODO $MAKE -s javadoc-public
+$MAKE -s docs/scaladoc
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -218,7 +218,7 @@ $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
 cd docs
 echo "-- we ignore htmldoc errors because the docs contain a bunch"
-echo "-- of links to the javadocs, but the javadocs aren't included"
+echo "-- of links to the scaladoc, but the scaladoc isn't included"
 echo "-- in the PDF so htmldoc flags those as broken links."
 echo "-- please be on the lookout for other kinds of errors."
 ../../../bin/htmldoc.sh || echo "htmldoc errors ignored"

@@ -19,7 +19,7 @@ JAVA = $(JAVA_HOME)/bin/java -server -Djava.awt.headless=true -Dfile.encoding=UT
 SCALA_VERSION = 2.9.0-1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 LIBS = lib_managed/scala_$(SCALA_VERSION)/compile
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):$(LIBS)/asm-all-3.3.1.jar:$(LIBS)/picocontainer-2.11.1.jar:$(LIBS)/log4j-1.2.16.jar
+CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):`ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
 
 ### common prerequisites
 tmp:
@@ -126,6 +126,43 @@ github:
 	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
 	cd extensions/table; git pull; git status
 
+### Scaladoc
+
+# for internal devel team use
+tmp/scaladoc: netlogo | tmp
+	-rm -rf tmp/scaladoc
+	-mkdir -p tmp/scaladoc
+	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
+	bin/scaladoc \
+	  -d tmp/scaladoc \
+	  -doc-title 'NetLogo' \
+	  -doc-version `cat tmp/version.txt` \
+	  -classpath $(CLASSPATH) \
+	  -sourcepath src/main \
+	  -encoding us-ascii \
+          `find src/main -name \*.scala -o -name \*.java`
+
+# these are the docs we include with the User Manual
+docs/scaladoc: netlogo
+	-rm -rf docs/scaladoc
+	-mkdir -p docs/scaladoc
+	bin/scaladoc \
+	  -d docs/scaladoc \
+	  -doc-title 'NetLogo API' \
+	  -doc-version `cat tmp/version.txt` \
+	  -classpath $(CLASSPATH) \
+	  -sourcepath src/main \
+	  -encoding us-ascii \
+	  src/main/org/nlogo/app/App.scala \
+	  src/main/org/nlogo/lite/InterfaceComponent.java \
+	  src/main/org/nlogo/lite/Applet.scala \
+	  src/main/org/nlogo/lite/AppletPanel.java \
+	  src/main/org/nlogo/headless/HeadlessWorkspace.java \
+          src/main/org/nlogo/api/*.*a \
+          src/main/org/nlogo/agent/*.*a \
+          src/main/org/nlogo/workspace/*.*a \
+          src/main/org/nlogo/nvm/*.*a
+
 ### misc targets
 
 # cleaning
@@ -137,7 +174,7 @@ clean:
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
-	rm -rf tmp target docs/javadoc
+	rm -rf tmp target docs/scaladoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
 clean-extensions:
