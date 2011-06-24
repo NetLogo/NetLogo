@@ -57,19 +57,14 @@ models/index.txt:
 	@echo "@@@ building models/index.txt"
 	bin/sbt model-index
 
-###
 ### JAR building
-###
 
 JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
 
-
-###
 ### extensions
-###
 
 EXTENSIONS=\
 	extensions/array/array.jar \
@@ -155,7 +150,7 @@ realclean:
 benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
 
-### Scala scripting library
+# Scala scripting library
 bin/Scripting.class: bin/Scripting.scala | $(SCALA_JAR)
 	@echo "@@@ building bin/Scripting.class"
 	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
