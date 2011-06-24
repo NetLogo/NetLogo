@@ -63,7 +63,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         }
 
       case (AwaitingVersionNumber, _) =>
-        sendData(InvalidMessage)
+        sendData(InvalidMessage("expected version number, but didnt get it.", message))
         disconnect(notifyClient=true, reason="Received invalid message from client: " + message)
         Disconnected
 
@@ -111,7 +111,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         }
 
       case (AwaitingEnterMessage, _) =>
-        sendData(InvalidMessage)
+        sendData(InvalidMessage("expected enter message, but didnt get it.", message))
         disconnect(false, "")
         Disconnected
 
@@ -124,12 +124,12 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         Disconnected
 
       case (ParticipantClientLoggedOn, _) =>
-        sendData(InvalidMessage)
+        sendData(InvalidMessage("unexpected message", message))
         disconnect(false, "")
         Disconnected
 
       case (ParticipantClientLoggedOn, _) =>
-        sendData(InvalidMessage)
+        sendData(InvalidMessage("unexpected message", message))
         disconnect(false, "")
         Disconnected
 

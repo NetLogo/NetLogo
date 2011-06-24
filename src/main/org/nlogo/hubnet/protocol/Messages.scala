@@ -21,7 +21,7 @@ case class HandshakeFromServer(activityName: String, interfaceSpecList: LogoList
 case class LoginFailure(content: String) extends Message
 
 // Whenever the client sends something unexpected, the server responds with this.
-case object InvalidMessage extends Message
+case class InvalidMessage(errorMessage:String, original:AnyRef) extends Message
 
 case class OverrideMessage(data: Any, clear: Boolean) extends Message
 
