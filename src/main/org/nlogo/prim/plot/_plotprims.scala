@@ -191,7 +191,7 @@ final class _setplotpeninterval extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
 final class _setplotpenmode extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
   def perform(p: Plot, c: Context) {
     val mode = argEvalIntValue(c, 0)
-    if (mode < PlotPenInterface.MIN_MODE || mode > PlotPenInterface.MAX_MODE) {
+    if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
       throw new EngineException(c, this, mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
     p.currentPenOrBust.mode = mode

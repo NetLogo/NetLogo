@@ -60,7 +60,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
         try {
           world.updateFrom(new java.io.DataInputStream(new java.io.ByteArrayInputStream(worldData)))
           renderer.changeTopology(world.wrappingAllowedInX(), world.wrappingAllowedInY())
-          renderer.resetCache(patchSize())
+          renderer.resetCache(patchSize)
           _displayOn=true
         }
         catch {case e: java.io.IOException => org.nlogo.util.Exceptions.handle(e)}

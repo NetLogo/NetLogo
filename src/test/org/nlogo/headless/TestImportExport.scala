@@ -169,11 +169,11 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("random-seed 2843")
       testCommand("crt 10 [ pd  set pen-size random 5 ]")
       testCommand("ask turtles [ fd random 5 ]")
-      val realColors = workspace.renderer.trailDrawer.colors()
+      val realColors = workspace.renderer.trailDrawer.colors
       testCommand("export-world \"" + filename + "\"")
       testCommand("ca")
       testCommand("import-world \"" + filename + "\"")
-      val importedColors = workspace.renderer.trailDrawer.colors()
+      val importedColors = workspace.renderer.trailDrawer.colors
 
       expect(realColors.size)(importedColors.size)
 

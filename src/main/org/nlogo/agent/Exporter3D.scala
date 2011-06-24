@@ -35,14 +35,14 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("color"))
     val drawing  = world.drawing
     for(line <- drawing.lines) {
-      print(csv.encode(JDouble.toString(line.x0())))
-      print("," + csv.encode(JDouble.toString(line.y0())))
-      print("," + csv.encode(JDouble.toString(line.z0())))
-      print("," + csv.encode(JDouble.toString(line.x1())))
-      print("," + csv.encode(JDouble.toString(line.y1())))
-      print("," + csv.encode(JDouble.toString(line.z1())))
-      print("," + csv.encode(JDouble.toString(line.width())))
-      print("," + csv.data(line.color()))
+      print(csv.encode(JDouble.toString(line.x0)))
+      print("," + csv.encode(JDouble.toString(line.y0)))
+      print("," + csv.encode(JDouble.toString(line.z0)))
+      print("," + csv.encode(JDouble.toString(line.x1)))
+      print("," + csv.encode(JDouble.toString(line.y1)))
+      print("," + csv.encode(JDouble.toString(line.z1)))
+      print("," + csv.encode(JDouble.toString(line.width)))
+      print("," + csv.data(line.color))
       println()
     }
     println(csv.encode("shape")  + ","
@@ -57,11 +57,11 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("lineThickness"))
 
     for(stamp <- drawing.turtleStamps) {
-      print(csv.encode(stamp.shape()))
+      print(csv.encode(stamp.shape))
       print("," + csv.encode(JDouble.toString(stamp.xcor())))
       print("," + csv.encode(JDouble.toString(stamp.ycor())))
       print("," + csv.encode(JDouble.toString(stamp.zcor())))
-      print("," + csv.encode(JDouble.toString(stamp.size())))
+      print("," + csv.encode(JDouble.toString(stamp.size)))
       print("," + csv.encode(JDouble.toString(stamp.heading())))
       print("," + csv.encode(JDouble.toString(stamp.pitch())))
       print("," + csv.encode(JDouble.toString(stamp.roll())))
@@ -83,19 +83,19 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("heading")  + ","
             + csv.encode("pitch"))
     for(stamp <- drawing.linkStamps) {
-      print(csv.encode(stamp.shape()))
+      print(csv.encode(stamp.shape))
       print("," + csv.encode(JDouble.toString(stamp.x1())))
       print("," + csv.encode(JDouble.toString(stamp.y1())))
-      print("," + csv.encode(JDouble.toString(stamp.z1())))
+      print("," + csv.encode(JDouble.toString(stamp.z1)))
       print("," + csv.encode(JDouble.toString(stamp.x2())))
       print("," + csv.encode(JDouble.toString(stamp.y2())))
-      print("," + csv.encode(JDouble.toString(stamp.z2())))
+      print("," + csv.encode(JDouble.toString(stamp.z2)))
       print("," + csv.data(stamp.color()))
       print("," + csv.encode(JDouble.toString(stamp.lineThickness())))
       print("," + csv.encode(java.lang.Boolean.toString(stamp.isDirectedLink())))
       print("," + csv.encode(JDouble.toString(stamp.linkDestinationSize())))
       print("," + csv.encode(JDouble.toString(stamp.heading())))
-      print("," + csv.encode(JDouble.toString(stamp.pitch())))
+      print("," + csv.encode(JDouble.toString(stamp.pitch)))
       println()
     }
     println()

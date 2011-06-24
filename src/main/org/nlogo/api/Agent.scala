@@ -1,0 +1,38 @@
+package org.nlogo.api
+
+/**
+ * NetLogo agents include turtles, patches, links and the observer.
+ */
+trait Agent {
+
+  /** Returns a displayable name of this type of agent (Turtle, Link, Patch, Observer) */
+  def classDisplayName: String
+
+  /** Returns the world object associated with this agent */
+  def world: World
+
+  /** Returns the id number of this agent.  The who number in the case of a turtle, index into the array in the case of patches */
+  def id: Long
+
+  /** Returns the name of the current shape, empty string in the case of patches. */
+  def shape: String
+
+  /** Returns the size of this agent */
+  def size: Double
+
+  /** Sets the variable in the position vn of the agent variable array to value
+    * @param vn    the index into the agent variable array
+    * @param value the new value for the variable
+    * @throws LogoException
+    * @throws AgentException If value is the wrong type for the given variable or if you try to change variables that cannot be changed
+    */
+  @throws(classOf[LogoException])
+  @throws(classOf[AgentException])
+  def setVariable(vn: Int, value: AnyRef)
+
+  /** Returns the value of the variable in the given position of the agent variable array
+    * @param vn the index into the agent variable array
+    */
+  def getVariable(vn: Int): AnyRef
+
+}
