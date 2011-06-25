@@ -155,7 +155,7 @@ docs/scaladoc: netlogo
 	  -sourcepath src/main \
 	  -encoding us-ascii \
 	  src/main/org/nlogo/app/App.scala \
-	  src/main/org/nlogo/lite/InterfaceComponent.java \
+	  src/main/org/nlogo/lite/InterfaceComponent.scala \
 	  src/main/org/nlogo/lite/Applet.scala \
 	  src/main/org/nlogo/lite/AppletPanel.java \
 	  src/main/org/nlogo/headless/HeadlessWorkspace.java \
