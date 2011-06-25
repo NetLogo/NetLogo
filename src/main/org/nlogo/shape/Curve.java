@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.nlogo.api.GraphicsInterface;
 
-import static org.nlogo.api.RendererInterface.SHAPE_WIDTH;
+import static org.nlogo.api.Constants.ShapeWidth;
 
 // Note: currently I think this is used only as an abstract superclass
 // for Polygon.  Neither Steph nor I really knows why -- not sure if
@@ -120,7 +120,7 @@ public abstract strictfp class Curve
       xcoords.set
           (i, Integer.valueOf(getElt(i, ycoords)));
       ycoords.set
-          (i, Integer.valueOf(SHAPE_WIDTH - temp));
+          (i, Integer.valueOf(ShapeWidth() - temp));
     }
   }
 
@@ -130,7 +130,7 @@ public abstract strictfp class Curve
     for (int i = 0; i < xcoords.size(); ++i) {
       int temp = getElt(i, xcoords);
       xcoords.set
-          (i, Integer.valueOf(SHAPE_WIDTH - getElt(i, ycoords)));
+          (i, Integer.valueOf(ShapeWidth() - getElt(i, ycoords)));
       ycoords.set
           (i, Integer.valueOf(temp));
     }
@@ -141,7 +141,7 @@ public abstract strictfp class Curve
     // For each point in the curve
     for (int i = 0; i < xcoords.size(); ++i) {
       xcoords.set
-          (i, Integer.valueOf(SHAPE_WIDTH - getElt(i, xcoords)));
+          (i, Integer.valueOf(ShapeWidth() - getElt(i, xcoords)));
     }
   }
 
@@ -150,7 +150,7 @@ public abstract strictfp class Curve
     // For each point in the curve
     for (int i = 0; i < ycoords.size(); ++i) {
       ycoords.set
-          (i, Integer.valueOf(SHAPE_WIDTH - getElt(i, ycoords)));
+          (i, Integer.valueOf(ShapeWidth() - getElt(i, ycoords)));
     }
   }
 

@@ -91,10 +91,10 @@ public strictfp class Protractor3D
     double pitchRadians = StrictMath.toRadians(pitch);
     double sin = StrictMath.sin(pitchRadians);
     double distProj = distance * StrictMath.cos(pitchRadians);
-    if (StrictMath.abs(sin) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(sin) < org.nlogo.api.Constants.Infinitesimal()) {
       sin = 0;
     }
-    if (StrictMath.abs(distProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(distProj) < org.nlogo.api.Constants.Infinitesimal()) {
       distProj = 0;
     }
 
@@ -102,10 +102,10 @@ public strictfp class Protractor3D
     double cosProj = StrictMath.cos(headingRadians);
     double sinProj = StrictMath.sin(headingRadians);
 
-    if (StrictMath.abs(cosProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(cosProj) < org.nlogo.api.Constants.Infinitesimal()) {
       cosProj = 0;
     }
-    if (StrictMath.abs(sinProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(sinProj) < org.nlogo.api.Constants.Infinitesimal()) {
       sinProj = 0;
     }
 

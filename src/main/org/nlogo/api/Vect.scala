@@ -6,7 +6,7 @@ package org.nlogo.api
 import java.lang.StrictMath._
 
 object Vect {
-  private val INFINITESIMAL = 3.2e-15
+  private val Infinitesimal = 3.2e-15
   private def bindWithinOne(num: Double) = num min 1 max -1
   def axisTransformation(a: Vect, u: Vect, v: Vect, w: Vect) =
     Vect(x = u.x * a.x + v.x * a.y + w.x * a.z,
@@ -43,7 +43,7 @@ case class Vect(x: Double, y: Double, z: Double){
   import Vect._
 
   def magnitude = sqrt(x * x + y * y + z * z)
-  def zeroify(d: Double) = if(abs(d) < INFINITESIMAL) 0.0 else d
+  def zeroify(d: Double) = if(abs(d) < Infinitesimal) 0.0 else d
   def invert = Vect(-x, -y, -z)
   def add(v: Vect) = Vect(x + v.x, y + v.y, z + v.z)
   def subtract(v: Vect) = Vect(x - v.x, y - v.y, z - v.z)

@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 import org.nlogo.api.GraphicsInterface;
 
-import static org.nlogo.api.RendererInterface.SHAPE_WIDTH;
+import static org.nlogo.api.Constants.ShapeWidth;
 
 public strictfp class Rectangle
     extends Element
@@ -155,16 +155,16 @@ public strictfp class Rectangle
     int temp2;
     temp2 = upperLeft.x;
     upperLeft.x = upperLeft.y;
-    upperLeft.y = SHAPE_WIDTH - temp2;
+    upperLeft.y = ShapeWidth() - temp2;
     temp2 = upperRight.x;
     upperRight.x = upperRight.y;
-    upperRight.y = SHAPE_WIDTH - temp2;
+    upperRight.y = ShapeWidth() - temp2;
     temp2 = lowerLeft.x;
     lowerLeft.x = lowerLeft.y;
-    lowerLeft.y = SHAPE_WIDTH - temp2;
+    lowerLeft.y = ShapeWidth() - temp2;
     temp2 = lowerRight.x;
     lowerRight.x = lowerRight.y;
-    lowerRight.y = SHAPE_WIDTH - temp2;
+    lowerRight.y = ShapeWidth() - temp2;
   }
 
   @Override
@@ -176,16 +176,16 @@ public strictfp class Rectangle
     upperRight = temp;
     int temp2;
     temp2 = upperLeft.x;
-    upperLeft.x = SHAPE_WIDTH - upperLeft.y;
+    upperLeft.x = ShapeWidth() - upperLeft.y;
     upperLeft.y = temp2;
     temp2 = lowerLeft.x;
-    lowerLeft.x = SHAPE_WIDTH - lowerLeft.y;
+    lowerLeft.x = ShapeWidth() - lowerLeft.y;
     lowerLeft.y = temp2;
     temp2 = upperRight.x;
-    upperRight.x = SHAPE_WIDTH - upperRight.y;
+    upperRight.x = ShapeWidth() - upperRight.y;
     upperRight.y = temp2;
     temp2 = lowerRight.x;
-    lowerRight.x = SHAPE_WIDTH - lowerRight.y;
+    lowerRight.x = ShapeWidth() - lowerRight.y;
     lowerRight.y = temp2;
   }
 
@@ -197,10 +197,10 @@ public strictfp class Rectangle
     temp = lowerLeft;
     lowerLeft = lowerRight;
     lowerRight = temp;
-    upperLeft.x = SHAPE_WIDTH - upperLeft.x;
-    upperRight.x = SHAPE_WIDTH - upperRight.x;
-    lowerLeft.x = SHAPE_WIDTH - lowerLeft.x;
-    lowerRight.x = SHAPE_WIDTH - lowerRight.x;
+    upperLeft.x = ShapeWidth() - upperLeft.x;
+    upperRight.x = ShapeWidth() - upperRight.x;
+    lowerLeft.x = ShapeWidth() - lowerLeft.x;
+    lowerRight.x = ShapeWidth() - lowerRight.x;
   }
 
   @Override
@@ -211,10 +211,10 @@ public strictfp class Rectangle
     temp = lowerRight;
     lowerRight = upperRight;
     upperRight = temp;
-    upperLeft.y = SHAPE_WIDTH - upperLeft.y;
-    upperRight.y = SHAPE_WIDTH - upperRight.y;
-    lowerLeft.y = SHAPE_WIDTH - lowerLeft.y;
-    lowerRight.y = SHAPE_WIDTH - lowerRight.y;
+    upperLeft.y = ShapeWidth() - upperLeft.y;
+    upperRight.y = ShapeWidth() - upperRight.y;
+    lowerLeft.y = ShapeWidth() - lowerLeft.y;
+    lowerRight.y = ShapeWidth() - lowerRight.y;
   }
 
   @Override

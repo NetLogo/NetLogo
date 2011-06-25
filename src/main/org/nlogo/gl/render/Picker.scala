@@ -1,6 +1,6 @@
 package org.nlogo.gl.render
 
-import org.nlogo.api.{ Vect, World }
+import org.nlogo.api.{ Constants, Vect }
 
 object Picker {
 
@@ -32,7 +32,7 @@ object Picker {
     var tc, tN, tD = D        // tc = tN / tD, default tD = D >= 0
 
     // compute the line parameters of the two closest points
-    if (D < World.INFINITESIMAL) { // the lines are almost parallel
+    if (D < Constants.Infinitesimal) { // the lines are almost parallel
       sN = 0.0        // force using point P0 on segment S1
       sD = 1.0        // to prevent possible division by 0.0 later
       tN = e
@@ -54,8 +54,8 @@ object Picker {
     }
 
     // finally do the division to get sc and tc
-    sc = if (math.abs(sN) < World.INFINITESIMAL) 0.0 else (sN / sD)
-    tc = if (math.abs(tN) < World.INFINITESIMAL) 0.0 else (tN / tD)
+    sc = if (math.abs(sN) < Constants.Infinitesimal) 0.0 else (sN / sD)
+    tc = if (math.abs(tN) < Constants.Infinitesimal) 0.0 else (tN / tD)
 
     // get the difference of the two closest points
     val dP = Vect((u.x * sc) - (v.x * tc) + w.x,

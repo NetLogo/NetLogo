@@ -448,21 +448,20 @@ public strictfp class World
   public WorldDimensions setDimensionVariable(String variableName, int value, WorldDimensions d)
       throws WorldDimensionException {
     if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
-      d.minPxcor = value;
+      d.minPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
-      d.maxPxcor = value;
+      d.maxPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
-      d.minPycor = value;
+      d.minPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
-      d.maxPycor = value;
+      d.maxPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
-      d.minPxcor = growMin(_minPxcor, _maxPxcor, value, d.minPxcor);
-      d.maxPxcor = growMax(_minPxcor, _maxPxcor, value, d.maxPxcor);
+      d.minPxcor_$eq(growMin(_minPxcor, _maxPxcor, value, d.minPxcor()));
+      d.maxPxcor_$eq(growMax(_minPxcor, _maxPxcor, value, d.maxPxcor()));
     } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
-      d.minPycor = growMin(_minPycor, _maxPycor, value, d.minPycor);
-      d.maxPycor = growMax(_minPycor, _maxPycor, value, d.maxPycor);
+      d.minPycor_$eq(growMin(_minPycor, _maxPycor, value, d.minPycor()));
+      d.maxPycor_$eq(growMax(_minPycor, _maxPycor, value, d.maxPycor()));
     }
-
     return d;
   }
 
@@ -503,10 +502,10 @@ public strictfp class World
   }
 
   public boolean equalDimensions(WorldDimensions d) {
-    return d.minPxcor == _minPxcor &&
-        d.maxPxcor == _maxPxcor &&
-        d.minPycor == _minPycor &&
-        d.maxPycor == _maxPycor;
+    return d.minPxcor() == _minPxcor &&
+      d.maxPxcor() == _maxPxcor &&
+      d.minPycor() == _minPycor &&
+      d.maxPycor() == _maxPycor;
   }
 
   public Patch getPatch(int id) {
@@ -670,7 +669,7 @@ public strictfp class World
   /// creating & clearing
 
   public void createPatches(WorldDimensions dim) {
-    createPatches(dim.minPxcor, dim.maxPxcor, dim.minPycor, dim.maxPycor);
+    createPatches(dim.minPxcor(), dim.maxPxcor(), dim.minPycor(), dim.maxPycor());
   }
 
   public void createPatches(int minPxcor, int maxPxcor,

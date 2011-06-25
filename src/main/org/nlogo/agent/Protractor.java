@@ -1,6 +1,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.Constants;
 import org.nlogo.api.I18N;
 import org.nlogo.api.I18NJava;
 
@@ -198,10 +199,10 @@ public strictfp class Protractor
       double headingRadians = StrictMath.toRadians(heading);
       cos = StrictMath.cos(headingRadians);
       sin = StrictMath.sin(headingRadians);
-      if (StrictMath.abs(cos) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(cos) < Constants.Infinitesimal()) {
         cos = 0;
       }
-      if (StrictMath.abs(sin) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(sin) < Constants.Infinitesimal()) {
         sin = 0;
       }
     }

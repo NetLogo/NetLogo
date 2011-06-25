@@ -54,7 +54,7 @@ public strictfp class Graphics2DWrapper
     double yCorrection = 0;
     if (IS_QUARTZ) {
       // one pixel bigger
-      sizeCorrection = RendererInterface.SHAPE_WIDTH / scale;
+      sizeCorrection = Constants.ShapeWidth() / scale;
       // adjust position to still be centered
       xCorrection = -0.5 * sizeCorrection;
       yCorrection = xCorrection;
@@ -72,7 +72,7 @@ public strictfp class Graphics2DWrapper
 
     if (!IS_QUARTZ) {
       // one pixel smaller
-      sizeCorrection = -RendererInterface.SHAPE_WIDTH / scale;
+      sizeCorrection = -Constants.ShapeWidth() / scale;
       xCorrection = getXCorrection(sizeCorrection, angle);
       yCorrection = getYCorrection(sizeCorrection, angle);
     }
@@ -90,7 +90,7 @@ public strictfp class Graphics2DWrapper
 
     if (IS_QUARTZ) {
       // size: one pixel bigger
-      sizeCorrection = RendererInterface.SHAPE_WIDTH / scale;
+      sizeCorrection = Constants.ShapeWidth() / scale;
       xCorrection = getXCorrection(sizeCorrection, angle);
       yCorrection = getYCorrection(sizeCorrection, angle);
     }
@@ -105,7 +105,7 @@ public strictfp class Graphics2DWrapper
     double sizeCorrection = 0;
     if (!IS_QUARTZ) {
       // size: one pixel smaller
-      sizeCorrection = -RendererInterface.SHAPE_WIDTH / scale;
+      sizeCorrection = -Constants.ShapeWidth() / scale;
     }
 
     g.draw(new java.awt.geom.Rectangle2D.Double

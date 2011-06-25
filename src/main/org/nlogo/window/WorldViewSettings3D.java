@@ -316,10 +316,10 @@ public strictfp class WorldViewSettings3D
     if (d instanceof org.nlogo.api.WorldDimensions3D) {
       org.nlogo.api.WorldDimensions3D dd = (org.nlogo.api.WorldDimensions3D) d;
       setDimensions
-          (dd.minPxcor, dd.maxPxcor, dd.minPycor, dd.maxPycor, dd.minPzcor, dd.maxPzcor);
+        (dd.minPxcor(), dd.maxPxcor(), dd.minPycor(), dd.maxPycor(), dd.minPzcor(), dd.maxPzcor());
     } else {
       setDimensions
-          (d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, 0, 0);
+        (d.minPxcor(), d.maxPxcor(), d.minPycor(), d.maxPycor(), 0, 0);
     }
   }
 

@@ -21,10 +21,10 @@ public final strictfp class TrigTables {
       double headingRadians = StrictMath.toRadians(i);
       double c = StrictMath.cos(headingRadians);
       double s = StrictMath.sin(headingRadians);
-      if (StrictMath.abs(c) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(c) < org.nlogo.api.Constants.Infinitesimal()) {
         c = 0;
       }
-      if (StrictMath.abs(s) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(s) < org.nlogo.api.Constants.Infinitesimal()) {
         s = 0;
       }
       sin[i] = s;

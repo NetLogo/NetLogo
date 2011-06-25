@@ -37,7 +37,7 @@ public final strictfp class _fdinternal
     MutableDouble countdown = (MutableDouble) context.getLet(let);
     double distance = countdown.value;
     double distanceMagnitude = StrictMath.abs(distance);
-    if (distanceMagnitude <= org.nlogo.api.World.INFINITESIMAL) {
+    if (distanceMagnitude <= org.nlogo.api.Constants.Infinitesimal()) {
       context.ip = next;
       return;
     }

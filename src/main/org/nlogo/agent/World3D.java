@@ -181,9 +181,9 @@ public final strictfp class World3D
   @Override
   public void createPatches(WorldDimensions dim) {
     WorldDimensions3D d = (WorldDimensions3D) dim;
-    createPatches(dim.minPxcor, dim.maxPxcor,
-        dim.minPycor, dim.maxPycor,
-        d.minPzcor, d.maxPzcor);
+    createPatches(dim.minPxcor(), dim.maxPxcor(),
+                  dim.minPycor(), dim.maxPycor(),
+                  d.minPzcor(), d.maxPzcor());
   }
 
   @Override
@@ -330,41 +330,39 @@ public final strictfp class World3D
   public WorldDimensions setDimensionVariable(String variableName, int value, WorldDimensions d)
       throws WorldDimensionException {
     if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
-      d.minPxcor = value;
+      d.minPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
-      d.maxPxcor = value;
+      d.maxPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
-      d.minPycor = value;
+      d.minPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
-      d.maxPycor = value;
+      d.maxPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MIN-PZCOR")) {
-      ((WorldDimensions3D) d).minPzcor = value;
+      ((WorldDimensions3D) d).minPzcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PZCOR")) {
-      ((WorldDimensions3D) d).maxPzcor = value;
+      ((WorldDimensions3D) d).maxPzcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
-      d.minPxcor = growMin(_minPxcor, _maxPxcor, value, d.minPxcor);
-      d.maxPxcor = growMax(_minPxcor, _maxPxcor, value, d.maxPxcor);
+      d.minPxcor_$eq(growMin(_minPxcor, _maxPxcor, value, d.minPxcor()));
+      d.maxPxcor_$eq(growMax(_minPxcor, _maxPxcor, value, d.maxPxcor()));
     } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
-      d.minPycor = growMin(_minPycor, _maxPycor, value, d.minPycor);
-      d.maxPycor = growMax(_minPycor, _maxPycor, value, d.maxPycor);
+      d.minPycor_$eq(growMin(_minPycor, _maxPycor, value, d.minPycor()));
+      d.maxPycor_$eq(growMax(_minPycor, _maxPycor, value, d.maxPycor()));
     } else if (variableName.equalsIgnoreCase("WORLD-DEPTH")) {
       WorldDimensions3D wd = (WorldDimensions3D) d;
-
-      wd.minPzcor = growMin(_minPzcor, _maxPzcor, value, wd.minPzcor);
-      wd.maxPzcor = growMax(_minPzcor, _maxPzcor, value, wd.maxPzcor);
+      wd.minPzcor_$eq(growMin(_minPzcor, _maxPzcor, value, wd.minPzcor()));
+      wd.maxPzcor_$eq(growMax(_minPzcor, _maxPzcor, value, wd.maxPzcor()));
     }
-
     return d;
   }
 
   @Override
   public boolean equalDimensions(WorldDimensions d) {
-    return d.minPxcor == _minPxcor &&
-        d.maxPxcor == _maxPxcor &&
-        d.minPycor == _minPycor &&
-        d.maxPycor == _maxPycor &&
-        ((WorldDimensions3D) d).minPzcor == _minPzcor &&
-        ((WorldDimensions3D) d).maxPzcor == _maxPzcor;
+    return d.minPxcor() == _minPxcor &&
+      d.maxPxcor() == _maxPxcor &&
+      d.minPycor() == _minPycor &&
+      d.maxPycor() == _maxPycor &&
+      ((WorldDimensions3D) d).minPzcor() == _minPzcor &&
+      ((WorldDimensions3D) d).maxPzcor() == _maxPzcor;
   }
 
   @Override

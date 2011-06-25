@@ -466,7 +466,7 @@ public abstract strictfp class WorldViewSettings
   }
 
   public void setDimensions(org.nlogo.api.WorldDimensions d) {
-    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor);
+    setDimensions(d.minPxcor(), d.maxPxcor(), d.minPycor(), d.maxPycor());
   }
 
   public void setDimensions(int minPxcor, int maxPxcor,

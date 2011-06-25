@@ -1,7 +1,7 @@
 package org.nlogo.render;
 
 import org.nlogo.api.GraphicsInterface;
-import org.nlogo.api.RendererInterface;
+import org.nlogo.api.Constants;
 
 public strictfp class BoxRenderer extends AbstractTopologyRenderer {
   public BoxRenderer(org.nlogo.api.World world) {
@@ -38,7 +38,7 @@ public strictfp class BoxRenderer extends AbstractTopologyRenderer {
   @Override
   public void fillBackground(GraphicsInterface g) {
     if (viewOffsetX != 0 || viewOffsetY != 0) {
-      fillWith(g, RendererInterface.VIEW_BACKGROUND);
+      fillWith(g, Constants.ViewBackground());
     }
   }
 

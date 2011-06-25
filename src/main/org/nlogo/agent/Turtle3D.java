@@ -148,10 +148,10 @@ public final strictfp class Turtle3D
     double pitchRadians = StrictMath.toRadians(pitch());
     double sin = StrictMath.sin(pitchRadians);
     double distProj = distance * StrictMath.cos(pitchRadians);
-    if (StrictMath.abs(sin) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(sin) < org.nlogo.api.Constants.Infinitesimal()) {
       sin = 0;
     }
-    if (StrictMath.abs(distProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(distProj) < org.nlogo.api.Constants.Infinitesimal()) {
       distProj = 0;
     }
 
@@ -159,10 +159,10 @@ public final strictfp class Turtle3D
     double cosProj = StrictMath.cos(headingRadians);
     double sinProj = StrictMath.sin(headingRadians);
 
-    if (StrictMath.abs(cosProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(cosProj) < org.nlogo.api.Constants.Infinitesimal()) {
       cosProj = 0;
     }
-    if (StrictMath.abs(sinProj) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(sinProj) < org.nlogo.api.Constants.Infinitesimal()) {
       sinProj = 0;
     }
 
@@ -1026,10 +1026,10 @@ public final strictfp class Turtle3D
 
     double sinDelta = StrictMath.sin(StrictMath.toRadians(delta));
     double cosDelta = StrictMath.cos(StrictMath.toRadians(delta));
-    if (StrictMath.abs(sinDelta) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(sinDelta) < org.nlogo.api.Constants.Infinitesimal()) {
       sinDelta = 0;
     }
-    if (StrictMath.abs(cosDelta) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(cosDelta) < org.nlogo.api.Constants.Infinitesimal()) {
       cosDelta = 0;
     }
 

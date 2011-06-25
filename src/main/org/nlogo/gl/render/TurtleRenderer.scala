@@ -2,7 +2,7 @@ package org.nlogo.gl.render
 
 import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
-import org.nlogo.api.{ Agent, Perspective, Turtle, World }
+import org.nlogo.api.{ Agent, Constants, Perspective, Turtle, World }
 import org.nlogo.util.JCL._
 
 private class TurtleRenderer(world: World, shapeRenderer: ShapeRenderer)
@@ -52,9 +52,9 @@ extends AgentRenderer(world, shapeRenderer) {
     val headingRadians = math.toRadians(turtle.heading)
     var cos = math.cos(headingRadians)
     var sin = math.sin(headingRadians)
-    if(math.abs(cos) < org.nlogo.api.World.INFINITESIMAL)
+    if(math.abs(cos) < Constants.Infinitesimal)
       cos = 0
-    if(math.abs(sin) < org.nlogo.api.World.INFINITESIMAL)
+    if(math.abs(sin) < Constants.Infinitesimal)
       sin = 0
     Array(dist * sin * Renderer.WORLD_SCALE,
           dist * cos * Renderer.WORLD_SCALE,

@@ -312,7 +312,7 @@ public strictfp class Observer
   public double dx() {
     double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
         StrictMath.sin(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
@@ -321,7 +321,7 @@ public strictfp class Observer
   public double dy() {
     double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
         StrictMath.cos(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
@@ -329,7 +329,7 @@ public strictfp class Observer
 
   public double dz() {
     double value = StrictMath.sin(StrictMath.toRadians(pitch));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
