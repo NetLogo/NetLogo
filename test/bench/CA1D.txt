@@ -5369,7 +5369,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          LDC 3.2E-15
+          INVOKESTATIC org/nlogo/api/Constants.Infinitesimal ()D
           DCMPG
           IFGT L7
           ALOAD 1
@@ -5531,7 +5531,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          LDC 3.2E-15
+          INVOKESTATIC org/nlogo/api/Constants.Infinitesimal ()D
           DCMPG
           IFGT L7
           ALOAD 1
@@ -5693,7 +5693,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          LDC 3.2E-15
+          INVOKESTATIC org/nlogo/api/Constants.Infinitesimal ()D
           DCMPG
           IFGT L7
           ALOAD 1
@@ -5856,7 +5856,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          LDC 3.2E-15
+          INVOKESTATIC org/nlogo/api/Constants.Infinitesimal ()D
           DCMPG
           IFGT L7
           ALOAD 1
@@ -5985,7 +5985,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           INVOKESTATIC java/lang/StrictMath.abs (D)D
           DSTORE 6
           DLOAD 6
-          LDC 3.2E-15
+          INVOKESTATIC org/nlogo/api/Constants.Infinitesimal ()D
           DCMPG
           IFGT L7
           ALOAD 1
