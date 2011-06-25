@@ -146,6 +146,7 @@ tmp/scaladoc: netlogo | tmp
 docs/scaladoc: netlogo
 	-rm -rf docs/scaladoc
 	-mkdir -p docs/scaladoc
+	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
 	bin/scaladoc \
 	  -d docs/scaladoc \
 	  -doc-title 'NetLogo API' \
