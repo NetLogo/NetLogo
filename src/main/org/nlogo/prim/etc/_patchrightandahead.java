@@ -23,7 +23,7 @@ public final strictfp class _patchrightandahead
           (argEvalDoubleValue(context, 0),
               argEvalDoubleValue(context, 1));
     } catch (org.nlogo.api.AgentException exc) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
   }
 }

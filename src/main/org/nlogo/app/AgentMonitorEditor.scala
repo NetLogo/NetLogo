@@ -347,7 +347,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
           case LINK_WHO =>
             val (end1, end2, breed) = agent match {
               case l: Link => (l.end1, l.end2, l.getBreed)
-              case _ => (Nobody.NOBODY, Nobody.NOBODY, workspace.world.links)
+              case _ => (Nobody, Nobody, workspace.world.links)
             }
             index match {
               case Link.VAR_END1 =>

@@ -36,7 +36,7 @@ public final strictfp class _inlinkfrom
     Turtle target = argEvalTurtle(context, 0);
     Link link = linkManager.findLinkFrom(target, (Turtle) context.agent, breed, true);
     if (link == null) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
     return link;
   }

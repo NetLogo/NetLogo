@@ -48,7 +48,7 @@ object ScalaConversions {
     case x: ExtensionObject => x
     case x: Agent => x
     case x: AgentSet => x
-    case x: Nobody => x
+    case Nobody => Nobody
 
     // Seqs turn into LogoList. their elements are recursively converted.
     // also recurse into LogoLists.

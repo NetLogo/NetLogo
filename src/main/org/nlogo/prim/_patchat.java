@@ -2,6 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.Patch;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -26,7 +27,7 @@ public final strictfp class _patchat
     try {
       patch = context.agent.getPatchAtOffsets(dx, dy);
     } catch (org.nlogo.api.AgentException e) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
     return patch;
   }

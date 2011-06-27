@@ -25,7 +25,7 @@ public final strictfp class _patchahead
               turtle.heading(),
               argEvalDoubleValue(context, 0));
     } catch (org.nlogo.api.AgentException exc) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
   }
 }

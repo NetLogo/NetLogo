@@ -35,7 +35,7 @@ public final strictfp class _patchatheadingpitchanddistance
                 argEvalDoubleValue(context, 2));
       }
     } catch (org.nlogo.api.AgentException exc) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
   }
 }

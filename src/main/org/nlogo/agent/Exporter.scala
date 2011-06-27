@@ -108,7 +108,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
     Collections.sort(sortedGlobals)
     val subject =
-      Option(world.observer.targetAgent).getOrElse(Nobody.NOBODY)
+      Option(world.observer.targetAgent).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
     print(csv.encode(JInteger.toString(world.minPxcor)) + "," 

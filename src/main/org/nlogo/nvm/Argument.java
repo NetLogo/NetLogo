@@ -24,7 +24,7 @@ public strictfp class Argument
     }
     if (cached instanceof org.nlogo.agent.Agent &&
         ((org.nlogo.agent.Agent) cached).id == -1) {
-      cached = org.nlogo.api.Nobody.NOBODY;
+      cached = org.nlogo.api.Nobody$.MODULE$;
     }
     return cached;
   }

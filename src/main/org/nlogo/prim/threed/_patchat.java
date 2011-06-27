@@ -26,7 +26,7 @@ public final strictfp class _patchat
     try {
       patch = ((org.nlogo.agent.Agent3D) (context.agent)).getPatchAtOffsets(dx, dy, dz);
     } catch (org.nlogo.api.AgentException e) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
     return patch;
   }

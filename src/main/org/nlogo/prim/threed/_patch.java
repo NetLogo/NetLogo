@@ -2,7 +2,7 @@ package org.nlogo.prim.threed;
 
 import org.nlogo.agent.World3D;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -28,7 +28,7 @@ public final strictfp class _patch
                   argEvalDoubleValue(context, 1),
                   argEvalDoubleValue(context, 2));
     } catch (org.nlogo.api.AgentException ex) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
   }
 }

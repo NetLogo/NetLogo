@@ -3,7 +3,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -22,7 +22,7 @@ public final strictfp class _linkbreedsingular
     Link link = world.getLink(argEvalDouble(context, 0),
         argEvalDouble(context, 1), breed);
     if (link == null) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
     return link;
   }

@@ -1,7 +1,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -28,7 +28,7 @@ public final strictfp class _patch
               (argEvalDoubleValue(context, 0),
                   argEvalDoubleValue(context, 1));
     } catch (org.nlogo.api.AgentException ex) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
   }
 }

@@ -1,6 +1,6 @@
 package org.nlogo.prim;
 
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.agent.Turtle;
 import org.nlogo.agent.Patch;
 import org.nlogo.nvm.Reporter;
@@ -30,7 +30,7 @@ public final strictfp class _patchwest
       patch = world.fastGetPatchAt(-1, 0);
     }
     if (patch == null) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
     return patch;
   }

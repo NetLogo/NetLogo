@@ -8,6 +8,6 @@ class _nobody extends Reporter with Pure {
     Syntax.reporterSyntax(Syntax.TYPE_NOBODY)
   override def report(context: Context): AnyRef =
     report_1(context)
-  def report_1(context: Context): Nobody =
-    Nobody.NOBODY
+  def report_1(context: Context) =
+    Nobody
 }

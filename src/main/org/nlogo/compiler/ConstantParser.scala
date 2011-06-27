@@ -17,7 +17,7 @@ private object ConstantParser {
       case d:java.lang.Double => new _constdouble(d)
       case l:LogoList => new _constlist(l)
       case s:String => new _conststring(s)
-      case n:Nobody => new _nobody
+      case Nobody => new _nobody
       case _ => throw new IllegalArgumentException(value.getClass.getName)
     }
 }

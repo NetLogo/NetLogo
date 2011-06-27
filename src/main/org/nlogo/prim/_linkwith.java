@@ -40,7 +40,7 @@ public final strictfp class _linkwith
     mustNotBeDirected(breed, context);
     Link link = linkManager.findLinkEitherWay(parent, target, breed, true);
     if (link == null) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
     return link;
   }

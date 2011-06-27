@@ -4,7 +4,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.agent.Turtle;
 import org.nlogo.agent.Patch;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Syntax;
 
 public final strictfp class _patcheast
@@ -30,7 +30,7 @@ public final strictfp class _patcheast
       patch = world.fastGetPatchAt(1, 0);
     }
     if (patch == null) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
     return patch;
   }
