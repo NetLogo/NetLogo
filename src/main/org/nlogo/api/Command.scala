@@ -1,20 +1,19 @@
-package org.nlogo.api;
+package org.nlogo.api
 
 /**
  * Interface for NetLogo extension commands. Commands are primitives that
  * do not return a value.  All new commands must implement this interface.
  */
-public interface Command
-    extends Primitive {
+trait Command extends Primitive {
+
   /**
-   * Specifies whether NetLogo should "switch" to another
-   * turtle after running this command.  Generally, this should be true
-   * if this <code>Command</code> affects the state of the world (changing a variable, changing
-   * graphics, etc.)
+   * Specifies whether NetLogo should "switch" to another turtle after running this command.
+   * Generally, this should be true if this <code>Command</code> affects the state of the world
+   * (changing a variable, changing graphics, etc.)
    *
    * @return <code> true </code> if a switch should occur, <code> false </code> otherwise.
    */
-  boolean getSwitchesBoolean();
+  def getSwitchesBoolean: Boolean
 
   /**
    * Returns a new instance of this <code>Command</code>.  Called by NetLogo
@@ -23,7 +22,7 @@ public interface Command
    * @param name the name that was found in the code (without the JAR identifer)
    * @return <code>Command</code> to be peformed during runtime
    */
-  Command newInstance(String name);
+  def newInstance(name: String): Command
 
   /**
    * Executes this <code>Command</code>. Called by NetLogo when this <code>Command</code> is called at run-time.
@@ -35,5 +34,8 @@ public interface Command
    * @throws ExtensionException (if an extension-related problem occurs)
    * @throws LogoException      (if one of the evaluated arguments throws a LogoException)
    */
-  void perform(Argument args[], Context context) throws ExtensionException, LogoException;
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def perform(args: Array[Argument], context: Context)
+
 }

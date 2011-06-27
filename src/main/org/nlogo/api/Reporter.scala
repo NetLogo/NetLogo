@@ -1,4 +1,4 @@
-package org.nlogo.api;
+package org.nlogo.api
 
 /**
  * Interface for NetLogo reporters. Reporters are primitives that
@@ -6,8 +6,7 @@ package org.nlogo.api;
  * <p>Note that NetLogo will not call your contructor directly, it will
  * call <code>newInstance(String)</code> instead.
  */
-public interface Reporter
-    extends Primitive {
+trait Reporter extends Primitive {
 
   /**
    * Returns a new instance of this <code>Reporter</code>.  Called by NetLogo
@@ -16,13 +15,11 @@ public interface Reporter
    * @param name the name that was found in the code (without the JAR identifer)
    * @return the <code>Reporter</code> to be called during runtime
    */
-  Reporter newInstance(String name);
-
+  def newInstance(name: String): Reporter
 
   /**
    * Executes this <code>Reporter</code>. Called by NetLogo when this <code>Reporter</code> is
-   * called in a running
-   * NetLogo model.
+   * called in a running NetLogo model.
    *
    * @param args    The <code>Argument</code>s that were included with
    *                the command in the NetLogo code.  (May be a <code>Reporter</code> or a constant.)
@@ -30,5 +27,8 @@ public interface Reporter
    * @return the object to be reported
    * @throws ExtensionException
    */
-  Object report(Argument args[], Context context) throws ExtensionException, LogoException;
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def report(args: Array[Argument], context: Context): AnyRef
+
 }
