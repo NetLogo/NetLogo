@@ -116,7 +116,9 @@ public strictfp class TurtleData
     if ((mask & LABEL_COLOR) == LABEL_COLOR) {
       labelColor = org.nlogo.api.Color.getRGBAListByARGB(is.readInt());
     }
-    breedIndex = is.readInt();
+    if ((mask & BREED_INDEX) == BREED_INDEX) {
+      breedIndex = is.readInt();
+    }
     if ((mask & LINE_THICKNESS) == LINE_THICKNESS) {
       lineThickness = is.readDouble();
     }
@@ -374,12 +376,12 @@ public strictfp class TurtleData
       diffs.mask |= LINE_THICKNESS;
       diffs.lineThickness = lineThickness;
     }
-
-    // include breed index whether it changed or not
-    breedIndex = other.breedIndex;
-    diffs.breedIndex = breedIndex;
-
-
+    if ((other.mask & BREED_INDEX) == BREED_INDEX &&
+        breedIndex != other.breedIndex) {
+      breedIndex = other.breedIndex;
+      diffs.mask |= BREED_INDEX;
+      diffs.breedIndex = breedIndex;
+    }
     if (diffs.mask != DEAD) {
       return diffs;
     } else {
@@ -418,7 +420,9 @@ public strictfp class TurtleData
     if ((mask & LABEL_COLOR) == LABEL_COLOR) {
       os.writeInt(org.nlogo.api.Color.getARGBIntByRGBAList(labelColor));
     }
-    os.writeInt(breedIndex);
+    if ((mask & BREED_INDEX) == BREED_INDEX) {
+      os.writeInt(breedIndex);
+    }
     if ((mask & LINE_THICKNESS) == LINE_THICKNESS) {
       os.writeDouble(lineThickness);
     }
