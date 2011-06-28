@@ -48,7 +48,7 @@ public final strictfp class _patchset
         descendList(context, (LogoList) elt, resultSet);
       } else if (elt instanceof Patch) {
         resultSet.add((Patch) elt);
-      } else if (!(elt instanceof org.nlogo.api.Nobody)) {
+      } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
             (context, this, i, Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET, elt);
       }
@@ -79,7 +79,7 @@ public final strictfp class _patchset
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
-      } else if (!(obj instanceof org.nlogo.api.Nobody)) {
+      } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
         throw new EngineException(context, this,
             I18NJava.errors().getN("org.nlogo.prim.etc._patchset.listInputNonPatch",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));

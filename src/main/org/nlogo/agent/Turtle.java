@@ -276,7 +276,7 @@ public strictfp class Turtle
 
   @Override
   public Object getTurtleOrLinkVariable(String varName) {
-    return getTurtleVariable(world.program().turtlesOwn.indexOf(varName));
+    return getTurtleVariable(world.program().turtlesOwn().indexOf(varName));
   }
 
   @Override
@@ -380,7 +380,7 @@ public strictfp class Turtle
   @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
-    setTurtleVariable(world.program().turtlesOwn.indexOf(varName), value);
+    setTurtleVariable(world.program().turtlesOwn().indexOf(varName), value);
   }
 
   @Override
@@ -1122,7 +1122,7 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<Object> iter = world.program().breeds.values().iterator(); iter.hasNext(); j++) {
+    for (Iterator<Object> iter = world.program().breeds().values().iterator(); iter.hasNext(); j++) {
       if (mybreed == ((AgentSet) iter.next())) {
         return j;
       }

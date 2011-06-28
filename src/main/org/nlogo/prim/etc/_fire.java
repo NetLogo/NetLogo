@@ -52,7 +52,7 @@ public final strictfp class _fire
 
   @Override
   public void perform(final Context context) {
-    int BURNED_TREES_VAR = world.program().interfaceGlobals.size() + 1;
+    int BURNED_TREES_VAR = world.program().interfaceGlobals().size() + 1;
     int patchCount = world.patches().count();
     boolean any = false;
     for (int i = 0; i < patchCount; i++) {
@@ -93,7 +93,7 @@ public final strictfp class _fire
           world.observer().variables[BURNED_TREES_VAR] =
               Double.valueOf
                   (((Double) world.observer().variables
-                      [world.program().interfaceGlobals.size()])
+                      [world.program().interfaceGlobals().size()])
                       .doubleValue() + 1);
         }
       } else {

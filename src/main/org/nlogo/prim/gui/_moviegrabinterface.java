@@ -19,7 +19,7 @@ public final strictfp class _moviegrabinterface
       throw new EngineException(
           context, this, token().name() + " can only be used in the GUI");
     }
-    if (world.program().is3D) {
+    if (world.program().is3D()) {
       throw new EngineException(
           context, this,
           token().name() + " is not supported in NetLogo 3D");

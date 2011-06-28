@@ -92,7 +92,7 @@ public final strictfp class _atpoints
     if (entry instanceof LogoList) {
       LogoList entryList = (LogoList) entry;
       if (entryList.size() == 2 ||
-          ((world.program().is3D)
+          ((world.program().is3D())
               && (entryList.size() == 3))) {
         for (Iterator<Object> iter = entryList.iterator(); iter.hasNext();) {
           if (!(iter.next() instanceof Double)) {
@@ -111,7 +111,7 @@ public final strictfp class _atpoints
     // predictable ordering so runs are reproducible - ST 8/13/03
     LinkedHashSet<Patch> result =
         new LinkedHashSet<Patch>();
-    boolean is3D = world.program().is3D;
+    boolean is3D = world.program().is3D();
     for (Iterator<Object> it = points.iterator(); it.hasNext();) {
       LogoList entry = (LogoList) it.next();
       Double x = null;

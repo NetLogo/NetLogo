@@ -46,7 +46,7 @@ public final strictfp class _linkset
         descendList(context, (LogoList) elt, resultSet);
       } else if (elt instanceof Link) {
         resultSet.add((Link) elt);
-      } else if (!(elt instanceof org.nlogo.api.Nobody)) {
+      } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
             (context, this, i, Syntax.TYPE_LINK | Syntax.TYPE_LINKSET, elt);
       }
@@ -75,7 +75,7 @@ public final strictfp class _linkset
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
-      } else if (!(obj instanceof org.nlogo.api.Nobody)) {
+      } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
         throw new EngineException(context, this,
             I18NJava.errors().getN("org.nlogo.prim.etc._linkset.invalidListInputs",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));

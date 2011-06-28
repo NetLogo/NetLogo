@@ -16,7 +16,7 @@ public final strictfp class _importdrawing
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
-    if (world.program().is3D) {
+    if (world.program().is3D()) {
       throw new EngineException(context, this,
           I18N.errors().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D"));
     }

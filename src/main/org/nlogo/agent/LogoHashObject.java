@@ -12,7 +12,7 @@ package org.nlogo.agent;
 import java.util.Iterator;
 
 import org.nlogo.api.LogoList;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.api.Equality;
 
 public final strictfp class LogoHashObject {
@@ -67,7 +67,7 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
     else if (sourceObject instanceof Turtle) {
       return Long.valueOf
           (((Turtle) sourceObject).id).hashCode();
-    } else if (sourceObject instanceof Nobody) {
+    } else if (sourceObject == Nobody$.MODULE$) {
       return NOBODY_CODE;
     } else if (sourceObject instanceof LogoList) {
       // Hash algor for List (from which ArrayList and therefore LogoList extend)

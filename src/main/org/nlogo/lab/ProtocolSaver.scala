@@ -86,7 +86,8 @@ object ProtocolSaver
                           attributes(("variable", valueSet.variableName)))
           for(value <- enumeratedValueSet)
             elementWithAttributes("value",
-                                  attributes(("value", Dump.logoObject(value,true,false))))
+                                  attributes(("value", Dump.logoObject(
+                                    value.asInstanceOf[AnyRef],true,false))))
           hd.endElement("", "", "enumeratedValueSet")
       }
     hd.endElement("", "", "experiment")

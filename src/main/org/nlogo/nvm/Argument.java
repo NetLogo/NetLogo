@@ -165,7 +165,7 @@ public strictfp class Argument
   private String getExceptionMessage(int wantedType, Object badValue) {
     String result = "Expected this input to be "
         + org.nlogo.nvm.Syntax.aTypeName(wantedType) + " but got "
-        + (badValue instanceof org.nlogo.api.Nobody
+        + (badValue == org.nlogo.api.Nobody$.MODULE$
         ? "NOBODY"
         : "the " + org.nlogo.nvm.Syntax.typeName(badValue)
         + " " + Dump.logoObject(badValue))

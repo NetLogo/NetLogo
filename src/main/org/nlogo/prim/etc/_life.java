@@ -33,11 +33,11 @@ public final strictfp class _life
     int patchCount = world.patches().count();
     double fgcolor =
         ((Double) world.observer().variables
-            [world.program().globals.indexOf("FGCOLOR")])
+            [world.program().globals().indexOf("FGCOLOR")])
             .doubleValue();
     double bgcolor =
         ((Double) world.observer().variables
-            [world.program().globals.indexOf("BGCOLOR")])
+            [world.program().globals().indexOf("BGCOLOR")])
             .doubleValue();
     for (int i = 0; i < patchCount; i++) {
       Patch patch = world.getPatch(i);

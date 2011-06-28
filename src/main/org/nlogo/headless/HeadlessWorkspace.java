@@ -521,8 +521,8 @@ public strictfp class HeadlessWorkspace
 
   @Override
   public void exportOutputAreaToCSV(java.io.PrintWriter writer) {
-    writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"));
-    org.nlogo.api.Dump.csv.stringToCSV(writer, outputAreaBuffer.toString());
+    writer.println(org.nlogo.api.Dump.csv().encode("OUTPUT"));
+    org.nlogo.api.Dump.csv().stringToCSV(writer, outputAreaBuffer.toString());
   }
 
   /**

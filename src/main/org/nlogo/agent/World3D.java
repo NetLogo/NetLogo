@@ -229,8 +229,8 @@ public final strictfp class World3D
     _maxPycorBoxed = Double.valueOf(_maxPycor);
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
-    if (program().breeds != null) {
-      for (Iterator<Object> iter = program().breeds.values().iterator();
+    if (program().breeds() != null) {
+      for (Iterator<Object> iter = program().breeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
@@ -246,7 +246,7 @@ public final strictfp class World3D
     Arrays.fill(patchColors, Color.getARGBbyPremodulatedColorNumber(0.0));
     patchColorsDirty = true;
 
-    int numVariables = program().patchesOwn.size();
+    int numVariables = program().patchesOwn().size();
 
     _observer.resetPerspective();
 

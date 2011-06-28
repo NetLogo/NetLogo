@@ -208,13 +208,13 @@ public strictfp class TrailDrawer
 
   public void exportDrawingToCSV(java.io.PrintWriter writer) {
     if (!drawingBlank) {
-      writer.println(Dump.csv.encode("DRAWING"));
+      writer.println(Dump.csv().encode("DRAWING"));
 
-      writer.println(Dump.csv.encode(Double.toString(world.patchSize())));
+      writer.println(Dump.csv().encode(Double.toString(world.patchSize())));
 
       String colorString = org.nlogo.util.HexString.toHexString(colors());
 
-      Dump.csv.stringToCSV(writer, colorString);
+      Dump.csv().stringToCSV(writer, colorString);
     }
     writer.println();
   }

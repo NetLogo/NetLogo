@@ -382,7 +382,7 @@ public final strictfp class Syntax {
 
   public static String aTypeName(Object obj) {
     String result = typeName(obj);
-    if (obj instanceof org.nlogo.api.Nobody) {
+    if (obj == org.nlogo.api.Nobody$.MODULE$) {
       return result;
     } else {
       return addAOrAn(result);
@@ -400,7 +400,7 @@ public final strictfp class Syntax {
       return typeName(TYPE_LIST);
     } else if (obj instanceof org.nlogo.agent.AgentSet) {
       return typeName(TYPE_AGENTSET);
-    } else if (obj instanceof org.nlogo.api.Nobody) {
+    } else if (obj == org.nlogo.api.Nobody$.MODULE$) {
       return typeName(TYPE_NOBODY);
     } else if (obj instanceof org.nlogo.agent.Turtle) {
       return typeName(TYPE_TURTLE);

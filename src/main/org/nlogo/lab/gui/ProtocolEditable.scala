@@ -61,7 +61,7 @@ class ProtocolEditable(protocol: Protocol,
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
          case evs: EnumeratedValueSet =>
-           evs.map(Dump.logoObject(_, true, false)).mkString(" ")
+           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(Dump.number(_)).mkString("[", " ", "]")
        }) + "]\n"

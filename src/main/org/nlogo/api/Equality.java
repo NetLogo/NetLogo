@@ -29,11 +29,11 @@ public final strictfp class Equality {
     } else if ((o1 instanceof Turtle) && (o2 instanceof Turtle)) {
       // works even if both turtles are dead!
       return ((Turtle) o1).id() == ((Turtle) o2).id();
-    } else if (o1 instanceof Nobody) {
-      return o2 instanceof Nobody ||
+    } else if (o1 == Nobody$.MODULE$) {
+      return o2 == Nobody$.MODULE$ ||
           (o2 instanceof Turtle && ((Turtle) o2).id() == -1) ||
           (o2 instanceof Link && ((Link) o2).id() == -1);
-    } else if (o2 instanceof Nobody) {
+    } else if (o2 == Nobody$.MODULE$) {
       return (o1 instanceof Turtle && ((Turtle) o1).id() == -1)
           || (o1 instanceof Link && ((Link) o1).id() == -1);
     } else if ((o1 instanceof AgentSet) && (o2 instanceof AgentSet)) {

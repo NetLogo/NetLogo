@@ -6,7 +6,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Link;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Syntax;
@@ -86,21 +86,21 @@ public final strictfp class _equal
     return arg0.id == arg1.id;
   }
 
-  public boolean report_14(Context context, Nobody arg0, Agent arg1) {
+  public boolean report_14(Context context, Nobody$ arg0, Agent arg1) {
     return arg1.id == -1;
   }
 
-  public boolean report_15(Context context, Agent arg0, Nobody arg1) {
+  public boolean report_15(Context context, Agent arg0, Nobody$ arg1) {
     return arg0.id == -1;
   }
 
-  public boolean report_16(Context context, Object arg0, Nobody arg1) {
-    return (arg0 instanceof Nobody) ||
+  public boolean report_16(Context context, Object arg0, Nobody$ arg1) {
+    return (arg0 == Nobody$.MODULE$) ||
         (arg0 instanceof Agent) && ((Agent) arg0).id == -1;
   }
 
-  public boolean report_17(Context context, Nobody arg0, Object arg1) {
-    return (arg1 instanceof Nobody) ||
+  public boolean report_17(Context context, Nobody$ arg0, Object arg1) {
+    return (arg1 == Nobody$.MODULE$) ||
         (arg1 instanceof Agent) && ((Agent) arg1).id == -1;
   }
 }

@@ -508,16 +508,16 @@ public abstract strictfp class AbstractWorkspace
   }
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
-    writer.println(Dump.csv.header("MODEL SETTINGS"));
-    List<String> globals = world.program().interfaceGlobals;
-    writer.println(Dump.csv.variableNameRow(globals));
+    writer.println(Dump.csv().header("MODEL SETTINGS"));
+    List<String> globals = world.program().interfaceGlobals();
+    writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
     for (Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
           world.getObserverVariableByName(iter.next());
     }
-    writer.println(Dump.csv.dataRow(values));
+    writer.println(Dump.csv().dataRow(values));
     writer.println();
   }
 
@@ -561,7 +561,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-              (s, world, extensionManager, world.program().is3D);
+            (s, world, extensionManager, world.program().is3D());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -690,7 +690,7 @@ public abstract strictfp class AbstractWorkspace
   public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
     return compiler().autoConvert
         (source, subprogram, reporter, modelVersion,
-            this, true, world().program().is3D);
+         this, true, world().program().is3D());
   }
 
   public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
@@ -712,7 +712,7 @@ public abstract strictfp class AbstractWorkspace
   public Object readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString
-        (source, world, getExtensionManager(), world.program().is3D);
+      (source, world, getExtensionManager(), world.program().is3D());
   }
 
   public void checkReporterSyntax(String source)
@@ -729,7 +729,7 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().is3D);
+      compiler().readFromString(s, world.program().is3D());
       return true;
     }
     catch(CompilerException e) {
@@ -738,12 +738,12 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().is3D);
+    return compiler().isValidIdentifier(s, world.program().is3D());
   }
 
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
-        (s, getExtensionManager(), world.program().is3D);
+      (s, getExtensionManager(), world.program().is3D());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
@@ -751,7 +751,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().is3D);
+    return compiler().findProcedurePositions(source, world.program().is3D());
   }
 
   public abstract org.nlogo.nvm.CompilerInterface compiler();

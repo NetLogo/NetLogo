@@ -42,7 +42,7 @@ public strictfp class ArgumentTypeException
     } else if (badValue != null) {
       String badValueStr = Dump.logoObject(badValue, true, false);
 
-      result += " but got " + (badValue instanceof org.nlogo.api.Nobody
+      result += " but got " + (badValue == org.nlogo.api.Nobody$.MODULE$
           ? "NOBODY"
           : "the " + Syntax.typeName(badValue) + " " + badValueStr)
           + " instead";

@@ -46,7 +46,7 @@ public final strictfp class _diffuse
           (context, this,
               ex.patch() + " should contain a number in the " + world.patchesOwnNameAt(reference.vn()) +
                   " variable, but contains " +
-                  (value instanceof org.nlogo.api.Nobody
+                  (value == org.nlogo.api.Nobody$.MODULE$
                       ? "NOBODY"
                       : "the " + Syntax.typeName(value) + " " + Dump.logoObject(value)) +
                   " instead");

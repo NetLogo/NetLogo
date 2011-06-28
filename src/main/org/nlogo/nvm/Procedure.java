@@ -97,8 +97,22 @@ public strictfp class Procedure {
 
   @Override
   public String toString() {
-    return super.toString() +
-        "[" + name + ":" + Dump.list(args) + ":" + usableBy + "]";
+    StringBuilder buf = new StringBuilder();
+    buf.append(super.toString());
+    buf.append("[");
+    buf.append(name);
+    buf.append(":");
+    boolean first = true ;
+    for(String a : args) {
+      buf.append(first ? "[" : " ");
+      buf.append(a);
+      first = false;
+    }
+    buf.append("]");
+    buf.append(":");
+    buf.append(usableBy);
+    buf.append("]");
+    return buf.toString();
   }
 
   public String dump() {
@@ -111,7 +125,16 @@ public strictfp class Procedure {
     if (parent != null) {
       buf.append(":" + parent.displayName);
     }
-    buf.append(":" + Dump.list(args) + "{" + usableBy + "}:\n");
+    buf.append(":");
+    boolean first = true ;
+    buf.append("[");
+    for(String a : args) {
+      if(!first)
+        buf.append(" ");
+      buf.append(a);
+      first = false;
+    }
+    buf.append("]{" + usableBy + "}:\n");
     for (int i = 0; i < code.length; i++) {
       if (indent) {
         buf.append("   ");

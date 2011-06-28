@@ -706,12 +706,12 @@ public strictfp class ExtensionManager
   }
 
   public void exportWorld(java.io.PrintWriter writer) {
-    writer.println(Dump.csv.encode("EXTENSIONS"));
+    writer.println(Dump.csv().encode("EXTENSIONS"));
     writer.println();
     for (JarContainer container : jars.values()) {
       StringBuilder data = container.classManager.exportWorld();
       if (data.length() > 0) {
-        writer.println(Dump.csv.encode(container.extensionName));
+        writer.println(Dump.csv().encode(container.extensionName));
         writer.print(data);
         writer.println();
       }

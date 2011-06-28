@@ -159,7 +159,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       steps = 0
       resetPlot()
       settingsString = ""
-      for ((name, value) <- settings) settingsString += name + " = " + Dump.logoObject(value) + "\n"
+      for ((name, value) <- settings)
+        settingsString += name + " = " + Dump.logoObject(value.asInstanceOf[AnyRef]) + "\n"
       updateProgressArea(true)
     }
   }
