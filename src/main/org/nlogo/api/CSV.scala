@@ -53,7 +53,7 @@ class CSV(dump: Any => String) {
         if (i < text.size && k < MaxColumns)
           line += ','
       }
-      writer.println(data(line))
+      writer.println(data(line.toString))
     }
   }
 
