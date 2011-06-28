@@ -698,7 +698,7 @@ public strictfp class World
       }
     }
     if (_program.linkBreeds != null) {
-      for (Iterator<Object> iter = _program.breeds.values().iterator();
+      for (Iterator<Object> iter = _program.linkBreeds.values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
