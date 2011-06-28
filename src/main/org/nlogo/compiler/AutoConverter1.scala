@@ -1,7 +1,10 @@
 package org.nlogo.compiler
-import org.nlogo.api.{CompilerException,Token,TokenizerInterface,TokenType,Version}
+
+import org.nlogo.api.{CompilerException,Token,TokenizerInterface,TokenType,VersionHistory}
 import org.nlogo.nvm.{Command,Procedure,Reporter}
 import org.nlogo.prim._constdouble
+import VersionHistory._  // olderThan* methods
+
 // AutoConverter1 handles easy conversions that don't require parsing.
 // AutoConverter2 handles hard conversions that do.
 // This class was automatically converted from Scala to Java using a program called jatran.  I did
@@ -18,36 +21,36 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   def convert(originalSource:String, subprogram:Boolean, reporter:Boolean, version:String):String = {
     var source = originalSource
     if(source.trim.length == 0) return source
-    if(Version.olderThan20alpha1(version))
+    if(olderThan20alpha1(version))
       source = convert(source, CONVERSIONS1)
-    if(Version.olderThan20beta5(version))
+    if(olderThan20beta5(version))
       source = convert(source, CONVERSIONS2)
-    if(Version.olderThan21beta3(version))
+    if(olderThan21beta3(version))
       source = convert(source, CONVERSIONS3)
-    if(Version.olderThan22pre3(version))
+    if(olderThan22pre3(version))
       source = convert(source, CONVERSIONS4)
-    if(Version.olderThan30pre5(version))
+    if(olderThan30pre5(version))
       source = convert(source, CONVERSIONS5)
-    if(Version.olderThan30beta1(version))
+    if(olderThan30beta1(version))
       source = convert(source, CONVERSIONS6)
-    if(Version.olderThan30beta2(version))
+    if(olderThan30beta2(version))
       source = convert(source, CONVERSIONS7)
-    if(Version.olderThan31pre1(version)) {
+    if(olderThan31pre1(version)) {
       source = convertBreeds(source)
       source = convertScreenEdge(source)
       source = convert(source, CONVERSIONS8)
     }
-    if(Version.olderThan31pre2(version))
+    if(olderThan31pre2(version))
       source = convert(source, CONVERSIONS9)
-    if(Version.olderThan31beta5(version))
+    if(olderThan31beta5(version))
       source = convert(source, CONVERSIONS11)
-    if(Version.olderThan32pre2(version)) {
+    if(olderThan32pre2(version)) {
       source = convert(source, CONVERSIONS13)
       source = convertCreateCustomBreed(source)
     }
-    if(Version.olderThan32pre3(version))
+    if(olderThan32pre3(version))
       source = convertNsum(source)
-    if(Version.olderThan3DPreview3(version)) {
+    if(olderThan3DPreview3(version)) {
       // do every thing since the branch
       source = convert(source, CONVERSIONS4)
       source = convert(source, CONVERSIONS5)
@@ -63,32 +66,32 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
       source = convert(source, CONVERSIONS13)
       source = convertCreateCustomBreed(source)
     }
-    if(Version.olderThan32pre4(version) || Version.olderThan3DPreview4(version)) {
+    if(olderThan32pre4(version) || olderThan3DPreview4(version)) {
       source = convert(source, CONVERSIONS14)
       source = convertDashOf(source)
     }
-    if(Version.olderThan32pre5(version) || Version.olderThan3DPreview4(version))
+    if(olderThan32pre5(version) || olderThan3DPreview4(version))
       source = convertOtherBreedHere(source)
-    if(Version.olderThan40pre1(version) || Version.olderThan3DPreview4(version))
+    if(olderThan40pre1(version) || olderThan3DPreview4(version))
       source = convert(source, CONVERSIONS15)
-    if(Version.olderThan40pre3(version) || Version.olderThan3DPreview4(version))
+    if(olderThan40pre3(version) || olderThan3DPreview4(version))
       source = convertLocals(source)
-    if(Version.olderThan40pre4(version) || Version.olderThan3DPreview4(version))
+    if(olderThan40pre4(version) || olderThan3DPreview4(version))
       source = convert(source, CONVERSIONS16)
-    if(Version.olderThan40alpha3(version) || Version.olderThan3DPreview5(version))
+    if(olderThan40alpha3(version) || olderThan3DPreview5(version))
       source = convert(source, CONVERSIONS17)
-    if(Version.olderThan40beta2(version) || Version.olderThan3DPreview5(version)) {
+    if(olderThan40beta2(version) || olderThan3DPreview5(version)) {
       source = convert(source, CONVERSIONS18)
       source = convertExtensionNames(source)
     }
-    if(Version.olderThan40beta4(version))
+    if(olderThan40beta4(version))
       source = convert(source, CONVERSIONS19)
-    if(Version.olderThan40beta5(version))
+    if(olderThan40beta5(version))
       source = convert(source, CONVERSIONS20)
 
-    if(Version.olderThan42pre1(version))
+    if(olderThan42pre1(version))
       source = convert(source, CONVERSIONS21)
-    if(Version.olderThan42pre5(version))
+    if(olderThan42pre5(version))
       source = convert(source, CONVERSIONS22)
 
     source

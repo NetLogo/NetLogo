@@ -12,7 +12,7 @@ import java.awt.print.PageFormat
 import javax.swing._
 import javax.swing.event.{DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent}
 import javax.swing.text.JTextComponent
-import org.nlogo.api.{I18N, Version, ModelSection}
+import org.nlogo.api.{I18N, VersionHistory, ModelSection}
 import text.html.{HTMLDocument, HTMLEditorKit}
 import java.io.File
 
@@ -134,7 +134,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
     if(e.section == ModelSection.INFO) {
-      info(if(Version.olderThan42pre2(e.version))
+      info(if(VersionHistory.olderThan42pre2(e.version))
              InfoConverter.convert(e.text)
            else e.text)
       resetView()

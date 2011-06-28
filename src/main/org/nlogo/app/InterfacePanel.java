@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.Version;
+import org.nlogo.api.VersionHistory;
 import org.nlogo.awt.Utils;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
@@ -36,7 +37,7 @@ strictfp class InterfacePanel
     workspace.setWidgetContainer(this);
     // in 3d don't add the view widget since it's always
     // disabled there's no reason for it to take space 7/5/07
-    if (!org.nlogo.api.Version.is3D()) {
+    if (!Version.is3D()) {
       addWidget((Widget) viewWidget, 0, 0, false, false);
     }
     ((Widget) viewWidget).deleteable_$eq(false);
@@ -259,7 +260,7 @@ strictfp class InterfacePanel
     }
     if (viewWidget instanceof org.nlogo.window.ViewWidget &&
         !type.equals("GRAPHICS-WINDOW") &&
-        org.nlogo.api.Version.olderThan13pre1(modelVersion)) {
+        VersionHistory.olderThan13pre1(modelVersion)) {
       y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight() +
           ((org.nlogo.window.ViewWidget) viewWidget).controlStrip.getHeight();
     }

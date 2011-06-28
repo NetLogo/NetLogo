@@ -1,16 +1,19 @@
 package org.nlogo.compiler
-import org.nlogo.api.{CompilerException,Token,TokenizerInterface,TokenType,Version}
-import org.nlogo.nvm.{Command,Procedure,Reporter,Workspace}
+
+import org.nlogo.api.{ CompilerException, Token, TokenizerInterface, TokenType, VersionHistory }
+import org.nlogo.nvm.{ Command, Procedure, Reporter, Workspace }
 import org.nlogo.prim._constdouble
+
 // AutoConverter1 handles easy conversions that don't require parsing.
 // AutoConverter2 handles hard conversions that do.
 // This class was automatically converted from Scala to Java using a program called jatran.  I did
 // some hand cleaning up of the code, but not that much, so beware. - ST 12/10/08
+
 class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenizer:TokenizerInterface) {
   def convert(originalSource:String, subprogram:Boolean, reporter:Boolean, version:String):String = {
     var source = originalSource
     if(source.trim.length == 0) return source
-    if(Version.olderThan32pre4(version) || Version.olderThan3DPreview4(version)) {
+    if(VersionHistory.olderThan32pre4(version) || VersionHistory.olderThan3DPreview4(version)) {
       try { source = runVisitor(source, subprogram, reporter) }
       catch {
         // It's kind of crummy to just ignore exceptions, but we don't have a parser that can recover

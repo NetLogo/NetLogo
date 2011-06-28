@@ -9,6 +9,8 @@ import org.nlogo.api.ModelReader;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.ModelSection;
 import org.nlogo.api.RandomServices;
+import org.nlogo.api.Version;
+import org.nlogo.api.VersionHistory;
 
 public strictfp class InterfacePanelLite
     extends javax.swing.JLayeredPane
@@ -244,7 +246,7 @@ public strictfp class InterfacePanelLite
   private void doPopup(java.awt.event.MouseEvent e) {
     javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
     javax.swing.JMenuItem item;
-    item = new javax.swing.JMenuItem(org.nlogo.api.Version.version());
+    item = new javax.swing.JMenuItem(Version.version());
     item.setEnabled(false);
     menu.add(item);
     item = new javax.swing.JMenuItem(org.nlogo.util.SysInfo.getOSInfoString());
@@ -319,7 +321,7 @@ public strictfp class InterfacePanelLite
       int x = Integer.parseInt(strings[1]);
       int y = Integer.parseInt(strings[2]);
       if (!type.equals("GRAPHICS-WINDOW") &&
-          org.nlogo.api.Version.olderThan13pre1(modelVersion)) {
+          VersionHistory.olderThan13pre1(modelVersion)) {
         y += viewWidget.getAdditionalHeight();
       }
       if (type.equals("GRAPHICS-WINDOW") || type.equals("VIEW")) {

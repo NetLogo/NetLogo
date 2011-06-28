@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Observable;
 
 import org.nlogo.api.GraphicsInterface;
+import org.nlogo.api.VersionHistory;
 
 import static org.nlogo.api.Constants.ShapeWidth;
 
@@ -366,8 +367,8 @@ public strictfp class VectorShape
     shape.setRotatable(getString(shapes, index++).equals("true"));
     int rgb = Integer.valueOf(getString(shapes, index++)).intValue();
     boolean translateColors = version != null &&
-        (org.nlogo.api.Version.olderThan30pre5(version) ||
-            org.nlogo.api.Version.olderThan3DPreview3(version));
+        (VersionHistory.olderThan30pre5(version) ||
+            VersionHistory.olderThan3DPreview3(version));
 
     if (translateColors) {
       rgb = org.nlogo.api.Color.translateSavedColor(rgb);
