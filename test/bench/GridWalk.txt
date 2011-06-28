@@ -209,7 +209,7 @@ procedure SETUP:[]{O---}:
             ISTORE 3
             ILOAD 3
             IFNE L2
-            GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+            GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
             GOTO L3
            L2
             ALOAD 2
@@ -249,7 +249,7 @@ procedure SETUP:[]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L5
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L6
          L5
           ALOAD 2
@@ -433,7 +433,7 @@ procedure GO:[]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L5
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L6
          L5
           ALOAD 2

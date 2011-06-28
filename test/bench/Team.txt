@@ -1835,9 +1835,9 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
 
 procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
 [0]_asm_procedurepickteammembers_setprocedurevariable_0 "" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
          L0
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L1
           ASTORE 2
           ALOAD 1
@@ -2649,7 +2649,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L7
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L8
          L7
           ALOAD 2
@@ -2837,7 +2837,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ISTORE 3
           ILOAD 3
           IFNE L7
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L8
          L7
           ALOAD 2
@@ -6306,7 +6306,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ISTORE 3
           ILOAD 3
           IFNE L7
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L8
          L7
           ALOAD 2
@@ -6331,9 +6331,9 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          L9
           RETURN
 [6]_asm_procedurefindallcomponents_if_7 "if start = nobody" boolean => void
-      _equal Object,Nobody => boolean
+      _equal Object,Nobody$ => boolean
         _procedurevariable:START => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6341,13 +6341,13 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ICONST_0
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4

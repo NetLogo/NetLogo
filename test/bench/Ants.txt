@@ -3209,9 +3209,9 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
          L1
           RETURN
 [1]_asm_procedurechemicalscent_if_3 "if p != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _procedurevariable:P => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3219,13 +3219,13 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4
@@ -5015,9 +5015,9 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L1
           RETURN
 [1]_asm_proceduregetnestscent_if_3 "if p != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _procedurevariable:P => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5025,13 +5025,13 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ICONST_1
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4

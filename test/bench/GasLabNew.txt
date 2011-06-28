@@ -3,14 +3,21 @@ interfaceGlobals [number-of-particles collide? trace? init-particle-speed partic
 turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds PARTICLES = 
-particlesFLASHES = 
-flashesCLOCKERS = 
-clockers
-breeds-own PARTICLES = 
-[SPEED MASS ENERGY WALL-HITS MOMENTUM-DIFFERENCE LAST-COLLISION]FLASHES = 
-[BIRTHDAY]CLOCKERS = 
-[]
+breeds PARTICLES = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents: 
+FLASHES = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents: 
+CLOCKERS = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents:
+breeds-own PARTICLES = [SPEED, MASS, ENERGY, WALL-HITS, MOMENTUM-DIFFERENCE, LAST-COLLISION]
+FLASHES = [BIRTHDAY]
+CLOCKERS = []
 link-breeds 
 link-breeds-own 
 
@@ -704,7 +711,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ASTORE 6
           ALOAD 6
           IFNONNULL L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L4
          L3
           ALOAD 0
@@ -3654,7 +3661,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ISTORE 3
           ILOAD 3
           IFNE L13
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L14
          L13
           ALOAD 2
@@ -3680,9 +3687,9 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           RETURN
 [2]_asm_procedurecheckforcollision_if_3 "if (candidate != nobody) and (speed > 0 or [speed] of candidate > 0" boolean => void
       _and
-        _notequal Object,Nobody => boolean
+        _notequal Object,Nobody$ => boolean
           _procedurevariable:CANDIDATE => Object
-          _nobody => Nobody
+          _nobody => Nobody$
         _or
           _greaterthan Object,double => boolean
             _breedvariable:SPEED => Object
@@ -3707,13 +3714,13 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ICONST_0
           AALOAD
          L4
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L5
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L6
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L6
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L7
@@ -11956,9 +11963,9 @@ procedure SETUP-PARTICLE:[]{-T--}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
 [3]_setbreedvariable:LAST-COLLISION
-      _asm_proceduresetupparticle_nobody_3 "nobody" => Nobody
+      _asm_proceduresetupparticle_nobody_3 "nobody" => Nobody$
            L0
-            GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+            GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
            L1
             ARETURN
 [4]_setbreedvariable:WALL-HITS
@@ -13137,9 +13144,9 @@ procedure MOVE:[OLD-PATCH]{-T--}:
          L7
           RETURN
 [3]_setbreedvariable:LAST-COLLISION
-      _asm_proceduremove_nobody_3 "nobody" => Nobody
+      _asm_proceduremove_nobody_3 "nobody" => Nobody$
            L0
-            GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+            GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
            L1
             ARETURN
 [4]_asm_proceduremove_return_4 "" => void

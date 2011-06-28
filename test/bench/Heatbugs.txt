@@ -1570,7 +1570,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ISTORE 3
           ILOAD 3
           IFNE L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L4
          L3
           ALOAD 2

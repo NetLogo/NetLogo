@@ -3,12 +3,16 @@ interfaceGlobals [init-sheep sheep-metabolism sheep-reproduce init-wolves wolf-m
 turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE ENERGY PREY]
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR COUNTDOWN]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds SHEEP = 
-sheepWOLVES = 
-wolves
-breeds-own SHEEP = 
-[]WOLVES = 
-[]
+breeds SHEEP = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents: 
+WOLVES = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents:
+breeds-own SHEEP = []
+WOLVES = []
 link-breeds 
 link-breeds-own 
 
@@ -3388,7 +3392,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           ISTORE 3
           ILOAD 3
           IFNE L10
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L11
          L10
           ALOAD 2
@@ -3426,9 +3430,9 @@ procedure CATCH-SHEEP:[]{-T--}:
          L13
           RETURN
 [1]_asm_procedurecatchsheep_if_1 "if (prey != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _turtlevariable:PREY => Object
-        _nobody => Nobody
+        _nobody => Nobody$
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L0
           ALOAD 1
@@ -3448,13 +3452,13 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L4
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L5
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L5
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L6

@@ -364,9 +364,9 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L6
           RETURN
 [2]_asm_proceduremakenode_if_2 "if old-node != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _procedurevariable:OLD-NODE => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -374,13 +374,13 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           ICONST_0
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4
@@ -725,7 +725,7 @@ procedure SETUP:[]{O---}:
            L1
             ARETURN
 [3]_asm_proceduresetup_call_3 "make-node nobody"
-      _nobody => Nobody
+      _nobody => Nobody$
          L0
           NEW org/nlogo/nvm/Activation
           DUP
@@ -739,7 +739,7 @@ procedure SETUP:[]{O---}:
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           AASTORE
           ALOAD 1
@@ -800,7 +800,7 @@ procedure SETUP:[]{O---}:
           ASTORE 6
           ALOAD 6
           IFNONNULL L4
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L5
          L4
           ALOAD 6
@@ -956,9 +956,9 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L9
           RETURN
 [1]_asm_procedurefindpartner_setprocedurevariable_3 "" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
          L0
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L1
           ASTORE 2
           ALOAD 1
@@ -1075,9 +1075,9 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             INVOKESPECIAL java/lang/Double.<init> (D)V
             ARETURN
 [4]_asm_procedurefindpartner_if_7 "if partner = nobody" boolean => void
-      _equal Object,Nobody => boolean
+      _equal Object,Nobody$ => boolean
         _procedurevariable:PARTNER => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1085,13 +1085,13 @@ procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ICONST_1
           AALOAD
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4

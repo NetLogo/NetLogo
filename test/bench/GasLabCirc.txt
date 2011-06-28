@@ -3,10 +3,11 @@ interfaceGlobals [number largest-particle-size color-scheme smallest-particle-si
 turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]
 patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
 links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds PARTICLES = 
-particles
-breeds-own PARTICLES = 
-[SPEED MASS]
+breeds PARTICLES = TreeAgentSet
+...... type: class org.nlogo.agent.Turtle
+...... count(): 0
+...... agents:
+breeds-own PARTICLES = [SPEED, MASS]
 link-breeds 
 link-breeds-own 
 
@@ -699,22 +700,22 @@ procedure GO:[]{O---}:
          L5
           RETURN
 [10]_asm_procedurego_if_27 "if colliding-particle-1 != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _observervariable:COLLIDING-PARTICLE-1 => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 9
           INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4
@@ -879,22 +880,22 @@ procedure GO:[]{O---}:
          L1
           RETURN
 [14]_asm_procedurego_if_31 "if colliding-particle-1 != nobody" boolean => void
-      _notequal Object,Nobody => boolean
+      _notequal Object,Nobody$ => boolean
         _observervariable:COLLIDING-PARTICLE-1 => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 9
           INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4
@@ -2075,10 +2076,10 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L5
           RETURN
 [1]_asm_proceduresortcollisions_setobservervariable_7 "set colliding-particle-1 nobody" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L4
           ASTORE 2
          L0
@@ -2106,10 +2107,10 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
          L6
           RETURN
 [2]_asm_proceduresortcollisions_setobservervariable_8 "set colliding-particle-2 nobody" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L4
           ASTORE 2
          L0
@@ -7648,10 +7649,10 @@ procedure SETUP:[]{O---}:
          L6
           RETURN
 [10]_asm_proceduresetup_setobservervariable_11 "set colliding-particle-1 nobody" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L4
           ASTORE 2
          L0
@@ -7679,10 +7680,10 @@ procedure SETUP:[]{O---}:
          L6
           RETURN
 [11]_asm_proceduresetup_setobservervariable_12 "set colliding-particle-2 nobody" Object => void
-      _nobody => Nobody
+      _nobody => Nobody$
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L4
           ASTORE 2
          L0
@@ -10533,22 +10534,22 @@ procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
 
 procedure COLLIDE-WINNERS:[]{OTPL}:
 [0]_asm_procedurecollidewinners_if_0 "if colliding-particle-1 = nobody" boolean => void
-      _equal Object,Nobody => boolean
+      _equal Object,Nobody$ => boolean
         _observervariable:COLLIDING-PARTICLE-1 => Object
-        _nobody => Nobody
+        _nobody => Nobody$
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           BIPUSH 9
           INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
          L1
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
          L2
           ASTORE 3
           ASTORE 2
           ALOAD 2
-          INSTANCEOF org/nlogo/api/Nobody
-          IFNE L3
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
+          IF_ACMPEQ L3
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
           IFEQ L4

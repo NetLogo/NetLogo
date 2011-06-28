@@ -1277,7 +1277,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ISTORE 3
           ILOAD 3
           IFNE L11
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L12
          L11
           ALOAD 2
@@ -1628,7 +1628,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ASTORE 6
           ALOAD 6
           IFNONNULL L4
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L5
          L4
           ALOAD 6
@@ -5383,7 +5383,7 @@ procedure SETUP:[]{O---}:
           ASTORE 6
           ALOAD 6
           IFNONNULL L4
-          GETSTATIC org/nlogo/api/Nobody.NOBODY : Lorg/nlogo/api/Nobody;
+          GETSTATIC org/nlogo/api/Nobody$.MODULE$ : Lorg/nlogo/api/Nobody$;
           GOTO L5
          L4
           ALOAD 6
