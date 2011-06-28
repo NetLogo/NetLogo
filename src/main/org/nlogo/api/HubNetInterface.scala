@@ -93,7 +93,7 @@ trait HubNetInterface extends ViewInterface {
   def getInQueueSize: Int
 
   /// client editor
-  def save(buf: scala.collection.mutable.StringBuilder)
+  def save(buf: StringBuilder)
   def closeClientEditor()
   def openClientEditor()
   def clientEditor: AnyRef
