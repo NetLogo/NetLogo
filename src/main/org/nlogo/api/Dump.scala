@@ -136,8 +136,8 @@ object Dump {
           buf ++= printName.toLowerCase
         }
         else {
-          buf ++= "turtles "
-          buf ++= as.agents.asScala.map(_.id).mkString(" ")
+          val ids = as.agents.asScala.map(_.id.toString).toSeq
+          buf ++= ("turtles" +: ids).mkString(" ")
         }
       }
       else if (classOf[Link].isAssignableFrom(as.`type`)) {
@@ -151,10 +151,10 @@ object Dump {
           buf ++= printName.toLowerCase
         }
         else {
-          buf ++= "links "
           def linkString(link: Link) =
             "[" + link.end1.id + " " + link.end2.id + " " + agentset(link.getBreed, true) + "]"
-          buf ++= as.agents.asScala.map(a => linkString(a.asInstanceOf[Link])).mkString(" ")
+          val ids = as.agents.asScala.map(a => linkString(a.asInstanceOf[Link])).toSeq
+          buf ++= ("links" +: ids).mkString(" ")
         }
       }
       else if (classOf[Patch].isAssignableFrom(as.`type`)) {
@@ -164,10 +164,10 @@ object Dump {
           buf ++= printName.toLowerCase
         }
         else {
-          buf ++= "patches "
           def patchString(p: Patch) =
             "[" + p.pxcor + " " + p.pycor + "]"
-          buf ++= as.agents.asScala.map(a => patchString(a.asInstanceOf[Patch])).mkString(" ")
+          val ids = as.agents.asScala.map(a => patchString(a.asInstanceOf[Patch])).toSeq
+          buf ++= ("patches" +: ids).mkString(" ")
         }
       }
       else if (classOf[Observer].isAssignableFrom(as.`type`))
