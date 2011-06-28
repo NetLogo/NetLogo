@@ -129,8 +129,9 @@ public strictfp class Procedure {
     boolean first = true ;
     buf.append("[");
     for(String a : args) {
-      if(!first)
+      if(!first) {
         buf.append(" ");
+      }
       buf.append(a);
       first = false;
     }
