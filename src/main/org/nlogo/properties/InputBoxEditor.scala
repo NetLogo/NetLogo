@@ -22,7 +22,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   add(new JLabel(accessor.displayName))
   add(typeCombo)
 
-  for (t <- options.getValues)
+  for (t <- options.values)
     typeCombo.addItem(t)
   typeCombo.addActionListener{() =>
     multiline.setEnabled(selected.enableMultiline)

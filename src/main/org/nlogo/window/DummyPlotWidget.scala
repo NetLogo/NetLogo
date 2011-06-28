@@ -21,7 +21,7 @@ class DummyPlotWidget(plot:Plot, plotManager: PlotManager) extends AbstractPlotW
   override def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
     super.load(strings, helper)
     nameOptions = createNameOptions()
-    if (nameOptions.getNames.contains(plot.name)) {
+    if (nameOptions.names.contains(plot.name)) {
       nameOptions.selectByName(plot.name)
     }
     this
