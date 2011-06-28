@@ -316,6 +316,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+60.0
 
 SLIDER
 2
@@ -516,8 +517,8 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 9-Block Stalagmite draws on and connects several central ideas in the study of probability, both theoretical and empirical: combinatorics, sample space, binomial distributions, and frequency distribution function.  In the related curricular material, students use crayons and paper to build the Combinations Tower.  The Combinations Tower is a giant bell-shaped histogram of all the 512 different combinations of a 3-by-3 array of squares that can each be either green or blue.
 
 In the tower, these combinations are grouped in columns according to how many green squares there are in each.  9-Block Stalagmite accompanies these curricular activities.
@@ -526,80 +527,80 @@ The model generates random samples (with repetitions), counts how many green squ
 
 This model is a part of the ProbLab curriculum.  The ProbLab Curriculum is currently under development at the CCL.  For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-At the top of the view, a square array of "patches" (the NetLogo square agents that don't move) generates green and blue "turtles" (the NetLogo agents that move).  These turtles' colors -- whether they are green or blue -- are determined randomly according to probabilities set by the user.  For instance, an 80% chance for each turtle to be green (so 20% chance for each turtle to be blue).  Next, the model moves this turtle-sample towards the right so that it arrive in a column that matches the number of green turtles in the sample.  Lastly, the model moves the sample down along the column and stacks it on top either of the bottom of the column or a previous sample that has already been positioned there.  When the turtles stop, they mark their color onto the patches, and then they "die".  For each sample that is generated, a larger duplicate appears on the side for the user's viewing convenience.
+At the top of the view, a square array of "patches" (the NetLogo square agents that don't move) generates green and blue "turtles" (the NetLogo agents that move).  These turtles' colors --- whether they are green or blue --- are determined randomly according to probabilities set by the user.  For instance, an 80% chance for each turtle to be green (so 20% chance for each turtle to be blue).  Next, the model moves this turtle-sample towards the right so that it arrive in a column that matches the number of green turtles in the sample.  Lastly, the model moves the sample down along the column and stacks it on top either of the bottom of the column or a previous sample that has already been positioned there.  When the turtles stop, they mark their color onto the patches, and then they "die".  For each sample that is generated, a larger duplicate appears on the side for the user's viewing convenience.
 
 Note that for a 9-block there are 10 columns in the view.  This is because we need a column for all combinations that have 0 greens, a column for 1 green, a column for 2 green, ..., and a columns for 9 green for a total of 10 columns (9 + 1).
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Buttons:
-'Setup' - prepares the view, including erasing the coloration from a previous run of the experiment.
-'Go' - a forever button that runs the experiment according to the values you have set in the sliders.
+### Buttons
+
+'Setup' - prepares the view, including erasing the coloration from a previous run of the experiment.  
+'Go' - a forever button that runs the experiment according to the values you have set in the sliders.  
 'Go Once' - a button that runs the experiment only once.
 
-Sliders:
-'side' - determines the size of the square sample arrays.  For instance, for a value of 3, the model will create a 3-by-3 square (9 turtles).
+### Sliders
+
+'side' - determines the size of the square sample arrays.  For instance, for a value of 3, the model will create a 3-by-3 square (9 turtles).  
 'probability-to-be-target-color' - determines the chance of each turtle in the sample array to be green (or any other color you have set the model to).  A value of 50 means that each turtle has an equal chance of being green or blue, a value of 80 means that each turtle has a 80% chance of being green (so each has a 20% chance of being blue).
 
-Switches:
-'keep-repeats?' - when "Off," each column will have only different combinations with no repetitions; when "On," there will most probably be repetitions in at least some of the columns.  (For 2-by-2 samples, there will be very rare cases that the whole sample space will be discovered without repetitions.  For 3-by-3 samples, the cases are so rare that you probably won't ever see it!! Actually, how rare are they?..)
-'magnify?' - when "On," you get a larger version of the sample on the side.  This helps when you're working with very small patch sizes, such as when you want to have very tall columns so as to exhaust the sample space corresponding to the value of 'side,' e.g,. 512 for 'side = 3.'
+### Switches
+
+'keep-repeats?' - when "Off," each column will have only different combinations with no repetitions; when "On," there will most probably be repetitions in at least some of the columns.  (For 2-by-2 samples, there will be very rare cases that the whole sample space will be discovered without repetitions.  For 3-by-3 samples, the cases are so rare that you probably won't ever see it!! Actually, how rare are they?..)  
+'magnify?' - when "On," you get a larger version of the sample on the side.  This helps when you're working with very small patch sizes, such as when you want to have very tall columns so as to exhaust the sample space corresponding to the value of 'side,' e.g,. 512 for 'side = 3.'  
 'stop-at-all-found?' - when "On," each run will end if all the different combinations have been discovered.  When "Off," the run will continue until one of the columns reaches the top.
 
-Monitors:
-'#-target-color' - displays the total number of squares of target-color, e.g., 'green.'
-'#-other-color' - displays the total number of squares of other-color, e.g., 'blue.'
-'%-target-color' - displays as a percentage the proportion of target-color squares out of all colored squares.
-'combinations found' - displays the proportion of the sample space that has been revealed
+### Monitors
+
+'#-target-color' - displays the total number of squares of target-color, e.g., 'green.'  
+'#-other-color' - displays the total number of squares of other-color, e.g., 'blue.'  
+'%-target-color' - displays as a percentage the proportion of target-color squares out of all colored squares.  
+'combinations found' - displays the proportion of the sample space that has been revealed  
 '?-blocks' shows the square of 'side.' So if 'side' is set to 3, '?-blocks' will show 9. This means that each sample of side 3 has 9 squares.
 
-Plots:
+### Plots
+
 'filling-up-sample-space' - plots the total number of combinations that have been discovered as a proportion of the sample space that has been discovered.
+
+### How to use it
 
 Set the sliders according to the values you want, press Setup, and then press Go.
 
 Note that once you have pressed Go, changing the slider values would "confuse" the model.  Instead, you should un-press Go, wait until the button jumps back up, and only then change the sliders as you wish, press Setup, and then press Go
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Setup the model in its default settings ('side' slider set to the value of 3; 'probability' slider set to the value of .5), slow down the model with the speed slider at the top left of the view, and press Go.  Note the following: the more green squares there are in the random sample the further to the right the block will move before descending down. See that at the bottom of each column there is a number.  This number tells you the type of sample that will be collected in this column.  For instance, in the column labeled '2,' samples that have exactly 2 green patches will stop moving to the right and will descend.  So, as the columns grow up, note that each sample will descend over a previous sample that has exactly as many green squares.  Overall, the columns on the right are greener than the columns on the left.  As you shift your gaze from side to side, the color density changes.
 
 Run the model over and over and watch the shape of the colorful histogram that is plotted.  Note any consistencies in the shape of this histogram.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Work in the 'side' = 2 setup. Set 'keep-duplicates?' to Off.  How many samples do you need to fill the entire sample space?  Does this change according to the settings of 'probability'?  If so, why might this be so? If the probability is set at 80%, does it take as many trials to fill the sample space as compared to a setting of 50%? If not, why not?
 
 Setup the model with the 'side' value at 2 and the 'probability' at 70%.  Press Setup and then Go.  (If you have previously slowed down the model, you're welcome to speed it up now.)  Note that the %-target-color tends to 70%. Also note that more sample combinations collect up in the column of 3 green patches than any other column.  So '3' is the mode.  We have found it interesting and perhaps somewhat confusing to shift between thinking about the 'mode' and thinking about the 'mean.' For instance, if you set the 'probability' to 83%, you might think that 83% of 4 is 3.32 and so the mode should still be '3.' Is it? What is going on here? So for some probability setting, the 3-column will most often get to the top before other columns. For other probability settings, the 4-column wins. Try to determine the probability ranges in which each column "rules." Hint: How many ranges should there be?
 
 Edit the view so that the y-axis value is 260 and the patch size is 1 pixel. Now, if you set up in 'side = 3,' all 512 different 9-blocks will fit in. Try this.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
-Add monitors and/or graphs that will feature aspects of the experiments that are difficult to see in the current version.  For instance:
-- How many samples does it take for the experiment to produce an all-green sample?  How is this dependent on the various settings?
-- Are there more samples with an even number of green squares as compared to those with an odd number of green squares?
+Add monitors and/or graphs that will feature aspects of the experiments that are difficult to see in the current version.  For instance:  
+- How many samples does it take for the experiment to produce an all-green sample?  How is this dependent on the various settings?  
+- Are there more samples with an even number of green squares as compared to those with an odd number of green squares?  
 - How symmetrical is the histogram?  How would you define "symmetry?"  How would you quantify and display its change over time?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Turtle Shapes -- The top panel of the view features a red arrow-like turtle shape.  Pressing on this button toggles between Turtles-Shape "On" and "Off."  In many NetLogo models, turtles represent specific agents ("creatures") in the situation or phenomenon that is being modeled.  So in many models the turtles have distinctive shapes (icons) that approximate or at least suggest what they are modeling.  However, this model is an example of a case where we do not want any special turtle shape.  In fact, we actually want the turtles to look like the patches -- just squares.  So we have turned the Turtle-Shapes to "Off."  Try running the model with the Turtles-Shapes "On" (you can change this while running the model) and see which mode you prefer.  The difference between these two modes will be most noticeable when you are running the model slowly and/or when the 'magnify?' switch is turned to 'On."  You could also edit the size of the turtles.  Perhaps you will discover that you prefer having the turtles be some special shape.  How might that affect the histogram?
+Turtle Shapes --- The top panel of the view features a red arrow-like turtle shape.  Pressing on this button toggles between Turtles-Shape "On" and "Off."  In many NetLogo models, turtles represent specific agents ("creatures") in the situation or phenomenon that is being modeled.  So in many models the turtles have distinctive shapes (icons) that approximate or at least suggest what they are modeling.  However, this model is an example of a case where we do not want any special turtle shape.  In fact, we actually want the turtles to look like the patches --- just squares.  So we have turned the Turtle-Shapes to "Off."  Try running the model with the Turtles-Shapes "On" (you can change this while running the model) and see which mode you prefer.  The difference between these two modes will be most noticeable when you are running the model slowly and/or when the 'magnify?' switch is turned to 'On."  You could also edit the size of the turtles.  Perhaps you will discover that you prefer having the turtles be some special shape.  How might that affect the histogram?
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-Some of the other ProbLab (curricular) models, including SAMPLER -- HubNet Participatory Simulation -- feature related visuals and activities.  In Stochastic Patchwork and especially in 9-Blocks you will see the same 3-by-3 array of green-or-blue squares.  In the 9-Block Stalagmite model, when 'keep-duplicates?' is set to 'Off' and the y-axis value of the view is set to 260, we get the whole sample space without any duplicates.  In the Stochastic Patchwork model and especially in 9-Blocks model, we see frequency distribution histograms.  These histograms compare in interesting ways with the shape of the combinations tower in this model.
-
+Some of the other ProbLab (curricular) models, including SAMPLER --- HubNet Participatory Simulation --- feature related visuals and activities.  In Stochastic Patchwork and especially in 9-Blocks you will see the same 3-by-3 array of green-or-blue squares.  In the 9-Block Stalagmite model, when 'keep-duplicates?' is set to 'Off' and the y-axis value of the view is set to 260, we get the whole sample space without any duplicates.  In the Stochastic Patchwork model and especially in 9-Blocks model, we see frequency distribution histograms.  These histograms compare in interesting ways with the shape of the combinations tower in this model.
 
 ## CREDITS AND REFERENCES
+
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
@@ -890,7 +891,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 setup
 repeat 150 [ go ]

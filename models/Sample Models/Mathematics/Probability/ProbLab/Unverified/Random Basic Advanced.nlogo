@@ -231,6 +231,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 19
@@ -366,8 +367,8 @@ PENS
 "default" 1.0 1 -16777216 true "" ""
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Random Basic Advanced explores the effect of sample size on the distribution of sample mean.
 
 At each run, a sample of random values is selected and displayed on "messengers," who each carry a brick to the top of a corresponding column in a bar chart.  (So a messenger with "5" will carry the brick to the top of the fifth column from the left.) The values are also added into a histogram (below the view). The mean value from each batch of messenger is added to yet another histogram (at the bottom of the interface).
@@ -376,45 +377,46 @@ The larger the sample size, the smaller the variance of the distribution. That i
 
 This model is a part of the ProbLab curriculum. The ProbLab curriculum is currently under development at the CCL. For more information about the ProbLab curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 At every trial (sampling), random values are assigned to as many "messengers" as you choose. The messengers each carry a brick. They go to a column according to their value and lay the brick at the top of that column. The mean value of the batch of messengers is plotted in a histogram.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Buttons:
+### Buttons
+
 SETUP - prepares the model for running with your sample-space parameter setting.
 
 GO - runs the model with the current settings.
 
-Sliders:
-SAMPLE-SIZE -- set the total number of integer values, beginning from 1, that can be randomly assigned to the messengers
+### Sliders
 
-Switches:
-BUMP-DOWN? -- when set to "on," the columns in the view will all go down by one step to anticipate the columns reaching the top of the space.
+SAMPLE-SIZE --- set the total number of integer values, beginning from 1, that can be randomly assigned to the messengers
 
-Monitors:
-BIGGEST-DIFFERENCE -- show the vertical difference between the tallest column and the shortest column. Note that columns can be so short that they are below min-pycor.
+### Switches
 
-STD DEV -- standard deviation of the sample-mean distribution. This is a measure of shape the distribution tends towards. A lower standard deviation implies a narrower distribution.
+BUMP-DOWN? --- when set to "on," the columns in the view will all go down by one step to anticipate the columns reaching the top of the space.
 
-Plots:
-ALL VALUES FROM MESSENGERS-- plots all of the randomly assigned values in the messenger labels.
+### Monitors
 
-MEAN VALUES OF BATCHES OF MESSENGERS -- plots the mean of all the randomly-assigned values in the messenger labels.
+BIGGEST-DIFFERENCE --- show the vertical difference between the tallest column and the shortest column. Note that columns can be so short that they are below min-pycor.
 
+STD DEV --- standard deviation of the sample-mean distribution. This is a measure of shape the distribution tends towards. A lower standard deviation implies a narrower distribution.
 
-THINGS TO NOTICE
-----------------
+### Plots
+
+ALL VALUES FROM MESSENGERS --- plots all of the randomly assigned values in the messenger labels.
+
+MEAN VALUES OF BATCHES OF MESSENGERS --- plots the mean of all the randomly-assigned values in the messenger labels.
+
+## THINGS TO NOTICE
+
 Each messenger "carries" a little brick. It swoops down to the highest point in a brick tower. It goes to the brick tower that is as far from the left wall as is the messenger's number. So a messenger with "7" will go to the seventh column from the left.
 
 When the bricks are about to hit the top of the space, all the columns "bump down" to make space for the new bricks. But the monitor "ALL VALUES" keeps a record of all the bricks that have been laid. So, sometimes a column of bricks will be empty, because it is not tall enough to make it into the view, yet its corresponding column in the the plot will still be there.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Run the model with NUM-MESSENGERS = 1. Compare the histogram in the plot to the towers in the graphic windows. What do you see? Now setup and run the model with NUM-MESSENGERS = 2. Is the histogram any different from before? Repeat this for values of NUM-MESSENGERS 10, 20, and 30. For a sample size of 1, the raw data (the bricks in the towers) are exactly the same as the histogram. For a sample size of 2, we begin to see a certain shallow bump in the middle of the distribution. For larger sample sizes, this bump becomes more and more acute.  For a sample size of 30, the distribution is narrow.
 
 Another comparison is to do with the likelihood of getting a low value, say "1," in different settings of NUM-MESSENGERS. Run the model 100 trial for different values of NUM-MESSENGERS and see if there is a pattern to this comparison.
@@ -423,38 +425,34 @@ What is the standard deviation dependent on? For a fixed number of messengers, w
 
 Once the model has run for many trials, should the BIGGEST-DIFFERENCE increase or decrease? On the one hand, individual columns have "opportunities" to get very tall, but on the other hand, all columns have the same opportunities. Is this a paradox?
 
+## PEDAGOGICAL NOTE
 
-PEDAGOGICAL NOTE
----------------
 Why are we getting this pattern? Let's think about the case of NUM-MESSENGERS = 2 to understand the bump in the distribution plot:
 
 The only way to get a value of "1," is if both the messengers have a value of "1," but to get a value of, say, "2," either both messengers have "2," or one has "1" and the other "3" or vice versa. So there are three different ways of getting "2." How about getting a "3?" There are more than three ways of getting "3": [3,3]; [2,4]; [4,2]; [1,5]; [5,1]. So there are five ways of getting "3." You can see that the nearer the value is to the middle (50), there are more and more ways of getting that value as a mean of two values. Because these values are random, over many runs we will get more means that are closer to the middle, so we get the bump.
 
-This way of finding all the different possible compound events is called combinatorial analysis -- determining all the combinations for a given set of variables each with a set of possible values. Once we know all the combinations, we can group them so as to predict the chances of getting any outcome from each group. For instance, if we know that there are triple as many ways for two messengers to form a mean of "2" than to form a mean of "1," then we can predict that we will get a "2" three times as much as we get a "1," if we run the simulation long enough. That is where combinatorial analysis (theoretical probability) meets experimental simulations (empirical probability).
+This way of finding all the different possible compound events is called combinatorial analysis --- determining all the combinations for a given set of variables each with a set of possible values. Once we know all the combinations, we can group them so as to predict the chances of getting any outcome from each group. For instance, if we know that there are triple as many ways for two messengers to form a mean of "2" than to form a mean of "1," then we can predict that we will get a "2" three times as much as we get a "1," if we run the simulation long enough. That is where combinatorial analysis (theoretical probability) meets experimental simulations (empirical probability).
 
 Can we extend this way of thinking in order to understand the difference between the distribution we get for NUM-MESSENGERS = 2 as compared to the distribution we get for NUM-MESSENGERS = 3? For NUM-MESSENGERS = 3, we get an even narrower distribution. Why? Extending our previous way of thinking, we can expect that with three messengers the number of combinations for getting mean values of 1, 2, 3 etc. rises even more sharply than for NUM-MESSENGERS = 2. Let's see: for "1" there is only one combination: [1,1,1], just like for NUM-MESSENGERS = 2. But for "2" there are more than just three as in the previous example. Look: [2,2,2]; [1,2,3]; [1,3,2]; [2,3,1]; [2,1,3]; [3,1,2]; [3,2,1]; [1,1,4]; [1,4,1]; [4,1,1], for a total of ten combinations.
 
 You might notice that the more messengers in a batch (the higher the setting of NUM-MESSENGERS), the less likely it is to get a low mean sample value, say "1." For NUM-MESSENGERS = 10, you would get a "1" only if all the messengers chose "1" randomly at the same time. That happens once every 100^10, which is "1" with 1000 zeros after it. That's pretty rare...
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 In the model, the bricks laid by the messengers are NetLogo "turtles".  However, in NetLogo, the more turtles are visible, the longer it takes to update the display. Thus, the closer the display gets to being full of bricks, the slower the model runs.  To eliminate this problem, one may want to use colored NetLogo "patches", rather than "turtles", to represent the bricks in the display histogram.
 
-Currently, the brick columns in the display show the absolute height of each column -- not the proportionate height of the columns.  This means that once a column is considerably taller than other columns, these other columns may be shown as empty.  They are not tall enough to enter the display -- they are "under water."  We have chosen this design option, because we think it helps users "get into" the model when they first start working with it. But you might want to change this or add an option that gives you the proportionate height of the columns.  For a clue on how to make this work, take a look at the code of the Rugby model.
+Currently, the brick columns in the display show the absolute height of each column --- not the proportionate height of the columns.  This means that once a column is considerably taller than other columns, these other columns may be shown as empty.  They are not tall enough to enter the display --- they are "under water."  We have chosen this design option, because we think it helps users "get into" the model when they first start working with it. But you might want to change this or add an option that gives you the proportionate height of the columns.  For a clue on how to make this work, take a look at the code of the Rugby model.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-The DISPLAY command is used to make the motion of the messengers animate.
+The `display` command is used to make the motion of the messengers animate.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 See the ProbLab model Random Basic. In that model, there is only a single messenger. This model extends Random Basic in that we now have compound events, that is, we look to understand the chances of two or more independent events occurring simultaneously.
 
-
 ## CREDITS AND REFERENCES
+
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
@@ -763,7 +761,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 random-seed 0 set sample-space 50 set height 35 setup repeat 100 [ go ]
 place-messengers-and-choose-random-values
