@@ -17,6 +17,8 @@ class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
   val perfanal = "perfanal" % "perfanal" % "1.0" from
     "http://ccl.northwestern.edu/devel/PerfAnal.jar"
 
+  val formatter = "com.github.olim7t" % "sbt-scalariform" % "1.0.3"
+
   // pmd depends on jaxen and asm
   val pmd = "pmd" % "pmd" % "4.2rc1" from
     "http://ccl.northwestern.edu/devel/pmd-4.2rc1.jar"
