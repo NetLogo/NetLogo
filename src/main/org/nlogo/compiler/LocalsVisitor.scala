@@ -1,7 +1,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.Let
+import org.nlogo.api.{ I18N, Let }
 import org.nlogo.nvm.{ Command, Procedure, Reporter }
 import org.nlogo.prim._
 
@@ -75,7 +75,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
     expr.reporter match {
       case l: _letvariable =>
         cAssert(currentLet == null || (currentLet.let ne l.let),
-                "Nothing named " + l.token.name + " has been defined",
+                I18N.errors.getN("compiler.LocalsVisitor.notDefined", l.token.name),
                 l.token)
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {

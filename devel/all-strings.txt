@@ -1084,11 +1084,8 @@ src/main/org/nlogo/compiler/ExpressionParser.scala:173:         else Syntax.aTyp
 src/main/org/nlogo/compiler/ExpressionParser.scala:176:    else if(rightArgs.forall(_ == "any input"))
 src/main/org/nlogo/compiler/ExpressionParser.scala:179:      result + ", " + rightArgs.mkString + "."
 src/main/org/nlogo/compiler/ExpressionParser.scala:181:      result + ", " + rightArgs.toList.dropRight(1).mkString(", ") + " and " + rightArgs.last + "." 
-src/main/org/nlogo/compiler/ExpressionParser.scala:235:   * resolves the type of an expression. We call this "resolution" instead of "checking" because
 src/main/org/nlogo/compiler/ExpressionParser.scala:248:            instruction + " expected this input to be " + Syntax.aTypeName(goalType) + ", but got " +
 src/main/org/nlogo/compiler/ExpressionParser.scala:249:            Syntax.aTypeName(arg.reportedType) + " instead",arg)
-src/main/org/nlogo/compiler/ExpressionParser.scala:283:   *                   the "stack"
-src/main/org/nlogo/compiler/ExpressionParser.scala:307:   *                   the "stack"
 src/main/org/nlogo/compiler/ExpressionParser.scala:395:            Procedure.Type.COMMAND, token, "__lambda-" + lambdaNumbers.next(), None, procedure)
 src/main/org/nlogo/compiler/ExpressionParser.scala:547:        Procedure.Type.COMMAND, openBracket, "__lambda-" + lambdaNumbers.next(), None, procedure)
 src/main/org/nlogo/compiler/ExpressionParser.scala:568:    else exception("Expected " + Syntax.aTypeName(goalType) + " here, rather than a list or block.",block)
@@ -1102,12 +1099,6 @@ src/main/org/nlogo/compiler/IdentifierParser.scala:129:    "an integer (e.g. 4),
 src/main/org/nlogo/compiler/IdentifierParser.scala:130:    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:131:    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:132:    "a floating point result."
-src/main/org/nlogo/compiler/LocalsVisitor.scala:7: * This is an AstVisitor that optimizes "let" variables by converting them to "locals" variables
-src/main/org/nlogo/compiler/LocalsVisitor.scala:9: * "Whenever possible" is "whenever it's not inside an ask". We must find and convert two prims:
-src/main/org/nlogo/compiler/LocalsVisitor.scala:12: * We also do the same thing with "repeat", which by default uses the "let" mechanism, but must be
-src/main/org/nlogo/compiler/LocalsVisitor.scala:13: * changed to use the "locals" mechanism when used outside "ask". - ST 11/10/05 */
-src/main/org/nlogo/compiler/LocalsVisitor.scala:33:        val exempt = l.token.name.equalsIgnoreCase("__LET")
-src/main/org/nlogo/compiler/LocalsVisitor.scala:53:          procedure.args.add("_repeatlocal:" + vn)
 src/main/org/nlogo/compiler/LocalsVisitor.scala:69:                "Nothing named " + l.token.name + " has been defined",l.token)
 src/main/org/nlogo/compiler/StructureParser.scala:64:    if(!subprogram) usingFiles += (("aggregate", null))
 src/main/org/nlogo/compiler/StructureParser.scala:76:        if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
