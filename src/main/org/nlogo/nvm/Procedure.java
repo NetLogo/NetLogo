@@ -8,6 +8,8 @@ import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Let;
 import org.nlogo.api.Token;
 
+import static scala.collection.JavaConversions.asJavaIterable;
+
 public strictfp class Procedure {
 
   // maybe we should just use a boolean for this - ST 2/7/11
@@ -145,7 +147,7 @@ public strictfp class Procedure {
       buf.append(command.dump(indent ? 6 : 3));
       buf.append("\n");
     }
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       buf.append("\n");
       buf.append(p.dump());
     }
@@ -157,7 +159,7 @@ public strictfp class Procedure {
     for (int i = 0; i < code.length; i++) {
       code[i].init(workspace);
     }
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       p.init(workspace);
     }
   }
@@ -168,7 +170,7 @@ public strictfp class Procedure {
 
   public void setOwner(SourceOwner owner) {
     this.owner = owner;
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       p.setOwner(owner);
     }
   }

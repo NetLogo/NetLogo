@@ -3,9 +3,9 @@ package org.nlogo.agent
 import java.io.PrintWriter
 import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
 import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
-import org.nlogo.util.JCL._
 import org.nlogo.api.{ Dump, Nobody }
 import Dump.csv
+import collection.JavaConverters._
 
 // This is just a bunch of copy-and-pasted code from the 2D version, with little 3D tweaks embedded
 // in it.  It really ought to be redone to eliminate the copy-and-paste. - ST 4/11/11
@@ -34,7 +34,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("width")  + ","
             + csv.encode("color"))
     val drawing  = world.drawing
-    for(line <- drawing.lines) {
+    for(line <- drawing.lines.asScala) {
       print(csv.encode(JDouble.toString(line.x0)))
       print("," + csv.encode(JDouble.toString(line.y0)))
       print("," + csv.encode(JDouble.toString(line.z0)))
@@ -56,7 +56,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("color")  + ","
             + csv.encode("lineThickness"))
 
-    for(stamp <- drawing.turtleStamps) {
+    for(stamp <- drawing.turtleStamps.asScala) {
       print(csv.encode(stamp.shape))
       print("," + csv.encode(JDouble.toString(stamp.xcor)))
       print("," + csv.encode(JDouble.toString(stamp.ycor)))
@@ -82,7 +82,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
             + csv.encode("destSize") + ","
             + csv.encode("heading")  + ","
             + csv.encode("pitch"))
-    for(stamp <- drawing.linkStamps) {
+    for(stamp <- drawing.linkStamps.asScala) {
       print(csv.encode(stamp.shape))
       print("," + csv.encode(JDouble.toString(stamp.x1)))
       print("," + csv.encode(JDouble.toString(stamp.y1)))
@@ -117,9 +117,9 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.zipWithIndex) {
-      globalVarIndices.put(globals(i), JInteger.valueOf(i))
-      sortedGlobals.add(globals(i))
+    for((g, i) <- globals.asScala.zipWithIndex) {
+      globalVarIndices.put(globals.get(i), JInteger.valueOf(i))
+      sortedGlobals.add(globals.get(i))
     }
     // we want to make sure to export the globals in alphabetical order so that the world files are
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
@@ -139,11 +139,11 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.data(if(world.links().isDirected()) "DIRECTED" else
                                    if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
                   + csv.encode(Dump.number(world.tickCounter.ticks)))
-    for((g, i) <- globals.zipWithIndex) {
+    for((g, i) <- globals.asScala.zipWithIndex) {
       print(",")
       print(csv.data
                    (world.observer().getObserverVariable
-                    (globalVarIndices.get(sortedGlobals(i)).intValue())
+                    (globalVarIndices.get(sortedGlobals.get(i)).intValue())
                   ))
     }
     println()
@@ -156,9 +156,9 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     val turtlesVarSize = world.program.turtlesOwn.size()
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]()
-    for(current <- world.program.breedsOwn.keySet()) {
+    for(current <- world.program.breedsOwn.asScala.keySet) {
       val breedOwns = world.program.breedsOwn.get(current)
-      for(breedVarName <- breedOwns)
+      for(breedVarName <- breedOwns.asScala)
         if(breedVarIndices.get(breedVarName) == null) {
           allTurtleVars.add(breedVarName)
           breedVarIndices.put(breedVarName, JInteger.valueOf(allTurtleVars.size() - 1))
