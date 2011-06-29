@@ -1,20 +1,6 @@
 package org.nlogo.api
 
-class LocalFile(_filepath: String, suffix: String) extends File {
-
-  def this(_filepath: String) = this(_filepath, null)
-
-  val filepath =
-    if (_filepath == null || suffix == null)
-      _filepath
-    else {
-      val tmpf = _filepath.toLowerCase
-      val tmps = suffix.toLowerCase
-      if (tmpf.endsWith(tmps))
-        _filepath.substring(0, tmpf.lastIndexOf(tmps))
-      else
-        _filepath
-    }
+class LocalFile(filepath: String) extends File {
 
   private var w: java.io.PrintWriter = null
   override def getPrintWriter = w
@@ -28,8 +14,6 @@ class LocalFile(_filepath: String, suffix: String) extends File {
     if (w != null || reader != null)
       throw new java.io.IOException(
         "Attempted to open an already open file")
-    val fullpath =
-      filepath + Option(suffix).getOrElse("")
     mode match {
       case FileMode.READ =>
         pos = 0
@@ -37,13 +21,13 @@ class LocalFile(_filepath: String, suffix: String) extends File {
         reader = new java.io.BufferedReader(
             new java.io.InputStreamReader(
                 new java.io.BufferedInputStream(
-                    new java.io.FileInputStream(new java.io.File(fullpath)))))
+                    new java.io.FileInputStream(new java.io.File(filepath)))))
         this.mode = mode
       case FileMode.WRITE =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(fullpath))
+        w = new java.io.PrintWriter(new java.io.FileWriter(filepath))
         this.mode = mode
       case FileMode.APPEND =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(fullpath, true))
+        w = new java.io.PrintWriter(new java.io.FileWriter(filepath, true))
         this.mode = mode
     }
   }
@@ -89,9 +73,9 @@ class LocalFile(_filepath: String, suffix: String) extends File {
   }
 
   override def getAbsolutePath =
-    new java.io.File(filepath + Option(suffix).getOrElse("")).getAbsolutePath
+    new java.io.File(filepath).getAbsolutePath
 
   override def getPath =
-    new java.io.File(filepath + Option(suffix).getOrElse("")).getPath
+    new java.io.File(filepath).getPath
 
 }

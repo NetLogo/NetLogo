@@ -11,21 +11,7 @@ object RemoteFile {
   }
 }
 
-class RemoteFile(_filepath: String, suffix: String) extends File {
-
-  def this(_filepath: String) = this(_filepath, null)
-
-  val filepath =
-    if (_filepath == null || suffix == null)
-      _filepath
-    else {
-      val tmpf = _filepath.toLowerCase
-      val tmps = suffix.toLowerCase
-      if (tmpf.endsWith(tmps))
-        _filepath.substring(0, tmpf.lastIndexOf(tmps))
-      else
-        _filepath
-    }
+class RemoteFile(filepath: String) extends File {
 
   override def getPrintWriter = null
 
@@ -41,8 +27,6 @@ class RemoteFile(_filepath: String, suffix: String) extends File {
     if (reader != null)
       throw new java.io.IOException(
         "Attempted to open an already open file")
-    val fullpath =
-      filepath + Option(suffix).getOrElse("")
     mode match {
       case FileMode.READ =>
         pos = 0
@@ -50,7 +34,7 @@ class RemoteFile(_filepath: String, suffix: String) extends File {
         reader = new java.io.BufferedReader(
             new java.io.InputStreamReader(
                 new java.io.BufferedInputStream(
-                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(fullpath)).openStream())))
+                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(filepath)).openStream())))
         this.mode = mode
       case FileMode.WRITE | FileMode.APPEND =>
         unsupported
@@ -81,9 +65,9 @@ class RemoteFile(_filepath: String, suffix: String) extends File {
   }
 
   override def getAbsolutePath =
-    new java.io.File(filepath + Option(suffix).getOrElse("")).getAbsolutePath
+    new java.io.File(filepath).getAbsolutePath
 
   override def getPath =
-    new java.io.File(filepath + Option(suffix).getOrElse("")).getPath
+    new java.io.File(filepath).getPath
 
 }

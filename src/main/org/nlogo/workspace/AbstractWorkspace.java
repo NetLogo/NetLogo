@@ -639,8 +639,7 @@ public abstract strictfp class AbstractWorkspace
                                             String experimentName,
                                             boolean includeHeader)
       throws java.io.IOException {
-    org.nlogo.api.File file =
-        new org.nlogo.api.LocalFile(filename, ".csv");
+    org.nlogo.api.File file = new org.nlogo.api.LocalFile(filename);
     file.open(org.nlogo.api.FileMode.WRITE);
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
