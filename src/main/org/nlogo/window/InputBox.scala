@@ -4,7 +4,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
-import org.nlogo.api.File.stripLines
+import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Utils.platformMonospacedFont
 import org.nlogo.awt.Utils.platformFont
@@ -301,7 +301,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def load(strings:Array[String], helper:Widget.LoadHelper) = {
     val displayName = strings(5)
     if(displayName ==  "NIL") name("") else name(displayName)
-    var contents = org.nlogo.api.File.restoreLines(strings(6))
+    var contents = org.nlogo.api.ModelReader.restoreLines(strings(6))
     if(contents == "NIL") contents = ""
     if(strings.length > 8) multiline(strings(8) == "1")
 

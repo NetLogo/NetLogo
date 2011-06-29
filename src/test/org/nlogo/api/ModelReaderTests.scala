@@ -63,4 +63,38 @@ class ModelReaderTests extends FunSuite {
     assert(widgets.get(0).get(0) === "GRAPHICS-WINDOW")
   }
   
+  // strip/restoreLines
+  test("StripSimple") {
+    expect("foo")(ModelReader.stripLines("foo"))
+  }
+  test("StripLineBreak") {
+    expect("foo\\nbar")(ModelReader.stripLines("foo\nbar"))
+  }
+  test("StripConsecutiveLineBreaks") {
+    expect("foo\\n\\nbar")(ModelReader.stripLines("foo\n\nbar"))
+  }
+  test("StripTrailingLineBreak") {
+    expect("foo\\n")(ModelReader.stripLines("foo\n"))
+  }
+  test("StripInnerNewLines") {
+    expect("foo\\n\\\"foo\\\\n\\\"")(
+      ModelReader.stripLines("foo\n\"foo\\n\""))
+  }
+  test("RestoreSimple") {
+    expect("foo")(ModelReader.restoreLines("foo"))
+  }
+  test("RestoreLineBreak") {
+    expect("foo\nbar")(ModelReader.restoreLines("foo\\nbar"))
+  }
+  test("RestoreConsecutiveLineBreaks") {
+    expect("foo\n\nbar")(ModelReader.restoreLines("foo\\n\\nbar"))
+  }
+  test("RestoreInitialLineBreaks") {
+    expect("\n\n\nfoo")(ModelReader.restoreLines("\\n\\n\\nfoo"))
+  }
+  test("RestoreInnerNewLines") {
+    expect("foo\n\"foo\\n\"")(
+      ModelReader.restoreLines("foo\\n\"foo\\\\n\""))
+  }
+
 }

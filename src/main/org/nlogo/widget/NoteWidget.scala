@@ -1,6 +1,6 @@
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, I18N}
+import org.nlogo.api.{Editable, I18N, ModelReader}
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 
@@ -85,7 +85,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.append("TEXTBOX\n")
     s.append(getBoundsString)
     if (_text.trim == "") s.append("NIL\n")
-    else  s.append(org.nlogo.api.File.stripLines(_text) + "\n")
+    else  s.append(ModelReader.stripLines(_text) + "\n")
     s.append(fontSize + "\n")
     s.append(org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB) + "\n")
     s.append((if (transparency) "1" else "0") + "\n")
@@ -93,7 +93,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
   }
 
   def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    text = if (strings(5) == "NIL") "" else org.nlogo.api.File.restoreLines(strings(5))
+    text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
     if (strings.length >= 7) fontSize = strings(6).toInt
     if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble)
     if (strings.length >= 9) transparency(strings(8).toInt != 0)

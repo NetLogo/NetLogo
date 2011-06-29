@@ -9,7 +9,7 @@ import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.awt.Utils.button1Mask
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{I18N, Editable, Options, Version}
+import org.nlogo.api.{I18N, Editable, ModelReader, Options, Version}
 
 object ButtonWidget {
 
@@ -422,8 +422,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     if(name.trim != "") s.append(name + "\n") else s.append("NIL\n")
 
-    import org.nlogo.api.File.stripLines
-    if(innerSource() != null  && innerSource().trim != "") s.append(stripLines(innerSource()) + "\n")
+    if(innerSource() != null  && innerSource().trim != "")
+      s.append(ModelReader.stripLines(innerSource()) + "\n")
     else s.append("NIL\n")
 
     if(forever) s.append("T\n") else s.append("NIL\n")
@@ -464,7 +464,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     // so we just skip those lines
     name = if(strings(5) != "NIL") strings(5) else ""
 
-    val source = org.nlogo.api.File.restoreLines(strings(6))
+    val source = org.nlogo.api.ModelReader.restoreLines(strings(6))
     wrapSource(helper.convert(if(source=="NIL") "" else source, false))
 
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList

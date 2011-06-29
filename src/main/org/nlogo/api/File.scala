@@ -1,29 +1,6 @@
 package org.nlogo.api
 
-object File {
-  def stripLines(st: String): String =
-    st.flatMap{
-      case '\n' => "\\n"
-      case '\\' => "\\\\"
-      case '\"' => "\\\""
-      case c => c.toString
-    }
-  def restoreLines(s: String): String =
-    if(s.size < 2)
-      s
-    else if(s.head == '\\')
-      s.tail.head match {
-        case 'n' => '\n' + restoreLines(s.tail.tail)
-        case '\\' => '\\' + restoreLines(s.tail.tail)
-        case '"' => '"' + restoreLines(s.tail.tail)
-        case _ =>
-          sys.error("invalid escape sequence in \"" + s + "\"")
-      }
-    else s.head + restoreLines(s.tail)
-}
-
 abstract class File {
-  import File._
   var eof = false
   var pos = 0L
   var reader: java.io.BufferedReader = null

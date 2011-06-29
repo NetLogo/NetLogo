@@ -84,7 +84,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     val x2 = strings(3).toInt
     val y2 = strings(4).toInt
     setSize(x2 - x1, y2 - y1)
-    name(org.nlogo.api.File.restoreLines(strings(5)))
+    name(org.nlogo.api.ModelReader.restoreLines(strings(5)))
     choicesWrapper(strings(7))
     index(Integer.parseInt(strings(8)))
     this

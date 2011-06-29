@@ -8,6 +8,7 @@ import org.nlogo.agent.Observer;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
+import org.nlogo.api.ModelReader;
 import org.nlogo.api.Property;
 
 public strictfp class MonitorWidget
@@ -286,7 +287,7 @@ public strictfp class MonitorWidget
       s.append("NIL\n");
     }
     if (!innerSource.trim().equals("")) {
-      s.append(org.nlogo.api.File.stripLines(innerSource()) + "\n");
+      s.append(ModelReader.stripLines(innerSource()) + "\n");
     } else {
       s.append("NIL\n");
     }
@@ -304,7 +305,7 @@ public strictfp class MonitorWidget
   @Override
   public Object load(String[] strings, Widget.LoadHelper helper) {
     String displayName = strings[5];
-    String source = org.nlogo.api.File.restoreLines(strings[6]);
+    String source = ModelReader.restoreLines(strings[6]);
 
     if (displayName.equals("NIL")) {
       name("");

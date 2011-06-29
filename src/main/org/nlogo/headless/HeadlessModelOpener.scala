@@ -3,7 +3,7 @@ package org.nlogo.headless
 import org.nlogo.agent.Observer
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
 import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList, SimpleJobOwner,
-                      ModelReader, ModelSection, Program, ValueConstraint, Version, File}
+                      ModelReader, ModelSection, Program, ValueConstraint, Version}
 import org.nlogo.nvm.CompilerResults
 import org.nlogo.plot.{Plot,PlotLoader}
 import org.nlogo.shape.{LinkShape, VectorShape}
@@ -131,7 +131,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       try ws.compileCommands(widgetSource)
       catch {
         case ex: CompilerException =>
-          println("compiling: \"" + File.stripLines(widgetSource) + "\"")
+          println("compiling: \"" + ModelReader.stripLines(widgetSource) + "\"")
           throw ex
       }
   }
@@ -173,7 +173,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
       def parseInputBox(widget: Array[String]) {
         interfaceGlobals += widget(5)
-        val defaultVal = escapeString(File.restoreLines(widget(6)))
+        val defaultVal = escapeString(ModelReader.restoreLines(widget(6)))
         if (widget(9) == "Number" || widget(9) == "Color")
           interfaceGlobalCommands.append("set " + widget(5) + " " + defaultVal + "\n")
         else
@@ -189,7 +189,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       def parseButton(widget: Array[String]) {
-        val buttonSource = File.restoreLines(widget(6)) match {
+        val buttonSource = ModelReader.restoreLines(widget(6)) match {
           case "NIL" => ""
           case s => s
         }
@@ -206,7 +206,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         if (monitorSource != "NIL")
         // add "__ignore" to turn the reporter into a command, so we can handle buttons and
         // monitors uniformly.  newline to protect against comments
-          monitors += "__ignore (" + File.restoreLines(monitorSource) + "\n)"
+          monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
       }
 
       def parseGraphicsWindow(widget: Array[String]) {
