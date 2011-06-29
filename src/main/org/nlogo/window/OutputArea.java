@@ -145,7 +145,7 @@ public strictfp class OutputArea
     org.nlogo.api.File file =
         new org.nlogo.api.LocalFile(filename);
     try {
-      file.open(org.nlogo.api.File.Mode.WRITE);
+      file.open(org.nlogo.api.FileMode.WRITE);
       StringTokenizer lines =
           new StringTokenizer(text.getText(), "\n");
       while (lines.hasMoreTokens()) {

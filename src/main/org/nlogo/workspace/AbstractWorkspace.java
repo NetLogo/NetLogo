@@ -591,8 +591,8 @@ public abstract strictfp class AbstractWorkspace
       throws java.io.IOException {
     org.nlogo.api.File file = new org.nlogo.api.LocalFile(importer.filename());
     try {
-      file.open(org.nlogo.api.File.Mode.READ);
-      importer.doImport(file.getBufferedReader());
+      file.open(org.nlogo.api.FileMode.READ);
+      importer.doImport(file.reader());
     } finally {
       try {
         file.close(false);
@@ -641,7 +641,7 @@ public abstract strictfp class AbstractWorkspace
       throws java.io.IOException {
     org.nlogo.api.File file =
         new org.nlogo.api.LocalFile(filename, ".csv");
-    file.open(org.nlogo.api.File.Mode.WRITE);
+    file.open(org.nlogo.api.FileMode.WRITE);
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
           (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);

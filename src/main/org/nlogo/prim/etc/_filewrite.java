@@ -11,7 +11,7 @@ public final strictfp class _filewrite
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     try {
       workspace.fileManager().ensureMode
-          (org.nlogo.api.File.Mode.APPEND);
+          (org.nlogo.api.FileMode.APPEND);
     } catch (java.io.IOException ex) {
       throw new EngineException(context, this, ex.getMessage());
     }

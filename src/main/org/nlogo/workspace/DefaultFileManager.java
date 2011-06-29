@@ -25,18 +25,18 @@ public final strictfp class DefaultFileManager
 
   public String getErrorInfo()
       throws java.io.IOException {
-    long position = currentFile.pos;
+    long position = currentFile.pos();
 
     currentFile.close(true);
-    currentFile.open(org.nlogo.api.File.Mode.READ);
+    currentFile.open(org.nlogo.api.FileMode.READ);
 
     int lineNumber = 1;
     long prevPosition = 0;
     String lastLine = readLine();
 
-    while (currentFile.pos < position) {
+    while (currentFile.pos() < position) {
       lineNumber++;
-      prevPosition = currentFile.pos;
+      prevPosition = currentFile.pos();
       lastLine = readLine();
     }
 
@@ -165,13 +165,13 @@ public final strictfp class DefaultFileManager
     }
   }
 
-  public void ensureMode(org.nlogo.api.File.Mode openMode)
+  public void ensureMode(org.nlogo.api.FileMode openMode)
       throws java.io.IOException {
     if (!hasCurrentFile()) {
       throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
     }
 
-    if (currentFile.getMode() == org.nlogo.api.File.Mode.NONE) {
+    if (currentFile.getMode() == org.nlogo.api.FileMode.NONE) {
       try {
         currentFile.open(openMode);
       } catch (java.io.FileNotFoundException ex) {
@@ -180,7 +180,7 @@ public final strictfp class DefaultFileManager
         throw new java.io.IOException(ex.getMessage());
       }
     } else if (currentFile.getMode() != openMode) {
-      String mode = (currentFile.getMode() == org.nlogo.api.File.Mode.READ) ? "READING" : "WRITING";
+      String mode = (currentFile.getMode() == org.nlogo.api.FileMode.READ) ? "READING" : "WRITING";
 
       throw new java.io.IOException("You can only use " + mode + " primitives with this file");
     }
@@ -284,7 +284,7 @@ public final strictfp class DefaultFileManager
     }
 
     // Needed to write my own version to keep track of the File's Position
-    java.io.BufferedReader buffReader = currentFile.getBufferedReader();
+    java.io.BufferedReader buffReader = currentFile.reader();
     String retString = "";
     char charbuff[] = new char[80];
     int charsRead = 80;
@@ -305,13 +305,13 @@ public final strictfp class DefaultFileManager
           charsRead = i;
         }
       }
-      currentFile.pos += charsRead;
+      currentFile.pos_$eq(currentFile.pos() + charsRead);
       retString += new String(charbuff, 0, charsRead);
     }
     buffReader.reset();
 
     // Doesn't include 'skip' when at the end of file
-    currentFile.pos += buffReader.skip(charsRead + skip) - charsRead;
+    currentFile.pos_$eq(currentFile.pos() + buffReader.skip(charsRead + skip) - charsRead);
 
     return retString;
   }
@@ -323,8 +323,8 @@ public final strictfp class DefaultFileManager
     }
 
     char charbuff[] = new char[num];
-    java.io.BufferedReader buffReader = currentFile.getBufferedReader();
-    currentFile.pos += buffReader.read(charbuff, 0, num);
+    java.io.BufferedReader buffReader = currentFile.reader();
+    currentFile.pos_$eq(currentFile.pos() + buffReader.read(charbuff, 0, num));
     return String.valueOf(charbuff);
   }
 
@@ -341,7 +341,7 @@ public final strictfp class DefaultFileManager
     while (line != null) {
       remainder += line;
       line = readLine();
-      currentFile.pos += line.length();
+      currentFile.pos_$eq(currentFile.pos() + line.length());
     }
     return remainder;
   }
@@ -357,14 +357,14 @@ public final strictfp class DefaultFileManager
 
   public boolean eof()
       throws java.io.IOException {
-    ensureMode(org.nlogo.api.File.Mode.READ);
-    if (!currentFile.eof) {
-      java.io.BufferedReader buffReader = currentFile.getBufferedReader();
+    ensureMode(org.nlogo.api.FileMode.READ);
+    if (!currentFile.eof()) {
+      java.io.BufferedReader buffReader = currentFile.reader();
       buffReader.mark(2);
-      currentFile.eof = (buffReader.read() == -1);
+      currentFile.eof_$eq(buffReader.read() == -1);
       buffReader.reset();
     }
-    return currentFile.eof;
+    return currentFile.eof();
   }
 
   public void closeAllFiles()

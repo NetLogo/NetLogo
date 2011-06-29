@@ -31,7 +31,7 @@ abstract class AbstractExporter(filename: String) {
   def export(tyype: String, modelFileName: String, extraHeader: String) {
     val file = new org.nlogo.api.LocalFile(filename, ".csv")
     try {
-      file.open(org.nlogo.api.File.Mode.WRITE)
+      file.open(org.nlogo.api.FileMode.WRITE)
       val writer = file.getPrintWriter()
       AbstractExporter.exportHeader(writer, tyype, modelFileName, extraHeader)
       export(writer)

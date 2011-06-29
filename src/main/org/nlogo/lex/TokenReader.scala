@@ -1,6 +1,6 @@
 package org.nlogo.lex
 
-import org.nlogo.api.{ CompilerException, File, Token, TokenizerInterface, TokenReaderInterface, TokenType }
+import org.nlogo.api.{ CompilerException, File, FileMode, Token, TokenizerInterface, TokenReaderInterface, TokenType }
 import java.io.IOException
 
 // This exists to support the file-read primitive, which uses ConstantParser.  During normal
@@ -18,7 +18,7 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
   // complexities, but it's also possible that even within that constraint, this stuff
   // doesn't need to be so complex either.  I really don't know. - ST 12/19/08
   def next(): Token = {
-    def reader = file.getBufferedReader() // def not val because we close & reopen the file below
+    def reader = file.reader // def not val because we close & reopen the file below
     val pos = file.pos
     // here we set an arbitrary ceiling on amount of buffered lookahead we let ourselves do.  we
     // have to set some ceiling. for reasons I don't understand, when we switched from JLex to
@@ -45,7 +45,7 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     catch {
       case ex: IOException => // token too big to mark; close and reopen file to get back where we were
         file.close(true)
-        file.open(File.Mode.READ)
+        file.open(FileMode.READ)
         reader.skip(pos)
         file.pos = pos
     }

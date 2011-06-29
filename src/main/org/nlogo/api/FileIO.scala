@@ -16,7 +16,7 @@ object FileIO {
   def writeFile(path: String, text: String, convertToPlatformLineBreaks: Boolean) {
     val file = new LocalFile(path)
     try {
-      file.open(File.Mode.WRITE)
+      file.open(FileMode.WRITE)
       if (!convertToPlatformLineBreaks)
         file.print(text)
       else {

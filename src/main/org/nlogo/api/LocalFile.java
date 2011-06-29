@@ -1,12 +1,10 @@
 package org.nlogo.api;
 
-// we shouldn't need "File." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 3/6/11
-
 public strictfp class LocalFile extends File {
 
   private final String filepath;
   private String suffix = null;
-  private File.Mode mode = File.Mode.NONE;
+  private FileMode mode = FileMode.NONE;
   private java.io.PrintWriter w = null;
   private java.io.BufferedReader buffReader;
 
@@ -30,7 +28,7 @@ public strictfp class LocalFile extends File {
   }
 
   @Override
-  public File.Mode getMode() {
+  public FileMode getMode() {
     return mode;
   }
 
@@ -41,7 +39,7 @@ public strictfp class LocalFile extends File {
   }
 
   @Override
-  public java.io.BufferedReader getBufferedReader() {
+  public java.io.BufferedReader reader() {
     return buffReader;
   }
 
@@ -52,7 +50,7 @@ public strictfp class LocalFile extends File {
   }
 
   @Override
-  public void open(File.Mode mode)
+  public void open(FileMode mode)
       throws java.io.IOException {
     if (w != null || buffReader != null) {
       throw new java.io.IOException("Attempted to open an already open file");
@@ -61,8 +59,8 @@ public strictfp class LocalFile extends File {
     String fullpath = suffix == null ? filepath : filepath + suffix;
     switch (mode) {
       case READ:
-        pos = 0;
-        eof = false;
+        pos_$eq(0);
+        eof_$eq(false);
         buffReader = new java.io.BufferedReader(
             new java.io.InputStreamReader(
                 new java.io.BufferedInputStream(
@@ -137,7 +135,7 @@ public strictfp class LocalFile extends File {
       default:
         break;
     }
-    mode = File.Mode.NONE;
+    mode = FileMode.NONE;
 
   }
 

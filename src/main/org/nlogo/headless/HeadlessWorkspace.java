@@ -499,7 +499,7 @@ public strictfp class HeadlessWorkspace
     org.nlogo.api.File file =
         new org.nlogo.api.LocalFile(filename);
     try {
-      file.open(org.nlogo.api.File.Mode.WRITE);
+      file.open(org.nlogo.api.FileMode.WRITE);
       StringTokenizer lines =
           new StringTokenizer(outputAreaBuffer.toString(), "\n");
       while (lines.hasMoreTokens()) {

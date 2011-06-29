@@ -115,11 +115,11 @@ object Compiler extends CompilerInterface {
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04
     var done = false
     while(!done) {
-      currFile.getBufferedReader.mark(1)
+      currFile.reader.mark(1)
       currFile.pos += 1
-      val i = currFile.getBufferedReader.read()
+      val i = currFile.reader.read()
       if(i == -1 || !Character.isWhitespace(i)) {
-        currFile.getBufferedReader.reset()
+        currFile.reader.reset()
         currFile.pos -= 1
         done = true
       }
