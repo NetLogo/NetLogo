@@ -4,8 +4,9 @@ import java.io._
 import java.util.concurrent.TimeUnit
 import java.net.SocketException
 import org.nlogo.util.Exceptions
+import org.nlogo.hubnet.protocol.{Protocol, Message}
 
-abstract class AbstractConnection(name: String, connectionStreams: Streamable) extends Thread(name) {
+abstract class AbstractConnection(name: String, connectionStreams: Streamable, isClient:Boolean=false) extends Thread(name) {
   private val writingThread = new WritingThread(name)
 
   // this used to be ArrayBlockingQueue[Any](10000)
@@ -21,20 +22,38 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
   // (also, making this protected for testing. JC - 1/1/11)
   // I see no reason to have any ceiling at all here.  (LinkedBlockingQueue
   // doesn't make us set a ceiling.) - ST 1/12/11
-  protected val writeQueue = new java.util.concurrent.LinkedBlockingQueue[Any](1000)
-
-  private var count = 0
-  private val RESET_DELAY = 1000
+  protected val writeQueue = new java.util.concurrent.LinkedBlockingQueue[Message](1000)
 
   protected val output = connectionStreams.getOutputStream
   private val input = connectionStreams.getInputStream
   @volatile private var keepListening = true
   @volatile private var keepWriting = true
 
+  protected var protocol:Protocol = null
+  def protocolName: String = protocol.name
+
+  def connType = if(isClient) "client" else "server"
+
+  def writeProtocol() {
+    output.write(protocolName.getBytes)
+    output.flush()
+  }
+
+  private def doProtocolExchange() {
+    def readProtocol() {
+      //TODO: figure out what to do here if the protocol is None.
+      protocol = Protocol.readProtocol(in = input, out = output).get
+    }
+    if(isClient) { writeProtocol(); readProtocol() }
+    else { readProtocol(); writeProtocol() }
+  }
+
+  doProtocolExchange()
+
   override def run() {
     writingThread.start()
     while (keepListening) {
-      try receiveData(input.readObject())
+      try receiveData(protocol.readMessage())
       catch {
         case e@(_:InterruptedIOException|_:OptionalDataException|_:RuntimeException) =>
           handleEx(e.asInstanceOf[Exception], false)
@@ -45,22 +64,22 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
     disconnect("Shutting down.")
   }
 
-  def receiveData(a: AnyRef)
+  def receiveData(m:Message)
   def handleEx(e: Exception, sendingEx: Boolean)
 
   // this should only be called if you need to wait for the send to
   // be completed it bypasses the writeQueue CB 09/28/2004
   @throws(classOf[java.io.IOException])
-  def waitForSendData(a: Any) {send(a)}
+  def waitForSendData(m: Message) {send(m)}
 
   // use this method if you don't need to wait for the send to complete
   // this should only be used before stopWriting() is called.
-  def sendData(a: Any) {
+  def sendData(m: Message) {
     // Note that the writingThread may be dead already at this point,
     // but it doesn't matter... the caller is *never* guaranteed that
     // messages are going to get through, since the client could vanish
     // at any time. - ST 11/22/04
-    writeQueue.add(a)
+    writeQueue.add(m)
   }
 
   // after a call to this, you should only call waitForSendData()
@@ -89,26 +108,8 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
   def getSendQueueSize = writeQueue.size
 
   @throws(classOf[java.io.IOException])
-  private def send(a: Any) {
-    output.synchronized {
-      output.writeObject(a)
-      // we're not sure if this call to flush is absolutely necessary.
-      // it can take up to .02 seconds.  however, since it is in a
-      // background thread and we want to ensure that we send out the
-      // messages as quickly as possible, let's leave it in.  if we
-      // ever need this code in a non-background thread.  we should
-      // revisit this issue.
-      // --mag 10/14/02
-      output.flush()
-      // always do a reset on the outputstream so that we don't get
-      // outofmemory errors from the serialized graph of object
-      // building up
-      // --mag 12/9/02
-      // only resetting every 1000th message seems to decrease
-      // bandwidth a good deal. --josh 11/19/09
-      count += 1
-      if (count % RESET_DELAY == 0) output.reset()
-    }
+  private def send(m: Message) {
+    output.synchronized { protocol.writeMessage(m) }
   }
 
   private class WritingThread(name: String) extends Thread("WritingThread:" + name) {

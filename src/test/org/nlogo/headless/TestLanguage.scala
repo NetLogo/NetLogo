@@ -82,35 +82,36 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
     class Tester(mode: TestMode) extends AbstractTestLanguage {
       // use a custom owner so we get fullName into the stack traces
       // we get on the JobThread - ST 1/26/11
-      override def owner =
-        new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
-      try {
-        init()
-        defineProcedures(proc.content)
-        nonProcs.foreach {
-          case OpenModel(modelPath) => workspace.open(modelPath)
-          case Proc(content) =>
-            defineProcedures(content)
-          case Command(agent, command) =>
-            testCommand(command, getAgentClass(agent), mode)
-          case CommandWithError(agent, command, message) =>
-            testCommandError(command, message, getAgentClass(agent), mode)
-          case CommandWithCompilerError(agent, command, message) =>
-            testCommandCompilerErrorMessage(command, message, getAgentClass(agent))
-          case CommandWithStackTrace(agent, command, stackTrace) =>
-            testCommandErrorStackTrace(command, stackTrace, getAgentClass(agent), mode)
-          case ReporterWithResult(reporter, result) =>
-            testReporter(reporter, result, mode)
-          case ReporterWithError(reporter, error) =>
-            testReporterError(reporter, error, mode)
-          case ReporterWithStackTrace(reporter, error) =>
-            testReporterErrorStackTrace(reporter, error, mode)
+      override def owner = new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
+      def run(){
+        try {
+          init()
+          defineProcedures(proc.content)
+          nonProcs.foreach {
+            case OpenModel(modelPath) => workspace.open(modelPath)
+            case Proc(content) =>
+              defineProcedures(content)
+            case Command(agent, command) =>
+              testCommand(command, getAgentClass(agent), mode)
+            case CommandWithError(agent, command, message) =>
+              testCommandError(command, message, getAgentClass(agent), mode)
+            case CommandWithCompilerError(agent, command, message) =>
+              testCommandCompilerErrorMessage(command, message, getAgentClass(agent))
+            case CommandWithStackTrace(agent, command, stackTrace) =>
+              testCommandErrorStackTrace(command, stackTrace, getAgentClass(agent), mode)
+            case ReporterWithResult(reporter, result) =>
+              testReporter(reporter, result, mode)
+            case ReporterWithError(reporter, error) =>
+              testReporterError(reporter, error, mode)
+            case ReporterWithStackTrace(reporter, error) =>
+              testReporterErrorStackTrace(reporter, error, mode)
+          }
         }
+        finally workspace.dispose()
       }
-      finally workspace.dispose()
     }
-    new Tester(NormalMode)
-    if(!testName.startsWith("*")) new Tester(RunMode)
+    new Tester(NormalMode).run()
+    if(!testName.startsWith("*")) new Tester(RunMode).run()
   }
 }
 

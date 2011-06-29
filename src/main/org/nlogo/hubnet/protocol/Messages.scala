@@ -8,6 +8,8 @@ import org.nlogo.hubnet.connection.ClientRoles
 // Message between hubnet clients and hubnet servers
 trait Message extends Serializable
 
+case class VersionMessage(version:String) extends Message
+
 // Clients send this message to go from the AwaitingVersion state to one of the LoggedOn states
 // (either ParticipantClientLoggedOn or ControllerClientLoggedOn).
 // clientType: "COMPUTER" for regular clients. TODO: Document what else is supported.
@@ -21,7 +23,7 @@ case class HandshakeFromServer(activityName: String, interfaceSpecList: LogoList
 case class LoginFailure(content: String) extends Message
 
 // Whenever the client sends something unexpected, the server responds with this.
-case class InvalidMessage(errorMessage:String, original:AnyRef) extends Message
+case class InvalidMessage(errorMessage:String, original:Message) extends Message
 
 case class OverrideMessage(data: Any, clear: Boolean) extends Message
 
@@ -70,7 +72,7 @@ case class PlotUpdate(plotInterface: PlotInterface) extends Message {
   private val bytes = {
     val out = new ByteArrayOutputStream()
     new ObjectOutputStream(out).writeObject(plotInterface)
-    out.toByteArray()
+    out.toByteArray
   }
   def plot = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject().asInstanceOf[PlotInterface]
 }

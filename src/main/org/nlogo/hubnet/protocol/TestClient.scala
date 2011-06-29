@@ -44,16 +44,16 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // attempts the handshake and explodes if it fails
   // called from the constructor.
   private def handshake(): (String, LogoList) = {
-    def sendAndReceive(a: AnyRef): AnyRef = {
-      rawSend(a)
+    def sendAndReceive(m: Message): AnyRef = {
+      rawSend(m)
       in.readObject()
     }
     try{
-      val version = sendAndReceive(Version.version)
+      socket.getOutputStream.write("Java    ".getBytes)
+      val version = sendAndReceive(VersionMessage(Version.version))
       val response = sendAndReceive(new EnterMessage(userId, clientType, ClientRoles.Participant))
       val result = response match {
         case h: HandshakeFromServer =>
-          send(EnterMessage)
           executor.submit(new Receiver())
           (h.activityName, h.interfaceSpecList)
         case r => throw new IllegalStateException(userId + " handshake failed. response:" + r)
@@ -65,10 +65,10 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   }
 
   // sends a message to the server
-  protected def send(a: AnyRef) = { rawSend(a) }
+  protected def send(m: Message) = { rawSend(m) }
 
-  protected def rawSend(a: AnyRef){
-    out.writeObject(a)
+  protected def rawSend(m: Message){
+    out.writeObject(m)
     out.flush()
   }
 

@@ -43,7 +43,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   var clientId: String = null
 
 
-  override def receiveData(message:AnyRef) {
+  override def receiveData(message:Message) {
 
     currentConnectionState = (currentConnectionState, message) match {
 
@@ -51,9 +51,9 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         // TODO: Not really sure what to do here.
         Disconnected
 
-      case (AwaitingVersionNumber, message:String) =>
-        if(message == Version.version) {
-          sendData(Version.version)
+      case (AwaitingVersionNumber, vm:VersionMessage) =>
+        if(vm.version == Version.version) {
+          sendData(vm)
           AwaitingEnterMessage
         } else {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "

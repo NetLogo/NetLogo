@@ -31,6 +31,7 @@ abstract class AbstractTestLanguage extends Assertions {
       else
         new WorldDimensions(-5, 5, -5, 5),
       HeadlessWorkspace.TEST_DECLARATIONS)
+    workspace.getHubNetManager.loadClientInterface(Nil, Version.version)
   }
 
   def defineProcedures(source: String) {

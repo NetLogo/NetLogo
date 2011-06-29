@@ -16,7 +16,7 @@ import org.nlogo.util.JCL._
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.{InputBoxWidget, ChooserWidget, SliderWidget, PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
 import org.nlogo.api.{WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
-import org.nlogo.hubnet.connection.{ClientRoles, Streamable, ConnectionTypes, AbstractConnection}
+import org.nlogo.hubnet.connection._
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -259,6 +259,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handleProtocolMessage(message: org.nlogo.hubnet.protocol.Message) {
     message match {
+      case VersionMessage(v) => if (!connected) {
+        if (v == Version.version)
+          sendDataAndWait(new EnterMessage(listener.clientId, ConnectionTypes.COMP_CONNECTION, role))
+        else handleLoginFailure("The version of the HubNet Client" +
+                " you are using does not match the version of the " +
+                "server. Please use the HubNet Client that comes with " + v)
+      }
       case h: HandshakeFromServer => completeLogin(h)
       case LoginFailure(content) => handleLoginFailure(content)
       case ExitMessage(reason) => disconnect(reason)
@@ -317,7 +324,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       //socket.setTcpNoDelay( true )
       listener = new Listener(userid, socket)
       listener.start()
-      sendDataAndWait(Version.version)
+      sendDataAndWait(VersionMessage(Version.version))
       null
     }
     catch {
@@ -361,13 +368,14 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   @throws(classOf[java.io.IOException])
   private class Listener(userName: String, socket: Socket)
-          extends AbstractConnection("Listener: " + userName, Streamable(socket)) {
+          extends AbstractConnection("Listener: " + userName, Streamable(socket), isClient=true) {
     var clientId = userName
+    override def protocolName = "Java"
     // kill the writingThread since we don't need it because
     // we only do synchronous I/O via waitForSendData() -- CB 09/28/04
     stopWriting()
-    override def receiveData(data:AnyRef) {
-      getToolkit.getSystemEventQueue.postEvent(new ClientAWTEvent(ClientPanel.this, data.asInstanceOf[AnyRef], true))
+    override def receiveData(data:Message) {
+      getToolkit.getSystemEventQueue.postEvent(new ClientAWTEvent(ClientPanel.this, data, true))
     }
     override def handleEx(e:Exception, sendingEx: Boolean) {
       getToolkit.getSystemEventQueue.postEvent(new ClientAWTExceptionEvent(ClientPanel.this, e, sendingEx))
@@ -407,10 +415,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   /**
    * Sends data and waits until the data is sent.
    */
-  def sendDataAndWait(obj: AnyRef) {
+  def sendDataAndWait(m: Message) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     if (listener != null) {
-      try listener.waitForSendData(obj)
+      try listener.waitForSendData(m)
       // If we have a socket exception writing rather than give
       // the user an error message they will not understand,
       // let's disconnect and let them re-enter.  This will
@@ -424,13 +432,6 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     a match {
       case m: Message => handleProtocolMessage(m)
-      case info: String => if (!connected) {
-        if (info == Version.version)
-          sendDataAndWait(new EnterMessage(listener.clientId, ConnectionTypes.COMP_CONNECTION, role))
-        else handleLoginFailure("The version of the HubNet Client" +
-                " you are using does not match the version of the " +
-                "server. Please use the HubNet Client that comes with " + info)
-      }
     }
   }
 }

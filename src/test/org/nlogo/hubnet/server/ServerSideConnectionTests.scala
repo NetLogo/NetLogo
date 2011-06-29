@@ -18,19 +18,19 @@ class ServerSideConnectionTests extends MockSuite {
 
   mockTest("Server transitions to AwaitingEnterMessage state upon receiving the correct version number from the client.") {
     val conn = newConnection()
-    conn.receiveData(Version.version)
+    conn.receiveData(VersionMessage(Version.version))
     assert(conn.getCurrentState === ConnectionStates.AwaitingEnterMessage)
   }
 
   mockTest("Server responds with version number after receiving the correct version number from the client"){
     val conn = newConnection()
-    conn.receiveData(Version.version)
-    assert(conn.nextOutgoingMessage === Version.version)
+    conn.receiveData(VersionMessage(Version.version))
+    assert(conn.nextOutgoingMessage === VersionMessage(Version.version))
   }
 
   mockTest("When client/server versions don't match, server should respond with LoginFailure and go to Disconnected state"){
     val conn = newConnection()
-    conn.receiveData("NetLogo 1.0")
+    conn.receiveData(VersionMessage("NetLogo 1.0"))
 
     val error = "The version of the HubNet Client you are using does not " +
                 "match the version of the server. Please use the HubNet Client that comes with " + Version.version
@@ -52,7 +52,7 @@ class ServerSideConnectionTests extends MockSuite {
       one(server).createHandshakeMessage(ConnectionTypes.COMP_CONNECTION); willReturn(HandshakeFromServer("test-model", LogoList()))
     }
 
-    conn.receiveData(Version.version)
+    conn.receiveData(VersionMessage(Version.version))
 
     conn.nextOutgoingMessage  // should be the version number, but that's tested elsewhere, so ignore
 
@@ -100,7 +100,7 @@ class ServerSideConnectionTests extends MockSuite {
       // in order to have a complete session.
 
       // the first message is always the version of the client.
-      conn.receiveData(Version.version)
+      conn.receiveData(VersionMessage(Version.version))
 
       // followed by an enter message from the client
       // (assuming that the server sent a good version back)
@@ -129,7 +129,7 @@ class ServerSideConnectionTests extends MockSuite {
       one(server).fullViewUpdate()
     }
     when {
-      conn.receiveData(Version.version)
+      conn.receiveData(VersionMessage(Version.version))
       conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION,
         ClientRoles.Controller))
     }
@@ -158,7 +158,7 @@ class ServerSideConnectionTests extends MockSuite {
       exactly(numControllers).of(server).fullViewUpdate()
     }
 
-    conns.foreach(conn => conn.receiveData(Version.version))
+    conns.foreach(conn => conn.receiveData(VersionMessage(Version.version)))
 
     conns.foreach(conn => conn.nextOutgoingMessage)  // These should all be version numbers, but ignore them here
 
