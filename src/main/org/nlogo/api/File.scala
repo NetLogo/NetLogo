@@ -29,7 +29,7 @@ abstract class File {
   var eof = false
   var pos = 0L
   var reader: java.io.BufferedReader = null
-  def getMode: FileMode = FileMode.NONE
+  var mode: FileMode = FileMode.NONE
 
   // abstract methods
   def getPrintWriter: java.io.PrintWriter

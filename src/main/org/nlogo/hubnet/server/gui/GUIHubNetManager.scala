@@ -64,7 +64,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def importClientInterface(filePath: String, client: Boolean) {
     _clientEditor.close()
     // Load the file
-    val fileContents = LocalFile.readFile(new java.io.File(filePath))
+    val fileContents = new LocalFile(filePath).readFile()
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions
@@ -86,7 +86,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
 
   private def closeControlCenter(){
     // the hubnet manager is created in AbstractWorkspace, but the control center
-    // isnt started unless showControlCenter is called.
+    // isn't started unless showControlCenter is called.
     if(controlCenter != null) controlCenter.dispose()
   }
 

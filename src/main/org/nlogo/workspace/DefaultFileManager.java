@@ -171,7 +171,7 @@ public final strictfp class DefaultFileManager
       throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
     }
 
-    if (currentFile.getMode() == org.nlogo.api.FileMode.NONE) {
+    if (currentFile.mode() == org.nlogo.api.FileMode.NONE) {
       try {
         currentFile.open(openMode);
       } catch (java.io.FileNotFoundException ex) {
@@ -179,8 +179,8 @@ public final strictfp class DefaultFileManager
       } catch (java.io.IOException ex) {
         throw new java.io.IOException(ex.getMessage());
       }
-    } else if (currentFile.getMode() != openMode) {
-      String mode = (currentFile.getMode() == org.nlogo.api.FileMode.READ) ? "READING" : "WRITING";
+    } else if (currentFile.mode() != openMode) {
+      String mode = (currentFile.mode() == org.nlogo.api.FileMode.READ) ? "READING" : "WRITING";
 
       throw new java.io.IOException("You can only use " + mode + " primitives with this file");
     }

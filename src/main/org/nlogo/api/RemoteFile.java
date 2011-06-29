@@ -27,7 +27,7 @@ public strictfp class RemoteFile extends File {
   }
 
   @Override
-  public FileMode getMode() {
+  public FileMode mode() {
     return mode;
   }
 

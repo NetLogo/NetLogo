@@ -428,8 +428,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   if(!Version.is3D)
     test("testTrailingCommas") {
-      workspace.initForTesting(35, org.nlogo.api.LocalFile.readFile(
-        new java.io.File("test/import/trailing-commas.nlogo")))
+      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
+        "test/import/trailing-commas.nlogo").readFile())
       testCommand("import-world \"test/import/trailing-commas.csv\"")
     }
 
@@ -460,8 +460,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   if(!Version.is3D)
     test("ExtraFieldValue") {
-      workspace.initForTesting(35, org.nlogo.api.LocalFile.readFile(
-        new java.io.File("test/import/trailing-commas.nlogo")))
+      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
+        "test/import/trailing-commas.nlogo").readFile())
       val errorNumber = Array(0)
       workspace.setImporterErrorHandler(
         new org.nlogo.agent.Importer.ErrorHandler() {
