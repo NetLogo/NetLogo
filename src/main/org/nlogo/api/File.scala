@@ -20,8 +20,6 @@ object File {
           sys.error("invalid escape sequence in \"" + s + "\"")
       }
     else s.head + restoreLines(s.tail)
-  def isValidName(name: String) =
-    Option(name).exists(_.nonEmpty)
 }
 
 abstract class File {
