@@ -1,6 +1,17 @@
 package org.nlogo.api
 
-class LocalFile(_filepath: String, suffix: String) extends File {
+object RemoteFile {
+  def exists(path: String): Boolean = {
+    val url = org.nlogo.util.Utils.escapeSpacesInURL(path)
+    try { new java.net.URL(url).openStream(); true }
+    catch {
+      case ex: java.io.IOException =>
+        false
+    }
+  }
+}
+
+class RemoteFile(_filepath: String, suffix: String) extends File {
 
   def this(_filepath: String) = this(_filepath, null)
 
@@ -16,16 +27,18 @@ class LocalFile(_filepath: String, suffix: String) extends File {
         _filepath
     }
 
-  private var w: java.io.PrintWriter = null
-  override def getPrintWriter = w
+  override def getPrintWriter = null
 
   @throws(classOf[java.io.IOException])
   override def getInputStream =
-    new java.io.FileInputStream(getPath)
+    new java.io.BufferedInputStream(
+      new java.net.URL(
+        org.nlogo.util.Utils.escapeSpacesInURL(getPath))
+      .openStream())
 
   @throws(classOf[java.io.IOException])
-  override def open(mode: FileMode) = {
-    if (w != null || reader != null)
+  override def open(mode: FileMode) {
+    if (reader != null)
       throw new java.io.IOException(
         "Attempted to open an already open file")
     val fullpath =
@@ -37,49 +50,28 @@ class LocalFile(_filepath: String, suffix: String) extends File {
         reader = new java.io.BufferedReader(
             new java.io.InputStreamReader(
                 new java.io.BufferedInputStream(
-                    new java.io.FileInputStream(new java.io.File(fullpath)))))
+                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(fullpath)).openStream())))
         this.mode = mode
-      case FileMode.WRITE =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(fullpath))
-        this.mode = mode
-      case FileMode.APPEND =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(fullpath, true))
-        this.mode = mode
+      case FileMode.WRITE | FileMode.APPEND =>
+        unsupported
     }
   }
 
-  @throws(classOf[java.io.IOException])
-  override def print(str: String) {
-    if (w == null)
-      throw new java.io.IOException("Attempted to print to an unopened File")
-    w.print(str)
-  }
+  private def unsupported = 
+    throw new java.io.IOException("Cannot write to remote files.")
 
   @throws(classOf[java.io.IOException])
-  override def println(line: String) {
-    if (w == null)
-      throw new java.io.IOException("Attempted to println to an unopened File")
-    w.println(line)
-  }
-
+  override def print(str: String) = unsupported
   @throws(classOf[java.io.IOException])
-  override def println() {
-    if (w == null)
-      throw new java.io.IOException("Attempted to println to an unopened File")
-    w.println()
-  }
+  override def println(line: String) = unsupported
+  @throws(classOf[java.io.IOException])
+  override def println() = unsupported
 
-  override def flush() {
-    if (w != null)
-      w.flush()
-  }
+  override def flush() { }
 
   @throws(classOf[java.io.IOException])
   override def close(ok: Boolean) {
     mode match {
-      case FileMode.WRITE | FileMode.APPEND =>
-        w.close()
-        w = null
       case FileMode.READ =>
         reader.close()
         reader = null
