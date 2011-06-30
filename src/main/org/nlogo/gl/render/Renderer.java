@@ -408,7 +408,7 @@ public class Renderer
       gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, FloatBuffer.wrap(lightPosition));
 
       float[] lightPosition2 = {1.0f, 0.6f, -0.5f, 0.0f};
-      gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, FloatBuffer.wrap(lightPosition2));
+      gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, FloatBuffer.wrap(lightPosition2));
 
       renderWorld(gl, world);
 
