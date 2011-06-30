@@ -23,102 +23,12 @@
 #     but we better double check
 #############################################################################################
 
-src/main/org/nlogo/agent/AbstractExporter.scala:12:    println(csv.header("export-" + tyype + " data (" + Version.version + ")"))
-src/main/org/nlogo/agent/AbstractExporter.scala:18:    val dateFormatter = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SSS Z")
-src/main/org/nlogo/agent/AbstractExporter.scala:32:    val file = new org.nlogo.api.LocalFile(filename, ".csv")
-src/main/org/nlogo/agent/Agent.java:140:            ? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
-src/main/org/nlogo/agent/Agent.java:141:            : "org.nlogo.agent.Agent.rgbListSizeError.3";
-src/main/org/nlogo/agent/AgentSet.java:68:      throw new IllegalStateException("unknown type: " + type);
 src/main/org/nlogo/agent/ArrayAgentSet.java:144:        ("Cannot call remove() from an  ArrayAgentSet");
 src/main/org/nlogo/agent/ArrayAgentSet.java:152:          ("Cannot call remove() on an AgentSet with removableAgents set to false");
 src/main/org/nlogo/agent/ArrayAgentSet.java:273:    StringBuilder s = new StringBuilder("AgentSet");
-src/main/org/nlogo/agent/BreedShapes.java:45:                  ? "__default"
 src/main/org/nlogo/agent/BreedShapes.java:51:                ? "default"
-src/main/org/nlogo/agent/BreedShapes.java:63:            breedShapePair.setValue("__default");
-src/main/org/nlogo/agent/BreedShapes.java:73:      if (result.equals("__default")) {
-src/main/org/nlogo/agent/BreedShapes.java:83:      if (result.equals("__default")) {
-src/main/org/nlogo/agent/Exporter.scala:28:    println(csv.encode("LINKS"))
-src/main/org/nlogo/agent/Exporter.scala:54:      if(key != "LINKS") {
-src/main/org/nlogo/agent/Exporter.scala:84:    println(csv.encode("RANDOM STATE"))
-src/main/org/nlogo/agent/Exporter.scala:90:    println(csv.encode("GLOBALS"))
-src/main/org/nlogo/agent/Exporter.scala:91:    print(csv.encode("min-pxcor") + ","
-src/main/org/nlogo/agent/Exporter.scala:92:          + csv.encode("max-pxcor") + ","
-src/main/org/nlogo/agent/Exporter.scala:93:          + csv.encode("min-pycor") + ","
-src/main/org/nlogo/agent/Exporter.scala:94:          + csv.encode("max-pycor") + ","
-src/main/org/nlogo/agent/Exporter.scala:95:          + csv.encode("perspective") + ","
-src/main/org/nlogo/agent/Exporter.scala:96:          + csv.encode("subject") + "," 
-src/main/org/nlogo/agent/Exporter.scala:97:          + csv.encode("nextIndex") + "," 
-src/main/org/nlogo/agent/Exporter.scala:98:          + csv.encode("directed-links") + ","
-src/main/org/nlogo/agent/Exporter.scala:99:          + csv.encode("ticks"))
-src/main/org/nlogo/agent/Exporter.scala:121:          + csv.data(if (world.links.isDirected) "DIRECTED" else
-src/main/org/nlogo/agent/Exporter.scala:122:                     if (world.links.isUndirected) "UNDIRECTED" else "NEITHER") + ","
-src/main/org/nlogo/agent/Exporter.scala:134:    println(csv.encode("TURTLES"))
-src/main/org/nlogo/agent/Exporter.scala:160:      if (key != "TURTLES") {
-src/main/org/nlogo/agent/Exporter.scala:189:    println(csv.encode("PATCHES"))
-src/main/org/nlogo/agent/Exporter3D.scala:27:    println(csv.encode("DRAWING"))
-src/main/org/nlogo/agent/Exporter3D.scala:28:    println(csv.encode("x0")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:29:            + csv.encode("y0")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:30:            + csv.encode("z0")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:31:            + csv.encode("x1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:32:            + csv.encode("y1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:33:            + csv.encode("z1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:34:            + csv.encode("width")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:35:            + csv.encode("color"))
-src/main/org/nlogo/agent/Exporter3D.scala:48:    println(csv.encode("shape")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:49:            + csv.encode("xcor")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:50:            + csv.encode("ycor")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:51:            + csv.encode("zcor")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:52:            + csv.encode("size")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:53:            + csv.encode("heading")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:54:            + csv.encode("pitch")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:55:            + csv.encode("roll")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:56:            + csv.encode("color")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:57:            + csv.encode("lineThickness"))
-src/main/org/nlogo/agent/Exporter3D.scala:72:    println(csv.encode("shape")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:73:            + csv.encode("x1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:74:            + csv.encode("y1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:75:            + csv.encode("z1")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:76:            + csv.encode("x2")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:77:            + csv.encode("y2")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:78:            + csv.encode("z2")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:79:            + csv.encode("color")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:80:            + csv.encode("lineThickness")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:81:            + csv.encode("directedLink")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:82:            + csv.encode("destSize") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:83:            + csv.encode("heading")  + ","
-src/main/org/nlogo/agent/Exporter3D.scala:84:            + csv.encode("pitch"))
-src/main/org/nlogo/agent/Exporter3D.scala:105:    println(csv.encode("GLOBALS"))
-src/main/org/nlogo/agent/Exporter3D.scala:106:    print(csv.encode("min-pxcor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:107:                  + csv.encode("max-pxcor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:108:                  + csv.encode("min-pycor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:109:                  + csv.encode("max-pycor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:110:                  + csv.encode("min-pzcor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:111:                  + csv.encode("max-pzcor") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:112:                  + csv.encode("perspective") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:113:                  + csv.encode("subject") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:114:                  + csv.encode("nextIndex") + "," 
-src/main/org/nlogo/agent/Exporter3D.scala:115:                  + csv.encode("directed-links") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:116:                  + csv.encode("ticks"))
-src/main/org/nlogo/agent/Exporter3D.scala:139:                  + csv.data(if(world.links().isDirected()) "DIRECTED" else
-src/main/org/nlogo/agent/Exporter3D.scala:140:                                   if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
-src/main/org/nlogo/agent/Exporter3D.scala:154:    println(csv.encode("TURTLES"))
-src/main/org/nlogo/agent/Exporter3D.scala:177:      if (!key.equals("TURTLES")) {
 src/main/org/nlogo/agent/HorizCylinder.java:20:      throw new AgentException("Cannot move turtle beyond the world's edge.");
-src/main/org/nlogo/agent/Importer.java:32:  static final String SCREEN_EDGE_X_HEADER = "SCREEN-EDGE-X";
-src/main/org/nlogo/agent/Importer.java:33:  static final String SCREEN_EDGE_Y_HEADER = "SCREEN-EDGE-Y";
-src/main/org/nlogo/agent/Importer.java:35:  static final String MIN_PXCOR_HEADER = "MIN-PXCOR";
-src/main/org/nlogo/agent/Importer.java:36:  static final String MAX_PXCOR_HEADER = "MAX-PXCOR";
-src/main/org/nlogo/agent/Importer.java:37:  static final String MIN_PYCOR_HEADER = "MIN-PYCOR";
-src/main/org/nlogo/agent/Importer.java:38:  static final String MAX_PYCOR_HEADER = "MAX-PYCOR";
-src/main/org/nlogo/agent/Importer.java:40:  static final String PERSPECTIVE_HEADER = "PERSPECTIVE";
-src/main/org/nlogo/agent/Importer.java:41:  static final String SUBJECT_HEADER = "SUBJECT";
-src/main/org/nlogo/agent/Importer.java:42:  static final String NEXT_INDEX_HEADER = "NEXTINDEX";
-src/main/org/nlogo/agent/Importer.java:43:  static final String DIRECTED_LINKS_HEADER = "DIRECTED-LINKS";
-src/main/org/nlogo/agent/Importer.java:44:  static final String TICKS_HEADER = "TICKS";
 src/main/org/nlogo/agent/Importer.java:128:        String versionHeader = "export-world data (NetLogo ";
-src/main/org/nlogo/agent/Importer.java:134:        if (line[0].trim().equals("RANDOM STATE")) {
-src/main/org/nlogo/agent/Importer.java:152:      if (nextLine != null && nextLine.indexOf("DRAWING") != -1) {
-src/main/org/nlogo/agent/Importer.java:155:      if (nextLine != null && nextLine.indexOf("OUTPUT") != -1) {
 src/main/org/nlogo/agent/Importer.java:169:      errorHandler.showError("Error Importing Drawing",
 src/main/org/nlogo/agent/Importer.java:170:          "Invalid data length, the drawing will not be imported", false);
 src/main/org/nlogo/agent/Importer.java:189:            errorHandler.showError("Error Importing Plots",
@@ -255,14 +165,12 @@ src/main/org/nlogo/agent/Importer3D.java:104:                "Coordinates in the
 src/main/org/nlogo/agent/Importer3D.java:152:        String abortingError = "Illegal Patch Coordinate- pxcor, pycor and pzcor must be in range.";
 src/main/org/nlogo/agent/Importer3D.java:158:      String abortingError = "Illegal Patch Coordinate- pxcor and pycor must be integers.";
 src/main/org/nlogo/agent/Importer3D.java:195:      String abortingError = "Illegal Screen dimension- max-px/y/zcor, min-px/y/zcor must be numbers.";
-src/main/org/nlogo/agent/ImportLexer.java:11:@SuppressWarnings({"unused","fallthrough"})
 src/main/org/nlogo/agent/ImportLexer.java:47:    "\10\0\2\2\1\4\25\0\1\2\1\0\1\3\11\0\1\1\uffd3\0";
 src/main/org/nlogo/agent/ImportLexer.java:61:    "\1\7\1\0\1\10\1\7\1\10";
 src/main/org/nlogo/agent/ImportLexer.java:90:    "Unkown internal scanner error",
 src/main/org/nlogo/agent/ImportLexer.java:91:    "Error: could not match input",
 src/main/org/nlogo/agent/ImportLexer.java:92:    "Error: pushback value was too large"
 src/main/org/nlogo/agent/ImportLexer.java:191:			if( c == '"' && i < s.length() - 1 && s.charAt( i + 1 ) == '"' )
-src/main/org/nlogo/agent/ImportLexer.java:387:   * will only be called with things that "Can't Possibly Happen".
 src/main/org/nlogo/agent/ImportLexer.java:587:          { throw new ImportLexer.LexerException( "Unclosed double quote" ) ;
 src/main/org/nlogo/agent/ImportLexer.java:611:		( "Quoted fields must be followed by comma or end of line" ) ;
 src/main/org/nlogo/agent/ImportPatchColors.java:28:          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", new String[]{fileName}));
@@ -287,9 +195,6 @@ src/main/org/nlogo/agent/Link.java:484:  public static final String MODE_NONE = 
 src/main/org/nlogo/agent/Link.java:485:  public static final String MODE_FREE = "free";
 src/main/org/nlogo/agent/Link.java:486:  public static final String MODE_FIXED = "fixed";
 src/main/org/nlogo/agent/Link.java:539:        ("links can't access patches via relative coordinates");
-src/main/org/nlogo/agent/LogoHashObject.java:3:/* The "general contract" between Object.hashCode() and Object.equals(..) is
-src/main/org/nlogo/agent/NetworkMetrics.java:80:   * Directed links are only followed in the "forward" direction.
-src/main/org/nlogo/agent/NetworkMetrics.java:129:   * Directed links are only followed in the "forward" direction.
 src/main/org/nlogo/agent/Observer.java:58:    throw new AgentException("the observer can't access a turtle variable without specifying which turtle");
 src/main/org/nlogo/agent/Observer.java:65:        ("the observer can't access a turtle or link variable without specifying which agent");
 src/main/org/nlogo/agent/Observer.java:71:    throw new AgentException("the observer can't access a turtle variable without specifying which turtle");
@@ -418,24 +323,15 @@ src/main/org/nlogo/api/AgentVariables.java:83:        ? new String[]{"PXCOR", "P
 src/main/org/nlogo/api/AgentVariables.java:84:        : new String[]{"PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR"};
 src/main/org/nlogo/api/AgentVariables.java:88:    return new String[]{"END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
 src/main/org/nlogo/api/AgentVariables.java:89:        "THICKNESS", "SHAPE", "TIE-MODE"};
-src/main/org/nlogo/api/ClassManager.java:15: *         primManager.addPrimitive("first-n-fibs", new Fibonacci());
 src/main/org/nlogo/api/Color.java:31:          "gray", "red", "orange", "brown",
 src/main/org/nlogo/api/Color.java:32:          "yellow", "green", "lime", "turquoise", "cyan", "sky",
 src/main/org/nlogo/api/Color.java:33:          "blue", "violet", "magenta", "pink",
 src/main/org/nlogo/api/Color.java:35:          "black", "white"
 src/main/org/nlogo/api/Color.java:475:  private static final String COLOR_TRANSLATIONS = "/system/color-translation.txt";
 src/main/org/nlogo/api/Color.java:524:      throw new IllegalStateException("Can't get RGB color");
-src/main/org/nlogo/api/Command.java:10:   * Specifies whether NetLogo should "switch" to another
-src/main/org/nlogo/api/CommandLogoThunk.java:5:   * @return whether the code did a "stop" at the top level
 src/main/org/nlogo/api/CompilerException.java:10:  public static final String RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX = "Runtime error: ";
 src/main/org/nlogo/api/CompilerException.java:44:    return getMessage() + " at position " + startPos + " in " + fileName;
-src/main/org/nlogo/api/Context.java:42:   * The "current working directory" is the current
 src/main/org/nlogo/api/CSV.java:73:      s = "null";
-src/main/org/nlogo/api/DefaultClassManager.java:16:  @SuppressWarnings("unused")
-src/main/org/nlogo/api/DefaultClassManager.java:31:  @SuppressWarnings("unused")
-src/main/org/nlogo/api/DefaultClassManager.java:45:  @SuppressWarnings("unused")
-src/main/org/nlogo/api/DefaultClassManager.java:59:  @SuppressWarnings("unused")
-src/main/org/nlogo/api/DefaultClassManager.java:63:        ("readExtensionObject not implemented for " + this);
 src/main/org/nlogo/api/DummyCompilerServices.scala:12:          case "true" => true: java.lang.Boolean
 src/main/org/nlogo/api/DummyCompilerServices.scala:13:          case "false" => false: java.lang.Boolean
 src/main/org/nlogo/api/DummyExtensionManager.scala:20:    if(filename == "aggregate") ""
@@ -479,44 +375,12 @@ src/main/org/nlogo/api/Dump.java:316:      return "observer";
 src/main/org/nlogo/api/Dump.java:318:      return "agent";
 src/main/org/nlogo/api/Dump.java:320:      return "list";
 src/main/org/nlogo/api/Dump.java:322:      return "nobody";
-src/main/org/nlogo/api/ExtensionManager.java:42:   * "live", or currently in the block, so that its primitives are available for use
-src/main/org/nlogo/api/ExtensionManager.java:65:   * Returns the identifier "name" by its imported implementation, if any,
-src/main/org/nlogo/api/File.java:101:            throw new IllegalArgumentException("invalid escape sequence in \"" + s + "\"");
-src/main/org/nlogo/api/Graphics2DWrapper.java:8:      System.getProperty("os.name").startsWith("Mac");
-src/main/org/nlogo/api/Graphics2DWrapper.java:10:      IS_MAC && Boolean.getBoolean("apple.awt.graphics.UseQuartz");
-src/main/org/nlogo/api/Graphics2DWrapper.java:19:    return "(" + (g.getTransform().getTranslateX() + x) + " , " + (g.getTransform().getTranslateY() + y) + ")";
-src/main/org/nlogo/api/JavaLibraryPath.java:12: * The Terms of Use for the website, in the "Content Submitted to Sun"
-src/main/org/nlogo/api/JavaLibraryPath.java:40:      final String filesep = System.getProperty("file.separator");
-src/main/org/nlogo/api/JavaLibraryPath.java:45:      String osname = System.getProperty("os.name");
-src/main/org/nlogo/api/JavaLibraryPath.java:46:      if (osname.equals("Mac OS X")) {
-src/main/org/nlogo/api/JavaLibraryPath.java:48:      } else if (osname.startsWith("Windows")) {
-src/main/org/nlogo/api/JavaLibraryPath.java:49:        libdir = libdir + "Windows";
-src/main/org/nlogo/api/JavaLibraryPath.java:51:        String arch = System.getProperty("os.arch");
-src/main/org/nlogo/api/JavaLibraryPath.java:52:        if (arch.endsWith("86")) {
-src/main/org/nlogo/api/JavaLibraryPath.java:53:          libdir = libdir + "-x86";
-src/main/org/nlogo/api/JavaLibraryPath.java:68:        libdir = libdir.replaceAll("LinuxLinux", "Linux");
-src/main/org/nlogo/api/JavaLibraryPath.java:84:    String newLibraryPath = System.getProperty("java.library.path");
-src/main/org/nlogo/api/JavaLibraryPath.java:94:    Field f = System.class.getDeclaredField("props");
-src/main/org/nlogo/api/JavaLibraryPath.java:98:    props.put("java.library.path", newLibraryPath);
-src/main/org/nlogo/api/JavaLibraryPath.java:105:        ClassLoader.class.getDeclaredField("usr_paths");
-src/main/org/nlogo/api/Link.java:48:   * Returns the x-coordinate of end2 this coordinate is "unwrapped" so
-src/main/org/nlogo/api/Link.java:54:   * Returns the y-coordinate of end2 this coordinate is "unwrapped" so
-src/main/org/nlogo/api/Link3D.java:10:   * Returns the z-coordinate of end2 this coordinate is "unwrapped" so
 src/main/org/nlogo/api/LocalFile.java:58:      throw new java.io.IOException("Attempted to open an already open file");
 src/main/org/nlogo/api/LocalFile.java:91:      throw new java.io.IOException("Attempted to print to an unopened File");
 src/main/org/nlogo/api/LocalFile.java:100:      throw new java.io.IOException("Attempted to println to an unopened File");
 src/main/org/nlogo/api/LocalFile.java:109:      throw new java.io.IOException("Attempted to println to an unopened File");
-src/main/org/nlogo/api/Matrix3D.java:10: * Sun grants you ("Licensee") a non-exclusive, royalty free, license to use,
-src/main/org/nlogo/api/Matrix3D.java:16: * This software is provided "AS IS," without a warranty of any kind. ALL
-src/main/org/nlogo/api/Matrix3D.java:292:    return ("[" + xo + "," + xx + "," + xy + "," + xz + ";"
-src/main/org/nlogo/api/Matrix3D.java:293:        + yo + "," + yx + "," + yy + "," + yz + ";"
-src/main/org/nlogo/api/Matrix3D.java:294:        + zo + "," + zx + "," + zy + "," + zz + "]");
 src/main/org/nlogo/api/ModelReader.scala:16:    Utils.getResourceAsStringArray("/system/defaultShapes.txt")
 src/main/org/nlogo/api/ModelReader.scala:18:    Utils.getResourceAsStringArray("/system/defaultLinkShapes.txt")
-src/main/org/nlogo/api/NetLogoListener.java:32:   * <p>The button may be a "once" button or a "forever" button.
-src/main/org/nlogo/api/NetLogoListener.java:33:   * If it is a "once" button, it pops back up automatically when
-src/main/org/nlogo/api/NetLogoListener.java:34:   * its action is completed.  If it is a "forever" button, it will
-src/main/org/nlogo/api/NetLogoListener.java:103:   * "Potentially" because an actual update might not take place
 src/main/org/nlogo/api/Number.scala:23:        Left("Illegal number format")
 src/main/org/nlogo/api/Number.scala:32:          Left("Number too large")
 src/main/org/nlogo/api/Number.scala:33:        else if (".eE".exists(text.contains(_)))
@@ -524,13 +388,6 @@ src/main/org/nlogo/api/Number.scala:36:          Left(text + " is too large to b
 src/main/org/nlogo/api/Number.scala:43:        Left("Illegal number format")
 src/main/org/nlogo/api/Options.java:52:    throw new IllegalArgumentException("not found: " + s);
 src/main/org/nlogo/api/Options.java:62:    throw new IllegalArgumentException("not found: " + obj);
-src/main/org/nlogo/api/package.html:5:<body bgcolor="white">
-src/main/org/nlogo/api/package.html:18:  <a href="../../../../extensions.html">Extending NetLogo</a> in 
-src/main/org/nlogo/api/package.html:19:<a href="../../../../index.html">NetLogo User Manual</a> 
-src/main/org/nlogo/api/Primitive.java:15:   * Turtle use "T", and to specify Patch use "P".  To use combinations,
-src/main/org/nlogo/api/Primitive.java:20:   * <pre> String getAgentClassString() { return "OTP"; }</pre>
-src/main/org/nlogo/api/PrimitiveManager.java:21:   * to in NetLogo code as "extensionname:primitive".  If true, they
-src/main/org/nlogo/api/PrimitiveManager.java:22:   * may also optionally be referred to simply as "primitive".  The
 src/main/org/nlogo/api/RemoteFile.java:71:      throw new java.io.IOException("Attempted to open an already open file");
 src/main/org/nlogo/api/RemoteFile.java:86:        throw new java.io.IOException("Cannot write to remote files.");
 src/main/org/nlogo/api/RemoteFile.java:88:        throw new java.io.IOException("Cannot append to remote files.");
@@ -575,27 +432,16 @@ src/main/org/nlogo/app/AgentMonitorEditor.scala:408:        throw new org.nlogo.
 src/main/org/nlogo/app/AgentMonitorEditor.scala:414:    if(text.equalsIgnoreCase("LINKS"))
 src/main/org/nlogo/app/AgentMonitorEditor.scala:419:        throw new org.nlogo.api.AgentException("expected a link breed")
 src/main/org/nlogo/app/AgentMonitorViewPanel.scala:46:  private class WatchMeAction extends javax.swing.AbstractAction("watch-me") {
-src/main/org/nlogo/app/AgentMonitorWindow.scala:38:  if(!System.getProperty("os.name").startsWith("Mac"))
 src/main/org/nlogo/app/AgentMonitorWindow.scala:106:      case O => "Globals"
 src/main/org/nlogo/app/AgentMonitorWindow.scala:107:      case T if agent == null => "(no turtle)"
 src/main/org/nlogo/app/AgentMonitorWindow.scala:108:      case T if agent.id == -1 => lastAliveTitle + " (dead)"
 src/main/org/nlogo/app/AgentMonitorWindow.scala:112:      case L if agent == null => "(no link)"
 src/main/org/nlogo/app/AgentMonitorWindow.scala:113:      case L if agent.id == -1 => lastAliveTitle + " (dead)"
 src/main/org/nlogo/app/AgentMonitorWindow.scala:117:      case P if agent == null => "(no patch)"
-src/main/org/nlogo/app/App.scala:31: * <p>See the "Controlling" section of the NetLogo User Manual
 src/main/org/nlogo/app/App.scala:63:    System.setProperty("apple.awt.graphics.UseQuartz", "true")
 src/main/org/nlogo/app/App.scala:64:    System.setProperty("apple.awt.showGrowBox", "true")
 src/main/org/nlogo/app/App.scala:65:    System.setProperty("apple.laf.useScreenMenuBar", "true")
 src/main/org/nlogo/app/App.scala:67:    System.setProperty("Quaqua.visualMargin", "1,1,1,1")
-src/main/org/nlogo/app/App.scala:73:    if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
-src/main/org/nlogo/app/App.scala:81:    pico.addScalaObject("org.nlogo.compiler.Compiler")
-src/main/org/nlogo/app/App.scala:88:    pico.add("org.nlogo.gl.view.ViewManager")
-src/main/org/nlogo/app/App.scala:95:          "org.nlogo.shape.editor.TurtleShapeManagerDialog",
-src/main/org/nlogo/app/App.scala:101:          "org.nlogo.shape.editor.LinkShapeManagerDialog",
-src/main/org/nlogo/app/App.scala:107:          "org.nlogo.sdm.gui.GUIAggregateManager",
-src/main/org/nlogo/app/App.scala:113:          "org.nlogo.hubnet.server.gui.GUIHubNetManager",
-src/main/org/nlogo/app/App.scala:118:    pico.add("org.nlogo.lab.gui.LabManager")
-src/main/org/nlogo/app/App.scala:119:    pico.add("org.nlogo.properties.EditDialogFactory")
 src/main/org/nlogo/app/App.scala:127:        val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
 src/main/org/nlogo/app/App.scala:128:                getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
 src/main/org/nlogo/app/App.scala:163:      if (token == "--events") org.nlogo.window.Event.logEvents = true;
@@ -617,14 +463,9 @@ src/main/org/nlogo/app/App.scala:201:          throw new IllegalStateException("
 src/main/org/nlogo/app/App.scala:215:              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
 src/main/org/nlogo/app/App.scala:228:              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
 src/main/org/nlogo/app/App.scala:258:  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, classOf[Observer])
-src/main/org/nlogo/app/App.scala:335:          pico.add("org.nlogo.render.Renderer")
-src/main/org/nlogo/app/App.scala:418:    if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Utils.center(frame, null) }
-src/main/org/nlogo/app/App.scala:424:    if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
 src/main/org/nlogo/app/App.scala:430:        JOptionPane.showInputDialog(null, "Enter your name:", "",
 src/main/org/nlogo/app/App.scala:439:    else JOptionPane.showConfirmDialog(null, "The file " + properties + " does not exist.",
 src/main/org/nlogo/app/App.scala:440:      "NetLogo", JOptionPane.DEFAULT_OPTION)
-src/main/org/nlogo/app/App.scala:511:        if (logger==null) Logger.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
-src/main/org/nlogo/app/App.scala:514:        if(logger==null) Logger.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
 src/main/org/nlogo/app/App.scala:525:    else commandLater("print \"can't, new model\"")
 src/main/org/nlogo/app/App.scala:531:    if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
 src/main/org/nlogo/app/App.scala:536:          val i = org.nlogo.swing.OptionDialog.showAsList(frame, "Magic Model Matcher", "You must choose!", matches.toArray)
@@ -637,7 +478,6 @@ src/main/org/nlogo/app/App.scala:563:    fileMenu.openFromPath(workspace.getMode
 src/main/org/nlogo/app/App.scala:567:    val path = workspace.getModelPath.replaceFirst(".nlogo$", "")
 src/main/org/nlogo/app/App.scala:571:      workspace.getModelPath.replaceFirst(" \\d+.nlogo$", " " + modelNumber + ".nlogo"), workspace.getModelType)
 src/main/org/nlogo/app/App.scala:669:    if(workspace.getModelFileName() == null) "NetLogo"
-src/main/org/nlogo/app/App.scala:673:      if(! System.getProperty("os.name").startsWith("Mac")) title = title + " - " + "NetLogo"
 src/main/org/nlogo/app/App.scala:676:      else title = "NetLogo " + (8212.toChar) + " " + title
 src/main/org/nlogo/app/App.scala:679:      if (workspace.getModelType() == ModelType.NORMAL) title += " {" + workspace.getModelDir() + "}"
 src/main/org/nlogo/app/App.scala:704:            RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
@@ -647,7 +487,6 @@ src/main/org/nlogo/app/App.scala:839:    if (java.awt.EventQueue.isDispatchThrea
 src/main/org/nlogo/app/App.scala:876:        "button '" + name + "' not found")}
 src/main/org/nlogo/app/App.scala:944:  setIconImage(org.nlogo.awt.Utils.loadImageResource("/images/arrowhead.gif"))
 src/main/org/nlogo/app/AppletSaver.scala:18:  val siteLink = "<a target=\"_blank\" href=\"" + url + "\">NetLogo</a>"
-src/main/org/nlogo/app/AppletSaver.scala:19:  val eol = System.getProperty("line.separator")
 src/main/org/nlogo/app/AppletSaver.scala:61:            frame, "Applet Saved",
 src/main/org/nlogo/app/AppletSaver.scala:62:            "The HTML file you have saved contains instructions for " +
 src/main/org/nlogo/app/AppletSaver.scala:63:            "arranging the necessary files on your web server.  "  +
@@ -737,13 +576,6 @@ src/main/org/nlogo/app/AppletSaver.scala:202:    line("        width=\"" + width
 src/main/org/nlogo/app/AppletSaver.scala:204:      line("  <param name=\"" + param._1 + "\"")
 src/main/org/nlogo/app/AppletSaver.scala:205:      line("         value=\"" + param._2 + "\">")
 src/main/org/nlogo/app/AppletSaver.scala:207:    line("</applet>")
-src/main/org/nlogo/app/AppletSaver.scala:213:    line(lines.mkString("<p><font size=\"-1\">", eol, "</font></p>"))
-src/main/org/nlogo/app/CommandCenter.scala:37:      putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
-src/main/org/nlogo/app/CommandCenter.scala:46:        putClientProperty("Quaqua.Button.style", "square")
-src/main/org/nlogo/app/CommandCenter.scala:47:        putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
-src/main/org/nlogo/app/CommandCenter.scala:56:      putClientProperty("Quaqua.Button.style", "square")
-src/main/org/nlogo/app/CommandCenter.scala:57:      putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
-src/main/org/nlogo/app/CommandCenter.scala:89:    if(System.getProperty("os.name").startsWith("Mac"))
 src/main/org/nlogo/app/CommandCenter.scala:114:              workspace.guessExportName("command center output.txt")))
 src/main/org/nlogo/app/CommandLine.java:85:    return "Command Center";
 src/main/org/nlogo/app/CommandLine.java:157:    String header = "to __commandline [] ";
@@ -754,12 +586,7 @@ src/main/org/nlogo/app/CommandLine.java:164:      header += "__patchcode ";
 src/main/org/nlogo/app/CommandLine.java:166:      header += "__linkcode ";
 src/main/org/nlogo/app/CommandLine.java:215:                    ("", "ERROR: " + error().getMessage(), true, true),
 src/main/org/nlogo/app/DirtyMonitor.scala:7:    val df = new java.text.SimpleDateFormat("yyyy-MM-dd.HH_mm_ss",
-src/main/org/nlogo/app/DirtyMonitor.scala:9:    System.getProperty("java.io.tmpdir") +
-src/main/org/nlogo/app/DirtyMonitor.scala:10:      System.getProperty("file.separator") + "autosave_" +
 src/main/org/nlogo/app/DirtyMonitor.scala:11:      df.format(new java.util.Date()) + ".nlogo"
-src/main/org/nlogo/app/DirtyMonitor.scala:34:      frame.getRootPane().putClientProperty("windowModified", dirty)
-src/main/org/nlogo/app/FileMenu.java:63:    if (!System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/app/FileMenu.java:76:    return org.nlogo.api.Version.is3D() ? "nlogo3d" : "nlogo";
 src/main/org/nlogo/app/FileMenu.java:80:    return "/system/empty." + modelSuffix();
 src/main/org/nlogo/app/FileMenu.java:170:      openFromSource(source, modelPath, "Loading...",
 src/main/org/nlogo/app/FileMenu.java:250:      suggestedFileName = suggestedFileName + suffix + ".html";
@@ -796,14 +623,11 @@ src/main/org/nlogo/app/FileMenu.java:607:          FileMenu.this, "Import HubNet
 src/main/org/nlogo/app/FileMenu.java:613:                  "Import HubNet Client",
 src/main/org/nlogo/app/FileMenu.java:614:                  "Which section would you like to import from?",
 src/main/org/nlogo/app/FileMenu.java:630:                "Importing Drawing...");
-src/main/org/nlogo/app/FileMenu.java:667:   * This is the model name if there is one, "Untitled.nlogo" otherwise.
 src/main/org/nlogo/app/FileMenu.java:672:      return "Untitled." + modelSuffix();
 src/main/org/nlogo/app/FileMenu.java:692:      openFromSource(source, null, "Clearing...",
 src/main/org/nlogo/app/FileMenu.java:698:      openFromSource(source, null, "Loading...",
 src/main/org/nlogo/app/FileMenu.java:720:            ("couldn't open: '" + path + "'");
 src/main/org/nlogo/app/FileMenu.java:722:      openFromSource(source, path, "Loading...", modelType);
-src/main/org/nlogo/app/FileMenu.java:737:   *                  example: "/home/mmh/models/My_Model.nlogo". This may be null, if,
-src/main/org/nlogo/app/FileMenu.java:739:   * @param message   the message to display in the "loading" modal dialog.
 src/main/org/nlogo/app/FileMenu.java:753:    if (version == null || !version.startsWith("NetLogo")) {
 src/main/org/nlogo/app/FileMenu.java:864:            "Saving...");
 src/main/org/nlogo/app/FileMenu.java:867:          (this, "Save failed.  Error: " + saver.getException().getMessage(),
@@ -845,7 +669,6 @@ src/main/org/nlogo/app/FindDialog.java:81:                      ("/images/magnif
 src/main/org/nlogo/app/FindDialog.java:331:          throw new IllegalStateException("Replace All replaced too many items.");
 src/main/org/nlogo/app/HelpMenu.scala:29:           "docs/index.html"))
 src/main/org/nlogo/app/HelpMenu.scala:32:           "docs/index2.html"))
-src/main/org/nlogo/app/HelpMenu.scala:40:  if(!System.getProperty("os.name").startsWith("Mac"))
 src/main/org/nlogo/app/HelpMenu.scala:42:      action("About " + Version.version + "...",
 src/main/org/nlogo/app/HistoryPrompt.scala:12:      classOf[HistoryPrompt].getResource("/images/popup.gif"))
 src/main/org/nlogo/app/HistoryPrompt.scala:24:  putClientProperty("Quaqua.Button.style", "square")
@@ -859,12 +682,6 @@ src/main/org/nlogo/app/IncludesMenu.scala:76:          javax.swing.JOptionPane.s
 src/main/org/nlogo/app/IncludesMenu.scala:86:  extends javax.swing.AbstractAction("New Source File") {
 src/main/org/nlogo/app/InfoConverter.scala:26:    val anythingButLowercaseLetter = """[\p{Print}&&\P{Lower}]*"""
 src/main/org/nlogo/app/InfoConverter.scala:29:    replace("""(?m)^(\s*\n|\A)(""" + anythingButLowercaseLetter + "[A-Z]" + anythingButLowercaseLetter + ")$",
-src/main/org/nlogo/app/InfoFormatter.scala:22:  def styleSheetFile: CSS = org.nlogo.util.Utils.getResourceAsString("/system/info.css")
-src/main/org/nlogo/app/InfoFormatter.scala:25:  def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
-src/main/org/nlogo/app/InfoFormatter.scala:27:            replace("{BODY-FONT-SIZE}", fontSize.toString).
-src/main/org/nlogo/app/InfoFormatter.scala:28:            replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
-src/main/org/nlogo/app/InfoFormatter.scala:29:            replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
-src/main/org/nlogo/app/InfoFormatter.scala:30:            replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
 src/main/org/nlogo/app/InfoFormatter.scala:39:    "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
 src/main/org/nlogo/app/InfoTab.scala:24:  val baseDocUrl = "docs/infotab.html"
 src/main/org/nlogo/app/InfoTab.scala:53:    setContentType("text/html")
@@ -888,7 +705,6 @@ src/main/org/nlogo/app/InterfacePanel.java:368:              "Exporting...");
 src/main/org/nlogo/app/InterfacePanel.java:479:    return (!widget.equals("Output")) || (getOutputWidget() == null);
 src/main/org/nlogo/app/InterfaceTab.scala:117:  private class CommandCenterLocationToggleAction extends AbstractAction("Toggle") {
 src/main/org/nlogo/app/InterfaceTab.scala:118:    putValue(Action.SMALL_ICON,new ImageIcon(classOf[InterfaceTab].getResource("/images/toggle.gif")))
-src/main/org/nlogo/app/InterfaceToolBar.scala:36:  if(System.getProperty("os.name").startsWith("Mac")) {
 src/main/org/nlogo/app/InterfaceToolBar.scala:46:    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/edit.gif")))
 src/main/org/nlogo/app/InterfaceToolBar.scala:53:    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/add.gif")))
 src/main/org/nlogo/app/InterfaceToolBar.scala:88:    putValue(Action.SMALL_ICON, new ImageIcon(classOf[InterfaceToolBar].getResource("/images/delete.gif")))
@@ -901,7 +717,6 @@ src/main/org/nlogo/app/ModelsLibraryDialog.java:145:            .getName().equal
 src/main/org/nlogo/app/ModelsLibraryDialog.java:155:            "toggle-or-open");
 src/main/org/nlogo/app/ModelsLibraryDialog.java:157:    tree.getActionMap().put("toggle-or-open", toggleOrOpenAction);
 src/main/org/nlogo/app/ModelsLibraryDialog.java:207:                (AboutWindow.class.getResource("/images/magnify.gif"))));
-src/main/org/nlogo/app/ModelsLibraryDialog.java:227:    if (System.getProperty("os.name").startsWith("Mac")) {
 src/main/org/nlogo/app/ModelsLibraryDialog.java:436:      textArea.setContentType("text/html");
 src/main/org/nlogo/app/ModelsLibraryDialog.java:466:            "<html>\n"
 src/main/org/nlogo/app/ModelsLibraryDialog.java:467:                + "<head>\n"
@@ -913,21 +728,8 @@ src/main/org/nlogo/app/ModelsLibraryDialog.java:473:                + "</body>"
 src/main/org/nlogo/app/ModelsLibraryDialog.java:474:                + "</html>"
 src/main/org/nlogo/app/ModelsLibraryDialog.java:498:        String text = org.nlogo.util.Utils.getResourceAsString("/system/library.html");
 src/main/org/nlogo/app/ModelsLibraryDialog.java:691:            infoMap.get(path.substring(path.indexOf("models"))
-src/main/org/nlogo/app/ModelsLibraryDialog.java:692:                .replace(System.getProperty("file.separator"), "/"));
 src/main/org/nlogo/app/ModelsLibraryIndexReader.scala:12:    val input = io.Source.fromFile("models/index.txt").getLines
-src/main/org/nlogo/app/package.html:5:<body bgcolor="white">
-src/main/org/nlogo/app/ProceduresTab.scala:55:        "/images/check.gif")))
-src/main/org/nlogo/app/ProceduresTab.scala:85:      try workspace.attachModelDir("foo.nlogo")
 src/main/org/nlogo/app/ProceduresTab.scala:139:  def classDisplayName = "Code"
-src/main/org/nlogo/app/ProceduresToHtml.scala:15:    pico.addScalaObject("org.nlogo.compiler.Compiler")
-src/main/org/nlogo/app/ProceduresToHtml.scala:26:    val result = new StringBuilder("<pre>")
-src/main/org/nlogo/app/ProceduresToHtml.scala:35:    result ++= "\n</pre>\n"
-src/main/org/nlogo/app/ProceduresToHtml.scala:40:    "<font color=\"#" + hexColor + "\">" + source.map(escape).mkString + "</font>"
-src/main/org/nlogo/app/ProceduresToHtml.scala:42:  private def toHex(i:Int) = (if(i < 16) "0" else "") + i.toHexString
-src/main/org/nlogo/app/ProceduresToHtml.scala:44:  private val escapeMap = Map('&' -> "&amp;",
-src/main/org/nlogo/app/ProceduresToHtml.scala:45:                              '<' -> "&lt;",
-src/main/org/nlogo/app/ProceduresToHtml.scala:46:                              '>' -> "&gt;",
-src/main/org/nlogo/app/ProceduresToHtml.scala:47:                              '"' -> "&quot;")
 src/main/org/nlogo/app/SmartIndenter.scala:29:      if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
 src/main/org/nlogo/app/SmartIndenter.scala:40:    if(List("]",")","end").contains(wordUpToCursor)) {
 src/main/org/nlogo/app/SmartIndenter.scala:87:       token.name.equalsIgnoreCase("breed"))
@@ -935,9 +737,6 @@ src/main/org/nlogo/app/SmartIndenter.scala:192:      (t.name.equalsIgnoreCase("t
 src/main/org/nlogo/app/SmartIndenter.scala:197:      t.name.equalsIgnoreCase("end")
 src/main/org/nlogo/app/Splash.scala:25:      Splash.getClass.getResource("/images/title.jpg"))
 src/main/org/nlogo/app/Splash.scala:30:      val version = "Version " + Version.versionNumberOnly
-src/main/org/nlogo/app/Splash.scala:33:      if(date.startsWith("INTERIM DEVEL BUILD"))
-src/main/org/nlogo/app/Tabs.scala:170:    filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
-src/main/org/nlogo/app/Tabs.scala:172:  val printAction = PimpedAction("print-current-tab") { _ =>
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:9:  val NewFile = "New File"
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:117:        this, "Save NetLogo Source File", java.awt.FileDialog.SAVE, newFileName)
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:120:      val suffixIndex = newFileName.lastIndexOf(".nls")
@@ -945,8 +744,6 @@ src/main/org/nlogo/app/TemporaryProceduresTab.scala:127:      newFileName ++= ".
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:130:        Array("Try Again"))
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:138:    val message = "Do you want to save the changes you made to " + filename + "?"
 src/main/org/nlogo/app/TemporaryProceduresTab.scala:146:  private class FileCloseAction extends javax.swing.AbstractAction("Close") {
-src/main/org/nlogo/app/WidgetPanel.java:137:        System.getProperty("os.name").startsWith("Mac") &&
-src/main/org/nlogo/app/WidgetPanel.java:138:        System.getProperty("os.version").startsWith("10.2")) {
 src/main/org/nlogo/app/WidgetPanel.java:404:    type = "DUMMY " + type.toUpperCase();
 src/main/org/nlogo/app/WidgetPanel.java:408:    } else if (type.equals("DUMMY SLIDER")) {
 src/main/org/nlogo/app/WidgetPanel.java:415:    } else if (type.equals("DUMMY BUTTON")) {
@@ -962,75 +759,12 @@ src/main/org/nlogo/app/WidgetWrapper.java:916:          new javax.swing.JMenuIte
 src/main/org/nlogo/app/WidgetWrapper.java:931:            new javax.swing.JMenuItem("Export...");
 src/main/org/nlogo/app/WidgetWrapper.java:937:                      (widget(), "Export",
 src/main/org/nlogo/app/WindowBar.java:50:        throw new IllegalStateException("type = " + type);
-src/main/org/nlogo/awt/JMFMovieEncoder.java:32: * make, have made, use and sell ("Utilize") all or any portion of the source
-src/main/org/nlogo/awt/JMFMovieEncoder.java:53: * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-src/main/org/nlogo/awt/JMFMovieEncoder.java:73: * Sun grants you ("Licensee") a non-exclusive, royalty free, license to use,
-src/main/org/nlogo/awt/JMFMovieEncoder.java:79: * This software is provided "AS IS," without a warranty of any kind. ALL
 src/main/org/nlogo/awt/JMFMovieEncoder.java:172:      throw new IOException("Can't set framerate after setup");
 src/main/org/nlogo/awt/JMFMovieEncoder.java:229:        throw new IOException("JMFMovieEncoder error: Failed to configure processor");
 src/main/org/nlogo/awt/JMFMovieEncoder.java:243:        throw new IOException("The mux does not support the input format: " + tcs[0].getFormat());
 src/main/org/nlogo/awt/JMFMovieEncoder.java:258:        throw new IOException("Failed to realize processor");
 src/main/org/nlogo/awt/JMFMovieEncoder.java:273:      throw new IOException("Cannot setup movie: " + ex);
-src/main/org/nlogo/awt/JMFMovieEncoder.java:580:        System.out.println("ugh.");
 src/main/org/nlogo/awt/Utils.java:26:                        "bounds: " + comp.getBounds());
-src/main/org/nlogo/awt/Utils.java:368:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/awt/Utils.java:369:      return "Lucida Grande";
-src/main/org/nlogo/awt/Utils.java:371:      return "Sans-serif";
-src/main/org/nlogo/awt/Utils.java:376:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/awt/Utils.java:377:      return "Monaco";
-src/main/org/nlogo/awt/Utils.java:378:    } else if (System.getProperty("os.name").startsWith("Windows")) {
-src/main/org/nlogo/awt/Utils.java:383:        if (fonts[i].equalsIgnoreCase("Lucida Console")) {
-src/main/org/nlogo/awt/Utils.java:387:      return "Monospaced";
-src/main/org/nlogo/awt/Utils.java:389:      return "Monospaced";
-src/main/org/nlogo/awt/Utils.java:394:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/awt/Utils.java:398:    } else if (!(System.getProperty("os.name").startsWith("Windows"))) {
-src/main/org/nlogo/awt/Utils.java:406:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/awt/Utils.java:417:      throw new IllegalStateException("not event thread: " + Thread.currentThread());
-src/main/org/nlogo/awt/Utils.java:482:            System.out.println(comp + " gained focus at " + System.nanoTime());
-src/main/org/nlogo/awt/Utils.java:483:            System.out.println("oppositeComponent = " + fe.getOppositeComponent());
-src/main/org/nlogo/awt/Utils.java:487:            System.out.println(comp + " lost focus at " + System.nanoTime());
-src/main/org/nlogo/awt/Utils.java:488:            System.out.println("oppositeComponent = " + fe.getOppositeComponent());
-src/main/org/nlogo/awt/Utils.java:507:        "<font color=\""
-src/main/org/nlogo/awt/Utils.java:512:            + "</font>";
-src/main/org/nlogo/compiler/Assembler.scala:25:    ret.token(new Token("END", TokenType.KEYWORD, ret)(proc.endPos, proc.endPos, proc.fileName))
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:22:                case s:String => s == "DIRECTED-LINK-BREED" } )
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:27:                case s:String => s == "UNDIRECTED-LINK-BREED" } ) 
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:32:    turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:33:    turtle("CREATE-ORDERED-*", COMMAND, false, classOf[_createorderedturtles]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:34:    turtle("HATCH-*", COMMAND, false, classOf[_hatch]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:35:    turtle("SPROUT-*", COMMAND, false,classOf[_sprout]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:36:    turtle("IS-*?", REPORTER, true,classOf[_isbreed]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:37:    turtle("*-HERE", REPORTER, false,classOf[_breedhere]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:38:    turtle("*-ON", REPORTER, false,classOf[_breedon]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:43:    turtle("*-AT", REPORTER, false,
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:51:    directedLink("IS-*?", REPORTER, true,classOf[_isbreed]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:52:    undirectedLink("IS-*?", REPORTER, true,classOf[_isbreed]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:53:    directedLink("CREATE-*-FROM", COMMAND, true,classOf[_createlinkfrom]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:54:    directedLink("CREATE-*-FROM", COMMAND, false,classOf[_createlinksfrom]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:55:    directedLink("CREATE-*-TO", COMMAND, true,classOf[_createlinkto]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:56:    directedLink("CREATE-*-TO", COMMAND, false,classOf[_createlinksto]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:57:    undirectedLink("CREATE-*-WITH", COMMAND, true,classOf[_createlinkwith]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:58:    undirectedLink("CREATE-*-WITH", COMMAND, false,classOf[_createlinkswith]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:59:    directedLink("IN-*-NEIGHBOR?", REPORTER, true,classOf[_inlinkneighbor]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:60:    directedLink("OUT-*-NEIGHBOR?", REPORTER, true,classOf[_outlinkneighbor]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:61:    directedLink("IN-*-FROM", REPORTER, true,classOf[_inlinkfrom]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:62:    directedLink("OUT-*-TO", REPORTER, true,classOf[_outlinkto]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:63:    directedLink("OUT-*-NEIGHBORS", REPORTER, true,classOf[_outlinkneighbors]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:64:    directedLink("IN-*-NEIGHBORS", REPORTER, true,classOf[_inlinkneighbors]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:65:    directedLink("MY-IN-*", REPORTER, false,classOf[_myinlinks]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:66:    directedLink("MY-OUT-*", REPORTER, false,classOf[_myoutlinks]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:67:    undirectedLink("*-NEIGHBORS", REPORTER, true,classOf[_linkneighbors]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:68:    undirectedLink("MY-*", REPORTER, false,classOf[_mylinks]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:69:    undirectedLink("*-WITH", REPORTER, true,classOf[_linkwith]),
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:70:    undirectedLink("*-NEIGHBOR?", REPORTER, true,classOf[_linkneighbor]) 
-src/main/org/nlogo/compiler/BreedIdentifierHandler.scala:78:    val pattern = Pattern.compile("\\A"+patternString.replaceAll("\\?","\\\\?").replaceAll("\\*","(.+)")+"\\Z")
-src/main/org/nlogo/compiler/Compiler.scala:15:  val Tokenizer2D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer2D")
-src/main/org/nlogo/compiler/Compiler.scala:16:  val Tokenizer3D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer3D")
-src/main/org/nlogo/compiler/Compiler.scala:17:  val TokenMapper2D = Femto.scalaSingleton(classOf[TokenMapperInterface], "org.nlogo.lex.TokenMapper2D")
-src/main/org/nlogo/compiler/Compiler.scala:38:    checkSyntax("to __bogus-name " + source + "\nend", 
-src/main/org/nlogo/compiler/Compiler.scala:43:    checkSyntax("to-report __bogus-name report " + source + "\nend", 
-src/main/org/nlogo/compiler/Compiler.scala:109:      Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader", 
-src/main/org/nlogo/compiler/CompilerMain.scala:53:          Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
 src/main/org/nlogo/compiler/ConstantParser.scala:27:  private val BAD_AGENT = "Not an agent"
 src/main/org/nlogo/compiler/ConstantParser.scala:28:  private val BAD_PATCH_SET_ARGS = "Patch agentsets are given by a set of 2 element integer lists containing a patch's pxcor and pycor"
 src/main/org/nlogo/compiler/ConstantParser.scala:29:  private val BAD_PATCH_ARGS = "pxcor and pycor must be floats"
@@ -1057,14 +791,9 @@ src/main/org/nlogo/compiler/ConstantParser.scala:50:  private val SET_TYPE_ALLTU
 src/main/org/nlogo/compiler/ConstantParser.scala:51:  private val SET_TYPE_ALLLINKS   = "ALL-LINKS"
 src/main/org/nlogo/compiler/ConstantParser.scala:52:  private val SET_TYPE_BREED      = "BREED"
 src/main/org/nlogo/compiler/ConstantParser.scala:53:  private val SET_TYPE_OBSERVER   = "OBSERVER"
-src/main/org/nlogo/compiler/ConstantParser.scala:144:  * parses a constant agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
 src/main/org/nlogo/compiler/ConstantParser.scala:155:                exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ",token) }
 src/main/org/nlogo/compiler/ConstantParser.scala:173:               exception("Invalid patch coordinates ( " + pxcor + " , " + pycor +  " , " + pzcor + " ) " ,token) }
 src/main/org/nlogo/compiler/ConstantParser.scala:311:            exception("Invalid patch coordinates in one of the agents of this set.",token)
-src/main/org/nlogo/compiler/ExpressionParser.scala:12: *  - "command" is an actual command token itself, e.g., show, run.
-src/main/org/nlogo/compiler/ExpressionParser.scala:13: *  - "reporter" is an actual reporter itself, e.g., +, round, with.
-src/main/org/nlogo/compiler/ExpressionParser.scala:14: *  - "statement" is a syntactic form with no value and a command as head (e.g., show 5)
-src/main/org/nlogo/compiler/ExpressionParser.scala:15: *  - "expression" is a syntactic form which can occur as an argument to a command or to a
 src/main/org/nlogo/compiler/ExpressionParser.scala:33:  private val EXPECTED_COMMAND = "Expected command."
 src/main/org/nlogo/compiler/ExpressionParser.scala:34:  private val EXPECTED_CLOSE_BRACKET = "Expected closing bracket."
 src/main/org/nlogo/compiler/ExpressionParser.scala:35:  private val EXPECTED_CLOSE_PAREN_HERE = "Expected a closing parenthesis here."
@@ -1089,7 +818,6 @@ src/main/org/nlogo/compiler/ExpressionParser.scala:249:            Syntax.aTypeN
 src/main/org/nlogo/compiler/ExpressionParser.scala:395:            Procedure.Type.COMMAND, token, "__lambda-" + lambdaNumbers.next(), None, procedure)
 src/main/org/nlogo/compiler/ExpressionParser.scala:547:        Procedure.Type.COMMAND, openBracket, "__lambda-" + lambdaNumbers.next(), None, procedure)
 src/main/org/nlogo/compiler/ExpressionParser.scala:568:    else exception("Expected " + Syntax.aTypeName(goalType) + " here, rather than a list or block.",block)
-src/main/org/nlogo/compiler/IdentifierParser.scala:7: * Converts identifier tokens into instances of primitives.  In "forgiving" mode, used by
 src/main/org/nlogo/compiler/IdentifierParser.scala:53:    else if(ident == "RANDOM-OR-RANDOM-FLOAT")
 src/main/org/nlogo/compiler/IdentifierParser.scala:103:      exception("Nothing named " + varName + " has been defined",
 src/main/org/nlogo/compiler/IdentifierParser.scala:116:            "Cannot use " + procedure.name + " as a procedure name.  Conflicts with: " + newVal,
@@ -1099,7 +827,6 @@ src/main/org/nlogo/compiler/IdentifierParser.scala:129:    "an integer (e.g. 4),
 src/main/org/nlogo/compiler/IdentifierParser.scala:130:    "That's no longer true in this version; instead, we now have two separate primitives. So you must " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:131:    "replace this with either RANDOM or RANDOM-FLOAT depending on whether you want an integer or " +
 src/main/org/nlogo/compiler/IdentifierParser.scala:132:    "a floating point result."
-src/main/org/nlogo/compiler/LocalsVisitor.scala:69:                "Nothing named " + l.token.name + " has been defined",l.token)
 src/main/org/nlogo/compiler/StructureParser.scala:64:    if(!subprogram) usingFiles += (("aggregate", null))
 src/main/org/nlogo/compiler/StructureParser.scala:76:        if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
 src/main/org/nlogo/compiler/StructureParser.scala:81:            if(java.lang.Boolean.getBoolean("org.nlogo.lang.requireSingularBreedArgument"))
@@ -1160,16 +887,12 @@ src/main/org/nlogo/compiler/StructureParser.scala:393:    cAssert(!procedures.co
 src/main/org/nlogo/compiler/StructureParser.scala:399:                "There is already a local variable called " + varName + " in the " + proc.name + " procedure",token)
 src/main/org/nlogo/compiler/StructureParser.scala:403:                  "There is already a local variable called " + varName + " in the " +
 src/main/org/nlogo/compiler/StructureParser.scala:404:                  proc.name + " procedure",token)
-src/main/org/nlogo/compiler/StructureParser.scala:409:   * parses the "import" special form
 src/main/org/nlogo/compiler/StructureParser.scala:415:    cAssert(token.tyype == TokenType.OPEN_BRACKET,"Expected [",token)
 src/main/org/nlogo/compiler/StructureParser.scala:422:        cAssert(token.tyype == TokenType.IDENT && token.name != null,"Expected identifier or ]",token)
 src/main/org/nlogo/compiler/StructureParser.scala:432:    cAssert(nameToken.tyype == TokenType.IDENT,"Expected variable name here",nameToken)
 src/main/org/nlogo/compiler/StructureParser.scala:436:            "There is already a local variable called " + name + " here",nameToken)
 src/main/org/nlogo/compiler/StructureParser.scala:447:      if(!tokenBuffer.hasNext) exception("Expected ] or END",tokenBuffer.head)
 src/main/org/nlogo/compiler/StructureParser.scala:465:        if(keyword != "END") exception("Expected ] or END",token)
-src/main/org/nlogo/compiler/StructureParser.scala:478:   * position of the "to" or "to-report" keyword, the Integer position of the
-src/main/org/nlogo/compiler/StructureParser.scala:479:   * procedure name, and the Integer position of the "end" keyword.
-src/main/org/nlogo/compiler/StructureParser.scala:481:   * This data structure is used to populate the "procedures" menu in the
 src/main/org/nlogo/compiler/StructureParser.scala:492:        if(keyword == "TO" || keyword == "TO-REPORT") {
 src/main/org/nlogo/compiler/StructureParser.scala:504:              if(token.tyype == TokenType.KEYWORD && token.value == "END")
 src/main/org/nlogo/compiler/StructureParser.scala:529:        if(keyword == "__INCLUDES") {
@@ -1179,147 +902,10 @@ src/main/org/nlogo/compiler/TypeParser.scala:156:                    "-only.", i
 src/main/org/nlogo/compiler/TypeParser.scala:171:      val abbreviations = Map('O' -> "observer", 'T' -> "turtle",
 src/main/org/nlogo/compiler/TypeParser.scala:172:                              'P' -> "patch", 'L' -> "link")
 src/main/org/nlogo/compiler/TypeParser.scala:175:      else if(english.charAt(0) == 'o') "an " + english
-src/main/org/nlogo/editor/Actions.scala:31:  class TabKeyAction extends MyTextAction("tab-key", _.indentSelection() )
-src/main/org/nlogo/editor/Actions.scala:32:  class ShiftTabKeyAction extends MyTextAction("shift-tab-key", e => { e.shiftLeft(); e.shiftLeft() })
-src/main/org/nlogo/editor/Actions.scala:33:  class CommentAction extends MyTextAction("comment-line", _.insertBeforeEachSelectedLine(";"))
-src/main/org/nlogo/editor/Actions.scala:34:  class UncommentAction extends MyTextAction("uncomment-line", _.uncomment())
-src/main/org/nlogo/editor/Actions.scala:35:  class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
-src/main/org/nlogo/editor/Actions.scala:36:  class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
-src/main/org/nlogo/editor/Actions.scala:38:    new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-src/main/org/nlogo/editor/Actions.scala:41:    new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-src/main/org/nlogo/editor/BracketMatcher.java:11: * of the same type.  Two different colors are used to indicate "good"
-src/main/org/nlogo/editor/BracketMatcher.java:12: * matches and "bad" matches (where bad means that the parentheses/brackets
-src/main/org/nlogo/editor/EditorArea.java:130:      super("enter");
-src/main/org/nlogo/editor/EditorArea.java:141:      super("close-bracket");
-src/main/org/nlogo/editor/EditorArea.java:407:    Actions.COPY_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.copy"));
-src/main/org/nlogo/editor/EditorArea.java:409:    Actions.CUT_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.cut"));
-src/main/org/nlogo/editor/EditorArea.java:411:    Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
-src/main/org/nlogo/editor/HighlightView.java:65:      System.getProperty("os.name").startsWith("Mac");
-src/main/org/nlogo/editor/HighlightView.java:101:      retrieveDefaultUIColor("textHighlight", java.awt.Color.BLUE);
-src/main/org/nlogo/editor/HighlightView.java:103:      retrieveDefaultUIColor("textText", java.awt.Color.BLACK);
-src/main/org/nlogo/editor/HighlightView.java:105:      retrieveDefaultUIColor("textHighlightText", java.awt.Color.WHITE);
 src/main/org/nlogo/editor/UndoManager.java:132:      super("Undo");
 src/main/org/nlogo/editor/UndoManager.java:148:        putValue(NAME, "Undo");
 src/main/org/nlogo/editor/UndoManager.java:156:      super("Redo");
 src/main/org/nlogo/editor/UndoManager.java:172:        putValue(NAME, "Redo");
-src/main/org/nlogo/generator/BytecodeUtils.scala:19:        println("debug: not rejiggered: " + instr.getClass.getName)
-src/main/org/nlogo/generator/BytecodeUtils.scala:24:    val name = i match { case _: Command => "perform"; case _: Reporter => "report" }
-src/main/org/nlogo/generator/BytecodeUtils.scala:35:        allMethods.filter(m => m.getName.startsWith("profiling_report") ||
-src/main/org/nlogo/generator/BytecodeUtils.scala:36:          m.getName.startsWith("profiling_perform"))
-src/main/org/nlogo/generator/BytecodeUtils.scala:40:    else allMethods.filter(m => m.getName.startsWith("report_") ||
-src/main/org/nlogo/generator/BytecodeUtils.scala:41:      m.getName.startsWith("perform_"))
-src/main/org/nlogo/generator/CustomGenerator.scala:89:    mv.keepField("procedure", instr.procedure, thisInstrUID)
-src/main/org/nlogo/generator/CustomGenerator.scala:90:    mv.visitTypeInsn(NEW, "org/nlogo/nvm/Activation")
-src/main/org/nlogo/generator/CustomGenerator.scala:94:    mv.loadKeptField("procedure", thisInstrUID)
-src/main/org/nlogo/generator/CustomGenerator.scala:98:    mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
-src/main/org/nlogo/generator/CustomGenerator.scala:102:    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:107:      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
-src/main/org/nlogo/generator/CustomGenerator.scala:120:    mv.visitFieldInsn(PUTFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
-src/main/org/nlogo/generator/CustomGenerator.scala:125:    mv.visitFieldInsn(PUTFIELD, "org/nlogo/nvm/Context", "ip", "I")
-src/main/org/nlogo/generator/CustomGenerator.scala:131:      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
-src/main/org/nlogo/generator/CustomGenerator.scala:133:      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
-src/main/org/nlogo/generator/CustomGenerator.scala:140:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
-src/main/org/nlogo/generator/CustomGenerator.scala:141:        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:160:    mv.keepField("procedure", instr.procedure, thisInstrUID)
-src/main/org/nlogo/generator/CustomGenerator.scala:161:    mv.visitTypeInsn(NEW, "org/nlogo/nvm/Activation")
-src/main/org/nlogo/generator/CustomGenerator.scala:165:    mv.loadKeptField("procedure", thisInstrUID)
-src/main/org/nlogo/generator/CustomGenerator.scala:169:    mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
-src/main/org/nlogo/generator/CustomGenerator.scala:173:    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:178:      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
-src/main/org/nlogo/generator/CustomGenerator.scala:193:      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
-src/main/org/nlogo/generator/CustomGenerator.scala:195:      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;");
-src/main/org/nlogo/generator/CustomGenerator.scala:202:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
-src/main/org/nlogo/generator/CustomGenerator.scala:203:        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:208:    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Context", "callReporterProcedure",
-src/main/org/nlogo/generator/CustomGenerator.scala:209:      "(Lorg/nlogo/nvm/Activation;)Ljava/lang/Object;")
-src/main/org/nlogo/generator/CustomGenerator.scala:215:      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Instruction", "workspace", "Lorg/nlogo/nvm/Workspace;")
-src/main/org/nlogo/generator/CustomGenerator.scala:217:      mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
-src/main/org/nlogo/generator/CustomGenerator.scala:224:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "closeCallRecord",
-src/main/org/nlogo/generator/CustomGenerator.scala:225:        "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:231:    mv.visitTypeInsn(NEW, "org/nlogo/nvm/EngineException")
-src/main/org/nlogo/generator/CustomGenerator.scala:235:    mv.visitLdcInsn("the " + instr.procedure.name + " procedure failed to report a result")
-src/main/org/nlogo/generator/CustomGenerator.scala:236:    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/EngineException", "<init>",
-src/main/org/nlogo/generator/CustomGenerator.scala:237:      "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:253:    mv.visitTypeInsn(NEW, "org/nlogo/api/LogoListBuilder")
-src/main/org/nlogo/generator/CustomGenerator.scala:255:    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V")
-src/main/org/nlogo/generator/CustomGenerator.scala:261:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:263:    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;")
-src/main/org/nlogo/generator/CustomGenerator.scala:286:    mv.visitTypeInsn(NEW, "org/nlogo/api/LogoListBuilder")
-src/main/org/nlogo/generator/CustomGenerator.scala:290:    mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V")
-src/main/org/nlogo/generator/CustomGenerator.scala:299:      mv.visitTypeInsn(INSTANCEOF, "org/nlogo/api/LogoList")
-src/main/org/nlogo/generator/CustomGenerator.scala:303:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "addAll", "(Ljava/lang/Iterable;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:309:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "add", "(Ljava/lang/Object;)V")
-src/main/org/nlogo/generator/CustomGenerator.scala:313:    mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/api/LogoListBuilder", "toLogoList", "()Lorg/nlogo/api/LogoList;")
-src/main/org/nlogo/generator/CustomGenerator.scala:328:    mv.visitTypeInsn(NEW, "java/lang/StringBuilder")
-src/main/org/nlogo/generator/CustomGenerator.scala:330:    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V")
-src/main/org/nlogo/generator/CustomGenerator.scala:335:      mv.visitMethodInsn(INVOKESTATIC, "org/nlogo/api/Dump", "logoObject",
-src/main/org/nlogo/generator/CustomGenerator.scala:336:        "(Ljava/lang/Object;)Ljava/lang/String;")
-src/main/org/nlogo/generator/CustomGenerator.scala:338:      mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
-src/main/org/nlogo/generator/CustomGenerator.scala:339:        "(Ljava/lang/String;)Ljava/lang/StringBuilder;")
-src/main/org/nlogo/generator/CustomGenerator.scala:342:    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString",
-src/main/org/nlogo/generator/CustomGenerator.scala:343:      "()Ljava/lang/String;")
-src/main/org/nlogo/generator/GeneratedInstruction.scala:19:      if elem.getClassName.containsSlice("_asm_")
-src/main/org/nlogo/generator/GeneratedInstruction.scala:33:    if (bytecode != "") buf ++= spaceString + disassembly.value.replaceAll("\n", "\n" + spaceString)
-src/main/org/nlogo/generator/Generator.scala:6:  private[generator] val KEPT_INSTRUCTION_PREFIX = "keptinstr"
-src/main/org/nlogo/generator/Generator.scala:54:      case _: Command => "org/nlogo/generator/GeneratedCommand"
-src/main/org/nlogo/generator/Generator.scala:55:      case _: Reporter => "org/nlogo/generator/GeneratedReporter"
-src/main/org/nlogo/generator/Generator.scala:64:      "_asm" + "_" + pName + cName.substring(cName.lastIndexOf('.') + 1) + "_" + nextCustomClassNumUID()
-src/main/org/nlogo/generator/Generator.scala:66:    val fullClassName = "org/nlogo/prim/" + className
-src/main/org/nlogo/generator/Generator.scala:72:        case _: Command => "perform"
-src/main/org/nlogo/generator/Generator.scala:73:        case _: Reporter => "report"
-src/main/org/nlogo/generator/Generator.scala:76:        case _: Command => "(Lorg/nlogo/nvm/Context;)V"
-src/main/org/nlogo/generator/Generator.scala:77:        case _: Reporter => "(Lorg/nlogo/nvm/Context;)Ljava/lang/Object;"
-src/main/org/nlogo/generator/Generator.scala:80:        null, Array("org/nlogo/api/LogoException"))
-src/main/org/nlogo/generator/Generator.scala:97:      val constructor = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
-src/main/org/nlogo/generator/Generator.scala:100:      constructor.visitMethodInsn(INVOKESPECIAL, superClassFullName, "<init>", "()V")
-src/main/org/nlogo/generator/Generator.scala:197:            "report", "(Lorg/nlogo/nvm/Context;)Ljava/lang/Object;")
-src/main/org/nlogo/generator/Generator.scala:202:            "perform", "(Lorg/nlogo/nvm/Context;)V")
-src/main/org/nlogo/generator/Generator.scala:208:     * We need the "init()" method of our GeneratedInstruction to call the init() method of the
-src/main/org/nlogo/generator/Generator.scala:211:     * inlining of everything.  (Remember that any Instructions that are called "old-style" with
-src/main/org/nlogo/generator/Generator.scala:215:      val mv = cw.visitMethod(ACC_PUBLIC, "init", "(Lorg/nlogo/nvm/Workspace;)V", null, null)
-src/main/org/nlogo/generator/Generator.scala:220:      mv.visitMethodInsn(INVOKESPECIAL, superClassFullName, "init", "(Lorg/nlogo/nvm/Workspace;)V")
-src/main/org/nlogo/generator/Generator.scala:229:      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Instruction", "init", "(Lorg/nlogo/nvm/Workspace;)V")
-src/main/org/nlogo/generator/Generator.scala:249:        List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
-src/main/org/nlogo/generator/Generator.scala:255:          """(?s)public final strictfp (?:perform|report).*?\n(.*?)\n\s*\n""".r
-src/main/org/nlogo/generator/Generator.scala:257:            .split("\n").filter(!isBoring(_)).mkString("\n")
-src/main/org/nlogo/generator/Generator.scala:262:        System.err.println("WARNING: method size=" + debugEndOfMethodLabel.getOffset +
-src/main/org/nlogo/generator/Generator.scala:263:          " for " + fullClassName)
-src/main/org/nlogo/generator/Generator.scala:267:        new java.io.File("tmp").mkdir()
-src/main/org/nlogo/generator/Generator.scala:268:        new java.io.File("tmp/Generator").mkdir()
-src/main/org/nlogo/generator/Generator.scala:269:        val fout = new java.io.FileOutputStream("tmp/Generator/" + className + ".class")
-src/main/org/nlogo/generator/Generator.scala:292:     * to be able to load it multiple times, then you should first call "keep" and save the index
-src/main/org/nlogo/generator/Generator.scala:309:      "kept" + instrUID + "_" + originalName
-src/main/org/nlogo/generator/Generator.scala:354:     * like "Turtle.class" ~Forrest (7/16/2006)
-src/main/org/nlogo/generator/Generator.scala:361:      val mv = cw.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "class$",
-src/main/org/nlogo/generator/Generator.scala:362:        "(Ljava/lang/String;)Ljava/lang/Class;", null, null)
-src/main/org/nlogo/generator/Generator.scala:365:      mv.visitTryCatchBlock(l0, l1, l2, "java/lang/ClassNotFoundException")
-src/main/org/nlogo/generator/Generator.scala:368:      mv.visitMethodInsn(INVOKESTATIC, "java/lang/Class", "forName",
-src/main/org/nlogo/generator/Generator.scala:369:        "(Ljava/lang/String;)Ljava/lang/Class;")
-src/main/org/nlogo/generator/Generator.scala:374:      mv.visitTypeInsn(NEW, "java/lang/NoClassDefFoundError")
-src/main/org/nlogo/generator/Generator.scala:376:      mv.visitMethodInsn(INVOKESPECIAL, "java/lang/NoClassDefFoundError", "<init>", "()V")
-src/main/org/nlogo/generator/Generator.scala:378:      mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/NoClassDefFoundError", "initCause",
-src/main/org/nlogo/generator/Generator.scala:379:        "(Ljava/lang/Throwable;)Ljava/lang/Throwable;")
-src/main/org/nlogo/generator/GeneratorAdapter.scala:43:    throw new IllegalStateException("Don't write line numbers to the NetLogoGeneratorAdapter -- line number info " +
-src/main/org/nlogo/generator/GeneratorAdapter.scala:44:      "is reserved for runtime error handling uses.")
-src/main/org/nlogo/generator/GeneratorAdapter.scala:50:   * Note that using "push" can create more efficient code than using "visitLdcInsn()", because when
-src/main/org/nlogo/generator/MethodRipper.scala:31:          if (List("workspace", "world").contains(name))
-src/main/org/nlogo/generator/MethodRipper.scala:44:            case ex: NoSuchFieldException => errorLog.append("MethodRipper says: " + ex)
-src/main/org/nlogo/generator/MethodRipper.scala:45:            case ex: IllegalAccessException => errorLog.append("MethodRipper says: " + ex)
-src/main/org/nlogo/generator/MethodRipper.scala:53:          errorLog.append("MethodRipper says: Java class " + instr.getClass +
-src/main/org/nlogo/generator/MethodRipper.scala:54:            " not allowed to set member fields in a report/perform method!")
-src/main/org/nlogo/generator/MethodRipper.scala:67:            case ex: NoSuchFieldException => errorLog.append("MethodRipper says: " + ex)
-src/main/org/nlogo/generator/MethodRipper.scala:68:            case ex: IllegalAccessException => errorLog.append("MethodRipper says: " + ex)
-src/main/org/nlogo/generator/MethodRipper.scala:77:      if (name == "displayName") {
-src/main/org/nlogo/generator/MethodRipper.scala:83:        if (name == "class$") {
-src/main/org/nlogo/generator/MethodRipper.scala:84:          bgen.generateStaticClassMethod("class$")
-src/main/org/nlogo/generator/MethodRipper.scala:89:          errorLog.append("debug: MethodRipper noticed that class " + instr.getClass() +
-src/main/org/nlogo/generator/MethodRipper.scala:90:            " contained a static method invocation to method '" + name +
-src/main/org/nlogo/generator/MethodRipper.scala:91:            "' in a report_X()/perform_X() method.\n")
-src/main/org/nlogo/generator/MethodRipper.scala:100:        errorLog.append("MethodRipper says: Java class " + instr.getClass() +
-src/main/org/nlogo/generator/MethodRipper.scala:101:          " not allowed to call method '" + name + "' in a report_X()/perform_X() method.\n")
-src/main/org/nlogo/generator/PeepholeOptimizer2.scala:7: * types are involved.  e.g., the int "vn" field in _procedurevariable.
-src/main/org/nlogo/generator/PeepholeOptimizer3.scala:17: * PeepholeSafeChecker checks for this.  If a report_* or perform_* method is "PeepholeSafe", then a
-src/main/org/nlogo/generator/PrimitiveCache.scala:20:          .getResourceAsStream(c.getName.replace('.', '/') + ".class")
 src/main/org/nlogo/generator/TypeConverter.scala:54:    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")
 src/main/org/nlogo/generator/TypeConverter.scala:60:    mv.visitTryCatchBlock(l0, l1, l1, "java/lang/ClassCastException")
 src/main/org/nlogo/generator/TypeConverter.scala:63:    mv.visitTypeInsn(CHECKCAST, "java/lang/Double")
@@ -1361,20 +947,12 @@ src/main/org/nlogo/gl/render/Builtins.scala:58:    shapeMap.put("circle", "spher
 src/main/org/nlogo/gl/render/JOGLLoader.scala:8:    "NetLogo found an old version of JOGL on your computer.\n"
 src/main/org/nlogo/gl/render/JOGLLoader.scala:9:    "You will need to remove it. For instructions, see Library Conflicts\n" +
 src/main/org/nlogo/gl/render/JOGLLoader.scala:10:    "in the System Requirements section of the NetLogo User Manual."
-src/main/org/nlogo/gl/render/JOGLLoader.scala:31:    val isMac = System.getProperty("os.name").startsWith("Mac")
 src/main/org/nlogo/gl/render/JOGLLoader.scala:37:          if(!e.getMessage.containsSlice("already loaded")) {
 src/main/org/nlogo/gl/render/JOGLLoader.scala:39:              "NetLogo could not find the required JOGL libraries.\n" + 
 src/main/org/nlogo/gl/render/JOGLLoader.scala:40:              "Please contact bugs@ccl.northwestern.edu for assistance."
-src/main/org/nlogo/gl/render/JOGLLoader.scala:45:    val joglPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl")
-src/main/org/nlogo/gl/render/JOGLLoader.scala:46:    val joglAwtPath = libraryPath + System.getProperty("file.separator") + System.mapLibraryName("jogl_awt")
-src/main/org/nlogo/gl/render/JOGLLoader.scala:48:      withErrorReporting { System.loadLibrary("jawt") }
-src/main/org/nlogo/gl/render/JOGLLoader.scala:56:      val osname = System.getProperty("os.name")
-src/main/org/nlogo/gl/render/JOGLLoader.scala:58:        new java.io.File("lib").getAbsolutePath +
-src/main/org/nlogo/gl/render/JOGLLoader.scala:59:        System.getProperty("file.separator") +
 src/main/org/nlogo/gl/render/JOGLLoader.scala:60:        (if (osname == "Mac OS X")
 src/main/org/nlogo/gl/render/JOGLLoader.scala:62:         else if(osname.startsWith("Windows"))
 src/main/org/nlogo/gl/render/JOGLLoader.scala:63:           "Windows"
-src/main/org/nlogo/gl/render/JOGLLoader.scala:65:           val arch = System.getProperty("os.arch")
 src/main/org/nlogo/gl/render/JOGLLoader.scala:66:           if(arch.endsWith("86"))
 src/main/org/nlogo/gl/render/JOGLLoader.scala:67:             "Linux-x86"
 src/main/org/nlogo/gl/render/JOGLLoader.scala:69:             "Linux-" + arch
@@ -1404,7 +982,6 @@ src/main/org/nlogo/gl/render/Renderer.java:168:        ("JOGL: " + JOGLLoader.ge
 src/main/org/nlogo/gl/render/Renderer.java:171:        "OpenGL graphics: " + gl.glGetString(GL.GL_RENDERER) + "\n"
 src/main/org/nlogo/gl/render/Renderer.java:172:            + "OpenGL version: " + gl.glGetString(GL.GL_VERSION) + "\n"
 src/main/org/nlogo/gl/render/Renderer.java:173:            + "OpenGL vendor: " + gl.glGetString(GL.GL_VENDOR)
-src/main/org/nlogo/gl/render/Renderer.java:309:   * be regarded as "visible".
 src/main/org/nlogo/gl/render/Renderer.java:335:      throw new IllegalStateException("Agent must be an instance of Turtle, Patch, or Link.");
 src/main/org/nlogo/gl/render/ShapeManager.java:73:      return shapes.get("default");
 src/main/org/nlogo/gl/render/ShapeManager.java:120:      while (!next.equals("end-shape")) {
@@ -1441,7 +1018,6 @@ src/main/org/nlogo/gl/view/Picker.scala:76:        menu.add(new AgentMenuItem(ag
 src/main/org/nlogo/gl/view/Picker.scala:105:    "<html>" +
 src/main/org/nlogo/gl/view/ViewControlStrip3D.scala:28:      "     " + workspace.viewWidget.tickCounterLabel + ": " + tickText)
 src/main/org/nlogo/gl/view/ViewControlStrip3D.scala:40:        workspace.viewWidget.tickCounterLabel + ": 00000000")
-src/main/org/nlogo/gl/view/ViewControlToolBar.scala:58:        val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
 src/main/org/nlogo/gl/view/ViewManager.scala:79:          "NetLogo could not load the JOGL native libraries on your computer.\n\n" +
 src/main/org/nlogo/gl/view/ViewManager.scala:80:            "Write bugs@ccl.northwestern.edu for assistance.", e)
 src/main/org/nlogo/gl/view/ViewManager.scala:95:        ("This graphics environment does not support full screen mode")
@@ -1517,67 +1093,15 @@ src/main/org/nlogo/headless/HeadlessModelOpener.scala:228:          case "BUTTON
 src/main/org/nlogo/headless/HeadlessModelOpener.scala:229:          case "MONITOR" if ws.isCompilerTestingMode => parseMonitor(widget)
 src/main/org/nlogo/headless/HeadlessModelOpener.scala:230:          case "GRAPHICS-WINDOW" => parseGraphicsWindow(widget)
 src/main/org/nlogo/headless/HeadlessWorkspace.java:54: * <p>See the "Controlling" section of the NetLogo User Manual
-src/main/org/nlogo/headless/HeadlessWorkspace.java:66:   * "headless", with no GUI.
-src/main/org/nlogo/headless/HeadlessWorkspace.java:79:    pico.addScalaObject("org.nlogo.compiler.Compiler");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:80:    pico.add("org.nlogo.sdm.AggregateManagerLite");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:81:    pico.add("org.nlogo.render.Renderer");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:83:        "org.nlogo.hubnet.server.HeadlessHubNetManager",
-src/main/org/nlogo/headless/HeadlessWorkspace.java:97:    pico.addScalaObject("org.nlogo.compiler.Compiler");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:98:    pico.add("org.nlogo.lab.Lab");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:99:    pico.add("org.nlogo.lab.ProtocolLoader");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:139:    defaultOwner = new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, Observer.class);
-src/main/org/nlogo/headless/HeadlessWorkspace.java:210:      "globals [glob1 glob2 glob3 ]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:211:          "breed [mice mouse]\n " +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:212:          "breed [frogs frog]\n " +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:213:          "breed [nodes node]\n " +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:214:          "directed-link-breed [directed-links directed-link]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:215:          "undirected-link-breed [undirected-links undirected-link]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:216:          "turtles-own [tvar]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:217:          "patches-own [pvar]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:218:          "mice-own [age fur]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:219:          "frogs-own [age spots]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:220:          "directed-links-own [lvar]\n" +
-src/main/org/nlogo/headless/HeadlessWorkspace.java:221:          "undirected-links-own [weight]\n";
-src/main/org/nlogo/headless/HeadlessWorkspace.java:273:    Plot plot1 = plotManager().newPlot("plot1");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:274:    plot1.createPlotPen("pen1", false);
-src/main/org/nlogo/headless/HeadlessWorkspace.java:275:    plot1.createPlotPen("pen2", false);
-src/main/org/nlogo/headless/HeadlessWorkspace.java:276:    Plot plot2 = plotManager().newPlot("plot2");
-src/main/org/nlogo/headless/HeadlessWorkspace.java:277:    plot2.createPlotPen("pen1", false);
-src/main/org/nlogo/headless/HeadlessWorkspace.java:278:    plot2.createPlotPen("pen2", false);
 src/main/org/nlogo/headless/HeadlessWorkspace.java:347:    return "ticks";
-src/main/org/nlogo/headless/HeadlessWorkspace.java:524:    writer.println(org.nlogo.api.Dump.csv.encode("OUTPUT"));
 src/main/org/nlogo/headless/HeadlessWorkspace.java:542:          System.err.println("got a " + (fatalError ? "" : "non") +
 src/main/org/nlogo/headless/HeadlessWorkspace.java:543:              "fatal error " + title + ": " + errorDetails);
 src/main/org/nlogo/headless/HeadlessWorkspace.java:773:      System.err.println("owner: " + owner.displayName());
-src/main/org/nlogo/headless/HeadlessWorkspace.java:795:          modelContents.startsWith(";; DOESN'T COMPILE IN CURRENT BUILD")) {
 src/main/org/nlogo/headless/HeadlessWorkspace.java:796:        System.out.println("ignored compile error: " + path);
-src/main/org/nlogo/headless/Main.scala:27:    val p = "java.awt.headless"
-src/main/org/nlogo/headless/Main.scala:29:      System.setProperty(p, "true")
-src/main/org/nlogo/headless/Main.scala:53:      if(arg == "--version")
-src/main/org/nlogo/headless/Main.scala:55:      else if(arg == "--extension-api-version")
-src/main/org/nlogo/headless/Main.scala:57:      else if(arg == "--builddate")
-src/main/org/nlogo/headless/Main.scala:59:      else if(arg == "--fullversion")
-src/main/org/nlogo/headless/Main.scala:61:      else if(arg == "--model")
-src/main/org/nlogo/headless/Main.scala:63:      else if(arg == "--min-pxcor")
-src/main/org/nlogo/headless/Main.scala:65:      else if(arg == "--max-pxcor")
-src/main/org/nlogo/headless/Main.scala:67:      else if(arg == "--min-pycor")
-src/main/org/nlogo/headless/Main.scala:69:      else if(arg == "--max-pycor")
-src/main/org/nlogo/headless/Main.scala:71:      else if(arg == "--setup-file")
-src/main/org/nlogo/headless/Main.scala:73:      else if(arg == "--experiment")
-src/main/org/nlogo/headless/Main.scala:75:      else if(arg == "--table")
-src/main/org/nlogo/headless/Main.scala:77:      else if(arg == "--spreadsheet")
-src/main/org/nlogo/headless/Main.scala:79:      else if(arg == "--threads")
-src/main/org/nlogo/headless/Main.scala:82:        die("unknown argument: " + arg)
-src/main/org/nlogo/headless/Main.scala:85:      die("you must specify --model")
-src/main/org/nlogo/headless/Main.scala:87:      die("you must specify either --setup-file or --experiment (or both)")
-src/main/org/nlogo/headless/Main.scala:90:      die("if any of min/max-px/ycor are specified, all four must be specified")
-src/main/org/nlogo/headless/package.html:5:<body bgcolor="white">
-src/main/org/nlogo/headless/package.html:7:Provides classes associated with running NetLogo "headless", that is,
 src/main/org/nlogo/headless/Shell.scala:31:        println("COMPILER ERROR: " + ex.getMessage)
 src/main/org/nlogo/headless/Shell.scala:35:        println("RUNTIME ERROR: " + msg)
 src/main/org/nlogo/headless/Shell.scala:38:        println("RUNTIME ERROR: " + ex.getMessage)
 src/main/org/nlogo/hubnet/client/App.scala:18:                           "org.nlogo.compiler.Compiler"))
-src/main/org/nlogo/hubnet/client/ClientApp.scala:23:      if (System.getProperty("os.name").startsWith("Mac"))
 src/main/org/nlogo/hubnet/client/ClientApp.scala:34:        if (args(i).equalsIgnoreCase("--robo")) {
 src/main/org/nlogo/hubnet/client/ClientApp.scala:44:        else if (args(i).equalsIgnoreCase("--id")) userid = args(i + 1)
 src/main/org/nlogo/hubnet/client/ClientApp.scala:45:        else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
@@ -1590,8 +1114,6 @@ src/main/org/nlogo/hubnet/client/ClientApp.scala:136:    0 == org.nlogo.swing.Op
 src/main/org/nlogo/hubnet/client/ClientApp.scala:144:        OptionDialog.show(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
 src/main/org/nlogo/hubnet/client/ClientApplet.java:126:            }, "Entering...");
 src/main/org/nlogo/hubnet/client/ClientApplet.java:162:                  "You have been disconnected from " + activityName + ".\nReason: " + reason, ok);
-src/main/org/nlogo/hubnet/client/ClientApplet.java:183:    System.setProperty("apple.awt.graphics.UseQuartz", "true");
-src/main/org/nlogo/hubnet/client/ClientApplet.java:184:    System.setProperty("apple.awt.showGrowBox", "true");
 src/main/org/nlogo/hubnet/client/ClientApplet.java:190:            applet.appFrame = new javax.swing.JFrame("HubNet Client");
 src/main/org/nlogo/hubnet/client/ClientGUI.scala:60:        case _ => throw new IllegalStateException("couldn't find widget " + name)
 src/main/org/nlogo/hubnet/client/ClientGUI.scala:86:    private val List(username, server, port) = List("User name", "Server", "Port").map(new StatusField(_, ""))
@@ -1714,19 +1236,12 @@ src/main/org/nlogo/hubnet/server/gui/ControlCenter.scala:194:        logMessage(
 src/main/org/nlogo/hubnet/server/gui/ControlCenter.scala:196:        broadcastMessage("" + currentTime + "   <Leader> " + message)
 src/main/org/nlogo/hubnet/server/gui/ControlCenter.scala:206:      val newMessage = "" + currentTime + "   " + message
 src/main/org/nlogo/hubnet/server/gui/ControlCenter.scala:209:        messageTextArea.getText() + (if (newMessage.endsWith("\n")) newMessage else newMessage) + "\n")
-src/main/org/nlogo/hubnet/server/gui/GUIHubNetManager.scala:24:  private var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
-src/main/org/nlogo/hubnet/server/gui/GUIHubNetManager.scala:46:    val clientApp = Femto.get(classOf[ClientAppInterface], "org.nlogo.hubnet.client.ClientApp", Array[AnyRef]())
 src/main/org/nlogo/hubnet/server/gui/GUIHubNetManager.scala:128:    Some("unimplemented")
-src/main/org/nlogo/hubnet/server/gui/HubNetClientEditor.scala:26:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/hubnet/server/gui/HubNetClientEditor.scala:77:    val t = if (!System.getProperty("os.name").startsWith("Mac")) {
 src/main/org/nlogo/hubnet/server/gui/HubNetClientEditor.scala:85:    if (mt == ModelType.NORMAL) t + " {" + directory + "}" else t
-src/main/org/nlogo/hubnet/server/gui/StartupDialog.scala:11:    setText(System.getProperty("user.name", ""))
 src/main/org/nlogo/hubnet/server/gui/StartupDialog.scala:13:  private val discoveryCheckBox = new JCheckBox("Broadcast server location") {
 src/main/org/nlogo/hubnet/server/gui/StartupDialog.scala:21:    val okButton = new JButton("Start"){ addActionListener(() => StartupDialog.this.setVisible(false)) }
 src/main/org/nlogo/hubnet/server/gui/StartupDialog.scala:28:      add(new TextFieldBox(){addField("Session name:", nameField)})
 src/main/org/nlogo/hubnet/server/gui/StartupDialog.scala:40:    setTitle("Start HubNet Activity")
-src/main/org/nlogo/hubnet/server/HeadlessHubNetManager.scala:57:    var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
-src/main/org/nlogo/hubnet/server/HeadlessHubNetManager.scala:58:    if(serverName == null || serverName.trim == "") serverName = System.getProperty("user.name", "")
 src/main/org/nlogo/hubnet/server/HeadlessHubNetManager.scala:88:          new TestClient(userId="Local " + clientIds.next(), port=connectionManager.port)
 src/main/org/nlogo/hubnet/server/HeadlessHubNetManager.scala:103:      case _ => Some("client not found: " + clientName)
 src/main/org/nlogo/hubnet/server/HubNetManager.scala:19:    "There is no data waiting.  Always check for data using " +
@@ -1814,8 +1329,6 @@ src/main/org/nlogo/lab/Lab.scala:22:          "experiment '" + protocolName + "'
 src/main/org/nlogo/lab/Lab.scala:59:                System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
 src/main/org/nlogo/lab/Lab.scala:62:                System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + t.getMessage)
 src/main/org/nlogo/lab/Lab.scala:65:                System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
-src/main/org/nlogo/lab/package.html:5:<body bgcolor="white">
-src/main/org/nlogo/lab/package.html:15:Protocol.  In the GUI, this is called an "experiment setup".
 src/main/org/nlogo/lab/Protocol.scala:19:    name + " (" + countRuns + " run" + (if(countRuns != 1) "s" else "") + ")"
 src/main/org/nlogo/lab/ProtocolLoader.scala:11:  val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
 src/main/org/nlogo/lab/ProtocolLoader.scala:23:        "no experiment named \"" + name + "\""))
@@ -1888,75 +1401,6 @@ src/main/org/nlogo/lab/Worker.scala:126:                  "Global variable does 
 src/main/org/nlogo/lab/Worker.scala:141:                  "Stopping condition failed to report a result:\n" +
 src/main/org/nlogo/lab/Worker.scala:145:                  "Stopping condition should report true or false, but instead reported the " +
 src/main/org/nlogo/lab/Worker.scala:154:              "Reporter for measuring runs failed to report a result:\n" + result)
-src/main/org/nlogo/lex/Tokenizer.scala:44:    val eof = new Token("", TokenType.EOF, "")(0, 0, "")
-src/main/org/nlogo/lex/TokenLexer.java:20:@SuppressWarnings({"unused","fallthrough"})
-src/main/org/nlogo/lex/TokenLexer.java:56:    "\10\0\2\5\1\6\2\0\1\4\22\0\1\5\1\3\1\2\5\3"+
-src/main/org/nlogo/lex/TokenLexer.java:57:    "\1\15\1\16\2\3\1\12\1\20\1\21\1\3\12\22\1\3\1\17"+
-src/main/org/nlogo/lex/TokenLexer.java:58:    "\4\3\1\0\32\3\1\13\1\1\1\14\1\3\1\7\1\0\15\3"+
-src/main/org/nlogo/lex/TokenLexer.java:59:    "\1\3\3\3\1\3\1\3\1\3\6\3\1\10\1\0\1\11\54\0"+
-src/main/org/nlogo/lex/TokenLexer.java:60:    "\1\3\12\0\1\3\4\0\1\3\5\0\27\3\1\0\37\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:61:    "\u013f\3\31\0\162\3\4\0\14\3\16\0\5\3\11\0\1\3\213\0"+
-src/main/org/nlogo/lex/TokenLexer.java:62:    "\1\3\13\0\1\3\1\0\3\3\1\0\1\3\1\0\24\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:63:    "\54\3\1\0\46\3\1\0\5\3\4\0\202\3\10\0\105\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:64:    "\46\3\2\0\2\3\6\0\20\3\41\0\46\3\2\0\1\3\7\0"+
-src/main/org/nlogo/lex/TokenLexer.java:65:    "\47\3\110\0\33\3\5\0\3\3\56\0\32\3\5\0\13\3\25\0"+
-src/main/org/nlogo/lex/TokenLexer.java:66:    "\12\3\4\0\2\3\1\0\143\3\1\0\1\3\17\0\2\3\7\0"+
-src/main/org/nlogo/lex/TokenLexer.java:67:    "\2\3\12\3\3\3\2\0\1\3\20\0\1\3\1\0\36\3\35\0"+
-src/main/org/nlogo/lex/TokenLexer.java:68:    "\3\3\60\0\46\3\13\0\1\3\u0152\0\66\3\3\0\1\3\22\0"+
-src/main/org/nlogo/lex/TokenLexer.java:69:    "\1\3\7\0\12\3\4\0\12\3\25\0\10\3\2\0\2\3\2\0"+
-src/main/org/nlogo/lex/TokenLexer.java:70:    "\26\3\1\0\7\3\1\0\1\3\3\0\4\3\3\0\1\3\36\0"+
-src/main/org/nlogo/lex/TokenLexer.java:71:    "\2\3\1\0\3\3\4\0\12\3\2\3\23\0\6\3\4\0\2\3"+
-src/main/org/nlogo/lex/TokenLexer.java:72:    "\2\0\26\3\1\0\7\3\1\0\2\3\1\0\2\3\1\0\2\3"+
-src/main/org/nlogo/lex/TokenLexer.java:73:    "\37\0\4\3\1\0\1\3\7\0\12\3\2\0\3\3\20\0\11\3"+
-src/main/org/nlogo/lex/TokenLexer.java:74:    "\1\0\3\3\1\0\26\3\1\0\7\3\1\0\2\3\1\0\5\3"+
-src/main/org/nlogo/lex/TokenLexer.java:75:    "\3\0\1\3\22\0\1\3\17\0\2\3\4\0\12\3\25\0\10\3"+
-src/main/org/nlogo/lex/TokenLexer.java:76:    "\2\0\2\3\2\0\26\3\1\0\7\3\1\0\2\3\1\0\5\3"+
-src/main/org/nlogo/lex/TokenLexer.java:77:    "\3\0\1\3\36\0\2\3\1\0\3\3\4\0\12\3\1\0\1\3"+
-src/main/org/nlogo/lex/TokenLexer.java:78:    "\21\0\1\3\1\0\6\3\3\0\3\3\1\0\4\3\3\0\2\3"+
-src/main/org/nlogo/lex/TokenLexer.java:79:    "\1\0\1\3\1\0\2\3\3\0\2\3\3\0\3\3\3\0\10\3"+
-src/main/org/nlogo/lex/TokenLexer.java:80:    "\1\0\3\3\55\0\11\3\25\0\10\3\1\0\3\3\1\0\27\3"+
-src/main/org/nlogo/lex/TokenLexer.java:81:    "\1\0\12\3\1\0\5\3\46\0\2\3\4\0\12\3\25\0\10\3"+
-src/main/org/nlogo/lex/TokenLexer.java:82:    "\1\0\3\3\1\0\27\3\1\0\12\3\1\0\5\3\3\0\1\3"+
-src/main/org/nlogo/lex/TokenLexer.java:83:    "\40\0\1\3\1\0\2\3\4\0\12\3\25\0\10\3\1\0\3\3"+
-src/main/org/nlogo/lex/TokenLexer.java:84:    "\1\0\27\3\1\0\20\3\46\0\2\3\4\0\12\3\25\0\22\3"+
-src/main/org/nlogo/lex/TokenLexer.java:85:    "\3\0\30\3\1\0\11\3\1\0\1\3\2\0\7\3\72\0\60\3"+
-src/main/org/nlogo/lex/TokenLexer.java:86:    "\1\0\2\3\14\0\7\3\11\0\12\3\47\0\2\3\1\0\1\3"+
-src/main/org/nlogo/lex/TokenLexer.java:89:    "\1\0\2\3\11\0\1\3\2\0\5\3\1\0\1\3\11\0\12\3"+
-src/main/org/nlogo/lex/TokenLexer.java:90:    "\2\0\2\3\42\0\1\3\37\0\12\3\26\0\10\3\1\0\42\3"+
-src/main/org/nlogo/lex/TokenLexer.java:91:    "\35\0\4\3\164\0\42\3\1\0\5\3\1\0\2\3\25\0\12\3"+
-src/main/org/nlogo/lex/TokenLexer.java:92:    "\6\0\6\3\112\0\46\3\12\0\51\3\7\0\132\3\5\0\104\3"+
-src/main/org/nlogo/lex/TokenLexer.java:93:    "\5\0\122\3\6\0\7\3\1\0\77\3\1\0\1\3\1\0\4\3"+
-src/main/org/nlogo/lex/TokenLexer.java:94:    "\2\0\7\3\1\0\1\3\1\0\4\3\2\0\47\3\1\0\1\3"+
-src/main/org/nlogo/lex/TokenLexer.java:95:    "\1\0\4\3\2\0\37\3\1\0\1\3\1\0\4\3\2\0\7\3"+
-src/main/org/nlogo/lex/TokenLexer.java:96:    "\1\0\1\3\1\0\4\3\2\0\7\3\1\0\7\3\1\0\27\3"+
-src/main/org/nlogo/lex/TokenLexer.java:97:    "\1\0\37\3\1\0\1\3\1\0\4\3\2\0\7\3\1\0\47\3"+
-src/main/org/nlogo/lex/TokenLexer.java:98:    "\1\0\23\3\16\0\11\3\56\0\125\3\14\0\u026c\3\2\0\10\3"+
-src/main/org/nlogo/lex/TokenLexer.java:99:    "\12\0\32\3\5\0\113\3\25\0\15\3\1\0\4\3\16\0\22\3"+
-src/main/org/nlogo/lex/TokenLexer.java:100:    "\16\0\22\3\16\0\15\3\1\0\3\3\17\0\64\3\43\0\1\3"+
-src/main/org/nlogo/lex/TokenLexer.java:101:    "\4\0\1\3\3\0\12\3\46\0\12\3\6\0\130\3\10\0\51\3"+
-src/main/org/nlogo/lex/TokenLexer.java:102:    "\127\0\35\3\51\0\12\3\36\3\2\0\5\3\u038b\0\154\3\224\0"+
-src/main/org/nlogo/lex/TokenLexer.java:103:    "\234\3\4\0\132\3\6\0\26\3\2\0\6\3\2\0\46\3\2\0"+
-src/main/org/nlogo/lex/TokenLexer.java:104:    "\6\3\2\0\10\3\1\0\1\3\1\0\1\3\1\0\1\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:105:    "\37\3\2\0\65\3\1\0\7\3\1\0\1\3\3\0\3\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:106:    "\7\3\3\0\4\3\2\0\6\3\4\0\15\3\5\0\3\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:107:    "\7\3\164\0\1\3\15\0\1\3\202\0\1\3\4\0\1\3\2\0"+
-src/main/org/nlogo/lex/TokenLexer.java:108:    "\12\3\1\0\1\3\3\0\5\3\6\0\1\3\1\0\1\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:110:    "\5\3\u0ebb\0\2\3\52\0\5\3\5\0\2\3\4\0\126\3\6\0"+
-src/main/org/nlogo/lex/TokenLexer.java:111:    "\3\3\1\0\132\3\1\0\4\3\5\0\50\3\4\0\136\3\21\0"+
-src/main/org/nlogo/lex/TokenLexer.java:112:    "\30\3\70\0\20\3\u0200\0\u19b6\3\112\0\u51a6\3\132\0\u048d\3\u0773\0"+
-src/main/org/nlogo/lex/TokenLexer.java:113:    "\u2ba4\3\u215c\0\u012e\3\2\0\73\3\225\0\7\3\14\0\5\3\5\0"+
-src/main/org/nlogo/lex/TokenLexer.java:114:    "\1\3\1\0\12\3\1\0\15\3\1\0\5\3\1\0\1\3\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:115:    "\2\3\1\0\2\3\1\0\154\3\41\0\u016b\3\22\0\100\3\2\0"+
-src/main/org/nlogo/lex/TokenLexer.java:116:    "\66\3\50\0\14\3\164\0\5\3\1\0\207\3\23\0\12\3\7\0"+
-src/main/org/nlogo/lex/TokenLexer.java:117:    "\32\3\6\0\32\3\13\0\131\3\3\0\6\3\2\0\6\3\2\0"+
-src/main/org/nlogo/lex/TokenLexer.java:118:    "\6\3\2\0\3\3\43\0";
-src/main/org/nlogo/lex/TokenLexer.java:132:    "\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15"+
-src/main/org/nlogo/lex/TokenLexer.java:133:    "\2\4\1\16\1\1\1\17\1\20\1\21\2\20\1\0"+
-src/main/org/nlogo/lex/TokenLexer.java:134:    "\1\22\1\0\1\23\1\24\1\25\1\26";
-src/main/org/nlogo/lex/TokenLexer.java:163:    "Unkown internal scanner error",
-src/main/org/nlogo/lex/TokenLexer.java:164:    "Error: could not match input",
-src/main/org/nlogo/lex/TokenLexer.java:165:    "Error: pushback value was too large"
-src/main/org/nlogo/lex/TokenLexer.java:475:   * will only be called with things that "Can't Possibly Happen".
 src/main/org/nlogo/lex/TokenLexer.java:763:	return new Token( text , TokenType.BAD , "Closing double quote is missing" , 
 src/main/org/nlogo/lex/TokenLexer.java:769:	return new Token( "" , TokenType.BAD , "End of line reached unexpectedly" ,
 src/main/org/nlogo/lex/TokenLexer.java:795:	org.nlogo.api.TokenHolder cmd = tokenMapper.getCommand( "__magic-open" ) ;
@@ -1977,7 +1421,6 @@ src/main/org/nlogo/lex/TokenMapper.scala:46:    } yield primName.toUpperCase -> 
 src/main/org/nlogo/lex/TokenMapper.scala:51:      (primName, className) <- commands ++ reporters if className.startsWith("org.nlogo.prim.dead.")
 src/main/org/nlogo/lite/Applet.scala:45:        var name = getParameter("DefaultModel")
 src/main/org/nlogo/lite/Applet.scala:46:        if(getCodeBase.toString.startsWith("file:") &&
-src/main/org/nlogo/lite/Applet.scala:47:           System.getProperty("os.name").startsWith("Windows"))
 src/main/org/nlogo/lite/Applet.scala:74:        Option(e.sourceOwner).map(o => o.classDisplayName + ": ").getOrElse("")
 src/main/org/nlogo/lite/Applet.scala:85:    val message = "Model file not found:\n" + name + "\n\n" +
 src/main/org/nlogo/lite/Applet.scala:86:      "The model should be in the same directory as the HTML\n" +
@@ -1986,121 +1429,12 @@ src/main/org/nlogo/lite/Applet.scala:88:      "attribute of the APPLET tag to po
 src/main/org/nlogo/lite/Applet.scala:90:    val dialog = pane.createDialog(new JFrame, "Model File Not Found")
 src/main/org/nlogo/lite/Applet.scala:95:    val message = "The file is not a valid NetLogo model file."
 src/main/org/nlogo/lite/Applet.scala:97:    val dialog = pane.createDialog(new JFrame, "Model File Not Found")
-src/main/org/nlogo/lite/AppletPanel.java:29: * <p>See the "Controlling" section of the NetLogo User Manual
 src/main/org/nlogo/lite/AppletPanel.java:86:    defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, Observer.class);
 src/main/org/nlogo/lite/AppletPanel.java:147:              RuntimeErrorDialog.show("Runtime Error", null, null,
-src/main/org/nlogo/lite/InterfaceComponent.java:23: * <p>See the "Controlling" section of the NetLogo User Manual
-src/main/org/nlogo/lite/InterfaceComponent.java:88:   * uses the "display name" to identify the widget. Display names are not
-src/main/org/nlogo/lite/InterfaceComponent.java:104:   * <code>hideWidget()</code>. This method uses the "display name" to identify the
 src/main/org/nlogo/lite/InterfaceComponent.java:128:      throw new IllegalStateException("couldn't open: '" + path + "'");
-src/main/org/nlogo/lite/InterfaceComponent.java:167:   * had pressed the button.  If the button is a "once" button, this method
-src/main/org/nlogo/lite/InterfaceComponent.java:168:   * does not return until the button has popped back up.  (For "forever"
 src/main/org/nlogo/lite/InterfaceComponent.java:187:    throw new IllegalArgumentException("widget \"" + name + "\" not found");
 src/main/org/nlogo/lite/InterfaceComponent.java:232:    new Thread("reportAndCallback") {
-src/main/org/nlogo/lite/LiteWorkspace.scala:13:    classOf[CompilerInterface], "org.nlogo.compiler.Compiler")
-src/main/org/nlogo/lite/LiteWorkspace.scala:22:              "org.nlogo.sdm.AggregateManagerLite", Array())
-src/main/org/nlogo/lite/LiteWorkspace.scala:39:    classOf[RendererInterface], "org.nlogo.render.Renderer", Array(world))
 src/main/org/nlogo/lite/ProceduresLite.scala:14:  override def classDisplayName = "Code"
-src/main/org/nlogo/log/Logger.java:22:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".BUTTONS");
-src/main/org/nlogo/log/Logger.java:24:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".GREENS");
-src/main/org/nlogo/log/Logger.java:26:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".CODE");
-src/main/org/nlogo/log/Logger.java:28:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".WIDGETS");
-src/main/org/nlogo/log/Logger.java:30:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".GLOBALS");
-src/main/org/nlogo/log/Logger.java:32:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".SPEED");
-src/main/org/nlogo/log/Logger.java:34:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".TURTLES");
-src/main/org/nlogo/log/Logger.java:36:      org.apache.log4j.Logger.getLogger(Logger.class.getName() + ".LINKS");
-src/main/org/nlogo/log/Logger.java:43:    logDirectory = System.getProperty("java.io.tmpdir");
-src/main/org/nlogo/log/Logger.java:57:            System.getProperty("user.home")
-src/main/org/nlogo/log/Logger.java:58:                + java.io.File.separatorChar + "dummy.txt";
-src/main/org/nlogo/log/Logger.java:100:          xappender.setUsername(System.getProperty("user.name"));
-src/main/org/nlogo/log/Logger.java:102:          xappender.setModelName(name == null ? "new model" : name);
-src/main/org/nlogo/log/Logger.java:130:    widgetMsg.updateWidgetMessage(type.toLowerCase(), name, "added");
-src/main/org/nlogo/log/Logger.java:135:    widgetMsg.updateWidgetMessage(type.toLowerCase(), name, "removed");
-src/main/org/nlogo/log/Logger.java:146:  private static LogMessage tickMsg = LogMessage.createGlobalMessage("ticks");
-src/main/org/nlogo/log/Logger.java:149:    tickMsg.updateGlobalMessage("ticks", Double.toString(ticks));
-src/main/org/nlogo/log/Logger.java:160:    mortalityMsg.updateAgentMessage("turtle", name, "born", breed);
-src/main/org/nlogo/log/Logger.java:165:    mortalityMsg.updateAgentMessage("turtle", name, "died", breed);
-src/main/org/nlogo/log/Logger.java:174:          (name, "released", (onceButton ? "once" : (stopping ? "user" : "code")));
-src/main/org/nlogo/log/Logger.java:180:    buttonMsg.updateButtonMessage(name, "pressed", "user");
-src/main/org/nlogo/log/Logger.java:205:  private static LogMessage switchMsg = LogMessage.createGlobalMessage("switch");
-src/main/org/nlogo/log/Logger.java:214:  private static LogMessage chooserMsg = LogMessage.createGlobalMessage("chooser");
-src/main/org/nlogo/log/Logger.java:223:  private static LogMessage inputBoxMsg = LogMessage.createGlobalMessage("input box");
-src/main/org/nlogo/log/Logger.java:237:          (owner.toLowerCase(), "compiled", text, Character.toString(agentType), "success", 0, 0);
-src/main/org/nlogo/log/Logger.java:240:          (owner.toLowerCase(), "compiled", text, Character.toString(agentType),
-src/main/org/nlogo/log/Logger.java:243:    if (owner.equals("Code")) {
-src/main/org/nlogo/log/Logger.java:245:    } else if (!owner.startsWith("Slider")) {
-src/main/org/nlogo/log/Logger.java:250:  private static LogMessage globalMsg = LogMessage.createGlobalMessage("globals");
-src/main/org/nlogo/log/Logger.java:265:      return "unknown";
-src/main/org/nlogo/log/Logger.java:270:      new java.text.SimpleDateFormat("yyyy-MM-dd.HH_mm_ss_SS", java.util.Locale.US);
-src/main/org/nlogo/log/Logger.java:274:        + System.getProperty("file.separator") + "logfile_" + appender + "_"
-src/main/org/nlogo/log/Logger.java:275:        + dateFormat.format(new java.util.Date()) + ".xml";
-src/main/org/nlogo/log/Logger.java:291:            return name.startsWith("logfile_") && name.endsWith(".xml");
-src/main/org/nlogo/log/Logger.java:297:          (path + System.getProperty("file.separator") + files[i]);
-src/main/org/nlogo/log/Logger.java:312:            return name.startsWith("logfile_") && name.endsWith(".xml");
-src/main/org/nlogo/log/Logger.java:327:            return name.startsWith("logfile_") && name.endsWith(".xml");
-src/main/org/nlogo/log/Logger.java:336:          String file = path + System.getProperty("file.separator") + files[i];
-src/main/org/nlogo/log/LogMessage.scala:5:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:6:    msg.attributes = Array(Array("type", tyype))
-src/main/org/nlogo/log/LogMessage.scala:7:    msg.elements = Array(new LogMessage("name"),
-src/main/org/nlogo/log/LogMessage.scala:8:                         new LogMessage("value"))
-src/main/org/nlogo/log/LogMessage.scala:12:    val msg = new LogMessage("parameters")
-src/main/org/nlogo/log/LogMessage.scala:13:    msg.elements = Array(new LogMessage("min"),
-src/main/org/nlogo/log/LogMessage.scala:14:                         new LogMessage("max"),
-src/main/org/nlogo/log/LogMessage.scala:15:                         new LogMessage("inc"))
-src/main/org/nlogo/log/LogMessage.scala:19:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:20:    msg.attributes = Array(Array("type", "slider"))
-src/main/org/nlogo/log/LogMessage.scala:21:    msg.elements = Array(new LogMessage("action"),
-src/main/org/nlogo/log/LogMessage.scala:22:                         new LogMessage("name"),
-src/main/org/nlogo/log/LogMessage.scala:23:                         new LogMessage("value"),
-src/main/org/nlogo/log/LogMessage.scala:25:    msg.elements(0).data = "changed"
-src/main/org/nlogo/log/LogMessage.scala:29:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:30:    msg.attributes = Array(Array("type", "button"))
-src/main/org/nlogo/log/LogMessage.scala:31:    msg.elements = Array(new LogMessage("name"),
-src/main/org/nlogo/log/LogMessage.scala:32:                         new LogMessage("action"),
-src/main/org/nlogo/log/LogMessage.scala:33:                         new LogMessage("releaseType"))
-src/main/org/nlogo/log/LogMessage.scala:37:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:38:    msg.attributes = Array(Array("type", null))
-src/main/org/nlogo/log/LogMessage.scala:39:    msg.elements = Array(new LogMessage("name"),
-src/main/org/nlogo/log/LogMessage.scala:40:                         new LogMessage("action"))
-src/main/org/nlogo/log/LogMessage.scala:44:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:45:    msg.attributes = Array(Array("type", null))
-src/main/org/nlogo/log/LogMessage.scala:46:    msg.elements = Array(new LogMessage("action"),
-src/main/org/nlogo/log/LogMessage.scala:47:                         new LogMessage("code"),
-src/main/org/nlogo/log/LogMessage.scala:48:                         new LogMessage("agentType"),
-src/main/org/nlogo/log/LogMessage.scala:49:                         new LogMessage("errorMessage"))
-src/main/org/nlogo/log/LogMessage.scala:50:    msg.elements(3).attributes = Array(Array("startPos", null),
-src/main/org/nlogo/log/LogMessage.scala:51:                                       Array("endPos", null))
-src/main/org/nlogo/log/LogMessage.scala:55:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:56:    msg.attributes = Array(Array("type", "speed"))
-src/main/org/nlogo/log/LogMessage.scala:57:    msg.elements = Array(new LogMessage("value"))
-src/main/org/nlogo/log/LogMessage.scala:61:    val msg = new LogMessage("event")
-src/main/org/nlogo/log/LogMessage.scala:62:    msg.attributes = Array(Array("type", null))
-src/main/org/nlogo/log/LogMessage.scala:63:    msg.elements = Array(new LogMessage("name"),
-src/main/org/nlogo/log/LogMessage.scala:64:                         new LogMessage("action"),
-src/main/org/nlogo/log/LogMessage.scala:65:                         new LogMessage("breed"))
-src/main/org/nlogo/log/XMLFileAppender.scala:31:      tf.setAttribute("indent-number", 2: java.lang.Integer)
-src/main/org/nlogo/log/XMLFileAppender.scala:35:    transformer.setOutputProperty(OutputKeys.INDENT, "yes")
-src/main/org/nlogo/log/XMLFileAppender.scala:38:    hd.startDTD("eventSet", "netlogo_logging.dtd", fileName)
-src/main/org/nlogo/log/XMLFileAppender.scala:41:    attributes.addAttribute("", "", "username", "CDATA", username) 
-src/main/org/nlogo/log/XMLFileAppender.scala:42:    attributes.addAttribute("", "", "name", "CDATA", studentName) 
-src/main/org/nlogo/log/XMLFileAppender.scala:43:    attributes.addAttribute("", "", "ipaddress", "CDATA", iPAddress) 
-src/main/org/nlogo/log/XMLFileAppender.scala:44:    attributes.addAttribute("", "", "modelName", "CDATA", modelName) 
-src/main/org/nlogo/log/XMLFileAppender.scala:45:    attributes.addAttribute("", "", "version", "CDATA", version) 
-src/main/org/nlogo/log/XMLFileAppender.scala:46:    hd.startElement("", "", "eventSet", attributes)
-src/main/org/nlogo/log/XMLFileAppender.scala:55:      hd.endElement("", "", "eventSet")
-src/main/org/nlogo/log/XMLLayout.scala:25:      case _ => "log"
-src/main/org/nlogo/log/XMLLayout.scala:27:    attributes.addAttribute("", "", "logger", "CDATA", event.getLoggerName)
-src/main/org/nlogo/log/XMLLayout.scala:28:    attributes.addAttribute("", "", "timestamp", "CDATA", event.timeStamp.toString)
-src/main/org/nlogo/log/XMLLayout.scala:29:    attributes.addAttribute("", "", "level", "CDATA", event.getLevel.toString)
-src/main/org/nlogo/log/XMLLayout.scala:30:    attributes.addAttribute("", "", "type", "CDATA", tyype)
-src/main/org/nlogo/log/XMLLayout.scala:31:    hd.startElement("", "", "event", attributes)
-src/main/org/nlogo/log/XMLLayout.scala:37:        hd.startElement("", "", "message", attributes)
-src/main/org/nlogo/log/XMLLayout.scala:40:        hd.endElement("", "", "message")
-src/main/org/nlogo/log/XMLLayout.scala:42:    hd.endElement("", "", "event")
-src/main/org/nlogo/log/XMLLayout.scala:49:      attributes.addAttribute("", "", attr(0), "CDATA", attr(1))
-src/main/org/nlogo/nvm/Activation.java:32:    result += ":" + procedure.name + "(" + args.length + " args";
-src/main/org/nlogo/nvm/Activation.java:33:    result += ", return address = " + returnAddress + ")\n";
-src/main/org/nlogo/nvm/Activation.java:35:      result += "  arg " + i + " = " + args[i] + "\n";
 src/main/org/nlogo/nvm/Argument.java:166:    String result = "Expected this input to be "
 src/main/org/nlogo/nvm/Argument.java:167:        + org.nlogo.nvm.Syntax.aTypeName(wantedType) + " but got "
 src/main/org/nlogo/nvm/Argument.java:169:        ? "NOBODY"
@@ -2113,7 +1447,6 @@ src/main/org/nlogo/nvm/ArgumentTypeException.java:45:      result += " but got "
 src/main/org/nlogo/nvm/ArgumentTypeException.java:46:          ? "NOBODY"
 src/main/org/nlogo/nvm/ArgumentTypeException.java:47:          : "the " + Syntax.typeName(badValue) + " " + badValueStr)
 src/main/org/nlogo/nvm/ArgumentTypeException.java:48:          + " instead";
-src/main/org/nlogo/nvm/Context.java:30:   * in a forever button's code exits via "stop", then the forever button
 src/main/org/nlogo/nvm/Context.java:99:          (this, "stack overflow (recursion too deep)");
 src/main/org/nlogo/nvm/Context.java:137:        throw new IllegalStateException("null parent context");
 src/main/org/nlogo/nvm/EngineException.java:69:      throw new IllegalStateException("An EngineException must only be 'resolved' once!");
@@ -2146,10 +1479,6 @@ src/main/org/nlogo/nvm/Procedure.java:114:    buf.append(":" + Dump.list(args) +
 src/main/org/nlogo/nvm/Pure.java:16: * that are entirely pure.  A reporter is "entirely pure" if it implements Pure,
 src/main/org/nlogo/nvm/Pure.java:17: * and all of it's children are "entirely pure".  Entirely pure reporters get
 src/main/org/nlogo/nvm/Pure.java:20: * "Pure" reporters *must* not depend on "context", "workspace", "world", etc
-src/main/org/nlogo/nvm/StackTraceBuilder.scala:21: * - "plot 'plot 1' setup code" is an anonymous procedure in a plot
-src/main/org/nlogo/nvm/StackTraceBuilder.scala:22: * - "RESET-TICKS" is not a procedure, but a command that can trigger
-src/main/org/nlogo/nvm/StackTraceBuilder.scala:24: * - "SETUP" is an ordinary procedure
-src/main/org/nlogo/nvm/StackTraceBuilder.scala:25: * - "Command Center" is the display name of the dummy top level procedure
 src/main/org/nlogo/nvm/StackTraceBuilder.scala:36:      case l: LogoException => l.getMessage + "\nerror while "
 src/main/org/nlogo/nvm/StackTraceBuilder.scala:37:      case _ => "error (" + e.getClass.getSimpleName + ")\n while "
 src/main/org/nlogo/nvm/StackTraceBuilder.scala:39:    errorMessage.getOrElse("") + agent + " running " + instruction.displayName + "\n" +
@@ -2170,7 +1499,6 @@ src/main/org/nlogo/nvm/Syntax.java:329:            return num + "st";
 src/main/org/nlogo/nvm/Syntax.java:331:            return num + "nd";
 src/main/org/nlogo/nvm/Syntax.java:333:            return num + "rd";
 src/main/org/nlogo/nvm/Syntax.java:335:            return num + "th";
-src/main/org/nlogo/nvm/Syntax.java:344:   * (e.g. "the second input", "the first argument on the right", etc)
 src/main/org/nlogo/nvm/Syntax.java:357:        return "the input on the left";
 src/main/org/nlogo/nvm/Syntax.java:359:        return "the " + getOrdinalNumberText(argIndex) + " input on the right";
 src/main/org/nlogo/nvm/Syntax.java:362:      return "the " + getOrdinalNumberText(argIndex + 1) + " input";
@@ -2207,8 +1535,6 @@ src/main/org/nlogo/nvm/Syntax.java:512:      return result + " or " + typeName(m
 src/main/org/nlogo/nvm/Syntax.java:544:        ("There was no Syntax type constant found for this class " + typeC);
 src/main/org/nlogo/nvm/Syntax.java:555:        return "an " + str;
 src/main/org/nlogo/nvm/Syntax.java:592:      buf.append(" [RIGHT ASSOCIATIVE]");
-src/main/org/nlogo/plot/package.html:5:<body bgcolor="white">
-src/main/org/nlogo/plot/package.html:26:max, y min and max).  "Auto plot" (whether the range expands
 src/main/org/nlogo/plot/Plot.scala:17:  override def toString = "Plot(" + name + ")"
 src/main/org/nlogo/plot/Plot.scala:26:    if(plotListener == null) sys.error("null plotListener")
 src/main/org/nlogo/plot/Plot.scala:51:  def currentPenOrBust: PlotPen = currentPen.getOrElse(throw new PlotException("Plot '"+name+"' has no pens!"))
@@ -2258,8 +1584,6 @@ src/main/org/nlogo/prim/_repeatlocal.java:26:    return super.toString() + ":" +
 src/main/org/nlogo/prim/_repeatlocalinternal.java:23:    return super.toString() + ":" + offset + "," + vn;
 src/main/org/nlogo/prim/_sprout.java:36:    return super.toString() + ":" + breedName + ",+" + offset;
 src/main/org/nlogo/prim/_turtle.java:29:          (context, this, idDouble + " is not an integer");
-src/main/org/nlogo/prim/dead/_randomorrandomfloat.scala:6: * This primitive never existed; we convert "random" (in very, very old models) or
-src/main/org/nlogo/prim/dead/_randomorrandomfloat.scala:7: * "random-int-or-float" (in more recent models) to this to force the user to change it; we need to
 src/main/org/nlogo/prim/etc/_boom.java:23:    throw new EngineException(context, this, "boom!");
 src/main/org/nlogo/prim/etc/_createnetworkpreferential.java:37:      throw new EngineException(context, "This command only supports undirected link breeds.");
 src/main/org/nlogo/prim/etc/_createnetworkpreferential.java:40:      throw new EngineException(context, "The number of neighbors to link to in each step must be at least 1.");
@@ -2288,7 +1612,6 @@ src/main/org/nlogo/prim/etc/_fileexists.java:22:              argEvalString(cont
 src/main/org/nlogo/prim/etc/_fileread.java:26:      throw new EngineException(context, this, "The end of file has been reached");
 src/main/org/nlogo/prim/etc/_filereadchars.java:17:      throw new EngineException(context, this, "The end of file has been reached");
 src/main/org/nlogo/prim/etc/_filereadline.java:15:      throw new EngineException(context, this, "The end of file has been reached");
-src/main/org/nlogo/prim/etc/_git.java:22:    if (!System.getProperty("os.name").startsWith("Mac")) {
 src/main/org/nlogo/prim/etc/_git.java:24:          (context, this, "at present, only works on Macs");
 src/main/org/nlogo/prim/etc/_git.java:29:          (context, this, "must save model first");
 src/main/org/nlogo/prim/etc/_git.java:32:      java.io.File git = new java.io.File(".git");
@@ -2439,32 +1762,13 @@ src/main/org/nlogo/properties/WorldPreview.scala:261:        label = "(" + maxPx
 src/main/org/nlogo/properties/WorldPreview.scala:266:        label = "(" + minPxcor + "," + minPycor + ")"
 src/main/org/nlogo/properties/WorldPreview.scala:291:        if(field == "World wraps horizontally" || field.startsWith("World wraps X"))
 src/main/org/nlogo/properties/WorldPreview.scala:293:        else if(field == "World wraps vertically" || field.startsWith("World wraps Y"))
-src/main/org/nlogo/render/AbstractRenderer.java:111:      System.getProperty("os.name").startsWith("Windows");
 src/main/org/nlogo/render/TrailDrawer.java:164:        throw new javax.imageio.IIOException("The following file is not in a supported image format: " +
 src/main/org/nlogo/render/TrailDrawer.java:211:      writer.println(Dump.csv.encode("DRAWING"));
 src/main/org/nlogo/render/TrailDrawer.java:287:      if (penMode.equals("erase")) {
 src/main/org/nlogo/render/TurtleShapeManager.java:53:    return "shapes " + shapeCache.size() + " pixels " + pixelCount + " angleStep " + angleStep;
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:9:    "MODEL"            -> "org.nlogo.sdm.gui.AggregateDrawing",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:10:    "STOCK"            -> "org.nlogo.sdm.gui.WrappedStock",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:11:    "RATE"             -> "org.nlogo.sdm.gui.WrappedRate",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:12:    "CONVERTER"        -> "org.nlogo.sdm.gui.WrappedConverter",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:13:    "RESERVOIR_FIGURE" -> "org.nlogo.sdm.gui.ReservoirFigure",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:14:    "STOCK_FIGURE"     -> "org.nlogo.sdm.gui.StockFigure",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:15:    "RATE_CONN"        -> "org.nlogo.sdm.gui.RateConnection",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:16:    "CHOP_DIAMOND"     -> "org.jhotdraw.contrib.ChopDiamondConnector",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:17:    "CHOP_BOX"         -> "org.jhotdraw.standard.ChopBoxConnector",  
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:18:    "RESERVOIR"        -> "org.nlogo.sdm.gui.WrappedReservoir", 
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:19:    "CONVERTER_FIGURE" -> "org.nlogo.sdm.gui.ConverterFigure",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:20:    "BINDING_CONN"     -> "org.nlogo.sdm.gui.BindingConnection",
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:21:    "CHOP_ELLIPSE"     -> "org.jhotdraw.figures.ChopEllipseConnector",  
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:22:    "CHOP_RATE"        -> "org.nlogo.sdm.gui.ChopRateConnector"
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:31:  def classDisplayName = "System Dynamics"
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:72:          "org.nlogo.aggregate.gui", "org.nlogo.sdm.gui")
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:75:            "invalid token: \"" + tokenizer.sval + "\"")
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:106:    else if(st.sval == validTokens("STOCK")) {
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:113:    else if(st.sval == validTokens("RATE")) {
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:119:    else if(st.sval == validTokens("CONVERTER")) {
-src/main/org/nlogo/sdm/AggregateManagerLite.scala:125:    else if(st.sval == validTokens("MODEL"))
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:126:      new Model("Test Model", 1)
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:131:    if(st.nextToken() == StreamTokenizer.TT_WORD && st.sval.equals("REF")) {
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:134:        if(st.nextToken() == StreamTokenizer.TT_WORD && st.sval.equals("REF"))
@@ -2472,7 +1776,6 @@ src/main/org/nlogo/sdm/AggregateManagerLite.scala:165:      throw new java.io.IO
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:170:      throw new java.io.IOException("expected integer (boolean)")
 src/main/org/nlogo/sdm/AggregateManagerLite.scala:175:      throw new java.io.IOException("expected integer")
 src/main/org/nlogo/sdm/gui/AggregateDrawing.java:10:  private final Model model = new Model("default", 1);
-src/main/org/nlogo/sdm/gui/AggregateModelEditor.java:202:    boolean isOSX = System.getProperty("os.name").startsWith("Mac");
 src/main/org/nlogo/sdm/gui/AggregateModelEditorToolBar.scala:27:    val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(editor))
 src/main/org/nlogo/sdm/gui/AggregateModelEditorToolBar.scala:28:    val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(editor))
 src/main/org/nlogo/sdm/gui/AggregateModelEditorToolBar.scala:29:    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(editor, new RateConnection()))
@@ -2493,16 +1796,7 @@ src/main/org/nlogo/sdm/gui/Properties.scala:17:    P("allowNegative", P.Boolean,
 src/main/org/nlogo/sdm/gui/Properties.scala:20:    P("nameWrapper", P.Identifier, "Name"),
 src/main/org/nlogo/sdm/gui/Properties.scala:21:    P("expressionWrapper", P.Reporter, "Expression")
 src/main/org/nlogo/sdm/gui/RateConnection.java:324:    return "Flow";
-src/main/org/nlogo/sdm/gui/ReservoirFigure.java:36:  @SuppressWarnings("unchecked")
 src/main/org/nlogo/sdm/gui/StockFigure.java:133:    return "Stock";
-src/main/org/nlogo/sdm/Model.scala:13:    text.replaceAll(" *org.nlogo.sdm.Stock ",
-src/main/org/nlogo/sdm/Model.scala:14:                    "org.nlogo.sdm.gui.WrappedStock ")
-src/main/org/nlogo/sdm/Model.scala:15:        .replaceAll(" *org.nlogo.sdm.Rate ",
-src/main/org/nlogo/sdm/Model.scala:16:                    "org.nlogo.sdm.gui.WrappedRate ")
-src/main/org/nlogo/sdm/Model.scala:17:        .replaceAll(" *org.nlogo.sdm.Reservoir ",
-src/main/org/nlogo/sdm/Model.scala:18:                    "org.nlogo.sdm.gui.WrappedReservoir")
-src/main/org/nlogo/sdm/Model.scala:19:        .replaceAll(" *org.nlogo.sdm.Converter ",
-src/main/org/nlogo/sdm/Model.scala:20:                    "org.nlogo.sdm.gui.WrappedConverter")
 src/main/org/nlogo/sdm/Model.scala:30:      throw new Model.ModelException("dt cannot be less than or equal to 0.")
 src/main/org/nlogo/sdm/Model.scala:39:      throw new Model.ModelException("Already element with named " + element.name)
 src/main/org/nlogo/sdm/Translator.scala:31:    globals += ";; System dynamics model globals\nglobals [\n"
@@ -2608,7 +1902,6 @@ src/main/org/nlogo/shape/editor/ImportDialog.java:158:    manager.shapesList().s
 src/main/org/nlogo/shape/editor/ImportDialog.java:165:        (this, message, "Import", javax.swing.JOptionPane.WARNING_MESSAGE);
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:50:                        "You may lose changes made to this shape. Do you want to cancel anyway?",
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:51:                        "Confirm Cancel", javax.swing.JOptionPane.YES_NO_OPTION)) {
-src/main/org/nlogo/shape/editor/LinkEditorDialog.java:62:    javax.swing.JLabel label = new javax.swing.JLabel("name: ");
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:70:    label = new javax.swing.JLabel("direction indicator: ");
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:73:    javax.swing.JButton diButton = new javax.swing.JButton("Edit");
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:84:    label = new javax.swing.JLabel("curviness: ");
@@ -2620,12 +1913,6 @@ src/main/org/nlogo/shape/editor/LinkEditorDialog.java:158:              (this, "
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:176:        (this, "A shape with this name already exists. Do you want to replace it?",
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:177:            "Confirm Overwrite", javax.swing.JOptionPane.YES_NO_OPTION)) {
 src/main/org/nlogo/shape/editor/LinkEditorDialog.java:191:                (this, "Curviness:", "Enter a number", javax.swing.JOptionPane.PLAIN_MESSAGE);
-src/main/org/nlogo/shape/editor/ManagerDialog.scala:109:    shapesList.selectShapeName("default")
-src/main/org/nlogo/shape/editor/ManagerDialog.scala:116:    shapesList.selectShapeName("default")
-src/main/org/nlogo/shape/editor/ManagerDialog.scala:121:    val defaultShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-src/main/org/nlogo/shape/editor/ManagerDialog.scala:122:    val libraryShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/libraryShapes.txt")
-src/main/org/nlogo/shape/editor/ShapeCellRenderer.java:14:      new javax.swing.JLabel("blah", javax.swing.SwingConstants.LEFT);
-src/main/org/nlogo/shape/editor/ShapeView.java:37:      System.getProperty("os.name").startsWith("Mac");
 src/main/org/nlogo/shape/Line.java:57:    if (modifiedPoint.equals("start")) {
 src/main/org/nlogo/shape/Line.java:60:    if (modifiedPoint.equals("end")) {
 src/main/org/nlogo/shape/Line.java:123:    return "Line " + c.getRGB() + " " + marked + " " + start.x + " " + start.y + " " + end.x + " " + end.y;
@@ -2668,33 +1955,13 @@ src/main/org/nlogo/shape/VectorShape.java:360:    if (shape.getName().indexOf("S
 src/main/org/nlogo/shape/VectorShape.java:363:      throw new IllegalStateException("found StarLogoT version instead of shape");
 src/main/org/nlogo/shape/VectorShape.java:366:    shape.setRotatable(getString(shapes, index++).equals("true"));
 src/main/org/nlogo/shape/VectorShape.java:402:        ("Polygon -7500403 true true 150 5 40 250 150 205 260 250");
-src/main/org/nlogo/swing/BrowserLauncher.java:37:      return new java.net.URI("file", filePath, null).toURL().toString();
-src/main/org/nlogo/swing/BrowserLauncher.java:47:    String osName = System.getProperty("os.name");
-src/main/org/nlogo/swing/BrowserLauncher.java:49:    if (osName.startsWith("Mac")) {
-src/main/org/nlogo/swing/BrowserLauncher.java:54:        Class<?> desktopClass = Class.forName("java.awt.Desktop");
-src/main/org/nlogo/swing/BrowserLauncher.java:55:        Object result = desktopClass.getMethod("isDesktopSupported").invoke(null);
-src/main/org/nlogo/swing/BrowserLauncher.java:57:          Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
-src/main/org/nlogo/swing/BrowserLauncher.java:58:          desktopClass.getMethod("browse", java.net.URI.class).invoke(desktop, new java.net.URI(url));
-src/main/org/nlogo/swing/BrowserLauncher.java:63:      if (osName.startsWith("Windows")) {
-src/main/org/nlogo/swing/BrowserLauncher.java:65:            new String[]{"cmd.exe", "/c", "start", "\"\"", '"' + url + '"'});
-src/main/org/nlogo/swing/BrowserLauncher.java:69:              "firefox", "-remote", "'openURL(", url + ")'"});
-src/main/org/nlogo/swing/BrowserLauncher.java:72:            Runtime.getRuntime().exec(new String[]{"firefox", url});
 src/main/org/nlogo/swing/BrowserLauncher.java:78:              "NetLogo could not find and execute a web browser named \'firefox\'." +
 src/main/org/nlogo/swing/BrowserLauncher.java:79:                  "Please install Firefox and ensure that the \'firefox\' command " +
 src/main/org/nlogo/swing/BrowserLauncher.java:80:                  "is in your executable PATH.  Firefox is available here:\n " +
 src/main/org/nlogo/swing/BrowserLauncher.java:82:                  "The full error message was:\n " + ex.getLocalizedMessage()
-src/main/org/nlogo/swing/ButtonPanel.scala:12:  val MAC = System.getProperty("os.name").startsWith("Mac")
-src/main/org/nlogo/swing/CollapsiblePane.java:15:            (CollapsiblePane.class.getResource("/images/popup.gif")));
-src/main/org/nlogo/swing/CollapsiblePane.java:18:            (CollapsiblePane.class.getResource("/images/closedarrow.gif")));
-src/main/org/nlogo/swing/FileDialog.java:19:  private static String currentDirectory = System.getProperty("user.home");
-src/main/org/nlogo/swing/FileDialog.java:56:      System.getProperty("os.name").startsWith("Mac");
-src/main/org/nlogo/swing/FileDialog.java:58:      System.getProperty("os.name").startsWith("Linux");
 src/main/org/nlogo/swing/MessageDialog.java:61:        new javax.swing.AbstractAction("Dismiss") {
-src/main/org/nlogo/swing/ModalProgressTask.java:44:    super("ModalProgressTask boss");
 src/main/org/nlogo/swing/Popup.scala:18:    PimpedJButton(i18n("common.buttons.ok")){ if(ok) die() },
 src/main/org/nlogo/swing/Popup.scala:19:    PimpedJButton(i18n("common.buttons.cancel")){ cancel; die() }),
-src/main/org/nlogo/swing/PrinterManager.java:46:        if (System.getProperty("os.name").startsWith("Mac")
-src/main/org/nlogo/swing/PrinterManager.java:47:            && System.getProperty("os.version").startsWith("10.5")) {
 src/main/org/nlogo/swing/PrinterManager.java:62:    String pageNumString = " - page " + pageNum;
 src/main/org/nlogo/swing/PrinterManager.java:69:      new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 9);
 src/main/org/nlogo/swing/SelectableJLabel.scala:10:class SelectableJLabel(str: String) extends JTextField(" " + str + " ") {  
@@ -2705,42 +1972,12 @@ src/main/org/nlogo/swing/TextFieldBox.java:125:    fb.addField("Name:", new JTex
 src/main/org/nlogo/swing/TextFieldBox.java:126:    fb.addField("Server location or IP address:", new JTextField(8));
 src/main/org/nlogo/swing/TextFieldBox.java:127:    fb.addField("Port:", new JTextField(20));
 src/main/org/nlogo/swing/TextFieldBox.java:132:    d.setTitle("TextFieldBox");
-src/main/org/nlogo/swing/ToolBarComboBox.scala:13:    if (System.getProperty("os.name").startsWith("Mac")) setBackground(Color.WHITE)
-src/main/org/nlogo/swing/ToolBarMenu.java:11:    if (System.getProperty("os.name").startsWith("Mac")) {
 src/main/org/nlogo/swing/UserDialog.java:47:    buttons.add(new javax.swing.JButton(new ButtonPressAction(i18n.apply("common.buttons.halt"), 2)));
 src/main/org/nlogo/swing/UserDialog.java:48:    buttons.add(new javax.swing.JButton(new ButtonPressAction(i18n.apply("common.buttons.ok"), 0)));
 src/main/org/nlogo/swing/UserDialog.java:55:        (UserDialog.class.getResource("/images/arrowhead.gif"));
 src/main/org/nlogo/swing/Utils.java:16:        (bogusFrame, "Notice",
 src/main/org/nlogo/swing/Utils.java:36:      javax.swing.UIManager.put("Slider.paintValue", Boolean.FALSE);
-src/main/org/nlogo/swing/Utils.java:37:      if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/swing/Utils.java:42:      } else if (System.getProperty("os.name").startsWith("Windows")) {
-src/main/org/nlogo/swing/Utils.java:45:      } else if (System.getProperty("swing.defaultlaf") == null) {
-src/main/org/nlogo/swing/Utils.java:48:              ("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-src/main/org/nlogo/swing/Utils.java:84:          && QuaquaManager.getProperty("os.arch").equals("x86_64")
-src/main/org/nlogo/swing/Utils.java:85:          ? "quaqua64"
-src/main/org/nlogo/swing/Utils.java:86:          : "quaqua";
-src/main/org/nlogo/swing/Utils.java:87:      System.load(new java.io.File(".").getCanonicalPath() + "/lib/Mac OS X/lib" + libraryName + ".jnilib");
-src/main/org/nlogo/swing/Utils.java:88:      System.setProperty("Quaqua.jniIsPreloaded", "true");
-src/main/org/nlogo/swing/Utils.java:147:            "ESC_ACTION");
-src/main/org/nlogo/swing/Utils.java:151:            ("ESC_ACTION", action);
-src/main/org/nlogo/swing/VTextIcon.java:90:    if ("font".equals(prop)) {
-src/main/org/nlogo/swing/WindowCloseBox.java:8:      System.getProperty("os.name").startsWith("Mac");
-src/main/org/nlogo/swing/WindowDragger.java:27:      System.getProperty("os.name").startsWith("Mac");
-src/main/org/nlogo/swing/WrappingPopupMenu.java:29:    if (System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/util/Exceptions.scala:25:    System.err.println("Warning -- Ignoring exception: " + t)
-src/main/org/nlogo/util/Femto.scala:17:      .getField( "MODULE$" ).get(null).asInstanceOf[T]
-src/main/org/nlogo/util/HexString.scala:22:  private val hexChar = "0123456789ABCDEF"
-src/main/org/nlogo/util/Pico.scala:21:    addComponent(Class.forName(name + "$").getField("MODULE$").get(null))
-src/main/org/nlogo/util/SysInfo.scala:11:    var result = getProperty("java.vm.name") +
-src/main/org/nlogo/util/SysInfo.scala:12:      " " + getProperty("java.version") +
-src/main/org/nlogo/util/SysInfo.scala:13:      " (" + getProperty("java.vendor")
-src/main/org/nlogo/util/SysInfo.scala:14:    if(getProperty("java.fullversion") != null)
-src/main/org/nlogo/util/SysInfo.scala:15:      result += "; " + getProperty("java.fullversion")
-src/main/org/nlogo/util/SysInfo.scala:16:    else if(getProperty("java.runtime.version") != null)
-src/main/org/nlogo/util/SysInfo.scala:17:      result += "; " + getProperty("java.runtime.version")
-src/main/org/nlogo/util/SysInfo.scala:22:    getVMInfoString.indexOf("libgcj") != -1
 src/main/org/nlogo/util/SysInfo.scala:24:    "operating system: " + getProperty("os.name") +
-src/main/org/nlogo/util/SysInfo.scala:25:      " " + getProperty("os.version") +
 src/main/org/nlogo/util/SysInfo.scala:26:      " ("  + getProperty("os.arch") + " processor)"
 src/main/org/nlogo/util/SysInfo.scala:33:    "Java heap: " +
 src/main/org/nlogo/util/SysInfo.scala:34:      "used = " + (total - free) +
@@ -2749,24 +1986,11 @@ src/main/org/nlogo/util/SysInfo.scala:36:      " MB, max = " + max +
 src/main/org/nlogo/util/SysInfo.scala:37:      " MB"
 src/main/org/nlogo/util/SysInfo.scala:39:  var getJOGLInfoString = "JOGL: (3D View not initialized)" 
 src/main/org/nlogo/util/SysInfo.scala:40:  var getGLInfoString = "OpenGL Graphics: (3D View not initialized)" 
-src/main/org/nlogo/util/SysInfo.scala:44:      var browser = getProperty("browser")
 src/main/org/nlogo/util/SysInfo.scala:47:        browser = "(unknown browser)"
-src/main/org/nlogo/util/SysInfo.scala:49:      var version = getProperty("browser.version")
 src/main/org/nlogo/util/SysInfo.scala:52:        version = "(unknown version)"
-src/main/org/nlogo/util/SysInfo.scala:54:      var vendor = getProperty("browser.vendor")
 src/main/org/nlogo/util/SysInfo.scala:60:        vendor = " (" + vendor + ")"
-src/main/org/nlogo/util/SysInfo.scala:67:    "Scala " + scala.util.Properties.versionString
 src/main/org/nlogo/util/Utils.scala:20:    url.flatMap{case ' ' => "%20"
 src/main/org/nlogo/util/Utils.scala:23:    url.replaceAll("%20", " ")
-src/main/org/nlogo/util/Utils.scala:47:        if(!System.getProperty("os.name").startsWith("Mac")) {
-src/main/org/nlogo/util/Utils.scala:50:            "file:/" + sampleURL.drop(badStart.size)
-src/main/org/nlogo/util/Utils.scala:61:          .openStream(), "UTF-8"))
-src/main/org/nlogo/widget/DummySwitchWidget.java:45:    s.append("SWITCH\n");
-src/main/org/nlogo/widget/DummySwitchWidget.java:50:      s.append("NIL\n");
-src/main/org/nlogo/widget/DummySwitchWidget.java:55:      s.append("NIL\n");
-src/main/org/nlogo/widget/NoteWidget.java:182:    s.append("TEXTBOX\n");
-src/main/org/nlogo/widget/NoteWidget.java:185:      s.append("NIL\n");
-src/main/org/nlogo/widget/NoteWidget.java:197:    if (strings[5].equals("NIL")) {
 src/main/org/nlogo/widget/Switch.java:98:        + fontMetrics.stringWidth("Off");
 src/main/org/nlogo/widget/Switch.java:145:    g.drawString("On",
 src/main/org/nlogo/widget/Switch.java:149:    g.drawString("Off",
@@ -2941,14 +2165,6 @@ src/main/org/nlogo/window/InterfaceFactory.scala:18:  val output = WidgetInfo("o
 src/main/org/nlogo/window/InterfaceFactory.scala:19:  val note = WidgetInfo("note", "note.gif")
 src/main/org/nlogo/window/InterfaceFactory.scala:20:  val view = WidgetInfo("view", "view.gif")
 src/main/org/nlogo/window/InterfaceFactory.scala:24:  def icon = new ImageIcon(classOf[WidgetInfo].getResource("/images/" + imageName))
-src/main/org/nlogo/window/InterfacePanelLite.java:321:      if (!type.equals("GRAPHICS-WINDOW") &&
-src/main/org/nlogo/window/InterfacePanelLite.java:325:      if (type.equals("GRAPHICS-WINDOW") || type.equals("VIEW")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:340:          if (type.equals("MONITOR")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:342:          } else if (type.equals("PLOT")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:344:          } else if (type.equals("SLIDER")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:350:          } else if (type.equals("INPUTBOX")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:354:          } else if (type.equals("BUTTON")) {
-src/main/org/nlogo/window/InterfacePanelLite.java:356:          } else if (type.equals("OUTPUT")) {
 src/main/org/nlogo/window/ModelLoader.scala:28:      if (version == null || !version.startsWith("NetLogo")) throw new InvalidVersionException()
 src/main/org/nlogo/window/ModelLoader.scala:40:              val message = "This model was created in " + version +
 src/main/org/nlogo/window/ModelLoader.scala:41:                      ". You may need to make changes for it to work in " +
@@ -3055,17 +2271,11 @@ src/main/org/nlogo/window/WorldViewSettings2D.java:97:              "Consider ki
 src/main/org/nlogo/window/WorldViewSettings2D.java:100:                  "Kick clients?", message,
 src/main/org/nlogo/window/WorldViewSettings2D.java:102:                  new String[]{"Kick clients", "Don't kick"});
 src/main/org/nlogo/window/WorldViewSettings2D.java:110:          (org.nlogo.awt.Utils.getFrame(gWidget), runnable, "Resizing...");
-src/main/org/nlogo/window/WorldViewSettings2D.java:125:        "GRAPHICS-WINDOW\n" +
 src/main/org/nlogo/window/WorldViewSettings3D.java:302:          (org.nlogo.awt.Utils.getFrame(gWidget), runnable, "Resizing...");
-src/main/org/nlogo/window/WorldViewSettings3D.java:353:        "GRAPHICS-WINDOW\n" +
-src/main/org/nlogo/workspace/AbstractWorkspace.java:81:   * end in ".nlogo".
-src/main/org/nlogo/workspace/AbstractWorkspace.java:110:    jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
-src/main/org/nlogo/workspace/AbstractWorkspace.java:160:    System.err.println("WARNING: " + message);
 src/main/org/nlogo/workspace/AbstractWorkspace.java:260:      path = System.getProperty("user.home")
 src/main/org/nlogo/workspace/AbstractWorkspace.java:261:          + java.io.File.separatorChar + "dummy.txt";
 src/main/org/nlogo/workspace/AbstractWorkspace.java:289:    java.io.File git = new java.io.File(".git");
 src/main/org/nlogo/workspace/AbstractWorkspace.java:291:      throw new java.io.IOException("no .git directory found");
-src/main/org/nlogo/workspace/AbstractWorkspace.java:334:   * We need to do a "save as" if the model is new, from the
 src/main/org/nlogo/workspace/AbstractWorkspace.java:356:      return "Untitled";
 src/main/org/nlogo/workspace/AbstractWorkspace.java:358:    int suffixIndex = str.lastIndexOf(".nlogo");
 src/main/org/nlogo/workspace/AbstractWorkspace.java:362:    suffixIndex = str.lastIndexOf(".nlogo3d");
@@ -3169,7 +2379,6 @@ src/main/org/nlogo/workspace/ExtensionManager.java:704:      throw new IllegalSt
 src/main/org/nlogo/workspace/ExtensionManager.java:709:    writer.println(Dump.csv.encode("EXTENSIONS"));
 src/main/org/nlogo/workspace/ExtensionManager.java:728:      throw new org.nlogo.api.ExtensionException("there is no extension named " + name + "in this model");
 src/main/org/nlogo/workspace/ModelsLibrary.java:57:      int loc = path.toUpperCase().lastIndexOf("/" + targetName.toUpperCase() + ".NLOGO");
-src/main/org/nlogo/workspace/ModelsLibrary.java:95:   *                   ".nlogo" extension.
 src/main/org/nlogo/workspace/ModelsLibrary.java:106:          + ".NLOGO") == path.lastIndexOf('/')) {
 src/main/org/nlogo/workspace/ModelsLibrary.java:122:      java.io.File directoryRoot = new java.io.File("models", "");
 src/main/org/nlogo/workspace/ModelsLibrary.java:123:      rootNode = new Node("models", "", true);
