@@ -1,12 +1,5 @@
 package org.nlogo.api
 
-// import java.util.ArrayList
-// import java.util.Collection
-// import java.util.Collections
-// import java.util.Comparator
-// import java.util.HashMap
-// import java.util.Map
-
 import java.util.{ Collection => JCollection, List => JList, Set => JSet }
 import collection.JavaConverters._
 
