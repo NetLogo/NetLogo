@@ -61,6 +61,9 @@
     public org.nlogo.window.WidgetContainer getWidgetContainer();
     public void waitFor(java.lang.Runnable);
 }
+-keep public class org.nlogo.util.Utils {
+    public static java.lang.String reader2String(java.io.Reader);
+}
 
 # pull in stuff we access only by reflection (for dependency injection)
 -keep class org.nlogo.render.Renderer {
