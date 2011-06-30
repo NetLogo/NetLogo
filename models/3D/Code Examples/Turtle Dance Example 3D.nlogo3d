@@ -1,7 +1,6 @@
 to setup
   clear-all
-  crt number-of-turtles
-  [
+  crt number-of-turtles [
     fd 9
     left 90
   ]
@@ -10,13 +9,12 @@ to setup
 end
 
 to go
-  ask turtles
-    [
-      fd .1
-      left 0.65
-      tilt-up .65
-    ]
-    tick
+  ask turtles [
+    fd 0.1
+    left 0.65
+    tilt-up .65
+  ]
+  tick
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -46,6 +44,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 20
@@ -131,8 +130,8 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a simple Code Example to help new users understand how turtles move in 3D space.  On each tick each turtle will move forward, turn left and pitch up.
 @#$#@#$#@
 default
@@ -429,7 +428,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

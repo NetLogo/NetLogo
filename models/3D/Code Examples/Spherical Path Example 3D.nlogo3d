@@ -89,6 +89,7 @@ GRAPHICS-WINDOW
 1
 0
 ticks
+30.0
 
 CHOOSER
 35
@@ -177,18 +178,16 @@ degrees
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This shows how to make turtles move along a perfect sphere. The first procedure moves turtles based a user-defined distance to be travelled; the second moves then based on a user-defined degree measure.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 We use trigonometry to calculate the turtle's successive positions on the circle.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Turtles Circling, Circular Path Example
 @#$#@#$#@
 default
@@ -485,7 +484,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 repeat 75 [ go-distance ]

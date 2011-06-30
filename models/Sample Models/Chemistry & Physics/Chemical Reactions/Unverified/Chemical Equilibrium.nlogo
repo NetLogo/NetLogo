@@ -10,9 +10,6 @@ to setup
     randomize
   ]
   reset-ticks
-  ;; adjust the y-range of the plot to fit the number of molecules
-  set-plot-y-range 0 max (list yellowmols bluemols)
-  update-plot
 end
 
 to randomize
@@ -38,7 +35,6 @@ to go
   ask turtles
   [ check-for-reaction ]
   tick
-  update-plot
 end
 
 ;; In WIGGLE, turtles are given a slight random twist to their heading.
@@ -81,18 +77,6 @@ to react-reverse [t]
   rt random-float 360
   jump 2
 end
-
-;; In UPDATE-PLOT, each pen plots its corresponding turtle count.
-to update-plot
-  set-current-plot-pen "Yellows"
-    plot count turtles with [color = yellow]
-  set-current-plot-pen "Blues"
-    plot count turtles with [color = blue]
-  set-current-plot-pen "Browns"
-    plot count turtles with [color =  brown]
-  set-current-plot-pen "Greens"
-    plot count turtles with [color = green]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 289
@@ -119,6 +103,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 57
@@ -242,16 +227,16 @@ molecules
 200.0
 true
 true
-"" ""
+"set-plot-y-range 0 max (list yellowmols bluemols)" ""
 PENS
-"Yellows" 1.0 0 -1184463 true "" ""
-"Blues" 1.0 0 -13345367 true "" ""
-"Greens" 1.0 0 -10899396 true "" ""
-"Browns" 1.0 0 -6459832 true "" ""
+"Yellows" 1.0 0 -1184463 true "" "plot count turtles with [color = yellow]"
+"Blues" 1.0 0 -13345367 true "" "plot count turtles with [color = blue]"
+"Greens" 1.0 0 -10899396 true "" "plot count turtles with [color = green]"
+"Browns" 1.0 0 -6459832 true "" "plot count turtles with [color = brown]"
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This project shows how a simple chemical system comes to different equilibrium states depending on the concentrations of the initial reactants.
 
 Equilibrium is the term we use to describe a system in which there are no macroscopic changes.  This means that the system "looks" like nothing is happening.  In fact, in all chemical systems microscopic processes continue but in a balance that yields no changes at the macroscopic level.
@@ -260,40 +245,33 @@ This model simulates two simple reactions of four molecules.  The reactions can 
 
 A classic real-life example that would illustrate such reactions is the reactions of carbon monoxide with nitrogen dioxide to produce carbon dioxide and nitrogen monoxide (or, nitric oxide).  The reverse is also possible.  All the reactants are gases.  We could watch such an equilibrium system because NO2 is a reddish colored gas which is visible. However, the combining of nitrogen dioxide (NO2) with carbon monoxide (CO) results in the colorless products nitrogen monoxide (NO) and carbon dioxide (CO2), and so the system loses its reddish color.  And yet, not all the color is lost. Ultimately the system comes to equilibrium with some of the "reactants" and some of the "products" present.
 
-How much "reactant" and "product" a system ends up with depends on a number of factors.  The inherent kinetics of the reaction are of vital concern: For instance, some reactions tend to go in a particular direction because energy is released in that direction.  A system's equilibrium is also affected by the concentrations of the reactants -- this is modeled here -- and by the system's temperature.
+How much "reactant" and "product" a system ends up with depends on a number of factors.  The inherent kinetics of the reaction are of vital concern: For instance, some reactions tend to go in a particular direction because energy is released in that direction.  A system's equilibrium is also affected by the concentrations of the reactants -- this is modeled here --- and by the system's temperature.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 As stated above, this model simulates a chemical system of four different molecules.  They are represented in the view as turtles of four different colors.  In this simulation, yellow molecules react with blue molecules to produce brown molecules and green molecules.
 
 The model is setup by first adjusting the YELLOWMOLS and BLUEMOLS sliders and pushing the SETUP button.  YELLOWMOLS sets how many yellow molecules the simulation starts with, while BLUEMOLS sets how many blue molecules the simulation starts with.
-
 
 The GO button sets the simulation in motion.  Molecules move randomly and react with each other, changing color to represent rearrangement of atoms into different molecular structures.  The system soon comes into equilibrium.
 
 Four monitors show how many of each kind of molecule are present in the system.  There is also a plot which plots the number of each kind of molecule present versus time.
 
+## THINGS TO NOTICE
 
-
-THINGS TO NOTICE
-----------------
 Notice that the number of product molecules is limited by the smallest amount of reactant product.  Notice that there are always the same number of reactant products since they are formed in a one-to-one correspondence with each other.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 How do different amounts of the two reactants affect the final equilibrium.  Are absolute amounts important, is it the difference between the amounts, or is it a ratio of the two reactants that matters?
 
 Try setting the YELLOWMOLS slider to 400 and the BLUEMOLS slider to 20, 40, 100, 200, and 400 in five successive simulations.  What sort of equilibrium state do you predict in each case?  Are certain ratios predictable?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 What if the forward and reverse reaction rates were the variables controlled instead of initial concentrations.  You could compare such a simulation with the one in this model and see if concentration and reaction rates act independently of each other, as measured by the final equilibrium state.
 
 You could also extend the program by allowing the user to introduce new molecules into the simulation while it is running.  How would the addition of fifty blue molecules affect a system that was already at equilibrium?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -580,7 +558,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

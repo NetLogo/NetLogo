@@ -1,6 +1,6 @@
 ;;  This procedure creates 8 turtles in puts them in a circle
 to setup
-  ca
+  clear-all
   setxyz 10 -20 6 ; set the observer position
   crt 8
     [ fd 9 ]
@@ -85,6 +85,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 76
@@ -197,17 +198,17 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This is a 3D version of the 2D model Neighborhoods Example This code example shows how to use the basic 2D and 3D neighborhood primitives in a 3D world.  These include neighbors, neighbors6, in-radius, and at-points:
+## WHAT IS IT?
 
-- neighbors: reports the 26 patches surrounding a patch or turtle
+This is a 3D version of the 2D model Neighborhoods Example This code example shows how to use the basic 2D and 3D neighborhood primitives in a 3D world.  These include `neighbors`, `neighbors6`, `in-radius`, and `at-points`:
 
-- neighbors6: reports the same patches3d, excluding the ones at the corners
+- `neighbors`: reports the 26 patches surrounding a patch or turtle
 
-- <agentset> in-radius <number>: reports those agents in agentset whose distance from the caller is less than or equal to n.
+- `neighbors6`: reports the same patches, excluding the ones at the corners
 
-- <agentset> at-points <list>: reports those agents in agentset at the given points relative to the caller, where list is a list of two-element lists.
+- `<agentset> in-radius <number`>: reports those agents in agentset whose distance from the caller is less than or equal to n.
+
+- `<agentset> at-points <list>`: reports those agents in agentset at the given points relative to the caller, where list is a list of two-element lists.
 
 Although in this example, we only change the color of the reported patches, you can of course do more complicated operations, including assigning that agentset to a variable. This is particularly useful for Cellular Automata models.
 @#$#@#$#@
@@ -491,7 +492,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 paint-neighbors

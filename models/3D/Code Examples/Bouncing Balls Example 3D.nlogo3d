@@ -90,6 +90,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 63
@@ -197,13 +198,12 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is an example that displays many of the capabilities of NetLogo 3D.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 The SETUP button creates BALL-COUNT balls poised above the "floor" of the world. GO releases the balls and "gravity" pulls them down.  The balls will bounce until they lose momentum.  If the COLOR-SPEED? switch is on the color of the ball will be scaled the speed it is moving.  If the TAILS? switch is on the balls will leave a trace of the path they have taken.
 @#$#@#$#@
 default
@@ -500,7 +500,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

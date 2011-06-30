@@ -107,6 +107,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 24
@@ -143,18 +144,16 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This example shows make a terrain in 3D and move turtles across the terrain. This is much like the Hill Climbing Example in 2D.  However, the elevation variation in the terrain is visible in the 3D space.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
-The hill climbing code is very similar to UPHILL in 2D. However, we want the turtles to look at the link neighbors of the stayer here rather than the patch neighbors.
+The hill climbing code is very similar to `uphill` in 2D. However, we want the turtles to look at the link neighbors of the stayer here rather than the patch neighbors.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Note that terrain models are not full 3D models.  Each spot on the landscape only has eight neighbors; we use links to indicate the neighbors of each location since it cannot be determined spatially.  We do, however, use the 3D space to display the height of each location.
 @#$#@#$#@
 default
@@ -440,7 +439,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

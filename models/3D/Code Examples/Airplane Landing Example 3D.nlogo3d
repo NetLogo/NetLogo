@@ -1,8 +1,13 @@
 globals [ speed ]
 
 to setup
-  ca
-  crt 1 [ setxy 4 4 set roll -45 set color red set shape "airplane" ]
+  clear-all
+  crt 1 [
+    setxy 4 4
+    set roll -45
+    set color red
+    set shape "airplane"
+  ]
   set speed .1
   ask patches with [ pzcor = -8 ] [ set pcolor green + (random-float 2) - 1 ]
   ask patches with [ pzcor = -8 and pxcor > -12 and pxcor < -4 ]
@@ -25,15 +30,11 @@ to go
     [ set roll precision (roll + 1) 3 ]
     if ( roll = 0 and pitch = -15 )
     [ set zcor zcor - .00 ]
-
     if ( zcor < -6.2 and pitch != 0 )
     [ set pitch precision (pitch + .2) 3 ]
-
     if ( zcor < -6.2 and pitch = 0 and speed > 0 )
     [ set speed speed - .001 ]
-
     fd speed
-
   ]
   tick
 end
@@ -65,6 +66,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 58
@@ -169,8 +171,8 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is an animation of an airplane landing at an airport.
 @#$#@#$#@
 default
@@ -467,7 +469,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

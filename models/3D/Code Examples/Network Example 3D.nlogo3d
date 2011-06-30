@@ -3,8 +3,7 @@ to setup
   ;; These shapes were drawn using the Shapes Editor, on
   ;; the Tools menu.
   set-default-shape turtles "circle"
-  create-turtles number-of-nodes
-  [
+  create-turtles number-of-nodes [
     ;; Initially, my-nodes have no connecting edges.  So we set
     ;; out-edges and in-edges to the empty list.
     set shape "circle"
@@ -38,8 +37,7 @@ to form-random-edge ;; node procedure
   let other-node one-of other turtles
   ;; make sure we got another node, and that we aren't connected
   ;; to it, and that it isn't connected to us
-  if (other-node != nobody) and link-with other-node = nobody
-  [
+  if (other-node != nobody) and link-with other-node = nobody [
      create-link-with other-node [ set color green ]
   ]
 end
@@ -71,6 +69,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 100
@@ -154,40 +153,33 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the 2D model Network Example. The only significant difference from the 2D code is that we spread the nodes around the world in 3D space.
 
 This example demonstrates how to make a network in NetLogo.  The network consists of a collection of nodes, some of which are connected by edges.
 
 This example doesn't do anything in particular with the nodes and edges.  You can use it as the basis for your own model that actually does something with them.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Position the nodes in a circle, instead of randomly.
 
-Use the turtle variable LABEL to label the nodes and/or edges with some information.
+Use the turtle variable `label` to label the nodes and/or edges with some information.
 
 Try calculating some statistics about the network that forms, for example the average degree.
 
-Try other rules for connecting nodes besides totally randomly.  For example, you could:
-- Connect every node to every other node.
-- Make sure each node has at least one edge going in or out.
-- Only connect nodes that are spatially close to each other.
-- Make some nodes into "hubs" (with lots of edges).
+Try other rules for connecting nodes besides totally randomly.  For example, you could:  
+- Connect every node to every other node.  
+- Make sure each node has at least one edge going in or out.  
+- Only connect nodes that are spatially close to each other.  
+- Make some nodes into "hubs" (with lots of edges).  
 And so on.
 
 Make two kinds of nodes, differentiated by color, then only allow edges to connect two nodes that are different colors.  This makes the network "bipartite."  (You might position the two kinds of nodes in two straight lines.)
 
+## RELATED MODELS
 
-NETLOGO FEATURES
-----------------
-In the GO button, the "Force display update after each iteration" checkbox is turned off.  This makes the model run a lot faster, since we don't need to see each edge appear and disappear individually.
-
-
-RELATED MODELS
---------------
 Network Example
 
 Owen Densmore's "Layout" model, available from the NetLogo User Community Models web page (http://ccl.northwestern.edu/netlogo/models/community/), shows how to make the nodes and edges automatically reposition themselves into a pleasing-looking layout.  It also shows how to generate a network with "hubs", where the distribution of the number of edges the nodes have follows a power law.
@@ -472,7 +464,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

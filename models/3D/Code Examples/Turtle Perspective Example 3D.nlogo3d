@@ -8,7 +8,10 @@ to setup
 end
 
 to go
-  ask turtles [ fd .1 lt 1 ]
+  ask turtles [
+    fd 0.1
+    lt 1
+  ]
   tick
 end
 
@@ -48,6 +51,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 76
@@ -206,8 +210,8 @@ Observer position
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is an example that demonstrates changing perspectives in NetLogo 3D.
 @#$#@#$#@
 default
@@ -504,7 +508,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
