@@ -396,7 +396,7 @@ public strictfp class VectorShape
   // out of defaultShapes.txt - ST 6/27/05
   public static VectorShape getDefaultShape() {
     VectorShape result = new org.nlogo.shape.VectorShape();
-    result.setName(org.nlogo.api.ShapeList.DEFAULT_SHAPE_NAME);
+    result.setName(org.nlogo.api.ShapeList.DefaultShapeName());
     result.setRotatable(true);
     result.setEditableColorIndex(0);
     result.addElement
