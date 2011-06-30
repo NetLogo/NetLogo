@@ -70,7 +70,11 @@ class Tabs(val workspace: GUIWorkspace,
   val errorColor = java.awt.Color.RED
   
   def handle(e: CompiledEvent) {
-    def clearErrors() { for(i <- 3 until getTabCount) setForegroundAt(i, null) }
+    def clearErrors() {
+      for(i <- 0 until getTabCount)
+        if(getComponentAt(i).isInstanceOf[ProceduresTab])
+          setForegroundAt(i, null)
+    }
     def recolorTab(component: java.awt.Component, hasError: Boolean) {
       setForegroundAt(indexOfComponent(component), if(hasError) errorColor else null)
     }
