@@ -7,40 +7,10 @@ package org.nlogo.api;
 // convert back and forth to an integer at import or export time. - ST 3/18/08
 public enum Perspective {
   OBSERVE, RIDE, FOLLOW, WATCH;
-
-  // now for import/export support
   public int export() {
-    switch (this) {
-      case OBSERVE:
-        return OBSERVE_INT;
-      case RIDE:
-        return RIDE_INT;
-      case FOLLOW:
-        return FOLLOW_INT;
-      case WATCH:
-        return WATCH_INT;
-      default:
-        throw new IllegalStateException();
-    }
+    return ordinal();
   }
-
   public static Perspective load(int perspectiveAsInteger) {
-    switch (perspectiveAsInteger) {
-      case OBSERVE_INT:
-        return OBSERVE;
-      case RIDE_INT:
-        return RIDE;
-      case FOLLOW_INT:
-        return FOLLOW;
-      case WATCH_INT:
-        return WATCH;
-      default:
-        throw new IllegalStateException();
-    }
+    return Perspective.class.getEnumConstants()[perspectiveAsInteger];
   }
-
-  private static final int OBSERVE_INT = 0;
-  private static final int RIDE_INT = 1;
-  private static final int FOLLOW_INT = 2;
-  private static final int WATCH_INT = 4;
 }
