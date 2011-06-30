@@ -332,8 +332,8 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         descriptor)
     }
     def generateKeptFields() {
-      import org.nlogo.util.JCL._
-      for (fieldName <- keptThings.keySet) {
+      import collection.JavaConverters._
+      for (fieldName <- keptThings.keySet.asScala) {
         val descriptor = keptThingsTypes.get(fieldName).getDescriptor
         var accessCode = keptThingsAccessCodes.get(fieldName).intValue
         // remove "final" flag, so we can set the fields after construction.
@@ -342,8 +342,8 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       }
     }
     def setAllKeptFields(resultInstr: Instruction) {
-      import org.nlogo.util.JCL._
-      for (fieldName <- keptThings.keySet) {
+      import collection.JavaConverters._
+      for (fieldName <- keptThings.keySet.asScala) {
         val f = resultInstr.getClass.getDeclaredField(fieldName)
         f.setAccessible(true)
         f.set(resultInstr, keptThings.get(fieldName))

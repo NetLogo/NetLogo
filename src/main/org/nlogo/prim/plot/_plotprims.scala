@@ -93,8 +93,8 @@ class _histogram extends CurrentPlotCommand(Syntax.TYPE_LIST) {
     val currentPen = plot.currentPenOrBust
     currentPen.plotListenerReset(false)
     plot.beginHistogram(currentPen)
-    import org.nlogo.util.JCL._
-    for(value <- list if(value.isInstanceOf[Double])) plot.nextHistogramValue(value.asInstanceOf[Double])
+    for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
+      plot.nextHistogramValue(d)
     plot.endHistogram(currentPen)
     plot.makeDirty()
   }
