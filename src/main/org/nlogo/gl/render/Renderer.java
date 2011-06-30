@@ -194,6 +194,8 @@ public class Renderer
 
     gl.glEnable(GL.GL_LIGHTING);
 
+    gl.glEnable(GL.GL_NORMALIZE);
+
     // Coloring
 
     gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
