@@ -159,7 +159,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         val message =
           "An incompatible version of the HubNet Client tried logging in. " +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
-          Version.version()
+          Version.version
         org.nlogo.util.Exceptions.handle(new Exception(message, e))
       } else {
         if (!sendingEx) org.nlogo.util.Exceptions.handle(e)

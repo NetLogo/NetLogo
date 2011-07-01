@@ -20,8 +20,8 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   }
   private var graphicsInfo = ""
   private val staticInfo =
-    Version.version() +
-      " (" + Version.buildDate() + ")\n" +
+    Version.version +
+      " (" + Version.buildDate + ")\n" +
       "Extension API version: " + APIVersion.version + "\n" +
       SysInfo.getVMInfoString + "\n" +
       SysInfo.getOSInfoString + "\n" +
@@ -35,8 +35,8 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       setText(
           "<html>\n"
           + "<center>"
-          + "<b>" + Version.version()
-          + " <font color=\"#666666\">(" + Version.buildDate()
+          + "<b>" + Version.version
+          + " <font color=\"#666666\">(" + Version.buildDate
           + ")</font>" + "</b><br><br>\n"
           + "<font size=-1><b>web site</b> "
           + "<a href=\"http://ccl.northwestern.edu/netlogo/\">ccl.northwestern.edu/netlogo</a><br><br>"

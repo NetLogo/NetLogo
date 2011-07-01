@@ -39,7 +39,7 @@ object ModelLoader {
             val response = {
               val message = "This model was created in " + version +
                       ". You may need to make changes for it to work in " +
-                      org.nlogo.api.Version.version() + "."
+                      org.nlogo.api.Version.version + "."
               val options = Array[Object](I18N.gui.get("common.buttons.continue"), "Open Transition Guide", I18N.gui.get("common.buttons.cancel"))
               org.nlogo.swing.OptionDialog.show(linkParent, I18N.gui.get("common.messages.warning"), message, options)
             }
