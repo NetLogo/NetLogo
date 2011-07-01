@@ -77,8 +77,8 @@ abstract class AbstractTestLanguage extends Assertions {
       case ex =>
         // PureConstantOptimizer turns some errors that would be runtime errors into compile-time
         // errors, so we have to check for those
-        if(ex.getMessage.startsWith(CompilerException.RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX))
-          expect(CompilerException.RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX + expectedError)(
+        if(ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix))
+          expect(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
             ex.getMessage)
         else
           withClue(mode + ": reporter: " + reporter) {
