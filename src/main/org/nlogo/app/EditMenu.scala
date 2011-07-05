@@ -49,7 +49,8 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
     if(e.section == org.nlogo.api.ModelSection.MODEL_SETTINGS) {
       app.workspace.snapOn(e.lines != null &&
-                           e.lines.size > 0 &&
+                           e.lines.nonEmpty &&
+                           e.lines.head.trim.nonEmpty &&
                            e.lines.head.toInt != 0)
       snapper.setState(app.workspace.snapOn)
     }
