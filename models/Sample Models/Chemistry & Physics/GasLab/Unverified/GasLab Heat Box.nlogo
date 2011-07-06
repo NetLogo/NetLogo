@@ -31,7 +31,7 @@ particles-own
 ]
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set max-tick-delta 0.1073
@@ -451,6 +451,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -467,6 +468,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -483,6 +485,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 96
@@ -700,67 +703,70 @@ PENS
 "init-avg-speed" 1.0 0 -16777216 true "draw-vert-line init-avg-speed" ""
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
-This model is illustrates the relationship between temperature and pressure in
+This model is illustrates the relationship between temperature and pressure in  
 a fixed volume gas container.
 
 This model is part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
-HOW IT WORKS
-------------
+## HOW IT WORKS
+
 The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.
 
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch. In this model, two turtles are aimed so that they will collide at the origin.
-3. An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.
-4. The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.
-5. Each particle is assigned its new speed, heading and energy.
-6. If a particle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch. In this model, two turtles are aimed so that they will collide at the origin.  
+3. An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.  
+4. The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.  
+5. Each particle is assigned its new speed, heading and energy.  
+6. If a particle finds itself on or very close to a wall of the container, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
 As the walls of the box are heated, the sides of the walls will change color from a deep red (cool) to a bright red, to pink to a pale pink white (hot).  The walls contain a constant heat value throughout the simulation.  If ONE-SIDE? is set to ON, only the left wall will be heated, while the other three walls remain yellow.
 
-The exact way particles gain energy from the walls of the box is as follows:
-1. Particles check their state of energy.
-2. They hit or bounce off the wall.
-3. They find wall energy and recalculate their new energy.
+The exact way particles gain energy from the walls of the box is as follows:  
+1. Particles check their state of energy.  
+2. They hit or bounce off the wall.  
+3. They find wall energy and recalculate their new energy.  
 4. They change their speed and direction after the wall hit.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
+### Initial settings
+
 - NUMBER-OF-PARTICLES: number of particles within in the box
 
-Buttons:
-The SETUP button will set these initial conditions.
+### Buttons
+
+The SETUP button will set these initial conditions.  
 The GO button will begin the simulation.
 
-Other Settings:
--  OUTSIDE TEMPERATURE: temperature of the outside of the box and the wall of the box.
--  ONE SIDE?: heats only the left wall if enabled.  the other walls are colored yellow, and do not affect the energy of the particles that bounce into it.
+### Other Settings
+
+-  OUTSIDE TEMPERATURE: temperature of the outside of the box and the wall of the box.  
+-  ONE SIDE?: heats only the left wall if enabled.  the other walls are colored yellow, and do not affect the energy of the particles that bounce into it.  
 - COLLIDE?: Turns collisions between particles on and off.
 
-Monitors:
-- PRESSURE: the pressure of the gas particles in the box
-- WALL HITS PER PARTICLE: number of times that each particle hit the walls
-- AVERAGE SPEED: average speed of the particles.
+### Monitors
+
+- PRESSURE: the pressure of the gas particles in the box  
+- WALL HITS PER PARTICLE: number of times that each particle hit the walls  
+- AVERAGE SPEED: average speed of the particles.  
 - AVERAGE ENERGY: average kinetic energy of the particles.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed.
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.
-- ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as m*(v^2)/2.
-- PRESSURE VS. TIME: plots average pressure of the inside of the box over time.
-- TEMPERATURE VS. TIME: plots particle temperature inside the box over time and wall temperature over time.
+### Plots
+
+- SPEED COUNTS: plots the number of particles in each range of speed.  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  
+- ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as m*(v^2)/2.  
+- PRESSURE VS. TIME: plots average pressure of the inside of the box over time.  
+- TEMPERATURE VS. TIME: plots particle temperature inside the box over time and wall temperature over time.  
 - WALL HITS PER PARTICLE: plots average wall hits per particle over time.
 
-THINGS TO NOTICE
-----------------
+## THINGS TO NOTICE
 
 How does adding heat to the box walls affect the pressure?
 
@@ -770,27 +776,23 @@ How does the particle behavior or system response change with only one wall heat
 
 Does the system reach an equilibrium temperature faster when the wall is heated or cooled the same amount in comparison to the temperature of the particles?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try to get the inside temperature to reach the outside temperature.  Is this possible?
 
 Try to increase the wall hits per particle.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Give the wall a mass and see how that affects the behavior of the model.
 
 Close off the right side of the box.  Create two valves on either side to the wall that allow the user to "spurt" particles into the chambers to see how number of particles affects pressure.
 
 Vary the width and length of the box, does this effect how fast the particle temperature changes?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Notice how the collisions are detected by the turtles and how the code guarantees the same two particles do not collide twice.  What happens if we let the patches detect them?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1089,7 +1091,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

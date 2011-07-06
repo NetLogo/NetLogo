@@ -23,7 +23,7 @@ patches-own [
 ]
 
 to setup [mode]
-  ca
+  clear-all
   make-box
   set vclock  0
   crt number
@@ -242,6 +242,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 7
@@ -273,6 +274,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 8
@@ -289,6 +291,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 7
@@ -320,6 +323,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 8
@@ -336,6 +340,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 7
@@ -441,81 +446,77 @@ PENS
 "default" 1.0 0 -16777216 true "" ""
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model simulates the Second Law of Thermodynamics via the behavior of gas particles in a box. The Second Law of Thermodynamics states that systems tend towards increased entropy.  Essentially what this means is that over time ordered systems become less ordered unless work is done on the system to keep it ordered.
 
-HOW IT WORKS
-------------
-Particles are modeled as perfectly elastic particles with no energy except their kinetic energy -- that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+## HOW IT WORKS
 
-The exact way two particles collide is as follows:
-1. Two turtles "collide" if they find themselves on the same patch.
-2. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-3. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-4. Each turtle is assigned its new velocity, energy, and heading.
+Particles are modeled as perfectly elastic particles with no energy except their kinetic energy --- that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+
+The exact way two particles collide is as follows:  
+1. Two turtles "collide" if they find themselves on the same patch.  
+2. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+3. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+4. Each turtle is assigned its new velocity, energy, and heading.  
 5. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
 
 The propeller is modeled such that it shows the effect of the flux of the particles between the two sides of the box, but does not effect or interact with the particles as they pass through.  When particles move from the left side to the right side they accelerate the propeller clockwise, and likewise, when particles move from the right side to the left side they accelerate the propeller counter-clockwise.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-SETUP: sets up the initial conditions and distributes the particles in one of three different modes.  Be sure to wait till the Setup button stops before pushing go.
-CORNER: all the particles are created in the lower left corner of the box and diffuse outwards from there.
-ONE SIDE: all the particles are created in the left side of the box evenly distributed.
-BOTH SIDES: all the particles are created evenly distributed throughout the entire box.
-GO: runs the code again and again.  This is a "forever" button.
-NUMBER: the number of gas particles
+SETUP: sets up the initial conditions and distributes the particles in one of three different modes.  Be sure to wait till the Setup button stops before pushing go.  
+CORNER: all the particles are created in the lower left corner of the box and diffuse outwards from there.  
+ONE SIDE: all the particles are created in the left side of the box evenly distributed.  
+BOTH SIDES: all the particles are created evenly distributed throughout the entire box.  
+GO: runs the code again and again.  This is a "forever" button.  
+NUMBER: the number of gas particles  
 PROPELLER-RADIUS: the radius of the propeller in the opening between the sides of the box.  The size of the opening is based on the size of the propeller.
 
-About the plots:
-PARTICLE COUNTS: plots the number of particles on each side of the box.
-PROPELLER VELOCITY: plots the velocity of the propeller: positive is clockwise, negative is counter-clockwise.
-PRESSURES: plots the pressure of the gas on each side of the box.
+### About the plots
+
+PARTICLE COUNTS: plots the number of particles on each side of the box.  
+PROPELLER VELOCITY: plots the velocity of the propeller: positive is clockwise, negative is counter-clockwise.  
+PRESSURES: plots the pressure of the gas on each side of the box.  
 ENTROPY: plots a measure of the entropy of the system.  As the particles become more evenly and randomly distributed the entropy will increase.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 When the particles are evenly distributed throughout the box, what do you notice about the behavior of the propeller?
 
 In what ways is this model a correct or incorrect idealization of the real world?
 
 In what ways can you quantify entropy?  What is the best way to quantify entropy in this model?  Does this model use this method?  If not, what is wrong with the method being used?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Set all the particles in part of the world, or with the same heading -- what happens?  Does this correspond to a physical possibility?
 
 Are there other interesting quantities to keep track of?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Could you find a way to measure or express the "temperature" of this imaginary gas?  Try to construct a thermometer.
 
 What happens if there are particles of different masses?  (See GasLab Two Gas model.)
 
 How does this 2-D model differ from the 3-D model?
 
-If MORE than two particles arrive on the same patch, the current code says they don't collide.  Is this a mistake?  How does it affect the results?
+If *more* than two particles arrive on the same patch, the current code says they don't collide.  Is this a mistake?  How does it affect the results?
 
 Is this model valid for fluids in any aspect?  How could it be made to be fluid-like?
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 The GasLab suite of models, especially GasLab Maxwell's Demon, which models a theoretical system that seems to violate the Second Law of Thermodynamics.
 
-
 ## CREDITS AND REFERENCES
-Based on GasLab -- thanks to Brent Collins and Seth Tisue for their help on this model.
+
+Thanks to Brent Collins and Seth Tisue for their work on this model.
 @#$#@#$#@
 default
 true
@@ -807,7 +808,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 setup "corner"
 repeat 75 [ go ]
