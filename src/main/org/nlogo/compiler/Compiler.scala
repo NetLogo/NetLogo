@@ -1,7 +1,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, ExtensionManager, Number, Program, Token,
+import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
 import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
@@ -80,25 +80,25 @@ object Compiler extends CompilerInterface {
   /// it to ConstantParser.  This should really be cleaned up so that ConstantParser uses api.World
   /// too. - ST 2/23/09
 
-  // In the following 3 methods, the initial call to Number.parse is a performance optimization.
+  // In the following 3 methods, the initial call to NumberParser is a performance optimization.
   // During import-world, we're calling readFromString over and over again and most of the time
-  // the result is a number.  So we try the fast path through Number.parse first before falling
+  // the result is a number.  So we try the fast path through NumberParser first before falling
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
         .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer(is3D).tokenize(source).iterator))
 

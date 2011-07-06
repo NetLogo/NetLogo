@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.lang.Number;  // not api.Number
 
 public final strictfp class Color {
 
