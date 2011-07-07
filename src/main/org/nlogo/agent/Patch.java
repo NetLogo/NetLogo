@@ -84,7 +84,7 @@ public strictfp class Patch
           variables[i] = "";
           break;
         case VAR_PLABELCOLOR:
-          variables[i] = Color.BOXED_WHITE;
+          variables[i] = Color.BoxedWhite();
           break;
         default:
           variables[i] = World.ZERO;
@@ -363,7 +363,7 @@ public strictfp class Patch
   }
 
   public void pcolor(double pcolor) {
-    if (pcolor < 0 || pcolor >= Color.MAX_COLOR) {
+    if (pcolor < 0 || pcolor >= Color.MaxColor()) {
       pcolor = Color.modulateDouble(pcolor);
     }
     if (this.pcolor != pcolor) {
@@ -379,7 +379,7 @@ public strictfp class Patch
 
   public void pcolor(Double boxedColor) {
     double color = boxedColor.doubleValue();
-    if (color < 0 || color >= Color.MAX_COLOR) {
+    if (color < 0 || color >= Color.MaxColor()) {
       color = Color.modulateDouble(color);
       if (pcolor != color) {
         pcolor = color;

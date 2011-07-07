@@ -776,9 +776,9 @@ public strictfp class World
   public void clearPatches() {
     for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
       Patch patch = (Patch) iter.next();
-      patch.pcolorDoubleUnchecked(Color.BOXED_BLACK);
+      patch.pcolorDoubleUnchecked(Color.BoxedBlack());
       patch.label("");
-      patch.labelColor(Color.BOXED_WHITE);
+      patch.labelColor(Color.BoxedWhite());
       try {
         for (int j = patch.NUMBER_PREDEFINED_VARS;
              j < patch.variables.length;

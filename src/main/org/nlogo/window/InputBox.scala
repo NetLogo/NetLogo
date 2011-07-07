@@ -534,18 +534,19 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       scroller.setVisible(false)
       panel.setOpaque(true)
 
-      val (colorval, c) = if (value.isInstanceOf[Double]) {
-        val cv = modulateDouble(value.asInstanceOf[Double])
-        (cv, getColor(cv))
-      } else (0d, Color.BLACK)
+      val (colorval, c) =
+        if (value.isInstanceOf[Double]) {
+          val cv = modulateDouble(value.asInstanceOf[Double]): java.lang.Double
+          (cv, getColor(cv))
+        }
+        else (0d: java.lang.Double, Color.BLACK)
 
       panel.setBackground(c)
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
       panel.setText(colorval match {
-        // this logic is duplicated in ColorEditor
-        // black and white are special cases
-        case 0 => "0 (black)"
-        case 9.9 => "9.9 (white)"
+        // this logic is duplicated in ColorEditor; black and white are special cases
+        case d: java.lang.Double if d.doubleValue == 0.0 => "0 (black)"
+        case d: java.lang.Double if d.doubleValue == 9.9 => "9.9 (white)"
         case c =>
           val index = (c / 10).toInt
           val baseColor = index * 10 + 5

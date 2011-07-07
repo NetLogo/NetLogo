@@ -34,7 +34,7 @@ public final strictfp class Turtle3D
     LAST_PREDEFINED_VAR = VAR_PENMODE3D;
     NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
 
-    variables[VAR_COLOR3D] = Color.BOXED_BLACK;
+    variables[VAR_COLOR3D] = Color.BoxedBlack();
     heading = 0;
     variables[VAR_HEADING3D] = World.ZERO;
     this.xcor = xcor.doubleValue();
@@ -47,7 +47,7 @@ public final strictfp class Turtle3D
     }
     variables[VAR_SHAPE3D] = world.turtleBreedShapes.breedShape(breed);
     variables[VAR_LABEL3D] = "";
-    variables[VAR_LABELCOLOR3D] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR3D] = Color.BoxedWhite();
     variables[VAR_BREED3D] = breed;
     variables[VAR_HIDDEN3D] = Boolean.FALSE;
     variables[VAR_SIZE3D] = World.ONE;

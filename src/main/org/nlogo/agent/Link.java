@@ -75,11 +75,11 @@ public strictfp class Link
   Link(World world, Turtle end1, Turtle end2, AgentSet breed) {
     super(world);
     variables = new Object[world.getVariablesArraySize(this, breed)];
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     variables[VAR_END1] = end1;
     variables[VAR_END2] = end2;
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_THICKNESS] = World.ZERO;
     variables[VAR_SHAPE] = world.linkBreedShapes.breedShape(breed);
@@ -507,7 +507,7 @@ public strictfp class Link
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }

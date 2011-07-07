@@ -50,7 +50,7 @@ public strictfp class Turtle
 
 
   void initvars(Double xcor, Double ycor, AgentSet breed) {
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     heading = 0;
     variables[VAR_HEADING] = World.ZERO;
     this.xcor = xcor.doubleValue();
@@ -59,7 +59,7 @@ public strictfp class Turtle
     variables[VAR_YCOR] = ycor;
     variables[VAR_SHAPE] = world.turtleBreedShapes.breedShape(breed);
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_BREED] = breed;
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_SIZE] = World.ONE;
@@ -583,7 +583,7 @@ public strictfp class Turtle
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }
