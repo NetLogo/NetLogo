@@ -24,7 +24,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "square"
   set max-tick-delta 0.1073
@@ -355,6 +355,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -371,6 +372,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -387,6 +389,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 96
@@ -467,6 +470,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 209
@@ -483,6 +487,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 SLIDER
 176
@@ -687,70 +692,61 @@ max [speed] of particles
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
 
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model simulates the behavior of two different types of gas particles in a box with a partitioning wall. Part or all of the wall can be removed, allowing the particles to mix together. It was one of the original CM StarLogo applications (under the name GPCEE) and is now ported to NetLogo as part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
 This model is part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
+## HOW IT WORKS
 
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow, green for medium, and red for high speeds.
 
-HOW IT WORKS
-------------
+Coloring of the particles is with respect to one speed (10). Particles with a speed less than 5 are blue, ones that are more than 15 are red, while all in those in-between are green.
 
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+The exact way two particles collide is as follows:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch.  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each particle is assigned its new velocity, energy, and heading.  
+6. If a particle finds itself on or very close to a wall of the container, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
-Coloring of the particles is with respect to one speed (10).
-Particles with a speed less than 5 are blue, ones that are more than
-15 are red, while all in those in-between are green.
+## HOW TO USE IT
 
-The exact way two particles collide is as follows:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch.
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each particle is assigned its new velocity, energy, and heading.
-6. If a particle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
-
-
-
-HOW TO USE IT
--------------
-Initial settings:
-- BOX-SIZE: the percent of the width and height of the world that the box will occupy.
-- NUM-MAGENTAS and NUM-CYAN: the number of gas particles of each color.
-- MAGENTA-INIT-SPEED and CYAN-INIT-SPEED: the initial speed the the respective particle.
+Initial settings:  
+- BOX-SIZE: the percent of the width and height of the world that the box will occupy.  
+- NUM-MAGENTAS and NUM-CYAN: the number of gas particles of each color.  
+- MAGENTA-INIT-SPEED and CYAN-INIT-SPEED: the initial speed the the respective particle.  
 - MAGENTA-MASS and CYAN-MASS: the mass of the respective particles.
 
-The SETUP button will set these initial conditions.
+The SETUP button will set these initial conditions.  
 The GO button will begin the simulation.
 
-Controls:
-The OPEN button opens the wall between the chambers of the box.
+Controls:  
+The OPEN button opens the wall between the chambers of the box.  
 The CLOSE button closes the wall between the chambers of the box.
 
-Other settings:
-- COLLIDE?: Turns collisions between particles on and off.
+Other settings:  
+- COLLIDE?: Turns collisions between particles on and off.  
 - OPENING-SIZE: the size of the opening made as a percentage of the BOX-SIZE when the OPEN button is pressed.
 
-Monitors:
-- MAGENTAS IN RIGHT CHAMBER: number of magenta particles in the right chamber.
-- CYANS IN LEFT CHAMBER: number of cyan particles in the left chamber
-- AVERAGE ENERGY MAGENTA or CYAN: average energy of magenta or cyan particles.
+Monitors:  
+- MAGENTAS IN RIGHT CHAMBER: number of magenta particles in the right chamber.  
+- CYANS IN LEFT CHAMBER: number of cyan particles in the left chamber  
+- AVERAGE ENERGY MAGENTA or CYAN: average energy of magenta or cyan particles.  
 - AVERAGE SPEED MAGENTA or CYAN: average speed of magenta or cyan particles.
 
-Plots:
-- AVERAGE ENERGY: average energy of the different particles over time.
+Plots:  
+- AVERAGE ENERGY: average energy of the different particles over time.  
 - AVERAGE SPEED: average speed of the different particles over time.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 What variables affect how quickly the model reaches a new equilibrium when the wall is removed?
 
 Why does the average speed for each color decrease as the model runs with the wall in place, even though the average energy remains constant?
@@ -763,25 +759,23 @@ Do heavier particles tend to have higher or lower speeds when the distribution o
 
 Is it reasonable that this box can be considered to be "insulated"?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Calculate how long the model takes to reach equilibrium with different sizes of windows (holding other parameters constant).
 
 Calculate how long the model takes to reach equilibrium with different particle speeds.
 
 Set the number of cyan particles to zero.  This is a model of a gas expanding into a vacuum.  This experiment was first done by Joule, using two insulated chambers separated by a valve.  He found that the temperature of the gas remained the same when the valve was opened.  Why would this be true? Is this model consistent with that observation?
 
-Try some extreme situations, to test your intuitive understanding:
--- masses the same, speeds of the two particles very different.
--- speeds the same, masses very different.
+Try some extreme situations, to test your intuitive understanding:  
+-- masses the same, speeds of the two particles very different.  
+-- speeds the same, masses very different.  
 -- a very small number of one kind of particle -- almost, but not quite a vacuum.  What happens to those few particles, and how do they affect the other kind?
 
 Try relating quantitatively the ratio of the equilibrium speeds of both gases after the wall is opened to the ratio of the masses of both gases.  How are they related?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Monitor pressure in the right and left chambers.
 
 Monitor temperature in the right and left chambers.
@@ -792,11 +786,9 @@ Replace the partition wall with a surface that can transmit energy.
 
 Add the histograms of energy and speed distribution (such as found in the "Free Gas" model).
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
 Notice how collisions are detected by the turtles and how the code guarantees that the same two particles do not collide twice.  What happens if we let the patches detect them?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1090,7 +1082,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

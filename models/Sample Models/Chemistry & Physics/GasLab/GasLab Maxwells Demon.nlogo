@@ -24,7 +24,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set max-tick-delta 0.1073
@@ -346,6 +346,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -362,6 +363,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -378,6 +380,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 95
@@ -567,74 +570,69 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model illustrates a famous thought experiment, which raised important issues about the nature of entropy.  In 1871, James Clerk Maxwell imagined a situation where a very small and nimble being could, by opening and closing a valve between two gas-filled chambers, allow only faster particles to go through one way and only slower particles to go through the other.  By doing this, the being (later called a demon) could raise the temperature of one chamber (faster particles) and lower the temperature of the other (slower particles), without the expenditure of work.  This was a violation of the Second Law of Thermodynamics, and he asserted that this could not actually occur.  The implications of this puzzle have continued to be central to thermodynamics, entropy, and information theory up to the present time.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow, green for medium, and red for high speeds.
 
 Coloring of the particles is with respect to one speed (10).  Particles with a speed less than 5 are blue, ones that are more than 15 are red, while all in those in-between are green.
 
-Particles behave according to the following rules:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches).
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each turtle is assigned its new velocity, energy, and heading.
+Particles behave according to the following rules:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches).  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each turtle is assigned its new velocity, energy, and heading.  
 6. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
 
 The setup is the same as that for the "Two-Gas" model.  What is added is a "valve".  It transports fast particles from the left to the right chamber when they arrive at the turquoise strip, and slow particles from the right to the left chamber when they arrive at the violet strip.  When a particle passes through, it becomes larger for a short time and displays its speed.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Settings:
-NUMBER-OF-PARTICLES: total number of particles in the two chambers
-INIT-PARTICLE-SPEED: initial speed of all the particles
+Settings:  
+NUMBER-OF-PARTICLES: total number of particles in the two chambers  
+INIT-PARTICLE-SPEED: initial speed of all the particles  
 PARTICLE-MASS: particles' mass
 
-Other settings:
-COLLIDE? If this is On, the particles collide.  If it is Off, they do not collide.
-THRESHOLD: The threshold is how much faster or slower than the average speed a particle must be going to be transferred to the other chamber by the "valve".
-DEMON?: If this is On, the valve is operating.  If it is Off, the valve does nothing.
+Other settings:  
+COLLIDE? If this is On, the particles collide.  If it is Off, they do not collide.  
+THRESHOLD: The threshold is how much faster or slower than the average speed a particle must be going to be transferred to the other chamber by the "valve".  
+DEMON?: If this is On, the valve is operating.  If it is Off, the valve does nothing.  
 TIME-DISPLAY-PARTICLES: determines for how long the particles are visually enlarged and their speeds are labeled, before the go back to their original size.
 
 Initialize the model by pressing SETUP, and press GO to run it.
 
-Monitors:
-AVERAGE SPEED:  average speed of all the particles.
-AVERAGE SPEED LEFT: average particle speed in the left chamber.
+Monitors:  
+AVERAGE SPEED:  average speed of all the particles.  
+AVERAGE SPEED LEFT: average particle speed in the left chamber.  
 AVERAGE SPEED RIGHT: average particle speed in the right chamber.
 
-Plots:
-PARTICLES COUNT: the number of particles in the left (turquoise) and right (violet) chambers.
-AVERAGE ENERGIES: the average energy of the particles in the left and right chambers.  This is calculated as the average of 1/2 mv^2 for the particles.
+Plots:  
+PARTICLES COUNT: the number of particles in the left (turquoise) and right (violet) chambers.  
+AVERAGE ENERGIES: the average energy of the particles in the left and right chambers.  This is calculated as the average of 1/2 mv^2 for the particles.  
 AVERAGE SPEEDS:  the average speeds of the particles in both the left and the right chambers.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Watch the "valve" carefully. Can you see fast (red) particles jump right and slow (blue) particles jump left when they run into the valve?  They are enlarged and their speeds are labeled for a short time.
 
 What happens to the average energies and speeds in the left and right chambers?  Do the values settle down after a long time?
 
 Notice the particles count in the two chambers.  While the model starts out with more particles going into the right chamber than the left, this changes after a while.  Why does that happen?  Given the Maxwell-Boltzmann distribution, which chamber should have more particles?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Change the valve threshold.  Does it change the rate of evolution of the model?  Does it change its eventual result?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 What happens if there are particles of different masses?  (See Two Gas model.)
 
 How would you calculate the pressure in each box?  (See Piston models.)  Do they remain equal?
@@ -643,12 +641,9 @@ If such a valve were possible, could "free energy" be gotten from the two chambe
 
 Another way of increasing order and later extracting energy might be to allow the valve to let through particles in only one direction, so that eventually one chamber is filled with gas, while the other one ends up empty.  Can you create such a system?
 
+## RELATED MODELS
 
-
-RELATED MODELS
----------------
 Look at the other GasLab models.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -947,7 +942,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
