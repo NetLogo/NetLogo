@@ -2,7 +2,6 @@ package org.nlogo.headless
 
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
-import org.nlogo.util.JCL._
 import org.nlogo.api.Perspective
 import MockGraphics._
 import org.nlogo.util.WorldType
@@ -146,9 +145,9 @@ class TestColorRendering extends AbstractTestRenderer {
   class PimpedWorkspace(workspace: HeadlessWorkspace){
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
-      for (shape <- workspace.world.turtleShapeList().getShapes) {
+      import collection.JavaConverters._
+      for (shape <- workspace.world.turtleShapeList().getShapes.asScala)
         workspace.world.turtleShapeList().removeShape(shape)
-      }
       // add one non-recolorable shape
       shapes.foreach(workspace.world.turtleShapeList().add)
     }

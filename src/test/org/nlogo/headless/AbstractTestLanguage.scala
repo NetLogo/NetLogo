@@ -34,11 +34,13 @@ abstract class AbstractTestLanguage extends Assertions {
   }
 
   def defineProcedures(source: String) {
-    import org.nlogo.util.JCL._
-    val results = compiler.compileProgram(
-      HeadlessWorkspace.TEST_DECLARATIONS + source,
-      workspace.world.newProgram(Nil),
-      workspace.getExtensionManager()) 
+    val results = {
+      import collection.JavaConverters._
+      compiler.compileProgram(
+        HeadlessWorkspace.TEST_DECLARATIONS + source,
+        workspace.world.newProgram(List[String]().asJava),
+        workspace.getExtensionManager())
+    }
     workspace.setProcedures(results.proceduresMap)
     workspace.world.program(results.program)
     workspace.init() 
