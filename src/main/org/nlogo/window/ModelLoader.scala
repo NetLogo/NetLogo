@@ -69,13 +69,13 @@ object ModelLoader {
 
         val sectionTypes = List(
           ModelSection.PreviewCommands,
-          ModelSection.Source,
+          ModelSection.Code,
           ModelSection.Info,
-          ModelSection.Widgets,
-          ModelSection.Aggregate,
-          ModelSection.Shapes,
-          ModelSection.Experiments,
-          ModelSection.Client,
+          ModelSection.Interface,
+          ModelSection.SystemDynamics,
+          ModelSection.TurtleShapes,
+          ModelSection.BehaviorSpace,
+          ModelSection.HubNetClient,
           ModelSection.LinkShapes,
           ModelSection.ModelSettings)
 
@@ -85,12 +85,12 @@ object ModelLoader {
             // so the default shapes must be loaded -- or maybe it's a model (such as the
             // default model) that was hand-edited to have no shapes in it, so it always gets
             // the default shapes when opened. - ST 9/2/03
-            case (ModelSection.Shapes, 0) => ModelReader.defaultShapes
+            case (ModelSection.TurtleShapes, 0) => ModelReader.defaultShapes
             case (ModelSection.LinkShapes, 0) => ModelReader.defaultLinkShapes
             // Another kludge: pre-4.1 model files have
             // org.nlogo.aggregate.gui in them instead of org.nlogo.sdm.gui,
             // so translate on the fly - ST 2/18/08
-            case (ModelSection.Aggregate, _) =>
+            case (ModelSection.SystemDynamics, _) =>
               map.get(section).map(_.replaceAll("org.nlogo.aggregate.gui", "org.nlogo.sdm.gui"))
             case _ => map.get(section)
           }

@@ -68,7 +68,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions
-    val widgets = parsedFile.get(if (client) ModelSection.Client else ModelSection.Widgets)
+    val widgets = parsedFile.get(if (client) ModelSection.HubNetClient else ModelSection.Interface)
     _clientEditor.load(widgets, parsedFile.get(ModelSection.Version)(0))
     openClientEditor()
   }

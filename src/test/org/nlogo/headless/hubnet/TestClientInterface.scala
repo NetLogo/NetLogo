@@ -25,7 +25,7 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   private def getClientWidgets(modelFilePath: String) = {
-    ModelReader.parseModel(new LocalFile(modelFilePath).readFile()).get(ModelSection.Client)
+    ModelReader.parseModel(new LocalFile(modelFilePath).readFile()).get(ModelSection.HubNetClient)
   }
 
   test("test roundTripSerialization method"){

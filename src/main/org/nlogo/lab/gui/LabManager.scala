@@ -43,7 +43,7 @@ class LabManager(val workspace: GUIWorkspace,
                    metrics.map(workspace.autoConvert(_, true, true, e.version)),
                    valueSets)
     }
-    if(e.section == ModelSection.Experiments && !e.text.trim.isEmpty)
+    if(e.section == ModelSection.BehaviorSpace && !e.text.trim.isEmpty)
       protocols ++= new ProtocolLoader(workspace).loadAll(e.text).map(autoConvert)
   }
   def save =

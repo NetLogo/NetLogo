@@ -96,7 +96,7 @@ object App{
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.Shapes))))
+            new ConstantParameter(new ShapeSectionReader(ModelSection.TurtleShapes))))
     pico.add(classOf[LinkShapesManagerInterface],
           "org.nlogo.shape.editor.LinkShapeManagerDialog",
           Array[Parameter] (
@@ -923,7 +923,7 @@ class App extends
    * Internal use only.
    */
   def handle(e:LoadSectionEvent){
-    if(e.section == ModelSection.Client && e.lines.length > 0)
+    if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
       frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
   }
 

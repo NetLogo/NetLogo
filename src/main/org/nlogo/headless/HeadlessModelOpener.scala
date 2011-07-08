@@ -11,7 +11,7 @@ import org.nlogo.api.StringUtils.escapeString
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.Experiments).mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
 }
 
 /**
@@ -39,16 +39,16 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) = {
-      WidgetParser.parseWidgets(map.get(ModelSection.Widgets), netLogoVersion)
+      WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
     }
 
     // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.Aggregate)
+    val sdmLines = map.get(ModelSection.SystemDynamics)
     if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
 
     // read procedures, compile them.
     val results = {
-      val code = map.get(ModelSection.Source).mkString("", "\n", "\n")
+      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
       // we could convert right here.
       // we'd still need to convert slider constraints, plots, monitors and buttons.
       // JC - 9/14/10
@@ -64,9 +64,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.Shapes), map.get(ModelSection.LinkShapes), netLogoVersion)
+    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.Client), netLogoVersion)
+    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
 
     ws.init()
     ws.world.program(results.program)
