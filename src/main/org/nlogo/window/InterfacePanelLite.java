@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.CompilerServices;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.RandomServices;
 import org.nlogo.api.Version;
 import org.nlogo.api.VersionHistory;
@@ -374,7 +374,7 @@ public strictfp class InterfacePanelLite
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.WIDGETS) {
+    if (e.section == ModelSectionJ.WIDGETS()) {
       try {
         List<List<String>> v =
             ModelReader.parseWidgets(e.lines);

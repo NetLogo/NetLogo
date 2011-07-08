@@ -133,7 +133,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
   }
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == ModelSection.INFO) {
+    if(e.section == ModelSection.Info) {
       info(if(VersionHistory.olderThan42pre2(e.version))
              InfoConverter.convert(e.text)
            else e.text)

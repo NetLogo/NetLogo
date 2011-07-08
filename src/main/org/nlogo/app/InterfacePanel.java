@@ -13,7 +13,7 @@ import org.nlogo.window.Widget;
 import org.nlogo.window.JobWidget;
 import org.nlogo.window.PlotWidget;
 import org.nlogo.window.SliderWidget;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -374,7 +374,7 @@ strictfp class InterfacePanel
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.WIDGETS) {
+    if (e.section == ModelSectionJ.WIDGETS()) {
       loadWidgets(e.lines, e.version);
     }
   }

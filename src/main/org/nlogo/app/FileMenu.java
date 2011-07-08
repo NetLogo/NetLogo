@@ -7,6 +7,7 @@ import org.nlogo.api.ModelType;
 import org.nlogo.awt.UserCancelException;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 
 /*
  * note that multiple instances of this class may exist
@@ -728,7 +729,7 @@ public strictfp class FileMenu
     // map elements are { source, info, resources, version }
     Map<ModelSection, String[]> map =
         ModelReader.parseModel(source);
-    if (map == null || map.get(ModelSection.VERSION).length == 0) {
+    if (map == null || map.get(ModelSectionJ.VERSION()).length == 0) {
       notifyUserNotValidFile();
     }
     String version = org.nlogo.api.ModelReader.parseVersion(map);

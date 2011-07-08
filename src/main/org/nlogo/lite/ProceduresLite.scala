@@ -19,7 +19,7 @@ with Event.LinkChild with Events.LoadSectionEvent.Handler
   override def source = headerSource + innerSource
   override def innerSource(text: String) { this.text = text }
   override def handle(e: Events.LoadSectionEvent) {
-    if(e.section == ModelSection.SOURCE) {
+    if(e.section == ModelSection.Source) {
       innerSource(workspace.autoConvert(e.text, false, false, e.version))
       (new Events.CompileAllEvent).raise(this)
     }

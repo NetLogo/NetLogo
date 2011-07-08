@@ -54,7 +54,7 @@ with Event.LinkParent {
       }})
     addLinkComponent(new LoadSectionEvent.Handler {
       override def handle(e: LoadSectionEvent) {
-        if (e.section == ModelSection.AGGREGATE)
+        if (e.section == ModelSection.Aggregate)
           workspace.aggregateManager.load(e.text, workspace)
       }})
     val iP =

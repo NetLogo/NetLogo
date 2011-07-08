@@ -9,8 +9,7 @@ object ModelReader {
 
   val SEPARATOR = "@#$#@#$#@"
 
-  val sections =
-    java.util.EnumSet.allOf(classOf[ModelSection]).asScala
+  val sections = ModelSection.allSections
 
   lazy val defaultShapes =
     Utils.getResourceAsStringArray("/system/defaultShapes.txt")
@@ -18,8 +17,8 @@ object ModelReader {
     Utils.getResourceAsStringArray("/system/defaultLinkShapes.txt")
 
   def parseModel(model: String): ModelMap = {
-    val map = collection.mutable.HashMap(
-      sections.map(_ -> Array[String]()).toSeq :_*)
+    val map: collection.mutable.HashMap[ModelSection, Array[String]] =
+      sections.map(_ -> Array[String]())(collection.breakOut)
     val lines = {
       val br = new java.io.BufferedReader(new java.io.StringReader(model))
       Iterator.continually(br.readLine()).takeWhile(_ != null)
@@ -41,7 +40,7 @@ object ModelReader {
   }
   
   def parseVersion(map: ModelMap): String =
-    map.get(ModelSection.VERSION)(0)
+    map.get(ModelSection.Version)(0)
 
   def parseWidgets(lines: Array[String]): java.util.List[java.util.List[String]] = {
     val widgets = new collection.mutable.ListBuffer[List[String]]

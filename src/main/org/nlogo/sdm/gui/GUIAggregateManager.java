@@ -2,7 +2,7 @@ package org.nlogo.sdm.gui;
 
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.TokenType;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 import org.nlogo.window.EditDialogFactoryInterface;
 
 public strictfp class GUIAggregateManager
@@ -72,7 +72,7 @@ public strictfp class GUIAggregateManager
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.AGGREGATE) {
+    if (e.section == ModelSectionJ.AGGREGATE()) {
       load(e.text, compiler);
     }
   }

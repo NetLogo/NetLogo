@@ -13,7 +13,7 @@ import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.ModelType;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.Procedure;
@@ -1271,20 +1271,20 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// preview commands & aggregate
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.PREVIEW_COMMANDS &&
+    if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
         e.text.trim().length() > 0) {
       previewCommands_$eq(e.text);
     }
-    if (e.section == ModelSection.CLIENT &&
+    if (e.section == ModelSectionJ.CLIENT() &&
         e.lines.length > 0 &&
         !isApplet()) {
       getHubNetManager().load(e.lines, e.version);
     }
-    if (e.section == ModelSection.SHAPES) {
+    if (e.section == ModelSectionJ.SHAPES()) {
       world.turtleShapeList().replaceShapes
           (org.nlogo.shape.VectorShape.parseShapes(e.lines, e.version));
     }
-    if (e.section == ModelSection.LINK_SHAPES) {
+    if (e.section == ModelSectionJ.LINK_SHAPES()) {
       world.linkShapeList().replaceShapes
           (org.nlogo.shape.LinkShape.parseShapes(e.lines, e.version));
     }

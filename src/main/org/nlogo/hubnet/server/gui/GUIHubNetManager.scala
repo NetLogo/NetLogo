@@ -68,8 +68,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions
-    val widgets = parsedFile.get(if (client) ModelSection.CLIENT else ModelSection.WIDGETS)
-    _clientEditor.load(widgets, parsedFile.get(ModelSection.VERSION)(0))
+    val widgets = parsedFile.get(if (client) ModelSection.Client else ModelSection.Widgets)
+    _clientEditor.load(widgets, parsedFile.get(ModelSection.Version)(0))
     openClientEditor()
   }
 
