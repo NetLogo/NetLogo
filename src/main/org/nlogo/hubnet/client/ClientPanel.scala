@@ -169,7 +169,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case c: Char => {
         try c match {
           case 'c' =>
-            plotWidget.plot.clear
+            plotWidget.plot.clear()
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'r' =>
@@ -276,7 +276,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private var listener: Listener = null
   var connected:Boolean = false
 
-  def login(userid: String, hostip: String, port: Int): String = {
+  def login(userid: String, hostip: String, port: Int): Option[String] = {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     // there used to be a flag called loggingIn
     // to "ensure that we only execute this one at a time"
@@ -303,14 +303,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       listener = new Listener(userid, socket)
       listener.start()
       sendDataAndWait(Version.version)
-      null
+      None
     }
     catch {
-      case e: NoRouteToHostException => "Login failed:\n" + hostip + " could not be reached."
-      case e: UnknownHostException => "Login failed:\n" + hostip + " does not resolve to a valid IP address."
-      case e: ConnectException => "Login failed:\n" + "There was no server running at " + hostip + " on port " + port
-      case e: IOException => "Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e)
-      case e: RuntimeException => "Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e)
+      case e: NoRouteToHostException => Some("Login failed:\n" + hostip + " could not be reached.")
+      case e: UnknownHostException => Some("Login failed:\n" + hostip + " does not resolve to a valid IP address.")
+      case e: ConnectException => Some("Login failed:\n" + "There was no server running at " + hostip + " on port " + port)
+      case e => Some("Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e))
     }
   }
 
@@ -405,7 +404,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     } else System.err.println("Attempted to send data on a shutdown listener, ignoring.")
   }
 
-  private def receiveData(a: Any): Unit = {
+  private def receiveData(a: Any) {
     org.nlogo.awt.Utils.mustBeEventDispatchThread()
     a match {
       case m: Message => handleProtocolMessage(m)
