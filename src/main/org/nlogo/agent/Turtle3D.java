@@ -8,33 +8,34 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Vect;
 
 public final strictfp class Turtle3D
     extends Turtle
     implements Agent3D, org.nlogo.api.Turtle3D {
-  public static final int VAR_WHO3D = AgentVariables.VAR_WHO3D;
-  public static final int VAR_COLOR3D = AgentVariables.VAR_COLOR3D;
-  public static final int VAR_HEADING3D = AgentVariables.VAR_HEADING3D;
-  public static final int VAR_PITCH3D = AgentVariables.VAR_PITCH3D;
-  public static final int VAR_ROLL3D = AgentVariables.VAR_ROLL3D;
-  public static final int VAR_XCOR3D = AgentVariables.VAR_XCOR3D;
-  public static final int VAR_YCOR3D = AgentVariables.VAR_YCOR3D;
-  public static final int VAR_ZCOR3D = AgentVariables.VAR_ZCOR3D;
-  static final int VAR_SHAPE3D = AgentVariables.VAR_SHAPE3D;
-  public static final int VAR_LABEL3D = AgentVariables.VAR_LABEL3D;
-  private static final int VAR_LABELCOLOR3D = AgentVariables.VAR_LABELCOLOR3D;
-  static final int VAR_BREED3D = AgentVariables.VAR_BREED3D;
-  private static final int VAR_HIDDEN3D = AgentVariables.VAR_HIDDEN3D;
-  private static final int VAR_SIZE3D = AgentVariables.VAR_SIZE3D;
-  private static final int VAR_PENSIZE3D = AgentVariables.VAR_PENSIZE3D;
-  private static final int VAR_PENMODE3D = AgentVariables.VAR_PENMODE3D;
+  public static final int VAR_WHO3D = AgentVariableNumbers.VAR_WHO3D;
+  public static final int VAR_COLOR3D = AgentVariableNumbers.VAR_COLOR3D;
+  public static final int VAR_HEADING3D = AgentVariableNumbers.VAR_HEADING3D;
+  public static final int VAR_PITCH3D = AgentVariableNumbers.VAR_PITCH3D;
+  public static final int VAR_ROLL3D = AgentVariableNumbers.VAR_ROLL3D;
+  public static final int VAR_XCOR3D = AgentVariableNumbers.VAR_XCOR3D;
+  public static final int VAR_YCOR3D = AgentVariableNumbers.VAR_YCOR3D;
+  public static final int VAR_ZCOR3D = AgentVariableNumbers.VAR_ZCOR3D;
+  static final int VAR_SHAPE3D = AgentVariableNumbers.VAR_SHAPE3D;
+  public static final int VAR_LABEL3D = AgentVariableNumbers.VAR_LABEL3D;
+  private static final int VAR_LABELCOLOR3D = AgentVariableNumbers.VAR_LABELCOLOR3D;
+  static final int VAR_BREED3D = AgentVariableNumbers.VAR_BREED3D;
+  private static final int VAR_HIDDEN3D = AgentVariableNumbers.VAR_HIDDEN3D;
+  private static final int VAR_SIZE3D = AgentVariableNumbers.VAR_SIZE3D;
+  private static final int VAR_PENSIZE3D = AgentVariableNumbers.VAR_PENSIZE3D;
+  private static final int VAR_PENMODE3D = AgentVariableNumbers.VAR_PENMODE3D;
 
   void initvars(Number xcor, Number ycor, AgentSet breed) {
     LAST_PREDEFINED_VAR = VAR_PENMODE3D;
     NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
 
-    variables[VAR_COLOR3D] = Color.BOXED_BLACK;
+    variables[VAR_COLOR3D] = Color.BoxedBlack();
     heading = 0;
     variables[VAR_HEADING3D] = World.ZERO;
     this.xcor = xcor.doubleValue();
@@ -47,7 +48,7 @@ public final strictfp class Turtle3D
     }
     variables[VAR_SHAPE3D] = world.turtleBreedShapes.breedShape(breed);
     variables[VAR_LABEL3D] = "";
-    variables[VAR_LABELCOLOR3D] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR3D] = Color.BoxedWhite();
     variables[VAR_BREED3D] = breed;
     variables[VAR_HIDDEN3D] = Boolean.FALSE;
     variables[VAR_SIZE3D] = World.ONE;

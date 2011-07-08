@@ -7,16 +7,17 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 
 public final strictfp class Patch3D
     extends Patch
     implements Agent3D, org.nlogo.api.Patch3D {
-  public static final int VAR_PXCOR3D = AgentVariables.VAR_PXCOR3D;
-  public static final int VAR_PYCOR3D = AgentVariables.VAR_PYCOR3D;
-  public static final int VAR_PZCOR3D = AgentVariables.VAR_PZCOR3D;
-  public static final int VAR_PCOLOR3D = AgentVariables.VAR_PCOLOR3D;
-  public static final int VAR_PLABEL3D = AgentVariables.VAR_PLABEL3D;
-  public static final int VAR_PLABELCOLOR3D = AgentVariables.VAR_PLABELCOLOR3D;
+  public static final int VAR_PXCOR3D = AgentVariableNumbers.VAR_PXCOR3D;
+  public static final int VAR_PYCOR3D = AgentVariableNumbers.VAR_PYCOR3D;
+  public static final int VAR_PZCOR3D = AgentVariableNumbers.VAR_PZCOR3D;
+  public static final int VAR_PCOLOR3D = AgentVariableNumbers.VAR_PCOLOR3D;
+  public static final int VAR_PLABEL3D = AgentVariableNumbers.VAR_PLABEL3D;
+  public static final int VAR_PLABELCOLOR3D = AgentVariableNumbers.VAR_PLABELCOLOR3D;
 
   public final int pzcor;
 
@@ -56,7 +57,7 @@ public final strictfp class Patch3D
           variables[i] = "";
           break;
         case VAR_PLABELCOLOR3D:
-          variables[i] = Color.BOXED_WHITE;
+          variables[i] = Color.BoxedWhite();
           break;
         default:
           variables[i] = World.ZERO;
@@ -206,7 +207,7 @@ public final strictfp class Patch3D
 
   @Override
   public void pcolor(double pcolor) {
-    if (pcolor < 0 || pcolor >= Color.MAX_COLOR) {
+    if (pcolor < 0 || pcolor >= Color.MaxColor()) {
       pcolor = Color.modulateDouble(pcolor);
     }
     if (this.pcolor != pcolor) {
@@ -223,7 +224,7 @@ public final strictfp class Patch3D
   @Override
   public void pcolor(Double boxedColor) {
     double color = boxedColor.doubleValue();
-    if (color < 0 || color >= Color.MAX_COLOR) {
+    if (color < 0 || color >= Color.MaxColor()) {
       color = Color.modulateDouble(color);
       if (pcolor != color) {
         pcolor = color;

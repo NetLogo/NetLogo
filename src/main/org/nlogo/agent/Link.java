@@ -3,6 +3,7 @@ package org.nlogo.agent;
 import java.util.Iterator;
 
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18NJava;
@@ -39,16 +40,16 @@ public strictfp class Link
 
   /// variables
 
-  public static final int VAR_END1 = AgentVariables.VAR_END1;
-  public static final int VAR_END2 = AgentVariables.VAR_END2;
-  public static final int VAR_COLOR = AgentVariables.VAR_LCOLOR;
-  public static final int VAR_LABEL = AgentVariables.VAR_LLABEL;
-  static final int VAR_LABELCOLOR = AgentVariables.VAR_LLABELCOLOR;
-  static final int VAR_HIDDEN = AgentVariables.VAR_LHIDDEN;
-  public static final int VAR_BREED = AgentVariables.VAR_LBREED;
-  public static final int VAR_THICKNESS = AgentVariables.VAR_THICKNESS;
-  public static final int VAR_SHAPE = AgentVariables.VAR_LSHAPE;
-  public static final int VAR_TIEMODE = AgentVariables.VAR_TIEMODE;
+  public static final int VAR_END1 = AgentVariableNumbers.VAR_END1;
+  public static final int VAR_END2 = AgentVariableNumbers.VAR_END2;
+  public static final int VAR_COLOR = AgentVariableNumbers.VAR_LCOLOR;
+  public static final int VAR_LABEL = AgentVariableNumbers.VAR_LLABEL;
+  static final int VAR_LABELCOLOR = AgentVariableNumbers.VAR_LLABELCOLOR;
+  static final int VAR_HIDDEN = AgentVariableNumbers.VAR_LHIDDEN;
+  public static final int VAR_BREED = AgentVariableNumbers.VAR_LBREED;
+  public static final int VAR_THICKNESS = AgentVariableNumbers.VAR_THICKNESS;
+  public static final int VAR_SHAPE = AgentVariableNumbers.VAR_LSHAPE;
+  public static final int VAR_TIEMODE = AgentVariableNumbers.VAR_TIEMODE;
 
   public int LAST_PREDEFINED_VAR = VAR_TIEMODE;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
@@ -75,11 +76,11 @@ public strictfp class Link
   Link(World world, Turtle end1, Turtle end2, AgentSet breed) {
     super(world);
     variables = new Object[world.getVariablesArraySize(this, breed)];
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     variables[VAR_END1] = end1;
     variables[VAR_END2] = end2;
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_THICKNESS] = World.ZERO;
     variables[VAR_SHAPE] = world.linkBreedShapes.breedShape(breed);
@@ -507,7 +508,7 @@ public strictfp class Link
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }

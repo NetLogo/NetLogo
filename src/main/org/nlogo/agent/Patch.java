@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18NJava;
@@ -15,11 +16,11 @@ import org.nlogo.api.I18N;
 public strictfp class Patch
     extends Agent
     implements org.nlogo.api.Patch {
-  public static final int VAR_PXCOR = AgentVariables.VAR_PXCOR;
-  public static final int VAR_PYCOR = AgentVariables.VAR_PYCOR;
-  public static final int VAR_PCOLOR = AgentVariables.VAR_PCOLOR;
-  public static final int VAR_PLABEL = AgentVariables.VAR_PLABEL;
-  public static final int VAR_PLABELCOLOR = AgentVariables.VAR_PLABELCOLOR;
+  public static final int VAR_PXCOR = AgentVariableNumbers.VAR_PXCOR;
+  public static final int VAR_PYCOR = AgentVariableNumbers.VAR_PYCOR;
+  public static final int VAR_PCOLOR = AgentVariableNumbers.VAR_PCOLOR;
+  public static final int VAR_PLABEL = AgentVariableNumbers.VAR_PLABEL;
+  public static final int VAR_PLABELCOLOR = AgentVariableNumbers.VAR_PLABELCOLOR;
 
   public static final int LAST_PREDEFINED_VAR = 4;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
@@ -84,7 +85,7 @@ public strictfp class Patch
           variables[i] = "";
           break;
         case VAR_PLABELCOLOR:
-          variables[i] = Color.BOXED_WHITE;
+          variables[i] = Color.BoxedWhite();
           break;
         default:
           variables[i] = World.ZERO;
@@ -363,7 +364,7 @@ public strictfp class Patch
   }
 
   public void pcolor(double pcolor) {
-    if (pcolor < 0 || pcolor >= Color.MAX_COLOR) {
+    if (pcolor < 0 || pcolor >= Color.MaxColor()) {
       pcolor = Color.modulateDouble(pcolor);
     }
     if (this.pcolor != pcolor) {
@@ -379,7 +380,7 @@ public strictfp class Patch
 
   public void pcolor(Double boxedColor) {
     double color = boxedColor.doubleValue();
-    if (color < 0 || color >= Color.MAX_COLOR) {
+    if (color < 0 || color >= Color.MaxColor()) {
       color = Color.modulateDouble(color);
       if (pcolor != color) {
         pcolor = color;

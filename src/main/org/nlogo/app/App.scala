@@ -96,13 +96,13 @@ object App{
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.SHAPES))))
+            new ConstantParameter(new ShapeSectionReader(ModelSection.TurtleShapes))))
     pico.add(classOf[LinkShapesManagerInterface],
           "org.nlogo.shape.editor.LinkShapeManagerDialog",
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.LINK_SHAPES))))
+            new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
     pico.add(classOf[AggregateManagerInterface],
           "org.nlogo.sdm.gui.GUIAggregateManager",
           Array[Parameter] (
@@ -210,8 +210,8 @@ object App{
     def read(path: String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.VERSION) == null ||
-              map.get(ModelSection.VERSION).length == 0 ||
+              map.get(ModelSection.Version) == null ||
+              map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         Array.empty[String]
@@ -223,8 +223,8 @@ object App{
     override def getVersion(path:String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.VERSION) == null ||
-              map.get(ModelSection.VERSION).length == 0 ||
+              map.get(ModelSection.Version) == null ||
+              map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         null;
@@ -923,7 +923,7 @@ class App extends
    * Internal use only.
    */
   def handle(e:LoadSectionEvent){
-    if(e.section == ModelSection.CLIENT && e.lines.length > 0)
+    if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
       frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
   }
 

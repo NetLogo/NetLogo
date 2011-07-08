@@ -13,14 +13,14 @@ private object Alpha {
       case t: Turtle => t.color
       case p: Patch => p.pcolor
       case l: Link => l.color
-      case _ => 255
+      case _ => 255: java.lang.Double
     }
     // special case black, non-RGB 3D patches to be invisible.  kinda janky to have a special case
     // like that but until we have an alpha variable I guess it's the least bad design. - ST 4/20/11
-    if (agent.isInstanceOf[Patch3D] && color == Color.BOXED_BLACK)
-      0
+    if (agent.isInstanceOf[Patch3D] && color == Color.BoxedBlack)
+      0d
     else
-      Color.getColor(color).getAlpha();
+      Color.getColor(color).getAlpha
   }
 
   /**

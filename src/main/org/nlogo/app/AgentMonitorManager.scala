@@ -128,9 +128,11 @@ with org.nlogo.window.Event.LinkParent
         if(agent == null)
           emptyLinkMonitorWindow = window
       }
-      import org.nlogo.util.JCL._
       val otherWindows = new java.util.ArrayList[Window]()
-      otherWindows.addAll(monitorWindows.values)
+      otherWindows.addAll{
+        import collection.JavaConverters._
+        monitorWindows.values.toList.asJava
+      }
       if(emptyTurtleMonitorWindow != null)
         otherWindows.add(emptyTurtleMonitorWindow)
       if(emptyPatchMonitorWindow != null)

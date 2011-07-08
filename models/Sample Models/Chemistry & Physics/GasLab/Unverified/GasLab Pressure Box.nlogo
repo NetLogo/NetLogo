@@ -31,7 +31,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set init-particle-speed 10.0
@@ -418,6 +418,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -434,6 +435,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 7
@@ -450,6 +452,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 95
@@ -605,6 +608,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 142
@@ -633,8 +637,8 @@ count particles
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
 The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
@@ -643,57 +647,57 @@ This model simulates the behavior of gas particles trapped in a container with a
 
 This model is part of the Connected Chemistry curriculum, which is part of the Modeling Across the Curriculum (MAC) Project.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow, green for medium, and red for high speeds.
 
 Coloring of the particles is with respect to one speed (10).  Particles with a speed less than 5 are blue, ones that are more than 15 are red, while all in those in-between are green.
 
-Particles behave according to the following rules:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch (the world is composed of a grid of small squares called patches).
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each turtle is assigned its new velocity, energy, and heading.
+Particles behave according to the following rules:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch (the world is composed of a grid of small squares called patches).  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each turtle is assigned its new velocity, energy, and heading.  
 6. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
-
-Pressure is calculated as the force per unit area (or length in this two-dimensional model).  Pressure is calculated by adding up the momentum transferred to the walls of the box by the particles when they bounce off and divided by the length of the wall, which they hit.
-
-
-HOW TO USE IT
--------------
-Initial settings:
-- BOX-SIZE: The size of the box as a percentage of the world-width
-- INITIAL-NUMBER-PARTICLES: the number of gas particles in the box when the simulation starts
-
-The SETUP button puts in the initial conditions you have set with the sliders.  Be sure to wait until the SETUP button stops before pushing GO.
-The GO button runs the code again and again.  This is a "forever" button.
-
-Additional settings:
-COLLIDE?: determines whether or not the particles collide among themselves
-ADD PARTICLES: pressing this button adds particles to the container through a valve, before and while the model is running
-NUMBER-TO-ADD: number of particles that are added to the box with each press of the "ADD PARTICLES" button
-
-Monitors:
-- NUMBER OF PARTICLES: the number of particles in the box
-- PRESSURE: the pressure of the gas particles in the box
-- WALL HITS PER PARTICLE:
-- AVERAGE SPEED: average speed of the particles.
-- AVERAGE ENERGY: average kinetic energy of the particles.
-
-Plots:
-- PRESSURE: plots the pressure in the box
-- PARTICLE COUNT: plots the number of particles in the box
-- WALL HITS PER PARTICLE: plots the number of times a particle hits a wall every big tick
 
 Pressure is defined as the force per unit area (or length in this two-dimensional model).  Pressure is calculated by adding up the momentum transferred to the walls of the box by the particles when they bounce off and divided by the length of the wall, which they hit.
 
-Initially, the particles are not moving, and cannot hit the wall. Therefore the initial pressure is zero.  As the particles start moving, they all first have the same speed in random directions.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed -- some particles get faster, some get slower.
+Initially, the particles are not moving, and cannot hit the wall. Therefore the initial pressure is zero.  As the particles start moving, they all first have the same speed in random directions.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed --- some particles get faster, some get slower.
 
+## HOW TO USE IT
 
-THINGS TO NOTICE
-----------------
+### Initial settings
+
+- BOX-SIZE: The size of the box as a percentage of the world-width  
+- INITIAL-NUMBER-PARTICLES: the number of gas particles in the box when the simulation starts
+
+The SETUP button puts in the initial conditions you have set with the sliders.  Be sure to wait until the SETUP button stops before pushing GO.
+
+The GO button runs the code again and again.  This is a "forever" button.
+
+### Additional settings
+
+COLLIDE?: determines whether or not the particles collide among themselves  
+ADD PARTICLES: pressing this button adds particles to the container through a valve, before and while the model is running  
+NUMBER-TO-ADD: number of particles that are added to the box with each press of the "ADD PARTICLES" button
+
+### Monitors
+
+- NUMBER OF PARTICLES: the number of particles in the box  
+- PRESSURE: the pressure of the gas particles in the box  
+- WALL HITS PER PARTICLE:  
+- AVERAGE SPEED: average speed of the particles.  
+- AVERAGE ENERGY: average kinetic energy of the particles.
+
+### Plots
+
+- PRESSURE: plots the pressure in the box  
+- PARTICLE COUNT: plots the number of particles in the box  
+- WALL HITS PER PARTICLE: plots the number of times a particle hits a wall every big tick
+
+## THINGS TO NOTICE
+
 What is happening to the particles in the box as a new group of particles is injected?  How is this related to the way pressure changes over time?
 
 Can you observe collisions with the walls as they happen (you can pendown a particle or slow down the model)?  For example, do the particles change their color?  Direction?
@@ -704,9 +708,8 @@ Why does the pressure fluctuate, even though the number of particles is the same
 
 In what ways is this model an incorrect idealization of the real world?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try different settings, especially the extremes.   Are the particles behaving in a similar way?  How does this effect the pressure?  The energy?
 
 How are the number of particles and the pressure in the box related to each other?  Can you quantify this relationship? Does it change if collisions among particles are removed?
@@ -721,9 +724,8 @@ Notice that the pressure does not go up immediately after particles are added.  
 
 Sometimes, when going up in an elevator, airplane or up a mountain we feel a 'popping' sensation in our ears.  This is associated with changes in pressure.  Can you relate between this model and these changes in pressure?  Are the temperature and volume constant in this situation?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 What would happen if particles were added continuously rather than instantly?  Add a switch that allows for particles to continuously be added to the box.
 
 Can you "puncture" the box, so that particles will escape?
@@ -731,7 +733,6 @@ Can you "puncture" the box, so that particles will escape?
 What would happen if the box were heated?  How would the particles behave?  How would this affect the pressure?  Add a slider and code that increases the temperature inside the box.
 
 If you could change the shape of the box, so that the volume remains the same: Does the shape of the box make a difference in the way the particles behave, or the values of pressure?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1030,7 +1031,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

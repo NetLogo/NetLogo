@@ -310,6 +310,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 MONITOR
 85
@@ -530,7 +531,7 @@ NIL
 NIL
 NIL
 NIL
-1
+0
 
 CHOOSER
 105
@@ -543,56 +544,53 @@ run-mode
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is one in a series of GasLab models that use the same basic rules for what happens when particles run into each other. Each one has different features in order to show different aspects of the behavior of gases.
 
 This model is simplified to show the collision of only two particles, since this event is so hard to watch when there are many particles in the world: given the initial motions of two colliding particles, what can we learn about their final motions from the principles of conservation of momentum and energy?
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --wel- blue for slow, green for medium, and red for high speeds.
 
 Coloring of the particles is with respect to one speed (10).  Particles with a speed less than 5 are blue, ones that are more than 15 are red, while all in those in-between are green.
 
-Particles behave according to the following rules:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  The particles are aimed to hit each other at the origin.
-2. Two particles "collide" if they find themselves on the same patch (the world is composed of a grid of small squares called patches).
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each turtle is assigned its new velocity, energy, and heading.
+Particles behave according to the following rules:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  The particles are aimed to hit each other at the origin.  
+2. Two particles "collide" if they find themselves on the same patch (the world is composed of a grid of small squares called patches).  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each turtle is assigned its new velocity, energy, and heading.  
 6. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- COLLISION-ANGLE: Sets the angle that separates the pink and blue particles before the collision.
-- REFLECTION-ANGLE: Sets the angle of the axis connecting the particles' centers when they collide with respect to the vertical axis. To calculate the outcome of the collision, the speeds of the two particles are projected onto this new axis and the new speeds and headings are computed. Other GasLab models use random values for "REFLECTION-ANGLE", but this model allows you to experiment with them one by one. This angle is called THETA in the code of the model.
-- INIT-PINK-SPEED (or BLUE): Sets the initial speed of the pink (or blue) particle.
+Initial settings:  
+- COLLISION-ANGLE: Sets the angle that separates the pink and blue particles before the collision.  
+- REFLECTION-ANGLE: Sets the angle of the axis connecting the particles' centers when they collide with respect to the vertical axis. To calculate the outcome of the collision, the speeds of the two particles are projected onto this new axis and the new speeds and headings are computed. Other GasLab models use random values for "REFLECTION-ANGLE", but this model allows you to experiment with them one by one. This angle is called THETA in the code of the model.  
+- INIT-PINK-SPEED (or BLUE): Sets the initial speed of the pink (or blue) particle.  
 - PINK-MASS (or BLUE): Sets the mass of the pink (or blue) particle.
 
-Other settings:
+Other settings:  
 - SHOW-CENTER-OF-MASS?: If ON, the center of mass of the system will be shown in gray.
 
-Buttons for running the model:
-- SETUP
-- RUN-MODE: Chooses between ONE COLLISION (just one run), ALL-COLLISION-ANGLES (loops through all the collision angles with 15-degrees steps) and ALL-REFLECTION-ANGLES(loops through all the reflection angles with 15-degrees steps).
+Buttons for running the model:  
+- SETUP  
+- RUN-MODE: Chooses between ONE COLLISION (just one run), ALL-COLLISION-ANGLES (loops through all the collision angles with 15-degrees steps) and ALL-REFLECTION-ANGLES(loops through all the reflection angles with 15-degrees steps).  
 - GO
 
-Monitors:
-- ENERGY OF PINK (or -BLUE): Shows the current energy of the pink (or blue) particle.
-- SPEED OF PINK (or -BLUE): Shows the current speed of the pink (or blue) particle.
-- AVERAGE SPEED: Shows the average of the speeds of the two particles.
+Monitors:  
+- ENERGY OF PINK (or -BLUE): Shows the current energy of the pink (or blue) particle.  
+- SPEED OF PINK (or -BLUE): Shows the current speed of the pink (or blue) particle.  
+- AVERAGE SPEED: Shows the average of the speeds of the two particles.  
 - TOTAL ENERGY: Shows the sum of the energies of the two particles.
 
-Plots:
+Plots:  
 - SPEEDS: speed of each of the particles over time.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Set the reflection-angle to zero.  Draw a picture representing the two balls as they collide, with their two faces touching.  Make the line connecting their centers be the same as theta.  Draw vectors representing their motion.
 
 While running the following situations note the paths of the two particles.  Can you make sense of what they do?  Is it what you expected?
@@ -603,9 +601,8 @@ Choose a COLLISION-ANGLE and choose ALL-REFLECTION-ANGLES to cycle through all o
 
 Choose a REFLECTION-ANGLE and choose ALL-COLLISION-ANGLES to cycle through all of the angles of collision.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 With COLLISION-ANGLE = 180 (directly across from each other) and REFLECTION-ANGLE = 90, it looks as if the two particles miss each other.  What is happening?
 
 With REFLECTION-ANGLE = 45 degrees, the particles go off at right angles. Why?  Draw a picture of what is happening at the moment of collision.
@@ -614,9 +611,8 @@ With REFLECTION-ANGLE = 0 degrees, the two particles reverse direction. Why?
 
 What is the motion of the center of mass?  What would you expect it to be?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Have the masses of the two particles be different.
 
 Have the initial speeds of the two particles be different.
@@ -629,12 +625,11 @@ The fact that the velocities are not always the same after every kind of collisi
 
 Does this seem like a reasonable model for colliding particles? When is it reasonably valid, and when is it decidedly NOT valid?
 
-When two particles collide, should theta be picked randomly -- each theta has an equal probability -- or in some other way?  Would this change the eventual velocity distribution among many particles?
+When two particles collide, should theta be picked randomly -- each theta has an equal probability --- or in some other way?  Would this change the eventual velocity distribution among many particles?
 
 After you have gotten used to observing and understanding these simple collisions, go to the "Free Gas" or "Gas in a Box" model.  Especially watch the particle whose path is traced in gray.  Does it make sense?  Can you picture each collision?
 
 Record the velocities of each particle after each collision. After you have several sets of velocities, look at the entire velocity distribution. What do you notice? Is it the Maxwell-Boltzmann distribution?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -928,7 +923,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

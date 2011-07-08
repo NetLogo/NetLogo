@@ -11,7 +11,7 @@ import org.nlogo.api.StringUtils.escapeString
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.EXPERIMENTS).mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
 }
 
 /**
@@ -33,22 +33,22 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.modelOpened = true
 
     // get out if unknown version
-    val netLogoVersion = map.get(ModelSection.VERSION).head
+    val netLogoVersion = map.get(ModelSection.Version).head
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) = {
-      WidgetParser.parseWidgets(map.get(ModelSection.WIDGETS), netLogoVersion)
+      WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
     }
 
     // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.AGGREGATE)
+    val sdmLines = map.get(ModelSection.SystemDynamics)
     if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
 
     // read procedures, compile them.
     val results = {
-      val code = map.get(ModelSection.SOURCE).mkString("", "\n", "\n")
+      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
       // we could convert right here.
       // we'd still need to convert slider constraints, plots, monitors and buttons.
       // JC - 9/14/10
@@ -60,13 +60,13 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
-    val previewCommands = map.get(ModelSection.PREVIEW_COMMANDS).mkString("", "\n", "\n")
+    val previewCommands = map.get(ModelSection.PreviewCommands).mkString("", "\n", "\n")
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.SHAPES), map.get(ModelSection.LINK_SHAPES), netLogoVersion)
+    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.CLIENT), netLogoVersion)
+    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
 
     ws.init()
     ws.world.program(results.program)

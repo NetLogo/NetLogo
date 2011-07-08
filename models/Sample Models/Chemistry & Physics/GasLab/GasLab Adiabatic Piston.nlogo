@@ -40,7 +40,7 @@ pistons-own
 ]
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set max-tick-delta 0.1073
@@ -470,6 +470,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -486,6 +487,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -502,6 +504,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 95
@@ -779,8 +782,8 @@ System
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
 The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls (see the model "GasLab Gas in a Box" for an introduction to the GasLab collection).
@@ -789,17 +792,16 @@ This particular model simulates the behavior of gas particles in a box with a mo
 
 "Adiabatic" means "without loss or gain of heat".  In this model, no heat energy (such as heat loss through the walls of the box) is added to or removed from the system.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The basic principle of all GasLab models is the following algorithm (for more details, see the model "GasLab Gas in a Box":
 
-1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.
-3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.
-4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.
-5) Each particle is assigned its new speed, heading and energy.
-6) If a particle finds itself on or very close to a wall of the container or the piston, it "bounces" -- that is, reflects its direction and keeps its same speed.
+1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.  
+3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.  
+4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.  
+5) Each particle is assigned its new speed, heading and energy.  
+6) If a particle finds itself on or very close to a wall of the container or the piston, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
 The piston has both potential energy (due to gravity) and kinetic energy (from its motion).
 
@@ -811,49 +813,47 @@ Gravity is incorporated in this model as a constant downwards acceleration on th
 
 Pressure is calculated by adding up the momentum transferred to the walls of the box and the piston by the particles when they bounce off.  This is averaged over the surface area of the box to give the pressure.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- NUMBER-OF-PARTICLES: number of gas particles.
-- INIT-PARTICLE-SPEED: initial speed of the particles.
-- PARTICLE-MASS: mass of each particle.
-- BOX-HEIGHT: height of the container (percentage of the world-height).
-- BOX-WIDTH: width of the container  (percentage of the world-width).
+Initial settings:  
+- NUMBER-OF-PARTICLES: number of gas particles.  
+- INIT-PARTICLE-SPEED: initial speed of the particles.  
+- PARTICLE-MASS: mass of each particle.  
+- BOX-HEIGHT: height of the container (percentage of the world-height).  
+- BOX-WIDTH: width of the container  (percentage of the world-width).  
 - PISTON-MASS: mass of the piston, in the same "units" as the particle's mass.
 
-The SETUP button will set the initial conditions.
+The SETUP button will set the initial conditions.  
 The GO button will run the simulation.
 
-Other settings:
+Other settings:  
 - COLLIDE?: Turns collisions between particles on and off.
 
-Monitors:
-- AVERAGE SPEED: average speed of the particles.
-- AVERAGE ENERGY: average kinetic energy per particle of the gas.
-- TOTAL ENERGY: total energy of the particles.
-- PISTON HEIGHT: piston's height above the bottom of the box.
-- PISTON VELOCITY: speed of the piston (up is positive).
-- PISTON POTENTIAL ENERGY: potential energy of the piston, due to gravity.
-- PISTON KINETIC ENERGY: kinetic energy of the piston, due to its motion.
-- PISTON TOTAL ENERGY: sum of potential and kinetic energy of the piston.
+Monitors:  
+- AVERAGE SPEED: average speed of the particles.  
+- AVERAGE ENERGY: average kinetic energy per particle of the gas.  
+- TOTAL ENERGY: total energy of the particles.  
+- PISTON HEIGHT: piston's height above the bottom of the box.  
+- PISTON VELOCITY: speed of the piston (up is positive).  
+- PISTON POTENTIAL ENERGY: potential energy of the piston, due to gravity.  
+- PISTON KINETIC ENERGY: kinetic energy of the piston, due to its motion.  
+- PISTON TOTAL ENERGY: sum of potential and kinetic energy of the piston.  
 - SYSTEM ENERGY: sum of particles' and the piston's total energy.
 
-Plots:
-- PISTON HEIGHT VS. TIME: measured up from the bottom of the box.
-- PRESSURE VS. TIME: average pressure of the particles.
+Plots:  
+- PISTON HEIGHT VS. TIME: measured up from the bottom of the box.  
+- PRESSURE VS. TIME: average pressure of the particles.  
 - ENERGY OF PARTICLES, PISTON, AND TOTAL ENERGY: in terms of energy per particle.  The piston's energy is both kinetic (motion) and potential (height).
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Watch all the plots and notice how they change in relation to each other.
 
 Does the piston reach an equilibrium position (as this might take a long time, so you could turn the display off to speed the process up)?  What is the pattern of its motion before that?  Why doesn't it keep oscillating, like a bouncing ball, if all of the collisions are elastic?
 
 Would you expect that the pressure would settle at a stable value?  What would determine it?
 
-The energy of the gas changes as the piston moves up and down.  How are the two related?   Where does the energy come from and where does it go?
+The energy of the gas changes as the piston moves up and down.  How are the two related? Where does the energy come from and where does it go?
 
 Can you infer what is happening to the temperature of the gas as the piston moves?
 
@@ -863,9 +863,8 @@ Gravity only affects the piston in this model.  Does this make sense?  If gravit
 
 You can change the coloring of the particles while the model is running by moving the INIT-PARTICLE-SPEED slider.  This will change the meaning of the colors, but not the relative meanings of the colors or the behavior of the model.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Change the initial particle mass and particle speed.  How do these variables affect the piston's motion and its equilibrium position?  Adjust the piston's mass to keep it inside the box.
 
 Change the piston mass, leaving the gas alone.  What happens to all of the volume, pressure, and energy?  Note: if you do this while the model is running, the piston energy changes suddenly.  Why is this?
@@ -874,26 +873,24 @@ In this simulation, the piston and the particles exchange energy on every collis
 
 In this adiabatic system, neither pressure, volume, nor temperature are constant, so pressure and volume are not simply inversely proportional.  In fact it turns out that for two different states,
 
-|   (P'/P) = (V/V')^gamma,
+> (P'/P) = (V/V')^gamma,
 
 where gamma depends on the number of degrees of freedom of the particles.   In this two-dimensional case, gamma = 2.  Confirm that this is roughly true by changing piston-mass (hence pressure) and noticing its effect on piston height (hence volume).
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Add a heater in the box that changes the temperature of the gas.  What would happen if the gas were heated and nothing else were changed?
 
 Combine this with the "Two Gas" model such that there are gases pushing on both sides of a piston, instead of gravity against a single gas.
 
 Give the piston the ability to store thermal energy, so that it heats up instead of moving when the particles hit it.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Look at the other GasLab models, especially "GasLab Isothermal Piston" and "GasLab Moving Piston".
 
-
 ## CREDITS AND REFERENCES
+
 Wilensky, U. (1999). GasLab--an Extensible Modeling Toolkit for Exploring Micro- and Macro- Views of Gases. In Roberts, N. , Feurzeig, W. & Hunter, B. (Eds.) Computer Modeling and Simulation in Science Education. Berlin: Springer Verlag.  (this is the best and most detailed source)
 
 Wilensky, U. & Resnick, M. (1999). Thinking in Levels: A Dynamic Systems Perspective to Making Sense of the World. Journal of Science Education and Technology. Vol. 8 No. 1
@@ -1195,7 +1192,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

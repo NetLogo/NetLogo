@@ -23,7 +23,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set max-tick-delta 0.1073
@@ -367,6 +367,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -383,6 +384,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -399,6 +401,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 96
@@ -663,61 +666,59 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 In this model, a gaseous atmosphere is placed above the surface of a "planet", represented by a yellow line at the bottom of the world.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The basic principle of all GasLab models is the following algorithm (for more details, see the model "GasLab Gas in a Box"):
 
-1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.
-3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.
-4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.
-5) Each particle is assigned its new speed, heading and energy.
-6) If a particle finds itself on or very close to the surface of the planet, it "bounces" -- that is, reflects its direction and keeps its same speed.
+1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2) Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches). In this model, two particles are aimed so that they will collide at the origin.  
+3) An angle of collision for the particles is chosen, as if they were two solid balls that hit, and this angle describes the direction of the line connecting their centers.  
+4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.  
+5) Each particle is assigned its new speed, heading and energy.  
+6) If a particle finds itself on or very close to the surface of the planet, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
 In this model, the effect of gravity is calculated as follows: every particle is given additional velocity downward during each clock tick, as it would get in a gravitational field. The particles bounce off the "ground". They disappear if they reach the top of the world, as if they had escaped the planet's gravitational field. The percentage of lost particles is shown in the PERCENT LOST PARTICLES monitor.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- NUMBER-OF-PARTICLES: number of gas particles
-- INIT-PARTICLE-SPEED: initial speed of each particle
-- PARTICLE-MASS: mass of each particle
+Initial settings:  
+- NUMBER-OF-PARTICLES: number of gas particles  
+- INIT-PARTICLE-SPEED: initial speed of each particle  
+- PARTICLE-MASS: mass of each particle  
 - GRAVITY-ACCELERATION: value of the gravitational acceleration
 
 The SETUP button will set the initial conditions.  The GO button will run the simulation.
 
-Other settings:
-- COLLIDE?: Turns collisions between particles on and off.
+Other settings:  
+- COLLIDE?: Turns collisions between particles on and off.  
 - TRACE?: Traces the path of one of the particles.
 
-Monitors:
-- AVERAGE SPEED: average speed of the particles.
-- PERCENT FAST, PERCENT MEDIUM, PERCENT SLOW: percentage of particles with different speeds - fast (red), medium (green), and slow (blue).
-- PERCENT LOST PARTICLES: percentage of particles that have disappeared at the top edge of the world.
+Monitors:  
+- AVERAGE SPEED: average speed of the particles.  
+- PERCENT FAST, PERCENT MEDIUM, PERCENT SLOW: percentage of particles with different speeds - fast (red), medium (green), and slow (blue).  
+- PERCENT LOST PARTICLES: percentage of particles that have disappeared at the top edge of the world.  
 - CLOCK (inside the View): number of ticks that have run.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed.
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.
-- ENERGY HISTOGRAM: distribution of energies of all the particles, using m*(v^2)/2.
-- DENSITY HISTOGRAM: shows the number of particles at each 'layer' of the atmosphere, i.e. its local density.
+Plots:  
+- SPEED COUNTS: plots the number of particles in each range of speed.  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  
+- ENERGY HISTOGRAM: distribution of energies of all the particles, using m*(v^2)/2.  
+- DENSITY HISTOGRAM: shows the number of particles at each 'layer' of the atmosphere, i.e. its local density.  
 - ENERGY VS. HEIGHT: shows the mean energy of the particles at each "layer" of the atmosphere.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Try to predict what the view will look like after a while, and why.
 
 Watch the gray path of one particle. What can you say about its motion? Turn COLLIDE? off and see if there are any differences.
@@ -726,9 +727,8 @@ Watch the change in density distribution as the model runs.
 
 As the model runs, what happens to the average speed and kinetic energy of the particles?  If they gain energy, where does it come from?   What happens to the speed and energy distributions?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 What happens when gravity is increased or decreased?
 
 Change the initial number, speed and mass.  What happens to the density distribution?
@@ -741,9 +741,8 @@ Try and find out if the distribution of the particles in this model is the same 
 
 Try making gravity negative.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Find a way to plot the relative "temperature" of the gas as a function of distance from the planet.
 
 Try this model with particles of different masses.  You could color each mass differently to be able to see where they go.  Are their distributions different?  Which ones escape most easily?  What does this suggest about the composition of an atmosphere?
@@ -752,19 +751,16 @@ The fact that particles escape when they reach a certain height isn't completely
 
 Make the "planet" into a central point instead of a flat plane.
 
-This basic model could be used to explore other situations where freely moving particles have forces on them -- e.g. a centrifuge or charged particles (ions) in an electrical field.
+This basic model could be used to explore other situations where freely moving particles have forces on them --- e.g. a centrifuge or charged particles (ions) in an electrical field.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Because of the influence of gravity, the particles follow curved paths.  Since NetLogo models time in discrete steps, these curved paths must be approximated with a series of short straight lines.  This is the source of a slight inaccuracy where the particles gradually lose energy if the model runs for a long time.  The effect is as though the collisions with the ground were slightly inelastic.  The inaccuracy can be reduced by increasing "vsplit", but the model will run slower.
+Because of the influence of gravity, the particles follow curved paths.  Since NetLogo models time in discrete steps, these curved paths must be approximated with a series of short straight lines.  This is the source of a slight inaccuracy where the particles gradually lose energy if the model runs for a long time.  The effect is as though the collisions with the ground were slightly inelastic.  The inaccuracy can be reduced by increasing `vsplit`, but the model will run slower.
 
+## RELATED MODELS
 
-RELATED MODELS
----------------
-This model is part of the GasLab suite and curriculum.
+This model is part of the GasLab suite and curriculum.  
 See, in particular, the models "Gas in a Box" and "Gravity Box", which is a modified version of the "Atmosphere" model, with a ceiling on the atmosphere.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1063,7 +1059,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18NJava;
@@ -27,19 +28,19 @@ public strictfp class Turtle
     variables[VAR_WHO] = Double.valueOf(id);
   }
 
-  public static final int VAR_WHO = AgentVariables.VAR_WHO;
-  public static final int VAR_COLOR = AgentVariables.VAR_COLOR;
-  public static final int VAR_HEADING = AgentVariables.VAR_HEADING;
-  public static final int VAR_XCOR = AgentVariables.VAR_XCOR;
-  public static final int VAR_YCOR = AgentVariables.VAR_YCOR;
-  static final int VAR_SHAPE = AgentVariables.VAR_SHAPE;
-  public static final int VAR_LABEL = AgentVariables.VAR_LABEL;
-  private static final int VAR_LABELCOLOR = AgentVariables.VAR_LABELCOLOR;
-  static final int VAR_BREED = AgentVariables.VAR_BREED;
-  private static final int VAR_HIDDEN = AgentVariables.VAR_HIDDEN;
-  private static final int VAR_SIZE = AgentVariables.VAR_SIZE;
-  private static final int VAR_PENSIZE = AgentVariables.VAR_PENSIZE;
-  private static final int VAR_PENMODE = AgentVariables.VAR_PENMODE;
+  public static final int VAR_WHO = AgentVariableNumbers.VAR_WHO;
+  public static final int VAR_COLOR = AgentVariableNumbers.VAR_COLOR;
+  public static final int VAR_HEADING = AgentVariableNumbers.VAR_HEADING;
+  public static final int VAR_XCOR = AgentVariableNumbers.VAR_XCOR;
+  public static final int VAR_YCOR = AgentVariableNumbers.VAR_YCOR;
+  static final int VAR_SHAPE = AgentVariableNumbers.VAR_SHAPE;
+  public static final int VAR_LABEL = AgentVariableNumbers.VAR_LABEL;
+  private static final int VAR_LABELCOLOR = AgentVariableNumbers.VAR_LABELCOLOR;
+  static final int VAR_BREED = AgentVariableNumbers.VAR_BREED;
+  private static final int VAR_HIDDEN = AgentVariableNumbers.VAR_HIDDEN;
+  private static final int VAR_SIZE = AgentVariableNumbers.VAR_SIZE;
+  private static final int VAR_PENSIZE = AgentVariableNumbers.VAR_PENSIZE;
+  private static final int VAR_PENMODE = AgentVariableNumbers.VAR_PENMODE;
 
   public int LAST_PREDEFINED_VAR = VAR_PENMODE;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
@@ -50,7 +51,7 @@ public strictfp class Turtle
 
 
   void initvars(Double xcor, Double ycor, AgentSet breed) {
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     heading = 0;
     variables[VAR_HEADING] = World.ZERO;
     this.xcor = xcor.doubleValue();
@@ -59,7 +60,7 @@ public strictfp class Turtle
     variables[VAR_YCOR] = ycor;
     variables[VAR_SHAPE] = world.turtleBreedShapes.breedShape(breed);
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_BREED] = breed;
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_SIZE] = World.ONE;
@@ -583,7 +584,7 @@ public strictfp class Turtle
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }

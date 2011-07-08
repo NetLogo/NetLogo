@@ -26,7 +26,7 @@ tmp:
 	@echo "@@@ making tmp"
 	mkdir -p tmp
 bin/sbt-launch.jar:
-	curl -s 'http://ccl.northwestern.edu/devel/sbt-launch-0.7.6.RC0.jar' -o bin/sbt-launch.jar
+	curl -s 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
 $(SCALA_JAR): | bin/sbt-launch.jar
 	bin/sbt update
 

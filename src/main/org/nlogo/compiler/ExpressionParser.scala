@@ -358,6 +358,8 @@ private class ExpressionParser(procedure: Procedure,
                 r2.token(token)
                 (r2, new ReporterApp(r2, token.startPos, token.endPos, token.fileName))
               }
+            case _ =>
+              sys.error("unexpected token type: " + token.tyype)
           }
           // handle the case of the concise task syntax, where I can write e.g. "map + ..." instead
           // of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for constants

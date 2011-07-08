@@ -47,7 +47,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   }
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == org.nlogo.api.ModelSection.MODEL_SETTINGS) {
+    if(e.section == org.nlogo.api.ModelSection.ModelSettings) {
       app.workspace.snapOn(e.lines != null &&
                            e.lines.nonEmpty &&
                            e.lines.head.trim.nonEmpty &&

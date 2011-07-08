@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import java.lang.{ Double => JDouble, Long => JLong }
 
-object Number {
+object NumberParser {
   def parse(text: String): Either[String, JDouble] = {
     try {
       // parseDouble is costly, especially if it fails, so bail first if we can

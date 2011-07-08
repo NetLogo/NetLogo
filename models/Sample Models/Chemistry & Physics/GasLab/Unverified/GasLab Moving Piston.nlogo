@@ -365,6 +365,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 100
@@ -663,8 +664,8 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model simulates the behavior of gas particles as the volume changes. In this model, the volume is slowly changing over time by a piston that is rising and falling.  As the piston lowers, the volume of the box decreases and as the piston rises, the volume of the box increases.  This systematic motion of the piston does no work on the particles inside the box.  The piston only serves a mechanism to change the volume of the box.
 
 The particles start with the same mass and speed upon the start of the simulation. The mass of the particles stays constant throughout the simulation, whereas, the speeds will change once particles start to collide.  Particles are in constant motion colliding with other particles and the walls. All collisions are modeled as elastic collisions, in that the total kinetic energy before and after the collision is conserved.  For example, when a fast moving particle collides with a slow moving particle, the fast moving particle will give some of its speed to the slow moving particle.  Therefore, the fast moving particle will leave the collision moving slower then when it entered the collision.  And the slow moving particle will speed up a bit.  The speed in a particle to particle collision is still conserved.  The collisions between a particle and a wall is modeled the same way.  When the particles hit the wall they transfer momentum to the wall.  After this transfer occurs, the particles then bounce off the wall with a different direction and speed. The system's pressure is calculated by averaging the number of collisions the particles have with the walls at each time step.
@@ -673,51 +674,54 @@ The Moving Piston model is one of a collection of GasLab models that use the sam
 
 Multiple adaptations of this model can be found in the Chemistry folder of the Curricular Models section under the names Chem Volume 1 and 2.  It is part of a suite of models used to teach students about the chemistry of the Gas Laws.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The particles are modeled as single particles, all with the same mass and initial velocity.  Molecules are modeled as perfectly elastic particles with no internal energy except that which is due to their motion.  Collisions with the box and between molecules are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
 
-The exact way two particles collide is as follows:
-1. Two turtles "collide" if they find themselves on the same patch.
-2. A random axis is chosen, as if they were two billiard balls that hit and this axis was the line connecting their centers.
-3. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center mass system.
-4. Each turtle is assigned its new speed, energy and heading.
+The exact way two particles collide is as follows:  
+1. Two turtles "collide" if they find themselves on the same patch.  
+2. A random axis is chosen, as if they were two billiard balls that hit and this axis was the line connecting their centers.  
+3. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center mass system.  
+4. Each turtle is assigned its new speed, energy and heading.  
 5. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Buttons:
-SETUP - puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.
+### Buttons
+
+SETUP - puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.  
 GO - runs the code again and again.  This is a "forever" button.
 
-Sliders:
-BOX-HEIGHT - height of the container
-BOX-WIDTH - width of the container
-NUMBER - number of particles
-PISTON-SPEED - rate of the piston
+### Sliders
+
+BOX-HEIGHT - height of the container  
+BOX-WIDTH - width of the container  
+NUMBER - number of particles  
+PISTON-SPEED - rate of the piston  
 SCALE - number of clock cycles over which to average the pressure
 
-Switch:
+### Switch
+
 HISTOGRAM? - turns histograms on or off
 
-Plots:
-VOLUME - plots the volume over time
-PRESSURE - plots the pressure over time
-PRESSURE VS. VOLUME - plots pressure over volume
-PRESSURE * VOLUME - plots the value of pressure * volume over time
-TEMPERATURE - plots the average temperature
-SPEED HISTOGRAM - illustrates the number of particles at their various speeds
+### Plots
+
+VOLUME - plots the volume over time  
+PRESSURE - plots the pressure over time  
+PRESSURE VS. VOLUME - plots pressure over volume  
+PRESSURE * VOLUME - plots the value of pressure * volume over time  
+TEMPERATURE - plots the average temperature  
+SPEED HISTOGRAM - illustrates the number of particles at their various speeds  
 ENERGY HISTOGRAM - illustrates the number of particles at their various energy levels
+
+### How to use it
 
 Adjust the BOX-HEIGHT, BOX-WIDTH, NUMBER, and PISTON-SPEED variable before pressing SETUP.  The SETUP button will set the initial conditions.  The GO button will run the simulation.
 
 In this model, though, the collisions of the piston with the particles are ignored. Note that there's a physical impossibility in the model here: in real life if you moved the piston down you would do work on the gas by compressing it, and its temperature would increase.  In this model, the energy and temperature are constant no matter how you manipulate the piston.  Nonetheless, the basic relationship between volume and pressure is correctly demonstrated here.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 How does the pressure change as the volume of the box changes?  Compare the two plots of volume and pressure.
 
 How does the pressure change as the shape of the box changes?
@@ -730,29 +734,25 @@ How does more particles change the relationship between pressure and volume?
 
 What shapes do the energy and speed histograms reach after a while?  Why aren't they the same?  Do the pressure and volume affect these shapes?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 How would you calculate pressure?  How does this code do it?
 
 Change the number, mass, and initial velocity of the particles.  Does this affect the pressure?   Why? Do the results make intuitive sense?  Look at the extremes:  very few or very many molecules,  high or low volumes.
 
-Figure out how many molecules there REALLY are in a box this size -- say a 10-cm cube.  Look up or calculate the REAL mass and speed of a typical molecule.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?
+Figure out how many molecules there *really* are in a box this size --- say a 10-cm cube.  Look up or calculate the *real* mass and speed of a typical molecule.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Are there other ways one might calculate pressure?
 
 Create an isothermal piston example where the user can manually move the piston to any level in the box.
 
 Add in a temperature variable that allows for the particles to move the piston to the appropriate volume.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Notice how collisions are detected by the turtles and how the code guarantees that the same two particles do not collide twice.  What happens if we let the patches detect them?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1046,7 +1046,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

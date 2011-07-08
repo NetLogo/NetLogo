@@ -488,6 +488,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 8
@@ -504,6 +505,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 10
@@ -535,6 +537,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 10
@@ -684,47 +687,44 @@ percent-slow
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.  This model is different from the other GasLab models in that the collision calculations take the circular shape and size of the particles into account, instead of modeling the particles as dimensionless points.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The model determines the resulting motion of particles that collide, with no loss in their total momentum or total kinetic energy (an elastic collision).
 
 To calculate the outcome of collision, it is necessary to calculate the exact time at which the edge of one particle (represented as a circle), would touch the edge of another particle (or the walls of a container) if the particles were allowed to continue with their current headings and speeds.
 
 By performing such a calculation, one can determine when the next collision anywhere in the system would occur in time.  From this determination, the model then advances the motion of all the particles using their current headings and speeds that far in time until this next collision point is reached.  Exchange of kinetic energy and momentum between the two particles, according to conservation of kinetic energy and conservation of momentum along the collision axis (a line drawn between the centers of the two particles), is then calculated, and the particles are given new headings and speeds based on this outcome.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 NUMBER determines the number of gas particles used with SETUP.  If the world is too small or the particles are too large, the SETUP procedure of the particles will stop so as to prevent overlapping particles.
 
 SMALLEST-PARTICLE-SIZE and LARGEST-PARTICLE-SIZE determines the range of particle sizes that will be created when SETUP is pressed.  (Particles are also assigned a mass proportional to the area of the particle that is created.)
 
-The SETUP button will set the initial conditions.
+The SETUP button will set the initial conditions.  
 The GO button will run the simulation.
 
-Monitors:
-- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).
-- AVERAGE SPEED: average speed of the particles.
+Monitors:  
+- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).  
+- AVERAGE SPEED: average speed of the particles.  
 - AVERAGE ENERGY: average kinetic energy of the particles.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed.
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.
+Plots:  
+- SPEED COUNTS: plots the number of particles in each range of speed.  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  
 - ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as  m*(v^2)/2.  The gray line is the average value, and the black line is the initial average.
 
 Initially, all the particles have the same speed but random directions. Therefore the first histogram plots of speed will show only one column.  If all the particles have the same size (and therefore the same mass), then the first histogram plot of energy will also show one column.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed -- some particles get faster, some get slower.  The histogram distribution changes accordingly.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Run the model with different masses, by setting the MAX-PARTICLE-SIZE larger than the MIN-PARTICLE-SIZE.  Mass is scaled linearly to the area of the particle, so that a particle that is twice the radius of another particle, has four the area and therefore four times the mass.
 
-With many different mass particles colliding over time, different sized particles start to move at different speed ranges (in general).  The smallest mass particles will be usually moving faster (red) than the average particle speed and the largest mass particles will be usually slower (blue) than the average particle speed.  This emergent result is what happens in a gas that is a mixture of particles of different masses.  At any given temperature, the higher mass particles are moving slower (such as Nitrogen gas: N2) then the lower mass particles (such as water vapor: H2O).
+With many different mass particles colliding over time, different sized particles start to move at different speed ranges (in general).  The smallest mass particles will be usually moving faster (red) than the average particle speed and the largest mass particles will be usually slower (blue) than the average particle speed.  This emergent result is what happens in a gas that is a mixture of particles of different masses.  At any given temperature, the higher mass particles are moving slower (such as Nitrogen gas: N<sub>2</sub>) then the lower mass particles (such as water vapor: H<sub>2</sub>O).
 
 The particle histograms quickly converge on the classic Maxwell-Boltzmann distribution.  What's special about these curves?  Why is the shape of the energy curve not the same as the speed curve?
 
@@ -732,30 +732,25 @@ Look at the other GasLab models to compare the particle histograms.  In those mo
 
 With particles of different sizes, you may notice some fast moving particles have lower energy than medium speed particles.  How can the difference in the mass of the particles account for this?
 
+## THINGS TO TRY
 
-
-THINGS TO TRY
--------------
 Setting all the particles to have a very slow speed (e.g. 0.001) and one particle to have a very fast speed helps show how kinetic energy is eventually transferred to all the particles through a series of collisions and would serve as a good model for energy exchange through conduction between hot and cold gases.
 
 To see what the approximate mass of each particle is, type this in the command center:
-|    ask particles [set label precision mass 0]
 
+    ask particles [ set label precision mass 0 ]
 
-EXTENDING THE MODEL
--------------------
+## EXTENDING THE MODEL
+
 Collisions between boxes and circles could also be explored.  Variations in size between particles could investigated or variations in the mass of some of the particle could be made to explore other factors that affect the outcome of collisions.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Instead of advancing one tick at a time as in most models, the tick counter takes on fractional values, using the TICK-ADVANCE primitive.  (In the Interface tab, it is displayed as an integer, but if you make a monitor for TICKS you'll see the exact value.)
+Instead of advancing one tick at a time as in most models, the tick counter takes on fractional values, using the `tick-advance` primitive.  (In the Interface tab, it is displayed as an integer, but if you make a monitor for `ticks` you'll see the exact value.)
 
+## RELATED MODELS
 
-RELATED MODELS
----------------
 Look at the other GasLab models to see collisions of "point" particles, that is, the particles are assumed to have an area or volume of zero.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1048,7 +1043,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

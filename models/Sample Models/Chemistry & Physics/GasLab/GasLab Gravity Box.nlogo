@@ -23,7 +23,7 @@ particles-own
 
 
 to setup
-  ca
+  clear-all
   set-default-shape particles "circle"
   set-default-shape flashes "plane"
   set max-tick-delta 0.1073
@@ -391,6 +391,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -407,6 +408,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -423,6 +425,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 96
@@ -694,71 +697,67 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
 
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model simulates the effect of gravity on gas particles.  It is very similar to GasLab Atmosphere, but with a "ceiling" over the gas, so particles can never escape.
 
 This model is part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+## HOW IT WORKS
 
-Coloring of the particles is with respect to one speed (10).
-Particles with a speed less than 5 are blue, ones that are more than
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow, green for medium, and red for high speeds.
+
+Coloring of the particles is with respect to one speed (10).  
+Particles with a speed less than 5 are blue, ones that are more than  
 15 are red, while all in those in-between are green.
 
-The exact way two particles collide is as follows:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch.
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each particle is assigned its new velocity, energy, and heading.
-6. If a particle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
-
+The exact way two particles collide is as follows:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch.  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each particle is assigned its new velocity, energy, and heading.  
+6. If a particle finds itself on or very close to a wall of the container, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
 In this model the particles behave exactly as in the basic Gas in a Box model except for now gravity acts on the particles.  Every particle is given additional velocity downward during each tick, as it would get in a gravitational field.  The particles bounce off the "ground" as well as the ceiling.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- GRAVITY: strength of the gravitational acceleration
-- NUMBER-OF-PARTICLES: number of gas particles
-- INIT-PARTICLE-SPEED: initial speed of each particle
+Initial settings:  
+- GRAVITY: strength of the gravitational acceleration  
+- NUMBER-OF-PARTICLES: number of gas particles  
+- INIT-PARTICLE-SPEED: initial speed of each particle  
 - PARTICLE-MASS: mass of each particle
 
-Other settings:
-- TRACE?: Traces the path of one of the particles.
+Other settings:  
+- TRACE?: Traces the path of one of the particles.  
 - COLLIDE?: Turns collisions between particles on and off.
 
-The SETUP button will set the initial conditions.
+The SETUP button will set the initial conditions.  
 The GO button will run the simulation.
 
-
-Monitors:
-- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).
-- AVERAGE SPEED: average speed of the particles.
+Monitors:  
+- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).  
+- AVERAGE SPEED: average speed of the particles.  
 - AVERAGE ENERGY: average energy of the particles.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed.
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.
-- ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as m*(v^2)/2.
-- HEIGHT VS. TEMPERATURE: shows the temperature of the particles at each 'layer' of the box.
-- DENSITY HISTOGRAM: shows the number of particles at each 'layer' of the box, i.e. its local density.
+Plots:  
+- SPEED COUNTS: plots the number of particles in each range of speed.  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  
+- ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as m*(v^2)/2.  
+- HEIGHT VS. TEMPERATURE: shows the temperature of the particles at each 'layer' of the box.  
+- DENSITY HISTOGRAM: shows the number of particles at each 'layer' of the box, i.e. its local density.  
 - AGGREGATE TEMPERATURE: shows the aggregate sum of the HEIGHT VS. TEMPERATURE plot for the entire model run.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Try to predict what the view will look like after a while, and why.
 
 Watch the gray path of one particle. What can you say about its motion?
@@ -771,9 +770,8 @@ What is the shape of the path of individual particles?
 
 What happens to the aggregate temperature plot over time? Is the temperature uniform over the box?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 What happens when gravity is increased or decreased?
 
 Change the initial number, speed and mass.  What happens to the density distribution?
@@ -786,24 +784,19 @@ Try making gravity negative.
 
 Varying model parameters such as NUMBER and GRAVITY, what do you observe about the aggregate temperature graph?  Can you explain these results?  How would you square these results with a) the fact that "hot air rises" in a room and b) that it is colder as you go higher in elevation?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Try this model with particles of different masses.  You could color each mass differently to be able to see where they go.  Are their distributions different?  Do the different masses tend to have different average heights?  What does this suggest about the composition of an atmosphere?
 
+This basic model could be used to explore other situations where freely moving particles have forces on them --- e.g. a centrifuge or charged particles (ions) in an electrical field.
 
-This basic model could be used to explore other situations where freely moving particles have forces on them -- e.g. a centrifuge or charged particles (ions) in an electrical field.
+## NETLOGO FEATURES
 
+Because of the influence of gravity, the particles follow curved paths.  Since NetLogo models time in discrete steps, these curved paths must be approximated with a series of short straight lines.  This is the source of a slight inaccuracy where the particles gradually lose energy if the model runs for a long time.  (The effect is as though the collisions with the ground were slightly inelastic.)  The inaccuracy can be reduced by increasing `vsplit`, but the model will run slower.
 
-NETLOGO FEATURES
-----------------
-Because of the influence of gravity, the particles follow curved paths.  Since NetLogo models time in discrete steps, these curved paths must be approximated with a series of short straight lines.  This is the source of a slight inaccuracy where the particles gradually lose energy if the model runs for a long time.  (The effect is as though the collisions with the ground were slightly inelastic.)  The inaccuracy can be reduced by increasing vsplit, but the model will run slower.
+## RELATED MODELS
 
-
-RELATED MODELS
----------------
 This model is part of the GasLab suite and curriculum.  See, in particular, Gas in a Box and GasLab Atmosphere.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1102,7 +1095,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
