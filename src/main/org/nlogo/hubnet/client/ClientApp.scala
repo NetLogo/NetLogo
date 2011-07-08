@@ -124,6 +124,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     ModalProgressTask(Utils.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
       clientPanel.requestFocus()
+      loginDialog.setVisible(false)
     })
     exs.foreach{ ex =>
       handleLoginFailure(ex)
@@ -161,8 +162,12 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleExit() {
     Utils.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?"))
+    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
+      setVisible(false)
+      this.dispose()
+      doLogin()
+    }
   }
 
   def handleQuit() {
