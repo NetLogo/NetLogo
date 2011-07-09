@@ -3,12 +3,11 @@ package org.nlogo.hubnet.client
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
-import java.awt.event.{WindowAdapter, WindowEvent}
-import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
 import org.nlogo.awt.Utils
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.api.{I18N, CompilerServices}
+import javax.swing.{WindowConstants, JFrame}
 
 /**
  * The HubNet client. 
@@ -76,7 +75,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       this.isLocal = isLocal
       setIconImage(Utils.loadImageResource("/images/arrowhead.gif"))
       getContentPane.setLayout(new BorderLayout())
-      loginDialog = new LoginDialog(this, userid, hostip, port, true)
+      loginDialog = new LoginDialog(this, userid, hostip, port, false)
       clientPanel =
         if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, workspace)
         else new ClientPanel(editorFactory, this, workspace)
@@ -112,30 +111,31 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private def doLogin() {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
-    if (!isLocal) {
-      dispose()
-      loginDialog.doLogin()
-      login(loginDialog.getUserName, loginDialog.getServer, loginDialog.getPort)
-    }
+    if (!isLocal)
+      loginDialog.go(new LoginCallback {
+        def apply(user: String, host: String, port: Int) { login(user, host, port) }
+      })
   }
 
-  def completeLogin() {setVisible(true)}
+  def completeLogin() { setVisible(true) }
 
   private def login(userid: String, hostip: String, port: Int) {
-    val exs = Array[String](null)
-    ModalProgressTask(
-      Utils.getFrame(this), "Entering...",
-      () => exs(0) = clientPanel.login(userid, hostip, port))
-    if (exs(0) != null) {
-      handleLoginFailure(exs(0))
-      clientPanel.disconnect(exs(0).toString)
+    var exs: Option[String] = None
+    ModalProgressTask(Utils.getFrame(this), "Entering...", () => {
+      exs = clientPanel.login(userid, hostip, port)
+      clientPanel.requestFocus()
+      loginDialog.setVisible(false)
+    })
+    exs.foreach{ ex =>
+      handleLoginFailure(ex)
+      clientPanel.disconnect(ex.toString)
     }
   }
 
   def showExitMessage(title: String, message: String): Boolean = {
     Utils.mustBeEventDispatchThread()
     val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
-    0 == org.nlogo.swing.OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
+    0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
@@ -152,21 +152,30 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String) {
     Utils.mustBeEventDispatchThread()
-    OptionDialog.show(loginDialog, "Login Failed", errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    org.nlogo.awt.Utils.invokeLater(() => {
+        OptionDialog.show(ClientApp.this, "Login Failed",
+          errorMessage,
+          Array(I18N.gui.get("common.buttons.ok")))
+        ()
+      })
   }
 
   def handleExit() {
     Utils.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?"))
+    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
+      setVisible(false)
+      this.dispose()
+      doLogin()
+    }
   }
 
   def handleQuit() {
     Utils.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.quit"), "Do you really want to quit HubNet?")) destroy()
-  }
-
-  def destroy() {
-    Utils.invokeLater(() => System.exit(0))
+    val shouldExit = showExitMessage(
+      I18N.gui.get("common.buttons.quit"),
+      "Do you really want to quit HubNet?")
+    println("shouldExit=" + shouldExit)
+    if (shouldExit) Utils.invokeLater(() => System.exit(0))
   }
 }

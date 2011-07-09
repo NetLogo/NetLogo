@@ -83,16 +83,15 @@ public strictfp class ClientApplet
     org.nlogo.awt.Utils.invokeLater(new Runnable() {
       public void run() {
         loginDialog = new LoginDialog
-            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), !isApplet);
+            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), isApplet);
         loginDialog.addWindowListener
             (new java.awt.event.WindowAdapter() {
               @Override
               public void windowClosing(java.awt.event.WindowEvent e) {
                 clientPanel.logout();
                 attemptLogin = false;
-                if (!isApplet) {
-                  System.exit(0);
-                }
+                loginDialog.setVisible(false);
+                if (!isApplet) { System.exit(0); }
               }
             });
 
@@ -107,26 +106,32 @@ public strictfp class ClientApplet
 
   private void doLogin() {
     if (attemptLogin && !loginDialog.isVisible()) {
-      loginDialog.doLogin();
-      if (attemptLogin) {
-        login(loginDialog.getUserName(), loginDialog.getServer(), loginDialog.getPort());
-      }
+      loginDialog.go(new LoginCallback() {
+        @Override
+        public void apply(String user, String host, int port) {
+          if (attemptLogin) {
+            login(loginDialog.username(), loginDialog.server(), loginDialog.port());
+          }
+        }});
     }
   }
 
   private void login(final String userid, final String hostip, final int port) {
-    final String[] exs = new String[]{null};
+    final String[] error = new String[1];
     org.nlogo.swing.ModalProgressTask.apply(
-      org.nlogo.awt.Utils.getFrame(ClientApplet.this),
-      "Entering...",
-      new Runnable() {
-        public void run() {
-          exs[0] = clientPanel.login(userid, hostip, port);
-          clientPanel.requestFocus();
-        }});
-    if (exs[0] != null) {
-      clientPanel.disconnect(exs[0]);
-      handleLoginFailure(exs[0]);
+        org.nlogo.awt.Utils.getFrame(ClientApplet.this),
+        "Entering...",
+        new Runnable() {
+          public void run() {
+            scala.Option<String> e = clientPanel.login(userid, hostip, port);
+            if(e.isDefined()) error[0] = e.get();
+            clientPanel.requestFocus();
+            loginDialog.setVisible(false);
+          }
+        });
+    if (error[0] != null) {
+      clientPanel.disconnect(error[0]);
+      handleLoginFailure(error[0]);
     }
   }
 
