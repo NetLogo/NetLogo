@@ -124,7 +124,9 @@ public strictfp class ClientApplet
         new Runnable() {
           public void run() {
             scala.Option<String> e = clientPanel.login(userid, hostip, port);
-            if(e.isDefined()) error[0] = e.get();
+            if(e.isDefined()) {
+              error[0] = e.get();
+            }
             clientPanel.requestFocus();
             loginDialog.setVisible(false);
           }
