@@ -15,7 +15,7 @@ class LocalFile(filepath: String) extends File {
       throw new java.io.IOException(
         "Attempted to open an already open file")
     mode match {
-      case FileMode.READ =>
+      case FileMode.Read =>
         pos = 0
         eof = false
         reader = new java.io.BufferedReader(
@@ -23,12 +23,14 @@ class LocalFile(filepath: String) extends File {
                 new java.io.BufferedInputStream(
                     new java.io.FileInputStream(new java.io.File(filepath)))))
         this.mode = mode
-      case FileMode.WRITE =>
+      case FileMode.Write =>
         w = new java.io.PrintWriter(new java.io.FileWriter(filepath))
         this.mode = mode
-      case FileMode.APPEND =>
+      case FileMode.Append =>
         w = new java.io.PrintWriter(new java.io.FileWriter(filepath, true))
         this.mode = mode
+      case FileMode.None =>
+        sys.error("file is not open")
     }
   }
 
@@ -61,15 +63,15 @@ class LocalFile(filepath: String) extends File {
   @throws(classOf[java.io.IOException])
   override def close(ok: Boolean) {
     mode match {
-      case FileMode.WRITE | FileMode.APPEND =>
+      case FileMode.Write | FileMode.Append =>
         w.close()
         w = null
-      case FileMode.READ =>
+      case FileMode.Read =>
         reader.close()
         reader = null
-      case FileMode.NONE =>
+      case FileMode.None =>
     }
-    mode = FileMode.NONE
+    mode = FileMode.None
   }
 
   override def getAbsolutePath =

@@ -4,7 +4,7 @@ abstract class File {
   var eof = false
   var pos = 0L
   var reader: java.io.BufferedReader = null
-  var mode: FileMode = FileMode.NONE
+  var mode: FileMode = FileMode.None
 
   // abstract methods
   def getPrintWriter: java.io.PrintWriter
@@ -27,7 +27,7 @@ abstract class File {
   @throws(classOf[java.io.IOException])
   def readFile(): String = {
     if (reader == null)
-      open(FileMode.READ)
+      open(FileMode.Read)
     org.nlogo.util.Utils.reader2String(reader)
   }
 }

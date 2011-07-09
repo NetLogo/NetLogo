@@ -28,7 +28,7 @@ public final strictfp class DefaultFileManager
     long position = currentFile.pos();
 
     currentFile.close(true);
-    currentFile.open(org.nlogo.api.FileMode.READ);
+    currentFile.open(org.nlogo.api.FileModeJ.READ());
 
     int lineNumber = 1;
     long prevPosition = 0;
@@ -171,7 +171,7 @@ public final strictfp class DefaultFileManager
       throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
     }
 
-    if (currentFile.mode() == org.nlogo.api.FileMode.NONE) {
+    if (currentFile.mode() == org.nlogo.api.FileModeJ.NONE()) {
       try {
         currentFile.open(openMode);
       } catch (java.io.FileNotFoundException ex) {
@@ -180,7 +180,7 @@ public final strictfp class DefaultFileManager
         throw new java.io.IOException(ex.getMessage());
       }
     } else if (currentFile.mode() != openMode) {
-      String mode = (currentFile.mode() == org.nlogo.api.FileMode.READ) ? "READING" : "WRITING";
+      String mode = (currentFile.mode() == org.nlogo.api.FileModeJ.READ()) ? "READING" : "WRITING";
 
       throw new java.io.IOException("You can only use " + mode + " primitives with this file");
     }
@@ -357,7 +357,7 @@ public final strictfp class DefaultFileManager
 
   public boolean eof()
       throws java.io.IOException {
-    ensureMode(org.nlogo.api.FileMode.READ);
+    ensureMode(org.nlogo.api.FileModeJ.READ());
     if (!currentFile.eof()) {
       java.io.BufferedReader buffReader = currentFile.reader();
       buffReader.mark(2);

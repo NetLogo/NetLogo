@@ -591,7 +591,7 @@ public abstract strictfp class AbstractWorkspace
       throws java.io.IOException {
     org.nlogo.api.File file = new org.nlogo.api.LocalFile(importer.filename());
     try {
-      file.open(org.nlogo.api.FileMode.READ);
+      file.open(org.nlogo.api.FileModeJ.READ());
       importer.doImport(file.reader());
     } finally {
       try {
@@ -640,7 +640,7 @@ public abstract strictfp class AbstractWorkspace
                                             boolean includeHeader)
       throws java.io.IOException {
     org.nlogo.api.File file = new org.nlogo.api.LocalFile(filename);
-    file.open(org.nlogo.api.FileMode.WRITE);
+    file.open(org.nlogo.api.FileModeJ.WRITE());
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
           (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);

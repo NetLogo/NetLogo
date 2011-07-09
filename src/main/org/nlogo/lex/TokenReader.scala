@@ -45,7 +45,7 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     catch {
       case ex: IOException => // token too big to mark; close and reopen file to get back where we were
         file.close(true)
-        file.open(FileMode.READ)
+        file.open(FileMode.Read)
         reader.skip(pos)
         file.pos = pos
     }

@@ -28,7 +28,7 @@ class RemoteFile(filepath: String) extends File {
       throw new java.io.IOException(
         "Attempted to open an already open file")
     mode match {
-      case FileMode.READ =>
+      case FileMode.Read =>
         pos = 0
         eof = false
         reader = new java.io.BufferedReader(
@@ -36,7 +36,7 @@ class RemoteFile(filepath: String) extends File {
                 new java.io.BufferedInputStream(
                     new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(filepath)).openStream())))
         this.mode = mode
-      case FileMode.WRITE | FileMode.APPEND =>
+      case FileMode.Write | FileMode.Append | FileMode.None =>
         unsupported
     }
   }
@@ -56,12 +56,14 @@ class RemoteFile(filepath: String) extends File {
   @throws(classOf[java.io.IOException])
   override def close(ok: Boolean) {
     mode match {
-      case FileMode.READ =>
+      case FileMode.Read =>
         reader.close()
         reader = null
-      case FileMode.NONE =>
+      case FileMode.None =>
+      case FileMode.Write | FileMode.Append =>
+        unsupported
     }
-    mode = FileMode.NONE
+    mode = FileMode.None
   }
 
   override def getAbsolutePath =

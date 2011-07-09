@@ -12,7 +12,7 @@ public final strictfp class _filetype
       throws LogoException {
     try {
       workspace.fileManager().ensureMode
-          (org.nlogo.api.FileMode.APPEND);
+         (org.nlogo.api.FileModeJ.APPEND());
     } catch (java.io.IOException ex) {
       throw new EngineException(context, this, ex.getMessage());
     }
