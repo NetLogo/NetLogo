@@ -436,7 +436,6 @@ to clear-fades
     ask positive-streamers [ die ]
     ask step-leaders [ die ]
 end
-  
 @#$#@#$#@
 GRAPHICS-WINDOW
 215
