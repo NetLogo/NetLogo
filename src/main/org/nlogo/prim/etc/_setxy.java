@@ -2,7 +2,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -36,7 +35,7 @@ public final strictfp class _setxy
       turtle.xandycor(newx, newy);
     } catch (org.nlogo.api.AgentException e) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld",
+          I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld",
               newx.doubleValue(), newy.doubleValue()));
     }
     context.ip = next;
@@ -50,7 +49,7 @@ public final strictfp class _setxy
           turtle.shortestPathY(yvalue));
     } catch (org.nlogo.api.AgentException e) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld", xvalue, yvalue));
+          I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld", xvalue, yvalue));
     }
     context.ip = next;
   }

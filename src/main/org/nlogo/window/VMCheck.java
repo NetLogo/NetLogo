@@ -40,10 +40,10 @@ public strictfp final class VMCheck {
     java.awt.Frame bogusFrame = new java.awt.Frame();
     bogusFrame.pack(); // otherwise OptionDialog will fail to get font metrics
     int choice = org.nlogo.swing.OptionDialog.show
-        (bogusFrame, I18N.gui().get("common.messages.warning"),
+        (bogusFrame, I18N.guiJ().get("common.messages.warning"),
             message + "  If you choose to continue, NetLogo may not " +
                 "function properly.",
-            new String[]{I18N.gui().get("common.buttons.quit"), I18N.gui().get("common.buttons.continue")});
+            new String[]{I18N.guiJ().get("common.buttons.quit"), I18N.guiJ().get("common.buttons.continue")});
     if (choice == 0) {
       System.exit(0);
     }

@@ -7,7 +7,6 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
@@ -154,7 +153,7 @@ public strictfp class Turtle
     Patch target = world.getTopology().getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }
     return target;
   }
@@ -253,7 +252,7 @@ public strictfp class Turtle
   private void mustOwn(String name)
       throws AgentException {
     if (name != null && !world.breedOwns(getBreed(), name)) {
-      throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
           getBreed().printName(), name));
     }
   }
@@ -317,7 +316,7 @@ public strictfp class Turtle
         return penSize();
       default:
         throw new IllegalArgumentException
-            (I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+            (I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -325,7 +324,7 @@ public strictfp class Turtle
   public Object getLinkBreedVariable(String name)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
   }
 
   @Override
@@ -357,14 +356,14 @@ public strictfp class Turtle
     if (vn != -1) {
       return getTurtleVariable(vn);
     }
-    throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable", this.toString(), name));
+    throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable", this.toString(), name));
   }
 
   @Override
   public Object getLinkVariable(int vn)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
   }
 
   @Override
@@ -407,9 +406,9 @@ public strictfp class Turtle
         penSize(value);
         break;
       case VAR_WHO:
-        throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho"));
+        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
       default:
-        throw new IllegalArgumentException(I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -459,7 +458,7 @@ public strictfp class Turtle
             String newShape = world.checkTurtleShapeName((String) value);
             if (newShape == null) {
               throw new AgentException
-                  (I18NJava.errors().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+                  (I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
             }
             shape(newShape);
           } else {
@@ -484,7 +483,7 @@ public strictfp class Turtle
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.turtles() && !world.isBreed(breed)) {
-              throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
+              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
             }
             setBreed(breed);
           } else {
@@ -528,9 +527,9 @@ public strictfp class Turtle
           break;
 
         case VAR_WHO:
-          throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho"));
+          throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
         default:
-          throw new IllegalStateException(I18NJava.errors().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
+          throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
   }

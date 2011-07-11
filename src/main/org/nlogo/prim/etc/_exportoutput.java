@@ -13,7 +13,7 @@ public final strictfp class _exportoutput
     final String filename = argEvalString(context, 0);
     if (filename.equals("")) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
     }
     final org.nlogo.nvm.Command comm = this;
     workspace.waitFor

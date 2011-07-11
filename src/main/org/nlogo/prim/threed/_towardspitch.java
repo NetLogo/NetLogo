@@ -1,7 +1,6 @@
 package org.nlogo.prim.threed;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -21,7 +20,7 @@ public final strictfp class _towardspitch
     org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     if (agent.id == -1) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     try {
       return newValidDouble(world.protractor().towardsPitch(context.agent, agent, true)); // true = wrap

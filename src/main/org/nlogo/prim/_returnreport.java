@@ -25,6 +25,6 @@ public final strictfp class _returnreport extends Command {
 
   public void perform_1(Context context) throws LogoException {
     throw new EngineException(context, this,
-            I18N.errors().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
+            I18N.errorsJ().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
   }
 }

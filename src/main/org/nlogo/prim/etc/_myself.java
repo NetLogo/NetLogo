@@ -22,7 +22,7 @@ public final strictfp class _myself
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;
   }
@@ -31,7 +31,7 @@ public final strictfp class _myself
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;
   }

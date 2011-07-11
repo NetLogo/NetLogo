@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -22,14 +21,14 @@ public final strictfp class _nof
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (n > list.size()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
       }
       if (n == list.size()) {
         return list;
@@ -42,7 +41,7 @@ public final strictfp class _nof
       int count = agents.count();
       if (n > count) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
       }
       return agents.randomSubset(n, count, context.job.random);
     } else {

@@ -17,7 +17,7 @@ object I18N {
 
   case class Prefix(name:String)
 
-  class BundleKind(name:String){
+  class BundleKind(name:String) extends I18NJava {
 
     val defaultLocale = {
       import java.util.prefs._
@@ -55,10 +55,8 @@ object I18N {
     private val englishBundle = getBundle(Locale.US)
     def getBundle(locale:Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key:String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
-    def get(key:String) = getN(key)
-    def getNJava(key:String, args:Array[Object]): String = getNJava(key, args.map(_.toString))
-    def getNJava(key:String, args:Array[String]): String = getN(key, args:_*)
-    def getN(key:String, args: AnyRef*) = {
+    override def get(key:String) = getN(key)
+    override def getN(key:String, args: AnyRef*) = {
       def getFromBundle(bundle: ResourceBundle): Option[String] =
         try Some(bundle.getString(key)) catch { case m:MissingResourceException => None }
       val preformattedText = getFromBundle(defaultBundle).getOrElse{
@@ -87,15 +85,13 @@ object I18N {
     // internal use only, used to set the locale for error messages in the GUI only.
     def setLanguage(locale:Locale) { defaultBundle = getBundle(locale) }
     // for use in Java classes that we don't want to depend on I18N
-    def fn = get _
+    override val fn = get _
   }
 
-  object Gui extends BundleKind("GUI_Strings")
-  def gui = Gui // so java can call this easily.
+  lazy val gui = new BundleKind("GUI_Strings")
+  lazy val errors = new BundleKind("Errors")
 
-  object Errors extends BundleKind("Errors")
-  def errors = Errors // so java can call this easily.
-
-  object Prims extends BundleKind("Primitives")
-  def prims = Prims // so java can call this easily.
+  // for easy use from Java
+  def guiJ: I18NJava = gui
+  def errorsJ: I18NJava = errors
 }

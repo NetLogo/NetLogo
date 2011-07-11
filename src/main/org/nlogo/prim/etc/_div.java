@@ -27,7 +27,7 @@ public final strictfp class _div extends Reporter implements Pure {
   public double report_1(Context context, double arg0, double arg1)
       throws LogoException {
     if (arg1 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
     return arg0 / arg1;
   }

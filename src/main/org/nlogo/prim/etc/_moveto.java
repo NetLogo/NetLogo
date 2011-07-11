@@ -4,7 +4,6 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.AgentException;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -24,7 +23,7 @@ public final strictfp class _moveto
     Agent otherAgent = argEvalAgent(context, 0);
     if (otherAgent.id == -1) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", otherAgent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", otherAgent.classDisplayName()));
     }
     if (otherAgent instanceof org.nlogo.agent.Link) {
       throw new EngineException(context, this, "you can't move-to a link");

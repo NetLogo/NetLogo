@@ -24,7 +24,7 @@ public final strictfp class _randomnormal extends Reporter {
   public double report_1(Context context, double mean, double sdev) throws LogoException {
     if (sdev < 0) {
       throw new EngineException(
-          context, this, I18N.errors().get("org.nlogo.prim.etc._randomNormal.secondInputNotNegative"));
+          context, this, I18N.errorsJ().get("org.nlogo.prim.etc._randomNormal.secondInputNotNegative"));
 
     }
     return validDouble(mean + sdev * context.job.random.nextGaussian());

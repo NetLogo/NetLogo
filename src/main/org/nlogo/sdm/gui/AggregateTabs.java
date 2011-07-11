@@ -18,8 +18,8 @@ strictfp class AggregateTabs
     this.editor = editor;
 
     proceduresTab = new AggregateProceduresTab(colorizer);
-    add(I18N.gui().get("tools.sdm.diagram"), activePanel);
-    add(I18N.gui().get("tabs.code"), proceduresTab);
+    add(I18N.guiJ().get("tools.sdm.diagram"), activePanel);
+    add(I18N.guiJ().get("tabs.code"), proceduresTab);
     setSelectedComponent(activePanel);
   }
 

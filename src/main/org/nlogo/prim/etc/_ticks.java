@@ -23,7 +23,7 @@ public final strictfp class _ticks extends Reporter {
     double result = world.ticks();
     if (result == -1) {
       throw new EngineException(
-          context, this, I18N.errors().get("org.nlogo.prim.etc.$common.tickCounterNotStarted"));
+          context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.tickCounterNotStarted"));
     }
     return result;
   }

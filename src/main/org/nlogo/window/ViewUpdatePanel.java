@@ -38,9 +38,9 @@ public strictfp class ViewUpdatePanel
     settings = workspace.viewWidget.settings();
     add(speedSlider);
     SettingsButton settingsButton = new SettingsButton();
-    viewUpdates.addItem(I18N.gui().get("tabs.run.viewUpdates.dropdown.onticks"));
-    viewUpdates.addItem(I18N.gui().get("tabs.run.viewUpdates.dropdown.continuous"));
-    viewUpdates.setToolTipText(I18N.gui().get("tabs.run.viewUpdates.dropdown.tooltip"));
+    viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"));
+    viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"));
+    viewUpdates.setToolTipText(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.tooltip"));
     // we don't want a settings button in the applet ev 2/28/06
     if (editable) {
       javax.swing.JPanel panel = new javax.swing.JPanel
@@ -99,12 +99,12 @@ public strictfp class ViewUpdatePanel
   private class SettingsButton
       extends javax.swing.JButton {
     public SettingsButton() {
-      super(I18N.gui().get("tabs.run.settingsButton"));
+      super(I18N.guiJ().get("tabs.run.settingsButton"));
       setFont
           (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
               java.awt.Font.PLAIN, 10));
       setFocusable(false);
-      setToolTipText(I18N.gui().get("tabs.run.settingsButton.tooltip"));
+      setToolTipText(I18N.guiJ().get("tabs.run.settingsButton.tooltip"));
       addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -131,9 +131,9 @@ public strictfp class ViewUpdatePanel
   }
 
   private void setMode(String name) {
-    if (name.equals(I18N.gui().get("tabs.run.viewUpdates.dropdown.onticks"))) {
+    if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"))) {
       workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.TICK_BASED);
-    } else if (name.equals(I18N.gui().get("tabs.run.viewUpdates.dropdown.continuous"))) {
+    } else if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"))) {
       workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.CONTINUOUS);
     } else {
       throw new IllegalStateException();

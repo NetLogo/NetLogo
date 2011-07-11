@@ -24,7 +24,7 @@ public final strictfp class _atan extends Reporter implements Pure {
 
   public double report_1(Context context, double d1, double d2) throws LogoException {
     if (d1 == 0 && d2 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.atan.bothInputsCannotBeZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.atan.bothInputsCannotBeZero"));
     }
     if (d1 == 0) {
       return d2 > 0 ? 0 : 180;

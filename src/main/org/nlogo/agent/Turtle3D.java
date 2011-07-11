@@ -349,7 +349,7 @@ public final strictfp class Turtle3D
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.turtles() && !world.isBreed(breed)) {
-              throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
+              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
             }
             setBreed(breed);
           } else {

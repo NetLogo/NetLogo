@@ -28,13 +28,13 @@ public final strictfp class _first
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.isEmpty()) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyList"));
+        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
       }
       return list.first();
     } else if (obj instanceof String) {
       String string = (String) obj;
       if (string.length() == 0) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyString"));
+        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
       }
       return string.substring(0, 1);
     } else {
@@ -46,7 +46,7 @@ public final strictfp class _first
   public Object report_2(final org.nlogo.nvm.Context context, LogoList list)
       throws LogoException {
     if (list.isEmpty()) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyList"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
     return list.first();
   }
@@ -54,7 +54,7 @@ public final strictfp class _first
   public Object report_3(final org.nlogo.nvm.Context context, String string)
       throws LogoException {
     if (string.length() == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyString"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
     }
     return string.substring(0, 1);
   }

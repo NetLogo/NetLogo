@@ -33,7 +33,7 @@ public final strictfp class _layoutcircle
         if (set.type() != Turtle.class) {
           throw new EngineException
               (context, this,
-                  I18N.errors().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
+                  I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
         }
         org.nlogo.agent.Layouts.circle(set, radius, context.job.random);
       }

@@ -62,7 +62,7 @@ strictfp class AggregateModelEditor
        AggregateDrawing drawing,
        CompilerServices compiler,
        EditDialogFactoryInterface dialogFactory) {
-    super(I18N.gui().get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration());
+    super(I18N.guiJ().get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration());
     undoManager = new UndoManager();
 
     this.linkParent = linkParent;
@@ -206,9 +206,9 @@ strictfp class AggregateModelEditor
     }
 
     org.jhotdraw.util.CommandMenu editMenu =
-        new org.jhotdraw.util.CommandMenu(I18N.gui().get("menu.edit"));
-    editMenu.add(new org.jhotdraw.util.UndoCommand(I18N.gui().get("menu.edit.undo"), this));
-    editMenu.add(new org.jhotdraw.util.RedoCommand(I18N.gui().get("menu.edit.redo"), this));
+        new org.jhotdraw.util.CommandMenu(I18N.guiJ().get("menu.edit"));
+    editMenu.add(new org.jhotdraw.util.UndoCommand(I18N.guiJ().get("menu.edit.undo"), this));
+    editMenu.add(new org.jhotdraw.util.RedoCommand(I18N.guiJ().get("menu.edit.redo"), this));
     menuBar.add(editMenu);
 
     if (isOSX) {
@@ -219,7 +219,7 @@ strictfp class AggregateModelEditor
       menuBar.add(zoomMenu);
     }
 
-    menuBar.add(new org.nlogo.swing.TabsMenu(I18N.gui().get("menu.tabs"), tabs));
+    menuBar.add(new org.nlogo.swing.TabsMenu(I18N.guiJ().get("menu.tabs"), tabs));
 
     if (isOSX) {
       menuBarFactory.addHelpMenu(menuBar);

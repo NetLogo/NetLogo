@@ -26,7 +26,7 @@ public final strictfp class _mod extends Reporter implements Pure {
 
   public double report_1(Context context, double d0, double d1) throws LogoException {
     if (d1 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
     return validDouble(d0 - (StrictMath.floor(d0 / d1) * d1));
   }

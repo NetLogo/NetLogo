@@ -10,7 +10,6 @@ import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.util.Thunk;
@@ -253,7 +252,7 @@ public abstract strictfp class Instruction
       throws EngineException {
     if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
+          (context, this, I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
     }
   }
 
@@ -361,7 +360,7 @@ public abstract strictfp class Instruction
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       return agent;
     } catch (ClassCastException ex) {

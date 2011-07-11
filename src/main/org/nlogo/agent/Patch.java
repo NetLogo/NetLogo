@@ -7,7 +7,6 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.AgentException;
@@ -135,7 +134,7 @@ public strictfp class Patch
   public Object getTurtleVariable(int vn)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
   }
 
 
@@ -143,27 +142,27 @@ public strictfp class Patch
   public Object getLinkVariable(int vn)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
   }
 
   @Override
   public Object getTurtleOrLinkVariable(String varName)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
   }
 
   @Override
   public Object getLinkBreedVariable(String name)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
   }
 
   @Override
   public Object getBreedVariable(String name)
       throws AgentException {
-    throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
   }
 
   @Override
@@ -180,47 +179,47 @@ public strictfp class Patch
   @Override
   public void setTurtleVariable(int vn, Object value)
       throws AgentException {
-    throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
   }
 
   @Override
   public void setTurtleVariable(int vn, double value)
       throws AgentException {
-    throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
   }
 
   @Override
   public void setBreedVariable(String name, Object value)
       throws AgentException {
-    throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
   }
 
   @Override
   public void setLinkVariable(int vn, Object value)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
   }
 
   @Override
   public void setLinkVariable(int vn, double value)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
   }
 
   @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
   }
 
   @Override
   public void setLinkBreedVariable(String name, Object value)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
   }
 
   @Override
@@ -264,10 +263,10 @@ public strictfp class Patch
 
         case VAR_PXCOR:
         case VAR_PYCOR:
-          throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+          throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
 
         default:
-          throw new IllegalStateException(I18NJava.errors().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
+          throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
   }
@@ -277,11 +276,11 @@ public strictfp class Patch
       throws AgentException {
     switch (vn) {
       case VAR_PXCOR:
-        throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
       case VAR_PYCOR:
-        throw new AgentException(I18N.errors().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
       default:
-        throw new IllegalArgumentException(I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -302,7 +301,7 @@ public strictfp class Patch
         return pycor;
       default:
         throw new IllegalArgumentException(
-            I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", Integer.toString(vn)));
+            I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", Integer.toString(vn)));
     }
   }
 
@@ -311,7 +310,7 @@ public strictfp class Patch
       throws AgentException {
     Patch target = world.getTopology().getPatchAt(pxcor + dx, pycor + dy);
     if (target == null) {
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }
     return target;
   }
@@ -353,7 +352,7 @@ public strictfp class Patch
     if (variables[VAR_PCOLOR] == null || variables[VAR_PCOLOR] instanceof Double) {
       return pcolor;
     }
-    throw new IllegalStateException(I18N.errors().get("org.nlogo.agent.Patch.pcolorNotADouble"));
+    throw new IllegalStateException(I18N.errorsJ().get("org.nlogo.agent.Patch.pcolorNotADouble"));
   }
 
   public Object pcolor() {

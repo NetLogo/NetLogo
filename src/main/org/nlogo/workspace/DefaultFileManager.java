@@ -168,7 +168,7 @@ public final strictfp class DefaultFileManager
   public void ensureMode(org.nlogo.api.FileMode openMode)
       throws java.io.IOException {
     if (!hasCurrentFile()) {
-      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
+      throw new java.io.IOException(I18N.errorsJ().get("org.nlogo.workspace.DefaultFileManager.noOpenFile"));
     }
 
     if (currentFile.mode() == org.nlogo.api.FileModeJ.NONE()) {
@@ -207,13 +207,13 @@ public final strictfp class DefaultFileManager
     }
     java.io.File checkFile = new java.io.File(filePath);
     if (!checkFile.exists()) {
-      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile"));
+      throw new java.io.IOException(I18N.errorsJ().get("org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile"));
     }
     if (!checkFile.canWrite()) {
       throw new java.io.IOException("Modification to this file is denied.");
     }
     if (!checkFile.isFile()) {
-      throw new java.io.IOException(I18N.errors().get("org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles"));
+      throw new java.io.IOException(I18N.errorsJ().get("org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles"));
     }
 
     if (!checkFile.delete()) {

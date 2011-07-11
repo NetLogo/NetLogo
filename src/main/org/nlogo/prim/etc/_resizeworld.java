@@ -31,7 +31,7 @@ public final strictfp class _resizeworld
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
     }
 
     if (oldMinX != newMinX || oldMaxX != newMaxX ||

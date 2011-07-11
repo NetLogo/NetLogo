@@ -56,7 +56,7 @@ strictfp class ImportDialog
           }
         });
     javax.swing.Action cancelAction =
-        new javax.swing.AbstractAction(I18N.gui().get("common.buttons.cancel")) {
+        new javax.swing.AbstractAction(I18N.guiJ().get("common.buttons.cancel")) {
           public void actionPerformed(java.awt.event.ActionEvent e) {
             dispose();
           }
@@ -110,7 +110,7 @@ strictfp class ImportDialog
   private void importSelectedShapes() {
     Shape shape;
     String name;
-    Object[] choices = {"Replace", "Rename", I18N.gui().get("common.buttons.cancel")};
+    Object[] choices = {"Replace", "Rename", I18N.guiJ().get("common.buttons.cancel")};
     int[] selected = list.getSelectedIndices();
     ArrayList<Shape> shapesToAdd = new ArrayList<Shape>();
 

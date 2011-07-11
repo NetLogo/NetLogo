@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -32,7 +31,7 @@ public final strictfp class _mean extends Reporter implements Pure {
       Object elt = it.next();
       if (!(elt instanceof Double)) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
+            I18N.errorsJ().getN("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
                 Dump.logoObject(elt), Syntax.typeName(elt)));
       }
       sum += ((Double) elt).doubleValue();

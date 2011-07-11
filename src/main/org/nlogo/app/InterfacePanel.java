@@ -65,20 +65,20 @@ strictfp class InterfacePanel
   protected void doPopup(final java.awt.event.MouseEvent e) {
     JPopupMenu menu = new JPopupMenu();
     // add all the widgets
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY()));
     WidgetCreationMenuItem outputItem =
-        new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.output"), "OUTPUT", e.getX(), e.getY());
+        new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.output"), "OUTPUT", e.getX(), e.getY());
     if (getOutputWidget() != null) {
       outputItem.setEnabled(false);
     }
     menu.add(outputItem);
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
 
     // add extra stuff
     menu.add(new javax.swing.JPopupMenu.Separator());
@@ -97,7 +97,7 @@ strictfp class InterfacePanel
             } catch (java.io.IOException ex) {
               javax.swing.JOptionPane.showMessageDialog
                   (InterfacePanel.this, ex.getMessage(),
-                      I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+                      I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
             }
           }
         });
@@ -162,9 +162,9 @@ strictfp class InterfacePanel
           java.awt.Font.PLAIN, 12);
       return new org.nlogo.window.InputBoxWidget
           (new org.nlogo.window.CodeEditor
-              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui().fn()),
+              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               new org.nlogo.window.CodeEditor
-                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui().fn()),
+                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               workspace, this);
     } else if (type.equals("OUTPUT"))  // currently in saved models only - ST 3/17/04
     {

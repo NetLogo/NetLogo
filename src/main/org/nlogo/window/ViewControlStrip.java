@@ -254,9 +254,9 @@ public strictfp class ViewControlStrip
     return (!workspace.jobManager.anyPrimaryJobs())
         ||
         org.nlogo.swing.OptionDialog.show
-            (this, I18N.gui().get("common.messages.warning"),
+            (this, I18N.guiJ().get("common.messages.warning"),
                 "Changing the size will halt and clear the world.",
-                new String[]{"Change Size", I18N.gui().get("common.buttons.cancel")})
+                new String[]{"Change Size", I18N.guiJ().get("common.buttons.cancel")})
             == 0;
   }
 

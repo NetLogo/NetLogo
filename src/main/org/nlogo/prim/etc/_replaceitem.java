@@ -2,7 +2,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -20,13 +19,13 @@ public final strictfp class _replaceitem
     Object elt = args[2].report(context);
     if (index < 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
     }
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (index >= list.size()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
                 index, Dump.logoObject(list), list.size()));
       }
       return list.replaceItem(index, elt);
@@ -37,7 +36,7 @@ public final strictfp class _replaceitem
             (context, this, 2, Syntax.TYPE_STRING, elt);
       } else if (index >= string.length()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
                 index, Dump.logoObject(string), string.length()));
       }
       return string.substring(0, index) + (String) elt + string.substring(index + 1);

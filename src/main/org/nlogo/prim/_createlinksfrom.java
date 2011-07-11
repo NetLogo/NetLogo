@@ -56,7 +56,7 @@ public final strictfp class _createlinksfrom
         if (src == dest) {
           throw new EngineException
               (context, this,
-                  I18N.errors().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
+                  I18N.errorsJ().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
         }
         if (src.id != -1 && dest.id != -1) {
           Link link = world.linkManager.createLink(src, dest, breed);

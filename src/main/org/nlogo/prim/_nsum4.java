@@ -5,7 +5,6 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -47,7 +46,7 @@ public final strictfp class _nsum4 extends Reporter {
       Object value = ((Patch) it.next()).getPatchVariable(vn);
       if (!(value instanceof Double)) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
+            I18N.errorsJ().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
                 Dump.logoObject(value).toString(), Syntax.typeName(value)));
       }
 

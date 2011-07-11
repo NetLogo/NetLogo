@@ -84,7 +84,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   private JLabel[] turtleLabel = new JLabel[16];
 
   public ColorDialog(Frame frame, boolean modalFlag) {
-    super(frame, I18N.gui().get("tools.colorswatch"), modalFlag);
+    super(frame, I18N.guiJ().get("tools.colorswatch"), modalFlag);
     setVisible(false);
 
     getContentPane().setLayout(new GridBagLayout());
@@ -275,7 +275,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   }
 
   private void createTopLeftLabel() {
-    JLabel upperLeftCorner = new JLabel(I18N.gui().get("tools.colorswatch.preview"));
+    JLabel upperLeftCorner = new JLabel(I18N.guiJ().get("tools.colorswatch.preview"));
 
     upperLeftCorner.setFont(new java.awt.Font("ArialNarrow", 0, 10));
     upperLeftCorner.setPreferredSize(new Dimension(45, 20));
@@ -368,17 +368,17 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     controlsContainer.setLayout(new BoxLayout(controlsContainer, BoxLayout.LINE_AXIS));
     // Copy button
     if (!plotPenFlag) {
-      JButton copyButton = new JButton(I18N.gui().get("tools.colorswatch.copy"));
+      JButton copyButton = new JButton(I18N.guiJ().get("tools.colorswatch.copy"));
       copyButton.setActionCommand("Copy");
       copyButton.addActionListener(this);
       controlsContainer.add(copyButton);
     } else {
       controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
-      okButton = new JButton(I18N.gui().get("common.buttons.ok"));
+      okButton = new JButton(I18N.guiJ().get("common.buttons.ok"));
       controlsContainer.add(okButton);
       okButton.addActionListener(this);
       controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
-      JButton cancelButton = new JButton(I18N.gui().get("common.buttons.cancel"));
+      JButton cancelButton = new JButton(I18N.guiJ().get("common.buttons.cancel"));
       cancelButton.addActionListener(this);
       controlsContainer.add(cancelButton);
       controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -396,7 +396,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     controlsContainer.add(Box.createHorizontalGlue());
 
     // Hide numbers checkbox
-    checkboxHideNumbers = new JCheckBox(I18N.gui().get("tools.colorswatch.numbers"), true);
+    checkboxHideNumbers = new JCheckBox(I18N.guiJ().get("tools.colorswatch.numbers"), true);
     controlsContainer.add(checkboxHideNumbers);
     checkboxHideNumbers.addItemListener(this);
 
@@ -432,7 +432,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
     controlsContainer.add(stepJpanel);
 
-    JLabel gradationLabel = new JLabel(" " + I18N.gui().get("tools.colorswatch.increment"));
+    JLabel gradationLabel = new JLabel(" " + I18N.guiJ().get("tools.colorswatch.increment"));
     controlsContainer.add(gradationLabel);
 
     controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -519,10 +519,10 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       createSwatches();
       swatchesContainer.setVisible(true);
       swatchesContainer.repaint();
-    } else if (actionCommand.equals(I18N.gui().get("common.buttons.ok"))) {
+    } else if (actionCommand.equals(I18N.guiJ().get("common.buttons.ok"))) {
       okCancelFlag = 1;
       dispose();
-    } else if (actionCommand.equals(I18N.gui().get("common.buttons.cancel"))) {
+    } else if (actionCommand.equals(I18N.guiJ().get("common.buttons.cancel"))) {
       okCancelFlag = -1;
       dispose();
     }

@@ -42,7 +42,7 @@ public strictfp class DummyMonitorWidget
   @Override
 
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.monitor");
+    return I18N.guiJ().get("tabs.run.widgets.monitor");
   }
 
   public List<Property> propertySet() {

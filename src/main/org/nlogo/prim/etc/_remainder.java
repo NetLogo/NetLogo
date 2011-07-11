@@ -26,7 +26,7 @@ public final strictfp class _remainder extends Reporter implements Pure {
   public double report_1(Context context, double d1, double d2)
       throws LogoException {
     if (d2 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
     return validDouble(d1 % d2);
   }

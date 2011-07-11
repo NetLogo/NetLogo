@@ -5,7 +5,6 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -48,7 +47,7 @@ public final strictfp class _lessorequal
       }
     }
     throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
+        I18N.errorsJ().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
             Syntax.aTypeName(o1), Syntax.aTypeName(o2)));
   }
 
@@ -77,7 +76,7 @@ public final strictfp class _lessorequal
       return arg0 <= ((Double) arg1).doubleValue();
     }
     throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
+        I18N.errorsJ().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
             Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)));
   }
 
@@ -86,7 +85,7 @@ public final strictfp class _lessorequal
       return ((Double) arg0).doubleValue() <= arg1;
     }
     throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
+        I18N.errorsJ().getN("org.nlogo.prim._lessorequal.cannotCompareParameters",
             Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)));
   }
 }

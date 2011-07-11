@@ -3,7 +3,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -25,14 +24,14 @@ public final strictfp class _otherend
       link = (Link) context.agent;
       if (!(context.myself() instanceof Turtle)) {
         throw new EngineException(context, this,
-            I18N.errors().get("org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd"));
+            I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd"));
       }
       node = (Turtle) context.myself();
     } else {
       node = (Turtle) context.agent;
       if (!(context.myself() instanceof Link)) {
         throw new EngineException(context, this,
-            I18N.errors().get("org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd"));
+            I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd"));
       }
       link = (Link) context.myself();
     }
@@ -47,6 +46,6 @@ public final strictfp class _otherend
     }
 
     throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.prim.etc._otherend.incorrectLink", node.toString(), link.toString()));
+        I18N.errorsJ().getN("org.nlogo.prim.etc._otherend.incorrectLink", node.toString(), link.toString()));
   }
 }

@@ -274,9 +274,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   @Override
   public boolean warningMessage(String message) {
-    String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     return 0 == org.nlogo.swing.OptionDialog.show(
-        getFrame(), I18N.gui().get("common.messages.warning"),
+        getFrame(), I18N.guiJ().get("common.messages.warning"),
         "Warning: " + message, options);
   }
 
@@ -730,7 +730,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (JOGLLoadingException jlex) {
       String message = jlex.getMessage();
       org.nlogo.swing.Utils.alert
-          ("3D View", message, "" + jlex.getCause(), I18N.gui().get("common.buttons.continue"));
+          ("3D View", message, "" + jlex.getCause(), I18N.guiJ().get("common.buttons.continue"));
       switchTo3DViewAction.setEnabled(false);
     }
   }
@@ -968,8 +968,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
         org.nlogo.awt.Utils.mustBeEventDispatchThread();
-        String[] options = fatalError ? new String[]{I18N.gui().get("common.buttons.ok")} :
-            new String[]{I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+        String[] options = fatalError ? new String[]{I18N.guiJ().get("common.buttons.ok")} :
+            new String[]{I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
         return org.nlogo.swing.OptionDialog.show
             (getFrame(), title, errorDetails, options) == 0;
       }
@@ -1031,7 +1031,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (java.io.IOException ex) {
       javax.swing.JOptionPane.showMessageDialog
           (getExportWindowFrame(), ex.getMessage(),
-              I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+              I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -1083,14 +1083,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (plotManager().getPlotNames().length == 0) {
         org.nlogo.swing.OptionDialog.show
             (getFrame(), "Export Plot", "There are no plots to export.",
-                new String[]{I18N.gui().get("common.buttons.ok")});
+                new String[]{I18N.guiJ().get("common.buttons.ok")});
         return;
       }
       try {
         super.exportAllPlots(e.filename);
       } catch (java.io.IOException ex) {
         String message = "Export of all plots to" + e.filename + " failed: " + ex.getMessage();
-        String[] options = {I18N.gui().get("common.buttons.ok")};
+        String[] options = {I18N.guiJ().get("common.buttons.ok")};
         org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
       }
     } else {
@@ -1103,7 +1103,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           super.exportPlot(plot.name(), e.filename);
         } catch (java.io.IOException ex) {
           String message = "Export of " + plot.name() + " plot to " + e.filename + " failed: " + ex.getMessage();
-          String[] options = {I18N.gui().get("common.buttons.ok")};
+          String[] options = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
         }
       }
@@ -1116,7 +1116,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     String[] plotNames = plotManager().getPlotNames();
     if (plotNames.length == 0) {
       String message = "There are no plots to export.";
-      String[] options = {I18N.gui().get("common.buttons.ok")};
+      String[] options = {I18N.guiJ().get("common.buttons.ok")};
       org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options);
       return null;
     }
@@ -1256,7 +1256,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public final javax.swing.Action hubNetControlCenterAction =
-      new javax.swing.AbstractAction(I18N.gui().get("menu.tools.hubNetControlCenter")) {
+      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           hubNetManager.showControlCenter();
         }

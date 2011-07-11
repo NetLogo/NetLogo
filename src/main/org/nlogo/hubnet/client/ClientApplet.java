@@ -152,7 +152,7 @@ public strictfp class ClientApplet
     org.nlogo.awt.Utils.invokeLater(new Runnable() {
       public void run() {
         org.nlogo.swing.OptionDialog.show
-            (ClientApplet.this, "Login Failed", errorMessage, new String[]{I18N.gui().get("common.buttons.ok")});
+            (ClientApplet.this, "Login Failed", errorMessage, new String[]{I18N.guiJ().get("common.buttons.ok")});
       }
     });
   }
@@ -162,7 +162,7 @@ public strictfp class ClientApplet
     if (connected) {
       org.nlogo.awt.Utils.invokeLater(new Runnable() {
         public void run() {
-          String[] ok = {I18N.gui().get("common.buttons.ok")};
+          String[] ok = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show
               (ClientApplet.this, "",
                   "You have been disconnected from " + activityName + ".\nReason: " + reason, ok);

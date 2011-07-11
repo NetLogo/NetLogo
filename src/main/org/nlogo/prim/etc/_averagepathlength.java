@@ -31,7 +31,7 @@ public final strictfp class _averagepathlength extends Reporter {
     }
     if (linkBreed != world.links() && !world.isLinkBreed(linkBreed)) {
       throw new EngineException (context, this,
-              I18N.errors().get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"));
+              I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"));
     }
     return world.linkManager.networkMetrics
         .averagePathLength(nodeSet, linkBreed);

@@ -22,7 +22,7 @@ public strictfp class DummyChooserWidget
 
   @Override
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.chooser");
+    return I18N.guiJ().get("tabs.run.widgets.chooser");
   }
 
   public List<Property> propertySet() {

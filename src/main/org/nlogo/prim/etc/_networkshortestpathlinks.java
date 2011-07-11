@@ -3,7 +3,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
@@ -28,12 +27,12 @@ public final strictfp class _networkshortestpathlinks extends Reporter {
       throws LogoException {
     if (linkBreed != world.links() && !world.isLinkBreed(linkBreed)) {
       throw new EngineException (context, this,
-              I18N.errors().get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"));
+              I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"));
     }
 
     if (destNode.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", destNode.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", destNode.classDisplayName()));
     }
     return world.linkManager.networkMetrics.networkShortestPathLinks(context.job.random, (Turtle) context.agent, destNode, linkBreed);
   }

@@ -8,7 +8,6 @@ import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -70,7 +69,7 @@ public final strictfp class _patchset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.type() != org.nlogo.agent.Patch.class) {
           throw new EngineException(context, this,
-              I18NJava.errors().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
+              I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
         for (AgentSet.Iterator iter2 = tempSet.iterator();
@@ -81,7 +80,7 @@ public final strictfp class _patchset
         descendList(context, (LogoList) obj, result);
       } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._patchset.listInputNonPatch",
+            I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatch",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }
     }

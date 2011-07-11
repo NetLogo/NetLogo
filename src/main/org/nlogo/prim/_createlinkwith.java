@@ -50,7 +50,7 @@ public final strictfp class _createlinkwith
       if (src == dest) {
         throw new EngineException
             (context, this,
-                I18N.errors().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
+                I18N.errorsJ().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
       }
       if (src.id > dest.id) {
         Turtle tmp = src;

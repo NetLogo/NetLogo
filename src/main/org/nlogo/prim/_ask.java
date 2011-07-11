@@ -5,7 +5,6 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
@@ -43,18 +42,18 @@ public final strictfp class _ask
       if (!(context.agent instanceof Observer)) {
         if (agentset == world.turtles()) {
           throw new EngineException
-              (context, this, I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
+              (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
         }
         if (agentset == world.patches()) {
           throw new EngineException
-              (context, this, I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
+              (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
         }
       }
     } else if (target instanceof Agent) {
       Agent agent = (Agent) target;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
       agentset.add(agent);
@@ -70,11 +69,11 @@ public final strictfp class _ask
     if (!(context.agent instanceof Observer)) {
       if (agentset == world.turtles()) {
         throw new EngineException
-            (context, this, I18N.errors().get("org.nlogo.prim.ask.onlyObserverCanAskAllTurtles"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.ask.onlyObserverCanAskAllTurtles"));
       }
       if (agentset == world.patches()) {
         throw new EngineException
-            (context, this, I18N.errors().get("org.nlogo.prim.ask.onlyObserverCanAskAllPatches"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.ask.onlyObserverCanAskAllPatches"));
       }
     }
     context.runExclusiveJob(agentset, next);
@@ -85,7 +84,7 @@ public final strictfp class _ask
       throws LogoException {
     if (agent.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     AgentSet agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
     agentset.add(agent);

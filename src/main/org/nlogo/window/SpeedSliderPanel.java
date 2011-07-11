@@ -15,7 +15,7 @@ public strictfp class SpeedSliderPanel
 
   final SpeedSlider speedSlider;
 
-  final javax.swing.JLabel normal = new SpeedLabel(I18N.gui().get("tabs.run.speedslider.normalspeed"));
+  final javax.swing.JLabel normal = new SpeedLabel(I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
 
   private final boolean labelsBelow;
 
@@ -83,21 +83,21 @@ public strictfp class SpeedSliderPanel
   void enableLabels(int value) {
     if (value == 0) {
       if (labelsBelow) {
-        normal.setText("      " + I18N.gui().get("tabs.run.speedslider.normalspeed"));
+        normal.setText("      " + I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
       } else {
-        normal.setText(I18N.gui().get("tabs.run.speedslider.normalspeed"));
+        normal.setText(I18N.guiJ().get("tabs.run.speedslider.normalspeed"));
       }
     } else if (value < 0) {
       if (labelsBelow) {
-        normal.setText(I18N.gui().get("tabs.run.speedslider.slower") + "                         ");
+        normal.setText(I18N.guiJ().get("tabs.run.speedslider.slower") + "                         ");
       } else {
-        normal.setText(I18N.gui().get("tabs.run.speedslider.slower"));
+        normal.setText(I18N.guiJ().get("tabs.run.speedslider.slower"));
       }
     } else {
       if (labelsBelow) {
-        normal.setText("                         " + I18N.gui().get("tabs.run.speedslider.faster"));
+        normal.setText("                         " + I18N.guiJ().get("tabs.run.speedslider.faster"));
       } else {
-        normal.setText(I18N.gui().get("tabs.run.speedslider.faster"));
+        normal.setText(I18N.guiJ().get("tabs.run.speedslider.faster"));
       }
     }
   }
@@ -206,11 +206,11 @@ public strictfp class SpeedSliderPanel
       java.awt.FontMetrics fontMetrics = getFontMetrics(getFont());
       if (!labelsBelow) {
         d.width = StrictMath.max(d.width,
-            fontMetrics.stringWidth(I18N.gui().get("tabs.run.speedslider.normalspeed")));
+            fontMetrics.stringWidth(I18N.guiJ().get("tabs.run.speedslider.normalspeed")));
       } else {
         d.width = StrictMath.max(d.width,
             fontMetrics.stringWidth
-                ("                         " + I18N.gui().get("tabs.run.speedslider.faster")) + 10);
+                ("                         " + I18N.guiJ().get("tabs.run.speedslider.faster")) + 10);
 
       }
       return d;

@@ -53,7 +53,7 @@ public strictfp class DummyButtonWidget
 
   @Override
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.button");
+    return I18N.guiJ().get("tabs.run.widgets.button");
   }
 
   private String name = "";

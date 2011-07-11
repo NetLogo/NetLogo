@@ -6,7 +6,6 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
@@ -271,7 +270,7 @@ public strictfp class Link
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.links() && !world.isLinkBreed(breed)) {
-              throw new AgentException(I18N.errors().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
+              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
             }
             if (world.getLink(end1.agentKey(), end2.agentKey(), breed) != null) {
               throw new AgentException("there is already a "
@@ -281,7 +280,7 @@ public strictfp class Link
             }
             if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
               throw new AgentException
-                  (I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
+                  (I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
             }
             setBreed(breed);
           } else {
@@ -301,7 +300,7 @@ public strictfp class Link
           if (value instanceof String) {
             String newShape = world.checkLinkShapeName((String) value);
             if (newShape == null) {
-              throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+              throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
             }
             shape(newShape);
           } else {
@@ -409,7 +408,7 @@ public strictfp class Link
       throws AgentException {
     if (name != null && !world.linkBreedOwns(getBreed(), name)) {
       throw new AgentException(
-          I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
+          I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
     }
   }
 
