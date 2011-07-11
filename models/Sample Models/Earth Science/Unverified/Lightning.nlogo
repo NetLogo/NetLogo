@@ -432,9 +432,9 @@ to clear-fades
     if (pcolor = (violet + 3)) or (pcolor = (blue + 3)) [
       set pcolor black
     ]
-    ]
-    ask positive-streamers [ die ]
-    ask step-leaders [ die ]
+  ]
+  ask positive-streamers [ die ]
+  ask step-leaders [ die ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
