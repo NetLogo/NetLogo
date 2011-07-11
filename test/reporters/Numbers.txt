@@ -2,7 +2,7 @@ NumberFormats
   [3 -3 3. -3. -.3 -0.3 .3 0.3] => [3 -3 3 -3 -0.3 -0.3 0.3 0.3]
 
 Sqrt1
-  sqrt -1 => ERROR The square root of -1.0 is an imaginary number.
+  sqrt -1 => ERROR The square root of -1 is an imaginary number.
 
 Sqrt2
   sqrt 0.0 => 0
@@ -224,10 +224,10 @@ Log4
   log 1 10.0 => 0
 
 Log5
-  log 9 0 => ERROR 0.0 isn't a valid base for a logarithm.
+  log 9 0 => ERROR 0 isn't a valid base for a logarithm.
 
 Log6
-  log 9 -2 => ERROR -2.0 isn't a valid base for a logarithm.
+  log 9 -2 => ERROR -2 isn't a valid base for a logarithm.
 
 Log7
   log 100 10 + 2 => 4
