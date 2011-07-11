@@ -6,7 +6,6 @@ import org.nlogo.window.SyntaxColors
 import org.nlogo.awt.Utils.colorize
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
-import org.nlogo.util.JCL._
 
 class Picker(view: View) extends PickListener with ActionListener {
 
@@ -58,7 +57,8 @@ class Picker(view: View) extends PickListener with ActionListener {
     }
 
     var last: Class[_] = null
-    for(agent <- agents) {
+    import collection.JavaConverters._
+    for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
         menu.add(new javax.swing.JPopupMenu.Separator)
         last = agent.getClass
