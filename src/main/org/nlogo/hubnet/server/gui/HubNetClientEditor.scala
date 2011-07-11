@@ -82,6 +82,6 @@ class HubNetClientEditor(workspace: GUIWorkspace,
       I18N.gui.get("menu.tools.hubNetClientEditor") + " " + 8212.toChar + " " + title
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
-    if (mt == ModelType.NORMAL) t + " {" + directory + "}" else t
+    if (mt == ModelType.Normal) t + " {" + directory + "}" else t
   }
 }

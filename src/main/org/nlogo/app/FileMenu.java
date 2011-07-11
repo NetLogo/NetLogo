@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelType;
+import org.nlogo.api.ModelTypeJ;
 import org.nlogo.awt.UserCancelException;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
@@ -151,7 +152,7 @@ public strictfp class FileMenu
       offerSave();
       openFromPath
           (userChooseLoadPath(),
-              ModelType.NORMAL);
+           ModelTypeJ.NORMAL());
     }
   }
 
@@ -169,7 +170,7 @@ public strictfp class FileMenu
               (org.nlogo.awt.Utils.getFrame(FileMenu.this));
       String modelPath = ModelsLibraryDialog.getModelPath();
       openFromSource(source, modelPath, "Loading...",
-          ModelType.LIBRARY);
+                     ModelTypeJ.LIBRARY());
     }
   }
 
@@ -673,19 +674,19 @@ public strictfp class FileMenu
     String source = org.nlogo.util.Utils.url2String(model);
     if (model.equals(emptyModelPath())) {
       openFromSource(source, null, "Clearing...",
-          ModelType.NEW);
+                     ModelTypeJ.NEW());
     } else {
       // models loaded from URLs are treated as library models, since
       // they are read-only. This is currently never used, so I'm
       // not even sure it's what we would really want...
       openFromSource(source, null, "Loading...",
-          ModelType.LIBRARY);
+                     ModelTypeJ.LIBRARY());
     }
   }
 
   public void handle(org.nlogo.window.Events.OpenModelEvent e) {
     try {
-      openFromPath(e.path, ModelType.LIBRARY);
+      openFromPath(e.path, ModelTypeJ.LIBRARY());
     } catch (java.io.IOException ex) {
       throw new IllegalStateException(ex);
     }
@@ -890,7 +891,7 @@ public strictfp class FileMenu
       throws UserCancelException {
     String newFileName = guessFileName();
     String newDirectoryName = null;
-    if (app.workspace().getModelType() == ModelType.NORMAL) {
+    if (app.workspace().getModelType() == ModelTypeJ.NORMAL()) {
       // we only default to saving in the model dir for normal and
       // models. for library and new models, we use the current
       // FileDialog dir.

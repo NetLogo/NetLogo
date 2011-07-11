@@ -13,6 +13,7 @@ import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.ModelType;
+import org.nlogo.api.ModelTypeJ;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.nvm.CompilerInterface;
@@ -1231,7 +1232,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void modelSaved(String newModelPath) {
     setModelPath(newModelPath);
-    setModelType(ModelType.NORMAL);
+    setModelType(ModelTypeJ.NORMAL());
   }
 
   public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {

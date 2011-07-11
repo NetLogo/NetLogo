@@ -104,7 +104,7 @@ public abstract strictfp class AbstractWorkspace
                               AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
     this.world = world;
     this.hubNetManagerFactory = hubNetManagerFactory;
-    modelType = ModelType.NEW;
+    modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
@@ -280,7 +280,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   /**
-   * instantly converts the current model to ModelType.NORMAL. This is used
+   * instantly converts the current model to ModelTypeJ.NORMAL. This is used
    * by the __edit command to enable quick saving of library models. It
    * probably shouldn't be used anywhere else.
    */
@@ -290,7 +290,7 @@ public abstract strictfp class AbstractWorkspace
     if (!git.exists() || !git.isDirectory()) {
       throw new java.io.IOException("no .git directory found");
     }
-    modelType = ModelType.NORMAL;
+    modelType = ModelTypeJ.NORMAL();
     return getModelPath();
   }
 
@@ -337,8 +337,8 @@ public abstract strictfp class AbstractWorkspace
    * Basically, only normal models can get silently saved.
    */
   public boolean forceSaveAs() {
-    return modelType == ModelType.NEW
-        || modelType == ModelType.LIBRARY;
+    return modelType == ModelTypeJ.NEW()
+      || modelType == ModelTypeJ.LIBRARY();
   }
 
   public String modelNameForDisplay() {

@@ -522,7 +522,7 @@ class App extends
   private def reload() {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.NEW && path != null) openFromSource(FileIO.file2String(path), path, modelType)
+    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
     else commandLater("print \"can't, new model\"")
   }
 
@@ -540,7 +540,7 @@ class App extends
       if (fullName != null) {
         val path = org.nlogo.workspace.ModelsLibrary.getModelPath(fullName)
         val source = org.nlogo.api.FileIO.file2String(path)
-        org.nlogo.awt.Utils.invokeLater(() => openFromSource(source, path, ModelType.LIBRARY))
+        org.nlogo.awt.Utils.invokeLater(() => openFromSource(source, path, ModelType.Library))
       }
     }
   }
@@ -677,7 +677,7 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.NORMAL) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
       title 
     }
   }
@@ -729,10 +729,10 @@ class App extends
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
   @throws(classOf[java.io.IOException])
-  def open(path:String)  { dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.NORMAL)) }
+  def open(path:String)  { dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Normal)) }
 
   @throws(classOf[java.io.IOException])
-  def libraryOpen(path:String){ dispatchThreadOrBust(path, ModelType.LIBRARY) }
+  def libraryOpen(path:String){ dispatchThreadOrBust(path, ModelType.Library) }
 
   /**
    * Opens a model stored in a string.
@@ -742,7 +742,7 @@ class App extends
    */
   def openFromSource(name:String, source:String){
     // I'm not positive that NORMAL is right here.
-    openFromSource(source, name, ModelType.NORMAL)
+    openFromSource(source, name, ModelType.Normal)
   }
 
   def openFromSource(source:String, path:String, modelType:ModelType){

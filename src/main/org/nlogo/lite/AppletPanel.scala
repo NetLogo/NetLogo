@@ -216,7 +216,7 @@ with Event.LinkParent {
     // reading case that goes out to the web server instead of 1the file system.... so, I think
     // TYPE_LIBRARY is probably OK. - ST 10/11/05
     RuntimeErrorDialog.setModelName(name)
-    ModelLoader.load(this, path, ModelType.LIBRARY, source)
+    ModelLoader.load(this, path, ModelType.Library, source)
   }
 
 }
