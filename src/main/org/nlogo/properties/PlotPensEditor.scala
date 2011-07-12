@@ -131,6 +131,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       setGridColor(Color.BLACK)
       setShowGrid(true)
       setRowSelectionAllowed(false)
+      getTableHeader.setReorderingAllowed(false)
 
       getSelectionModel.addListSelectionListener(new RowListener())
       getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
