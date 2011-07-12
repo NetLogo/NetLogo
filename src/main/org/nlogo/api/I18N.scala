@@ -4,16 +4,16 @@ import java.util.{MissingResourceException, Locale, ResourceBundle}
 
 object I18N {
 
-  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(availble)
+  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(available)
 
-  def availble(locale:Locale) =
+  def available(locale:Locale) =
     try {
       val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
       rb.getLocale == locale
     }
     catch { case m: MissingResourceException => false }
 
-  def localeIfAvailable(loc:Locale): Option[Locale] = if(availble(loc)) Some(loc) else None
+  def localeIfAvailable(loc:Locale): Option[Locale] = if(available(loc)) Some(loc) else None
 
   case class Prefix(name:String)
 
