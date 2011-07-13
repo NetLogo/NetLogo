@@ -4,37 +4,42 @@ import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
 import org.nlogo.api.World3D
 import java.nio.FloatBuffer
-import collection.mutable.ListBuffer
-import java.lang.{IndexOutOfBoundsException, IllegalStateException, Float => JavaFloat, Double => JavaDouble}
+import collection.mutable.ArrayBuffer
+import java.lang.{IndexOutOfBoundsException, IllegalStateException, Float => JFloat, Double => JDouble}
+
+/**
+ * This is a small library for managing and debugging lighting.  It includes
+ * methods for showing the positions and directions of the lights in 3D space.
+ *
+ * It isn't normally enabled; to enable it, call the showLights() method.  If you ever wondered what
+ * the default lighting scheme in NetLogo 3D looks like, here it is, there are two directional
+ * lights pointing roughly at opposite corners.
+ */
 
 class LightManager {
 
-  val lights = new ListBuffer[Light]()
-
-  // Keep track of how many lights we're using (OpenGL supports up to 8)
-  var LightCounter = 0
+  val lights = ArrayBuffer[Light]()
 
   private var glInstance: Option[GL] = None
-  implicit def getGL: GL = glInstance.getOrElse(throw new IllegalStateException("Handle to OpenGL interface is not set. "
-    + "Make sure init() got called."))
+  implicit def getGL: GL = glInstance.getOrElse(
+    sys.error("Handle to OpenGL interface is not set. Make sure init() got called."))
 
   def init(gl: GL) {
-    this.glInstance = Some(gl)
+    glInstance = Some(gl)
   }
 
-  def AddLight(light: Light) {
-    if (LightCounter >= 8) {
-      throw new IllegalStateException("Failed to add light: Only a maximum of 8 lights is supported in OpenGL.")
-    }
-    light.glLightNumber = GetOpenGLLightNumber(LightCounter)
+  def addLight(light: Light) {
+    require(lights.size < 8,
+            "Failed to add light: Only a maximum of 8 lights is supported in OpenGL.")
+
+    light.glLightNumber = getOpenGLLightNumber(lights.size)
     light.glInstance = glInstance
 
     light.turnOn()
-    lights ++= List(light)
-    LightCounter += 1
+    lights += light
   }
 
-  /*
+  /**
    * This method actually makes the lights effective by setting all of the appropriate OpenGL state variables.
    * This should be called on every frame (or just once, but be sure that no other parts of the application
    * change the lighting in that case).
@@ -43,7 +48,7 @@ class LightManager {
     lights.foreach(_.applyLight())
   }
 
-  /*
+  /**
    * Shows the positions of all the lights present in the world.  Positional lights are rendered as spheres,
    * and directional lights are rendered as arrows. This is intended as a debugging aid.
    *
@@ -51,44 +56,41 @@ class LightManager {
    * this method will approximate the source of the light by rendering it outside of the world.
    */
   def showLights(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                   shapeRenderer: ShapeRenderer) {
+                 shapeRenderer: ShapeRenderer) {
     lights.foreach(_.showLight(glu, world, worldScale, observerDistance, shapeRenderer))
   }
 
-  def GetOpenGLLightNumber(lightIndex: Int) = lightIndex match {
-    case 0 => GL.GL_LIGHT0
-    case 1 => GL.GL_LIGHT1
-    case 2 => GL.GL_LIGHT2
-    case 3 => GL.GL_LIGHT3
-    case 4 => GL.GL_LIGHT4
-    case 5 => GL.GL_LIGHT5
-    case 6 => GL.GL_LIGHT6
-    case 7 => GL.GL_LIGHT7
-    case _ => throw new IndexOutOfBoundsException("Light index needs to be between 0 and 7.")
+  private val lightNumbers = List(
+    GL.GL_LIGHT0, GL.GL_LIGHT1, GL.GL_LIGHT2, GL.GL_LIGHT3,
+    GL.GL_LIGHT4, GL.GL_LIGHT5, GL.GL_LIGHT6, GL.GL_LIGHT7)
+
+  def getOpenGLLightNumber(lightIndex: Int) = {
+    require(lightNumbers.isDefinedAt(lightIndex),
+            "Light index needs to be between 0 and 7.")
+    lightNumbers(lightIndex)
   }
 }
 
-
 abstract class Light {
   
-  var ambient = new RGBA(1, 1, 1, 1)
-  var diffuse = new RGBA(1, 1, 1, 1)
-  var specular = new RGBA(1, 1, 1, 1)
+  var ambient = RGBA(1, 1, 1, 1)
+  var diffuse = RGBA(1, 1, 1, 1)
+  var specular = RGBA(1, 1, 1, 1)
 
   var glLightNumber = -1
   
   var glInstance: Option[GL] = None
-  implicit def getGL: GL = glInstance.getOrElse(throw new IllegalStateException(
+  implicit def getGL: GL = glInstance.getOrElse(sys.error(
     "Handle to OpenGL interface must be set before attempting to use the light. "
-    + "Use LightManager.AddLight() and LightManager.RemoveLight() to add or remove lights, "
+    + "Use LightManager.addLight() and LightManager.removeLight() to add or remove lights, "
     + "and be sure LightManager.init() was called."))
 
-  protected var isOn = true
-  def IsOn: Boolean = isOn
+  private var _isOn = true
+  def isOn: Boolean = _isOn
 
   def turnOn() {
     assertValidLightNumber()
-    isOn = true
+    _isOn = true
     val gl = getGL
     gl.glLightfv(glLightNumber, GL.GL_AMBIENT, FloatBuffer.wrap(ambient.toFloat4Array))
     gl.glLightfv(glLightNumber, GL.GL_DIFFUSE, FloatBuffer.wrap(diffuse.toFloat4Array))
@@ -99,7 +101,7 @@ abstract class Light {
 
   def turnOff() {
     assertValidLightNumber()
-    isOn = false
+    _isOn = false
     getGL.glDisable(glLightNumber)
   }
 
@@ -107,31 +109,31 @@ abstract class Light {
     if (isOn) turnOff() else turnOn()
   }
 
-  /*
+  /**
    * Makes the light effective by setting the appropriate OpenGL state variables. Be sure
    * that the light is on by calling turnOn(), but note that it is on by default.
    */
   def applyLight();
 
-  /*
+  /**
    * Shows the light's position in 3D space. This is intended as a debugging aid.
    */
   def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                   shapeRenderer: ShapeRenderer);
 
-  /*
+  /**
    * Helps visualize the light's position in 3D space by drawing some lines. This is intended as a debugging aid.
    */
-  def renderPositionHintLines(x: JavaFloat, y: JavaFloat, z: JavaFloat,
-                              MinX: JavaFloat, MinY: JavaFloat, MinZ: JavaFloat,
-                              MaxX: JavaFloat, MaxY: JavaFloat, MaxZ: JavaFloat) {
+  def renderPositionHintLines(x: JFloat, y: JFloat, z: JFloat,
+                              minX: JFloat, minY: JFloat, minZ: JFloat,
+                              maxX: JFloat, maxY: JFloat, maxZ: JFloat) {
     
     val gl = getGL
 
     // Render a line extending from the light position to the world bottom (helps visualize light's Z position)
     gl.glBegin(GL.GL_LINES)
     gl.glVertex3f(x, y, z)
-    gl.glVertex3f(x, y, MinZ)
+    gl.glVertex3f(x, y, minZ)
     gl.glEnd()
 
     // Render a pair of crossing lines at the world bottom (helps visualize light's (X,Y) position)
@@ -139,57 +141,57 @@ abstract class Light {
     gl.glColor4fv(java.nio.FloatBuffer.wrap(Array(0.3f, 0.3f, 0.3f, 1.0f)))
     gl.glBegin(GL.GL_LINES)
 
-    if (x <= MaxX) {
-      gl.glVertex3f(MinX, y, MinZ)
-      gl.glVertex3f(x, y, MinZ)
+    if (x <= maxX) {
+      gl.glVertex3f(minX, y, minZ)
+      gl.glVertex3f(x, y, minZ)
     }
 
-    if (x >= MinX) {
-      gl.glVertex3f(x, y, MinZ)
-      gl.glVertex3f(MaxX, y, MinZ)
+    if (x >= minX) {
+      gl.glVertex3f(x, y, minZ)
+      gl.glVertex3f(maxX, y, minZ)
     }
 
-    if (y <= MaxY) {
-      gl.glVertex3f(x, MinY, MinZ)
-      gl.glVertex3f(x, y, MinZ)
+    if (y <= maxY) {
+      gl.glVertex3f(x, minY, minZ)
+      gl.glVertex3f(x, y, minZ)
     }
 
-    if (y >= MinY) {
-      gl.glVertex3f(x, y, MinZ)
-      gl.glVertex3f(x, MaxY, MinZ)
+    if (y >= minY) {
+      gl.glVertex3f(x, y, minZ)
+      gl.glVertex3f(x, maxY, minZ)
     }
     
     // If the light's (X,Y) position is outside of the world's boundaries, it may also be helpful to draw
     // a few lines extending from the world boundaries.
 
-    if (x < MinX || x > MaxX) {
-      if (y <= MaxY) {
-        gl.glVertex3f(x, MinY, MinZ)
-        gl.glVertex3f(if (x < MinX) MinX else MaxX, MinY, MinZ)
+    if (x < minX || x > maxX) {
+      if (y <= maxY) {
+        gl.glVertex3f(x, minY, minZ)
+        gl.glVertex3f(if (x < minX) minX else maxX, minY, minZ)
       }
 
-      if (y >= MinY) {
-        gl.glVertex3f(x, MaxY, MinZ)
-        gl.glVertex3f(if (x < MinX) MinX else MaxX, MaxY, MinZ)
+      if (y >= minY) {
+        gl.glVertex3f(x, maxY, minZ)
+        gl.glVertex3f(if (x < minX) minX else maxX, maxY, minZ)
       }
     }
 
-    if (y < MinY || y > MaxY) {
-      if (x <= MaxX) {
-        gl.glVertex3f(MinX, y, MinZ)
-        gl.glVertex3f(MinX, if (y < MinY) MinY else MaxY, MinZ)
+    if (y < minY || y > maxY) {
+      if (x <= maxX) {
+        gl.glVertex3f(minX, y, minZ)
+        gl.glVertex3f(minX, if (y < minY) minY else maxY, minZ)
       }
 
-      if (x >= MinX) {
-        gl.glVertex3f(MaxX, y, MinZ)
-        gl.glVertex3f(MaxX, if (y < MinY) MinY else MaxY, MinZ)
+      if (x >= minX) {
+        gl.glVertex3f(maxX, y, minZ)
+        gl.glVertex3f(maxX, if (y < minY) minY else maxY, minZ)
       }
     }
 
     gl.glEnd()
   }
 
-  /*
+  /**
    * Draws a 3D arrow (comprised of a cylinder and a cone) at the current position specified by the OpenGL
    * modelview matrix, pointing in the direction specified by the vector (xdir, ydir, zdir). This is used
    * for rendering directional lights.
@@ -222,25 +224,14 @@ abstract class Light {
 
   def assertValidLightNumber() {
     assert (glLightNumber >= GL.GL_LIGHT0 || glLightNumber <= GL.GL_LIGHT7,
-      { throw new IllegalStateException("Invalid OpenGL light number: " + glLightNumber
+      { sys.error("Invalid OpenGL light number: " + glLightNumber
           + ". Light number needs to be between " + GL.GL_LIGHT0 + " and " + GL.GL_LIGHT7
-          + ". Use LightManager.AddLight() and LightManager.RemoveLight() to add or remove lights.")
+          + ". Use LightManager.addLight() and LightManager.removeLight() to add or remove lights.")
       })
   }
 
-  def getLabel: String = {
-    val numberLabel = glLightNumber match {
-      case GL.GL_LIGHT0 => "GL_LIGHT0"
-      case GL.GL_LIGHT1 => "GL_LIGHT1"
-      case GL.GL_LIGHT2 => "GL_LIGHT2"
-      case GL.GL_LIGHT3 => "GL_LIGHT3"
-      case GL.GL_LIGHT4 => "GL_LIGHT4"
-      case GL.GL_LIGHT5 => "GL_LIGHT5"
-      case GL.GL_LIGHT6 => "GL_LIGHT6"
-      case GL.GL_LIGHT7 => "GL_LIGHT7"
-    }
-    numberLabel + " (" + typeLabel + ")" + (if (isOn) "" else " [off]")
-  }
+  def getLabel: String =
+    "GL_LIGHT" + lightNumbers.indexOf(glLightNumber) + " (" + typeLabel + ")" + (if (isOn) "" else " [off]")
 
   // Specifies whether this is a position or a directional light.
   def typeLabel: String
@@ -293,7 +284,7 @@ class DirectionalLight(val direction: Direction) extends Light {
                             worldScale * world.maxPxcor, worldScale * world.maxPycor, worldScale * world.maxPzcor)
 
     // Render a label for the light
-    shapeRenderer.renderLabel(getGL, getLabel, new JavaDouble(47.0), lightSourceX, lightSourceY, lightSourceZ,
+    shapeRenderer.renderLabel(getGL, getLabel, 47: JDouble, lightSourceX, lightSourceY, lightSourceZ,
         1.0f, 12, world.patchSize)
 
     gl.glEnable(GL.GL_LIGHTING)
@@ -334,29 +325,30 @@ class PositionalLight(val position: Position) extends Light {
                             worldScale * world.maxPxcor, worldScale * world.maxPycor, worldScale * world.maxPzcor)
 
     // Render a label for the light
-    shapeRenderer.renderLabel(getGL, getLabel, new JavaDouble(47.0), position.x, position.y, position.z,
+    shapeRenderer.renderLabel(getGL, getLabel, 47: JDouble, position.x, position.y, position.z,
         1.0f, 12, world.patchSize)
 
     gl.glEnable(GL.GL_LIGHTING)
   }
 }
 
-abstract class Vector3(val x: JavaFloat, val y: JavaFloat, val z: JavaFloat) {
+abstract class Vector3 {
+  val x: JFloat; val y: JFloat; val z: JFloat
   def toFloat4Array: Array[Float];
 }
 
-class Position(x: JavaFloat, y: JavaFloat, z: JavaFloat) extends Vector3(x, y, z) {
-  def toFloat4Array: Array[Float] = Array(x, y, z, 1.0f)
+case class Position(x: JFloat, y: JFloat, z: JFloat) extends Vector3 {
+  override def toFloat4Array = Array(x, y, z, 1.0f)
 }
 
-class Direction(x: JavaFloat, y: JavaFloat, z: JavaFloat) extends Vector3(x, y, z) {
-  def toFloat4Array: Array[Float] = Array(x, y, z, 0.0f)
+case class Direction(x: JFloat, y: JFloat, z: JFloat) extends Vector3 {
+  override def toFloat4Array = Array(x, y, z, 0.0f)
   def normalized: Direction = {
     val length = math.sqrt(x*x + y*y + z*z).toFloat
-    new Direction(x/length, y/length, z/length)
+    Direction(x/length, y/length, z/length)
   }
 }
 
-class RGBA(val r: JavaFloat, val g: JavaFloat, val b: JavaFloat, val a: JavaFloat) {
-  def toFloat4Array: Array[Float] = Array(r, g, b, a)
+case class RGBA(r: JFloat, g: JFloat, b: JFloat, a: JFloat) {
+  def toFloat4Array = Array[Float](r, g, b, a)
 }

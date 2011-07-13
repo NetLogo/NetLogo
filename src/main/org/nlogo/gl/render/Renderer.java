@@ -184,13 +184,13 @@ public class Renderer
     light1.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
     light1.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
     light1.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
-    lightManager.AddLight(light1);
+    lightManager.addLight(light1);
 
     Light light2 = new DirectionalLight(new Direction(1.0f, 0.6f, -0.5f));
     light2.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
     light2.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
     light2.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
-    lightManager.AddLight(light2);
+    lightManager.addLight(light2);
 
     // This is necessary for properly rendering scaled objects. Without this, small objects
     // may look too bright, and large objects will look flat.
