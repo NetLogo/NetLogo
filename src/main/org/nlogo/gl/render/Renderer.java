@@ -42,6 +42,7 @@ public class Renderer
   final LinkRenderer linkRenderer;
   final ShapeRenderer shapeRenderer;
   final MouseState mouseState = new MouseState() ;
+  final LightManager lightManager = new LightManager();
 
   int width;
   int height;
@@ -177,22 +178,23 @@ public class Renderer
 
     // Lighting
 
-    float[] lightAmbient = {0.25f, 0.25f, 0.25f, 1.0f};
-    float[] lightDiffuse = {0.35f, 0.35f, 0.35f, 1.0f};
+    lightManager.init(gl);
 
-    gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, FloatBuffer.wrap(lightAmbient));
-    gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, FloatBuffer.wrap(lightDiffuse));
-    gl.glEnable(GL.GL_LIGHT0);
+    Light light1 = new DirectionalLight(new Direction(-1.0f, -0.3f, 0.4f));
+    light1.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+    light1.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+    light1.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+    lightManager.AddLight(light1);
 
-    float[] lightAmbient2 = {0.25f, 0.25f, 0.25f, 1.0f};
-    float[] lightDiffuse2 = {0.35f, 0.35f, 0.35f, 1.0f};
-    float[] lightPos2 = {0.25f, 0.25f, 0.25f, 0.0f};
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_AMBIENT, FloatBuffer.wrap(lightAmbient2));
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE, FloatBuffer.wrap(lightDiffuse2));
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, FloatBuffer.wrap(lightPos2));
-    gl.glEnable(GL.GL_LIGHT2);
+    Light light2 = new DirectionalLight(new Direction(1.0f, 0.6f, -0.5f));
+    light2.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+    light2.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+    light2.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+    lightManager.AddLight(light2);
 
-    gl.glEnable(GL.GL_LIGHTING);
+    // This is necessary for properly rendering scaled objects. Without this, small objects
+    // may look too bright, and large objects will look flat.
+    gl.glEnable(GL.GL_NORMALIZE);
 
     // Coloring
 
@@ -404,11 +406,19 @@ public class Renderer
 
       worldRenderer.renderCrossHairs(gl);
 
-      float[] lightPosition = {-1.0f, -0.3f, 0.4f, 0.0f};
-      gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, FloatBuffer.wrap(lightPosition));
+      lightManager.applyLighting();
 
-      float[] lightPosition2 = {1.0f, 0.6f, -0.5f, 0.0f};
-      gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, FloatBuffer.wrap(lightPosition2));
+      // Uncomment the code below to show the positions and directions of all the lights
+      // in the world (only works in NetLogo 3D, not the 3D view in 2D).
+      /*
+      if (world instanceof World3D)
+      {
+        double observerDistance = Math.sqrt(world.observer().oxcor() * world.observer().oxcor()
+              + world.observer().oycor() * world.observer().oycor()
+              + world.observer().ozcor() * world.observer().ozcor());
+        lightManager.showLights(glu, (World3D)world, WORLD_SCALE, observerDistance, shapeRenderer);
+      }
+      */
 
       renderWorld(gl, world);
 
