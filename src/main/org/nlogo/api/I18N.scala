@@ -64,8 +64,6 @@ object I18N {
         println("unable to find translation for: " + key + " in " + name + " for locale: " + defaultBundle.getLocale)
         getFromBundle(englishBundle).getOrElse(sys.error("coding error, bad translation key: " + key + " for " + name))
       }
-      //println(preformattedText)
-      //println(args.mkString(","))
       java.text.MessageFormat.format(preformattedText, args:_*)
     }
     // internal use only
