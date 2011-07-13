@@ -7,7 +7,7 @@ class _runresult extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TYPE_STRING | Syntax.TYPE_REPORTER_LAMBDA,
+      Array(Syntax.TYPE_STRING | Syntax.TYPE_REPORTER_TASK,
         Syntax.TYPE_REPEATABLE | Syntax.TYPE_WILDCARD),
       Syntax.TYPE_WILDCARD,
       1)
@@ -51,7 +51,7 @@ class _runresult extends Reporter {
         lambda.report(context, actuals)
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.TYPE_REPORTER_LAMBDA | Syntax.TYPE_STRING, obj)
+          context, this, 0, Syntax.TYPE_REPORTER_TASK | Syntax.TYPE_STRING, obj)
     }
 
 }

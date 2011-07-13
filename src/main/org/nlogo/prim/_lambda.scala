@@ -6,7 +6,7 @@ import org.nlogo.nvm._
 class _lambda(proc: Procedure) extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Syntax.TYPE_COMMAND_LAMBDA)
+    Syntax.reporterSyntax(Syntax.TYPE_COMMAND_TASK)
 
   override def toString =
     super.toString + ":" + proc.displayName

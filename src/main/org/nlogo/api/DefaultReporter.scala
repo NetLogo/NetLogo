@@ -16,10 +16,10 @@ abstract class DefaultReporter extends Reporter {
   /**
    * Indicates that this reporter takes no arguments and returns a number.
    *
-   * @return <code>Syntax.reporterSyntax(Syntax.TYPE_NUMBER)</code>
+   * @return <code>Syntax.reporterSyntax(Syntax.NumberType)</code>
    */
   override def getSyntax =
-    Syntax.reporterSyntax(Syntax.TYPE_NUMBER)
+    Syntax.reporterSyntax(Syntax.NumberType)
 
   /**
    * Returns a new instance of this class, created by invoking the empty constructor.

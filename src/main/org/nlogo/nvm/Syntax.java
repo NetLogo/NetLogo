@@ -4,38 +4,38 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.LogoList;
 
 public final strictfp class Syntax {
-  public static final int TYPE_VOID = org.nlogo.api.Syntax.TYPE_VOID();
-  public static final int TYPE_NUMBER = org.nlogo.api.Syntax.TYPE_NUMBER();
-  public static final int TYPE_BOOLEAN = org.nlogo.api.Syntax.TYPE_BOOLEAN();
-  public static final int TYPE_STRING = org.nlogo.api.Syntax.TYPE_STRING();
-  public static final int TYPE_LIST = org.nlogo.api.Syntax.TYPE_LIST();
-  public static final int TYPE_TURTLESET = org.nlogo.api.Syntax.TYPE_TURTLESET();
-  public static final int TYPE_PATCHSET = org.nlogo.api.Syntax.TYPE_PATCHSET();
-  public static final int TYPE_LINKSET = org.nlogo.api.Syntax.TYPE_LINKSET();
-  public static final int TYPE_AGENTSET = org.nlogo.api.Syntax.TYPE_AGENTSET();
-  public static final int TYPE_NOBODY = org.nlogo.api.Syntax.TYPE_NOBODY();
-  public static final int TYPE_TURTLE = org.nlogo.api.Syntax.TYPE_TURTLE();
-  public static final int TYPE_PATCH = org.nlogo.api.Syntax.TYPE_PATCH();
-  public static final int TYPE_LINK = org.nlogo.api.Syntax.TYPE_LINK();
-  public static final int TYPE_COMMAND_LAMBDA = org.nlogo.api.Syntax.TYPE_COMMAND_LAMBDA();
-  public static final int TYPE_REPORTER_LAMBDA = org.nlogo.api.Syntax.TYPE_REPORTER_LAMBDA();
-  public static final int TYPE_AGENT = org.nlogo.api.Syntax.TYPE_AGENT();
-  public static final int TYPE_READABLE = org.nlogo.api.Syntax.TYPE_READABLE();
-  public static final int TYPE_WILDCARD = org.nlogo.api.Syntax.TYPE_WILDCARD();
-  public static final int TYPE_REFERENCE = org.nlogo.api.Syntax.TYPE_REFERENCE();
-  public static final int TYPE_COMMAND_BLOCK = org.nlogo.api.Syntax.TYPE_COMMAND_BLOCK();
-  public static final int TYPE_BOOLEAN_BLOCK = org.nlogo.api.Syntax.TYPE_BOOLEAN_BLOCK();
-  public static final int TYPE_NUMBER_BLOCK = org.nlogo.api.Syntax.TYPE_NUMBER_BLOCK();
-  public static final int TYPE_OTHER_BLOCK = org.nlogo.api.Syntax.TYPE_OTHER_BLOCK();
-  public static final int TYPE_REPORTER_BLOCK = org.nlogo.api.Syntax.TYPE_REPORTER_BLOCK();
-  public static final int TYPE_BRACKETED = org.nlogo.api.Syntax.TYPE_BRACKETED();
-  public static final int TYPE_REPEATABLE = org.nlogo.api.Syntax.TYPE_REPEATABLE();
+  public static final int TYPE_VOID = org.nlogo.api.Syntax.VoidType();
+  public static final int TYPE_NUMBER = org.nlogo.api.Syntax.NumberType();
+  public static final int TYPE_BOOLEAN = org.nlogo.api.Syntax.BooleanType();
+  public static final int TYPE_STRING = org.nlogo.api.Syntax.StringType();
+  public static final int TYPE_LIST = org.nlogo.api.Syntax.ListType();
+  public static final int TYPE_TURTLESET = org.nlogo.api.Syntax.TurtlesetType();
+  public static final int TYPE_PATCHSET = org.nlogo.api.Syntax.PatchsetType();
+  public static final int TYPE_LINKSET = org.nlogo.api.Syntax.LinksetType();
+  public static final int TYPE_AGENTSET = org.nlogo.api.Syntax.AgentsetType();
+  public static final int TYPE_NOBODY = org.nlogo.api.Syntax.NobodyType();
+  public static final int TYPE_TURTLE = org.nlogo.api.Syntax.TurtleType();
+  public static final int TYPE_PATCH = org.nlogo.api.Syntax.PatchType();
+  public static final int TYPE_LINK = org.nlogo.api.Syntax.LinkType();
+  public static final int TYPE_COMMAND_TASK = org.nlogo.api.Syntax.CommandTaskType();
+  public static final int TYPE_REPORTER_TASK = org.nlogo.api.Syntax.ReporterTaskType();
+  public static final int TYPE_AGENT = org.nlogo.api.Syntax.AgentType();
+  public static final int TYPE_READABLE = org.nlogo.api.Syntax.ReadableType();
+  public static final int TYPE_WILDCARD = org.nlogo.api.Syntax.WildcardType();
+  public static final int TYPE_REFERENCE = org.nlogo.api.Syntax.ReferenceType();
+  public static final int TYPE_COMMAND_BLOCK = org.nlogo.api.Syntax.CommandBlockType();
+  public static final int TYPE_BOOLEAN_BLOCK = org.nlogo.api.Syntax.BooleanBlockType();
+  public static final int TYPE_NUMBER_BLOCK = org.nlogo.api.Syntax.NumberBlockType();
+  public static final int TYPE_OTHER_BLOCK = org.nlogo.api.Syntax.OtherBlockType();
+  public static final int TYPE_REPORTER_BLOCK = org.nlogo.api.Syntax.ReporterBlockType();
+  public static final int TYPE_BRACKETED = org.nlogo.api.Syntax.BracketedType();
+  public static final int TYPE_REPEATABLE = org.nlogo.api.Syntax.RepeatableType();
   // At present, TYPE_OPTIONAL is implemented only in combination with
   // TYPE_COMMAND_BLOCK as the last argument - ST 5/25/06
-  public static final int TYPE_OPTIONAL = org.nlogo.api.Syntax.TYPE_OPTIONAL();
+  public static final int TYPE_OPTIONAL = org.nlogo.api.Syntax.OptionalType();
 
-  public static final int COMMAND_PRECEDENCE = org.nlogo.api.Syntax.COMMAND_PRECEDENCE();
-  public static final int NORMAL_PRECEDENCE = org.nlogo.api.Syntax.NORMAL_PRECEDENCE();
+  public static final int COMMAND_PRECEDENCE = org.nlogo.api.Syntax.CommandPrecedence();
+  public static final int NORMAL_PRECEDENCE = org.nlogo.api.Syntax.NormalPrecedence();
 
   private final int left;
   private final int[] right;
@@ -409,9 +409,9 @@ public final strictfp class Syntax {
     } else if (obj instanceof org.nlogo.agent.Link) {
       return typeName(TYPE_LINK);
     } else if (obj instanceof org.nlogo.nvm.ReporterLambda) {
-      return typeName(TYPE_REPORTER_LAMBDA);
+      return typeName(TYPE_REPORTER_TASK);
     } else if (obj instanceof org.nlogo.nvm.CommandLambda) {
-      return typeName(TYPE_COMMAND_LAMBDA);
+      return typeName(TYPE_COMMAND_TASK);
     } else if (obj == null) {
       return "null";
     } else {
@@ -479,12 +479,12 @@ public final strictfp class Syntax {
     } else if (compatible(mask, TYPE_LINK)) {
       result = "link";
       mask = subtractMasks(mask, TYPE_LINK | TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_REPORTER_LAMBDA)) {
+    } else if (compatible(mask, TYPE_REPORTER_TASK)) {
       result = "reporter task";
-      mask = subtractMasks(mask, TYPE_REPORTER_LAMBDA);
-    } else if (compatible(mask, TYPE_COMMAND_LAMBDA)) {
+      mask = subtractMasks(mask, TYPE_REPORTER_TASK);
+    } else if (compatible(mask, TYPE_COMMAND_TASK)) {
       result = "command task";
-      mask = subtractMasks(mask, TYPE_COMMAND_LAMBDA);
+      mask = subtractMasks(mask, TYPE_COMMAND_TASK);
     } else if (compatible(mask, TYPE_NOBODY)) {
       result = "NOBODY";
       mask = subtractMasks(mask, TYPE_NOBODY);
@@ -529,9 +529,9 @@ public final strictfp class Syntax {
     } else if (typeC.equals(org.nlogo.agent.Link.class)) {
       return Syntax.TYPE_LINK;
     } else if (typeC.equals(org.nlogo.nvm.ReporterLambda.class)) {
-      return Syntax.TYPE_REPORTER_LAMBDA;
+      return Syntax.TYPE_REPORTER_TASK;
     } else if (typeC.equals(org.nlogo.nvm.CommandLambda.class)) {
-      return Syntax.TYPE_COMMAND_LAMBDA;
+      return Syntax.TYPE_COMMAND_TASK;
     } else if (typeC.equals(java.lang.String.class)) {
       return Syntax.TYPE_STRING;
     } else if (typeC.equals(java.lang.Double.class) || typeC.equals(java.lang.Double.TYPE)) {

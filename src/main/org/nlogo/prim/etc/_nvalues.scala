@@ -10,7 +10,7 @@ import org.nlogo.nvm.Syntax
 class _nvalues extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_NUMBER, Syntax.TYPE_REPORTER_LAMBDA),
+    Syntax.reporterSyntax(Array(Syntax.TYPE_NUMBER, Syntax.TYPE_REPORTER_TASK),
                           Syntax.TYPE_LIST)
 
   override def report(context: Context) = {

@@ -6,7 +6,7 @@ import org.nlogo.api.I18N
 class _reduce extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_LAMBDA, Syntax.TYPE_LIST), Syntax.TYPE_WILDCARD)
+    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK, Syntax.TYPE_LIST), Syntax.TYPE_WILDCARD)
 
   override def report(context: Context) = {
     val lambda = argEvalReporterLambda(context, 0)

@@ -478,7 +478,7 @@ public abstract strictfp class Instruction
     try {
       return (ReporterLambda) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_REPORTER_LAMBDA, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_REPORTER_TASK, obj);
     }
   }
 
@@ -487,7 +487,7 @@ public abstract strictfp class Instruction
     try {
       return (CommandLambda) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_COMMAND_LAMBDA, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_COMMAND_TASK, obj);
     }
   }
 

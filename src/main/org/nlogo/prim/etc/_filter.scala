@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter
 class _filter extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_LAMBDA, Syntax.TYPE_LIST),
+    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK, Syntax.TYPE_LIST),
       Syntax.TYPE_LIST)
 
   def report(context: Context) = {

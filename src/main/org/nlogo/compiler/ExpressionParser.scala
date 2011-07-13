@@ -127,7 +127,7 @@ private class ExpressionParser(procedure: Procedure,
       if(token.tyype == TokenType.CLOSE_PAREN)
         done = true
       else if(token.tyype == TokenType.REPORTER &&
-              goalType != Syntax.TYPE_REPORTER_LAMBDA &&
+              goalType != Syntax.TYPE_REPORTER_TASK &&
               token.value.asInstanceOf[Reporter].syntax.isInfix) {
         // we can be confident that any infix op still in tokens
         // at this point is lower precedence, or we would already
@@ -311,9 +311,9 @@ private class ExpressionParser(procedure: Procedure,
    */
   private def parseExpressionInternal(tokens:BufferedIterator[Token],variadic:Boolean,precedence:Int,goalType:Int):Expression = {
     var token = tokens.head
-    val wantAnyLambda = goalType == (Syntax.TYPE_REPORTER_LAMBDA | Syntax.TYPE_COMMAND_LAMBDA)
-    val wantReporterLambda = wantAnyLambda || goalType == Syntax.TYPE_REPORTER_LAMBDA
-    val wantCommandLambda = wantAnyLambda || goalType == Syntax.TYPE_COMMAND_LAMBDA
+    val wantAnyLambda = goalType == (Syntax.TYPE_REPORTER_TASK | Syntax.TYPE_COMMAND_TASK)
+    val wantReporterLambda = wantAnyLambda || goalType == Syntax.TYPE_REPORTER_TASK
+    val wantCommandLambda = wantAnyLambda || goalType == Syntax.TYPE_COMMAND_TASK
     val expr:Expression =
       token.tyype match {
         case TokenType.OPEN_PAREN =>
@@ -513,7 +513,7 @@ private class ExpressionParser(procedure: Procedure,
       tokens.next()
       new CommandBlock(stmts,openBracket.startPos,token.endPos,token.fileName)
     }
-    else if(compatible(goalType, Syntax.TYPE_REPORTER_LAMBDA) &&
+    else if(compatible(goalType, Syntax.TYPE_REPORTER_TASK) &&
             !block.isCommandLambda &&
             !compatible(goalType,Syntax.TYPE_LIST)) {
       val openBracket = tokens.next()
@@ -529,7 +529,7 @@ private class ExpressionParser(procedure: Procedure,
       app.addArgument(expr)
       app
     }
-    else if(compatible(goalType, Syntax.TYPE_COMMAND_LAMBDA) &&
+    else if(compatible(goalType, Syntax.TYPE_COMMAND_TASK) &&
             block.isCommandLambda &&
             !compatible(goalType,Syntax.TYPE_LIST)) {
       val openBracket = tokens.next()
