@@ -1,5 +1,3 @@
-extensions [array]
-
 globals [
   initial-trees   ;; how many trees (green patches) we started with
   burned-trees    ;; how many have burned so far
