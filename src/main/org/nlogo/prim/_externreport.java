@@ -27,11 +27,11 @@ public final strictfp class _externreport
         acs[1] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[1]);
       }
       return Syntax.reporterSyntax
-          (s.getLeft(), s.getRight(), s.getRet(), s.getPrecedence(), s.getDfault(),
+          (s.left(), s.right(), s.ret(), s.precedence(), s.dfault(),
               false, acs[0], acs[1]);
     } else {
       return Syntax.reporterSyntax
-          (s.getLeft(), s.getRight(), s.getRet(), s.getPrecedence(), s.getDfault(),
+          (s.left(), s.right(), s.ret(), s.precedence(), s.dfault(),
               false, acs[0], null);
     }
   }

@@ -28,10 +28,10 @@ public final strictfp class _extern
         acs[1] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[1]);
       }
       return org.nlogo.nvm.Syntax.commandSyntax
-          (s.getRight(), s.getDfault(), acs[0], acs[1], command.getSwitchesBoolean());
+          (s.right(), s.dfault(), acs[0], acs[1], command.getSwitchesBoolean());
     } else {
       return org.nlogo.nvm.Syntax.commandSyntax
-          (s.getRight(), s.getDfault(), acs[0], null, command.getSwitchesBoolean());
+          (s.right(), s.dfault(), acs[0], null, command.getSwitchesBoolean());
     }
   }
 

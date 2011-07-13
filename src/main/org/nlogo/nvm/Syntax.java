@@ -4,38 +4,38 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.LogoList;
 
 public final strictfp class Syntax {
-  public static final int TYPE_VOID = org.nlogo.api.Syntax.TYPE_VOID;
-  public static final int TYPE_NUMBER = org.nlogo.api.Syntax.TYPE_NUMBER;
-  public static final int TYPE_BOOLEAN = org.nlogo.api.Syntax.TYPE_BOOLEAN;
-  public static final int TYPE_STRING = org.nlogo.api.Syntax.TYPE_STRING;
-  public static final int TYPE_LIST = org.nlogo.api.Syntax.TYPE_LIST;
-  public static final int TYPE_TURTLESET = org.nlogo.api.Syntax.TYPE_TURTLESET;
-  public static final int TYPE_PATCHSET = org.nlogo.api.Syntax.TYPE_PATCHSET;
-  public static final int TYPE_LINKSET = org.nlogo.api.Syntax.TYPE_LINKSET;
-  public static final int TYPE_AGENTSET = org.nlogo.api.Syntax.TYPE_AGENTSET;
-  public static final int TYPE_NOBODY = org.nlogo.api.Syntax.TYPE_NOBODY;
-  public static final int TYPE_TURTLE = org.nlogo.api.Syntax.TYPE_TURTLE;
-  public static final int TYPE_PATCH = org.nlogo.api.Syntax.TYPE_PATCH;
-  public static final int TYPE_LINK = org.nlogo.api.Syntax.TYPE_LINK;
-  public static final int TYPE_COMMAND_LAMBDA = org.nlogo.api.Syntax.TYPE_COMMAND_LAMBDA;
-  public static final int TYPE_REPORTER_LAMBDA = org.nlogo.api.Syntax.TYPE_REPORTER_LAMBDA;
-  public static final int TYPE_AGENT = org.nlogo.api.Syntax.TYPE_AGENT;
-  public static final int TYPE_READABLE = org.nlogo.api.Syntax.TYPE_READABLE;
-  public static final int TYPE_WILDCARD = org.nlogo.api.Syntax.TYPE_WILDCARD;
-  public static final int TYPE_REFERENCE = org.nlogo.api.Syntax.TYPE_REFERENCE;
-  public static final int TYPE_COMMAND_BLOCK = org.nlogo.api.Syntax.TYPE_COMMAND_BLOCK;
-  public static final int TYPE_BOOLEAN_BLOCK = org.nlogo.api.Syntax.TYPE_BOOLEAN_BLOCK;
-  public static final int TYPE_NUMBER_BLOCK = org.nlogo.api.Syntax.TYPE_NUMBER_BLOCK;
-  public static final int TYPE_OTHER_BLOCK = org.nlogo.api.Syntax.TYPE_OTHER_BLOCK;
-  public static final int TYPE_REPORTER_BLOCK = org.nlogo.api.Syntax.TYPE_REPORTER_BLOCK;
-  public static final int TYPE_BRACKETED = org.nlogo.api.Syntax.TYPE_BRACKETED;
-  public static final int TYPE_REPEATABLE = org.nlogo.api.Syntax.TYPE_REPEATABLE;
+  public static final int TYPE_VOID = org.nlogo.api.Syntax.TYPE_VOID();
+  public static final int TYPE_NUMBER = org.nlogo.api.Syntax.TYPE_NUMBER();
+  public static final int TYPE_BOOLEAN = org.nlogo.api.Syntax.TYPE_BOOLEAN();
+  public static final int TYPE_STRING = org.nlogo.api.Syntax.TYPE_STRING();
+  public static final int TYPE_LIST = org.nlogo.api.Syntax.TYPE_LIST();
+  public static final int TYPE_TURTLESET = org.nlogo.api.Syntax.TYPE_TURTLESET();
+  public static final int TYPE_PATCHSET = org.nlogo.api.Syntax.TYPE_PATCHSET();
+  public static final int TYPE_LINKSET = org.nlogo.api.Syntax.TYPE_LINKSET();
+  public static final int TYPE_AGENTSET = org.nlogo.api.Syntax.TYPE_AGENTSET();
+  public static final int TYPE_NOBODY = org.nlogo.api.Syntax.TYPE_NOBODY();
+  public static final int TYPE_TURTLE = org.nlogo.api.Syntax.TYPE_TURTLE();
+  public static final int TYPE_PATCH = org.nlogo.api.Syntax.TYPE_PATCH();
+  public static final int TYPE_LINK = org.nlogo.api.Syntax.TYPE_LINK();
+  public static final int TYPE_COMMAND_LAMBDA = org.nlogo.api.Syntax.TYPE_COMMAND_LAMBDA();
+  public static final int TYPE_REPORTER_LAMBDA = org.nlogo.api.Syntax.TYPE_REPORTER_LAMBDA();
+  public static final int TYPE_AGENT = org.nlogo.api.Syntax.TYPE_AGENT();
+  public static final int TYPE_READABLE = org.nlogo.api.Syntax.TYPE_READABLE();
+  public static final int TYPE_WILDCARD = org.nlogo.api.Syntax.TYPE_WILDCARD();
+  public static final int TYPE_REFERENCE = org.nlogo.api.Syntax.TYPE_REFERENCE();
+  public static final int TYPE_COMMAND_BLOCK = org.nlogo.api.Syntax.TYPE_COMMAND_BLOCK();
+  public static final int TYPE_BOOLEAN_BLOCK = org.nlogo.api.Syntax.TYPE_BOOLEAN_BLOCK();
+  public static final int TYPE_NUMBER_BLOCK = org.nlogo.api.Syntax.TYPE_NUMBER_BLOCK();
+  public static final int TYPE_OTHER_BLOCK = org.nlogo.api.Syntax.TYPE_OTHER_BLOCK();
+  public static final int TYPE_REPORTER_BLOCK = org.nlogo.api.Syntax.TYPE_REPORTER_BLOCK();
+  public static final int TYPE_BRACKETED = org.nlogo.api.Syntax.TYPE_BRACKETED();
+  public static final int TYPE_REPEATABLE = org.nlogo.api.Syntax.TYPE_REPEATABLE();
   // At present, TYPE_OPTIONAL is implemented only in combination with
   // TYPE_COMMAND_BLOCK as the last argument - ST 5/25/06
-  public static final int TYPE_OPTIONAL = org.nlogo.api.Syntax.TYPE_OPTIONAL;
+  public static final int TYPE_OPTIONAL = org.nlogo.api.Syntax.TYPE_OPTIONAL();
 
-  public static final int COMMAND_PRECEDENCE = org.nlogo.api.Syntax.COMMAND_PRECEDENCE;
-  public static final int NORMAL_PRECEDENCE = org.nlogo.api.Syntax.NORMAL_PRECEDENCE;
+  public static final int COMMAND_PRECEDENCE = org.nlogo.api.Syntax.COMMAND_PRECEDENCE();
+  public static final int NORMAL_PRECEDENCE = org.nlogo.api.Syntax.NORMAL_PRECEDENCE();
 
   private final int left;
   private final int[] right;
