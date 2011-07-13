@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ ArgumentTypeException , Context , EngineException, Report
 class _sortby extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_LAMBDA,
+    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK,
                                 Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET),
                           Syntax.TYPE_LIST, "OTPL", "?")
 

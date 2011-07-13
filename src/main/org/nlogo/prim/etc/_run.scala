@@ -7,7 +7,7 @@ class _run extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.TYPE_STRING | Syntax.TYPE_COMMAND_LAMBDA,
+      Array(Syntax.TYPE_STRING | Syntax.TYPE_COMMAND_TASK,
             Syntax.TYPE_REPEATABLE | Syntax.TYPE_WILDCARD),
       1)
 
@@ -47,7 +47,7 @@ class _run extends Command {
         context.ip = next
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.TYPE_COMMAND_LAMBDA | Syntax.TYPE_STRING, obj)
+          context, this, 0, Syntax.TYPE_COMMAND_TASK | Syntax.TYPE_STRING, obj)
     }
   }
 

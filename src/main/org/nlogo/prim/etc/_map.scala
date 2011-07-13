@@ -6,7 +6,7 @@ import org.nlogo.nvm.{EngineException, Context, Syntax, Reporter}
 class _map extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_LAMBDA, Syntax.TYPE_REPEATABLE | Syntax.TYPE_LIST),
+    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK, Syntax.TYPE_REPEATABLE | Syntax.TYPE_LIST),
       Syntax.TYPE_LIST,
       2) // default # of inputs
 

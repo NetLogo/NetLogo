@@ -9,7 +9,7 @@ class _lambdareport extends Reporter {
 
   override def syntax = Syntax.reporterSyntax(
     Array(Syntax.TYPE_WILDCARD),
-    Syntax.TYPE_REPORTER_LAMBDA)
+    Syntax.TYPE_REPORTER_TASK)
 
   override def report(c: Context): AnyRef =
     ReporterLambda(body = args(0),

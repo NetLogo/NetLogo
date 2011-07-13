@@ -4,16 +4,16 @@ import java.util.{MissingResourceException, Locale, ResourceBundle}
 
 object I18N {
 
-  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(availble)
+  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(available)
 
-  def availble(locale:Locale) =
+  def available(locale:Locale) =
     try {
       val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
       rb.getLocale == locale
     }
     catch { case m: MissingResourceException => false }
 
-  def localeIfAvailable(loc:Locale): Option[Locale] = if(availble(loc)) Some(loc) else None
+  def localeIfAvailable(loc:Locale): Option[Locale] = if(available(loc)) Some(loc) else None
 
   case class Prefix(name:String)
 
@@ -64,8 +64,6 @@ object I18N {
         println("unable to find translation for: " + key + " in " + name + " for locale: " + defaultBundle.getLocale)
         getFromBundle(englishBundle).getOrElse(sys.error("coding error, bad translation key: " + key + " for " + name))
       }
-      //println(preformattedText)
-      //println(args.mkString(","))
       java.text.MessageFormat.format(preformattedText, args:_*)
     }
     // internal use only

@@ -2,7 +2,7 @@ package org.nlogo.gl.render
 
 import javax.media.opengl.GL
 import org.nlogo.api.{ Drawing3D, DrawingLine3D, World3D, Perspective }
-import org.nlogo.util.JCL._
+import collection.JavaConverters._
 
 private class TrailRenderer3D(world: World3D, renderer: TurtleRenderer3D, linkRenderer: LinkRenderer3D)
 extends DrawingRendererInterface {
@@ -27,7 +27,7 @@ extends DrawingRendererInterface {
   def renderDrawing(gl: GL) {
     var defaultDist = 1.5 * (world.worldWidth max world.worldHeight max world.worldDepth)
     // Link stamps
-    for(stamp <- drawing.linkStamps) {
+    for(stamp <- drawing.linkStamps.asScala) {
       val distance =
         if (world.observer.perspective == Perspective.FOLLOW || world.observer.perspective == Perspective.RIDE)
           world.observer.followDistance
@@ -38,7 +38,7 @@ extends DrawingRendererInterface {
       linkRenderer.renderWrappedLink(gl, stamp, 0, world.patchSize, false, lineScale)
     }
     // Turtle stamps
-    for(stamp <- drawing.turtleStamps)
+    for(stamp <- drawing.turtleStamps.asScala)
       renderer.renderWrappedTurtle(gl, stamp, 0, world.patchSize, false, defaultDist)
     // Turtle trails (pen-down command)
     renderTrails(gl)
@@ -46,7 +46,7 @@ extends DrawingRendererInterface {
   }
 
   def renderTrails(gl: GL) {
-    for(line <- drawing.lines)
+    for(line <- drawing.lines.asScala)
       renderWrappedLine(gl, line)
   }
 
