@@ -14,15 +14,11 @@ object HeadlessModelOpener {
     ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
 }
 
-/**
- * this class is an abomination - JC 10/27/09
- * everything works off of side effects, asking the workspace to update something
- * but not only that, some of the internals of this class work off side effects as well
- * when they don't have to.
- * it could be better with some white space. - JC 10/27/09
-*/
+// this class is an abomination
+// everything works off of side effects, asking the workspace to update something
+// but not only that, some of the internals of this class work off side effects as well
+// when they don't have to. - JC 10/27/09
 class HeadlessModelOpener(ws: HeadlessWorkspace) {
-  import org.nlogo.util.JCL._ // ModelReader uses java.util.Map, Program uses java.util.List
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
@@ -53,7 +49,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // we'd still need to convert slider constraints, plots, monitors and buttons.
       // JC - 9/14/10
       // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
-      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals), ws.getExtensionManager)
+      import collection.JavaConverters._
+      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
@@ -216,9 +213,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // finally parse all the widgets in the WIDGETS section
       val widgets = ModelReader.parseWidgets(widgetsSection)
 
-      // just "toArray" doesn't work here because we get the java toArray method, not the Scala one
-      // - ST 1/21/09, 4/20/10
-      for (widget <- widgets.map(_.toList.toArray))
+      import collection.JavaConverters._
+      for (widget <- widgets.asScala.map(_.asScala.toArray))
         widget(0) match {
           case "SLIDER" => parseSlider(widget)
           case "SWITCH" => parseSwitch(widget)

@@ -3,7 +3,6 @@ package org.nlogo.gl.render
 import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
 import org.nlogo.api.{ Agent, Constants, Perspective, Turtle, World }
-import org.nlogo.util.JCL._
 
 private class TurtleRenderer(world: World, shapeRenderer: ShapeRenderer)
 extends AgentRenderer(world, shapeRenderer) {
@@ -24,7 +23,8 @@ extends AgentRenderer(world, shapeRenderer) {
   def renderTurtles(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
     if (world.turtles == null)
       return
-    for(turtle <- world.turtles.agents.map(_.asInstanceOf[Turtle]))
+    import collection.JavaConverters._
+    for(turtle <- world.turtles.agents.asScala.map(_.asInstanceOf[Turtle]))
       if ((world.observer.perspective != Perspective.RIDE || world.observer.targetAgent != turtle)
           && !turtle.hidden)
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)

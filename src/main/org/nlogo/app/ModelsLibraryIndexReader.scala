@@ -4,7 +4,7 @@ package org.nlogo.app
 // convert the whole thing to Scala. - ST 2/27/11
 
 import org.nlogo.util.Exceptions.handling
-import org.nlogo.util.JCL.toJavaMap
+import collection.JavaConverters._
 
 object ModelsLibraryIndexReader {
   def readInfoMap: java.util.Map[String, String] = {
@@ -14,6 +14,6 @@ object ModelsLibraryIndexReader {
       for(Seq(name, description) <- input.grouped(2))
         result(name) = description
     }
-    toJavaMap(result)
+    result.asJava
   }
 }
