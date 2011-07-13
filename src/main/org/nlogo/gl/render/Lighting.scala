@@ -16,6 +16,12 @@ import java.lang.{IndexOutOfBoundsException, IllegalStateException, Float => JFl
  * lights pointing roughly at opposite corners.
  */
 
+object LightManager {
+  val lightNumbers = List(
+    GL.GL_LIGHT0, GL.GL_LIGHT1, GL.GL_LIGHT2, GL.GL_LIGHT3,
+    GL.GL_LIGHT4, GL.GL_LIGHT5, GL.GL_LIGHT6, GL.GL_LIGHT7)
+}
+
 class LightManager {
 
   val lights = ArrayBuffer[Light]()
@@ -60,14 +66,10 @@ class LightManager {
     lights.foreach(_.showLight(glu, world, worldScale, observerDistance, shapeRenderer))
   }
 
-  private val lightNumbers = List(
-    GL.GL_LIGHT0, GL.GL_LIGHT1, GL.GL_LIGHT2, GL.GL_LIGHT3,
-    GL.GL_LIGHT4, GL.GL_LIGHT5, GL.GL_LIGHT6, GL.GL_LIGHT7)
-
   def getOpenGLLightNumber(lightIndex: Int) = {
-    require(lightNumbers.isDefinedAt(lightIndex),
+    require(LightManager.lightNumbers.isDefinedAt(lightIndex),
             "Light index needs to be between 0 and 7.")
-    lightNumbers(lightIndex)
+    LightManager.lightNumbers(lightIndex)
   }
 }
 
@@ -231,7 +233,8 @@ abstract class Light {
   }
 
   def getLabel: String =
-    "GL_LIGHT" + lightNumbers.indexOf(glLightNumber) + " (" + typeLabel + ")" + (if (isOn) "" else " [off]")
+    "GL_LIGHT" + LightManager.lightNumbers.indexOf(glLightNumber) +
+      " (" + typeLabel + ")" + (if (isOn) "" else " [off]")
 
   // Specifies whether this is a position or a directional light.
   def typeLabel: String
