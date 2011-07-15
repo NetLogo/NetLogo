@@ -63,7 +63,7 @@ trait HubNetInterface extends ViewInterface {
 
   /// clients
   @throws(classOf[LogoException])
-  def setClientInterface(clientType: String, interfaceInfo:LogoList)
+  def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
   @throws(classOf[LogoException])

@@ -1,22 +1,35 @@
 -include common.txt
 
+# this keeps scala stuff from being obfuscated.
+# i was having a lot of trouble getting the applet to work without it.
+-dontobfuscate
+
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 
 # pulling in ordinary Scala objects costs very little in size, but
 # when we starting pulling in stuff from the Scala standard library,
 # the costs escalate somewhat, so be careful - ST 2/21/09, 8/12/09
--libraryjars project/boot/scala-2.9.0-1/lib/scala-library.jar
+-injars project/boot/scala-2.9.0-1/lib/scala-library.jar
 
 -injars target/scala_2.9.0-1/classes
 
-# this is an injar, not a library jar, because we're going to stuff the Scala classes
-# we need directly into HubNet.jar, so HubNet.jar has no external dependencies
--injars project/boot/scala-2.9.0-1/lib/scala-library.jar
+-injars resources(!**.svn**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
 
--injars resources(!**.svn**,!images/shapes-editor/**,!images/title.jpg,images/**,system/version.txt,system/color-translation.txt)
 
 -outjar HubNet.jar
+
+
+# ProGuard doc recommends keeping Exceptions,InnerClasses,Signature
+# for libraries.  we keep SourceFile and LineNumberTable so we get
+# nice stack traces.  but we get significant space savings (10% or so)
+# by not keeping ScalaSignature - ST 5/13/11
+-keepnames class * { *; }
+-keepattributes Exceptions,InnerClasses,Signature,SourceFile,LineNumberTable
+
+-keep public class scala.ScalaObject {
+  *;
+}
 
 -keep public class org.nlogo.hubnet.client.App {
      public static void main(...);
@@ -37,10 +50,14 @@
 }
 
 # HubNet uses java.io.Serializable, so we need this, taken from the ProGuard manual
--keepclassmembers class org.nlogo.** implements java.io.Serializable {
+# http://proguard.sourceforge.net/index.html#/manual/examples.html#serializable
+# this is what I needed to avoid weird serialversionuid issues. -JC 7/15/2011
+-keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
-    static final java.io.ObjectStreamField[] serialPersistentFields;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
     !static !transient <fields>;
+    !private <fields>;
+    !private <methods>;
     private void writeObject(java.io.ObjectOutputStream);
     private void readObject(java.io.ObjectInputStream);
     java.lang.Object writeReplace();

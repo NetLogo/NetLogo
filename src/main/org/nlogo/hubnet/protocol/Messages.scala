@@ -1,25 +1,32 @@
 package org.nlogo.hubnet.protocol
 
-import org.nlogo.api.{Version, LogoList, PlotInterface}
+import org.nlogo.api.{Version, PlotInterface}
 import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream, 
                 ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException, Serializable}
 // Message between hubnet clients and hubnet servers
+@SerialVersionUID(0)
 trait Message extends Serializable
 
 // Messages sent to establish handshake between client and server
+@SerialVersionUID(0)
 case class HandshakeFromClient(userId: String, clientType: String) extends Message
-case class HandshakeFromServer(activityName: String, interfaceSpecList: LogoList) extends Message
+@SerialVersionUID(0)
+case class HandshakeFromServer(activityName: String, interfaceSpecList: Iterable[AnyRef]) extends Message
 
 // Message from server tells client that login has failed
+@SerialVersionUID(0)
 case class LoginFailure(content: String) extends Message
 
+@SerialVersionUID(0)
 case class OverrideMessage(data: Any, clear: Boolean) extends Message
 
 // Message from server tells client the server has disconnected it, 
 // or from client tells server it has disconnected itself
+@SerialVersionUID(0)
 case class ExitMessage(reason:String) extends Message
 
 // Message from client tells server the client has successfully connected
+@SerialVersionUID(0)
 case object EnterMessage extends Message
 
 /**
@@ -27,14 +34,18 @@ case object EnterMessage extends Message
  * @param content information to be handled by the indicated widget
  * @param tag the name of the widget
  */
+@SerialVersionUID(0)
 case class WidgetControl(content: AnyRef, tag: String) extends Message
 
 // Message from server tells client to disable the view until the next update
+@SerialVersionUID(0)
 case object DisableView extends Message
 
+@SerialVersionUID(0)
 case object ClearOverrideMessage extends Message
 
 // Message from client indicates user interaction with widget
+@SerialVersionUID(0)
 case class ActivityCommand(tag: String, content: AnyRef) extends Message
 
 case class AgentPerspectiveMessage(bytes: Array[Byte]) extends Message
@@ -44,11 +55,13 @@ case class AgentPerspectiveMessage(bytes: Array[Byte]) extends Message
  * @param worldData a serialized <code>ServerWorld</code>
  * @see org.nlogo.hubnet.mirroring.ServerWorld
  */
+@SerialVersionUID(0)
 case class ViewUpdate(worldData: Array[Byte]) extends Message
 
 /**
  * Message from server tells client to update Plots
  */
+@SerialVersionUID(0)
 case class PlotUpdate(plotInterface: PlotInterface) extends Message {
   private val bytes = {
     val out = new ByteArrayOutputStream()
@@ -58,6 +71,7 @@ case class PlotUpdate(plotInterface: PlotInterface) extends Message {
   def plot = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject().asInstanceOf[PlotInterface]
 }
 
+@SerialVersionUID(0)
 case class PlotControl(content: AnyRef, plotName: String) extends Message
 
 /**
@@ -71,6 +85,7 @@ object Text {
     case object CLEAR extends MessageType
   }
 }
+@SerialVersionUID(0)
 case class Text(content: String, messageType: Text.MessageType) extends Message
 
 object DiscoveryMessage {

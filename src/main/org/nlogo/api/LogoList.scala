@@ -17,7 +17,7 @@ object LogoList {
 }
 
 class LogoList private (private val v: Vector[AnyRef])
-extends java.util.AbstractSequentialList[AnyRef] with java.io.Serializable {
+extends java.util.AbstractSequentialList[AnyRef] with Serializable {
 
   def scalaIterator = v.iterator
 

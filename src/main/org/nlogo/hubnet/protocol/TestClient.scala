@@ -42,7 +42,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
 
   // attempts the handshake and explodes if it fails
   // called from the constructor.
-  private def handshake(): (String, LogoList) = {
+  private def handshake(): (String, Iterable[AnyRef]) = {
     def sendAndReceive(a: AnyRef): AnyRef = {
       rawSend(a)
       in.readObject()

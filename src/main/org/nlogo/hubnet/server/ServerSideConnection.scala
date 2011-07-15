@@ -122,7 +122,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   // TODO...this absolutely HAS to be cleaned up before 4.2 final.
   // also, its not even really dying hard, its dying hard if it needs to.
   // but whatever, it will all be ripped out soon.
-  private def dieHard(reason:String) = {
+  private def dieHard(reason:String) {
     if(! server.removeClient(clientId, notifyClient=true, reason)){
       waitForSendData(ExitMessage(reason))
       stopWriting()

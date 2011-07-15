@@ -11,6 +11,7 @@ import org.nlogo.util.JCL._
 import java.net.{BindException, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface, LogoException}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
+import collection.JavaConverters._
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
@@ -28,7 +29,7 @@ trait ConnectionManagerInterface {
   def isSupportedClientType(clientType: String): Boolean
   def finalizeConnection(c: ServerSideConnection, desiredClientId: String): Boolean
   def createHandshakeMessage(clientType: String): HandshakeFromServer
-  def fullViewUpdate(): Unit
+  def fullViewUpdate()
   def putClientData(messageEnvelope: MessageEnvelope)
   def removeClient(userid: String, notifyClient: Boolean, reason: String): Boolean
   def logMessage(message:String)
@@ -70,9 +71,9 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   private type ClientType = String
-  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, LogoList]()
+  private val clientInterfaceMap = collection.mutable.HashMap[ClientType, Iterable[AnyRef]]()
   private def clientInterfaceSpec: ClientInterface = {
-    clientInterfaceMap(ConnectionTypes.COMP_CONNECTION).first.asInstanceOf[ClientInterface]
+    clientInterfaceMap(ConnectionTypes.COMP_CONNECTION).head.asInstanceOf[ClientInterface]
   }
   // this business needs to get cleaned up
   // for different client types. im leaving this hack in for now,
@@ -99,7 +100,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     running = true
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
-    clientInterfaceMap += (ConnectionTypes.COMP_CONNECTION -> LogoList(createClientInterfaceSpec))
+    clientInterfaceMap += (ConnectionTypes.COMP_CONNECTION -> List(createClientInterfaceSpec))
 
     // try every port from DEFAULT_PORT_NUMBER to MAX_PORT_NUMBER until
     // we find one that works
@@ -162,7 +163,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    */
   def enqueueMessage(message:MessageEnvelope) { connection.enqueueMessage(message) }
 
-  def run: Unit = {
+  def run() {
     try {
       while (serverOn) {
         try waitForConnection()
@@ -218,28 +219,28 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   /// client Interface code
   def reloadClientInterface() {
-    setClientInterface(ConnectionTypes.COMP_CONNECTION, LogoList())
+    setClientInterface(ConnectionTypes.COMP_CONNECTION, List())
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType:ClientType, interfaceInfo:LogoList) {
+  def setClientInterface(interfaceType:ClientType, interfaceInfo:Iterable[AnyRef]) {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
     // its usually assumed that a call to hubnet-reset will happen right after this call
     // but, it doesn't hurt to keep this here. JC 12/28/10
     if(interfaceType == ConnectionTypes.COMP_CONNECTION)
-      clientInterfaceMap += (interfaceType -> LogoList(createClientInterfaceSpec))
+      clientInterfaceMap += (interfaceType -> List(createClientInterfaceSpec))
     else
       clientInterfaceMap += (interfaceType -> interfaceInfo)
   }
 
   private def createClientInterfaceSpec: ClientInterface = {
     val widgetDescriptions = connection.getClientInterface
-    val widgets = toScalaSeq(ModelReader.parseWidgets(widgetDescriptions)).toList.map(toScalaSeq(_).toList).toList
+    val widgets = ModelReader.parseWidgets(widgetDescriptions).asScala.toList.map(_.asScala.toList).toList
     val clientInterfaceSpec = new ClientInterface(widgets, widgetDescriptions.toList,
-      toScalaSeq(world.turtleShapeList.getShapes),
-      toScalaSeq(world.linkShapeList.getShapes), workspace)
+      world.turtleShapeList.getShapes.asScala,
+      world.linkShapeList.getShapes.asScala, workspace)
     clientInterfaceSpec
   }
 
@@ -377,11 +378,11 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   private var lastPatches: AgentSet = null
 
-  def fullViewUpdate(): Unit = {
+  def fullViewUpdate() {
     doViewUpdate(true) /* reset the world before sending the update */
   }
 
-  def incrementalViewUpdate(): Unit = {
+  def incrementalViewUpdate() {
     // update the entire world if the patches have changed (do to a world resizing)
     doViewUpdate(lastPatches != world.patches())
   }

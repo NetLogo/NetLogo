@@ -1,6 +1,6 @@
 package org.nlogo.prim.hubnet
 
-import org.nlogo.api.LogoList
+import org.nlogo.api.{CommandRunnable, LogoList}
 import org.nlogo.nvm.{EngineException, Context, Reporter, Syntax}
 import Syntax._
 
@@ -142,6 +142,20 @@ class _hubnetsetplotmirroring extends org.nlogo.nvm.Command {
   override def syntax = commandSyntax(Array(TYPE_BOOLEAN))
   override def perform(context: Context) {
     workspace.getHubNetManager.setPlotMirroring(argEvalBooleanValue(context, 0))
+    context.ip = next
+  }
+}
+
+class _hubnetsetclientinterface extends org.nlogo.nvm.Command {
+  def syntax = commandSyntax(Array[Int](TYPE_STRING, TYPE_LIST), "O---", false)
+  def perform(context: Context) {
+    val interfaceType = argEvalString(context, 0)
+    val interfaceInfo = argEvalList(context, 1)
+    workspace.waitFor(new CommandRunnable {
+      override def run() {
+        workspace.getHubNetManager.setClientInterface(interfaceType, interfaceInfo.toIterable)
+      }
+    })
     context.ip = next
   }
 }
