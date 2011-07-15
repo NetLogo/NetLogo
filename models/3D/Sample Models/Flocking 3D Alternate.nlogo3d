@@ -268,6 +268,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 107
@@ -542,18 +543,16 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a vector-based 3D flocking model, based on Jon Klein's implementation of Craig Reynolds' Boids algorithm. Each bird is influenced by a series of urges. By assigning different weights to each urge, the birds exhibit different flocking behaviors.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Each bird has vectors for velocity and acceleration, that is, a velocity and acceleration in the x, y, and z directions.  Each of these vectors is influenced by six urges, to be near the center of the flock, to have the same velocity as the rest of the flock, to be keep spacing correct, to avoid colliding with obstacles, to be near to the center of the world and to wander throughout the world.  Each of these factors affects the resulting velocity and acceleration; however, the sliders in the interface weight the amount that each has an effect.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Choose the number of birds with the POPULATION slider. Press SETUP to create the birds. Press GO to start the simulation.
 
 BUILD-CUBES randomly places floating-ball obstacles throughout the world. BUILD-WALL creates a randomly placed wall.
@@ -562,11 +561,11 @@ VISION is the distance that a bird can see around it. MAX-VELOCITY is the fastes
 
 A bird's movement is determined by the set of urges acting on that bird:
 
-CENTER-CONSTANT - urge to move towards the center of its flock
-VELOCITY-CONSTANT - urge to align its velocity with the velocity of her flockmates
-SPACING-CONSTANT - urge to be no closer than CRUISE-DISTANCE from other birds
-AVOIDANCE-CONSTANT - urge to avoid colliding with obstacles
-WORLD-CENTER-CONSTANT - urge to avoid the edges of the world
+CENTER-CONSTANT - urge to move towards the center of its flock  
+VELOCITY-CONSTANT - urge to align its velocity with the velocity of her flockmates  
+SPACING-CONSTANT - urge to be no closer than CRUISE-DISTANCE from other birds  
+AVOIDANCE-CONSTANT - urge to avoid colliding with obstacles  
+WORLD-CENTER-CONSTANT - urge to avoid the edges of the world  
 WANDER-CONSTANT - urge to move in a random way
 
 The urge-constant sliders control the weight of each urge in determining the birds' behavior.
@@ -575,34 +574,30 @@ If the VERTICAL-SPACING? switch is off the spacing urge only operates horizontal
 
 If a bird hits an obstacle, the bird dies. The COUNT DEAD-BIRDS monitor shows the number of dead birds.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Compare how long it takes the birds to form flocks in this model to how long it takes in the regular 3D Flocking model.
 
 Given the default settings the flocks travel in a circular pattern.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Turn VERTICAL-SPACING? off and notice how it changes the shape of the flocks.
 
 Try changing the different constants so that the birds become better or worse at avoiding obstacles.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Try adding different urges to the model; also try making different types of obstacles for birds to avoid.
 
 Create different breeds of birds that behave differently from each other and see how they interact.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-This model uses lists and map fairly extensively to represent and manipulate vectors.
-
+This model uses lists and `map` fairly extensively to represent and manipulate vectors.
 
 ## CREDITS AND REFERENCES
+
 This model is based on Jon Klein's "Swarm" demo for breve, (see http://www.spiderland.org/breve/) which was inspired by Craig Reynolds classic Boids flocking algorithm.
 @#$#@#$#@
 default
@@ -899,7 +894,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 watch turtle 0

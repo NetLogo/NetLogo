@@ -96,6 +96,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 60
@@ -230,22 +231,21 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the Follower model found in the Art section of the Sample Models. In Follower, turtles attempt to "connect" with other turtles, forming long chains according to a small set of simple rules.
 
 In the model, a turtle can follow only ONE other turtle, and similarly it can only be followed by ONE other turtle. This means there are four turtle states, each represented by a different color:
 
-Pink: Unattached
-Green: Following another turtle (a "tail")
-Yellow: Being followed by another turtle (a "head")
-Blue: Following and being followed by other turtles (a "body" segment)
+ * Pink: Unattached  
+ * Green: Following another turtle (a "tail")  
+ * Yellow: Being followed by another turtle (a "head")  
+ * Blue: Following and being followed by other turtles (a "body" segment)
 
 Turtles are created in the pink (unattached) state. At each turn, each turtle checks a random patch in a square donut shape around itself. If it finds a turtle there who is not already being followed, it will "latch on" and start following the movements of that turtle. An unattached turtle (one that has not yet "latched on" to another turtle) will move randomly.
 
+## HOW TO USE IT
 
-HOW TO USE IT
---------------
 SETUP: Clears the world and creates the number of turtles specified in the NUM-TURTLES slider. All the turtles are created in an unattached state (pink).
 
 GO: Runs the simulation.
@@ -262,9 +262,8 @@ There is also a plot called "Turtle Count" that displays, over time, the number 
 
 FOLLOW ONE-OF TURTLES: selects a random turtle and follows it.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Each of the sliders has a different effect on the simulation.
 
 Notice that the when the number of turtles is high, chains tend to form very quickly. This is because there are more turtles and therefore more chances for each turtle to attach on each turn.
@@ -275,27 +274,23 @@ The amount of movement randomness (set by WAVER) can also change the simulation 
 
 The simulation, under any parameters, moves towards forming loops. Loops may be formed by wrapping around the screen, but in almost all cases if the simulation is left running long enough you will get many small loops or one big loop. It is possible that a chain will never connect to itself if the WAVER slider is set to zero, but otherwise the simulation should proceed towards loops.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try making the waver setting very high. Notice how the turtles clump up into little clusters. This is because they are moving over themselves frequently, which increases the chances of attaching to their tail. This makes sense if the donut allows the turtles to check close to themselves, but if it does not (NEAR-RADIUS is big) then the same thing still happens. Why is this the case?
 
 Notice that we are plotting all four possible turtle states, but only three appear on the plot. Do you know why?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Try implementing different rules for how turtles follow each other.
 
 You might also try giving the turtles a certain probability of breaking apart again. See how this affects the patterns they make.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note the use of the "towards" and "towards-pitch" primitives to make the turtles follow each other.
+Note the use of the `towards` and `towards-pitch` primitives to make the turtles follow each other.
 
 Note also that we must be very careful to ensure that we never have two turtles following the same leader.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -593,7 +588,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 follow one-of turtles
