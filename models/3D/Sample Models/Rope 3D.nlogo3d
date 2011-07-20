@@ -108,6 +108,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 264
@@ -349,64 +350,56 @@ move-blue-end?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This project simulates a wave moving along a rope.  One end of the rope is green, and the other is blue.  The ends of the rope may be driven in sinusoidal motion (along the y and z axes), causing wave patterns to travel along the rope.  This creates a wave that travels along the rope.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The rope is made up of a line of turtles.  The x coordinates (xcors) of the turtles are permanently fixed, but the turtles are free to move in either the y or z directions.  Each turtle acts as it were connected to its two neighboring turtles with springs.  When a neighboring turtle is farther away, it exerts a stronger force.
+The rope is made up of a line of turtles.  The x coordinates of the turtles are permanently fixed, but the turtles are free to move in either the y or z directions.  Each turtle acts as it were connected to its two neighboring turtles with springs.  When a neighboring turtle is farther away, it exerts a stronger force.
 
 In the initial configuration, the green end of the rope is the driving force, and the blue end is fixed to the wall.   When the green turtle moves up, it "pulls up" the turtle next to it (in the x direction).  This turtle pulls the next turtle up, and so on.  As a result, a wave moves down the rope. When the wave reaches the blue end of the rope, the wave is reflected back down the rope the opposite direction from the way it had come.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Click the SETUP button to set up the rope.
+Click the SETUP button to set up the rope.  
 Click GO to start the ropes moving.
 
-The FRICTION slider controls the amount of friction in the rope.
+The FRICTION slider controls the amount of friction in the rope.  
 The SYNCHRONIZE-ENDS? switch locks the path of the blue end in step with the path of the green end.
 
-The MOVE-GREEN-END? switch controls whether the green end is moving in sinusoidal motion, or whether it is fixed to the wall.
+The MOVE-GREEN-END? switch controls whether the green end is moving in sinusoidal motion, or whether it is fixed to the wall.  
 The MOVE-BLUE-END? switch controls whether the blue end is moving in sinusoidal motion, or whether it is fixed to the wall.
 
 Also, for each end (blue and green), there are sliders to change the frequency and amplitude of their sinusoidal behavior.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 There's a connection between the frequency with which the left end of the rope goes up and down and the number of peaks that emerge.
 
+## THINGS TO TRY
 
-THINGS TO TRY
-------------
 Change the values on the sliders and observe what happens to the waves on the rope.
 
-Experiment with using different y frequencies and amplitudes than z frequencies and amplitudes.   Can you get the green end of the rope to move in a circle?  An ellipse?  A figure eight?  What other shapes can you find -- will the green turtle's path always repeat?  (You may find it useful to put the green turtle's pen down.  You can do this from the Command Center by typing "ask turtle 0 [ pd ]")
+Experiment with using different y frequencies and amplitudes than z frequencies and amplitudes.   Can you get the green end of the rope to move in a circle?  An ellipse?  A figure eight?  What other shapes can you find -- will the green turtle's path always repeat?  (You may find it useful to put the green turtle's pen down.  You can do this from the Command Center by typing `ask turtle 0 [ pd ]`)
 
 Try to create a "standing wave", in which some points on the rope do not move at all.
 
 Experiment with different amounts of friction.  What is the effect on the waveforms?  Some particularly strange behaviors happen when friction is 0.  Can you explain what you observe?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Change the blue end of the rope so that it moves freely, rather than being a driving force, or being fixed.  How does that change the behavior of waves in the rope?
 
 Add the effect of gravity to the model.  Make the strength of gravity be adjustable in the Interface tab by using a slider.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
-For this project, it does not make sense for the turtles to "wrap" when they go outside the world boundary box in the 3D view.  So the real y-position and z-position of the turtles are kept in turtle variables (YPOS and ZPOS), and the turtle is hidden if its YPOS or ZPOS are outside the range of the world's boundaries.
+For this project, it does not make sense for the turtles to "wrap" when they go outside the world boundary box in the 3D view.  So the real y-position and z-position of the turtles are kept in turtle variables `ypos` and `zpos`, and the turtle is hidden if its `ypos` or `zpos` are outside the range of the world's boundaries.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Rope (2D version)
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -690,7 +683,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 set y-frequency-green 20

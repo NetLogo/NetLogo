@@ -212,6 +212,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 13
@@ -316,17 +317,16 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is a 3D version of a surface-walking algorithm used in "Surface Walk 2D". Turtles approximate a user-defined surface using a simple algorithm that considers the turtle's current position relative to neighboring surface patches.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Turtles exist in a world that consists of two different kinds of patches: surface and non-surface. Turtles follow two basic rules in order to walk along the patch-defined surface:
 
-1) Look for opposite neighboring patches. If the turtle is currently on a surface patch, it will look for a non-surface one, and vice versa.
-2) Of those neighboring patches of opposite type, identify the one that requires the smallest change in turtle angle for the turtle to face.
+1) Look for opposite neighboring patches. If the turtle is currently on a surface patch, it will look for a non-surface one, and vice versa.  
+2) Of those neighboring patches of opposite type, identify the one that requires the smallest change in turtle angle for the turtle to face.  
 3) Adjust pitch and heading halfway to the patch that requires the smallest change in angle to face and take a step.
 
 Why does this algorithm work? Consider any perturbation along a flat surface (in the case of 2D, a curve or angle along an otherwise straight line). In order to traverse the perturbation and remain on the surface, a turtle needs to find and remain on the 'edge' of the surface, and maintain its direction while traveling along this edge. Since turtles in NetLogo always report being on only one patch (the one that the center of their body is over), we maintain the turtle's position along the edge by having it search for a patch that is of opposite type to the patch it is positioned over (Rule 1).
@@ -337,28 +337,26 @@ Finally, Rule 3 reduces the 'weaving' effects produced by turtles moving toward 
 
 In 3D versions of this surface-walking algorithm, the same rules are used as in the 2D version, but the way to determine the angle between a turtle's current heading and the nearest opposite patch is a little more complicated. Because there are two angle measures, heading and pitch, we use the inverse dot product to determine the angle between a turtle's heading and a given patch. For more detail, it may help to look through the "Trig for Angle Calculations" section of the Code tab or visit the "Geometric Interpretation" of the dot product entry at Wikipedia: http://en.wikipedia.org/wiki/Dot_product.
 
-HOW TO USE IT
--------------
-NUMBER-OF-TURTLES: Allows the user to adjust the number of turtles that will appear along the shape surface when SETUP is pressed.
-STEP-SIZE: Allows the user to adjust how far each turtle moves forward during each step.
-SURFACE-SHAPE: Allows the user to select the surface shape to appear when SETUP is pressed.
-COLORED-SURFACE?: Allows user to toggle whether the surface on which turtles will walk is colored red, or is invisible.
-SETUP: Sets up the environment by creating a surface and placing turtles along the surface.
-GO: Runs the model by asking turtles to walk along the surface.
+## HOW TO USE IT
+
+NUMBER-OF-TURTLES: Allows the user to adjust the number of turtles that will appear along the shape surface when SETUP is pressed.  
+STEP-SIZE: Allows the user to adjust how far each turtle moves forward during each step.  
+SURFACE-SHAPE: Allows the user to select the surface shape to appear when SETUP is pressed.  
+COLORED-SURFACE?: Allows user to toggle whether the surface on which turtles will walk is colored red, or is invisible.  
+SETUP: Sets up the environment by creating a surface and placing turtles along the surface.  
+GO: Runs the model by asking turtles to walk along the surface.  
 TRACE: Asks a random turtle to leave a trail.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Try adjusting STEP-SIZE while the model is running. What happens to the motion of the turtles? What happens to their speed?
 
 Do turtles behave differently on different types of surfaces? Try using the SURFACE-SHAPE chooser to test different shapes. Try creating your own.
 
 Set the SURFACE-SHAPE chooser to "Sphere", and set NUMBER-OF-TURTLES to 1. Run the model and observe the motion of that one turtle over the sphere. Is its motion what you would expect? Try using the TRACE button to trace the turtle's trajectory over the surface, or try different surfaces.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 What might happen if the STEP-SIZE is set to 1 or larger?
 
 Currently, turtles turn half of the way to the edge patch that they identify. What happens if they turn the whole way?
@@ -367,27 +365,23 @@ Select "Mickey Mouse" from the SURFACE-SHAPE chooser. SETUP and tell the model t
 
 When does the surface-walking algorithm fail? Why? Does changing the world's resolution effect turtle motion?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Currently, turtles seek the surface edge by seeking patches that are classified in certain ways. Find and implement another way that patches can be identified or that turtles can identify edge patches.
 
 Can there be more than two types or classifications of surface patches? When would this be useful?
 
-Try using STAMP to trace the trajectory of a turtle over different kids of surfaces. How might one describe surface-walking accuracy?
+Try using `stamp` to trace the trajectory of a turtle over different kids of surfaces. How might one describe surface-walking accuracy?
 
 The surface-walking algorithm used in this model fails for surfaces (or gaps in surfaces) that are only one patch wide. Why? How might this be fixed?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note the use of TOWARDS and TOWARDS-PITCH to compute headings and pitches and MIN-ONE-OF to make a choice between competing patches.
+Note the use of `towards` and `towards-pitch` to compute headings and pitches and `min-one-of` to make a choice between competing patches.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Surface Walking (2D NetLogo model)
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -685,7 +679,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
