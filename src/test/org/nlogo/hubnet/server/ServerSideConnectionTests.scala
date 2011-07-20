@@ -85,7 +85,7 @@ class ServerSideConnectionTests extends MockSuite {
       one(server).finalizeConnection(arg(conn), arg(clientId)); willReturn(true)
       // ServerSideConnection then asks the ConnectionManager to create the handshake
       // which it will send back to the client.
-      one(server).createHandshakeMessage("COMPUTER"); willReturn(HandshakeFromServer("test-model", LogoList()))
+      one(server).createHandshakeMessage("COMPUTER"); willReturn(HandshakeFromServer("test-model", List()))
       // after a successful login, ServerSideConnection asks the ConnectionManager
       // to do a fullViewUpdate, which sends a ViewUpdate to the client
       // (actually, all clients...but it shouldn't do that.)
