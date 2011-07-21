@@ -3,9 +3,9 @@ package org.nlogo.hubnet.protocol
 import java.net.Socket
 import org.nlogo.api.{LogoList, Version}
 import java.io.{IOException, ObjectOutputStream}
-import org.nlogo.util.JCL._
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}
+import collection.JavaConverters._
 
 object TestClient{
   implicit val pool = Executors.newCachedThreadPool()
@@ -34,8 +34,10 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   }
 
   def close(reason:String){ send(ExitMessage(reason)) }
-  def getWidgetControls: List[WidgetControl] = messagesReceived.collect{ case wc: WidgetControl => wc }.toList
-  def getViewUpdates: List[ViewUp] = messagesReceived.collect{ case vu: ViewUp => vu }.toList
+  def getWidgetControls: List[WidgetControl] =
+    messagesReceived.asScala.collect{ case wc: WidgetControl => wc }.toList
+  def getViewUpdates: List[ViewUp] =
+    messagesReceived.asScala.collect{ case vu: ViewUp => vu }.toList
 
   def nextMessage(timeoutMillis:Long=200): Option[Message] =
     Option(messagesReceived.poll(timeoutMillis, TimeUnit.MILLISECONDS))

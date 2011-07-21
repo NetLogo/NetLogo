@@ -3,7 +3,6 @@ package org.nlogo.prim.hubnet
 import org.nlogo.nvm.Syntax._
 import org.nlogo.nvm.{Context, Syntax}
 import org.nlogo.agent.{ArrayAgentSet, Agent, AgentSet}
-import org.nlogo.util.JCL._
 import org.nlogo.api.{CommandRunnable, LogoException}
 
 class _hubnetsendoverride extends org.nlogo.nvm.Command {

@@ -2,7 +2,6 @@ package org.nlogo.properties
 
 import org.nlogo.api.Options
 import org.nlogo.window.InputBox
-import org.nlogo.util.JCL._
 import org.nlogo.swing.Implicits._
 
 import java.awt.FlowLayout
