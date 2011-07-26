@@ -106,7 +106,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -379,7 +381,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -593,7 +597,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -775,7 +781,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -1883,7 +1891,13 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2013,7 +2027,13 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2621,7 +2641,13 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2751,7 +2777,13 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -3073,7 +3105,9 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -4444,7 +4478,9 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -4623,7 +4659,9 @@ procedure HIDE-WATER:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -4802,7 +4840,9 @@ procedure SHOW-WATER:[]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW

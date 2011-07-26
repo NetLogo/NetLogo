@@ -2416,7 +2416,9 @@ procedure SEPARATE:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
