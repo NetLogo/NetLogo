@@ -194,8 +194,8 @@ edit.plot.pen.mode.bar = Bar
 edit.plot.pen.mode.point = Point
 edit.plot.pen.interval = Interval
 edit.plot.pen.showInLegend = Show in legend
+edit.plot.pen.setupCommands = Pen Setup Commands
 edit.plot.pen.updateCommands = Pen Update Commands
-edit.plot.pen.updateCommands = Pen Setup Commands
 
 edit.chooser.globalVar = Global variable
 edit.chooser.choices = Choices
