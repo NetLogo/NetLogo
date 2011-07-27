@@ -100,8 +100,8 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
                           // variables (i.e., sliders/switches/choices that we
                           // don't know about in this context)
     val replacements = new collection.mutable.ArrayBuffer[Replacement]
-    import org.nlogo.util.JCL._ // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values) {
+    import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
+    for(procedure <- results.procedures.values.asScala) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       // So far this has been the same as compile().  What's different is that we proceed no farther
       // than the ExpressionParser phase.  Once the code is parsed, a visitor traverses the parsed

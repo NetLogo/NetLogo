@@ -1,8 +1,11 @@
 package org.nlogo.compiler
+
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
 import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType,Version}
 import org.nlogo.nvm.{Instruction,Procedure,Reporter}
 import org.nlogo.prim._
+import collection.JavaConverters._
+
 /**
  * Converts identifier tokens into instances of primitives.  In "forgiving" mode, used by
  * AutoConverter, unknown identifiers are assumed to be references to global variables that the
@@ -29,12 +32,11 @@ private class IdentifierParser(program:Program,
     it.map(processToken).toSeq
   }
   private def getLetFromArg(p:Procedure,ident:String,tokPos:Int):Option[Let] = {
-    import org.nlogo.util.JCL._  // p.lets and let.children are Java lists
-    def checkLet(let:Let):Option[Let] =
+    def checkLet(let: Let): Option[Let] =
       if(tokPos < let.startPos || tokPos > let.endPos) None
-      else let.children.map(checkLet).find(_.isDefined)
+      else let.children.asScala.map(checkLet).find(_.isDefined)
              .getOrElse(if(let.varName == ident) Some(let) else None)
-    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok:Token,procedure:Procedure,tokPos:Int):Token = {
     val ident = tok.value.asInstanceOf[String]
@@ -82,20 +84,19 @@ private class IdentifierParser(program:Program,
   }
 
   private def getAgentVariableReporter(varName:String,tok:Token):Reporter = {
-    import org.nlogo.util.JCL._ // breedsOwn maps are Java maps
-    if(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))
+    if(program.turtlesOwn.asScala.contains(varName) && program.linksOwn.asScala.contains(varName))
       new _turtleorlinkvariable(varName)
-    else if(program.turtlesOwn.contains(varName))
+    else if(program.turtlesOwn.asScala.contains(varName))
       new _turtlevariable(program.turtlesOwn.indexOf(varName))
-    else if(program.patchesOwn.contains(varName))
+    else if(program.patchesOwn.asScala.contains(varName))
       new _patchvariable(program.patchesOwn.indexOf(varName))
-    else if(program.linksOwn.contains(varName))
+    else if(program.linksOwn.asScala.contains(varName))
       new _linkvariable(program.linksOwn.indexOf(varName))
-    else if(program.globals.contains(varName))
+    else if(program.globals.asScala.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
-    else if(program.breedsOwn.values.exists(_.contains(varName)))
+    else if(program.breedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _breedvariable(varName)
-    else if(program.linkBreedsOwn.values.exists(_.contains(varName)))
+    else if(program.linkBreedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _linkbreedvariable(varName)
     else if(forgiving)
       new _unknownidentifier

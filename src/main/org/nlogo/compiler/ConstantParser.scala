@@ -299,8 +299,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
       while(token.tyype != TokenType.CLOSE_BRACE) {
         cAssert(token.tyype == TokenType.OPEN_BRACKET,BAD_PATCH_SET_ARGS,token)
         val listVal = readConstantPrefix(token,tokens).asInstanceOf[LogoList]
-        import org.nlogo.util.JCL._ // so we can access a LogoList
-        cAssert(listVal.size == 2 && listVal.forall(_.isInstanceOf[java.lang.Double]),
+        cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
                 BAD_PATCH_SET_ARGS,token)
         try {
           agentset.add(world.getPatchAt(listVal.get(0).asInstanceOf[java.lang.Double].intValue,
