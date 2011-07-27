@@ -1851,7 +1851,13 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2494,7 +2500,13 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -3360,7 +3372,13 @@ procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -5166,7 +5184,13 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW

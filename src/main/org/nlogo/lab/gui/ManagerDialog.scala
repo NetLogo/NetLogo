@@ -92,12 +92,12 @@ private class ManagerDialog(manager: LabManager,
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.util.Exceptions.ignore(ex) }
   }
   private def makeNew {
-    import org.nlogo.util.JCL._ // interfaceGlobals is a Java list
+    import collection.JavaConverters._
     editProtocol(
       new Protocol(
         "experiment", "setup", "go", "", 1, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
-          manager.workspace.world.program.interfaceGlobals.toList
+          manager.workspace.world.program.interfaceGlobals.asScala.toList
           .map{case variableName: String =>
             new EnumeratedValueSet(
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),

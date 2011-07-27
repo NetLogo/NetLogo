@@ -6,7 +6,6 @@ globals [ edges drop-width k ]
 
 to setup
   clear-all
-;;  setxyz -32 34 15
   ask patches with [ pzcor = 0 ]
   [
     sprout-waters 1 [
@@ -118,6 +117,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 43
@@ -209,50 +209,43 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the 2D model Raindrops, it simulates raindrops falling on the surface of a pond and the waves they produce.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Click the SETUP button to set up the pond, then GO to enable motion in the water and listen for drops.  Periodically click on the 2D view of the pond to release a raindrop, or leave the RANDOM-RAIN? switch on and watch the randomly generated drops fall.  The IMPACT slider determines the force that the raindrops exert when they hit the surface of the water. SURFACE-TENSION and FRICTION determine the properties of the surface of the pond.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The pond is made up of a grid of turtles, each of whom, like in Wave Machine 3D, behaves like it is connected to its neighbors by springs.  Each turtle has a vertical position and velocity, which determine how high above the sides of the pond it is or how far below, and how much that distance will change at the next time step.
 
 When drops are released they decrease the vertical velocity of the particles under them, causing them to move downwards.  As they fall, they pull down their neighbors, who at the same time pull them up. This exchange creates a wave within the pond, centered on where the drop fell.
 
 As the waves hit the walls, they are reflected back towards the middle, as the walls don't move up or down.  Friction causes the waves to eventually decline by pulling them closer to the surface level.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try creating multiple drops in the pool to see how they interact.  Do they cancel each other out or reinforce each other?
 
 Change the surface tension to see how it affects the speed of waves.  Why does water with low surface tension move so slowly?  What sort of liquids in real life is it similar to?
 
 Set friction to 0 and release some drops.  Do the waves ever dissipate?  How can the waves rise above the sides of the pond (have positive z-coordinates) when only downward moving forces are exerted on them?  How is a turtle's movement similar to that of a spring.  Is the friction used in this model analogous to that in a spring?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 This model doesn't take into account water pressure.  When part of the water is pushed down on the impact of a drop, the rest of the water should feel a push from beneath.  Try adding in this mechanism.
 
 Extend the model so that the walls impose friction on waves that brush against them, causing them to dampen.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-------------------
-The model listens for raindrops using NetLogo's mouse primitives.  GO repeatedly calls mouse-down? to register when the user has clicked over the pond.  When this condition reports true, it uses two reporters, mouse-xcor and mouse-ycor, to record the current coordinates of the mouse so that a drop can be released in the appropriate place.
+The model listens for raindrops using NetLogo's mouse primitives.  GO repeatedly calls `mouse-down?` to register when the user has clicked over the pond.  When this condition reports true, it uses two reporters, `mouse-xcor` and `mouse-ycor`, to record the current coordinates of the mouse so that a drop can be released in the appropriate place.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 For another model that demonstrates how turtles behave as a surface, see Wave Machine 3D.  In it, turtles are connected in the same manner as outlined above, but their movement is governed by the regular sinusoidal motion of a section of the surface.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -550,7 +543,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

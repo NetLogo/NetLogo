@@ -34,7 +34,8 @@ IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server
 
 # make sure we have proper versions of tools
-# (htmldoc 1.8.27 is available from htmldoc.org; it's a simple
+# ("brew install htmldoc"; or if you don't want to involve homebrew,
+# 1.8.27 is also available from htmldoc.org as a simple
 # configure/make/make install)
 if test `htmldoc --version` != 1.8.27 ;
 then

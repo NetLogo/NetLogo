@@ -1,6 +1,5 @@
 package org.nlogo.properties
 
-import org.nlogo.util.JCL._
 import org.nlogo.api.Options
 import org.nlogo.swing.Implicits._
 

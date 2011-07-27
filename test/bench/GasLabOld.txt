@@ -1447,7 +1447,9 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -1765,7 +1767,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -1952,7 +1956,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2124,7 +2130,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2311,7 +2319,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -2469,7 +2479,9 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -4300,7 +4312,9 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   ALOAD 1
                   ALOAD 0
                   ICONST_0
-                  SIPUSH 272
+                  GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+                  GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+                  IOR
                   ALOAD 2
                   INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                   ATHROW
@@ -6296,7 +6310,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -6548,7 +6564,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -6800,7 +6818,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -7141,7 +7161,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -7393,7 +7415,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -7645,7 +7669,9 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ALOAD 1
             ALOAD 0
             ICONST_0
-            SIPUSH 272
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+            GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+            IOR
             ALOAD 2
             INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
             ATHROW
@@ -8264,7 +8290,9 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -8414,7 +8442,9 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -8564,7 +8594,9 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -11886,7 +11918,9 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -13578,7 +13612,9 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 1904
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW

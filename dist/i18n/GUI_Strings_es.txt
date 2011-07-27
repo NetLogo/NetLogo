@@ -2,10 +2,10 @@
 
 common.observer = observador
 common.turtle = tortuga
-common.patch = parch
+common.patch = parcela
 common.link = enlace
 common.turtles = tortugas
-common.patches = parches
+common.patches = parcelas
 common.links = enlaces
 
 common.buttons.ok = OK
@@ -16,7 +16,7 @@ common.buttons.quit = Salir
 common.buttons.exit = Salir
 common.buttons.continue = Continuar
 common.buttons.save = Guardar
-common.buttons.halt = Interrumpir
+common.buttons.halt = Detener
 common.buttons.yes = Sí
 common.buttons.no = No
 
@@ -45,7 +45,7 @@ menu.file.import = Importar
 menu.file.import.world = Importar Mundo...
 menu.file.import.patchColors = Importar Colores de Parcelas...
 menu.file.import.patchColorsRGB = Importar Colores de Parcelas de Formato RGB...
-menu.file.import.drawing = Importar a la Capa de Trazos...
+menu.file.import.drawing = Importar Imagen...
 menu.file.import.hubNetClientInterface = Importar Interfaz del Cliente HubNet Client...
 menu.file.quit = Salir
 
@@ -58,10 +58,10 @@ menu.edit.undo = Deshacer
 menu.edit.redo = Rehacer
 menu.edit.selectAll = Seleccionar Todo
 menu.edit.find = Buscar...
-menu.edit.findNext = Buscar próxima...
-menu.edit.shiftLeft = Mover texto a la izquierda
+menu.edit.findNext = Buscar siguiente...
+menu.edit.shiftLeft = Des-Sangrar texto
 menu.edit.shiftRight = Sangrar texto
-menu.edit.comment = Excluir mediante comentarios
+menu.edit.comment = Comentarios al texto
 menu.edit.uncomment = Descomentar
 menu.edit.snapToGrid = Ajustar a la cuadrícula
 
@@ -69,7 +69,7 @@ menu.tools = Herramientas
 menu.tools.halt = Detener
 menu.tools.globalsMonitor = Monitor de Variables Globales
 menu.tools.turtleMonitor = Monitor de Tortugas
-menu.tools.patchMonitor = Monitor de Parches
+menu.tools.patchMonitor = Monitor de Parcelas
 menu.tools.linkMonitor = Monitor de Enlaces
 menu.tools.closeAllAgentMonitors = Cerrar Todos los Monitores de Agentes
 menu.tools.hideCommandCenter = Ocultar Entrada de Comandos
@@ -78,20 +78,17 @@ menu.tools.3DView = Vista en 3D
 menu.tools.colorSwatches = Muestras de Colores Disponibles
 menu.tools.turtleShapesEditor = Editor de Formas para Tortugas
 menu.tools.linkShapesEditor = Editor de Formas para Enlaces
-menu.tools.behaviorSpace = Espacio de Variación de Comportamiento
+menu.tools.behaviorSpace = Analizador de Comportamiento
 menu.tools.systemDynamicsModeler = Modelador de Dinámicas de Sistemas
 menu.tools.hubNetClientEditor = Editor del Cliente HubNet
 menu.tools.hubNetControlCenter = Centro de Control del HubNet
 
-menu.zoom = Acercar
+menu.zoom = Tamaño
 menu.zoom.larger = Más grande
 menu.zoom.normalSize = Tamaño normal
 menu.zoom.smaller = Más pequeño
 
 menu.tabs = Pestañas
-menu.zoom.run = Correr
-menu.zoom.info = Info
-menu.zoom.code = Código
 
 menu.help = Ayuda
 menu.help.lookUpInDictionary(F1) = Buscar en el Diccionario (F1)
@@ -100,23 +97,23 @@ menu.help.netLogoDictionary = Diccionario NetLogo
 menu.help.netLogoUsersGroup = Comunidad de Usuarios de NetLogo
 menu.help.donate = Donar a NetLogo
 
-tabs.run = Correr
+tabs.run = Ejecutar
 tabs.run.editButton = Editar
-tabs.run.editButton.tooltip = editar los componentes seleccionados
+tabs.run.editButton.tooltip = Editar los componentes seleccionados
 tabs.run.deleteButton = Borrar
-tabs.run.deleteButton.tooltip = borrar los componentes seleccionados
+tabs.run.deleteButton.tooltip = Borrar los componentes seleccionados
 tabs.run.addButton = Añadir
-tabs.run.addButton.tooltip = añadir componente a la interfaz
+tabs.run.addButton.tooltip = Añadir componente a la interfaz
 tabs.run.settingsButton = Configuración...
 tabs.run.settingsButton.tooltip = Editar configuración del modelo
 tabs.run.view.ticks = tictacs
-tabs.run.viewUpdates.checkbox = recibir actualizaciones de la Vista…
+tabs.run.viewUpdates.checkbox = Actualizar de la Vista…
 tabs.run.viewUpdates.checkbox.tooltip = Congelar o Descongelar la Vista
-tabs.run.viewUpdates.dropdown.onticks = en las tictacs
+tabs.run.viewUpdates.dropdown.onticks = manualmente (ticks)
 tabs.run.viewUpdates.dropdown.continuous = continuamente
 tabs.run.viewUpdates.dropdown.tooltip = cambiar el modo de actualización de la vista
 
-tabs.run.speedslider.normalspeed = rapidez normal
+tabs.run.speedslider.normalspeed = velocidad normal
 tabs.run.speedslider.faster = más rápido
 tabs.run.speedslider.slower = más lento
 
@@ -130,19 +127,16 @@ tabs.run.widgets.plot = Gráfico
 tabs.run.widgets.output = Salida
 tabs.run.widgets.note = Nota
 tabs.run.widgets.view = Vista
-tabs.run.widgets.tooltip = elegir el tipo de componente añadir
+tabs.run.widgets.tooltip = Elegir el tipo de componente a añadir
 
-tabs.run.commandcenter = Centro de Comando
+tabs.run.commandcenter = Terminal de Instrucciones
 tabs.run.commandcenter.clearButton = Borrar
-tabs.run.commandcenter.nohistory = No Hay Antecedentes
+tabs.run.commandcenter.nohistory = No hay historial
 tabs.run.commandcenter.orusetabkey = o utilizar la tecla Tab
 tabs.run.commandcenter.exporting = Exportando
-tabs.run.commandcenter.history = Historia
-tabs.run.commandcenter.useArrowKeys = Usa las teclas de abajo y ariiba
-tabs.run.commandcenter.clearHistory = Borrar la historia
 
-tabs.info = Info
-tabs.info.edit = Edición
+tabs.info = Información
+tabs.info.edit = Editar
 tabs.info.help = Ayuda
 
 tabs.code = Código
@@ -150,56 +144,55 @@ tabs.code.rightclick.quickhelp = Ayuda rápida
 tabs.code.checkButton = Comprobar
 tabs.code.procedures = Procedimientos
 tabs.code.procedures.none = ninguno
-tabs.code.indentAutomatically = Guión de forma automática
+tabs.code.indentAutomatically = Sangrado automático
 
 # find actions and dialog
 dialog.find.title = Buscar
 dialog.find.find = Buscar:
 dialog.find.replaceWith = Reemplazar:
 dialog.find.ignoreCase = Ignorar mayúsculas
-dialog.find.wrapAround = Envuelto en él
-dialog.find.notFound = frase que no se encuentra
+dialog.find.wrapAround = Busqueda ampliada
+dialog.find.notFound = frase no encontrada
 dialog.find.next = Siguiente
 dialog.find.previous = Anterior
-dialog.find.replaceAndFind = Reemplazar y Buscar
+dialog.find.replaceAndFind = Reemplazar y Siguiente
 dialog.find.replace = Reemplazar
 dialog.find.replaceAll = Reemplazar Todos Casos
 
 # widget editors
 
 edit.button.agents = Agente(s)
-edit.button.forever = Siempre
+edit.button.forever = Continuamente
 edit.button.disable = Deshabilitar hasta después de la inicialización
-edit.button.commands = Comandos
-edit.button.displayName = Nombre para mostrar
-edit.button.actionKey = Acción clave
+edit.button.commands = Instrucciones
+edit.button.displayName = Etiqueta del botón
+edit.button.actionKey = Tecla asociada
 
 edit.plot.name = Nombre
-edit.plot.xLabel = etiqueta del eje X
+edit.plot.xLabel = Etiqueta del eje X
 edit.plot.xmin = X mín
 edit.plot.xmax = X máx
-edit.plot.yLabel = etiqueta del eje Y
+edit.plot.yLabel = Etiqueta del eje Y
 edit.plot.ymin = Y mín
 edit.plot.ymax = Y máx
 edit.plot.autoScale = ¿Escala automática?
 edit.plot.showLegend = ¿Mostrar leyenda?
-edit.plot.setupCode = Comandos de Inicialización de Gráficos 
-edit.plot.updateCode = Comandos de Actualización de Gráficos
-edit.plot.pen.plotPens = Plumas para gráficos
+edit.plot.setupCode = Instrucciones de Inicialización del Gráfico 
+edit.plot.updateCode = Instrucciones de Actualización del Gráfico
+edit.plot.pen.plotPens = Trazos del Gráfico
 edit.plot.pen.color = Color
-edit.plot.pen.name = Nombre de la pluma
-edit.plot.pen.updateCommands = Comandos de actualización de gráficos
-edit.plot.pen.add = Añadir pluma
+edit.plot.pen.name = Nombre del Trazo
+edit.plot.pen.add = Añadir trazo
 edit.plot.pen.editing = Editando:
-edit.plot.pen.advanced = Opciones Avanzadas para la pluma
+edit.plot.pen.advanced = Opciones Avanzadas para trazos
 edit.plot.pen.mode = Modo
-edit.plot.pen.mode.line = Línea
-edit.plot.pen.mode.bar = de Barras
-edit.plot.pen.mode.point = de Puntos
+edit.plot.pen.mode.line = Líneas
+edit.plot.pen.mode.bar = Barras
+edit.plot.pen.mode.point = Puntos
 edit.plot.pen.interval = Intervalo
 edit.plot.pen.showInLegend = Mostrar en la leyenda
-edit.plot.pen.setupCommands = Comandos de Inicialización de Gráficos
-edit.plot.pen.updateCommands = Comandos de Actualización de Gráficos
+edit.plot.pen.setupCommands = Instrucciones de Inicialización de Trazos
+edit.plot.pen.updateCommands = Instrucciones de Actualización de Trazos
 
 edit.chooser.globalVar = Variable global
 edit.chooser.choices = Opciones
@@ -207,14 +200,14 @@ edit.chooser.choices = Opciones
 edit.slider.globalVar = Variable global
 edit.slider.minimum = Mínimo
 edit.slider.increment = Incremento
-edit.slider.maximum = Máxima
+edit.slider.maximum = Máximo
 edit.slider.value = Valor
 edit.slider.units = Unidades (opcional)
-edit.slider.vertical = ¿vertical?
+edit.slider.vertical = ¿Vertical?
 
-edit.monitor.reporter = Reportador
-edit.monitor.name = Nombre para mostrar
-edit.monitor.decimalPlaces = Núm Decimales
+edit.monitor.reporter = Monitor
+edit.monitor.name = Etiqueta del monitor
+edit.monitor.decimalPlaces = Núm. Decimales
 edit.monitor.fontSize = Tamaño de fuente
 
 edit.output.fontSize = Tamaño de fuente
@@ -222,9 +215,9 @@ edit.output.fontSize = Tamaño de fuente
 edit.input.globalVar = Variable global
 edit.input.type = Tipo
 edit.input.type.number = Número
-edit.input.type.string = String
-edit.input.type.string.reporter = String (reportador)
-edit.input.type.string.commands = String (comandos)
+edit.input.type.string = Texto
+edit.input.type.string.reporter = Texto (función)
+edit.input.type.string.commands = Texto (instrucciones)
 edit.input.type.color = Color
 
 edit.text.text = Texto
@@ -236,8 +229,8 @@ edit.switch.globalVar = Variable global
 
 edit.viewSettings.world = Mundo
 edit.viewSettings.view = Vista
-edit.viewSettings.tickCounter = Cuenta de tictacs
-edit.viewSettings.origin.location = Lugar de la origen:
+edit.viewSettings.tickCounter = Contador temporal (ticks)
+edit.viewSettings.origin.location = Ubicación del origen:
 
 edit.viewSettings.origin.location.center = Centro
 edit.viewSettings.origin.location.corner = Esquina
@@ -270,46 +263,44 @@ edit.viewSettings.3D.origin.location.edge.west = Oeste
 edit.viewSettings.3D.origin.location.edge.bottom = Abajo
 edit.viewSettings.3D.origin.location.edge.top = Arriba
 
-edit.viewSettings.showTickCounter = Mostrar la cuenta de tictacs
-edit.viewSettings.tickCounterLabel = Marque la etiqueta de tictacs
+edit.viewSettings.showTickCounter = Mostrar el contador temporal
+edit.viewSettings.tickCounterLabel = Etiqueta para el contador temporal
 
-edit.viewSettings.2D.patchSize = Tamaño de parche
-edit.viewSettings.2D.patchSize.info = Medida en píxeles
+edit.viewSettings.2D.patchSize = Tamaño de parcela
+edit.viewSettings.2D.patchSize.info = medida en píxeles
 edit.viewSettings.2D.fontSize = Tamaño de la fuente
-edit.viewSettings.2D.fontSize.info = de las etiquetas de los agentes
-edit.viewSettings.2D.wrapX = El mundo envuelve horizontalmente
-edit.viewSettings.2D.wrapY = El mundo envuelve verticalmente
-edit.viewSettings.2D.frameRate = Velocidad de los cuadros
-edit.viewSettings.2D.frameRate.info = cuadros por segundo a una velocidad normal
+edit.viewSettings.2D.fontSize.info = de las etiquetas de agentes
+edit.viewSettings.2D.wrapX = Mundo sin límite horizontal
+edit.viewSettings.2D.wrapY = Mundo sin límite vertical
 
-edit.viewSettings.2D.minPxcor = mínima coordenada x para los parches
-edit.viewSettings.2D.maxPxcor = máxima coordenada x para los parches
-edit.viewSettings.2D.minPycor = mínima coordenada y para los parches
-edit.viewSettings.2D.maxPycor = máxima coordenada y para los parches
+edit.viewSettings.2D.minPxcor = mínima coordenada x para las parcelas
+edit.viewSettings.2D.maxPxcor = máxima coordenada x para las parcelas
+edit.viewSettings.2D.minPycor = mínima coordenada y para las parcelas
+edit.viewSettings.2D.maxPycor = máxima coordenada y para las parcelas
 
-edit.viewSettings.3D.smooth = Suavizar los bordes (corre más lento)
+edit.viewSettings.3D.smooth = Suavizar los bordes (ejecución más lenta)
 edit.viewSettings.3D.affects = sólo afecta a la vista 3D
-edit.viewSettings.3D.wireFrame = Mostrar malla de alambres
-edit.viewSettings.3D.fontSize.info = de las etiquetas de los agentes
+edit.viewSettings.3D.wireFrame = Visualización simplificada
+edit.viewSettings.3D.fontSize.info = de las etiquetas de agentes
 edit.viewSettings.3D.dualView = Actualizar la vista 2D
-edit.viewSettings.3D.wrapX = El mundo envuelve en el sentido X (este-oeste)
-edit.viewSettings.3D.wrapY = El mundo envuelve en el sentido  Y (norte / sur)
-edit.viewSettings.3D.wrapZ = v envuelve en el sentido Z (arriba / abajo)
-edit.viewSettings.3D.minPxcor = mínima coordenada x para los parches
-edit.viewSettings.3D.maxPxcor = máxima coordenada x para los parches
-edit.viewSettings.3D.minPycor = mínima coordenada y para los parches
-edit.viewSettings.3D.maxPycor = máxima coordenada y para los parches
-edit.viewSettings.3D.minPzcor = mínima coordenada z para los parches
-edit.viewSettings.3D.maxPzcor = máxima coordenada z para los parches
+edit.viewSettings.3D.wrapX = Mundo sín límite en el sentido X (este / oeste)
+edit.viewSettings.3D.wrapY = Mundo sín límite en el sentido  Y (norte / sur)
+edit.viewSettings.3D.wrapZ = Mundo sín límite en el sentido Z (arriba / abajo)
+edit.viewSettings.3D.minPxcor = mínima coordenada x para las parcelas
+edit.viewSettings.3D.maxPxcor = máxima coordenada x para las parcelas
+edit.viewSettings.3D.minPycor = mínima coordenada y para las parcelas
+edit.viewSettings.3D.maxPycor = máxima coordenada y para las parcelas
+edit.viewSettings.3D.minPzcor = mínima coordenada z para las parcelas
+edit.viewSettings.3D.maxPzcor = máxima coordenada z para las parcelas
 
-edit.hubnet.tag = Etiquetas
+edit.hubnet.tag = Pestaña
 edit.hubnet.view.width = Ancho (píxeles)
-edit.hubnet.view.height = Altura (píxeles)
+edit.hubnet.view.height = Alto (píxeles)
 
 # tools
 
-tools.colorswatch = Muestras de colores
-tools.colorswatch.preview = Anticipo
+tools.colorswatch = Colores disponibles
+tools.colorswatch.preview = Muestra
 tools.colorswatch.copy = Copiar color seleccionado
 tools.colorswatch.numbers = Números
 tools.colorswatch.increment = Incremento
@@ -320,12 +311,12 @@ tools.shapesEditor.edit = Editar
 tools.shapesEditor.new = Nuevo
 tools.shapesEditor.delete = Eliminar
 tools.shapesEditor.duplicate = Duplicar
-tools.shapesEditor.info = (Muchas más formas están disponibles en la biblioteca)
-tools.shapesEditor.import.note = Importar Formas del Modelo
+tools.shapesEditor.info = (hay muchas más formas disponibles en la biblioteca)
+tools.shapesEditor.import.note = Importar Formas de un Modelo
 tools.shapesEditor.import.error = No hay formas en este archivo.
 
-tools.sdm.diagram = Esquema
-tools.sdm.stock = Archivo
+tools.sdm.diagram = Diagrama
+tools.sdm.stock = Nivel
 tools.sdm.variable = Variable
 tools.sdm.flow = Flujo
 tools.sdm.link = Enlace
@@ -343,70 +334,36 @@ tools.behaviorSpace.delete = Eliminar
 tools.behaviorSpace.run = Ejecutar
 tools.behaviorSpace.close = Cerrar
 
-tools.behaviorSpace.experimentName = Nombre de Experimento
-tools.behaviorSpace.vary = Variar las variables de la siguiente manera (notar paréntesis y comillas):
+tools.behaviorSpace.experimentName = Nombre del Experimento
+tools.behaviorSpace.vary = Variar las variables de la siguiente manera (atención a los paréntesis y comillas):
 
-# Esta propiedad se extiende a través de varias líneas, y contiene brechas de HTML en ella.
-tools.behaviorSpace.vary.info = O indicar valores para utilizar--por ejemplo: <br> \
-["Mi-deslizante" 1 2 7 8] <br> \
-o especificar inicio, incremento, y valor final--por ejemplo: <br> \
-["Mi-regulador" [0 1 10]] (notar paréntesis adicional) <br> \
-para pasar de 0 a 10, con paso de 1. <br> \
-Usted también puede variar max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
+# Esta propiedad se extiende a través de varias líneas, y contiene separadores HTML.
+tools.behaviorSpace.vary.info = Indicar los valores a utilizar, p.e.: <br> \
+["Mi-deslizador" 1 2 7 8] <br> \
+o bien, especificar inicio, incremento, y valor final, p.e.: <br> \
+["Mi-deslizador" [0 1 10]] (atención a los paréntesis adicionales) <br> \
+para pasar de 0 a 10, con incrementos de 1. <br> \
+También se puede variar max-pxcor, min-pxcor, max-pycor, min-pycor y random-seed.
 
 tools.behaviorSpace.repetitions = Repeticiones
-tools.behaviorSpace.repetitions.info = ejecutar cada combinación este número de veces
-tools.behaviorSpace.metrics = Medir ejecución utilizando estos reporteros:
-# Esta propiedad tiene un salto de HTML en ella.
-tools.behaviorSpace.metrics.info = un reportero cada línea; no puede dividir un<br> reportero tras varias líneas
-tools.behaviorSpace.runMetricsEveryStep = Medir ejecuciones a cada paso
-tools.behaviorSpace.runMetricsEveryStep.info = si no marcado, se mide ejecuciones solamente después de correrlas.
-tools.behaviorSpace.setupCommands = comandos de configuración:
-tools.behaviorSpace.goCommands = comandos repetidos en la ejecución:
-tools.behaviorSpace.exitCondition = condición de terminar:
-tools.behaviorSpace.exitCondition.info = la ejecución para cuando se cumpla esta condición
-tools.behaviorSpace.finalCommands = Últimos comandos:
-tools.behaviorSpace.finalCommands.info = ejecutar al final de cada ejecución
-tools.behaviorSpace.timeLimit = Límite de plazo
-tools.behaviorSpace.timeLimit.info = Parar después de este número de pasos ('0' = correr sin límite)
+tools.behaviorSpace.repetitions.info = ejecutar cada combinación tantas veces como
+tools.behaviorSpace.metrics = Evaluar las ejecuciones utilizando estos indicadores:
+# Esta propiedad tiene un separador HTML.
+tools.behaviorSpace.metrics.info = un indicador por línea; no se pueden<br> dividir indicadores en varias líneas
+tools.behaviorSpace.runMetricsEveryStep = Evaluar las ejecuciones a cada paso
+tools.behaviorSpace.runMetricsEveryStep.info = si no se marca, se evalúan ejecuciones al finalizar cada una.
+tools.behaviorSpace.setupCommands = Instrucciones de Configuración inicial:
+tools.behaviorSpace.goCommands = Instrucciones de Ejecución:
+tools.behaviorSpace.exitCondition = Condición de fin de ejecución:
+tools.behaviorSpace.exitCondition.info = la ejecución se detiene cuando se cumple esta condición
+tools.behaviorSpace.finalCommands = Instrucciones post-ejecución:
+tools.behaviorSpace.finalCommands.info = se ejecutan al finalizar cada ejecución
+tools.behaviorSpace.timeLimit = Límite de tiempo
+tools.behaviorSpace.timeLimit.info = se detiene la ejecución al alcanzar este número de pasos ('0' = sin límite)
 
 # Models Library
 
-modelsLibrary.clear = Borrar
-modelsLibrary.community = Ir a la página web de los Modelos de la Comunidad de Usuarios
+modelsLibrary.clear = Limpiar
+modelsLibrary.community = Ir a la página web de Modelos de la Comunidad de Usuarios
 modelsLibrary.open = Abrir
 modelsLibrary.loading = Cargando Biblioteca de Modelos...
-
-
-menu.tools.hubnetControlCenter.removedViaControlCenter = Eliminado a través del Centro de control.
-menu.tools.hubnetControlCenter.kick = Patada
-menu.tools.hubnetControlCenter.local = Local
-menu.tools.hubnetControlCenter.reset = Restablecer
-menu.tools.hubnetControlCenter.clientName = CLIENTE NOMBRE
-menu.tools.hubnetControlCenter.clients = Clientes:
-menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
-menu.tools.hubnetControlCenter.broadcastMessage = Mensaje de Difusión
-menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Espejo vista 2D en los clientes
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Parcelas espejo en los clientes (experimental)
-menu.tools.hubnetControlCenter.name = Nombre:
-menu.tools.hubnetControlCenter.activity = Actividad:
-menu.tools.hubnetControlCenter.unknown = DESCONOCIDO
-menu.tools.hubnetControlCenter.serverAddress = Dirección del servidor:
-menu.tools.hubnetControlCenter.portNumber = Número de puerto:
-menu.tools.hubnetControlCenter.settings = Configuración:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' se unió a: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' ha desconnectado.
-
-
-view.3d.orbit = órbita
-view.3d.zoom = Zoom
-view.3d.move = Moverse
-view.3d.interact = Interactuar
-view.3d.watching = Mirando
-view.3d.riding = Montando
-view.3d.following = Vigilando
-view.3d.fullScreen = Pantalla completa
-view.3d.resetPerspective = Restablecer Perspectiva
-view.3d.fullScreenWarning = En algunos sistemas, el modo de pantalla completa puede hacer que Windows se bloquee.
-
-

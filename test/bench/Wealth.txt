@@ -245,7 +245,13 @@ procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 816
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          IOR
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -3811,7 +3817,9 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
               ALOAD 1
               ALOAD 0
               ICONST_0
-              SIPUSH 272
+              GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+              GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+              IOR
               ALOAD 2
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
               ATHROW
@@ -6769,7 +6777,9 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 1
           ALOAD 0
           ICONST_0
-          SIPUSH 272
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
@@ -6871,7 +6881,9 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 1
           ALOAD 0
           ICONST_0
-          BIPUSH 120
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_LIST : I
+          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
