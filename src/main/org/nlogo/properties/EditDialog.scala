@@ -88,7 +88,7 @@ trait EditDialog extends javax.swing.JDialog {
       override def windowClosing(e: java.awt.event.WindowEvent) {
         if(editPanel.valid) {
           editPanel.apply()
-          bye()
+          if(target.editFinished) bye()
         }}})
 
   org.nlogo.swing.Utils.addEscKeyAction(this, () => cancel(target))
