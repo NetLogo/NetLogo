@@ -1,13 +1,11 @@
-breed [ leaves leaf ]
+breed [leaves leaf]
 
-turtles-own
-[ new? ]
+turtles-own [new?]
 
 ; setup the initial turtle and its properties
 to setup
   clear-all
-  create-leaves 1
-  [
+  create-leaves 1 [
     set shape "line"
     set shape "line"
     set color init-color
@@ -20,13 +18,11 @@ end
 
 ; have all non-new turtles draw an iteration of the tree
 to iterate
-  ask leaves
-  [
+  ask leaves [
     set new? false
   ]
 ; here are the commands to draw the tree
-  ask leaves with [ not new? ]
-  [
+  ask leaves with [not new?] [
     pd
     fd 2
     right 15
@@ -92,7 +88,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 90
@@ -232,43 +228,39 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the 2D model Tree Simple. This model draws special types of pictures called fractals.  A fractal is a shape that is self-similar - that is, it looks the same no matter how closely you zoom in or out.  For instance, a tree can be thought of as a fractal since if you look at the tree as a whole, you see a stick, that is to say the trunk, with branches coming out of it.  Then if you look at a smaller portion of it, say a branch, you see a similar thing, namely, a stick with branches coming out of it.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Perhaps the best way to start with this program is by looking at an example of a fractal.  In the "Interface" tab, press the SETUP button to set up a fractal that draws a tree. Then press the GO button and watch it draw.
 
 You can also have the fractal drawn one step a time.  Once you click the SETUP button, instead of clicking the GO button, click on the GO ONCE button.  This draws the fractal by drawing one iteration of the fractal per click as opposed to continuously, like the GO button.
 
-If you don't like the location of the fractal you can change it by modifying the value of the following sliders:
-The INIT-X slider sets the initial x coordinate of the first turtle.  It changes the horizontal starting location of the original turtle.
-The INIT-Y slider sets the initial y coordinate of the first turtle.  It changes the vertical starting location of the original turtle.
+If you don't like the location of the fractal you can change it by modifying the value of the following sliders:  
+The INIT-X slider sets the initial x coordinate of the first turtle.  It changes the horizontal starting location of the original turtle.  
+The INIT-Y slider sets the initial y coordinate of the first turtle.  It changes the vertical starting location of the original turtle.  
 The INIT-Z slider sets the initial z coordinate of the first turtle.  It changes the starting location of the original turtle on the z-axis.
 
-If you don't like the color scheme of the fractal you can change it by modifying the value of the following sliders:
-The INIT-COLOR slider sets the initial color of the first turtle.
+If you don't like the color scheme of the fractal you can change it by modifying the value of the following sliders:  
+The INIT-COLOR slider sets the initial color of the first turtle.  
 The value of the COLOR-INC slider is added to the turtles color anytime a new turtle hatches.
 
 The NUM TURTLES monitor indicates how many turtles are in the graphics window currently.  The ITERATIONS monitor shows how many times through the iterate procedure the model has gone.
 
-Be aware that due to the varying systems that NetLogo runs on, it might be best to limit the number of iterations to about 8 or 9 of any particular fractal.  If you go much more than that, you might have trouble with memory problems.
+Be aware that due to the varying systems that NetLogo runs on, it might be best to limit the number of iterations to about 8 or 9 of any particular fractal.  If you go much more than that, you might run out of memory.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Notice the self-similarity of the fractal at each iteration.  What if one were to perform an infinite number of iterations?  Would looking at any piece up close look any different than looking at the whole?  Also notice how the number of turtles in each of the example is multiplied by some number at each iteration.  Does this make sense?  Try to figure out the number of turtles at some arbitrary step n.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Now that you have played around with settings for the example provided, why not try making your own tree fractals.  Use NetLogo commands to make your own fractals that look like trees.  Then change the initial color and color increment values to make the fractal more interesting to look at.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Try adding switches or sliders such as max-increment-random-length or min-increment-random-degree or random-length that could impose a random factor to the movement of the turtles.  The use of these plus the NetLogo primitive random would increase the realism in a fractal.  This would be especially useful in drawing realistic trees since branches are not spaced uniformly on a tree nor do they all branch from the trunk at the same angle.
 
 Pick up a book on fractals or search on the internet to find fractals that are interesting and try to create them.  Also try to find different types of fractals such as L-System Fractals.  You may find some resources below.
@@ -277,19 +269,17 @@ Try starting with more than just one turtle, in a different location or heading,
 
 Try to make a realistic forest.  Does this require vastly different commands from making a realistic tree?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Notice the use of agentsets to make some of the commands only affect certain turtles. For example, the reporter WITH is used to isolate non-new turtles and have the rules only affect them.  Also notice how the fractals are formed using several agents following the same rules through the use of the "hatch" primitive which makes it so simple to generate fractals like a tree.
+Notice the use of agentsets to make some of the commands only affect certain turtles. For example, the reporter `with` is used to isolate non-new turtles and have the rules only affect them.  Also notice how the fractals are formed using several agents following the same rules through the use of the `hatch` primitive which makes it so simple to generate fractals like a tree.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 L-System Fractals
 
-
 ## CREDITS AND REFERENCES
-This site offers an introduction to fractals, including L-system fractals as well as others.
+
+This site offers an introduction to fractals, including L-system fractals as well as others.  
 http://www.cs.wpi.edu/~matt/courses/cs563/talks/cbyrd/pres1.html
 
 The Fractal Geometry of Nature by Benoit Mandelbrot
@@ -588,7 +578,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 @#$#@#$#@
