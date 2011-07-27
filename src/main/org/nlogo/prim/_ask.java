@@ -69,7 +69,7 @@ public final strictfp class _ask
     if (!(context.agent instanceof Observer)) {
       if (agentset == world.turtles()) {
         throw new EngineException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.ask.onlyObserverCanAskAllTurtles"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
       }
       if (agentset == world.patches()) {
         throw new EngineException
