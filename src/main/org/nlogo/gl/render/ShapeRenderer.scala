@@ -104,7 +104,7 @@ private class ShapeRenderer(world: World) {
     val Array(heading, pitch, roll) = orientation
     gl.glTranslated(xcor, ycor, zcor)
     // non-rotatable shapes always face the viewpoint
-    if (highlight && world.observer.perspective == Perspective.FOLLOW) {
+    if (highlight && world.observer.perspective == Perspective.Follow) {
       gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
       gl.glRotated(90, 1.0, 0.0, 0.0)
       gl.glRotated(-world.observer.pitch, -1.0, 0.0, 0.0)
@@ -117,7 +117,7 @@ private class ShapeRenderer(world: World) {
     else {
       gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
       gl.glRotated(90, 1.0, 0.0, 0.0)
-      if (world.observer.perspective == Perspective.FOLLOW || world.observer.perspective == Perspective.RIDE) {
+      if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride) {
         gl.glRotated(-world.observer.pitch, -1.0, 0.0, 0.0)
         gl.glRotated(-world.observer.roll, 0.0, 0.0, 1.0)
       }
@@ -216,7 +216,7 @@ private class ShapeRenderer(world: World) {
       zcor + ((Renderer.WORLD_SCALE / 2) * height))
     gl.glRotated(-observer.heading, 0.0, 0.0, 1.0)
     gl.glRotated(90, 1.0, 0.0, 0.0)
-    if (observer.perspective == Perspective.FOLLOW || observer.perspective == Perspective.RIDE) {
+    if (observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
       gl.glRotated(-observer.pitch, -1.0, 0.0, 0.0)
       gl.glRotated(-observer.roll, 0.0, 0.0, 1.0)
     } else {
@@ -250,7 +250,7 @@ private class ShapeRenderer(world: World) {
     gl.glScaled(stretch, stretch, 0.0)
     gl.glCallList(haloShape.displayListIndex)
     gl.glPopMatrix()
-    if (world.observer.perspective == Perspective.WATCH && stencilSupport) {
+    if (world.observer.perspective == Perspective.Watch && stencilSupport) {
       if (!isTurtle) {
         gl.glRotated(-world.observer.heading, 0.0, 0.0, 1.0)
         gl.glRotated(90, 1.0, 0.0, 0.0)

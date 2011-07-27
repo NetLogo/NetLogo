@@ -9,8 +9,8 @@ extends AgentRenderer(world, shapeRenderer) {
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.FOLLOW || 
-         world.observer.perspective == Perspective.RIDE)
+      if(world.observer.perspective == Perspective.Follow || 
+         world.observer.perspective == Perspective.Ride)
         world.observer.followDistance
       else
         world.observer.dist
@@ -25,7 +25,7 @@ extends AgentRenderer(world, shapeRenderer) {
       return
     import collection.JavaConverters._
     for(turtle <- world.turtles.agents.asScala.map(_.asInstanceOf[Turtle]))
-      if ((world.observer.perspective != Perspective.RIDE || world.observer.targetAgent != turtle)
+      if ((world.observer.perspective != Perspective.Ride || world.observer.targetAgent != turtle)
           && !turtle.hidden)
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)
   }

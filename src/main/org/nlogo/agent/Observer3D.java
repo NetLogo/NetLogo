@@ -1,7 +1,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Vect;
 
 public final strictfp class Observer3D
@@ -29,9 +29,9 @@ public final strictfp class Observer3D
   public boolean updatePosition() {
     boolean changed = false;
 
-    if (perspective == Perspective.OBSERVE) {
+    if (perspective == PerspectiveJ.OBSERVE()) {
       return false;
-    } else if (perspective == Perspective.WATCH) {
+    } else if (perspective == PerspectiveJ.WATCH()) {
       if (targetAgent.id() == -1) {
         resetPerspective();
         return true;
@@ -87,7 +87,7 @@ public final strictfp class Observer3D
   }
 
   public double followOffsetZ() {
-    if (perspective == Perspective.FOLLOW || perspective == Perspective.RIDE) {
+    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
       World3D w = (World3D) world;
       return ozcor() - ((w.minPzcor() + w.maxPzcor()) / 2.0);
     }

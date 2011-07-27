@@ -127,17 +127,17 @@ class Picker(view: View) extends PickListener with ActionListener {
       case Inspect =>
         view.viewManager.workspace.inspectAgent(item.agent, 3)
       case Follow =>
-        observer.setPerspective(Perspective.FOLLOW, item.agent)
+        observer.setPerspective(Perspective.Follow, item.agent)
         val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt
         observer.followDistance(1 max distance min 100)
         update()
       case Ride =>
-        observer.setPerspective(Perspective.RIDE, item.agent)
+        observer.setPerspective(Perspective.Ride, item.agent)
         observer.followDistance(0)
         update()
       case Watch =>
         observer.home()
-        observer.setPerspective(Perspective.WATCH, item.agent)
+        observer.setPerspective(Perspective.Watch, item.agent)
     }
   }
   

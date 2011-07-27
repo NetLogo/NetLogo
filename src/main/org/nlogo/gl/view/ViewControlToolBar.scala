@@ -79,23 +79,23 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
       this.perspective = perspective
       this.agent = agent
       perspective match {
-        case Perspective.OBSERVE =>
+        case Perspective.Observe =>
           status.setText("")
           setButtonsEnabled(true)
-        case Perspective.WATCH =>
+        case Perspective.Watch =>
           status.setText(I18N.gui.get("view.3d.watching") + agent.toString)
           orbitAction.setEnabled(true)
           zoomAction.setEnabled(true)
           moveAction.setEnabled(false)
           if (moveButton.isSelected)
             orbitButton.doClick()
-        case Perspective.RIDE =>
+        case Perspective.Ride =>
           status.setText(I18N.gui.get("view.3d.riding") + agent.toString)
           setButtonsEnabled(false)
           zoomAction.setEnabled(true)
           if (!interactButton.isSelected && !zoomButton.isSelected)
             zoomButton.doClick()
-        case Perspective.FOLLOW =>
+        case Perspective.Follow =>
           status.setText(I18N.gui.get("view.3d.following") + agent.toString)
           setButtonsEnabled(false)
           zoomAction.setEnabled(true)

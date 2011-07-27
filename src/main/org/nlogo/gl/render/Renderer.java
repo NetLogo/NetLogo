@@ -30,6 +30,7 @@ import org.nlogo.api.World3D;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ShapeList;
 
 public class Renderer
@@ -303,7 +304,7 @@ public class Renderer
     if (agent instanceof Turtle) {
       Turtle turtle = (Turtle) agent;
 
-      boolean riding_agent = (world.observer().perspective() == Perspective.RIDE)
+      boolean riding_agent = (world.observer().perspective() == PerspectiveJ.RIDE())
           && (world.observer().targetAgent() == turtle);
 
       return !riding_agent && !turtle.hidden()
@@ -584,7 +585,7 @@ public class Renderer
           performPick();
         }
 
-        if ((perspective != Perspective.OBSERVE)
+        if ((perspective != PerspectiveJ.OBSERVE())
             && mouseState.inside() && (mouseState.point() != null)) {
           updateMouseCors();
         }
@@ -647,7 +648,7 @@ public class Renderer
 
     Perspective p = world.observer().perspective();
 
-    if (p == Perspective.FOLLOW || p == Perspective.RIDE) {
+    if (p == PerspectiveJ.FOLLOW() || p == PerspectiveJ.RIDE()) {
       distance = world.observer().followDistance();
     } else {
       distance = world.observer().dist();

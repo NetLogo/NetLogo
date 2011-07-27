@@ -3,7 +3,7 @@ package org.nlogo.prim.hubnet;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Syntax;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.agent.Agent;
 
 public strictfp class _hubnetsendfollow
@@ -27,7 +27,7 @@ public strictfp class _hubnetsendfollow
           public void run() {
             workspace.getHubNetManager().sendAgentPerspective
                 (client,
-                    Perspective.FOLLOW.export(),
+                    PerspectiveJ.FOLLOW().export(),
                     agent.getAgentClass(), agent.id, radius, false);
           }
         });

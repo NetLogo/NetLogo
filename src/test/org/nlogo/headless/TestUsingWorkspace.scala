@@ -16,7 +16,7 @@ trait TestUsingWorkspace extends MockSuite {
     drawSpotlight: Boolean = false,
     renderPerspective: Boolean = false,
     isHeadless: Boolean = true,
-    perspective: Perspective = Perspective.OBSERVE) extends ViewSettings
+    perspective: Perspective = Perspective.Observe) extends ViewSettings
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: WorldType = WorldType.Torus)

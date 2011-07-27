@@ -7,7 +7,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _follow
     extends Command {
@@ -26,7 +26,7 @@ public final strictfp class _follow
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
-    world.observer().setPerspective(Perspective.FOLLOW, turtle);
+    world.observer().setPerspective(PerspectiveJ.FOLLOW(), turtle);
     // the following code is duplicated in _follow and _followme - ST 6/28/05
     int distance = (int) turtle.size() * 5;
     world.observer()

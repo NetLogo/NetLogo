@@ -7,6 +7,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 
 import org.nlogo.window.GUIWorkspace;
 
@@ -18,7 +19,7 @@ public strictfp class AgentMonitorView
     addMouseListener(popupListener);
   }
 
-  private Perspective perspective = Perspective.OBSERVE;
+  private Perspective perspective = PerspectiveJ.OBSERVE();
 
   @Override
   public boolean isDead() {
@@ -33,7 +34,7 @@ public strictfp class AgentMonitorView
 
   public void agent(Agent agent) {
     this.agent = agent;
-    perspective = Perspective.FOLLOW;
+    perspective = PerspectiveJ.FOLLOW();
   }
 
   private double radius;
@@ -64,7 +65,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public double viewOffsetX() {
-    if (perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
+    if (perspective == PerspectiveJ.OBSERVE() || agent instanceof org.nlogo.agent.DummyLink) {
       return 0;
     }
 
@@ -81,7 +82,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public double viewOffsetY() {
-    if (perspective == Perspective.OBSERVE || agent instanceof org.nlogo.agent.DummyLink) {
+    if (perspective == PerspectiveJ.OBSERVE() || agent instanceof org.nlogo.agent.DummyLink) {
       return 0;
     }
 

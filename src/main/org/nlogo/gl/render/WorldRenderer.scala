@@ -26,7 +26,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     var z = observer.ozcor
     var heading = observer.heading
     var pitch = observer.pitch
-    if(observer.perspective == Perspective.FOLLOW || observer.perspective == Perspective.RIDE) {
+    if(observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
       var distance: Double = observer.followDistance
       // try and skip the area where you're way too close to the turtle to be interesting
       observer.targetAgent match {
@@ -71,7 +71,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     if(showCrossHairs) {
       val coords = getCrosshairCoords
       val perspective = observer.perspective
-      if(perspective != Perspective.FOLLOW && perspective != Perspective.RIDE) {
+      if(perspective != Perspective.Follow && perspective != Perspective.Ride) {
         val dist = observer.dist
         coords(0) += dist * observer.dx 
         coords(1) += dist * observer.dy 
