@@ -50,7 +50,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   // the panel that should collapse
   private lazy val collapso = new JPanel(new BorderLayout()) {
     add(errorLabel, BorderLayout.NORTH)
-    add(scrollPane)
+    add(scrollPane, BorderLayout.CENTER)
     if (collapseWhenEmpty) setVisible(false)
   }
   private def collapsed = !collapso.isVisible()
