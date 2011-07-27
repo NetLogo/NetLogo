@@ -153,6 +153,28 @@ public strictfp class Argument
     }
   }
 
+  public org.nlogo.api.ReporterTask getReporterTask()
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.api.ReporterTask) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(getExceptionMessage
+          (org.nlogo.nvm.Syntax.TYPE_REPORTER_TASK, obj));
+    }
+  }
+
+  public org.nlogo.api.CommandTask getCommandTask()
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.api.CommandTask) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(getExceptionMessage
+          (org.nlogo.nvm.Syntax.TYPE_COMMAND_TASK, obj));
+    }
+  }
+
   /**
    * <i>Special (undocumented) method for the cities extension. </i>
    * Returns the argument reporter without evaluating.

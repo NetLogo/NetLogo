@@ -55,7 +55,7 @@ object Dump {
         "nobody"
       case l: LogoList =>
         list(l, readable, exporting)
-      case task: Lambda =>
+      case task: Task =>
         task.toString
       case null =>
         "<null>"

@@ -14,7 +14,7 @@ import org.nlogo.api.Let
 // lambdas may close over two kinds of variables, let variables and procedure parameters (aka
 // "locals"), so we have storage for both of those in the lambda.
 
-sealed trait Lambda extends org.nlogo.api.Lambda {
+sealed trait Lambda {
   val formals: Array[Let]  // don't mutate please! Array for efficiency
   val lets: List[LetBinding]
   val locals: Array[AnyRef]
@@ -37,7 +37,8 @@ sealed trait Lambda extends org.nlogo.api.Lambda {
 // Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
 // variables into the context, bind actuals to formals, call report(), then unswap.
 
-case class ReporterLambda(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef]) extends Lambda {
+case class ReporterLambda(body: Reporter, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
+extends Lambda with org.nlogo.api.ReporterTask {
   override def toString = "(reporter task)"
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
     val oldLets = context.letBindings
@@ -56,7 +57,8 @@ case class ReporterLambda(body: Reporter, formals: Array[Let], lets: List[LetBin
 // make a new Activation, then call runExclusive() on the context.  We also have to check if the
 // turtle died and see if a "non-local exit" occurred (namely _report or _stop).
 
-case class CommandLambda(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef]) extends Lambda {
+case class CommandLambda(procedure: Procedure, formals: Array[Let], lets: List[LetBinding], locals: Array[AnyRef])
+extends Lambda with org.nlogo.api.CommandTask {
   override def toString = procedure.displayName
   def perform(context: Context, args: Array[AnyRef]) {
     val oldLets = context.letBindings

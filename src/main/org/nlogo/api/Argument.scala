@@ -133,4 +133,24 @@ trait Argument {
   @throws(classOf[LogoException])
   def getLink: Link
 
+  /**
+   * Returns the argument as a <code>org.nlogo.api.ReporterTask</code>.
+   *
+   * @throws ExtensionException if the argument is not a <code>ReporterTask</code>
+   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getReporterTask: ReporterTask
+
+  /**
+   * Returns the argument as a <code>org.nlogo.api.CommandTask</code>.
+   *
+   * @throws ExtensionException if the argument is not a <code>CommandTask</code>
+   * @throws LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getCommandTask: CommandTask
+
 }
