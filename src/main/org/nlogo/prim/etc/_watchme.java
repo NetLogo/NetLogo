@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Syntax;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _watchme
     extends Command {
@@ -14,7 +14,7 @@ public final strictfp class _watchme
   @Override
   public void perform(final org.nlogo.nvm.Context context) {
     world.observer().home();
-    world.observer().setPerspective(Perspective.WATCH, context.agent);
+    world.observer().setPerspective(PerspectiveJ.WATCH(), context.agent);
     context.ip = next;
   }
 }

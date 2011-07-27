@@ -4,6 +4,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.workspace.AbstractWorkspace;
 
 public strictfp class View
@@ -207,8 +208,8 @@ public strictfp class View
       workspace.updateManager().donePainting();
 
       // update the mouse coordinates if following
-      if ((workspace.world.observer().perspective() == Perspective.FOLLOW) ||
-          (workspace.world.observer().perspective() == Perspective.RIDE)) {
+      if ((workspace.world.observer().perspective() == PerspectiveJ.FOLLOW()) ||
+          (workspace.world.observer().perspective() == PerspectiveJ.RIDE())) {
         mouser.updateMouseCors();
       }
     }
@@ -666,14 +667,14 @@ public strictfp class View
         workspace.inspectAgent(item.agent.getAgentClass(), item.agent, radius);
         return;
       case FOLLOW:
-        workspace.world.observer().setPerspective(Perspective.FOLLOW, item.agent);
+        workspace.world.observer().setPerspective(PerspectiveJ.FOLLOW(), item.agent);
         int distance = (int) ((org.nlogo.agent.Turtle) item.agent).size() * 5;
         workspace.world.observer().followDistance(StrictMath.max
             (1, StrictMath.min(distance, 100)));
         break;
       case WATCH:
         workspace.world.observer().home();
-        workspace.world.observer().setPerspective(Perspective.WATCH, item.agent);
+        workspace.world.observer().setPerspective(PerspectiveJ.WATCH(), item.agent);
         break;
       default:
         throw new IllegalStateException();

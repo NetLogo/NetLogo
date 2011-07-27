@@ -167,7 +167,7 @@ docs/scaladoc: netlogo
 ### misc targets
 
 # cleaning
-.PHONY: clean clean-extensions realclean distclean
+.PHONY: clean clean-extensions distclean
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
@@ -180,10 +180,9 @@ clean:
 	rm -f resources/*.properties
 clean-extensions:
 	rm -rf $(foreach foo,$(EXTENSIONS),$(dir $(foo)))
-realclean:
-	git clean -fdX
 distclean:
 	git clean -fd
+	git clean -fX
 
 # benchmarking
 .PHONY: benches

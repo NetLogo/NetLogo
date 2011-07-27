@@ -11,7 +11,7 @@ import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ModelType;
 import org.nlogo.api.ModelTypeJ;
 import org.nlogo.api.ModelSectionJ;
@@ -471,8 +471,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (glView.displayOn()) {
         view.thaw();
       }
-      if ((world.observer().perspective() != Perspective.FOLLOW) &&
-          (world.observer().perspective() != Perspective.RIDE)) {
+      if ((world.observer().perspective() != PerspectiveJ.FOLLOW()) &&
+          (world.observer().perspective() != PerspectiveJ.RIDE())) {
         world.observer().home();
       }
       viewWidget.setVisible(true);

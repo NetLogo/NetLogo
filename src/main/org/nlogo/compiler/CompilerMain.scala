@@ -22,9 +22,9 @@ private object CompilerMain {
                                                displayName, program, oldProcedures, extensionManager)
       .parse(subprogram)  // process declarations
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
-    import org.nlogo.util.JCL._ // structureResults.procedures.values is a java.util.Collection
+    import collection.JavaConverters._  // structureResults.procedures.values is a java.util.Collection
     val lambdaNumbers = Iterator.from(1)
-    for(procedure <- structureResults.procedures.values) {
+    for(procedure <- structureResults.procedures.values.asScala) {
       procedure.topLevel = subprogram
       val tokens =
         new IdentifierParser(program, oldProcedures, structureResults.procedures, false)

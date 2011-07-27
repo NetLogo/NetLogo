@@ -133,7 +133,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.encode(Integer.toString(world.maxPycor())) + ","
                   + csv.encode(Integer.toString(world.minPzcor())) + ","
                   + csv.encode(Integer.toString(world.maxPzcor())) + ","
-                  + csv.encode(Integer.toString(world.observer().perspective().export())) + ","
+                  + csv.encode(Integer.toString(world.observer().perspective().export)) + ","
                   + csv.data(subject) + ","
                   + csv.encode(JLong.toString(world.nextTurtleIndex())) + ","
                   + csv.data(if(world.links().isDirected()) "DIRECTED" else

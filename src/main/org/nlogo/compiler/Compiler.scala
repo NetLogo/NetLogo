@@ -54,8 +54,8 @@ object Compiler extends CompilerInterface {
                                       program, oldProcedures, extensionManager)
       .parse(subprogram)
     val identifierParser = new IdentifierParser(program, noProcedures, results.procedures, !parse)
-    import org.nlogo.util.JCL._ // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values) {
+    import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
+    for(procedure <- results.procedures.values.asScala) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
         new ExpressionParser(procedure).parse(tokens)

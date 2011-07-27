@@ -9,8 +9,8 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.FOLLOW || 
-         world.observer.perspective == Perspective.RIDE)
+      if(world.observer.perspective == Perspective.Follow || 
+         world.observer.perspective == Perspective.Ride)
         world.observer.followDistance
       else
         world.observer.dist

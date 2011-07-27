@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.AgentException;
 
 import static org.nlogo.util.JCL.toJavaList;
@@ -479,7 +480,7 @@ public strictfp class ClientWorld
 
   private PerspectiveMode perspectiveMode = PerspectiveMode.SERVER;
 
-  public Perspective perspective = Perspective.OBSERVE;
+  public Perspective perspective = PerspectiveJ.OBSERVE();
   public AgentData targetAgent;
   public double radius;
 
@@ -503,7 +504,7 @@ public strictfp class ClientWorld
   }
 
   public double followOffsetX() {
-    if (targetAgent == null || (perspective != Perspective.FOLLOW && perspective != Perspective.RIDE)) {
+    if (targetAgent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
       return 0;
     }
 
@@ -517,7 +518,7 @@ public strictfp class ClientWorld
   public double followOffsetY() {
     AgentData agent = targetAgent();
 
-    if (agent == null || (perspective != Perspective.FOLLOW && perspective != Perspective.RIDE)) {
+    if (agent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
       return 0;
     }
 
