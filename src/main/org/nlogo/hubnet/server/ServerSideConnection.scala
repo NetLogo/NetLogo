@@ -68,7 +68,10 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   private def handleMessage(message:Message) {
     message match {
       case HandshakeFromClient(userId, clientType) => {
-        if (!validClientVersion) {
+        if(userId == null  || userId.trim == ""){
+          sendData(new LoginFailure("Server received empty username."))
+        }
+        else if (!validClientVersion) {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "
                   + "match the version of the server. Please use the HubNet Client that comes with " + Version.version))
         }
