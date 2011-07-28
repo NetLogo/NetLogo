@@ -890,7 +890,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         world.observer().variableConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
-      for (SliderConstraint.SliderConstraintException cce : org.nlogo.util.JCL.toJavaList(ex.getErrors())) {
+      for (SliderConstraint.SliderConstraintException cce :
+             scala.collection.JavaConversions.asJavaIterable(ex.getErrors())) {
         e.slider.setConstraintError(cce.spec().fieldName(), cce);
       }
     }

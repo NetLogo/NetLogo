@@ -7,7 +7,6 @@ import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
-import org.nlogo.util.JCL._
 import java.net.{BindException, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface, LogoException}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
@@ -257,7 +256,8 @@ class ConnectionManager(val connection: ConnectionInterface,
     new HandshakeFromServer(workspace.modelNameForDisplay, clientInterfaceMap(clientType))
   }
 
-  def isSupportedClientType(clientType:String): Boolean = clientInterfaceMap.containsKey(clientType)
+  def isSupportedClientType(clientType:String): Boolean =
+    clientInterfaceMap.isDefinedAt(clientType)
 
   def isValidTag(tag:String) = clientInterfaceSpec.containsWidget(tag)
 

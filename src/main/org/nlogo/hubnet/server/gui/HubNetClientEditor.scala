@@ -43,7 +43,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   def getWidgetsForSaving: java.util.List[org.nlogo.window.Widget] = interfacePanel.getWidgetsForSaving
 
   def getWidgetsAsStrings: Seq[String] = {
-    val widgets = org.nlogo.util.JCL.toScalaSeq(getWidgetsForSaving)
+    val widgets = scala.collection.JavaConversions.asScalaBuffer(getWidgetsForSaving)
     def widgetToStrings(w:Widget): List[String] = {
       try {
         val br = new BufferedReader(new StringReader(w.save))

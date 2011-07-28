@@ -6,7 +6,6 @@ import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNet
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.util.JCL.toScalaSeq
 import org.nlogo.agent.{Link, Turtle}
 
 import java.util.concurrent.LinkedBlockingQueue

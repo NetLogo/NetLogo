@@ -12,7 +12,6 @@ import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.Utils.{getFrame, invokeLater}
 import org.nlogo.swing.Implicits._
-import org.nlogo.util.JCL._
 import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
 import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnection}
@@ -233,8 +232,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)
-    viewWidget.renderer.replaceTurtleShapes(toJavaList(clientInterface.turtleShapes))
-    viewWidget.renderer.replaceLinkShapes(toJavaList(clientInterface.linkShapes))
+    viewWidget.renderer.replaceTurtleShapes(
+      scala.collection.JavaConversions.seqAsJavaList(clientInterface.turtleShapes))
+    viewWidget.renderer.replaceLinkShapes(
+      scala.collection.JavaConversions.seqAsJavaList(clientInterface.linkShapes))
     sendDataAndWait(EnterMessage)
     connected = true
     invokeLater(() => {

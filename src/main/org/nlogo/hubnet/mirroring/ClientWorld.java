@@ -8,8 +8,8 @@ import java.util.TreeMap;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.AgentException;
-
-import static org.nlogo.util.JCL.toJavaList;
+import static scala.collection.JavaConversions.seqAsJavaList;
+import static scala.collection.JavaConversions.setAsJavaSet;
 
 public strictfp class ClientWorld
     implements org.nlogo.api.World {
@@ -574,15 +574,15 @@ public strictfp class ClientWorld
 
   public void updateOverrides(SendOverride list) {
     if (list.type == Agent.AgentType.TURTLE) {
-      for (Long id : toJavaList(list.overrides().keySet())) {
+      for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(getTurtle(id), list.variable, list.overrides().apply(id));
       }
     } else if (list.type == Agent.AgentType.PATCH) {
-      for (Long id : toJavaList(list.overrides().keySet())) {
+      for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(patches[id.intValue()], list.variable, list.overrides().apply(id));
       }
     } else if (list.type == Agent.AgentType.LINK) {
-      for (Long id : toJavaList(list.overrides().keySet())) {
+      for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(getLink(id), list.variable, list.overrides().apply(id));
       }
     }
@@ -599,15 +599,15 @@ public strictfp class ClientWorld
 
   public void updateOverrides(ClearOverride list) {
     if (list.type == Agent.AgentType.TURTLE) {
-      for (Long id : toJavaList(list.agents())) {
+      for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(getTurtle(id), list.variable);
       }
     } else if (list.type == Agent.AgentType.PATCH) {
-      for (Long id : toJavaList(list.agents())) {
+      for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(patches[id.intValue()], list.variable);
       }
     } else if (list.type == Agent.AgentType.LINK) {
-      for (Long id : toJavaList(list.agents())) {
+      for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(getLink(id), list.variable);
       }
     }
