@@ -68,7 +68,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   private def handleMessage(message:Message) {
     message match {
       case HandshakeFromClient(userId, clientType) => {
-        if(userId == null  || userId.trim == ""){
+        if(userId == null || userId.trim == ""){
           sendData(new LoginFailure("Server received empty username."))
         }
         else if (!validClientVersion) {
@@ -89,7 +89,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
             if (HubNetUtils.plotMirroring) server.sendPlots(userId)
           }
           else {
-            sendData(new LoginFailure("\"" + clientId + "\" is already taken by another user. Please choose another name."))
+            sendData(new LoginFailure("\"" + userId + "\" is already taken by another user. Please choose another name."))
           }
         }
         catch { case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex) }
