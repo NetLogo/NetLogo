@@ -112,7 +112,6 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
     if (!isLocal){
-      dispose()
       loginDialog.go(new LoginCallback {
         def apply(user: String, host: String, port: Int) { login(user, host, port) }
       })
@@ -144,22 +143,19 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     Utils.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else {
-      if (connected) Utils.invokeLater(() => {
+      if (connected) {
         OptionDialog.show(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+        dispose()
+        doLogin()
         ()
-      })
-      doLogin()
+      }
     }
   }
 
   def handleLoginFailure(errorMessage: String) {
     Utils.mustBeEventDispatchThread()
-    org.nlogo.awt.Utils.invokeLater(() => {
-        OptionDialog.show(ClientApp.this, "Login Failed",
-          errorMessage,
-          Array(I18N.gui.get("common.buttons.ok")))
-        ()
-      })
+    OptionDialog.show(ClientApp.this, "Login Failed",
+      errorMessage, Array(I18N.gui.get("common.buttons.ok")))
   }
 
   def handleExit() {
@@ -167,7 +163,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
       setVisible(false)
-      this.dispose()
+      dispose()
       doLogin()
     }
   }
@@ -177,7 +173,6 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     val shouldExit = showExitMessage(
       I18N.gui.get("common.buttons.quit"),
       "Do you really want to quit HubNet?")
-    println("shouldExit=" + shouldExit)
-    if (shouldExit) Utils.invokeLater(() => System.exit(0))
+    if (shouldExit) System.exit(0)
   }
 }
