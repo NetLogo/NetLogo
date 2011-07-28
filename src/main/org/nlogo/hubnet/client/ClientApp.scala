@@ -111,10 +111,12 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private def doLogin() {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
-    if (!isLocal)
+    if (!isLocal){
+      dispose()
       loginDialog.go(new LoginCallback {
         def apply(user: String, host: String, port: Int) { login(user, host, port) }
       })
+    }
   }
 
   def completeLogin() { setVisible(true) }
