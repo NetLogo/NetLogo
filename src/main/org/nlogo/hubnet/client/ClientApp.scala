@@ -124,12 +124,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     var exs: Option[String] = None
     ModalProgressTask(Utils.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
-      clientPanel.requestFocus()
-      loginDialog.setVisible(false)
     })
-    exs.foreach{ ex =>
-      handleLoginFailure(ex)
-      clientPanel.disconnect(ex.toString)
+    exs match {
+      case Some(ex) =>
+        handleLoginFailure(ex)
+        clientPanel.disconnect(ex.toString)
+      case None =>
+        clientPanel.requestFocus()
+        loginDialog.setVisible(false)
     }
   }
 
@@ -156,6 +158,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     Utils.mustBeEventDispatchThread()
     OptionDialog.show(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    loginDialog.setVisible(true)
   }
 
   def handleExit() {
