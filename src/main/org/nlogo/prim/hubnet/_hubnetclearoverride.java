@@ -6,7 +6,7 @@ import org.nlogo.nvm.Syntax;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Agent;
 import org.nlogo.nvm.Context;
-import org.nlogo.util.JCL;
+import static scala.collection.JavaConversions.asScalaBuffer;
 
 public strictfp class _hubnetclearoverride
     extends org.nlogo.nvm.Command {
@@ -48,7 +48,7 @@ public strictfp class _hubnetclearoverride
         (new org.nlogo.api.CommandRunnable() {
           public void run() throws LogoException {
             workspace.getHubNetManager().clearOverride(client, set.type(), varName,
-                JCL.toScalaSeq(overrides));
+                asScalaBuffer(overrides));
           }
         });
     context.ip = next;

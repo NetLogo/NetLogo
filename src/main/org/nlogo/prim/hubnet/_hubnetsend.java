@@ -10,7 +10,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
-import org.nlogo.util.JCL;
+import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsend
     extends org.nlogo.nvm.Command {
@@ -43,7 +43,7 @@ public final strictfp class _hubnetsend
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, nodesArg);
     }
-    hubnetManager.send(JCL.toScalaSeq(nodes), tag, message);
+    hubnetManager.send(asScalaBuffer(nodes), tag, message);
     context.ip = next;
   }
 
