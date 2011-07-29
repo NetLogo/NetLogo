@@ -65,6 +65,13 @@
       <dd>
         Use up to 1 gigabyte of memory for Java VM heap. You may need to
         grow this number in order to run some models.
+      <dt>
+        <code>-Dfile.encoding=UTF-8</code>
+      <dd>
+        Force all file I/O to use UTF-8 encoding. Ensures that NetLogo can
+        load and save all models consistently, and that file-* primitives
+        work consistently on all platforms, including models containing
+        Unicode characters.
       </dl>
     <h3>
       Additional recommended options for GUI only
