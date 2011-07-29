@@ -4,7 +4,7 @@ LAUNCH=`dirname $0`/sbt-launch-0.10.1.jar
 URL='http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.10.1/sbt-launch.jar'
 
 if [ ! -f $LAUNCH ] ; then
-  curl $URL -o $LAUNCH
+  curl -f $URL -o $LAUNCH || exit
 fi
 
 if [ `uname -s` = Linux ] ; then
