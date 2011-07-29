@@ -12,11 +12,11 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     init()
     // the default error handler just spits something to stdout or stderr or somewhere.
     // we want to fail hard. - ST 7/21/10 
-    workspace.setImporterErrorHandler(
+    workspace.importerErrorHandler =
       new org.nlogo.agent.Importer.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           sys.error(title + " / " + errorDetails + " / " + fatalError)
-      })
+      }
   }
 
   override def afterEach() { workspace.dispose() }
@@ -197,7 +197,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   test("testExportLinks") {
     val filename = getUniqueFilename()
-    workspace.initForTesting(10, HeadlessWorkspace.TEST_DECLARATIONS)
+    workspace.initForTesting(10, HeadlessWorkspace.TestDeclarations)
     testCommand("ca")
     testCommand("create-ordered-nodes 2 [ fd 2 ]")
     testCommand("ask node 0 [ create-link-to node 1 [ tie ] ]")
@@ -216,7 +216,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   if(!Version.is3D)
     test("testImportInvalidSize") {
       workspace.initForTesting(10)
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
             {
@@ -226,14 +226,14 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
                 errorDetails)
               true
             }
-        })
+        }
       testCommand("import-world \"test/import/invalid-drawing.csv\"")
     }
 
   if(!Version.is3D)
     test("testImportDrawingIncompleteData") {
       workspace.initForTesting(10)
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
             assert(!fatalError)
@@ -242,7 +242,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
               errorDetails)
             true
           }
-        })
+        }
       testCommand("import-world \"test/import/short-drawing.csv\"")
     }
 
@@ -278,7 +278,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   if(!Version.is3D)
     test("testNonExistentPlot") {
       workspace.initForTesting(10)
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
@@ -287,14 +287,14 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
               errorDetails)
             true
           }
-        })
+        }
       testCommand("import-world \"test/import/plot-simple.csv\"")
     }
 
   if(!Version.is3D)
     test("testNonExistentPen") {
       workspace.open("test/import/plot-simple.nlogo")
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
           def showError(title: String, errorDetails: String,
                         fatalError: Boolean) =
@@ -303,8 +303,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
               expect("Error Importing Plots")(title)
               expect("The pen \"default 1\" does not exist.")(errorDetails)
               true
-            }
-        })
+            }}
       testCommand("import-world \"plot-simple.csv\"")
     }
 
@@ -436,10 +435,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   if(!Version.is3D)
     test("ImportWrongOrder") {
       workspace.initForTesting(10)
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) =
-            {
+          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
               assert(fatalError)
               expect("Fatal Error- Incorrect Structure For Import File")(title)
               expect("The agents are in the wrong order in the import file. " +
@@ -447,8 +445,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
                 "followed by the patches.  Found TURTLES but needed " +
                 "GLOBALS\n\nThe import will now abort.")(errorDetails)
               true
-            }
-        })
+            }}
       testCommand("import-world \"test/import/wrong-order.csv\"")
     }
 
@@ -463,7 +460,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       workspace.initForTesting(35, new org.nlogo.api.LocalFile(
         "test/import/trailing-commas.nlogo").readFile())
       val errorNumber = Array(0)
-      workspace.setImporterErrorHandler(
+      workspace.importerErrorHandler =
         new org.nlogo.agent.Importer.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
@@ -493,7 +490,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
             errorNumber(0) += 1
             true
           }
-        })
+        }
       testCommand("import-world \"test/import/extra-values.csv\"")
       expect(2)(errorNumber(0))
     }

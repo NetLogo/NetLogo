@@ -24,20 +24,20 @@ abstract class AbstractTestLanguage extends Assertions {
 
   def init() {
     workspace = HeadlessWorkspace.newInstance
-    workspace.silent(true)
+    workspace.silent = true
     workspace.initForTesting(
       if(Version.is3D)
         new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
       else
         new WorldDimensions(-5, 5, -5, 5),
-      HeadlessWorkspace.TEST_DECLARATIONS)
+      HeadlessWorkspace.TestDeclarations)
   }
 
   def defineProcedures(source: String) {
     val results = {
       import collection.JavaConverters._
       compiler.compileProgram(
-        HeadlessWorkspace.TEST_DECLARATIONS + source,
+        HeadlessWorkspace.TestDeclarations + source,
         workspace.world.newProgram(List[String]().asJava),
         workspace.getExtensionManager())
     }

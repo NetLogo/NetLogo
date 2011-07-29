@@ -526,7 +526,7 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract void clearAll();
 
-  protected abstract org.nlogo.agent.Importer.ErrorHandler getImporterErrorHandler();
+  protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();
 
   public void importWorld(String filename)
       throws java.io.IOException {
@@ -539,7 +539,7 @@ public abstract strictfp class AbstractWorkspace
           public void doImport(java.io.BufferedReader reader)
               throws java.io.IOException {
             world.importWorld
-                (getImporterErrorHandler(), AbstractWorkspace.this,
+                (importerErrorHandler(), AbstractWorkspace.this,
                     stringReader(), reader);
           }
         });
@@ -551,7 +551,7 @@ public abstract strictfp class AbstractWorkspace
     // extensions are hanging on to old data. ev 4/10/09
     clearAll();
     world.importWorld
-        (getImporterErrorHandler(), AbstractWorkspace.this,
+        (importerErrorHandler(), AbstractWorkspace.this,
             stringReader(), new java.io.BufferedReader(reader));
   }
 
@@ -759,6 +759,8 @@ public abstract strictfp class AbstractWorkspace
     return null;
   }
 
-  public void clearLastLogoException() {
-  }
+  public void clearLastLogoException() { }
+
+  public void lastLogoException_$eq(LogoException e) { }
+
 }

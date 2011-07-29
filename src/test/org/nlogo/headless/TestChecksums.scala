@@ -87,7 +87,7 @@ class ChecksumTester(info: String => Unit) {
 
   def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
     val workspace = HeadlessWorkspace.newInstance
-    workspace.silent(true)
+    workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
     workspace.open(model)
     Checksummer.initModelForChecksumming(workspace)

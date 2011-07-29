@@ -964,7 +964,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// importing
 
   @Override
-  protected org.nlogo.agent.Importer.ErrorHandler getImporterErrorHandler() {
+  protected org.nlogo.agent.Importer.ErrorHandler importerErrorHandler() {
     return new org.nlogo.agent.Importer.ErrorHandler() {
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
