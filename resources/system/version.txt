@@ -1,11 +1,9 @@
 NetLogo 5.0beta4
-INTERIM DEVEL BUILD
+August 1, 2011
 NetLogo 5.0beta3
 NetLogo 5.0beta2
 NetLogo 5.0beta1
-NetLogo 4.2
-NetLogo 4.1
-NetLogo 4.0
+NetLogo 4.
 NetLogo 3.
 NetLogo 2.
 NetLogo 1.
