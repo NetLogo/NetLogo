@@ -130,8 +130,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         handleLoginFailure(ex)
         clientPanel.disconnect(ex.toString)
       case None =>
-        clientPanel.requestFocus()
         loginDialog.setVisible(false)
+        clientPanel.requestFocus()
     }
   }
 
