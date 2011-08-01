@@ -158,7 +158,7 @@ docs/scaladoc: netlogo
 	  src/main/org/nlogo/lite/InterfaceComponent.scala \
 	  src/main/org/nlogo/lite/Applet.scala \
 	  src/main/org/nlogo/lite/AppletPanel.scala \
-	  src/main/org/nlogo/headless/HeadlessWorkspace.java \
+	  src/main/org/nlogo/headless/HeadlessWorkspace.scala \
           src/main/org/nlogo/api/*.*a \
           src/main/org/nlogo/agent/*.*a \
           src/main/org/nlogo/workspace/*.*a \
