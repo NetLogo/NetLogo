@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App Spanish" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="org.nlogo.app.App" />
-    <option name="VM_PARAMETERS" value="-Duser.language=es -Duser.region=ES" />
+    <option name="VM_PARAMETERS" value="-Duser.language=es -Duser.region=ES -Dfile.encoding=UTF-8" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
