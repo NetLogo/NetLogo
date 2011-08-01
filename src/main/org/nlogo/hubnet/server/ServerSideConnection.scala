@@ -73,7 +73,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         }
         else if (!validClientVersion) {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "
-                  + "match the version of the server. Please use the HubNet Client that comes with " + Version.version))
+                  + "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version))
         }
         else if(!server.isSupportedClientType(clientType)){
           sendData(new LoginFailure("The HubNet model you are connected to does not support your client type: " + clientType))
@@ -89,7 +89,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
             if (HubNetUtils.plotMirroring) server.sendPlots(userId)
           }
           else {
-            sendData(new LoginFailure("\"" + userId + "\" is already taken by another user. Please choose another name."))
+            sendData(new LoginFailure("\"" + userId + "\" is already taken by another user.\nPlease choose another name."))
           }
         }
         catch { case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex) }
@@ -158,9 +158,9 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         stopWriting()
         super.disconnect(e.toString)
       }
-      if( e.isInstanceOf[ClassNotFoundException]) {
+      if(e.isInstanceOf[ClassNotFoundException]) {
         val message =
-          "An incompatible version of the HubNet Client tried logging in. " +
+          "An incompatible version of the HubNet Client tried logging in.\n" +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
           Version.version
         org.nlogo.util.Exceptions.handle(new Exception(message, e))
