@@ -984,53 +984,50 @@ avg-energy-magenta
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This model is a 2D version of the 3D model Gas Lab Two Gas; it is one in a series of GasLab models.  They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
+## WHAT IS IT?
+
+This model is a 2D version of the 3D model GasLab Two Gas; it is one in a series of GasLab models.  They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
 The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
 
 This model is the simplest gas model in the suite of GasLab models.  The particles are moving and colliding with each other with no external constraints, such as gravity or containers.  In this model, particles are modeled as perfectly elastic ones with no energy except their kinetic energy -- which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to their speed -- blue for slow, green for medium, and red for high.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The basic principle of all GasLab models is the following algorithm (for more details, see the model "GasLab Gas in a Box"):
 
-1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2) Two particles "collide" if their surfaces touch.  In this model, the time at which any collision is about to occur is measured, and particles move forward until the first pair to collide touch one another.  They are collided, and the cycle repeats.
-3) The vector of collision for the particles describes the direction of the line connecting their centers.
-4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.
+1) A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2) Two particles "collide" if their surfaces touch.  In this model, the time at which any collision is about to occur is measured, and particles move forward until the first pair to collide touch one another.  They are collided, and the cycle repeats.  
+3) The vector of collision for the particles describes the direction of the line connecting their centers.  
+4) The particles exchange momentum and energy only along this line, conforming to the conservation of momentum and energy for elastic collisions.  
 5) Each particle is assigned its new speed, direction and energy.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-- OPEN: opens the door between the two chambers and allows particles to pas through
+- OPEN: opens the door between the two chambers and allows particles to pas through  
 - CLOSE: closes the door separating the two chambers
 
-- NUM-MAGENTAS and NUM-CYANS: the number of gas particles of each type.
-- COLLIDE?: Turns collisions between particles on and off.
-- MAGENTA-INIT-SPEED and CYAN-INIT-SPEED: the initial speed of each type of particle -- particles of the same type start with the same speed.
-- MAGENTA-MASS and CYAN-MASS: the mass of each type particle -- particles of the same type have the same mass.
-- BOX-SIZE: defines the size of the bounding box
+- NUM-MAGENTAS and NUM-CYANS: the number of gas particles of each type.  
+- COLLIDE?: Turns collisions between particles on and off.  
+- MAGENTA-INIT-SPEED and CYAN-INIT-SPEED: the initial speed of each type of particle -- particles of the same type start with the same speed.  
+- MAGENTA-MASS and CYAN-MASS: the mass of each type particle -- particles of the same type have the same mass.  
+- BOX-SIZE: defines the size of the bounding box  
 - OPENING-SIZE: define the size of the "door" between the two chambers
 
-As in most NetLogo models, the first step is to press SETUP. It puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.
+As in most NetLogo models, the first step is to press SETUP. It puts in the initial conditions you have set with the sliders.  Be sure to wait till the SETUP button stops before pushing GO.  
 The GO button runs the models again and again.  This is a "forever" button.
 
-Monitors:
+Monitors:  
 MAGENTAS IN LEFT CHAMBER, CYANS IN RIGHT CHAMBER, AVERAGE SPEED MAGENTA and CYAN, and AVERAGE ENERGY MAGENTA and CYAN help you track the changes after the "door" has been opened.
 
-Plots:
-- Average Speeds: Shows the change in average speed for each type of particle.
+Plots:  
+- Average Speeds: Shows the change in average speed for each type of particle.  
 - Average Energy: Shows the change in average energy for each type of particle.
 
 Initially, all the particles have the same speed but random directions. Therefore the first histogram plots of speed and energy should show only one column each.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed -- some particles get faster, some get slower, and the plot will show that change.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 What variables affect how quickly the model reaches a new equilibrium when the wall is removed?
 
 Why does the average speed for each color decrease as the model runs with the wall in place, even though the average energy remains constant?
@@ -1043,25 +1040,23 @@ Do heavier particles tend to have higher or lower speeds when the distribution o
 
 Is it reasonable to consider this box "insulated"?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Calculate how long the model takes to reach equilibrium with different sizes of windows (holding other parameters constant).
 
 Calculate how long the model takes to reach equilibrium with different particle speeds.
 
 Set the number of cyan particles to zero.  This is a model of a gas expanding into a vacuum.  This experiment was first done by Joule, using two insulated chambers separated by a valve.  He found that the temperature of the gas remained the same when the valve was opened.  Why would this be true? Is this model consistent with that observation?
 
-Try some extreme situations, to test your intuitive understanding:
--- masses the same, speeds of the two particles very different.
--- speeds the same, masses very different.
+Try some extreme situations, to test your intuitive understanding:  
+-- masses the same, speeds of the two particles very different.  
+-- speeds the same, masses very different.  
 -- a very small number of one kind of particle -- almost, but not quite a vacuum.  What happens to those few particles, and how do they affect the other kind?
 
 Try relating quantitatively the ratio of the equilibrium speeds of both gases after the wall is opened to the ratio of the masses of both gases.  How are they related?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Monitor pressure in the right and left chambers.
 
 Monitor temperature in the right and left chambers.
@@ -1072,15 +1067,14 @@ Replace the partition wall with a surface that can transmit energy.
 
 Add the histograms of energy and speed distribution (such as found in the "Free Gas" model).
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
-Notice the use of the histogram primitive.
+Notice the use of the `histogram` primitive.
 
-When making 3D shapes, both sides of a shape must be defined or else one side becomes transparent. We use this feature to create a box with opaque inside walls and fencelike outside walls. For more information about 3d shapes, see the NetLogo User Manual.
-
+When making 3D shapes, both sides of a shape must be defined or else one side becomes transparent. We use this feature to create a box with opaque inside walls and fencelike outside walls. For more information about 3D shapes, see the NetLogo User Manual.
 
 ## CREDITS AND REFERENCES
+
 This was one of the original Connection Machine StarLogo applications (under the name GPCEE) and is now ported to NetLogo as part of the Participatory Simulations project.
 @#$#@#$#@
 default
@@ -1409,7 +1403,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta3
+NetLogo 3D 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
