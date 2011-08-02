@@ -122,7 +122,12 @@ object TestParser {
   }
   def parseFile(f: File): List[LanguageTest] = {
     def preprocessStackTraces(s:String) = s.replace("\\\n  ", "\\n")
-    parseString(f.getName.replace(".txt", ""), preprocessStackTraces(file2String(f.getAbsolutePath)))
+    val suiteName =
+      if(f.getName == "tests.txt")
+        f.getParentFile.getName
+      else
+        f.getName.replace(".txt", "")
+    parseString(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
   }
   def parseString(suiteName: String, s: String): List[LanguageTest] = {
     def split(xs: List[String]): List[LanguageTest] = {
