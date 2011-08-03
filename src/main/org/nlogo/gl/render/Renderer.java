@@ -857,7 +857,7 @@ public class Renderer
   }
 
   public void setMouseCors(java.awt.Point mousePt) {
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
     pickPatches(null, ray);
     mouseState.point_$eq(mousePt);
   }
