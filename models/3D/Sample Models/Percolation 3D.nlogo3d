@@ -60,7 +60,7 @@ end
 GRAPHICS-WINDOW
 0
 0
-225
+245
 246
 21
 21
@@ -84,6 +84,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 162
@@ -188,18 +189,16 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is a 3D version of the 2D model Percolation. It shows how an oil spill can percolate down through permeable soil.  It was inspired by a similar model meant to be done by hand on graph paper (see "Forest Fires, Oil Spills, and Fractal Geometry", Mathematics Teacher, Nov. 1998, p. 684-5).
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 This model represents an oil spill as a finite number of oil "particles", or simply oil drops. The oil drops sink downward through the soil by moving diagonally down and northeast, southeast, northwest or southwest. The patches through which the drops spread represent the empty spaces in the soil the porosity (or "holeyness") is adjustable. Each drop's chance of actually moving on down is contingent on a certain probability, set by the POROSITY slider.  That is, the higher the porosity, the higher the chance of a drop to percolate through it.  This models the fact that in more porous soil, oil has a greater chance of continuing downward.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Push the SETUP button.  The oil spill is represented by red patches, which start at the top of the world.
 
 Press the GO button to run the model or the GO ONCE button to advance the oil drops one step.
@@ -210,36 +209,31 @@ It can be run as long as you like; it resets to the top of the world when it rea
 
 The two plots show how large the leading edge of the spill is (red) and how much soil has been saturated (brown).
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
------------------
 Try different settings for the porosity.  What do you notice about the pattern of affected soil?  Can you find a setting where the oil just keeps sinking, and  a setting where it just stops?
 
 If percolation stops at a certain porosity, it's still possible that it would percolate further at that porosity given a larger world.
 
 Note the plot of the size of the leading edge of oil.  Does the value settle down roughly to a constant?  How does this value depend on the porosity?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Give the soil different porosity at different depths.  How does it affect the flow?  In a real situation, if you took soil samples, Could you reliably predict how deep an oil spill would go or be likely to go?
 
 Currently, the model is set so that the user has no control over how much oil will spill.  Try adding a feature that will allow the user to specify precisely, when s/he presses SETUP, the amount of oil that will spill on that go.  For instance, a slider may be useful here, but you'd have to modify the code to accommodate this new slider.  Such control over the to-be-spilled amount of oil gives the user a basis to predict how deep the oil will eventually percolate (i.e. how many empty spaces it will fill up).  But then again, the depth of the spill is related to the soil's porosity.  Can you predict the depth of the spill before you press GO?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This is a good example of a cellular automaton model, because it uses only patches.  It also uses a simple random-number generator to give a probability, which in turn determines the average large-scale behavior.
 
 This is also a simple example of how plots can be used to reveal, graphically, the average behavior of a model as it unfolds.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 "Fire" is a similar model.  In both cases, there is a rather sharp cutoff between halting and spreading forever.
 
 This model qualifies as a "stochastic" or "probabilistic" one-dimension cellular automaton.  For more information, see the "CA Stochastic" model.
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -523,7 +517,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta5
 @#$#@#$#@
 setup
 repeat world-depth - 1 [ go ]

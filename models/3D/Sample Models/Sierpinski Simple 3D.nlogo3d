@@ -69,6 +69,7 @@ GRAPHICS-WINDOW
 0
 0
 iterations
+30.0
 
 BUTTON
 46
@@ -102,7 +103,7 @@ NIL
 NIL
 NIL
 NIL
-1
+0
 
 MONITOR
 210
@@ -116,85 +117,82 @@ count turtles
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the Sierpinski Simple model in the NetLogo Models Library. The fractal that this model produces was discovered by the great Polish mathematician Waclaw Sierpinski in 1916.  Sierpinski was a professor at Lvov and Warsaw.  He was one of the most influential mathematicians of his time in Poland and had a worldwide reputation.  In fact, one of the moon's craters is named after him.
 
-The basic geometric construction of the Sierpinski tree goes as follows.  We begin with a single point on the plane and then apply a repetitive scheme of operations to it.  Grow a "spider" centered at this point by drawing three equal line segments directed to the vertices of an equilateral triangle.  Then at each vertex of the triangle repeat the construction -- grow a similar "spider" only scale it down by the factor of two.
+The basic geometric construction of the Sierpinski tree goes as follows.  We begin with a single point on the plane and then apply a repetitive scheme of operations to it.  Grow a "spider" centered at this point by drawing three equal line segments directed to the vertices of an equilateral triangle.  Then at each vertex of the triangle repeat the construction --- grow a similar "spider" only scale it down by the factor of two.
 
-|            .               Step 0: Start with a point
+                .               Step 0: Start with a point
 
-|            |
-|            |
-|            |               Step 1: Grow a spider
-|           / \
-|          /   \
-|         /     \
 
-|            |
-|            |
-|           /|\
-|          / | \
-|            |               Step 2: Repeat step 1
-|           / \
-|        | /   \ |
-|        |/     \|
-|       / \     / \
-|      /   \   /   \
+                |
+                |
+                |               Step 1: Grow a spider
+               / \
+              /   \
+             /     \
+
+
+                |
+                |
+               /|\
+              / | \
+                |               Step 2: Repeat step 1
+               / \
+            | /   \ |
+            |/     \|
+           / \     / \
+          /   \   /   \
 
 The Sierpinski tree is closely related to the class of fractals called Sierpinski Carpets which includes the famous Sierpinski Triangle or as it is usually called The Sierpinski Gasket.
 
 The features that characterize the Sierpinski tree are self-similarity and connectedness.  It is not always easy to determine if a fractal is connected.  It took almost a decade to prove the connectedness of the famous Mandelbrot set.  However connectedness is apparent from the way Sierpinski tree is generated; at each iteration the set is connected.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Push the SETUP button to clear the screen and initialize globals.  Press repeatedly on the GO ONCE button to perform iterations of the Sierpinski algorithm.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
-Notice the use of "hatch" primitive which makes it so simple to generate fractals like Sierpinski tree.
+Notice the use of `hatch` primitive which makes it so simple to generate fractals like Sierpinski tree.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try to write a program that draws other self-similar shapes.  For instance try the rule below
 
-|                   .               Step 0
+                       .               Step 0
 
-|
-|                   |
-|                   |
-|                   |
-|            ______________         Step 1
-|                   |
-|                   |
-|                   |
 
-|                   |
-|                 __|__
-|                   |
-|                   |
-|           __|___________|__       Step 2
-|             |     |     |
-|                   |
-|                 __|__
-|                   |
+    
+                       |
+                       |
+                       |
+                ______________         Step 1
+                       |
+                       |
+                       |
+
+
+                       |
+                     __|__
+                       |
+                       |
+               __|___________|__       Step 2
+                 |     |     |
+                       |
+                     __|__
+                       |
 
 The resulting fractal is known in Algebraic Topology as a Universal Covering of the Figure Eight.
 
+## NETLOGO FEATURES
 
+Notice how the curves are formed using several agents following the same rules.  Also, take note of the use of the `hatch` command.
 
-NETLOGO FEATURES
-----------------
-Notice how the curves are formed using several agents following the same rules.  Also, take note of the use of the hatch command.
+## RELATED MODELS
 
-
-RELATED MODELS
---------------
 L-System Fractals
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -492,7 +490,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta5
 @#$#@#$#@
 setup repeat 7 [ go ]
 @#$#@#$#@
