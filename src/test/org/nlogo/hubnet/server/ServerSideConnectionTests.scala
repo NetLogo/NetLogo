@@ -41,7 +41,7 @@ class ServerSideConnectionTests extends MockSuite {
     conn.receiveData(HandshakeFromClient(clientId, "COMPUTER"))
     // this was lifted right from ServerSideConnection.scala
     val error = "The version of the HubNet Client you are using does not " +
-                "match the version of the server. Please use the HubNet Client that comes with " + Version.version
+                "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version
     conn.nextOutgoingMessage match {
       case LoginFailure(reason) => assert(reason === error)
       case _ => fail("expected LogonFailure")
