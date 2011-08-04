@@ -856,7 +856,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -866,11 +866,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -992,7 +992,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -1002,11 +1002,11 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -3154,7 +3154,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -3164,11 +3164,11 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -3530,7 +3530,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -3540,11 +3540,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -3889,7 +3889,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/nvm/MutableDouble
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/nvm/MutableDouble.value : D
+          INVOKEVIRTUAL org/nlogo/nvm/MutableDouble.value ()D
           DSTORE 4
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.abs (D)D
@@ -3937,12 +3937,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           I2D
           INVOKEVIRTUAL org/nlogo/agent/Turtle.jump (D)V
           ALOAD 3
-          DUP
-          GETFIELD org/nlogo/nvm/MutableDouble.value : D
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/nvm/MutableDouble.value ()D
           ILOAD 8
           I2D
           DSUB
-          PUTFIELD org/nlogo/nvm/MutableDouble.value : D
+          INVOKEVIRTUAL org/nlogo/nvm/MutableDouble.value_$eq (D)V
          L4
           GOTO L8
          L5

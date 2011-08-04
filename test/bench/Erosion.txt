@@ -1462,7 +1462,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -1472,11 +1472,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
@@ -3787,7 +3787,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           CHECKCAST org/nlogo/nvm/MutableLong
           ASTORE 2
           ALOAD 2
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_0
           LCMP
           IFGT L1
@@ -3797,11 +3797,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           GOTO L2
          L1
           ALOAD 2
-          DUP
-          GETFIELD org/nlogo/nvm/MutableLong.value : J
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
           LCONST_1
           LSUB
-          PUTFIELD org/nlogo/nvm/MutableLong.value : J
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
           ALOAD 1
           BIPUSH 16
           PUTFIELD org/nlogo/nvm/Context.ip : I
