@@ -24,7 +24,8 @@ public final strictfp class _modes
       Object srcElt = it.next();
       LogoHashObject logoElt = new LogoHashObject(srcElt);
       if (counts.containsKey(logoElt)) {
-        counts.get(logoElt).value++;
+        MutableInteger i = counts.get(logoElt);
+        i.value_$eq(i.value() + 1);
       } else {
         counts.put(logoElt, new MutableInteger(1));
       }
@@ -34,7 +35,7 @@ public final strictfp class _modes
     int currMaxCount = 0;
     while (keys.hasNext()) {
       LogoHashObject currKey = keys.next();
-      int currVal = counts.get(currKey).value;
+      int currVal = counts.get(currKey).value();
       if (currVal > currMaxCount) {
         currMaxCount = currVal;
       }
@@ -44,7 +45,7 @@ public final strictfp class _modes
     LogoListBuilder modes = new LogoListBuilder();
     while (keys.hasNext()) {
       LogoHashObject currKey = keys.next();
-      int currVal = counts.get(currKey).value;
+      int currVal = counts.get(currKey).value();
       if (currVal == currMaxCount) {
         modes.add(currKey.getSourceObject());
       }

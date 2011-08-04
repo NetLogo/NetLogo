@@ -24,7 +24,7 @@ public final strictfp class _waitinternal extends Command {
   }
 
   public void perform_1(Context context) {
-    if (System.nanoTime() >= ((MutableLong) context.getLet(let)).value) {
+    if (System.nanoTime() >= ((MutableLong) context.getLet(let)).value()) {
       context.ip = next;
     }
   }

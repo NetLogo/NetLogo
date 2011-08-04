@@ -35,7 +35,7 @@ public final strictfp class _fdinternal
   public void perform_1(Context context) {
     Turtle turtle = (Turtle) context.agent;
     MutableDouble countdown = (MutableDouble) context.getLet(let);
-    double distance = countdown.value;
+    double distance = countdown.value();
     double distanceMagnitude = StrictMath.abs(distance);
     if (distanceMagnitude <= org.nlogo.api.Constants.Infinitesimal()) {
       context.ip = next;
@@ -50,7 +50,7 @@ public final strictfp class _fdinternal
       int stepDistance = (distance > 0) ? 1 : -1;
       try {
         turtle.jump(stepDistance);
-        countdown.value -= stepDistance;
+        countdown.value_$eq(countdown.value() - stepDistance);
       } catch (AgentException e) {
         context.ip = next;
       }

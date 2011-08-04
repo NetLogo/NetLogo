@@ -60,8 +60,8 @@ public final strictfp class _every
       tempMap.put(this, new MutableLong(currentTime));
       // execute the commands in the block
       context.ip = next;
-    } else if (currentTime >= lastRunTime.value + delay) {
-      lastRunTime.value = currentTime;
+    } else if (currentTime >= lastRunTime.value() + delay) {
+      lastRunTime.value_$eq(currentTime);
       // execute the commands in the block
       context.ip = next;
     } else {

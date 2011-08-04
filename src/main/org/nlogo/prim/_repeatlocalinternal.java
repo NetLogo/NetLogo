@@ -27,10 +27,10 @@ public final strictfp class _repeatlocalinternal
   public void perform(final org.nlogo.nvm.Context context) {
     MutableLong counter =
         (MutableLong) context.activation.args[vn];
-    if (counter.value <= 0) {
+    if (counter.value() <= 0) {
       context.ip = next;
     } else {
-      counter.value--;
+      counter.value_$eq(counter.value() - 1);
       context.ip = offset;
     }
   }
@@ -38,10 +38,10 @@ public final strictfp class _repeatlocalinternal
   public void perform_1(final org.nlogo.nvm.Context context) {
     MutableLong counter =
         (MutableLong) context.activation.args[vn];
-    if (counter.value <= 0) {
+    if (counter.value() <= 0) {
       context.ip = next;
     } else {
-      counter.value--;
+      counter.value_$eq(counter.value() - 1);
       context.ip = offset;
     }
   }
