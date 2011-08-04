@@ -137,17 +137,18 @@ class InterfaceTab(workspace: GUIWorkspace,
           splitPane.setDividerLocation(maxDividerLocation)
           if (iP.isFocusable) iP.requestFocus()
         }
-        else
-        if (splitPane.getLastDividerLocation < maxDividerLocation)
-          splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-        else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-          splitPane.getOrientation match {
-            case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-            case _ => // horizontal
-              // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-              splitPane.setDividerLocation(0.5)
-          }
-        commandCenter.requestFocus()
+        else {
+          if (splitPane.getLastDividerLocation < maxDividerLocation)
+            splitPane.setDividerLocation(splitPane.getLastDividerLocation)
+          else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
+            splitPane.getOrientation match {
+              case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
+              case _ => // horizontal
+                // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
+                splitPane.setDividerLocation(0.5)
+            }
+          commandCenter.requestFocus()
+        }
         putValue(Action.NAME,
           if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui("hideCommandCenter")
           else I18N.gui("showCommandCenter"))
