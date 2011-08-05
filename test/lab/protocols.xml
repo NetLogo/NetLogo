@@ -218,13 +218,13 @@
     <metric>ticks</metric>
   </experiment>
   <experiment name="metricsWithSideEffects" repetitions="1" runMetricsEveryStep="true">
-    <setup>clear-all</setup>
+    <setup>clear-all reset-ticks</setup>
     <go>tick</go>
     <timeLimit steps="2"/>
     <metric>metric</metric>
   </experiment>
   <experiment name="runNumber" repetitions="3" runMetricsEveryStep="true">
-    <setup>clear-all</setup>
+    <setup>clear-all reset-ticks</setup>
     <go>tick</go>
     <timeLimit steps="2"/>
     <metric>behaviorspace-run-number</metric>
