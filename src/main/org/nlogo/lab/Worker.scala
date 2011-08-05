@@ -156,7 +156,7 @@ class Worker(val protocol: Protocol)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
-      if(protocol.runMetricsEveryStep) {
+      if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
       }
@@ -166,14 +166,14 @@ class Worker(val protocol: Protocol)
       {
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
-        if(protocol.runMetricsEveryStep && !listeners.isEmpty) {
+        if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         }
         ws.updateDisplay(false)
         if(aborted) return
       }
-      if(!protocol.runMetricsEveryStep) {
+      if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
       }
