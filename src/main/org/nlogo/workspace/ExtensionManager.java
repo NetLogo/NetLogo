@@ -176,7 +176,7 @@ public strictfp class ExtensionManager
         theJarContainer = new JarContainer(extName, jarPath, myClassLoader, modified);
         try {
           // compilation tests shouldn't initialize the extension
-          if (!workspace.isCompilerTestingMode()) {
+          if (!workspace.compilerTestingMode()) {
             classManager.runOnce(this);
           }
         } catch (org.nlogo.api.ExtensionException ex) {

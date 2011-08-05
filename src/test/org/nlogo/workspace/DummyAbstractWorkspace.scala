@@ -15,6 +15,7 @@ extends AbstractWorkspaceScala(
 {
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true
+  override def compilerTestingMode = false
   override def aggregateManager: AggregateManagerInterface = unsupported
   override def waitFor(runnable: org.nlogo.api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: org.nlogo.api.ReporterRunnable[T]): T = unsupported

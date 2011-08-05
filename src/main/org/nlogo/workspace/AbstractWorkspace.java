@@ -129,9 +129,7 @@ public abstract strictfp class AbstractWorkspace
   /**
    * Internal use only.
    */
-  public boolean isCompilerTestingMode() {
-    return false;
-  }
+  public abstract boolean compilerTestingMode();
 
   /**
    * Shuts down the background thread associated with this workspace,

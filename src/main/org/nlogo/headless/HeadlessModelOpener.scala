@@ -69,7 +69,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.world.program(results.program)
 
     // test code is mixed with actual code here, which is a bit funny.
-    if (ws.isCompilerTestingMode)
+    if (ws.compilerTestingMode)
       testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
     else
       finish(Map() ++ constraints, results.program, interfaceGlobalCommands)
@@ -221,8 +221,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)
           case "INPUTBOX" => parseInputBox(widget)
           case "PLOT" => parsePlot(widget)
-          case "BUTTON" if ws.isCompilerTestingMode => parseButton(widget)
-          case "MONITOR" if ws.isCompilerTestingMode => parseMonitor(widget)
+          case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
+          case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
           case "GRAPHICS-WINDOW" => parseGraphicsWindow(widget)
           case _ => // ignore
         }

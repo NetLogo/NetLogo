@@ -341,6 +341,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return frame;
   }
 
+  public boolean compilerTestingMode() {
+    return false;
+  }
+
   @Override
   public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
     return viewWidget.settings();
