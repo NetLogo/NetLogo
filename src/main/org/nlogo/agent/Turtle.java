@@ -219,8 +219,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);
@@ -1044,8 +1044,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);
@@ -1060,8 +1060,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);

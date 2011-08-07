@@ -192,8 +192,8 @@ public strictfp class Protractor
     double sin;
     int integerHeading = (int) heading;
     if (heading == integerHeading) {
-      cos = TrigTables.cos[integerHeading];
-      sin = TrigTables.sin[integerHeading];
+      cos = TrigTables.cos()[integerHeading];
+      sin = TrigTables.sin()[integerHeading];
     } else {
       double headingRadians = StrictMath.toRadians(heading);
       cos = StrictMath.cos(headingRadians);
