@@ -509,11 +509,15 @@ class App extends
         if(logger!=null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
-        if (logger==null) Logger.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
-        else logger.zipSessionFiles(e.args(0).toString)
+        if (logger==null)
+          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
+        else
+          logger.zipSessionFiles(e.args(0).toString)
       case DELETE_LOG_FILES =>
-        if(logger==null) Logger.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else logger.deleteSessionFiles()
+        if(logger==null)
+          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
+        else
+          logger.deleteSessionFiles()
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
