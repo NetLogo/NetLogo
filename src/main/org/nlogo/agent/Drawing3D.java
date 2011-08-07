@@ -2,6 +2,7 @@ package org.nlogo.agent;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.nlogo.api.AgentException;
 
 public strictfp class Drawing3D
     implements org.nlogo.api.Drawing3D {
@@ -36,6 +37,22 @@ public strictfp class Drawing3D
     return linkStamps;
   }
 
+  private double heading(double x0, double y0, double x1, double y1) {
+    try {
+      return world.protractor().towards(x0, y0, x1, y1, true);
+    } catch (AgentException e) {
+      return 0.0;
+    }
+  }
+
+  private double pitch(double x0, double y0, double z0, double x1, double y1, double z1) {
+    try {
+      return world.protractor().towardsPitch(x0, y0, z0, x1, y1, z1, true);
+    } catch (AgentException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
   void stamp(Agent agent) {
     if (agent instanceof Turtle) {
       turtleStamps.add(new TurtleStamp3D((Turtle3D) agent));
@@ -48,8 +65,9 @@ public strictfp class Drawing3D
                 double x1, double y1, double z1,
                 double width, Object color) {
     DrawingLine3D l = new DrawingLine3D(x0, y0, z0, x1, y1, z1,
-        width, color, world);
-
+                                        pitch(x0, y0, z0, x1, y1, z1),
+                                        heading(x0, y0, x1, y1),
+                                        width, color);
     wrap(l);
   }
 
@@ -57,7 +75,9 @@ public strictfp class Drawing3D
                double x1, double y1, double z1,
                double width, Object color) {
     lines.add(new DrawingLine3D(x0, y0, z0, x1, y1, z1,
-        width, color, world));
+                                pitch(x0, y0, z0, x1, y1, z1),
+                                heading(x0, y0, x1, y1),
+                                width, color));
   }
 
   void addStamp(String shape, double xcor, double ycor, double zcor, double size,
@@ -76,12 +96,12 @@ public strictfp class Drawing3D
 
 
   private void wrap(DrawingLine3D l) {
-    double startX = l.x0;
-    double startY = l.y0;
-    double endX = l.x0;
-    double endY = l.y0;
-    double startZ = l.z0;
-    double endZ = l.z0;
+    double startX = l.x0();
+    double startY = l.y0();
+    double endX = l.x0();
+    double endY = l.y0();
+    double startZ = l.z0();
+    double endZ = l.z0();
     double temp;
 
     if (endX < startX) {
@@ -100,12 +120,12 @@ public strictfp class Drawing3D
       startZ = temp;
     }
 
-    double xdiff = l.x1 - l.x0;
-    double ydiff = l.y1 - l.y0;
-    double zdiff = l.z1 - l.z0;
-    double distX = l.x1 - l.x0;
-    double distY = l.y1 - l.y0;
-    double distZ = l.z1 - l.z0;
+    double xdiff = l.x1() - l.x0();
+    double ydiff = l.y1() - l.y0();
+    double zdiff = l.z1() - l.z0();
+    double distX = l.x1() - l.x0();
+    double distY = l.y1() - l.y0();
+    double distZ = l.z1() - l.z0();
     double newStartX = 0;
     double newStartY = 0;
     double newStartZ = 0;
@@ -233,8 +253,10 @@ public strictfp class Drawing3D
       }
 
       lines.add(new DrawingLine3D(startX, startY, startZ,
-          endX, endY, endZ,
-          l.width, l.color, world));
+                                  endX, endY, endZ,
+                                  pitch(startX, startY, startZ, endX, endY, endZ),
+                                  heading(startX, startY, endX, endY),
+                                  l.width(), l.color()));
 
       distX -= (endX - startX);
       distY -= (endY - startY);
