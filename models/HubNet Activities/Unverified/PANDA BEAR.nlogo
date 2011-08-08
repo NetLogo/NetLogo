@@ -325,6 +325,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 107
@@ -341,6 +342,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 204
@@ -357,6 +359,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 10
@@ -373,6 +376,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 10
@@ -430,26 +434,27 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Perimeters and Areas by Embodied Agent Reasoning, or PANDA BEAR, is a microworld for mathematics learning that lies at the intersection of dynamic geometry environments and participatory simulation activities. In PANDA BEAR, individual students identify with and control a single vertex of a shared, group-polygon.
 
 The measures of perimeter and area of the group-polygon are foregrounded in the environment. Group-level challenges involving the perimeter and area that cannot be solved by one individual are issued by the activity leader to the students. Through the communication of ideas and strategies with each other, the students collaboratively build solutions for the challenges.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-SERVER interface:
+### Server interface
+
 SETUP is run automatically when the activity is opened, and can be run whenever the teacher wants to clear the links comprising a group-polygon and prepare students to be formed into a different polygon when EDGIFY is pressed next. GO is the main button for allowing students to log in and move around. After the EDGIFY button has been pressed, the students will all be connected in a single group-polygon. When the students are connected, the PERIMETER and AREA monitors update automatically as students move their vertices around. The PANDA plot shows both of those measures over time as a record of the group's actions as they work towards a goal. SETUP-PLOT resets the plot to start a new challenge with the same group-polygon. To force all students' clients to exit the activity and re-enter, the teacher can press the RESET button on the HubNet Control Center.
 
-CLIENT interface:
+### Client interface
+
 The client interface allows each student to control one vertex in the group-polygon. The YOU ARE A: monitor shows a description of the shape and color of the vertex the student is controlling. CHANGE APPEARANCE changes the vertex's shape and color. The LOCATED AT: monitor shows the current coordinates of the student's vertex. The HEADING: monitor shows the current heading of the student's vertex - that is, the direction in which the vertex travels if asked to move forward. The PERIMETER: and AREA: monitors show the current measures of the group-polygon. The FD (forward), BK (back), LT (right-turn), and RT (right-turn) buttons change the student's vertex's location and heading. The STEP-SIZE and TURN-AMOUNT input boxes control the amount of movement of the FD, BK, LT, and RT buttons. The GET-CENTERED button rounds the student's vertex's x and y coordinates to the nearest integer, which can be helpful for coordinating with other students.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 In a triangle, for an individual vertex, moving "between" the other two vertices minimizes the perimeter for a given area.
 
 In a triangle, when all three vertices attempt to form an isosceles triangle, an equilateral triangle is formed.
@@ -458,9 +463,8 @@ Strategies that work for challenges at the triangle level often work at the squa
 
 As the number of vertices is increased, the polygon that maximizes the area given a perimeter and minimizes the perimeter given an area gets closer and closer to a circle.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 With three students (and so, three vertices), ask the students to make the area as big as possible while keeping the perimeter at or below 25.
 
 With three students (and so, three vertices), ask the students to make the perimeter as small as possible while keeping the area at or above 25.
@@ -469,29 +473,26 @@ Increase the number of students in the polygon from three to four (and beyond - 
 
 Modify the challenges in a patterned way. For example, with four students, doubling the allowed perimeter should quadruple the maximum area.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Add vertices that the students can't control.
 
 Add different methods of movement. For example, instead of turning and going forward and backward, the students could be allowed to move in the 4 cardinal directions or with a mouse.
 
 Allow the students to give their vertex movement rules to follow over and over so that the group-polygon "dances".
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This model uses links to form the sides of the polygon; each vertex is linked to exactly two other vertices.  The sum of the lengths of all the links is the perimeter of the polygon.
 
 The area calculation is based on information found here: http://mathworld.wolfram.com/PolygonArea.html
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 PANDA BEAR Solo
 
-
 ## CREDITS AND REFERENCES
+
 Thanks to Josh Unterman for his work on this model.
 @#$#@#$#@
 default
@@ -700,7 +701,7 @@ Line -7500403 true 40 216 269 79
 Line -7500403 true 84 40 221 269
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

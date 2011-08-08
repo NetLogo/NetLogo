@@ -460,6 +460,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 71
@@ -476,6 +477,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 18
@@ -492,6 +494,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 22
@@ -559,6 +562,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 22
@@ -597,6 +601,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 25
@@ -628,6 +633,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 45
@@ -677,6 +683,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 117
@@ -693,6 +700,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 21
@@ -719,24 +727,23 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Each student defines the motion of a walking character by setting its velocity on their client over time intervals.  The students have 9 different intervals for which they can set the velocity.  They can then send these velocities to their characters, where they see the character walking its route over the 9 intervals.  This is designed to help students understand the accumulation of distance as a function of time. This can serve as a jumping off point for advanced concepts ranging from derivatives and integrals to wave mechanics.
 
 For further documentation, see the Participatory Simulations Guide found at http://ccl.northwestern.edu/ps/
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Each student has control of nine sliders, one for each interval over a period of time, the sliders determine the velocity of the character, walker, assigned to the student. Once instructions have been given and students have made selected their velocities for each time interval you can run the simulation.  The walkers will move across the view at the indicated rates possibly leaving behind a trail to make it easier to see the change in position over time.
 
 There are two possible clients for this activity, one with a view and one without.  Walking includes the view, Walking Alternate does not.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 To start the activity press the SETUP button and then press LOGIN.  Have the students login and identify their location in the view. Students can then change the velocities of their character by moving the interval sliders on the client.  To run the entire set of nine intervals press the GO button, to move forward only one interval at a time press the STEP button.  You may leave the LOGIN button pressed at all times if you wish.
 
 To reset the clock and reset the walkers to their initial positions, that is a position that was randomly selected at login, press the SETUP button.  If you just want to reset the clocks and allow the walkers to continue from their current positions press the RESET-CLOCK button. To reset walkers to a new random position press the SET-RANDOM-POSITIONS button. To set the position of all walkers to the same place select the location by setting the WALKER-POSITION slider and press the SET-UNIFORM-POSITIONS button.
@@ -745,14 +752,12 @@ By default the velocities and positions for all walkers are plotted in the POSIT
 
 There are a few settings that will help you and the participants to visualize the simulation. SIMULATION-SPEED adjusts how quickly to move through the intervals during GO. When SHOW-USER-ID? is true, all the turtles show their user-id as its label otherwise no label is shown. When FOOTPRINTS? is true the walkers leave a trail of footprints behind them, the footprints fade over time so you can track how long ago you were at each position. When TRAILS? is true the walkers change the pcolor along their path as they move indicating whether they are moving in a positive or negative direction. When ANIMATION? is true the walkers are animated like a flipbook as they move across the world.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Notice if a walker moves more than 1 position during an interval, it equally divides the amount of time spent traveling through each position.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Have your walker sit at x = 3 during the fourth time segment.  What is the same  and different between the solutions? Encourage students to come up with unique solutions.
 
 Have students coordinate to make a traveling or a standing wave.
@@ -761,21 +766,17 @@ Have each student set their walker to have a velocity of +2 during the fourth ti
 
 Have each student set their velocities so that the walker starts and ends in the same position.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 A real person may not move at a constant speed.  He or she may build speed gradually until they have reached a constant speed.  Then before reaching their destination, they will slow down.  Try to make this happen as a part of the model.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 This activity uses incremental turtle shapes in order to simulate an animation.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Function
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1267,7 +1268,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
