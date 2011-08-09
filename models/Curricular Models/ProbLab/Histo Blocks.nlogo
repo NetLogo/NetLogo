@@ -492,7 +492,7 @@ This model uses a special procedure in order to partition the histogram columns.
 
 Several of ProbLab's models are related to Histo Blocks, notably Sample Stalagmite.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Thanks to Dor Abrahamson for his work on the design of this model and the ProbLab curriculum. Thank you to Josh Unterman for his talent and work on producing this model.
 @#$#@#$#@

@@ -722,7 +722,7 @@ This activity uses NetLogo's network support to move the goods from stage to sta
 Investments
 Public Good
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 For a discussion of the original MIT Beer Game and additional suggestions for discussion points, see http://web.mit.edu/jsterman/www/SDG/beergame.html
 

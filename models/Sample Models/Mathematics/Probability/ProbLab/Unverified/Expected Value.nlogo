@@ -903,7 +903,7 @@ Add another unit-value slider. It could for 7, so you'd need to create a die sha
 
 This model is closely related to a variety of models in the ProbLab curriculum. As described in the 'THINGS TO TRY' section, one may set the ratios up so that they mirror the sample population of other models in the curriculum, including 9-Block Stalagmite and S.A.M.P.L.E.R. For instance, if one sets BLACK-OUT? to 'On,' this model would produce an effect that is similar to that of S.A.M.P.L.E.R., where one chooses a certain number of tiles and doesn't see any of the other tiles in the population.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@

@@ -190,7 +190,7 @@ This model is related to all of the other models in the "Urban Suite".
 
 In particular, it is related to "Urban Suite - Structure from Randomness 2", which is another model demonstrating the same concept.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is based on pages 43-45 of the book "Cities and Complexity" by Michael Batty.
 

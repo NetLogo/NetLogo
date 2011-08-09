@@ -318,7 +318,7 @@ Also, the creation of the smooth attraction topology is directly related to the 
 
 Some of the patterns that form are reminiscent of Cellular Automata, or perhaps the "Vants" model.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model was based on a model originally written by William Rand and Derek Robinson as part of the Sluce Project at the University of Michigan (http://www.cscs.umich.edu/sluce).  For more about the original model (SOME) that was the basis for this model, please see:
 

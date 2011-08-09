@@ -430,7 +430,7 @@ The use of invisible turtles to represent players is a little unusual.  The loca
 
 We use the DISPLAY primitive to control what the players see when, and for how long.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 false

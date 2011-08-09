@@ -317,7 +317,7 @@ You may want to monitor different aspects of the probabilistic experiment, to an
 - is there particular permutations you like?  You could add code to see how long it takes the model to find this permutation.
 - what is the dynamic ratio between the number of one-green and three-green outcomes?
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

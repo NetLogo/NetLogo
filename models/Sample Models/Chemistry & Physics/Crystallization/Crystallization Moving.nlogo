@@ -405,7 +405,7 @@ With every time step, each atom's temperature changes to the average of everythi
 Crystallization Basic  
 Crystallization Directed
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Original implementation: Carrie Hobbs, for the Center for Connected Learning and Computer-Based Modeling.
 @#$#@#$#@

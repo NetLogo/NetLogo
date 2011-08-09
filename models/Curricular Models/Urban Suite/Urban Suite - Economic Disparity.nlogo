@@ -766,7 +766,7 @@ This model is related to all of the other models in the "Urban Suite".  In parti
 
 It might also be interesting to compare it to the models "Wealth Distribution" and "Voronoi".
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model was loosely based on a model originally written by William Rand and Derek Robinson as part of the Sluce Project at the University of Michigan (http://www.cscs.umich.edu/sluce).  For more about the original model (SOME) that was the basis for this model, please see:
 

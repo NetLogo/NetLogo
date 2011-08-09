@@ -737,7 +737,7 @@ The ProbLab model Random Combinations and Permutations builds on Dice. There, yo
 
 An interesting feature of "Dice," that does not appear in many other models, is the procedure for selecting a die's face value. To you, it is obvious that three dots means "3," but the program doesn't "know" this unless you "tell" it. Each time you click on a die, Look in the Shapes Editor that is in the Tools dropdown menu. You will find six die shapes: 1, 2, 3, 4, 5, and 6. The names of these shapes form a list: ["one" "two" "three" "four" "five" "six"]. Each time you click on a die, a procedure maps between each name and the numerical value corresponding to it.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@

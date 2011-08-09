@@ -404,7 +404,7 @@ Also, the Segregation library model in NetLogo also explores how individuals dec
 
 For another urban settlement model, see the SOME model (created by the SLUCE project at University of Michigan), which explores residential settlements.   http://www.cscs.umich.edu/sluce/education/sluce_ed.htm
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is loosely based on the model presented in this paper:  Arthur, W.B. (1988), "Urban systems and historical path dependence", in Ausubel, J.H., Herman, R. (Eds), Cities and their Vital Systems: Infrastructure, Past, Present and Future, National Academy Press, Washington, DC, pp.85-97.
 

@@ -438,7 +438,7 @@ Try playing the game once with labels "Off" then once with labels "On."  Does th
 
 Try changing the multiplier that the bank uses to increase the money before it is redistributed.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Here are some references to increase your understanding and appreciation of this game and others like it
 

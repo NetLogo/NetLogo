@@ -809,7 +809,7 @@ Because so much information must be conveyed through the appearance of each turt
 
 The various Wolf-Sheep models are non-HubNet versions of a similar model.  Also see the Bug Hunter model and the Guppy model for other HubNet models that explore population dynamics.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 false

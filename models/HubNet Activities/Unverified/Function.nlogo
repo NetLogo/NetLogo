@@ -1175,7 +1175,7 @@ Students' equations are not checked for syntax errors until the teacher attempts
 
 This model uses the runresult primitive to approximate the y value for each x value, thus, functions can use any valid NetLogo code in the function defining y.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

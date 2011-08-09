@@ -207,7 +207,7 @@ To color the patches appropriately, the activity value (which has been normalize
 
 This model is related to all of the other models in the "Urban Suite".  In particular, it is demonstrating the same concept as the "Urban Suite - Path Dependence" model, although the focus is slightly different.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is based on pages 38-42 of the book "Cities and Complexity" by Michael Batty.
 

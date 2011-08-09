@@ -1027,7 +1027,7 @@ It should be interesting to track how long it takes the model from one success t
 
 Following is an extension idea for applying this model towards thinking about search algorithms. Currently, the program guesses combinations randomly. This could be improved upon so that the program finds the combination in less guesses. For instance, the moment one of the squares has the correct color or dice face, the program would continue guessing only for the other squares. Another idea might be to create a systematic search procedure.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@

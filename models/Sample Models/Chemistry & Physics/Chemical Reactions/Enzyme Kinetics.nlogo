@@ -472,7 +472,7 @@ Include a slider that allows you to change the concentration of enzyme.  What af
 
 It is a little difficult to ensure that a reactant never participates in two reactions simultaneously.  In the future, a primitive called GRAB may be added to NetLogo; then the code in the FORM-COMPLEX procedure wouldn't need to be quite so tricky.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Thanks to Mike Stieff for his work on this model.
 @#$#@#$#@

@@ -844,7 +844,7 @@ Use the model with the entire class to serve as an introduction to the topic.  T
 
 Currently, the turtles remain sick once they're infected.  How would the shape of the plot change if turtles eventually healed?  If, after healing, they were immune to the disease, or could still spread the disease, how would the dynamics be altered?
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

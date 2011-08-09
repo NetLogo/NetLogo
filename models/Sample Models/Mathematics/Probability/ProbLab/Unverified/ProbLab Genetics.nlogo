@@ -747,7 +747,7 @@ In terms of interactions between breeds, several NetLogo models track the number
 
 In Expected Value Advanced, a model of the ProbLab Curriculum, the same metaphor of roaming fish is used.  As in this model, where a fish carries the value of the number of green squares in its 4-block, fish in Expected Value Advanced carry an underlying monetary value that may be collected and quantified.  Additionally, the fish's appearance is dependent on their underlying value (the larger the value, the lighter the body color).
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 

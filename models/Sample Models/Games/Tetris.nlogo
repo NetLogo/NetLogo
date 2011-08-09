@@ -630,7 +630,7 @@ Add the option of including pieces composed of more than four blocks, or fewer.
 
 This model makes use of turtle breeds.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

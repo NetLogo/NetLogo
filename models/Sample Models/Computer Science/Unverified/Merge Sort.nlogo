@@ -343,7 +343,7 @@ This model uses lists extensively.
 
 Note that NetLogo includes SORT and SORT-BY primitives; normally, you would just use one of these, rather than implementing a sort algorithm yourself.  SORT arranges items in ascending order; SORT-BY lets you specify how items are to be ordered.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

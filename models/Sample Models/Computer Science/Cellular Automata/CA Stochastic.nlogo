@@ -645,7 +645,7 @@ Turbulence (in Chemistry & Physics) - a continuous cellular automata that exhibi
 Ising (in Chemistry & Physics) - a microscopic view of a magnetic field which undergoes phase changes with respect to temperature
 DLA (in Chemistry & Physics) - a growth model demonstrating how the accumulation of randomly placed particles can lead to complex structures found throughout nature
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Chate, H. & Manneville, P. (1990). Criticality in cellular automata. Physica D (45), 122-135.
 Li, W., Packard, N., & Langton, C. (1990). Transition Phenomena in Cellular Automata Rule Space. Physica D (45), 77-94.

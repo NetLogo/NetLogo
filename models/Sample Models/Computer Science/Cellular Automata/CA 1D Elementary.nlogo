@@ -558,7 +558,7 @@ CA 1D Rule 250 - the basic rule 250 model
 CA 1D Totalistic - a model that shows all 2,187 possible 1D 3-color totalistic cellular automata.
 CA Stochastic- the probabalistic counterpart to this model
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Thanks to Eytan Bakshy, Geoff Hulette, and Erich Neuwirth for their help with this model.
 

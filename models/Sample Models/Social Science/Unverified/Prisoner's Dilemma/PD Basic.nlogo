@@ -250,7 +250,7 @@ PD N-Person Iterated
 
 PD Basic Evolutionary
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

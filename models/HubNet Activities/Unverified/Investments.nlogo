@@ -347,7 +347,7 @@ Currently all of the conditions of the world are controlled by input from the te
 
 Public Good
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

@@ -978,7 +978,7 @@ Create a model of heat transfer that shows what happens to the energy of one ver
 See GasLab Models
 See other Connected Chemistry models.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

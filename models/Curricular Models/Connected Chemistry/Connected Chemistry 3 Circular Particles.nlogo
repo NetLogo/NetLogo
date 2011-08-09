@@ -810,7 +810,7 @@ The global variable VIEW-UPDATE-RATE determines the minimum number of simulation
 See GasLab Circular Particles
 See other Connected Chemistry models.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true
