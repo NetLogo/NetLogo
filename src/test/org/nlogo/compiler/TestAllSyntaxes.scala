@@ -34,7 +34,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_atan number/number,number,OTPL,null,10,2,2
                      |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,null,12,1,1
                      |_autoplot ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_averagepathlength turtle agentset/link agentset,number,OTPL,null,10,2,2
                      |_basecolors ,list,OTPL,null,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,null,10,0,0
                      |_boom ,anything,OTPL,null,10,0,0
@@ -92,7 +91,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_inlinkfrom agent,agent,-T--,null,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,null,10,1,1
                      |_inlinkneighbors ,agentset,-T--,null,10,0,0
-                     |_innetworkradius turtle agentset,number/link agentset,turtle agentset,-T--,null,12,2,2
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,null,12,1,1
                      |_inradiusnowrap agentset,number,agentset,-TP-,null,12,1,1
                      |_inrect agentset,number/number,agentset,-TP-,null,12,2,2
@@ -167,9 +165,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_neighbors4 ,patch agentset,-TP-,null,10,0,0
                      |_netlogoapplet ,TRUE/FALSE,OTPL,null,10,0,0
                      |_netlogoversion ,string,OTPL,null,10,0,0
-                     |_networkdistance turtle/link agentset,number,-T--,null,10,2,2
-                     |_networkshortestpathlinks turtle/link agentset,list,-T--,null,10,2,2
-                     |_networkshortestpathnodes turtle/link agentset,list,-T--,null,10,2,2
                      |_newseed ,number,OTPL,null,10,0,0
                      |_nof number/list or agentset,list or agentset,OTPL,null,10,2,2
                      |_nolinks ,link agentset,OTPL,null,10,0,0
@@ -309,7 +304,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_createlinkswith turtle agentset/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkto turtle/command block (optional),-T--,---L,0,2,2 *
                     |_createlinkwith agent/command block (optional),-T--,---L,0,2,2 *
-                    |_createnetworkpreferential turtle agentset/link agentset/number,O---,null,0,3,3 *
                     |_createorderedturtles number/command block (optional),O---,-T--,0,2,2 *
                     |_createtemporaryplotpen string,OTPL,null,0,1,1
                     |_createturtles number/command block (optional),O---,-T--,0,2,2 *
@@ -405,8 +399,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_inspectwithradius agent/number,OTPL,null,0,2,2
                     |_jump number,-T--,null,0,1,1 *
                     |_layoutcircle list or turtle agentset/number,OTPL,null,0,2,2 *
-                    |_layoutmagspring turtle agentset/link agentset/number/number/number/number/number/TRUE/FALSE,OTPL,null,0,8,8 *
-                    |_layoutquick ,OTPL,null,0,0,0 *
                     |_layoutradial turtle agentset/link agentset/turtle,OTPL,null,0,3,3 *
                     |_layoutspring turtle agentset/link agentset/number/number/number,OTPL,null,0,5,5 *
                     |_layouttutte turtle agentset/link agentset/number,OTPL,null,0,3,3 *
