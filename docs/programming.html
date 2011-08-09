@@ -3051,26 +3051,17 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       <img alt="screen shot" src="images/tutte-layout.gif">
     <p>
       <a href="dictionary.html#layout-spring"><tt>layout-spring</tt></a>
-      and <a href=
-      "dictionary.html#layout-magspring"><tt>__layout-magspring</tt></a>
-      are quite similar and are useful for many kinds of networks. The
-      drawback is that they are relatively slow since they take many
-      iterations to converge. In both layouts the links act as springs that
+      is useful for many kinds of networks. The
+      drawback is that is relatively slow since  it takes many
+      iterations to converge. In this layout the links act as springs that
       pull the nodes they connect toward each other and the nodes repel
-      each other. In the magnetic spring there is also a magnetic field
-      pulling the nodes in a compass direction you choose. The strength of
-      all of these forces are controlled by inputs to the primitives. These
+      each other. The strength of
+      the forces is controlled by inputs to the primitives. These
       inputs will always have a value between 0 and 1; keep in mind that
       very small changes can still affect the appearance of the network.
       The springs also have a length (in patch units), however, because of
       all the forces involved the nodes will not end up exactly that
-      distance from each other. The magnetic spring layout also has a
-      boolean input, bidirectional?, which indicates whether the springs
-      should push in both directions parallel to the magnetic field; if it
-      is true the networks will be more evenly spaced.
-    <p class="screenshot">
-      <img alt="screen shot" src="images/magspring-layout.gif"> <img alt=
-      "screen shot" src="images/magspring-bidirectional.gif">
+      distance from each other.
     <blockquote>
       <p>
         <b>Code Examples:</b>Network Example, Network Import Example, Giant
