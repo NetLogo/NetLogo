@@ -17,7 +17,8 @@ def ignore(path: String) =
   path.contains("/extensions/gis/") ||
   path.contains("/src_managed/") ||
   path.contains("/tmp/") ||
-  path.endsWith("Lexer.java")
+  path.endsWith("Lexer.java") ||
+  path.startsWith(".idea")
 
 // probably there are a lot more that could be here
 val extensions =
