@@ -541,6 +541,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 39
@@ -557,6 +558,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 144
@@ -573,6 +575,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 54
@@ -604,6 +607,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 50
@@ -719,6 +723,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 CHOOSER
 747
@@ -838,11 +843,11 @@ PENS
 "mates" 1.0 0 -8630108 true "" "plot  total-mates-found"
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This selection model shows how sexual attraction and predation change the coloration and patterns in guppy's population.
 
-If you have not seen guppies you can see some at the "Sex and the Single Guppy" webpage:
+If you have not seen guppies you can see some at the "Sex and the Single Guppy" webpage:  
 http://www.pbs.org/wgbh/evolution/sex/guppy/low_bandwidth.html
 
 When you run the model, you can either play the role of a predator or the role of a mate.
@@ -853,17 +858,16 @@ You can notice that many guppies are very colorful, have garish patterns and lar
 
 The answer lies in the fact that guppies are driven by more than only a survival instinct. Guppies also desire to reproduce with other guppies and to do this they must be noticed by their mates. The "flashier" a male guppy is, the likelier a female guppy will choose him as a mate, passing his genes to the next generation. This is sexual selection at work, and it is the force that drives guppy's coloration toward conspicuousness just as hard as predation pushes coloration toward drabness.
 
-Thus as a mate, you will again probably notice the more brightly colored guppy males.
+Thus as a mate, you will again probably notice the more brightly colored guppy males.  
 When you click on a colorful mate, he will hatch an offspring, which will likely create another colorful guppy and guppies will increasingly become colorful over generations, pushed by breeding pressure.
 
-Quoting from "Sex and the Single Guppy"  [2]:
+Quoting from "Sex and the Single Guppy"  [2]:  
 There may be several evolutionary reasons why female guppies prefer flashy males. On the most basic level, the male with the biggest, brightest tail spot announces most loudly, "Hey, I'm over here" to any female it can see. Flashy colors are simply easier to locate.  However, there is also research to suggest that bright colors serve as an indicator of good genes in the way the strong physique of a human athlete is a direct indicator of that individual's health and vitality.  Or, bright coloration may signal to a potential mate that he's got something else going for him. After all, he's been able to survive the very handicap -- conspicuousness to predators -- that his flashiness creates.
 
 Whatever the reasons, it is clear from the research of Endler and other evolutionary biologists that male guppies live in the crossfire between their enemies and their would-be mates, with the opposing forces of predation and sexual selection forever pushing the guppy coloration in opposite directions.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 You can assume either the role of a predator or the role of a mate.
 
 When GO is pressed, if you are a predator you should try to click on the guppies, as fast as you can, in order to eat them.  Each time you click on a guppy it will be removed from the guppy population.  At that point, another guppy in the population will hatch an offspring to replace the one that was caught (keeping the population of guppies constant).
@@ -878,56 +882,55 @@ However, guppies looking for a mate exert the opposite selection.  Relatively dr
 
 Guppy populations are evolving to match, and/or stand out, from their environment depending on which of the selective pressures are stronger.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 To run the activity press the GO button.  To start the activity over with the same group of students stop the GO button by pressing it again, press the SETUP button, and press GO again.  To run the activity with a new group of students press the RESET button in the Control Center.
 
-Buttons:
-SETUP - Clears the world and populates the world with fish. All players are set to initial values.
-GO - Runs the simulation, students can login and start eating, or mating with the fish population.
-CHANGE BACKGROUND - loads the image selected in the BACKGROUND chooser into the drawing.
+Buttons:  
+SETUP - Clears the world and populates the world with fish. All players are set to initial values.  
+GO - Runs the simulation, students can login and start eating, or mating with the fish population.  
+CHANGE BACKGROUND - loads the image selected in the BACKGROUND chooser into the drawing.  
 CLEAR BACKGROUND - erases the drawing so the patches show through.
 
-Sliders:
-FISH-SPEED-SCALE - controls how quickly the fish move around the world
-CARRYING-CAPACITY - the simulation will automatically keep CARRYING-CAPACITY fish in the world at all times.  If there are too many fish it will randomly kill some, however, if there are too few fish, a random fish already will automatically be reproduced.  Note that CARRYING-CAPACITY will only be active when the ENFORCE-CAPACITY? switch is in the "on" position.
-MIN-AGE-REPRODUCTION - The minimum amount of time before a fish can reproduce after it is born and since the last time it reproduced.
+Sliders:  
+FISH-SPEED-SCALE - controls how quickly the fish move around the world  
+CARRYING-CAPACITY - the simulation will automatically keep CARRYING-CAPACITY fish in the world at all times.  If there are too many fish it will randomly kill some, however, if there are too few fish, a random fish already will automatically be reproduced.  Note that CARRYING-CAPACITY will only be active when the ENFORCE-CAPACITY? switch is in the "on" position.  
+MIN-AGE-REPRODUCTION - The minimum amount of time before a fish can reproduce after it is born and since the last time it reproduced.  
 BACKGROUND-COLOR - the value of the color of the background (patches), which is only visible when there is no image loaded in the drawing.
 
-Switches:
-ENFORCE-CAPACITY? - When it is on, the simulation automatically maintains number of fish in the world at CARRYING-CAPACITY.
-SHOW-AGE? - When it is on, set the label of each fish to its age.
+Switches:  
+ENFORCE-CAPACITY? - When it is on, the simulation automatically maintains number of fish in the world at CARRYING-CAPACITY.  
+SHOW-AGE? - When it is on, set the label of each fish to its age.  
 ROCK-SHELTERS? - When it is on, a rock shelter is placed on top of the world, as new fish are born they emerge from the rocks rather than appearing where its parent was at the time of reproduction.
 
-Monitors:
-FISH - The number of fish in the world.
-MATES - The number of students logged in as mates.
-PREDATORS - The number of students logged in as predators.
-MATES-LEADER - The name of the student (or indication of a tie) with the highest number of mates found.
-PREDATOR-LEADER - The name of the student (or indication of a tie) with the highest number of prey found.
-MATES-FOUND - The number of mates found by the leader.
-PREY-FOUND - The number of prey found by the leader.
-TOTAL-MATES-FOUND - The number of mates found by all mates.
+Monitors:  
+FISH - The number of fish in the world.  
+MATES - The number of students logged in as mates.  
+PREDATORS - The number of students logged in as predators.  
+MATES-LEADER - The name of the student (or indication of a tie) with the highest number of mates found.  
+PREDATOR-LEADER - The name of the student (or indication of a tie) with the highest number of prey found.  
+MATES-FOUND - The number of mates found by the leader.  
+PREY-FOUND - The number of prey found by the leader.  
+TOTAL-MATES-FOUND - The number of mates found by all mates.  
 TOTAL-PREY-FOUND - The number of prey found by all predators.
 
-Choosers:
-BACKGROUND - Select the name of the background image to use in the world.
+Choosers:  
+BACKGROUND - Select the name of the background image to use in the world.  
 PLAYER-ROLES - Select the type of game to play so you can explore the affects of the two forces (mates and predators) separately and in competition with each other.
 
-Plots:
+Plots:  
 FOUND V TIME - The number of fish found by both predators and mates over time.
 
-Global variables in the procedures to change:
-WANDER-ANGLE - The amount that the fish will wiggle when they move around the world.
-MAX-COLOR-MUTATION-STEP - the maximum amount that a color gene can change by in one step
-CHANCE-MUTATE-COLOR - The percent chance the fish parts will slightly change color when reproduced
-CHANCE-MUTATE-SIZE - The percent chance the fish parts will slightly change size when reproduced
-MAX-FISH-SIZE - A limit on the size fish can grow to, to keep the simulation reasonable
+Global variables in the procedures to change:  
+WANDER-ANGLE - The amount that the fish will wiggle when they move around the world.  
+MAX-COLOR-MUTATION-STEP - the maximum amount that a color gene can change by in one step  
+CHANCE-MUTATE-COLOR - The percent chance the fish parts will slightly change color when reproduced  
+CHANCE-MUTATE-SIZE - The percent chance the fish parts will slightly change size when reproduced  
+MAX-FISH-SIZE - A limit on the size fish can grow to, to keep the simulation reasonable  
 MAX-SIZE-MUTATION-STEP - the maximum amount that a size gene can change by in one step
 
-THINGS TO TRY
--------------
+## THINGS TO TRY
+
 Select ALL MATES in the PLAYER-ROLES chooser, run the activity notice the results, Are the fish very colorful or are they drab?
 
 Do the same with ALL PREDATORS and MATES V PREDATORS, which force wins out in the end?
@@ -936,25 +939,22 @@ Try different backgrounds to see if the drab color of the guppies becomes closer
 
 Try to run the model without using a backdrop, instead adjust the color of the patches using the BACKGROUND-COLOR slider.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 It can sometimes be difficult to click on the fish because catching fish is dependent on patch boundaries, change it so it uses in-radius instead.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-This model uses import-drawing to load high resolution backdrops into the drawing layer. However, the fish do not directly interact with the background, it only affects how the users see the world.
+This model uses `import-drawing` to load high resolution backdrops into the drawing layer. However, the fish do not directly interact with the background; it only affects how the users see the world.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-Bug Hunt Pursuit
+Bug Hunt Pursuit  
 Peppered Moths
 
-
 ## CREDITS AND REFERENCES
-[1] Inspired by Sex and the Single Guppy http://www.pbs.org/wgbh/evolution/sex/guppy/low_bandwidth.html
+
+[1] Inspired by Sex and the Single Guppy http://www.pbs.org/wgbh/evolution/sex/guppy/low_bandwidth.html  
 [2] Sex and the Single Guppy. Conclusion: Exhibitionism Explained http://www.pbs.org/wgbh/evolution/sex/guppy/conclusion.html
 @#$#@#$#@
 default
@@ -1313,7 +1313,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
