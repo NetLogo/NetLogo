@@ -67,7 +67,7 @@ to make-turtles
       ;; would visually overlap the turtle.  ITEM
       ;; is used to look up our day name in the list
       ;; of all day names.
-       set label word (item birthday days) "     "
+       set label word (item birthday days) "        "
      ]
    ]
 end
@@ -93,13 +93,13 @@ end
 GRAPHICS-WINDOW
 152
 10
-397
-524
+432
+731
 4
 11
-21.0
+30.0
 1
-14
+16
 1
 1
 1
@@ -115,7 +115,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-2
+2.0
 
 BUTTON
 25
@@ -509,7 +509,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta2
+NetLogo 5.0beta5
 @#$#@#$#@
 setup
 go
