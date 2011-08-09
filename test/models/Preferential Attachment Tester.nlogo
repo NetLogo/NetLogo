@@ -89,12 +89,6 @@ to layout
   ]
 end
 
-to mag-layout
-  repeat 3 [
-    __layout-magspring turtles links 0.5 1.0 0.4 0.4 0 false
-  ]
-end
-
 to-report bad-intersections [t1 t2]
   let i intersection t1 t2
   if length i = 0
