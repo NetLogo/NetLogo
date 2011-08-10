@@ -308,16 +308,16 @@ public class Renderer
           && (world.observer().targetAgent() == turtle);
 
       return !riding_agent && !turtle.hidden()
-          && (Alpha.getAlpha(turtle) > 0.0 || turtle.hasLabel());
+        && (turtle.alpha() > 0.0 || turtle.hasLabel());
     } else if (agent instanceof Link) {
       Link link = (Link) agent;
-      return !link.hidden() && (Alpha.getAlpha(link) > 0.0 || link.hasLabel());
+      return !link.hidden() && (link.alpha() > 0.0 || link.hasLabel());
     } else if (agent instanceof Patch3D) {
       // Patch3D supports the alpha variable, so check Patch3D
       // before checking the regular Patch.
 
       Patch3D patch = (Patch3D) agent;
-      return Alpha.getAlpha(patch) > 0.0 || patch.hasLabel();
+      return patch.alpha() > 0.0 || patch.hasLabel();
     } else if (agent instanceof Patch) {
       // We will assume all patches are visible. However, perhaps
       // we should only return true for non-black patches.
@@ -429,7 +429,7 @@ public class Renderer
       // as well as link stamps.
       double lineScale = calculateLineScale();
 
-      boolean sortingNeeded = Alpha.sceneHasPartiallyTransparentObjects(world);
+      boolean sortingNeeded = world.hasPartiallyTransparentObjects();
 
       if (!sortingNeeded) {
         worldRenderer.renderPatchShapes
@@ -465,7 +465,7 @@ public class Renderer
 
         for (Agent agent : world.turtles().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -475,7 +475,7 @@ public class Renderer
 
         for (Agent agent : world.patches().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -485,7 +485,7 @@ public class Renderer
 
         for (Agent agent : world.links().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -503,7 +503,7 @@ public class Renderer
           // Link stamps
           for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
             if (agentIsVisible(stamp)) {
-              if (Alpha.agentIsPartiallyTransparent(stamp)) {
+              if (stamp.isPartiallyTransparent()) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -514,7 +514,7 @@ public class Renderer
           // Turtle stamps
           for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
             if (agentIsVisible(stamp)) {
-              if (Alpha.agentIsPartiallyTransparent(stamp)) {
+              if (stamp.isPartiallyTransparent()) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);

@@ -47,4 +47,5 @@ trait World {
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
+  def hasPartiallyTransparentObjects: Boolean
 }

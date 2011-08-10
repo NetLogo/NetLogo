@@ -30,7 +30,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       // label. The label should get drawn a little lower for invisible patches
       // (See ShapeRenderer(3D).renderWrappedAgent() for label rendering for
       // visible patches).
-      if(Alpha.getAlpha(patch) == 0.0 && patch.hasLabel) {  // TODO: Possibility of floating error here (and in Renderer.agentIsVisible() method).
+      if(patch.alpha == 0.0 && patch.hasLabel) {  // TODO: Possibility of floating error here (and in Renderer.agentIsVisible() method).
         val scale = Renderer.WORLD_SCALE
         gl.glPushMatrix()
         val coords = getPatchCoords(patch)
@@ -65,7 +65,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       val shape3D = shapeRenderer.getShape("@@@PATCH@@@")
       for(id <- 0 until numPatches) {
         val patch = world.getPatch(id).asInstanceOf[Patch3D]
-        if(Alpha.getAlpha(patch) == 0.0) {
+        if(patch.alpha == 0.0) {
           // If a patch is invisible, but has a label, we still need to render that label. The label
           // should get drawn a little lower for invisible patches (See
           // ShapeRenderer(3D).renderWrappedAgent() for label rendering for visible patches).

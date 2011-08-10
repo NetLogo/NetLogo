@@ -555,4 +555,9 @@ public strictfp class Patch
   public Patch getPatchNorthEast() {
     return world.getTopology().getPNE(this);
   }
+
+  public int alpha() {
+    return org.nlogo.api.Color.getColor(pcolor()).getAlpha();
+  }
+
 }

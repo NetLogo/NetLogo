@@ -20,6 +20,13 @@ trait Agent {
   /** Returns the size of this agent */
   def size: Double
 
+  /**
+   * 0-255, 0 = invisible, 255 = opaque
+   */
+  def alpha: Int
+
+  def isPartiallyTransparent: Boolean
+
   /** Sets the variable in the position vn of the agent variable array to value
     * @param vn    the index into the agent variable array
     * @param value the new value for the variable

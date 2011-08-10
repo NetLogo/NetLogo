@@ -1352,4 +1352,8 @@ public strictfp class World
     return AllStoredValues.apply(this);
   }
 
+  public boolean hasPartiallyTransparentObjects() {
+    return Alpha.hasPartiallyTransparentObjects(this);
+  }
+
 }

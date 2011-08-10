@@ -325,4 +325,14 @@ public final strictfp class Patch3D
   public String toString() {
     return "patch " + pxcor + " " + pycor + " " + pzcor;
   }
+
+  // special case black, non-RGB 3D patches to be invisible.  kinda janky to have a special case
+  // like that but until we have an alpha variable I guess it's the least bad design. - ST 4/20/11
+  @Override
+  public int alpha() {
+    return pcolor().equals(Color.BoxedBlack())
+      ? 0
+      : Color.getColor(pcolor()).getAlpha();
+  }
+
 }

@@ -459,4 +459,13 @@ public strictfp class TurtleData
   public Object[] variables() {
     throw new UnsupportedOperationException();
   }
+
+  public int alpha() {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean isPartiallyTransparent() {
+    throw new UnsupportedOperationException();
+  }
+
 }

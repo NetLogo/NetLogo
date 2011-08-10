@@ -557,4 +557,9 @@ public strictfp class Observer
         rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),
         rotationPoint.z());
   }
+
+  public int alpha() {
+    return 0;
+  }
+
 }

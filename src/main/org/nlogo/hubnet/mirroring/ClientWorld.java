@@ -823,4 +823,9 @@ public strictfp class ClientWorld
   public scala.collection.Iterator<Object> allStoredValues() {
     throw new UnsupportedOperationException();
   }
+
+  public boolean hasPartiallyTransparentObjects() {
+    return false;
+  }
+
 }

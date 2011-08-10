@@ -1208,4 +1208,10 @@ public strictfp class Turtle
   public int getAgentBit() {
     return BIT;
   }
+
+  public int alpha() {
+    return org.nlogo.api.Color.getColor(color()).getAlpha();
+  }
+
+
 }

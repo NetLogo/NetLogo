@@ -672,4 +672,8 @@ public strictfp class Link
     return world.compareLinkBreeds(getBreed(), otherLink.getBreed());
   }
 
+  public int alpha() {
+    return org.nlogo.api.Color.getColor(color()).getAlpha();
+  }
+
 }
