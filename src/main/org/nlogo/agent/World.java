@@ -650,10 +650,20 @@ public strictfp class World
     patchColorsDirty = false;
   }
 
+  // performance optimization -- avoid drawing an all-black bitmap if we
+  // could just paint one big black rectangle
   boolean patchesAllBlack = true;
-
   public boolean patchesAllBlack() {
     return patchesAllBlack;
+  }
+
+  // performance optimization for 3D renderer -- avoid sorting by distance
+  // from observer unless we need to.  once this flag becomes true, we don't
+  // work as hard as we could to return it back to false, because doing so
+  // would be expensive.  we just reset it at clear-all time.
+  boolean mayHavePartiallyTransparentObjects = false;
+  public boolean mayHavePartiallyTransparentObjects() {
+    return mayHavePartiallyTransparentObjects;
   }
 
   public int[] patchColors() {
@@ -729,6 +739,7 @@ public strictfp class World
     _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
     patchesWithLabels = 0;
     patchesAllBlack = true;
+    mayHavePartiallyTransparentObjects = false;
   }
 
   public void clearAll() {
@@ -738,6 +749,7 @@ public strictfp class World
     clearGlobals();
     clearLinks();
     _observer.resetPerspective();
+    mayHavePartiallyTransparentObjects = false;
   }
 
   // in a 2D world the drawing lives in the
@@ -1350,10 +1362,6 @@ public strictfp class World
 
   public scala.collection.Iterator<Object> allStoredValues() {
     return AllStoredValues.apply(this);
-  }
-
-  public boolean hasPartiallyTransparentObjects() {
-    return Alpha.hasPartiallyTransparentObjects(this);
   }
 
 }

@@ -431,6 +431,9 @@ public strictfp class Patch
           ((Double) rgb.get(2)).intValue());
       world.patchColorsDirty = true;
       world.patchesAllBlack = false;
+      if(rgb.size() > 3) {
+        world.mayHavePartiallyTransparentObjects = true;
+      }
     }
   }
 

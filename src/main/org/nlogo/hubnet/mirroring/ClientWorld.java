@@ -824,7 +824,7 @@ public strictfp class ClientWorld
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasPartiallyTransparentObjects() {
+  public boolean mayHavePartiallyTransparentObjects() {
     return false;
   }
 

@@ -598,6 +598,9 @@ public strictfp class Turtle
       throws AgentException {
     validRGBList(rgb, true);
     variables[varIndex] = rgb;
+    if(rgb.size() > 3) {
+      world.mayHavePartiallyTransparentObjects = true;
+    }
   }
 
   public void turnRight(double delta) {

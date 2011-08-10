@@ -429,7 +429,7 @@ public class Renderer
       // as well as link stamps.
       double lineScale = calculateLineScale();
 
-      boolean sortingNeeded = world.hasPartiallyTransparentObjects();
+      boolean sortingNeeded = world.mayHavePartiallyTransparentObjects();
 
       if (!sortingNeeded) {
         worldRenderer.renderPatchShapes

@@ -266,6 +266,7 @@ public final strictfp class World3D
     _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
     patchesWithLabels = 0;
     patchesAllBlack = true;
+    mayHavePartiallyTransparentObjects = false;
   }
 
   /// export world
