@@ -5,8 +5,10 @@ import collection.JavaConverters._
 
 private object Alpha {
 
-  def agentIsPartiallyTransparent(agent: Agent) =
-    getAlpha(agent) < 255
+  def agentIsPartiallyTransparent(agent: Agent) = {
+    val alpha = getAlpha(agent)
+    alpha > 0 && alpha < 255
+  }
 
   def getAlpha(agent: Agent) = {
     val color = agent match {
