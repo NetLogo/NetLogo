@@ -114,6 +114,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   def pause() {
     pause(updatePolicy.slowdown _)
   }
+  // here we might be on either thread, depending on which kind of pause this is - ST 8/10/11
   private def pause(length: () => Long) {
     val timeToBed = nanoTime
     var remaining = length()
