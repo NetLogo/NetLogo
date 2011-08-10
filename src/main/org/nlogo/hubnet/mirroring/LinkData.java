@@ -550,4 +550,8 @@ public strictfp class LinkData
   public Object getVariable(int vn) {
     throw new UnsupportedOperationException();
   }
+
+  public Object[] variables() {
+    throw new UnsupportedOperationException();
+  }
 }

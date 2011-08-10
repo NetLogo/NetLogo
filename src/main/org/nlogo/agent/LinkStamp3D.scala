@@ -24,5 +24,6 @@ extends org.nlogo.api.LinkStamp3D {
   override def classDisplayName = ""
   override def getVariable(vn: Int) = unsupported
   override def setVariable(vn: Int, value: AnyRef) = unsupported
+  override def variables = unsupported
   private def unsupported = throw new UnsupportedOperationException
 }

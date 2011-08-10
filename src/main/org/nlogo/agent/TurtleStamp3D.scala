@@ -27,6 +27,7 @@ extends org.nlogo.api.TurtleStamp3D {
   override def dz = 0
   override def getVariable(vn: Int) = unsupported
   override def setVariable(vn: Int, value: AnyRef) = unsupported
+  override def variables = unsupported
 
   private def unsupported = throw new UnsupportedOperationException
 }

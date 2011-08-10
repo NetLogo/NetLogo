@@ -297,6 +297,8 @@ public strictfp class FileMenu
       final String exportPath = org.nlogo.swing.FileDialog.show
           (FileMenu.this, "Export World", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("world.csv"));
+      TaskWarning.maybeWarn(org.nlogo.awt.Utils.getFrame(FileMenu.this),
+                            app.workspace().world());
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply

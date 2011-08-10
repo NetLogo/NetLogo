@@ -1347,4 +1347,9 @@ public strictfp class World
   public CompilerServices compiler() {
     return _compiler;
   }
+
+  public scala.collection.Iterator<Object> allStoredValues() {
+    return AllStoredValues.apply(this);
+  }
+
 }

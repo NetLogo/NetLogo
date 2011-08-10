@@ -25,6 +25,7 @@ public abstract strictfp class Agent
     return id;
   }
 
+  public Object[] variables() { return variables; }
   public Object[] variables = null; // public ONLY for __fire
   ValueConstraint[] variableConstraints = null;
 

@@ -46,4 +46,5 @@ trait World {
   def linksOwnNameAt(i: Int): String
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
+  def allStoredValues: Iterator[AnyRef]
 }

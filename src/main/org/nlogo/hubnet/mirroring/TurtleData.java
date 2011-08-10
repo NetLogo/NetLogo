@@ -455,4 +455,8 @@ public strictfp class TurtleData
   public void setVariable(int vn, Object value) {
     throw new UnsupportedOperationException();
   }
+
+  public Object[] variables() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -35,4 +35,9 @@ trait Agent {
     */
   def getVariable(vn: Int): AnyRef
 
+  /** Returns raw array of all agent variables.  Warning: this method is liable to change return type
+    * in a future API version.
+    */
+  def variables: Array[AnyRef]
+
 }

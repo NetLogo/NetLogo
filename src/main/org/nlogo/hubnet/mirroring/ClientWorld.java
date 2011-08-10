@@ -819,4 +819,8 @@ public strictfp class ClientWorld
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int i) {
     throw new UnsupportedOperationException();
   }
+
+  public scala.collection.Iterator<Object> allStoredValues() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -131,21 +131,22 @@ class TurtleTestsDrawer extends MockSuite {
                         label: String = "",
                         labelColor: Object = white)
   extends Turtle {
-    def classDisplayName = "TestTurtle"
-    def id = 0
-    def xcor = 0
-    def ycor = 0
-    def heading = 0
-    def lineThickness = 0
-    def hasLabel = label!=""
-    def labelString = label
-    def world: World = sys.error("unimplemented")
-    def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
-    def getVariable(vn:Int) = sys.error("unimplemented")
-    def heading( d:Double ) = sys.error("unimplemented")
-    def getBreed: AgentSet = sys.error("unimplemented")
-    def getBreedIndex = sys.error("unimplemented")
-    def getPatchHere = sys.error("unimplemented")
-    def jump(distance:Double) = sys.error("unimplemented")
+    override def classDisplayName = "TestTurtle"
+    override def id = 0
+    override def xcor = 0
+    override def ycor = 0
+    override def heading = 0
+    override def lineThickness = 0
+    override def hasLabel = label!=""
+    override def labelString = label
+    override def world: World = sys.error("unimplemented")
+    override def setVariable(vn:Int,value:Object) = sys.error("unimplemented")
+    override def getVariable(vn:Int) = sys.error("unimplemented")
+    override def variables = sys.error("unimplemented")
+    override def heading( d:Double ) = sys.error("unimplemented")
+    override def getBreed: AgentSet = sys.error("unimplemented")
+    override def getBreedIndex = sys.error("unimplemented")
+    override def getPatchHere = sys.error("unimplemented")
+    override def jump(distance:Double) = sys.error("unimplemented")
   }
 }
