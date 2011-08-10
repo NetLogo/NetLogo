@@ -1,4 +1,4 @@
-scalaVersion := "2.9.0-1"
+scalaVersion := "2.9.1.RC2"
 
 name := "NetLogo"
 

@@ -27,7 +27,7 @@ TOUCH=touch
 XARGS=xargs
 
 # other
-SCALA=2.9.0-1
+SCALA=2.9.1.RC2
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
