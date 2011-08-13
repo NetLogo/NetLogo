@@ -285,10 +285,8 @@ class ConnectionManager(val connection: ConnectionInterface,
     import WidgetTypes._
     try {
       message.widget match {
-        case Slider | Switch =>
+        case Slider | Switch | Chooser | Input =>
           execute("set " + message.tag.toString + " " + message.content.toString)
-        case Chooser | Input =>
-          execute("set " + message.tag.toString + " \"" + message.content.toString + "\"")
         case Button =>
           // Find matching button based on display name or source code. Note: we are currently
           // not supporting forever buttons.
