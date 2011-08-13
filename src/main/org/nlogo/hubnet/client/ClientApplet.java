@@ -81,45 +81,90 @@ public strictfp class ClientApplet
     clientPanel.setDisplayOn(false);
   }
 
-  // Returns true if the port number was supplied as a parameter to the applet,
-  // like so:
+  // Returns information about the parameters that are understood by this applet.  Each element of the
+  // array is a set of three Strings containing the name, the type, and a description. Parameters are
+  // supplied in the applet tag like this:
+  //
   // <applet code="...">
+  //    <param name="role" value="controller">
   //    <param name="port" value="9173">
   // </applet>
-  private boolean hasPortParam() {
-    return getParameter("port") != null;
+  @Override
+  public String[][] getParameterInfo() {
+    String pinfo[][] = {
+        {"role",  "String",   "If specified, then the login dialog will be skipped and the applet will log in "
+                            + "immediately with the specified role, which can be either \"controller\" or "
+                            + "\"participant\"."},
+        {"user",  "String",   "The user name to use for connecting to the activity. This is only used if the "
+                            + "\"role\" parameter was also specified. A default user name will be used if this "
+                            + "parameter is omitted."},
+        {"port",  "String",   "The port number to connect to."}
+    };
+    return pinfo;
   }
 
-  // Returns the default port number that should be pre-filled in the login dialog.
+  // Returns true if the given parameter was supplied in the applet.
+  private boolean hasParam(String param) {
+    return getParameter(param) != null;
+  }
+
+  // Returns the default port number that should be used for connecting to the activity, or pre-filled
+  // in the login dialog.
   private int getDefaultPort() {
-    return hasPortParam() ? Integer.parseInt(getParameter("port")) : Ports.DEFAULT_PORT_NUMBER();
+    return hasParam("port") ? Integer.parseInt(getParameter("port")) : Ports.DEFAULT_PORT_NUMBER();
+  }
+
+  // Returns the username to use for logging in to the activity. This is only used when the login
+  // dialog is skipped.
+  private String getDefaultUsername() {
+    if (hasParam("user"))
+      return getParameter("user");
+
+    if (getParameter("role").equals("controller"))
+      return "controller";
+
+    // "user" will be the default if the role is "participant" or if the role is unspecified.
+    return "user";
   }
 
   public void go(final String server, final boolean isApplet) {
     org.nlogo.awt.Utils.invokeLater(new Runnable() {
       public void run() {
-        loginDialog = new LoginDialog
-            (new Frame(), "", server, getDefaultPort(), !isApplet);
-        loginDialog.addWindowListener
-            (new java.awt.event.WindowAdapter() {
-              @Override
-              public void windowClosing(java.awt.event.WindowEvent e) {
-                clientPanel.logout();
-                attemptLogin = false;
-                if (!isApplet) {
-                  System.exit(0);
-                }
-              }
-            });
 
-        org.nlogo.awt.Utils.center(loginDialog, null);
-        doLogin();
+        if (hasParam("role") && getParameter("role").equals("controller")) {
+          login(getDefaultUsername(), server, getDefaultPort(), ClientRoles.Controller());
+        }
+        else if (hasParam("role") && getParameter("role").equals("participant")) {
+          login(getDefaultUsername(), server, getDefaultPort(), ClientRoles.Participant());
+        }
+        else {
+          showLoginDialog(server, isApplet);
+        }
       }
     });
   }
 
   private LoginDialog loginDialog;
   private boolean attemptLogin = true;
+
+  private void showLoginDialog(final String server, final boolean isApplet) {
+    loginDialog = new LoginDialog
+        (new Frame(), "", server, getDefaultPort(), !isApplet);
+    loginDialog.addWindowListener
+        (new java.awt.event.WindowAdapter() {
+          @Override
+          public void windowClosing(java.awt.event.WindowEvent e) {
+            clientPanel.logout();
+            attemptLogin = false;
+            if (!isApplet) {
+              System.exit(0);
+            }
+          }
+        });
+
+    org.nlogo.awt.Utils.center(loginDialog, null);
+    doLogin();
+  }
 
   private void doLogin() {
     if (attemptLogin && !loginDialog.isVisible()) {
