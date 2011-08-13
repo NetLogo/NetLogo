@@ -475,7 +475,24 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   private val widgetValues = new HashMap[String, AnyRef]
 
-  private def getNewWidgetValue(reporter:String) : AnyRef = {
+  // When updating monitor values, we want to avoid runtime errors when the monitor value is
+  // invalid.  We'll use a new job owner with a different name to distinguish the update procedures
+  // for monitors from the update procedures for all the other widget types.
+  //
+  // In HubNet activities, it's pretty common to have monitors whose values aren't valid until
+  // the activity is started and there are clients connected.  In the full application, this
+  // won't cause a runtime error (see: GUIWorkspace.runtimeErrorPrivate) and the monitor will
+  // simply display "N/A".
+  //
+  // This attempts to do the same thing in headless - in HeadlessWorkspace.runtimeError, we'll
+  // check if the job owner is this monitorUpdater, and if so, we'll avoid throwing an exception.
+  lazy val monitorUpdater = new SimpleJobOwner("ConnectionManager (monitor updater)", workspace.world.auxRNG, classOf[Observer])
+
+  // For widget types other than monitors, we'll use the existing JobOwner defined in the
+  // ConnectionManager class.
+  lazy val regularWidgetUpdater = owner
+
+  private def getNewWidgetValue(owner: JobOwner, reporter:String) : AnyRef = {
     val procedure = widgetReporterProcedures.getOrElseUpdate(reporter,
       workspace.compileReporter(reporter))
     workspace.jobManager.addReporterJobAndWait(owner, workspace.world.observers, procedure)
@@ -486,7 +503,7 @@ class ConnectionManager(val connection: ConnectionInterface,
       workspace.serverWidgetSpecs.foreach(widget =>
         widget match {
           case i: InterfaceGlobalWidgetSpec =>
-            val newValue = getNewWidgetValue(i.name)
+            val newValue = getNewWidgetValue(regularWidgetUpdater, i.name)
             if(!widgetValues.contains(i.name) || widgetValues(i.name) != newValue) {
               controllerClients.foreach(_.sendData(WidgetControl(newValue, i.name)))
             }
@@ -495,7 +512,10 @@ class ConnectionManager(val connection: ConnectionInterface,
             // m.source is an option because for hubnet, the regular hubnet client monitors dont have source.
             // there might be a better way to handle this, but its ok for now.
             m.source.foreach{ source =>
-              val newValue = getNewWidgetValue(source)
+              val newValue = getNewWidgetValue(monitorUpdater, source) match {
+                case error: LogoException => "N/A"
+                case result => result
+              }
               if(!widgetValues.contains(source) || widgetValues(source) != newValue) {
                 controllerClients.foreach(_.sendData(WidgetControl(newValue, m.displayName.getOrElse(source))))
               }

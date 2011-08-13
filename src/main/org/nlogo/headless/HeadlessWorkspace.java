@@ -771,12 +771,20 @@ public strictfp class HeadlessWorkspace
    */
   public void runtimeError(org.nlogo.api.JobOwner owner, org.nlogo.nvm.Context context,
                            org.nlogo.nvm.Instruction instruction, Exception ex) {
-    if (ex instanceof org.nlogo.api.LogoException) {
-      lastLogoException = (org.nlogo.api.LogoException) ex;
-      lastErrorReport = new ErrorReport(owner, context, instruction, ex);
-    } else {
-      System.err.println("owner: " + owner.displayName());
-      org.nlogo.util.Exceptions.handle(ex);
+
+    // Avoid runtime errors for monitor widgets.
+    // See also:
+    //  * comment above ConnectionManager.monitorUpdater.
+    //  * comment in GUIWorkspace.runtimeErrorPrivate() where we check if the
+    //    owner is an instance of MonitorWidget
+    if (!(owner.displayName().equals("ConnectionManager (monitor updater)"))) {
+      if (ex instanceof org.nlogo.api.LogoException) {
+        lastLogoException = (org.nlogo.api.LogoException) ex;
+        lastErrorReport = new ErrorReport(owner, context, instruction, ex);
+      } else {
+        System.err.println("owner: " + owner.displayName());
+        org.nlogo.util.Exceptions.handle(ex);
+      }
     }
   }
 
