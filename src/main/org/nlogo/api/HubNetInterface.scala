@@ -89,6 +89,7 @@ trait HubNetInterface extends ViewInterface {
   def showControlCenter()
 
   /// network info
+  def getPort: Int
   def getOutQueueSize: Double
   def getInQueueSize: Int
 

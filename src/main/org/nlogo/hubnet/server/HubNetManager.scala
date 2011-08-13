@@ -208,6 +208,12 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// network info
   @throws(classOf[HubNetException])
+  def getPort: Int = {
+    checkRunningStatus()
+    connectionManager.port
+  }
+
+  @throws(classOf[HubNetException])
   def getOutQueueSize: Double = {
     checkRunningStatus()
     val queueSizes = connectionManager.clientSendQueueSizes

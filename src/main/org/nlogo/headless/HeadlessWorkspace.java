@@ -116,6 +116,10 @@ public strictfp class HeadlessWorkspace
 
   private final CompilerInterface compiler;
 
+  public HubNetInterface hubnetManager() {
+    return super.hubnetManager();
+  }
+
   @Override
   public CompilerInterface compiler() {
     return compiler;
