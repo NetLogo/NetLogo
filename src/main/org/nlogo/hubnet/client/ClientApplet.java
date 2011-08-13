@@ -81,11 +81,25 @@ public strictfp class ClientApplet
     clientPanel.setDisplayOn(false);
   }
 
+  // Returns true if the port number was supplied as a parameter to the applet,
+  // like so:
+  // <applet code="...">
+  //    <param name="port" value="9173">
+  // </applet>
+  private boolean hasPortParam() {
+    return getParameter("port") != null;
+  }
+
+  // Returns the default port number that should be pre-filled in the login dialog.
+  private int getDefaultPort() {
+    return hasPortParam() ? Integer.parseInt(getParameter("port")) : Ports.DEFAULT_PORT_NUMBER();
+  }
+
   public void go(final String server, final boolean isApplet) {
     org.nlogo.awt.Utils.invokeLater(new Runnable() {
       public void run() {
         loginDialog = new LoginDialog
-            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), !isApplet);
+            (new Frame(), "", server, getDefaultPort(), !isApplet);
         loginDialog.addWindowListener
             (new java.awt.event.WindowAdapter() {
               @Override
