@@ -20,6 +20,14 @@ extends javax.swing.JPanel
 with org.nlogo.util.Exceptions.Handler
 with Event.LinkParent {
 
+  /// LinkComponent stuff
+
+  val linkComponents: JList[AnyRef] = new ArrayList[AnyRef]
+  /** internal use only */
+  def addLinkComponent(c: AnyRef) { linkComponents.add(c) }
+  /** internal use only */
+  override def getLinkChildren = linkComponents.toArray
+
   /**
    * The NetLogoListenerManager stored in this field can be used to add and remove NetLogoListeners,
    * so the embedding environment can receive notifications of events happening within NetLogo.
@@ -117,14 +125,6 @@ with Event.LinkParent {
         ex.printStackTrace(System.err)
     }
   }
-
-  /// LinkComponent stuff
-
-  val linkComponents: JList[AnyRef] = new ArrayList[AnyRef]
-  /** internal use only */
-  def addLinkComponent(c: AnyRef) { linkComponents.add(c) }
-  /** internal use only */
-  override def getLinkChildren = linkComponents.toArray
 
   /**
    * Runs NetLogo commands and waits for them to complete.
