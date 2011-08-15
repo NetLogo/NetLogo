@@ -391,8 +391,8 @@ menu.tools.hubnetControlCenter.unknown = UNKNOWN
 menu.tools.hubnetControlCenter.serverAddress = Server address:
 menu.tools.hubnetControlCenter.portNumber = Port number:
 menu.tools.hubnetControlCenter.settings = Settings:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' joined from: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' disconnected.
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}'' joined from: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}'' disconnected.
 
 view.3d.orbit = Orbit
 view.3d.zoom = Zoom
