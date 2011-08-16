@@ -32,7 +32,7 @@ object InfoFormatter {
   def toInnerHtml(str: MarkDownString): HTML =
     // SMARTYPANTS beautifies quotes, dashes, etc.
     // AUTOLINKS lets you omit the angle brackets around URLs and email addresses
-    // HARDWRAPS enables GitHub flavored newlines (http://github.github.com/github-flavored-markdown/)
+    // HARDWRAPS enables GitHub flavored newlines (github.github.com/github-flavored-markdown/)
     PostProcessor(
       new PegDownProcessor(Extensions.SMARTYPANTS | Extensions.AUTOLINKS | Extensions.HARDWRAPS)
         .markdownToHtml(str)
