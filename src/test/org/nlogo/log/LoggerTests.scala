@@ -54,7 +54,6 @@ class LoggerTests extends FunSuite {
     expect(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
-    println(log)
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
@@ -73,7 +72,6 @@ class LoggerTests extends FunSuite {
     expect(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
-    println(log)
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
