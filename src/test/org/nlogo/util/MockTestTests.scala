@@ -1,7 +1,5 @@
 package org.nlogo.util
 
-import org.jmock.api.ExpectationError
-
 class MockSuiteTests extends MockSuite{
   trait X{
     def i(i:Int)
@@ -47,12 +45,12 @@ class MockSuiteTests extends MockSuite{
     expecting{
       one(x).a(arg(a[Int]))
     }
-    val e = intercept[ExpectationError] {
+    val e = intercept[AssertionError] {
       when {
         x.a("not an int")
       }
     }
-    val errorMessage = """|unexpected invocation: x.a("not an int")
+    val errorMessage = """|java.lang.AssertionError: unexpected invocation: x.a("not an int")
                           |expectations:
                           |  expected once, never invoked: x.a(<int>); returns a default value
                           |what happened before this: nothing!""".stripMargin
@@ -64,12 +62,12 @@ class MockSuiteTests extends MockSuite{
     expecting{
       one(x).a(arg(a[Char]))
     }
-    val e = intercept[ExpectationError] {
+    val e = intercept[AssertionError] {
       when {
         x.a("not an char")
       }
     }
-    val errorMessage = """|unexpected invocation: x.a("not an char")
+    val errorMessage = """|java.lang.AssertionError: unexpected invocation: x.a("not an char")
                           |expectations:
                           |  expected once, never invoked: x.a(<char>); returns a default value
                           |what happened before this: nothing!""".stripMargin
