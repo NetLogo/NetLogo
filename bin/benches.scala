@@ -12,7 +12,7 @@ import collection.mutable.{HashMap,ListBuffer,HashSet}
 val results = new HashMap[String,ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
-shell("""java -classpath target/scala_2.9.1.RC2/classes:project/boot/scala-2.9.1.RC2/lib/scala-library.jar:resources org.nlogo.headless.Main --fullversion""")
+shell("""java -classpath target/scala_2.9.1.RC3/classes:project/boot/scala-2.9.1.RC3/lib/scala-library.jar:resources org.nlogo.headless.Main --fullversion""")
   .foreach(println)
 
 val isOfficialBenchmarkingLaptop = shell("hostname").next.trim == "seth2.local"
