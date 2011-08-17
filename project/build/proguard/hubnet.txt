@@ -39,12 +39,25 @@
 # HubNet uses java.io.Serializable, so we need this, taken from the ProGuard manual
 # http://proguard.sourceforge.net/index.html#/manual/examples.html#serializable
 # this is what I needed to avoid weird serialversionuid issues. -JC 7/15/2011
--keepclassmembers class ** implements java.io.Serializable {
+-keepclassmembers class org.nlogo.** implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
     !static !transient <fields>;
     !private <fields>;
     !private <methods>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+# for the Scala collections, we need to keep enough stuff that we can serialize
+# and deserialize, but not so much stuff that serialVersionUIDs don't change
+# (since in Streamable we ignore id mismatches) - ST 8/17/11
+-keepclassmembers class scala.collection.** implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
     private void writeObject(java.io.ObjectOutputStream);
     private void readObject(java.io.ObjectInputStream);
     java.lang.Object writeReplace();
