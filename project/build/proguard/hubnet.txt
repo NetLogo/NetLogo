@@ -39,7 +39,7 @@
 # HubNet uses java.io.Serializable, so we need this, taken from the ProGuard manual
 # http://proguard.sourceforge.net/index.html#/manual/examples.html#serializable
 # this is what I needed to avoid weird serialversionuid issues. -JC 7/15/2011
--keepclassmembers class org.nlogo.** implements java.io.Serializable {
+-keepclassmembers class ** implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
     !static !transient <fields>;
