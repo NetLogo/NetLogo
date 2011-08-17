@@ -2,7 +2,8 @@ package org.nlogo.util
 
 import org.scalatest.FunSuite
 
-import org.scalacheck.{Properties, Prop}
+import org.scalacheck.{Properties, Prop, Gen, Arbitrary}
+import Arbitrary.arbitrary
 import Prop._
 
 // These are actually tests for the Utils class.
@@ -31,8 +32,8 @@ object UtilsTests2 extends Properties("Utils") {
       ns == Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns)))
 
   property("reader2String is inverse of StringReader") =
-    forAll((ns: String, bufferSize: Int) =>
-      (bufferSize > 0 && bufferSize <= 4096) ==>  // we don't need to test gigantic buffers - ST 12/22/09
-        { ns == Utils.reader2String(new java.io.StringReader(ns), bufferSize) })
+    forAll(arbitrary[String], Gen.chooseNum(1, 4096)) {
+      (ns: String, bufferSize: Int) =>
+        { ns == Utils.reader2String(new java.io.StringReader(ns), bufferSize) }}
 
 }
