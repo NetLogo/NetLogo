@@ -6,9 +6,9 @@ import java.util.Arrays
 import org.nlogo.hubnet.protocol.DiscoveryMessage
 
 object DiscoveryListener {
-  /**The multicast group for server discovery **/
+  /**The multicast group for server discovery */
   val SERVER_DISCOVERY_MULTICAST_GROUP = "228.5.8.80" // NOPMD pmd doesn't like hardcoded IPv4 addresses
-  /**The multicast port for server discovery **/
+  /**The multicast port for server discovery */
   val SERVER_DISCOVERY_MULTICAST_PORT = 5885
 }
 
@@ -17,7 +17,7 @@ object DiscoveryListener {
  * broadcast by a  { @link org.nlogo.hubnet.server.DiscoveryAnnouncer }
  * in the server. When a message is received, it notifies an  { @link AnnouncementListener }.
  * @see org.nlogo.hubnet.protocol.DiscoveryMessage
- **/
+ */
 class DiscoveryListener extends Thread {
   import DiscoveryListener._
 
@@ -31,7 +31,7 @@ class DiscoveryListener extends Thread {
   /**
    * Sets the specified announcement listener to receive messages from this discovery listener.
    * @param listener the announcement listener
-   **/
+   */
   def setAnnouncementListener(listener: AnnouncementListener) {
     synchronized {this.listener = listener}
   }
@@ -40,20 +40,20 @@ class DiscoveryListener extends Thread {
    * Removes the specified announcement listener so that it
    * no longer receives messages from this discovery listener.
    * @param listener the announcement listener
-   **/
+   */
   def removeAnnouncementListener(listener: AnnouncementListener) {
     synchronized {if (listener == this.listener) this.listener = null}
   }
 
   /**
    * Stops the discovery listener from listening for messages on the multicast group.
-   **/
+   */
   def stopListening() {shouldKeepListening = false}
 
   /**
    * Notifies the registered announcement listener that a
    * message has been received.
-   **/
+   */
   private def notifyListeners(m: DiscoveryMessage) {
     if (listener != null) listener.synchronized {listener.announcementReceived(m)}
   }
@@ -61,7 +61,7 @@ class DiscoveryListener extends Thread {
   /**
    * Joins a multicast group and listens for packets
    * until <code> stopListening() </code> is called.
-   **/
+   */
   override def run() {
     // arbitrary, but possibly larger than many MTUs, but this doesn't
     // really matter on the client, unless zero termination matters...
