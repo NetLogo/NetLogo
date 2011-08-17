@@ -36,7 +36,9 @@ class Worker(val protocol: Protocol)
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures = {
         import collection.JavaConverters._
-        executor.invokeAll(runners.asJava).asScala
+        // The explicit use of JavaConversions here with a type parameter, instead of just plain
+        // "asJava", is required to compile against Java 5 - ST 8/17/11
+        executor.invokeAll(collection.JavaConversions.asJavaCollection[Callable[Unit]](runners)).asScala
       }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
