@@ -21,7 +21,7 @@ object Streamable{
       }
     }
     def getInputStream: ObjectInputStream =
-      new DecompressibleInputStream(socket.getInputStream)
+      new VersionIDMismatchIgnoringObjectInputStream(socket.getInputStream)
     def close(): Unit = socket.close()
   }
 }
@@ -32,7 +32,7 @@ object Streamable{
 // calculated serialVersionUIDs without breaking HubNet.  thank you
 // stackoverflow.com/questions/795470/how-to-deserialize-an-object-persited-in-a-db-now-when-the-obect-has-different-se/796589#796589
 // !!!!!! - ST 8/17/11
-private class DecompressibleInputStream(in: InputStream)
+private class VersionIDMismatchIgnoringObjectInputStream(in: InputStream)
 extends ObjectInputStream(in) {
   override protected def readClassDescriptor: ObjectStreamClass = {
     var resultClassDescriptor = super.readClassDescriptor
