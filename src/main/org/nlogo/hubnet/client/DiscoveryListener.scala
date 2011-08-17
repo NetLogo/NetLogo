@@ -84,6 +84,8 @@ class DiscoveryListener extends Thread {
       multicastSocket.leaveGroup(group)
     }
     catch {
+      // must be in an applet, so ignore - ST 8/17/11
+      case ex: java.security.AccessControlException => org.nlogo.util.Exceptions.ignore(ex)
       // Im not sure how we should handle this...
       case ex: IOException => org.nlogo.util.Exceptions.ignore(ex)
     }
