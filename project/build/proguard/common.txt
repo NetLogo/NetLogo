@@ -9,9 +9,8 @@
 # pull in both managed and unmanaged libraries
 -libraryjars ../../../lib_managed/scala_2.9.1.RC3/compile
 
-# we need to remove these before 5.0 final. see ticket #1186 - ST 2/11/11
+# we need to remove this when doing release builds. see ticket #1186 - ST 2/11/11
 -dontwarn java.lang.String
--dontwarn org.nlogo.nvm.NonLocalExit$
 
 # I tried this but got a weird error at runtime.  maybe try again sometime and report
 # the bug to the ProGuard author
