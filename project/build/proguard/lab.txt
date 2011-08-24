@@ -9,7 +9,7 @@
 -dontobfuscate
 
 -libraryjars NetLogo.jar
--libraryjars project/boot/scala-2.9.1.RC3/lib/scala-library.jar
--libraryjars lib_managed/scala_2.9.1.RC3/test/scalatest_2.9.0-1.6.1.jar
--injars target/scala_2.9.1.RC3/classes(org/nlogo/lab/**)
+-libraryjars project/boot/scala-2.9.1.RC4/lib/scala-library.jar
+-libraryjars lib_managed/scala_2.9.1.RC4/test/scalatest_2.9.0-1.6.1.jar
+-injars target/scala_2.9.1.RC4/classes(org/nlogo/lab/**)
 -outjar BehaviorSpace.jar
