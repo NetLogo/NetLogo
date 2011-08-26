@@ -125,7 +125,7 @@ public strictfp class ViewControlStrip
     public ThreedButton() {
       super(" 3D "); // spaces so it isn't so tiny
       setFont
-          (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
+          (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
               java.awt.Font.PLAIN, 10));
       setBackground(InterfaceColors.GRAPHICS_BACKGROUND);
       setBorder(org.nlogo.swing.Utils.createWidgetBorder());

@@ -12,7 +12,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
   locally{
     setOpaque(false)
     addMouseListener(this)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
   
   private[this] var enabled = true

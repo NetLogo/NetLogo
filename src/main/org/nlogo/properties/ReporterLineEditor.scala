@@ -1,7 +1,7 @@
 package org.nlogo
 package properties
 
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{JScrollPane, ScrollPaneConstants}
 import editor.{EditorField, Colorizer, EditorArea}
 import java.awt.{Dimension, Font}

@@ -7,120 +7,7 @@ import java.util.List;
 public strictfp class Utils {
 
   // this class is not instantiable
-  private Utils() {
-    throw new IllegalStateException();
-  }
-
-  /**
-   * Prints the component hierarchy to stdout.
-   *
-   * @param root where to begin
-   */
-  public static void printComponentTree(java.awt.Component root) {
-    walkComponentTree
-        (root, 0,
-            new ComponentTreeWalker() {
-              public void touch(java.awt.Component comp, int level) {
-                System.out.println
-                    (indent(level * 2) + comp.getClass() + ", " +
-                        "bounds: " + comp.getBounds());
-              }
-            });
-  }
-
-  /// helpers for tree walker methods
-
-  private static String indent(int n) {
-    StringBuilder result = new StringBuilder(n);
-    for (int i = 0; i < n; i++) {
-      result.append(' ');
-    }
-    return result.toString();
-  }
-
-  public interface ComponentTreeWalker {
-    void touch(java.awt.Component comp, int level);
-  }
-
-  public static void walkComponentTree(java.awt.Component comp,
-                                       int level,
-                                       ComponentTreeWalker walker) {
-    walker.touch(comp, level);
-    if (comp instanceof java.awt.Container) {
-      java.awt.Component[] components = ((java.awt.Container) comp).getComponents();
-      for (int i = 0; i < components.length; i++) {
-        walkComponentTree(components[i], level + 1, walker);
-      }
-    }
-  }
-
-  ///
-
-  /**
-   * Converts point from a component's coordinate system to screen coordinates.
-   */
-  public static void convertPointToScreen(Point p, java.awt.Component c) {
-    int x, y;
-    do {
-      if (c instanceof java.applet.Applet || c instanceof java.awt.Window) {
-        Point pp = c.getLocationOnScreen();
-        x = pp.x;
-        y = pp.y;
-      } else {
-        x = c.getLocation().x;
-        y = c.getLocation().y;
-      }
-      p.x += x;
-      p.y += y;
-
-      if (c instanceof java.awt.Window || c instanceof java.applet.Applet) {
-        break;
-      }
-      c = c.getParent();
-
-    } while (c != null);
-  }
-
-  /**
-   * Converts point to a component's coordinate system from screen coordinates.
-   */
-  public static void convertPointFromScreen(Point p, java.awt.Component c) {
-    int x, y;
-    do {
-      if (c instanceof java.applet.Applet || c instanceof java.awt.Window) {
-        Point pp = c.getLocationOnScreen();
-        x = pp.x;
-        y = pp.y;
-      } else {
-        x = c.getLocation().x;
-        y = c.getLocation().y;
-      }
-      p.x -= x;
-      p.y -= y;
-
-      if (c instanceof java.awt.Window || c instanceof java.applet.Applet) {
-        break;
-      }
-      c = c.getParent();
-
-    } while (c != null);
-  }
-
-  /**
-   * Returns the location of a component on the screen.
-   */
-  public static java.awt.Point getLocationOnScreen(java.awt.Component c) {
-    java.awt.Point result = new java.awt.Point(0, 0);
-    convertPointToScreen(result, c);
-    return result;
-  }
-
-  /**
-   * Returns the difference between two points.
-   */
-  public static java.awt.Point subtractPoints(java.awt.Point p1, java.awt.Point p2) {
-    return new java.awt.Point(p1.x - p2.x, p1.y - p2.y);
-  }
+  private Utils() { throw new IllegalStateException(); }
 
   /**
    * Returns the frame containing a component.
@@ -362,54 +249,6 @@ public strictfp class Utils {
     return (e.getModifiers() & java.awt.event.InputEvent.BUTTON1_MASK) != 0;
   }
 
-  /// default font stuff
-
-  public static String platformFont() {
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      return "Lucida Grande";
-    } else {
-      return "Sans-serif";
-    }
-  }
-
-  public static String platformMonospacedFont() {
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      return "Monaco";
-    } else if (System.getProperty("os.name").startsWith("Windows")) {
-      String[] fonts =
-          java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
-              .getAvailableFontFamilyNames();
-      for (int i = 0; i < fonts.length; i++) {
-        if (fonts[i].equalsIgnoreCase("Lucida Console")) {
-          return fonts[i];
-        }
-      }
-      return "Monospaced";
-    } else {
-      return "Monospaced";
-    }
-  }
-
-  public static void adjustDefaultFont(java.awt.Component comp) {
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      comp.setFont
-          (new java.awt.Font
-              (platformFont(), java.awt.Font.PLAIN, 11));
-    } else if (!(System.getProperty("os.name").startsWith("Windows"))) {
-      comp.setFont
-          (new java.awt.Font
-              (platformFont(), java.awt.Font.PLAIN, 12));
-    }
-  }
-
-  public static void adjustDefaultMonospacedFont(java.awt.Component comp) {
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      comp.setFont
-          (new java.awt.Font
-              (platformMonospacedFont(), java.awt.Font.PLAIN, 12));
-    }
-  }
-
   /// event thread stuff
 
   public static void mustBeEventDispatchThread() {
@@ -526,4 +365,5 @@ public strictfp class Utils {
     g.drawRect(x, y, width + 6, height + 6);
     g.drawString(string, x + 3, y + 3 + metrics.getAscent());
   }
+
 }

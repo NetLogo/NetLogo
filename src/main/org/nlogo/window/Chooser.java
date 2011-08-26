@@ -39,7 +39,7 @@ public abstract strictfp class Chooser
     setLayout(null);
     add(control);
     doLayout();
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
     this.addMouseWheelListener(this);
   }
 

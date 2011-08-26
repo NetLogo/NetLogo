@@ -51,7 +51,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
       }
     val clearButton = new JButton(PimpedAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
       setFocusable(false)
-      setFont(new Font(org.nlogo.awt.Utils.platformFont, Font.PLAIN, 9))
+      setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 9))
       // get right appearance on Mac - ST 10/4/05
       putClientProperty("Quaqua.Button.style", "square")
       putClientProperty("Quaqua.Component.visualMargin", new Insets(0, 0, 0, 0))
@@ -67,7 +67,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
     northPanel.setOpaque(false)
     northPanel.add(titleLabel)
     northPanel.add(Box.createGlue)
-    org.nlogo.awt.Utils.adjustDefaultFont(titleLabel)
+    org.nlogo.awt.Fonts.adjustDefaultFont(titleLabel)
     titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
     if(locationToggleButton != null) northPanel.add(locationToggleButton)
     northPanel.add(clearButton)

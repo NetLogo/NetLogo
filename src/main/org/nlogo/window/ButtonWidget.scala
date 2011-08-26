@@ -82,7 +82,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     addMouseMotionListener(this)
     setBackground(InterfaceColors.BUTTON_BACKGROUND)
     setBorder(widgetBorder)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
   // buttonType now controls the agentClass. no one should ever be setting

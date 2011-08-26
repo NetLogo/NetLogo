@@ -34,7 +34,7 @@ extends javax.swing.JPanel {
   }
 
   private class LegendItem(pen: PlotPen) extends javax.swing.JComponent {
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
     override def paintComponent(g: java.awt.Graphics) {
       val ascent = g.getFontMetrics.getMaxAscent

@@ -21,7 +21,7 @@ public strictfp class DummyMonitorWidget
     setOpaque(true);
     setBackground(InterfaceColors.MONITOR_BACKGROUND);
     setBorder(widgetBorder());
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
   }
 
   private String name = "";

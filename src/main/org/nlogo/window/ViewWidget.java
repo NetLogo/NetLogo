@@ -38,7 +38,7 @@ public strictfp class ViewWidget
   ViewWidget(GUIWorkspace workspace) {
     this.workspace = workspace;
     displaySwitch = new DisplaySwitch(workspace);
-    org.nlogo.awt.Utils.adjustDefaultFont(tickCounter);
+    org.nlogo.awt.Fonts.adjustDefaultFont(tickCounter);
     view = new View(workspace);
 
     controlStrip = new ViewControlStrip(workspace, this);

@@ -11,7 +11,7 @@ class EditorFactory(compiler: CompilerServices) extends org.nlogo.window.EditorF
                 listener: java.awt.event.TextListener,
                 isApp: Boolean) =
   {
-    val font = new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont,
+    val font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                                  java.awt.Font.PLAIN, 12)
     val colorizer = new org.nlogo.window.EditorColorizer(compiler)
     class MyCodeEditor

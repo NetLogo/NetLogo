@@ -11,7 +11,7 @@ import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL
 import java.awt.{Font, BorderLayout}
 import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
 import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
 import org.nlogo.api.DummyEditable
 

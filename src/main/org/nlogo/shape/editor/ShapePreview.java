@@ -75,7 +75,7 @@ strictfp class ShapePreview
     g.setColor(java.awt.Color.BLACK);
     g.fillRect(x, y, scale, scale);
     g.setFont
-        (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
+        (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
             java.awt.Font.PLAIN, 10));
     g.drawString(Integer.toString(scale),
         (getWidth() - g.getFontMetrics().stringWidth(Integer.toString(scale))) / 2,

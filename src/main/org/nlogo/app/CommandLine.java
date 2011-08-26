@@ -51,7 +51,7 @@ strictfp class CommandLine
     textField =
         new org.nlogo.editor.EditorField<TokenType>
             (30,
-                new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont(),
+                new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
                     java.awt.Font.PLAIN, 12),
                 true, new EditorColorizer(workspace),
                 I18N.guiJ().fn());

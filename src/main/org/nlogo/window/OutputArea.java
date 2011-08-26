@@ -50,7 +50,7 @@ public strictfp class OutputArea
     text.setEditable(false);
     text.setDragEnabled(false);
     text.setFont(new java.awt.Font
-        (org.nlogo.awt.Utils.platformMonospacedFont(),
+        (org.nlogo.awt.Fonts.platformMonospacedFont(),
             java.awt.Font.PLAIN, 12));
     setLayout(new java.awt.BorderLayout());
     scrollPane = new javax.swing.JScrollPane
@@ -66,7 +66,7 @@ public strictfp class OutputArea
 
   public void fontSize(int fontSize) {
     text.setFont(new java.awt.Font
-        (org.nlogo.awt.Utils.platformMonospacedFont(),
+        (org.nlogo.awt.Fonts.platformMonospacedFont(),
             java.awt.Font.PLAIN, fontSize));
   }
 

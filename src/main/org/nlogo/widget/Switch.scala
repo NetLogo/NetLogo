@@ -28,7 +28,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   setBackground(InterfaceColors.SWITCH_BACKGROUND)
   setBorder(widgetBorder)
   setOpaque(true)
-  org.nlogo.awt.Utils.adjustDefaultFont(this)
+  org.nlogo.awt.Fonts.adjustDefaultFont(this)
   add(dragger)
   add(channel)
   addMouseWheelListener(this)

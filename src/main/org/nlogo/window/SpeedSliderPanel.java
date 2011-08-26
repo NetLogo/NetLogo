@@ -27,7 +27,7 @@ public strictfp class SpeedSliderPanel
     speedSlider.addChangeListener(this);
     speedSlider.addMouseListener(this);
     speedSlider.setOpaque(false);
-    org.nlogo.awt.Utils.adjustDefaultFont(normal);
+    org.nlogo.awt.Fonts.adjustDefaultFont(normal);
     setOpaque(false);
     if (labelsBelow) {
       GridBagLayout gridbag = new GridBagLayout();

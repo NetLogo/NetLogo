@@ -11,7 +11,7 @@ import org.nlogo.swing.{BrowserLauncher, PimpedAction, IconHolder}
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
   private val system: JTextArea = new JTextArea() {
-    setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont(), Font.PLAIN, 12))
+    setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont(), Font.PLAIN, 12))
     setLineWrap(true)
     setWrapStyleWord(true)
     setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10))
@@ -64,7 +64,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     getContentPane.add(graphic,BorderLayout.NORTH)
 
     val credits = new JTextArea(org.nlogo.util.Utils.getResourceAsString("/system/about.txt"),15,0){
-      setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont(),Font.PLAIN,12))
+      setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont(),Font.PLAIN,12))
       setDragEnabled(false)
       setLineWrap(true)
       setWrapStyleWord(true)

@@ -4,7 +4,7 @@ import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
 import java.awt.{List => AWTList, _}
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{OptionDialog, PimpedJButton}
 import org.nlogo.editor.{Colorizer, EditorField}

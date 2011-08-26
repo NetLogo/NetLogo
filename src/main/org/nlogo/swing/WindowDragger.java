@@ -79,7 +79,7 @@ public strictfp class WindowDragger
   public void mousePressed(java.awt.event.MouseEvent e) {
     mousePressLoc = e.getPoint();
     mousePressAbsLoc = new java.awt.Point(mousePressLoc);
-    org.nlogo.awt.Utils.convertPointToScreen
+    org.nlogo.awt.Coordinates.convertPointToScreen
         (mousePressAbsLoc, WindowDragger.this);
     locationWhenPressed = window.getLocationOnScreen();
   }
@@ -87,7 +87,7 @@ public strictfp class WindowDragger
   public void mouseDragged(java.awt.event.MouseEvent e) {
     if (!inCloseBox(mousePressLoc)) {
       java.awt.Point dragAbsLoc = new java.awt.Point(e.getPoint());
-      org.nlogo.awt.Utils.convertPointToScreen
+      org.nlogo.awt.Coordinates.convertPointToScreen
           (dragAbsLoc, WindowDragger.this);
       java.awt.GraphicsConfiguration gc = getGraphicsConfiguration();
       java.awt.Rectangle bounds = gc.getBounds();

@@ -158,7 +158,7 @@ strictfp class InterfacePanel
     } else if (type.equals("INPUT") ||  // in the GUI, it's "Input Box"
         type.equals("INPUTBOX"))  // in saved models, it's "INPUTBOX"
     {
-      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont(),
+      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
           java.awt.Font.PLAIN, 12);
       return new org.nlogo.window.InputBoxWidget
           (new org.nlogo.window.CodeEditor

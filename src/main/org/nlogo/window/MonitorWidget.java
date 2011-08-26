@@ -33,7 +33,7 @@ public strictfp class MonitorWidget
     addMouseListener(this);
     setBackground(InterfaceColors.MONITOR_BACKGROUND);
     setBorder(widgetBorder());
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
     fontSize = getFont().getSize();
   }
 

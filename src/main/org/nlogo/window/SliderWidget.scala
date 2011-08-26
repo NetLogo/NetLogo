@@ -23,7 +23,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     setOpaque(true)
     setLayout(null)
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
     doLayout()
     setBorder(widgetBorder)
     addMouseListener(new MouseAdapter {

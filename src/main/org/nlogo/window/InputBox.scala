@@ -6,8 +6,8 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
-import org.nlogo.awt.Utils.platformMonospacedFont
-import org.nlogo.awt.Utils.platformFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformFont
 import org.nlogo.swing.Implicits._
 import org.nlogo.api.{Options, I18N, ValueConstraint, CompilerException, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Frame, Dimension, Font, Component}
@@ -113,7 +113,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
     setBorder(widgetBorder)
     setOpaque(true)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
     val layout = new java.awt.GridBagLayout()
     setLayout(layout)

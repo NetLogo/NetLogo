@@ -617,9 +617,9 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   // QuaquaButtonUI.getMinimumSize() - ST 5/12/10
 
   public void workAroundQuaquaBug(java.awt.Container root) {
-    org.nlogo.awt.Utils.walkComponentTree
+    org.nlogo.awt.Tree.walkComponentTree
         (root, 0,
-            new org.nlogo.awt.Utils.ComponentTreeWalker() {
+            new org.nlogo.awt.Tree.ComponentTreeWalker() {
               public void touch(java.awt.Component comp, int level) {
                 if (comp instanceof javax.swing.JComponent) {
                   // using a different style than the default doesn't affect

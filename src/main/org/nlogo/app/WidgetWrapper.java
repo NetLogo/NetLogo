@@ -490,7 +490,7 @@ public strictfp class WidgetWrapper
     int x = e.getX();
     int y = e.getY();
     java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Utils.convertPointToScreen(p, this);
+    org.nlogo.awt.Coordinates.convertPointToScreen(p, this);
     startPressX = p.x;
     startPressY = p.y;
 
@@ -544,7 +544,7 @@ public strictfp class WidgetWrapper
     int x = e.getX();
     int y = e.getY();
     java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Utils.convertPointToScreen(p, this);
+    org.nlogo.awt.Coordinates.convertPointToScreen(p, this);
     x = p.x;
     y = p.y;
     if (mouseMode() == MouseMode.DRAG) {

@@ -39,7 +39,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     setWrapStyleWord(true)
     getDocument.addDocumentListener(InfoTab.this)
     getDocument.addUndoableEditListener(undoManager)
-    setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont,
+    setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                      Font.PLAIN, 12))
   }
   private val editorPane = new JEditorPane() { self =>

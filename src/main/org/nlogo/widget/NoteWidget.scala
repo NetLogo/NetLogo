@@ -8,7 +8,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
 
   setBackground(InterfaceColors.TRANSPARENT)
   setOpaque(false)
-  org.nlogo.awt.Utils.adjustDefaultFont(this)
+  org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   val MIN_WIDTH = 15
   val DEFAULT_WIDTH = 150

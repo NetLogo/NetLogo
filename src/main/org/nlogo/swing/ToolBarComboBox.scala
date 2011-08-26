@@ -20,7 +20,7 @@ class ToolBarComboBox(val items: Array[JMenuItem]) extends JPanel {
         }
       }
     })
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
   def populate(menu: JPopupMenu) {
