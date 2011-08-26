@@ -257,7 +257,7 @@ strictfp class ModelsLibraryDialog
         });
 
     this.setSize(740, 680);
-    org.nlogo.awt.Utils.center(this, parent);
+    org.nlogo.awt.Positioning.center(this, parent);
   }
 
   //
@@ -526,7 +526,7 @@ strictfp class ModelsLibraryDialog
     void setImage(String imagePath) {
       image = null;
       if (imagePath != null) {
-        image = org.nlogo.awt.Utils.loadImageFile
+        image = org.nlogo.awt.Images.loadImageFile
             (imagePath, false); // false = don't cache
       }
       repaint();

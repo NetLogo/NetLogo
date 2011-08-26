@@ -427,7 +427,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       org.nlogo.swing.Utils.addEscKeyAction(this, cancelAction)
 
       pack()
-      org.nlogo.awt.Utils.center(this, parent)
+      org.nlogo.awt.Positioning.center(this, parent)
       addWindowListener(new WindowAdapter() {
         override def windowClosing(e: WindowEvent) {
           dispose()

@@ -85,7 +85,7 @@ public strictfp class MessageDialog
     pack();
     if (firstShow) {
       firstShow = false;
-      org.nlogo.awt.Utils.center(this, parentFrame);
+      org.nlogo.awt.Positioning.center(this, parentFrame);
     }
     setVisible(true);
   }

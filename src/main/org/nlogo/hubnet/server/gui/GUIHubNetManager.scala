@@ -91,7 +91,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
 
   /// client editor
   def openClientEditor() {
-    org.nlogo.awt.Utils.moveNextTo(_clientEditor, linkParent)
+    org.nlogo.awt.Positioning.moveNextTo(_clientEditor, linkParent)
     _clientEditor.setVisible(true)
     _clientEditor.setSize(_clientEditor.getPreferredSize)
   }

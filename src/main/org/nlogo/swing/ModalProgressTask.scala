@@ -2,7 +2,8 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Frame }
 import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, SwingConstants }
-import org.nlogo.awt.Utils.{ center, mustBeEventDispatchThread }
+import org.nlogo.awt.Utils.mustBeEventDispatchThread
+import org.nlogo.awt.Positioning.center
 
 object ModalProgressTask {
 

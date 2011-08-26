@@ -338,7 +338,7 @@ strictfp class InterfacePanel
   public void handle(org.nlogo.window.Events.ExportInterfaceEvent e) {
     try {
       javax.imageio.ImageIO.write
-          (org.nlogo.awt.Utils.paintToImage(this),
+          (org.nlogo.awt.Images.paintToImage(this),
               "png", e.stream);
     } catch (java.io.IOException ex) {
       e.exceptionBox[0] = ex;

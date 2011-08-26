@@ -34,7 +34,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     getContentPane.add(clientsPanel, BorderLayout.EAST)
     getContentPane.add(messagePanel, BorderLayout.SOUTH)
     pack()
-    org.nlogo.awt.Utils.moveNextTo(this, frame)
+    org.nlogo.awt.Positioning.moveNextTo(this, frame)
     setVisible(true)
   }
 

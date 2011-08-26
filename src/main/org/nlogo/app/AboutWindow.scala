@@ -81,7 +81,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
 
     org.nlogo.swing.Utils.addEscKeyAction(this, PimpedAction{ _ => dispose() } )
     pack()
-    org.nlogo.awt.Utils.center(this,null)
+    org.nlogo.awt.Positioning.center(this,null)
 
     // Bring the parent frame (the main NetLogo window) to front.
     // Otherwise this will be obscured (sometimes completely) by

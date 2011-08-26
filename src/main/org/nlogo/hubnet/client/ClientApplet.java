@@ -95,7 +95,7 @@ public strictfp class ClientApplet
               }
             });
 
-        org.nlogo.awt.Utils.center(loginDialog, null);
+        org.nlogo.awt.Positioning.center(loginDialog, null);
         doLogin();
       }
     });

@@ -29,7 +29,7 @@ public strictfp class OptionDialog
 
   public static int show(java.awt.Component owner, String title,
                          String message, Object[] options) {
-    List<String> brokenLines = org.nlogo.awt.Utils.breakLines
+    List<String> brokenLines = org.nlogo.awt.LineBreaker.breakLines
         (message,
             owner.getFontMetrics(owner.getFont()), DIALOG_WIDTH);
     StringBuilder brokenMessage = new StringBuilder();

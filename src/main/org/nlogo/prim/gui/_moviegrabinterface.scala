@@ -21,7 +21,7 @@ class _moviegrabinterface extends Command {
                   throw new EngineException(
                     context, _moviegrabinterface.this, "Must call MOVIE-START first")
                 gw.movieEncoder.add(
-                  org.nlogo.awt.Utils.paintToImage(
+                  org.nlogo.awt.Images.paintToImage(
                     gw.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]))
               }
               catch {

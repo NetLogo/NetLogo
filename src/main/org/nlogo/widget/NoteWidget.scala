@@ -62,7 +62,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
   override def getPreferredSize(font: Font): Dimension = {
     val metrics = getFontMetrics(font)
-    val height: Int = org.nlogo.awt.Utils.breakLines(_text, metrics, _width).size * (metrics.getMaxDescent + metrics.getMaxAscent)
+    val height: Int = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width).size * (metrics.getMaxDescent + metrics.getMaxAscent)
     new Dimension(StrictMath.max(MIN_WIDTH, _width), StrictMath.max(MIN_HEIGHT, height))
   }
   override def needsPreferredWidthFudgeFactor = false
@@ -73,7 +73,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     val metrics: FontMetrics = g.getFontMetrics
     val stringHeight: Int = metrics.getMaxDescent + metrics.getMaxAscent
     val stringAscent: Int = metrics.getMaxAscent
-    val lines = org.nlogo.awt.Utils.breakLines(_text, metrics, _width)
+    val lines = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width)
     g.setColor(color)
     import collection.JavaConverters._
     for((line, i) <- lines.asScala.zipWithIndex)

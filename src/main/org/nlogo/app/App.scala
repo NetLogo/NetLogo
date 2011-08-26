@@ -416,7 +416,7 @@ class App extends
     tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
     smartPack(frame.getPreferredSize)
 
-    if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Utils.center(frame, null) }
+    if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
     
     org.nlogo.app.FindDialog.init(frame) 
     
@@ -946,7 +946,7 @@ class App extends
 }
 
 class AppFrame extends JFrame with LinkParent {
-  setIconImage(org.nlogo.awt.Utils.loadImageResource("/images/arrowhead.gif"))
+  setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
   private val linkComponents = new collection.mutable.ListBuffer[Object]()

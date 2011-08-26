@@ -114,7 +114,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     timer.start()
 
     pack()
-    org.nlogo.awt.Utils.center(this, dialog)
+    org.nlogo.awt.Positioning.center(this, dialog)
   }
         
   override def getMinimumSize = getPreferredSize

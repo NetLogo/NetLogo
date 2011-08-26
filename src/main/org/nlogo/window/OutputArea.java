@@ -104,7 +104,7 @@ public strictfp class OutputArea
     if (wrapLines) {
       java.awt.FontMetrics fontMetrics = getFontMetrics(text.getFont());
       List<String> messageLines =
-          org.nlogo.awt.Utils.breakLines
+          org.nlogo.awt.LineBreaker.breakLines
               (message, fontMetrics,
                   text.getWidth() - 24); // 24 = a guess at the scrollbar width
       StringBuilder wrappedMessage = new StringBuilder();

@@ -99,7 +99,7 @@ trait EditDialog extends javax.swing.JDialog {
     case Some(location) =>
       setLocation(location)
     case None =>  
-      org.nlogo.awt.Utils.center(this, window)
+      org.nlogo.awt.Positioning.center(this, window)
       EditDialog.lastLocation = Some(getLocation)
   }
   editPanel.requestFocus()

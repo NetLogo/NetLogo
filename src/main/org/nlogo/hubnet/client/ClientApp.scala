@@ -4,7 +4,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.Utils
+import org.nlogo.awt.{ Utils, Images, Positioning }
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.api.{I18N, CompilerServices}
 import javax.swing.{WindowConstants, JFrame}
@@ -73,7 +73,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       })
 
       this.isLocal = isLocal
-      setIconImage(Utils.loadImageResource("/images/arrowhead.gif"))
+      setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
       getContentPane.setLayout(new BorderLayout())
       loginDialog = new LoginDialog(this, userid, hostip, port, false)
       clientPanel =
@@ -82,7 +82,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
       pack()
-      Utils.center(this, null)
+      Positioning.center(this, null)
 
       if (isLocal) {
         val killLocalListener = () => {
@@ -101,7 +101,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       }
       else {
         addWindowListener(() => handleExit())
-        Utils.center(loginDialog, null)
+        Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
         doLogin()
       }

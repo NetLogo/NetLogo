@@ -36,11 +36,11 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
     if(app.colorDialog == null) {     
       app.colorDialog =
         new org.nlogo.window.ColorDialog(app.frame, false) 
-      org.nlogo.awt.Utils.center(app.colorDialog, app.frame)
+      org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
       app.colorDialog.showDialog()
     }
     else {
-      org.nlogo.awt.Utils.center(app.colorDialog, app.frame)
+      org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
       app.colorDialog.setVisible(true)
     }
   }

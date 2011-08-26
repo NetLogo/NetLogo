@@ -161,7 +161,7 @@ public strictfp class Renderer
   ///
 
   public java.awt.image.BufferedImage exportView(ViewSettings settings) {
-    // unfortunately we can't just call org.nlogo.awt.Utils.paintToImage()
+    // unfortunately we can't just call org.nlogo.awt.Images.paintToImage()
     // here because we need to do a few nonstandard things
     // (namely call graphicsPainter's paint method instead of
     // our own, and grab the world lock) - ST 6/12/04
@@ -182,7 +182,7 @@ public strictfp class Renderer
   }
 
   public void exportView(java.awt.Graphics2D g, ViewSettings settings) {
-    // unfortunately we can't just call org.nlogo.awt.Utils.paintToImage()
+    // unfortunately we can't just call org.nlogo.awt.Images.paintToImage()
     // here because we need to do a few nonstandard things
     // (namely call graphicsPainter's paint method instead of
     // our own, and grab the world lock) - ST 6/12/04, 10/12/05
