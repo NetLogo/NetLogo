@@ -1,58 +1,60 @@
-package org.nlogo.awt;
+package org.nlogo.awt
 
-import java.awt.Dimension;
+import java.awt.Dimension
+import java.awt.image.BufferedImage
 
 /**
  * Encodes a sequence of BufferedImages into a movie.
  */
-public interface MovieEncoder {
+trait MovieEncoder {
+
   /**
    * Sets the frame rate.
    *
    * @param frameRate frames per second.
    */
-  void setFrameRate(float frameRate)
-      throws java.io.IOException;
+  @throws(classOf[java.io.IOException])
+  def setFrameRate(frameRate: Float)
 
   /**
    * Returns the frame rate.
    */
-  float getFrameRate();
+  def getFrameRate: Float
 
   /**
    * Returns the frame size.
    */
-  Dimension getFrameSize();
+  def getFrameSize: Dimension
 
   /**
    * Returns a string describing the movie format.
    */
-  String getFormat();
+  def getFormat: String
 
   /**
    * Adds an image to the movie.
    */
-  void add(java.awt.image.BufferedImage image)
-      throws java.io.IOException;
+  @throws(classOf[java.io.IOException])
+  def add(image: BufferedImage)
 
   /**
    * Returns true if this encoder has been set up.
    */
-  boolean isSetup();
+  def isSetup: Boolean
 
   /**
    * Stops the movie and writes it to a file.
    */
-  void stop();
+  def stop()
 
   /**
    * Cancels the current movie.
    */
-  void cancel();
+  def cancel()
 
   /**
    * Returns the number of frames recorded so far.
    */
-  int getNumFrames();
-}
+  def getNumFrames: Int
 
+}
