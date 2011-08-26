@@ -6,7 +6,7 @@ import org.nlogo.editor.Colorizer
 class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swing.JPanel {
   val text = new org.nlogo.editor.EditorArea[TokenType](
     50, 75, 
-    new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
+    new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                       java.awt.Font.PLAIN, 12),
     true, 
     // Dummy listener since the editor is not editable
