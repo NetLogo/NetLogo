@@ -4,6 +4,8 @@ import java.util.{ List => JList }
 import java.awt.FontMetrics
 import collection.JavaConverters._
 
+// This is pretty raw converted Java code that ought to be made a lot more Scala-tastic.
+
 object LineBreaker {
   def breakLines(_text: String, metrics: FontMetrics, width: Int): JList[String] = {
     var text = _text
