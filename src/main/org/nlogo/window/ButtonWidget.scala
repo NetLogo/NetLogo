@@ -6,7 +6,7 @@ import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.util.MersenneTwisterFast
-import org.nlogo.awt.Mouse.button1Mask
+import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
 import org.nlogo.api.{I18N, Editable, ModelReader, Options, Version}
@@ -197,12 +197,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def mousePressed(e: MouseEvent) {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
-    if (error == null && !e.isPopupTrigger && button1Mask(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
+    if (error == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
   def mouseDragged(e: MouseEvent) {
     if (error == null){
-      if (button1Mask(e) && isEnabled) {
+      if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
         if (getBounds().contains(e.getPoint()) && ! disabledWaitingForSetup) buttonUp = false
         else if (!forever || !foreverOn) buttonUp = true
@@ -214,7 +214,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def mouseExited(e:MouseEvent) {}
   def mouseMoved(e: MouseEvent) {}
   def mouseClicked(e: MouseEvent) {
-    if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && button1Mask(e))
+    if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
   }
 

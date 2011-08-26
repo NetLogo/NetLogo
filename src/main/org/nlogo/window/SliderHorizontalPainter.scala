@@ -150,7 +150,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.button1Mask(e)) incrementClick(e.getX())
+        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.hasButton1(e)) incrementClick(e.getX())
       }
     })
 

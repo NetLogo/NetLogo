@@ -117,7 +117,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if (org.nlogo.awt.Mouse.button1Mask(e)) {
+        if (org.nlogo.awt.Mouse.hasButton1(e)) {
           isOn = ! isOn
         }
       }

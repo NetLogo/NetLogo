@@ -164,7 +164,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.button1Mask(e)) incrementClick(e.getY)
+        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.hasButton1(e)) incrementClick(e.getY)
       }
     })
     // make tooltips appear in the same location onscreen as they do

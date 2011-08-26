@@ -478,7 +478,7 @@ public strictfp class WidgetWrapper
       doPopup(e);
       return;
     }
-    if (!org.nlogo.awt.Mouse.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
     foreground();
@@ -582,7 +582,7 @@ public strictfp class WidgetWrapper
     if (e.isPopupTrigger()) {
       doPopup(e);
       return;
-    } else if (org.nlogo.awt.Mouse.button1Mask(e)) {
+    } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
         interfacePanel().dropSelectedWidgets();
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW

@@ -18,7 +18,7 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
   addMouseListener(
     new java.awt.event.MouseAdapter() {
       override def mousePressed(e: java.awt.event.MouseEvent) {
-        if(!e.isPopupTrigger && org.nlogo.awt.Mouse.button1Mask(e))
+        if(!e.isPopupTrigger && org.nlogo.awt.Mouse.hasButton1(e))
           doPopupMenu()}})
   // get right appearance on Mac - ST 10/4/05
   putClientProperty("Quaqua.Button.style", "square")

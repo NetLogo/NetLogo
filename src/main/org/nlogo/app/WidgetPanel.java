@@ -256,7 +256,7 @@ public strictfp class WidgetPanel
   }
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    if (!org.nlogo.awt.Mouse.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
     java.awt.Point p = e.getPoint();
@@ -316,7 +316,7 @@ public strictfp class WidgetPanel
       doPopup(e);
       return;
     }
-    if (!org.nlogo.awt.Mouse.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
 
@@ -462,7 +462,7 @@ public strictfp class WidgetPanel
       doPopup(e);
       return;
     }
-    if (org.nlogo.awt.Mouse.button1Mask(e)) {
+    if (org.nlogo.awt.Mouse.hasButton1(e)) {
       java.awt.Point p = e.getPoint();
       java.awt.Rectangle rect = this.getBounds();
 

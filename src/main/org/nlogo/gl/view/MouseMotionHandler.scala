@@ -2,7 +2,7 @@ package org.nlogo.gl.view
 
 import org.nlogo.api.Perspective
 import java.awt.event.{ MouseEvent, MouseWheelEvent }
-import org.nlogo.awt.Mouse.button1Mask
+import org.nlogo.awt.Mouse.hasButton1
 
 object MouseMotionHandler {
   sealed trait Mode
@@ -48,7 +48,7 @@ with java.awt.event.MouseWheelListener {
   def mousePressed(evt: MouseEvent) {
     prevMouseX = evt.getX
     prevMouseY = evt.getY
-    if (!evt.isPopupTrigger && movementMode == InteractMode && button1Mask(evt))
+    if (!evt.isPopupTrigger && movementMode == InteractMode && hasButton1(evt))
       view.renderer.mouseDown(true)
     else {
       if (evt.isPopupTrigger)
@@ -59,7 +59,7 @@ with java.awt.event.MouseWheelListener {
 
   def mouseReleased(evt: MouseEvent) {
     view.renderer.showCrossHairs(false)
-    if (!evt.isPopupTrigger && (movementMode == InteractMode) && button1Mask(evt))
+    if (!evt.isPopupTrigger && (movementMode == InteractMode) && hasButton1(evt))
       view.renderer.mouseDown(false)
     else if (evt.isPopupTrigger)
       view.doPopup(evt)
