@@ -177,7 +177,7 @@ public abstract strictfp class Chooser
     int fontHeight = fontAscent + metrics.getMaxDescent();
 
     String shortenedName =
-        org.nlogo.awt.Utils.shortenStringToFit
+        org.nlogo.awt.Fonts.shortenStringToFit
             (name, size.width - 2 * MARGIN, metrics);
     g.drawString
         (shortenedName,
@@ -185,7 +185,7 @@ public abstract strictfp class Chooser
             MARGIN + (cb.y - MARGIN - fontHeight) / 2 + fontAscent);
 
     String shortenedValue =
-        org.nlogo.awt.Utils.shortenStringToFit
+        org.nlogo.awt.Fonts.shortenStringToFit
             (Dump.logoObject(value()),
                 cb.width - MARGIN * 3 - triangleSize() - 2, // extra 2 for triangle shadow
                 metrics);

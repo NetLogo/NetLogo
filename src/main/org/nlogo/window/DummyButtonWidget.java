@@ -100,7 +100,7 @@ public strictfp class DummyButtonWidget
     int stringWidth = fontMetrics.stringWidth(displayName);
     g.setColor(getForeground());
 
-    String shortString = org.nlogo.awt.Utils.shortenStringToFit(displayName, availableWidth, fontMetrics);
+    String shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics);
     int nx = stringWidth > availableWidth ? 4 : (size.width / 2) - (stringWidth / 2);
     int ny = (size.height / 2) + (labelHeight / 2);
     g.drawString(shortString, nx, ny);

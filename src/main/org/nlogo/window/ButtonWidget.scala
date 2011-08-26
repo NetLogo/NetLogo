@@ -403,7 +403,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       }
       g.setColor(color)
       val availableWidth = getSize().width - 8
-      val shortString = org.nlogo.awt.Utils.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
+      val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
       val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
       val labelHeight = g.getFontMetrics.getMaxDescent + g.getFontMetrics.getMaxAscent
       val ny = (getSize().height / 2) + (labelHeight / 2)

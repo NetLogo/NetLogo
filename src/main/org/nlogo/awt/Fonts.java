@@ -2,6 +2,7 @@ package org.nlogo.awt;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GraphicsEnvironment;
 
 public final strictfp class Fonts {
@@ -53,6 +54,19 @@ public final strictfp class Fonts {
           (new Font
               (platformMonospacedFont(), Font.PLAIN, 12));
     }
+  }
+
+  /**
+   * Squeezes a string to fit in a small space.
+   */
+  public static String shortenStringToFit(String name, int availableWidth, FontMetrics metrics) {
+    if (metrics.stringWidth(name) > availableWidth) {
+      name += "...";
+      while (metrics.stringWidth(name) > availableWidth && name.length() > 3) {
+        name = name.substring(0, name.length() - 4) + "...";
+      }
+    }
+    return name;
   }
 
 }

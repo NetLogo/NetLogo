@@ -125,7 +125,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
         val valueString = slider.valueString(slider.value)
         val fontMetrics = g.getFontMetrics
         val valueWidth = fontMetrics.stringWidth(valueString)
-        val shortenedName = org.nlogo.awt.Utils.shortenStringToFit(
+        val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
             slider.name, rect.width - nameXOffset - valueWidth - RIGHT_MARGIN - CHANNEL_LEFT_MARGIN - 2, fontMetrics)
         g.setColor(slider.getForeground)
         g.drawString(shortenedName, nameXOffset, rect.height - fontMetrics.getMaxDescent - padNameHeight)

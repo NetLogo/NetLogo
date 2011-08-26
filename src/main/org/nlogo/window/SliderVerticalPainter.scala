@@ -119,7 +119,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
         // remember, we are writing rotated counter-clockwise 90 degrees, so that var names
         // reflect that.
         val valueHeight = fontMetrics.stringWidth(valueString)
-        val shortenedName = org.nlogo.awt.Utils.shortenStringToFit(
+        val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
           slider.name, rect.height - nameYOffset - valueHeight - TOP_MARGIN - CHANNEL_BOTTOM_MARGIN - 2, fontMetrics)
 
         // write name and value text rotated -90 degrees

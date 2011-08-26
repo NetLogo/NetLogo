@@ -3,7 +3,7 @@ package org.nlogo.app
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{OptionDialog, ToolBar, Printable, PrinterManager, BrowserLauncher, PimpedJButton}
-import org.nlogo.awt.{ Hierarchy, Utils }
+import org.nlogo.awt.Hierarchy
 
 import java.awt.{Font, Dimension, BorderLayout, Graphics}
 import java.awt.event.{ActionEvent, FocusEvent, FocusListener}

@@ -194,7 +194,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private def getPenName(metricNumber: Int): String = {
     val buf = new StringBuilder()
     if (protocol.metrics.length > 1) buf.append(metricNumber + " ")
-    buf.append(org.nlogo.awt.Utils.shortenStringToFit(
+    buf.append(org.nlogo.awt.Fonts.shortenStringToFit(
       protocol.metrics(metricNumber).trim.replaceAll("\\s+", " "),
       100, // an arbitrary limit to keep the pen names from getting too wide
       plotWidgetOption.get.getFontMetrics(plotWidgetOption.get.getFont)))

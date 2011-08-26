@@ -7,7 +7,6 @@ import java.util.List;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Version;
 import org.nlogo.api.VersionHistory;
-import org.nlogo.awt.Utils;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
 import org.nlogo.window.JobWidget;

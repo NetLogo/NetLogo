@@ -27,7 +27,7 @@ public final strictfp class Images {
   public static Image loadImageResource(String path) {
     Image image =
         Toolkit.getDefaultToolkit().getImage
-            (Utils.class.getResource(path));
+            (Images.class.getResource(path));
     return loadImage(image)
         ? image
         : null;

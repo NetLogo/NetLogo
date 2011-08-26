@@ -4,7 +4,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.{ Utils, Hierarchy, Images, Positioning, EventQueue }
+import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.api.{I18N, CompilerServices}
 import javax.swing.{WindowConstants, JFrame}

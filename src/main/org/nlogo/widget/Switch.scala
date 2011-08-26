@@ -92,7 +92,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       StrictMath.max(fontMetrics.stringWidth("On"), fontMetrics.stringWidth("Off")) + controlRect.width + 2 * BORDERX
     g.setColor(getForeground)
     g.drawString(
-      org.nlogo.awt.Utils.shortenStringToFit(displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics),
+      org.nlogo.awt.Fonts.shortenStringToFit(displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics),
       controlLabelWidth + 2 * BORDERX,
       (getHeight - fontMetrics.getHeight - (2 * BORDERY)) / 2 + stringAscent + 1)
   }

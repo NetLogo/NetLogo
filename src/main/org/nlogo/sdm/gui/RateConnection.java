@@ -149,7 +149,7 @@ public strictfp class RateConnection
       int labelY = center.y - ICON_SIZE + 50;
       java.awt.Font oldFont = g.getFont();
       g.setFont(oldFont.deriveFont(java.awt.Font.ITALIC, 10.0f));
-      org.nlogo.awt.Utils.drawStringInBox(g, displayname,
+      Utils.drawStringInBox(g, displayname,
           labelX, labelY);
       g.setFont(oldFont);
       g.setColor(oldColor);
