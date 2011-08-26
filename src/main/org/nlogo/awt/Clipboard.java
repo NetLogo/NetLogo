@@ -5,7 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
-public strictfp class Clipboard {
+public final strictfp class Clipboard {
 
   // this class is not instantiable
   private Clipboard() { throw new IllegalStateException(); }

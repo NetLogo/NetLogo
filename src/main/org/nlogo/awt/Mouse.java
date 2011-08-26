@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.Component;
 import java.awt.Point;
 
-public strictfp class Mouse {
+public final strictfp class Mouse {
 
   // this class is not instantiable
   private Mouse() { throw new IllegalStateException(); }

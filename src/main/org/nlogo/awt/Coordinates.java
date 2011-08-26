@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Window;
 import java.applet.Applet;
 
-public strictfp class Coordinates {
+public final strictfp class Coordinates {
 
   // this class is not instantiable
   private Coordinates() { throw new IllegalStateException(); }

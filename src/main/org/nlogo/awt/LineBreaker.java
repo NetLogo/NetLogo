@@ -3,7 +3,7 @@ package org.nlogo.awt;
 import java.util.List;
 import java.util.ArrayList;
 
-public strictfp class LineBreaker {
+public final strictfp class LineBreaker {
 
   // this class is not instantiable
   private LineBreaker() { throw new IllegalStateException(); }

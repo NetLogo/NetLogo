@@ -6,7 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 
-public strictfp class Utils {
+public final strictfp class Utils {
 
   // this class is not instantiable
   private Utils() { throw new IllegalStateException(); }

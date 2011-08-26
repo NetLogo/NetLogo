@@ -2,7 +2,7 @@ package org.nlogo.awt;
 
 import java.awt.Color;
 
-public strictfp class Colors {
+public final strictfp class Colors {
 
   // this class is not instantiable
   private Colors() { throw new IllegalStateException(); }

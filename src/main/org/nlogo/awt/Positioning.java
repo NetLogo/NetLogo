@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 
-public strictfp class Positioning {
+public final strictfp class Positioning {
 
   // this class is not instantiable
   private Positioning() { throw new IllegalStateException(); }

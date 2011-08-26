@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 
-public strictfp class Fonts {
+public final strictfp class Fonts {
 
   // this class is not instantiable
   private Fonts() { throw new IllegalStateException(); }

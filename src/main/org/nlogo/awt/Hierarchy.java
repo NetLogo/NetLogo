@@ -5,7 +5,7 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Window;
 
-public strictfp class Hierarchy {
+public final strictfp class Hierarchy {
 
   // this class is not instantiable
   private Hierarchy() { throw new IllegalStateException(); }

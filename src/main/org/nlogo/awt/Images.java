@@ -6,7 +6,7 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
-public strictfp class Images {
+public final strictfp class Images {
 
   // this class is not instantiable
   private Images() { throw new IllegalStateException(); }

@@ -1,6 +1,6 @@
 package org.nlogo.awt;
 
-public strictfp class EventQueue {
+public final strictfp class EventQueue {
 
   // this class is not instantiable
   private EventQueue() { throw new IllegalStateException(); }
