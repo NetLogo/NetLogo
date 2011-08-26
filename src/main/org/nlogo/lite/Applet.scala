@@ -1,7 +1,7 @@
 package org.nlogo.lite
 
 import org.nlogo.awt.Hierarchy.getFrame
-import org.nlogo.awt.Utils.invokeLater
+import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window.{ RuntimeErrorDialog, VMCheck }
 import org.nlogo.util.Exceptions
 import javax.swing.{ JApplet, JFrame, JPanel, JOptionPane, JLabel }

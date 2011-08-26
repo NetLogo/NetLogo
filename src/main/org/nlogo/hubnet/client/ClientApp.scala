@@ -4,7 +4,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.{ Utils, Hierarchy, Images, Positioning }
+import org.nlogo.awt.{ Utils, Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.api.{I18N, CompilerServices}
 import javax.swing.{WindowConstants, JFrame}
@@ -65,7 +65,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
               port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
-    Utils.invokeLater(() => {
+    EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {
           org.nlogo.util.Exceptions.handle(e)
@@ -136,13 +136,13 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def showExitMessage(title: String, message: String): Boolean = {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
     0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else {
       if (connected) {
@@ -155,14 +155,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def handleLoginFailure(errorMessage: String) {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     OptionDialog.show(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
     loginDialog.setVisible(true)
   }
 
   def handleExit() {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
       setVisible(false)
@@ -172,7 +172,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def handleQuit() {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     val shouldExit = showExitMessage(
       I18N.gui.get("common.buttons.quit"),
       "Do you really want to quit HubNet?")

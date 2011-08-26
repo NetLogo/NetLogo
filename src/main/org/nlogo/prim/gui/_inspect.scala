@@ -12,7 +12,7 @@ class _inspect extends Command {
     if (agent.id == -1)
       throw new EngineException(context, this,
         I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-    org.nlogo.awt.Utils.invokeLater(
+    org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {
         override def run() {
           // we usually use a default radius of 3, but that doesnt work when the world has a radius

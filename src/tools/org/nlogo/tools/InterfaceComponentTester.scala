@@ -12,7 +12,7 @@ object InterfaceComponentTester {
   def main(args: Array[String]) {
     invokeLater { new InterfaceComponentTester } }
   def invokeLater(body: => Unit) {
-    awt.Utils.invokeLater(
+    awt.EventQueue.invokeLater(
       new Runnable { override def run() {
         body }})}
 }

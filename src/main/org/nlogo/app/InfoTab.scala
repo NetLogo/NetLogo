@@ -200,7 +200,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
       }
       toggleHelpButton()
       requestFocus()
-      org.nlogo.awt.Utils.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
+      org.nlogo.awt.EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
     }
   }
 }

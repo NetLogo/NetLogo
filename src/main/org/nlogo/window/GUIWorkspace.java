@@ -281,7 +281,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void resizeView() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     viewWidget.settings().resizeWithProgress(true);
   }
 
@@ -306,7 +306,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       runner.run();
     } else {
       try {
-        org.nlogo.awt.Utils.invokeAndWait(runner);
+        org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
         org.nlogo.util.Exceptions.handle(ex);
       }
@@ -326,7 +326,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       runner.run();
     } else {
       try {
-        org.nlogo.awt.Utils.invokeAndWait(runner);
+        org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
         org.nlogo.util.Exceptions.handle(ex);
       }
@@ -362,7 +362,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void open(final String path) {
     try {
-      org.nlogo.awt.Utils.invokeAndWait
+      org.nlogo.awt.EventQueue.invokeAndWait
           (new Runnable() {
             public void run() {
               new org.nlogo.window.Events.OpenModelEvent(path)
@@ -972,7 +972,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return new org.nlogo.agent.Importer.ErrorHandler() {
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
-        org.nlogo.awt.Utils.mustBeEventDispatchThread();
+        org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
         String[] options = fatalError ? new String[]{I18N.guiJ().get("common.buttons.ok")} :
             new String[]{I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
         return org.nlogo.swing.OptionDialog.show
@@ -1145,7 +1145,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // show the original thread in which it happened, so we hang on to the
     // current thread before switching - ST 7/30/04
     final Thread thread = Thread.currentThread();
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             runtimeErrorPrivate(owner, context, instruction, thread, ex);
@@ -1192,7 +1192,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       // if the Code tab came forward... probably because something that
       // the call to select() in ProceduresTab was doing was doing invokeLater()
       // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
-      org.nlogo.awt.Utils.invokeLater
+      org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
             public void run() {
               RuntimeErrorDialog.show("Runtime Error", context, instruction, thread, ex);

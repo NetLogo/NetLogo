@@ -46,7 +46,7 @@ with Event.LinkChild {
    * @see #setProcedures
    */
   def compile() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     (new org.nlogo.window.Events.CompileAllEvent).raise(this)
   }
 
@@ -57,7 +57,7 @@ with Event.LinkChild {
    * @param text the widget specification
    */
   def makeWidget(text: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val result = new ArrayList[String]
     val tokenizer = new StringTokenizer(text, "\n")
     while (tokenizer.hasMoreTokens)
@@ -77,7 +77,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def hideWidget(name: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     iP.hideWidget(name)
   }
 
@@ -92,7 +92,7 @@ with Event.LinkChild {
    * @see #hideWidget
    */
   def showWidget(name: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     iP.showWidget(name)
   }
 
@@ -104,7 +104,7 @@ with Event.LinkChild {
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.window.InvalidVersionException])
   def open(path: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val source = org.nlogo.api.FileIO.file2String(path)
     if (source == null)
       sys.error("couldn't open: '" + path + "'")
@@ -149,13 +149,13 @@ with Event.LinkChild {
    * up.  (For "forever" buttons, it returns immediately.)
    */
   def pressButton(name: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = findWidget(name, classOf[ButtonWidget]).asInstanceOf[ButtonWidget]
     button.keyTriggered()
   }
 
   def findWidget(name: String, tyype: Class[_]): Widget = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
       comp.getClass() == tyype && comp.asInstanceOf[Widget].displayName == name
     iP.getComponents.find(matches)
@@ -168,7 +168,7 @@ with Event.LinkChild {
    * user later, etc.
    */
   def getViewImage: java.awt.image.RenderedImage = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     workspace.exportView()
   }
 
@@ -187,7 +187,7 @@ with Event.LinkChild {
    * @param name the display name of the widget to reveal.
    */
   def getPlotContentsAsImage(name: String): java.awt.image.RenderedImage = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     findWidget(name, classOf[PlotWidget]).asInstanceOf[PlotWidget].exportGraphics
   }
 

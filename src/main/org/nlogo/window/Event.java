@@ -46,7 +46,7 @@ public abstract strictfp class Event {
   private static List<Object[]> recentEvents = new ArrayList<Object[]>();
 
   public static String recentEventTrace() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     StringBuilder buf = new StringBuilder();
     for (Object[] info : recentEvents) {
       Event event = (Event) info[0];
@@ -105,7 +105,7 @@ public abstract strictfp class Event {
 
   public void raiseLater(final Object raiser) {
     raisingThread = Thread.currentThread();
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             // call doRaise(), not raise(), so raisingThread
@@ -123,7 +123,7 @@ public abstract strictfp class Event {
   ///
 
   private void doRaise(Object raiser) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     int oldNestingDepth = nestingDepth;
     try {
 

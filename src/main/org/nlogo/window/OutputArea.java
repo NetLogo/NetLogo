@@ -131,7 +131,7 @@ public strictfp class OutputArea
       lastTemporaryAddition = text.getSelectedText();
     }
     // doesn't always work unless we wait til later to do it - ST 8/18/03
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             scrollPane.getVerticalScrollBar().setValue

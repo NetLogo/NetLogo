@@ -17,7 +17,7 @@ public strictfp class ClientApplet
   @Override
   public void init() {
     VMCheck.detectBadJVMs();
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         setBackground(java.awt.Color.white);
         getContentPane().setBackground(java.awt.Color.white);
@@ -80,7 +80,7 @@ public strictfp class ClientApplet
   }
 
   public void go(final String server, final boolean isApplet) {
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         loginDialog = new LoginDialog
             (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), isApplet);
@@ -139,7 +139,7 @@ public strictfp class ClientApplet
 
   @Override
   public void destroy() {
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         attemptLogin = false;
         clientPanel.logout();
@@ -148,8 +148,8 @@ public strictfp class ClientApplet
   }
 
   public void handleLoginFailure(final String errorMessage) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         org.nlogo.swing.OptionDialog.show
             (ClientApplet.this, "Login Failed", errorMessage, new String[]{I18N.guiJ().get("common.buttons.ok")});
@@ -158,9 +158,9 @@ public strictfp class ClientApplet
   }
 
   public void handleDisconnect(final String activityName, boolean connected, final String reason) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     if (connected) {
-      org.nlogo.awt.Utils.invokeLater(new Runnable() {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
           String[] ok = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show
@@ -189,7 +189,7 @@ public strictfp class ClientApplet
     System.setProperty("apple.awt.graphics.UseQuartz", "true");
     System.setProperty("apple.awt.showGrowBox", "true");
     VMCheck.detectBadJVMs();
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             final ClientApplet applet = new ClientApplet();

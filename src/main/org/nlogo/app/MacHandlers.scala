@@ -33,7 +33,7 @@ object MacHandlers {
     if(app == null)
       openMeLater = path
     else try {
-      org.nlogo.awt.Utils.mustBeEventDispatchThread()
+      org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
       app.fileMenu.offerSave()
       app.open(path)
     }

@@ -42,7 +42,7 @@ object ThreadUtils {
     // (or other code on the event thread) tries to lock World
     // - ST 8/13/03,8/16/03
     try {
-      org.nlogo.awt.Utils.invokeLater(new Runnable() {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
         def run() {
           try result.value = runnable.run()
           catch {

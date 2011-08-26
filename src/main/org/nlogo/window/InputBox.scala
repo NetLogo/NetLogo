@@ -165,7 +165,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
                 showError(ex.asInstanceOf[Exception])
-                org.nlogo.awt.Utils.invokeLater(() => InputBox.this.textArea.requestFocus())
+                org.nlogo.awt.EventQueue.invokeLater(() => InputBox.this.textArea.requestFocus())
             }
             editing = false
           }

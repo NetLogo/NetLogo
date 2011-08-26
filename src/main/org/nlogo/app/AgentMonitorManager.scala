@@ -147,7 +147,7 @@ with org.nlogo.window.Event.LinkParent
     if(agent == null && (agentClass ne classOf[Observer]))
       window.requestFocus()
     else
-      org.nlogo.awt.Utils.invokeLater(
+      org.nlogo.awt.EventQueue.invokeLater(
         new Runnable() { def run() { frame.requestFocus() }})
   }
   

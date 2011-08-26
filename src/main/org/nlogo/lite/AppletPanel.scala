@@ -114,7 +114,7 @@ with Event.LinkParent {
       if (!throwable.isInstanceOf[LogoException])
         throwable.printStackTrace(System.err)
       val thread = Thread.currentThread
-      org.nlogo.awt.Utils.invokeLater(
+      org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
           override def run() {
             RuntimeErrorDialog.show("Runtime Error", null, null, thread, throwable)
@@ -140,7 +140,7 @@ with Event.LinkParent {
    */
   @throws(classOf[CompilerException])
   def command(source: String) {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(defaultOwner, source)
   }
 
@@ -175,7 +175,7 @@ with Event.LinkParent {
    */
   @throws(classOf[CompilerException])
   def report(source: String): AnyRef = {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(defaultOwner, source)
   }
 
@@ -185,7 +185,7 @@ with Event.LinkParent {
    * @return contents of Code tab
    */
   def getProcedures: String = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     procedures.innerSource
   }
 
@@ -195,7 +195,7 @@ with Event.LinkParent {
    * @param source new contents
    */
   def setProcedures(source: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     procedures.innerSource(source)
   }
 

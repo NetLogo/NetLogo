@@ -144,7 +144,7 @@ object App{
     // exceptions because we're doing too much on the main thread.
         // Hey, it's important to make a good first impression.
     //   - ST 8/19/03
-    org.nlogo.awt.Utils.invokeAndWait(()=>app.finishStartup())
+    org.nlogo.awt.EventQueue.invokeAndWait(()=>app.finishStartup())
   }
 
   private def processCommandLineArguments(args: Array[String]) {
@@ -544,7 +544,7 @@ class App extends
       if (fullName != null) {
         val path = org.nlogo.workspace.ModelsLibrary.getModelPath(fullName)
         val source = org.nlogo.api.FileIO.file2String(path)
-        org.nlogo.awt.Utils.invokeLater(() => openFromSource(source, path, ModelType.Library))
+        org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
       }
     }
   }
@@ -705,7 +705,7 @@ class App extends
         // that actually prints to stdout but I'm not really sure that's
         // important. ev 2/25/08
         if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
-          org.nlogo.awt.Utils.invokeLater(() =>
+          org.nlogo.awt.EventQueue.invokeLater(() =>
             RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
       }
       else {
@@ -716,7 +716,7 @@ class App extends
           // previous one... for now, let's spit it to stdout but
           // otherwise ignore it - ST 6/10/02
           ! org.nlogo.window.RuntimeErrorDialog.alreadyVisible) {
-          org.nlogo.awt.Utils.invokeLater(() =>
+          org.nlogo.awt.EventQueue.invokeLater(() =>
             RuntimeErrorDialog.show("Internal Error", null, null, Thread.currentThread, t))
         }
       }
@@ -767,7 +767,7 @@ class App extends
    */
   @throws(classOf[CompilerException])
   def command(source: String) {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
   }
 
@@ -798,7 +798,7 @@ class App extends
    */
   @throws(classOf[CompilerException])
   def report(source: String): Object = {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())
   }
 
@@ -845,13 +845,13 @@ class App extends
     val button = findButton(name)
     if (button.forever) {
       button.foreverOn = !button.foreverOn
-      org.nlogo.awt.Utils.invokeAndWait(() => {
+      org.nlogo.awt.EventQueue.invokeAndWait(() => {
         button.buttonUp = !button.foreverOn
         button.action()
       })
     }
     else {
-      org.nlogo.awt.Utils.invokeAndWait(() => {
+      org.nlogo.awt.EventQueue.invokeAndWait(() => {
         button.buttonUp = false
         button.action()
       })
@@ -940,7 +940,7 @@ class App extends
   def getLinkParent: AppFrame = frame // for Event.LinkChild
 
   private def dispatchThreadOrBust[T](f: => T) = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     f
   }
 }

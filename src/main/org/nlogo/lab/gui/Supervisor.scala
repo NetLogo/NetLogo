@@ -59,7 +59,7 @@ class Supervisor(dialog: java.awt.Dialog,
   }
   def hasSpreadsheetExporter = exporters.exists(_.isInstanceOf[SpreadsheetExporter])
   override def start() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()
     workspace.jobManager.haltPrimary()
     try worker.compile(workspace) // result discarded. just to make sure compilation succeeds
@@ -103,13 +103,13 @@ class Supervisor(dialog: java.awt.Dialog,
       workerThread.setUncaughtExceptionHandler(
         new Thread.UncaughtExceptionHandler {
           def uncaughtException(t: Thread, e: Throwable) {
-            org.nlogo.awt.Utils.invokeLater(new Runnable() { def run() { failure(e) } } )
+            org.nlogo.awt.EventQueue.invokeLater(new Runnable() { def run() { failure(e) } } )
           }})
       workerThread.start()
-      org.nlogo.awt.Utils.invokeLater(new Runnable() { def run() {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable() { def run() {
         progressDialog.setVisible(true) } })
       workerThread.join()
-      org.nlogo.awt.Utils.invokeLater(new Runnable { def run() {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable { def run() {
         progressDialog.close() } })
     }
     catch {
@@ -123,7 +123,7 @@ class Supervisor(dialog: java.awt.Dialog,
     workspace.jobManager.haltPrimary()
     workerThread.interrupt()
     while(workerThread.isAlive) Thread.sleep(100)
-    org.nlogo.awt.Utils.invokeLater(
+    org.nlogo.awt.EventQueue.invokeLater(
       new Runnable { def run() {
         workspace.jobManager.haltPrimary()
         workspace.jobManager.haltSecondary()
@@ -133,7 +133,7 @@ class Supervisor(dialog: java.awt.Dialog,
     headlessWorkspaces.foreach(_.dispose())
   }
   private def failure(t: Throwable) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     t match {
       case ex: CompilerException =>
         org.nlogo.swing.OptionDialog.show(

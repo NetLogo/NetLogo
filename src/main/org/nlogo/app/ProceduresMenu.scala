@@ -1,6 +1,6 @@
 package org.nlogo.app
 
-import org.nlogo.awt.Utils
+import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Implicits._
 import org.nlogo.api.I18N
 import javax.swing.JMenuItem
@@ -23,7 +23,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
           target.select(endPos, endPos)
-          Utils.invokeLater{() =>
+          EventQueue.invokeLater{() =>
             target.select(namePos, namePos + proc.size)  // highlight the name
           }
         }

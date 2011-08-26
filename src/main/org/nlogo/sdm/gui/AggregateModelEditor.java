@@ -235,7 +235,7 @@ strictfp class AggregateModelEditor
 
     setVisible(true);
 
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             toFront();

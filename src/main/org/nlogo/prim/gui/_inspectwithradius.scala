@@ -16,7 +16,7 @@ class _inspectwithradius extends Command {
     if (radius < 0 || radius > limit)
       throw new EngineException(
         context, this, "the radius must be between 0 and " + limit)
-    org.nlogo.awt.Utils.invokeLater(
+    org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {
         override def run() {
             workspace.inspectAgent(agent.getAgentClass, agent, radius)

@@ -5,7 +5,7 @@ import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionMa
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.util.Femto
 import org.nlogo.api._
-import org.nlogo.awt.Utils.invokeLater
+import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
 
 import java.net.InetAddress

@@ -172,7 +172,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   private def invokeAndWait(f: => Unit) =
-    try org.nlogo.awt.Utils.invokeAndWait(new Runnable {def run() {f}})
+    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run() {f}})
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
@@ -223,7 +223,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     val newElapsed = hours + ":" + minutes + ":" + seconds
     if (force || elapsed != newElapsed) {
       elapsed = newElapsed
-      org.nlogo.awt.Utils.invokeLater(new Runnable {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable {
         def run() {
           progressArea.setText("Run #" + runCount + " of " + totalRuns + ", " +
                   "step #" + steps + "\n" +

@@ -141,7 +141,7 @@ class ViewManager(val workspace: GUIWorkspace,
     }
 
   def incrementalUpdateFromJobThread() {
-    try org.nlogo.awt.Utils.invokeAndWait(paintRunnable)
+    try org.nlogo.awt.EventQueue.invokeAndWait(paintRunnable)
     catch {
       case ex: InterruptedException =>
         repaint()
