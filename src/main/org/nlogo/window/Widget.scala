@@ -95,7 +95,7 @@ abstract class Widget extends JPanel {
   }
 
   def findWidgetContainer: WidgetContainer = {
-    org.nlogo.awt.Utils.findAncestorOfClass(this, classOf[WidgetContainer]).asInstanceOf[WidgetContainer]
+    org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer]).asInstanceOf[WidgetContainer]
   }
 
   def displayName(displayName: String): Unit = {

@@ -356,7 +356,7 @@ strictfp class InterfacePanel
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(this),
+        org.nlogo.awt.Hierarchy.getFrame(this),
         "Exporting...",
         new Runnable() {
           public void run() {

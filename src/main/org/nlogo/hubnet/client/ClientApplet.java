@@ -119,7 +119,7 @@ public strictfp class ClientApplet
   private void login(final String userid, final String hostip, final int port) {
     final String[] error = new String[1];
     org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(ClientApplet.this),
+        org.nlogo.awt.Hierarchy.getFrame(ClientApplet.this),
         "Entering...",
         new Runnable() {
           public void run() {

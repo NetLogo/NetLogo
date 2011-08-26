@@ -113,11 +113,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   protected class Channel extends javax.swing.JComponent {
     setOpaque(false)
-    setBackground(org.nlogo.awt.Utils.mixColors(InterfaceColors.SWITCH_BACKGROUND, java.awt.Color.BLACK, 0.5))
+    setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SWITCH_BACKGROUND, java.awt.Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if (org.nlogo.awt.Utils.button1Mask(e)) {
+        if (org.nlogo.awt.Mouse.button1Mask(e)) {
           isOn = ! isOn
         }
       }

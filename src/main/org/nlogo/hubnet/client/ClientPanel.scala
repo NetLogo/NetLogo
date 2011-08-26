@@ -10,7 +10,8 @@ import org.nlogo.hubnet.mirroring.{OverrideList, HubNetLinkStamp, HubNetPlotPoin
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._
-import org.nlogo.awt.Utils.{getFrame, invokeLater}
+import org.nlogo.awt.Utils.invokeLater
+import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.{PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
 import org.nlogo.api.{I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}

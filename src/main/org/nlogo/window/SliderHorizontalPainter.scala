@@ -146,11 +146,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
 
   class Channel extends JComponent {
     setOpaque(false)
-    setBackground(org.nlogo.awt.Utils.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
+    setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if ((!e.isPopupTrigger) && org.nlogo.awt.Utils.button1Mask(e)) incrementClick(e.getX())
+        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.button1Mask(e)) incrementClick(e.getX())
       }
     })
 

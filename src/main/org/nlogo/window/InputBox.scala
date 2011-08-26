@@ -181,7 +181,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     def actionPerformed(e: ActionEvent) {
       if (!editing) {
         editing = true
-        dialog = new InputDialog(org.nlogo.awt.Utils.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
+        dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
         dialog.setVisible(true)
         editDialogTextArea.setText(textArea.getText)
         editDialogTextArea.selectAll()
@@ -191,7 +191,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
   private class SelectColorActionListener extends ActionListener {
     def actionPerformed(e: ActionEvent) {
-      val colorDialog = new ColorDialog(org.nlogo.awt.Utils.getFrame(InputBox.this), true)
+      val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       valueObject(colorDialog.showInputBoxDialog(
         if (value.isInstanceOf[Double])
           org.nlogo.api.Color.modulateDouble(value.asInstanceOf[Double])
@@ -201,7 +201,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   private def showError(ex: Exception) {
-    val frame = org.nlogo.awt.Utils.getFrame(this)
+    val frame = org.nlogo.awt.Hierarchy.getFrame(this)
     if (frame != null) {
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))

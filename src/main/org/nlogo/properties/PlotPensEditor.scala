@@ -36,7 +36,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   def changed() {} // seemingly no need to do anything here
   def set(value: List[PlotPen]) {} // seemingly no need to do anything here either
 
-  private def frame = org.nlogo.awt.Utils.getFrame(this)
+  private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
   override def get: Option[List[PlotPen]] = {
     if(table.isEditing) table.getCellEditor.stopCellEditing
@@ -384,7 +384,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         try {intervalField.getText.toDouble; true}
         catch {
           case ex: NumberFormatException =>
-            OptionDialog.show(org.nlogo.awt.Utils.getWindow(this),
+            OptionDialog.show(org.nlogo.awt.Hierarchy.getWindow(this),
               "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
             false
         }

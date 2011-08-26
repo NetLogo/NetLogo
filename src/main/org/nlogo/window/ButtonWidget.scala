@@ -6,7 +6,7 @@ import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.util.MersenneTwisterFast
-import org.nlogo.awt.Utils.button1Mask
+import org.nlogo.awt.Mouse.button1Mask
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
 import org.nlogo.api.{I18N, Editable, ModelReader, Options, Version}

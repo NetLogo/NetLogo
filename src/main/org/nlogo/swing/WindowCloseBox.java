@@ -31,7 +31,7 @@ strictfp class WindowCloseBox
   }
 
   public void actionPerformed(java.awt.event.ActionEvent e) {
-    java.awt.Window window = org.nlogo.awt.Utils.getWindow(this);
+    java.awt.Window window = org.nlogo.awt.Hierarchy.getWindow(this);
     window.dispatchEvent
         (new java.awt.event.WindowEvent
             (window, java.awt.event.WindowEvent.WINDOW_CLOSING));

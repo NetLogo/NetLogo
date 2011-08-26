@@ -168,7 +168,7 @@ strictfp class WindowBar
 
   private void drawConvexRect(java.awt.Graphics g, java.awt.Rectangle r) {
     g.setColor
-        (org.nlogo.awt.Utils.mixColors
+        (org.nlogo.awt.Colors.mixColors
             (getForeground(), getBackground(), .5));
     g.drawRect(r.x, r.y, r.width, r.height);
   }

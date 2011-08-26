@@ -30,8 +30,8 @@ public strictfp class MessageDialog
   }
 
   protected MessageDialog(java.awt.Component owner) {
-    super(org.nlogo.awt.Utils.getFrame(owner));
-    parentFrame = org.nlogo.awt.Utils.getFrame(owner);
+    super(org.nlogo.awt.Hierarchy.getFrame(owner));
+    parentFrame = org.nlogo.awt.Hierarchy.getFrame(owner);
     addWindowListener
         (new java.awt.event.WindowAdapter() {
           @Override

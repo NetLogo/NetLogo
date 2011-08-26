@@ -76,7 +76,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
       messageTextArea.append(message + "\n")
       // windows seems to need this to scroll to the end
       messageTextArea.setCaretPosition(messageTextArea.getDocument.getLength)
-      val frame = org.nlogo.awt.Utils.getFrame(this)
+      val frame = org.nlogo.awt.Hierarchy.getFrame(this)
       // frame might be null in the applet ev 1/23/09
       if (frame != null) frame.pack()
     }
@@ -91,7 +91,7 @@ class ClientGUI(editorFactory: org.nlogo.window.EditorFactory,clientView: Client
     }
     def setStatus(u:String, activity: String, s:String, p:Int) {
       username setText u; server setText s; port setText p.toString
-      org.nlogo.awt.Utils.getFrame(ClientGUI.this).setTitle("HubNet: " + activity)
+      org.nlogo.awt.Hierarchy.getFrame(ClientGUI.this).setTitle("HubNet: " + activity)
     }
   }
   // Component shows label,value pair. For the status bar.

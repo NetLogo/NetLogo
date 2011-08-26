@@ -226,6 +226,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     }
   }
 
-  private def frame = org.nlogo.awt.Utils.getFrame(this)
+  private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
 }

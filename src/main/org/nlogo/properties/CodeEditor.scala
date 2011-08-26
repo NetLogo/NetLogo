@@ -76,7 +76,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     if (collapsable && collapseWhenEmpty) {
       collapso setVisible newVisibility
       arrow.updateDirection()
-      org.nlogo.awt.Utils.getWindow(this).pack()
+      org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
     }
   }

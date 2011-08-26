@@ -167,7 +167,7 @@ public strictfp class FileMenu
       offerSave();
       String source =
           ModelsLibraryDialog.open
-              (org.nlogo.awt.Utils.getFrame(FileMenu.this));
+              (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this));
       String modelPath = ModelsLibraryDialog.getModelPath();
       openFromSource(source, modelPath, "Loading...",
                      ModelTypeJ.LIBRARY());
@@ -223,7 +223,7 @@ public strictfp class FileMenu
       // workspace.getModelFileName() to guarantee consistency. this should
       // be fine since we forced a save.
       appletSaver.save
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
               app.tabs().interfaceTab().getInterfacePanel(),
               app.workspace().modelNameForDisplay(),
               exportPath,
@@ -278,7 +278,7 @@ public strictfp class FileMenu
       // workspace.getModelFileName() to guarantee consistency. this should
       // be fine since we forced a save.
       appletSaver.saveClient
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
               app.workspace().getHubNetManager().getInterfaceWidth(),
               app.workspace().getHubNetManager().getInterfaceHeight(),
               app.workspace().modelNameForDisplay(),
@@ -297,12 +297,12 @@ public strictfp class FileMenu
       final String exportPath = org.nlogo.swing.FileDialog.show
           (FileMenu.this, "Export World", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("world.csv"));
-      TaskWarning.maybeWarn(org.nlogo.awt.Utils.getFrame(FileMenu.this),
+      TaskWarning.maybeWarn(org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
                             app.workspace().world());
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
            "Exporting...",
            new Runnable() {
              public void run() {
@@ -333,7 +333,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -365,7 +365,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -393,7 +393,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export Output", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("output.txt"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -415,7 +415,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export Plot", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("plot.csv"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -438,7 +438,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export All Plots", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("plots.csv"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -462,7 +462,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing...",
         new Runnable() {
           public void run() {
@@ -493,7 +493,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Patch Colors...",
         new Runnable() {
           public void run() {
@@ -529,7 +529,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Patch Colors...",
         new Runnable() {
           public void run() {
@@ -565,7 +565,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Drawing...",
         new Runnable() {
           public void run() {
@@ -604,7 +604,7 @@ public strictfp class FileMenu
 
       if (choice != 2) {
         org.nlogo.swing.ModalProgressTask.apply(
-          org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
           "Importing Drawing...",
           new Runnable() {
             public void run() {
@@ -780,7 +780,7 @@ public strictfp class FileMenu
           }
         };
         org.nlogo.swing.ModalProgressTask.apply(
-          org.nlogo.awt.Utils.getFrame(this), message, loader);
+          org.nlogo.awt.Hierarchy.getFrame(this), message, loader);
         app.tabs().requestFocus();
       }
     } catch (org.nlogo.window.InvalidVersionException e) {
@@ -846,7 +846,7 @@ public strictfp class FileMenu
     checkWithUserBeforeSavingModelFromOldVersion();
     Saver saver = new Saver(path);
     org.nlogo.swing.ModalProgressTask.apply(
-      org.nlogo.awt.Utils.getFrame(this), "Saving...", saver);
+      org.nlogo.awt.Hierarchy.getFrame(this), "Saving...", saver);
     if (saver.getException() != null) {
       javax.swing.JOptionPane.showMessageDialog
           (this, "Save failed.  Error: " + saver.getException().getMessage(),

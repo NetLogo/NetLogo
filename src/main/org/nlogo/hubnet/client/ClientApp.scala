@@ -4,7 +4,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.{ Utils, Images, Positioning }
+import org.nlogo.awt.{ Utils, Hierarchy, Images, Positioning }
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.api.{I18N, CompilerServices}
 import javax.swing.{WindowConstants, JFrame}
@@ -122,7 +122,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   private def login(userid: String, hostip: String, port: Int) {
     var exs: Option[String] = None
-    ModalProgressTask(Utils.getFrame(this), "Entering...", () => {
+    ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
     })
     exs match {

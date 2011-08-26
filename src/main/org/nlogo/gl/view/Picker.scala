@@ -3,7 +3,7 @@ package org.nlogo.gl.view
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.gl.render.PickListener
 import org.nlogo.window.SyntaxColors
-import org.nlogo.awt.Utils.colorize
+import org.nlogo.awt.Colors.colorize
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
 

@@ -24,7 +24,7 @@ class InterfaceComponentTester extends JFrame {
   val gaslab = models + "Chemistry & Physics/GasLab/GasLab Free Gas.nlogo"
   val comp = new InterfaceComponent(frame)
   comp.listenerManager.addListener(new NoisyListener)
-  def frame = awt.Utils.getFrame(this)
+  def frame = awt.Hierarchy.getFrame(this)
 
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(comp, BorderLayout.CENTER)

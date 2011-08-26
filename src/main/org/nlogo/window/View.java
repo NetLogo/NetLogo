@@ -128,7 +128,7 @@ public strictfp class View
   boolean iconified = false;
 
   public void handle(org.nlogo.window.Events.IconifiedEvent e) {
-    if (e.frame == org.nlogo.awt.Utils.getFrame(this)) {
+    if (e.frame == org.nlogo.awt.Hierarchy.getFrame(this)) {
       iconified = e.iconified;
     }
   }
@@ -469,7 +469,7 @@ public strictfp class View
       javax.swing.JMenuItem resetItem =
           new javax.swing.JMenuItem(
               "<html>"
-                  + org.nlogo.awt.Utils.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
+                  + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
       resetItem.addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -610,14 +610,14 @@ public strictfp class View
 
     AgentMenuItem(org.nlogo.agent.Agent agent, AgentMenuType type, String caption, boolean submenu) {
       super("<html>"
-          + org.nlogo.awt.Utils.colorize(
+          + org.nlogo.awt.Colors.colorize(
           caption,
           SyntaxColors.COMMAND_COLOR)
           + " "
-          + org.nlogo.awt.Utils.colorize(
+          + org.nlogo.awt.Colors.colorize(
           agent.classDisplayName(),
           SyntaxColors.REPORTER_COLOR)
-          + org.nlogo.awt.Utils.colorize(
+          + org.nlogo.awt.Colors.colorize(
           agent.toString().substring(agent.classDisplayName().length()),
           SyntaxColors.CONSTANT_COLOR)
       );

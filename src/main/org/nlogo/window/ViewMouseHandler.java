@@ -71,14 +71,14 @@ public strictfp class ViewMouseHandler
 
   public void mousePressed(java.awt.event.MouseEvent e) {
     if (!e.isPopupTrigger() &&
-        org.nlogo.awt.Utils.button1Mask(e)) {
+        org.nlogo.awt.Mouse.button1Mask(e)) {
       mouseDown(true);
     }
   }
 
   public void mouseReleased(java.awt.event.MouseEvent e) {
     if (!e.isPopupTrigger() &&
-        org.nlogo.awt.Utils.button1Mask(e)) {
+        org.nlogo.awt.Mouse.button1Mask(e)) {
       mouseDown(false);
     }
   }

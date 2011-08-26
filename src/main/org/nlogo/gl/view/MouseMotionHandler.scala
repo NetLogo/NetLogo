@@ -2,7 +2,7 @@ package org.nlogo.gl.view
 
 import org.nlogo.api.Perspective
 import java.awt.event.{ MouseEvent, MouseWheelEvent }
-import org.nlogo.awt.Utils.button1Mask
+import org.nlogo.awt.Mouse.button1Mask
 
 object MouseMotionHandler {
   sealed trait Mode
