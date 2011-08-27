@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc;
+package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;

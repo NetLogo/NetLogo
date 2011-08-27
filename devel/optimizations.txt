@@ -17,7 +17,7 @@ early loop exit:
   _greatherthan(_countwith,_constdouble:0) => _anywith
   _notequal(_countwith,_constdouble:0) => _anywith
   _equal(_countwith,_constdouble:0) => _not(_anywith)
-@ _oneof(_with) => _oneofwith
+  _oneof(_with) => _oneofwith
 @ _any(_breedon) => _anybreedon
 @ _any(_turtleson) => _anyturtleson
 @ _equal(_count,_constdouble:0) => _not(_any)

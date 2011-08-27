@@ -427,7 +427,7 @@ R no-patches etc._nopatches
 R no-turtles etc._noturtles
 R not _not
 R of _of
-R one-of etc._oneof
+R one-of _oneof
 R or _or
 R other _other
 R other-end etc._otherend

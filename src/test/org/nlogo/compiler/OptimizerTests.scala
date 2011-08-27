@@ -118,6 +118,10 @@ class OptimizerTests extends FunSuite {
     expect("_countwith[_patches[], [_equal[_patchvariable:2[], _constdouble:15.0[]]]]")(
       compileReporter("count patches with [pcolor = red]"))
   }
+  test("oneOfWith") {
+    expect("_oneofwith[_patches[], [_equal[_patchvariable:2[], _constdouble:15.0[]]]]")(
+      compileReporter("one-of patches with [pcolor = red]"))
+  }
   test("anyWith1") {
     expect("_not[_anywith[_patches[], [_constboolean:true[]]]]")(
       compileReporter("count patches with [true] = 0"))

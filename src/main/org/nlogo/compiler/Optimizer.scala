@@ -7,6 +7,7 @@ import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
+
 private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
 
   override def visitProcedureDefinition(defn: ProcedureDefinition) {
@@ -29,7 +30,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   private val commandMungers: List[CommandMunger] =
     List(Fd1, FdLessThan1, FastHatch, FastSprout, FastCrt, FastCro)
   private val reporterMungers: List[ReporterMunger] =
-    List(PatchAt, With, Nsum, Nsum4, 
+    List(PatchAt, With, OneOfWith, Nsum, Nsum4, 
          CountWith, OtherWith, WithOther, AnyOther, AnyOtherWith, CountOther, CountOtherWith, 
          AnyWith1, AnyWith2, AnyWith3, AnyWith4, AnyWith5, 
          PatchVariableDouble, TurtleVariableDouble, RandomConst)
@@ -260,6 +261,17 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       root.strip()
       root.replace(newClass)
       root.graftArg(value)
+    }
+  }
+  // _oneof(_with) => _oneofwith
+  private object OneOfWith extends RewritingReporterMunger {
+    val clazz = classOf[_oneof]
+    def munge(root: Match) {
+      val arg0 = root.matchArg(0, classOf[_with])
+      root.strip()
+      root.replace(classOf[_oneofwith])
+      root.graftArg(arg0.matchArg(0))
+      root.graftArg(arg0.matchArg(1))
     }
   }
   private object Nsum extends RewritingReporterMunger {
