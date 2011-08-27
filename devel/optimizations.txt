@@ -1,3 +1,6 @@
+@ = got lost between 4.0 and 4.1 when the optimizer was rewritten from
+the ground up. maybe should be re-added someday.
+
 == Visitors
 
 reduce interpreter overhead by reducing arity:
