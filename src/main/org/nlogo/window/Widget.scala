@@ -94,9 +94,9 @@ abstract class Widget extends JPanel {
     override def mouseReleased(e: MouseEvent){ if (e.isPopupTrigger) { doPopup(e) } }
   }
 
-  def findWidgetContainer: WidgetContainer = {
-    org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer]).asInstanceOf[WidgetContainer]
-  }
+  def findWidgetContainer: WidgetContainer =
+    org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer])
+      .orNull.asInstanceOf[WidgetContainer]
 
   def displayName(displayName: String): Unit = {
     this.displayName = displayName

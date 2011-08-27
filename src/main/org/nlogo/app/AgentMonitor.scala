@@ -18,7 +18,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       agentEditor.reset()
       val window = org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[AgentMonitorWindow])
-      .asInstanceOf[AgentMonitorWindow]
+        .orNull.asInstanceOf[AgentMonitorWindow]
       if(window != null)
         window.agentChangeNotify(oldAgent)
       if(hasView)
