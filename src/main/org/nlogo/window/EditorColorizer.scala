@@ -55,7 +55,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
       // guard against any bugs in tokenization causing out-of-bounds positions
       if (result.isDefinedAt(j))
         result(j) = tok.tyype
-    result.toList.asJava
+    result.toIndexedSeq.asJava
   }
 
   def isMatch(token1: TokenType, token2: TokenType) =
