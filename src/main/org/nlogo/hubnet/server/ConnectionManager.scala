@@ -274,9 +274,23 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   // calling toList in 3 places here because things in JCL arent serializble
   def createControllerClientHandshakeMessage: HandshakeFromServer = {
+    // The controller client currently doesn't have access to a compiler, so we
+    // must evaluate certain things (like slider constraints) before sending them.
+    val compiledInterface = connection.getControllerClientInterface.map(widget =>
+      widget match {
+        case s: SliderSpec =>
+          SliderSpec(s.loc, s.name,
+            workspace.evaluateReporter(owner, s.min).toString,
+            workspace.evaluateReporter(owner, s.max).toString,
+            s.value,
+            workspace.evaluateReporter(owner, s.increment).toString,
+            s.units, s.vertical)
+        case w => w
+      })
+
     new HandshakeFromServer(workspace.modelNameForDisplay, LogoList(
       new ClientInterface(
-        connection.getControllerClientInterface.toList,
+        compiledInterface.toList,
         toScalaSeq(world.turtleShapeList.getShapes).toList,
         toScalaSeq(world.linkShapeList.getShapes).toList)))
   }
