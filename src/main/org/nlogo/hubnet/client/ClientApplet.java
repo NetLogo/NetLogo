@@ -3,18 +3,24 @@ package org.nlogo.hubnet.client;
 import org.nlogo.api.I18N;
 import org.nlogo.hubnet.connection.ClientRoles;
 import org.nlogo.hubnet.connection.Ports;
+import org.nlogo.window.AppletAdPanel;
 import org.nlogo.window.EditorFactory;
 
 import java.awt.Frame;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import org.nlogo.window.VMCheck;
 import org.nlogo.api.Token;
 import scala.Enumeration;
 
+import netscape.javascript.JSObject;
+
 public strictfp class ClientApplet
     extends javax.swing.JApplet
     implements ErrorHandler {
   private ClientPanel clientPanel;
+  private AppletAdPanel adPanel;
 
   @Override
   public void init() {
@@ -39,6 +45,14 @@ public strictfp class ClientApplet
 
         clientPanel.setBackground(java.awt.Color.white);
 
+        // Whenever the size of the client panel changes, notify the page containing the applet.
+        clientPanel.addComponentListener(new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            notifyNewSize();
+          }
+        });
+
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
         java.awt.GridBagConstraints c = new java.awt.GridBagConstraints();
 
@@ -49,7 +63,7 @@ public strictfp class ClientApplet
         gridbag.setConstraints(clientPanel, c);
         add(clientPanel);
 
-        org.nlogo.window.AppletAdPanel panel = new org.nlogo.window.AppletAdPanel
+        adPanel = new org.nlogo.window.AppletAdPanel
             (new java.awt.event.MouseAdapter() {
               @Override
               public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -63,8 +77,8 @@ public strictfp class ClientApplet
               }
             });
         c.anchor = java.awt.GridBagConstraints.SOUTH;
-        gridbag.setConstraints(panel, c);
-        add(panel);
+        gridbag.setConstraints(adPanel, c);
+        add(adPanel);
         attemptLogin = true;
         go(getDocumentBase().getHost(), true);
       }
@@ -92,13 +106,20 @@ public strictfp class ClientApplet
   @Override
   public String[][] getParameterInfo() {
     String pinfo[][] = {
-        {"role",  "String",   "If specified, then the login dialog will be skipped and the applet will log in "
-                            + "immediately with the specified role, which can be either \"controller\" or "
-                            + "\"participant\"."},
-        {"user",  "String",   "The user name to use for connecting to the activity. This is only used if the "
-                            + "\"role\" parameter was also specified. A default user name will be used if this "
-                            + "parameter is omitted."},
-        {"port",  "String",   "The port number to connect to."}
+        {"role",    "String",   "If specified, then the login dialog will be skipped and the applet will log in "
+                              + "immediately with the specified role, which can be either \"controller\" or "
+                              + "\"participant\"."},
+        {"user",    "String",   "The user name to use for connecting to the activity. This is only used if the "
+                              + "\"role\" parameter was also specified. A default user name will be used if this "
+                              + "parameter is omitted."},
+        {"port",    "String",   "The port number to connect to."},
+        {"notify",  "Boolean",  "If \"true\", notify the page containing the applet of changes in the activity's "
+                              + "status. The page must define a JavaScript function called handleActivityEvent "
+                              + "that accepts two arguments (event, and eventArgs). This function will be called "
+                              + "by the applet for certain events that happen in the activity. (Currently, the "
+                              + "only events supported are \"login complete\" and \"size changed\". The first one "
+                              + "doesn't have any eventArgs. The eventArgs for the second one is an array {width, "
+                              + "height} containing the new ideal applet size for the activity.)" }
     };
     return pinfo;
   }
@@ -234,6 +255,42 @@ public strictfp class ClientApplet
     if (appFrame != null) {
       appFrame.pack();
       appFrame.setVisible(true);
+    }
+
+    // Notify the page containing the applet that we finished logging in to the activity.
+    notifyActivityEvent("login complete", null);
+  }
+
+  /**
+   * Send a notification to the web page containing the applet of the ideal applet size for running
+   * this activity (the notification only gets sent if the applet tag had the "notify" parameter set
+   * to "true").
+   */
+  public void notifyNewSize() {
+    int width = clientPanel.getPreferredSize().width + adPanel.getPreferredSize().width;
+    int height = Math.max(clientPanel.getPreferredSize().height, adPanel.getPreferredSize().height);
+    notifyActivityEvent("size changed", new int[] {width, height});
+  }
+
+  /**
+   * If the applet tag had the "notify" parameter set to "true", then send a notification to the
+   * web page containing the applet by evaluating a JavaScript function called handleActivityEvent
+   * (which must be defined by the page).  This function must accept a string argument called
+   * eventName, and a second argument called eventArgs (whose type depends on the event).
+   *
+   * @param eventName The name of the event (e.g., "login complete" or "size changed").
+   * @param eventArgs Any additional information associated with this event (e.g., the new dimensions
+   * of the activity for the "size changed" event). This may be null.
+   */
+  public void notifyActivityEvent(String eventName, Object eventArgs) {
+    if (hasParam("notify") && getParameter("notify").equals("true")) {
+      try {
+        JSObject win = JSObject.getWindow(this);
+        win.call("handleActivityEvent", new Object[] {eventName, eventArgs});
+      }
+      catch (Exception e) {
+        // Possibly, the applet is being viewed in an applet viewer. In any case, ignore the exception.
+      }
     }
   }
 

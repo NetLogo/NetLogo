@@ -8,6 +8,9 @@
 # the costs escalate somewhat, so be careful - ST 2/21/09, 8/12/09
 -libraryjars project/boot/scala-2.9.0-1/lib/scala-library.jar
 
+# For Java-to-JavaScript communication support in the applet.
+-libraryjars dist/java5/plugin.jar
+
 -injars target/scala_2.9.0-1/classes
 
 # this is an injar, not a library jar, because we're going to stuff the Scala classes

@@ -5,6 +5,9 @@
 
 -libraryjars project/boot/scala-2.9.0-1/lib/scala-library.jar
 
+# For Java-to-JavaScript communication support in the applet.
+-libraryjars dist/java5/plugin.jar
+
 # just keep everything. so we aren't even really using the functionality of ProGuard here
 # except just as a way to build the jar.
 -dontshrink
