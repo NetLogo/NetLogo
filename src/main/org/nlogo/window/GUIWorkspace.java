@@ -1180,7 +1180,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // but we don't want to just stream errors to the command center, so let's not print
     // anything to the command center, and assume that someday MonitorWidgets will do
     // their own user notification - ST 12/16/01
+    // Also, we don't want to keep showing runtime error dialogs for invalid monitors every
+    // time we update the controller client widgets (hence the check for the job owner's
+    // display name being ConnectionManager monitor updater). See also: comment above
+    // ConnectionManager.monitorUpdater, the comment in HeadlessWorkspace.runtimeError(),
+    // and/or commit 8328084dffa6a422600e9f084ca2f894fa956446 - Sergey 8/25/11
     if (!(owner instanceof MonitorWidget ||
+        owner.displayName().equals("ConnectionManager (monitor updater)") ||
         ex instanceof org.nlogo.nvm.HaltException)) {
       // It doesn't seem like we should need to use invokeLater() here, because
       // we're already on the event thread.  But without using it, at least on
