@@ -489,8 +489,8 @@ public strictfp class WidgetWrapper
     java.awt.Dimension d = getSize();
     int x = e.getX();
     int y = e.getY();
-    java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Coordinates.convertPointToScreen(p, this);
+    java.awt.Point p = 
+      org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
     startPressX = p.x;
     startPressY = p.y;
 
@@ -541,12 +541,10 @@ public strictfp class WidgetWrapper
   private boolean constrainToVertical = false;
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    int x = e.getX();
-    int y = e.getY();
-    java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Coordinates.convertPointToScreen(p, this);
-    x = p.x;
-    y = p.y;
+    java.awt.Point p = 
+      org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
+    int x = p.x;
+    int y = p.y;
     if (mouseMode() == MouseMode.DRAG) {
       if ((e.getModifiers() & java.awt.event.InputEvent.SHIFT_MASK) == 0) {
         constrainToHorizontal = false;

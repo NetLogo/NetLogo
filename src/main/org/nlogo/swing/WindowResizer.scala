@@ -17,15 +17,14 @@ extends javax.swing.JPanel {
   private val adapter = new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
       val mousePressLoc = e.getPoint
-      mousePressAbsLoc = new java.awt.Point(mousePressLoc)
-      convertPointToScreen(mousePressAbsLoc, WindowResizer.this)
+      mousePressAbsLoc = convertPointToScreen(mousePressLoc, WindowResizer.this)
       sizeWhenPressed = window.getSize
     }
   }
   private val motionAdapter = new MouseMotionAdapter {
     override def mouseDragged(e: MouseEvent) {
-      val dragAbsLoc = new java.awt.Point(e.getPoint)
-      convertPointToScreen(dragAbsLoc, WindowResizer.this)
+      val dragAbsLoc = 
+        convertPointToScreen(e.getPoint, WindowResizer.this)
       window.setSize(
         sizeWhenPressed.width + (dragAbsLoc.x - mousePressAbsLoc.x),
         sizeWhenPressed.height + (dragAbsLoc.y - mousePressAbsLoc.y))

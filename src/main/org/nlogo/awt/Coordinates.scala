@@ -7,31 +7,23 @@ object Coordinates {
 
   /**
    * Converts point from a component's coordinate system to screen coordinates.
+   * Always returns a freshly constructed Point object.
    */
-  def convertPointToScreen(p: Point, c: Component) {
-    if(c != null) {
-      val done = c.isInstanceOf[Applet] || c.isInstanceOf[Window]
-      val (x, y) =
-        if (done) {
-          val pp = c.getLocationOnScreen
-          (pp.x, pp.y)
-        }
-        else
-          (c.getLocation.x, c.getLocation.y)
-      p.x += x
-      p.y += y
-      if (!done)
-        convertPointToScreen(p, c.getParent)
-    }
-  }
+  def convertPointToScreen(p: Point, c: Component): Point =
+    if(c == null)
+      new Point(p)
+    else if(c.isInstanceOf[Applet] || c.isInstanceOf[Window])
+      new Point(p.x + c.getLocationOnScreen.x,
+                p.y + c.getLocationOnScreen.y)
+    else
+      convertPointToScreen(new Point(p.x + c.getLocation.x,
+                                     p.y + c.getLocation.y),
+                           c.getParent)
 
   /**
    * Returns the location of a component on the screen.
    */
-  def getLocationOnScreen(c: Component): Point = {
-    val result = new Point(0, 0)
-    convertPointToScreen(result, c)
-    result
-  }
+  def getLocationOnScreen(c: Component): Point =
+    convertPointToScreen(new Point(0, 0), c)
 
 }
