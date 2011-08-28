@@ -79,7 +79,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     handle.setSize((HANDLE_WIDTH * scaleFactor).toInt, (HANDLE_HEIGHT * scaleFactor).toInt)
     handle.setLocation(handleXPos, HANDLE_Y_POS)
     channel.setBounds(LEFT_MARGIN, CHANNEL_Y_POS,
-      slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN, (CHANNEL_HEIGHT * scaleFactor.toInt))
+      slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN, (CHANNEL_HEIGHT * scaleFactor).toInt)
   }
 
   private def handleXPos = {
