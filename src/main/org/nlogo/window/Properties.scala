@@ -89,9 +89,9 @@ object Properties {
     P("wrappingY", P.Boolean, I18N.gui("viewSettings.2D.wrapY"), setLive = true)
   )
   val wrap3D = javaList(
-    P("wrappingX", P.Boolean, I18N.gui("viewSettings.3D.wrapX"), setLive = true),
-    P("wrappingY", P.Boolean, I18N.gui("viewSettings.3D.wrapY"), setLive = true),
-    P("wrappingZ", P.Boolean, I18N.gui("viewSettings.3D.wrapZ"), setLive = true)
+    P("wrappingX", P.Boolean, I18N.gui("viewSettings.3D.wrapX"), enabled = false, setLive = true),
+    P("wrappingY", P.Boolean, I18N.gui("viewSettings.3D.wrapY"), enabled = false, setLive = true),
+    P("wrappingZ", P.Boolean, I18N.gui("viewSettings.3D.wrapZ"), enabled = false, setLive = true)
   )
   val dims2D = javaList(
     P("minPxcor", P.NegativeInteger, "min-pxcor", I18N.gui("viewSettings.2D.minPxcor"), setLive = true),
