@@ -108,11 +108,14 @@ public strictfp class ClientApplet
     String pinfo[][] = {
         {"role",    "String",   "If specified, then the login dialog will be skipped and the applet will log in "
                               + "immediately with the specified role, which can be either \"controller\" or "
-                              + "\"participant\"."},
+                              + "\"participant\". If this parameter is defined, then the \"port\" parameter "
+                              + "also has to be defined."},
         {"user",    "String",   "The user name to use for connecting to the activity. This is only used if the "
                               + "\"role\" parameter was also specified. A default user name will be used if this "
                               + "parameter is omitted."},
-        {"port",    "String",   "The port number to connect to."},
+        {"port",    "String",   "The port number to connect to.  If the \"role\" parameter was specified, then "
+                              + "this parameter is mandatory.  Otherwise, it is optional (the default value of "
+                              + Ports.DEFAULT_PORT_NUMBER() + " will be used)."},
         {"notify",  "Boolean",  "If \"true\", notify the page containing the applet of changes in the activity's "
                               + "status. The page must define a JavaScript function called handleActivityEvent "
                               + "that accepts two arguments (event, and eventArgs). This function will be called "
@@ -129,10 +132,21 @@ public strictfp class ClientApplet
     return getParameter(param) != null;
   }
 
-  // Returns the default port number that should be used for connecting to the activity, or pre-filled
+  // Returns the port number that should be used for connecting to the activity, or pre-filled
   // in the login dialog.
-  private int getDefaultPort() {
-    return hasParam("port") ? Integer.parseInt(getParameter("port")) : Ports.DEFAULT_PORT_NUMBER();
+  private int getPort() {
+    if (hasParam("role")) {
+      if (!hasParam("port")) {
+        throw new IllegalStateException("If the \"role\" parameter is supplied in the <applet> tag, "
+          + "then the \"port\" parameter also has to be supplied.");
+      }
+      else {
+        return Integer.parseInt(getParameter("port"));
+      }
+    }
+    else {
+      return Ports.DEFAULT_PORT_NUMBER();
+    }
   }
 
   // Returns the username to use for logging in to the activity. This is only used when the login
@@ -153,10 +167,10 @@ public strictfp class ClientApplet
       public void run() {
 
         if (hasParam("role") && getParameter("role").equals("controller")) {
-          login(getDefaultUsername(), server, getDefaultPort(), ClientRoles.Controller());
+          login(getDefaultUsername(), server, getPort(), ClientRoles.Controller());
         }
         else if (hasParam("role") && getParameter("role").equals("participant")) {
-          login(getDefaultUsername(), server, getDefaultPort(), ClientRoles.Participant());
+          login(getDefaultUsername(), server, getPort(), ClientRoles.Participant());
         }
         else {
           showLoginDialog(server, isApplet);
@@ -170,7 +184,7 @@ public strictfp class ClientApplet
 
   private void showLoginDialog(final String server, final boolean isApplet) {
     loginDialog = new LoginDialog
-        (new Frame(), "", server, getDefaultPort(), !isApplet);
+        (new Frame(), "", server, getPort(), !isApplet);
     loginDialog.addWindowListener
         (new java.awt.event.WindowAdapter() {
           @Override
