@@ -2,40 +2,40 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.api.LogoList;
+import static org.nlogo.api.Syntax.*;
 
 public final strictfp class Syntax {
-  public static final int TYPE_VOID = org.nlogo.api.Syntax.VoidType();
-  public static final int TYPE_NUMBER = org.nlogo.api.Syntax.NumberType();
-  public static final int TYPE_BOOLEAN = org.nlogo.api.Syntax.BooleanType();
-  public static final int TYPE_STRING = org.nlogo.api.Syntax.StringType();
-  public static final int TYPE_LIST = org.nlogo.api.Syntax.ListType();
-  public static final int TYPE_TURTLESET = org.nlogo.api.Syntax.TurtlesetType();
-  public static final int TYPE_PATCHSET = org.nlogo.api.Syntax.PatchsetType();
-  public static final int TYPE_LINKSET = org.nlogo.api.Syntax.LinksetType();
-  public static final int TYPE_AGENTSET = org.nlogo.api.Syntax.AgentsetType();
-  public static final int TYPE_NOBODY = org.nlogo.api.Syntax.NobodyType();
-  public static final int TYPE_TURTLE = org.nlogo.api.Syntax.TurtleType();
-  public static final int TYPE_PATCH = org.nlogo.api.Syntax.PatchType();
-  public static final int TYPE_LINK = org.nlogo.api.Syntax.LinkType();
-  public static final int TYPE_COMMAND_TASK = org.nlogo.api.Syntax.CommandTaskType();
-  public static final int TYPE_REPORTER_TASK = org.nlogo.api.Syntax.ReporterTaskType();
-  public static final int TYPE_AGENT = org.nlogo.api.Syntax.AgentType();
-  public static final int TYPE_READABLE = org.nlogo.api.Syntax.ReadableType();
-  public static final int TYPE_WILDCARD = org.nlogo.api.Syntax.WildcardType();
-  public static final int TYPE_REFERENCE = org.nlogo.api.Syntax.ReferenceType();
-  public static final int TYPE_COMMAND_BLOCK = org.nlogo.api.Syntax.CommandBlockType();
-  public static final int TYPE_BOOLEAN_BLOCK = org.nlogo.api.Syntax.BooleanBlockType();
-  public static final int TYPE_NUMBER_BLOCK = org.nlogo.api.Syntax.NumberBlockType();
-  public static final int TYPE_OTHER_BLOCK = org.nlogo.api.Syntax.OtherBlockType();
-  public static final int TYPE_REPORTER_BLOCK = org.nlogo.api.Syntax.ReporterBlockType();
-  public static final int TYPE_BRACKETED = org.nlogo.api.Syntax.BracketedType();
-  public static final int TYPE_REPEATABLE = org.nlogo.api.Syntax.RepeatableType();
-  // At present, TYPE_OPTIONAL is implemented only in combination with
-  // TYPE_COMMAND_BLOCK as the last argument - ST 5/25/06
-  public static final int TYPE_OPTIONAL = org.nlogo.api.Syntax.OptionalType();
 
-  public static final int COMMAND_PRECEDENCE = org.nlogo.api.Syntax.CommandPrecedence();
-  public static final int NORMAL_PRECEDENCE = org.nlogo.api.Syntax.NormalPrecedence();
+  public static final int TYPE_VOID = VoidType();
+  public static final int TYPE_NUMBER = NumberType();
+  public static final int TYPE_BOOLEAN = BooleanType();
+  public static final int TYPE_STRING = StringType();
+  public static final int TYPE_LIST = ListType();
+  public static final int TYPE_TURTLESET = TurtlesetType();
+  public static final int TYPE_PATCHSET = PatchsetType();
+  public static final int TYPE_LINKSET = LinksetType();
+  public static final int TYPE_AGENTSET = AgentsetType();
+  public static final int TYPE_NOBODY = NobodyType();
+  public static final int TYPE_TURTLE = TurtleType();
+  public static final int TYPE_PATCH = PatchType();
+  public static final int TYPE_LINK = LinkType();
+  public static final int TYPE_COMMAND_TASK = CommandTaskType();
+  public static final int TYPE_REPORTER_TASK = ReporterTaskType();
+  public static final int TYPE_AGENT = AgentType();
+  public static final int TYPE_READABLE = ReadableType();
+  public static final int TYPE_WILDCARD = WildcardType();
+  public static final int TYPE_REFERENCE = ReferenceType();
+  public static final int TYPE_COMMAND_BLOCK = CommandBlockType();
+  public static final int TYPE_BOOLEAN_BLOCK = BooleanBlockType();
+  public static final int TYPE_NUMBER_BLOCK = NumberBlockType();
+  public static final int TYPE_OTHER_BLOCK = OtherBlockType();
+  public static final int TYPE_REPORTER_BLOCK = ReporterBlockType();
+  public static final int TYPE_BRACKETED = BracketedType();
+  public static final int TYPE_REPEATABLE = RepeatableType();
+  public static final int TYPE_OPTIONAL = OptionalType();
+
+  public static final int COMMAND_PRECEDENCE = CommandPrecedence();
+  public static final int NORMAL_PRECEDENCE = NormalPrecedence();
 
   private final int left;
   private final int[] right;
@@ -119,33 +119,33 @@ public final strictfp class Syntax {
   }
 
   public static Syntax commandSyntax(String agentClassString, boolean switches) {
-    return new Syntax(TYPE_VOID, new int[]{}, TYPE_VOID,
-        COMMAND_PRECEDENCE, 0, 0, false, agentClassString,
-        null, switches);
+    return new Syntax(VoidType(), new int[]{}, VoidType(),
+      CommandPrecedence(), 0, 0, false, agentClassString,
+      null, switches);
   }
 
   // for use by commands
   public static Syntax commandSyntax(int[] right) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         right.length, false);
   }
 
   // for use by commands
   public static Syntax commandSyntax(int[] right, boolean switches) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         right.length, right.length, false, "OTPL", null, switches);
   }
 
   // for use by commands
   public static Syntax commandSyntax(int[] right, String agentClassString) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         right.length, right.length, false, agentClassString,
         null, false);
   }
 
   // for use by commands
   public static Syntax commandSyntax(int[] right, String agentClassString, boolean switches) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         right.length, right.length, false, agentClassString,
         null, switches);
   }
@@ -153,7 +153,7 @@ public final strictfp class Syntax {
   // for use by commands
   public static Syntax commandSyntax(int[] right, String agentClassString,
                                      String blockAgentClassString, boolean switches) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         right.length, right.length, false, agentClassString,
         blockAgentClassString, switches);
   }
@@ -161,27 +161,27 @@ public final strictfp class Syntax {
   // for use by commands
   public static Syntax commandSyntax(int[] right, int dfault, String agentClassString,
                                      String blockAgentClassString, boolean switches) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         dfault, right.length, false, agentClassString,
         blockAgentClassString, switches);
   }
 
   // for use by variadic commands
   public static Syntax commandSyntax(int[] right, int dfault) {
-    return new Syntax(TYPE_VOID, right, TYPE_VOID, COMMAND_PRECEDENCE,
+    return new Syntax(VoidType(), right, VoidType(), CommandPrecedence(),
         dfault, false);
   }
 
   // for use by constants and no-argument reporters
   public static Syntax reporterSyntax(int ret) {
-    return new Syntax(TYPE_VOID, new int[0], ret,
-        NORMAL_PRECEDENCE, 0, false);
+    return new Syntax(VoidType(), new int[0], ret,
+        NormalPrecedence(), 0, false);
   }
 
   // for use by constants and no-argument reporters
   public static Syntax reporterSyntax(int ret, String agentClassString) {
-    return new Syntax(TYPE_VOID, new int[0], ret,
-        NORMAL_PRECEDENCE, 0, 0, false, agentClassString,
+    return new Syntax(VoidType(), new int[0], ret,
+        NormalPrecedence(), 0, 0, false, agentClassString,
         null, false);
   }
 
@@ -201,34 +201,34 @@ public final strictfp class Syntax {
 
   // for use by prefix reporters
   public static Syntax reporterSyntax(int[] right, int ret) {
-    return new Syntax(TYPE_VOID, right, ret, NORMAL_PRECEDENCE,
+    return new Syntax(VoidType(), right, ret, NormalPrecedence(),
         right.length, false);
   }
 
   // for use by prefix reporters
   public static Syntax reporterSyntax(int[] right, int ret, String agentClassString,
                                       String blockAgentClassString) {
-    return new Syntax(TYPE_VOID, right, ret, NORMAL_PRECEDENCE,
+    return new Syntax(VoidType(), right, ret, NormalPrecedence(),
         right.length, right.length, false,
         agentClassString, blockAgentClassString, false);
   }
 
   // for use by prefix reporters
   public static Syntax reporterSyntax(int[] right, int ret, String agentClassString) {
-    return new Syntax(TYPE_VOID, right, ret,
-        NORMAL_PRECEDENCE, right.length, right.length,
+    return new Syntax(VoidType(), right, ret,
+        NormalPrecedence(), right.length, right.length,
         false, agentClassString, null, false);
   }
 
   // for use by variadic reporters
   public static Syntax reporterSyntax(int[] right, int ret, int dfault) {
-    return new Syntax(TYPE_VOID, right, ret, NORMAL_PRECEDENCE,
+    return new Syntax(VoidType(), right, ret, NormalPrecedence(),
         dfault, false);
   }
 
   // for use by variadic reporters when min is different than default
   public static Syntax reporterSyntax(int[] right, int ret, int dfault, int min) {
-    return new Syntax(TYPE_VOID, right, ret, NORMAL_PRECEDENCE,
+    return new Syntax(VoidType(), right, ret, NormalPrecedence(),
         dfault, min, false, "OTPL", null, false);
   }
 
@@ -259,7 +259,7 @@ public final strictfp class Syntax {
    * @return true if this instruction is infix, false otherwise.
    */
   public boolean isInfix() {
-    return left != TYPE_VOID;
+    return left != VoidType();
   }
 
   /**
@@ -286,7 +286,7 @@ public final strictfp class Syntax {
 
   public boolean takesOptionalCommandBlock() {
     return right.length > 0 &&
-        compatible(right[right.length - 1], TYPE_OPTIONAL);
+        compatible(right[right.length - 1], OptionalType());
   }
 
   /**
@@ -365,15 +365,15 @@ public final strictfp class Syntax {
 
   public static int getAgentSetMask(Class<? extends Agent> type) {
     if (type == org.nlogo.agent.Turtle.class) {
-      return TYPE_TURTLESET;
+      return TurtlesetType();
     }
     if (type == org.nlogo.agent.Patch.class) {
-      return TYPE_PATCHSET;
+      return PatchsetType();
     }
     if (type == org.nlogo.agent.Link.class) {
-      return TYPE_LINKSET;
+      return LinksetType();
     }
-    return TYPE_AGENTSET;
+    return AgentsetType();
   }
 
   public static boolean compatible(int mask, int value) {
@@ -391,27 +391,27 @@ public final strictfp class Syntax {
 
   public static String typeName(Object obj) {
     if (obj instanceof Number) {
-      return typeName(TYPE_NUMBER);
+      return typeName(NumberType());
     } else if (obj instanceof Boolean) {
-      return typeName(TYPE_BOOLEAN);
+      return typeName(BooleanType());
     } else if (obj instanceof String) {
-      return typeName(TYPE_STRING);
+      return typeName(StringType());
     } else if (obj instanceof LogoList) {
-      return typeName(TYPE_LIST);
+      return typeName(ListType());
     } else if (obj instanceof org.nlogo.agent.AgentSet) {
-      return typeName(TYPE_AGENTSET);
+      return typeName(AgentsetType());
     } else if (obj == org.nlogo.api.Nobody$.MODULE$) {
-      return typeName(TYPE_NOBODY);
+      return typeName(NobodyType());
     } else if (obj instanceof org.nlogo.agent.Turtle) {
-      return typeName(TYPE_TURTLE);
+      return typeName(TurtleType());
     } else if (obj instanceof org.nlogo.agent.Patch) {
-      return typeName(TYPE_PATCH);
+      return typeName(PatchType());
     } else if (obj instanceof org.nlogo.agent.Link) {
-      return typeName(TYPE_LINK);
+      return typeName(LinkType());
     } else if (obj instanceof org.nlogo.nvm.ReporterLambda) {
-      return typeName(TYPE_REPORTER_TASK);
+      return typeName(ReporterTaskType());
     } else if (obj instanceof org.nlogo.nvm.CommandLambda) {
-      return typeName(TYPE_COMMAND_TASK);
+      return typeName(CommandTaskType());
     } else if (obj == null) {
       return "null";
     } else {
@@ -432,81 +432,81 @@ public final strictfp class Syntax {
 
   public static String typeName(int mask) {
     String result = "(none)";
-    if (compatible(mask, TYPE_REPEATABLE)) {
-      mask = subtractMasks(mask, TYPE_REPEATABLE);
+    if (compatible(mask, RepeatableType())) {
+      mask = subtractMasks(mask, RepeatableType());
     }
-    if (compatible(mask, TYPE_REFERENCE)) {
+    if (compatible(mask, ReferenceType())) {
       return "variable";
-    } else if ((mask & TYPE_BRACKETED) == TYPE_BRACKETED) {
+    } else if ((mask & BracketedType()) == BracketedType()) {
       result = "list or block";
-      mask = subtractMasks(mask, TYPE_BRACKETED);
-    } else if ((mask & TYPE_WILDCARD) == TYPE_WILDCARD) {
+      mask = subtractMasks(mask, BracketedType());
+    } else if ((mask & WildcardType()) == WildcardType()) {
       result = "anything";
-      mask = subtractMasks(mask, TYPE_WILDCARD);
-    } else if ((mask & TYPE_AGENT) == TYPE_AGENT) {
+      mask = subtractMasks(mask, WildcardType());
+    } else if ((mask & AgentType()) == AgentType()) {
       result = "agent";
-      mask = subtractMasks(mask, TYPE_AGENT | TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_NUMBER)) {
+      mask = subtractMasks(mask, AgentType() | NobodyType());
+    } else if (compatible(mask, NumberType())) {
       result = "number";
-      mask = subtractMasks(mask, TYPE_NUMBER);
-    } else if (compatible(mask, TYPE_BOOLEAN)) {
+      mask = subtractMasks(mask, NumberType());
+    } else if (compatible(mask, BooleanType())) {
       result = "TRUE/FALSE";
-      mask = subtractMasks(mask, TYPE_BOOLEAN);
-    } else if (compatible(mask, TYPE_STRING)) {
+      mask = subtractMasks(mask, BooleanType());
+    } else if (compatible(mask, StringType())) {
       result = "string";
-      mask = subtractMasks(mask, TYPE_STRING);
-    } else if (compatible(mask, TYPE_LIST)) {
+      mask = subtractMasks(mask, StringType());
+    } else if (compatible(mask, ListType())) {
       result = "list";
-      mask = subtractMasks(mask, TYPE_LIST);
-    } else if ((mask & TYPE_AGENTSET) == TYPE_AGENTSET) {
+      mask = subtractMasks(mask, ListType());
+    } else if ((mask & AgentsetType()) == AgentsetType()) {
       result = "agentset";
-      mask = subtractMasks(mask, TYPE_AGENTSET);
-    } else if (compatible(mask, TYPE_TURTLESET)) {
+      mask = subtractMasks(mask, AgentsetType());
+    } else if (compatible(mask, TurtlesetType())) {
       result = "turtle agentset";
-      mask = subtractMasks(mask, TYPE_TURTLESET);
-    } else if (compatible(mask, TYPE_PATCHSET)) {
+      mask = subtractMasks(mask, TurtlesetType());
+    } else if (compatible(mask, PatchsetType())) {
       result = "patch agentset";
-      mask = subtractMasks(mask, TYPE_PATCHSET);
-    } else if (compatible(mask, TYPE_LINKSET)) {
+      mask = subtractMasks(mask, PatchsetType());
+    } else if (compatible(mask, LinksetType())) {
       result = "link agentset";
-      mask = subtractMasks(mask, TYPE_LINKSET);
-    } else if (compatible(mask, TYPE_TURTLE)) {
+      mask = subtractMasks(mask, LinksetType());
+    } else if (compatible(mask, TurtleType())) {
       result = "turtle";
-      mask = subtractMasks(mask, TYPE_TURTLE | TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_PATCH)) {
+      mask = subtractMasks(mask, TurtleType() | NobodyType());
+    } else if (compatible(mask, PatchType())) {
       result = "patch";
-      mask = subtractMasks(mask, TYPE_PATCH | TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_LINK)) {
+      mask = subtractMasks(mask, PatchType() | NobodyType());
+    } else if (compatible(mask, LinkType())) {
       result = "link";
-      mask = subtractMasks(mask, TYPE_LINK | TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_REPORTER_TASK)) {
+      mask = subtractMasks(mask, LinkType() | NobodyType());
+    } else if (compatible(mask, ReporterTaskType())) {
       result = "reporter task";
-      mask = subtractMasks(mask, TYPE_REPORTER_TASK);
-    } else if (compatible(mask, TYPE_COMMAND_TASK)) {
+      mask = subtractMasks(mask, ReporterTaskType());
+    } else if (compatible(mask, CommandTaskType())) {
       result = "command task";
-      mask = subtractMasks(mask, TYPE_COMMAND_TASK);
-    } else if (compatible(mask, TYPE_NOBODY)) {
+      mask = subtractMasks(mask, CommandTaskType());
+    } else if (compatible(mask, NobodyType())) {
       result = "NOBODY";
-      mask = subtractMasks(mask, TYPE_NOBODY);
-    } else if (compatible(mask, TYPE_COMMAND_BLOCK)) {
+      mask = subtractMasks(mask, NobodyType());
+    } else if (compatible(mask, CommandBlockType())) {
       result = "command block";
-      mask = subtractMasks(mask, TYPE_COMMAND_BLOCK);
-    } else if ((mask & TYPE_REPORTER_BLOCK) == TYPE_REPORTER_BLOCK) {
+      mask = subtractMasks(mask, CommandBlockType());
+    } else if ((mask & ReporterBlockType()) == ReporterBlockType()) {
       result = "reporter block";
-      mask = subtractMasks(mask, TYPE_REPORTER_BLOCK);
-    } else if (compatible(mask, TYPE_OTHER_BLOCK)) {
+      mask = subtractMasks(mask, ReporterBlockType());
+    } else if (compatible(mask, OtherBlockType())) {
       result = "different kind of block";
-      mask = subtractMasks(mask, TYPE_REPORTER_BLOCK);
-    } else if (compatible(mask, TYPE_BOOLEAN_BLOCK)) {
+      mask = subtractMasks(mask, ReporterBlockType());
+    } else if (compatible(mask, BooleanBlockType())) {
       result = "TRUE/FALSE block";
-      mask = subtractMasks(mask, TYPE_BOOLEAN_BLOCK);
-    } else if (compatible(mask, TYPE_NUMBER_BLOCK)) {
+      mask = subtractMasks(mask, BooleanBlockType());
+    } else if (compatible(mask, NumberBlockType())) {
       result = "number block";
-      mask = subtractMasks(mask, TYPE_NUMBER_BLOCK);
+      mask = subtractMasks(mask, NumberBlockType());
     }
     if (mask == 0) {
       return result;
-    } else if (mask == Syntax.TYPE_OPTIONAL) {
+    } else if (mask == OptionalType()) {
       return result + " (optional)";
     } else {
       return result + " or " + typeName(mask);
@@ -515,29 +515,29 @@ public final strictfp class Syntax {
 
   public static int getTypeConstant(Class<?> typeC) {
     if (typeC.equals(java.lang.Object.class)) {
-      return Syntax.TYPE_WILDCARD;
+      return WildcardType();
     } else if (typeC.equals(org.nlogo.agent.Agent.class)) {
-      return Syntax.TYPE_AGENT;
+      return AgentType();
     } else if (typeC.equals(org.nlogo.agent.AgentSet.class)) {
-      return Syntax.TYPE_AGENTSET;
+      return AgentsetType();
     } else if (typeC.equals(org.nlogo.api.LogoList.class)) {
-      return Syntax.TYPE_LIST;
+      return ListType();
     } else if (typeC.equals(org.nlogo.agent.Turtle.class)) {
-      return Syntax.TYPE_TURTLE;
+      return TurtleType();
     } else if (typeC.equals(org.nlogo.agent.Patch.class)) {
-      return Syntax.TYPE_PATCH;
+      return PatchType();
     } else if (typeC.equals(org.nlogo.agent.Link.class)) {
-      return Syntax.TYPE_LINK;
+      return LinkType();
     } else if (typeC.equals(org.nlogo.nvm.ReporterLambda.class)) {
-      return Syntax.TYPE_REPORTER_TASK;
+      return ReporterTaskType();
     } else if (typeC.equals(org.nlogo.nvm.CommandLambda.class)) {
-      return Syntax.TYPE_COMMAND_TASK;
+      return CommandTaskType();
     } else if (typeC.equals(java.lang.String.class)) {
-      return Syntax.TYPE_STRING;
+      return StringType();
     } else if (typeC.equals(java.lang.Double.class) || typeC.equals(java.lang.Double.TYPE)) {
-      return Syntax.TYPE_NUMBER;
+      return NumberType();
     } else if (typeC.equals(java.lang.Boolean.class) || typeC.equals(java.lang.Boolean.TYPE)) {
-      return Syntax.TYPE_BOOLEAN;
+      return BooleanType();
     }
     // Sorry, probably should handle this better somehow.  ~Forrest (2/16/2007)
     throw new IllegalArgumentException
@@ -564,7 +564,7 @@ public final strictfp class Syntax {
 
   public String dump() {
     StringBuffer buf = new StringBuffer(); // NOPMD
-    if (left != TYPE_VOID) {
+    if (left != VoidType()) {
       buf.append(typeName(left));
       buf.append(',');
     }
@@ -574,7 +574,7 @@ public final strictfp class Syntax {
       }
       buf.append(typeName(right[i]));
     }
-    if (ret != TYPE_VOID) {
+    if (ret != VoidType()) {
       buf.append(',');
       buf.append(typeName(ret));
     }

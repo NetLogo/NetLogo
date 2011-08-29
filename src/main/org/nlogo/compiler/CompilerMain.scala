@@ -35,7 +35,7 @@ private object CompilerMain {
     // finds command lambdas and makes Procedures out of them, too.  the remaining
     // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
     for(procdef <- defs) {
-      procdef.accept(new ReferenceVisitor)  // handle TYPE_REFERENCE
+      procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new LambdaVisitor)  // handle _lambdareport

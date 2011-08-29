@@ -1,10 +1,11 @@
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers.{cAssert,exception}
-import org.nlogo.api.{CompilerException,Token,TokenType}
-import org.nlogo.nvm.{Command,Instruction,Procedure,Referenceable,Reporter,Syntax}
+import CompilerExceptionThrowers.{ cAssert, exception }
+import org.nlogo.api.{ CompilerException, Syntax, Token, TokenType }
+import org.nlogo.nvm
+import nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
 import org.nlogo.prim._
-import Syntax.compatible
+import org.nlogo.nvm.Syntax.compatible
 
 /**
  * The actual NetLogo parser.
@@ -127,7 +128,7 @@ private class ExpressionParser(procedure: Procedure,
       if(token.tyype == TokenType.CLOSE_PAREN)
         done = true
       else if(token.tyype == TokenType.REPORTER &&
-              goalType != Syntax.TYPE_REPORTER_TASK &&
+              goalType != Syntax.ReporterTaskType &&
               token.value.asInstanceOf[Reporter].syntax.isInfix) {
         // we can be confident that any infix op still in tokens
         // at this point is lower precedence, or we would already
@@ -154,13 +155,13 @@ private class ExpressionParser(procedure: Procedure,
    * into Syntax, where it could be made more efficient.
    */
   private def isVariadic(ins:Instruction):Boolean =
-    ins.syntax.right.exists(compatible(_,Syntax.TYPE_REPEATABLE))
+    ins.syntax.right.exists(compatible(_,Syntax.RepeatableType))
   /**
    * this is used for generating an error message when some arguments are found to be missing
    */
   private def missingInput(app:Application,right:Boolean):String = {
     val syntax = app.instruction.syntax
-    val rightArgs = syntax.right.map(Syntax.aTypeName(_).replaceFirst("anything","any input"))
+    val rightArgs = syntax.right.map(nvm.Syntax.aTypeName(_).replaceFirst("anything","any input"))
     val left = syntax.left
     val result =
       if(right && isVariadic(app.instruction) && syntax.min == 0)
@@ -170,7 +171,7 @@ private class ExpressionParser(procedure: Procedure,
         app.instruction.displayName + " expected " + (if(isVariadic(app.instruction)) "at least " else "") +
         (if(right) syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
                     (if(syntax.isInfix) " on the right" else "")
-         else Syntax.aTypeName(left) + " on the left.")
+         else nvm.Syntax.aTypeName(left) + " on the left.")
     if(!right)
       result
     else if(rightArgs.forall(_ == "any input"))
@@ -205,9 +206,9 @@ private class ExpressionParser(procedure: Procedure,
     // look at right args from left-to-right...
     var formal1 = 0
     val types = syntax.right()
-    while(formal1 < types.length && !compatible(Syntax.TYPE_REPEATABLE,types(formal1))) {
+    while(formal1 < types.length && !compatible(Syntax.RepeatableType,types(formal1))) {
       if(formal1 == types.length - 1 && app.size == types.length - 1 &&
-         compatible(Syntax.TYPE_OPTIONAL,types(formal1)))
+         compatible(Syntax.OptionalType,types(formal1)))
         return
       cAssert(app.size > actual1,missingInput(app,true),app)
       app.replaceArg(actual1,resolveType(types(formal1),app(actual1),app.instruction.displayName))
@@ -218,7 +219,7 @@ private class ExpressionParser(procedure: Procedure,
       // then we encountered a repeatable arg, so we look at right args from right-to-left...
       var actual2 = app.size - 1
       var formal2 = types.length - 1
-      while(formal2 >= 0 && !compatible(Syntax.TYPE_REPEATABLE,types(formal2))) {
+      while(formal2 >= 0 && !compatible(Syntax.RepeatableType,types(formal2))) {
         cAssert(app.size > actual2 && actual2 > -1,missingInput(app,true),app)
         app.replaceArg(actual2,resolveType(types(formal2),app(actual2),app.instruction.displayName))
         formal2 -= 1
@@ -245,9 +246,9 @@ private class ExpressionParser(procedure: Procedure,
       case _ => originalArg
     }
     cAssert(compatible(goalType,arg.reportedType),
-            instruction + " expected this input to be " + Syntax.aTypeName(goalType) + ", but got " +
-            Syntax.aTypeName(arg.reportedType) + " instead",arg)
-    if(goalType == Syntax.TYPE_REFERENCE) {
+            instruction + " expected this input to be " + nvm.Syntax.aTypeName(goalType) + ", but got " +
+            nvm.Syntax.aTypeName(arg.reportedType) + " instead",arg)
+    if(goalType == Syntax.ReferenceType) {
       // we can be sure this cast will work, because otherwise the assert above would've failed (no
       // Expression other than a ReporterApp can have type TYPE_REFERENCE, which it must or we
       // wouldn't be here). there has to be a better way to do this, though...
@@ -311,9 +312,9 @@ private class ExpressionParser(procedure: Procedure,
    */
   private def parseExpressionInternal(tokens:BufferedIterator[Token],variadic:Boolean,precedence:Int,goalType:Int):Expression = {
     var token = tokens.head
-    val wantAnyLambda = goalType == (Syntax.TYPE_REPORTER_TASK | Syntax.TYPE_COMMAND_TASK)
-    val wantReporterLambda = wantAnyLambda || goalType == Syntax.TYPE_REPORTER_TASK
-    val wantCommandLambda = wantAnyLambda || goalType == Syntax.TYPE_COMMAND_TASK
+    val wantAnyLambda = goalType == (Syntax.ReporterTaskType | Syntax.CommandTaskType)
+    val wantReporterLambda = wantAnyLambda || goalType == Syntax.ReporterTaskType
+    val wantCommandLambda = wantAnyLambda || goalType == Syntax.CommandTaskType
     val expr:Expression =
       token.tyype match {
         case TokenType.OPEN_PAREN =>
@@ -488,9 +489,9 @@ private class ExpressionParser(procedure: Procedure,
   private def parseDelayedBlock(block:DelayedBlock,goalType:Int):Expression = {
     val tokens = block.tokens.iterator.buffered
     val openBracket = tokens.head
-    if(compatible(goalType,Syntax.TYPE_REPORTER_BLOCK)) {
+    if(compatible(goalType,Syntax.ReporterBlockType)) {
       tokens.next()
-      val expr = resolveType(Syntax.TYPE_WILDCARD,parseExpression(tokens,false,goalType),null)
+      val expr = resolveType(Syntax.WildcardType, parseExpression(tokens,false,goalType),null)
       val token = tokens.head
       cAssert(token.tyype != TokenType.EOF,MISSING_CLOSE_BRACKET,openBracket) // should be impossible for delayed block
       cAssert(token.tyype == TokenType.CLOSE_BRACKET,EXPECTED_CLOSE_BRACKET,token)
@@ -498,7 +499,7 @@ private class ExpressionParser(procedure: Procedure,
       tokens.next()
       new ReporterBlock(expr.asInstanceOf[ReporterApp],openBracket.startPos,token.endPos,token.fileName)
     }
-    else if(compatible(goalType,Syntax.TYPE_COMMAND_BLOCK)) {
+    else if(compatible(goalType,Syntax.CommandBlockType)) {
       tokens.next()
       var token = tokens.head
       val stmts = new Statements(token.fileName)
@@ -513,11 +514,11 @@ private class ExpressionParser(procedure: Procedure,
       tokens.next()
       new CommandBlock(stmts,openBracket.startPos,token.endPos,token.fileName)
     }
-    else if(compatible(goalType, Syntax.TYPE_REPORTER_TASK) &&
+    else if(compatible(goalType, Syntax.ReporterTaskType) &&
             !block.isCommandLambda &&
-            !compatible(goalType,Syntax.TYPE_LIST)) {
+            !compatible(goalType,Syntax.ListType)) {
       val openBracket = tokens.next()
-      val expr = resolveType(Syntax.TYPE_WILDCARD,parseExpression(tokens,false,Syntax.TYPE_WILDCARD),null).asInstanceOf[ReporterApp]
+      val expr = resolveType(Syntax.WildcardType,parseExpression(tokens,false,Syntax.WildcardType),null).asInstanceOf[ReporterApp]
       val closeBracket = tokens.head
       cAssert(closeBracket.tyype != TokenType.EOF,MISSING_CLOSE_BRACKET,openBracket) // should be impossible for delayed block
       cAssert(closeBracket.tyype == TokenType.CLOSE_BRACKET,EXPECTED_CLOSE_BRACKET,closeBracket)
@@ -529,9 +530,9 @@ private class ExpressionParser(procedure: Procedure,
       app.addArgument(expr)
       app
     }
-    else if(compatible(goalType, Syntax.TYPE_COMMAND_TASK) &&
+    else if(compatible(goalType, Syntax.CommandTaskType) &&
             block.isCommandLambda &&
-            !compatible(goalType,Syntax.TYPE_LIST)) {
+            !compatible(goalType,Syntax.ListType)) {
       val openBracket = tokens.next()
       var token = tokens.head
       val stmts = new Statements(token.fileName)
@@ -555,7 +556,7 @@ private class ExpressionParser(procedure: Procedure,
       lambda.token(openBracket)
       new ReporterApp(lambda, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
     }
-    else if(compatible(goalType,Syntax.TYPE_LIST)) {
+    else if(compatible(goalType,Syntax.ListType)) {
       // parseConstantList() deals with the open bracket itself, but it leaves the close bracket so
       // we can easily find out where the expression ends.  it's OK to pass a null world and
       // extensionManager here because we only ever use this code when we are parsing constant lists
@@ -567,7 +568,7 @@ private class ExpressionParser(procedure: Procedure,
       new ReporterApp(tmp,openBracket.startPos,token.endPos,token.fileName)
     }
     // we weren't actually expecting a block at all!
-    else exception("Expected " + Syntax.aTypeName(goalType) + " here, rather than a list or block.",block)
+    else exception("Expected " + nvm.Syntax.aTypeName(goalType) + " here, rather than a list or block.",block)
   }
   private class MissingPrefixException(val token:Token) extends Exception
   private class UnexpectedTokenException(val token:Token) extends Exception

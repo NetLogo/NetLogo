@@ -85,13 +85,13 @@ public strictfp class Procedure {
   public Syntax syntax() {
     int[] right = new int[(args.size() - localsCount)];
     for (int i = 0; i < right.length; i++) {
-      right[i] = Syntax.TYPE_WILDCARD;
+      right[i] = org.nlogo.api.Syntax.WildcardType();
     }
     switch (tyype) {
       case COMMAND:
         return Syntax.commandSyntax(right);
       case REPORTER:
-        return Syntax.reporterSyntax(right, Syntax.TYPE_WILDCARD);
+        return Syntax.reporterSyntax(right, org.nlogo.api.Syntax.WildcardType());
       default:
         throw new IllegalStateException();
     }

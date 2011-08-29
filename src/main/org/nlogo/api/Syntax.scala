@@ -1,8 +1,5 @@
 package org.nlogo.api
 
-// NOTE: This class mirrors the behavior of nvm.Syntax but is distinct from it. The only
-// relationship is that nvm.Syntax uses the constants declared in here.
-
 /**
  * Specifies the arguments accepted by a primitive.
  * Used by the compiler for type-checking.

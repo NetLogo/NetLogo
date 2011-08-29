@@ -1,6 +1,7 @@
 package org.nlogo.generator
 
-import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter }
 
 object Generator {
   private[generator] val KEPT_INSTRUCTION_PREFIX = "keptinstr"
@@ -130,11 +131,11 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         new CustomGenerator(profilingEnabled).generate(instr.asInstanceOf[CustomGenerated], nlgen, thisInstrUID, ip)
         nlgen.markLineNumber(parentInstrUID)
         val actualReturnType = instr.syntax.ret match {
-          case Syntax.TYPE_BOOLEAN => classOf[Boolean]
-          case Syntax.TYPE_LIST => classOf[org.nlogo.api.LogoList]
-          case Syntax.TYPE_STRING => classOf[String]
-          case Syntax.TYPE_WILDCARD => classOf[Object]
-          case Syntax.TYPE_VOID => java.lang.Void.TYPE
+          case Syntax.BooleanType => classOf[Boolean]
+          case Syntax.ListType => classOf[org.nlogo.api.LogoList]
+          case Syntax.StringType => classOf[String]
+          case Syntax.WildcardType => classOf[Object]
+          case Syntax.VoidType => java.lang.Void.TYPE
         }
         nlgen.generateConversion(actualReturnType, retTypeWanted, parentInstr, argIndex)
       } else {

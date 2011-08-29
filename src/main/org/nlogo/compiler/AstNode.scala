@@ -7,8 +7,9 @@ package org.nlogo.compiler
 // see also AstVisitor.scala which implements the Visitor pattern on these AST's.
 
 import CompilerExceptionThrowers.exception
-import org.nlogo.api.CompilerException
-import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction, Syntax }
+import org.nlogo.api.{ CompilerException, Syntax }
+import org.nlogo.nvm
+import nvm.{ Procedure, Command, Reporter, Instruction }
 import org.nlogo.api.CompilerException
 
 /**
@@ -113,7 +114,7 @@ class Statement(var command: Command, var start: Int, var end: Int, val file: St
  * to commands and reporters, etc.
  */
 class CommandBlock(val statements: Statements, var start: Int, var end: Int, val file: String) extends Expression {
-  def reportedType() = Syntax.TYPE_COMMAND_BLOCK;
+  def reportedType() = Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
 }
@@ -136,13 +137,13 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
   def reportedType(): Int = {
     val appType = app.reportedType
     appType match {
-      case Syntax.TYPE_BOOLEAN => Syntax.TYPE_BOOLEAN_BLOCK
-      case Syntax.TYPE_NUMBER => Syntax.TYPE_NUMBER_BLOCK
+      case Syntax.BooleanType => Syntax.BooleanBlockType
+      case Syntax.NumberType => Syntax.NumberBlockType
       case _ =>
-        if (Syntax.compatible(appType, Syntax.TYPE_BOOLEAN)
-            || Syntax.compatible(appType, Syntax.TYPE_NUMBER))
-          Syntax.TYPE_REPORTER_BLOCK
-        else Syntax.TYPE_OTHER_BLOCK
+        if (nvm.Syntax.compatible(appType, Syntax.BooleanType)
+            || nvm.Syntax.compatible(appType, Syntax.NumberType))
+          Syntax.ReporterBlockType
+        else Syntax.OtherBlockType
     }
   }
 }
