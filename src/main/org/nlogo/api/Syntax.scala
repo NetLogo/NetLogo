@@ -18,7 +18,7 @@ package org.nlogo.api
  * }
  * </pre>
  * 
- * An input can be made variadic, meaning that the it can be repeated any number of
+ * An input can be made variadic, meaning that it can be repeated any number of
  * times when enclosed in parentheses, if you add the <code>RepeatableType</code> flag.
  * When using variadic inputs you should also define the default number of inputs, that
  * is, the number of inputs expect if the user does not use parentheses. For example:
