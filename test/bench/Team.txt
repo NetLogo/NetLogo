@@ -467,12 +467,12 @@ procedure GO:[]{O---}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -1946,12 +1946,12 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ICONST_0
           DLOAD 2
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 4
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -2271,12 +2271,12 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ICONST_0
           DLOAD 2
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 4
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -2883,8 +2883,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -5510,7 +5510,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ICONST_1
             ALOAD 6
-            INVOKESTATIC org/nlogo/nvm/Syntax.typeName (Ljava/lang/Object;)Ljava/lang/String;
+            INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
             INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -6442,8 +6442,8 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENT : I
+          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.AgentType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -6579,12 +6579,12 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V

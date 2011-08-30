@@ -245,12 +245,12 @@ procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCH : I
+          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.PatchType ()I
           IOR
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
+          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
           IOR
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_PATCHSET : I
+          INVOKESTATIC org/nlogo/api/Syntax.PatchsetType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -1429,12 +1429,12 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           ICONST_0
           DLOAD 2
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 4
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -2573,12 +2573,12 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -2795,12 +2795,12 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -3017,12 +3017,12 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -3817,8 +3817,8 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
               ALOAD 1
               ALOAD 0
               ICONST_0
-              GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
-              GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+              INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
+              INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
               IOR
               ALOAD 2
               INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -3994,13 +3994,13 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           DLOAD 3
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -4168,13 +4168,13 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           DLOAD 3
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -4556,13 +4556,13 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           DLOAD 3
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -4685,12 +4685,12 @@ procedure MOVE-EAT-AGE-DIE:[]{-T--}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -5298,12 +5298,12 @@ procedure GROW-GRAIN:[]{-TP-}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -5546,12 +5546,12 @@ procedure GROW-GRAIN:[]{-TP-}:
           DUP
           ICONST_0
           ALOAD 2
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           ALOAD 3
-          INVOKESTATIC org/nlogo/nvm/Syntax.aTypeName (Ljava/lang/Object;)Ljava/lang/String;
+          INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
@@ -6777,8 +6777,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLESET : I
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_TURTLE : I
+          INVOKESTATIC org/nlogo/api/Syntax.TurtlesetType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.TurtleType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
@@ -6881,8 +6881,8 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ALOAD 1
           ALOAD 0
           ICONST_0
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_LIST : I
-          GETSTATIC org/nlogo/nvm/Syntax.TYPE_AGENTSET : I
+          INVOKESTATIC org/nlogo/api/Syntax.ListType ()I
+          INVOKESTATIC org/nlogo/api/Syntax.AgentsetType ()I
           IOR
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
