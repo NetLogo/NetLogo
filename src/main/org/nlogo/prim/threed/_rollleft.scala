@@ -1,12 +1,12 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ Command, Context, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 class _rollleft extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.TYPE_NUMBER), "-T--", true)
+    Syntax.commandSyntax(Array(Syntax.NumberType), "-T--", true)
   override def perform(context: Context) {
     val delta = argEvalDoubleValue(context, 0)
     val t = context.agent.asInstanceOf[Turtle3D]

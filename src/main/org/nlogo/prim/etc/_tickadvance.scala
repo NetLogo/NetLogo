@@ -1,11 +1,11 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.nvm.{Context, EngineException, Syntax}
-import org.nlogo.api.{I18N, LogoException}
+import org.nlogo.api.{ I18N, LogoException, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 
-class _tickadvance extends org.nlogo.nvm.Command {
+class _tickadvance extends Command {
   override def syntax = 
-    Syntax.commandSyntax(Array(Syntax.TYPE_NUMBER), "O---", true)
+    Syntax.commandSyntax(Array(Syntax.NumberType), "O---", true)
   override def perform(context: Context) {
     val amount = argEvalDoubleValue(context, 0)
     if(amount < 0)

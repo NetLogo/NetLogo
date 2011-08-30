@@ -2,7 +2,7 @@ package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.agent.Agent;
 
@@ -12,7 +12,7 @@ public strictfp class _hubnetsendfollow
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]
-            {Syntax.TYPE_STRING, Syntax.TYPE_AGENT, Syntax.TYPE_NUMBER},
+            {Syntax.StringType(), Syntax.AgentType(), Syntax.NumberType()},
             "OTPL", false);
   }
 

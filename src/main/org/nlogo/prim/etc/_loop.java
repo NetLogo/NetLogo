@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _loop
     extends Command
@@ -16,7 +16,7 @@ public final strictfp class _loop
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_COMMAND_BLOCK});
+        (new int[]{Syntax.CommandBlockType()});
   }
 
   public void assemble(org.nlogo.nvm.AssemblerAssistant a) {

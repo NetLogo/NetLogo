@@ -10,7 +10,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _ask
     extends Command
@@ -18,8 +18,8 @@ public final strictfp class _ask
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_AGENTSET | Syntax.TYPE_AGENT,
-            Syntax.TYPE_COMMAND_BLOCK},
+        (new int[]{Syntax.AgentsetType() | Syntax.AgentType(),
+            Syntax.CommandBlockType()},
             "OTPL", "?", true);
   }
 
@@ -58,7 +58,7 @@ public final strictfp class _ask
       agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
       agentset.add(agent);
     } else {
-      throw new ArgumentTypeException(context, this, 0, Syntax.TYPE_AGENTSET | Syntax.TYPE_AGENT, target);
+      throw new ArgumentTypeException(context, this, 0, Syntax.AgentsetType() | Syntax.AgentType(), target);
     }
     context.runExclusiveJob(agentset, next);
     context.ip = offset;

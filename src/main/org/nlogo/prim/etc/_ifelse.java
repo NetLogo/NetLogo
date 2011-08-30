@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _ifelse
     extends Command
@@ -11,9 +11,9 @@ public final strictfp class _ifelse
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_BOOLEAN,
-            Syntax.TYPE_COMMAND_BLOCK,
-            Syntax.TYPE_COMMAND_BLOCK});
+        (new int[]{Syntax.BooleanType(),
+            Syntax.CommandBlockType(),
+            Syntax.CommandBlockType()});
   }
 
   @Override

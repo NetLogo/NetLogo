@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _reverse
     extends Reporter
@@ -18,14 +18,14 @@ public final strictfp class _reverse
       return new StringBuilder((String) obj).reverse().toString();
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_LIST | Syntax.TYPE_STRING;
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

@@ -4,7 +4,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _createturtles
     extends Command
@@ -23,8 +23,8 @@ public final strictfp class _createturtles
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_COMMAND_BLOCK | Syntax.TYPE_OPTIONAL},
+        (new int[]{Syntax.NumberType(),
+            Syntax.CommandBlockType() | Syntax.OptionalType()},
             "O---", "-T--", true);
   }
 

@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 /**
  * reloads all extensions

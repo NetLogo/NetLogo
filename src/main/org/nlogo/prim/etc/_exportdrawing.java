@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _exportdrawing
     extends org.nlogo.nvm.Command {
@@ -30,7 +30,7 @@ public final strictfp class _exportdrawing
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
+    int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }
 }

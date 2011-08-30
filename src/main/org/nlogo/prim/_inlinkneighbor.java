@@ -5,7 +5,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _inlinkneighbor
     extends Reporter {
@@ -22,8 +22,8 @@ public final strictfp class _inlinkneighbor
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_AGENT},
-            Syntax.TYPE_BOOLEAN, "-T--");
+        (new int[]{Syntax.AgentType()},
+            Syntax.BooleanType(), "-T--");
   }
 
   @Override

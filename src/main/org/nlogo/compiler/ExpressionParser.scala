@@ -2,8 +2,8 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.api.{ CompilerException, Syntax, Token, TokenType, TypeNames }
+import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
-import org.nlogo.nvm.Syntax.compatible
 import org.nlogo.prim._
 
 /**
@@ -163,7 +163,7 @@ private class ExpressionParser(procedure: Procedure,
     val rightArgs = syntax.right.map(TypeNames.aName(_).replaceFirst("anything","any input"))
     val left = syntax.left
     val result =
-      if(right && isVariadic(app.instruction) && syntax.min == 0)
+      if(right && isVariadic(app.instruction) && syntax.minimum == 0)
         app.instruction.displayName + " expected " + syntax.rightDefault + " input" + (if(syntax.rightDefault > 1) "s" else "") +
         " on the right or any number of inputs when surrounded by parentheses"
       else
@@ -204,7 +204,7 @@ private class ExpressionParser(procedure: Procedure,
     }
     // look at right args from left-to-right...
     var formal1 = 0
-    val types = syntax.right()
+    val types = syntax.right
     while(formal1 < types.length && !compatible(Syntax.RepeatableType,types(formal1))) {
       if(formal1 == types.length - 1 && app.size == types.length - 1 &&
          compatible(Syntax.OptionalType,types(formal1)))

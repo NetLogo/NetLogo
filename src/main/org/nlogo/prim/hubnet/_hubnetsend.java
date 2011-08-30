@@ -10,7 +10,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsend
@@ -30,7 +30,7 @@ public final strictfp class _hubnetsend
         if (!(node instanceof String)) {
           throw new EngineException
               (context, this, "HUBNET-SEND expected "
-                  + TypeNames.aName(Syntax.TYPE_STRING | Syntax.TYPE_LIST)
+                  + TypeNames.aName(Syntax.StringType() | Syntax.ListType())
                   + " of strings as the first input, but one item is the "
                   + TypeNames.name(node) + " " +
                   Dump.logoObject(node)
@@ -42,7 +42,7 @@ public final strictfp class _hubnetsend
       nodes.add((String) nodesArg);
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, nodesArg);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), nodesArg);
     }
     hubnetManager.send(asScalaBuffer(nodes), tag, message);
     context.ip = next;
@@ -50,9 +50,9 @@ public final strictfp class _hubnetsend
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING | Syntax.TYPE_LIST,
-        Syntax.TYPE_STRING,
-        Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.StringType() | Syntax.ListType(),
+        Syntax.StringType(),
+        Syntax.WildcardType()};
     return Syntax.commandSyntax(right);
   }
 }

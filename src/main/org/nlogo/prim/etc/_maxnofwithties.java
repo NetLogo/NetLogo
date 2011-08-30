@@ -11,17 +11,17 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _maxnofwithties
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_AGENTSET,
-            new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER_BLOCK},
-            Syntax.TYPE_AGENTSET,
-            Syntax.NORMAL_PRECEDENCE,
+        (Syntax.AgentsetType(),
+            new int[]{Syntax.NumberType(), Syntax.NumberBlockType()},
+            Syntax.AgentsetType(),
+            org.nlogo.api.Syntax.NormalPrecedence(),
             false, // left associative
             "OTPL",
             "?"    // takes reporter block of unknown agent type

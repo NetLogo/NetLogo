@@ -5,7 +5,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _outlinkto
     extends Reporter {
@@ -21,8 +21,8 @@ public final strictfp class _outlinkto
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_AGENT};
-    int ret = Syntax.TYPE_AGENT;
+    int[] right = {Syntax.AgentType()};
+    int ret = Syntax.AgentType();
     return Syntax.reporterSyntax(right, ret, "-T--");
   }
 

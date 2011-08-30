@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _clearall
     extends org.nlogo.nvm.Command {

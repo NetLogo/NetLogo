@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linkbreedvariableof
     extends Reporter {
@@ -46,7 +46,7 @@ public final strictfp class _linkbreedvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_LINKSET | Syntax.TYPE_LINK,
+              Syntax.LinksetType() | Syntax.LinkType(),
               agentOrSet);
     }
   }
@@ -58,8 +58,8 @@ public final strictfp class _linkbreedvariableof
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LINK | Syntax.TYPE_LINKSET};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.LinkType() | Syntax.LinksetType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

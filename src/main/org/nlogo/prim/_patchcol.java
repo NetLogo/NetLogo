@@ -5,7 +5,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _patchcol
@@ -28,8 +28,8 @@ public final strictfp class _patchcol
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER};
-    int ret = Syntax.TYPE_PATCHSET;
+    int[] right = {Syntax.NumberType()};
+    int ret = Syntax.PatchsetType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

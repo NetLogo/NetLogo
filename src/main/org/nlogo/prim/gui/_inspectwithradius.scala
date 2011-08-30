@@ -1,11 +1,11 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.{ I18N, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _inspectwithradius extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.TYPE_AGENT, Syntax.TYPE_NUMBER))
+    Syntax.commandSyntax(Array(Syntax.AgentType, Syntax.NumberType))
   override def perform(context: Context) {
     val agent = argEvalAgent(context, 0)
     val radius = argEvalDouble(context, 1)

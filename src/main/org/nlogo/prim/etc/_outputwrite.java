@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Workspace;
 
 public final strictfp class _outputwrite
@@ -17,7 +17,7 @@ public final strictfp class _outputwrite
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_READABLE};
+    int[] right = {Syntax.ReadableType()};
     return Syntax.commandSyntax(right);
   }
 }

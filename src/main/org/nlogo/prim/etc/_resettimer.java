@@ -1,6 +1,6 @@
 package org.nlogo.prim.etc;
 
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _resettimer
     extends org.nlogo.nvm.Command {

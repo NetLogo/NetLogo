@@ -1,7 +1,7 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ CommandRunnable, LogoException }
-import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _movieclose extends Command {

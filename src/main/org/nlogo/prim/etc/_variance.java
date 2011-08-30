@@ -10,14 +10,14 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _variance extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_LIST},
-            Syntax.TYPE_NUMBER);
+        (new int[]{Syntax.ListType()},
+            Syntax.NumberType());
   }
 
   @Override

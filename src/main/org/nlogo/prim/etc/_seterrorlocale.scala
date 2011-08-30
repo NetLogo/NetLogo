@@ -1,19 +1,19 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.nvm.{Context, Syntax}
-import org.nlogo.api.I18N
+import org.nlogo.api.{ I18N, Syntax }
+import org.nlogo.nvm.{ Command, Context }
 import java.util.Locale
 
-class _seterrorlocale extends org.nlogo.nvm.Command {
+class _seterrorlocale extends Command {
   override def syntax = 
-    Syntax.commandSyntax(Array(Syntax.TYPE_STRING, Syntax.TYPE_STRING), "O---", false)
+    Syntax.commandSyntax(Array(Syntax.StringType, Syntax.StringType), "O---", false)
   override def perform(context: Context) {
     I18N.errors.setLanguage(new Locale(argEvalString(context, 0), argEvalString(context, 1)))
     context.ip = next
   }
 }
 
-class _spanish extends org.nlogo.nvm.Command {
+class _spanish extends Command {
   override def syntax = Syntax.commandSyntax(Array(), "O---", false)
   override def perform(context: Context) {
     I18N.errors.setLanguage(new Locale("es", "MX"))

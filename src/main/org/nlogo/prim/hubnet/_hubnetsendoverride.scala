@@ -1,13 +1,13 @@
 package org.nlogo.prim.hubnet
 
-import org.nlogo.nvm.Syntax._
-import org.nlogo.nvm.{Context, Syntax}
-import org.nlogo.agent.{ArrayAgentSet, Agent, AgentSet}
-import org.nlogo.api.{CommandRunnable, LogoException}
+import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
+import org.nlogo.api.{ CommandRunnable, LogoException, Syntax }
+import Syntax._
+import org.nlogo.nvm.{ Command, Context }
 
-class _hubnetsendoverride extends org.nlogo.nvm.Command {
+class _hubnetsendoverride extends Command {
   override def syntax = Syntax.commandSyntax(
-    Array(TYPE_STRING, TYPE_AGENTSET | TYPE_AGENT, TYPE_STRING, TYPE_REPORTER_BLOCK),
+    Array(StringType, AgentsetType | AgentType, StringType, ReporterBlockType),
     "OTPL", "?", false)
 
   @throws(classOf[LogoException])

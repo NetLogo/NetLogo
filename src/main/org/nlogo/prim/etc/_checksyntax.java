@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 /**
  * A reporter that checks the syntax of NetLogo statements. This compiles code
@@ -28,7 +28,7 @@ public final strictfp class _checksyntax
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_STRING);
+    int[] right = {Syntax.StringType()};
+    return Syntax.reporterSyntax(right, Syntax.StringType());
   }
 }

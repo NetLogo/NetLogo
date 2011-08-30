@@ -1,13 +1,13 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.LogoListBuilder
-import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, Syntax }
+import org.nlogo.api.{ LogoListBuilder, Syntax }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter }
 
 class _filter extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK, Syntax.TYPE_LIST),
-      Syntax.TYPE_LIST)
+    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.ListType),
+      Syntax.ListType)
 
   def report(context: Context) = {
     val lambda = argEvalReporterLambda(context, 0)
@@ -23,7 +23,7 @@ class _filter extends Reporter {
             builder.add(item)
         case obj =>
           throw new ArgumentTypeException(
-            context, this, 0, Syntax.TYPE_BOOLEAN, obj)
+            context, this, 0, Syntax.BooleanType, obj)
       }
     val result = builder.toLogoList
     if (result.size == list.size) list

@@ -4,7 +4,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _watch
@@ -12,7 +12,7 @@ public final strictfp class _watch
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_AGENT},
+        (new int[]{Syntax.AgentType()},
             "O---", true);
   }
 

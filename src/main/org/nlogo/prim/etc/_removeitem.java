@@ -7,7 +7,7 @@ import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _removeitem
     extends Reporter
@@ -41,15 +41,15 @@ public final strictfp class _removeitem
       return buf.toString();
     } else {
       throw new ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_LIST | Syntax.TYPE_STRING},
-            Syntax.TYPE_LIST | Syntax.TYPE_STRING);
+        (new int[]{Syntax.NumberType(),
+            Syntax.ListType() | Syntax.StringType()},
+            Syntax.ListType() | Syntax.StringType());
   }
 }

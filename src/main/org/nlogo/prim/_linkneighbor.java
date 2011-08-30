@@ -6,7 +6,7 @@ import org.nlogo.agent.LinkManager;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linkneighbor extends Reporter {
   private final String breedName;
@@ -22,8 +22,8 @@ public final strictfp class _linkneighbor extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_AGENT},
-            Syntax.TYPE_BOOLEAN, "-T--");
+        (new int[]{Syntax.AgentType()},
+            Syntax.BooleanType(), "-T--");
   }
 
   @Override

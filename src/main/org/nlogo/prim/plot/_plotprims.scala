@@ -1,8 +1,8 @@
 package org.nlogo.prim.plot
 
-import org.nlogo.plot.{Plot, PlotManager}
-import org.nlogo.nvm.{Context, Syntax, Command, Reporter, EngineException}
-import org.nlogo.api.{Color, PlotPenInterface}
+import org.nlogo.api.{ Color, PlotPenInterface, Syntax }
+import org.nlogo.nvm.{ Context, Command, EngineException, Reporter }
+import org.nlogo.plot.{ Plot, PlotManager }
 
 //
 // commands requiring only the plot manager (its ok if there are no plots)
@@ -17,7 +17,7 @@ class _setupplots extends PlotManagerCommand(callsOtherCode = true) {
 class _updateplots extends PlotManagerCommand(callsOtherCode = true) {
   def perform(plotManager: PlotManager, c: Context) { workspace.updatePlots(c) }
 }
-class _setcurrentplot extends PlotManagerCommand(callsOtherCode = false, Syntax.TYPE_STRING) {
+class _setcurrentplot extends PlotManagerCommand(callsOtherCode = false, Syntax.StringType) {
   def perform(plotManager: PlotManager, context: Context){
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
@@ -35,7 +35,7 @@ class _clearplot extends ReallySimpleCurrentPlotCommand(_.clear())
 class _autoplotoff extends ReallySimpleCurrentPlotCommand(_.autoPlotOn=false)
 class _autoploton extends ReallySimpleCurrentPlotCommand(_.autoPlotOn=true)
 
-class _plot extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
+class _plot extends CurrentPlotCommand(Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val y = argEvalDoubleValue(context, 0)
     p.currentPenOrBust.plot(y)
@@ -43,7 +43,7 @@ class _plot extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
   }
 }
 
-class _plotxy extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER) {
+class _plotxy extends CurrentPlotCommand(Syntax.NumberType, Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
@@ -52,7 +52,7 @@ class _plotxy extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER)
   }
 }
 
-class _setplotxrange extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER) {
+class _setplotxrange extends CurrentPlotCommand(Syntax.NumberType, Syntax.NumberType) {
   def perform(p: Plot, context: Context) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
@@ -66,7 +66,7 @@ class _setplotxrange extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_
   }
 }
 
-class _setplotyrange extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER) {
+class _setplotyrange extends CurrentPlotCommand(Syntax.NumberType, Syntax.NumberType) {
   def perform(p: Plot, context: Context) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
@@ -80,14 +80,14 @@ class _setplotyrange extends CurrentPlotCommand(Syntax.TYPE_NUMBER, Syntax.TYPE_
   }
 }
 
-class _createtemporaryplotpen extends CurrentPlotCommand(Syntax.TYPE_STRING) {
+class _createtemporaryplotpen extends CurrentPlotCommand(Syntax.StringType) {
   def perform(plot: Plot, context: Context) {
     val name = argEvalString(context, 0)
     plot.currentPen=plot.getPen(name).getOrElse(plot.createPlotPen(name, true))
   }
 }
 
-class _histogram extends CurrentPlotCommand(Syntax.TYPE_LIST) {
+class _histogram extends CurrentPlotCommand(Syntax.ListType) {
   def perform(plot: Plot, c: Context) {
     val list = argEvalList(c,0)
     val currentPen = plot.currentPenOrBust
@@ -100,7 +100,7 @@ class _histogram extends CurrentPlotCommand(Syntax.TYPE_LIST) {
   }
 }
 
-class _sethistogramnumbars extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
+class _sethistogramnumbars extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(plot: Plot, context: Context) {
     val numBars = argEvalIntValue(context, 0)
     if (numBars < 1) {
@@ -110,7 +110,7 @@ class _sethistogramnumbars extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
   }
 }
 
-class _exportplot extends CurrentPlotCommand(Syntax.TYPE_STRING, Syntax.TYPE_STRING) {
+class _exportplot extends CurrentPlotCommand(Syntax.StringType, Syntax.StringType) {
   def perform(plot: Plot, context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
@@ -133,7 +133,7 @@ class _exportplot extends CurrentPlotCommand(Syntax.TYPE_STRING, Syntax.TYPE_STR
 }
 
 // this also requires only the PlotManager, but it seems better to put it here next to exportplot.
-class _exportplots extends PlotManagerCommand(callsOtherCode = false, Syntax.TYPE_STRING) {
+class _exportplots extends PlotManagerCommand(callsOtherCode = false, Syntax.StringType) {
   def perform(plotManager: PlotManager, context: Context){
     val path = argEvalString(context, 0)
     if (plotManager.getPlotNames.length == 0) {
@@ -158,13 +158,13 @@ class _exportplots extends PlotManagerCommand(callsOtherCode = false, Syntax.TYP
 // reporters
 //
 
-class _autoplot extends ReallySimplePlotReporter(Syntax.TYPE_BOOLEAN, p => Boolean.box(p.autoPlotOn))
-class _plotname extends ReallySimplePlotReporter(Syntax.TYPE_STRING, _.name)
-class _plotxmin extends ReallySimplePlotReporter(Syntax.TYPE_NUMBER, p => Double.box(p.xMin))
-class _plotxmax extends ReallySimplePlotReporter(Syntax.TYPE_NUMBER, p => Double.box(p.xMax))
-class _plotymin extends ReallySimplePlotReporter(Syntax.TYPE_NUMBER, p => Double.box(p.yMin))
-class _plotymax extends ReallySimplePlotReporter(Syntax.TYPE_NUMBER, p => Double.box(p.yMax))
-class _plotpenexists extends PlotReporter(Syntax.TYPE_BOOLEAN,Syntax.TYPE_STRING){
+class _autoplot extends ReallySimplePlotReporter(Syntax.BooleanType, p => Boolean.box(p.autoPlotOn))
+class _plotname extends ReallySimplePlotReporter(Syntax.StringType, _.name)
+class _plotxmin extends ReallySimplePlotReporter(Syntax.NumberType, p => Double.box(p.xMin))
+class _plotxmax extends ReallySimplePlotReporter(Syntax.NumberType, p => Double.box(p.xMax))
+class _plotymin extends ReallySimplePlotReporter(Syntax.NumberType, p => Double.box(p.yMin))
+class _plotymax extends ReallySimplePlotReporter(Syntax.NumberType, p => Double.box(p.yMax))
+class _plotpenexists extends PlotReporter(Syntax.BooleanType,Syntax.StringType){
   def report(p: Plot, c: Context) =
     Boolean.box(p.getPen(argEvalString(c,0)).isDefined)
 }
@@ -184,11 +184,11 @@ final class _plotpenreset extends ReallySimpleCurrentPlotCommand( plot => {
   plot.makeDirty()
 })
 
-final class _setplotpeninterval extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
+final class _setplotpeninterval extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(p: Plot, c: Context) { p.currentPenOrBust.interval = argEvalDoubleValue(c, 0) }
 }
 
-final class _setplotpenmode extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
+final class _setplotpenmode extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(p: Plot, c: Context) {
     val mode = argEvalIntValue(c, 0)
     if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
@@ -198,13 +198,13 @@ final class _setplotpenmode extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
   }
 }
 
-final class _setplotpencolor extends CurrentPlotCommand(Syntax.TYPE_NUMBER) {
+final class _setplotpencolor extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(p: Plot, c: Context) {
     p.currentPenOrBust.color = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(argEvalDoubleValue(c, 0)))
   }
 }
 
-final class _setcurrentplotpen extends CurrentPlotCommand(Syntax.TYPE_STRING) {
+final class _setcurrentplotpen extends CurrentPlotCommand(Syntax.StringType) {
   def perform(p: Plot, c: Context) {
     val penName = argEvalString(c, 0)
     p.currentPen = p.getPen(penName).getOrElse(

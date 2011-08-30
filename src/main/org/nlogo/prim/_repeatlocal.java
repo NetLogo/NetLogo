@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _repeatlocal
     extends Command
@@ -17,7 +17,7 @@ public final strictfp class _repeatlocal
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_COMMAND_BLOCK};
+    int[] right = {Syntax.NumberType(), Syntax.CommandBlockType()};
     return Syntax.commandSyntax(right);
   }
 

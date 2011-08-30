@@ -9,7 +9,7 @@ import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtleorlinkvariableof
     extends Reporter {
@@ -48,8 +48,8 @@ public final strictfp class _turtleorlinkvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_LINKSET | Syntax.TYPE_LINK |
-                  Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.LinksetType() | Syntax.LinkType() |
+                  Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }
@@ -61,8 +61,8 @@ public final strictfp class _turtleorlinkvariableof
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LINK | Syntax.TYPE_LINKSET | Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.LinkType() | Syntax.LinksetType() | Syntax.TurtleType() | Syntax.TurtlesetType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -93,8 +93,8 @@ public final strictfp class _turtleorlinkvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_LINKSET | Syntax.TYPE_LINK |
-                  Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.LinksetType() | Syntax.LinkType() |
+                  Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }

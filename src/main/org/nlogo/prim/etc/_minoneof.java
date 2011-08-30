@@ -8,14 +8,14 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _minoneof
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK};
-    int ret = Syntax.TYPE_AGENT;
+    int[] right = {Syntax.AgentsetType(), Syntax.NumberBlockType()};
+    int ret = Syntax.AgentType();
     return Syntax.reporterSyntax(right, ret, "OTPL", "?");
   }
 

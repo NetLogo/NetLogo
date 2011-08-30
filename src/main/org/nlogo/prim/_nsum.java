@@ -10,7 +10,7 @@ import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _nsum extends Reporter {
   public int vn;
@@ -18,8 +18,8 @@ public final strictfp class _nsum extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_REFERENCE},
-            Syntax.TYPE_NUMBER, "-TP-");
+        (new int[]{Syntax.ReferenceType()},
+            Syntax.NumberType(), "-TP-");
   }
 
   @Override

@@ -1,12 +1,12 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ LogoException, Nobody }
-import org.nlogo.nvm.{ Context, Reporter, Syntax }
+import org.nlogo.api.{ Nobody, Syntax }
+import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.window.GUIWorkspace
 
 class _mousepatch extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(Syntax.TYPE_PATCH | Syntax.TYPE_NOBODY)
+    Syntax.reporterSyntax(Syntax.PatchType | Syntax.NobodyType)
   override def report(context: Context): AnyRef =
     workspace match {
       case gw: GUIWorkspace =>

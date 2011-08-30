@@ -6,6 +6,7 @@ import java.util.List;
 import org.nlogo.api.Dump;
 import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Let;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
 
 import static scala.collection.JavaConversions.asJavaIterable;
@@ -85,13 +86,13 @@ public strictfp class Procedure {
   public Syntax syntax() {
     int[] right = new int[(args.size() - localsCount)];
     for (int i = 0; i < right.length; i++) {
-      right[i] = org.nlogo.api.Syntax.WildcardType();
+      right[i] = Syntax.WildcardType();
     }
     switch (tyype) {
       case COMMAND:
         return Syntax.commandSyntax(right);
       case REPORTER:
-        return Syntax.reporterSyntax(right, org.nlogo.api.Syntax.WildcardType());
+        return Syntax.reporterSyntax(right, Syntax.WildcardType());
       default:
         throw new IllegalStateException();
     }

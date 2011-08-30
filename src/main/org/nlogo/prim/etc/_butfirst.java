@@ -6,15 +6,15 @@ import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _butfirst
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_LIST | Syntax.TYPE_STRING;
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -41,7 +41,7 @@ public final strictfp class _butfirst
       return string.substring(1);
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, arg0);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), arg0);
     }
   }
 

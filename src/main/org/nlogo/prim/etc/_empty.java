@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _empty
     extends Reporter
@@ -19,14 +19,14 @@ public final strictfp class _empty
       String string = (String) obj;
       return (string.length() == 0) ? Boolean.TRUE : Boolean.FALSE;
     } else {
-      throw new ArgumentTypeException(context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+      throw new ArgumentTypeException(context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

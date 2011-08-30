@@ -1,7 +1,7 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Agent;
@@ -14,8 +14,8 @@ public strictfp class _hubnetclearoverride
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]
-            {Syntax.TYPE_STRING, Syntax.TYPE_AGENTSET | Syntax.TYPE_AGENT,
-                Syntax.TYPE_STRING},
+            {Syntax.StringType(), Syntax.AgentsetType() | Syntax.AgentType(),
+                Syntax.StringType()},
             "OTPL", "?", false);
   }
 

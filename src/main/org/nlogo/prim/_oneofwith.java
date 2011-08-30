@@ -6,10 +6,10 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Nobody$;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
 
 public final strictfp class _oneofwith
     extends Reporter {
@@ -17,8 +17,8 @@ public final strictfp class _oneofwith
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_AGENTSET, Syntax.TYPE_BOOLEAN_BLOCK},
-            Syntax.TYPE_AGENT | Syntax.TYPE_NOBODY, "OTPL", "?");
+        (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
+         Syntax.AgentType() | Syntax.NobodyType(), "OTPL", "?");
   }
 
   @Override

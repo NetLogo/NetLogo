@@ -1,14 +1,15 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.{ Observer3D, Turtle3D }
-import org.nlogo.nvm.{ Command, Context, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 class _facexyz extends Command {
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.TYPE_NUMBER,
-            Syntax.TYPE_NUMBER,
-            Syntax.TYPE_NUMBER),
+      Array(Syntax.NumberType,
+            Syntax.NumberType,
+            Syntax.NumberType),
       "OT--", true)
   override def perform(context: Context) {
     context.agent match {

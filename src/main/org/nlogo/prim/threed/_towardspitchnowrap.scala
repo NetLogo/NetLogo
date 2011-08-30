@@ -1,13 +1,13 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ I18N, AgentException }
-import org.nlogo.nvm.{ Context, EngineException, Reporter, Syntax }
+import org.nlogo.api.{ AgentException, I18N, Syntax }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _towardspitchnowrap extends Reporter {
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH),
-      Syntax.TYPE_NUMBER, "-TP-")
+    Syntax.reporterSyntax(Array(Syntax.TurtleType | Syntax.PatchType),
+      Syntax.NumberType, "-TP-")
   override def report(context: Context) = {
     val agent = argEvalAgent(context, 0)
     if (agent.id == -1)

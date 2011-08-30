@@ -8,7 +8,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _oneof
     extends Reporter {
@@ -33,14 +33,14 @@ public final strictfp class _oneof
       }
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET, obj);
+          (context, this, 0, Syntax.ListType() | Syntax.AgentsetType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_AGENTSET | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.AgentsetType() | Syntax.ListType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -81,7 +81,7 @@ public final strictfp class _oneof
       }
     } else {
       throw new ArgumentTypeException(context, this, 0,
-          Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET, obj);
+          Syntax.ListType() | Syntax.AgentsetType(), obj);
     }
   }
 

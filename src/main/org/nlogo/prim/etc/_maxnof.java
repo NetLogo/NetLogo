@@ -11,14 +11,14 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _maxnof
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK};
-    int ret = Syntax.TYPE_AGENTSET;
+    int[] right = {Syntax.NumberType(), Syntax.AgentsetType(), Syntax.NumberBlockType()};
+    int ret = Syntax.AgentsetType();
     return Syntax.reporterSyntax(right, ret, "OTPL", "?");
   }
 

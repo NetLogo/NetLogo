@@ -4,13 +4,13 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _jump
     extends Command {
   @Override
   public Syntax syntax() {
-    return Syntax.commandSyntax(new int[]{Syntax.TYPE_NUMBER},
+    return Syntax.commandSyntax(new int[]{Syntax.NumberType()},
         "-T--", true);
   }
 

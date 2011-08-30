@@ -4,16 +4,16 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _minus extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_NUMBER;
-    int[] right = {Syntax.TYPE_NUMBER};
-    int ret = Syntax.TYPE_NUMBER;
+    int left = Syntax.NumberType();
+    int[] right = {Syntax.NumberType()};
+    int ret = Syntax.NumberType();
     return Syntax.reporterSyntax(left, right, ret,
-        Syntax.NORMAL_PRECEDENCE - 3);
+        org.nlogo.api.Syntax.NormalPrecedence() - 3);
   }
 
   @Override

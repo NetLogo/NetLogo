@@ -10,17 +10,17 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _inradius
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET;
-    int[] right = {Syntax.TYPE_NUMBER};
-    int ret = Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET;
+    int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
+    int[] right = {Syntax.NumberType()};
+    int ret = Syntax.TurtlesetType() | Syntax.PatchsetType();
     return Syntax.reporterSyntax
-        (left, right, ret, Syntax.NORMAL_PRECEDENCE + 2,
+        (left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2,
             false, "-TP-", null);
   }
 

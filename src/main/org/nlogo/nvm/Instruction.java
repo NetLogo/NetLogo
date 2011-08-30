@@ -12,6 +12,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.util.Thunk;
 
 public abstract strictfp class Instruction
@@ -364,7 +365,7 @@ public abstract strictfp class Instruction
       }
       return agent;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.AgentType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentType(), obj);
     }
   }
 
@@ -373,7 +374,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.AgentSet) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.AgentsetType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentsetType(), obj);
     }
   }
 
@@ -384,11 +385,11 @@ public abstract strictfp class Instruction
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
       if (set.type() != type) {
         throw new ArgumentTypeException(context, this, argIndex,
-            Syntax.getAgentSetMask(type), obj);
+            getAgentSetMask(type), obj);
       }
       return set;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.AgentsetType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentsetType(), obj);
     }
   }
 
@@ -397,7 +398,7 @@ public abstract strictfp class Instruction
     try {
       return (Boolean) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.BooleanType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.BooleanType(), obj);
     }
   }
 
@@ -406,7 +407,7 @@ public abstract strictfp class Instruction
     try {
       return ((Boolean) obj).booleanValue();
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.BooleanType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.BooleanType(), obj);
     }
   }
 
@@ -423,7 +424,7 @@ public abstract strictfp class Instruction
     try {
       return (LogoList) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.ListType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.ListType(), obj);
     }
   }
 
@@ -432,7 +433,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Patch) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.PatchType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.PatchType(), obj);
     }
   }
 
@@ -441,7 +442,7 @@ public abstract strictfp class Instruction
     try {
       return (String) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.StringType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.StringType(), obj);
     }
   }
 
@@ -451,7 +452,7 @@ public abstract strictfp class Instruction
     try {
       return (Double) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.NumberType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.NumberType(), obj);
     }
   }
 
@@ -460,7 +461,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Turtle) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.TurtleType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.TurtleType(), obj);
     }
   }
 
@@ -469,7 +470,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Link) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.LinkType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.LinkType(), obj);
     }
   }
 
@@ -478,7 +479,7 @@ public abstract strictfp class Instruction
     try {
       return (ReporterLambda) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.ReporterTaskType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
     }
   }
 
@@ -487,8 +488,21 @@ public abstract strictfp class Instruction
     try {
       return (CommandLambda) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, org.nlogo.api.Syntax.CommandTaskType(), obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }
+  }
+
+  private static int getAgentSetMask(Class<? extends Agent> type) {
+    if (org.nlogo.api.Turtle.class.isAssignableFrom(type)) {
+      return Syntax.TurtlesetType();
+    }
+    if (org.nlogo.api.Patch.class.isAssignableFrom(type)) {
+      return Syntax.PatchsetType();
+    }
+    if (org.nlogo.api.Link.class.isAssignableFrom(type)) {
+      return Syntax.LinksetType();
+    }
+    return Syntax.AgentsetType();
   }
 
   public void copyFieldsFrom(Instruction sourceInstr) {

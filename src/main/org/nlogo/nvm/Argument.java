@@ -2,6 +2,7 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 
 /**
@@ -38,7 +39,7 @@ public strictfp class Argument
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException
           (getExceptionMessage
-           (org.nlogo.api.Syntax.AgentsetType(), obj));
+           (Syntax.AgentsetType(), obj));
     }
   }
 
@@ -50,7 +51,7 @@ public strictfp class Argument
       return (org.nlogo.api.Agent) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.AgentType(), obj));
+        getExceptionMessage(Syntax.AgentType(), obj));
     }
   }
 
@@ -61,7 +62,7 @@ public strictfp class Argument
       return (Boolean) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.BooleanType(), obj));
+        getExceptionMessage(Syntax.BooleanType(), obj));
     }
   }
 
@@ -72,7 +73,7 @@ public strictfp class Argument
       return ((Boolean) obj).booleanValue();
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.BooleanType(), obj));
+        getExceptionMessage(Syntax.BooleanType(), obj));
     }
   }
 
@@ -83,7 +84,7 @@ public strictfp class Argument
       return ((Double) obj).doubleValue();
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.NumberType(), obj));
+        getExceptionMessage(Syntax.NumberType(), obj));
     }
   }
 
@@ -94,7 +95,7 @@ public strictfp class Argument
       return ((Double) obj).intValue();
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.NumberType(), obj));
+        getExceptionMessage(Syntax.NumberType(), obj));
     }
   }
 
@@ -105,7 +106,7 @@ public strictfp class Argument
       return (org.nlogo.api.LogoList) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.ListType(), obj));
+        getExceptionMessage(Syntax.ListType(), obj));
     }
   }
 
@@ -116,7 +117,7 @@ public strictfp class Argument
       return (org.nlogo.api.Patch) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.PatchType(), obj));
+        getExceptionMessage(Syntax.PatchType(), obj));
     }
   }
 
@@ -127,7 +128,7 @@ public strictfp class Argument
       return (String) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.StringType(), obj));
+        getExceptionMessage(Syntax.StringType(), obj));
     }
   }
 
@@ -139,7 +140,7 @@ public strictfp class Argument
       return (org.nlogo.api.Turtle) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.TurtleType(), obj));
+        getExceptionMessage(Syntax.TurtleType(), obj));
     }
   }
 
@@ -150,7 +151,7 @@ public strictfp class Argument
       return (org.nlogo.api.Link) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.LinkType(), obj));
+        getExceptionMessage(Syntax.LinkType(), obj));
     }
   }
 
@@ -161,7 +162,7 @@ public strictfp class Argument
       return (org.nlogo.api.ReporterTask) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.ReporterTaskType(), obj));
+        getExceptionMessage(Syntax.ReporterTaskType(), obj));
     }
   }
 
@@ -172,7 +173,7 @@ public strictfp class Argument
       return (org.nlogo.api.CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException(
-        getExceptionMessage(org.nlogo.api.Syntax.CommandTaskType(), obj));
+        getExceptionMessage(Syntax.CommandTaskType(), obj));
     }
   }
 

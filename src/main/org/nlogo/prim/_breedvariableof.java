@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _breedvariableof
@@ -21,8 +21,8 @@ public final strictfp class _breedvariableof
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET},
-            Syntax.TYPE_WILDCARD);
+        (new int[]{Syntax.TurtleType() | Syntax.TurtlesetType()},
+            Syntax.WildcardType());
   }
 
   @Override
@@ -59,7 +59,7 @@ public final strictfp class _breedvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }

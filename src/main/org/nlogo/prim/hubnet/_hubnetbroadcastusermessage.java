@@ -2,7 +2,7 @@ package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _hubnetbroadcastusermessage
     extends org.nlogo.nvm.Command {
@@ -15,7 +15,7 @@ public final strictfp class _hubnetbroadcastusermessage
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.WildcardType()};
     return Syntax.commandSyntax(right);
   }
 }

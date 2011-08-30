@@ -5,7 +5,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _askconcurrent
     extends Command
@@ -13,7 +13,7 @@ public final strictfp class _askconcurrent
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_AGENTSET, Syntax.TYPE_COMMAND_BLOCK},
+        (new int[]{Syntax.AgentsetType(), Syntax.CommandBlockType()},
             "OTPL", "?", true);
   }
 

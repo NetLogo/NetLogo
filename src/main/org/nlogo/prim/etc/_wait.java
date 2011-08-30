@@ -5,7 +5,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _wait
     extends Command
@@ -14,7 +14,7 @@ public final strictfp class _wait
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER};
+    int[] right = {Syntax.NumberType()};
     return Syntax.commandSyntax(right);
   }
 

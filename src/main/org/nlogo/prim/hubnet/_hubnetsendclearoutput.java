@@ -7,7 +7,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsendclearoutput
@@ -24,7 +24,7 @@ public final strictfp class _hubnetsendclearoutput
         if (!(node instanceof String)) {
           throw new EngineException
               (context, this, "HUBNET-SEND expected "
-                  + TypeNames.aName(Syntax.TYPE_STRING | Syntax.TYPE_LIST)
+                  + TypeNames.aName(Syntax.StringType() | Syntax.ListType())
                   + " of strings as the first input, but one item is the "
                   + TypeNames.name(node) + " " +
                   Dump.logoObject(node)
@@ -36,7 +36,7 @@ public final strictfp class _hubnetsendclearoutput
       nodes.add((String) clients);
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, clients);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
     workspace.getHubNetManager().clearText(asScalaBuffer(nodes));
@@ -45,7 +45,7 @@ public final strictfp class _hubnetsendclearoutput
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING | Syntax.TYPE_LIST};
+    int[] right = {Syntax.StringType() | Syntax.ListType()};
     return Syntax.commandSyntax(right);
   }
 }

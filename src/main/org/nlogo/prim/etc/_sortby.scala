@@ -1,15 +1,15 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, LogoList }
-import org.nlogo.nvm.{ ArgumentTypeException , Context , EngineException, Reporter , ReporterLambda , Syntax }
+import org.nlogo.api.{ LogoException, LogoList, Syntax }
+import org.nlogo.nvm.{ ArgumentTypeException , Context , EngineException, Reporter , ReporterLambda  }
 
 class _sortby extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK,
-                                Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET),
-                          Syntax.TYPE_LIST, "OTPL", "?")
+    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType,
+                                Syntax.ListType | Syntax.AgentsetType),
+                          Syntax.ListType, "OTPL", "?")
 
   override def report(context: Context) = {
     val lambda = argEvalReporterLambda(context, 0)
@@ -29,7 +29,7 @@ class _sortby extends Reporter {
         list
       case _ =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET, obj)
+          context, this, 0, Syntax.ListType | Syntax.AgentsetType, obj)
     }
     try {
       java.util.Collections.sort(input, new MyComparator(context, lambda))
@@ -44,7 +44,7 @@ class _sortby extends Reporter {
   extends java.util.Comparator[AnyRef] {
     def die(o: AnyRef) =
       throw new ArgumentTypeException(
-        context, _sortby.this, 0, Syntax.TYPE_BOOLEAN, o)
+        context, _sortby.this, 0, Syntax.BooleanType, o)
     override def compare(o1: AnyRef, o2: AnyRef) =
       try lambda.report(context, Array(o1, o2)) match {
             case b: java.lang.Boolean =>

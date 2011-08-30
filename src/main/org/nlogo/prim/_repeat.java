@@ -5,7 +5,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _repeat
     extends Command
@@ -15,8 +15,8 @@ public final strictfp class _repeat
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_COMMAND_BLOCK});
+        (new int[]{Syntax.NumberType(),
+            Syntax.CommandBlockType()});
   }
 
   @Override

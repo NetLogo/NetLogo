@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _filereadline
     extends Reporter {
@@ -21,7 +21,7 @@ public final strictfp class _filereadline
   @Override
   public Syntax syntax() {
     int[] right = {};
-    int ret = Syntax.TYPE_STRING;
+    int ret = Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

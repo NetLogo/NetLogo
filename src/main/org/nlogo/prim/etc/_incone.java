@@ -10,17 +10,17 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _incone
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,          // left
-            new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER}, // right
-            Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,          // return
-            Syntax.NORMAL_PRECEDENCE + 2, false, "OTPL", "-T--");
+        (Syntax.TurtlesetType() | Syntax.PatchsetType(),          // left
+            new int[]{Syntax.NumberType(), Syntax.NumberType()}, // right
+            Syntax.TurtlesetType() | Syntax.PatchsetType(),          // return
+            org.nlogo.api.Syntax.NormalPrecedence() + 2, false, "OTPL", "-T--");
   }
 
   @Override

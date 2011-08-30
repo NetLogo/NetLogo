@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Workspace;
 
 public final strictfp class _fileprint
@@ -24,7 +24,7 @@ public final strictfp class _fileprint
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.WildcardType()};
     return Syntax.commandSyntax(right);
   }
 }

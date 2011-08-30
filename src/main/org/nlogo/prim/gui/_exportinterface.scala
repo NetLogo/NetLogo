@@ -1,14 +1,13 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.CommandRunnable
+import org.nlogo.api.{ CommandRunnable, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
-import org.nlogo.nvm.Syntax
 import org.nlogo.window.GUIWorkspace
 
 class _exportinterface extends Command {
 
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.TYPE_STRING))
+    Syntax.commandSyntax(Array(Syntax.StringType))
 
   override def perform(context: Context) {
     workspace match {

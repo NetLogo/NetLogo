@@ -7,14 +7,14 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.NonLocalExit$;
 import org.nlogo.nvm.Procedure;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _report
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_WILDCARD});
+        (new int[]{Syntax.WildcardType()});
   }
 
   @Override

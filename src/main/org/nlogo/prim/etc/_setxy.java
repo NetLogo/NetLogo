@@ -6,13 +6,13 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _setxy
     extends Command {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER};
+    int[] right = {Syntax.NumberType(), Syntax.NumberType()};
     return Syntax.commandSyntax(right, "-T--", true);
   }
 

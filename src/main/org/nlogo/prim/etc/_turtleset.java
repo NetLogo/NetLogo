@@ -14,16 +14,16 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtleset
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_TURTLE
-        | Syntax.TYPE_TURTLESET | Syntax.TYPE_NOBODY
-        | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_TURTLESET;
+    int[] right = {Syntax.RepeatableType() | Syntax.TurtleType()
+        | Syntax.TurtlesetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.TurtlesetType();
     return Syntax.reporterSyntax(right, ret, 1, 0);
   }
 
@@ -38,7 +38,7 @@ public final strictfp class _turtleset
         AgentSet tempSet = (AgentSet) elt;
         if (tempSet.type() != org.nlogo.agent.Turtle.class) {
           throw new ArgumentTypeException
-              (context, this, i, Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET, elt);
+              (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
         }
         for (AgentSet.Iterator iter = tempSet.iterator();
              iter.hasNext();) {
@@ -50,7 +50,7 @@ public final strictfp class _turtleset
         resultSet.add((Turtle) elt);
       } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
-            (context, this, i, Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET, elt);
+            (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(

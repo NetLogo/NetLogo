@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _followme

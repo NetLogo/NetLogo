@@ -1,7 +1,7 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _hubnetplotpenup
     extends org.nlogo.nvm.Command {
@@ -19,7 +19,7 @@ public final strictfp class _hubnetplotpenup
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
+    int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }
 }

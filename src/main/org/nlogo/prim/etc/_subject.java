@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Agent;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _subject
@@ -22,6 +22,6 @@ public final strictfp class _subject
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_AGENT);
+    return Syntax.reporterSyntax(Syntax.AgentType());
   }
 }

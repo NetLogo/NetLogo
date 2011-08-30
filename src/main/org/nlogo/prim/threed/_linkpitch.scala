@@ -1,13 +1,13 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Link
-import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ Context, Reporter, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _linkpitch extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      Syntax.TYPE_NUMBER, "---L")
+      Syntax.NumberType, "---L")
   override def report(context: Context) = {
     val link = context.agent.asInstanceOf[Link]
     try Double.box(world.protractor.towardsPitch(link.end1, link.end2, true))

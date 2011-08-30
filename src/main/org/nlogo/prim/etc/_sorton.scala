@@ -1,15 +1,15 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ Dump, LogoListBuilder, TypeNames }
-import org.nlogo.nvm.{ Context, EngineException, Reporter, Syntax }
+import org.nlogo.api.{ Dump, LogoListBuilder, Syntax, TypeNames }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _sorton extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TYPE_REPORTER_BLOCK, Syntax.TYPE_AGENTSET),
-      Syntax.TYPE_LIST,
+      Array(Syntax.ReporterBlockType, Syntax.AgentsetType),
+      Syntax.ListType,
       "OTPL", "?")  // ? = reporter block has unknown agent type
 
   override def report(context: Context) = {

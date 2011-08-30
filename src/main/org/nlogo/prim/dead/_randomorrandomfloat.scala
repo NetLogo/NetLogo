@@ -1,6 +1,7 @@
 package org.nlogo.prim.dead
 
-import org.nlogo.nvm.{Context, Reporter, Syntax}
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Context, Reporter }
 
 /**
  * This primitive never existed; we convert "random" (in very, very old models) or
@@ -12,6 +13,6 @@ class _randomorrandomfloat extends Reporter {
   override def report(context: Context) =
     throw new IllegalStateException
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_NUMBER),
-                          Syntax.TYPE_NUMBER)
+    Syntax.reporterSyntax(Array(Syntax.NumberType),
+                          Syntax.NumberType)
 }

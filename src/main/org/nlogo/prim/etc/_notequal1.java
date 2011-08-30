@@ -4,7 +4,7 @@ import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _notequal1
     extends Reporter
@@ -17,8 +17,8 @@ public final strictfp class _notequal1
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int[] right = {Syntax.WildcardType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(right, ret);
   }
 

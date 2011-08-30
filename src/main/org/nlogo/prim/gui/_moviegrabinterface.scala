@@ -1,7 +1,7 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _moviegrabinterface extends Command {

@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _setletvariable
     extends Command {
@@ -25,7 +25,7 @@ public final strictfp class _setletvariable
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_WILDCARD});
+        (new int[]{Syntax.WildcardType()});
   }
 
   @Override

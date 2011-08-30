@@ -9,16 +9,16 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _inconenowrap
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_AGENTSET;
-    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER};
-    int ret = Syntax.TYPE_AGENTSET;
-    return Syntax.reporterSyntax(left, right, ret, Syntax.NORMAL_PRECEDENCE + 2,
+    int left = Syntax.AgentsetType();
+    int[] right = {Syntax.NumberType(), Syntax.NumberType()};
+    int ret = Syntax.AgentsetType();
+    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2,
         false, "OTPL", "-T--");
   }
 

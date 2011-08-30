@@ -6,14 +6,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _distance extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH},
-            Syntax.TYPE_NUMBER, "-TP-");
+        (new int[]{Syntax.TurtleType() | Syntax.PatchType()},
+            Syntax.NumberType(), "-TP-");
   }
 
   @Override

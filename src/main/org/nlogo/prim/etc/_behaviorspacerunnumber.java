@@ -3,13 +3,13 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _behaviorspacerunnumber
     extends org.nlogo.nvm.Reporter {
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_NUMBER);
+    return Syntax.reporterSyntax(Syntax.NumberType());
   }
 
   @Override

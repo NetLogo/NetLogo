@@ -1,13 +1,13 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _hubnetroboclient
     extends org.nlogo.nvm.Command {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER};
+    int[] right = {Syntax.NumberType()};
     return Syntax.commandSyntax(right, "O---", false);
   }
 

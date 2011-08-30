@@ -1,12 +1,12 @@
 package org.nlogo.prim.gui
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.I18N
-import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.{ I18N, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _inspect extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.TYPE_AGENT))
+    Syntax.commandSyntax(Array(Syntax.AgentType))
   override def perform(context: Context) {
     val agent = argEvalAgent(context, 0)
     if (agent.id == -1)

@@ -5,13 +5,13 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _neighbors
     extends Reporter {
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_PATCHSET, "-TP-");
+    return Syntax.reporterSyntax(Syntax.PatchsetType(), "-TP-");
   }
 
   @Override

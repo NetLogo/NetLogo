@@ -5,7 +5,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _link
     extends Reporter {
@@ -22,7 +22,7 @@ public final strictfp class _link
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
-            Syntax.TYPE_LINK | Syntax.TYPE_NOBODY);
+        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.LinkType() | Syntax.NobodyType());
   }
 }

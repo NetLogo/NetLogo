@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 /**
  * Returns a string representation of the contents of the stack
@@ -15,6 +15,6 @@ public final strictfp class _dumpextensions
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_STRING);
+    return Syntax.reporterSyntax(Syntax.StringType());
   }
 }

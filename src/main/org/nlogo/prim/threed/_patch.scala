@@ -1,14 +1,14 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.World3D
-import org.nlogo.api.{ AgentException, LogoException, Nobody }
-import org.nlogo.nvm.{ Context, Reporter, Syntax }
+import org.nlogo.api.{ AgentException, Nobody, Syntax }
+import org.nlogo.nvm.{ Context, Reporter }
 
 class _patch extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER),
-      Syntax.TYPE_PATCH | Syntax.TYPE_NOBODY)
+      Array(Syntax.NumberType, Syntax.NumberType, Syntax.NumberType),
+      Syntax.PatchType | Syntax.NobodyType)
   override def report(context: Context) =
     try world.asInstanceOf[World3D].getPatchAt(
       argEvalDoubleValue(context, 0),

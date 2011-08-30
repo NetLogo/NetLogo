@@ -5,17 +5,17 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
 
 public final strictfp class _anyotherwith extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_AGENTSET, Syntax.TYPE_BOOLEAN_BLOCK},
-            Syntax.TYPE_BOOLEAN, "-TPL",
+        (new int[]{Syntax.AgentsetType(), Syntax.BooleanBlockType()},
+            Syntax.BooleanType(), "-TPL",
             "?");  // takes reporter block of unknown agent type
   }
 

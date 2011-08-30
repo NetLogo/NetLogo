@@ -2,7 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 // replaces _sprout when initialization block is empty
 
@@ -17,7 +17,7 @@ public final strictfp class _fastsprout
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.NumberType()},
             "--P-", true);
   }
 

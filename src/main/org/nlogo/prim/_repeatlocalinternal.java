@@ -2,7 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _repeatlocalinternal
     extends Command {

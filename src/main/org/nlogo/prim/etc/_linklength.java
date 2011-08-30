@@ -3,12 +3,12 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Link;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linklength extends Reporter {
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_NUMBER, "---L");
+    return Syntax.reporterSyntax(Syntax.NumberType(), "---L");
   }
 
   @Override

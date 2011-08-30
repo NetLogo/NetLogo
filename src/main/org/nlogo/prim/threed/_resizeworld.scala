@@ -1,16 +1,16 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.World3D
-import org.nlogo.api.{ CommandRunnable, LogoException }
-import org.nlogo.nvm.{ Command, Context, EngineException, Syntax }
+import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _resizeworld extends Command {
 
   override def syntax =
     Syntax.commandSyntax(Array(
-      Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER,
-      Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER,
-      Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER), "O---", true)
+      Syntax.NumberType, Syntax.NumberType,
+      Syntax.NumberType, Syntax.NumberType,
+      Syntax.NumberType, Syntax.NumberType), "O---", true)
 
   override def perform(context: Context) {
 

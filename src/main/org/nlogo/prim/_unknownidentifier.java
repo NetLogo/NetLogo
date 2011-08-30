@@ -6,7 +6,7 @@ package org.nlogo.prim;
 // about. - ST 7/7/06
 
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _unknownidentifier
     extends Reporter {
@@ -17,6 +17,6 @@ public final strictfp class _unknownidentifier
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_WILDCARD);
+    return Syntax.reporterSyntax(Syntax.WildcardType());
   }
 }

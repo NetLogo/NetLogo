@@ -1,14 +1,14 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ CompilerException, LogoException }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandLambda, Context, EngineException, Syntax }
+import org.nlogo.api.{ CompilerException, Syntax }
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandLambda, Context, EngineException }
 
 class _run extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.TYPE_STRING | Syntax.TYPE_COMMAND_TASK,
-            Syntax.TYPE_REPEATABLE | Syntax.TYPE_WILDCARD),
+      Array(Syntax.StringType | Syntax.CommandTaskType,
+            Syntax.RepeatableType | Syntax.WildcardType),
       1)
 
   override def perform(context: Context) {
@@ -47,7 +47,7 @@ class _run extends Command {
         context.ip = next
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.TYPE_COMMAND_TASK | Syntax.TYPE_STRING, obj)
+          context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
     }
   }
 

@@ -6,7 +6,7 @@ import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reference;
 import org.nlogo.nvm.Referenceable;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _patchvariable
@@ -21,7 +21,7 @@ public final strictfp class _patchvariable
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_WILDCARD | Syntax.TYPE_REFERENCE,
+        (Syntax.WildcardType() | Syntax.ReferenceType(),
             "-TP-");
   }
 

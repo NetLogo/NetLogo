@@ -14,16 +14,16 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _patchset
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_PATCH
-        | Syntax.TYPE_PATCHSET | Syntax.TYPE_NOBODY
-        | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_PATCHSET;
+    int[] right = {Syntax.RepeatableType() | Syntax.PatchType()
+        | Syntax.PatchsetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.PatchsetType();
     return Syntax.reporterSyntax(right, ret, 1, 0);
   }
 
@@ -38,7 +38,7 @@ public final strictfp class _patchset
         AgentSet tempSet = (AgentSet) elt;
         if (tempSet.type() != org.nlogo.agent.Patch.class) {
           throw new ArgumentTypeException
-              (context, this, i, Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET, elt);
+              (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
         }
         for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Patch) iter.next());
@@ -49,7 +49,7 @@ public final strictfp class _patchset
         resultSet.add((Patch) elt);
       } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
-            (context, this, i, Syntax.TYPE_PATCH | Syntax.TYPE_PATCHSET, elt);
+            (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(

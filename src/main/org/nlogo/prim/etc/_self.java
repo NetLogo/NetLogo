@@ -3,14 +3,14 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _self
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_AGENT, "-TPL");
+        (Syntax.AgentType(), "-TPL");
   }
 
   @Override

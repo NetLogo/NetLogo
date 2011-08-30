@@ -9,18 +9,18 @@ import org.nlogo.agent.Link;
 import org.nlogo.api.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Pure;
 
 public final strictfp class _equal
     extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_WILDCARD;
-    int[] right = {Syntax.TYPE_WILDCARD};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int left = Syntax.WildcardType();
+    int[] right = {Syntax.WildcardType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(left, right, ret,
-        Syntax.NORMAL_PRECEDENCE - 5);
+        org.nlogo.api.Syntax.NormalPrecedence() - 5);
   }
 
   @Override

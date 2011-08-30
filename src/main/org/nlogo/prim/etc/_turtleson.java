@@ -11,15 +11,15 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtleson
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_AGENT | Syntax.TYPE_AGENTSET},
-            Syntax.TYPE_TURTLESET);
+        (new int[]{Syntax.AgentType() | Syntax.AgentsetType()},
+            Syntax.TurtlesetType());
   }
 
   @Override
@@ -48,7 +48,7 @@ public final strictfp class _turtleson
       }
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_AGENT | Syntax.TYPE_AGENTSET, agentOrSet);
+          (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
     return new org.nlogo.agent.ArrayAgentSet
         (Turtle.class,

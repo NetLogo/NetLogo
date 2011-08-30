@@ -11,7 +11,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _nof
     extends Reporter {
@@ -46,7 +46,7 @@ public final strictfp class _nof
       return agents.randomSubset(n, count, context.job.random);
     } else {
       throw new ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.AgentsetType(), obj);
     }
   }
 
@@ -71,8 +71,8 @@ public final strictfp class _nof
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_AGENTSET | Syntax.TYPE_LIST},
-            Syntax.TYPE_AGENTSET | Syntax.TYPE_LIST);
+        (new int[]{Syntax.NumberType(),
+            Syntax.AgentsetType() | Syntax.ListType()},
+            Syntax.AgentsetType() | Syntax.ListType());
   }
 }

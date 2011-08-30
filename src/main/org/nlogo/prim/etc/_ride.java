@@ -5,7 +5,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
 
 public final strictfp class _ride
@@ -13,7 +13,7 @@ public final strictfp class _ride
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_TURTLE},
+        (new int[]{Syntax.TurtleType()},
             "O---", true);
   }
 

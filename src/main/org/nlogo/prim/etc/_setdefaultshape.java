@@ -5,14 +5,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _setdefaultshape
     extends Command {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_TURTLESET | Syntax.TYPE_LINKSET,
-        Syntax.TYPE_STRING};
+    int[] right = {Syntax.TurtlesetType() | Syntax.LinksetType(),
+        Syntax.StringType()};
     return Syntax.commandSyntax(right, "O---");
   }
 

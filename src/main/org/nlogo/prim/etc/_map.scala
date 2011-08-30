@@ -1,13 +1,13 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.LogoListBuilder
-import org.nlogo.nvm.{EngineException, Context, Syntax, Reporter}
+import org.nlogo.api.{ LogoListBuilder, Syntax }
+import org.nlogo.nvm.{ EngineException, Context, Reporter }
 
 class _map extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_TASK, Syntax.TYPE_REPEATABLE | Syntax.TYPE_LIST),
-      Syntax.TYPE_LIST,
+    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.RepeatableType | Syntax.ListType),
+      Syntax.ListType,
       2) // default # of inputs
 
   // Oh boy, this is going to be really fun one to generate...

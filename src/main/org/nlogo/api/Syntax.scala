@@ -38,7 +38,89 @@ case class Syntax(left: Int = Syntax.VoidType,
                   right: Array[Int] = Array(),
                   ret: Int = Syntax.VoidType,
                   precedence: Int = Syntax.NormalPrecedence,
-                  dfault: Int = 0)
+                  defaultOption: Option[Int] = None,
+                  minimumOption: Option[Int] = None, // minimum number of args might be different than the default
+                  isRightAssociative: Boolean = false, // only relevant if infix
+                  agentClassString: String = "OTPL",
+                  blockAgentClassString: String = null,
+                  switches: Boolean = false)
+{
+
+  import Syntax._
+
+  require(agentClassString == null ||
+          agentClassString.size == 4)
+  require(blockAgentClassString == null ||
+          blockAgentClassString.size == 4 ||
+          blockAgentClassString == "?")
+
+  /**
+   * indicates whether this instruction should be parsed as infix. Infix
+   * instructions expect exactly one argument on the left and should not
+   * be variadic on the right.
+   *
+   * @return true if this instruction is infix, false otherwise.
+   */
+  def isInfix =
+    left != VoidType
+
+  def dfault =
+    defaultOption.getOrElse(right.size)
+
+  def minimum =
+    minimumOption.getOrElse(dfault)
+
+  /**
+   * returns the number of args this instruction takes on the right
+   * by default.
+   */
+  def rightDefault =
+    if (takesOptionalCommandBlock) dfault - 1 else dfault
+
+  /**
+   * returns the total number of args, left and right, this instruction
+   * takes by default.
+   */
+  def totalDefault =
+    rightDefault + (if (isInfix) 1 else 0)
+
+  def takesOptionalCommandBlock =
+    right.lastOption.exists(compatible(_, OptionalType))
+
+  def dump = {
+    val buf = new java.lang.StringBuilder
+    if (left != VoidType) {
+      buf.append(TypeNames.name(left))
+      buf.append(',')
+    }
+    for (i <- 0 until right.size) {
+      if (i > 0)
+        buf.append('/')
+      buf.append(TypeNames.name(right(i)))
+    }
+    if (ret != VoidType) {
+      buf.append(',')
+      buf.append(TypeNames.name(ret))
+    }
+    buf.append(',')
+    buf.append(agentClassString)
+    buf.append(',')
+    buf.append(blockAgentClassString)
+    buf.append(',')
+    buf.append(precedence)
+    buf.append(',')
+    buf.append(dfault)
+    buf.append(',')
+    buf.append(minimum)
+    if (isRightAssociative)
+      buf.append(" [RIGHT ASSOCIATIVE]")
+    if (switches)
+      buf.append(" *")
+    buf.toString
+  }
+
+}
+  
 
 object Syntax {
 
@@ -170,8 +252,12 @@ object Syntax {
   val CommandPrecedence = 0
   val NormalPrecedence = 10
 
+  def compatible(mask: Int, value: Int): Boolean =
+    (mask & value) != 0
+
   /** Returns a Syntax object for commands with no arguments. */
-  def commandSyntax() = Syntax()
+  def commandSyntax() =
+    Syntax(precedence = CommandPrecedence)
 
   /**
    * Returns a <code>Syntax</code> for commands with one or more right arguments.
@@ -179,7 +265,8 @@ object Syntax {
    * @param right an array of Type flags that are to be to the right of the Primitive
    */
   def commandSyntax(right: Array[Int]) =
-    Syntax(right = right, precedence = CommandPrecedence, dfault = right.size)
+    Syntax(precedence = CommandPrecedence,
+           right = right)
 
   /**
    * Returns a <code>Syntax</code> for commands with a variable number of arguments.
@@ -188,8 +275,78 @@ object Syntax {
    * @param dfault the default number of arguments if no parenthesis are used.
    */
   def commandSyntax(right: Array[Int], dfault: Int) =
-    Syntax(right = right, precedence = CommandPrecedence, dfault = dfault)
+    Syntax(precedence = CommandPrecedence,
+           right = right, defaultOption = Some(dfault))
 
+  def commandSyntax(switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           switches = switches)
+
+  def commandSyntax(agentClassString: String, switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           agentClassString = agentClassString, switches = switches)
+  
+  // for use by commands
+  def commandSyntax(right: Array[Int], switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           right = right, switches = switches)
+  
+  // for use by commands
+  def commandSyntax(right: Array[Int], agentClassString: String) =
+    Syntax(precedence = CommandPrecedence,
+           right = right, agentClassString = agentClassString)
+
+  // for use by commands
+  def commandSyntax(right: Array[Int], agentClassString: String, switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           right = right, agentClassString = agentClassString, switches = switches)
+
+  // for use by commands
+  def commandSyntax(right: Array[Int], agentClassString: String, blockAgentClassString: String, switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           right = right, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString,
+           switches = switches)
+
+  // for use by commands
+  def commandSyntax(right: Array[Int], dfault: Int, agentClassString: String,
+                    blockAgentClassString: String, switches: Boolean) =
+    Syntax(precedence = CommandPrecedence,
+           right = right, defaultOption = Some(dfault), agentClassString = agentClassString,
+           blockAgentClassString = blockAgentClassString, switches = switches)
+
+  // for use by constants and no-argument reporters
+  def reporterSyntax(ret: Int, agentClassString: String) =
+    Syntax(ret = ret, agentClassString = agentClassString)
+  
+  // for use by infix reporters
+  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean) =
+    Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative)
+  
+  // for use by prefix reporters
+  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String, blockAgentClassString: String) =
+    Syntax(right = right, ret = ret, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
+  
+  // for use by prefix reporters
+  def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String) =
+    Syntax(right = right, ret = ret, agentClassString = agentClassString)
+  
+  // for use by variadic reporters when min is different than default
+  def reporterSyntax(right: Array[Int], ret: Int, dfault: Int, minimum: Int) =
+    Syntax(right = right, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
+  
+  // for use by reporters that take a reporter block
+  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean,
+                     agentClassString: String, blockAgentClassString: String) =
+    Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative,
+           agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
+
+  def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int,
+                     dfault: Int, isRightAssociative: Boolean,
+                     agentClassString: String, blockAgentClassString: String) =
+    Syntax(left = left, right = right, ret = ret, precedence = precedence, defaultOption = Some(dfault),
+           isRightAssociative = isRightAssociative, agentClassString = agentClassString,
+           blockAgentClassString = blockAgentClassString)
+  
   /**
    * Returns a <code>Syntax</code> for reporters with no arguments
    *
@@ -207,7 +364,7 @@ object Syntax {
    * @param precedence
    */
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int) =
-    Syntax(left = left, right = right, ret = ret, precedence = precedence, dfault = right.size)
+    Syntax(left = left, right = right, ret = ret, precedence = precedence)
 
   /**
    * Returns a <code>Syntax</code> for reporters with one or more right arguments
@@ -216,7 +373,7 @@ object Syntax {
    * @param ret   the return type
    */
   def reporterSyntax(right: Array[Int], ret: Int) =
-    Syntax(right = right, ret = ret, dfault = right.size)
+    Syntax(right = right, ret = ret)
 
   /**
    * Returns a <code>Syntax</code> for reporters with a variable number of
@@ -227,7 +384,7 @@ object Syntax {
    * @param dfault the default number of arguments if no parenthesis are used.
    */
   def reporterSyntax(right: Array[Int], ret: Int, dfault: Int) =
-    Syntax(right = right, ret = ret, dfault = dfault)
+    Syntax(right = right, ret = ret, defaultOption = Some(dfault))
 
   def convertOldStyleAgentClassString(oldStyle: String) =
     "OTPL".map(c => if (oldStyle.contains(c)) c else '-')

@@ -1,13 +1,13 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.LogoException
-import org.nlogo.nvm.{ Command, Context, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 import org.nlogo.workspace.{ AbstractWorkspace, Benchmarker }
 
 class _bench extends Command {
   override def syntax =
-    Syntax.commandSyntax(Array(Syntax.TYPE_NUMBER,
-                               Syntax.TYPE_NUMBER),
+    Syntax.commandSyntax(Array(Syntax.NumberType,
+                               Syntax.NumberType),
                          "O---")
   override def perform(context: Context) {
     val minTime = argEvalIntValue(context, 0)

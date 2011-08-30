@@ -8,14 +8,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _diffuse4
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_REFERENCE, Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
             "O---", true);
   }
 

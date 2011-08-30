@@ -1,15 +1,15 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ CompilerException, LogoException }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterLambda, Syntax }
+import org.nlogo.api.{ CompilerException, LogoException, Syntax }
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterLambda }
 
 class _runresult extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TYPE_STRING | Syntax.TYPE_REPORTER_TASK,
-        Syntax.TYPE_REPEATABLE | Syntax.TYPE_WILDCARD),
-      Syntax.TYPE_WILDCARD,
+      Array(Syntax.StringType | Syntax.ReporterTaskType,
+        Syntax.RepeatableType | Syntax.WildcardType),
+      Syntax.WildcardType,
       1)
 
   override def report(context: Context) =
@@ -51,7 +51,7 @@ class _runresult extends Reporter {
         lambda.report(context, actuals)
       case obj =>
         throw new ArgumentTypeException(
-          context, this, 0, Syntax.TYPE_REPORTER_TASK | Syntax.TYPE_STRING, obj)
+          context, this, 0, Syntax.ReporterTaskType | Syntax.StringType, obj)
     }
 
 }

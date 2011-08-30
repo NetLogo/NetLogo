@@ -6,13 +6,13 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _ln extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_NUMBER);
+    int[] right = {Syntax.NumberType()};
+    return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
 
   @Override

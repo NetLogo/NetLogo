@@ -1,14 +1,14 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _hubnetbroadcast
     extends org.nlogo.nvm.Command {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING,
-        Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.StringType(),
+        Syntax.WildcardType()};
     return Syntax.commandSyntax(right);
   }
 

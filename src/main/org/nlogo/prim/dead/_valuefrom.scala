@@ -1,8 +1,7 @@
-package org.nlogo.prim.dead ;
+package org.nlogo.prim.dead
 
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Context, Reporter }
 
 /**
  * This isn't in the language anymore, but in order to auto-translate
@@ -11,9 +10,10 @@ import org.nlogo.nvm.Syntax;
  */
 
 class _valuefrom extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      Array(Syntax.AgentType, Syntax.ReporterBlockType),
+      Syntax.WildcardType)
   override def report(context: Context) =
     throw new IllegalStateException
-  override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_AGENT, Syntax.TYPE_REPORTER_BLOCK),
-                          Syntax.TYPE_WILDCARD)
 }

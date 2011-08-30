@@ -5,14 +5,14 @@ import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _extracthsb
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_LIST;
+    int[] right = {Syntax.NumberType() | Syntax.ListType()};
+    int ret = Syntax.ListType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -54,7 +54,7 @@ public final strictfp class _extracthsb
               (color));
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_NUMBER, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.NumberType(), obj);
     }
   }
 

@@ -8,8 +8,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.exception
 import org.nlogo.api.{ CompilerException, Syntax }
-import org.nlogo.nvm
-import nvm.{ Procedure, Command, Reporter, Instruction }
+import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
 import org.nlogo.api.CompilerException
 
 /**
@@ -140,8 +139,8 @@ class ReporterBlock(val app: ReporterApp, var start: Int, var end: Int, val file
       case Syntax.BooleanType => Syntax.BooleanBlockType
       case Syntax.NumberType => Syntax.NumberBlockType
       case _ =>
-        if (nvm.Syntax.compatible(appType, Syntax.BooleanType)
-            || nvm.Syntax.compatible(appType, Syntax.NumberType))
+        if (Syntax.compatible(appType, Syntax.BooleanType)
+            || Syntax.compatible(appType, Syntax.NumberType))
           Syntax.ReporterBlockType
         else Syntax.OtherBlockType
     }

@@ -9,7 +9,7 @@ import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtlevariableof
     extends Reporter {
@@ -48,7 +48,7 @@ public final strictfp class _turtlevariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }
@@ -64,8 +64,8 @@ public final strictfp class _turtlevariableof
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.TurtleType() | Syntax.TurtlesetType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -96,7 +96,7 @@ public final strictfp class _turtlevariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }

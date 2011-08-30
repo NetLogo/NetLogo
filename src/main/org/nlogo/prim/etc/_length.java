@@ -5,15 +5,15 @@ import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Pure;
 
 public final strictfp class _length extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_LIST | Syntax.TYPE_STRING},
-            Syntax.TYPE_NUMBER);
+        (new int[]{Syntax.ListType() | Syntax.StringType()},
+            Syntax.NumberType());
   }
 
   @Override
@@ -25,7 +25,7 @@ public final strictfp class _length extends Reporter implements Pure {
       return report_3(context, (String) obj);
     }
     throw new ArgumentTypeException
-        (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+        (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
   }
 
   public double report_1(Context context, Object obj) throws LogoException {
@@ -35,7 +35,7 @@ public final strictfp class _length extends Reporter implements Pure {
       return ((String) obj).length();
     }
     throw new ArgumentTypeException
-        (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+        (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
   }
 
   public double report_2(Context context, LogoList list) {

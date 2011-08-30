@@ -13,7 +13,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _breedon
@@ -27,9 +27,9 @@ public final strictfp class _breedon
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH |
-            Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET},
-            Syntax.TYPE_TURTLESET);
+        (new int[]{Syntax.TurtleType() | Syntax.PatchType() |
+            Syntax.TurtlesetType() | Syntax.PatchsetType()},
+            Syntax.TurtlesetType());
   }
 
   @Override
@@ -85,8 +85,8 @@ public final strictfp class _breedon
     } else {
       throw new ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH |
-                  Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,
+              Syntax.TurtleType() | Syntax.PatchType() |
+                  Syntax.TurtlesetType() | Syntax.PatchsetType(),
               agentOrSet);
     }
     return new ArrayAgentSet
@@ -116,8 +116,8 @@ public final strictfp class _breedon
     } else {
       throw new ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH |
-                  Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,
+              Syntax.TurtleType() | Syntax.PatchType() |
+                  Syntax.TurtlesetType() | Syntax.PatchsetType(),
               sourceSet);
     }
     return new ArrayAgentSet
@@ -148,8 +148,8 @@ public final strictfp class _breedon
     } else {
       throw new ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH |
-                  Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,
+              Syntax.TurtleType() | Syntax.PatchType() |
+                  Syntax.TurtlesetType() | Syntax.PatchsetType(),
               agent);
     }
     return new ArrayAgentSet

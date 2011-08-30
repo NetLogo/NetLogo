@@ -1,7 +1,7 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public strictfp class _hubnetclearoverrides
     extends org.nlogo.nvm.Command {
@@ -9,7 +9,7 @@ public strictfp class _hubnetclearoverrides
 
   @Override
   public Syntax syntax() {
-    return Syntax.commandSyntax(new int[]{Syntax.TYPE_STRING}, "OTPL", false);
+    return Syntax.commandSyntax(new int[]{Syntax.StringType()}, "OTPL", false);
   }
 
   @Override

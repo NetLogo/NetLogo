@@ -13,16 +13,16 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linkset
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_LINK
-        | Syntax.TYPE_LINKSET | Syntax.TYPE_NOBODY
-        | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_LINKSET;
+    int[] right = {Syntax.RepeatableType() | Syntax.LinkType()
+        | Syntax.LinksetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.LinksetType();
     return Syntax.reporterSyntax(right, ret, 1, 0);
   }
 
@@ -36,7 +36,7 @@ public final strictfp class _linkset
         AgentSet tempSet = (AgentSet) elt;
         if (tempSet.type() != org.nlogo.agent.Link.class) {
           throw new ArgumentTypeException
-              (context, this, i, Syntax.TYPE_LINK | Syntax.TYPE_LINKSET, elt);
+              (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
         }
         for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Link) iter.next());
@@ -47,7 +47,7 @@ public final strictfp class _linkset
         resultSet.add((Link) elt);
       } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
-            (context, this, i, Syntax.TYPE_LINK | Syntax.TYPE_LINKSET, elt);
+            (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(

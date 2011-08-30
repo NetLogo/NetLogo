@@ -1,15 +1,15 @@
 package org.nlogo.prim
 
-import org.nlogo.api.Let
-import org.nlogo.nvm.{ReporterLambda, Context, Reporter, Syntax}
+import org.nlogo.api.{ Let, Syntax }
+import org.nlogo.nvm.{ ReporterLambda, Context, Reporter }
 
 class _lambdareport extends Reporter {
 
   val formals = collection.mutable.ArrayBuffer[Let]()
 
   override def syntax = Syntax.reporterSyntax(
-    Array(Syntax.TYPE_WILDCARD),
-    Syntax.TYPE_REPORTER_TASK)
+    Array(Syntax.WildcardType),
+    Syntax.ReporterTaskType)
 
   override def report(c: Context): AnyRef =
     ReporterLambda(body = args(0),

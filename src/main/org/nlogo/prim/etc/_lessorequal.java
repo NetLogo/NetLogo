@@ -11,16 +11,16 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _lessorequal
     extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_NUMBER | Syntax.TYPE_STRING | Syntax.TYPE_AGENT;
-    int[] right = {Syntax.TYPE_NUMBER | Syntax.TYPE_STRING | Syntax.TYPE_AGENT};
-    int ret = Syntax.TYPE_BOOLEAN;
-    return Syntax.reporterSyntax(left, right, ret, Syntax.NORMAL_PRECEDENCE - 4);
+    int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
+    int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
+    int ret = Syntax.BooleanType();
+    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() - 4);
   }
 
   @Override

@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _setlinkbreedvariable
     extends Command {
@@ -16,7 +16,7 @@ public final strictfp class _setlinkbreedvariable
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.WildcardType()};
     return Syntax.commandSyntax(right, "---L", true);
   }
 

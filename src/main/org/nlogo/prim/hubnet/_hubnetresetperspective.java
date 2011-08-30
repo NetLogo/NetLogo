@@ -2,7 +2,7 @@ package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public strictfp class _hubnetresetperspective
     extends org.nlogo.nvm.Command {
@@ -10,7 +10,7 @@ public strictfp class _hubnetresetperspective
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]
-            {Syntax.TYPE_STRING},
+            {Syntax.StringType()},
             "OTPL", false);
   }
 
