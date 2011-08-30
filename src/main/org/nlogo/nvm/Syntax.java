@@ -1,6 +1,6 @@
 package org.nlogo.nvm;
 
-import org.nlogo.agent.Agent;
+import org.nlogo.api.Agent;
 import org.nlogo.api.LogoList;
 import static org.nlogo.api.Syntax.*;
 
@@ -364,13 +364,13 @@ public final strictfp class Syntax {
   }
 
   public static int getAgentSetMask(Class<? extends Agent> type) {
-    if (type == org.nlogo.agent.Turtle.class) {
+    if (org.nlogo.api.Turtle.class.isAssignableFrom(type)) {
       return TurtlesetType();
     }
-    if (type == org.nlogo.agent.Patch.class) {
+    if (org.nlogo.api.Patch.class.isAssignableFrom(type)) {
       return PatchsetType();
     }
-    if (type == org.nlogo.agent.Link.class) {
+    if (org.nlogo.api.Link.class.isAssignableFrom(type)) {
       return LinksetType();
     }
     return AgentsetType();
@@ -398,19 +398,19 @@ public final strictfp class Syntax {
       return typeName(StringType());
     } else if (obj instanceof LogoList) {
       return typeName(ListType());
-    } else if (obj instanceof org.nlogo.agent.AgentSet) {
+    } else if (obj instanceof org.nlogo.api.AgentSet) {
       return typeName(AgentsetType());
     } else if (obj == org.nlogo.api.Nobody$.MODULE$) {
       return typeName(NobodyType());
-    } else if (obj instanceof org.nlogo.agent.Turtle) {
+    } else if (obj instanceof org.nlogo.api.Turtle) {
       return typeName(TurtleType());
-    } else if (obj instanceof org.nlogo.agent.Patch) {
+    } else if (obj instanceof org.nlogo.api.Patch) {
       return typeName(PatchType());
-    } else if (obj instanceof org.nlogo.agent.Link) {
+    } else if (obj instanceof org.nlogo.api.Link) {
       return typeName(LinkType());
-    } else if (obj instanceof org.nlogo.nvm.ReporterLambda) {
+    } else if (obj instanceof org.nlogo.api.ReporterTask) {
       return typeName(ReporterTaskType());
-    } else if (obj instanceof org.nlogo.nvm.CommandLambda) {
+    } else if (obj instanceof org.nlogo.api.CommandTask) {
       return typeName(CommandTaskType());
     } else if (obj == null) {
       return "null";
@@ -514,30 +514,30 @@ public final strictfp class Syntax {
   }
 
   public static int getTypeConstant(Class<?> typeC) {
-    if (typeC.equals(java.lang.Object.class)) {
-      return WildcardType();
-    } else if (typeC.equals(org.nlogo.agent.Agent.class)) {
+    if (org.nlogo.api.Agent.class.isAssignableFrom(typeC)) {
       return AgentType();
-    } else if (typeC.equals(org.nlogo.agent.AgentSet.class)) {
+    } else if (org.nlogo.api.AgentSet.class.isAssignableFrom(typeC)) {
       return AgentsetType();
-    } else if (typeC.equals(org.nlogo.api.LogoList.class)) {
+    } else if (org.nlogo.api.LogoList.class.isAssignableFrom(typeC)) {
       return ListType();
-    } else if (typeC.equals(org.nlogo.agent.Turtle.class)) {
+    } else if (org.nlogo.api.Turtle.class.isAssignableFrom(typeC)) {
       return TurtleType();
-    } else if (typeC.equals(org.nlogo.agent.Patch.class)) {
+    } else if (org.nlogo.api.Patch.class.isAssignableFrom(typeC)) {
       return PatchType();
-    } else if (typeC.equals(org.nlogo.agent.Link.class)) {
+    } else if (org.nlogo.api.Link.class.isAssignableFrom(typeC)) {
       return LinkType();
-    } else if (typeC.equals(org.nlogo.nvm.ReporterLambda.class)) {
+    } else if (org.nlogo.api.ReporterTask.class.isAssignableFrom(typeC)) {
       return ReporterTaskType();
-    } else if (typeC.equals(org.nlogo.nvm.CommandLambda.class)) {
+    } else if (org.nlogo.api.CommandTask.class.isAssignableFrom(typeC)) {
       return CommandTaskType();
-    } else if (typeC.equals(java.lang.String.class)) {
+    } else if (java.lang.String.class.isAssignableFrom(typeC)) {
       return StringType();
-    } else if (typeC.equals(java.lang.Double.class) || typeC.equals(java.lang.Double.TYPE)) {
+    } else if (java.lang.Double.class.isAssignableFrom(typeC) || typeC.equals(java.lang.Double.TYPE)) {
       return NumberType();
-    } else if (typeC.equals(java.lang.Boolean.class) || typeC.equals(java.lang.Boolean.TYPE)) {
+    } else if (java.lang.Boolean.class.isAssignableFrom(typeC) || typeC.equals(java.lang.Boolean.TYPE)) {
       return BooleanType();
+    } else if (java.lang.Object.class == typeC) {
+      return WildcardType();
     }
     // Sorry, probably should handle this better somehow.  ~Forrest (2/16/2007)
     throw new IllegalArgumentException
