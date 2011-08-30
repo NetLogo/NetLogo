@@ -34,10 +34,10 @@ package org.nlogo.api
  * @see Primitive#getSyntax()
  */
 
-case class Syntax(left: Int = Syntax.VoidType,
+case class Syntax(precedence: Int,
+                  left: Int = Syntax.VoidType,
                   right: Array[Int] = Array(),
                   ret: Int = Syntax.VoidType,
-                  precedence: Int = Syntax.NormalPrecedence,
                   defaultOption: Option[Int] = None,
                   minimumOption: Option[Int] = None, // minimum number of args might be different than the default
                   isRightAssociative: Boolean = false, // only relevant if infix
@@ -316,7 +316,8 @@ object Syntax {
 
   // for use by constants and no-argument reporters
   def reporterSyntax(ret: Int, agentClassString: String) =
-    Syntax(ret = ret, agentClassString = agentClassString)
+    Syntax(precedence = NormalPrecedence,
+           ret = ret, agentClassString = agentClassString)
   
   // for use by infix reporters
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean) =
@@ -324,15 +325,18 @@ object Syntax {
   
   // for use by prefix reporters
   def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String, blockAgentClassString: String) =
-    Syntax(right = right, ret = ret, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
+    Syntax(precedence = NormalPrecedence,
+           right = right, ret = ret, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
   
   // for use by prefix reporters
   def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String) =
-    Syntax(right = right, ret = ret, agentClassString = agentClassString)
+    Syntax(precedence = NormalPrecedence,
+           right = right, ret = ret, agentClassString = agentClassString)
   
   // for use by variadic reporters when min is different than default
   def reporterSyntax(right: Array[Int], ret: Int, dfault: Int, minimum: Int) =
-    Syntax(right = right, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
+    Syntax(precedence = NormalPrecedence,
+           right = right, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
   
   // for use by reporters that take a reporter block
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean,
@@ -353,7 +357,8 @@ object Syntax {
    * @param ret the return type
    */
   def reporterSyntax(ret: Int) =
-    Syntax(ret = ret)
+    Syntax(precedence = NormalPrecedence,
+           ret = ret)
 
   /**
    * Returns a <code>Syntax</code> for reporters with infix arguments.
@@ -373,7 +378,8 @@ object Syntax {
    * @param ret   the return type
    */
   def reporterSyntax(right: Array[Int], ret: Int) =
-    Syntax(right = right, ret = ret)
+    Syntax(precedence = NormalPrecedence,
+           right = right, ret = ret)
 
   /**
    * Returns a <code>Syntax</code> for reporters with a variable number of
@@ -384,7 +390,8 @@ object Syntax {
    * @param dfault the default number of arguments if no parenthesis are used.
    */
   def reporterSyntax(right: Array[Int], ret: Int, dfault: Int) =
-    Syntax(right = right, ret = ret, defaultOption = Some(dfault))
+    Syntax(precedence = NormalPrecedence,
+           right = right, ret = ret, defaultOption = Some(dfault))
 
   def convertOldStyleAgentClassString(oldStyle: String) =
     "OTPL".map(c => if (oldStyle.contains(c)) c else '-')
