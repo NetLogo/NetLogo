@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
 import static scala.collection.JavaConversions.asScalaBuffer;
@@ -29,9 +30,9 @@ public final strictfp class _hubnetsend
         if (!(node instanceof String)) {
           throw new EngineException
               (context, this, "HUBNET-SEND expected "
-                  + Syntax.aTypeName(Syntax.TYPE_STRING | Syntax.TYPE_LIST)
+                  + TypeNames.aName(Syntax.TYPE_STRING | Syntax.TYPE_LIST)
                   + " of strings as the first input, but one item is the "
-                  + Syntax.typeName(node) + " " +
+                  + TypeNames.name(node) + " " +
                   Dump.logoObject(node)
                   + " instead");
         }

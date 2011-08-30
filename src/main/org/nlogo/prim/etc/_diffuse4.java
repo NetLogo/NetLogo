@@ -5,6 +5,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.agent.PatchException;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Syntax;
@@ -48,7 +49,7 @@ public final strictfp class _diffuse4
               " variable, but contains " +
               (value == org.nlogo.api.Nobody$.MODULE$
                   ? "NOBODY"
-                  : "the " + Syntax.typeName(value) + " " + Dump.logoObject(value)) +
+                  : "the " + TypeNames.name(value) + " " + Dump.logoObject(value)) +
               " instead");
     }
     context.ip = next;

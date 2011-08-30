@@ -6,6 +6,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
@@ -48,7 +49,7 @@ public final strictfp class _greaterthan
     }
     throw new EngineException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
-            Syntax.aTypeName(o1), Syntax.aTypeName(o2)));
+            TypeNames.aName(o1), TypeNames.aName(o2)));
   }
 
   public boolean report_2(Context context, String arg0, String arg1) {
@@ -77,7 +78,7 @@ public final strictfp class _greaterthan
     }
     throw new EngineException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
-            Syntax.aTypeName(arg0), Syntax.aTypeName(arg1))
+            TypeNames.aName(arg0), TypeNames.aName(arg1))
         );
   }
 
@@ -87,7 +88,7 @@ public final strictfp class _greaterthan
     }
     throw new EngineException
         (context, this, I18N.errorsJ().getN("org.nlogo.prim._greaterthan.cannotCompareParameters",
-            Syntax.aTypeName(arg0), Syntax.aTypeName(arg1))
+            TypeNames.aName(arg0), TypeNames.aName(arg1))
         );
   }
 }

@@ -6,6 +6,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
@@ -32,7 +33,7 @@ public final strictfp class _mean extends Reporter implements Pure {
       if (!(elt instanceof Double)) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim._mean.cantFindMeanOfNonNumbers",
-                Dump.logoObject(elt), Syntax.typeName(elt)));
+                Dump.logoObject(elt), TypeNames.name(elt)));
       }
       sum += ((Double) elt).doubleValue();
     }

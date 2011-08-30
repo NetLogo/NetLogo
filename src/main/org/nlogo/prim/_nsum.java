@@ -6,6 +6,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
@@ -47,7 +48,7 @@ public final strictfp class _nsum extends Reporter {
       if (!(value instanceof Double)) {
         throw new EngineException(context, this,
             I18N.errorsJ().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
-                Dump.logoObject(value).toString(), Syntax.typeName(value)));
+                Dump.logoObject(value).toString(), TypeNames.name(value)));
       }
 
       sum += ((Double) value).doubleValue();

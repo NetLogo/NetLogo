@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ Dump, LogoListBuilder }
+import org.nlogo.api.{ Dump, LogoListBuilder, TypeNames }
 import org.nlogo.nvm.{ Context, EngineException, Reporter, Syntax }
 
 class _sorton extends Reporter {
@@ -46,7 +46,7 @@ class _sorton extends Reporter {
             throw new EngineException(
               context, _sorton.this , 
               "SORT-ON works on numbers, strings, or agents of the same type, " +
-              "but not on " + Syntax.aTypeName(o1) + " and " + Syntax.aTypeName(o2))
+              "but not on " + TypeNames.aName(o1) + " and " + TypeNames.aName(o2))
         }
     }
 

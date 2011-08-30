@@ -1,6 +1,7 @@
 package org.nlogo.nvm;
 
 import org.nlogo.api.Dump;
+import org.nlogo.api.TypeNames;
 
 public strictfp class ArgumentTypeException
     extends EngineException {
@@ -32,19 +33,19 @@ public strictfp class ArgumentTypeException
     if (instruction != null) {
       result += instruction.displayName();
     }
-    result += " expected input to be " + Syntax.aTypeName(wantedType);
+    result += " expected input to be " + TypeNames.aName(wantedType);
 
     // if badValue is a Class object, then it's not REALLY
     // a value at all -- it's just something to tell us what
     // kind of bad value was returned.
     if (badValue instanceof Class<?>) {
-      result += " but got " + Syntax.aTypeName(Syntax.getTypeConstant((Class<?>) badValue)) + " instead";
+      result += " but got " + TypeNames.aName(org.nlogo.api.Syntax.getTypeConstant((Class<?>) badValue)) + " instead";
     } else if (badValue != null) {
       String badValueStr = Dump.logoObject(badValue, true, false);
 
       result += " but got " + (badValue == org.nlogo.api.Nobody$.MODULE$
           ? "NOBODY"
-          : "the " + Syntax.typeName(badValue) + " " + badValueStr)
+          : "the " + TypeNames.name(badValue) + " " + badValueStr)
           + " instead";
     }
 

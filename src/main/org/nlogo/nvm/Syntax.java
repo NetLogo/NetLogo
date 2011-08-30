@@ -2,6 +2,7 @@ package org.nlogo.nvm;
 
 import org.nlogo.api.Agent;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.TypeNames;
 import static org.nlogo.api.Syntax.*;
 
 public final strictfp class Syntax {
@@ -380,203 +381,21 @@ public final strictfp class Syntax {
     return (mask & value) > 0;
   }
 
-  public static String aTypeName(Object obj) {
-    String result = typeName(obj);
-    if (obj == org.nlogo.api.Nobody$.MODULE$) {
-      return result;
-    } else {
-      return addAOrAn(result);
-    }
-  }
-
-  public static String typeName(Object obj) {
-    if (obj instanceof Number) {
-      return typeName(NumberType());
-    } else if (obj instanceof Boolean) {
-      return typeName(BooleanType());
-    } else if (obj instanceof String) {
-      return typeName(StringType());
-    } else if (obj instanceof LogoList) {
-      return typeName(ListType());
-    } else if (obj instanceof org.nlogo.api.AgentSet) {
-      return typeName(AgentsetType());
-    } else if (obj == org.nlogo.api.Nobody$.MODULE$) {
-      return typeName(NobodyType());
-    } else if (obj instanceof org.nlogo.api.Turtle) {
-      return typeName(TurtleType());
-    } else if (obj instanceof org.nlogo.api.Patch) {
-      return typeName(PatchType());
-    } else if (obj instanceof org.nlogo.api.Link) {
-      return typeName(LinkType());
-    } else if (obj instanceof org.nlogo.api.ReporterTask) {
-      return typeName(ReporterTaskType());
-    } else if (obj instanceof org.nlogo.api.CommandTask) {
-      return typeName(CommandTaskType());
-    } else if (obj == null) {
-      return "null";
-    } else {
-      return obj.getClass().getName();
-    }
-  }
-
-  public static String aTypeName(int mask) {
-    String result = typeName(mask);
-    if (result.equals("NOBODY")) {
-      return "NOBODY";
-    } else if (result.equals("anything")) {
-      return result;
-    } else {
-      return addAOrAn(result);
-    }
-  }
-
-  public static String typeName(int mask) {
-    String result = "(none)";
-    if (compatible(mask, RepeatableType())) {
-      mask = subtractMasks(mask, RepeatableType());
-    }
-    if (compatible(mask, ReferenceType())) {
-      return "variable";
-    } else if ((mask & BracketedType()) == BracketedType()) {
-      result = "list or block";
-      mask = subtractMasks(mask, BracketedType());
-    } else if ((mask & WildcardType()) == WildcardType()) {
-      result = "anything";
-      mask = subtractMasks(mask, WildcardType());
-    } else if ((mask & AgentType()) == AgentType()) {
-      result = "agent";
-      mask = subtractMasks(mask, AgentType() | NobodyType());
-    } else if (compatible(mask, NumberType())) {
-      result = "number";
-      mask = subtractMasks(mask, NumberType());
-    } else if (compatible(mask, BooleanType())) {
-      result = "TRUE/FALSE";
-      mask = subtractMasks(mask, BooleanType());
-    } else if (compatible(mask, StringType())) {
-      result = "string";
-      mask = subtractMasks(mask, StringType());
-    } else if (compatible(mask, ListType())) {
-      result = "list";
-      mask = subtractMasks(mask, ListType());
-    } else if ((mask & AgentsetType()) == AgentsetType()) {
-      result = "agentset";
-      mask = subtractMasks(mask, AgentsetType());
-    } else if (compatible(mask, TurtlesetType())) {
-      result = "turtle agentset";
-      mask = subtractMasks(mask, TurtlesetType());
-    } else if (compatible(mask, PatchsetType())) {
-      result = "patch agentset";
-      mask = subtractMasks(mask, PatchsetType());
-    } else if (compatible(mask, LinksetType())) {
-      result = "link agentset";
-      mask = subtractMasks(mask, LinksetType());
-    } else if (compatible(mask, TurtleType())) {
-      result = "turtle";
-      mask = subtractMasks(mask, TurtleType() | NobodyType());
-    } else if (compatible(mask, PatchType())) {
-      result = "patch";
-      mask = subtractMasks(mask, PatchType() | NobodyType());
-    } else if (compatible(mask, LinkType())) {
-      result = "link";
-      mask = subtractMasks(mask, LinkType() | NobodyType());
-    } else if (compatible(mask, ReporterTaskType())) {
-      result = "reporter task";
-      mask = subtractMasks(mask, ReporterTaskType());
-    } else if (compatible(mask, CommandTaskType())) {
-      result = "command task";
-      mask = subtractMasks(mask, CommandTaskType());
-    } else if (compatible(mask, NobodyType())) {
-      result = "NOBODY";
-      mask = subtractMasks(mask, NobodyType());
-    } else if (compatible(mask, CommandBlockType())) {
-      result = "command block";
-      mask = subtractMasks(mask, CommandBlockType());
-    } else if ((mask & ReporterBlockType()) == ReporterBlockType()) {
-      result = "reporter block";
-      mask = subtractMasks(mask, ReporterBlockType());
-    } else if (compatible(mask, OtherBlockType())) {
-      result = "different kind of block";
-      mask = subtractMasks(mask, ReporterBlockType());
-    } else if (compatible(mask, BooleanBlockType())) {
-      result = "TRUE/FALSE block";
-      mask = subtractMasks(mask, BooleanBlockType());
-    } else if (compatible(mask, NumberBlockType())) {
-      result = "number block";
-      mask = subtractMasks(mask, NumberBlockType());
-    }
-    if (mask == 0) {
-      return result;
-    } else if (mask == OptionalType()) {
-      return result + " (optional)";
-    } else {
-      return result + " or " + typeName(mask);
-    }
-  }
-
-  public static int getTypeConstant(Class<?> typeC) {
-    if (org.nlogo.api.Agent.class.isAssignableFrom(typeC)) {
-      return AgentType();
-    } else if (org.nlogo.api.AgentSet.class.isAssignableFrom(typeC)) {
-      return AgentsetType();
-    } else if (org.nlogo.api.LogoList.class.isAssignableFrom(typeC)) {
-      return ListType();
-    } else if (org.nlogo.api.Turtle.class.isAssignableFrom(typeC)) {
-      return TurtleType();
-    } else if (org.nlogo.api.Patch.class.isAssignableFrom(typeC)) {
-      return PatchType();
-    } else if (org.nlogo.api.Link.class.isAssignableFrom(typeC)) {
-      return LinkType();
-    } else if (org.nlogo.api.ReporterTask.class.isAssignableFrom(typeC)) {
-      return ReporterTaskType();
-    } else if (org.nlogo.api.CommandTask.class.isAssignableFrom(typeC)) {
-      return CommandTaskType();
-    } else if (java.lang.String.class.isAssignableFrom(typeC)) {
-      return StringType();
-    } else if (java.lang.Double.class.isAssignableFrom(typeC) || typeC.equals(java.lang.Double.TYPE)) {
-      return NumberType();
-    } else if (java.lang.Boolean.class.isAssignableFrom(typeC) || typeC.equals(java.lang.Boolean.TYPE)) {
-      return BooleanType();
-    } else if (java.lang.Object.class == typeC) {
-      return WildcardType();
-    }
-    // Sorry, probably should handle this better somehow.  ~Forrest (2/16/2007)
-    throw new IllegalArgumentException
-        ("There was no Syntax type constant found for this class " + typeC);
-  }
-
-  private static String addAOrAn(String str) {
-    switch (str.toUpperCase().charAt(0))  // NOPMD intentional fallthrough
-    {
-      case 'A':
-      case 'E':
-      case 'I':
-      case 'O':
-      case 'U':
-        return "an " + str;
-      default:
-        return "a " + str;
-    }
-  }
-
-  private static int subtractMasks(int mask1, int mask2) {
-    return mask1 - (mask1 & mask2);
-  }
-
   public String dump() {
     StringBuffer buf = new StringBuffer(); // NOPMD
     if (left != VoidType()) {
-      buf.append(typeName(left));
+      buf.append(TypeNames.name(left));
       buf.append(',');
     }
     for (int i = 0; i < right.length; i++) {
       if (i > 0) {
         buf.append('/');
       }
-      buf.append(typeName(right[i]));
+      buf.append(TypeNames.name(right[i]));
     }
     if (ret != VoidType()) {
       buf.append(',');
-      buf.append(typeName(ret));
+      buf.append(TypeNames.name(ret));
     }
     buf.append(',');
     buf.append(agentClassString);
