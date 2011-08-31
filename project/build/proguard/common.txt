@@ -7,7 +7,7 @@
 -libraryjars ../../../dist/java5/java6.jar
 
 # pull in both managed and unmanaged libraries
--libraryjars ../../../lib_managed/scala_2.9.1.RC4/compile
+-libraryjars ../../../lib_managed/scala_2.9.1/compile
 
 # we need to remove this when doing release builds. see ticket #1186 - ST 2/11/11
 -dontwarn java.lang.String

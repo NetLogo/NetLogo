@@ -29,7 +29,7 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA=2.9.1.RC4
+SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
