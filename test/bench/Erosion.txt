@@ -1382,24 +1382,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurebenchmark_resettimer_1 "reset-timer" => void
-         L0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_resettimer_1.workspace : Lorg/nlogo/nvm/Workspace;
-          INVOKEINTERFACE org/nlogo/nvm/Workspace.world ()Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
-          INVOKEVIRTUAL org/nlogo/agent/Timer.reset ()V
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[2]_asm_procedurebenchmark_call_2 "setup"
+[1]_resettimer
+[2]_asm_procedurebenchmark_call_1 "setup"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_3
@@ -1412,7 +1401,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_3 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
       _constdouble:250.0 => double
          L0
           LDC 250.0
@@ -1426,7 +1415,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_3.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -1434,12 +1423,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[4]_asm_procedurebenchmark_call_4 "go"
+[4]_asm_procedurebenchmark_call_3 "go"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_5
@@ -1452,7 +1441,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurebenchmark_repeatlocalinternal_5 "" => void
+[5]_asm_procedurebenchmark_repeatlocalinternal_4 "" => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1482,12 +1471,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_6 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_6.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
           GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
           INVOKEVIRTUAL org/nlogo/agent/Timer.read ()D
          L4
@@ -1521,7 +1510,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[7]_asm_procedurebenchmark_return_7 "" => void
+[7]_asm_procedurebenchmark_return_6 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3243,23 +3232,14 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           RETURN
 
 procedure SETUP:[_repeatlocal:0]{O---}:
-[0]_asm_proceduresetup_clearall_0 "clear-all" => void
-         L0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_clearall_0.workspace : Lorg/nlogo/nvm/Workspace;
-          INVOKEINTERFACE org/nlogo/nvm/Workspace.clearAll ()V
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
+[0]_clearall
 [1]_resetticks
-[2]_asm_proceduresetup_setobservervariable_1 "set show-water? true" Object => void
+[2]_asm_proceduresetup_setobservervariable_0 "set show-water? true" Object => void
       _constboolean:true => Boolean
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_1.kept2_value : Ljava/lang/Boolean;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.kept2_value : Ljava/lang/Boolean;
          L4
           ASTORE 2
          L0
@@ -3286,11 +3266,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresetup_ask_2 "ask patches" AgentSet => void
+[3]_asm_proceduresetup_ask_1 "ask patches" AgentSet => void
       _patches => AgentSet
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_2.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ASTORE 2
@@ -3300,7 +3280,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           IFNE L2
           ALOAD 2
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_2.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/EngineException
@@ -3315,7 +3295,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L3
           ALOAD 2
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_2.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L2
           NEW org/nlogo/nvm/EngineException
@@ -3337,7 +3317,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L4
           RETURN
-[4]_asm_proceduresetup_ifelse_3 "ifelse bumpy?" boolean => void
+[4]_asm_proceduresetup_ifelse_2 "ifelse bumpy?" boolean => void
       _observervariable:BUMPY? => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3376,7 +3356,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[5]_asm_proceduresetup_ifelse_4 "ifelse hill?" boolean => void
+[5]_asm_proceduresetup_ifelse_3 "ifelse hill?" boolean => void
       _observervariable:HILL? => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3415,7 +3395,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[6]_asm_proceduresetup_setpatchvariable_5 "set elevation -100 * (distancexy 0 0 / max-pxcor) + 100 + random" Object => void
+[6]_asm_proceduresetup_setpatchvariable_4 "set elevation -100 * (distancexy 0 0 / max-pxcor) + 100 + random" Object => void
       _plus double,double => double
         _plus double,double => double
           _mult double,double => double
@@ -3438,7 +3418,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DSTORE 4
           DSTORE 2
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.protractor ()Lorg/nlogo/agent/Protractor;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -3448,7 +3428,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/Protractor.distance (Lorg/nlogo/api/Agent;DDZ)D
          L7
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_4.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.maxPxcor ()I
           I2D
          L8
@@ -3529,14 +3509,14 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L17
           RETURN
-[7]_asm_proceduresetup_goto_6 "" => void
+[7]_asm_proceduresetup_goto_5 "" => void
          L0
           ALOAD 1
           BIPUSH 9
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[8]_asm_proceduresetup_setpatchvariable_7 "set elevation random" Object => void
+[8]_asm_proceduresetup_setpatchvariable_6 "set elevation random" Object => void
       _randomconst:125 => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -3577,19 +3557,19 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[9]_asm_proceduresetup_goto_8 "" => void
+[9]_asm_proceduresetup_goto_7 "" => void
          L0
           ALOAD 1
           BIPUSH 11
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[10]_asm_proceduresetup_setpatchvariable_9 "set elevation 100" Object => void
+[10]_asm_proceduresetup_setpatchvariable_8 "set elevation 100" Object => void
       _constdouble:100.0 => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_9.kept2_value : Ljava/lang/Double;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_8.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
          L0
@@ -3616,12 +3596,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[11]_asm_proceduresetup_setpatchvariable_10 "set water 0" Object => void
+[11]_asm_proceduresetup_setpatchvariable_9 "set water 0" Object => void
       _constdouble:0.0 => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_10.kept2_value : Ljava/lang/Double;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_9.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
          L0
@@ -3648,12 +3628,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[12]_asm_proceduresetup_setpatchvariable_11 "set drain? false" Object => void
+[12]_asm_proceduresetup_setpatchvariable_10 "set drain? false" Object => void
       _constboolean:false => Boolean
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_11.kept2_value : Ljava/lang/Boolean;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_10.kept2_value : Ljava/lang/Boolean;
          L4
           ASTORE 2
          L0
@@ -3680,14 +3660,14 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[13]_asm_proceduresetup_done_12 "" => void
+[13]_asm_proceduresetup_done_11 "" => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[14]_asm_proceduresetup_if_13 "if bumpy?" boolean => void
+[14]_asm_proceduresetup_if_12 "if bumpy?" boolean => void
       _observervariable:BUMPY? => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3726,7 +3706,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[15]_asm_proceduresetup_repeatlocal_14 "" double => void
+[15]_asm_proceduresetup_repeatlocal_13 "" double => void
       _observervariable:TERRAIN-SMOOTHNESS => Object
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
          L2
@@ -3762,7 +3742,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_14.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_repeatlocal_13.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -3771,13 +3751,13 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L5
           RETURN
 [16]_diffuse:ELEVATION
-      _asm_proceduresetup_constdouble_15 "0.5" => Double
+      _asm_proceduresetup_constdouble_14 "0.5" => Double
            L0
             ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduresetup_constdouble_15.kept1_value : Ljava/lang/Double;
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_constdouble_14.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[17]_asm_proceduresetup_repeatlocalinternal_16 "" => void
+[17]_asm_proceduresetup_repeatlocalinternal_15 "" => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3807,10 +3787,10 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[18]_asm_proceduresetup_ask_17 "ask patches with [count neighbors != 8" AgentSet => void
+[18]_asm_proceduresetup_ask_16 "ask patches with [count neighbors != 8" AgentSet => void
       _with AgentSet,Reporter => AgentSet
         _patches => AgentSet
-        _asm_proceduresetup_notequal_18 "count neighbors != 8" double,double => boolean
+        _asm_proceduresetup_notequal_17 "count neighbors != 8" double,double => boolean
           _count AgentSet => double
             _neighbors => AgentSet
           _constdouble:8.0 => double
@@ -3858,11 +3838,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
               ARETURN
          L0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L1
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_notequal_18;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_notequal_17;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -3945,7 +3925,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.world : Lorg/nlogo/agent/World;
           INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
          L6
           ASTORE 2
@@ -3955,7 +3935,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           IFNE L7
           ALOAD 2
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L8
           NEW org/nlogo/nvm/EngineException
@@ -3970,7 +3950,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L8
           ALOAD 2
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_17.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_16.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L7
           NEW org/nlogo/nvm/EngineException
@@ -3992,12 +3972,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L9
           RETURN
-[19]_asm_proceduresetup_setpatchvariable_19 "set drain? true" Object => void
+[19]_asm_proceduresetup_setpatchvariable_18 "set drain? true" Object => void
       _constboolean:true => Boolean
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_19.kept2_value : Ljava/lang/Boolean;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_18.kept2_value : Ljava/lang/Boolean;
          L4
           ASTORE 2
          L0
@@ -4024,12 +4004,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[20]_asm_proceduresetup_setpatchvariable_20 "set elevation -10000000" Object => void
+[20]_asm_proceduresetup_setpatchvariable_19 "set elevation -10000000" Object => void
       _constdouble:-1.0E7 => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_20.kept2_value : Ljava/lang/Double;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setpatchvariable_19.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
          L0
@@ -4056,17 +4036,17 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[21]_asm_proceduresetup_done_21 "" => void
+[21]_asm_proceduresetup_done_20 "" => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[22]_asm_proceduresetup_setobservervariable_22 "set drains patches with [drain?" Object => void
+[22]_asm_proceduresetup_setobservervariable_21 "set drains patches with [drain?" Object => void
       _with AgentSet,Reporter => AgentSet
         _patches => AgentSet
-        _asm_proceduresetup_patchvariable_23 "drain?" => Object
+        _asm_proceduresetup_patchvariable_22 "drain?" => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
              L0
               ALOAD 1
@@ -4090,11 +4070,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_22.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_21.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L4
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_22.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_patchvariable_23;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_21.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_patchvariable_22;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -4177,7 +4157,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_22.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_21.world : Lorg/nlogo/agent/World;
           INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
          L9
           ASTORE 2
@@ -4205,10 +4185,10 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[23]_asm_proceduresetup_setobservervariable_24 "set land patches with [not drain?" Object => void
+[23]_asm_proceduresetup_setobservervariable_23 "set land patches with [not drain?" Object => void
       _with AgentSet,Reporter => AgentSet
         _patches => AgentSet
-        _asm_proceduresetup_not_25 "not drain?" boolean => boolean
+        _asm_proceduresetup_not_24 "not drain?" boolean => boolean
           _patchvariable:DRAIN? => Object
               TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
               TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
@@ -4266,11 +4246,11 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_24.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_23.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
          L4
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_24.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_not_25;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_23.keptinstr4 : Lorg/nlogo/prim/_asm_proceduresetup_not_24;
           ASTORE 3
           ASTORE 2
           NEW org/nlogo/nvm/Context
@@ -4353,7 +4333,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_24.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_23.world : Lorg/nlogo/agent/World;
           INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
          L9
           ASTORE 2
@@ -4381,7 +4361,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L11
           RETURN
-[24]_asm_proceduresetup_ask_26 "ask land" Object => void
+[24]_asm_proceduresetup_ask_25 "ask land" Object => void
       _observervariable:LAND => Object
          L0
           ALOAD 1
@@ -4402,7 +4382,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           IFNE L3
           ALOAD 3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_26.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_25.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L4
           NEW org/nlogo/nvm/EngineException
@@ -4417,7 +4397,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
          L4
           ALOAD 3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_26.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_25.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
           IF_ACMPNE L3
           NEW org/nlogo/nvm/EngineException
@@ -4465,7 +4445,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           ICONST_1
           ICONST_0
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_26.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_25.world : Lorg/nlogo/agent/World;
           INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Ljava/lang/Class;IZLorg/nlogo/agent/World;)V
           ASTORE 3
           ALOAD 3
@@ -4494,12 +4474,12 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L7
           RETURN
-[25]_asm_proceduresetup_call_27 "recolor"
+[25]_asm_proceduresetup_call_26 "recolor"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_27.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_26.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           BIPUSH 26
@@ -4512,14 +4492,14 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[26]_asm_proceduresetup_done_28 "" => void
+[26]_asm_proceduresetup_done_27 "" => void
          L0
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.finished : Z
          L1
           RETURN
-[27]_asm_proceduresetup_return_29 "" => void
+[27]_asm_proceduresetup_return_28 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V

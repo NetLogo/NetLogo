@@ -235,30 +235,19 @@ procedure BENCHMARK:[]{O---}:
             LDC "/tmp/firebig.csv"
            L1
             ARETURN
-[7]_asm_procedurebenchmark_resettimer_7 "reset-timer" => void
-         L0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_resettimer_7.workspace : Lorg/nlogo/nvm/Workspace;
-          INVOKEINTERFACE org/nlogo/nvm/Workspace.world ()Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
-          INVOKEVIRTUAL org/nlogo/agent/Timer.reset ()V
-          ALOAD 1
-          BIPUSH 8
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
+[7]_resettimer
 [8]_importworld
-      _asm_procedurebenchmark_conststring_8 ""/tmp/firebig.csv"" => String
+      _asm_procedurebenchmark_conststring_7 ""/tmp/firebig.csv"" => String
            L0
             LDC "/tmp/firebig.csv"
            L1
             ARETURN
-[9]_asm_procedurebenchmark_setobservervariable_9 "set result timer" Object => void
+[9]_asm_procedurebenchmark_setobservervariable_8 "set result timer" Object => void
       _timer => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_9.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_8.world : Lorg/nlogo/agent/World;
           GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
           INVOKEVIRTUAL org/nlogo/agent/Timer.read ()D
          L4
@@ -292,7 +281,7 @@ procedure BENCHMARK:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[10]_asm_procedurebenchmark_return_10 "" => void
+[10]_asm_procedurebenchmark_return_9 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V

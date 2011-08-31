@@ -2127,24 +2127,13 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[1]_asm_procedurebenchmark_resettimer_1 "reset-timer" => void
-         L0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_resettimer_1.workspace : Lorg/nlogo/nvm/Workspace;
-          INVOKEINTERFACE org/nlogo/nvm/Workspace.world ()Lorg/nlogo/agent/World;
-          GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
-          INVOKEVIRTUAL org/nlogo/agent/Timer.reset ()V
-          ALOAD 1
-          ICONST_2
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[2]_asm_procedurebenchmark_call_2 "setup"
+[1]_resettimer
+[2]_asm_procedurebenchmark_call_1 "setup"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_3
@@ -2157,7 +2146,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[3]_asm_procedurebenchmark_repeatlocal_3 "" double => void
+[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
       _constdouble:2400.0 => double
          L0
           LDC 2400.0
@@ -2171,7 +2160,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_3.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -2179,12 +2168,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[4]_asm_procedurebenchmark_call_4 "go"
+[4]_asm_procedurebenchmark_call_3 "go"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_5
@@ -2197,7 +2186,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_procedurebenchmark_repeatlocalinternal_5 "" => void
+[5]_asm_procedurebenchmark_repeatlocalinternal_4 "" => void
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2227,12 +2216,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L2
           RETURN
-[6]_asm_procedurebenchmark_setobservervariable_6 "set result timer" Object => void
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
       _timer => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_6.world : Lorg/nlogo/agent/World;
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
           GETFIELD org/nlogo/agent/World.timer : Lorg/nlogo/agent/Timer;
           INVOKEVIRTUAL org/nlogo/agent/Timer.read ()D
          L4
@@ -2266,7 +2255,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[7]_asm_procedurebenchmark_return_7 "" => void
+[7]_asm_procedurebenchmark_return_6 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -3585,23 +3574,14 @@ procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           RETURN
 
 procedure SETUP:[]{O---}:
-[0]_asm_proceduresetup_clearall_0 "ca" => void
-         L0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_clearall_0.workspace : Lorg/nlogo/nvm/Workspace;
-          INVOKEINTERFACE org/nlogo/nvm/Workspace.clearAll ()V
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
+[0]_clearall
 [1]_resetticks
-[2]_asm_proceduresetup_setobservervariable_1 "set max-grain 50" Object => void
+[2]_asm_proceduresetup_setobservervariable_0 "set max-grain 50" Object => void
       _constdouble:50.0 => Double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_1.kept2_value : Ljava/lang/Double;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.kept2_value : Ljava/lang/Double;
          L4
           ASTORE 2
          L0
@@ -3628,12 +3608,12 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L6
           RETURN
-[3]_asm_proceduresetup_call_2 "setup-patches"
+[3]_asm_proceduresetup_call_1 "setup-patches"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_4
@@ -3646,12 +3626,12 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[4]_asm_proceduresetup_call_3 "setup-turtles"
+[4]_asm_proceduresetup_call_2 "setup-turtles"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           ICONST_5
@@ -3664,12 +3644,12 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[5]_asm_proceduresetup_call_4 "setup-plotz"
+[5]_asm_proceduresetup_call_3 "setup-plotz"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           BIPUSH 6
@@ -3682,12 +3662,12 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[6]_asm_proceduresetup_call_5 "update-plotz"
+[6]_asm_proceduresetup_call_4 "update-plotz"
          L0
           NEW org/nlogo/nvm/Activation
           DUP
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_5.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           BIPUSH 7
@@ -3700,7 +3680,7 @@ procedure SETUP:[]{O---}:
           PUTFIELD org/nlogo/nvm/Context.ip : I
          L1
           RETURN
-[7]_asm_proceduresetup_return_6 "" => void
+[7]_asm_proceduresetup_return_5 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
