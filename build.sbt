@@ -5,7 +5,7 @@ name := "NetLogo"
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalacOptions ++=
-  "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
+  "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
   .split(" ").toSeq
 
 javacOptions ++=
@@ -19,9 +19,6 @@ scalaSource in Test <<= baseDirectory(_ / "src" / "test")
 javaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 javaSource in Test <<= baseDirectory(_ / "src" / "test")
-
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings",
-	      	      "-encoding", "us-ascii")
 
 resolvers += "java.net" at "http://download.java.net/maven/2"
 
