@@ -36,6 +36,6 @@ libraryDependencies ++= Seq("asm" % "asm-all" % "3.3.1",
                             "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
                             "org.jmock" % "jmock" % "2.5.1" % "test",
                             "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-                            "org.scala-tools.testing" % "scalacheck_2.9.0" % "1.9" % "test",
+                            "org.scala-tools.testing" % "scalacheck_2.9.1" % "1.9" % "test",
                             "org.scalatest" % "scalatest_2.9.0" % "1.6.1" % "test")
 
