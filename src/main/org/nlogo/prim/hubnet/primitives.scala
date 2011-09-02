@@ -1,7 +1,7 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.api.{ CommandRunnable, LogoList, Syntax }
-import org.nlogo.nvm.{ EngineException, Context, Reporter }
+import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
 import Syntax._
 
 class _hubnetmessage extends Reporter {
@@ -46,7 +46,7 @@ class _hubnetclientslist extends Reporter {
     LogoList(workspace.getHubNetManager.clients.toSeq.map(_.asInstanceOf[AnyRef]): _*)
 }
 
-class _hubnetkickclient extends org.nlogo.nvm.Command {
+class _hubnetkickclient extends Command {
   override def syntax = commandSyntax(Array(StringType), "OTPL")
   override def perform(context: Context) {
     workspace.getHubNetManager.kick(argEvalString(context, 0))
@@ -54,7 +54,7 @@ class _hubnetkickclient extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetkickallclients extends org.nlogo.nvm.Command {
+class _hubnetkickallclients extends Command {
   override def syntax = commandSyntax("OTPL", true)
   override def perform(context: Context) {
     workspace.getHubNetManager.kickAll()
@@ -74,7 +74,7 @@ class _hubnetoutqsize extends Reporter {
     workspace.getHubNetManager.getOutQueueSize.toDouble.asInstanceOf[AnyRef]
 }
 
-class _hubnetcreateclient extends org.nlogo.nvm.Command {
+class _hubnetcreateclient extends Command {
   override def syntax = commandSyntax("O---", false)
   override def perform(context: Context) {
     workspace.getHubNetManager.newClient(false,0)
@@ -82,7 +82,7 @@ class _hubnetcreateclient extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetsendfromlocalclient extends org.nlogo.nvm.Command {
+class _hubnetsendfromlocalclient extends Command {
   override def syntax = commandSyntax(Array(StringType, StringType, WildcardType))
   override def perform(context: Context) {
     val clientId = argEvalString(context, 0)
@@ -94,7 +94,7 @@ class _hubnetsendfromlocalclient extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetwaitforclients extends org.nlogo.nvm.Command {
+class _hubnetwaitforclients extends Command {
   // two args:
   //   1) number of clients to wait for.
   //   2) timeout (milliseconds)
@@ -112,7 +112,7 @@ class _hubnetwaitforclients extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetwaitformessages extends org.nlogo.nvm.Command {
+class _hubnetwaitformessages extends Command {
   // two args:
   //   1) number of messages to wait for.
   //   2) timeout (milliseconds)
@@ -130,7 +130,7 @@ class _hubnetwaitformessages extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetsetviewmirroring extends org.nlogo.nvm.Command {
+class _hubnetsetviewmirroring extends Command {
   override def syntax = commandSyntax(Array(BooleanType))
   override def perform(context: Context) {
     workspace.getHubNetManager.setViewMirroring(argEvalBooleanValue(context, 0))
@@ -138,7 +138,7 @@ class _hubnetsetviewmirroring extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetsetplotmirroring extends org.nlogo.nvm.Command {
+class _hubnetsetplotmirroring extends Command {
   override def syntax = commandSyntax(Array(BooleanType))
   override def perform(context: Context) {
     workspace.getHubNetManager.setPlotMirroring(argEvalBooleanValue(context, 0))
@@ -146,7 +146,7 @@ class _hubnetsetplotmirroring extends org.nlogo.nvm.Command {
   }
 }
 
-class _hubnetsetclientinterface extends org.nlogo.nvm.Command {
+class _hubnetsetclientinterface extends Command {
   def syntax = commandSyntax(Array[Int](StringType, ListType), "O---", false)
   def perform(context: Context) {
     val interfaceType = argEvalString(context, 0)
