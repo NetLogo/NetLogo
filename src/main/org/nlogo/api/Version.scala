@@ -71,7 +71,7 @@ object Version {
   // allowed in the applet.
   def useGenerator =
     try 
-      !java.lang.Boolean.getBoolean("org.nlogo.noGenerator") || {
+      !java.lang.Boolean.getBoolean("org.nlogo.noGenerator") && {
         Class.forName("org.nlogo.generator.Generator");
         true
       }
