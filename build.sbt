@@ -23,7 +23,7 @@ javaSource in Test <<= baseDirectory(_ / "src" / "test")
 resolvers += "java.net" at "http://download.java.net/maven/2"
 
 libraryDependencies ++= Seq("asm" % "asm-all" % "3.3.1",
-                            "org.picocontainer" % "picocontainer" % "2.11.1",
+                            "org.picocontainer" % "picocontainer" % "2.13.6",
                             "log4j" % "log4j" % "1.2.16",
                             "javax.media" % "jmf" % "2.1.1e",
                             "org.pegdown" % "pegdown" % "0.9.1",

@@ -22,7 +22,7 @@ trait Libraries extends DefaultProject {
 
   /// regular dependencies
   val asm = "asm" % "asm-all" % "3.3.1"
-  val picocontainer = "org.picocontainer" % "picocontainer" % "2.11.1"
+  val picocontainer = "org.picocontainer" % "picocontainer" % "2.13.6"
   val log4j = "log4j" % "log4j" % "1.2.16"
   val jmf = "javax.media" % "jmf" % "2.1.1e"
   val pegdown = "org.pegdown" % "pegdown" % "0.9.1"
