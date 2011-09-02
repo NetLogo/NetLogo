@@ -242,3 +242,58 @@ class _hubnetbroadcastusermessage extends Command {
     context.ip = next
   }
 }
+
+class _hubnetroboclient extends Command {
+  override def syntax =
+    commandSyntax(Array(NumberType), "O---", false)
+  override def perform(context: Context) {
+    workspace.getHubNetManager.newClient(true, argEvalIntValue(context, 0))
+    context.ip = next
+  }
+}
+
+class _hubnetclearoverrides extends Command {
+  override def syntax =
+    commandSyntax(Array(StringType), "OTPL", false)
+  override def perform(context: Context) {
+    val client = argEvalString(context, 0)
+    workspace.waitFor(
+      new CommandRunnable {
+        override def run() {
+          workspace.getHubNetManager.clearOverrideLists(client)
+        }})
+    context.ip = next
+  }
+}
+
+class _hubnetclearoverride extends Command {
+  override def syntax =
+    commandSyntax(Array(StringType,
+                        AgentsetType | AgentType,
+                        StringType),
+                  "OTPL", "?", false)
+  override def perform(context: Context) {
+    import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+    val client = argEvalString(context, 0)
+    val target = args(1).report(context)
+    val varName = argEvalString(context, 2)
+    val set = target match {
+      case agent: Agent =>
+        val set = new ArrayAgentSet(agent.getAgentClass, 1, false, world)
+        set.add(agent)
+        set
+      case set: AgentSet =>
+        set
+    }
+    val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
+    val iter = set.iterator
+    while(iter.hasNext)
+      overrides += java.lang.Long.valueOf(iter.next().id)
+    workspace.waitFor(
+      new CommandRunnable() {
+        override def run() {
+          workspace.getHubNetManager.clearOverride(
+            client, set.`type`, varName, overrides)}})
+    context.ip = next
+  }
+}
