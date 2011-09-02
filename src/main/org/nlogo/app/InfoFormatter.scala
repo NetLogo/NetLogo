@@ -30,13 +30,12 @@ object InfoFormatter {
             replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
 
   def toInnerHtml(str: MarkDownString): HTML =
-    // SMARTYPANTS beautifies quotes, dashes, etc.
-    // AUTOLINKS lets you omit the angle brackets around URLs and email addresses
-    // HARDWRAPS enables GitHub flavored newlines (github.github.com/github-flavored-markdown/)
-    PostProcessor(
-      new PegDownProcessor(Extensions.SMARTYPANTS | Extensions.AUTOLINKS | Extensions.HARDWRAPS)
-        .markdownToHtml(str)
-    )
+    new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
+                         Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
+                         Extensions.HARDWRAPS |         // GitHub flavored newlines
+                         Extensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
+      .markdownToHtml(str)
+
   def wrapHtml(body: HTML, fontSize:Int=defaultFontSize): HTML = {
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
   }
@@ -45,13 +44,4 @@ object InfoFormatter {
     wrapHtml(toInnerHtml(content), fontSize)
   }
 
-  object PostProcessor {
-    lazy val convert: String => String =
-      List(fixLessThans).reduceLeft(_ andThen _)
-
-    def apply(s:String) = convert(s)
-
-    private val fixLessThans = replace("""<[^A-Za-z/]""", "&lt;$0")
-    private def replace(s1: String, s2: String) = (_: String).replaceAll(s1, s2)
-  }
 }

@@ -7,31 +7,36 @@ class InfoFormatterTests extends FunSuite {
 
   import InfoFormatter._
 
-  val helloWorldMarkdown = """
-    # Hello
-    World
-    """
-  val helloWorldInnerHtml = """<pre><code># Hello
-World
-</code></pre>"""
+  val helloWorldMarkdown = """|
+                              |    # Hello
+                              |    World
+                              |    """.stripMargin
+  val helloWorldInnerHtml = """|<pre><code># Hello
+                               |World
+                               |</code></pre>""".stripMargin
 
   test("hello world (smoke test)") {
-    assert(toInnerHtml(helloWorldMarkdown) === helloWorldInnerHtml)
+    expect(helloWorldInnerHtml) {
+      toInnerHtml(helloWorldMarkdown)
+    }
   }
 
-  test("github flavored newlines") {
-    val twoParagraphsUsingSingleNewLine = """hi
-there"""
-    assert(toInnerHtml(twoParagraphsUsingSingleNewLine) === """<p>hi<br/>
-there</p>""")
-
-    val twoParagraphsUsingTwoNewLines = """hi
-
-there"""
-    assert(toInnerHtml(twoParagraphsUsingTwoNewLines) === """<p>hi</p><p>there</p>""")
+  test("github flavored newlines 1") {
+    expect("""<p>hi<br/>there</p>""") {
+      toInnerHtml("""|hi
+                     |there""".stripMargin)
+    }
   }
 
-  test("main"){
+  test("github flavored newlines 2") {
+    expect("""<p>hi</p><p>there</p>""") {
+      toInnerHtml("""|hi
+                     |
+                     |there""".stripMargin)
+    }
+  }
+
+  test("main") {
     val fullHtml = InfoFormatter(helloWorldMarkdown)
     // make sure the style sheet is there:
     assert(fullHtml.contains("<style type=\"text/css\">"))
@@ -41,30 +46,30 @@ there"""
     assert(fullHtml.contains(helloWorldInnerHtml))
   }
 
-  test("read function that should probably be in a utils class somewhere"){
-    assert(read(new ByteArrayInputStream("goo".getBytes)) == "goo")
-    assert(read(new ByteArrayInputStream("\ngoo".getBytes)) === "\ngoo")
-    assert(read(new ByteArrayInputStream("\ngoo\n".getBytes)) === "\ngoo\n")
+  test("read function that should probably be in a utils class somewhere") {
+    def process(s: String) =
+      expect(s) { read(new ByteArrayInputStream(s.getBytes)) }
+    process("goo")
+    process("\ngoo")
+    process("\ngoo\n")
   }
 
-  test("unordered list bug"){
+  test("unordered list bug") {
     val weirdUnorderedListBugText = "  * Hello World\n    * Worwe qworijwetor"
     val innerHtml = toInnerHtml(weirdUnorderedListBugText)
     assert(innerHtml.contains("World"))
   }
 
   // trac.assembla.com/nlogo/ticket/1278
-  test("< characters get converted to &lt;"){
-    val x = """|is 5<6?
-               |is 5 < 6?
-               |is 5 < x?""".stripMargin
-    val innerHtml = toInnerHtml(x)
-    assert(innerHtml === """|<p>is 5&lt;<6?<br/>
-                            |is 5 &lt;< 6?<br/>
-                            |is 5 &lt;< x?</p>""".stripMargin)
+  test("< characters get converted to &lt;") {
+    expect("""<p>is 5&lt;6?<br/>is 5 &lt; 6?<br/>is 5 &lt; x?</p>""") {
+      toInnerHtml("""|is 5<6?
+                     |is 5 < 6?
+                     |is 5 < x?""".stripMargin)
+    }
   }
 
-  test("table parsing makes no changes and isn't outrageously slow"){
+  test("table parsing makes no changes and isn't outrageously slow") {
     val content = """|<table border>
                      |<tr> <th>Your action <th>Partner's action <th>Your jail time <th>Partner's jail time
                      |<tr> <td>silent      <td>silent           <td>1              <td>1
@@ -72,9 +77,44 @@ there"""
                      |<tr> <td>confess     <td>silent           <td>0              <td>5
                      |</table>""".stripMargin
     val time = System.currentTimeMillis
-    assert(toInnerHtml(content) === content)
+    expect(content) { toInnerHtml(content) }
     // trac.assembla.com/nlogo/ticket/1181
     assert(System.currentTimeMillis - time < 1000)
   }
 
+  // here we get a <pre> block because we have a blank line before the fence
+  test("fenced code blocks 1") {
+    expect("""|<p>foo</p>
+              |<pre><code>   bar
+              |  baz
+              |qux
+              |</code></pre><p>oof</p>""".stripMargin) {
+      toInnerHtml("""|foo
+                     |
+                     |```
+                     |   bar
+                     |  baz
+                     |qux
+                     |```
+                     |oof""".stripMargin)
+    }
+  }
+
+  // in contrast, here no <pre> because no blank line
+  test("fenced code blocks 2") {
+    expect("""|<p>foo<br/><code>
+              |   bar
+              |  baz
+              |qux
+              |</code><br/>oof</p>""".stripMargin) {
+      toInnerHtml("""|foo
+                     |```
+                     |   bar
+                     |  baz
+                     |qux
+                     |```
+                     |oof""".stripMargin)
+    }
+  }
+  
 }
