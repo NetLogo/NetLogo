@@ -31,16 +31,16 @@ trait Libraries extends DefaultProject {
     "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar"
   val jhotdraw = "org.jhotdraw" % "jhotdraw" % "6.0b1" from
     "http://ccl.northwestern.edu/devel/jhotdraw-6.0b1.jar"
-  val quaqua = "ch.randelshofer" % "quaqua" % "7.3.4" from
-    "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar"
+  val quaqua = "ch.randelshofer" % "quaqua" % "7.4.2" from
+    "http://ccl.northwestern.edu/devel/quaqua-7.4.2.jar"
   val jogl = "org.jogl" % "jogl" % "1.1.1" from
     "http://ccl.northwestern.edu/devel/jogl-1.1.1.jar"
   val gluegen = "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from
     "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar"
-  // 7.3.4 isn't the real version number, it's just "the version that comes
-  // with Quaqua 7.3.4" - ST 5/6/11
-  val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
-    "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
+  // 7.4.2 isn't the real version number, it's just "the version that comes
+  // with Quaqua 7.4.2" - ST 9/2/11
+  val swingLayout = "ch.randelshofer" % "swing-layout" % "7.4.2" from
+    "http://ccl.northwestern.edu/devel/swing-layout-7.4.2.jar"
     
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
