@@ -1,6 +1,7 @@
 package org.nlogo.prim.hubnet
 
-import org.nlogo.api.{ CommandRunnable, LogoList, Syntax }
+import org.nlogo.agent.Observer
+import org.nlogo.api.{ CommandRunnable, Dump, LogoList, Syntax }
 import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
 import Syntax._
 
@@ -156,6 +157,88 @@ class _hubnetsetclientinterface extends Command {
         workspace.getHubNetManager.setClientInterface(interfaceType, interfaceInfo.toIterable)
       }
     })
+    context.ip = next
+  }
+}
+
+class _hubnetfetchmessage extends Command {
+  override def syntax =
+    commandSyntax
+  override def perform(context: Context) {
+    workspace.getHubNetManager.fetchMessage()
+    context.ip = next
+  }
+}
+
+class _hubnetreset extends Command {
+  override def syntax =
+    commandSyntax("O---", false)
+  override def perform(context: Context) {
+    workspace.waitFor(
+      new CommandRunnable {
+        override def run() {
+          workspace.getHubNetManager.reset()
+        }})
+    context.ip = next
+  }
+}
+
+class _hubnetresetperspective extends Command {
+  override def syntax =
+    commandSyntax(Array(StringType), "OTPL", false)
+  override def perform(context: Context) {
+    val client = argEvalString(context, 0)
+    val agent = world.observer.targetAgent
+    val agentClass =
+      Option(agent).map(_.getClass).getOrElse(classOf[Observer])
+    val id = Option(agent).map(_.id).getOrElse(0L)
+    workspace.waitFor(
+      new CommandRunnable {
+        override def run() {
+          workspace.getHubNetManager.sendAgentPerspective(
+            client, world.observer.perspective.export,
+            agentClass, id, (world.worldWidth() - 1) / 2, true)
+        }})
+    context.ip = next
+  }
+}
+
+class _hubnetbroadcast extends Command {
+  override def syntax =
+    commandSyntax(Array(StringType, WildcardType))
+  override def perform(context: Context) {
+    val variableName = argEvalString(context, 0)
+    val data = args(1).report(context)
+    workspace.getHubNetManager.broadcast(variableName, data)
+    context.ip = next
+  }
+}
+
+class _hubnetbroadcastclearoutput extends Command {
+  override def syntax =
+    commandSyntax
+  override def perform(context: Context) {
+    workspace.getHubNetManager.broadcastClearText()
+    context.ip = next
+  }
+}
+
+class _hubnetbroadcastmessage extends Command {
+  override def syntax =
+    commandSyntax(Array(WildcardType))
+  override def perform(context: Context) {
+    val data = args(0).report(context)
+    workspace.getHubNetManager.broadcast(Dump.logoObject(data) + "\n")
+    context.ip = next
+  }
+}
+
+class _hubnetbroadcastusermessage extends Command {
+  override def syntax =
+    commandSyntax(Array(WildcardType))
+  override def perform(context: Context) {
+    val data = args(0).report(context)
+    workspace.getHubNetManager.broadcastUserMessage(Dump.logoObject(data))
     context.ip = next
   }
 }
