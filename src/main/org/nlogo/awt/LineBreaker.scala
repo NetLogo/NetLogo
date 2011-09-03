@@ -16,10 +16,10 @@ object LineBreaker {
     while (text.nonEmpty) {
       var index = 0
       var done = false
-      while (!done && index < text.size && (metrics.stringWidth(text.substring(0, index + 1)) < width
-                                            || text.charAt(index) == ' ')) {
+      while (!done && index < text.size && (metrics.stringWidth(text.take(index + 1)) < width
+                                            || text(index) == ' ')) {
         if (text.charAt(index) == '\n') {
-          text = text.substring(0, index) + ' ' + text.substring(index + 1)
+          text = text.take(index) + ' ' + text.drop(index + 1)
           done = true
         }
         index += 1
@@ -34,23 +34,16 @@ object LineBreaker {
 
       // invariant: index is now the index of the first non-space
       // character which won't fit in the current line
-
       if (index < text.size) {
-        val spaceIndex = text.substring(0, index).lastIndexOf(' ')
+        val spaceIndex = text.take(index).lastIndexOf(' ')
         if (spaceIndex >= 0)
           index = spaceIndex + 1
       }
 
       // invariant: index is now the index of the first character
       // which will *not* be included in the current line
-
-      val thisLine = text.substring(0, index)
-      if (index < text.size) {
-        text = text.substring(index, text.length())
-      } else {
-        text = ""
-      }
-      result += thisLine
+      result += text.take(index)
+      text = text.drop(index)
     }
     nonEmptyResult
   }
