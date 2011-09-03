@@ -15,12 +15,12 @@ object LineBreaker {
       else result.asJava
     while (text.nonEmpty) {
       var index = 0
-      while (index < text.size && (metrics.stringWidth(text.substring(0, index + 1)) < width
-                                   || text(index) == ' ')) {
-        if (text(index) == '\n') {
+      var done = false
+      while (!done && index < text.size && (metrics.stringWidth(text.substring(0, index + 1)) < width
+                                            || text.charAt(index) == ' ')) {
+        if (text.charAt(index) == '\n') {
           text = text.substring(0, index) + ' ' + text.substring(index + 1)
-          index += 1
-          return nonEmptyResult
+          done = true
         }
         index += 1
       }
