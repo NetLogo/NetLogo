@@ -178,7 +178,7 @@ public final strictfp class Context {
   }
 
   public void stop() {
-    if (activation.procedure.isLambda()) {
+    if (activation.procedure.isTask()) {
       throw NonLocalExit$.MODULE$;
     }
     if (activation.procedure.topLevel) {

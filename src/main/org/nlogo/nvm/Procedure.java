@@ -34,24 +34,24 @@ public strictfp class Procedure {
   public final scala.collection.mutable.ArrayBuffer<Procedure> children =
       new scala.collection.mutable.ArrayBuffer<Procedure>();
 
-  public boolean isLambda() {
+  public boolean isTask() {
     return parent != null;
   }
 
   public int size; // cache args.size() for efficiency with making Activations
 
-  // ExpressionParser doesn't know how many parameters the lambda is going to take;
-  // that's determined by LambdaVisitor. so for now this is mutable - ST 2/4/11
-  public final scala.collection.mutable.ArrayBuffer<Let> lambdaFormals =
+  // ExpressionParser doesn't know how many parameters the task is going to take;
+  // that's determined by TaskVisitor. so for now this is mutable - ST 2/4/11
+  public final scala.collection.mutable.ArrayBuffer<Let> taskFormals =
       new scala.collection.mutable.ArrayBuffer<Let>();
 
-  public Let getLambdaFormal(int n, Token token) {
-    while (lambdaFormals.size() < n) {
-      lambdaFormals.$plus$eq(
+  public Let getTaskFormal(int n, Token token) {
+    while (taskFormals.size() < n) {
+      taskFormals.$plus$eq(
           new Let("?" + n, token.startPos(), token.endPos(),
               java.util.Collections.<Let>emptyList()));
     }
-    return lambdaFormals.apply(n - 1);
+    return taskFormals.apply(n - 1);
   }
 
   public final List<Let> lets = new ArrayList<Let>();
@@ -71,7 +71,7 @@ public strictfp class Procedure {
   }
 
   private String buildDisplayName(scala.Option<String> displayName) {
-    return isLambda() ?
+    return isTask() ?
         "(command task from: " + parent.displayName + ")" :
         (displayName.isDefined() ? displayName.get() : ("procedure " + getNameAndFile()));
   }
@@ -120,7 +120,7 @@ public strictfp class Procedure {
 
   public String dump() {
     StringBuilder buf = new StringBuilder();
-    boolean indent = isLambda();
+    boolean indent = isTask();
     if (indent) {
       buf.append("   ");
     }

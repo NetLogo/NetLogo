@@ -474,19 +474,19 @@ public abstract strictfp class Instruction
     }
   }
 
-  public ReporterLambda argEvalReporterLambda(Context context, int argIndex) throws LogoException {
+  public ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (ReporterLambda) obj;
+      return (ReporterTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
     }
   }
 
-  public CommandLambda argEvalCommandLambda(Context context, int argIndex) throws LogoException {
+  public CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (CommandLambda) obj;
+      return (CommandTask) obj;
     } catch (ClassCastException ex) {
       throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }

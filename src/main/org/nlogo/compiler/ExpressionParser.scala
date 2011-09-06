@@ -22,7 +22,7 @@ import org.nlogo.prim._
  */
 
 private class ExpressionParser(procedure: Procedure,
-                               lambdaNumbers: Iterator[Int] = Iterator.from(1)) {
+                               taskNumbers: Iterator[Int] = Iterator.from(1)) {
   /**
    * one less than the lowest valid operator precedence. See
    * Syntax.
@@ -311,9 +311,9 @@ private class ExpressionParser(procedure: Procedure,
    */
   private def parseExpressionInternal(tokens:BufferedIterator[Token],variadic:Boolean,precedence:Int,goalType:Int):Expression = {
     var token = tokens.head
-    val wantAnyLambda = goalType == (Syntax.ReporterTaskType | Syntax.CommandTaskType)
-    val wantReporterLambda = wantAnyLambda || goalType == Syntax.ReporterTaskType
-    val wantCommandLambda = wantAnyLambda || goalType == Syntax.CommandTaskType
+    val wantAnyTask = goalType == (Syntax.ReporterTaskType | Syntax.CommandTaskType)
+    val wantReporterTask = wantAnyTask || goalType == Syntax.ReporterTaskType
+    val wantCommandTask = wantAnyTask || goalType == Syntax.CommandTaskType
     val expr:Expression =
       token.tyype match {
         case TokenType.OPEN_PAREN =>
@@ -344,9 +344,9 @@ private class ExpressionParser(procedure: Procedure,
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
             case TokenType.REPORTER =>
               val r = token.value.asInstanceOf[Reporter]
-              // the "|| wantReporterLambda" is needed or the concise syntax wouldn't work for infix
+              // the "|| wantReporterTask" is needed or the concise syntax wouldn't work for infix
               // reporters, e.g. "map + ..."
-              if(!r.syntax.isInfix || wantReporterLambda)
+              if(!r.syntax.isInfix || wantReporterTask)
                 (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
               else {
                 // this is a bit of a hack, but it's not terrible.  _minus is allowed to be unary
@@ -366,17 +366,17 @@ private class ExpressionParser(procedure: Procedure,
           // and nullary reporters, for the other primitives like map we require the reporter to
           // take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).  the
           // !variadic check is to prevent "map (f a) ..." from being misparsed.
-          if(wantReporterLambda && !variadic && (wantAnyLambda || reporter.syntax.totalDefault > 0)) {
-            val lambda = new _lambdareport
-            lambda.token(reporter.token)
-            val lambdaApp = new ReporterApp(lambda, reporter.token.startPos, reporter.token.endPos, reporter.token.fileName)
-            lambdaApp.addArgument(rApp)
+          if(wantReporterTask && !variadic && (wantAnyTask || reporter.syntax.totalDefault > 0)) {
+            val task = new _reportertask
+            task.token(reporter.token)
+            val taskApp = new ReporterApp(task, reporter.token.startPos, reporter.token.endPos, reporter.token.fileName)
+            taskApp.addArgument(rApp)
             for(argNumber <- 1 to reporter.syntax.totalDefault) {
-              var lv = new _lambdavariable(argNumber)
+              var lv = new _taskvariable(argNumber)
               lv.token(reporter.token)
               rApp.addArgument(new ReporterApp(lv, reporter.token.startPos, reporter.token.endPos, reporter.token.fileName))
             }
-            lambdaApp
+            taskApp
           }
           // the normal case
           else {
@@ -388,21 +388,21 @@ private class ExpressionParser(procedure: Procedure,
           }
         // handle the case of the concise task syntax, where I can write e.g. "foreach xs print"
         // instead of "foreach xs [ print ? ]"
-        case TokenType.COMMAND if wantCommandLambda =>
+        case TokenType.COMMAND if wantCommandTask =>
           tokens.next()
           val stmt = new Statement(token.value.asInstanceOf[Command], token.startPos, token.endPos, token.fileName)
           val stmts = new Statements(token.fileName)
           stmts.addStatement(stmt)
-          val lambdaProcedure = new Procedure(
-            Procedure.Type.COMMAND, token, "__lambda-" + lambdaNumbers.next(), None, procedure)
-          procedure.children += lambdaProcedure
-          lambdaProcedure.pos = token.startPos
-          lambdaProcedure.endPos = token.endPos
-          result ::= new ProcedureDefinition(lambdaProcedure, stmts)
-          val lambda = new _lambda(lambdaProcedure)
-          lambda.token(token)
+          val taskProcedure = new Procedure(
+            Procedure.Type.COMMAND, token, "__task-" + taskNumbers.next(), None, procedure)
+          procedure.children += taskProcedure
+          taskProcedure.pos = token.startPos
+          taskProcedure.endPos = token.endPos
+          result ::= new ProcedureDefinition(taskProcedure, stmts)
+          val task = new _commandtask(taskProcedure)
+          task.token(token)
           for(argNumber <- 1 to stmt.command.syntax.totalDefault) {
-            var lv = new _lambdavariable(argNumber)
+            var lv = new _taskvariable(argNumber)
             lv.token(token)
             stmt.addArgument(new ReporterApp(lv, token.startPos, token.endPos, token.fileName))
           }
@@ -412,7 +412,7 @@ private class ExpressionParser(procedure: Procedure,
             stmt.addArgument(
               new CommandBlock(
                 new Statements(token.fileName), token.startPos, token.endPos, token.fileName))
-          new ReporterApp(lambda, token.startPos, token.endPos, token.fileName)
+          new ReporterApp(task, token.startPos, token.endPos, token.fileName)
         case _ =>
           // here we throw a temporary exception, since we don't know yet what this error means... It
           // generally either means MISSING_INPUT_ON_RIGHT or EXPECTED_REPORTER.
@@ -514,7 +514,7 @@ private class ExpressionParser(procedure: Procedure,
       new CommandBlock(stmts,openBracket.startPos,token.endPos,token.fileName)
     }
     else if(compatible(goalType, Syntax.ReporterTaskType) &&
-            !block.isCommandLambda &&
+            !block.isCommandTask &&
             !compatible(goalType,Syntax.ListType)) {
       val openBracket = tokens.next()
       val expr = resolveType(Syntax.WildcardType,parseExpression(tokens,false,Syntax.WildcardType),null).asInstanceOf[ReporterApp]
@@ -523,14 +523,14 @@ private class ExpressionParser(procedure: Procedure,
       cAssert(closeBracket.tyype == TokenType.CLOSE_BRACKET,EXPECTED_CLOSE_BRACKET,closeBracket)
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
-      val lambda = new _lambdareport
-      lambda.token(openBracket)
-      val app = new ReporterApp(lambda, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
+      val task = new _reportertask
+      task.token(openBracket)
+      val app = new ReporterApp(task, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
       app.addArgument(expr)
       app
     }
     else if(compatible(goalType, Syntax.CommandTaskType) &&
-            block.isCommandLambda &&
+            block.isCommandTask &&
             !compatible(goalType,Syntax.ListType)) {
       val openBracket = tokens.next()
       var token = tokens.head
@@ -545,15 +545,15 @@ private class ExpressionParser(procedure: Procedure,
       val closeBracket = token
       // the origin of the block are based on the positions of the brackets.
       tokens.next()
-      val lambdaProcedure = new Procedure(
-        Procedure.Type.COMMAND, openBracket, "__lambda-" + lambdaNumbers.next(), None, procedure)
-      procedure.children += lambdaProcedure
-      lambdaProcedure.pos = openBracket.startPos
-      lambdaProcedure.endPos = closeBracket.endPos
-      result ::= new ProcedureDefinition(lambdaProcedure, stmts)
-      val lambda = new _lambda(lambdaProcedure)
-      lambda.token(openBracket)
-      new ReporterApp(lambda, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
+      val taskProcedure = new Procedure(
+        Procedure.Type.COMMAND, openBracket, "__task-" + taskNumbers.next(), None, procedure)
+      procedure.children += taskProcedure
+      taskProcedure.pos = openBracket.startPos
+      taskProcedure.endPos = closeBracket.endPos
+      result ::= new ProcedureDefinition(taskProcedure, stmts)
+      val task = new _commandtask(taskProcedure)
+      task.token(openBracket)
+      new ReporterApp(task, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
     }
     else if(compatible(goalType,Syntax.ListType)) {
       // parseConstantList() deals with the open bracket itself, but it leaves the close bracket so
@@ -582,7 +582,7 @@ private class ExpressionParser(procedure: Procedure,
   extends Expression {
     def reportedType = throw new UnsupportedOperationException
     def accept(v:AstVisitor) = throw new UnsupportedOperationException
-    def isCommandLambda =
+    def isCommandTask =
       tokens.tail.dropWhile(_.tyype == TokenType.OPEN_PAREN)
             .headOption
             .exists(t => t.tyype == TokenType.COMMAND || t.tyype == TokenType.CLOSE_BRACKET)

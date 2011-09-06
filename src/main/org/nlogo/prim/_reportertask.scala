@@ -1,9 +1,9 @@
 package org.nlogo.prim
 
 import org.nlogo.api.{ Let, Syntax }
-import org.nlogo.nvm.{ ReporterLambda, Context, Reporter }
+import org.nlogo.nvm.{ ReporterTask, Context, Reporter }
 
-class _lambdareport extends Reporter {
+class _reportertask extends Reporter {
 
   val formals = collection.mutable.ArrayBuffer[Let]()
 
@@ -12,7 +12,7 @@ class _lambdareport extends Reporter {
     Syntax.ReporterTaskType)
 
   override def report(c: Context): AnyRef =
-    ReporterLambda(body = args(0),
+    ReporterTask(body = args(0),
                    formals = formals.reverse.dropWhile(_==null).reverse.toArray,
                    lets = c.letBindings,
                    locals = c.activation.args)

@@ -179,7 +179,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
 [2]_asm_procedurecalculatepressure_setobservervariable_5 "set zero-pressure-count length filter [? = 0] pressure-history" Object => void
       _length Object => double
         _filter
-          _lambdareport
+          _reportertask
             _asm_procedurecalculatepressure_equal_6 "? = 0" Object,double => boolean
               _letvariable(null) => Object
               _constdouble:0.0 => double
@@ -4184,7 +4184,7 @@ procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L2
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -4375,7 +4375,7 @@ procedure LAST-N:[N THE-LIST]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L11
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -5542,7 +5542,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6047,7 +6047,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -6241,7 +6241,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

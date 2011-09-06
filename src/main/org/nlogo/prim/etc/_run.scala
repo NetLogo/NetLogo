@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandLambda, Context, EngineException }
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context, EngineException }
 
 class _run extends Command {
 
@@ -32,18 +32,18 @@ class _run extends Command {
           case error: CompilerException =>
             throw new EngineException(context, this, error.getMessage)
         }
-      case lambda: CommandLambda =>
+      case task: CommandTask =>
         val n = args.size - 1
-        if(n < lambda.formals.size)
+        if(n < task.formals.size)
           throw new EngineException(
-            context, this, lambda.missingInputs(n))
+            context, this, task.missingInputs(n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {
           actuals(i) = args(i + 1).report(context)
           i += 1
         }
-        lambda.perform(context, actuals)
+        task.perform(context, actuals)
         context.ip = next
       case obj =>
         throw new ArgumentTypeException(

@@ -39,7 +39,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // Using "__let" instead of "let" to indicates that this is a let we don't want converted
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
         val exempt = l.token.name.equalsIgnoreCase("__LET")
-        if(!procedure.isLambda && askNestingLevel == 0 && !exempt) {
+        if(!procedure.isTask && askNestingLevel == 0 && !exempt) {
           stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.varName))
           stmt.command.token(stmt.command.token)
           stmt.removeArgument(0)
@@ -52,7 +52,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
         else stmt.drop(1).foreach(_.accept(this)) // drop(1) skips the _letvariable which won't be evaluated
         currentLet = null
       case r: _repeat =>
-        if(!procedure.isLambda && askNestingLevel == 0) {
+        if(!procedure.isTask && askNestingLevel == 0) {
           vn = procedure.args.size
           stmt.command = new _repeatlocal(vn)
           procedure.localsCount += 1

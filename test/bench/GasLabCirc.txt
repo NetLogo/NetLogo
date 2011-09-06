@@ -64,7 +64,7 @@ procedure GO:[]{O---}:
                                     item 2 ? != colliding-particle-2]
                               colliding-particles" Object => void
       _filter
-        _lambdareport
+        _reportertask
           _asm_procedurego_and_3 "item 1 ? != colliding-particle-1 and
                                     item 2 ? != colliding-particle-1 and
                                     item 1 ? != colliding-particle-2 and
@@ -572,7 +572,7 @@ procedure GO:[]{O---}:
                                     item 2 ? != colliding-particle-1]
                               colliding-particles" Object => void
       _filter
-        _lambdareport
+        _reportertask
           _asm_procedurego_and_21 "item 1 ? != colliding-particle-1 and
                                     item 2 ? != colliding-particle-1"
             _notequal Object,Object => boolean
@@ -1689,7 +1689,7 @@ procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -1952,7 +1952,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
                                   item 2 ? != colliding-particle-2]
                                  colliding-particles" Object => void
       _filter
-        _lambdareport
+        _reportertask
           _asm_proceduresortcollisions_or_1 "item 1 ? != colliding-particle-1 or
                                   item 2 ? != colliding-particle-2"
             _notequal Object,Object => boolean
@@ -2229,7 +2229,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2350,7 +2350,7 @@ procedure SORT-COLLISIONS:[WINNER DT]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
            L1
             ARETURN
-      _lambda:(command task from: procedure SORT-COLLISIONS)
+      _commandtask:(command task from: procedure SORT-COLLISIONS)
 [8]_asm_proceduresortcollisions_setprocedurevariable_14 "" Object => void
       _item
         _asm_proceduresortcollisions_constdouble_15 "0" => Double
@@ -3666,7 +3666,7 @@ procedure OVERLAPPING?:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L22
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -10473,7 +10473,7 @@ procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L6
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -10598,7 +10598,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -10865,7 +10865,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -11137,7 +11137,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -11765,7 +11765,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

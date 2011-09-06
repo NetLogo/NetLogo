@@ -18,7 +18,7 @@ private class Assembler {
     assembleStatements(procdef.statements)
     val ret = proc.tyype match {
       case Procedure.Type.COMMAND =>
-        if (proc.isLambda) new _done
+        if (proc.isTask) new _done
         else new _return
       case Procedure.Type.REPORTER => new _returnreport
     }

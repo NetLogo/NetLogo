@@ -11,15 +11,15 @@
   to foo end
   (word task [foo]) => "(command task from: procedure __EVALUATOR)"
 
-CallLambda
+CallTask
   O> run [set glob1 5]
   glob1 => 5
 
-NestedCallLambda
+NestedCallTask
   O> run [ run [ set glob1 5 ] ]
   glob1 => 5
 
-CallLambdaAgainAndAgain
+CallTaskAgainAndAgain
   O> set glob1 task [set glob2 glob2 + 5]
   O> run glob1
   glob2 => 5
@@ -63,10 +63,10 @@ CloseOverProcedureVariable
   O> run foo 10
   glob1 => 10
 
-*WrongTypeOfLambda1
+*WrongTypeOfTask1
   O> __ignore runresult task [__ignore 5] => ERROR RUNRESULT expected input to be a string or reporter task but got the command task (command task from: procedure __EVALUATOR) instead.
 
-WrongTypeOfLambda2
+WrongTypeOfTask2
   O> run task [5] => ERROR RUN expected input to be a string or command task but got the reporter task (reporter task) instead.
 
 NotEnoughInputs
@@ -75,7 +75,7 @@ NotEnoughInputs
 NotEnoughInputsForeach
   O> foreach [1 2 3] [__ignore ?1 + ?2] => ERROR task expected 2 inputs, but only got 1
 
-command-and-reporter-lambdas-close-over-same-let-variable
+command-and-reporter-tasks-close-over-same-let-variable
   to-report make-account let balance 0 report list task [balance] task [ set balance balance + ? ] end
   O> set glob1 make-account
   O> set glob2 item 0 glob1
@@ -89,7 +89,7 @@ command-and-reporter-lambdas-close-over-same-let-variable
   runresult (item 0 glob1) => 0
   runresult glob2 => 30
 
-command-and-reporter-lambdas-close-over-same-procedure-input
+command-and-reporter-tasks-close-over-same-procedure-input
   to-report make-account [balance] report list task [balance] task [ set balance balance + ? ] end
   O> set glob1 make-account 100
   O> set glob2 item 0 glob1
@@ -103,13 +103,13 @@ command-and-reporter-lambdas-close-over-same-procedure-input
   runresult (item 0 glob1) => 50
   runresult glob2 => 130
 
-*command-lambda-stack-trace
+*command-task-stack-trace
   O> run task [print __boom] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\
     called by procedure __EVALUATOR
 
-*command-lambda-in-command-lambda-stack-trace
+*command-task-in-command-task-stack-trace
   O> run task [run task [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\

@@ -1,9 +1,9 @@
 package org.nlogo.prim
 
 import org.nlogo.api.{ Let, Syntax }
-import org.nlogo.nvm.{ CommandLambda, Context, Procedure, Reporter }
+import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
 
-class _lambda(proc: Procedure) extends Reporter {
+class _commandtask(proc: Procedure) extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(Syntax.CommandTaskType)
@@ -12,8 +12,8 @@ class _lambda(proc: Procedure) extends Reporter {
     super.toString + ":" + proc.displayName
 
   override def report(c: Context): AnyRef =
-    CommandLambda(procedure = proc,
-                  formals = proc.lambdaFormals.reverse.dropWhile(_ == null).reverse.toArray,
+    CommandTask(procedure = proc,
+                  formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
                   lets = c.letBindings,
                   locals = c.activation.args)
 

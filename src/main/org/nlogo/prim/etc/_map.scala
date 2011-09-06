@@ -17,11 +17,11 @@ class _map extends Reporter {
   // case. - ST 3/20/08
   override def report(context: Context) = {
 
-    val lambda = argEvalReporterLambda(context, 0)
+    val task = argEvalReporterTask(context, 0)
     val n = args.length - 1
-    if(n < lambda.formals.size)
+    if(n < task.formals.size)
       throw new EngineException(
-        context, this, lambda.missingInputs(n))
+        context, this, task.missingInputs(n))
 
     // get all of the list args, if any.
     var size = 0
@@ -43,7 +43,7 @@ class _map extends Reporter {
         actuals(j) = iters(j).next()
         j += 1
       }
-      result.add(lambda.report(context, actuals))
+      result.add(task.report(context, actuals))
       i += 1
     }
     result.toLogoList

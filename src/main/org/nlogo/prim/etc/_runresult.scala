@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ CompilerException, LogoException, Syntax }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterLambda }
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Context, EngineException, Reporter, ReporterTask }
 
 class _runresult extends Reporter {
 
@@ -37,18 +37,18 @@ class _runresult extends Reporter {
           case ex: LogoException =>
             throw new EngineException(context, this, ex.getMessage)
         }
-      case lambda: ReporterLambda =>
+      case task: ReporterTask =>
         val n = args.size - 1
-        if(n < lambda.formals.size)
+        if(n < task.formals.size)
           throw new EngineException(
-            context, this, lambda.missingInputs(n))
+            context, this, task.missingInputs(n))
         val actuals = new Array[AnyRef](n)
         var i = 0
         while(i < n) {
           actuals(i) = args(i + 1).report(context)
           i += 1
         }
-        lambda.report(context, actuals)
+        task.report(context, actuals)
       case obj =>
         throw new ArgumentTypeException(
           context, this, 0, Syntax.ReporterTaskType | Syntax.StringType, obj)

@@ -94,7 +94,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -126,7 +126,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           RETURN
 [3]_asm_proceduresetupcontinue_setprocedurevariable_3 "set on?-list map [[on?] of ?] sort patches with [pycor = row" Object => void
       _map
-        _lambdareport
+        _reportertask
           _asm_proceduresetupcontinue_patchvariableof_4 "of ?" Object => Object
             _letvariable(null) => Object
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
@@ -934,7 +934,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1091,7 +1091,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -3522,7 +3522,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L2
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -4377,7 +4377,7 @@ procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L2
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -8554,7 +8554,7 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L9
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
@@ -8757,7 +8757,7 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
-          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L18
           GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW

@@ -2,7 +2,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
 import org.nlogo.api.{ LogoException, LogoList, Syntax }
-import org.nlogo.nvm.{ ArgumentTypeException , Context , EngineException, Reporter , ReporterLambda  }
+import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter, ReporterTask  }
 
 class _sortby extends Reporter {
 
@@ -12,10 +12,10 @@ class _sortby extends Reporter {
                           Syntax.ListType, "OTPL", "?")
 
   override def report(context: Context) = {
-    val lambda = argEvalReporterLambda(context, 0)
-    if(lambda.formals.size > 2)
+    val task = argEvalReporterTask(context, 0)
+    if(task.formals.size > 2)
       throw new EngineException(
-        context, this, lambda.missingInputs(2))
+        context, this, task.missingInputs(2))
     val obj = args(1).report(context)
     val input = obj match {
       case list: LogoList =>
@@ -32,7 +32,7 @@ class _sortby extends Reporter {
           context, this, 0, Syntax.ListType | Syntax.AgentsetType, obj)
     }
     try {
-      java.util.Collections.sort(input, new MyComparator(context, lambda))
+      java.util.Collections.sort(input, new MyComparator(context, task))
       LogoList.fromJava(input)
     }
     catch {
@@ -40,16 +40,16 @@ class _sortby extends Reporter {
     }
   }
 
-  class MyComparator(context: Context, lambda: ReporterLambda)
+  class MyComparator(context: Context, task: ReporterTask)
   extends java.util.Comparator[AnyRef] {
     def die(o: AnyRef) =
       throw new ArgumentTypeException(
         context, _sortby.this, 0, Syntax.BooleanType, o)
     override def compare(o1: AnyRef, o2: AnyRef) =
-      try lambda.report(context, Array(o1, o2)) match {
+      try task.report(context, Array(o1, o2)) match {
             case b: java.lang.Boolean =>
               if(b.booleanValue) -1
-              else lambda.report(context, Array(o2, o1)) match {
+              else task.report(context, Array(o2, o1)) match {
                 case b: java.lang.Boolean =>
                   if(b.booleanValue) 1
                   else 0

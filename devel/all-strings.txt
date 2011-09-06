@@ -815,8 +815,8 @@ src/main/org/nlogo/compiler/ExpressionParser.scala:179:      result + ", " + rig
 src/main/org/nlogo/compiler/ExpressionParser.scala:181:      result + ", " + rightArgs.toList.dropRight(1).mkString(", ") + " and " + rightArgs.last + "." 
 src/main/org/nlogo/compiler/ExpressionParser.scala:248:            instruction + " expected this input to be " + Syntax.aTypeName(goalType) + ", but got " +
 src/main/org/nlogo/compiler/ExpressionParser.scala:249:            Syntax.aTypeName(arg.reportedType) + " instead",arg)
-src/main/org/nlogo/compiler/ExpressionParser.scala:395:            Procedure.Type.COMMAND, token, "__lambda-" + lambdaNumbers.next(), None, procedure)
-src/main/org/nlogo/compiler/ExpressionParser.scala:547:        Procedure.Type.COMMAND, openBracket, "__lambda-" + lambdaNumbers.next(), None, procedure)
+src/main/org/nlogo/compiler/ExpressionParser.scala:395:            Procedure.Type.COMMAND, token, "__task-" + taskNumbers.next(), None, procedure)
+src/main/org/nlogo/compiler/ExpressionParser.scala:547:        Procedure.Type.COMMAND, openBracket, "__task-" + taskNumbers.next(), None, procedure)
 src/main/org/nlogo/compiler/ExpressionParser.scala:568:    else exception("Expected " + Syntax.aTypeName(goalType) + " here, rather than a list or block.",block)
 src/main/org/nlogo/compiler/IdentifierParser.scala:53:    else if(ident == "RANDOM-OR-RANDOM-FLOAT")
 src/main/org/nlogo/compiler/IdentifierParser.scala:103:      exception("Nothing named " + varName + " has been defined",
@@ -1469,8 +1469,8 @@ src/main/org/nlogo/nvm/Job.java:66:        buf.append("running");
 src/main/org/nlogo/nvm/Job.java:69:        buf.append("done");
 src/main/org/nlogo/nvm/Job.java:72:        buf.append("removed");
 src/main/org/nlogo/nvm/Job.java:76:            ("unknown state: " + state);
-src/main/org/nlogo/nvm/Lambda.scala:33:    "task expected " + formals.size + " input" + plural + ", but only got " + n
-src/main/org/nlogo/nvm/Lambda.scala:41:  override def toString = "(reporter task)"
+src/main/org/nlogo/nvm/Task.scala:33:    "task expected " + formals.size + " input" + plural + ", but only got " + n
+src/main/org/nlogo/nvm/Task.scala:41:  override def toString = "(reporter task)"
 src/main/org/nlogo/nvm/Procedure.java:72:        "(command task from: " + parent.displayName + ")" :
 src/main/org/nlogo/nvm/Procedure.java:73:        (displayName.isDefined() ? displayName.get() : ("procedure " + getNameAndFile()));
 src/main/org/nlogo/nvm/Procedure.java:80:    return name + " (" + fileName + ")";

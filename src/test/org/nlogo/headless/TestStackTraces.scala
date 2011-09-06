@@ -5,9 +5,9 @@ Important Note:
 LanguageTests (CommandTests and ReporterTests) now support testing stack traces directly.
 Don't add any more tests here; add them there instead.
 
-Here is an example from LambdaC:
+Here is an example from CommandTasks:
 
-*command-lambda-stack-trace
+*command-task-stack-trace
    O> run task [print __boom] => STACKTRACE boom!\
    error while observer running __BOOM\
      called by (command task from: procedure __EVALUATOR)\

@@ -46,8 +46,8 @@ private class IdentifierParser(program:Program,
         if(ident.length == 1) 1
         // if it's more than just "?", it needs to be an integer.
         else try { Integer.parseInt(ident.substring(1)) }
-             catch { case e:NumberFormatException => exception(INVALID_LAMBDA_VARIABLE,tok ) }
-      newToken(new _lambdavariable(varNumber),
+             catch { case e:NumberFormatException => exception(INVALID_TASK_VARIABLE,tok ) }
+      newToken(new _taskvariable(varNumber),
                ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
     }
     // kludgy to special case this, but we only have one such prim,
@@ -123,7 +123,7 @@ private class IdentifierParser(program:Program,
     tok
   }
   /// error texts
-  private val INVALID_LAMBDA_VARIABLE =
+  private val INVALID_TASK_VARIABLE =
     "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
   private val RANDOM_OR_RANDOM_FLOAT_ERROR =
     "This code was written for an old version of NetLogo in which the RANDOM primitive sometimes reported " +

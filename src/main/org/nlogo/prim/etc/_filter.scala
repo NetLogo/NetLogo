@@ -10,14 +10,14 @@ class _filter extends Reporter {
       Syntax.ListType)
 
   def report(context: Context) = {
-    val lambda = argEvalReporterLambda(context, 0)
+    val task = argEvalReporterTask(context, 0)
     val list = argEvalList(context, 1)
-    if(lambda.formals.size > 1)
+    if(task.formals.size > 1)
       throw new EngineException(
-        context, this, lambda.missingInputs(1))
+        context, this, task.missingInputs(1))
     val builder = new LogoListBuilder
     for (item <- list)
-      lambda.report(context, Array(item)) match {
+      task.report(context, Array(item)) match {
         case b: java.lang.Boolean =>
           if (b.booleanValue)
             builder.add(item)

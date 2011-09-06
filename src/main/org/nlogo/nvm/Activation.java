@@ -5,7 +5,7 @@ public final strictfp class Activation {
   public final Procedure procedure;
   public final Activation parent;
   final int returnAddress;
-  // not final so ReporterLambda can swap in the definition-site args - ST 2/5/11
+  // not final so ReporterTask can swap in the definition-site args - ST 2/5/11
   public Object[] args;
 
   private static final Object[] NO_ARGS = new Object[]{};

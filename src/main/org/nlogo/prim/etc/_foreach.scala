@@ -18,10 +18,10 @@ class _foreach extends Command {
           I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.iterator
     }
-    val lambda = argEvalCommandLambda(context, n)
-    if(n < lambda.formals.size)
+    val task = argEvalCommandTask(context, n)
+    if(n < task.formals.size)
       throw new EngineException(
-        context, this, lambda.missingInputs(n))
+        context, this, task.missingInputs(n))
     var i = 0
     val actuals = new Array[AnyRef](n)
     while(i < size && !context.finished) {
@@ -30,7 +30,7 @@ class _foreach extends Command {
         actuals(j) = iters(j).next()
         j += 1
       }
-      lambda.perform(context, actuals)
+      task.perform(context, actuals)
       i += 1
     }
     context.ip = next
