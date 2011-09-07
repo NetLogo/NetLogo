@@ -1,7 +1,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Link
-import org.nlogo.nvm.{ Command, Context, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 class _untie extends Command {
   override def syntax =
