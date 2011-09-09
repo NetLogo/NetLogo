@@ -211,8 +211,8 @@ private class StructureParser(originalTokens:Seq[Token],displayName:Option[Strin
   private def processTokenWithExtensionManager(token:Token):Token = {
     def wrap(prim:org.nlogo.api.Primitive,name:String):Instruction =
       prim match {
-        case c:org.nlogo.api.Command  => new org.nlogo.prim._extern      (c.newInstance(name))
-        case r:org.nlogo.api.Reporter => new org.nlogo.prim._externreport(r.newInstance(name))
+        case c: org.nlogo.api.Command  => new org.nlogo.prim._extern(c)
+        case r: org.nlogo.api.Reporter => new org.nlogo.prim._externreport(r)
       }
     if(token.tyype != TokenType.IDENT ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)

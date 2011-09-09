@@ -21,12 +21,4 @@ abstract class DefaultReporter extends Reporter {
   override def getSyntax =
     Syntax.reporterSyntax(Syntax.NumberType)
 
-  /**
-   * Returns a new instance of this class, created by invoking the empty constructor.
-   *
-   * @return <code>(Reporter) this.getClass().newInstance()</code>
-   */
-  override def newInstance(name: String) =
-    getClass.newInstance.asInstanceOf[Reporter]
-
 }
