@@ -1,29 +1,40 @@
-package org.nlogo.prim.etc;
+package org.nlogo.prim.file;
 
+import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
 
-public final strictfp class _filereadchars
+public final strictfp class _fileread
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
-    int num = argEvalIntValue(context, 0);
+    Object obj = null;
 
     try {
-      return workspace.fileManager().readChars(num);
+      obj = workspace.fileManager().read(world);
+    } catch (CompilerException error) {
+      try {
+        String newErrorDescription =
+            error.getMessage() + workspace.fileManager().getErrorInfo();
+        throw new EngineException(context, this, newErrorDescription);
+      } catch (java.io.IOException ex) {
+        throw new IllegalStateException(ex);
+      }
     } catch (java.io.EOFException ex) {
       throw new EngineException(context, this, "The end of file has been reached");
     } catch (java.io.IOException ex) {
       throw new EngineException(context, this, ex.getMessage());
     }
+
+    return obj;
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.NumberType()};
-    int ret = Syntax.StringType();
+    int[] right = {};
+    int ret = Syntax.ReadableType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

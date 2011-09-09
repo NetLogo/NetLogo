@@ -1,4 +1,4 @@
-package org.nlogo.prim.etc;
+package org.nlogo.prim.file;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;

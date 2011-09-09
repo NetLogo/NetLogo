@@ -1,18 +1,18 @@
-package org.nlogo.prim.etc;
+package org.nlogo.prim.file;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
 
-public final strictfp class _filereadline
+public final strictfp class _fileatend
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
     try {
-      return workspace.fileManager().readLine();
-    } catch (java.io.EOFException ex) {
-      throw new EngineException(context, this, "The end of file has been reached");
+      return workspace.fileManager().eof()
+          ? Boolean.TRUE
+          : Boolean.FALSE;
     } catch (java.io.IOException ex) {
       throw new EngineException(context, this, ex.getMessage());
     }
@@ -20,8 +20,6 @@ public final strictfp class _filereadline
 
   @Override
   public Syntax syntax() {
-    int[] right = {};
-    int ret = Syntax.StringType();
-    return Syntax.reporterSyntax(right, ret);
+    return Syntax.reporterSyntax(Syntax.BooleanType());
   }
 }
