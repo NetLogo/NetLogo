@@ -92,7 +92,7 @@ abstract class AbstractTestLanguage extends Assertions {
     privateTestReporterError(reporter, error, workspace.lastLogoException.getMessage, mode)
   }
   def testReporterErrorStackTrace(reporter: String, stackTrace: String, mode: TestMode) {
-    privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.getNetLogoStackTrace.get, mode)
+    privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.stackTrace.get, mode)
   }
   def testCommand(command: String,
                   agentClass: Class[_ <: Agent] = classOf[Observer],
@@ -129,7 +129,7 @@ abstract class AbstractTestLanguage extends Assertions {
     catch {
       case ex: LogoException =>
         withClue(mode + ": command: " + command) {
-          expect(stackTrace)(workspace.lastErrorReport.getNetLogoStackTrace.get)
+          expect(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }
   }

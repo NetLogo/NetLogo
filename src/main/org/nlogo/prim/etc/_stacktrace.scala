@@ -7,5 +7,6 @@ class _stacktrace extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.StringType)
   override def report(context: Context) =
-    StackTraceBuilder.getStackTrace(context.activation, context.agent, this, None)
+    StackTraceBuilder.build(
+      context.activation, context.agent, this, None)
 }

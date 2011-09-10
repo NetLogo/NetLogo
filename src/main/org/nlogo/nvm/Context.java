@@ -321,7 +321,8 @@ public final strictfp class Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
-    return StackTraceBuilder.getStackTrace(activation, agent, instruction, throwable);
+    return StackTraceBuilder.build(
+      activation, agent, instruction, scala.Option.apply(throwable));
   }
 
   /// coming up for air

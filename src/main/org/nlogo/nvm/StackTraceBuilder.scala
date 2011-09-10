@@ -27,15 +27,13 @@ import org.nlogo.agent.Agent
  */
 object StackTraceBuilder {
 
-  def getStackTrace(act: Activation, agent: Agent, instruction: Instruction, cause: Throwable): String = {
-    getStackTrace(act, agent, instruction, Option(cause))
-  }
-
-  def getStackTrace(act: Activation, agent: Agent, instruction: Instruction, cause: Option[Throwable]): String = {
-    val errorMessage = cause map { e => e match {
-      case l: LogoException => l.getMessage + "\nerror while "
-      case _ => "error (" + e.getClass.getSimpleName + ")\n while "
-    }}
+  def build(act: Activation, agent: Agent, instruction: Instruction, cause: Option[Throwable]): String = {
+    val errorMessage = cause map {
+      case l: LogoException =>
+        l.getMessage + "\nerror while "
+      case e =>
+        "error (" + e.getClass.getSimpleName + ")\n while "
+    }
     errorMessage.getOrElse("") + agent + " running " + instruction.displayName + "\n" +
       entries(act).map("  called by " + _).mkString("\n")
   }
