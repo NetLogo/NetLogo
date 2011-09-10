@@ -78,9 +78,11 @@ extends Task with org.nlogo.api.CommandTask {
     val exited =
       try { context.runExclusive(); false }
       catch { case NonLocalExit => true }
-    context.finished = context.agent.id == -1
-    context.activation = oldActivation
-    context.letBindings = oldLets
+      finally {
+        context.finished = context.agent.id == -1
+        context.activation = oldActivation
+        context.letBindings = oldLets
+      }
     if(exited && context.activation.procedure.tyype == Procedure.Type.COMMAND)
       context.stop()
     // note that it's up to the caller to restore context.ip
