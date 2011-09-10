@@ -19,7 +19,8 @@ JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss
 SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:resources:$(SCALA_JAR):$(LIBS)
+CLASSES = target/scala_$(SCALA_VERSION)/classes
+CLASSPATH = $(CLASSES):resources:$(SCALA_JAR):$(LIBS)
 
 ### common prerequisites
 tmp:
@@ -137,7 +138,7 @@ tmp/scaladoc: netlogo | tmp
 	  -d tmp/scaladoc \
 	  -doc-title 'NetLogo' \
 	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(CLASSPATH) \
+	  -classpath $(LIBS):$(CLASSES) \
 	  -sourcepath src/main \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
@@ -151,7 +152,7 @@ docs/scaladoc: netlogo
 	  -d docs/scaladoc \
 	  -doc-title 'NetLogo API' \
 	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(CLASSPATH) \
+	  -classpath $(LIBS):$(CLASSES) \
 	  -sourcepath src/main \
 	  -encoding us-ascii \
 	  src/main/org/nlogo/app/App.scala \
