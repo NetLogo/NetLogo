@@ -1,5 +1,6 @@
-package org.nlogo
-package api
+package org.nlogo.api
+
+import annotation.strictfp
 
 object Pow {
 
