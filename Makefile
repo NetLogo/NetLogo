@@ -18,8 +18,8 @@ endif
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
-LIBS = lib_managed/scala_$(SCALA_VERSION)/compile
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):`ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+CLASSPATH = target/scala_$(SCALA_VERSION)/classes:resources:$(SCALA_JAR):$(LIBS)
 
 ### common prerequisites
 tmp:
