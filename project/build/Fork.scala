@@ -14,7 +14,6 @@ trait Fork extends DefaultProject {
       si.libraryJar :: si.compilerJar :: Nil
     }
     override def runJVMOptions = Seq(
-      "-server",
       "-XX:MaxPermSize=128m",
       "-Xss16m",
       "-Xmx1024m",

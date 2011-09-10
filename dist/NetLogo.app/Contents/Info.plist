@@ -51,7 +51,7 @@
 			<string>true</string>
 		</dict>
 		<key>VMOptions</key>
-		<string>-server -Dapple.awt.graphics.UseQuartz=true -Djava.ext.dirs= -XX:+PrintJavaStackAtFatalState -XX:MaxPermSize=128m -Xss16m -Xmx1024m -Dfile.encoding=UTF-8</string>
+		<string>-Dapple.awt.graphics.UseQuartz=true -Djava.ext.dirs= -XX:+PrintJavaStackAtFatalState -XX:MaxPermSize=128m -Xss16m -Xmx1024m -Dfile.encoding=UTF-8</string>
 		<key>WorkingDirectory</key>
 		<string>$APP_PACKAGE/..</string>
 	</dict>

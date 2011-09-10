@@ -471,7 +471,7 @@ windows.-->
       the GUI, so it is saved as part of the model. To run an experiment
       setup saved in a model, here is an example command line:
     <pre>
-java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
+java -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment1 \
@@ -490,10 +490,6 @@ java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
       system property <tt>java.awt.headless</tt> to be true. This tells
       Java to run in headless mode, allowing NetLogo to run on machines
       when a graphical display is not available.
-    <p>
-      Note the use of the <tt>-server</tt> flag to tell Java to optimize
-      performance for &quot;server&quot; type applications; we recommend
-      this flag for best performance in most situations.
     <p>
       Note the user of <tt>-Xss</tt> to specify a larger maximum stack
       size than the default. This permits models to use deeper recursion.
@@ -519,7 +515,7 @@ java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
       Here's another example that shows some additional, optional
       arguments:
     <pre>
-java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
+java -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment2 \
@@ -543,7 +539,7 @@ java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
     <p>
       Yet another example:
     <pre>
-java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
+java -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment2 \
@@ -571,7 +567,7 @@ java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
       Here is one final example that shows how to run an experiment setup
       which is stored in a separate XML file, instead of in the model file:
     <pre>
-java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
+java -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --setup-file fire-setups.xml \
@@ -586,7 +582,7 @@ java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
       <tt>-Dorg.nlogo.is3d=true</tt> to any of these startup commands, for
       example:
     <pre>
-java -server -Dorg.nlogo.is3d=true -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
+java -Dorg.nlogo.is3d=true -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire3D.nlogo \
   --experiment experiment1 \
