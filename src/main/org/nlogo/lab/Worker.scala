@@ -74,7 +74,7 @@ class Worker(val protocol: Protocol)
   class Runner(runNumber: Int, settings: List[Pair[String, Any]], fn: ()=>Workspace)
     extends Callable[Unit]
   {
-    class FailedException(message: String) extends LogoException(message)
+    class FailedException(message: String) extends RuntimeException(message) 
     private def owner(rng: MersenneTwisterFast) =
       new SimpleJobOwner("BehaviorSpace", rng, classOf[Observer])
     @volatile var aborted = false
