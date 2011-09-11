@@ -7,8 +7,5 @@ class _netlogoapplet extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
   override def report(context: Context) =
-    if (workspace.getIsApplet)
-      java.lang.Boolean.TRUE
-    else
-      java.lang.Boolean.FALSE
+    Boolean.box(workspace.getIsApplet)
 }

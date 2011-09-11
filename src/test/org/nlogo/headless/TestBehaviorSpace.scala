@@ -128,7 +128,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val workspace =
       runExperiment(0, "globals [counter foo]",
         "testImmediateExit")
-    expect(java.lang.Double.valueOf(99))(
+    expect(Double.box(99))(
       workspace.report("foo"))
   }
   test("CarryoverBetweenRuns") {
@@ -139,7 +139,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       .newWorker("testCarryover",
         new java.io.File("test/lab/protocols.xml"))
         .run(workspace, () => workspace, 1)
-    expect(java.lang.Double.valueOf(20))(
+    expect(Double.box(20))(
       workspace.report("foo"))
   }
   test("ResizingWorld1") {
@@ -155,7 +155,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val workspace = runExperiment(0, "", "runNumber")
     // I suppose we could reset the run number to 0 after a run, and we do that in the GUI, but I
     // can't see a reason to ensure it headless - ST 7/7/10
-    expect(java.lang.Double.valueOf(3))(
+    expect(Double.box(3))(
       workspace.report("behaviorspace-run-number"))
   }
   // test export-graphics in headless mode
@@ -249,7 +249,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
         .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,
     // so no runtime error
-    expect(java.lang.Double.valueOf(2))(
+    expect(Double.box(2))(
       workspace.report("ticks"))
   }
 }

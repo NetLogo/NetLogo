@@ -546,9 +546,9 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
             // build index
             val index = new java.util.ArrayList[AnyRef](4)
             index.add(name)
-            index.add(java.lang.Integer.valueOf(toPos))
-            index.add(java.lang.Integer.valueOf(namePos))
-            index.add(java.lang.Integer.valueOf(endPos))
+            index.add(Int.box(toPos))
+            index.add(Int.box(namePos))
+            index.add(Int.box(endPos))
             procsTable.put(name, index)
           }
         }

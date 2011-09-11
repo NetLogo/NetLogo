@@ -52,7 +52,7 @@ private object CompilerMain {
         procdef.procedure.code =
           Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
                     Array(source, procdef.procedure,
-                          java.lang.Boolean.valueOf(
+                          Boolean.box(
                             extensionManager.profilingEnabled)))
             .generate()
     }

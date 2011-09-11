@@ -8,5 +8,5 @@ class _maxpzcor extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    java.lang.Double.valueOf(world.asInstanceOf[World3D].maxPzcor)
+    Double.box(world.asInstanceOf[World3D].maxPzcor)
 }

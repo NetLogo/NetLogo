@@ -16,7 +16,7 @@ class SendOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String, 
   private def readObject(in:java.io.ObjectInputStream){
     val numOverrides = in.readInt()
     overrides = (for(i <- 0 until numOverrides)
-                 yield (java.lang.Long.valueOf(in.readLong()), in.readObject()))
+                 yield (Long.box(in.readLong()), in.readObject()))
                 .toMap
   }
 }

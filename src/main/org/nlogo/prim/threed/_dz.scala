@@ -12,7 +12,7 @@ class _dz extends Reporter {
     val turtle = context.agent.asInstanceOf[Turtle3D]
     val value = turtle.dz
     validDouble(value)
-    java.lang.Double.valueOf(
+    Double.box(
       if (StrictMath.abs(value) < 3.2e-15)
         0
       else

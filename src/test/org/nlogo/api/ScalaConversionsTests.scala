@@ -7,10 +7,10 @@ class ScalaConversionsTests extends FunSuite {
 
   import ScalaConversions._
 
-  //case x: Boolean => java.lang.Boolean.valueOf(x)
+  //case x: Boolean => Boolean.box(x)
   test("Boolean") { testConversion(true -> java.lang.Boolean.TRUE) }
 
-  //case x: Char => java.lang.String.valueOf(x)
+  //case x: Char => x.toString
   test("Char") { testConversion('c' -> "c") }
 
   //case x: java.lang.Character => x.toString
@@ -18,47 +18,47 @@ class ScalaConversionsTests extends FunSuite {
 
   // scala number types
 
-  //case x: Byte => java.lang.Double.valueOf(x)
+  //case x: Byte => Double.box(x)
   test("Byte") { testConversion(5.toByte -> 5d) }
-  //case x: Short => java.lang.Double.valueOf(x)
+  //case x: Short => Double.box(x)
   test("Short") { testConversion(5.toShort -> 5d) }
-  //case x: Int => java.lang.Double.valueOf(x)
+  //case x: Int => Double.box(x)
   test("Int") { testConversion(5 -> 5d) }
-  //case x: Float => java.lang.Double.valueOf(x)
+  //case x: Float => Double.box(x)
   test("Float") { testConversion(5f -> 5d) }
-  //case x: Double => java.lang.Double.valueOf(x)
+  //case x: Double => Double.box(x)
   test("Double") { testConversion(5d -> 5d) }
-  //case x: Long => java.lang.Double.valueOf(x)
+  //case x: Long => Double.box(x)
   test("Long") { testConversion(5L -> 5d) }
 
   // java number types
 
-  //case x: java.lang.Byte => java.lang.Double.valueOf(x.doubleValue)
-  test("JavaByte") { testConversion(java.lang.Byte.valueOf(7.toByte) -> 7d) }
-  //case x: java.lang.Short => java.lang.Double.valueOf(x.doubleValue)
-  test("JavaShort") { testConversion(java.lang.Short.valueOf(7.toShort) -> 7d) }
-  //case x: java.lang.Integer => java.lang.Double.valueOf(x.doubleValue)
-  test("JavaInteger") { testConversion(java.lang.Integer.valueOf(7) -> 7d) }
-  //case x: java.lang.Float => java.lang.Double.valueOf(x.doubleValue)
-  test("JavaFloat") { testConversion(java.lang.Float.valueOf(7.toFloat) -> 7d) }
-  //case x: java.lang.Long => java.lang.Double.valueOf(x.doubleValue)
-  test("JavaLong") { testConversion(java.lang.Long.valueOf(7.toLong) -> 7d) }
+  //case x: java.lang.Byte => Double.box(x.doubleValue)
+  test("JavaByte") { testConversion(Byte.box(7.toByte) -> 7d) }
+  //case x: java.lang.Short => Double.box(x.doubleValue)
+  test("JavaShort") { testConversion(Short.box(7.toShort) -> 7d) }
+  //case x: java.lang.Integer => Double.box(x.doubleValue)
+  test("JavaInteger") { testConversion(Int.box(7) -> 7d) }
+  //case x: java.lang.Float => Double.box(x.doubleValue)
+  test("JavaFloat") { testConversion(Float.box(7.toFloat) -> 7d) }
+  //case x: java.lang.Long => Double.box(x.doubleValue)
+  test("JavaLong") { testConversion(Long.box(7.toLong) -> 7d) }
 
   //case x: Array[_] => new LogoList(x map {toLogoObject _}: _*)
   test("ArrayOfInts") {
-    testConversion(Array(1, 2, 3) -> LogoList(JDouble.valueOf(1.0), JDouble.valueOf(2.0), JDouble.valueOf(3.0)))
+    testConversion(Array(1, 2, 3) -> LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)))
   }
 
   //case x: Seq[_] => new LogoList(x map {toLogoObject _}: _*)
   test("SeqOfInts") {
-    testConversion(List(1, 2, 3) -> LogoList(JDouble.valueOf(1.0), JDouble.valueOf(2.0), JDouble.valueOf(3.0)))
+    testConversion(List(1, 2, 3) -> LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)))
   }
 
   val nestedLogoList =
     LogoList(
-      LogoList(JDouble.valueOf(1.0), JDouble.valueOf(2.0), JDouble.valueOf(3.0)),
-      LogoList(JDouble.valueOf(1.0), JDouble.valueOf(2.0), JDouble.valueOf(3.0)),
-      LogoList(JDouble.valueOf(1.0), JDouble.valueOf(2.0), JDouble.valueOf(3.0)))
+      LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)),
+      LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)),
+      LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)))
 
   test("ArrayOfArraysOfInts") {
     testConversion(Array(Array(1, 2, 3), Array(1, 2, 3), Array(1, 2, 3)) -> nestedLogoList)
@@ -69,12 +69,12 @@ class ScalaConversionsTests extends FunSuite {
   }
 
   test("LogoListOfIntegers") {
-    testConversion(LogoList(JInteger.valueOf(1),
-      JInteger.valueOf(2),
-      JInteger.valueOf(3))
-      -> LogoList(JDouble.valueOf(1.0),
-        JDouble.valueOf(2.0),
-        JDouble.valueOf(3.0)))
+    testConversion(LogoList(Int.box(1),
+      Int.box(2),
+      Int.box(3))
+      -> LogoList(Double.box(1.0),
+        Double.box(2.0),
+        Double.box(3.0)))
   }
 
   test("SeqOfSeqsOfInts") {
@@ -90,7 +90,7 @@ class ScalaConversionsTests extends FunSuite {
   }
 
   test("HeterogenousSeq") {
-    testConversion(List(1, "test", 'c') -> LogoList(JDouble.valueOf(1.0), "test", "c"))
+    testConversion(List(1, "test", 'c') -> LogoList(Double.box(1.0), "test", "c"))
   }
 
   test("NonConvertableObject") {

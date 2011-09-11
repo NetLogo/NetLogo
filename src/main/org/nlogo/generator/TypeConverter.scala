@@ -100,7 +100,7 @@ private object TypeConverter {
     mv.visitVarInsn(ALOAD, 1) // context
     mv.visitVarInsn(ALOAD, 0) // this (GeneratedInstruction)
     mv.visitIntInsn(BIPUSH, argIndex) // index of argument that was wrong type
-    mv.visitLdcInsn(Integer.valueOf(api.Syntax.BooleanType))
+    mv.visitLdcInsn(Int.box(api.Syntax.BooleanType))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
       "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V")
@@ -142,7 +142,7 @@ private object TypeConverter {
     mv.visitVarInsn(ALOAD, 1) // context
     mv.visitVarInsn(ALOAD, 0) // this (GeneratedInstruction)
     mv.visitIntInsn(BIPUSH, argIndex) // index of argument that was wrong type
-    mv.visitLdcInsn(Integer.valueOf(api.Syntax.getTypeConstant(typeTo)))
+    mv.visitLdcInsn(Int.box(api.Syntax.getTypeConstant(typeTo)))
     mv.visitVarInsn(ALOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/ArgumentTypeException", "<init>",
       "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V");

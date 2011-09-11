@@ -8,7 +8,7 @@ class _fileatend extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
   override def report(context: Context) =
-    try java.lang.Boolean.valueOf(workspace.fileManager.eof)
+    try Boolean.box(workspace.fileManager.eof)
     catch {
       case ex: IOException =>
         throw new EngineException(context, this, ex.getMessage)
@@ -69,7 +69,7 @@ class _fileexists extends Reporter {
                           Syntax.BooleanType)
   override def report(context: Context) =
     try
-      java.lang.Boolean.valueOf(
+      Boolean.box(
         workspace.fileManager.fileExists(
           workspace.fileManager.attachPrefix(
             argEvalString(context, 0))))

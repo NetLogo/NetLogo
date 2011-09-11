@@ -8,5 +8,5 @@ class _worlddepth extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    java.lang.Double.valueOf(world.asInstanceOf[World3D].worldDepth)
+    Double.box(world.asInstanceOf[World3D].worldDepth)
 }

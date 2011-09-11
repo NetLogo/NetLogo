@@ -7,7 +7,7 @@ class _timer extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    java.lang.Double.valueOf(report_1(context))
+    Double.box(report_1(context))
   def report_1(context: Context) =
     world.timer.read
 }
