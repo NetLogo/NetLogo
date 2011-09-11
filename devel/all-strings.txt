@@ -1537,10 +1537,7 @@ src/main/org/nlogo/nvm/Syntax.java:555:        return "an " + str;
 src/main/org/nlogo/nvm/Syntax.java:592:      buf.append(" [RIGHT ASSOCIATIVE]");
 src/main/org/nlogo/plot/Plot.scala:17:  override def toString = "Plot(" + name + ")"
 src/main/org/nlogo/plot/Plot.scala:26:    if(plotListener == null) sys.error("null plotListener")
-src/main/org/nlogo/plot/Plot.scala:51:  def currentPenOrBust: PlotPen = currentPen.getOrElse(throw new PlotException("Plot '"+name+"' has no pens!"))
 src/main/org/nlogo/plot/Plot.scala:144:    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
-src/main/org/nlogo/plot/Plot.scala:218:      throw new PlotException("You cannot histogram with a plot-pen-interval of 0.")
-src/main/org/nlogo/plot/Plot.scala:226:      throw new PlotException("You cannot histogram with a plot-pen-interval of 0.")
 src/main/org/nlogo/plot/PlotExporter.scala:16:      "x min", "x max", "y min", "y max",
 src/main/org/nlogo/plot/PlotExporter.scala:17:      "autoplot?", "current pen",
 src/main/org/nlogo/plot/PlotExporter.scala:18:      "legend open?",

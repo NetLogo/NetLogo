@@ -148,10 +148,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case s:String =>
         plotWidget.plot.currentPen=plotWidget.plot.getPen(s).getOrElse(plotWidget.plot.createPlotPen(s, true))
       // This instance sets the plot-pen-color
-      case i: Int => plotWidget.plot.currentPenOrBust.color=(i)
+      case i: Int => plotWidget.plot.currentPen.get.color=(i)
       // This instance sets plot-pen-up and down
       case b: Boolean =>
-        plotWidget.plot.currentPenOrBust.isDown = b
+        plotWidget.plot.currentPen.get.isDown = b
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // This instance is a point to plot
@@ -160,9 +160,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         // however, this is only the case in narrowcast plotting
         // plot mirroring always sends both coordinates even if
         // auto-plot is on. ev 8/18/08
-        if (p.specifiesXCor) plotWidget.plot.currentPenOrBust.plot(p.xcor, p.ycor)
+        if (p.specifiesXCor) plotWidget.plot.currentPen.get.plot(p.xcor, p.ycor)
         // if not, we'll just let the plot use the next one.
-        else plotWidget.plot.currentPenOrBust.plot(p.ycor)
+        else plotWidget.plot.currentPen.get.plot(p.ycor)
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // These instances do various plotting commands
@@ -173,11 +173,11 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'r' =>
-            plotWidget.plot.currentPenOrBust.hardReset()
+            plotWidget.plot.currentPen.get.hardReset()
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'p' =>
-            plotWidget.plot.currentPenOrBust.softReset()
+            plotWidget.plot.currentPen.get.softReset()
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'n' =>
@@ -189,11 +189,11 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       }
       // This instance changes the plot-pen-mode
       case s:Short =>
-        plotWidget.plot.currentPenOrBust.mode = s.toInt
+        plotWidget.plot.currentPen.get.mode = s.toInt
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // This instance changes the plot-pen-interval
-      case d:Double => plotWidget.plot.currentPenOrBust.interval = d
+      case d:Double => plotWidget.plot.currentPen.get.interval = d
       // This instance is used for anything that has a lot of data
       case list: List[_] => list(0) match {
         case 'x' =>

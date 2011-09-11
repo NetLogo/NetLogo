@@ -99,7 +99,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def penDown(penDown: Boolean) {broadcastToClients(penDown)}
   // Sends as a plot-pen-interval
   // TODO: I dont think this really works... Its ignoring the argument! - JC 8/21/10
-  def setHistogramNumBars(num: Int) {setInterval(currentPlot.currentPenOrBust.interval)}
+  def setHistogramNumBars(num: Int) {for(pen <- currentPlot.currentPen) setInterval(pen.interval)}
   // TODO: Note - send strings to mean pen name, ints for color, doubles for interval, boolean for pen down...BAD!
   // Sends a java.lang.String, which is the name of the current plot pen
   def currentPen(penName: String) {broadcastToClients(penName)}

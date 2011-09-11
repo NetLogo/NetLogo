@@ -10,9 +10,8 @@ import org.nlogo.api.{ JobOwner, Version, RendererInterface, Perspective,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.nvm.{ CompilerResults, LabInterface }
-import org.nlogo.plot.{ Plot, PlotPen, PlotException }
-import org.nlogo.nvm.{ Workspace, DefaultCompilerServices, CompilerInterface }
+import org.nlogo.nvm.{ CompilerResults, LabInterface,
+                       Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter

@@ -1,15 +1,29 @@
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ Color, PlotPenInterface, Syntax }
-import org.nlogo.nvm.{ Context, Command, EngineException, Reporter }
+import org.nlogo.api.{ Color, Dump, I18N, PlotPenInterface, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
 import org.nlogo.plot.{ Plot, PlotManager }
 
 //
 // base classes
 //
 
+trait Helpers extends Instruction {
+  def currentPenOrBust(plot: Plot, context: Context) =
+    plot.currentPen.getOrElse(
+      throw new EngineException(
+        context, this, "Plot '" + plot.name + "' has no pens!"))
+  def plotManager =
+    workspace.plotManager.asInstanceOf[PlotManager]
+  def currentPlot(context: Context) =
+    plotManager.currentPlot.getOrElse(
+      throw new EngineException(
+        context, this, 
+        I18N.errors.get("org.nlogo.plot.noPlotSelected")))
+}
+
 abstract class PlotManagerCommand(callsOtherCode:Boolean, args: Int*)
-extends Command(callsOtherCode) {
+extends Command(callsOtherCode) with Helpers {
   def perform(plotManager: PlotManager, c: Context)
   override def perform(context: Context) {
     perform(workspace.plotManager.asInstanceOf[PlotManager], context)
@@ -19,25 +33,19 @@ extends Command(callsOtherCode) {
 }
 
 abstract class CurrentPlotCommand(args: Int*)
-extends Command {
+extends Command with Helpers {
   def perform(p: Plot, c: Context)
-  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
   override def perform(context: Context) {
-    perform(plotManager.currentPlotOrBust, context)
+    perform(currentPlot(context), context)
     context.ip = next
   }
   override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
 }
-abstract class ReallySimpleCurrentPlotCommand(f: Plot=>Unit)
-extends CurrentPlotCommand {
-  def perform(p: Plot, c: Context){ f(p) }
-}
 
 abstract class PlotReporter(returnType: Int, args: Int*)
-extends Reporter {
+extends Reporter with Helpers {
   def report(p: Plot, c: Context): Object
-  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
-  override def report(context: Context): Object = report(plotManager.currentPlotOrBust, context)
+  override def report(context: Context): Object = report(currentPlot(context), context)
   override def syntax = Syntax.reporterSyntax(args.toArray, returnType)
 }
 abstract class ReallySimplePlotReporter(returnType: Int, f: Plot=>Object)
@@ -63,7 +71,7 @@ class _setcurrentplot extends PlotManagerCommand(callsOtherCode = false, Syntax.
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
     if (plot == null) { throw new EngineException(context, this, "no such plot: \"" + name + "\"") }
-    plotManager.setCurrentPlot(plot)
+    plotManager.currentPlot = Some(plot)
     context.ip = next
   }
 }
@@ -72,14 +80,26 @@ class _setcurrentplot extends PlotManagerCommand(callsOtherCode = false, Syntax.
 // commands requiring that there be a current plot.
 //
 
-class _clearplot extends ReallySimpleCurrentPlotCommand(_.clear())
-class _autoplotoff extends ReallySimpleCurrentPlotCommand(_.autoPlotOn=false)
-class _autoploton extends ReallySimpleCurrentPlotCommand(_.autoPlotOn=true)
+class _clearplot extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    p.clear()
+  }
+}
+class _autoplotoff extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    p.autoPlotOn = false
+  }
+}
+class _autoploton extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    p.autoPlotOn = true
+  }
+}
 
 class _plot extends CurrentPlotCommand(Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val y = argEvalDoubleValue(context, 0)
-    p.currentPenOrBust.plot(y)
+    currentPenOrBust(p, context).plot(y)
     p.makeDirty()
   }
 }
@@ -88,7 +108,7 @@ class _plotxy extends CurrentPlotCommand(Syntax.NumberType, Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
-    p.currentPenOrBust.plot(x, y)
+    currentPenOrBust(p, context).plot(x, y)
     p.makeDirty()
   }
 }
@@ -131,8 +151,11 @@ class _createtemporaryplotpen extends CurrentPlotCommand(Syntax.StringType) {
 class _histogram extends CurrentPlotCommand(Syntax.ListType) {
   def perform(plot: Plot, c: Context) {
     val list = argEvalList(c,0)
-    val currentPen = plot.currentPenOrBust
+    val currentPen = currentPenOrBust(plot, c)
     currentPen.plotListenerReset(false)
+    if(currentPen.interval <= 0)
+      throw new EngineException(c, this,
+        "You cannot histogram with a plot-pen-interval of " + Dump.number(currentPen.interval) + ".")
     plot.beginHistogram(currentPen)
     for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
       plot.nextHistogramValue(d)
@@ -147,7 +170,7 @@ class _sethistogramnumbars extends CurrentPlotCommand(Syntax.NumberType) {
     if (numBars < 1) {
       throw new EngineException(context, this, "You cannot make a histogram with " + numBars + " bars.")
     }
-    plot.setHistogramNumBars(plot.currentPenOrBust, numBars)
+    plot.setHistogramNumBars(currentPenOrBust(plot, context), numBars)
   }
 }
 
@@ -214,19 +237,36 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType,Syntax.StringType){
 // plot pen prims
 //
 
-final class _plotpendown extends ReallySimpleCurrentPlotCommand(_.currentPenOrBust.isDown = true)
-final class _plotpenup extends ReallySimpleCurrentPlotCommand(_.currentPenOrBust.isDown = false)
-final class _plotpenshow extends ReallySimpleCurrentPlotCommand(_.currentPenOrBust.hidden = false)
-final class _plotpenhide extends ReallySimpleCurrentPlotCommand(_.currentPenOrBust.hidden = true)
-
-final class _plotpenreset extends ReallySimpleCurrentPlotCommand( plot => {
-  plot.currentPenOrBust.hardReset()
-  plot.currentPenOrBust.plotListenerReset(true)
-  plot.makeDirty()
-})
+final class _plotpendown extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    currentPenOrBust(p, c).isDown = true
+  }
+}
+final class _plotpenup extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    currentPenOrBust(p, c).isDown = false
+  }
+}
+final class _plotpenshow extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    currentPenOrBust(p, c).hidden = false
+  }
+}
+final class _plotpenhide extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    currentPenOrBust(p, c).hidden = true
+  }
+}
+final class _plotpenreset extends CurrentPlotCommand() {
+  override def perform(p: Plot, c: Context) {
+    currentPenOrBust(p, c).hardReset()
+    currentPenOrBust(p, c).plotListenerReset(true)
+    p.makeDirty()
+  }
+}
 
 final class _setplotpeninterval extends CurrentPlotCommand(Syntax.NumberType) {
-  def perform(p: Plot, c: Context) { p.currentPenOrBust.interval = argEvalDoubleValue(c, 0) }
+  def perform(p: Plot, c: Context) { currentPenOrBust(p, c).interval = argEvalDoubleValue(c, 0) }
 }
 
 final class _setplotpenmode extends CurrentPlotCommand(Syntax.NumberType) {
@@ -235,13 +275,13 @@ final class _setplotpenmode extends CurrentPlotCommand(Syntax.NumberType) {
     if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
       throw new EngineException(c, this, mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
-    p.currentPenOrBust.mode = mode
+    currentPenOrBust(p, c).mode = mode
   }
 }
 
 final class _setplotpencolor extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(p: Plot, c: Context) {
-    p.currentPenOrBust.color = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(argEvalDoubleValue(c, 0)))
+    currentPenOrBust(p, c).color = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(argEvalDoubleValue(c, 0)))
   }
 }
 

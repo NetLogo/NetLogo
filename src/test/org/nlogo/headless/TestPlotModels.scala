@@ -13,7 +13,7 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   def onlyPlot = workspace.plotManager.plots(0)
-  def onlyPen = workspace.plotManager.currentPlotOrBust.pens.head
+  def onlyPen = workspace.plotManager.currentPlot.get.pens.head
 
   val modelCode = "breed [dogs dog] to setup reset-ticks clear-all-plots end  to go create-dogs 1 tick end"
   val theModel = Model(modelCode, Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2"))))

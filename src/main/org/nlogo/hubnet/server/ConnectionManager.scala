@@ -65,7 +65,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     // as they need be evaluated each time.
     // i wanted to avoid giving the entire plot manager to ServerPlotManager
     // JC - 12/20/10
-    workspace.plotManager.plots, workspace.plotManager.currentPlotOrBust) {
+    workspace.plotManager.plots, workspace.plotManager.currentPlot.get) {
     workspace.plotManager.listener = this
   }
 
