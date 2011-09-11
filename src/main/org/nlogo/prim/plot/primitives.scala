@@ -9,10 +9,6 @@ import org.nlogo.plot.{ Plot, PlotManager }
 //
 
 trait Helpers extends Instruction {
-  def currentPenOrBust(plot: Plot, context: Context) =
-    plot.currentPen.getOrElse(
-      throw new EngineException(
-        context, this, "Plot '" + plot.name + "' has no pens!"))
   def plotManager =
     workspace.plotManager.asInstanceOf[PlotManager]
   def currentPlot(context: Context) =
@@ -20,6 +16,12 @@ trait Helpers extends Instruction {
       throw new EngineException(
         context, this, 
         I18N.errors.get("org.nlogo.plot.noPlotSelected")))
+  def currentPen(context: Context) = {
+    val plot = currentPlot(context)
+    plot.currentPen.getOrElse(
+      throw new EngineException(
+        context, this, "Plot '" + plot.name + "' has no pens!"))
+  }
 }
 
 abstract class PlotManagerCommand(callsOtherCode:Boolean, args: Int*)
@@ -99,7 +101,7 @@ class _autoploton extends CurrentPlotCommand() {
 class _plot extends CurrentPlotCommand(Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val y = argEvalDoubleValue(context, 0)
-    currentPenOrBust(p, context).plot(y)
+    currentPen(context).plot(y)
     p.makeDirty()
   }
 }
@@ -108,7 +110,7 @@ class _plotxy extends CurrentPlotCommand(Syntax.NumberType, Syntax.NumberType) {
   override def perform(p: Plot, context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
-    currentPenOrBust(p, context).plot(x, y)
+    currentPen(context).plot(x, y)
     p.makeDirty()
   }
 }
@@ -151,15 +153,15 @@ class _createtemporaryplotpen extends CurrentPlotCommand(Syntax.StringType) {
 class _histogram extends CurrentPlotCommand(Syntax.ListType) {
   def perform(plot: Plot, c: Context) {
     val list = argEvalList(c,0)
-    val currentPen = currentPenOrBust(plot, c)
-    currentPen.plotListenerReset(false)
-    if(currentPen.interval <= 0)
+    val pen = currentPen(c)
+    pen.plotListenerReset(false)
+    if(pen.interval <= 0)
       throw new EngineException(c, this,
-        "You cannot histogram with a plot-pen-interval of " + Dump.number(currentPen.interval) + ".")
-    plot.beginHistogram(currentPen)
+        "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
+    plot.beginHistogram(pen)
     for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
       plot.nextHistogramValue(d)
-    plot.endHistogram(currentPen)
+    plot.endHistogram(pen)
     plot.makeDirty()
   }
 }
@@ -170,7 +172,7 @@ class _sethistogramnumbars extends CurrentPlotCommand(Syntax.NumberType) {
     if (numBars < 1) {
       throw new EngineException(context, this, "You cannot make a histogram with " + numBars + " bars.")
     }
-    plot.setHistogramNumBars(currentPenOrBust(plot, context), numBars)
+    plot.setHistogramNumBars(currentPen(context), numBars)
   }
 }
 
@@ -239,34 +241,34 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType,Syntax.StringType){
 
 final class _plotpendown extends CurrentPlotCommand() {
   override def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).isDown = true
+    currentPen(c).isDown = true
   }
 }
 final class _plotpenup extends CurrentPlotCommand() {
   override def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).isDown = false
+    currentPen(c).isDown = false
   }
 }
 final class _plotpenshow extends CurrentPlotCommand() {
   override def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).hidden = false
+    currentPen(c).hidden = false
   }
 }
 final class _plotpenhide extends CurrentPlotCommand() {
   override def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).hidden = true
+    currentPen(c).hidden = true
   }
 }
 final class _plotpenreset extends CurrentPlotCommand() {
   override def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).hardReset()
-    currentPenOrBust(p, c).plotListenerReset(true)
+    currentPen(c).hardReset()
+    currentPen(c).plotListenerReset(true)
     p.makeDirty()
   }
 }
 
 final class _setplotpeninterval extends CurrentPlotCommand(Syntax.NumberType) {
-  def perform(p: Plot, c: Context) { currentPenOrBust(p, c).interval = argEvalDoubleValue(c, 0) }
+  def perform(p: Plot, c: Context) { currentPen(c).interval = argEvalDoubleValue(c, 0) }
 }
 
 final class _setplotpenmode extends CurrentPlotCommand(Syntax.NumberType) {
@@ -275,13 +277,13 @@ final class _setplotpenmode extends CurrentPlotCommand(Syntax.NumberType) {
     if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
       throw new EngineException(c, this, mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
-    currentPenOrBust(p, c).mode = mode
+    currentPen(c).mode = mode
   }
 }
 
 final class _setplotpencolor extends CurrentPlotCommand(Syntax.NumberType) {
   def perform(p: Plot, c: Context) {
-    currentPenOrBust(p, c).color = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(argEvalDoubleValue(c, 0)))
+    currentPen(c).color = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(argEvalDoubleValue(c, 0)))
   }
 }
 
