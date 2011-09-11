@@ -140,6 +140,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     plot.yMin = min
     plot.yMax = max
     plot.makeDirty()
+    context.ip = next
   }
 }
 
@@ -167,6 +168,7 @@ class _histogram extends PlotCommand(Syntax.ListType) {
       plot.nextHistogramValue(d)
     plot.endHistogram(pen)
     plot.makeDirty()
+    context.ip = next
   }
 }
 
