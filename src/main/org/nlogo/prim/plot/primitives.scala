@@ -5,6 +5,47 @@ import org.nlogo.nvm.{ Context, Command, EngineException, Reporter }
 import org.nlogo.plot.{ Plot, PlotManager }
 
 //
+// base classes
+//
+
+abstract class PlotManagerCommand(callsOtherCode:Boolean, args: Int*)
+extends Command(callsOtherCode) {
+  def perform(plotManager: PlotManager, c: Context)
+  override def perform(context: Context) {
+    perform(workspace.plotManager.asInstanceOf[PlotManager], context)
+    context.ip = next
+  }
+  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
+}
+
+abstract class CurrentPlotCommand(args: Int*)
+extends Command {
+  def perform(p: Plot, c: Context)
+  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
+  override def perform(context: Context) {
+    perform(plotManager.currentPlotOrBust, context)
+    context.ip = next
+  }
+  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
+}
+abstract class ReallySimpleCurrentPlotCommand(f: Plot=>Unit)
+extends CurrentPlotCommand {
+  def perform(p: Plot, c: Context){ f(p) }
+}
+
+abstract class PlotReporter(returnType: Int, args: Int*)
+extends Reporter {
+  def report(p: Plot, c: Context): Object
+  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
+  override def report(context: Context): Object = report(plotManager.currentPlotOrBust, context)
+  override def syntax = Syntax.reporterSyntax(args.toArray, returnType)
+}
+abstract class ReallySimplePlotReporter(returnType: Int, f: Plot=>Object)
+extends PlotReporter(returnType){
+  def report(p: Plot, c: Context) = f(p)
+}
+
+//
 // commands requiring only the plot manager (its ok if there are no plots)
 //
 
@@ -211,42 +252,4 @@ final class _setcurrentplotpen extends CurrentPlotCommand(Syntax.StringType) {
       throw new EngineException(
         c, this, "There is no pen named \"" + penName + "\" in the current plot"))
   }
-}
-
-//
-// helpers
-//
-
-abstract class PlotManagerCommand(callsOtherCode:Boolean, args: Int*) extends Command(callsOtherCode) {
-  def perform(plotManager: PlotManager, c: Context)
-  override def perform(context: Context) {
-    perform(workspace.plotManager.asInstanceOf[PlotManager], context)
-    context.ip = next
-  }
-  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
-}
-
-
-abstract class ReallySimpleCurrentPlotCommand(f: Plot=>Unit) extends CurrentPlotCommand{
-  def perform(p: Plot, c: Context){ f(p) }
-}
-
-abstract class CurrentPlotCommand(args: Int*) extends Command {
-  def perform(p: Plot, c: Context)
-  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
-  override def perform(context: Context) {
-    perform(plotManager.currentPlotOrBust, context)
-    context.ip = next
-  }
-  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
-}
-
-abstract class ReallySimplePlotReporter(returnType: Int, f: Plot=>Object) extends PlotReporter(returnType){
-  def report(p: Plot, c: Context) = f(p)
-}
-abstract class PlotReporter(returnType: Int, args: Int*) extends Reporter {
-  def report(p: Plot, c: Context): Object
-  def plotManager = workspace.plotManager.asInstanceOf[PlotManager]
-  override def report(context: Context): Object = report(plotManager.currentPlotOrBust, context)
-  override def syntax = Syntax.reporterSyntax(args.toArray, returnType)
 }
