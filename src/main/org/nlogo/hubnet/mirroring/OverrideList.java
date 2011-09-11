@@ -46,7 +46,7 @@ public strictfp class OverrideList
   private strictfp class OverrideException
       extends org.nlogo.api.LogoException {
     public OverrideException(String message) {
-      super(message);
+      super(message, null);
     }
   }
 }

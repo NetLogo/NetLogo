@@ -10,6 +10,5 @@ package org.nlogo.api
  * a concrete subclass like EngineException.
  */
 
-abstract class LogoException(message: String, cause: Throwable) extends Exception(message, cause) {
-  def this(message: String) = this(message, null)
-}
+abstract class LogoException(message: String, cause: Throwable = null)
+extends Exception(message, cause)
