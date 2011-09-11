@@ -175,7 +175,6 @@ clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
-	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/scaladoc
