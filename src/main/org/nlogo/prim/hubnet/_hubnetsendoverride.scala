@@ -26,9 +26,7 @@ class _hubnetsendoverride extends Command {
       case _ => throw new IllegalStateException("cant happen...")
     }
 
-    if(org.nlogo.hubnet.mirroring.OverrideList.getOverrideIndex(
-        org.nlogo.hubnet.mirroring.Agent.AgentType.fromAgentClass(set.`type`),
-        varName) == -1)
+    if(!workspace.getHubNetManager.isOverridable(set.`type`, varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
     

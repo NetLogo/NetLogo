@@ -285,9 +285,7 @@ class _hubnetclearoverride extends Command {
       case set: AgentSet =>
         set
     }
-    if(org.nlogo.hubnet.mirroring.OverrideList.getOverrideIndex(
-        org.nlogo.hubnet.mirroring.Agent.AgentType.fromAgentClass(set.`type`),
-        varName) == -1)
+    if(!workspace.getHubNetManager.isOverridable(set.`type`, varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
