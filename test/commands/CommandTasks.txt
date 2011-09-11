@@ -103,18 +103,18 @@ command-and-reporter-tasks-close-over-same-procedure-input
   runresult (item 0 glob1) => 50
   runresult glob2 => 130
 
-*command-task-stack-trace
-  O> run task [print __boom] => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
-    called by procedure __EVALUATOR
-
-*command-task-in-command-task-stack-trace
-  O> run task [run task [print __boom]] => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by (command task from: procedure __EVALUATOR)\
-    called by (command task from: procedure __EVALUATOR)\
-    called by procedure __EVALUATOR
+#*command-task-stack-trace
+#  O> run task [print __boom] => STACKTRACE boom!\
+#  error while observer running __BOOM\
+#    called by (command task from: procedure __EVALUATOR)\
+#    called by procedure __EVALUATOR
+#
+#*command-task-in-command-task-stack-trace
+#  O> run task [run task [print __boom]] => STACKTRACE boom!\
+#  error while observer running __BOOM\
+#    called by (command task from: procedure __EVALUATOR)\
+#    called by (command task from: procedure __EVALUATOR)\
+#    called by procedure __EVALUATOR
 
 turtle-executing-command-task
   O> crt 1 let f task [set label "hi"] ask turtle 0 [run f]
