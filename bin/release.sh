@@ -359,6 +359,7 @@ $HDIUTIL create NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSI
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
 $RM -rf dmg
+mv NetLogo\ "$VERSION".dmg $COMPRESSEDVERSION
 cd netlogo-$COMPRESSEDVERSION
 
 # remove Mac-only stuff
