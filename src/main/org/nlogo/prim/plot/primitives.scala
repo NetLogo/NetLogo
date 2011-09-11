@@ -26,29 +26,32 @@ trait Helpers extends Instruction {
 
 abstract class PlotManagerCommand(callsOtherCode:Boolean, args: Int*)
 extends Command(callsOtherCode) with Helpers {
+  override def syntax =
+    Syntax.commandSyntax(args.toArray)
   def perform(plotManager: PlotManager, c: Context)
   override def perform(context: Context) {
     perform(workspace.plotManager.asInstanceOf[PlotManager], context)
     context.ip = next
   }
-  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
 }
 
 abstract class CurrentPlotCommand(args: Int*)
 extends Command with Helpers {
+  override def syntax =
+    Syntax.commandSyntax(args.toArray)
   def perform(p: Plot, c: Context)
   override def perform(context: Context) {
     perform(currentPlot(context), context)
     context.ip = next
   }
-  override def syntax = if(args.isEmpty) Syntax.commandSyntax else Syntax.commandSyntax(args.toArray)
 }
 
 abstract class PlotReporter(returnType: Int, args: Int*)
 extends Reporter with Helpers {
+  override def syntax =
+    Syntax.reporterSyntax(args.toArray, returnType)
   def report(p: Plot, c: Context): Object
   override def report(context: Context): Object = report(currentPlot(context), context)
-  override def syntax = Syntax.reporterSyntax(args.toArray, returnType)
 }
 abstract class ReallySimplePlotReporter(returnType: Int, f: Plot=>Object)
 extends PlotReporter(returnType){
