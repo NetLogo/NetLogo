@@ -1,16 +1,17 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
-import org.nlogo.api.{ CommandRunnable, LogoException, Syntax }
-import Syntax._
-import org.nlogo.nvm.{ Command, Context }
+import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _hubnetsendoverride extends Command {
+
   override def syntax = Syntax.commandSyntax(
-    Array(StringType, AgentsetType | AgentType, StringType, ReporterBlockType),
+    Array(Syntax.StringType, Syntax.AgentsetType | Syntax.AgentType,
+          Syntax.StringType,
+          Syntax.ReporterBlockType),
     "OTPL", "?", false)
 
-  @throws(classOf[LogoException])
   override def perform(context: Context) {
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
@@ -25,6 +26,12 @@ class _hubnetsendoverride extends Command {
       case _ => throw new IllegalStateException("cant happen...")
     }
 
+    if(org.nlogo.hubnet.mirroring.OverrideList.getOverrideIndex(
+        org.nlogo.hubnet.mirroring.Agent.AgentType.fromAgentClass(set.`type`),
+        varName) == -1)
+      throw new EngineException(context, this,
+        "you cannot override " + varName)
+    
     val freshContext = new Context(context, set)
     args(3).checkAgentSetClass(set, context)
 
@@ -37,9 +44,9 @@ class _hubnetsendoverride extends Command {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      @throws(classOf[LogoException])
       def run() { workspace.getHubNetManager.sendOverrideList(client, set.`type`(), varName, overrides.toMap) }
     })
     context.ip = next
   }
+
 }

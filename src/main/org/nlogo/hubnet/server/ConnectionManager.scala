@@ -8,7 +8,7 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface, LogoException}
+import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import collection.JavaConverters._
 
@@ -356,13 +356,11 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   /// view stuff
-  @throws(classOf[LogoException])
   def sendOverrideList (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
                                  varName: String, overrides:Map[java.lang.Long, AnyRef]) = {
     sendUserMessage(client, new OverrideMessage(new SendOverride(agentClass, varName, overrides), false))
   }
 
-  @throws(classOf[LogoException])
   def clearOverride (client:String, agentClass: Class[_ <: org.nlogo.api.Agent],
                               varName:String, overrides:Seq[java.lang.Long]) = {
     sendUserMessage(client, new OverrideMessage(new ClearOverride(agentClass, varName, overrides), true))

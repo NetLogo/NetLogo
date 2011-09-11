@@ -37,7 +37,7 @@ public strictfp class Agent {
     return bos.toByteArray();
   }
 
-  enum AgentType {
+  public enum AgentType {
     TURTLE, PATCH, LINK, OBSERVER;
 
     public int toInt() {

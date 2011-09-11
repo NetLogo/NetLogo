@@ -144,12 +144,10 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   
   /// Individualized client views
 
-  @throws(classOf[org.nlogo.api.LogoException])
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                        varName: String, overrides: Map[java.lang.Long, AnyRef]) {
     connectionManager.sendOverrideList(client, agentType, varName, overrides)
   }
-  @throws(classOf[org.nlogo.api.LogoException])
   def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                     varName: String, overrides: Seq[java.lang.Long]) {
     connectionManager.clearOverride(client, agentType, varName, overrides)
