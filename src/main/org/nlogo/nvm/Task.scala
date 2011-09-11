@@ -77,7 +77,16 @@ extends Task with org.nlogo.api.CommandTask {
     context.ip = 0
     val exited =
       try { context.runExclusive(); false }
-      catch { case NonLocalExit => true }
+      catch {
+        case NonLocalExit =>
+          true
+        case ex: api.LogoException =>
+          // the stuff in the finally block is going to throw away some of
+          // the information we need to build an accurate stack trace, so we'd
+          // better do it now - ST 9/11/11
+          ex.fillInStackTrace()
+          throw ex
+      }
       finally {
         context.finished = context.agent.id == -1
         context.activation = oldActivation

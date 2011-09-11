@@ -321,6 +321,10 @@ public final strictfp class Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
+    if(throwable instanceof EngineException &&
+       ((EngineException) throwable).cachedRuntimeErrorMessage.isDefined()) {
+      return ((EngineException) throwable).cachedRuntimeErrorMessage.get();
+    }
     return StackTraceBuilder.build(
       activation, agent, instruction, scala.Option.apply(throwable));
   }

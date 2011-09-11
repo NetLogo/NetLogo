@@ -72,4 +72,17 @@ public strictfp class EngineException
     instruction = instruction.extractErrorInstruction(this);
   }
 
+  scala.Option<String> cachedRuntimeErrorMessage = scala.Option.apply(null);
+
+  @Override
+  public Throwable fillInStackTrace() {
+    super.fillInStackTrace();
+    if(context != null && !cachedRuntimeErrorMessage.isDefined()) {
+      cachedRuntimeErrorMessage = scala.Option.apply(
+        context.buildRuntimeErrorMessage(
+          instruction, this));
+    }
+    return this;
+  }
+
 }
