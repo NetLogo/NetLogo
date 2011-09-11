@@ -92,7 +92,7 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	if [ ! -d extensions/network/src ] ; then git clone http://github.com/NetLogo/NetLogo-Extension.git extensions/netlogo ; fi
+	if [ ! -d extensions/network/src ] ; then git clone http://github.com/NetLogo/Network-Extension.git extensions/network ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
 	if [ ! -d extensions/sample/src ] ; then git clone http://github.com/NetLogo/Sample-Extension.git extensions/sample ; fi
