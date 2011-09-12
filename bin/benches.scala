@@ -50,15 +50,16 @@ def printResults() {
   for(name <- allNames; numbers = results(name); if !numbers.isEmpty) {
     val min = numbers.min
     printf("%" + width + "s  %7.3f",name,min)
-    printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
-	   100 * min / results40(name),
-	   100 * min / results41(name))
+    if(results40.isDefinedAt(name) && results41.isDefinedAt(name))
+      printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
+             100 * min / results40(name),
+             100 * min / results41(name))
     if(!haveGoodResult(name)) print(" (no reliable result yet)")
     println()
   }
   def geometricMean(xs:List[Double]) = math.pow(xs.reduceLeft(_ * _), 1.0 / xs.size)
   def overall(oldResults:Map[String,Double]) =
-    geometricMean(allNames.filter(results(_).nonEmpty)
+    geometricMean(allNames.filter(x => results(x).nonEmpty && oldResults.isDefinedAt(x))
                           .map(name => results(name).min / oldResults(name)))
   printf("                    (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
          100 * overall(results40), 100 * overall(results41))
