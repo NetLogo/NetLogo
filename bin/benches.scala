@@ -7,9 +7,9 @@ exec bin/scala -deprecation -classpath bin -nocompdaemon "$0" "$@"
 // End:
 
 import Scripting.shell
+import collection.mutable.{ HashMap, ListBuffer, HashSet }
 
-import collection.mutable.{HashMap,ListBuffer,HashSet}
-val results = new HashMap[String,ListBuffer[Double]]
+val results = new HashMap[String, ListBuffer[Double]]
 val haveGoodResult = new HashSet[String]
 
 shell("""java -classpath target/scala_2.9.1/classes:project/boot/scala-2.9.1/lib/scala-library.jar:resources org.nlogo.headless.Main --fullversion""")
@@ -28,7 +28,7 @@ val results41 =
       "Life" -> 8.851, "PrefAttach" -> 7.747, "Team" -> 5.289, "Termites" -> 6.578,
       "VirusNet" -> 3.457, "Wealth" -> 5.813, "Wolf" -> 6.498)
 
-val allNames:List[String] = {
+val allNames: List[String] = {
   val nameArgs = args.takeWhile(!_.head.isDigit).toList
   if(!nameArgs.isEmpty) nameArgs
   else shell("""find test/models/benchmarks -name \*.nlogo -depth 1""")
@@ -37,11 +37,11 @@ val allNames:List[String] = {
 allNames.foreach(name => results += (name -> new ListBuffer[Double]))
 val width = allNames.map(_.size).max
 
-def outputLines(name:String):Iterator[String] =
-  shell("make bench ARGS=\"" + name + args.dropWhile(!_.head.isDigit).mkString(" "," ","") + "\"")
-def record(name:String,line:String) {
+def outputLines(name: String): Iterator[String] =
+  shell("make bench ARGS=\"" + name + args.dropWhile(!_.head.isDigit).mkString(" ", " ", "") + "\"")
+def record(name: String, line: String) {
   val Match = ("@@@ " + name + """ Benchmark: (\d+\.\d+)( \(hit time limit\))?""").r
-  val Match(num,warning) = line
+  val Match(num, warning) = line
   if(warning == null) haveGoodResult += name
   results(name) += num.toDouble
 }
@@ -49,7 +49,7 @@ def printResults() {
   println()
   for(name <- allNames; numbers = results(name); if !numbers.isEmpty) {
     val min = numbers.min
-    printf("%" + width + "s  %7.3f",name,min)
+    printf("%" + width + "s  %7.3f", name, min)
     if(results40.isDefinedAt(name) && results41.isDefinedAt(name))
       printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
              100 * min / results40(name),
@@ -57,18 +57,18 @@ def printResults() {
     if(!haveGoodResult(name)) print(" (no reliable result yet)")
     println()
   }
-  def geometricMean(xs:List[Double]) = math.pow(xs.reduceLeft(_ * _), 1.0 / xs.size)
-  def overall(oldResults:Map[String,Double]) =
+  def geometricMean(xs: List[Double]) = math.pow(xs.reduceLeft(_ * _), 1.0 / xs.size)
+  def overall(oldResults: Map[String, Double]) =
     geometricMean(allNames.filter(x => results(x).nonEmpty && oldResults.isDefinedAt(x))
                           .map(name => results(name).min / oldResults(name)))
   printf("                    (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
          100 * overall(results40), 100 * overall(results41))
   println(); println()
 }
-def runIt(name:String) {
+def runIt(name: String) {
   for(out <- outputLines(name))
     if(!out.startsWith("@@@@@@"))
-      if(out.startsWith("@@@ ")) { println(out); record(name,out) }
+      if(out.startsWith("@@@ ")) { println(out); record(name, out) }
       else System.err.println(out)
   printResults()
 }
