@@ -13,7 +13,7 @@ p { margin-left: 1.5em ; }
 p.c1 {font-style: italic}
     </style>
   <h1>
-      Introducing NetLogo 3D
+      NetLogo 3D
     </h1>
     <p>
       NetLogo includes the NetLogo 3D application, a preview release that
@@ -462,12 +462,12 @@ end-shape
       described in the <a href="3d.html#custom-shapes">Custom Shapes</a>
       section. Currently we do not import shapes in any standard formats,
       though we may allow this in the future.
-    <h4>
-      <a name="dictionary" id="dictionary">Dictionary</a>
-    </h4>
     <h2>
-      Commands and Reporters
+      <a name="dictionary" id="dictionary">Dictionary</a>
     </h2>
+    <h3>
+      Commands and Reporters
+    </h3>
     <h4>
       Turtle-related primitives
     </h4><a href="#distancexyz">distancexyz</a> <a href=
@@ -511,9 +511,9 @@ end-shape
     <h4>
       Link primitives
     </h4><a href="#link-pitch">link-pitch</a>
-    <h2>
+    <h3>
       Built-In Variables
-    </h2>
+    </h3>
     <h4>
       Turtles
     </h4><a href="#zcor">zcor</a> <a href="#pitch">pitch</a> <a href=
@@ -521,13 +521,13 @@ end-shape
     <h4>
       Patches
     </h4><a href="#pzcor">pzcor</a>
-    <h2>
-      A
-    </h2>
+    <h3>
+      Primitives
+    </h3>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="at-points" id="at-points">at-points</a>
-      </h4>
+      </h3>
       <h4>
         <i>agentset</i> at-points [[<i>x1 y1 z1</i>] [<i>x2 y2 z2</i>] ...]
       </h4>
@@ -551,16 +551,13 @@ ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
           ;; relative to the caller, move
 </pre>
     </div>
-    <h2>
-      D
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="distancexyz" id="distancexyz">distancexyz</a>
         <br>
         <a name="distancexyz-nowrap" id=
         "distancexyz-nowrap">distancexyz-nowrap</a>
-      </h4>
+      </h3>
       <h4>
         distancexyz <i>xcor</i> <i>ycor</i> <i>zcor</i>
         <br>
@@ -590,9 +587,9 @@ if (distancexyz 0 0 0) &lt; 10
 </pre>
     </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="dz" id="dz">dz</a>
-      </h4>
+      </h3>
       <h4>
         dz
         <br>
@@ -610,15 +607,12 @@ if (distancexyz 0 0 0) &lt; 10
         See also <a href="dictionary.html#dx">dx</a>, <a href=
         "dictionary.html#dy">dy</a>.
       </div>
-    <h2>
-      F
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="face" id="face">face</a>
         <br>
         <a name="facexyz" id="facexyz">facexyz</a>
-      </h4>
+      </h3>
       <h4>
         face <i>agent</i>
         <br>
@@ -636,13 +630,10 @@ if (distancexyz 0 0 0) &lt; 10
         target are also at the same z coordinate the pitch will not change
         either.
       </div>
-    <h2>
-      L
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="left" id="left">left</a>
-      </h4>
+      </h3>
       <h4>
         left <i>number</i>
         <br>
@@ -658,9 +649,9 @@ if (distancexyz 0 0 0) &lt; 10
         "#tilt-up">tilt-up</a>, <a href="#tilt-down">tilt-down</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="link-pitch" id="link-pitch">link-pitch</a>
-      </h4>
+      </h3>
       <h4>
         link-pitch
         <br>
@@ -677,9 +668,9 @@ ask link 0 1 [ print link-pitch ]
         <a href="#pitch">pitch</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="load-shapes-3d" id="load-shapes-3d">load-shapes-3d</a>
-      </h4>
+      </h3>
       <h4>
         load-shapes-3d <i>filename</i>
         <br>
@@ -691,15 +682,12 @@ ask link 0 1 [ print link-pitch ]
         shape of the same name to the model using the Turtle Shapes Editor.
         Custom shapes override built-in 3D shapes and converted 2D shapes.
       </div>
-    <h2>
-      M
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="max-pzcor" id="max-pzcor">max-pzcor</a>
         <br>
         <a name="min-pzcor" id="min-pzcor">min-pzcor</a>
-      </h4>
+      </h3>
       <h4>
         max-pzcor
         <br>
@@ -722,15 +710,12 @@ ask link 0 1 [ print link-pitch ]
         <a href="#max-pycor">min-pycor</a>, and <a href=
         "#world-depth">world-width</a>.
       </div>
-    <h2>
-      N
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="neighbors" id="neighbors">neighbors</a>
         <br>
         <a name="neighbors6" id="neighbors6">neighbors6</a>
-      </h4>
+      </h3>
       <h4>
         neighbors
         <br>
@@ -753,11 +738,8 @@ ask neighbors6 [ set pcolor red ]
   ;; turns the six neighboring patches red
 </pre>
     </div>
-    <h2>
-      O
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="orbit-down" id="orbit-down">orbit-down</a>
         <br>
         <a name="orbit-left" id="orbit-left">orbit-left</a>
@@ -765,7 +747,7 @@ ask neighbors6 [ set pcolor red ]
         <a name="orbit-right" id="orbit-right">orbit-right</a>
         <br>
         <a name="orbit-up" id="orbit-up">orbit-up</a>
-      </h4>
+      </h3>
       <h4>
         orbit-down <i>number</i>
         <br>
@@ -791,13 +773,13 @@ ask neighbors6 [ set pcolor red ]
         <a href="#zoom">zoom</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="oxcor" id="oxcor">oxcor</a>
         <br>
         <a name="oycor" id="oycor">oycor</a>
         <br>
         <a name="ozcor" id="ozcor">ozcor</a>
-      </h4>
+      </h3>
       <h4>
         oxcor
         <br>
@@ -811,12 +793,9 @@ ask neighbors6 [ set pcolor red ]
         Reports the x-, y-, or z-coordinate of the observer.
       <p>
         See also <a href="#setxyz">setxyz</a>
-      <h2>
-        P
-      </h2>
-      <h4>
+      <h3>
         <a name="patch" id="patch">patch</a>
-      </h4>
+      </h3>
       <h4>
         patch <i>pxcor</i> <i>pycor</i> <i>pzcor</i>
       </h4>
@@ -834,9 +813,9 @@ ask (patch 3 -4 2) [ set pcolor green ]
         See also <a href="dictionary.html#patch">patch</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="patch-at" id="patch-at">patch-at</a>
-      </h4>
+      </h3>
       <h4>
         patch-at <i>dx</i> <i>dy</i> <i>dz</i>
         <br>
@@ -855,10 +834,10 @@ ask patch-at 1 -1 1 [ set pcolor green ]
 </pre>
     </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="patch-at-heading-pitch-and-distance" id=
         "patch-at-heading-pitch-and-distance">patch-at-heading-pitch-and-distance</a>
-      </h4>
+      </h3>
       <h4>
         patch-at-heading-pitch-and-distance <i>heading</i> <i>pitch</i>
         <i>distance</i>
@@ -881,9 +860,9 @@ ask patch-at-heading-pitch-and-distance 0 90 1 [ set pcolor green ]
 </pre>
     </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="pitch" id="pitch">pitch</a>
-      </h4>
+      </h3>
       <h4>
         pitch
         <br>
@@ -914,9 +893,9 @@ set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
         "#left">left</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="pzcor" id="pzcor">pzcor</a>
-      </h4>
+      </h3>
       <h4>
         pzcor
         <br>
@@ -937,13 +916,10 @@ set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
         See also <a href="dictionary.html#pycor">pxcor, pycor</a>, <a href=
         "#zcor">zcor</a>.
       </div>
-    <h2>
-      R
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="random-pzcor" id="random-pzcor">random-pzcor</a>
-      </h4>
+      </h3>
       <h4>
         random-pzcor
       </h4>
@@ -961,9 +937,9 @@ ask turtles [
         "#random-pycor">random-pycor</a>.
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="random-zcor" id="random-zcor">random-zcor</a>
-      </h4>
+      </h3>
       <h4>
         random-zcor
       </h4>
@@ -984,9 +960,9 @@ ask turtles [
         <a href="dictionary.html#random-ycor">random-ycor</a>.
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="right" id="right">right</a>
-      </h4>
+      </h3>
       <h4>
         right <i>number</i>
         <br>
@@ -1002,9 +978,9 @@ ask turtles [
         "#left">left</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="roll" id="roll">roll</a>
-      </h4>
+      </h3>
       <h4>
         roll
         <br>
@@ -1030,9 +1006,9 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
         "#roll-right">roll-right</a>.
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="roll-left" id="roll-left">roll-left</a>
-      </h4>
+      </h3>
       <h4>
         roll-left <i>number</i>
         <br>
@@ -1043,9 +1019,9 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
         with respect to the current heading and pitch.
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="roll-right" id="roll-right">roll-right</a>
-      </h4>
+      </h3>
       <h4>
         roll-right <i>number</i>
         <br>
@@ -1055,13 +1031,10 @@ set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
         The wingtip of the turtle rotates to the right <i>number</i>
         degrees with respect to the current heading and pitch.
       </div>
-    <h2>
-      S
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="setxyz" id="setxyz">setxyz</a>
-      </h4>
+      </h3>
       <h4>
         setxyz <i>x y z</i>
         <br>
@@ -1083,16 +1056,13 @@ setxyz 0 0 0
 ;; agent moves to the middle of the center patch
 </pre>See also <a href="#face">face</a>
     </div>
-    <h2>
-      T
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="tilt-down" id="tilt-down">tilt-down</a>
         <br>
         <a name="tilt-up" id="tilt-up">tilt-up</a>
         <br>
-      </h4>
+      </h3>
       <h4>
         tilt-down <i>number</i>
         <br>
@@ -1107,12 +1077,12 @@ setxyz 0 0 0
         roll) may change when a turtle turns.
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="towards-pitch" id="towards-pitch">towards-pitch</a>
         <br>
         <a name="towards-pitch-nowrap" id=
         "towards-pitch-nowrap">towards-pitch-nowrap</a>
-      </h4>
+      </h3>
       <h4>
         towards-pitch <i>agent</i>
         <br>
@@ -1137,13 +1107,13 @@ setxyz 0 0 0
         See also <a href="dictionary.html#towards">towards</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="towards-pitch-xyz" id=
         "towards-pitch-xyz">towards-pitch-xyz</a>
         <br>
         <a name="towards-pitch-xyz-nowrap" id=
         "towards-pitch-xyz-nowrap">towards-pitch-xyz-nowrap</a>
-      </h4>
+      </h3>
       <h4>
         towards-pitch-xyz <i>x</i> <i>y</i> <i>z</i>
         <br>
@@ -1168,11 +1138,11 @@ setxyz 0 0 0
         See also <a href="dictionary.html#towardsxy">towardsxy</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="turtles-at" id="turtles-at">turtles-at</a>
         <br>
         <a name="breeds-at" id="breeds-at">&lt;breeds&gt;-at</a>
-      </h4>
+      </h3>
       <h4>
         turtles-at <i>dx</i> <i>dy</i> <i>dz</i>
         <br>
@@ -1194,13 +1164,10 @@ show [count turtles-at 0 0 0] of turtle 0
 =&gt; 40
 </pre>
     </div>
-    <h2>
-      W
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="world-depth" id="world-depth">world-depth</a>
-      </h4>
+      </h3>
       <h4>
         world-depth
       </h4>
@@ -1214,13 +1181,10 @@ show [count turtles-at 0 0 0] of turtle 0
         "dictionary.html#world-width">world-width</a>, and <a href=
         "dictionary.html#world-height">world-height</a>
       </div>
-    <h2>
-      Z
-    </h2>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="zcor" id="zcor">zcor</a>
-      </h4>
+      </h3>
       <h4>
         zcor
         <br>
@@ -1242,9 +1206,9 @@ show [count turtles-at 0 0 0] of turtle 0
         "dictionary.html#pycor">pycor</a>, <a href="#pzcor">pzcor</a>
       </div>
     <div class="dict_entry">
-      <h4>
+      <h3>
         <a name="zoom" id="zoom">zoom</a>
-      </h4>
+      </h3>
       <h4>
         zoom <i>number</i>
         <br>

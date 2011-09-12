@@ -13,18 +13,16 @@
     </div>
     <p>
       Many models created in earlier versions of NetLogo also work in
-      NetLogo 5.0. However, some models will need changes. If your old
+      NetLogo 5.0. However, some models will need changes. If an old
       model isn't working, this section of the User Manual may be able
       to help you.
     <p>
-      What issues you need to be aware of depends on how old your model is.
-      The older the NetLogo version it was made with, the more issues you
-      may need to be aware of.
+      What issues may arise depends on what version of NetLogo
+      the model was created with.
     <p>
-      This section does not list every change that was made in the NetLogo
-      versions discussed. It covers only the changes that are most likely
-      to be issues for users. For a complete list of changes, see the
-      <a href="versions.html">What's New?</a> section.
+      This section does not list every change that was made in the
+      NetLogo versions discussed, only the changes most likely to
+      cause issues for users.
     <ul>
       <li>
         <a href="#v50">Changes for NetLogo 5.0</a>
@@ -50,10 +48,10 @@
       primitives are still supported. We recommend changing your model to
       use the new style, but if you don't, it should still work.
     <p>
-      The best way to see how to transition a plot is with an example. This
-      code is for a model that has one plot, called
-      &quot;populations&quot;, with two pens, &quot;robots&quot; and
-      &quot;humans&quot;:
+      The following example shows how to change a model to use the new style.
+      Suppose you have a typical NetLogo 4.1 model with one plot called
+      &quot;populations&quot; and two pens called &quot;robots&quot; and
+      &quot;humans&quot;. The old code might look like:
     <pre>
 <code>to setup
   clear-all
@@ -76,7 +74,7 @@ to do-plotting
 end</code>
 </pre>
     <p>
-      Here are the steps to transition:
+      Here are the steps to make the transition:
     <ul>
       <li>Copy the <code>plot count robots</code> command and paste it into
       the Update Commands field for the robots pen in the plot edit dialog.
@@ -108,8 +106,7 @@ to go
 end</code>
 </pre>
     <p>
-      This section doesn't explain everything you need to know about
-      transitioning plots. For more details on how plotting works in
+      For more details on how plotting works in
       NetLogo 5.0, see the Plotting Sections of the Programming Guide and
       the Interface Guide. For details on how plotting interacts with the
       tick counter, read on.
@@ -139,8 +136,8 @@ end</code>
       Interface tab. Code inside plots is triggered by <tt>reset-ticks</tt>
       and <tt>tick</tt>. Resetting the tick counter runs plot setup code,
       and then it also runs plot update code to plot the initial state of
-      the model. The initial state of the model won't be set up until
-      the end of <tt>setup</tt>, so that's why <tt>reset-tick</tt>
+      the model. The initial state of the model won't be in place until
+      the end of <tt>setup</tt>, so that's why <tt>reset-ticks</tt>
       should go at the end.
     <h4>
       <tt>__clear-all-and-reset-ticks</tt>
@@ -152,7 +149,7 @@ end</code>
       <tt>__clear-all-and-reset-ticks</tt>, which combines the effects of
       <tt>clear-all</tt> and <tt>reset-ticks</tt>. The two underscores on
       the name indicate that this is not a normal primitive, but exists
-      only for the purpose of maintaining backwards compatibility.
+      only for backwards compatibility.
     <p>
       You should remove <tt>__clear-all-and-reset-ticks</tt> from your
       code, replace it with <tt>clear-all</tt>, and put
@@ -169,11 +166,11 @@ end</code>
       represent Unicode characters using the UTF-8 encoding.
     <p>
       Previous versions of NetLogo allowed Unicode characters to be used in
-      some contexts, but in model files, they were saved in your
+      some contexts. However, model files were saved in the
       platform's default encoding, which on most systems was something
-      other than UTF-8. The character would be handled correctly on the
-      same platform (e.g. two Windows machines), but would appear
-      incorrectly if the model was moved between platforms (e.g. from
+      other than UTF-8. Characters were handled correctly on the
+      same platform (e.g. two Windows machines), but could be altered
+      if the model was moved between platforms (e.g. from
       Windows to Mac or vice versa).
     <p>
       When opening an existing model in NetLogo 5.0, if the model contains
@@ -187,8 +184,8 @@ end</code>
       But if you expect a large number of characters to be affected, and
       you want them translated automatically, you can use a third party
       utility to re-encode your .nlogo file from its original encoding into
-      UTF-8. After conversion, open the model in NetLogo 5.0 and you should
-      find that all characters appear correctly.
+      UTF-8. After conversion, open the model in NetLogo 5.0 and
+      all characters should be correct.
     <h3>
       Info tabs
     </h3>
@@ -221,6 +218,10 @@ end</code>
       probably just because its speed is being limited by this rate. If you
       want, you can press the Settings button in the Interface tab and
       change the frame rate to a higher number.
+    <p>
+      Some old models used the <tt>every</tt> command to set a default speed.
+      In most case this can be now removed from the code, and the target frame
+      rate setting used instead.
     <h3>
       Extensions API
     </h3>
@@ -228,13 +229,16 @@ end</code>
       If you are the author of an extension, you will need to recompile it
       against the 5.0 NetLogo.jar and lib directory for it to work with
       5.0.
+    <p>You may also need to be aware of the following changes:
+    <h4>Syntax constants</h4>
     <p>
-      The 5.0 extensions API is mostly the same as in 4.1, but one
-      significant change is that <tt>org.nlogo.api.LogoList</tt> no longer
-      has a public constructor.
-    <p>
-      There are now two ways to construct a <tt>LogoList</tt>. If you have
-      a <tt>java.lang.Iterable</tt>, you can copy the contents into a fresh
+      The code
+      for specifying the syntax of a primitive has changed slightly, for
+      example <tt>Syntax.TYPE_STRING</tt> is now <tt>Syntax.StringType()</tt>.
+    <h4>LogoList construction</h4>
+    <p>One significant change is that <tt>org.nlogo.api.LogoList</tt> no longer
+      has a public constructor.  Instead, there are two new ways to construct a <tt>LogoList</tt>.
+    <p>If you have a <tt>java.lang.Iterable</tt>, you can copy the contents into a fresh
       <tt>LogoList</tt> by passing it to the static method
       <tt>LogoList.fromJava()</tt>. See the array extension source code for
       a sample usage.
@@ -243,6 +247,12 @@ end</code>
       <tt>org.nlogo.api.LogoListBuilder</tt>. The <a href=
       "extensions.html">Extensions Guide</a> has sample code showing the
       use of <tt>LogoListBuilder</tt>.
+    <h4>Primitive classes</h4>
+    <p>In prior NetLogo versions, the extensions API required that
+each extension primitive have its own separate top-level class with a no-argument
+constructor.  These limitations have now been lifted.  Also, api.Primitive objects
+are now made only once, when the extension is loaded, instead of every time
+the Code tab was recompiled.
     <h2>
       <a name="v41" id="v41">Changes for NetLogo 4.1</a>
     </h2>
@@ -857,33 +867,6 @@ true
     <p>
       See the <a href="programming.html#tie">Tie</a> section of the
       programming guide for details.
-    <h3>
-      HubNet Clients
-    </h3>
-    <p>
-      A HubNet activity's client interface is no longer stored in a
-      separate model file. To import a client from an old model select File
-      -&gt; Import -&gt; Import HubNet Client. Then when asked, import from
-      the Interface Tab. You will no longer need the external client model
-      and you will no longer need to point to it when setting the client
-      interface so the following command can be removed:
-    <pre>
-hubnet-set-client-interface &quot;COMPUTER&quot; [ &quot;my-client.nlogo&quot; ]
-</pre>
-    <h3>
-      Performance of Lists
-    </h3>
-    <p>
-      The internal implementation of lists has changed which changes some
-      of the performance properties of lists, see the <a href=
-      "programming.html#list-performance">Programming guide</a> for details
-      on the current implementation. Note that <a href=
-      "dictionary.html#fput"><tt>fput</tt></a> is much faster than <a href=
-      "dictionary.html#lput"><tt>lput</tt></a> thus, you may improve
-      performance simply by switching to <a href=
-      "dictionary.html#fput"><tt>fput</tt></a>. If performance is still a
-      problem you may want to consider using the <a href=
-      "arraystables.html">Array &amp; Table extensions</a>
     <h2>
       <a name="v31" id="v31">Changes for NetLogo 3.1</a>
     </h2>
@@ -891,7 +874,7 @@ hubnet-set-client-interface &quot;COMPUTER&quot; [ &quot;my-client.nlogo&quot; ]
       Agentsets
     </h3>
     <p>
-      If your model is behaving strangely or incorrectly, perhaps it's
+      If your model is behaving strangely or incorrectly, it may be
       because since NetLogo 3.1, agentsets are now always in random order.
       In prior versions of NetLogo, agentsets were always in a fixed order.
       If your code depended on that fixed order, then it won't work
