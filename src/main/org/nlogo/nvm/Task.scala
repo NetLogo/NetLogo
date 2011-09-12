@@ -78,7 +78,7 @@ extends Task with org.nlogo.api.CommandTask {
     val exited =
       try { context.runExclusive(); false }
       catch {
-        case NonLocalExit =>
+        case NonLocalExit if oldActivation.procedure.tyype == Procedure.Type.COMMAND =>
           true
         case ex: api.LogoException =>
           // the stuff in the finally block is going to throw away some of

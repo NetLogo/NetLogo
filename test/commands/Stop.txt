@@ -1,3 +1,8 @@
+ReportFromForeach
+  to-report foo foreach (list 1 2 3) [ set glob1 glob1 + ? if (? = 2) [ report "done" ] ] end
+  foo => "done"
+  glob1 => 3
+
 StopFromDynamicallyNestedRepeat
   to p1 repeat 5 [ crt 1 p2 crt 1 ] end
   to p2 repeat 2 [ stop error "oops 1" ] error "oops 2" end
