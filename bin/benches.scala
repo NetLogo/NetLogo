@@ -15,7 +15,6 @@ val haveGoodResult = new HashSet[String]
 shell("""java -classpath target/scala_2.9.1/classes:project/boot/scala-2.9.1/lib/scala-library.jar:resources org.nlogo.headless.Main --fullversion""")
   .foreach(println)
 
-val isOfficialBenchmarkingLaptop = shell("hostname").next.trim == "seth2.local"
 val results40 = 
   Map("Ants" -> 7.471, "BZ" -> 7.839, "CA1D" -> 5.826, "Erosion" -> 6.292, "Fire" -> 0.273,
       "FireBig" -> 7.099, "Flocking" -> 7.023, "GasLabCirc" -> 6.439, "GasLabNew" -> 7.465,
@@ -51,10 +50,9 @@ def printResults() {
   for(name <- allNames; numbers = results(name); if !numbers.isEmpty) {
     val min = numbers.min
     printf("%" + width + "s  %7.3f",name,min)
-    if(isOfficialBenchmarkingLaptop)
-      printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
-             100 * min / results40(name),
-             100 * min / results41(name))
+    printf(" (%3.0f%% vs 4.0, %3.0f%% vs 4.1)",
+	   100 * min / results40(name),
+	   100 * min / results41(name))
     if(!haveGoodResult(name)) print(" (no reliable result yet)")
     println()
   }
