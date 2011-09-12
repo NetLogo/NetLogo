@@ -19,43 +19,38 @@
       Known bugs (all systems)
     </h2>
     <h3>
-      Language/engine bugs
+      Language/engine
     </h3>
     <ul>
       <li>
-        <tt>export-world</tt> and <tt>import-world</tt> don't save or
-        restore the default shapes set by <tt>set-default-shape</tt>
+        <tt>export-world</tt> and <tt>import-world</tt> don't save and
+        restore the effect of <tt>set-default-shape</tt>.
       <li>
         <tt>import-world</tt> doesn't work on arrays or tables that
-        contain other arrays or tables
-      <li>The <tt>run</tt> and <tt>runresult</tt> primitives are often not
+        contain other arrays or tables.
+      <li>The <tt>run</tt> and <tt>runresult</tt> primitives are sometimes not
       able to read or set variables created with <tt>let</tt>.
       <li>Not all mathematical operations are checked, so it's possible
       to get &quot;Infinity&quot; or &quot;NaN&quot; (Not a Number) as an
-      answer without a runtime error being signaled
+      answer without a runtime error being signaled.
       <li>A bug in Java causes patch colors imported using <a href=
       "dictionary.html#import-pcolors"><tt>import-pcolors</tt></a> to be
       brighter than the original if the original image has a grayscale
       palette. To work around this issue, convert the image file to an RGB
       palette.
-      <li>
-        <a href=
-        "dictionary.html#import-pcolors"><tt>import-pcolors</tt></a> may
-        give slightly different results when running on Java 6 as compared
-        to Java 5.
+      <li>Tasks:<ul>
+      <li><tt>import-world</tt> cannot import tasks.
+      <li>Recompiling the Code tab does not recompile tasks already stored in variables.
+      </ul>
       </ul>
     <h3>
-      Other bugs
+      Other
     </h3>
     <ul>
-      <li>Out-of-memory conditions are not handled gracefully
-      <li>the &quot;Snap to Grid&quot; feature is disabled when zoomed in
-      or out
+      <li>Out-of-memory conditions are not handled gracefully.
+      <li>&quot;Snap to Grid&quot; is disabled when zoomed in or out.
       <li>Drawing and then erasing a line in the drawing may not erase
       every pixel exactly.
-      <li>3D graphics don't work on <a href="requirements.html#threed">
-        some graphics configurations</a>; on others 3D works but 3D full
-        screen mode doesn't.
       <li>The size of the fonts used in a model's interface can vary
       somewhat from computer to computer and from platform. As a result,
       text that fits in a given space on one computer may not fit in
@@ -66,23 +61,10 @@
       properly. Use the GUI to open and resave the model in the current
       NetLogo version before running it headless.
       </ul>
-    <h3>
-      Extensions
-    </h3>
-    <ul>
-      <li>The GIS extension does not work in applets. (It hard-codes the
-      assumption that data files are stored locally, not on the server.)
-      </ul>
     <h2>
       Windows-only bugs
     </h2>
     <ul>
-      <li>If you re-install a specific NetLogo version on a machine where
-      it is already installed, the installer will get confused and print
-      several error messages. To re-install while avoiding this issue,
-      first uninstall, then re-install. (This issue does not arise when
-      installing a different version of NetLogo, only when re-installing
-      the same exact version.)
       <li>On some laptops, the Info and Code tabs may become garbled
       when you scroll them. To avoid this bug, reduce the size of the
       NetLogo window and/or reduce the color depth of your monitor (e.g.
@@ -95,7 +77,7 @@
         that site and vote for Sun to fix this bug.
       </ul>
     <h2>
-      Macintosh-only bugs
+      Mac-only bugs
     </h2>
     <ul>
       <li>When opening a model from the Finder (by double-clicking on it,
@@ -107,7 +89,7 @@
       Linux/UNIX-only bugs
     </h2>
     <ul>
-      <li>We have discovered a problem on Linux where the &quot;exp&quot;
+      <li>We have discovered a problem on Linux where the <tt>exp</tt>
       reporter sometimes returns a slightly different answer (differing
       only in the last decimal place) for the same input. According to an
       engineer at Sun, this should only happen on Linux kernel versions
@@ -128,7 +110,7 @@
       in all reported cases.
       </ul>
     <h2>
-      Known issues with HubNet
+      HubNet issues
     </h2>
     <p>
       See the <a href="hubnet.html#comp_issues">HubNet Guide</a> for a list

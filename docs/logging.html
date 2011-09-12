@@ -13,18 +13,18 @@
     </div>
     <p>
       NetLogo's logging facility allows researchers to record
-      students' actions for later analysis.
+      student actions for later analysis.
     <p>
-      Logging in NetLogo, once initiated, is invisible to the user. The
+      Logging in NetLogo, once initiated, is invisible to the student. The
       researcher can choose the type of events logged through a
       configuration file.
     <p>
-      NetLogo uses the Log4j package for logging. If you have previous
+      NetLogo uses the log4j package for logging. If you have previous
       experience with this package you'll find logging in NetLogo
       familiar.
     <p>
-      Logging is only supported in the special NetLogo Logging application;
-      it doesn't work in applets.
+      Logging is supported only by the special NetLogo Logging application.
+      It doesn't work in applets.
     <h2>
       Starting logging
     </h2>
@@ -47,13 +47,12 @@
       To enable logging, invoke the <tt>netlogo.sh</tt> script as follows:
     <pre>
 netlogo.sh --logging netlogo_logging.xml
-    
 </pre>
     <p>
       You could also modify the script to include these flags, or copy the
       script and modify the copy.
     <p>
-      You can replace netlogo_logging.xml with any valid log4j xml
+      You can replace netlogo_logging.xml with any valid log4j XML
       configuration file, which will be discussed in more detail later.
     <h2>
       Using logging
@@ -70,11 +69,10 @@ netlogo.sh --logging netlogo_logging.xml
       <tt>c:\Documents and Settings\&lt;user&gt;\Local Settings\Temp</tt>,
       where <tt>&lt;user&gt;</tt> is the logged in user and on Windows
       Vista the logs can be found in
-      <tt>c:\Users\&lt;user&gt;\AppData\Local\Temp</tt>. On Mac OS 10.5 the
-      temp directory varies for each user, you can determine your temp
+      <tt>c:\Users\&lt;user&gt;\AppData\Local\Temp</tt>. On Mac OS X, the
+      temp directory varies for each user. You can determine your temp
       directory by opening the Terminal application and typing <tt>echo
-      $TMPDIR</tt> at the prompt. On Mac OS prior to 10.5 the temp
-      directory is the same as on other Linux-like systems <tt>/tmp</tt>.
+      $TMPDIR</tt> at the prompt.
     <p>
       There are two convenience commands that will help you manage the
       logs. <tt>__zip-log-files <i>filename</i></tt> will gather all the
@@ -198,7 +196,7 @@ netlogo.sh --logging netlogo_logging.xml
 </pre>
         <tr>
         <td>
-          <tt>SPEED_SLIDER</tt>
+          <tt>SPEED</tt>
         <td>
           the speed slider changes
         <td>
@@ -228,6 +226,24 @@ netlogo.sh --logging netlogo_logging.xml
   &lt;name&gt;turtle 1&lt;/name&gt;
   &lt;action&gt;born&lt;/action&gt;
   &lt;breed&gt;TURTLES&lt;/breed&gt;
+&lt;/event&gt;
+</pre>
+        <tr>
+        <td>
+          <tt>LINKS</tt>
+        <td>
+          links die or are born
+        <td>
+          info
+        <td>
+          <pre>
+&lt;event logger=&quot;org.nlogo.log.Logger.LINKS&quot; 
+       timestamp=&quot;1177341094342&quot; 
+       level=&quot;INFO&quot; 
+       type=&quot;link&quot;&gt;
+  &lt;name&gt;link 2 7&lt;/name&gt;
+  &lt;action&gt;born&lt;/action&gt;
+  &lt;breed&gt;LINKS&lt;/breed&gt;
 &lt;/event&gt;
 </pre>
         </table>
