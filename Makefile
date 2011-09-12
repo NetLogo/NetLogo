@@ -191,7 +191,9 @@ distclean:
 	git clean -fX
 
 # benchmarking
-.PHONY: benches
+.PHONY: bench benches
+bench: netlogo
+	$(JAVA) -classpath $(CLASSPATH) org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
 
