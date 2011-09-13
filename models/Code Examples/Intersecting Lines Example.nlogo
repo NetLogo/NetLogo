@@ -78,11 +78,11 @@ to-report intersection [t1 t2]
 end
 
 to-report x-within? [x]  ;; turtle procedure
-  report abs (xcor - x) <= abs (size / 2 * sin heading)
+  report abs (xcor - x) <= abs (size / 2 * dx)
 end
 
 to-report y-within? [y]  ;; turtle procedure
-  report abs (ycor - y) <= abs (size / 2 * cos heading)
+  report abs (ycor - y) <= abs (size / 2 * dy)
 end
 @#$#@#$#@
 GRAPHICS-WINDOW

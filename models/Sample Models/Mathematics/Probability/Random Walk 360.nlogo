@@ -41,8 +41,8 @@ to go
   [
     ; head in a random direction
     rt random-float 360
-    set xc xc + (step-size * cos heading)
-    set yc yc + (step-size * sin heading)
+    set xc xc + (step-size * dx)
+    set yc yc + (step-size * dy)
     ; hide turtles who have moved out of the world
     ifelse patch-at (xc - xcor) (yc - ycor) = nobody
       [ ht ]
@@ -355,8 +355,8 @@ Create a new monitor called home-turtles.  Have it display the number of turtles
 
 Since NetLogo does not allow the world to be unbounded, the special code below is needed for this model to simulate the behavior, instead of stopping at the edge of the world the turtles hide themselves when they have moved outside the world.
 
-    set xc xc + (step-size * cos heading)
-    set yc yc + (step-size * sin heading)
+    set xc xc + (step-size * dx)
+    set yc yc + (step-size * dy)
     ; hide turtles who have moved out of the world
     ifelse patch-at (xc - xcor) (yc - ycor) = nobody
       [ ht ]

@@ -57,8 +57,8 @@ to-report average-flockmate-heading  ;; turtle procedure
   ;; We can't just average the heading variables here.
   ;; For example, the average of 1 and 359 should be 0,
   ;; not 180.  So we have to use trigonometry.
-  let x-component sum [sin heading] of flockmates
-  let y-component sum [cos heading] of flockmates
+  let x-component sum [dx] of flockmates
+  let y-component sum [dy] of flockmates
   ifelse x-component = 0 and y-component = 0
     [ report heading ]
     [ report atan x-component y-component ]

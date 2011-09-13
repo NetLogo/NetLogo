@@ -84,8 +84,8 @@ to explode                 ;; turtle procedure
     [ set dim 0
       rt random 360
       set size 1
-      set x-vel (x-vel * .5 + (sin heading) + (random-float 2.0) - 1)
-      set y-vel (y-vel * .3 + (cos heading) + (random-float 2.0) - 1)
+      set x-vel (x-vel * .5 + dx + (random-float 2.0) - 1)
+      set y-vel (y-vel * .3 + dy + (random-float 2.0) - 1)
       ifelse trails?
         [ pd ]
         [ pu ]

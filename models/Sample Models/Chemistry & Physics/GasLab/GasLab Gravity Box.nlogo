@@ -116,21 +116,21 @@ to move  ;; particle procedure
   ;; need to offset the turtle vertically by an additional amount.  The
   ;; easiest way to do this is to use "setxy" instead of "jump".
   ;; Trigonometry tells us that "jump speed * tick-delta" is equivalent to:
-  ;;   setxy (xcor + sin heading * speed * tick-delta)
-  ;;         (ycor + cos heading * speed * tick-delta)
+  ;;   setxy (xcor + dx * speed * tick-delta)
+  ;;         (ycor + dy * speed * tick-delta)
   ;; so to take gravity into account we just need to alter ycor
   ;; by an additional amount given by the classical physics equation:
   ;;   y(t) = 0.5*a*t^2 + v*t + y(t-1)
   ;; but taking tick-delta into account, since tick-delta is a multiplier of t.
-  setxy (xcor + sin heading * speed * tick-delta)
-        (ycor + cos heading * speed * tick-delta - gravity-acceleration * (0.5 * tick-delta * tick-delta))
+  setxy (xcor + dx * speed * tick-delta)
+        (ycor + dy * speed * tick-delta - gravity-acceleration * (0.5 * tick-delta * tick-delta))
   factor-gravity
 end
 
 
 to factor-gravity  ;; turtle procedure
-  let vx (sin heading * speed)
-  let vy (cos heading * speed) - (gravity-acceleration * tick-delta)
+  let vx (dx * speed)
+  let vy (dy * speed) - (gravity-acceleration * tick-delta)
   set speed sqrt ((vy ^ 2) + (vx ^ 2))
   recolor
   set heading atan vx vy
