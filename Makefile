@@ -139,7 +139,6 @@ tmp/scaladoc: netlogo | tmp
 	-rm -rf tmp/scaladoc
 	-mkdir -p tmp/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
-	echo "'contains wrong class package' errors here are just Scaladoc being whiny"
 	bin/scaladoc \
 	  -d tmp/scaladoc \
 	  -doc-title 'NetLogo' \
