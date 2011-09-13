@@ -15,18 +15,20 @@ val haveGoodResult = new HashSet[String]
 shell("""java -classpath target/scala_2.9.1/classes:project/boot/scala-2.9.1/lib/scala-library.jar:resources org.nlogo.headless.Main --fullversion""")
   .foreach(println)
 
+// 4.0 & 4.1 numbers from my home iMac on Sep. 13 2011, running Mac OS X Lion.
+// quad-core 2.8 GHz Intel Core i5, memory 4 GB 1333 Mhz DDR3 - ST 9/13/11
 val results40 = 
-  Map("Ants" -> 7.471, "BZ" -> 7.839, "CA1D" -> 5.826, "Erosion" -> 6.292, "Fire" -> 0.273,
-      "FireBig" -> 7.099, "Flocking" -> 7.023, "GasLabCirc" -> 6.439, "GasLabNew" -> 7.465,
-      "GasLabOld" -> 6.067, "GridWalk" -> 7.104, "Heatbugs" -> 6.286, "Ising" -> 6.414,
-      "Life" -> 8.986, "PrefAttach" -> 7.129, "Team" -> 4.466, "Termites" -> 5.228,
-      "VirusNet" -> 3.090, "Wealth" -> 5.5750, "Wolf" -> 6.988)
+  Map("Ants" -> 4.797, "BZ" -> 4.816, "CA1D" -> 4.714, "Erosion" -> 3.663, "Fire" -> 0.206,
+      "FireBig" -> 3.585, "Flocking" -> 2.399, "GasLabCirc" -> 3.955, "GasLabNew" -> 4.268,
+      "GasLabOld" -> 3.533, "GridWalk" -> 6.099, "Heatbugs" -> 3.160, "Ising" -> 4.042,
+      "Life" -> 5.481, "PrefAttach" -> 4.863, "Team" -> 2.839, "Termites" -> 3.298,
+      "VirusNet" -> 1.272, "Wealth" -> 4.193, "Wolf" -> 4.321)
 val results41 =
-  Map("Ants" -> 6.767, "BZ" -> 7.706, "CA1D" -> 5.782, "Erosion" -> 5.968, "Fire" -> 0.266,
-      "FireBig" -> 7.058, "Flocking" -> 7.275, "GasLabCirc" -> 6.046, "GasLabNew" -> 7.626,
-      "GasLabOld" -> 6.185, "GridWalk" -> 7.162, "Heatbugs" -> 5.919, "Ising" -> 5.736,
-      "Life" -> 8.851, "PrefAttach" -> 7.747, "Team" -> 5.289, "Termites" -> 6.578,
-      "VirusNet" -> 3.457, "Wealth" -> 5.813, "Wolf" -> 6.498)
+  Map("Ants" -> 4.357, "BZ" -> 4.759, "CA1D" -> 4.453, "Erosion" -> 3.511, "Fire" -> 0.207,
+      "FireBig" -> 3.680, "Flocking" -> 2.438, "GasLabCirc" -> 4.021, "GasLabNew" -> 4.601,
+      "GasLabOld" -> 3.718, "GridWalk" -> 6.362, "Heatbugs" -> 2.913, "Ising" -> 3.748,
+      "Life" -> 5.240, "PrefAttach" -> 5.004, "Team" -> 3.560, "Termites" -> 3.462,
+      "VirusNet" -> 1.442, "Wealth" -> 4.282, "Wolf" -> 4.281)
 
 val allNames: List[String] = {
   val nameArgs = args.takeWhile(!_.head.isDigit).toList
