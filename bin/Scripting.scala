@@ -2,6 +2,7 @@
 // we should be able to get rid of most or all of this. - ST 4/11/11
 
 object Scripting {
+
   // pipe a string through a shell command
   def pipe(input: String, cmd: String): Iterator[String] = {
     val process = exec(cmd)
@@ -10,20 +11,21 @@ object Scripting {
     out.close(); process.getOutputStream.close() // both necessary? not sure
     lines(io.Source.fromInputStream(process.getInputStream)("UTF-8"))
   }
+
   // get result code from unix shell command
   def exitValue(cmd: String): Int = {
     val process = exec(cmd)
     process.waitFor()
     process.exitValue
   }
+
   // get iterator over lines of output from a unix shell command
   // Note I don't use io.Source. I was having weird problems with
   // bin/benches.scala hanging and I thought io.Source might be
   // the culprit.  If this new code is found to be reliable, maybe
   // the other uses of io.Source in this file should be replaced
   // too. - ST 2/13/09
-  def shell(cmd: String): Iterator[String] = shell(cmd, true)
-  def shell(cmd: String, requireZeroExitStatus: Boolean): Iterator[String] = {
+  def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] = {
     val process = exec(cmd)
     val reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream, "UTF-8"))
     new Iterator[String] {
@@ -44,16 +46,25 @@ object Scripting {
       }
     }
   }
+
   // run a shell command
   def exec(cmd: String): Process = {
     val builder = new ProcessBuilder("/bin/sh", "-c", cmd)
     builder.redirectErrorStream(true)
     builder.start()
   }
+
   // get an iterator of lines from an IO source
-  def lines(source: io.Source) = source.getLines
+  def lines(source: io.Source): Iterator[String] =
+    source.getLines
+
   // get iterator over lines in a text file
-  def read: Iterator[String] = lines(io.Source.fromInputStream(System.in)("UTF-8"))
-  def read(name: String): Iterator[String] = lines(readChars(name))
-  def readChars(name: String): io.Source = io.Source.fromFile(name)("UTF-8")
+  def read: Iterator[String] =
+    io.Source.fromInputStream(System.in)("UTF-8").getLines
+  def read(name: String): Iterator[String] =
+    io.Source.fromFile(name)("UTF-8").getLines
+
+  def readChars(name: String): Iterator[Char] =
+    io.Source.fromFile(name)("UTF-8")
+
 }
