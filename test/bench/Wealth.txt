@@ -3470,7 +3470,7 @@ procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           ALOAD 0
           DLOAD 2
           DLOAD 4
-          INVOKESTATIC org/nlogo/api/Pow.pow (DD)D
+          INVOKESTATIC java/lang/StrictMath.pow (DD)D
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (D)D
          L20
           DSTORE 4
