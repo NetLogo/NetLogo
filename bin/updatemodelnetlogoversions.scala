@@ -10,10 +10,11 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // that happening with models we release to the public, so sometimes the versions recorded in our
 // model files need to be updated en masse. 
 
-import Scripting.{shell,read,readChars}
+import Scripting.{ shell, read, slurp }
+
 val version = read("resources/system/version.txt").next
 for(path <- args) {
-  val sections = readChars(path).mkString.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n",-1)
+  val sections = slurp(path).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n",-1)
   val newSections = sections.map(section => if(section.matches("NetLogo .*\n")) version + "\n"
                                             else section)
   new java.io.PrintStream(new java.io.FileOutputStream(new java.io.File(path)))

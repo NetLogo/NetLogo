@@ -41,13 +41,14 @@ object Scripting {
     builder.start()
   }
 
+  // read a whole file into a string
+  def slurp(name: String): String =
+    io.Source.fromFile(name)("UTF-8").mkString
+
   // get iterator over lines in a text file
   def read: Iterator[String] =
     io.Source.fromInputStream(System.in)("UTF-8").getLines
   def read(name: String): Iterator[String] =
     io.Source.fromFile(name)("UTF-8").getLines
-
-  def readChars(name: String): Iterator[Char] =
-    io.Source.fromFile(name)("UTF-8")
 
 }
