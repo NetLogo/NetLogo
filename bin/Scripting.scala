@@ -20,32 +20,19 @@ object Scripting {
   }
 
   // get iterator over lines of output from a unix shell command
-  // Note I don't use io.Source. I was having weird problems with
-  // bin/benches.scala hanging and I thought io.Source might be
-  // the culprit.  If this new code is found to be reliable, maybe
-  // the other uses of io.Source in this file should be replaced
-  // too. - ST 2/13/09
-  def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] = {
-    val process = exec(cmd)
-    val reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream, "UTF-8"))
+  def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] =
     new Iterator[String] {
-      var line = nextLine()
-      def next = { val result = line; line = null; result }
-      def hasNext = {
-        if (line == null) line = nextLine()
-        line != null
-      }
-      private def nextLine() = {
-        val result = reader.readLine()
-        if (result == null) {
-          process.waitFor()
-          if (requireZeroExitStatus)
-            require(process.exitValue == 0, "exit status " + process.exitValue + ": " + cmd)
-        }
-        result
+      val process = exec(cmd)
+      val source = io.Source.fromInputStream(process.getInputStream)("UTF-8")
+      val iter = source.getLines
+      def next() = iter.next()
+      def hasNext = iter.hasNext || {
+        process.waitFor()
+        if (requireZeroExitStatus)
+          require(process.exitValue == 0, "exit status " + process.exitValue + ": " + cmd)
+        false
       }
     }
-  }
 
   // run a shell command
   def exec(cmd: String): Process = {
