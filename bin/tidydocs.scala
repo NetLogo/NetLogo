@@ -25,7 +25,7 @@ for{file <- shell("""find docs -name \*.html""")
   shellDo(
     "tidy -m -q --clean no --indent yes --hide-endtags yes --doctype " + doctype +
     " --ncr no --break-before-br yes --wrap-sections no --ascii-chars yes --gnu-emacs yes --tidy-mark no --quote-marks yes --wrap 76 " +
-    file, false)
+    file, requireZeroExitStatus = false)
   // we want double quotes as &quot; so as not to confuse the HTML syntax highlighter in Emacs, but
   // we don't want single quotes as &#39; because that's annoying
   shellDo("""perl -pi -e "s/&#39;/\'/g" """ + file)
