@@ -8,7 +8,7 @@ exec bin/scala -nocompdaemon -deprecation -classpath bin "$0" "$@"
 
 import Scripting.{exec,exitValue,shell}
 val allNames:List[String] =
-  shell("""find test/models/benchmarks -name \*.nlogo -depth 1""")
+  shell("""find test/models/benchmarks -name \*.nlogo -maxdepth 1""")
     .map(_.split("/").last.split(" ").head).toList
 exec("mkdir -p tmp/profiles")
 val version =

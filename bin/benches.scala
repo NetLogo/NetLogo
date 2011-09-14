@@ -33,7 +33,7 @@ val results41 =
 val allNames: List[String] = {
   val nameArgs = args.takeWhile(!_.head.isDigit).toList
   if(!nameArgs.isEmpty) nameArgs
-  else shell("""find test/models/benchmarks -name \*.nlogo -depth 1""")
+  else shell("""find test/models/benchmarks -name \*.nlogo -maxdepth 1""")
         .map(_.split("/").last.split(" ").head).toList
 }
 allNames.foreach(name => results += (name -> new ListBuffer[Double]))
