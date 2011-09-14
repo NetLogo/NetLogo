@@ -9,7 +9,7 @@ object Scripting {
     val out = new java.io.PrintWriter(process.getOutputStream)
     out.print(input)
     out.close(); process.getOutputStream.close() // both necessary? not sure
-    lines(io.Source.fromInputStream(process.getInputStream)("UTF-8"))
+    io.Source.fromInputStream(process.getInputStream)("UTF-8").getLines
   }
 
   // get result code from unix shell command
@@ -40,10 +40,6 @@ object Scripting {
     builder.redirectErrorStream(true)
     builder.start()
   }
-
-  // get an iterator of lines from an IO source
-  def lines(source: io.Source): Iterator[String] =
-    source.getLines
 
   // get iterator over lines in a text file
   def read: Iterator[String] =
