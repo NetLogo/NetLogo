@@ -45,12 +45,8 @@ object Scripting {
     }
   }
   // run a shell command
-  val sh =
-    if (System.getProperty("os.name").startsWith("Windows"))
-      "c:/cygwin/bin/sh.exe"
-    else "/bin/sh"
   def exec(cmd: String): Process = {
-    val builder = new ProcessBuilder(sh, "-c", cmd)
+    val builder = new ProcessBuilder("/bin/sh", "-c", cmd)
     builder.redirectErrorStream(true)
     builder.start()
   }
