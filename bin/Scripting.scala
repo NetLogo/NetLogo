@@ -19,6 +19,10 @@ object Scripting {
     process.exitValue
   }
 
+  def shellDo(cmd: String, requireZeroExitStatus: Boolean = true) {
+    shell(cmd, requireZeroExitStatus).foreach(_ => ())
+  }
+  
   // get iterator over lines of output from a unix shell command
   def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] =
     new Iterator[String] {
