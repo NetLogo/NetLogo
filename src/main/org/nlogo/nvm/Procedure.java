@@ -6,7 +6,10 @@ import java.util.List;
 import org.nlogo.api.Dump;
 import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Let;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
+
+import static scala.collection.JavaConversions.asJavaIterable;
 
 public strictfp class Procedure {
 
@@ -31,24 +34,24 @@ public strictfp class Procedure {
   public final scala.collection.mutable.ArrayBuffer<Procedure> children =
       new scala.collection.mutable.ArrayBuffer<Procedure>();
 
-  public boolean isLambda() {
+  public boolean isTask() {
     return parent != null;
   }
 
   public int size; // cache args.size() for efficiency with making Activations
 
-  // ExpressionParser doesn't know how many parameters the lambda is going to take;
-  // that's determined by LambdaVisitor. so for now this is mutable - ST 2/4/11
-  public final scala.collection.mutable.ArrayBuffer<Let> lambdaFormals =
+  // ExpressionParser doesn't know how many parameters the task is going to take;
+  // that's determined by TaskVisitor. so for now this is mutable - ST 2/4/11
+  public final scala.collection.mutable.ArrayBuffer<Let> taskFormals =
       new scala.collection.mutable.ArrayBuffer<Let>();
 
-  public Let getLambdaFormal(int n, Token token) {
-    while (lambdaFormals.size() < n) {
-      lambdaFormals.$plus$eq(
+  public Let getTaskFormal(int n, Token token) {
+    while (taskFormals.size() < n) {
+      taskFormals.$plus$eq(
           new Let("?" + n, token.startPos(), token.endPos(),
               java.util.Collections.<Let>emptyList()));
     }
-    return lambdaFormals.apply(n - 1);
+    return taskFormals.apply(n - 1);
   }
 
   public final List<Let> lets = new ArrayList<Let>();
@@ -68,7 +71,7 @@ public strictfp class Procedure {
   }
 
   private String buildDisplayName(scala.Option<String> displayName) {
-    return isLambda() ?
+    return isTask() ?
         "(command task from: " + parent.displayName + ")" :
         (displayName.isDefined() ? displayName.get() : ("procedure " + getNameAndFile()));
   }
@@ -83,13 +86,13 @@ public strictfp class Procedure {
   public Syntax syntax() {
     int[] right = new int[(args.size() - localsCount)];
     for (int i = 0; i < right.length; i++) {
-      right[i] = Syntax.TYPE_WILDCARD;
+      right[i] = Syntax.WildcardType();
     }
     switch (tyype) {
       case COMMAND:
         return Syntax.commandSyntax(right);
       case REPORTER:
-        return Syntax.reporterSyntax(right, Syntax.TYPE_WILDCARD);
+        return Syntax.reporterSyntax(right, Syntax.WildcardType());
       default:
         throw new IllegalStateException();
     }
@@ -97,13 +100,27 @@ public strictfp class Procedure {
 
   @Override
   public String toString() {
-    return super.toString() +
-        "[" + name + ":" + Dump.list(args) + ":" + usableBy + "]";
+    StringBuilder buf = new StringBuilder();
+    buf.append(super.toString());
+    buf.append("[");
+    buf.append(name);
+    buf.append(":");
+    boolean first = true ;
+    for(String a : args) {
+      buf.append(first ? "[" : " ");
+      buf.append(a);
+      first = false;
+    }
+    buf.append("]");
+    buf.append(":");
+    buf.append(usableBy);
+    buf.append("]");
+    return buf.toString();
   }
 
   public String dump() {
     StringBuilder buf = new StringBuilder();
-    boolean indent = isLambda();
+    boolean indent = isTask();
     if (indent) {
       buf.append("   ");
     }
@@ -111,7 +128,17 @@ public strictfp class Procedure {
     if (parent != null) {
       buf.append(":" + parent.displayName);
     }
-    buf.append(":" + Dump.list(args) + "{" + usableBy + "}:\n");
+    buf.append(":");
+    boolean first = true ;
+    buf.append("[");
+    for(String a : args) {
+      if(!first) {
+        buf.append(" ");
+      }
+      buf.append(a);
+      first = false;
+    }
+    buf.append("]{" + usableBy + "}:\n");
     for (int i = 0; i < code.length; i++) {
       if (indent) {
         buf.append("   ");
@@ -121,7 +148,7 @@ public strictfp class Procedure {
       buf.append(command.dump(indent ? 6 : 3));
       buf.append("\n");
     }
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       buf.append("\n");
       buf.append(p.dump());
     }
@@ -133,7 +160,7 @@ public strictfp class Procedure {
     for (int i = 0; i < code.length; i++) {
       code[i].init(workspace);
     }
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       p.init(workspace);
     }
   }
@@ -144,7 +171,7 @@ public strictfp class Procedure {
 
   public void setOwner(SourceOwner owner) {
     this.owner = owner;
-    for (Procedure p : org.nlogo.util.JCL.toJavaIterable(children)) {
+    for (Procedure p : asJavaIterable(children)) {
       p.setOwner(owner);
     }
   }

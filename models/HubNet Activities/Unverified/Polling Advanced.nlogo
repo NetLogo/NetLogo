@@ -2176,7 +2176,7 @@ New Poller Question - adds a new HubNet Client question
 
 There are many more ways the turtles could be used to convey information.  Change the model so they set their shape according to type of response they have to the current question.  Or have the turtles adjust their size according to how many responses they have.  There could also be a turtle-display mode where they sit according to their responses to two questions.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

@@ -12,7 +12,7 @@ import org.nlogo.api.Color;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.LogoException;
 import org.nlogo.util.MersenneTwisterFast;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 import org.nlogo.api.Program;
 import org.nlogo.api.Shape;
 import org.nlogo.api.ShapeList;
@@ -448,21 +448,20 @@ public strictfp class World
   public WorldDimensions setDimensionVariable(String variableName, int value, WorldDimensions d)
       throws WorldDimensionException {
     if (variableName.equalsIgnoreCase("MIN-PXCOR")) {
-      d.minPxcor = value;
+      d.minPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PXCOR")) {
-      d.maxPxcor = value;
+      d.maxPxcor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MIN-PYCOR")) {
-      d.minPycor = value;
+      d.minPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("MAX-PYCOR")) {
-      d.maxPycor = value;
+      d.maxPycor_$eq(value);
     } else if (variableName.equalsIgnoreCase("WORLD-WIDTH")) {
-      d.minPxcor = growMin(_minPxcor, _maxPxcor, value, d.minPxcor);
-      d.maxPxcor = growMax(_minPxcor, _maxPxcor, value, d.maxPxcor);
+      d.minPxcor_$eq(growMin(_minPxcor, _maxPxcor, value, d.minPxcor()));
+      d.maxPxcor_$eq(growMax(_minPxcor, _maxPxcor, value, d.maxPxcor()));
     } else if (variableName.equalsIgnoreCase("WORLD-HEIGHT")) {
-      d.minPycor = growMin(_minPycor, _maxPycor, value, d.minPycor);
-      d.maxPycor = growMax(_minPycor, _maxPycor, value, d.maxPycor);
+      d.minPycor_$eq(growMin(_minPycor, _maxPycor, value, d.minPycor()));
+      d.maxPycor_$eq(growMax(_minPycor, _maxPycor, value, d.maxPycor()));
     }
-
     return d;
   }
 
@@ -503,10 +502,10 @@ public strictfp class World
   }
 
   public boolean equalDimensions(WorldDimensions d) {
-    return d.minPxcor == _minPxcor &&
-        d.maxPxcor == _maxPxcor &&
-        d.minPycor == _minPycor &&
-        d.maxPycor == _maxPycor;
+    return d.minPxcor() == _minPxcor &&
+      d.maxPxcor() == _maxPxcor &&
+      d.minPycor() == _minPycor &&
+      d.maxPycor() == _maxPycor;
   }
 
   public Patch getPatch(int id) {
@@ -620,7 +619,7 @@ public strictfp class World
   }
 
   public Link getOrCreateDummyLink(Object end1, Object end2, AgentSet breed) {
-    Link link = (end1 instanceof Nobody || end2 instanceof Nobody) ? null
+    Link link = (end1 == Nobody$.MODULE$ || end2 == Nobody$.MODULE$) ? null
         : getLink(((Turtle) end1).agentKey(), ((Turtle) end2).agentKey(), breed);
 
     if (link == null) {
@@ -651,10 +650,20 @@ public strictfp class World
     patchColorsDirty = false;
   }
 
+  // performance optimization -- avoid drawing an all-black bitmap if we
+  // could just paint one big black rectangle
   boolean patchesAllBlack = true;
-
   public boolean patchesAllBlack() {
     return patchesAllBlack;
+  }
+
+  // performance optimization for 3D renderer -- avoid sorting by distance
+  // from observer unless we need to.  once this flag becomes true, we don't
+  // work as hard as we could to return it back to false, because doing so
+  // would be expensive.  we just reset it at clear-all time.
+  boolean mayHavePartiallyTransparentObjects = false;
+  public boolean mayHavePartiallyTransparentObjects() {
+    return mayHavePartiallyTransparentObjects;
   }
 
   public int[] patchColors() {
@@ -670,7 +679,7 @@ public strictfp class World
   /// creating & clearing
 
   public void createPatches(WorldDimensions dim) {
-    createPatches(dim.minPxcor, dim.maxPxcor, dim.minPycor, dim.maxPycor);
+    createPatches(dim.minPxcor(), dim.maxPxcor(), dim.minPycor(), dim.maxPycor());
   }
 
   public void createPatches(int minPxcor, int maxPxcor,
@@ -692,14 +701,14 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    if (_program.breeds != null) {
-      for (Iterator<Object> iter = _program.breeds.values().iterator();
+    if (_program.breeds() != null) {
+      for (Iterator<Object> iter = _program.breeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
     }
-    if (_program.linkBreeds != null) {
-      for (Iterator<Object> iter = _program.breeds.values().iterator();
+    if (_program.linkBreeds() != null) {
+      for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
@@ -714,7 +723,7 @@ public strictfp class World
     Arrays.fill(patchColors, Color.getARGBbyPremodulatedColorNumber(0.0));
     patchColorsDirty = true;
 
-    int numVariables = _program.patchesOwn.size();
+    int numVariables = _program.patchesOwn().size();
 
     _observer.resetPerspective();
 
@@ -730,6 +739,7 @@ public strictfp class World
     _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
     patchesWithLabels = 0;
     patchesAllBlack = true;
+    mayHavePartiallyTransparentObjects = false;
   }
 
   public void clearAll() {
@@ -739,6 +749,7 @@ public strictfp class World
     clearGlobals();
     clearLinks();
     _observer.resetPerspective();
+    mayHavePartiallyTransparentObjects = false;
   }
 
   // in a 2D world the drawing lives in the
@@ -777,9 +788,9 @@ public strictfp class World
   public void clearPatches() {
     for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
       Patch patch = (Patch) iter.next();
-      patch.pcolorDoubleUnchecked(Color.BOXED_BLACK);
+      patch.pcolorDoubleUnchecked(Color.BoxedBlack());
       patch.label("");
-      patch.labelColor(Color.BOXED_WHITE);
+      patch.labelColor(Color.BoxedWhite());
       try {
         for (int j = patch.NUMBER_PREDEFINED_VARS;
              j < patch.variables.length;
@@ -794,8 +805,8 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    if (_program.breeds != null) {
-      for (Iterator<Object> iter = _program.breeds.values().iterator();
+    if (_program.breeds() != null) {
+      for (Iterator<Object> iter = _program.breeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
@@ -815,8 +826,8 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    if (_program.linkBreeds != null) {
-      for (Iterator<Object> iter = _program.linkBreeds.values().iterator();
+    if (_program.linkBreeds() != null) {
+      for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
            iter.hasNext();) {
         AgentSet set = ((AgentSet) iter.next());
         set.clear();
@@ -832,7 +843,7 @@ public strictfp class World
   }
 
   public void clearGlobals() {
-    for (int j = _program.interfaceGlobals.size();
+    for (int j = _program.interfaceGlobals().size();
          j < _observer.variables.length;
          j++) {
       try {
@@ -860,20 +871,20 @@ public strictfp class World
     // we create new agentsets for.  (if this is a first compile, all
     // the breeds will be created.)  any breeds that no longer exist
     // are dropped.
-    for (String breedName : _program.breeds.keySet()) {
+    for (String breedName : _program.breeds().keySet()) {
       AgentSet breed = (AgentSet) oldBreeds.get(breedName);
       if (breed == null) {
-        _program.breeds.put
+        _program.breeds().put
             (breedName,
                 new TreeAgentSet(Turtle.class, breedName.toUpperCase(), this));
       } else {
-        _program.breeds.put(breedName, breed);
+        _program.breeds().put(breedName, breed);
       }
     }
-    for (Iterator<String> breedNames = _program.linkBreeds.keySet().iterator();
+    for (Iterator<String> breedNames = _program.linkBreeds().keySet().iterator();
          breedNames.hasNext();) {
       String breedName = breedNames.next();
-      boolean directed = _program.linkBreeds.get(breedName).equals("DIRECTED-LINK-BREED");
+      boolean directed = _program.linkBreeds().get(breedName).equals("DIRECTED-LINK-BREED");
       AgentSet breed = (AgentSet) oldLinkBreeds.get(breedName);
       if (breed == null) {
         breed = new TreeAgentSet(Link.class, breedName.toUpperCase(), this);
@@ -881,7 +892,7 @@ public strictfp class World
         // clear the lists first
         breed.clearDirected();
       }
-      _program.linkBreeds.put(breedName, breed);
+      _program.linkBreeds().put(breedName, breed);
       breed.setDirected(directed);
     }
     List<Agent> doomedAgents = new ArrayList<Agent>();
@@ -923,7 +934,7 @@ public strictfp class World
     try {
       // Note: we only need to realloc() if the patch variables have changed.
       //  ~Forrest ( 5/2/2007)
-      if (_patches != null && !_program.patchesOwn.equals(oldPatchesOwn)) {
+      if (_patches != null && !_program.patchesOwn().equals(oldPatchesOwn)) {
         for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
           iter.next().realloc(true);
         }
@@ -934,8 +945,8 @@ public strictfp class World
     // call Agent.realloc() on the observer
     _observer.realloc(true);
     // and finally...
-    turtleBreedShapes.setUpBreedShapes(false, _program.breeds);
-    linkBreedShapes.setUpBreedShapes(false, _program.linkBreeds);
+    turtleBreedShapes.setUpBreedShapes(false, _program.breeds());
+    linkBreedShapes.setUpBreedShapes(false, _program.linkBreeds());
   }
 
   /// patch scratch
@@ -993,19 +1004,19 @@ public strictfp class World
   }
 
   public String turtlesOwnNameAt(int index) {
-    return _program.turtlesOwn.get(index);
+    return _program.turtlesOwn().get(index);
   }
 
   public int turtlesOwnIndexOf(String name) {
-    return _program.turtlesOwn.indexOf(name);
+    return _program.turtlesOwn().indexOf(name);
   }
 
   public int linksOwnIndexOf(String name) {
-    return _program.linksOwn.indexOf(name);
+    return _program.linksOwn().indexOf(name);
   }
 
   public String linksOwnNameAt(int index) {
-    return _program.linksOwn.get(index);
+    return _program.linksOwn().get(index);
   }
 
   int oldTurtlesOwnIndexOf(String name) {
@@ -1017,12 +1028,12 @@ public strictfp class World
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
-    List<String> breedOwns = _program.breedsOwn.get(breed.printName());
-    return breedOwns.get(index - _program.turtlesOwn.size());
+    List<String> breedOwns = _program.breedsOwn().get(breed.printName());
+    return breedOwns.get(index - _program.turtlesOwn().size());
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = _program.breedsOwn.get(breed.printName());
+    List<String> breedOwns = _program.breedsOwn().get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1031,17 +1042,17 @@ public strictfp class World
       return -1;
     }
     return breed.type() == Turtle.class
-        ? _program.turtlesOwn.size() + result
-        : _program.linksOwn.size() + result;
+        ? _program.turtlesOwn().size() + result
+        : _program.linksOwn().size() + result;
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
-    List<String> breedOwns = _program.linkBreedsOwn.get(breed.printName());
-    return breedOwns.get(index - _program.linksOwn.size());
+    List<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
+    return breedOwns.get(index - _program.linksOwn().size());
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = _program.linkBreedsOwn.get(breed.printName());
+    List<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1049,7 +1060,7 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return _program.linksOwn.size() + result;
+    return _program.linksOwn().size() + result;
   }
 
   /**
@@ -1083,37 +1094,37 @@ public strictfp class World
   }
 
   public String patchesOwnNameAt(int index) {
-    return _program.patchesOwn.get(index);
+    return _program.patchesOwn().get(index);
   }
 
   public int patchesOwnIndexOf(String name) {
-    return _program.patchesOwn.indexOf(name);
+    return _program.patchesOwn().indexOf(name);
   }
 
   public String observerOwnsNameAt(int index) {
-    return _program.globals.get(index);
+    return _program.globals().get(index);
   }
 
   public int observerOwnsIndexOf(String name) {
-    return _program.globals.indexOf(name);
+    return _program.globals().indexOf(name);
   }
 
   /// breeds & shapes
 
   public boolean isBreed(AgentSet breed) {
-    return _program.breeds.containsValue(breed);
+    return _program.breeds().containsValue(breed);
   }
 
   public boolean isLinkBreed(AgentSet breed) {
-    return _program.linkBreeds.containsValue(breed);
+    return _program.linkBreeds().containsValue(breed);
   }
 
   public AgentSet getBreed(String breedName) {
-    return (AgentSet) _program.breeds.get(breedName);
+    return (AgentSet) _program.breeds().get(breedName);
   }
 
   public AgentSet getLinkBreed(String breedName) {
-    return (AgentSet) _program.linkBreeds.get(breedName);
+    return (AgentSet) _program.linkBreeds().get(breedName);
   }
 
   public String getBreedSingular(AgentSet breed) {
@@ -1122,7 +1133,7 @@ public strictfp class World
     }
 
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.breedsSingular.entrySet()) {
+    for (Map.Entry<String, String> entry : _program.breedsSingular().entrySet()) {
       if (entry.getValue().equals(breedName)) {
         return entry.getKey();
       }
@@ -1137,7 +1148,7 @@ public strictfp class World
     }
 
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.linkBreedsSingular.entrySet()) {
+    for (Map.Entry<String, String> entry : _program.linkBreedsSingular().entrySet()) {
       if (entry.getValue().equals(breedName)) {
         return entry.getKey();
       }
@@ -1148,7 +1159,7 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (Iterator<Object> iter = _program.linkBreeds.values().iterator();
+    for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
          iter.hasNext();) {
       AgentSet next = (AgentSet) iter.next();
       if (next == breed1) {
@@ -1162,40 +1173,40 @@ public strictfp class World
   }
 
   public int getVariablesArraySize(Observer observer) {
-    return _program.globals.size();
+    return _program.globals().size();
   }
 
   public int getVariablesArraySize(Patch patch) {
-    return _program.patchesOwn.size();
+    return _program.patchesOwn().size();
   }
 
   public int getVariablesArraySize(org.nlogo.api.Turtle turtle, org.nlogo.api.AgentSet breed) {
     if (breed == _turtles) {
-      return _program.turtlesOwn.size();
+      return _program.turtlesOwn().size();
     } else {
       List<String> breedOwns =
-          _program.breedsOwn.get(breed.printName());
-      return _program.turtlesOwn.size() + breedOwns.size();
+          _program.breedsOwn().get(breed.printName());
+      return _program.turtlesOwn().size() + breedOwns.size();
     }
   }
 
   public int getVariablesArraySize(org.nlogo.api.Link link, org.nlogo.api.AgentSet breed) {
     if (breed == _links) {
-      return _program.linksOwn.size();
+      return _program.linksOwn().size();
     } else {
       List<String> breedOwns =
-          _program.linkBreedsOwn.get(breed.printName());
-      return _program.linksOwn.size() + breedOwns.size();
+          _program.linkBreedsOwn().get(breed.printName());
+      return _program.linksOwn().size() + breedOwns.size();
     }
   }
 
   public int getLinkVariablesArraySize(AgentSet breed) {
     if (breed == _links) {
-      return _program.linksOwn.size();
+      return _program.linksOwn().size();
     } else {
       List<String> breedOwns =
-          _program.linkBreedsOwn.get(breed.printName());
-      return _program.linksOwn.size() + breedOwns.size();
+          _program.linkBreedsOwn().get(breed.printName());
+      return _program.linksOwn().size() + breedOwns.size();
     }
   }
 
@@ -1224,7 +1235,7 @@ public strictfp class World
   // use of this method by other classes is discouraged
   // since that's poor information-hiding
   public Map<String, Object> getBreeds() {
-    return _program.breeds;
+    return _program.breeds();
   }
 
   public boolean breedOwns(AgentSet breed, String name) {
@@ -1232,12 +1243,12 @@ public strictfp class World
       return false;
     }
     List<String> breedOwns =
-        _program.breedsOwn.get(breed.printName());
+        _program.breedsOwn().get(breed.printName());
     return breedOwns.contains(name);
   }
 
   public Map<String, Object> getLinkBreeds() {
-    return _program.linkBreeds;
+    return _program.linkBreeds();
   }
 
   public boolean linkBreedOwns(AgentSet breed, String name) {
@@ -1245,7 +1256,7 @@ public strictfp class World
       return false;
     }
     List<String> breedOwns =
-        _program.linkBreedsOwn.get(breed.printName());
+        _program.linkBreedsOwn().get(breed.printName());
     return breedOwns.contains(name);
   }
 
@@ -1292,14 +1303,14 @@ public strictfp class World
     // that's just a hypothesis, about the PermGen, but in any
     // case only keeping the info we need will certainly reduce
     // overall RAM usage - ST 12/4/07
-    oldTurtlesOwn = _program.turtlesOwn;
-    oldPatchesOwn = _program.patchesOwn;
-    oldLinksOwn = _program.linksOwn;
-    oldGlobals = _program.globals;
-    oldBreeds = _program.breeds;
-    oldLinkBreeds = _program.linkBreeds;
-    oldBreedsOwn = _program.breedsOwn;
-    oldLinkBreedsOwn = _program.linkBreedsOwn;
+    oldTurtlesOwn = _program.turtlesOwn();
+    oldPatchesOwn = _program.patchesOwn();
+    oldLinksOwn = _program.linksOwn();
+    oldGlobals = _program.globals();
+    oldBreeds = _program.breeds();
+    oldLinkBreeds = _program.linkBreeds();
+    oldBreedsOwn = _program.breedsOwn();
+    oldLinkBreedsOwn = _program.linkBreedsOwn();
   }
 
   /// display on/off
@@ -1317,7 +1328,7 @@ public strictfp class World
   /// accessing observer variables by name;
 
   public Object getObserverVariableByName(String var) {
-    int index = _program.globals.indexOf(var.toUpperCase());
+    int index = _program.globals().indexOf(var.toUpperCase());
     if (index >= 0 && index < _observer.variables.length) {
       return _observer.variables[index];
     }
@@ -1328,8 +1339,8 @@ public strictfp class World
   public void setObserverVariableByName(String var, Object value)
       throws AgentException, LogoException {
     var = var.toUpperCase();
-    if (_program.globals.contains(var)) {
-      int index = _program.globals.indexOf(var);
+    if (_program.globals().contains(var)) {
+      int index = _program.globals().indexOf(var);
       if (-1 != index && index < _observer.variables.length) {
         _observer.setObserverVariable(index, value);
         return;
@@ -1348,4 +1359,9 @@ public strictfp class World
   public CompilerServices compiler() {
     return _compiler;
   }
+
+  public scala.collection.Iterator<Object> allStoredValues() {
+    return AllStoredValues.apply(this);
+  }
+
 }

@@ -15,6 +15,7 @@ extends AbstractWorkspaceScala(
 {
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true
+  override def compilerTestingMode = false
   override def aggregateManager: AggregateManagerInterface = unsupported
   override def waitFor(runnable: org.nlogo.api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: org.nlogo.api.ReporterRunnable[T]): T = unsupported
@@ -32,7 +33,7 @@ extends AbstractWorkspaceScala(
   override def openPrevious(): Unit = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
-  override def getImporterErrorHandler: org.nlogo.agent.Importer.ErrorHandler = unsupported
+  override def importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler = unsupported
   override def importDrawing(file: org.nlogo.api.File) = unsupported
   override def exportOutput(filename: String) = unsupported
   override def exportDrawing(filename: String, format: String) = unsupported

@@ -175,7 +175,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 37
@@ -264,50 +264,46 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model illustrates a phenomenon known as self-organized criticality. The world is filled with sand organized in columns. Falling sand stacks on top of the sand that is already there. Eventually a column will fall over because it gets too high, and the sand will spill into the surrounding area. This is called a cascade. When a falling column causes other columns to fall, the series of cascades is called an avalanche.  The size of an avalanche is the number of cascades that occur from one grain of sand falling.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Initially the world is either empty or full, at each step of the model a grain of sand drops from the top of the world. The sand continues to fall until it hits another grain of sand; at that point it rests where it is and checks to see if it is the fourth grain of sand in the current pile. If it is it causes a cascade, which distributes the four grains of sand in the current pile in the four cardinal directions. These grains of sand then in turn check to see if they make their new sandpile taller than three grains, if they do then they cascade as well. If a particle of sand goes over the edge of the world then it disappears forever.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-SETUP EMPTY initializes the model with no sand in it.
-SETUP FULL initializes the model with all the piles at random heights but below the threshold of four.
-GO ONCE will add one particle of sand to the world.
+SETUP EMPTY initializes the model with no sand in it.  
+SETUP FULL initializes the model with all the piles at random heights but below the threshold of four.  
+GO ONCE will add one particle of sand to the world.  
 GO will continue adding particles of sand at random locations.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The graph illustrates the relationship between the logarithm of the size of cascades and the logarithm of the frequency of their occurrence. Per Bak and others pointed out that in this model this graph would eventually become a straight line. A straight line on a log-log graph is indicative of a power law, which means that the relationship between the x and y axes is of the form y = A^Bx. The fact that this power law occurs regardless of the starting circumstances and despite the fact that the process is random is what Per Bak called self-organized criticality.
 
-THINGS TO TRY
--------------
-Slow down the model using the speed slider to watch the avalanches occur.
-Try using SETUP EMPTY and SETUP FULL; is the resultant pattern any different?
+## THINGS TO TRY
+
+Slow down the model using the speed slider to watch the avalanches occur.  
+Try using SETUP EMPTY and SETUP FULL; is the resultant pattern any different?  
 Can you explain why the graph is not a perfectly straight line?
 
-EXTENDING THE MODEL
--------------------
-The particles are currently colored by their depth in the sandpile. What if you colored them based on whether or not they were involved in an avalanche recently?
+## EXTENDING THE MODEL
+
+The particles are currently colored by their depth in the sandpile. What if you colored them based on whether or not they were involved in an avalanche recently?  
 What if you make the limit on high the sandpiles can go larger than four? How about eight or twelve?
 
-NETLOGO FEATURES
-----------------
+## NETLOGO FEATURES
+
 This model makes use of the fact that you can set the origin of a 3D model anywhere you want. It also creates its own logarithmic graph.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-There is a 2D version of this model in the Community Models called SANDPILE.
-
+There is a 2D version of this model in the Community Models called Sandpile.
 
 ## CREDITS AND REFERENCES
+
 Self organized criticality was originally investigated by Per Bak and collaborators.  The basis for this model is in Per Bak's book "How Nature Works".
 @#$#@#$#@
 default
@@ -590,7 +586,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 fill-world

@@ -8,10 +8,10 @@ public strictfp class DisplaySwitch
   private final GUIWorkspace workspace;
 
   public DisplaySwitch(GUIWorkspace workspace) {
-    super(I18N.gui().get("tabs.run.viewUpdates.checkbox"));
+    super(I18N.guiJ().get("tabs.run.viewUpdates.checkbox"));
     this.workspace = workspace;
     setFocusable(false);
-    setToolTipText(I18N.gui().get("tabs.run.viewUpdates.checkbox.tooltip"));
+    setToolTipText(I18N.guiJ().get("tabs.run.viewUpdates.checkbox.tooltip"));
     addActionListener(this);
   }
 

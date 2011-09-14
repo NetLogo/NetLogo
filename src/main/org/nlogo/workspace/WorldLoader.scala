@@ -1,6 +1,6 @@
 package org.nlogo.workspace
 
-import org.nlogo.api.{ I18N, Version, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ I18N, VersionHistory, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.Workspace.UpdateMode
 
 class WorldLoader {
@@ -40,7 +40,7 @@ class WorldLoader {
     var wrapY = true
     // if this model was not saved in some version of 3.1 or later.  ignore the wrap settings,
     // default is on ev 4/13/06
-    if(strings.length > 15 && !Version.olderThan31pre1(version)) {
+    if(strings.length > 15 && !VersionHistory.olderThan31pre1(version)) {
       wrapX = 0 != strings(14).toInt
       wrapY = 0 != strings(15).toInt
     }

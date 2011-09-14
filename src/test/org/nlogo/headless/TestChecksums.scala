@@ -2,7 +2,6 @@ package org.nlogo.headless
 
 import org.nlogo.api.{CompilerException, LogoException, Version}
 import java.util.concurrent.{Executors, TimeUnit}
-import org.nlogo.util.JCL._
 import org.nlogo.util.SlowTest
 import org.scalatest._
 
@@ -88,7 +87,7 @@ class ChecksumTester(info: String => Unit) {
 
   def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
     val workspace = HeadlessWorkspace.newInstance
-    workspace.silent(true)
+    workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
     workspace.open(model)
     Checksummer.initModelForChecksumming(workspace)

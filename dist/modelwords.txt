@@ -1,3 +1,4 @@
+personal_ws-1.1 en 3 
 A's
 ABCD
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -21,6 +22,7 @@ AVG
 AY
 Abbott
 Abelson
+Aboveground
 Abrahamson
 Aconc
 Addends
@@ -59,6 +61,7 @@ AssetDetail
 AssimEffic
 Attachedness
 Ausubel
+Automata
 Autosave
 AvailableCoalitions
 Avg
@@ -118,6 +121,7 @@ BlockStalagmite
 Bohannan
 Boids
 Bonabeau
+Booleans
 Boris
 Bos
 Bot
@@ -188,6 +192,7 @@ CentralLimitTheorem
 Cerny
 Chabay
 Challet
+Champaign
 Chapt
 Chate
 Chatelier
@@ -195,6 +200,7 @@ Chellapilla
 Chem
 ChemPressure
 ChemicalEquilibrium
+Cheng
 Cheung
 Cholesky
 ChopBoxConnector
@@ -321,6 +327,7 @@ Droids
 Drude
 Drude's
 Druery
+Dunham
 Dunn
 Durrett
 Dushoff
@@ -387,6 +394,7 @@ Feld
 Felsen
 Feurzeig
 FileName
+Filenames
 FillColor
 FilterFlow
 Fishtank
@@ -399,6 +407,7 @@ FormSaver
 Formsaver
 Forrest
 Forrest's
+Fractal's
 Freq
 Frisch
 Froemke
@@ -417,6 +426,7 @@ GUIRO
 Gabe
 Gagandeep
 Gaia
+Gainesville
 Galton
 GaltonBox
 GasChromatography
@@ -556,6 +566,7 @@ INIT
 INPUTBOX
 IOI
 IOO
+IP
 IR
 IRs
 ISME
@@ -567,10 +578,13 @@ IframeA
 IframeB
 Independant
 Init
+Initializers
+Intelligencer
 Inv
 Ising
 Itemx
 JFBFA
+JPEG
 JPG
 JSR
 JWU
@@ -620,6 +634,7 @@ Krypto
 Ku
 Kunihiko
 LIKERT
+LOGIN
 LSYS
 LT
 LUC
@@ -768,6 +783,7 @@ NetLogo
 NetLogo's
 Neuwirth
 NewAids
+Newell
 Nienke
 Nigel's
 Ning
@@ -798,6 +814,7 @@ OZCOR
 Ohm's
 OilCartel
 Onco
+Online
 Oomes
 OpticalIllusions
 Orszag
@@ -834,6 +851,7 @@ PPM
 PRECIPIATION
 PREDITOR
 PREV
+PROFILER
 PROTESTORS
 PSA
 PSO
@@ -876,8 +894,10 @@ PietBounce
 Pistachios
 Pittel
 PixMap
+Planarity
 PlantGrowth
 PoissonDistribution
+Poller
 Polyandry
 PolygonArea
 Polymerization
@@ -896,6 +916,7 @@ ProbGraphsBasic
 ProbLab
 ProbLab's
 ProbLabGenetics
+Profiler
 ProvisionCosts
 Pteroptyx
 Publ
@@ -903,8 +924,8 @@ Punnett
 QUICKSTART
 Qty
 Qual
-Quickstart
 QuickTime
+Quickstart
 RAD
 RC
 REC
@@ -973,10 +994,12 @@ Rudbeck
 Rugby
 RumorMill
 RunANDRunResult
+Runtime
 Ruralites
 Ruth's
 Rutherford's
 Ruven
+SATURATIONS
 SAfriAndCowsMonogamous
 SAfriAndCowsNoMarriage
 SAfriAndCowsPolyandry
@@ -1004,11 +1027,13 @@ STD
 STDEV
 STM
 STRENGTHs
+SV
 SW
 San
 Sanfey
 Sao
 Satis
+Saturations
 Scatterers
 Scheinkman
 Schelling's
@@ -1073,6 +1098,7 @@ Stieff
 StochasticPatchwork
 StockFigure
 Stonedahl
+Stouffer
 Strogatz
 StrongAcid
 Stroup
@@ -1091,6 +1117,7 @@ TELS
 TEXTAREA
 TEXTBOX
 THATWAY
+THERMO
 THHH
 THHT
 THISWAY
@@ -1136,6 +1163,7 @@ ToSantaFe
 Tocqueville
 Tocqueville's
 Toffoli
+Totalistic
 TrafficBasic
 TrafficGrid
 TrafficIntersection
@@ -1143,6 +1171,7 @@ TrapClickBounce
 TrapColorBounce
 TrapPietBounce
 TreeSimple
+Troutman
 TroutmanClarkGoldrick
 Tschiptschin
 Tt
@@ -1159,6 +1188,7 @@ UNKOWN
 UNMARK
 UV
 Ulam
+Uncomment
 UniformToNormal
 UniqueTurtleID
 Unpress
@@ -1179,6 +1209,7 @@ Vecchi
 VectorFeature
 VectorFeatures
 VectorFields
+Verlag
 Versuche
 Viceroys
 Vichniac
@@ -1286,6 +1317,8 @@ abc
 abcdefghijklmnopqrstuvwxyz
 abelson
 abs
+abutter
+abutters
 ac
 accel
 ach
@@ -1300,6 +1333,7 @@ adn
 aesthetic
 aesthetically
 af
+afterwards
 ag
 agcl
 agentset
@@ -1326,6 +1360,7 @@ amt
 anabaena
 anabolic
 analogizing
+analyses
 android
 android's
 androids
@@ -1338,6 +1373,7 @@ anthocyanins
 antiferromagnetic
 anum
 anyhwere
+anyone's
 ao
 ap
 apl
@@ -1367,6 +1403,7 @@ attachedness
 attemps
 au
 aug
+automata
 automaton's
 autoplot
 autosave
@@ -1424,6 +1461,9 @@ bibl
 bigfish
 bigpay
 bigpollute
+bilinear
+bimolecular
+bimolecularly
 bindigit
 binned
 binomrow
@@ -1446,6 +1486,7 @@ boids
 bonemarrow
 bonk
 bool
+boolean
 bot
 bot's
 bots
@@ -1540,6 +1581,7 @@ clikc
 clinicans
 clipx
 clipy
+clocker
 clonogenic
 cloud's
 clr
@@ -1554,6 +1596,8 @@ codependency
 coevolution
 coevolve
 col
+colEnd
+colStart
 collusive
 colo
 colorand
@@ -1563,8 +1607,10 @@ colour
 columbia
 columbine
 com
+comR
 combi
 combinatory
+comcnst
 comm
 comp
 companyinfo
@@ -1572,15 +1618,19 @@ competiton
 complexed
 complexification
 complexifying
+comrate
+conR
 conbase
 conc
 concH
 concOH
+concnst
 concreate
 condom
 condorcet
 conj
 connecteds
+conrate
 const
 constipation
 constructionist
@@ -1662,7 +1712,9 @@ darknesses
 darkparticle
 darnold
 das
+dataset
 dataset's
+datasets
 db
 dc
 dcs
@@ -1671,6 +1723,7 @@ dd
 ddscore
 de
 deads
+deadweight
 dealer's
 dearnest
 deathrate
@@ -1716,6 +1769,7 @@ dimensionlength
 dimerization
 diprotic
 dir
+directrix
 dirs
 disassociated
 discretized
@@ -1747,6 +1801,7 @@ dood
 dooder
 dormancy
 doublepoly
+doughnut
 downleft
 downtime
 dp
@@ -1796,12 +1851,15 @@ eg
 egoist
 egoists
 egypt
+eigenvectors
 ele
 elec
+electro
 electronegativity
 electtime
 elecvote
 eletrons
+eligibles
 elitism
 elodea
 elyunque
@@ -1825,10 +1883,12 @@ epicycloid
 eq
 eqn
 eqspi
+equilibrated
 equiprobable
 erdos
 erikclean
 esri
+et
 ethan
 ethno
 ethnocentric
@@ -1837,6 +1897,7 @@ ethnocentrics
 ethnocentrism
 european
 everreau
+everyone's
 everytime
 evolutionarily
 exe
@@ -1864,11 +1925,13 @@ fi
 figureEight
 figureEightCovering
 figureEightSetup
+filename
 filepath
 filterflow
 filterwater
 finalcoloring
 fire's
+firm's
 firstrow
 firstview
 fish's
@@ -1895,6 +1958,7 @@ flowercolor
 fluid's
 fly's
 flycatcher's
+foci
 follower's
 foo
 foodenergy
@@ -1902,6 +1966,7 @@ foodrot
 foreach
 foregrounded
 fork's
+formulae
 fot
 fourteenths
 fput
@@ -1956,6 +2021,7 @@ gini
 girlfish
 gis
 github
+globals
 glycine
 goers
 gogo
@@ -1968,6 +2034,7 @@ gov
 grayish
 graylevel
 greenpref
+grey
 gridcount
 gridlock
 gridx
@@ -2072,7 +2139,10 @@ inbox
 inc
 incf
 incr
+indep
+indices
 indiv
+individual's
 inedible
 ineluctability
 inf
@@ -2090,6 +2160,7 @@ int
 integrator
 intermittency
 internet
+interspecies
 interv
 intraspeaker
 intx
@@ -2100,6 +2171,7 @@ inwhich
 inx
 iny
 ioi
+ionzation
 ioo
 irradiance
 isecs
@@ -2173,9 +2245,12 @@ li
 lightish
 lilsquare
 lin
+linR
+lincnst
 lineh
 linev
 ling
+linslpe
 listerama
 littlefish
 littlepollute
@@ -2188,8 +2263,11 @@ localwin
 lockstep
 logaverage
 loggrain
+login
+logins
 logtime
 longhouses
+lookup
 lorenz
 lput
 lru
@@ -2203,8 +2281,10 @@ lumberjack
 luminance
 lval
 lymphatic
+mCopy
 mL
 mRNA
+mRef
 mac
 mach
 mag
@@ -2283,6 +2363,7 @@ mnrch
 mnrchs
 modcharge
 modiforce
+momentums
 monitorwater
 monomolecularly
 monopolist
@@ -2300,17 +2381,23 @@ mousetraps
 mousex
 mousey
 mov
+moveX
+moveY
 moveable
 moveis
 movemnt
+movex
+movey
 mph
 msg
 mult
+multi
 multicouple
 multiplayer
 mv
 mwilkers
 mx
+myburnttree
 mycolor
 myedges
 myleft
@@ -2320,10 +2407,12 @@ mymynode
 mynode
 mynodelist
 mynodes
+mypinetree
 mypos
 myright
 mysize
 myspi
+mytree
 myworld
 myworldgis
 móveis
@@ -2389,12 +2478,14 @@ nc
 nclear
 nconverted
 ncount
+nd
 ndelete
 ndisplay
 ne
 nearmates
 necsi
 neg
+negativestrm
 neoplastic
 ness
 netlogo
@@ -2432,6 +2523,7 @@ noice
 noint
 noldage
 nonagon
+nonlinearly
 nonmarket
 nonpareil
 nonpareils
@@ -2503,6 +2595,8 @@ oligomers
 olor
 olympus
 oncce
+one's
+online
 onn
 onramp
 ooi
@@ -2523,6 +2617,7 @@ orw
 oscar
 oscillatoria
 ot
+other's
 outskirt
 outta
 outx
@@ -2549,6 +2644,7 @@ parab
 parabola's
 parabolas
 paramaters
+parameterized
 params
 paramters
 parenth
@@ -2662,10 +2758,13 @@ poppyfield
 population's
 popup
 pos
+positiveStreamer
+positivestrm
 positron's
 positrons
 poss
 possiblity
+postivearrow
 powerlaw
 powerup
 pp
@@ -2694,6 +2793,7 @@ probabalistic
 probablity
 problematizes
 proc
+profiler
 programmatically
 protonated
 ps
@@ -2759,6 +2859,7 @@ redVal
 redbcells
 redclsd
 redispersing
+redisplays
 redox
 refracts
 reg
@@ -2776,6 +2877,8 @@ repr
 repuzzlefy
 resample
 resampled
+resize
+resized
 resnick
 restaurateurs
 resultant's
@@ -2807,6 +2910,8 @@ roming
 room's
 round's
 row's
+rowEnd
+rowStart
 rowe
 roy
 rp
@@ -2824,6 +2929,7 @@ runMetricsEveryStep
 runMetricsEveryTick
 runall
 runresult
+runtime
 ruralites
 russell
 rv
@@ -2837,6 +2943,7 @@ sandpiles
 santafe
 satisfed
 satisifed
+saturations
 sb
 sc
 scatterers
@@ -2966,6 +3073,7 @@ sp
 spacetime
 spanky
 spatiotemporal
+spawner
 spawner's
 spawners
 spd
@@ -2979,6 +3087,7 @@ spn
 spreadiness
 sq
 sqrd
+sqrt
 squarepiece
 squiggle
 sr
@@ -2997,6 +3106,7 @@ starpeople
 startegy
 startitem
 startp
+startup
 startx
 starty
 stats
@@ -3022,9 +3132,13 @@ su
 subhistory
 subitems
 sublattices
+sublist
+submatrix
+subproblems
 subprocedures
 subsampling
 subspidot
+substring
 subtend
 successeach
 sugarless
@@ -3057,6 +3171,7 @@ tT
 tabonuco
 tabonucos
 tage
+tangency
 tank's
 tanksize
 tapor
@@ -3079,10 +3194,12 @@ teamTwo
 techpubs
 teddy
 tele
+tellings
 tem
 temps
 texas
 tg
+th
 thatway
 theCollaboratory
 theatlantic
@@ -3092,6 +3209,7 @@ thier
 thiessen
 thisway
 threedshapes
+thru
 ths
 tictactoe
 til
@@ -3099,6 +3217,7 @@ tillfarm
 timeLimit
 timestep
 tisue
+titrate
 tj
 tmin
 tmp
@@ -3108,6 +3227,7 @@ tol
 toolbor
 topologic
 topview
+totalistic
 totalschools
 towardsxy
 towhere
@@ -3128,6 +3248,8 @@ tsplit
 tt
 ttyS
 tu
+tuple
+tuples
 turbidity
 turtleson
 tutte
@@ -3155,6 +3277,7 @@ underspecify
 undersupplied
 undraw
 unflooded
+unformatted
 unfreeze
 ungraphed
 ungrouped
@@ -3216,8 +3339,10 @@ vegitation
 vel
 vended
 verging
+versa
 vert
 vertex's
+vertices
 vibrational
 viceroys
 view's
@@ -3241,11 +3366,14 @@ watchmouse
 watergood
 waterquality
 wave's
+wavefronts
 wavelike
+wealths
 weathermap
 webpage
 website
 websites
+wel
 wgbh
 whitehouse
 widdershins
@@ -3313,6 +3441,7 @@ xahlee
 xangle
 xc
 xcenter
+xcoor
 xcoordinates
 xcor
 xcors
@@ -3347,6 +3476,7 @@ yahoo
 yale
 yc
 ycenter
+ycoor
 ycor
 ycors
 yd

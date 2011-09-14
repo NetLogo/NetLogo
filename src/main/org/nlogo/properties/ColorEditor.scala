@@ -54,7 +54,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: java.awt.Fr
      def actionPerformed(e: ActionEvent){
        val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
        val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
-       setColor(org.nlogo.api.Color.getColor(c))
+       setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
      }
    }
 

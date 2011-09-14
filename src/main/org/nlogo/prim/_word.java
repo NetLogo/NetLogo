@@ -5,7 +5,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _word
     extends Reporter
@@ -13,8 +13,8 @@ public final strictfp class _word
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_REPEATABLE | Syntax.TYPE_WILDCARD},
-            Syntax.TYPE_STRING, 2, 0);
+        (new int[]{Syntax.RepeatableType() | Syntax.WildcardType()},
+            Syntax.StringType(), 2, 0);
   }
 
   @Override

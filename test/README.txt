@@ -84,7 +84,7 @@ STACK TRACE TESTS
   and Command tests. The easiest way to learn how is by example. Here
   are examples of both:
 
-*command-lambda-in-command-lambda-stack-trace
+*command-task-in-command-task-stack-trace
   O> run task [run task [print __boom]] => STACKTRACE boom!\
   error while observer running __BOOM\
     called by (command task from: procedure __EVALUATOR)\

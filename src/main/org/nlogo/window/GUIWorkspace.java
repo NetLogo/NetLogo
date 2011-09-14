@@ -11,19 +11,21 @@ import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ModelType;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelTypeJ;
+import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.WidgetIO;
 import org.nlogo.app.WidgetPanel;
 import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
-import org.nlogo.util.JCL;
 import org.nlogo.workspace.BufferedReaderImporter;
 
 import java.util.HashMap;
+
+import static scala.collection.JavaConversions.asScalaBuffer;
 
 public abstract strictfp class GUIWorkspace // can't be both abstract and strictfp
     extends org.nlogo.workspace.AbstractWorkspaceScala
@@ -276,14 +278,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   @Override
   public boolean warningMessage(String message) {
-    String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     return 0 == org.nlogo.swing.OptionDialog.show(
-        getFrame(), I18N.gui().get("common.messages.warning"),
+        getFrame(), I18N.guiJ().get("common.messages.warning"),
         "Warning: " + message, options);
   }
 
   public void resizeView() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     viewWidget.settings().resizeWithProgress(true);
   }
 
@@ -308,7 +310,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       runner.run();
     } else {
       try {
-        org.nlogo.awt.Utils.invokeAndWait(runner);
+        org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
         org.nlogo.util.Exceptions.handle(ex);
       }
@@ -328,7 +330,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       runner.run();
     } else {
       try {
-        org.nlogo.awt.Utils.invokeAndWait(runner);
+        org.nlogo.awt.EventQueue.invokeAndWait(runner);
       } catch (InterruptedException ex) {
         org.nlogo.util.Exceptions.handle(ex);
       }
@@ -341,6 +343,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public java.awt.Frame getFrame() {
     return frame;
+  }
+
+  public boolean compilerTestingMode() {
+    return false;
   }
 
   @Override
@@ -360,7 +366,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void open(final String path) {
     try {
-      org.nlogo.awt.Utils.invokeAndWait
+      org.nlogo.awt.EventQueue.invokeAndWait
           (new Runnable() {
             public void run() {
               new org.nlogo.window.Events.OpenModelEvent(path)
@@ -473,8 +479,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (glView.displayOn()) {
         view.thaw();
       }
-      if ((world.observer().perspective() != Perspective.FOLLOW) &&
-          (world.observer().perspective() != Perspective.RIDE)) {
+      if ((world.observer().perspective() != PerspectiveJ.FOLLOW()) &&
+          (world.observer().perspective() != PerspectiveJ.RIDE())) {
         world.observer().home();
       }
       viewWidget.setVisible(true);
@@ -713,7 +719,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (glView != null) {
       glView.close();
     }
-    if (world.program().is3D) {
+    if (world.program().is3D()) {
       open3DView();
     }
 
@@ -732,7 +738,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (JOGLLoadingException jlex) {
       String message = jlex.getMessage();
       org.nlogo.swing.Utils.alert
-          ("3D View", message, "" + jlex.getCause(), I18N.gui().get("common.buttons.continue"));
+          ("3D View", message, "" + jlex.getCause(), I18N.guiJ().get("common.buttons.continue"));
       switchTo3DViewAction.setEnabled(false);
     }
   }
@@ -892,7 +898,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         world.observer().variableConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
-      for (SliderConstraint.SliderConstraintException cce : org.nlogo.util.JCL.toJavaList(ex.getErrors())) {
+      for (SliderConstraint.SliderConstraintException cce :
+             scala.collection.JavaConversions.asJavaIterable(ex.getErrors())) {
         e.slider.setConstraintError(cce.spec().fieldName(), cce);
       }
     }
@@ -965,13 +972,13 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// importing
 
   @Override
-  protected org.nlogo.agent.Importer.ErrorHandler getImporterErrorHandler() {
+  protected org.nlogo.agent.Importer.ErrorHandler importerErrorHandler() {
     return new org.nlogo.agent.Importer.ErrorHandler() {
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
-        org.nlogo.awt.Utils.mustBeEventDispatchThread();
-        String[] options = fatalError ? new String[]{I18N.gui().get("common.buttons.ok")} :
-            new String[]{I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+        org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
+        String[] options = fatalError ? new String[]{I18N.guiJ().get("common.buttons.ok")} :
+            new String[]{I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
         return org.nlogo.swing.OptionDialog.show
             (getFrame(), title, errorDetails, options) == 0;
       }
@@ -1033,7 +1040,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     } catch (java.io.IOException ex) {
       javax.swing.JOptionPane.showMessageDialog
           (getExportWindowFrame(), ex.getMessage(),
-              I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+              I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -1085,14 +1092,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (plotManager().getPlotNames().length == 0) {
         org.nlogo.swing.OptionDialog.show
             (getFrame(), "Export Plot", "There are no plots to export.",
-                new String[]{I18N.gui().get("common.buttons.ok")});
+                new String[]{I18N.guiJ().get("common.buttons.ok")});
         return;
       }
       try {
         super.exportAllPlots(e.filename);
       } catch (java.io.IOException ex) {
         String message = "Export of all plots to" + e.filename + " failed: " + ex.getMessage();
-        String[] options = {I18N.gui().get("common.buttons.ok")};
+        String[] options = {I18N.guiJ().get("common.buttons.ok")};
         org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
       }
     } else {
@@ -1105,7 +1112,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           super.exportPlot(plot.name(), e.filename);
         } catch (java.io.IOException ex) {
           String message = "Export of " + plot.name() + " plot to " + e.filename + " failed: " + ex.getMessage();
-          String[] options = {I18N.gui().get("common.buttons.ok")};
+          String[] options = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
         }
       }
@@ -1118,7 +1125,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     String[] plotNames = plotManager().getPlotNames();
     if (plotNames.length == 0) {
       String message = "There are no plots to export.";
-      String[] options = {I18N.gui().get("common.buttons.ok")};
+      String[] options = {I18N.guiJ().get("common.buttons.ok")};
       org.nlogo.swing.OptionDialog.show(frame, "Export Plot", message, options);
       return null;
     }
@@ -1142,7 +1149,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // show the original thread in which it happened, so we hang on to the
     // current thread before switching - ST 7/30/04
     final Thread thread = Thread.currentThread();
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             runtimeErrorPrivate(owner, context, instruction, thread, ex);
@@ -1189,7 +1196,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       // if the Code tab came forward... probably because something that
       // the call to select() in ProceduresTab was doing was doing invokeLater()
       // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
-      org.nlogo.awt.Utils.invokeLater
+      org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
             public void run() {
               RuntimeErrorDialog.show("Runtime Error", context, instruction, thread, ex);
@@ -1234,7 +1241,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    */
   public void modelSaved(String newModelPath) {
     setModelPath(newModelPath);
-    setModelType(ModelType.NORMAL);
+    setModelType(ModelTypeJ.NORMAL());
   }
 
   public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
@@ -1258,7 +1265,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public final javax.swing.Action hubNetControlCenterAction =
-      new javax.swing.AbstractAction(I18N.gui().get("menu.tools.hubNetControlCenter")) {
+      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           hubNetManager.showControlCenter();
         }
@@ -1274,23 +1281,23 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// preview commands & aggregate
 
   public void handle(final org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.PREVIEW_COMMANDS &&
+    if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
         e.text.trim().length() > 0) {
       previewCommands_$eq(e.text);
     }
-    if (e.section == ModelSection.CLIENT &&
+    if (e.section == ModelSectionJ.CLIENT() &&
         e.lines.length > 0 &&
         !isApplet()) {
       java.util.List<String> strings = new java.util.ArrayList<String>(e.lines.length) {{
         for (String s : e.lines) { add(s); }
       }};
-      getHubNetManager().loadClientInterface(WidgetIO.parseWidgets(JCL.toScalaSeq(strings)), e.version);
+      getHubNetManager().loadClientInterface(WidgetIO.parseWidgets(asScalaBuffer(strings)), e.version);
     }
-    if (e.section == ModelSection.SHAPES) {
+    if (e.section == ModelSectionJ.SHAPES()) {
       world.turtleShapeList().replaceShapes
           (org.nlogo.shape.VectorShape.parseShapes(e.lines, e.version));
     }
-    if (e.section == ModelSection.LINK_SHAPES) {
+    if (e.section == ModelSectionJ.LINK_SHAPES()) {
       world.linkShapeList().replaceShapes
           (org.nlogo.shape.LinkShape.parseShapes(e.lines, e.version));
     }
@@ -1329,7 +1336,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           widgets.add(specOption.get());
       }
     }
-    return JCL.toScalaSeq(widgets);
+    return asScalaBuffer(widgets);
   }
 
 }

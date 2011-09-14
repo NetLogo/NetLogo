@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Observable;
 
 import org.nlogo.api.GraphicsInterface;
+import org.nlogo.api.VersionHistory;
 
-import static org.nlogo.api.RendererInterface.SHAPE_WIDTH;
+import static org.nlogo.api.Constants.ShapeWidth;
 
 public strictfp class VectorShape
     extends Observable
@@ -244,8 +245,8 @@ public strictfp class VectorShape
         g.rotate(angle / 180.0 * StrictMath.PI, x, y, scale);
       }
       g.translate(x, y);
-      g.scale(scale, scale, SHAPE_WIDTH);
-      g.setStrokeFromLineThickness(lineThickness, scale, cellSize, SHAPE_WIDTH);
+      g.scale(scale, scale, ShapeWidth());
+      g.setStrokeFromLineThickness(lineThickness, scale, cellSize, ShapeWidth());
       for (int i = 0; i < elementList.size(); i++) {
         // we've already handled scaling & rotation ourselves,
         // but we need to let some element types know how much
@@ -366,8 +367,8 @@ public strictfp class VectorShape
     shape.setRotatable(getString(shapes, index++).equals("true"));
     int rgb = Integer.valueOf(getString(shapes, index++)).intValue();
     boolean translateColors = version != null &&
-        (org.nlogo.api.Version.olderThan30pre5(version) ||
-            org.nlogo.api.Version.olderThan3DPreview3(version));
+        (VersionHistory.olderThan30pre5(version) ||
+            VersionHistory.olderThan3DPreview3(version));
 
     if (translateColors) {
       rgb = org.nlogo.api.Color.translateSavedColor(rgb);
@@ -395,7 +396,7 @@ public strictfp class VectorShape
   // out of defaultShapes.txt - ST 6/27/05
   public static VectorShape getDefaultShape() {
     VectorShape result = new org.nlogo.shape.VectorShape();
-    result.setName(org.nlogo.api.ShapeList.DEFAULT_SHAPE_NAME);
+    result.setName(org.nlogo.api.ShapeList.DefaultShapeName());
     result.setRotatable(true);
     result.setEditableColorIndex(0);
     result.addElement

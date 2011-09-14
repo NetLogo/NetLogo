@@ -58,7 +58,7 @@ androids-own
 
 ;; startup of the model
 to startup
-  ca
+  clear-all
   setup
   hubnet-reset
 end
@@ -527,6 +527,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 117
@@ -543,6 +544,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 263
@@ -559,6 +561,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 116
@@ -733,6 +736,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 734
@@ -749,6 +753,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 649
@@ -765,6 +770,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 47
@@ -803,19 +809,19 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Minority Game is a simplified model of an economic market.  In each round agents choose to join one of two sides, 0 or 1. Those on the minority side at the end of a round earn a point.  This game is inspired by the "El Farol" bar problem.
 
 Each round, the live participants must choose 0 or 1. They can view their choice history for a specified number of previous turns, and may employ a finite set of strategies to make their decision. The record available to them shows which side, 0 or 1, was in the minority in previous rounds.
 
 This HubNet version of the model allows players to play against each other and a set of androids.  The androids' intelligence (and thus the difficulty of the game) can be increased through the ANDROID-MEMORY slider.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Each player begins with a score of 0 and must choose a side, 0 or 1, during each round. The round ends when all the human participants have made a choice.
 
 Each computer agent begins with a score of 0 and STRATEGIES-PER-AGENT strategies. Each of these strategies is a string of 0 and 1 choices, such as [0 1 1 1 0 0 1] that together represent the agents' possible plan of action (first choose 0, next time choose 1, next time choose 1, etc.). Initially, they choose a random one of these strategies to use. If their current strategy correctly predicted whether 0 or 1 would be the minority, they add one point to their score.  Each strategy also earns virtual points according to whether it would have been correct or not.  From then on, the agents will use their strategy with the highest virtual point total to predict whether they should select 0 or 1. Thus, for each android, the "fittest" strategies survive.
@@ -824,14 +830,13 @@ This strategy consists of a list of 1's and 0's that is 2^ANDROID-MEMORY long.  
 
 This means that if there are only computer agents and no human participants, once the number of computer agents, the number of strategies, and the length of the historical record are chosen, all parameters are fixed and the behavior of the system is of interest.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Quickstart Instructions:
-------------------------
-Teacher: Follow these directions to run the HubNet activity.
-Optional: Zoom In (see Tools in the Menu Bar)
-Optional: Change any of the settings.  If you did change settings, press the SETUP button.
+
+Teacher: Follow these directions to run the HubNet activity.  
+Optional: Zoom In (see Tools in the Menu Bar)  
+Optional: Change any of the settings.  If you did change settings, press the SETUP button.  
 Teacher: Press the LOGIN button
 
 Everyone: Open up a HubNet Client on your machine and choose a username and connect to this activity.
@@ -840,64 +845,63 @@ Teacher: When everyone is logged in press the LOGIN button again and press the G
 
 Everyone: Choose 0 or 1, when everyone has chosen the view will update to show the relative scores of all the players and androids
 
-Teacher: To run the activity again with the same group, stop the model by pressing the GO button, if it is on. Change any of the settings that you would like.
-Press the SETUP button.
+Teacher: To run the activity again with the same group, stop the model by pressing the GO button, if it is on. Change any of the settings that you would like.  
+Press the SETUP button.  
 Teacher: Restart the simulation by pressing the GO button again.
 
 Teacher: To start the simulation over with a new group, have all the clients log out (or boot them using the KICK button in the Control Center) and press SETUP
 
 Buttons:
---------
-SETUP: Resets the simulation according to the parameters set by the sliders all logged-in clients will remain logged-in but their scores will be reset to 0
-LOGIN: Allows clients to log in but not to start playing the game.
+
+SETUP: Resets the simulation according to the parameters set by the sliders all logged-in clients will remain logged-in but their scores will be reset to 0  
+LOGIN: Allows clients to log in but not to start playing the game.  
 GO: Starts and stops the model.
 
 Sliders:
---------
-NUMBER-OF-PARTICIPANTS: sets the total number of participants in the game, which includes androids and human participants, as clients log in androids will automatically turn into human players.  This is to ensure that there is always an odd number of participants in the world so there is always a true minority.
-PLAYER-MEMORY: The length of the history the players can view to help choose sides.
-ANDROID-MEMORY: Sets the length of the history which the computer agents use to predict their behavior.  One gets most interesting between 3 and 12, though there is some interesting behavior at 1 and 2.  Note that when using an ANDROID-MEMORY of 1, the
-STRATEGIES-PER-AGENT needs to be 4 or less.
+
+NUMBER-OF-PARTICIPANTS: sets the total number of participants in the game, which includes androids and human participants, as clients log in androids will automatically turn into human players.  This is to ensure that there is always an odd number of participants in the world so there is always a true minority.  
+PLAYER-MEMORY: The length of the history the players can view to help choose sides.  
+ANDROID-MEMORY: Sets the length of the history which the computer agents use to predict their behavior.  One gets most interesting between 3 and 12, though there is some interesting behavior at 1 and 2.  Note that when using an ANDROID-MEMORY of 1, the  
+STRATEGIES-PER-AGENT needs to be 4 or less.  
 STRATEGIES-PER-AGENT: Sets the number of strategies each computer agent has in their toolbox.  Five is typically a good value.  However, this can be changed for investigative purposes using the slider, if desired.
 
 Monitors:
----------
-HIGH SCORE and LOW SCORE show the maximum and minimum scores.
+
+HIGH SCORE and LOW SCORE show the maximum and minimum scores.  
 HISTORY: shows the most recent minority values.  The number of values shown is determined by the PLAYER-MEMORY slider.
 
 Plots:
-------
-SCORES: displays the minimum, maximum, and average scores over time
-SUCCESS RATES HISTOGRAM: a histogram of the successes per attempts for players and androids.
-NUMBER PICKING ZERO: plots the number of players and androids that picked zero during the last round
+
+SCORES: displays the minimum, maximum, and average scores over time  
+SUCCESS RATES HISTOGRAM: a histogram of the successes per attempts for players and androids.  
+NUMBER PICKING ZERO: plots the number of players and androids that picked zero during the last round  
 SUCCESS RATE: displays the minimum, maximum, and average success rate over time
 
 Quickstart
-----------
-NEXT >>> - shows the next quick start instruction
-<<< PREVIOUS - shows the previous quick start instruction
+
+NEXT >>> - shows the next quick start instruction  
+<<< PREVIOUS - shows the previous quick start instruction  
 RESET INSTRUCTIONS - shows the first quick start instruction
 
 Client Interface
-----------------
+
 Buttons:
---------
-0: press this button if you wish to choose 0 for a particular round.
+
+0: press this button if you wish to choose 0 for a particular round.  
 1: press this button if you wish to choose 1 for a particular round.
 
 Monitors:
----------
-YOU ARE A: displays the shape and color of your turtle in the view
-SCORE: displays how many times you have chosen a value that has been in the minority
-SUCCESS RATE: the number of times you have been in the minority divided by the number of selections you have participated in.
-LAST CHOICE: the value you chose in the last round
-HISTORY: the values that were in the minority in the most recent rounds
-CURRENT CHOICE: the value that you have chosen for this current round
+
+YOU ARE A: displays the shape and color of your turtle in the view  
+SCORE: displays how many times you have chosen a value that has been in the minority  
+SUCCESS RATE: the number of times you have been in the minority divided by the number of selections you have participated in.  
+LAST CHOICE: the value you chose in the last round  
+HISTORY: the values that were in the minority in the most recent rounds  
+CURRENT CHOICE: the value that you have chosen for this current round  
 CHOSEN-SIDES?: Tells you whether or not you have chosen this round
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 There are two extremes possible for each turn: the size of the minority is 1 agent or (NUMBER-OF-AGENTS - 1)/2 agents (since NUMBER-OF-AGENTS is always odd).  The former would represent a "wasting of resources" while the latter represents a situation which is more "for the common good."  However, each agent acts in an inherently selfish manner, as they care only if they and they alone are in the minority.  Nevertheless, the latter situation is prevalent in the system without live players.  Does this represent unintended cooperation between agents, or merely coordination and well developed powers of prediction?
 
 The agents in the view move according to how successful they are relative to the mean success rate.  After running for about 100 time steps (at just about any parameter setting), how do the fastest and slowest agents compare?  What does this imply?
@@ -906,38 +910,34 @@ Playing against others, what strategies seem to be the most effective?  What wou
 
 Look at the plot "Success Rates." As the game runs, the success rates converge. Can you explain this? At the time, the graph lines in the plot "Scores" diverge. Why is that?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 What strategy works to maximize your own score?
 
 Would you perform better against only computer agents than against humans?
 
 What strategy works better to try to reach social equity?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Maybe you could add computer agents with different strategies, or more dynamically evolutionary strategies.  Could you figure out a strategy that works the best against these computer agents?  You could code in multiple dynamic strategies that play against each other. Who would emerge victorious?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-One feature which was instrumental to this program being feasible was the n-values primitive.  When setting up strategies for each computer agent, they are binary numbers (stored in lists) of 2^ANDROID-MEMORY values. If this was done by starting with an empty list and using fput 2^ANDROID-MEMORY times, for each agent and for each strategy, during setup you would need to use fput N*S*(2^ANDROID-MEMORY) times.  Using n-values sped this up by about 2 or 3 orders of magnitude.
+One feature which was instrumental to this program being feasible was the `n-values` primitive.  When setting up strategies for each computer agent, they are binary numbers (stored in lists) of 2^ANDROID-MEMORY values. If this was done by starting with an empty list and using `fput` 2^ANDROID-MEMORY times, for each agent and for each strategy, during setup you would need to use `fput` N*S*(2^ANDROID-MEMORY) times.  Using `n-values` sped this up by about 2 or 3 orders of magnitude.
 
-The list primitives 'map' and 'reduce' were also used to simplify code.
+The list primitives `map` and `reduce` were also used to simplify code.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-Prisoner's Dilemma
-Altruism
-Cooperation
-El Farol
+Prisoner's Dilemma  
+Altruism  
+Cooperation  
+El Farol  
 Restaurants
 
-
 ## CREDITS AND REFERENCES
+
 Original implementation: Daniel B. Stouffer, for the Center for Connected Learning and Computer-Based Modeling.
 
 This model was based upon studies by Dr. Damien Challet et al.  Information can be found on the web at http://www.unifr.ch/econophysics/minority/
@@ -1334,7 +1334,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

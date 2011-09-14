@@ -3,14 +3,13 @@ package org.nlogo.prim;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _patchvariableof
     extends Reporter {
@@ -27,7 +26,7 @@ public final strictfp class _patchvariableof
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getPatchVariable(vn);
@@ -49,8 +48,8 @@ public final strictfp class _patchvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH
-                  | Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,
+              Syntax.TurtleType() | Syntax.PatchType()
+                  | Syntax.TurtlesetType() | Syntax.PatchsetType(),
               agentOrSet);
     }
   }
@@ -66,9 +65,9 @@ public final strictfp class _patchvariableof
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH
-        | Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.TurtleType() | Syntax.PatchType()
+        | Syntax.TurtlesetType() | Syntax.PatchsetType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -77,7 +76,7 @@ public final strictfp class _patchvariableof
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getPatchVariable(vn);
@@ -99,8 +98,8 @@ public final strictfp class _patchvariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH
-                  | Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET,
+              Syntax.TurtleType() | Syntax.PatchType()
+                  | Syntax.TurtlesetType() | Syntax.PatchsetType(),
               agentOrSet);
     }
   }
@@ -122,7 +121,7 @@ public final strictfp class _patchvariableof
   public Object report_3(Context context, Agent agent) throws LogoException {
     if (agent.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     try {
       return agent.getPatchVariable(vn);

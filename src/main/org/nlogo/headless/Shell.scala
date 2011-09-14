@@ -16,7 +16,7 @@ object Shell {
     Main.setHeadlessProperty()
     val workspace = HeadlessWorkspace.newInstance
     if (argv.isEmpty)
-      workspace.initForTesting(-5, 5, -5, 5, HeadlessWorkspace.TEST_DECLARATIONS)
+      workspace.initForTesting(-5, 5, -5, 5, HeadlessWorkspace.TestDeclarations)
     else
       workspace.open(argv(0))
     System.err.println(Version.fullVersion)

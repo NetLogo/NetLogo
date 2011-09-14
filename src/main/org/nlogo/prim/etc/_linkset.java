@@ -7,23 +7,22 @@ import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linkset
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_LINK
-        | Syntax.TYPE_LINKSET | Syntax.TYPE_NOBODY
-        | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_LINKSET;
+    int[] right = {Syntax.RepeatableType() | Syntax.LinkType()
+        | Syntax.LinksetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.LinksetType();
     return Syntax.reporterSyntax(right, ret, 1, 0);
   }
 
@@ -37,7 +36,7 @@ public final strictfp class _linkset
         AgentSet tempSet = (AgentSet) elt;
         if (tempSet.type() != org.nlogo.agent.Link.class) {
           throw new ArgumentTypeException
-              (context, this, i, Syntax.TYPE_LINK | Syntax.TYPE_LINKSET, elt);
+              (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
         }
         for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Link) iter.next());
@@ -46,9 +45,9 @@ public final strictfp class _linkset
         descendList(context, (LogoList) elt, resultSet);
       } else if (elt instanceof Link) {
         resultSet.add((Link) elt);
-      } else if (!(elt instanceof org.nlogo.api.Nobody)) {
+      } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
-            (context, this, i, Syntax.TYPE_LINK | Syntax.TYPE_LINKSET, elt);
+            (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
@@ -66,7 +65,7 @@ public final strictfp class _linkset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.type() != org.nlogo.agent.Link.class) {
           throw new EngineException(context, this,
-              I18NJava.errors().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
+              I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
         for (AgentSet.Iterator iter2 = tempSet.iterator();
@@ -75,9 +74,9 @@ public final strictfp class _linkset
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
-      } else if (!(obj instanceof org.nlogo.api.Nobody)) {
+      } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._linkset.invalidListInputs",
+            I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidListInputs",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }
     }

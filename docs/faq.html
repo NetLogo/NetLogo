@@ -64,6 +64,8 @@
       <li>
         <a href="#threedsplit"><b>Will NetLogo and NetLogo 3D remain
         separate applications?</b></a>
+      <li>
+        <a href="#ipad"><b>Can I run NetLogo on my iPad or iPhone?</b></a>
       </ul>
     <h3>
       Downloading
@@ -480,6 +482,17 @@
     <p>
       Models built in NetLogo 3D may require changes in order to run in the
       eventual unified application.
+    <h3>
+      <a name="ipad" id="ipad"></a>Can I run NetLogo on my iPad or iPhone?
+    </h3>
+    <p>No.  It's because NetLogo
+       is based on Java, which Apple doesn't support (or even allow!)
+       on iOS.  Hopefully Apple will change their minds on this someday.
+    <p>We are seeking funding for an alternate implementation on a
+       JavaScript/HTML5 base.  It would work on a variety of tablets
+       and phones.  But the many man-years of development
+       effort that have gone into the Java version can't cheaply or
+       easily be replicated on another platform.
     <h2>
       Downloading
     </h2>
@@ -679,9 +692,11 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       We recommend Sun's Java runtime when using NetLogo on Linux.
     <p>
-      In theory, any Java 5 or later runtime will run NetLogo. In practice,
-      some Java implementations aren't high enough quality. OpenJDK
-      doesn't work, nor does GNU libgcj.
+      In theory, any Java 5 or later runtime will run NetLogo. In
+      practice, some Java implementations aren't high enough
+      quality. GNU libgcj does not work. Very recent versions of
+      OpenJDK (1.6.0.0-22.b22 or newer) may work; older
+      ones don't.
     <p>
       Ubuntu users should consult <a href=
       "http://help.ubuntu.com/community/Java">http://help.ubuntu.com/community/Java</a>.
@@ -695,10 +710,10 @@ org.apache.commons.logging.impl.LogFactoryImpl
       @@@VERSION@@@.vmoptions file (found in the NetLogo directory, by
       default in C:\Program Files):
     <pre>
--Xmx1024M
+-Xmx1024m
 </pre>
     <p>
-      Try changing the 1024M a smaller number like 512M. This should permit
+      Try changing the 1024m a smaller number like 512m. This should permit
       NetLogo to start, although the lower heap size limit may affect your
       ability to run models with very large numbers of agents. (See
       <a href="#howbig">How big can my model be?</a>.)
@@ -834,17 +849,17 @@ org.apache.commons.logging.impl.LogFactoryImpl
         <b>Windows:</b> Edit this section of the &quot;NetLogo
         @@@VERSION@@@.vmoptions&quot; file in the NetLogo folder:
         <pre>
--Xmx1024M
+-Xmx1024m
 </pre>
       <li>
         <b>Macintosh:</b> Edit the Contents/Info.plist file in the NetLogo
         application package. (You can reach this file by control-clicking
         the application in the Finder and choosing &quot;Show Package
         Contents&quot; from the popup menu.) The relevant section is this;
-        the second number is the one-gigabyte ceiling:
+        the last number (1024) is the one-gigabyte ceiling:
         <pre>
 &lt;key&gt;VMOptions&lt;/key&gt;
-&lt;string&gt;-XX:MaxPermSize=128m -Xmx1024M&lt;/string&gt;
+&lt;string&gt;-XX:MaxPermSize=128m -Xss16m -Xmx1024m&lt;/string&gt;
 </pre>
       <li>
         <b>Other:</b> Edit the <tt>netlogo.sh</tt> script (or a copy),

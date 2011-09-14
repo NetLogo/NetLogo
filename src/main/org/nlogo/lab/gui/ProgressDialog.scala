@@ -114,7 +114,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     timer.start()
 
     pack()
-    org.nlogo.awt.Utils.center(this, dialog)
+    org.nlogo.awt.Positioning.center(this, dialog)
   }
         
   override def getMinimumSize = getPreferredSize
@@ -159,7 +159,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       steps = 0
       resetPlot()
       settingsString = ""
-      for ((name, value) <- settings) settingsString += name + " = " + Dump.logoObject(value) + "\n"
+      for ((name, value) <- settings)
+        settingsString += name + " = " + Dump.logoObject(value.asInstanceOf[AnyRef]) + "\n"
       updateProgressArea(true)
     }
   }
@@ -171,7 +172,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   private def invokeAndWait(f: => Unit) =
-    try org.nlogo.awt.Utils.invokeAndWait(new Runnable {def run() {f}})
+    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run() {f}})
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
@@ -193,7 +194,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private def getPenName(metricNumber: Int): String = {
     val buf = new StringBuilder()
     if (protocol.metrics.length > 1) buf.append(metricNumber + " ")
-    buf.append(org.nlogo.awt.Utils.shortenStringToFit(
+    buf.append(org.nlogo.awt.Fonts.shortenStringToFit(
       protocol.metrics(metricNumber).trim.replaceAll("\\s+", " "),
       100, // an arbitrary limit to keep the pen names from getting too wide
       plotWidgetOption.get.getFontMetrics(plotWidgetOption.get.getFont)))
@@ -222,7 +223,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     val newElapsed = hours + ":" + minutes + ":" + seconds
     if (force || elapsed != newElapsed) {
       elapsed = newElapsed
-      org.nlogo.awt.Utils.invokeLater(new Runnable {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable {
         def run() {
           progressArea.setText("Run #" + runCount + " of " + totalRuns + ", " +
                   "step #" + steps + "\n" +

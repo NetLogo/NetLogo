@@ -17,7 +17,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   var _nodesHaveView = false
   override def nodesHaveView = _nodesHaveView
   var validTag = false
-  override def incrementalViewUpdate {results+="UPDATE"}
+  override def incrementalViewUpdate() {results+="UPDATE"}
   override def sendOverrideList(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
                                 overrides: Map[java.lang.Long, AnyRef]) = true
   override def clearOverride(client: String, agentClass: Class[_ <: org.nlogo.api.Agent], varName: String,
@@ -31,7 +31,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   @throws(classOf[HubNetException])
   override def send(node:String, tag:String, message:Any) =
     if (!validTag) throw new HubNetException(tag + " is an invalid tag") else true
-  override def setClientInterface(interfaceType:String, interfaceInfo: LogoList){}
+  override def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){}
   override def sendPlot(clientId:String, plot:PlotInterface){}
   override def sendTextMessage(node:String, text:String) = true
   override def sendClearTextMessage(node:String) = true

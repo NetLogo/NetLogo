@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Let;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 // This isn't rejiggered yet because of the extra, unevaluated
 // argument. (I say "yet" because this shouldn't be that hard to work
@@ -17,7 +17,7 @@ public final strictfp class _let
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_WILDCARD, Syntax.TYPE_WILDCARD});
+        (new int[]{Syntax.WildcardType(), Syntax.WildcardType()});
   }
 
   @Override

@@ -4,13 +4,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
+import org.nlogo.api.I18N;
 
 public final strictfp class _randomnormal extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_NUMBER);
+    int[] right = {Syntax.NumberType(), Syntax.NumberType()};
+    return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
 
   @Override
@@ -23,8 +24,8 @@ public final strictfp class _randomnormal extends Reporter {
   public double report_1(Context context, double mean, double sdev) throws LogoException {
     if (sdev < 0) {
       throw new EngineException(
-          context, this,
-          "random-normal's second input can't be negative");
+          context, this, I18N.errorsJ().get("org.nlogo.prim.etc._randomNormal.secondInputNotNegative"));
+
     }
     return validDouble(mean + sdev * context.job.random.nextGaussian());
   }

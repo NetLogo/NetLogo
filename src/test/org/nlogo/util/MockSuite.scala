@@ -2,6 +2,7 @@ package org.nlogo.util
 
 import org.scalatest.FunSuite
 import org.jmock.{Expectations, Mockery, Sequence}
+import org.jmock.integration.junit4.JUnit4Mockery
 import scala.util.DynamicVariable
 import org.hamcrest.{Description, BaseMatcher, Matcher}
 import org.jmock.api.Action
@@ -43,12 +44,25 @@ import org.jmock.lib.legacy.ClassImposteriser
     assert(objectUnderTest.something == somethingElse)
   }
  */
+
+// We use JUnit4Mockery because with a regular Mockery I was getting uninformative
+// errors like:
+//    [info] - extension literal *** FAILED *** (142 milliseconds)
+//    [info]   org.jmock.api.ExpectationError: unexpected invocation
+// but with JUnit4Mockery we get:
+//    [info] - extension literal *** FAILED *** (113 milliseconds)
+//    [info]   java.lang.AssertionError: unexpected invocation: extensionManager.readExtensionObject("foo", "", "bar bazz")
+//    [info] expectations:
+//    [info]   expected once, never invoked: extensionManager.readExtensionObject("foo", "", "bar baz"); returns a default value
+//    [info] what happened before this: nothing!
+// - ST 8/16/11
+
 trait MockSuite extends FunSuite {
 
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {
     test(name) {
-      _context.withValue(new Mockery(){setImposteriser(ClassImposteriser.INSTANCE)}) {
+      _context.withValue(new JUnit4Mockery(){setImposteriser(ClassImposteriser.INSTANCE)}) {
         _expectations.withValue(new Expectations()) {
           f
         }

@@ -1,8 +1,11 @@
 package org.nlogo.compiler
+
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
 import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType,Version}
 import org.nlogo.nvm.{Instruction,Procedure,Reporter}
 import org.nlogo.prim._
+import collection.JavaConverters._
+
 /**
  * Converts identifier tokens into instances of primitives.  In "forgiving" mode, used by
  * AutoConverter, unknown identifiers are assumed to be references to global variables that the
@@ -29,12 +32,11 @@ private class IdentifierParser(program:Program,
     it.map(processToken).toSeq
   }
   private def getLetFromArg(p:Procedure,ident:String,tokPos:Int):Option[Let] = {
-    import org.nlogo.util.JCL._  // p.lets and let.children are Java lists
-    def checkLet(let:Let):Option[Let] =
+    def checkLet(let: Let): Option[Let] =
       if(tokPos < let.startPos || tokPos > let.endPos) None
-      else let.children.map(checkLet).find(_.isDefined)
+      else let.children.asScala.map(checkLet).find(_.isDefined)
              .getOrElse(if(let.varName == ident) Some(let) else None)
-    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok:Token,procedure:Procedure,tokPos:Int):Token = {
     val ident = tok.value.asInstanceOf[String]
@@ -44,8 +46,8 @@ private class IdentifierParser(program:Program,
         if(ident.length == 1) 1
         // if it's more than just "?", it needs to be an integer.
         else try { Integer.parseInt(ident.substring(1)) }
-             catch { case e:NumberFormatException => exception(INVALID_LAMBDA_VARIABLE,tok ) }
-      newToken(new _lambdavariable(varNumber),
+             catch { case e:NumberFormatException => exception(INVALID_TASK_VARIABLE,tok ) }
+      newToken(new _taskvariable(varNumber),
                ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
     }
     // kludgy to special case this, but we only have one such prim,
@@ -82,20 +84,19 @@ private class IdentifierParser(program:Program,
   }
 
   private def getAgentVariableReporter(varName:String,tok:Token):Reporter = {
-    import org.nlogo.util.JCL._ // breedsOwn maps are Java maps
-    if(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))
+    if(program.turtlesOwn.asScala.contains(varName) && program.linksOwn.asScala.contains(varName))
       new _turtleorlinkvariable(varName)
-    else if(program.turtlesOwn.contains(varName))
+    else if(program.turtlesOwn.asScala.contains(varName))
       new _turtlevariable(program.turtlesOwn.indexOf(varName))
-    else if(program.patchesOwn.contains(varName))
+    else if(program.patchesOwn.asScala.contains(varName))
       new _patchvariable(program.patchesOwn.indexOf(varName))
-    else if(program.linksOwn.contains(varName))
+    else if(program.linksOwn.asScala.contains(varName))
       new _linkvariable(program.linksOwn.indexOf(varName))
-    else if(program.globals.contains(varName))
+    else if(program.globals.asScala.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
-    else if(program.breedsOwn.values.exists(_.contains(varName)))
+    else if(program.breedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _breedvariable(varName)
-    else if(program.linkBreedsOwn.values.exists(_.contains(varName)))
+    else if(program.linkBreedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _linkbreedvariable(varName)
     else if(forgiving)
       new _unknownidentifier
@@ -122,7 +123,7 @@ private class IdentifierParser(program:Program,
     tok
   }
   /// error texts
-  private val INVALID_LAMBDA_VARIABLE =
+  private val INVALID_TASK_VARIABLE =
     "variables may not begin with a question mark unless they are the special variables ?, ?1, ?2, ..."
   private val RANDOM_OR_RANDOM_FLOAT_ERROR =
     "This code was written for an old version of NetLogo in which the RANDOM primitive sometimes reported " +

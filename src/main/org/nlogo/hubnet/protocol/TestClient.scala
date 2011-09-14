@@ -3,10 +3,10 @@ package org.nlogo.hubnet.protocol
 import java.net.Socket
 import org.nlogo.api.{LogoList, Version}
 import java.io.{IOException, ObjectOutputStream}
-import org.nlogo.util.JCL._
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}
-import org.nlogo.hubnet.connection.ClientRoles
+import org.nlogo.hubnet.connection.ClientRole
+import collection.JavaConverters._
 
 object TestClient{
   implicit val pool = Executors.newCachedThreadPool()
@@ -35,27 +35,29 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   }
 
   def close(reason:String){ send(ExitMessage(reason)) }
-  def getWidgetControls: List[WidgetControl] = messagesReceived.collect{ case wc: WidgetControl => wc }.toList
-  def getViewUpdates: List[ViewUp] = messagesReceived.collect{ case vu: ViewUp => vu }.toList
+  def getWidgetControls: List[WidgetControl] =
+    messagesReceived.asScala.collect{ case wc: WidgetControl => wc }.toList
+  def getViewUpdates: List[ViewUp] =
+    messagesReceived.asScala.collect{ case vu: ViewUp => vu }.toList
 
   def nextMessage(timeoutMillis:Long=200): Option[Message] =
     Option(messagesReceived.poll(timeoutMillis, TimeUnit.MILLISECONDS))
 
   // attempts the handshake and explodes if it fails
   // called from the constructor.
-  private def handshake(): (String, LogoList) = {
+  private def handshake(): (String, Iterable[AnyRef]) = {
     def sendAndReceive(a: AnyRef): AnyRef = {
       rawSend(a)
       in.readObject()
     }
     try{
       val version = sendAndReceive(Version.version)
-      val response = sendAndReceive(new EnterMessage(userId, clientType, ClientRoles.Participant))
+      val response = sendAndReceive(new EnterMessage(userId, clientType, ClientRole.Participant))
       val result = response match {
         case h: HandshakeFromServer =>
           send(EnterMessage)
           executor.submit(new Receiver())
-          (h.activityName, h.interfaceSpecList)
+          (h.activityName, h.interfaceSpecList.toIterable)
         case r => throw new IllegalStateException(userId + " handshake failed. response:" + r)
       }
       result

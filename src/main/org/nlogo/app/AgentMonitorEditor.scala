@@ -48,7 +48,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
     for(variableName <- vars.asScala) {
       val label = new javax.swing.JLabel(variableName.toLowerCase)
       label.setFont(
-        new java.awt.Font(org.nlogo.awt.Utils.platformFont,
+        new java.awt.Font(org.nlogo.awt.Fonts.platformFont,
                           java.awt.Font.PLAIN, 10))
       label.setBorder(
         javax.swing.BorderFactory.createEmptyBorder(0, 1, 0, 1))
@@ -134,7 +134,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
       org.nlogo.window.InterfaceColors.AGENT_EDITOR_BACKGROUND, 1))
 
   private val editor = new org.nlogo.editor.EditorField[TokenType](
-    17, new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont,
+    17, new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                          java.awt.Font.PLAIN, 12),
     false, new EditorColorizer(workspace), I18N.gui.get _)
   editor.setFont(editor.getFont.deriveFont(10f))
@@ -347,7 +347,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
           case LINK_WHO =>
             val (end1, end2, breed) = agent match {
               case l: Link => (l.end1, l.end2, l.getBreed)
-              case _ => (Nobody.NOBODY, Nobody.NOBODY, workspace.world.links)
+              case _ => (Nobody, Nobody, workspace.world.links)
             }
             index match {
               case Link.VAR_END1 =>

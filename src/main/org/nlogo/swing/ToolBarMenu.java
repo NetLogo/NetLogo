@@ -20,7 +20,7 @@ public abstract strictfp class ToolBarMenu
             menu.show(ToolBarMenu.this, 0, getHeight());
           }
         });
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
   }
 
   protected abstract void populate(javax.swing.JPopupMenu menu);

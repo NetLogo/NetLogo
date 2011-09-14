@@ -7,14 +7,14 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _myself
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_AGENT, "-TPL");
+        (Syntax.AgentType(), "-TPL");
   }
 
   @Override
@@ -22,7 +22,7 @@ public final strictfp class _myself
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;
   }
@@ -31,7 +31,7 @@ public final strictfp class _myself
     Agent myself = context.myself();
     if (myself == null || myself instanceof Observer) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._myself.noAgentMyself"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._myself.noAgentMyself"));
     }
     return myself;
   }

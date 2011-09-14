@@ -47,7 +47,6 @@ private class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
     m.getDeclaringClass.getName + "." + m.getName
   private def processClass(c: Class[_]) {
     val reader = PrimitiveCache.getClassReader(c)
-    import org.nlogo.util.JCL._
     for (m <- BytecodeUtils.getMethods(c, profilingEnabled))
       reader.accept(new MethodExtractorClassAdapter(m), ClassReader.SKIP_DEBUG)
   }

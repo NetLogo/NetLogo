@@ -61,8 +61,8 @@ public strictfp class CompilerManager
     workspace.world.rememberOldProgram();
     Program program = workspace.world.newProgram();
     workspace.world.program(program);
-    workspace.world.turtleBreedShapes.setUpBreedShapes(true, program.breeds); // true = clear old
-    workspace.world.linkBreedShapes.setUpBreedShapes(true, program.linkBreeds); // true = clear old
+    workspace.world.turtleBreedShapes.setUpBreedShapes(true, program.breeds()); // true = clear old
+    workspace.world.linkBreedShapes.setUpBreedShapes(true, program.linkBreeds()); // true = clear old
   }
 
   public void handle(org.nlogo.window.Events.LoadEndEvent e) {

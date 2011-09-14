@@ -25,7 +25,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   private val messagePanel: MessagePanel = new MessagePanel()
 
   import org.nlogo.swing.Implicits._
-  import org.nlogo.awt.Utils.invokeLater
+  import org.nlogo.awt.EventQueue.invokeLater
 
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
@@ -34,12 +34,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     getContentPane.add(clientsPanel, BorderLayout.EAST)
     getContentPane.add(messagePanel, BorderLayout.SOUTH)
     pack()
-    org.nlogo.awt.Utils.moveNextTo(this, frame)
+    org.nlogo.awt.Positioning.moveNextTo(this, frame)
     setVisible(true)
   }
 
   def setViewMirroring(mirror: Boolean) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (mirror != HubNetUtils.viewMirroring) {
       HubNetUtils.viewMirroring = mirror
       server.setViewEnabled(mirror)
@@ -47,14 +47,14 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   }
 
   def setPlotMirroring(mirror: Boolean) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     HubNetUtils.plotMirroring = mirror;
     if (mirror) server.plotManager.broadcastPlots()
   }
 
   // Kicks a client and notifies it.
   def kickClient(clientId: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     server.removeParticipantClient(clientId, true, I18N.gui.get("menu.tools.hubnetControlCenter.removedViaControlCenter"))
     clientsPanel.removeClientEntry(clientId)
   }
@@ -62,18 +62,18 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   def kickAllClients() {server.removeAllClients()}
   def reloadClientInterface() {server.reloadClientInterface()}
   def broadcastMessage(text: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     server.broadcast(text)
   }
 
   def addClient(clientId: String, remoteAddress: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     clientsPanel.addClientEntry(clientId)
     messagePanel.logMessage( I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientJoined" , clientId, remoteAddress) + "\n")
   }
 
   def clientDisconnect(clientId: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     messagePanel.logMessage(I18N.gui.getN("menu.tools.hubnetControlCenter.messagePanel.clientDisconnected" , clientId) + "\n")
     clientsPanel.removeClientEntry(clientId)
   }
@@ -181,7 +181,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         add(broadcastButton, BorderLayout.EAST)
       }, BorderLayout.SOUTH)
       add(new JScrollPane(messageTextArea) {setPreferredSize(new Dimension(10, 70))}, BorderLayout.NORTH)
-      org.nlogo.awt.Utils.invokeLater(() => inputField.requestFocus())
+      org.nlogo.awt.EventQueue.invokeLater(() => inputField.requestFocus())
     }
 
     /**

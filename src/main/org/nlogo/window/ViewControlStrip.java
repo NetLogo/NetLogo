@@ -125,7 +125,7 @@ public strictfp class ViewControlStrip
     public ThreedButton() {
       super(" 3D "); // spaces so it isn't so tiny
       setFont
-          (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
+          (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
               java.awt.Font.PLAIN, 10));
       setBackground(InterfaceColors.GRAPHICS_BACKGROUND);
       setBorder(org.nlogo.swing.Utils.createWidgetBorder());
@@ -254,9 +254,9 @@ public strictfp class ViewControlStrip
     return (!workspace.jobManager.anyPrimaryJobs())
         ||
         org.nlogo.swing.OptionDialog.show
-            (this, I18N.gui().get("common.messages.warning"),
+            (this, I18N.guiJ().get("common.messages.warning"),
                 "Changing the size will halt and clear the world.",
-                new String[]{"Change Size", I18N.gui().get("common.buttons.cancel")})
+                new String[]{"Change Size", I18N.guiJ().get("common.buttons.cancel")})
             == 0;
   }
 

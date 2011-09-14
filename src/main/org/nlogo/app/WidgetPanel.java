@@ -256,7 +256,7 @@ public strictfp class WidgetPanel
   }
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    if (!org.nlogo.awt.Utils.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
     java.awt.Point p = e.getPoint();
@@ -316,7 +316,7 @@ public strictfp class WidgetPanel
       doPopup(e);
       return;
     }
-    if (!org.nlogo.awt.Utils.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
 
@@ -352,19 +352,19 @@ public strictfp class WidgetPanel
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected void doPopup(java.awt.event.MouseEvent e) {
     javax.swing.JPopupMenu menu = new javax.swing.JPopupMenu();
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
-    WidgetCreationMenuItem plot = new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY());
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
+    WidgetCreationMenuItem plot = new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY());
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
     if (workspace.plotManager().plots().size() == 0) {
       plot.setEnabled(false);
     }
     menu.add(plot);
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
     menu.show(this, e.getX(), e.getY());
   }
 
@@ -431,13 +431,13 @@ public strictfp class WidgetPanel
     } else if (type.equals("DUMMY INPUT") ||  // in the GUI, it's "Input Box"
         type.equals("DUMMY INPUTBOX"))  // in saved models, it's "INPUTBOX"
     {
-      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont(),
+      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
           java.awt.Font.PLAIN, 12);
       return new org.nlogo.window.DummyInputBoxWidget
           (new org.nlogo.window.CodeEditor
-              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui().fn()),
+              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               new org.nlogo.window.CodeEditor
-                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui().fn()),
+                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               this, new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
     } else if (type.equals("DUMMY OUTPUT"))  // currently in saved models only - ST 3/17/04
     {
@@ -462,7 +462,7 @@ public strictfp class WidgetPanel
       doPopup(e);
       return;
     }
-    if (org.nlogo.awt.Utils.button1Mask(e)) {
+    if (org.nlogo.awt.Mouse.hasButton1(e)) {
       java.awt.Point p = e.getPoint();
       java.awt.Rectangle rect = this.getBounds();
 
@@ -861,9 +861,9 @@ public strictfp class WidgetPanel
   }
 
   public boolean canAddWidget(String widget) {
-    if (widget.equals(I18N.gui().get("tabs.run.widgets.view"))) {
+    if (widget.equals(I18N.guiJ().get("tabs.run.widgets.view"))) {
       return !hasView();
-    } else if (widget.equals(I18N.gui().get("tabs.run.widgets.plot"))) {
+    } else if (widget.equals(I18N.guiJ().get("tabs.run.widgets.plot"))) {
       // you can't add a plot to the client interface unless
       // there are plots in the server interface so enable the
       // plot button accordingly ev 1/25/07

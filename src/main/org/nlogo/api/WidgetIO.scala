@@ -1,6 +1,6 @@
 package org.nlogo.api
 
-import org.nlogo.api.File.{restoreLines, stripLines}
+import org.nlogo.api.ModelReader.{restoreLines, stripLines}
 import org.nlogo.api.StringUtils.unEscapeString
 import collection.mutable.ArrayBuffer
 

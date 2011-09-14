@@ -1,6 +1,6 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0beta3, available for free download from our site at
+NetLogo 5.0beta4, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
 This is a BETA release of NetLogo. As such, there may be a few bugs.
@@ -11,7 +11,7 @@ forward to hearing from you. Please let us know about bugs you find,
 features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0beta3, perhaps with minor updates to the code. If you have
+NetLogo 5.0beta4, perhaps with minor updates to the code. If you have
 any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
@@ -33,27 +33,19 @@ your local character set and report to us about successes or problems
 that you find.
 
 The following is a (partial) list of changes made since NetLogo
-5.0beta2:
+5.0beta3:
   
-features:
-- alpha/transparency is now supported in the 3D view and in NetLogo 3D
-  (if you use RGBA colors)
-- some compiler and runtime error messages are now internationalized
+changes since 5.0beta3:
+- new HubNet prims: hubnet-clients-list, hubnet-kick-client,
+  hubnet-kick-all-clients
+- API docs are included again
+- misc. fixes to Unicode support
+- fixed longstanding bug where 3D objects became brighter the smaller they got
+- misc. HubNet fixes
 
-tweaks:
-- enabled Pack200 support in the applet for faster loading
-
-fixes:
-- fixed logging regression in 4.1.3 where changes to the Code tab
-  weren't logged
-- fixed 5.0-only regression where the '<' character would disappear
-  from info tabs
-- fixed 5.0-only regression where the tick counter wasn't visible in
-  new models (#1315)
-- fixed 5.0-only regression where the Shift Left and Shift Right
-  menu items did the opposite
-- fixed 5.0-only matrix extension regression where matrix:regress
-  wasn't working
+Note also that because of extensions API changes, all extensions must
+be recompiled (even extensions that have already been recompiled for
+5.0beta3).
 
 Please send bug reports to bugs@ccl.northwestern.edu and other
 suggestions and comments to feedback@ccl.northwestern.edu.

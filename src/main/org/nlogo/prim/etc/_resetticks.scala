@@ -1,6 +1,7 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.nvm.{Command, Context, Syntax}
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 // true here because reset-ticks calls other code
 class _resetticks extends Command(true) {

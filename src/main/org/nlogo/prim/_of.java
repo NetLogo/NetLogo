@@ -3,23 +3,22 @@ package org.nlogo.prim;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _of
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_REPORTER_BLOCK,  // input on left
-            new int[]{Syntax.TYPE_AGENT | Syntax.TYPE_AGENTSET}, // inputs on right
-            Syntax.TYPE_WILDCARD, // return type
-            Syntax.NORMAL_PRECEDENCE + 1,
+        (Syntax.ReporterBlockType(),  // input on left
+            new int[]{Syntax.AgentType() | Syntax.AgentsetType()}, // inputs on right
+            Syntax.WildcardType(), // return type
+            org.nlogo.api.Syntax.NormalPrecedence() + 1,
             true, // right associative
             "OTPL",
             "?"    // takes reporter block of unknown agent type
@@ -33,7 +32,7 @@ public final strictfp class _of
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       args[0].checkAgentClass(agent, context);
       return new Context(context, agent).evaluateReporter(agent, args[0]);
@@ -50,7 +49,7 @@ public final strictfp class _of
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 1,
-              Syntax.TYPE_AGENTSET | Syntax.TYPE_AGENT,
+              Syntax.AgentsetType() | Syntax.AgentType(),
               agentOrSet);
     }
   }

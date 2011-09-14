@@ -64,13 +64,17 @@ class Tabs(val workspace: GUIWorkspace,
     setSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
-    org.nlogo.awt.Utils.invokeLater( () => tab.select(e.pos, e.pos + e.length) )
+    org.nlogo.awt.EventQueue.invokeLater( () => tab.select(e.pos, e.pos + e.length) )
   }
   
   val errorColor = java.awt.Color.RED
   
   def handle(e: CompiledEvent) {
-    def clearErrors() { for(i <- 3 until getTabCount) setForegroundAt(i, null) }
+    def clearErrors() {
+      for(i <- 0 until getTabCount)
+        if(getComponentAt(i).isInstanceOf[ProceduresTab])
+          setForegroundAt(i, null)
+    }
     def recolorTab(component: java.awt.Component, hasError: Boolean) {
       setForegroundAt(indexOfComponent(component), if(hasError) errorColor else null)
     }
@@ -135,11 +139,14 @@ class Tabs(val workspace: GUIWorkspace,
     // if I just call requestFocus the tab never gets the focus request because it's not yet
     // visible.  There might be a more swing appropriate way to do this but I can't figure it out
     // (if you know it feel free to fix) ev 7/24/07
-    org.nlogo.awt.Utils.invokeLater( () => requestFocus() )
+    org.nlogo.awt.EventQueue.invokeLater( () => requestFocus() )
   }
 
   def saveExternalFiles() {
-    for(i <- 3 until getTabCount) getComponentAt(i).asInstanceOf[TemporaryProceduresTab].doSave()
+    (3 until getTabCount)
+      .map(getComponentAt)
+      .collect{case tab: TemporaryProceduresTab => tab}
+      .foreach(_.doSave())
   }
 
   def saveTemporaryFile(tab: TemporaryProceduresTab, filename: String) {
@@ -148,7 +155,8 @@ class Tabs(val workspace: GUIWorkspace,
     tabsMenu.getItem(index).setText(filename)
   }
 
-  def getIndexOfComponent(tab: ProceduresTab): Int = (0 until getTabCount).find(n => getComponentAt(n) == tab).get
+  def getIndexOfComponent(tab: ProceduresTab): Int =
+    (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
   def closeTemporaryFile(tab: TemporaryProceduresTab) {
     val index = getIndexOfComponent(tab)

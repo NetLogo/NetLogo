@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Procedure;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 // Note that _call is "CustomGenerated".  That means that the bytecode

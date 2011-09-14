@@ -4,9 +4,11 @@ import java.util.Map;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelType;
+import org.nlogo.api.ModelTypeJ;
 import org.nlogo.awt.UserCancelException;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 
 /*
  * note that multiple instances of this class may exist
@@ -25,7 +27,7 @@ public strictfp class FileMenu
   ///
 
   public FileMenu(App app, ModelSaver modelSaver, AppletSaver appletSaver) {
-    super(I18N.gui().get("menu.file"));
+    super(I18N.guiJ().get("menu.file"));
     this.app = app;
     this.modelSaver = modelSaver;
     this.appletSaver = appletSaver;
@@ -37,10 +39,10 @@ public strictfp class FileMenu
     addMenuItem(new SaveAsAction());
     addMenuItem(new SaveAppletAction());
     addSeparator();
-    addMenuItem(I18N.gui().get("menu.file.print"), 'P', app.tabs().printAction());
+    addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
     org.nlogo.swing.Menu exportMenu =
-        new org.nlogo.swing.Menu(I18N.gui().get("menu.file.export"));
+        new org.nlogo.swing.Menu(I18N.guiJ().get("menu.file.export"));
     exportMenu.addMenuItem(new ExportWorldAction());
     exportMenu.addMenuItem(new ExportPlotAction());
     exportMenu.addMenuItem(new ExportAllPlotsAction());
@@ -50,7 +52,7 @@ public strictfp class FileMenu
     add(exportMenu);
     addSeparator();
     org.nlogo.swing.Menu importMenu =
-        new org.nlogo.swing.Menu(I18N.gui().get("menu.file.import"));
+        new org.nlogo.swing.Menu(I18N.guiJ().get("menu.file.import"));
     importMenu.addMenuItem(new ImportWorldAction());
     importMenu.addMenuItem(new ImportPatchColorsAction());
     importMenu.addMenuItem(new ImportPatchColorsRGBAction());
@@ -99,7 +101,7 @@ public strictfp class FileMenu
       } catch (java.io.IOException ex) {
         javax.swing.JOptionPane.showMessageDialog
             (FileMenu.this, ex.getMessage(),
-                I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+                I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
       }
     }
   }
@@ -121,14 +123,14 @@ public strictfp class FileMenu
       } catch (java.io.IOException ex) {
         javax.swing.JOptionPane.showMessageDialog
             (FileMenu.this, ex.getMessage(),
-                I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+                I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
       }
     }
   }
 
   private class NewAction extends FileMenuAction {
     NewAction() {
-      super(I18N.gui().get("menu.file.new"));
+      super(I18N.guiJ().get("menu.file.new"));
     }
 
     @Override
@@ -141,7 +143,7 @@ public strictfp class FileMenu
 
   private class OpenAction extends FileMenuAction {
     OpenAction() {
-      super(I18N.gui().get("menu.file.open"));
+      super(I18N.guiJ().get("menu.file.open"));
     }
 
     @Override
@@ -150,13 +152,13 @@ public strictfp class FileMenu
       offerSave();
       openFromPath
           (userChooseLoadPath(),
-              ModelType.NORMAL);
+           ModelTypeJ.NORMAL());
     }
   }
 
   private class ModelsLibraryAction extends FileMenuAction {
     ModelsLibraryAction() {
-      super(I18N.gui().get("menu.file.modelsLibrary"));
+      super(I18N.guiJ().get("menu.file.modelsLibrary"));
     }
 
     @Override
@@ -165,16 +167,16 @@ public strictfp class FileMenu
       offerSave();
       String source =
           ModelsLibraryDialog.open
-              (org.nlogo.awt.Utils.getFrame(FileMenu.this));
+              (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this));
       String modelPath = ModelsLibraryDialog.getModelPath();
       openFromSource(source, modelPath, "Loading...",
-          ModelType.LIBRARY);
+                     ModelTypeJ.LIBRARY());
     }
   }
 
   private class SaveAction extends FileMenuAction {
     SaveAction() {
-      super(I18N.gui().get("menu.file.save"));
+      super(I18N.guiJ().get("menu.file.save"));
     }
 
     @Override
@@ -186,7 +188,7 @@ public strictfp class FileMenu
 
   private class SaveAsAction extends FileMenuAction {
     SaveAsAction() {
-      super(I18N.gui().get("menu.file.saveAs"));
+      super(I18N.guiJ().get("menu.file.saveAs"));
     }
 
     @Override
@@ -202,7 +204,7 @@ public strictfp class FileMenu
     }
 
     SaveAppletAction() {
-      super(I18N.gui().get("menu.file.saveAsApplet"));
+      super(I18N.guiJ().get("menu.file.saveAsApplet"));
       // disabled for 3-D since it doesn't work - ST 2/25/05
       setEnabled(!org.nlogo.api.Version.is3D());
     }
@@ -221,7 +223,7 @@ public strictfp class FileMenu
       // workspace.getModelFileName() to guarantee consistency. this should
       // be fine since we forced a save.
       appletSaver.save
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
               app.tabs().interfaceTab().getInterfacePanel(),
               app.workspace().modelNameForDisplay(),
               exportPath,
@@ -262,7 +264,7 @@ public strictfp class FileMenu
 
   private class SaveClientAppletAction extends SaveAppletAction {
     SaveClientAppletAction() {
-      super(I18N.gui().get("menu.file.saveClientAsApplet")); // TODO i18n
+      super(I18N.guiJ().get("menu.file.saveClientAsApplet")); // TODO i18n
     }
 
     @Override
@@ -276,7 +278,7 @@ public strictfp class FileMenu
       // workspace.getModelFileName() to guarantee consistency. this should
       // be fine since we forced a save.
       appletSaver.saveClient
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
               app.workspace().getHubNetManager().getInterfaceWidth(),
               app.workspace().getHubNetManager().getInterfaceHeight(),
               app.workspace().modelNameForDisplay(),
@@ -286,7 +288,7 @@ public strictfp class FileMenu
 
   private class ExportWorldAction extends FileMenuAction {
     ExportWorldAction() {
-      super(I18N.gui().get("menu.file.export.world"));
+      super(I18N.guiJ().get("menu.file.export.world"));
     }
 
     @Override
@@ -295,10 +297,12 @@ public strictfp class FileMenu
       final String exportPath = org.nlogo.swing.FileDialog.show
           (FileMenu.this, "Export World", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("world.csv"));
+      TaskWarning.maybeWarn(org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
+                            app.workspace().world());
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply
-          (org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
            "Exporting...",
            new Runnable() {
              public void run() {
@@ -315,7 +319,7 @@ public strictfp class FileMenu
 
   private class ExportGraphicsAction extends FileMenuAction {
     ExportGraphicsAction() {
-      super(I18N.gui().get("menu.file.export.view"));
+      super(I18N.guiJ().get("menu.file.export.view"));
     }
 
     @Override
@@ -329,7 +333,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -347,7 +351,7 @@ public strictfp class FileMenu
 
   private class ExportInterfaceAction extends FileMenuAction {
     ExportInterfaceAction() {
-      super(I18N.gui().get("menu.file.export.interface"));
+      super(I18N.guiJ().get("menu.file.export.interface"));
     }
 
     @Override
@@ -361,7 +365,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -379,7 +383,7 @@ public strictfp class FileMenu
 
   private class ExportOutputAction extends FileMenuAction {
     ExportOutputAction() {
-      super(I18N.gui().get("menu.file.export.output"));
+      super(I18N.guiJ().get("menu.file.export.output"));
     }
 
     @Override
@@ -389,7 +393,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export Output", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("output.txt"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -401,7 +405,7 @@ public strictfp class FileMenu
 
   private class ExportPlotAction extends FileMenuAction {
     ExportPlotAction() {
-      super(I18N.gui().get("menu.file.export.plot"));
+      super(I18N.guiJ().get("menu.file.export.plot"));
     }
 
     @Override
@@ -411,7 +415,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export Plot", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("plot.csv"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -424,7 +428,7 @@ public strictfp class FileMenu
 
   private class ExportAllPlotsAction extends FileMenuAction {
     ExportAllPlotsAction() {
-      super(I18N.gui().get("menu.file.export.allPlots"));
+      super(I18N.guiJ().get("menu.file.export.allPlots"));
     }
 
     @Override
@@ -434,7 +438,7 @@ public strictfp class FileMenu
           (FileMenu.this, "Export All Plots", java.awt.FileDialog.SAVE,
               app.workspace().guessExportName("plots.csv"));
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -447,7 +451,7 @@ public strictfp class FileMenu
 
   private class ImportWorldAction extends ImportMenuAction {
     ImportWorldAction() {
-      super(I18N.gui().get("menu.file.import.world"));
+      super(I18N.guiJ().get("menu.file.import.world"));
     }
 
     @Override
@@ -458,7 +462,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing...",
         new Runnable() {
           public void run() {
@@ -478,7 +482,7 @@ public strictfp class FileMenu
 
   private class ImportPatchColorsAction extends ImportMenuAction {
     ImportPatchColorsAction() {
-      super(I18N.gui().get("menu.file.import.patchColors"));
+      super(I18N.guiJ().get("menu.file.import.patchColors"));
     }
 
     @Override
@@ -489,7 +493,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Patch Colors...",
         new Runnable() {
           public void run() {
@@ -514,7 +518,7 @@ public strictfp class FileMenu
 
   private class ImportPatchColorsRGBAction extends ImportMenuAction {
     ImportPatchColorsRGBAction() {
-      super(I18N.gui().get("menu.file.import.patchColorsRGB"));
+      super(I18N.guiJ().get("menu.file.import.patchColorsRGB"));
     }
 
     @Override
@@ -525,7 +529,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Patch Colors...",
         new Runnable() {
           public void run() {
@@ -550,7 +554,7 @@ public strictfp class FileMenu
 
   private class ImportDrawingAction extends ImportMenuAction {
     ImportDrawingAction() {
-      super(I18N.gui().get("menu.file.import.drawing"));
+      super(I18N.guiJ().get("menu.file.import.drawing"));
     }
 
     @Override
@@ -561,7 +565,7 @@ public strictfp class FileMenu
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(FileMenu.this),
+        org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
         "Importing Drawing...",
         new Runnable() {
           public void run() {
@@ -581,7 +585,7 @@ public strictfp class FileMenu
 
   private class ImportClientAction extends ImportMenuAction {
     ImportClientAction() {
-      super(I18N.gui().get("menu.file.import.hubNetClientInterface"));
+      super(I18N.guiJ().get("menu.file.import.hubNetClientInterface"));
     }
 
     @Override
@@ -596,11 +600,11 @@ public strictfp class FileMenu
               (app.workspace().getFrame(),
                   "Import HubNet Client",
                   "Which section would you like to import from?",
-                  new String[]{"Interface Tab", "HubNet client", I18N.gui().get("common.buttons.cancel")});
+                  new String[]{"Interface Tab", "HubNet client", I18N.guiJ().get("common.buttons.cancel")});
 
       if (choice != 2) {
         org.nlogo.swing.ModalProgressTask.apply(
-          org.nlogo.awt.Utils.getFrame(FileMenu.this),
+          org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
           "Importing Drawing...",
           new Runnable() {
             public void run() {
@@ -619,7 +623,7 @@ public strictfp class FileMenu
 
   private class QuitAction extends FileMenuAction {
     QuitAction() {
-      super(I18N.gui().get("menu.file.quit"));
+      super(I18N.guiJ().get("menu.file.quit"));
     }
 
     @Override
@@ -672,19 +676,19 @@ public strictfp class FileMenu
     String source = org.nlogo.util.Utils.url2String(model);
     if (model.equals(emptyModelPath())) {
       openFromSource(source, null, "Clearing...",
-          ModelType.NEW);
+                     ModelTypeJ.NEW());
     } else {
       // models loaded from URLs are treated as library models, since
       // they are read-only. This is currently never used, so I'm
       // not even sure it's what we would really want...
       openFromSource(source, null, "Loading...",
-          ModelType.LIBRARY);
+                     ModelTypeJ.LIBRARY());
     }
   }
 
   public void handle(org.nlogo.window.Events.OpenModelEvent e) {
     try {
-      openFromPath(e.path, ModelType.LIBRARY);
+      openFromPath(e.path, ModelTypeJ.LIBRARY());
     } catch (java.io.IOException ex) {
       throw new IllegalStateException(ex);
     }
@@ -728,7 +732,7 @@ public strictfp class FileMenu
     // map elements are { source, info, resources, version }
     Map<ModelSection, String[]> map =
         ModelReader.parseModel(source);
-    if (map == null || map.get(ModelSection.VERSION).length == 0) {
+    if (map == null || map.get(ModelSectionJ.VERSION()).length == 0) {
       notifyUserNotValidFile();
     }
     String version = org.nlogo.api.ModelReader.parseVersion(map);
@@ -776,7 +780,7 @@ public strictfp class FileMenu
           }
         };
         org.nlogo.swing.ModalProgressTask.apply(
-          org.nlogo.awt.Utils.getFrame(this), message, loader);
+          org.nlogo.awt.Hierarchy.getFrame(this), message, loader);
         app.tabs().requestFocus();
       }
     } catch (org.nlogo.window.InvalidVersionException e) {
@@ -842,7 +846,7 @@ public strictfp class FileMenu
     checkWithUserBeforeSavingModelFromOldVersion();
     Saver saver = new Saver(path);
     org.nlogo.swing.ModalProgressTask.apply(
-      org.nlogo.awt.Utils.getFrame(this), "Saving...", saver);
+      org.nlogo.awt.Hierarchy.getFrame(this), "Saving...", saver);
     if (saver.getException() != null) {
       javax.swing.JOptionPane.showMessageDialog
           (this, "Save failed.  Error: " + saver.getException().getMessage(),
@@ -862,7 +866,7 @@ public strictfp class FileMenu
 
     // check if we have an open movie
     if (app.workspace().movieEncoder != null) {
-      String[] options = {I18N.gui().get("common.buttons.ok"), I18N.gui().get("common.buttons.cancel")};
+      String[] options = {I18N.guiJ().get("common.buttons.ok"), I18N.guiJ().get("common.buttons.cancel")};
       String message = "There is a movie in progress. " +
           "Are you sure you want to exit this model? " +
           "You will lose the contents of your movie.";
@@ -889,7 +893,7 @@ public strictfp class FileMenu
       throws UserCancelException {
     String newFileName = guessFileName();
     String newDirectoryName = null;
-    if (app.workspace().getModelType() == ModelType.NORMAL) {
+    if (app.workspace().getModelType() == ModelTypeJ.NORMAL()) {
       // we only default to saving in the model dir for normal and
       // models. for library and new models, we use the current
       // FileDialog dir.
@@ -918,13 +922,13 @@ public strictfp class FileMenu
       String[] options = {"Try Again"};
       String message = "You must choose a name ending with: ." + modelSuffix();
       org.nlogo.swing.OptionDialog.show
-          (this, I18N.gui().get("common.messages.error"), message, options);
+          (this, I18N.guiJ().get("common.messages.error"), message, options);
     }
   }
 
   private boolean userWantsToSaveFirst()
       throws UserCancelException {
-    String[] options = {I18N.gui().get("common.buttons.save"), "Discard", I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.save"), "Discard", I18N.guiJ().get("common.buttons.cancel")};
     String message = "Do you want to save the changes you made to this model?";
     switch (org.nlogo.swing.OptionDialog.show
         (this, "NetLogo", message, options)) {
@@ -940,7 +944,7 @@ public strictfp class FileMenu
   private void checkWithUserBeforeSavingModelFromOldVersion()
       throws UserCancelException {
     if (!org.nlogo.api.Version.compatibleVersion(savedVersion)) {
-      String[] options = {I18N.gui().get("common.buttons.save"), I18N.gui().get("common.buttons.cancel")};
+      String[] options = {I18N.guiJ().get("common.buttons.save"), I18N.guiJ().get("common.buttons.cancel")};
       String message = "This model was made with " + savedVersion + ". "
           + "If you save it in " + org.nlogo.api.Version.version()
           + " it may not work in the old version anymore.";
@@ -954,7 +958,7 @@ public strictfp class FileMenu
 
   private void checkWithUserBeforeOpeningModelFromFutureVersion(String version)
       throws UserCancelException {
-    String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a model that was created" +
         " in a newer version of NetLogo.  (This is " +
         org.nlogo.api.Version.version() + "; " +
@@ -969,7 +973,7 @@ public strictfp class FileMenu
 
   private void checkWithUserBeforeOpening3DModelin2D(String version)
       throws UserCancelException {
-    String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a model that was created" +
         " in a 3D version of NetLogo.  (This is " +
         org.nlogo.api.Version.version() + "; " +
@@ -984,7 +988,7 @@ public strictfp class FileMenu
 
   private void checkWithUserBeforeOpening2DModelin3D()
       throws UserCancelException {
-    String[] options = {I18N.gui().get("common.buttons.continue"), I18N.gui().get("common.buttons.cancel")};
+    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
     String message = "You are attempting to open a 2D model in " +
         org.nlogo.api.Version.version() + ". " +
         "You might need to make changes before it will work in 3D.";
@@ -996,7 +1000,7 @@ public strictfp class FileMenu
 
   private void notifyUserNotValidFile()
       throws UserCancelException {
-    String[] options = {I18N.gui().get("common.buttons.ok")};
+    String[] options = {I18N.guiJ().get("common.buttons.ok")};
     org.nlogo.swing.OptionDialog.show
         (this, "NetLogo",
             "The file is not a valid NetLogo model file.",

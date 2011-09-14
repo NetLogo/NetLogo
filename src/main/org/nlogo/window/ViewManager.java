@@ -57,7 +57,7 @@ public strictfp class ViewManager {
 
   void incrementalUpdateFromJobThread() {
     try {
-      org.nlogo.awt.Utils.invokeAndWait(updateRunnable);
+      org.nlogo.awt.EventQueue.invokeAndWait(updateRunnable);
     } catch (InterruptedException ex) {
       getPrimary().repaint();
     }

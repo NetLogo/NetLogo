@@ -22,23 +22,23 @@ private object CompilerMain {
                                                displayName, program, oldProcedures, extensionManager)
       .parse(subprogram)  // process declarations
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
-    import org.nlogo.util.JCL._ // structureResults.procedures.values is a java.util.Collection
-    val lambdaNumbers = Iterator.from(1)
-    for(procedure <- structureResults.procedures.values) {
+    import collection.JavaConverters._  // structureResults.procedures.values is a java.util.Collection
+    val taskNumbers = Iterator.from(1)
+    for(procedure <- structureResults.procedures.values.asScala) {
       procedure.topLevel = subprogram
       val tokens =
         new IdentifierParser(program, oldProcedures, structureResults.procedures, false)
         .process(structureResults.tokens(procedure).iterator, procedure)  // resolve references
-      defs ++= new ExpressionParser(procedure, lambdaNumbers).parse(tokens) // parse
+      defs ++= new ExpressionParser(procedure, taskNumbers).parse(tokens) // parse
     }
     // StructureParser found the top level Procedures for us.  ExpressionParser
-    // finds command lambdas and makes Procedures out of them, too.  the remaining
+    // finds command tasks and makes Procedures out of them, too.  the remaining
     // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
     for(procdef <- defs) {
-      procdef.accept(new ReferenceVisitor)  // handle TYPE_REFERENCE
+      procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
-      procdef.accept(new LambdaVisitor)  // handle _lambdareport
+      procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
       procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
@@ -57,7 +57,7 @@ private object CompilerMain {
             .generate()
     }
     // only return top level procedures.
-    // lambda procs can be reached via the children field on Procedure.
-    defs.map(_.procedure).filterNot(_.isLambda)
+    // task procedures can be reached via the children field on Procedure.
+    defs.map(_.procedure).filterNot(_.isTask)
   }
 }

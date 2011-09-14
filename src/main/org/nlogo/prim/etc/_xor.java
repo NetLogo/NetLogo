@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _xor
     extends Reporter
@@ -20,10 +20,10 @@ public final strictfp class _xor
 
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_BOOLEAN;
-    int[] right = {Syntax.TYPE_BOOLEAN};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int left = Syntax.BooleanType();
+    int[] right = {Syntax.BooleanType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(left, right, ret,
-        Syntax.NORMAL_PRECEDENCE - 6);
+        org.nlogo.api.Syntax.NormalPrecedence() - 6);
   }
 }

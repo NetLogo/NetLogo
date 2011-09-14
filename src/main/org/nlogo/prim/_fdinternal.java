@@ -5,7 +5,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Command;
 import org.nlogo.api.Let;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.MutableDouble;
 
 // note that this and _bkinternal are pretty much carbon copies of each other
@@ -35,9 +35,9 @@ public final strictfp class _fdinternal
   public void perform_1(Context context) {
     Turtle turtle = (Turtle) context.agent;
     MutableDouble countdown = (MutableDouble) context.getLet(let);
-    double distance = countdown.value;
+    double distance = countdown.value();
     double distanceMagnitude = StrictMath.abs(distance);
-    if (distanceMagnitude <= org.nlogo.api.World.INFINITESIMAL) {
+    if (distanceMagnitude <= org.nlogo.api.Constants.Infinitesimal()) {
       context.ip = next;
       return;
     }
@@ -50,7 +50,7 @@ public final strictfp class _fdinternal
       int stepDistance = (distance > 0) ? 1 : -1;
       try {
         turtle.jump(stepDistance);
-        countdown.value -= stepDistance;
+        countdown.value_$eq(countdown.value() - stepDistance);
       } catch (AgentException e) {
         context.ip = next;
       }

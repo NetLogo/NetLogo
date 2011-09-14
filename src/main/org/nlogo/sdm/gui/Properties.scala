@@ -4,20 +4,20 @@ package org.nlogo.sdm.gui
 // so we put all of our Properties for this package here - ST 2/23/10
 
 import org.nlogo.api.{Property => P}
-import org.nlogo.util.JCL.JavaList
+import collection.JavaConverters._
 
 object Properties {
-  val converter = JavaList(
+  val converter = Seq(
     P("nameWrapper", P.Identifier, "Name"),
     P("expressionWrapper", P.Reporter, "Expression")
-  )
-  val stock = JavaList(
+  ).asJava
+  val stock = Seq(
     P("nameWrapper", P.Identifier, "Name"),
     P("initialValueExpressionWrapper", P.Reporter, "Initial value"),
     P("allowNegative", P.Boolean, "Allow negative values")
-  )
-  val rate = JavaList(
+  ).asJava
+  val rate = Seq(
     P("nameWrapper", P.Identifier, "Name"),
     P("expressionWrapper", P.Reporter, "Expression")
-  )
+  ).asJava
 }

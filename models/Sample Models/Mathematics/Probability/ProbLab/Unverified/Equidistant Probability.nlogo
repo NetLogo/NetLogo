@@ -636,7 +636,7 @@ For the "Epicenter" procedure, increase the number of squares in the view. Add i
 
 The three different ways of looking at the data in this model are the same as in Prob Graphs Basic: cumulative ratio, attempts until success ("waiting time"), and sampling.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 

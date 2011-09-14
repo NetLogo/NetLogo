@@ -895,7 +895,7 @@ For example, if a model is limited to a maximum of 400 particles, then when ther
 See GasLab Models
 See other Connected Chemistry models.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

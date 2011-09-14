@@ -66,43 +66,43 @@ public strictfp class WorldViewSettings3D
 
   @Override
   public void addCornerChoices() {
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
         new boolean[]{false, true, false,
             true, false, true},
         new boolean[]{true, false, true,
             false, true, false}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
         new boolean[]{false, true, true,
             false, false, true},
         new boolean[]{true, false, false,
             true, true, false}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
         new boolean[]{true, false, true,
             false, false, true},
         new boolean[]{false, true, false,
             true, true, false}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
         new boolean[]{true, false, false,
             true, false, true},
         new boolean[]{false, true, true,
             false, true, false}));
 
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
         new boolean[]{false, true, false,
             true, true, false},
         new boolean[]{true, false, true,
             false, false, true}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
         new boolean[]{false, true, true,
             false, true, false},
         new boolean[]{true, false, false,
             true, false, true}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
         new boolean[]{true, false, true,
             false, true, false},
         new boolean[]{false, true, false,
             true, false, true}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
         new boolean[]{true, false, false,
             true, true, false},
         new boolean[]{false, true, true,
@@ -111,32 +111,32 @@ public strictfp class WorldViewSettings3D
 
   @Override
   public void addEdgeChoices() {
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.south"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.south"),
         new boolean[]{true, true, false,
             true, true, true},
         new boolean[]{false, false, true,
             false, false, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.north"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.north"),
         new boolean[]{true, true, true,
             false, true, true},
         new boolean[]{false, false, false,
             true, false, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.east"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.east"),
         new boolean[]{true, false, true,
             true, true, true},
         new boolean[]{false, true, false,
             false, false, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.west"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.west"),
         new boolean[]{false, true, true,
             true, true, true},
         new boolean[]{true, false, false,
             false, false, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.bottom"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.bottom"),
         new boolean[]{true, true, true,
             true, false, true},
         new boolean[]{false, false, false,
             false, true, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.3D.origin.location.edge.top"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.3D.origin.location.edge.top"),
         new boolean[]{true, true, true,
             true, true, false},
         new boolean[]{false, false, false,
@@ -145,22 +145,22 @@ public strictfp class WorldViewSettings3D
 
   @Override
   public void addOriginConfigurations() {
-    originConfigurations.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.center"),
+    originConfigurations.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.center"),
         new boolean[]{false, true, false,
             true, false, true},
         new boolean[]{false, false, false,
             false, false, false}));
-    originConfigurations.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.corner"),
+    originConfigurations.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.corner"),
         new boolean[]{true, true, true,
             true, true, true},
         new boolean[]{false, false, false,
             false, false, false}));
-    originConfigurations.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.edge"),
+    originConfigurations.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.edge"),
         new boolean[]{true, true, true,
             true, true, true},
         new boolean[]{false, false, false,
             false, false, false}));
-    originConfigurations.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.custom"),
+    originConfigurations.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.custom"),
         new boolean[]{true, true, true,
             true, true, true},
         new boolean[]{false, false, false,
@@ -299,7 +299,7 @@ public strictfp class WorldViewSettings3D
         };
     if (showProgress) {
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(gWidget), "Resizing...", runnable);
+        org.nlogo.awt.Hierarchy.getFrame(gWidget), "Resizing...", runnable);
     } else {
       runnable.run();
     }
@@ -316,10 +316,10 @@ public strictfp class WorldViewSettings3D
     if (d instanceof org.nlogo.api.WorldDimensions3D) {
       org.nlogo.api.WorldDimensions3D dd = (org.nlogo.api.WorldDimensions3D) d;
       setDimensions
-          (dd.minPxcor, dd.maxPxcor, dd.minPycor, dd.maxPycor, dd.minPzcor, dd.maxPzcor);
+        (dd.minPxcor(), dd.maxPxcor(), dd.minPycor(), dd.maxPycor(), dd.minPzcor(), dd.maxPzcor());
     } else {
       setDimensions
-          (d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, 0, 0);
+        (d.minPxcor(), d.maxPxcor(), d.minPycor(), d.maxPycor(), 0, 0);
     }
   }
 

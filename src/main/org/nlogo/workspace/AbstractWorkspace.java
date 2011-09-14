@@ -104,7 +104,7 @@ public abstract strictfp class AbstractWorkspace
                               AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
     this.world = world;
     this.hubNetManagerFactory = hubNetManagerFactory;
-    modelType = ModelType.NEW;
+    modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
@@ -129,9 +129,7 @@ public abstract strictfp class AbstractWorkspace
   /**
    * Internal use only.
    */
-  public boolean isCompilerTestingMode() {
-    return false;
-  }
+  public abstract boolean compilerTestingMode();
 
   /**
    * Shuts down the background thread associated with this workspace,
@@ -280,7 +278,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   /**
-   * instantly converts the current model to ModelType.NORMAL. This is used
+   * instantly converts the current model to ModelTypeJ.NORMAL. This is used
    * by the __edit command to enable quick saving of library models. It
    * probably shouldn't be used anywhere else.
    */
@@ -290,7 +288,7 @@ public abstract strictfp class AbstractWorkspace
     if (!git.exists() || !git.isDirectory()) {
       throw new java.io.IOException("no .git directory found");
     }
-    modelType = ModelType.NORMAL;
+    modelType = ModelTypeJ.NORMAL();
     return getModelPath();
   }
 
@@ -337,8 +335,8 @@ public abstract strictfp class AbstractWorkspace
    * Basically, only normal models can get silently saved.
    */
   public boolean forceSaveAs() {
-    return modelType == ModelType.NEW
-        || modelType == ModelType.LIBRARY;
+    return modelType == ModelTypeJ.NEW()
+      || modelType == ModelTypeJ.LIBRARY();
   }
 
   public String modelNameForDisplay() {
@@ -508,16 +506,16 @@ public abstract strictfp class AbstractWorkspace
   }
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
-    writer.println(Dump.csv.header("MODEL SETTINGS"));
-    List<String> globals = world.program().interfaceGlobals;
-    writer.println(Dump.csv.variableNameRow(globals));
+    writer.println(Dump.csv().header("MODEL SETTINGS"));
+    List<String> globals = world.program().interfaceGlobals();
+    writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
     for (Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
           world.getObserverVariableByName(iter.next());
     }
-    writer.println(Dump.csv.dataRow(values));
+    writer.println(Dump.csv().dataRow(values));
     writer.println();
   }
 
@@ -526,7 +524,7 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract void clearAll();
 
-  protected abstract org.nlogo.agent.Importer.ErrorHandler getImporterErrorHandler();
+  protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();
 
   public void importWorld(String filename)
       throws java.io.IOException {
@@ -539,7 +537,7 @@ public abstract strictfp class AbstractWorkspace
           public void doImport(java.io.BufferedReader reader)
               throws java.io.IOException {
             world.importWorld
-                (getImporterErrorHandler(), AbstractWorkspace.this,
+                (importerErrorHandler(), AbstractWorkspace.this,
                     stringReader(), reader);
           }
         });
@@ -551,7 +549,7 @@ public abstract strictfp class AbstractWorkspace
     // extensions are hanging on to old data. ev 4/10/09
     clearAll();
     world.importWorld
-        (getImporterErrorHandler(), AbstractWorkspace.this,
+        (importerErrorHandler(), AbstractWorkspace.this,
             stringReader(), new java.io.BufferedReader(reader));
   }
 
@@ -561,7 +559,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-              (s, world, extensionManager, world.program().is3D);
+            (s, world, extensionManager, world.program().is3D());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -591,8 +589,8 @@ public abstract strictfp class AbstractWorkspace
       throws java.io.IOException {
     org.nlogo.api.File file = new org.nlogo.api.LocalFile(importer.filename());
     try {
-      file.open(org.nlogo.api.File.Mode.READ);
-      importer.doImport(file.getBufferedReader());
+      file.open(org.nlogo.api.FileModeJ.READ());
+      importer.doImport(file.reader());
     } finally {
       try {
         file.close(false);
@@ -639,9 +637,8 @@ public abstract strictfp class AbstractWorkspace
                                             String experimentName,
                                             boolean includeHeader)
       throws java.io.IOException {
-    org.nlogo.api.File file =
-        new org.nlogo.api.LocalFile(filename, ".csv");
-    file.open(org.nlogo.api.File.Mode.WRITE);
+    org.nlogo.api.File file = new org.nlogo.api.LocalFile(filename);
+    file.open(org.nlogo.api.FileModeJ.WRITE());
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
           (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);
@@ -690,7 +687,7 @@ public abstract strictfp class AbstractWorkspace
   public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
     return compiler().autoConvert
         (source, subprogram, reporter, modelVersion,
-            this, true, world().program().is3D);
+         this, true, world().program().is3D());
   }
 
   public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
@@ -712,7 +709,7 @@ public abstract strictfp class AbstractWorkspace
   public Object readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString
-        (source, world, getExtensionManager(), world.program().is3D);
+      (source, world, getExtensionManager(), world.program().is3D());
   }
 
   public void checkReporterSyntax(String source)
@@ -729,7 +726,7 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().is3D);
+      compiler().readFromString(s, world.program().is3D());
       return true;
     }
     catch(CompilerException e) {
@@ -738,12 +735,12 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().is3D);
+    return compiler().isValidIdentifier(s, world.program().is3D());
   }
 
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
-        (s, getExtensionManager(), world.program().is3D);
+      (s, getExtensionManager(), world.program().is3D());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
@@ -751,7 +748,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().is3D);
+    return compiler().findProcedurePositions(source, world.program().is3D());
   }
 
   public abstract org.nlogo.nvm.CompilerInterface compiler();
@@ -760,6 +757,8 @@ public abstract strictfp class AbstractWorkspace
     return null;
   }
 
-  public void clearLastLogoException() {
-  }
+  public void clearLastLogoException() { }
+
+  public void lastLogoException_$eq(LogoException e) { }
+
 }

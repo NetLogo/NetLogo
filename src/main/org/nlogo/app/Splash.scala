@@ -10,7 +10,7 @@ object Splash {
     splashWindow = new javax.swing.JWindow
     splashWindow.getContentPane.add(new MyIconHolder)
     splashWindow.pack()
-    org.nlogo.awt.Utils.center(splashWindow, null)
+    org.nlogo.awt.Positioning.center(splashWindow, null)
     splashWindow.setVisible(true)
   }
 

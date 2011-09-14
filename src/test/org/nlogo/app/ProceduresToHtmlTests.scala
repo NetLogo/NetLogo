@@ -1,7 +1,7 @@
 package org.nlogo.app
 
 import org.scalatest.FunSuite
-import org.nlogo.api.FileIO.file2String
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.util.SlowTest
 
 class ProceduresToHtmlTests extends FunSuite with SlowTest {
@@ -15,9 +15,11 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
            |""".stripMargin)(
       convert("to foo\n  crt 10\nend"))
   }
-  // very long Code tabs shouldn't blow the stack
-  test("don't blow stack") {
-    val path = "test/applet/Really Long Code.nls"
-    expect(1014842)(convert(file2String(path)).size)
-  }
+  // can be very slow, so restrict to 2D to keep overall nightly.sh runtime down - ST 6/24/11
+  if(!Version.is3D)
+    // very long Code tabs shouldn't blow the stack.  
+    test("don't blow stack") {
+      val path = "test/applet/Really Long Code.nls"
+      expect(1014842)(convert(FileIO.file2String(path)).size)
+    }
 }

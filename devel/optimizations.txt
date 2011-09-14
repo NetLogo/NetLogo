@@ -1,3 +1,6 @@
+@ = got lost between 4.0 and 4.1 when the optimizer was rewritten from
+the ground up. maybe should be re-added someday.
+
 == Visitors
 
 reduce interpreter overhead by reducing arity:
@@ -14,7 +17,7 @@ early loop exit:
   _greatherthan(_countwith,_constdouble:0) => _anywith
   _notequal(_countwith,_constdouble:0) => _anywith
   _equal(_countwith,_constdouble:0) => _not(_anywith)
-@ _oneof(_with) => _oneofwith
+  _oneof(_with) => _oneofwith
 @ _any(_breedon) => _anybreedon
 @ _any(_turtleson) => _anyturtleson
 @ _equal(_count,_constdouble:0) => _not(_any)

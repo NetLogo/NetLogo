@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
@@ -27,19 +27,19 @@ public strictfp class Turtle
     variables[VAR_WHO] = Double.valueOf(id);
   }
 
-  public static final int VAR_WHO = AgentVariables.VAR_WHO;
-  public static final int VAR_COLOR = AgentVariables.VAR_COLOR;
-  public static final int VAR_HEADING = AgentVariables.VAR_HEADING;
-  public static final int VAR_XCOR = AgentVariables.VAR_XCOR;
-  public static final int VAR_YCOR = AgentVariables.VAR_YCOR;
-  static final int VAR_SHAPE = AgentVariables.VAR_SHAPE;
-  public static final int VAR_LABEL = AgentVariables.VAR_LABEL;
-  private static final int VAR_LABELCOLOR = AgentVariables.VAR_LABELCOLOR;
-  static final int VAR_BREED = AgentVariables.VAR_BREED;
-  private static final int VAR_HIDDEN = AgentVariables.VAR_HIDDEN;
-  private static final int VAR_SIZE = AgentVariables.VAR_SIZE;
-  private static final int VAR_PENSIZE = AgentVariables.VAR_PENSIZE;
-  private static final int VAR_PENMODE = AgentVariables.VAR_PENMODE;
+  public static final int VAR_WHO = AgentVariableNumbers.VAR_WHO;
+  public static final int VAR_COLOR = AgentVariableNumbers.VAR_COLOR;
+  public static final int VAR_HEADING = AgentVariableNumbers.VAR_HEADING;
+  public static final int VAR_XCOR = AgentVariableNumbers.VAR_XCOR;
+  public static final int VAR_YCOR = AgentVariableNumbers.VAR_YCOR;
+  static final int VAR_SHAPE = AgentVariableNumbers.VAR_SHAPE;
+  public static final int VAR_LABEL = AgentVariableNumbers.VAR_LABEL;
+  private static final int VAR_LABELCOLOR = AgentVariableNumbers.VAR_LABELCOLOR;
+  static final int VAR_BREED = AgentVariableNumbers.VAR_BREED;
+  private static final int VAR_HIDDEN = AgentVariableNumbers.VAR_HIDDEN;
+  private static final int VAR_SIZE = AgentVariableNumbers.VAR_SIZE;
+  private static final int VAR_PENSIZE = AgentVariableNumbers.VAR_PENSIZE;
+  private static final int VAR_PENMODE = AgentVariableNumbers.VAR_PENMODE;
 
   public int LAST_PREDEFINED_VAR = VAR_PENMODE;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
@@ -50,7 +50,7 @@ public strictfp class Turtle
 
 
   void initvars(Double xcor, Double ycor, AgentSet breed) {
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     heading = 0;
     variables[VAR_HEADING] = World.ZERO;
     this.xcor = xcor.doubleValue();
@@ -59,7 +59,7 @@ public strictfp class Turtle
     variables[VAR_YCOR] = ycor;
     variables[VAR_SHAPE] = world.turtleBreedShapes.breedShape(breed);
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_BREED] = breed;
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_SIZE] = World.ONE;
@@ -153,7 +153,7 @@ public strictfp class Turtle
     Patch target = world.getTopology().getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }
     return target;
   }
@@ -219,8 +219,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);
@@ -252,7 +252,7 @@ public strictfp class Turtle
   private void mustOwn(String name)
       throws AgentException {
     if (name != null && !world.breedOwns(getBreed(), name)) {
-      throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
+      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
           getBreed().printName(), name));
     }
   }
@@ -276,7 +276,7 @@ public strictfp class Turtle
 
   @Override
   public Object getTurtleOrLinkVariable(String varName) {
-    return getTurtleVariable(world.program().turtlesOwn.indexOf(varName));
+    return getTurtleVariable(world.program().turtlesOwn().indexOf(varName));
   }
 
   @Override
@@ -316,7 +316,7 @@ public strictfp class Turtle
         return penSize();
       default:
         throw new IllegalArgumentException
-            (I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+            (I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -324,7 +324,7 @@ public strictfp class Turtle
   public Object getLinkBreedVariable(String name)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
   }
 
   @Override
@@ -356,14 +356,14 @@ public strictfp class Turtle
     if (vn != -1) {
       return getTurtleVariable(vn);
     }
-    throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable", this.toString(), name));
+    throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable", this.toString(), name));
   }
 
   @Override
   public Object getLinkVariable(int vn)
       throws AgentException {
     throw new AgentException
-        (I18N.errors().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
   }
 
   @Override
@@ -380,7 +380,7 @@ public strictfp class Turtle
   @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
-    setTurtleVariable(world.program().turtlesOwn.indexOf(varName), value);
+    setTurtleVariable(world.program().turtlesOwn().indexOf(varName), value);
   }
 
   @Override
@@ -406,9 +406,9 @@ public strictfp class Turtle
         penSize(value);
         break;
       case VAR_WHO:
-        throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho"));
+        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
       default:
-        throw new IllegalArgumentException(I18NJava.errors().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
     }
   }
 
@@ -458,7 +458,7 @@ public strictfp class Turtle
             String newShape = world.checkTurtleShapeName((String) value);
             if (newShape == null) {
               throw new AgentException
-                  (I18NJava.errors().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+                  (I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
             }
             shape(newShape);
           } else {
@@ -483,7 +483,7 @@ public strictfp class Turtle
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.turtles() && !world.isBreed(breed)) {
-              throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
+              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
             }
             setBreed(breed);
           } else {
@@ -527,9 +527,9 @@ public strictfp class Turtle
           break;
 
         case VAR_WHO:
-          throw new AgentException(I18N.errors().get("org.nlogo.agent.Turtle.cantChangeWho"));
+          throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
         default:
-          throw new IllegalStateException(I18NJava.errors().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
+          throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
       }
     }
   }
@@ -583,7 +583,7 @@ public strictfp class Turtle
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }
@@ -598,6 +598,9 @@ public strictfp class Turtle
       throws AgentException {
     validRGBList(rgb, true);
     variables[varIndex] = rgb;
+    if(rgb.size() > 3) {
+      world.mayHavePartiallyTransparentObjects = true;
+    }
   }
 
   public void turnRight(double delta) {
@@ -1044,8 +1047,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);
@@ -1060,8 +1063,8 @@ public strictfp class Turtle
       cachedHeading = heading;
       int integerHeading = (int) heading;
       if (heading == integerHeading) {
-        cachedCosine = TrigTables.cos[integerHeading];
-        cachedSine = TrigTables.sin[integerHeading];
+        cachedCosine = TrigTables.cos()[integerHeading];
+        cachedSine = TrigTables.sin()[integerHeading];
       } else {
         double headingRadians = StrictMath.toRadians(heading);
         cachedCosine = StrictMath.cos(headingRadians);
@@ -1122,7 +1125,7 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<Object> iter = world.program().breeds.values().iterator(); iter.hasNext(); j++) {
+    for (Iterator<Object> iter = world.program().breeds().values().iterator(); iter.hasNext(); j++) {
       if (mybreed == ((AgentSet) iter.next())) {
         return j;
       }
@@ -1208,4 +1211,10 @@ public strictfp class Turtle
   public int getAgentBit() {
     return BIT;
   }
+
+  public int alpha() {
+    return org.nlogo.api.Color.getColor(color()).getAlpha();
+  }
+
+
 }

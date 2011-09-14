@@ -12,7 +12,7 @@ object InterfaceComponentTester {
   def main(args: Array[String]) {
     invokeLater { new InterfaceComponentTester } }
   def invokeLater(body: => Unit) {
-    awt.Utils.invokeLater(
+    awt.EventQueue.invokeLater(
       new Runnable { override def run() {
         body }})}
 }
@@ -24,7 +24,7 @@ class InterfaceComponentTester extends JFrame {
   val gaslab = models + "Chemistry & Physics/GasLab/GasLab Free Gas.nlogo"
   val comp = new InterfaceComponent(frame)
   comp.listenerManager.addListener(new NoisyListener)
-  def frame = awt.Utils.getFrame(this)
+  def frame = awt.Hierarchy.getFrame(this)
 
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(comp, BorderLayout.CENTER)

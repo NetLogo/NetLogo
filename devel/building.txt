@@ -68,6 +68,7 @@ misc:
 - do all of the checks in netlogo/devel/checks.txt
   (or maybe skip some, especially if it's not a public release...)
 - update version number and date in resources/system/version.txt
+  and project/build.properties
   (replace INTERIM DEVEL BUILD with date, e.g. "Octember 42, 2525")
 - update the version compatibility tests in org.nlogo.api.TestVersion?
 - update copyright year in org/nlogo/app/AboutWindow.java,

@@ -40,7 +40,7 @@ class StartupDialog(parent: Frame) extends JDialog(parent, true) {
     setTitle("Start HubNet Activity")
     setResizable(false)
     pack()
-    org.nlogo.awt.Utils.center(this, parent)
+    org.nlogo.awt.Positioning.center(this, parent)
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   }
 }

@@ -29,7 +29,7 @@ public strictfp class OptionDialog
 
   public static int show(java.awt.Component owner, String title,
                          String message, Object[] options) {
-    List<String> brokenLines = org.nlogo.awt.Utils.breakLines
+    List<String> brokenLines = org.nlogo.awt.LineBreaker.breakLines
         (message,
             owner.getFontMetrics(owner.getFont()), DIALOG_WIDTH);
     StringBuilder brokenMessage = new StringBuilder();
@@ -40,7 +40,7 @@ public strictfp class OptionDialog
       }
     }
     return javax.swing.JOptionPane.showOptionDialog
-        (org.nlogo.awt.Utils.getFrame(owner),
+        (org.nlogo.awt.Hierarchy.getFrame(owner),
             brokenMessage.toString(), title,
             javax.swing.JOptionPane.DEFAULT_OPTION,
             javax.swing.JOptionPane.QUESTION_MESSAGE,
@@ -64,7 +64,7 @@ public strictfp class OptionDialog
                                String message, Object[] options) {
     return Arrays.asList(options).indexOf
         (javax.swing.JOptionPane.showInputDialog
-            (org.nlogo.awt.Utils.getFrame(owner),
+            (org.nlogo.awt.Hierarchy.getFrame(owner),
                 message, title,
                 javax.swing.JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]));

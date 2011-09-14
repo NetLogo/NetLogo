@@ -1,6 +1,6 @@
 package org.nlogo.gl.render
 
-import org.nlogo.api.{ Agent, Turtle3D, World, World3D }
+import org.nlogo.api.{ Agent, Constants, Turtle3D, World, World3D }
 import javax.media.opengl.GL
 
 private class TurtleRenderer3D(world: World, shapeRenderer: ShapeRenderer)
@@ -19,13 +19,13 @@ extends TurtleRenderer(world, shapeRenderer) {
     val pitchRadians = math.toRadians(t.pitch)
     var cosPitch = math.cos(pitchRadians)
     var sinPitch = math.sin(pitchRadians)
-    if(math.abs(cosHeading) < World.INFINITESIMAL)
+    if(math.abs(cosHeading) < Constants.Infinitesimal)
       cosHeading = 0
-    if(math.abs(sinHeading) < World.INFINITESIMAL)
+    if(math.abs(sinHeading) < Constants.Infinitesimal)
       sinHeading = 0
-    if(math.abs(cosPitch) < World.INFINITESIMAL)
+    if(math.abs(cosPitch) < Constants.Infinitesimal)
       cosPitch = 0
-    if(math.abs(sinPitch) < World.INFINITESIMAL)
+    if(math.abs(sinPitch) < Constants.Infinitesimal)
       sinPitch = 0
     Array(dist * sinHeading * cosPitch * Renderer.WORLD_SCALE,
           dist * cosHeading * cosPitch * Renderer.WORLD_SCALE,

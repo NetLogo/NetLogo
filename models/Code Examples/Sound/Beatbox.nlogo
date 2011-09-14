@@ -47,6 +47,7 @@ to setup
     ask patch-ahead 8 [ set plabel [instrument] of myself ]
   ]
   label-beats
+  reset-ticks
 end
 
 ;; this puts text in the top row and draws gray columns;
@@ -137,6 +138,7 @@ to rewind
   ask drummers [
     set xcor -1 * max-pxcor
   ]
+  reset-ticks
 end
 
 to load-file
@@ -182,6 +184,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 9
@@ -660,7 +663,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 import-world "Beats/seth3.csv"
 @#$#@#$#@

@@ -1,6 +1,6 @@
 package org.nlogo.app
 
-import org.nlogo.awt.Utils
+import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Implicits._
 import org.nlogo.api.I18N
 import javax.swing.JMenuItem
@@ -9,8 +9,8 @@ class ProceduresMenu(target: ProceduresMenuTarget)
         extends org.nlogo.swing.ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
   override def populate(menu: javax.swing.JPopupMenu) { 
     val procsTable = {
-      import org.nlogo.util.JCL._
-      target.compiler.findProcedurePositions(target.getText).mapValues(_.toList).toMap
+      import collection.JavaConverters._
+      target.compiler.findProcedurePositions(target.getText).asScala.mapValues(_.asScala.toList).toMap
     }
     val procs = procsTable.values.map(_.head.asInstanceOf[String]).toList
     if(procs.isEmpty) menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })
@@ -23,7 +23,7 @@ class ProceduresMenu(target: ProceduresMenuTarget)
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
           target.select(endPos, endPos)
-          Utils.invokeLater{() =>
+          EventQueue.invokeLater{() =>
             target.select(namePos, namePos + proc.size)  // highlight the name
           }
         }

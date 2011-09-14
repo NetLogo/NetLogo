@@ -4,7 +4,7 @@ import org.nlogo.api.CSV
 
 class PlotExporterTests extends SimplePlotTest {
 
-  val csv = new CSV(new CSV.ObjectDumper { def dump(obj:Object) = obj.toString })
+  val csv = new CSV(_.toString)
 
   val EXPORT_RESULT =
     "\"test plot\"\n" +

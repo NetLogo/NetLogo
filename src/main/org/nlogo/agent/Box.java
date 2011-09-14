@@ -17,7 +17,7 @@ final strictfp class Box
     double max = world.maxPxcor() + 0.5;
     double min = world.minPxcor() - 0.5;
     if (x >= max || x < min) {
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
     }
     return x;
   }
@@ -28,7 +28,7 @@ final strictfp class Box
     double max = world.maxPycor() + 0.5;
     double min = world.minPycor() - 0.5;
     if (y >= max || y < min) {
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
     }
     return y;
   }

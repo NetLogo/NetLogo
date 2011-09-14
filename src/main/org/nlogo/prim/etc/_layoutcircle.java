@@ -8,15 +8,15 @@ import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _layoutcircle
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_TURTLESET | Syntax.TYPE_LIST,
-            Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.TurtlesetType() | Syntax.ListType(),
+            Syntax.NumberType()},
             true);
   }
 
@@ -33,7 +33,7 @@ public final strictfp class _layoutcircle
         if (set.type() != Turtle.class) {
           throw new EngineException
               (context, this,
-                  I18N.errors().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
+                  I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
         }
         org.nlogo.agent.Layouts.circle(set, radius, context.job.random);
       }

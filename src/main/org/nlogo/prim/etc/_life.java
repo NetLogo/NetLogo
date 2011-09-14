@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 /*
 to go
@@ -33,11 +33,11 @@ public final strictfp class _life
     int patchCount = world.patches().count();
     double fgcolor =
         ((Double) world.observer().variables
-            [world.program().globals.indexOf("FGCOLOR")])
+            [world.program().globals().indexOf("FGCOLOR")])
             .doubleValue();
     double bgcolor =
         ((Double) world.observer().variables
-            [world.program().globals.indexOf("BGCOLOR")])
+            [world.program().globals().indexOf("BGCOLOR")])
             .doubleValue();
     for (int i = 0; i < patchCount; i++) {
       Patch patch = world.getPatch(i);

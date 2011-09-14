@@ -11,9 +11,11 @@ object ConnectionTypes{
  *                 should see all the server controls, and should have the ability
  *                 to start/stop the activity, kick other clients, and so on.
  */
-object ClientRoles extends Enumeration{
-  type ClientRole = Value
-  val Participant = Value("Participant")
-  val Controller = Value("Controller")
+object ClientRole {
+  val Participant = ClientRole("Participant")
+  val Controller = ClientRole("Controller")
 }
+
+case class ClientRole(name:String)
+
 

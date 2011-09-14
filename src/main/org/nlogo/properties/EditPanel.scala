@@ -32,8 +32,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     val properties = target.propertySet
     val layout = new GridBagLayout()
     setLayout(layout)
-    getsFirstFocus = addProperties(
-      this,org.nlogo.util.JCL.iterableToScalaIterable(properties), layout)
+    getsFirstFocus = {
+      import collection.JavaConverters._
+      addProperties(this, properties.asScala, layout)
+    }
     getsFirstFocus
   }
   def addProperties(editorPanel: JPanel, properties: Iterable[Property],
@@ -224,6 +226,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     }
   }
 
-  private def frame = org.nlogo.awt.Utils.getFrame(this)
+  private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
 }

@@ -2,13 +2,12 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _removeitem
     extends Reporter
@@ -19,13 +18,13 @@ public final strictfp class _removeitem
     Object obj = args[1].report(context);
     if (index < 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
     }
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (index >= list.size()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
                 index, Dump.logoObject(list), list.size()));
       }
       return list.removeItem(index);
@@ -33,7 +32,7 @@ public final strictfp class _removeitem
       String string = (String) obj;
       if (index >= string.length()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsStringSize",
                 index, Dump.logoObject(string), string.length()));
       }
       StringBuilder buf = new StringBuilder();
@@ -42,15 +41,15 @@ public final strictfp class _removeitem
       return buf.toString();
     } else {
       throw new ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_LIST | Syntax.TYPE_STRING},
-            Syntax.TYPE_LIST | Syntax.TYPE_STRING);
+        (new int[]{Syntax.NumberType(),
+            Syntax.ListType() | Syntax.StringType()},
+            Syntax.ListType() | Syntax.StringType());
   }
 }

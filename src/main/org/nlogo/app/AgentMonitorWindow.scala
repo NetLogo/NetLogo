@@ -140,10 +140,10 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def repaintPrompt() { }
     override def vars = {
       val allGlobals = workspace.world.program.globals
-      val result = new java.util.ArrayList[String]
-      import org.nlogo.util.JCL._
-      result.addAll(allGlobals.drop(workspace.world.program.interfaceGlobals.size))
-      result
+      import collection.JavaConverters._
+      allGlobals.asScala
+        .drop(workspace.world.program.interfaceGlobals.size)
+        .toList.asJava
     }
   }
 

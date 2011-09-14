@@ -37,7 +37,7 @@ clients-own
 ;;
 
 to startup
-  ca
+  clear-all
   setup
   hubnet-reset
 end
@@ -337,6 +337,7 @@ GRAPHICS-WINDOW
 1
 0
 Rolls
+30.0
 
 BUTTON
 39
@@ -353,6 +354,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 139
@@ -369,6 +371,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 PLOT
 5
@@ -421,6 +424,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 624
@@ -448,6 +452,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 554
@@ -461,36 +466,34 @@ rolls
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Dice Stalagmite HubNet is a Participatory Simulation Activity (PSA) in probability for exploring dependent and independent events.  Specifically, you compare the outcome distribution of a compound event, the sum of two randomly "rolled" dice, to the outcome distribution of independent events, the values of these same dice, taken one die at a time.
 
 This model is a part of the ProbLab curriculum.  The ProbLab curriculum is currently under development at the CCL.  For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Participants each roll their own pair of dice (preferably dice of different colors) and input the outcome, for example, "5 2", through the client interface.  Each outcome appears at the top middle of the server interface, in the form of the same two dice.  Then, this pair is duplicated, and one pair moves to the right (the pair), and the other pair moves to the left (the singles).  On each side, there is a "picture bar chart": on the right, the bar chart is for sums of dice (2 through 12) and on the left, the bar chart is for individual die values (1 through 6).  The dice have to find their columns and slide down those columns.  On the right, the dice find the column of their sum, and on the left, the dice each finds its own column of its value.  The events in each of the charts are mirrored in their respective histograms.
 
 As the dice stack up, you begin to notice different typical distributions in each bar chart.  The "singles" chart (SINGLE DICE), on the left, grows to become equally distributed.  It's never really "flat," but we can never predict in advance which column will "win."  On the other hand, the "pairs" bar chart (PAIR SUMS), on the right, always grows to the shape of a triangle -- the closer a column is to the middle of the of chart, the taller it will be, eventually.
 
 This triangle of pairs emerges as a result of the probabilities of rolling each sum with a pair of dice.  These probabilities can be found by examining the number of ways there are to roll each sum, as shown below.
 
-|                           61
-|                        51 52 62
-|                     41 42 43 53 63
-|                  31 32 33 34 44 54 64
-|               21 22 23 24 25 35 45 55 65
-|            11 12 13 14 15 16 26 36 46 56 66
+                               61
+                            51 52 62
+                         41 42 43 53 63
+                      31 32 33 34 44 54 64
+                   21 22 23 24 25 35 45 55 65
+                11 12 13 14 15 16 26 36 46 56 66
 
 For example, there are four ways to roll a 5 (14, 23, 32 and 41), and thus the probability of rolling a 5 is 4/36, or 1/9.
 
-A printable sheet graphically depicting all of the combinations can be found here:
+A printable sheet graphically depicting all of the combinations can be found here:  
 http://ccl.northwestern.edu/curriculum/ProbLab/dice-total-distrib.doc
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Make sure all participants are connected and have their clients.  Press GO.  Participants each roll their own pair of dice and then use their interface to input the result of the roll.  It is helpful (but not absolutely important) to have dice of different colors, because then you can differentiate between, say, a "2 5" and a "5 2."  That is helpful for comparing the outcomes to the combinatorial analysis of a pair of dice.
 
 Make sure your participants understand the difference between the two charts and how the dice find their columns (independently, on the left, and as a pair, on the right).  You can use the RANDOM-ROLL button and the speed slider to show this.
@@ -499,7 +502,7 @@ Once you see that the sums chart is beginning to grow its "bump" in the middle, 
 
 IMPORTANT NOTE: Because there is limited space in the view, when dice are stacking up near the top of either the singles area or the pairs area, the program bumps the die columns down, so that they can keep growing.  A useful way to think about this is that you are always looking at only the top section of each dice stack.  The plots, however, keep track of all the dice that have been rolled.
 
-Buttons:
+Buttons:  
 SETUP -- reset the dice in the world but keep the logged in clients.
 
 GO -- GO needs to be running so that participants can submit their dice rolls, and so that the dice can move (e.g. from RANDOM-ROLL).
@@ -508,49 +511,44 @@ RANDOM-ROLL -- creates a random pair of dice that behaves the same as though it 
 
 AUTO-FILL -- creates random pairs in a loop.
 
-Switches:
+Switches:  
 COLORED-DICE? -- when set to "On", the dice that are created will be color-coded (from a set of 12 different colors) based on what client "rolled" them.
 
-Monitors:
+Monitors:  
 ROLLS -- the total number of rolls performed including random rolls and rolls from clients.
 
-Plots:
+Plots:  
 SINGLE DICE -- histogram of independent outcomes of rolling dice (each die value is a separate event).
 
 PAIR SUMS -- histogram of compound outcomes from rolling dice (each sum of a pair of dice is an event).
 
 To start the activity over with the same group of students stop the GO button by pressing it again, press the SETUP button, and press GO again.  To run the activity with a new group of students press the RESET button in the Control Center.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The more events you stack up in the charts, the more the PAIR SUMS chart will take on a triangular shape.  Eventually, the '7' column will be the tallest, and then, in descending order, the '5' and '8,' the '4' and '9,' the '3' and '10,' the '2' and '11,' and the '1' and '12.'  The chart will not necessarily be perfect, but the more input the program gets, the closer the chart will approach this shape.
 
-At the same time, the SINGLE DICE graph approaches the shape of an equal distribution.
+At the same time, the SINGLE DICE graph approaches the shape of an equal distribution.  
 The SINGLE DICE is never exactly equally distributed.  If you look at the chart, you'll see that one of the columns is "beating" the other columns.  So why do we call it "equally distributed" if it's not really equal?  Well, it may depend on whether we are attending to the differences between the heights of the columns (an "additive" approach) or if we're attending to the proportions of the heights (a "multiplicative" approach).  Once you've accumulated hundreds of pairs of dice, one column may be over ten rows taller than another, but when you look at its plot, SINGLE DIE, this difference will not appear as large as it is in the bar chart of the display.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 If you are working alone on this PSA, for instance, if you are preparing for class, press GO and then type in the Command Center: simulate 1000.  This will allow you to see how the charts will look after, say, 30 students have each input 34 rolls.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Why settle for a pair of dice?  How would the charts look for three dice?  Do you expect any difference in the shapes of the outcome distributions?  Would the SINGLE DICE graph change at all?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-This model animates the movement of the dice and uses the DISPLAY command to show the intermediate states.
+This model animates the movement of the dice and uses the `display` command to show the intermediate states.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 See the ProbLab model Dice Stalagmite that is essentially the same activity but is designed to be used by a single person.  See the ProbLab model 9-Block Stalagmite that conveys the same ideas as this model does but uses a different stochastic object (not a pair of dice).
 
-
 ## CREDITS AND REFERENCES
+
 Thanks to Dor Abrahamson for his work on the design of this model and the ProbLab curriculum.  Thanks to Josh Unterman for building Dice Stalagmite and to Steve Gorodetskiy for converting it to the Dice Stalagmite HubNet.
 @#$#@#$#@
 default
@@ -872,7 +870,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

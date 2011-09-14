@@ -29,7 +29,7 @@ class TestCompileAll extends FunSuite with SlowTest{
     // this keeps patches from being created, which we don't need,
     // and which was slowing things down - ST 1/13/05
     // and has some other effects - ST 12/6/07
-    workspace.setCompilerTestingMode(true)
+    workspace.compilerTestingMode = true
     try {
       workspace.open(path)
       // compile BehaviorSpace experiments

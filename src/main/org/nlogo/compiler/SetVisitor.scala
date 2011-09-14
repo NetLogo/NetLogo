@@ -1,7 +1,10 @@
 package org.nlogo.compiler
+
+import org.nlogo.api.I18N
 import org.nlogo.compiler.CompilerExceptionThrowers.exception
 import org.nlogo.nvm.{Command,Reporter}
 import org.nlogo.prim._
+
 /**
  * an AstVisitor that handles the set command. We convert constructs like
  * "_set(var, value)" into more specific things like
@@ -9,7 +12,8 @@ import org.nlogo.prim._
  * knows internally the variable it's setting.
  */
 private class SetVisitor extends DefaultAstVisitor {
-  private val INVALID_SET = "This isn't something you can use \"set\" on"
+  private val INVALID_SET =
+    I18N.errors.get("compiler.SetVisitor.notSettable")
   override def visitStatement(stmt:Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {

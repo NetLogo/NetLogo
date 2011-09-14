@@ -3,19 +3,18 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _face
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_TURTLE | Syntax.TYPE_PATCH},
+        (new int[]{Syntax.TurtleType() | Syntax.PatchType()},
             "OT--", true);
   }
 
@@ -29,11 +28,11 @@ public final strictfp class _face
       throws LogoException {
     if (target instanceof org.nlogo.agent.Link) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
     if (target.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
     }
     if (context.agent instanceof Turtle) {
       ((Turtle) context.agent).face(target, true);

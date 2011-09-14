@@ -3,7 +3,7 @@
 ;; Code Tab of the System Dynamics Modeler.
 
 to setup
-  ca
+  clear-all
   system-dynamics-setup
   system-dynamics-do-plot
 end
@@ -444,7 +444,7 @@ NetLogo 5.0beta1
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@
-0.1
+0.001
     org.nlogo.sdm.gui.AggregateDrawing 25
         org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 175 233 88 60 40
             org.nlogo.sdm.gui.WrappedStock "sheep" "100" 1

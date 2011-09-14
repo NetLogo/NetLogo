@@ -5,7 +5,7 @@ import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 // Note that _callreport is "CustomGenerated".  That means that the

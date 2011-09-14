@@ -39,7 +39,7 @@ object ModelLoader {
             val response = {
               val message = "This model was created in " + version +
                       ". You may need to make changes for it to work in " +
-                      org.nlogo.api.Version.version() + "."
+                      org.nlogo.api.Version.version + "."
               val options = Array[Object](I18N.gui.get("common.buttons.continue"), "Open Transition Guide", I18N.gui.get("common.buttons.cancel"))
               org.nlogo.swing.OptionDialog.show(linkParent, I18N.gui.get("common.messages.warning"), message, options)
             }
@@ -68,16 +68,16 @@ object ModelLoader {
           new RemoveAllJobsEvent(), new LoadBeginEvent())
 
         val sectionTypes = List(
-          ModelSection.PREVIEW_COMMANDS,
-          ModelSection.SOURCE,
-          ModelSection.INFO,
-          ModelSection.WIDGETS,
-          ModelSection.AGGREGATE,
-          ModelSection.SHAPES,
-          ModelSection.EXPERIMENTS,
-          ModelSection.CLIENT,
-          ModelSection.LINK_SHAPES,
-          ModelSection.MODEL_SETTINGS)
+          ModelSection.PreviewCommands,
+          ModelSection.Code,
+          ModelSection.Info,
+          ModelSection.Interface,
+          ModelSection.SystemDynamics,
+          ModelSection.TurtleShapes,
+          ModelSection.BehaviorSpace,
+          ModelSection.HubNetClient,
+          ModelSection.LinkShapes,
+          ModelSection.ModelSettings)
 
         val loadSectionEvents = sectionTypes.map { section => // kludgey - ST 2/11/08
           val lines = (section, map.get(section).length) match {
@@ -85,12 +85,12 @@ object ModelLoader {
             // so the default shapes must be loaded -- or maybe it's a model (such as the
             // default model) that was hand-edited to have no shapes in it, so it always gets
             // the default shapes when opened. - ST 9/2/03
-            case (ModelSection.SHAPES, 0) => ModelReader.defaultShapes
-            case (ModelSection.LINK_SHAPES, 0) => ModelReader.defaultLinkShapes
+            case (ModelSection.TurtleShapes, 0) => ModelReader.defaultShapes
+            case (ModelSection.LinkShapes, 0) => ModelReader.defaultLinkShapes
             // Another kludge: pre-4.1 model files have
             // org.nlogo.aggregate.gui in them instead of org.nlogo.sdm.gui,
             // so translate on the fly - ST 2/18/08
-            case (ModelSection.AGGREGATE, _) =>
+            case (ModelSection.SystemDynamics, _) =>
               map.get(section).map(_.replaceAll("org.nlogo.aggregate.gui", "org.nlogo.sdm.gui"))
             case _ => map.get(section)
           }

@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _while
@@ -10,7 +10,7 @@ public final strictfp class _while
     implements org.nlogo.nvm.CustomAssembled {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_BOOLEAN_BLOCK, Syntax.TYPE_COMMAND_BLOCK};
+    int[] right = {Syntax.BooleanBlockType(), Syntax.CommandBlockType()};
     return Syntax.commandSyntax(right);
   }
 

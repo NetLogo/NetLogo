@@ -87,6 +87,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 22
@@ -164,18 +165,16 @@ use-whole-world?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the 2D model DLA. This model demonstrates diffusion-limited aggregation, in which randomly moving (diffusing) particles stick together (aggregate) to form beautiful treelike branching fractal structures.  There are many patterns found in nature that resemble the patterns produced by this model: crystals, coral, fungi, lightning, and so on.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 The model begins with an initial green "seed" in the center of the screen.  Red particles move around the screen randomly.  When a red particle hits a green square, it "sticks" and turns green (and a new red particle is created to keep the process going).
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Press SETUP to make the initial seed, then press GO to run the model.
 
 The WIGGLE-ANGLE slider controls how wiggly the paths the particles follow are.  If WIGGLE-ANGLE is 0, they move in straight lines.  If WIGGLE-ANGLE is 360, they move in a totally random direction at each time step.
@@ -186,9 +185,8 @@ Both settings may be altered in the middle of a model run.
 
 The USE-WHOLE-WORLD? switch controls whether the red particles start at the edge of the screen, or from just outside a sphere enclosing the green area.  If the switch is on, it's easier to see what's going on, but the model runs slower, particularly when WIGGLE-ANGLE is high.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Note that the resulting structure has a branching structure, like a tree.  Why does this happen?
 
 What other phenomena in the world do the shapes remind you of?  Is this aggregation process a plausible model of how those phenomena occur?
@@ -197,44 +195,40 @@ When the enclosing sphere gets too near to the edge of the screen, the model sto
 
 New red particles are created not at the edge of the screen, but at the edge of a sphere enclosing the current size of the green aggregate, instead of traveling from the edge of the screen.  Also, if a red particle wanders too far outside the sphere, it disappears and a new one is created.  Neither of these behaviors is essential to the model -- it is done this way just to the model runs fast.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Try different settings for WIGGLE-ANGLE.  What is the effect on the appearance of the resulting aggregate?  Why?
 
 Does the MAX-PARTICLES slider make any difference?  Why or why not?
 
 Do you think the USE-WHOLE-WORLD? setting has an effect on the appearance of the resulting aggregate?  Why or why not?  Experiment and find out.  If you initially thought differently from what you found, why do you think you thought otherwise?  Can you explain why it does happen the way you found?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 What happens if you start with more than one "seed" patch?  What happens if the seed is a line instead of a point?
 
 Can you find a way to modify the code so the resulting pattern spirals out instead of radiating straight out?
 
-The rule used in this model is that a particle "sticks" if any of the eight patches surrounding it are green.  What do the resulting structures look like if you use a different rule (for example, only testing the single patch ahead, or using NEIGHBORS6 instead of NEIGHBORS)?
+The rule used in this model is that a particle "sticks" if any of the eight patches surrounding it are green.  What do the resulting structures look like if you use a different rule (for example, only testing the single patch ahead, or using `neighbors6` instead of `neighbors`)?
 
 Can you compute the fractal dimension of the aggregate?
 
 If instead of using green, you gradually vary the color of deposited particles over time, you can see more vividly the accretion of "layers" over time.  (The effect is also visually pleasing.)
 
-The model will run faster if the turtles are invisible, so you may want to add a switch that hides them (using the HT command).
+The model will run faster if the turtles are invisible, so you may want to add a switch that hides them (using the `hide-turtle` command).
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note the use of the NEIGHBORS and DISTANCEXYZ primitives.
+Note the use of the `neighbors` and `distancexyz` primitives.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 The various models in the "Fractals" subsection of the "Mathematics" section of the Models Library demonstrate some other ways of "growing" fractal structures.
 
 The "Percolation" model in the "Earth Science" section produces patterns resembling the patterns in this model.
 
-
 ## CREDITS AND REFERENCES
+
 The concept of diffusion limited aggregation was invented by T.A. Witten and L.M. Sander in 1981.  Tamas Viczek's book "Fractal Growth Phenomena" contains a discussion, as do many other books about fractals.
 @#$#@#$#@
 default
@@ -517,7 +511,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 set use-whole-world? false
 setup

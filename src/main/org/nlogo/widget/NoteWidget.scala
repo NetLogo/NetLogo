@@ -1,6 +1,6 @@
 package org.nlogo.widget
 
-import org.nlogo.api.{Editable, I18N}
+import org.nlogo.api.{Editable, I18N, ModelReader}
 import org.nlogo.window.{InterfaceColors, SingleErrorWidget,Widget}
 import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
 
@@ -8,7 +8,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
 
   setBackground(InterfaceColors.TRANSPARENT)
   setOpaque(false)
-  org.nlogo.awt.Utils.adjustDefaultFont(this)
+  org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   val MIN_WIDTH = 15
   val DEFAULT_WIDTH = 150
@@ -62,7 +62,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
   override def getPreferredSize(font: Font): Dimension = {
     val metrics = getFontMetrics(font)
-    val height: Int = org.nlogo.awt.Utils.breakLines(_text, metrics, _width).size * (metrics.getMaxDescent + metrics.getMaxAscent)
+    val height: Int = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width).size * (metrics.getMaxDescent + metrics.getMaxAscent)
     new Dimension(StrictMath.max(MIN_WIDTH, _width), StrictMath.max(MIN_HEIGHT, height))
   }
   override def needsPreferredWidthFudgeFactor = false
@@ -73,14 +73,11 @@ class NoteWidget extends SingleErrorWidget with Editable {
     val metrics: FontMetrics = g.getFontMetrics
     val stringHeight: Int = metrics.getMaxDescent + metrics.getMaxAscent
     val stringAscent: Int = metrics.getMaxAscent
-    val lines = org.nlogo.awt.Utils.breakLines(_text, metrics, _width)
+    val lines = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width)
     g.setColor(color)
-    // import collection.JavaConverters
-    // weird error...value asScala is not a member of java.util.List[java.lang.String]
-    import org.nlogo.util.JCL._
-    for((line, i) <- lines.zipWithIndex){
+    import collection.JavaConverters._
+    for((line, i) <- lines.asScala.zipWithIndex)
       g.drawString(line, 0, i * stringHeight + stringAscent)
-    }
   }
 
   def save: String = {
@@ -88,7 +85,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.append("TEXTBOX\n")
     s.append(getBoundsString)
     if (_text.trim == "") s.append("NIL\n")
-    else  s.append(org.nlogo.api.File.stripLines(_text) + "\n")
+    else  s.append(ModelReader.stripLines(_text) + "\n")
     s.append(fontSize + "\n")
     s.append(org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB) + "\n")
     s.append((if (transparency) "1" else "0") + "\n")
@@ -99,9 +96,9 @@ class NoteWidget extends SingleErrorWidget with Editable {
     org.nlogo.api.Color.getClosestColorNumberByARGB(color.getRGB), transparency)
 
   def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    text = if (strings(5) == "NIL") "" else org.nlogo.api.File.restoreLines(strings(5))
+    text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
     if (strings.length >= 7) fontSize = strings(6).toInt
-    if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble)
+    if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble: java.lang.Double)
     if (strings.length >= 9) transparency(strings(8).toInt != 0)
     else transparency(false)
     val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)

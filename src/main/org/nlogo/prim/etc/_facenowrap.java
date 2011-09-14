@@ -1,12 +1,11 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _facenowrap
     extends Command {
@@ -14,7 +13,7 @@ public final strictfp class _facenowrap
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_AGENT}, "-T--", true);
+        (new int[]{Syntax.AgentType()}, "-T--", true);
   }
 
   @Override
@@ -23,7 +22,7 @@ public final strictfp class _facenowrap
     org.nlogo.agent.Agent agentToFace = argEvalAgent(context, 0);
     if (agentToFace.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agentToFace.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agentToFace.classDisplayName()));
     }
     org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) context.agent;
     turtle.face(agentToFace, false);

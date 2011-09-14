@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.MutableDouble;
 
 // note that this and _bk are pretty much carbon copies of each other
@@ -17,7 +17,7 @@ public final strictfp class _fd
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.NumberType()},
             "-T--");
   }
 

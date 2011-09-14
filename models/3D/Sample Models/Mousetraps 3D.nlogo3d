@@ -63,6 +63,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 65
@@ -150,33 +151,30 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the Mousetraps model. Imagine a gymnasium full of mousetraps.  On each mousetrap is a ping pong ball.  Now throw a single ping pong ball into the middle of the room. The ball lands on a trap, the trap triggers, and a second ball flies into the air.  The first ball also bounces into the air again, so now there are two balls in the air.  Each of those two balls triggers another trap, so there's four balls in the air. And so on...
 
 This experiment is a well-known metaphor for nuclear fission.  In nuclear fission, atoms of fissionable material such as uranium are the "mousetraps", and neutrons are the ping pong balls.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Light blue squares represent untriggered mousetraps.  Red squares represent triggered mousetraps.
 
 When a ball lands on a light blue square, the square turns red, a new ball appears, and both balls travel bounce.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Press SETUP to set up all the mousetraps and suspend a single ping pong ball over the center.  Press GO to release the ping pong ball.
 
 To vary the height to which the balls bounce, use the POWER slider.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 See the 2D version in the NetLogo models library.
 
-
 ## CREDITS AND REFERENCES
+
 This model is based on the "Mousetrap" demo included with the Swarm agent-based modeling toolkit (http://www.swarm.org/).  See http://acoma.santafe.edu/projects/swarm/examples/mousetrap/.  Note that this model and that demo differ in various details.
 @#$#@#$#@
 default
@@ -473,7 +471,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 set power 0.35

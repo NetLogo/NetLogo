@@ -1,19 +1,18 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _randomgamma extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
-            Syntax.TYPE_NUMBER);
+        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.NumberType());
   }
 
   @Override
@@ -26,7 +25,7 @@ public final strictfp class _randomgamma extends Reporter {
   public double report_1(Context context, double alpha, double lambda) throws LogoException {
     if (alpha <= 0 || lambda <= 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc._randomgamma.noNegativeInputs", displayName()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc._randomgamma.noNegativeInputs", displayName()));
     }
     return validDouble(org.nlogo.agent.Gamma.nextDouble(context.job.random, alpha, lambda));
   }

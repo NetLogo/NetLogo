@@ -14,7 +14,7 @@ public strictfp class DummyViewWidget
 
   @Override
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.view");
+    return I18N.guiJ().get("tabs.run.widgets.view");
   }
 
   public DummyViewWidget(org.nlogo.agent.World world) {

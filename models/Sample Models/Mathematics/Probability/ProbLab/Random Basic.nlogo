@@ -195,6 +195,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 173
@@ -226,6 +227,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 78
@@ -242,6 +244,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 33
@@ -318,8 +321,8 @@ NIL
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Random Basic is the simplest of all the ProbLab models. It can either be used first or as a detour from a more complex model to explain randomness.  This model introduces the user to the random generator in NetLogo. Randomness means that in the short term you cannot guess a value but in the long term all possible values will have occurred more or less equally often.
 
 Here we see a bar chart grow reflecting a real-time succession of random events. You can think of the bar chart as a competition between the columns and ask whether one of the columns wins more often than others. Or you can think of it as some goodies being given out and think about whether the goodies are being given out fairly. Or think about it some other way -- that's fine.
@@ -328,42 +331,38 @@ You can set the size of the sample space. Also, you can split the bar chart into
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at the CCL. For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 At every tick, the computer selects a random number between 1 and "sample-space" (a slider in the interface tab). For instance, if the slider reads 100, then the random number will be between 1 and 100, inclusive. This random number piggy-backs on a virtual dart. In this program the dart is called the 'messenger' because it carries the number from the top of the view to the appropriate column. Each column is associated with one number. Once the messenger gets to its column, the messenger vanishes but the column becomes taller by one square (the squares are called 'frames' in this and other models in ProbLab). The columns grow until one of them reaches the brown half of the view, which stops the run.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Choose a sample-space (you can leave it at the default value of '100') and press Setup. Now press Go. The messenger (the dart) will obtain a random number and carry it to the correct column. The red-green slider changes which columns are red and which are green. If it's set at 50% and if the sample space is 100 then patches up to 50 will be red and the rest will be green. If it's set at 50% and the sample space is 30 then patches up to 15 will be red. There are cases where this might be confusing: for instance, if it's set at 50% and if the sample space is 5 then patches up to 2 will be red. The '3'-column will be green because it goes further than 50% of 5.  That is, all columns up to and including the 3-column are more than 50% of the columns in the sample-space of 5 -- they are actually 60% because each of the 5 columns makes up 20% (and 5 * 20% is 100%). (See the section EXTENDING THE MODEL, below.)
 
-These are the widgets in order of appearance from top to bottom:
-SAMPLE-SPACE is a slider for setting how many columns you want to be filling up. Also, it sets the range of numbers that will be randomly selected. If you set the slider to 3 then you will have 3 columns and the values will always be either 1, 2, or 3.
-SETUP - prepares the model for running with your sample-space parameter setting.
-GO - runs the model with the current settings.
-BIGGEST GAP - shows the biggest vertical difference between all columns. For instance, if the highest column is 10 squares high and the lowest is at 3 squares high then this monitor will show '7'.
-%-RED - shows what percentage of the squares are red out of all the squares.
-COLORS? - when this switch is on the patches get painted either red or green depending on the red-green slider value and their position.
-RED-GREEN - sets the cut-off line for which patches are painted red and which green. When your sample-space is 100 then the position of the little handle on the slider (what you grab and move) is exactly at the cut-off line. For sample spaces other than 100 it will be under the cut-off line only when it is set at 50. This is because currently this slider works according to percentage of events and not column value.
+These are the widgets in order of appearance from top to bottom:  
+SAMPLE-SPACE is a slider for setting how many columns you want to be filling up. Also, it sets the range of numbers that will be randomly selected. If you set the slider to 3 then you will have 3 columns and the values will always be either 1, 2, or 3.  
+SETUP - prepares the model for running with your sample-space parameter setting.  
+GO - runs the model with the current settings.  
+BIGGEST GAP - shows the biggest vertical difference between all columns. For instance, if the highest column is 10 squares high and the lowest is at 3 squares high then this monitor will show '7'.  
+%-RED - shows what percentage of the squares are red out of all the squares.  
+COLORS? - when this switch is on the patches get painted either red or green depending on the red-green slider value and their position.  
+RED-GREEN - sets the cut-off line for which patches are painted red and which green. When your sample-space is 100 then the position of the little handle on the slider (what you grab and move) is exactly at the cut-off line. For sample spaces other than 100 it will be under the cut-off line only when it is set at 50. This is because currently this slider works according to percentage of events and not column value.  
 %-FULL - the proportion of the yellow area that has been filled up by squares.
 
-THINGS TO NOTICE
-----------------
+## THINGS TO NOTICE
+
 What happens to the biggest gap as the model runs. Does it change? Does it get consistently bigger? Smaller? Is this connected to the size of the sample space or not? Come up with an explanation for this. Also, if you keep running the model with the same sample space until it stops, are you getting the same biggest gap each time? Is it "kind of the same"?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 How does the size of the Sample-Space affect your sense of "fairness?" Is it more "fair" when the sample-space is small (narrow) or when it is big (wide)? Try changing the sample-space slider and see if you feel that the events are being equally distributed across the bar chart. You can set the red-green slider at 50%, then at other values, and, looking at the %-red monitor, evaluate how long it takes for the red-green and the %-red values to be more or less the same. Perhaps a good way to go about this is by using a sample-space of size 2. This is much like flipping a coin. Now set it to a sample-space of 6. This is kind of like rolling a die.
 
 Actually, what is fairness? Is the difference between two columns of heights 0 and 3 the same as the difference between two columns of heights 20 and 23?
 
 How does the passage of time -- more and more events -- affect how close the red-green slider and the %-red are?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Currently, the red-green slider shows you how many patches there are that are smaller than a cut-off value. But you may want to know, for instance, how often the value '1' appeared and compare it to how many times the value '2' appeared. You could just count, but you may want to compare the ratio between these accumulations and see what happens to it as the program runs.
 
 Another idea is to keep track of how many times, on average, a certain value, for instance '1' occurs out of every 10 trials. Partitioning the events into groups of 10 is called "sampling."
@@ -384,18 +383,16 @@ Add a slider that allows you to choose specific columns and find out how many sq
 
 Perhaps you noticed that each time you setup and run the model (each experiment) the random numbers come in a different order. But you may want to explore the same set of random numbers in several experiments where you modify some parameters. To do this, you should try working with the NetLogo primitive "random-seed" (see the NetLogo User Manual for details). If you keep sample-space constant, you should get the same numbers in the same order.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-We use the 'random' primitive a great deal in NetLogo and especially in ProbLab, where we care about probability. But how does NetLogo produce random numbers? Does it roll a die or flip a coin? Actually, NetLogo uses the "Mersenne Twister" random generator. This generator is sometimes called a 'pseudo-random' number generator because it uses a certain mathematical algorithm to produce numbers that appear random, but are actually predictable given enough time to figure out the pattern.
+We use the `random` primitive a great deal in NetLogo and especially in ProbLab, where we care about probability. But how does NetLogo produce random numbers? Does it roll a die or flip a coin? Actually, NetLogo uses the "Mersenne Twister" random generator. This generator is sometimes called a “pseudo-random” number generator because it uses a certain mathematical algorithm to produce numbers that appear random, but are actually predictable given enough time to figure out the pattern.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-All of the ProbLab models use randomness. Having worked with this model, you may now have a better sense of where these random numbers are coming from and what to expect when the random primitive is used. In particular, note how other ProbLab models use randomness to control the movement of agents.
-
+All of the ProbLab models use randomness. Having worked with this model, you may now have a better sense of where these random numbers are coming from and what to expect when the `random` primitive is used. In particular, note how other ProbLab models use randomness to control the movement of agents.
 
 ## CREDITS AND REFERENCES
+
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
@@ -696,7 +693,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@

@@ -24,21 +24,23 @@ abstract class AbstractTestLanguage extends Assertions {
 
   def init() {
     workspace = HeadlessWorkspace.newInstance
-    workspace.silent(true)
+    workspace.silent = true
     workspace.initForTesting(
       if(Version.is3D)
         new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
       else
         new WorldDimensions(-5, 5, -5, 5),
-      HeadlessWorkspace.TEST_DECLARATIONS)
+      HeadlessWorkspace.TestDeclarations)
   }
 
   def defineProcedures(source: String) {
-    import org.nlogo.util.JCL._
-    val results = compiler.compileProgram(
-      HeadlessWorkspace.TEST_DECLARATIONS + source,
-      workspace.world.newProgram(Nil),
-      workspace.getExtensionManager()) 
+    val results = {
+      import collection.JavaConverters._
+      compiler.compileProgram(
+        HeadlessWorkspace.TestDeclarations + source,
+        workspace.world.newProgram(List[String]().asJava),
+        workspace.getExtensionManager())
+    }
     workspace.setProcedures(results.proceduresMap)
     workspace.world.program(results.program)
     workspace.init() 
@@ -77,8 +79,8 @@ abstract class AbstractTestLanguage extends Assertions {
       case ex =>
         // PureConstantOptimizer turns some errors that would be runtime errors into compile-time
         // errors, so we have to check for those
-        if(ex.getMessage.startsWith(CompilerException.RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX))
-          expect(CompilerException.RUNTIME_ERROR_AT_COMPILE_TIME_MSG_PREFIX + expectedError)(
+        if(ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix))
+          expect(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
             ex.getMessage)
         else
           withClue(mode + ": reporter: " + reporter) {

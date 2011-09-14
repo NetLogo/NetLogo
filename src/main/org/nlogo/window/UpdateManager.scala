@@ -75,7 +75,8 @@ abstract class UpdateManager extends UpdateManagerInterface {
   }
   
   private def frameDone() {
-    pause(() => updatePolicy.smoothingPause(nanoTime))
+    val now = nanoTime
+    pauseUntil(() => now + updatePolicy.smoothingPause(nanoTime))
     lastUpdateNanos = nanoTime
     lastUpdateTicks = ticks
     pseudoTicks = 0
@@ -112,19 +113,20 @@ abstract class UpdateManager extends UpdateManagerInterface {
   }
   // this one runs on the job thread
   def pause() {
-    pause(updatePolicy.slowdown _)
+    val now = nanoTime
+    pauseUntil(() => now + updatePolicy.slowdown)
   }
-  private def pause(length: () => Long) {
-    val timeToBed = nanoTime
-    var remaining = length()
+  // here we might be on either thread, depending on which kind of pause this is - ST 8/10/11
+  private def pauseUntil(deadline: () => Long) {
+    var remaining = deadline() - nanoTime
     synchronized {
       // There are two reasons that sleep() might return -- because it timed out, or because
       // nudgeSleeper() nudged us.  So we check to see how long we've been waiting and go back to
-      // sleep if there's more time left.  But note that we call length() again because
+      // sleep if there's more time left.  But note that we call deadline() again because
       // if the user moved the slider, the value might be different now. - ST 8/16/07, 3/3/11
       while(remaining > 0 && !Thread.currentThread.isInterrupted) {
         sleep(remaining)
-        remaining = length() - nanoTime + timeToBed
+        remaining = deadline() - nanoTime
       }
     }
   }

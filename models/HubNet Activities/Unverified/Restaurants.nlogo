@@ -1171,7 +1171,7 @@ This model uses the create-temporary-plot-pen function to plot the the day's pro
 
 See the Social Science models in the NetLogo models library. 'Wealth Distribution,' for example, deals with similar content as this model -- the human economical behavior in a free market. Also see the HubNet activity 'Tragedy of the Commons' for a simulation of economical aggression under the conditions of limited resources.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model simulates an Economics concept associated with Vilfredo Pareto.
 See V. Pareto, Manuale d'economia politico (Milan,1906).

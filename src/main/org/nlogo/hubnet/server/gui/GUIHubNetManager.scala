@@ -2,12 +2,11 @@ package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.util.JCL.toScalaSeq
 import org.nlogo.util.Femto
 import org.nlogo.api._
-import org.nlogo.awt.Utils.invokeLater
+import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.swing.Implicits._
-import org.nlogo.hubnet.connection.{ClientRoles , HubNetException} 
+import org.nlogo.hubnet.connection.{ClientRole , HubNetException}
 import org.nlogo.api.WidgetIO.WidgetSpec 
 
 import java.net.InetAddress
@@ -49,7 +48,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup(editorFactory, "", host.getOrElse(null), connectionManager.port,
- 		  ClientRoles.Participant, true, isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+ 		  ClientRole.Participant, true, isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
   }
 
   /// client editor
@@ -67,12 +66,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def importClientInterface(filePath: String, client: Boolean) {
     _clientEditor.close()
     // Load the file
-    val fileContents = LocalFile.readFile(new java.io.File(filePath))
+    val fileContents = new LocalFile(filePath).readFile()
     // Parse the file
     val parsedFile = ModelReader.parseModel(fileContents)
     // Load the widget descriptions
-    val widgets = parsedFile.get(if (client) ModelSection.CLIENT else ModelSection.WIDGETS)
-    _clientEditor.loadClientInterface(WidgetIO.parseWidgets(widgets), parsedFile.get(ModelSection.VERSION)(0))
+    val widgets = parsedFile.get(if (client) ModelSection.HubNetClient  else ModelSection.Interface)
+    _clientEditor.loadClientInterface(WidgetIO.parseWidgets(widgets), parsedFile.get(ModelSection.Version)(0))
     openClientEditor()
   }
 
@@ -89,13 +88,13 @@ class GUIHubNetManager(workspace: GUIWorkspace,
 
   private def closeControlCenter(){
     // the hubnet manager is created in AbstractWorkspace, but the control center
-    // isnt started unless showControlCenter is called.
+    // isn't started unless showControlCenter is called.
     if(controlCenter != null) controlCenter.dispose()
   }
 
   /// client editor
   def openClientEditor() {
-    org.nlogo.awt.Utils.moveNextTo(_clientEditor, linkParent)
+    org.nlogo.awt.Positioning.moveNextTo(_clientEditor, linkParent)
     _clientEditor.setVisible(true)
     _clientEditor.setSize(_clientEditor.getPreferredSize)
   }

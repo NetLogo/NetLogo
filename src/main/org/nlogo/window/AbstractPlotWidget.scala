@@ -39,7 +39,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     // when it is shown or hidden, the usual way of just letting Zoomer
     // zoom the font size won't work, hence the fontSource stuff in
     // PlotLegend - ST 2/22/06
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
     setBackground(InterfaceColors.PLOT_BACKGROUND)
     plot.clear() // set current values to defaults
@@ -65,7 +65,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
     gridbag.setConstraints(nameLabel, c)
     add(nameLabel)
-    org.nlogo.awt.Utils.adjustDefaultFont(nameLabel)
+    org.nlogo.awt.Fonts.adjustDefaultFont(nameLabel)
     nameLabel.setFont(nameLabel.getFont().deriveFont(java.awt.Font.BOLD))
     nameLabel.setText(plot.name)
 
@@ -332,9 +332,9 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(max, c)
     add(max)
-    org.nlogo.awt.Utils.adjustDefaultFont(min)
-    org.nlogo.awt.Utils.adjustDefaultFont(label)
-    org.nlogo.awt.Utils.adjustDefaultFont(max)
+    org.nlogo.awt.Fonts.adjustDefaultFont(min)
+    org.nlogo.awt.Fonts.adjustDefaultFont(label)
+    org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
     def setLabel(text: String) {label.setText(text)}
     def setMax(text: String) {max.setText(text)}
@@ -372,9 +372,9 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(min, c)
     add(min)
-    org.nlogo.awt.Utils.adjustDefaultFont(min)
-    org.nlogo.awt.Utils.adjustDefaultFont(label)
-    org.nlogo.awt.Utils.adjustDefaultFont(max)
+    org.nlogo.awt.Fonts.adjustDefaultFont(min)
+    org.nlogo.awt.Fonts.adjustDefaultFont(label)
+    org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
     def setMin(text: String) {min.setText(text)}
     def setMax(text: String): Unit = {max.setText(text)}

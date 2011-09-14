@@ -1,6 +1,7 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.nvm.{ Context, Command, EngineException, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Context, Command, EngineException }
 import org.nlogo.window.GUIWorkspace
 
 class _reload extends Command {

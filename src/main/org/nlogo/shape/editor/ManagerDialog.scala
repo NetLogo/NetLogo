@@ -41,7 +41,7 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
   val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(() => duplicateShape())}
 
   val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
-    setFont(new Font(org.nlogo.awt.Utils.platformFont(), Font.PLAIN, 10))
+    setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
 
   ///

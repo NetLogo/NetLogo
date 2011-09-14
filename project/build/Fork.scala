@@ -16,7 +16,8 @@ trait Fork extends DefaultProject {
     override def runJVMOptions = Seq(
       "-server",
       "-XX:MaxPermSize=128m",
-      "-Xmx1024M",
+      "-Xss16m",
+      "-Xmx1024m",
       "-Dfile.encoding=UTF-8",
       "-Djava.ext.dirs=",
       "-Dapple.awt.graphics.UseQuartz=true",

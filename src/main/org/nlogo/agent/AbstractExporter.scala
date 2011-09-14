@@ -2,7 +2,7 @@ package org.nlogo.agent
 
 import java.io.{ IOException, PrintWriter }
 import org.nlogo.util.Exceptions.ignoring
-import org.nlogo.api.Version
+import org.nlogo.api.{ FileMode, Version }
 import org.nlogo.api.Dump.csv
 
 object AbstractExporter {
@@ -29,10 +29,10 @@ abstract class AbstractExporter(filename: String) {
 
   @throws(classOf[IOException])
   def export(tyype: String, modelFileName: String, extraHeader: String) {
-    val file = new org.nlogo.api.LocalFile(filename, ".csv")
+    val file = new org.nlogo.api.LocalFile(filename)
     try {
-      file.open(org.nlogo.api.File.Mode.WRITE)
-      val writer = file.getPrintWriter()
+      file.open(FileMode.Write)
+      val writer = file.getPrintWriter
       AbstractExporter.exportHeader(writer, tyype, modelFileName, extraHeader)
       export(writer)
     }

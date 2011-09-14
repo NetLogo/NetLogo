@@ -2,7 +2,7 @@ to setup
   clear-all
   crt number-of-drawers
   [ set size 3
-    pd ]
+    pen-down ]
   reset-ticks
 end
 
@@ -44,6 +44,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 10
@@ -112,8 +113,8 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This code example shows how to use turtles to draw lines that trace a turtle's trajectory.
 
 Since each line segment in a turtle, the model will eventually slow down once there are too many lines on the screen. If your model is creating too many lines, decrease the resolution of each line by moving more than once between calls to draw-line-to.
@@ -398,7 +399,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

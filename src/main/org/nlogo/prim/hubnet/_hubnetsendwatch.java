@@ -2,9 +2,9 @@ package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.agent.Agent;
-import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 
 public strictfp class _hubnetsendwatch
     extends org.nlogo.nvm.Command {
@@ -12,7 +12,7 @@ public strictfp class _hubnetsendwatch
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]
-            {Syntax.TYPE_STRING, Syntax.TYPE_AGENT},
+            {Syntax.StringType(), Syntax.AgentType()},
             "OTPL", false);
   }
 
@@ -26,7 +26,7 @@ public strictfp class _hubnetsendwatch
           public void run() {
             workspace.getHubNetManager().sendAgentPerspective
                 (client,
-                    Perspective.WATCH.export(),
+                    PerspectiveJ.WATCH().export(),
                     agent.getAgentClass(), agent.id, ((world.worldWidth() - 1) / 2), false);
           }
         });

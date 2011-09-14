@@ -6,10 +6,11 @@ import image.FilteredImageSource
 import org.nlogo.awt.DarkenImageFilter
 import javax.swing.ImageIcon
 import org.nlogo.util.MersenneTwisterFast
-import org.nlogo.awt.Utils.button1Mask
+import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
 import org.nlogo.nvm.Procedure
-import org.nlogo.api.{WidgetIO, I18N, Editable, Options, Version}
+import org.nlogo.api.{WidgetIO, I18N, Editable, ModelReader, Options, Version}
+import org.nlogo.api.{WidgetIO, I18N, Editable, ModelReader, Options, Version}
 
 object ButtonWidget {
 
@@ -82,7 +83,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     addMouseMotionListener(this)
     setBackground(InterfaceColors.BUTTON_BACKGROUND)
     setBorder(widgetBorder)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
   // buttonType now controls the agentClass. no one should ever be setting
@@ -197,12 +198,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def mousePressed(e: MouseEvent) {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
-    if (error == null && !e.isPopupTrigger && button1Mask(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
+    if (error == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
   def mouseDragged(e: MouseEvent) {
     if (error == null){
-      if (button1Mask(e) && isEnabled) {
+      if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
         if (getBounds().contains(e.getPoint()) && ! disabledWaitingForSetup) buttonUp = false
         else if (!forever || !foreverOn) buttonUp = true
@@ -214,7 +215,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def mouseExited(e:MouseEvent) {}
   def mouseMoved(e: MouseEvent) {}
   def mouseClicked(e: MouseEvent) {
-    if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && button1Mask(e))
+    if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
   }
 
@@ -403,7 +404,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       }
       g.setColor(color)
       val availableWidth = getSize().width - 8
-      val shortString = org.nlogo.awt.Utils.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
+      val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
       val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
       val labelHeight = g.getFontMetrics.getMaxDescent + g.getFontMetrics.getMaxAscent
       val ny = (getSize().height / 2) + (labelHeight / 2)

@@ -424,7 +424,7 @@ This model is related to all of the other models in the "Urban Suite".
 
 This model is also similar to the Rumor Mill model, which is found in the NetLogo models library.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 The original version of this model was developed during the Sprawl/Swarm Class at Illinois Institute of Technology in Fall 2006 under the supervision of Sarah Dunn and Martin Felsen, by the following students: Eileen Pedersen, Brian Reif, and Susana Odriozola.  See http://www.sprawlcity.us/ for more information about this course.
 

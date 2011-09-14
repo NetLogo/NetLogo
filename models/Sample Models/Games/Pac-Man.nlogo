@@ -596,7 +596,7 @@ This model makes use of breeds, create-<breed>, every, and user-message.
 
 The "import-world" command is used to read in the different maze configurations (levels).
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

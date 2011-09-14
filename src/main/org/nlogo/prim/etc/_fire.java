@@ -4,7 +4,7 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.World;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 // Note: this is for the old patch-based Fire Benchmark model, not the
 // new turtle-based Fire model. - ST 11/5/03
@@ -52,7 +52,7 @@ public final strictfp class _fire
 
   @Override
   public void perform(final Context context) {
-    int BURNED_TREES_VAR = world.program().interfaceGlobals.size() + 1;
+    int BURNED_TREES_VAR = world.program().interfaceGlobals().size() + 1;
     int patchCount = world.patches().count();
     boolean any = false;
     for (int i = 0; i < patchCount; i++) {
@@ -93,7 +93,7 @@ public final strictfp class _fire
           world.observer().variables[BURNED_TREES_VAR] =
               Double.valueOf
                   (((Double) world.observer().variables
-                      [world.program().interfaceGlobals.size()])
+                      [world.program().interfaceGlobals().size()])
                       .doubleValue() + 1);
         }
       } else {

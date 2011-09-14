@@ -3,9 +3,9 @@ package org.nlogo.agent;
 import java.util.Iterator;
 
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Shape;
@@ -39,16 +39,16 @@ public strictfp class Link
 
   /// variables
 
-  public static final int VAR_END1 = AgentVariables.VAR_END1;
-  public static final int VAR_END2 = AgentVariables.VAR_END2;
-  public static final int VAR_COLOR = AgentVariables.VAR_LCOLOR;
-  public static final int VAR_LABEL = AgentVariables.VAR_LLABEL;
-  static final int VAR_LABELCOLOR = AgentVariables.VAR_LLABELCOLOR;
-  static final int VAR_HIDDEN = AgentVariables.VAR_LHIDDEN;
-  public static final int VAR_BREED = AgentVariables.VAR_LBREED;
-  public static final int VAR_THICKNESS = AgentVariables.VAR_THICKNESS;
-  public static final int VAR_SHAPE = AgentVariables.VAR_LSHAPE;
-  public static final int VAR_TIEMODE = AgentVariables.VAR_TIEMODE;
+  public static final int VAR_END1 = AgentVariableNumbers.VAR_END1;
+  public static final int VAR_END2 = AgentVariableNumbers.VAR_END2;
+  public static final int VAR_COLOR = AgentVariableNumbers.VAR_LCOLOR;
+  public static final int VAR_LABEL = AgentVariableNumbers.VAR_LLABEL;
+  static final int VAR_LABELCOLOR = AgentVariableNumbers.VAR_LLABELCOLOR;
+  static final int VAR_HIDDEN = AgentVariableNumbers.VAR_LHIDDEN;
+  public static final int VAR_BREED = AgentVariableNumbers.VAR_LBREED;
+  public static final int VAR_THICKNESS = AgentVariableNumbers.VAR_THICKNESS;
+  public static final int VAR_SHAPE = AgentVariableNumbers.VAR_LSHAPE;
+  public static final int VAR_TIEMODE = AgentVariableNumbers.VAR_TIEMODE;
 
   public int LAST_PREDEFINED_VAR = VAR_TIEMODE;
   public int NUMBER_PREDEFINED_VARS = LAST_PREDEFINED_VAR + 1;
@@ -75,11 +75,11 @@ public strictfp class Link
   Link(World world, Turtle end1, Turtle end2, AgentSet breed) {
     super(world);
     variables = new Object[world.getVariablesArraySize(this, breed)];
-    variables[VAR_COLOR] = Color.BOXED_BLACK;
+    variables[VAR_COLOR] = Color.BoxedBlack();
     variables[VAR_END1] = end1;
     variables[VAR_END2] = end2;
     variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BOXED_WHITE;
+    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
     variables[VAR_HIDDEN] = Boolean.FALSE;
     variables[VAR_THICKNESS] = World.ZERO;
     variables[VAR_SHAPE] = world.linkBreedShapes.breedShape(breed);
@@ -175,7 +175,7 @@ public strictfp class Link
 
   @Override
   public Object getTurtleOrLinkVariable(String varName) {
-    return getLinkVariable(world.program().linksOwn.indexOf(varName));
+    return getLinkVariable(world.program().linksOwn().indexOf(varName));
   }
 
   @Override
@@ -213,7 +213,7 @@ public strictfp class Link
   @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
-    setLinkVariable(world.program().linksOwn.indexOf(varName), value);
+    setLinkVariable(world.program().linksOwn().indexOf(varName), value);
   }
 
   @Override
@@ -270,7 +270,7 @@ public strictfp class Link
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != world.links() && !world.isLinkBreed(breed)) {
-              throw new AgentException(I18N.errors().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
+              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
             }
             if (world.getLink(end1.agentKey(), end2.agentKey(), breed) != null) {
               throw new AgentException("there is already a "
@@ -280,7 +280,7 @@ public strictfp class Link
             }
             if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
               throw new AgentException
-                  (I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
+                  (I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
             }
             setBreed(breed);
           } else {
@@ -300,7 +300,7 @@ public strictfp class Link
           if (value instanceof String) {
             String newShape = world.checkLinkShapeName((String) value);
             if (newShape == null) {
-              throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+              throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
             }
             shape(newShape);
           } else {
@@ -408,7 +408,7 @@ public strictfp class Link
       throws AgentException {
     if (name != null && !world.linkBreedOwns(getBreed(), name)) {
       throw new AgentException(
-          I18NJava.errors().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
+          I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
     }
   }
 
@@ -507,7 +507,7 @@ public strictfp class Link
 
   public void colorDouble(Double boxedColor) {
     double c = boxedColor.doubleValue();
-    if (c < 0 || c >= Color.MAX_COLOR) {
+    if (c < 0 || c >= Color.MaxColor()) {
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }
@@ -522,6 +522,9 @@ public strictfp class Link
       throws AgentException {
     validRGBList(rgb, true);
     variables[VAR_COLOR] = rgb;
+    if(rgb.size() > 3) {
+      world.mayHavePartiallyTransparentObjects = true;
+    }
   }
 
   public AgentSet bothEnds() {
@@ -631,7 +634,7 @@ public strictfp class Link
       return 0;
     }
     int j = 1;
-    for (Iterator<Object> iter = world.program().linkBreeds.values().iterator(); iter.hasNext();) {
+    for (Iterator<Object> iter = world.program().linkBreeds().values().iterator(); iter.hasNext();) {
       if (mybreed == ((AgentSet) iter.next())) {
         return j;
       }
@@ -670,6 +673,10 @@ public strictfp class Link
     // when all else fails
     // whichever breed was declared first comes first in the list.
     return world.compareLinkBreeds(getBreed(), otherLink.getBreed());
+  }
+
+  public int alpha() {
+    return org.nlogo.api.Color.getColor(color()).getAlpha();
   }
 
 }

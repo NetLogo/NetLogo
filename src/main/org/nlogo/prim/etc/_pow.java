@@ -5,15 +5,15 @@ import org.nlogo.api.Pow;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _pow extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_NUMBER;
-    int[] right = {Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(left, right, Syntax.TYPE_NUMBER,
-        Syntax.NORMAL_PRECEDENCE - 1);
+    int left = Syntax.NumberType();
+    int[] right = {Syntax.NumberType()};
+    return Syntax.reporterSyntax(left, right, Syntax.NumberType(),
+        org.nlogo.api.Syntax.NormalPrecedence() - 1);
   }
 
   @Override

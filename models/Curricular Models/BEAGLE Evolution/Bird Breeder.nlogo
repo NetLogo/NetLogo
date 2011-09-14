@@ -1073,7 +1073,7 @@ The model could be extended to a HubNet version, where all four players are acti
 
 Plant Hybridization model.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

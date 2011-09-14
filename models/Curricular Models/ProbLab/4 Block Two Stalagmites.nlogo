@@ -944,7 +944,7 @@ Set KEEP-REPEATS? to Off, STOP-AT-ALL-FOUND? to On, and STOP-AT-TOP? to Off. Try
 
 Some of the other ProbLab (curricular) models, including SAMPLER -- HubNet Participatory Simulation -- feature related visuals and activities.  In Stochastic Patchwork and especially in 9-Blocks you will see the same 3-by-3 array of green-or-blue squares.  In the 9-Block Stalagmite model, when 'keep-duplicates?' is set to 'Off' and the y-axis value of the view is set to 260, we get the whole sample space without any duplicates.  In the Stochastic Patchwork model and especially in 9-Blocks model, we see frequency distribution histograms.  These histograms compare in interesting ways with the shape of the combinations tower in this model.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

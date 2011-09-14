@@ -3,7 +3,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _linkbreed
     extends Reporter {
@@ -25,7 +25,7 @@ public final strictfp class _linkbreed
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_LINKSET);
+    return Syntax.reporterSyntax(Syntax.LinksetType());
   }
 
   public AgentSet report_1(final Context context) {

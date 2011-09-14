@@ -2,7 +2,7 @@ package org.nlogo.lite
 
 import org.nlogo.api.{ CompilerServices, I18N }
 import org.nlogo.window.{ CodeEditor, EditorColorizer, EditorFactory }
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 
 class LiteEditorFactory(compiler: CompilerServices) extends EditorFactory {
   override def newEditor(cols: Int, rows: Int, disableFocusTraversal: Boolean) = {

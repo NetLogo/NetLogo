@@ -5,15 +5,15 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _resizeworld
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax(
-        new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER,
-            Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
+        new int[]{Syntax.NumberType(), Syntax.NumberType(),
+            Syntax.NumberType(), Syntax.NumberType()},
         "O---", true);
   }
 
@@ -31,7 +31,7 @@ public final strictfp class _resizeworld
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
     }
 
     if (oldMinX != newMinX || oldMaxX != newMaxX ||

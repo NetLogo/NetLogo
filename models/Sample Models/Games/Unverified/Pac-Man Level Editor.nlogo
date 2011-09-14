@@ -613,7 +613,7 @@ This model makes use of breeds, create-<breed>, user-message, user-input, user-y
 
 Pac-Man
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

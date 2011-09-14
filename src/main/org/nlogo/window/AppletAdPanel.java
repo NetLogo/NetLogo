@@ -25,7 +25,7 @@ public strictfp class AppletAdPanel
     public JVertLabel(String label) {
       super(label);
       setFont
-          (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
+          (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
               java.awt.Font.PLAIN, 10));
     }
 

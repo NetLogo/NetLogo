@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _islist
     extends Reporter
@@ -18,8 +18,8 @@ public final strictfp class _islist
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int[] right = {Syntax.WildcardType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

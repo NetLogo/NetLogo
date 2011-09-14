@@ -4,7 +4,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _returnreport extends Command {
@@ -25,6 +25,6 @@ public final strictfp class _returnreport extends Command {
 
   public void perform_1(Context context) throws LogoException {
     throw new EngineException(context, this,
-            I18N.errors().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
+            I18N.errorsJ().get("org.nlogo.prim._returnreport.reportNotCalledInReportProcedure"));
   }
 }

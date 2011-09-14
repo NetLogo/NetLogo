@@ -4,20 +4,19 @@ import java.util.Iterator;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _standarddeviation extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_NUMBER);
+    int[] right = {Syntax.ListType()};
+    return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
 
   @Override
@@ -37,7 +36,7 @@ public final strictfp class _standarddeviation extends Reporter implements Pure 
       }
     }
     if (listSize - badElts < 2) {
-      throw new EngineException(context, this, I18NJava.errors().getN(
+      throw new EngineException(context, this, I18N.errorsJ().getN(
           "org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem", Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);

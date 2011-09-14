@@ -1,13 +1,13 @@
 package org.nlogo.prim.etc
 
-import org.nlogo.api.LogoListBuilder
-import org.nlogo.nvm.{EngineException, Context, Syntax, Reporter}
+import org.nlogo.api.{ LogoListBuilder, Syntax }
+import org.nlogo.nvm.{ EngineException, Context, Reporter }
 
 class _map extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_REPORTER_LAMBDA, Syntax.TYPE_REPEATABLE | Syntax.TYPE_LIST),
-      Syntax.TYPE_LIST,
+    Syntax.reporterSyntax(Array(Syntax.ReporterTaskType, Syntax.RepeatableType | Syntax.ListType),
+      Syntax.ListType,
       2) // default # of inputs
 
   // Oh boy, this is going to be really fun one to generate...
@@ -17,11 +17,11 @@ class _map extends Reporter {
   // case. - ST 3/20/08
   override def report(context: Context) = {
 
-    val lambda = argEvalReporterLambda(context, 0)
+    val task = argEvalReporterTask(context, 0)
     val n = args.length - 1
-    if(n < lambda.formals.size)
+    if(n < task.formals.size)
       throw new EngineException(
-        context, this, lambda.missingInputs(n))
+        context, this, task.missingInputs(n))
 
     // get all of the list args, if any.
     var size = 0
@@ -43,7 +43,7 @@ class _map extends Reporter {
         actuals(j) = iters(j).next()
         j += 1
       }
-      result.add(lambda.report(context, actuals))
+      result.add(task.report(context, actuals))
       i += 1
     }
     result.toLogoList

@@ -7,7 +7,6 @@ import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
-import org.nlogo.util.JCL._
 import java.net.{BindException, ServerSocket}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import org.nlogo.hubnet.connection.MessageEnvelope._
@@ -16,6 +15,7 @@ import org.nlogo.api.WidgetIO._
 import actors.Actor
 import org.nlogo.nvm.Procedure
 import collection.mutable.{HashMap, ListBuffer}
+import collection.JavaConverters._
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
@@ -234,11 +234,11 @@ class ConnectionManager(val connection: ConnectionInterface,
 
   /// client Interface code
   def reloadClientInterface() {
-    setClientInterface(ConnectionTypes.COMP_CONNECTION, LogoList())
+    setClientInterface(ConnectionTypes.COMP_CONNECTION, List())
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType:ClientType, interfaceInfo:LogoList) {
+  def setClientInterface(interfaceType:ClientType, interfaceInfo:Iterable[AnyRef]) {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
@@ -247,14 +247,14 @@ class ConnectionManager(val connection: ConnectionInterface,
     if(interfaceType == ConnectionTypes.COMP_CONNECTION)
       clientInterfaceMap += (interfaceType -> LogoList(createClientInterfaceSpec))
     else
-      clientInterfaceMap += (interfaceType -> interfaceInfo)
+      clientInterfaceMap += (interfaceType -> LogoList(interfaceInfo.toSeq:_*))
   }
 
-  // calling toList in 3 places here because things in JCL arent serializble
-  private def createClientInterfaceSpec: ClientInterface = new ClientInterface(
-    connection.getClientInterface.toList,
-    toScalaSeq(world.turtleShapeList.getShapes).toList,
-    toScalaSeq(world.linkShapeList.getShapes).toList)
+  private def turtleShapes =  world.turtleShapeList.getShapes.asScala.toList
+  private def linkShapes = world.linkShapeList.getShapes.asScala.toList
+
+  private def createClientInterfaceSpec =
+    new ClientInterface(connection.getClientInterface.toList, turtleShapes, linkShapes)
 
   /**
    * Enqueues a message from the client to the manager.
@@ -275,10 +275,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   // calling toList in 3 places here because things in JCL arent serializble
   def createControllerClientHandshakeMessage: HandshakeFromServer = {
     new HandshakeFromServer(workspace.modelNameForDisplay, LogoList(
-      new ClientInterface(
-        connection.getControllerClientInterface.toList,
-        toScalaSeq(world.turtleShapeList.getShapes).toList,
-        toScalaSeq(world.linkShapeList.getShapes).toList)))
+      new ClientInterface(connection.getControllerClientInterface.toList, turtleShapes, linkShapes)))
   }
 
   def handleControllerClientMessage(c: ServerSideConnection, message: ActivityCommand) {
@@ -306,7 +303,8 @@ class ConnectionManager(val connection: ConnectionInterface,
     }
   }
 
-  def isSupportedClientType(clientType:String): Boolean = clientInterfaceMap.containsKey(clientType)
+  def isSupportedClientType(clientType:String): Boolean =
+    clientInterfaceMap.isDefinedAt(clientType)
 
   def isValidTag(tag:String) = clientInterfaceSpec.containsWidget(tag)
 

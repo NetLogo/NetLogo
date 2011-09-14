@@ -4,7 +4,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _repeatinternal
     extends Command {
@@ -28,20 +28,20 @@ public final strictfp class _repeatinternal
   @Override
   public void perform(final Context context) {
     MutableLong counter = (MutableLong) context.getLet(let);
-    if (counter.value <= 0) {
+    if (counter.value() <= 0) {
       context.ip = next;
     } else {
-      counter.value--;
+      counter.value_$eq(counter.value() - 1);
       context.ip = offset;
     }
   }
 
   public void perform_1(final Context context) {
     MutableLong counter = (MutableLong) context.getLet(let);
-    if (counter.value <= 0) {
+    if (counter.value() <= 0) {
       context.ip = next;
     } else {
-      counter.value--;
+      counter.value_$eq(counter.value() - 1);
       context.ip = offset;
     }
   }

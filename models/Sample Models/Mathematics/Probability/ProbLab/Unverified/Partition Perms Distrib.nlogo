@@ -448,7 +448,7 @@ This model is related in an interesting way to 9-Block Stalagmite. In that model
 
 Also, the model is related to the Attempts-Until-Success histogram in Prob Graph Basic and to the Distances to Whites histogram in Shuffle Board. Actually, those two histograms behave similar, whereas the histogram in this model behaves differently. Understanding this difference may sensitize you to "graph families." Just because all these graphs decrease monotonously, it does not necessarily mean that they describe the same or related functions.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@

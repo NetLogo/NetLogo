@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -12,7 +11,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _nof
     extends Reporter {
@@ -22,14 +21,14 @@ public final strictfp class _nof
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (n > list.size()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
       }
       if (n == list.size()) {
         return list;
@@ -42,12 +41,12 @@ public final strictfp class _nof
       int count = agents.count();
       if (n > count) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
       }
       return agents.randomSubset(n, count, context.job.random);
     } else {
       throw new ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_AGENTSET, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.AgentsetType(), obj);
     }
   }
 
@@ -72,8 +71,8 @@ public final strictfp class _nof
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER,
-            Syntax.TYPE_AGENTSET | Syntax.TYPE_LIST},
-            Syntax.TYPE_AGENTSET | Syntax.TYPE_LIST);
+        (new int[]{Syntax.NumberType(),
+            Syntax.AgentsetType() | Syntax.ListType()},
+            Syntax.AgentsetType() | Syntax.ListType());
   }
 }

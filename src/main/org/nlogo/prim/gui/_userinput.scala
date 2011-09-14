@@ -1,14 +1,14 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, I18N, LogoException, ReporterRunnable }
-import org.nlogo.nvm.{ Context, EngineException, Reporter, Syntax }
+import org.nlogo.api.{ Dump, I18N, ReporterRunnable, Syntax }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
 import org.nlogo.window.GUIWorkspace
 
 class _userinput extends Reporter {
 
   override def syntax =
-    Syntax.reporterSyntax(Array(Syntax.TYPE_WILDCARD),
-                          Syntax.TYPE_STRING)
+    Syntax.reporterSyntax(Array(Syntax.WildcardType),
+                          Syntax.StringType)
 
   override def report(context: Context) = {
     val inputMessage = args(0).report(context)

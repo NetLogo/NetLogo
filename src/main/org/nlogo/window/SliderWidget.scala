@@ -1,12 +1,12 @@
 package org.nlogo.window
 
 import org.nlogo.util.MersenneTwisterFast
-import java.awt.event.{MouseAdapter, MouseEvent}
-import org.nlogo.window.Events._
-import org.nlogo.api._
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
 import org.nlogo.agent.SliderConstraint.SliderConstraintException
 import org.nlogo.agent.SliderConstraint
 import java.awt.{Graphics, Font}
+import org.nlogo.api.{WidgetIO, Dump, Editable, I18N, LogoException, ModelReader}
 
 trait AbstractSliderWidget extends MultiErrorWidget {
 
@@ -23,7 +23,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     setOpaque(true)
     setLayout(null)
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
     doLayout()
     setBorder(widgetBorder)
     addMouseListener(new MouseAdapter {
@@ -214,16 +214,16 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
 
   // LOADING AND SAVING
   def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
-    val min: String = org.nlogo.api.File.restoreLines(strings(7))
-    val max: String = org.nlogo.api.File.restoreLines(strings(8))
+    val min: String = ModelReader.restoreLines(strings(7))
+    val max: String = ModelReader.restoreLines(strings(8))
     val v = strings(9).toDouble
-    val inc: String = org.nlogo.api.File.restoreLines(strings(10))
+    val inc: String = ModelReader.restoreLines(strings(10))
     if (strings.length > 12) {
       units = strings(12)
       if (units == "NIL") { units = "" }
     }
     if (strings.length > 13 && strings(13) == "VERTICAL") vertical = true
-    this.name = org.nlogo.api.File.restoreLines(strings(6))
+    this.name = ModelReader.restoreLines(strings(6))
     minimumCode=min
     maximumCode=max
     // i think this next line is here because of some weird bounds checking
@@ -243,10 +243,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     s.append(getBoundsString)
     if ((null != name) && (name.trim != "")) { s.append(name + "\n"); s.append(name + "\n") }
     else { s.append("NIL\n"); s.append("NIL\n") }
-    s.append(org.nlogo.api.File.stripLines(minimumCode) + "\n")
-    s.append(org.nlogo.api.File.stripLines(maximumCode) + "\n")
+    s.append(ModelReader.stripLines(minimumCode) + "\n")
+    s.append(ModelReader.stripLines(maximumCode) + "\n")
     s.append(Dump.number(value) + "\n")
-    s.append(org.nlogo.api.File.stripLines(incrementCode) + "\n")
+    s.append(ModelReader.stripLines(incrementCode) + "\n")
     s.append("1\n")
     if ((null != units) && (units.trim!="")) s.append(units + "\n")
     else { s.append("NIL\n") }

@@ -79,7 +79,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     handle.setSize((HANDLE_WIDTH * scaleFactor).toInt, (HANDLE_HEIGHT * scaleFactor).toInt)
     handle.setLocation(handleXPos, HANDLE_Y_POS)
     channel.setBounds(LEFT_MARGIN, CHANNEL_Y_POS,
-      slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN, (CHANNEL_HEIGHT * scaleFactor.toInt))
+      slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN, (CHANNEL_HEIGHT * scaleFactor).toInt)
   }
 
   private def handleXPos = {
@@ -125,7 +125,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
         val valueString = slider.valueString(slider.value)
         val fontMetrics = g.getFontMetrics
         val valueWidth = fontMetrics.stringWidth(valueString)
-        val shortenedName = org.nlogo.awt.Utils.shortenStringToFit(
+        val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
             slider.name, rect.width - nameXOffset - valueWidth - RIGHT_MARGIN - CHANNEL_LEFT_MARGIN - 2, fontMetrics)
         g.setColor(slider.getForeground)
         g.drawString(shortenedName, nameXOffset, rect.height - fontMetrics.getMaxDescent - padNameHeight)
@@ -146,11 +146,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
 
   class Channel extends JComponent {
     setOpaque(false)
-    setBackground(org.nlogo.awt.Utils.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
+    setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if ((!e.isPopupTrigger) && org.nlogo.awt.Utils.button1Mask(e)) incrementClick(e.getX())
+        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.hasButton1(e)) incrementClick(e.getX())
       }
     })
 

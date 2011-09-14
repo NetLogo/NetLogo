@@ -1,7 +1,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, ExtensionManager, Number, Program, Token,
+import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
 import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
@@ -54,8 +54,8 @@ object Compiler extends CompilerInterface {
                                       program, oldProcedures, extensionManager)
       .parse(subprogram)
     val identifierParser = new IdentifierParser(program, noProcedures, results.procedures, !parse)
-    import org.nlogo.util.JCL._ // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values) {
+    import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
+    for(procedure <- results.procedures.values.asScala) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
         new ExpressionParser(procedure).parse(tokens)
@@ -80,25 +80,25 @@ object Compiler extends CompilerInterface {
   /// it to ConstantParser.  This should really be cleaned up so that ConstantParser uses api.World
   /// too. - ST 2/23/09
 
-  // In the following 3 methods, the initial call to Number.parse is a performance optimization.
+  // In the following 3 methods, the initial call to NumberParser is a performance optimization.
   // During import-world, we're calling readFromString over and over again and most of the time
-  // the result is a number.  So we try the fast path through Number.parse first before falling
+  // the result is a number.  So we try the fast path through NumberParser first before falling
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
         .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
-    Number.parse(source).right.getOrElse(
+    NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer(is3D).tokenize(source).iterator))
 
@@ -115,11 +115,11 @@ object Compiler extends CompilerInterface {
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04
     var done = false
     while(!done) {
-      currFile.getBufferedReader.mark(1)
+      currFile.reader.mark(1)
       currFile.pos += 1
-      val i = currFile.getBufferedReader.read()
+      val i = currFile.reader.read()
       if(i == -1 || !Character.isWhitespace(i)) {
-        currFile.getBufferedReader.reset()
+        currFile.reader.reset()
         currFile.pos -= 1
         done = true
       }

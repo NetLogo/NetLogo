@@ -119,7 +119,7 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
         // remember, we are writing rotated counter-clockwise 90 degrees, so that var names
         // reflect that.
         val valueHeight = fontMetrics.stringWidth(valueString)
-        val shortenedName = org.nlogo.awt.Utils.shortenStringToFit(
+        val shortenedName = org.nlogo.awt.Fonts.shortenStringToFit(
           slider.name, rect.height - nameYOffset - valueHeight - TOP_MARGIN - CHANNEL_BOTTOM_MARGIN - 2, fontMetrics)
 
         // write name and value text rotated -90 degrees
@@ -160,11 +160,11 @@ class SliderVerticalPainter(private val slider: AbstractSliderWidget) extends Sl
 
   private class Channel extends JComponent {
     setOpaque(false)
-    setBackground(org.nlogo.awt.Utils.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
+    setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if ((!e.isPopupTrigger) && org.nlogo.awt.Utils.button1Mask(e)) incrementClick(e.getY)
+        if ((!e.isPopupTrigger) && org.nlogo.awt.Mouse.hasButton1(e)) incrementClick(e.getY)
       }
     })
     // make tooltips appear in the same location onscreen as they do

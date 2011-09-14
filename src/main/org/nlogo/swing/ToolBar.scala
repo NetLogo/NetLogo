@@ -35,7 +35,7 @@ abstract class ToolBar extends JToolBar {
     addControls()
     for(comp<-getComponents) {
       comp.setFocusable(false)
-      org.nlogo.awt.Utils.adjustDefaultFont(comp) 
+      org.nlogo.awt.Fonts.adjustDefaultFont(comp) 
     }
     // kinda kludgy but we don't want to have the text below
     // the checker in the checkbox in the Code tab ev 8/24/06

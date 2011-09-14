@@ -180,10 +180,10 @@ end
 GRAPHICS-WINDOW
 26
 77
-271
-290
-3
-3
+582
+134
+10
+0
 26.0
 1
 10
@@ -194,10 +194,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--3
-3
--3
-3
+-10
+10
+0
+0
 0
 0
 1
@@ -516,7 +516,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta3
+NetLogo 5.0beta5
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@

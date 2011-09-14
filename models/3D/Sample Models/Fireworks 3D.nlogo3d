@@ -348,18 +348,16 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This program models the action of fireworks.  Rockets begin at the bottom of the world, shoot upwards into the sky and then explode, emitting showers of falling sparks.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Each rocket, represented by a turtle, is launched upward with an initial x y and z velocity.  At a certain point in the sky, an explosion occurs, which is represented by a series of turtle hatches.  Each hatched turtle inherits the velocity from the original rocket in addition to velocity from the explosion itself.  The result is a simulation of a fireworks display.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 SETUP creates FIREWORKS rockets at the bottom of the screen (MIN-PZCOR). Pressing the GO forever button executes the model continually, launching the rockets. When a rocket hits its peak velocity, it explodes into FRAGMENTS pieces.
 
 GRAVITY determines the gravitational strength in the environment.  A larger value will give a greater gravitational acceleration, meaning that particles will be forced to the ground at a faster rate.  The inverse is true for smaller values.
@@ -380,30 +378,25 @@ The model will launch a new set of rockets every DELAY seconds.
 
 This model has been constructed so that all changes in the sliders and switches will take effect in the model during execution.  So, while the GO button is still down, you can change the values of the sliders and the switch, and you can see these changes in the world.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Experiment with the INITIAL-X-VEL, INITIAL-Y-VEL, and INITIAL-Z-VEL sliders.  Observe that initial x and y velocities of zero launch the rockets straight upwards.  When the initial x or y velocities are increased, notice that some rockets make an arc in the sky.
 
 With the initial z-velocity, observe that, on a fixed GRAVITY value, the heights of the fireworks are lower on smaller initial z-velocities and higher on larger ones.  Also observe that each rocket explodes at a height equal to or a little less than its apex.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Observe what happens to the model when the GRAVITY slider is set to different values.  Watch what happens to the model when GRAVITY is set to zero.  Can you explain what happens to the fireworks in the model?  Can you explain why this phenomenon occurs?  What does this say about the importance of gravity?  Now set the GRAVITY slider to its highest value.  What is different about the behavior of the fireworks at this setting?  What can you conclude about the relationship between gravity and how objects move in space?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 The fireworks represented in this model are only of one basic type.  A good way of extending this model would be to create other more complex kinds of fireworks.  Some could have multiple explosions, multiple colors, or a specific shape engineered into their design.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 An important aspect of this model is the fact that each particle from an explosion inherits the properties of the original firework.  This informational inheritance allows the model to adequately represent the projectile motion of the firework particles since their initial x, y, and z velocities are relative to their parent firework.
 
-To visually represent the fading property of the firework particles, this model made use of the reporter 'scale-color'.  As the turtle particles fall to the ground, they hold their pens down and gradually scale their color to black.  As mentioned above, the rate of fade can be controlled using the FADE-AMOUNT slider.
-
+To visually represent the fading property of the firework particles, this model made use of the reporter `scale-color`.  As the turtle particles fall to the ground, they hold their pens down and gradually scale their color to black.  As mentioned above, the rate of fade can be controlled using the FADE-AMOUNT slider.
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -691,7 +684,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta2
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 set trails? true
 set fireworks 30

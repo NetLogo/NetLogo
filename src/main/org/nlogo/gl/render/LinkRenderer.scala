@@ -2,17 +2,15 @@ package org.nlogo.gl.render
 
 import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
-
 import org.nlogo.api.{ Agent, Link, Perspective, World }
-import org.nlogo.util.JCL._
 
 private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
         extends AgentRenderer(world, shapeRenderer) {
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.FOLLOW || 
-         world.observer.perspective == Perspective.RIDE)
+      if(world.observer.perspective == Perspective.Follow || 
+         world.observer.perspective == Perspective.Ride)
         world.observer.followDistance
       else
         world.observer.dist
@@ -26,7 +24,8 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
     if(world.links == null)
       return
     val scale = lineScale
-    for(link <- world.links.agents.map(_.asInstanceOf[Link]))
+    import collection.JavaConverters._
+    for(link <- world.links.agents.asScala.map(_.asInstanceOf[Link]))
       if(!link.hidden)
         renderWrappedLink(gl, link, fontSize, patchSize, outlineAgent == link, scale)
   }

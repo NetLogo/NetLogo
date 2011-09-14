@@ -2,7 +2,7 @@ package org.nlogo.prim;
 
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 
 public final strictfp class _conststring extends Reporter implements Pure {
@@ -14,7 +14,7 @@ public final strictfp class _conststring extends Reporter implements Pure {
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_STRING);
+    return Syntax.reporterSyntax(Syntax.StringType());
   }
 
   @Override

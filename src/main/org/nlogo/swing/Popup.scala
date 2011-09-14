@@ -21,7 +21,7 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
 
   def show() {
     dialog.pack()
-    org.nlogo.awt.Utils.center(dialog, parentFrame)
+    org.nlogo.awt.Positioning.center(dialog, parentFrame)
     dialog.setVisible(true)
   }
 

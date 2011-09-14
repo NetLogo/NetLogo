@@ -427,7 +427,7 @@ strictfp class EditorDialog
 
     // BOTTOM BUTTONS
 
-    javax.swing.JButton cancel = new javax.swing.JButton(I18N.gui().get("common.buttons.cancel"));
+    javax.swing.JButton cancel = new javax.swing.JButton(I18N.guiJ().get("common.buttons.cancel"));
     cancel.addActionListener
         (new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -435,7 +435,7 @@ strictfp class EditorDialog
           }
         });
 
-    javax.swing.JButton done = new javax.swing.JButton(I18N.gui().get("common.buttons.ok"));
+    javax.swing.JButton done = new javax.swing.JButton(I18N.guiJ().get("common.buttons.ok"));
     done.addActionListener
         (new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent e) {

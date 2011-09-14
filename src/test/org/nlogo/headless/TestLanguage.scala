@@ -55,8 +55,8 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   // the rules on whether or not the test should be run
   val shouldRun = {
     val envCorrect =
-      if (testName.endsWith("_2D")) !Version.is3D()
-      else if (testName.endsWith("_3D")) Version.is3D()
+      if (testName.endsWith("_2D")) !Version.is3D
+      else if (testName.endsWith("_3D")) Version.is3D
       else true
     val noGenerator = java.lang.Boolean.getBoolean("org.nlogo.noGenerator")
     val generatorCorrect =
@@ -122,7 +122,12 @@ object TestParser {
   }
   def parseFile(f: File): List[LanguageTest] = {
     def preprocessStackTraces(s:String) = s.replace("\\\n  ", "\\n")
-    parseString(f.getName.replace(".txt", ""), preprocessStackTraces(file2String(f.getAbsolutePath)))
+    val suiteName =
+      if(f.getName == "tests.txt")
+        f.getParentFile.getName
+      else
+        f.getName.replace(".txt", "")
+    parseString(suiteName, preprocessStackTraces(file2String(f.getAbsolutePath)))
   }
   def parseString(suiteName: String, s: String): List[LanguageTest] = {
     def split(xs: List[String]): List[LanguageTest] = {

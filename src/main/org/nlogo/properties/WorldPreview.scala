@@ -138,7 +138,7 @@ class WorldPreview(width: Int, height: Int)
     private var minPxcor, maxPxcor, minPycor, maxPycor = 0
     private var xOrigin, yOrigin = 0
 
-    private val monoFont = org.nlogo.awt.Utils.platformMonospacedFont
+    private val monoFont = org.nlogo.awt.Fonts.platformMonospacedFont
 
     setSize(width, height)     
     setBackground(java.awt.Color.black)

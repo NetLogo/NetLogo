@@ -94,16 +94,16 @@ LetInsideAskConcurrent1
   any? turtles with [who != xcor] => false
 
 LetOfVarToItself1
-  O> let x x => COMPILER ERROR Nothing named X has been defined
+  O> let x x => COMPILER ERROR Nothing named X has been defined.
 
 LetOfVarToItself2
-  O> let x 1 + 2 + 3 + x => COMPILER ERROR Nothing named X has been defined
+  O> let x 1 + 2 + 3 + x => COMPILER ERROR Nothing named X has been defined.
 
 LetOfVarToItself3
-  O> let x 1 + 2 + 3 + x + 4 => COMPILER ERROR Nothing named X has been defined
+  O> let x 1 + 2 + 3 + x + 4 => COMPILER ERROR Nothing named X has been defined.
 
 LetOfVarToItselfInsideAsk
-  O> ask turtles [ let x x ] => COMPILER ERROR Nothing named X has been defined
+  O> ask turtles [ let x x ] => COMPILER ERROR Nothing named X has been defined.
 
 LetTwice
   O> let x 5 let x 6 => COMPILER ERROR There is already a local variable called X here

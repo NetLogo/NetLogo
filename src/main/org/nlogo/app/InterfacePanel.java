@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.Version;
-import org.nlogo.awt.Utils;
+import org.nlogo.api.VersionHistory;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
 import org.nlogo.window.JobWidget;
 import org.nlogo.window.PlotWidget;
 import org.nlogo.window.SliderWidget;
-import org.nlogo.api.ModelSection;
+import org.nlogo.api.ModelSectionJ;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -36,7 +36,7 @@ strictfp class InterfacePanel
     workspace.setWidgetContainer(this);
     // in 3d don't add the view widget since it's always
     // disabled there's no reason for it to take space 7/5/07
-    if (!org.nlogo.api.Version.is3D()) {
+    if (!Version.is3D()) {
       addWidget((Widget) viewWidget, 0, 0, false, false);
     }
     ((Widget) viewWidget).deleteable_$eq(false);
@@ -64,20 +64,20 @@ strictfp class InterfacePanel
   protected void doPopup(final java.awt.event.MouseEvent e) {
     JPopupMenu menu = new JPopupMenu();
     // add all the widgets
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.button"), "BUTTON", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.slider"), "SLIDER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.switch"), "SWITCH", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY()));
     WidgetCreationMenuItem outputItem =
-        new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.output"), "OUTPUT", e.getX(), e.getY());
+        new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.output"), "OUTPUT", e.getX(), e.getY());
     if (getOutputWidget() != null) {
       outputItem.setEnabled(false);
     }
     menu.add(outputItem);
-    menu.add(new WidgetCreationMenuItem(I18N.gui().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
+    menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
 
     // add extra stuff
     menu.add(new javax.swing.JPopupMenu.Separator());
@@ -96,7 +96,7 @@ strictfp class InterfacePanel
             } catch (java.io.IOException ex) {
               javax.swing.JOptionPane.showMessageDialog
                   (InterfacePanel.this, ex.getMessage(),
-                      I18N.gui().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
+                      I18N.guiJ().get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE);
             }
           }
         });
@@ -157,13 +157,13 @@ strictfp class InterfacePanel
     } else if (type.equals("INPUT") ||  // in the GUI, it's "Input Box"
         type.equals("INPUTBOX"))  // in saved models, it's "INPUTBOX"
     {
-      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont(),
+      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
           java.awt.Font.PLAIN, 12);
       return new org.nlogo.window.InputBoxWidget
           (new org.nlogo.window.CodeEditor
-              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.gui().fn()),
+              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               new org.nlogo.window.CodeEditor
-                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.gui().fn()),
+                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
               workspace, this);
     } else if (type.equals("OUTPUT"))  // currently in saved models only - ST 3/17/04
     {
@@ -259,7 +259,7 @@ strictfp class InterfacePanel
     }
     if (viewWidget instanceof org.nlogo.window.ViewWidget &&
         !type.equals("GRAPHICS-WINDOW") &&
-        org.nlogo.api.Version.olderThan13pre1(modelVersion)) {
+        VersionHistory.olderThan13pre1(modelVersion)) {
       y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight() +
           ((org.nlogo.window.ViewWidget) viewWidget).controlStrip.getHeight();
     }
@@ -337,7 +337,7 @@ strictfp class InterfacePanel
   public void handle(org.nlogo.window.Events.ExportInterfaceEvent e) {
     try {
       javax.imageio.ImageIO.write
-          (org.nlogo.awt.Utils.paintToImage(this),
+          (org.nlogo.awt.Images.paintToImage(this),
               "png", e.stream);
     } catch (java.io.IOException ex) {
       e.exceptionBox[0] = ex;
@@ -355,7 +355,7 @@ strictfp class InterfacePanel
       final java.io.IOException[] exception =
           new java.io.IOException[]{null};
       org.nlogo.swing.ModalProgressTask.apply(
-        org.nlogo.awt.Utils.getFrame(this),
+        org.nlogo.awt.Hierarchy.getFrame(this),
         "Exporting...",
         new Runnable() {
           public void run() {
@@ -373,7 +373,7 @@ strictfp class InterfacePanel
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSection.WIDGETS &&
+    if (e.section == ModelSectionJ.WIDGETS() &&
         // (hopefully) temporary hack for ReviewTab
         // ReviewTab needs to fire LoadSectionEvent so that its
         // InterfacePanelLite can load the widgets. But the main

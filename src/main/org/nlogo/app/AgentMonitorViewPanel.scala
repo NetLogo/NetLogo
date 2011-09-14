@@ -12,7 +12,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends javax.swing.JPanel 
   view.applyNewFontSize(workspace.view.fontSize, 0)
   private val watchButton = new javax.swing.JButton(new WatchMeAction)
   watchButton.setFont(
-    new java.awt.Font(org.nlogo.awt.Utils.platformFont,
+    new java.awt.Font(org.nlogo.awt.Fonts.platformFont,
                       java.awt.Font.PLAIN, 10))
   watchButton.setBackground(org.nlogo.window.InterfaceColors.GRAPHICS_BACKGROUND)
   watchButton.setBorder(org.nlogo.swing.Utils.createWidgetBorder())
@@ -45,7 +45,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends javax.swing.JPanel 
 
   private class WatchMeAction extends javax.swing.AbstractAction("watch-me") {
     override def actionPerformed(e: java.awt.event.ActionEvent) {
-      workspace.world.observer().setPerspective(Perspective.WATCH, view.agent)
+      workspace.world.observer().setPerspective(Perspective.Watch, view.agent)
       workspace.view.discardOffscreenImage()
       workspace.viewManager.getPrimary.incrementalUpdateFromEventThread()
     }

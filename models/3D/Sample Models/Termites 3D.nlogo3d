@@ -91,7 +91,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 102
@@ -236,54 +236,47 @@ Observer controls
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the Termites model. This project is inspired by the behavior of termites gathering wood chips into piles. The termites follow a set of simple rules. Each termite starts wandering randomly. If it bumps into a wood chip, it picks the chip up, and continues to wander randomly. When it bumps into another wood chip, it finds a nearby empty space and puts its wood chip down.  With these simple rules, the wood chips eventually end up in a single pile.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Click the SETUP button to set up the termites (white) and wood chips (yellow). Click the GO button to start the simulation.  The termites turn orange when they are carrying a wood chip.
 
 The NUMBER slider controls the number of termites. (Note: Changes in the NUMBER slider do not take effect until the next setup.) The DENSITY slider controls the initial density of wood chips.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 As piles of wood chips begin to form, the piles are not "protected" in any way. That is, termites sometimes take chips away from existing piles. That strategy might seem counter-productive. But if the piles were "protected", you would end up with lots of little piles, not one big one.
 
 The final piles are roughly round.  Why is this?  What other physical situations also produce round things?
 
 In general, the number of piles decreases with time. Why? Some piles disappear, when termites carry away all of the chips. And there is no way to start a new pile from scratch, since termites always put their wood chips near other wood chips. So the number of piles must decrease over time. (The only way a "new" pile starts is when an existing pile splits into two.)
 
-This project is a good example of a DECENTRALIZED strategy. There is no termite in charge, and no special pre-designated site for the piles. Each termite follows a set of simple rules, but the colony as a whole accomplishes a rather sophisticated task.
+This project is a good example of a _decentralized_ strategy. There is no termite in charge, and no special pre-designated site for the piles. Each termite follows a set of simple rules, but the colony as a whole accomplishes a rather sophisticated task.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Do the results change if you use just a single termite? What if you use several thousand termites?
 
 When there are just two piles left, which of them is most likely to "win" as the single, final pile? How often does the larger of the two piles win? If one pile has only a single wood chip, and the other pile has the rest of the wood chips, what are the chances that the first pile will win?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Can you extend the model to have the termites sort several colors of wood?
 
 Plot the number of piles, or their average size, or the number of termites carrying wood chips, as the model runs.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
--------------------
 Notice that the wood chips do not exist as objects. They are just represented as colors in the patches. The termites update the patch colors as they pick up and put down the wood chips. In effect, the patches are being used as the data structure. This strategy is useful in many NetLogo programs.
 
-Note than when you stop the GO forever button, the termites keep moving for a little while.  This is because they are each finishing the commands in the GO procedure.  To do this, they must finish their current cycle of finding a chip, finding a pile, and then finding an empty spot near the pile.  In most models, the GO function only moves the model forward one step, but in this model, the GO function is written to advance the turtles through a full cycle of activity.  See the "Buttons" section of the Programming Guide in the User Manual for more information on turtle forever buttons.
+Note than when you stop the GO forever button, the termites keep moving for a little while.  This is because they are each finishing the commands in the `go` procedure.  To do this, they must finish their current cycle of finding a chip, finding a pile, and then finding an empty spot near the pile.  In most models, the `go` procedure only moves the model forward one step, but in this model, `go` is written to advance the turtles through a full cycle of activity.  See the "Buttons" section of the Programming Guide in the User Manual for more information on turtle forever buttons.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 Shepherds, Painted Desert Challenge
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -566,7 +559,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 @#$#@#$#@

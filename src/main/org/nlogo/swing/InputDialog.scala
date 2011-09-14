@@ -1,7 +1,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Frame }
-import org.nlogo.awt.Utils.getFrame
+import org.nlogo.awt.Hierarchy.getFrame
 import javax.swing.{ JOptionPane, JTextField }
 
 object InputDialog {

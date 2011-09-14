@@ -1,17 +1,17 @@
 package org.nlogo.prim;
 
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.agent.Turtle;
 import org.nlogo.agent.Patch;
-import org.nlogo.api.Nobody;
+import org.nlogo.api.Nobody$;
 
 public final strictfp class _patchnw extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_PATCH, "-TP-");
+        (Syntax.PatchType(), "-TP-");
   }
 
   @Override
@@ -29,7 +29,7 @@ public final strictfp class _patchnw extends Reporter {
       patch = world.fastGetPatchAt(-1, 1);
     }
     if (patch == null) {
-      return Nobody.NOBODY;
+      return Nobody$.MODULE$;
     }
     return patch;
   }

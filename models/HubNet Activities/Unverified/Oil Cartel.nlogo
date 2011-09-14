@@ -1084,7 +1084,7 @@ Client specific plotting (experimental).
 
 Tragedy of the Commons, Gridlock, Prisoner's Dilemma HubNet
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 For an introduction to firm behavior in imperfectly competitive markets see:
 Nicholson, Walter. Intermediate Microeconomics and Its Application.  Thomson Learning, 2004.

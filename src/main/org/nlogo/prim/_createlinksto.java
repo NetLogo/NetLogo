@@ -8,7 +8,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _createlinksto
     extends Command
@@ -26,8 +26,8 @@ public final strictfp class _createlinksto
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_TURTLESET,
-            Syntax.TYPE_COMMAND_BLOCK | Syntax.TYPE_OPTIONAL},
+        (new int[]{Syntax.TurtlesetType(),
+            Syntax.CommandBlockType() | Syntax.OptionalType()},
             "-T--", "---L", true);
   }
 
@@ -56,7 +56,7 @@ public final strictfp class _createlinksto
         if (src == dest) {
           throw new EngineException
               (context, this,
-                  I18N.errors().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
+                  I18N.errorsJ().get("org.nlogo.prim.$common.turtleCantLinkToSelf"));
         }
         if (src.id != -1 && dest.id != -1) {
           Link link = world.linkManager.createLink(src, dest, breed);

@@ -60,7 +60,7 @@ public final strictfp class PrinterManager {
    */
   protected String getFooter(int pageNum, int pageWidth, java.awt.FontMetrics fm) {
     String pageNumString = " - page " + pageNum;
-    String shortFileName = org.nlogo.awt.Utils.shortenStringToFit(fileName, pageWidth - fm.stringWidth(pageNumString), fm);
+    String shortFileName = org.nlogo.awt.Fonts.shortenStringToFit(fileName, pageWidth - fm.stringWidth(pageNumString), fm);
     return shortFileName + pageNumString;
   }
 

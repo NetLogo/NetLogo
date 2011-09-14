@@ -43,7 +43,7 @@ object InfoTabDocGenerator {
         mkString("\n")
     }
 
-    // find header lines (## ) and wrap them with htmk <a> blocks
+    // find header lines (## ) and wrap them with html <a> blocks
     // so that they can be linked to from the TOC
     private val insertAIntoHeaders = (s: String) => {
       (for(line <- s.split("\n")) yield

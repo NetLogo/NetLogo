@@ -12,7 +12,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _member
     extends Reporter
@@ -81,16 +81,16 @@ public final strictfp class _member
     } else {
       throw new ArgumentTypeException
           (context, this, 1,
-              Syntax.TYPE_LIST | Syntax.TYPE_STRING | Syntax.TYPE_AGENTSET,
+              Syntax.ListType() | Syntax.StringType() | Syntax.AgentsetType(),
               obj);
     }
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD,
-        Syntax.TYPE_LIST | Syntax.TYPE_STRING | Syntax.TYPE_AGENTSET};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int[] right = {Syntax.WildcardType(),
+        Syntax.ListType() | Syntax.StringType() | Syntax.AgentsetType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

@@ -1,5 +1,5 @@
 to setup
-  ca
+  clear-all
   let threedshapes [ "default" "square" "circle" "triangle" "cylinder" "line" ]
   let positions [ "rt 60" "rt 120" "tilt-up 60" "tilt-up 120" "tilt-up 180" ]
   foreach threedshapes [
@@ -206,8 +206,8 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This code example shows all of the 3D shapes currently available in NetLogo 3D.
 @#$#@#$#@
 default
@@ -504,7 +504,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta3
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 @#$#@#$#@

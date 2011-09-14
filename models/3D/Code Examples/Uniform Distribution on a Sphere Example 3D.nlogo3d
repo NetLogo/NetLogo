@@ -47,6 +47,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 56
@@ -152,9 +153,9 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This code example demonstrates the correct way to uniformly distribute turtles on the surface of a sphere. Note that simply setting the heading and pitch to random numbers between 0 and 360 results in a non-uniform distribution with clustering at the poles in the z direction.  The solution in SETUP-UNIFORM is based on information found here:
+## WHAT IS IT?
+
+This code example demonstrates the correct way to uniformly distribute turtles on the surface of a sphere. Note that simply setting the heading and pitch to random numbers between 0 and 360 results in a non-uniform distribution with clustering at the poles in the z direction.  The solution in `setup-uniform` is based on information found here:
 
 http://mathworld.wolfram.com/SpherePointPicking.html
 @#$#@#$#@
@@ -441,7 +442,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup-uniform
 @#$#@#$#@

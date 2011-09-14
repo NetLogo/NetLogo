@@ -30,6 +30,7 @@ import org.nlogo.api.World3D;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ShapeList;
 
 public class Renderer
@@ -42,6 +43,7 @@ public class Renderer
   final LinkRenderer linkRenderer;
   final ShapeRenderer shapeRenderer;
   final MouseState mouseState = new MouseState() ;
+  final LightManager lightManager = new LightManager();
 
   int width;
   int height;
@@ -177,22 +179,23 @@ public class Renderer
 
     // Lighting
 
-    float[] lightAmbient = {0.25f, 0.25f, 0.25f, 1.0f};
-    float[] lightDiffuse = {0.35f, 0.35f, 0.35f, 1.0f};
+    lightManager.init(gl);
 
-    gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, FloatBuffer.wrap(lightAmbient));
-    gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, FloatBuffer.wrap(lightDiffuse));
-    gl.glEnable(GL.GL_LIGHT0);
+    Light light1 = new DirectionalLight(new Direction(-1.0f, -0.3f, 0.4f));
+    light1.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+    light1.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+    light1.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+    lightManager.addLight(light1);
 
-    float[] lightAmbient2 = {0.25f, 0.25f, 0.25f, 1.0f};
-    float[] lightDiffuse2 = {0.35f, 0.35f, 0.35f, 1.0f};
-    float[] lightPos2 = {0.25f, 0.25f, 0.25f, 0.0f};
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_AMBIENT, FloatBuffer.wrap(lightAmbient2));
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE, FloatBuffer.wrap(lightDiffuse2));
-    gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, FloatBuffer.wrap(lightPos2));
-    gl.glEnable(GL.GL_LIGHT2);
+    Light light2 = new DirectionalLight(new Direction(1.0f, 0.6f, -0.5f));
+    light2.ambient_$eq(new RGBA(0.25f, 0.25f, 0.25f, 1.0f));
+    light2.diffuse_$eq(new RGBA(0.35f, 0.35f, 0.35f, 1.0f));
+    light2.specular_$eq(new RGBA(0.0f, 0.0f, 0.0f, 0.0f));
+    lightManager.addLight(light2);
 
-    gl.glEnable(GL.GL_LIGHTING);
+    // This is necessary for properly rendering scaled objects. Without this, small objects
+    // may look too bright, and large objects will look flat.
+    gl.glEnable(GL.GL_NORMALIZE);
 
     // Coloring
 
@@ -301,20 +304,20 @@ public class Renderer
     if (agent instanceof Turtle) {
       Turtle turtle = (Turtle) agent;
 
-      boolean riding_agent = (world.observer().perspective() == Perspective.RIDE)
+      boolean riding_agent = (world.observer().perspective() == PerspectiveJ.RIDE())
           && (world.observer().targetAgent() == turtle);
 
       return !riding_agent && !turtle.hidden()
-          && (Alpha.getAlpha(turtle) > 0.0 || turtle.hasLabel());
+        && (turtle.alpha() > 0.0 || turtle.hasLabel());
     } else if (agent instanceof Link) {
       Link link = (Link) agent;
-      return !link.hidden() && (Alpha.getAlpha(link) > 0.0 || link.hasLabel());
+      return !link.hidden() && (link.alpha() > 0.0 || link.hasLabel());
     } else if (agent instanceof Patch3D) {
       // Patch3D supports the alpha variable, so check Patch3D
       // before checking the regular Patch.
 
       Patch3D patch = (Patch3D) agent;
-      return Alpha.getAlpha(patch) > 0.0 || patch.hasLabel();
+      return patch.alpha() > 0.0 || patch.hasLabel();
     } else if (agent instanceof Patch) {
       // We will assume all patches are visible. However, perhaps
       // we should only return true for non-black patches.
@@ -404,11 +407,19 @@ public class Renderer
 
       worldRenderer.renderCrossHairs(gl);
 
-      float[] lightPosition = {-1.0f, -0.3f, 0.4f, 0.0f};
-      gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, FloatBuffer.wrap(lightPosition));
+      lightManager.applyLighting();
 
-      float[] lightPosition2 = {1.0f, 0.6f, -0.5f, 0.0f};
-      gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, FloatBuffer.wrap(lightPosition2));
+      // Uncomment the code below to show the positions and directions of all the lights
+      // in the world (only works in NetLogo 3D, not the 3D view in 2D).
+      /*
+      if (world instanceof World3D)
+      {
+        double observerDistance = Math.sqrt(world.observer().oxcor() * world.observer().oxcor()
+              + world.observer().oycor() * world.observer().oycor()
+              + world.observer().ozcor() * world.observer().ozcor());
+        lightManager.showLights(glu, (World3D)world, WORLD_SCALE, observerDistance, shapeRenderer);
+      }
+      */
 
       renderWorld(gl, world);
 
@@ -418,7 +429,7 @@ public class Renderer
       // as well as link stamps.
       double lineScale = calculateLineScale();
 
-      boolean sortingNeeded = Alpha.sceneHasPartiallyTransparentObjects(world);
+      boolean sortingNeeded = world.mayHavePartiallyTransparentObjects();
 
       if (!sortingNeeded) {
         worldRenderer.renderPatchShapes
@@ -454,7 +465,7 @@ public class Renderer
 
         for (Agent agent : world.turtles().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -464,7 +475,7 @@ public class Renderer
 
         for (Agent agent : world.patches().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -474,7 +485,7 @@ public class Renderer
 
         for (Agent agent : world.links().agents()) {
           if (agentIsVisible(agent)) {
-            if (Alpha.agentIsPartiallyTransparent(agent)) {
+            if (agent.isPartiallyTransparent()) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -492,7 +503,7 @@ public class Renderer
           // Link stamps
           for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
             if (agentIsVisible(stamp)) {
-              if (Alpha.agentIsPartiallyTransparent(stamp)) {
+              if (stamp.isPartiallyTransparent()) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -503,7 +514,7 @@ public class Renderer
           // Turtle stamps
           for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
             if (agentIsVisible(stamp)) {
-              if (Alpha.agentIsPartiallyTransparent(stamp)) {
+              if (stamp.isPartiallyTransparent()) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -574,7 +585,7 @@ public class Renderer
           performPick();
         }
 
-        if ((perspective != Perspective.OBSERVE)
+        if ((perspective != PerspectiveJ.OBSERVE())
             && mouseState.inside() && (mouseState.point() != null)) {
           updateMouseCors();
         }
@@ -637,7 +648,7 @@ public class Renderer
 
     Perspective p = world.observer().perspective();
 
-    if (p == Perspective.FOLLOW || p == Perspective.RIDE) {
+    if (p == PerspectiveJ.FOLLOW() || p == PerspectiveJ.RIDE()) {
       distance = world.observer().followDistance();
     } else {
       distance = world.observer().dist();
@@ -846,7 +857,7 @@ public class Renderer
   }
 
   public void setMouseCors(java.awt.Point mousePt) {
-    double[][] ray = generatePickRay(mouseState.point().getX(), (height - mouseState.point().getY()));
+    double[][] ray = generatePickRay(mousePt.getX(), (height - mousePt.getY()));
     pickPatches(null, ray);
     mouseState.point_$eq(mousePt);
   }

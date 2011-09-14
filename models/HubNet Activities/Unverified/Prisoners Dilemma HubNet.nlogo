@@ -57,7 +57,7 @@ to startup
 end
 
 to setup
-  ca
+  clear-all
   setup-shapes
   setup-vars
   reset-ticks
@@ -539,6 +539,7 @@ GRAPHICS-WINDOW
 1
 0
 ticks
+30.0
 
 BUTTON
 27
@@ -555,6 +556,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 339
@@ -582,6 +584,7 @@ NIL
 A
 NIL
 NIL
+1
 
 BUTTON
 110
@@ -598,6 +601,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 194
@@ -614,6 +618,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 TEXTBOX
 330
@@ -739,95 +744,87 @@ OUTPUT
 12
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is a HubNet version of the Prisoner's Dilemma.  The Prisoner's Dilemma is a famous game-theory situation that models the costs and benefits of collaboration or treason between free agents where there is a struggle over some capital.
 
 The game has implications for a variety of social situations that involve negotiations in the absence of absolute trust between agents, such as in politics and economics. The game is a succession of interactions between agents, with each agent trying to maximize personal gains over all interactions. In this game, aggressive behavior is not necessarily the best strategy for maximizing personal gains. The rules of the game are such that agents are penalized when behaving aggressively in interacting with another aggressive agent, At each interaction between agents, each agent decides whether to 'cooperate' or 'defect.' These household terms in economics come from the following hypothetical situation.
 
 The Prisoner's Dilemma presents an interesting problem: if you and your accomplice in crime are imprisoned, then in order to minimize the overall jail time you should cooperate with your partner by remaining silent and not confessing.  However, you may choose to defect the unsaid "contract" with your partner by confessing.Let's assume you have confessed. If your partner does not confess you will go free.  If your partner confesses, you will go to jail for three years, much better than the five you would have earned had you refused to confess.  Unfortunately, your partner is in the same position.  Acting rationally in the short term, you will both be worse off. For more introductory information, please refer in the NetLogo models library to the PD BASIC model found in the PRISONER'S DILEMMA suite. Note also that in this model, the traditional year values, such as '3 years' or '5 years,' are given for modification.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 This model allows for many students within a classroom to challenge each other over a network.  Students will keep switching partners by moving their agents around on the screen and they can switch strategies. Students compete to see who has gained the maximum points over all interactions.
 
 Moreover, this model allows students to gain a grasp of computer programming. An input box on the screen allows students to edit and author strategies. Following are the strategies that students can choose from (see the STRATEGY-CHOICE choice button):
 
-Strategies:
-Random - randomly cooperate or defect
-Cooperate - cooperate always
-Defect - defect always
-Go-by-Majority - Totals the number of times that the partner has defected. {against you or regardless of whom the partner had been playing against? Andrei, please choose and phrase}  If the majority of the time, up to that point, the partner has defected, defect.  Otherwise, cooperate.
-Tit-for-Tat - If the opponent cooperates this round cooperate next round.  If the opponent defects this round, defect next round.  Initially cooperate. {again-- against me or anyone?}
-Suspicious-Tit-for-Tat - The Tit-for-Tat strategy, except initially defects
-Tit-for-Two-Tats - If the opponent cooperates this round cooperate next round.  If the opponent defects two rounds in a row, defect the next round.  Initially cooperate.
-Pavlov - If the previous tactic (cooperate or defect) resulted in good {Andrei, what does this mean? Any positive point? The maximum possible?} points, stick with that tactic.  Otherwise, switch strategies.  Currently, "Success" happens when the partner cooperates, so this will keep switching if the opponent is always defecting.  Initially random.
+Strategies:  
+Random - randomly cooperate or defect  
+Cooperate - cooperate always  
+Defect - defect always  
+Go-by-Majority - Totals the number of times that the partner has defected. {against you or regardless of whom the partner had been playing against? Andrei, please choose and phrase}  If the majority of the time, up to that point, the partner has defected, defect.  Otherwise, cooperate.  
+Tit-for-Tat - If the opponent cooperates this round cooperate next round.  If the opponent defects this round, defect next round.  Initially cooperate. {again-- against me or anyone?}  
+Suspicious-Tit-for-Tat - The Tit-for-Tat strategy, except initially defects  
+Tit-for-Two-Tats - If the opponent cooperates this round cooperate next round.  If the opponent defects two rounds in a row, defect the next round.  Initially cooperate.  
+Pavlov - If the previous tactic (cooperate or defect) resulted in good {Andrei, what does this mean? Any positive point? The maximum possible?} points, stick with that tactic.  Otherwise, switch strategies.  Currently, "Success" happens when the partner cooperates, so this will keep switching if the opponent is always defecting.  Initially random.  
 Unforgiving - Cooperate always unless the opponent defects once.  Upon opponent defection retaliate by defecting always.
 
 Rules for the Iterated Prisoner's Dilemma
------------------------------------------
+
 1.  This game will consist of matches in which each student competes against one opponent at a time.  Students may search for partners on their own.  Once paired, students will play 10 rounds, and then separate and look for other partners.
 
 2.  Each round the student and his/her partner will earn or lose points by either cooperating (C) or defecting (D) based on the rules set in their individual client. Each students' strategy is either selected (the STRATEGY-CHOICE ) or edited on the HubNet client. {Andrei, can players change their strat while in a given interaction?}
 
 3.  The point system is determined by the administrator, using the 4 sliders under "PAYOFF." That is, the administrator does not change the basic game but the value of the prizes and penalties.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Buttons:
---------
-SETUP: Begin playing the iterated prisoner's dilemma.
-RERUN: All players set their total back to zero, and are ready to replay
-PLAY: When students pair up, they will play a user-defined number of turns before separating
+
+SETUP: Begin playing the iterated prisoner's dilemma.  
+RERUN: All players set their total back to zero, and are ready to replay  
+PLAY: When students pair up, they will play a user-defined number of turns before separating  
 CREATE ANDROID: Creates a computer player to compete with students
 
 Switches:
----------
+
 ALLOW-STRATEGY-CHANGE?: If on, students will be able to change their strategies. If off, they will be locked into the last working strategy in their client until it is turned on again.
 
 Sliders:
---------
+
 COMPUTER STRATEGY - Select the computer's strategy from the drop-down list below.
 
 Plots:
-------
+
 STRATEGY PLOTS: Shows the total points accumulated for each given strategy.  Once a strategy is modified by a student, the results of that student's success/failure will not be plotted on this.
 
 C-D PLOT: Plots the total number of times players have cooperated, and the total number of times players have defected.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Watch the plots for the different strategies.  Is there a serious difference between tit-for-tat and suspicious-tit-fot-tat?  Does one strategy really beat out the rest?
 
 See how often students cooperate and defect.  In the long run, do students learn to switch to more trusting strategies?  Or do students all too often defect?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 1.  Experiment with playing different strategies one against the other.  Which strategies do the best?  Which do the worst?  Why?
 
 2. Let it run for a while with hundreds of computer players to see which strategies win under these conditions.
 
 3. There is a mode in which students cannot change their strategies.  Encourage them to code their own strategies, and then make them stick to that.  Which strategy seemed to work the best?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Students know the history of their last round, but not any of the previous rounds.  Think of a way to have clients be able to store the history of previous plays, and know what their current partner has done in other rounds.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note the use of the turtle variable LABEL to display each turtle's average score in the VIEW.
+Note the use of the turtle variable `label` to display each turtle's average score in the view.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 PD Basic, PD N-Person Iterated, PD Basic Evolutionary, PD 2-Person Iterated
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1473,7 +1470,7 @@ Line -7500403 true 40 216 269 79
 Line -7500403 true 84 40 221 269
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta5
 @#$#@#$#@
 setup
 @#$#@#$#@

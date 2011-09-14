@@ -1,5 +1,5 @@
 ;; setup is called once at the beginning of each run
-;; it clears the screen and resets the clock
+;; it clears the screen and starts the clock
 to setup
   clear-all
   reset-ticks
@@ -64,6 +64,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 69
@@ -166,20 +167,18 @@ roll?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a 3D version of the Sunflower model in the NetLogo Models Library. The interlocking spirals found in the seeds, petals and even branches of many plants occur naturally through the growth of the flower.  This model attempts to demonstrate the growth of these naturally occurring spirals.
 
-When a new seed emerges, the older ones grow slightly and move further from the center--the source--and the youngest seed finds the largest gap between existing seeds, in which it can grow.  This gap can be found by turning counter clockwise.  The angle made by this turn is a multiple of the golden ratio (1.618).  The golden ratio, based on the Fibonacci series (1, 1, 2, 3, 5, 8, 13...), equals the limit of F(n)/F(n-1).  Thus, these spirals can be mathematically generated, using the golden ratio.
+When a new seed emerges, the older ones grow slightly and move further from the center --- the source --- and the youngest seed finds the largest gap between existing seeds, in which it can grow.  This gap can be found by turning counter clockwise.  The angle made by this turn is a multiple of the golden ratio (1.618).  The golden ratio, based on the Fibonacci series (1, 1, 2, 3, 5, 8, 13...), equals the limit of F(n)/F(n-1).  Thus, these spirals can be mathematically generated, using the golden ratio.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 For each clock-tick, a new turtle (can be seen as a seed or a petal) is created.  As in nature, the turtle finds the appropriate position and begins growing.  The 'appropriate position' is defined as the number of clock-ticks times the 'turn increment'.  All of the other existing turtles move forward and grow slightly, with each clock-tick.  If a turtle gets too close to the edge of the world, it dies.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 The NUM-COLORS slider controls how many colors the turtles can be.  (Using this will make some of the spirals stand out more, other stand out less.)
 
 The STEP-SIZE slider controls how far away the turtle moves from the center, for each clock-tick.
@@ -192,32 +191,28 @@ You can select different shapes using the FLOWER-TYPE chooser.  For each shape t
 
 If ROLL? is true turtles also rotate roll by TURN-INCREMENT.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Think about the spirals that you see.  How many different ways can you make a pattern of spirals?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 How does adding colors change the spirals you see?  Does this change the phenomena, or only what you see?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Make the spirals go counter-clockwise.
 
 Make the model draw your favorite flower's petal or seed pattern.  For example, a buttercup or columbine could be made by creating 5 large petals of the appropriate colors.
 
 In nature, real plants don't have the golden number "programmed" into them.  Rather, the spirals form as the result of an emergent process, described in Conway and Guy's book (see below) and other sources.  Can you extend this model to capture this emergent process?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Note in the code that the turtles "die" when the reach the edge of the world.  This is so that they don't wrap around and re-appear on the opposite side.
-
+Note in the code that the turtles `die` when the reach the edge of the world.  This is so that they don't wrap around and re-appear on the opposite side.
 
 ## CREDITS AND REFERENCES
+
 This is based on pp. 113-24 of John H. Conway and Richard K. Guy's "The Book of Numbers".
 @#$#@#$#@
 default
@@ -514,7 +509,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 repeat 350 [ go ]

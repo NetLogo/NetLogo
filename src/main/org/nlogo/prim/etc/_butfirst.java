@@ -1,21 +1,20 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _butfirst
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_LIST | Syntax.TYPE_STRING;
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -30,19 +29,19 @@ public final strictfp class _butfirst
       LogoList list = (LogoList) arg0;
       if (list.isEmpty()) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
       }
       return list.butFirst();
     } else if (arg0 instanceof String) {
       String string = (String) arg0;
       if (string.length() == 0) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
       }
       return string.substring(1);
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, arg0);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), arg0);
     }
   }
 
@@ -50,7 +49,7 @@ public final strictfp class _butfirst
       throws LogoException {
     if (arg0.length() == 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
     }
     return arg0.substring(1);
   }
@@ -59,7 +58,7 @@ public final strictfp class _butfirst
       throws LogoException {
     if (arg0.isEmpty()) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
     }
     return arg0.butFirst();
   }

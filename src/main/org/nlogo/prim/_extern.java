@@ -1,11 +1,11 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.ExtensionContext;
-import org.nlogo.nvm.Syntax;
 
 public final strictfp class _extern
     extends Command
@@ -18,20 +18,20 @@ public final strictfp class _extern
 
   @Override
   public Syntax syntax() {
-    org.nlogo.api.Syntax s = command.getSyntax();
+    Syntax s = command.getSyntax();
     String[] acs = command.getAgentClassString().split(":");
     if (acs[0].length() < 4) {
-      acs[0] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[0]);
+      acs[0] = Syntax.convertOldStyleAgentClassString(acs[0]);
     }
     if (acs.length >= 2) {
       if (acs[1].length() < 4) {
-        acs[1] = org.nlogo.api.Syntax.convertOldStyleAgentClassString(acs[1]);
+        acs[1] = Syntax.convertOldStyleAgentClassString(acs[1]);
       }
-      return org.nlogo.nvm.Syntax.commandSyntax
-          (s.getRight(), s.getDfault(), acs[0], acs[1], command.getSwitchesBoolean());
+      return Syntax.commandSyntax
+          (s.right(), s.dfault(), acs[0], acs[1], command.getSwitchesBoolean());
     } else {
-      return org.nlogo.nvm.Syntax.commandSyntax
-          (s.getRight(), s.getDfault(), acs[0], null, command.getSwitchesBoolean());
+      return Syntax.commandSyntax
+          (s.right(), s.dfault(), acs[0], null, command.getSwitchesBoolean());
     }
   }
 

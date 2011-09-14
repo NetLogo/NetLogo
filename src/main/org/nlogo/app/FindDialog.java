@@ -48,7 +48,7 @@ public strictfp class FindDialog
   public static class FindAction
       extends javax.swing.text.TextAction {
     FindAction() {
-      super(I18N.gui().get("menu.edit.find"));
+      super(I18N.guiJ().get("menu.edit.find"));
       putValue
           (javax.swing.Action.SMALL_ICON,
               new javax.swing.ImageIcon
@@ -73,7 +73,7 @@ public strictfp class FindDialog
   public static class FindNextAction
       extends javax.swing.text.TextAction {
     FindNextAction() {
-      super(I18N.gui().get("menu.edit.findNext"));
+      super(I18N.guiJ().get("menu.edit.findNext"));
       putValue
           (javax.swing.Action.SMALL_ICON,
               new javax.swing.ImageIcon
@@ -110,7 +110,7 @@ public strictfp class FindDialog
   private final Frame owner;
 
   private FindDialog(Frame owner) {
-    super(owner, I18N.gui().get("dialog.find.title"), false);
+    super(owner, I18N.guiJ().get("dialog.find.title"), false);
     this.owner = owner;
 
     // initialize GUI elements
@@ -121,19 +121,19 @@ public strictfp class FindDialog
 
     findBox = new org.nlogo.swing.TextField(25);
     findBox.setEditable(true);
-    findPanel.addField(I18N.gui().get("dialog.find.find"), findBox);
+    findPanel.addField(I18N.guiJ().get("dialog.find.find"), findBox);
 
     replaceBox = new org.nlogo.swing.TextField(25);
     replaceBox.setEditable(true);
-    replaceLabel = new javax.swing.JLabel(I18N.gui().get("dialog.find.replaceWith"));
+    replaceLabel = new javax.swing.JLabel(I18N.guiJ().get("dialog.find.replaceWith"));
     findPanel.addField(replaceLabel, replaceBox);
 
     // options panel elements
     javax.swing.JPanel optionsPanel = new javax.swing.JPanel();
     optionsPanel.setLayout(new javax.swing.BoxLayout(optionsPanel, javax.swing.BoxLayout.X_AXIS));
-    ignoreCaseCheckBox = new javax.swing.JCheckBox(I18N.gui().get("dialog.find.ignoreCase"), true);
-    wrapAroundCheckBox = new javax.swing.JCheckBox(I18N.gui().get("dialog.find.wrapAround"), true);
-    notFoundLabel = new javax.swing.JLabel(I18N.gui().get("dialog.find.notFound"));
+    ignoreCaseCheckBox = new javax.swing.JCheckBox(I18N.guiJ().get("dialog.find.ignoreCase"), true);
+    wrapAroundCheckBox = new javax.swing.JCheckBox(I18N.guiJ().get("dialog.find.wrapAround"), true);
+    notFoundLabel = new javax.swing.JLabel(I18N.guiJ().get("dialog.find.notFound"));
 
     optionsPanel.add(ignoreCaseCheckBox);
     optionsPanel.add(javax.swing.Box.createHorizontalStrut(12));
@@ -143,11 +143,11 @@ public strictfp class FindDialog
     notFoundLabel.setVisible(false);
 
     // buttons
-    nextButton = new javax.swing.JButton(I18N.gui().get("dialog.find.next"));
-    prevButton = new javax.swing.JButton(I18N.gui().get("dialog.find.previous"));
-    replaceAndFindButton = new javax.swing.JButton(I18N.gui().get("dialog.find.replaceAndFind"));
-    replaceButton = new javax.swing.JButton(I18N.gui().get("dialog.find.replace"));
-    replaceAllButton = new javax.swing.JButton(I18N.gui().get("dialog.find.replaceAll"));
+    nextButton = new javax.swing.JButton(I18N.guiJ().get("dialog.find.next"));
+    prevButton = new javax.swing.JButton(I18N.guiJ().get("dialog.find.previous"));
+    replaceAndFindButton = new javax.swing.JButton(I18N.guiJ().get("dialog.find.replaceAndFind"));
+    replaceButton = new javax.swing.JButton(I18N.guiJ().get("dialog.find.replace"));
+    replaceAllButton = new javax.swing.JButton(I18N.guiJ().get("dialog.find.replaceAll"));
 
     getRootPane().setDefaultButton(nextButton);
 

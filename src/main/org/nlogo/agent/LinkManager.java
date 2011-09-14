@@ -13,11 +13,9 @@ import java.util.Map;
 public strictfp class LinkManager {
 
   private final World world;
-  public final NetworkMetrics networkMetrics;
 
   public LinkManager(World world) {
     this.world = world;
-    networkMetrics = new NetworkMetrics(this);
   }
 
   ///

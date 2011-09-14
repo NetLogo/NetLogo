@@ -70,7 +70,7 @@ class ViewManager(val workspace: GUIWorkspace,
       observerView = new ObserverView(this, null)
       observerView.canvas.addKeyListener(keyListener)
       currentView = observerView
-      org.nlogo.awt.Utils.moveNextTo(observerView, appWindow)
+      org.nlogo.awt.Positioning.moveNextTo(observerView, appWindow)
       currentView.updatePerspectiveLabel()
       observerView.setVisible(true)
     } catch {
@@ -141,7 +141,7 @@ class ViewManager(val workspace: GUIWorkspace,
     }
 
   def incrementalUpdateFromJobThread() {
-    try org.nlogo.awt.Utils.invokeAndWait(paintRunnable)
+    try org.nlogo.awt.EventQueue.invokeAndWait(paintRunnable)
     catch {
       case ex: InterruptedException =>
         repaint()

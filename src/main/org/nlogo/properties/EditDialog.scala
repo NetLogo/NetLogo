@@ -88,7 +88,7 @@ trait EditDialog extends javax.swing.JDialog {
       override def windowClosing(e: java.awt.event.WindowEvent) {
         if(editPanel.valid) {
           editPanel.apply()
-          bye()
+          if(target.editFinished) bye()
         }}})
 
   org.nlogo.swing.Utils.addEscKeyAction(this, () => cancel(target))
@@ -99,7 +99,7 @@ trait EditDialog extends javax.swing.JDialog {
     case Some(location) =>
       setLocation(location)
     case None =>  
-      org.nlogo.awt.Utils.center(this, window)
+      org.nlogo.awt.Positioning.center(this, window)
       EditDialog.lastLocation = Some(getLocation)
   }
   editPanel.requestFocus()

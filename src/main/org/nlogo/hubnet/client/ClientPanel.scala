@@ -10,13 +10,13 @@ import org.nlogo.hubnet.mirroring.{OverrideList, LinkStamp, PlotPoint, Line, Tur
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._
-import org.nlogo.awt.Utils.{getFrame, invokeLater}
+import org.nlogo.awt.EventQueue.invokeLater
+import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
-import org.nlogo.util.JCL._
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.{InputBoxWidget, ChooserWidget, SliderWidget, PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
 import org.nlogo.api.{WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
-import org.nlogo.hubnet.connection.{ClientRoles, Streamable, ConnectionTypes, AbstractConnection}
+import org.nlogo.hubnet.connection.{ClientRole, Streamable, ConnectionTypes, AbstractConnection}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -42,7 +42,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def setDisplayOn(on: Boolean) { if (viewWidget != null) viewWidget.setDisplayOn(on) }
 
   def sendMouseMessage(mouseXCor: Double, mouseYCor: Double, down: Boolean) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val coords = LogoList(mouseXCor.asInstanceOf[AnyRef], mouseYCor.asInstanceOf[AnyRef])
    sendDataAndWait(new ActivityCommand(WidgetTypes.MouseCommand, if (down) "View" else "Mouse Up", coords)) 
   }
@@ -79,7 +79,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   /// Interface Event Handlers
   def handle(e: org.nlogo.window.Events.AddJobEvent) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = e.owner.asInstanceOf[ButtonWidget]
     sendDataAndWait(new ActivityCommand(WidgetTypes.Button,
       button.displayName, button.foreverOn.asInstanceOf[AnyRef]))
@@ -102,7 +102,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   def handle(e: org.nlogo.window.Events.InterfaceGlobalEvent) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val widgetType = e.widget match {
       case b: ButtonWidget => WidgetTypes.Button
       case s: SliderWidget => WidgetTypes.Slider
@@ -121,7 +121,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   /// Message Handlers
   private def handleWidgetControlMessage(value: Any, widgetName: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
       case t: TurtleStamp => viewWidget.renderer.stamp(t)
       case ls: LinkStamp => viewWidget.renderer.stamp(ls)
@@ -151,7 +151,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   // this is the master method for handling plot messages. it should probably be redone.
   private def handlePlotControlMessage(value: Any, plotName:String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val plotWidget = findWidget(plotName).asInstanceOf[Option[PlotWidget]].get // horrible.
     value match {
       // This instance sets the current-plot-pen
@@ -183,7 +183,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case c: Char => {
         try c match {
           case 'c' =>
-            plotWidget.plot.clear
+            plotWidget.plot.clear()
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'r' =>
@@ -243,12 +243,14 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.first.asInstanceOf[ClientInterface]
     val widgets = WidgetIO.dumpWidgets(clientInterface.widgets)
-    new LoadSectionEvent("HubNet", ModelSection.WIDGETS, widgets.toArray, widgets.mkString("\n")).raise(this)
+    new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices(compiler)) 
-    viewWidget.renderer.replaceTurtleShapes(toJavaList(clientInterface.turtleShapes))
-    viewWidget.renderer.replaceLinkShapes(toJavaList(clientInterface.linkShapes))
+    viewWidget.renderer.replaceTurtleShapes(
+      scala.collection.JavaConversions.seqAsJavaList(clientInterface.turtleShapes.toSeq))
+    viewWidget.renderer.replaceLinkShapes(
+      scala.collection.JavaConversions.seqAsJavaList(clientInterface.linkShapes.toSeq))
     connected = true
     invokeLater(() => {
       getFrame(ClientPanel.this).pack()
@@ -285,13 +287,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private var userid: String = null
   private var hostip: String = null
   private var port: Int = 0
-  private var role: ClientRoles.Value = ClientRoles.Participant
+  private var role: ClientRole = ClientRole.Participant
   private var activityName: String = null
   private var listener: Listener = null
   var connected:Boolean = false
 
-  def login(userid: String, hostip: String, port: Int, role: ClientRoles.Value): String = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+  def login(userid: String, hostip: String, port: Int, role: ClientRole): Option[String] = {
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     // there used to be a flag called loggingIn
     // to "ensure that we only execute this one at a time"
     // but I don't understand what it was trying to prevent,
@@ -318,25 +320,24 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       listener = new Listener(userid, socket)
       listener.start()
       sendDataAndWait(Version.version)
-      null
+      None
     }
     catch {
-      case e: NoRouteToHostException => "Login failed:\n" + hostip + " could not be reached."
-      case e: UnknownHostException => "Login failed:\n" + hostip + " does not resolve to a valid IP address."
-      case e: ConnectException => "Login failed:\n" + "There was no server running at " + hostip + " on port " + port
-      case e: IOException => "Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e)
-      case e: RuntimeException => "Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e)
+      case e: NoRouteToHostException => Some("Login failed:\n" + hostip + " could not be reached.")
+      case e: UnknownHostException => Some("Login failed:\n" + hostip + " does not resolve to a valid IP address.")
+      case e: ConnectException => Some("Login failed:\n" + "There was no server running at " + hostip + " on port " + port)
+      case e => Some("Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e))
     }
   }
 
   def handleLoginFailure(errorMessage: String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     listener.disconnect(errorMessage)
     errorHandler.handleLoginFailure(errorMessage)
   }
 
   def disconnect(reason:String) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (listener != null) listener.disconnect(reason)
     else {
       invokeLater(() => errorHandler.handleDisconnect(activityName, connected, reason))
@@ -345,7 +346,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   def logout() {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (connected) {
       connected = false
       listener.stopWriting()
@@ -396,7 +397,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
 
   private def handleEx(e: Exception, sendingEx: Boolean) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     e.printStackTrace()
     // if it is not an exception in sending, we still might be
     // able to notify the server that we are dead
@@ -408,7 +409,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
    * Sends data and waits until the data is sent.
    */
   def sendDataAndWait(obj: AnyRef) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (listener != null) {
       try listener.waitForSendData(obj)
       // If we have a socket exception writing rather than give
@@ -421,7 +422,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   private def receiveData(a: Any) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     a match {
       case m: Message => handleProtocolMessage(m)
       case info: String => if (!connected) {

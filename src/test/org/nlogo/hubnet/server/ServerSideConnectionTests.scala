@@ -4,7 +4,7 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.util.MockSuite
 import org.nlogo.api.{LogoList, Version}
 import org.nlogo.hubnet.connection.MessageEnvelope._
-import org.nlogo.hubnet.connection.{ClientRoles , ConnectionTypes , Streamable}
+import org.nlogo.hubnet.connection.{ClientRole , ConnectionTypes , Streamable}
 
 // tests for the hubnet session behavior on the server side.
 class ServerSideConnectionTests extends MockSuite {
@@ -33,7 +33,7 @@ class ServerSideConnectionTests extends MockSuite {
     conn.receiveData("NetLogo 1.0")
 
     val error = "The version of the HubNet Client you are using does not " +
-                "match the version of the server. Please use the HubNet Client that comes with " + Version.version
+                "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version
     conn.nextOutgoingMessage match {
       case LoginFailure(reason) => assert(reason === error)
       case _ => fail("expected LoginFailure")
@@ -57,7 +57,7 @@ class ServerSideConnectionTests extends MockSuite {
     conn.nextOutgoingMessage  // should be the version number, but that's tested elsewhere, so ignore
 
     conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION,
-      ClientRoles.Participant))
+      ClientRole.Participant))
 
     assert(conn.nextOutgoingMessage === HandshakeFromServer("test-model", LogoList()))
   }
@@ -104,7 +104,7 @@ class ServerSideConnectionTests extends MockSuite {
 
       // followed by an enter message from the client
       // (assuming that the server sent a good version back)
-      conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION, ClientRoles.Participant))
+      conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION, ClientRole.Participant))
 
       // then a handful of activity messages.
       // these might represent a user clicking on buttons and things.
@@ -131,7 +131,7 @@ class ServerSideConnectionTests extends MockSuite {
     when {
       conn.receiveData(Version.version)
       conn.receiveData(EnterMessage(clientId, ConnectionTypes.COMP_CONNECTION,
-        ClientRoles.Controller))
+        ClientRole.Controller))
     }
 
     conn.nextOutgoingMessage  // should be the version number, but that's tested elsewhere, so ignore
@@ -164,7 +164,7 @@ class ServerSideConnectionTests extends MockSuite {
 
     for( i <- 0 to (numControllers-1) ) {
       conns(i).receiveData(EnterMessage(clientIds(i), ConnectionTypes.COMP_CONNECTION,
-        ClientRoles.Controller))
+        ClientRole.Controller))
       assert(conns(i).nextOutgoingMessage === HandshakeFromServer("test-model", LogoList()))
     }
   }

@@ -49,7 +49,7 @@ extends TextureRenderer(world) {
     gl.glTranslated(col, row, dep)
     gl.glRotated(-observer.heading, 0.0, 0.0, 1.0)
     gl.glRotated(90, 1.0, 0.0, 0.0)
-    if(observer.perspective == Perspective.FOLLOW || observer.perspective == Perspective.RIDE) {
+    if(observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
       gl.glRotated(-observer.pitch, -1.0, 0.0, 0.0)
       gl.glRotated(-observer.roll, 0.0, 0.0, 1.0)
     }

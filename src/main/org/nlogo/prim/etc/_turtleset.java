@@ -8,23 +8,22 @@ import org.nlogo.api.Dump;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtleset
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_REPEATABLE | Syntax.TYPE_TURTLE
-        | Syntax.TYPE_TURTLESET | Syntax.TYPE_NOBODY
-        | Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_TURTLESET;
+    int[] right = {Syntax.RepeatableType() | Syntax.TurtleType()
+        | Syntax.TurtlesetType() | Syntax.NobodyType()
+        | Syntax.ListType()};
+    int ret = Syntax.TurtlesetType();
     return Syntax.reporterSyntax(right, ret, 1, 0);
   }
 
@@ -39,7 +38,7 @@ public final strictfp class _turtleset
         AgentSet tempSet = (AgentSet) elt;
         if (tempSet.type() != org.nlogo.agent.Turtle.class) {
           throw new ArgumentTypeException
-              (context, this, i, Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET, elt);
+              (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
         }
         for (AgentSet.Iterator iter = tempSet.iterator();
              iter.hasNext();) {
@@ -49,9 +48,9 @@ public final strictfp class _turtleset
         descendList(context, (LogoList) elt, resultSet);
       } else if (elt instanceof Turtle) {
         resultSet.add((Turtle) elt);
-      } else if (!(elt instanceof org.nlogo.api.Nobody)) {
+      } else if (elt != org.nlogo.api.Nobody$.MODULE$) {
         throw new ArgumentTypeException
-            (context, this, i, Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET, elt);
+            (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
@@ -71,7 +70,7 @@ public final strictfp class _turtleset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.type() != org.nlogo.agent.Turtle.class) {
           throw new EngineException(context, this,
-              I18NJava.errors().getN("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
+              I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
         for (AgentSet.Iterator iter2 = tempSet.iterator();
@@ -80,9 +79,9 @@ public final strictfp class _turtleset
         }
       } else if (obj instanceof LogoList) {
         descendList(context, (LogoList) obj, result);
-      } else if (!(obj instanceof org.nlogo.api.Nobody)) {
+      } else if (obj != org.nlogo.api.Nobody$.MODULE$) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._turtleset.incorrectInputType",
+            I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.incorrectInputType",
                 this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }
     }

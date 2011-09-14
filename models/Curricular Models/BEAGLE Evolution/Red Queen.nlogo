@@ -418,7 +418,7 @@ This model uses the "frog top" shape that was imported from the Shapes Library.
 
 This model is related to the other BEAGLE models since they all examine evolution.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is related to a model that was used as the basis for a poster published at the Genetic and Evolutionary Computation Conference.  This model uses a more individual-based reproductive mechanism, whereas the model in the paper used a global one:
 

@@ -4,19 +4,19 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.agent.PatchException;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _diffuse
     extends Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_REFERENCE, Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.ReferenceType(), Syntax.NumberType()},
             "O---", true);
   }
 
@@ -34,7 +34,7 @@ public final strictfp class _diffuse
     double diffuseparam = argEvalDoubleValue(context, 0);
     if (diffuseparam < 0.0 || diffuseparam > 1.0) {
       throw new EngineException
-          (context, this, I18NJava.errors().getN("org.nlogo.prim.$common.paramOutOfBounds", diffuseparam));
+          (context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.paramOutOfBounds", diffuseparam));
     }
     try {
       world.diffuse(diffuseparam, reference.vn());
@@ -46,9 +46,9 @@ public final strictfp class _diffuse
           (context, this,
               ex.patch() + " should contain a number in the " + world.patchesOwnNameAt(reference.vn()) +
                   " variable, but contains " +
-                  (value instanceof org.nlogo.api.Nobody
+                  (value == org.nlogo.api.Nobody$.MODULE$
                       ? "NOBODY"
-                      : "the " + Syntax.typeName(value) + " " + Dump.logoObject(value)) +
+                      : "the " + TypeNames.name(value) + " " + Dump.logoObject(value)) +
                   " instead");
     }
     context.ip = next;

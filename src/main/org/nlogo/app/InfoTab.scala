@@ -3,7 +3,7 @@ package org.nlogo.app
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{OptionDialog, ToolBar, Printable, PrinterManager, BrowserLauncher, PimpedJButton}
-import org.nlogo.awt.Utils
+import org.nlogo.awt.Hierarchy
 
 import java.awt.{Font, Dimension, BorderLayout, Graphics}
 import java.awt.event.{ActionEvent, FocusEvent, FocusListener}
@@ -12,7 +12,7 @@ import java.awt.print.PageFormat
 import javax.swing._
 import javax.swing.event.{DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent}
 import javax.swing.text.JTextComponent
-import org.nlogo.api.{I18N, Version, ModelSection}
+import org.nlogo.api.{I18N, VersionHistory, ModelSection}
 import text.html.{HTMLDocument, HTMLEditorKit}
 import java.io.File
 
@@ -39,7 +39,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     setWrapStyleWord(true)
     getDocument.addDocumentListener(InfoTab.this)
     getDocument.addUndoableEditListener(undoManager)
-    setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont,
+    setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont,
                      Font.PLAIN, 12))
   }
   private val editorPane = new JEditorPane() { self =>
@@ -133,8 +133,8 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
   }
 
   def handle(e: org.nlogo.window.Events.LoadSectionEvent) {
-    if(e.section == ModelSection.INFO) {
-      info(if(Version.olderThan42pre2(e.version))
+    if(e.section == ModelSection.Info) {
+      info(if(VersionHistory.olderThan42pre2(e.version))
              InfoConverter.convert(e.text)
            else e.text)
       resetView()
@@ -165,7 +165,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
           """The URL you just clicked is invalid. This could
             |mean that it is formatted incorrectly. Click Help
             |to see documentation on using URLs in the Info Tab.""".stripMargin
-        val selection = OptionDialog.show(Utils.getFrame(InfoTab.this), "Bad URL", message,
+        val selection = OptionDialog.show(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
           Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")))
         if(selection == 1 /*Help*/) BrowserLauncher.openURL(this, baseDocUrl, "#infotabLinks", true)
       }
@@ -200,7 +200,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
       }
       toggleHelpButton()
       requestFocus()
-      org.nlogo.awt.Utils.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
+      org.nlogo.awt.EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
     }
   }
 }

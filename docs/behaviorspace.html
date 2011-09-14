@@ -471,7 +471,7 @@ windows.-->
       the GUI, so it is saved as part of the model. To run an experiment
       setup saved in a model, here is an example command line:
     <pre>
-java -server -Xmx1024M -cp NetLogo.jar \
+java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment1 \
@@ -491,15 +491,23 @@ java -server -Xmx1024M -cp NetLogo.jar \
       Java to run in headless mode, allowing NetLogo to run on machines
       when a graphical display is not available.
     <p>
-      Note the user of the <tt>-server</tt> flag to tell Java to optimize
+      Note the use of the <tt>-server</tt> flag to tell Java to optimize
       performance for &quot;server&quot; type applications; we recommend
       this flag for best performance in most situations.
+    <p>
+      Note the user of <tt>-Xss</tt> to specify a larger maximum stack
+      size than the default. This permits models to use deeper recursion.
     <p>
       Note the use of <tt>-Xmx</tt> to specify a maximum heap size of one
       gigabyte. If you don't specify a maximum heap size, you will get
       your VM's default size, which may be unusably small. (One
       gigabyte is an arbitrary size which should be more than large enough
       for most models; you can specify a different limit if you want.)
+    <p>
+      Note the use of <tt>-Dfile.encoding=UTF-8</tt>. This forces all file
+      I/O to use UTF-8 encoding. Doing so ensures that NetLogo can load all
+      models consistently, and that file-* primitives work consistently on
+      all platforms, including models containing Unicode characters.
     <p>
       The required <tt>--model</tt> argument is used to specify the model
       file you want to open.
@@ -511,7 +519,7 @@ java -server -Xmx1024M -cp NetLogo.jar \
       Here's another example that shows some additional, optional
       arguments:
     <pre>
-java -server -Xmx1024M -cp NetLogo.jar \
+java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment2 \
@@ -535,7 +543,7 @@ java -server -Xmx1024M -cp NetLogo.jar \
     <p>
       Yet another example:
     <pre>
-java -server -Xmx1024M -cp NetLogo.jar \
+java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --experiment experiment2 \
@@ -563,7 +571,7 @@ java -server -Xmx1024M -cp NetLogo.jar \
       Here is one final example that shows how to run an experiment setup
       which is stored in a separate XML file, instead of in the model file:
     <pre>
-java -server -Xmx1024M -cp NetLogo.jar \
+java -server -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire.nlogo \
   --setup-file fire-setups.xml \
@@ -578,7 +586,7 @@ java -server -Xmx1024M -cp NetLogo.jar \
       <tt>-Dorg.nlogo.is3d=true</tt> to any of these startup commands, for
       example:
     <pre>
-java -server -Dorg.nlogo.is3d=true -Xmx1024M -cp NetLogo.jar \
+java -server -Dorg.nlogo.is3d=true -Xss16m -Xmx1024m -Dfile.encoding=UTF-8 -cp NetLogo.jar \
   org.nlogo.headless.Main \
   --model Fire3D.nlogo \
   --experiment experiment1 \

@@ -59,7 +59,7 @@ public strictfp class ConverterFigure extends DiamondFigure
       if (name.length() == 0) {
         name = "?";
       }
-      org.nlogo.awt.Utils.drawStringInBox
+      Utils.drawStringInBox
           (g,
               name,
               displayBox().x + 14,

@@ -7,21 +7,20 @@ import java.util.TreeMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _minnofwithties
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_AGENTSET,
-            new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER_BLOCK},
-            Syntax.TYPE_AGENTSET,
-            Syntax.NORMAL_PRECEDENCE,
+        (Syntax.AgentsetType(),
+            new int[]{Syntax.NumberType(), Syntax.NumberBlockType()},
+            Syntax.AgentsetType(),
+            org.nlogo.api.Syntax.NormalPrecedence(),
             false, // left associative
             "OTPL",
             "?"    // takes reporter block of unknown agent type
@@ -33,13 +32,13 @@ public final strictfp class _minnofwithties
     int n = argEvalIntValue(context, 1);
     if (n < 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
     }
     AgentSet sourceSet = argEvalAgentSet(context, 0);
     int count = sourceSet.count();
     if (n > count) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
     }
     args[2].checkAgentSetClass(sourceSet, context);
     TreeMap<Object, LinkedList<Agent>> resultAgents =

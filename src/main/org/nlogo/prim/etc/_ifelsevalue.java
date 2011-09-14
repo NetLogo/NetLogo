@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _ifelsevalue
     extends Reporter
@@ -10,10 +10,10 @@ public final strictfp class _ifelsevalue
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_BOOLEAN,
-            Syntax.TYPE_REPORTER_BLOCK,
-            Syntax.TYPE_REPORTER_BLOCK},
-            Syntax.TYPE_WILDCARD);
+        (new int[]{Syntax.BooleanType(),
+            Syntax.ReporterBlockType(),
+            Syntax.ReporterBlockType()},
+            Syntax.WildcardType());
   }
 
   @Override

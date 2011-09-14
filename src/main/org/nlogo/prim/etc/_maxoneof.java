@@ -7,14 +7,14 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _maxoneof
     extends Reporter {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_AGENTSET, Syntax.TYPE_NUMBER_BLOCK};
-    int ret = Syntax.TYPE_AGENT;
+    int[] right = {Syntax.AgentsetType(), Syntax.NumberBlockType()};
+    int ret = Syntax.AgentType();
     return Syntax.reporterSyntax(right, ret, "OTPL", "?");
   }
 
@@ -44,7 +44,7 @@ public final strictfp class _maxoneof
       }
     }
     if (winners.isEmpty()) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     } else {
       return winners.get(context.job.random.nextInt(winners.size()));
     }

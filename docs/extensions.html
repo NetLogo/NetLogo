@@ -20,7 +20,7 @@
       you have written one, or once someone has given you one.
     <p>
       The second part is intended for programmers interested in writing
-      their own extensions using <a href="javadoc/index.html">the NetLogo
+      their own extensions using <a href="scaladoc/index.html">the NetLogo
       Extension API.</a>
     <ul>
       <li>
@@ -29,7 +29,7 @@
         <a href="#writing">Writing Extensions</a>
       </ul>
     <p>
-      The <a href="javadoc/index.html">NetLogo Extension API
+      The <a href="scaladoc/index.html">NetLogo Extension API
       Specification</a> contains further details.
     <h2>
       <a name="using" id="using">Using Extensions</a>
@@ -112,9 +112,9 @@ extensions [sound speech]
       contents:
         <ul>
           <li>one or more classes that implementation <a href=
-          "javadoc/org/nlogo/api/Primitive.html"><tt>org.nlogo.api.Primitive</tt></a>,
+          "scaladoc/org/nlogo/api/Primitive.html"><tt>org.nlogo.api.Primitive</tt></a>,
           <li>a main class that implements <a href=
-          "javadoc/org/nlogo/api/ClassManager.html"><tt>org.nlogo.api.ClassManager</tt></a>,
+          "scaladoc/org/nlogo/api/ClassManager.html"><tt>org.nlogo.api.ClassManager</tt></a>,
           and
           <li>a NetLogo extension manifest file, with the following four
           tags:
@@ -191,15 +191,15 @@ extensions [sound speech]
       A command performs an action; a reporter reports a value. To create a
       new command or reporter, create a class that implements the interface
       <tt><a href=
-      "javadoc/org/nlogo/api/Command.html">org.nlogo.api.Command</a></tt>
+      "scaladoc/org/nlogo/api/Command.html">org.nlogo.api.Command</a></tt>
       or <tt><a href=
-      "javadoc/org/nlogo/api/Reporter.html">org.nlogo.api.Reporter</a></tt>,
+      "scaladoc/org/nlogo/api/Reporter.html">org.nlogo.api.Reporter</a></tt>,
       which extend <a href=
-      "javadoc/org/nlogo/api/Primitive.html"><tt>org.nlogo.api.Primitive</tt></a>.
+      "scaladoc/org/nlogo/api/Primitive.html"><tt>org.nlogo.api.Primitive</tt></a>.
       In most cases, you can extend the abstract class <tt><a href=
-      "javadoc/org/nlogo/api/DefaultReporter.html">org.nlogo.api.DefaultReporter</a></tt>
+      "scaladoc/org/nlogo/api/DefaultReporter.html">org.nlogo.api.DefaultReporter</a></tt>
       or <tt><a href=
-      "javadoc/org/nlogo/api/DefaultCommand.html">org.nlogo.api.DefaultCommand</a></tt>.
+      "scaladoc/org/nlogo/api/DefaultCommand.html">org.nlogo.api.DefaultCommand</a></tt>.
     <p>
       <tt>DefaultReporter</tt> requires that we implement:
     <pre>
@@ -257,29 +257,26 @@ public class IntegerList extends DefaultReporter {
       All numbers used as NetLogo values must be of type Double, even if
       they happen to have no fractional part.
       <li>To access arguments, use <a href=
-      "javadoc/org/nlogo/api/Argument.html"><tt>org.nlogo.api.Argument</tt></a>'s
+      "scaladoc/org/nlogo/api/Argument.html"><tt>org.nlogo.api.Argument</tt></a>'s
       typesafe helper methods, such as <tt>getDoubleValue()</tt>.
       <li>Throw <a href=
-      "javadoc/org/nlogo/api/ExtensionException"><tt>org.nlogo.api.ExtensionException</tt></a>
+      "scaladoc/org/nlogo/api/ExtensionException.html"><tt>org.nlogo.api.ExtensionException</tt></a>
       to signal a NetLogo runtime error to the modeler.
       </ul>
     <p>
       A <tt>Command</tt> is just like a <tt>Reporter</tt>, except that
-      reporters implement <a href=
-      "javadoc/org/nlogo/api/Reporter.html#report(org.nlogo.api.Argument[],%20org.nlogo.api.Context)">
-      <tt>Object report(...)</tt></a> while commands implement <a href=
-      "javadoc/org/nlogo/api/Command.html#perform(org.nlogo.api.Argument[],%20org.nlogo.api.Context)">
-      <tt>void perform(...)</tt></a>.
+      reporters implement <tt>Object report(...)</tt> while commands implement 
+      <tt>void perform(...)</tt>.
     <h4>
       2. Write a ClassManager
     </h4>
     <p>
       Each extension must include, in addition to any number of command and
       reporter classes, a class that implements the interface <a href=
-      "javadoc/org/nlogo/api/ClassManager.html"><tt>org.nlogo.api.ClassManager</tt></a>.
+      "scaladoc/org/nlogo/api/ClassManager.html"><tt>org.nlogo.api.ClassManager</tt></a>.
       The ClassManager tells NetLogo which primitives are part of this
       extension. In simple cases, extend the abstract class <a href=
-      "javadoc/org/nlogo/api/DefaultClassManager.html"><tt>org.nlogo.api.DefaultClassManager</tt></a>,
+      "scaladoc/org/nlogo/api/DefaultClassManager.html"><tt>org.nlogo.api.DefaultClassManager</tt></a>,
       which provides empty implementations of the methods from
       <tt>ClassManager</tt> that you aren't likely to need.
     <p>
@@ -398,7 +395,7 @@ observer: [0 1 2 3 4]
       Now let's rewrite the extension in Scala.
     <p>
       If you are using Scala, you'll need to make sure you are using
-      Scala 2.9.0.1.
+      Scala 2.9.1.
     <h4>
       1. Create extension folder
     </h4>
@@ -686,7 +683,7 @@ $ jar tf scala-library.jar
       Conclusion
     </h3>
     <p>
-      Don't forget to consult the <a href="javadoc/index.html">NetLogo
+      Don't forget to consult the <a href="scaladoc/index.html">NetLogo
       API Specification</a> for full details on these classes, interfaces,
       and methods.
     <p>

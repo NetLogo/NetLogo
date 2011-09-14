@@ -21,7 +21,7 @@ public strictfp class DummyMonitorWidget
     setOpaque(true);
     setBackground(InterfaceColors.MONITOR_BACKGROUND);
     setBorder(widgetBorder());
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
   }
 
   private String name = "";
@@ -42,7 +42,7 @@ public strictfp class DummyMonitorWidget
   @Override
 
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.monitor");
+    return I18N.guiJ().get("tabs.run.widgets.monitor");
   }
 
   public List<Property> propertySet() {

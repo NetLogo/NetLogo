@@ -1,7 +1,6 @@
 to setup
-  ca
-  crt 3
-  [
+  clear-all
+  crt 3 [
     set heading who * 90
     set pitch 0
     set roll 0
@@ -44,6 +43,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 50
@@ -80,9 +80,9 @@ NIL
 1
 
 @#$#@#$#@
-WHAT IS IT?
------------
-This model shows three turtles moving around in 3D NetLogo. The gray turtle is changing only pitch and moving forward, the red turtle is changing only roll, and the orange turtle is changing pitch, roll, and heading as it is using right3d.
+## WHAT IS IT?
+
+This model shows three turtles moving around in NetLogo 3D. The gray turtle is changing only pitch and moving forward, the red turtle is changing only roll, and the orange turtle is changing pitch, roll, and heading as it is using right3d.
 @#$#@#$#@
 default
 true
@@ -378,7 +378,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

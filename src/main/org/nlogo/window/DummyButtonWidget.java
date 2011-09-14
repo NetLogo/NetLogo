@@ -13,7 +13,7 @@ public strictfp class DummyButtonWidget
   public DummyButtonWidget() {
     setBackground(InterfaceColors.BUTTON_BACKGROUND);
     setBorder(widgetBorder());
-    org.nlogo.awt.Utils.adjustDefaultFont(this);
+    org.nlogo.awt.Fonts.adjustDefaultFont(this);
   }
 
   public List<Property> propertySet() {
@@ -53,7 +53,7 @@ public strictfp class DummyButtonWidget
 
   @Override
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.button");
+    return I18N.guiJ().get("tabs.run.widgets.button");
   }
 
   private String name = "";
@@ -100,7 +100,7 @@ public strictfp class DummyButtonWidget
     int stringWidth = fontMetrics.stringWidth(displayName);
     g.setColor(getForeground());
 
-    String shortString = org.nlogo.awt.Utils.shortenStringToFit(displayName, availableWidth, fontMetrics);
+    String shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics);
     int nx = stringWidth > availableWidth ? 4 : (size.width / 2) - (stringWidth / 2);
     int ny = (size.height / 2) + (labelHeight / 2);
     g.drawString(shortString, nx, ny);

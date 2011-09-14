@@ -6,15 +6,15 @@ import org.nlogo.api.LogoList;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _first
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -28,25 +28,25 @@ public final strictfp class _first
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.isEmpty()) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyList"));
+        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
       }
       return list.first();
     } else if (obj instanceof String) {
       String string = (String) obj;
       if (string.length() == 0) {
-        throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyString"));
+        throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
       }
       return string.substring(0, 1);
     } else {
       throw new ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   public Object report_2(final org.nlogo.nvm.Context context, LogoList list)
       throws LogoException {
     if (list.isEmpty()) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyList"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
     return list.first();
   }
@@ -54,7 +54,7 @@ public final strictfp class _first
   public Object report_3(final org.nlogo.nvm.Context context, String string)
       throws LogoException {
     if (string.length() == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.emptyString"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
     }
     return string.substring(0, 1);
   }

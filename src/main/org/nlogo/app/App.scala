@@ -96,13 +96,13 @@ object App{
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.SHAPES))))
+            new ConstantParameter(new ShapeSectionReader(ModelSection.TurtleShapes))))
     pico.add(classOf[LinkShapesManagerInterface],
           "org.nlogo.shape.editor.LinkShapeManagerDialog",
           Array[Parameter] (
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.LINK_SHAPES))))
+            new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
     pico.add(classOf[AggregateManagerInterface],
           "org.nlogo.sdm.gui.GUIAggregateManager",
           Array[Parameter] (
@@ -144,7 +144,7 @@ object App{
     // exceptions because we're doing too much on the main thread.
         // Hey, it's important to make a good first impression.
     //   - ST 8/19/03
-    org.nlogo.awt.Utils.invokeAndWait(()=>app.finishStartup())
+    org.nlogo.awt.EventQueue.invokeAndWait(()=>app.finishStartup())
   }
 
   private def processCommandLineArguments(args: Array[String]) {
@@ -210,8 +210,8 @@ object App{
     def read(path: String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.VERSION) == null ||
-              map.get(ModelSection.VERSION).length == 0 ||
+              map.get(ModelSection.Version) == null ||
+              map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         Array.empty[String]
@@ -223,8 +223,8 @@ object App{
     override def getVersion(path:String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.VERSION) == null ||
-              map.get(ModelSection.VERSION).length == 0 ||
+              map.get(ModelSection.Version) == null ||
+              map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         null;
@@ -416,7 +416,7 @@ class App extends
     tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
     smartPack(frame.getPreferredSize)
 
-    if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Utils.center(frame, null) }
+    if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
     
     org.nlogo.app.FindDialog.init(frame) 
     
@@ -509,11 +509,15 @@ class App extends
         if(logger!=null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
-        if (logger==null) Logger.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
-        else logger.zipSessionFiles(e.args(0).toString)
+        if (logger==null)
+          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
+        else
+          logger.zipSessionFiles(e.args(0).toString)
       case DELETE_LOG_FILES =>
-        if(logger==null) Logger.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else logger.deleteSessionFiles()
+        if(logger==null)
+          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
+        else
+          logger.deleteSessionFiles()
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -522,7 +526,7 @@ class App extends
   private def reload() {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.NEW && path != null) openFromSource(FileIO.file2String(path), path, modelType)
+    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
     else commandLater("print \"can't, new model\"")
   }
 
@@ -540,7 +544,7 @@ class App extends
       if (fullName != null) {
         val path = org.nlogo.workspace.ModelsLibrary.getModelPath(fullName)
         val source = org.nlogo.api.FileIO.file2String(path)
-        org.nlogo.awt.Utils.invokeLater(() => openFromSource(source, path, ModelType.LIBRARY))
+        org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
       }
     }
   }
@@ -677,7 +681,7 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.NORMAL) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
       title 
     }
   }
@@ -701,7 +705,7 @@ class App extends
         // that actually prints to stdout but I'm not really sure that's
         // important. ev 2/25/08
         if (!org.nlogo.window.RuntimeErrorDialog.alreadyVisible)
-          org.nlogo.awt.Utils.invokeLater(() =>
+          org.nlogo.awt.EventQueue.invokeLater(() =>
             RuntimeErrorDialog.show("Runtime Error", null, null, Thread.currentThread, t))
       }
       else {
@@ -712,7 +716,7 @@ class App extends
           // previous one... for now, let's spit it to stdout but
           // otherwise ignore it - ST 6/10/02
           ! org.nlogo.window.RuntimeErrorDialog.alreadyVisible) {
-          org.nlogo.awt.Utils.invokeLater(() =>
+          org.nlogo.awt.EventQueue.invokeLater(() =>
             RuntimeErrorDialog.show("Internal Error", null, null, Thread.currentThread, t))
         }
       }
@@ -729,10 +733,10 @@ class App extends
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
   @throws(classOf[java.io.IOException])
-  def open(path:String)  { dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.NORMAL)) }
+  def open(path:String)  { dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Normal)) }
 
   @throws(classOf[java.io.IOException])
-  def libraryOpen(path:String){ dispatchThreadOrBust(path, ModelType.LIBRARY) }
+  def libraryOpen(path:String){ dispatchThreadOrBust(path, ModelType.Library) }
 
   /**
    * Opens a model stored in a string.
@@ -742,7 +746,7 @@ class App extends
    */
   def openFromSource(name:String, source:String){
     // I'm not positive that NORMAL is right here.
-    openFromSource(source, name, ModelType.NORMAL)
+    openFromSource(source, name, ModelType.Normal)
   }
 
   def openFromSource(source:String, path:String, modelType:ModelType){
@@ -763,7 +767,7 @@ class App extends
    */
   @throws(classOf[CompilerException])
   def command(source: String) {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
   }
 
@@ -794,7 +798,7 @@ class App extends
    */
   @throws(classOf[CompilerException])
   def report(source: String): Object = {
-    org.nlogo.awt.Utils.cantBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())
   }
 
@@ -841,13 +845,13 @@ class App extends
     val button = findButton(name)
     if (button.forever) {
       button.foreverOn = !button.foreverOn
-      org.nlogo.awt.Utils.invokeAndWait(() => {
+      org.nlogo.awt.EventQueue.invokeAndWait(() => {
         button.buttonUp = !button.foreverOn
         button.action()
       })
     }
     else {
-      org.nlogo.awt.Utils.invokeAndWait(() => {
+      org.nlogo.awt.EventQueue.invokeAndWait(() => {
         button.buttonUp = false
         button.action()
       })
@@ -923,7 +927,7 @@ class App extends
    * Internal use only.
    */
   def handle(e:LoadSectionEvent){
-    if(e.section == ModelSection.CLIENT && e.lines.length > 0)
+    if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
       frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
   }
 
@@ -936,13 +940,13 @@ class App extends
   def getLinkParent: AppFrame = frame // for Event.LinkChild
 
   private def dispatchThreadOrBust[T](f: => T) = {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread()
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     f
   }
 }
 
 class AppFrame extends JFrame with LinkParent {
-  setIconImage(org.nlogo.awt.Utils.loadImageResource("/images/arrowhead.gif"))
+  setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
   private val linkComponents = new collection.mutable.ListBuffer[Object]()

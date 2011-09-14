@@ -1154,7 +1154,7 @@ Displaying the supply and demand curves in a plot window is more complicated tha
 
 Tragedy of the Commons, Gridlock
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Original implementation: Greg Dunham, for the Center for Connected Learning and Computer-Based Modeling.
 @#$#@#$#@

@@ -2,7 +2,8 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Frame }
 import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, SwingConstants }
-import org.nlogo.awt.Utils.{ center, mustBeEventDispatchThread }
+import org.nlogo.awt.EventQueue.mustBeEventDispatchThread
+import org.nlogo.awt.Positioning.center
 
 object ModalProgressTask {
 
@@ -44,7 +45,7 @@ object ModalProgressTask {
       try {
         while (!dialog.isVisible)
         Thread.sleep(50)
-        org.nlogo.awt.Utils.invokeAndWait(r)
+        org.nlogo.awt.EventQueue.invokeAndWait(r)
       }
       catch {
         case _: InterruptedException => //ignore

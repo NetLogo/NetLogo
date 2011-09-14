@@ -1,26 +1,23 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList,
+import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList, SimpleJobOwner,
                       ModelReader, ModelSection, Program, ValueConstraint, Version, File, WidgetIO}
-import org.nlogo.plot.PlotLoader
+import org.nlogo.nvm.CompilerResults
+import org.nlogo.plot.{Plot,PlotLoader}
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.EXPERIMENTS).mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
 }
 
-/**
- * this class is an abomination - JC 10/27/09
- * everything works off of side effects, asking the workspace to update something
- * but not only that, some of the internals of this class work off side effects as well
- * when they don't have to.
- * it could be better with some white space. - JC 10/27/09
-*/
+// this class is an abomination
+// everything works off of side effects, asking the workspace to update something
+// but not only that, some of the internals of this class work off side effects as well
+// when they don't have to. - JC 10/27/09
 class HeadlessModelOpener(ws: HeadlessWorkspace) {
-  import org.nlogo.util.JCL._ // ModelReader uses java.util.Map, Program uses java.util.List
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
@@ -31,50 +28,51 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.modelOpened = true
 
     // get out if unknown version
-    val netLogoVersion = map.get(ModelSection.VERSION).head
+    val netLogoVersion = map.get(ModelSection.Version).head
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) = {
-      WidgetParser.parseWidgets(map.get(ModelSection.WIDGETS), netLogoVersion)
+      WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
     }
 
     // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.AGGREGATE)
+    val sdmLines = map.get(ModelSection.SystemDynamics)
     if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
 
     // read procedures, compile them.
     val results = {
-      val code = map.get(ModelSection.SOURCE).mkString("", "\n", "\n")
+      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
       // we could convert right here.
       // we'd still need to convert slider constraints, plots, monitors and buttons.
       // JC - 9/14/10
       // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
-      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals), ws.getExtensionManager)
+      import collection.JavaConverters._
+      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager)
     }
     ws.setProcedures(results.proceduresMap)
-    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
+    ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09, 9/6/11)
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
-    val previewCommands = map.get(ModelSection.PREVIEW_COMMANDS).mkString("", "\n", "\n")
+    val previewCommands = map.get(ModelSection.PreviewCommands).mkString("", "\n", "\n")
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.SHAPES), map.get(ModelSection.LINK_SHAPES), netLogoVersion)
+    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
 
-    ws.getHubNetManager.loadClientInterface(WidgetIO.parseWidgets(map.get(ModelSection.CLIENT)), netLogoVersion)
+    ws.getHubNetManager.loadClientInterface(WidgetIO.parseWidgets(map.get(ModelSection.HubNetClient)), netLogoVersion)
     // this only happens for headless.
     // GUI gets the widget specs from the widgets on the GUI themselves.
     // but headless cant do that, so it gets the widgets once, here.
-    ws.loadServerInterface(WidgetIO.parseWidgets(map.get(ModelSection.WIDGETS)))
+    ws.loadServerInterface(WidgetIO.parseWidgets(map.get(ModelSection.Interface)))
 
     ws.init()
     ws.world.program(results.program)
 
     // test code is mixed with actual code here, which is a bit funny.
-    if (ws.isCompilerTestingMode)
+    if (ws.compilerTestingMode)
       testCompileWidgets(results.program, netLogoVersion, buttonCode.toList, monitorCode.toList)
     else
       finish(Map() ++ constraints, results.program, interfaceGlobalCommands)
@@ -133,7 +131,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       try ws.compileCommands(widgetSource)
       catch {
         case ex: CompilerException =>
-          println("compiling: \"" + File.stripLines(widgetSource) + "\"")
+          println("compiling: \"" + ModelReader.stripLines(widgetSource) + "\"")
           throw ex
       }
   }
@@ -175,7 +173,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
       def parseInputBox(widget: Array[String]) {
         interfaceGlobals += widget(5)
-        val defaultVal = escapeString(File.restoreLines(widget(6)))
+        val defaultVal = escapeString(ModelReader.restoreLines(widget(6)))
         if (widget(9) == "Number" || widget(9) == "Color")
           interfaceGlobalCommands.append("set " + widget(5) + " " + defaultVal + "\n")
         else
@@ -191,7 +189,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       def parseButton(widget: Array[String]) {
-        val buttonSource = File.restoreLines(widget(6)) match {
+        val buttonSource = ModelReader.restoreLines(widget(6)) match {
           case "NIL" => ""
           case s => s
         }
@@ -209,7 +207,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         if (monitorSource != "NIL")
         // add "__ignore" to turn the reporter into a command, so we can handle buttons and
         // monitors uniformly.  newline to protect against comments
-          monitors += "__ignore (" + File.restoreLines(monitorSource) + "\n)"
+          monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
       }
 
       def parseGraphicsWindow(widget: Array[String]) {
@@ -219,17 +217,16 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // finally parse all the widgets in the WIDGETS section
       val widgets = ModelReader.parseWidgets(widgetsSection)
 
-      // just "toArray" doesn't work here because we get the java toArray method, not the Scala one
-      // - ST 1/21/09, 4/20/10
-      for (widget <- widgets.map(_.toList.toArray))
+      import collection.JavaConverters._
+      for (widget <- widgets.asScala.map(_.asScala.toArray))
         widget(0) match {
           case "SLIDER" => parseSlider(widget)
           case "SWITCH" => parseSwitch(widget)
           case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)
           case "INPUTBOX" => parseInputBox(widget)
           case "PLOT" => parsePlot(widget)
-          case "BUTTON" if ws.isCompilerTestingMode => parseButton(widget)
-          case "MONITOR" if ws.isCompilerTestingMode => parseMonitor(widget)
+          case "BUTTON" if ws.compilerTestingMode => parseButton(widget)
+          case "MONITOR" if ws.compilerTestingMode => parseMonitor(widget)
           case "GRAPHICS-WINDOW" => parseGraphicsWindow(widget)
           case _ => // ignore
         }

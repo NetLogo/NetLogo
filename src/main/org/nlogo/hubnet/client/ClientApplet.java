@@ -1,7 +1,7 @@
 package org.nlogo.hubnet.client;
 
 import org.nlogo.api.I18N;
-import org.nlogo.hubnet.connection.ClientRoles;
+import org.nlogo.hubnet.connection.ClientRole;
 import org.nlogo.hubnet.connection.Ports;
 import org.nlogo.window.EditorFactory;
 
@@ -19,7 +19,7 @@ public strictfp class ClientApplet
   @Override
   public void init() {
     VMCheck.detectBadJVMs();
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         setBackground(java.awt.Color.white);
         getContentPane().setBackground(java.awt.Color.white);
@@ -82,23 +82,22 @@ public strictfp class ClientApplet
   }
 
   public void go(final String server, final boolean isApplet) {
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         loginDialog = new LoginDialog
-            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), !isApplet);
+            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), isApplet);
         loginDialog.addWindowListener
             (new java.awt.event.WindowAdapter() {
               @Override
               public void windowClosing(java.awt.event.WindowEvent e) {
                 clientPanel.logout();
                 attemptLogin = false;
-                if (!isApplet) {
-                  System.exit(0);
-                }
+                loginDialog.setVisible(false);
+                if (!isApplet) { System.exit(0); }
               }
             });
 
-        org.nlogo.awt.Utils.center(loginDialog, null);
+        org.nlogo.awt.Positioning.center(loginDialog, null);
         doLogin();
       }
     });
@@ -109,34 +108,38 @@ public strictfp class ClientApplet
 
   private void doLogin() {
     if (attemptLogin && !loginDialog.isVisible()) {
-      loginDialog.doLogin();
-      if (attemptLogin) {
-        login(
-          loginDialog.getUserName(), loginDialog.getServer(),
-          loginDialog.getPort(), loginDialog.getClientRole());
-      }
+      loginDialog.go(new LoginCallback() {
+        @Override
+        public void apply(String user, String host, int port, ClientRole role) {
+          if (attemptLogin) { login(user, host, port, role); }
+        }});
     }
   }
 
-  private void login(final String userid, final String hostip, final int port, final Enumeration.Value role) {
-    final String[] exs = new String[]{null};
+  private void login(final String userid, final String hostip, final int port,  final ClientRole role) {
+    final String[] error = new String[1];
     org.nlogo.swing.ModalProgressTask.apply(
-      org.nlogo.awt.Utils.getFrame(ClientApplet.this),
-      "Entering...",
-      new Runnable() {
-        public void run() {
-          exs[0] = clientPanel.login(userid, hostip, port, role);
-          clientPanel.requestFocus();
-        }});
-    if (exs[0] != null) {
-      clientPanel.disconnect(exs[0]);
-      handleLoginFailure(exs[0]);
+        org.nlogo.awt.Hierarchy.getFrame(ClientApplet.this),
+        "Entering...",
+        new Runnable() {
+          public void run() {
+            scala.Option<String> e = clientPanel.login(userid, hostip, port, role);
+            if(e.isDefined()) {
+              error[0] = e.get();
+            }
+            clientPanel.requestFocus();
+            loginDialog.setVisible(false);
+          }
+        });
+    if (error[0] != null) {
+      clientPanel.disconnect(error[0]);
+      handleLoginFailure(error[0]);
     }
   }
 
   @Override
   public void destroy() {
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         attemptLogin = false;
         clientPanel.logout();
@@ -145,21 +148,21 @@ public strictfp class ClientApplet
   }
 
   public void handleLoginFailure(final String errorMessage) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
-    org.nlogo.awt.Utils.invokeLater(new Runnable() {
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         org.nlogo.swing.OptionDialog.show
-            (ClientApplet.this, "Login Failed", errorMessage, new String[]{I18N.gui().get("common.buttons.ok")});
+            (ClientApplet.this, "Login Failed", errorMessage, new String[]{I18N.guiJ().get("common.buttons.ok")});
       }
     });
   }
 
   public void handleDisconnect(final String activityName, boolean connected, final String reason) {
-    org.nlogo.awt.Utils.mustBeEventDispatchThread();
+    org.nlogo.awt.EventQueue.mustBeEventDispatchThread();
     if (connected) {
-      org.nlogo.awt.Utils.invokeLater(new Runnable() {
+      org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-          String[] ok = {I18N.gui().get("common.buttons.ok")};
+          String[] ok = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show
               (ClientApplet.this, "",
                   "You have been disconnected from " + activityName + ".\nReason: " + reason, ok);
@@ -186,7 +189,7 @@ public strictfp class ClientApplet
     System.setProperty("apple.awt.graphics.UseQuartz", "true");
     System.setProperty("apple.awt.showGrowBox", "true");
     VMCheck.detectBadJVMs();
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             final ClientApplet applet = new ClientApplet();

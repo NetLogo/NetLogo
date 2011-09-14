@@ -50,7 +50,7 @@ public strictfp class OutputArea
     text.setEditable(false);
     text.setDragEnabled(false);
     text.setFont(new java.awt.Font
-        (org.nlogo.awt.Utils.platformMonospacedFont(),
+        (org.nlogo.awt.Fonts.platformMonospacedFont(),
             java.awt.Font.PLAIN, 12));
     setLayout(new java.awt.BorderLayout());
     scrollPane = new javax.swing.JScrollPane
@@ -66,7 +66,7 @@ public strictfp class OutputArea
 
   public void fontSize(int fontSize) {
     text.setFont(new java.awt.Font
-        (org.nlogo.awt.Utils.platformMonospacedFont(),
+        (org.nlogo.awt.Fonts.platformMonospacedFont(),
             java.awt.Font.PLAIN, fontSize));
   }
 
@@ -104,7 +104,7 @@ public strictfp class OutputArea
     if (wrapLines) {
       java.awt.FontMetrics fontMetrics = getFontMetrics(text.getFont());
       List<String> messageLines =
-          org.nlogo.awt.Utils.breakLines
+          org.nlogo.awt.LineBreaker.breakLines
               (message, fontMetrics,
                   text.getWidth() - 24); // 24 = a guess at the scrollbar width
       StringBuilder wrappedMessage = new StringBuilder();
@@ -131,7 +131,7 @@ public strictfp class OutputArea
       lastTemporaryAddition = text.getSelectedText();
     }
     // doesn't always work unless we wait til later to do it - ST 8/18/03
-    org.nlogo.awt.Utils.invokeLater
+    org.nlogo.awt.EventQueue.invokeLater
         (new Runnable() {
           public void run() {
             scrollPane.getVerticalScrollBar().setValue
@@ -145,7 +145,7 @@ public strictfp class OutputArea
     org.nlogo.api.File file =
         new org.nlogo.api.LocalFile(filename);
     try {
-      file.open(org.nlogo.api.File.Mode.WRITE);
+      file.open(org.nlogo.api.FileModeJ.WRITE());
       StringTokenizer lines =
           new StringTokenizer(text.getText(), "\n");
       while (lines.hasMoreTokens()) {

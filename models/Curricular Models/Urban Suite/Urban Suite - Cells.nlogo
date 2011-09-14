@@ -370,7 +370,7 @@ This model is related to all of the other models in the "Urban Suite".
 
 This model is also similar to the models in the Computer Science/Cellular Automata section of the NetLogo models library.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 This model is based from the models described in chapter 2 of the book "Cities and Complexity" by Michael Batty.
 

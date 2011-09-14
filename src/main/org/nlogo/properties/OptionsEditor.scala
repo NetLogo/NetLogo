@@ -1,6 +1,5 @@
 package org.nlogo.properties
 
-import org.nlogo.util.JCL._
 import org.nlogo.api.Options
 import org.nlogo.swing.Implicits._
 
@@ -12,7 +11,7 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
   add(new javax.swing.JLabel(accessor.displayName))
   add(combo)
   private val options: Options[T] = accessor.get
-  for(optionName <- options.getNames)
+  for(optionName <- options.names)
     combo.addItem(optionName)
   private val originalOption: T = options.chosenValue
   combo.addActionListener(changed _)

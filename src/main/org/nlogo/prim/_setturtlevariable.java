@@ -3,7 +3,7 @@ package org.nlogo.prim;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _setturtlevariable
     extends Command {
@@ -16,7 +16,7 @@ public final strictfp class _setturtlevariable
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_WILDCARD}, "-T--", true);
+        (new int[]{Syntax.WildcardType()}, "-T--", true);
   }
 
   @Override

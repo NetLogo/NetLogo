@@ -118,16 +118,16 @@ class ExpressionParserTests extends FunSuite {
   }
   test("testDoParseMap") {
     runTest("__ignore map [round ?] [1.2 1.7 3.2]",
-      "_ignore[_map[_lambdareport[_round[_lambdavariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
+      "_ignore[_map[_reportertask[_round[_taskvariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
   }
   test("testDoParseMapShortSyntax") {
     runTest("__ignore map round [1.2 1.7 3.2]",
-      "_ignore[_map[_lambdareport[_round[_lambdavariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
+      "_ignore[_map[_reportertask[_round[_taskvariable:1[]]], _constlist:[1.2 1.7 3.2][]]]")
   }
   test("testDoParseForeach") {
     runTest("foreach [1 2 3] [__ignore ?]",
-      "_foreach[_constlist:[1 2 3][], _lambda:(command task from: procedure __TEST)[]]" +
-      "_ignore[_lambdavariable:1[]]")
+      "_foreach[_constlist:[1 2 3][], _commandtask:(command task from: procedure __TEST)[]]" +
+      "_ignore[_taskvariable:1[]]")
   }
   test("testDoParseParenthesizedCommand") {
     runTest("(__ignore 5)", "_ignore[_constdouble:5.0[]]")
@@ -161,29 +161,29 @@ class ExpressionParserTests extends FunSuite {
   test("testParseConstantListWithSublists") {
     runTest("__ignore [[1] [2]]", "_ignore[_constlist:[[1] [2]][]]")
   }
-  test("testParseConstantListInsideLambda1") {
+  test("testParseConstantListInsideTask1") {
     runTest("__ignore n-values 10 [[]]",
-      "_ignore[_nvalues[_constdouble:10.0[], _lambdareport[_constlist:[][]]]]")
+      "_ignore[_nvalues[_constdouble:10.0[], _reportertask[_constlist:[][]]]]")
   }
-  test("testParseConstantListInsideLambda2") {
+  test("testParseConstantListInsideTask2") {
     runTest("__ignore n-values 10 [[5]]",
-      "_ignore[_nvalues[_constdouble:10.0[], _lambdareport[_constlist:[5][]]]]")
+      "_ignore[_nvalues[_constdouble:10.0[], _reportertask[_constlist:[5][]]]]")
   }
-  test("testParseCommandLambda1") {
+  test("testParseCommandTask1") {
     runTest("__ignore task [print ?]",
-      "_ignore[_task[_lambda:(command task from: procedure __TEST)[]]]" +
-      "_print[_lambdavariable:1[]]")
+      "_ignore[_task[_commandtask:(command task from: procedure __TEST)[]]]" +
+      "_print[_taskvariable:1[]]")
   }
-  test("testParseCommandLambda2") {
+  test("testParseCommandTask2") {
     runTest("__ignore task [print 5]",
-      "_ignore[_task[_lambda:(command task from: procedure __TEST)[]]]" +
+      "_ignore[_task[_commandtask:(command task from: procedure __TEST)[]]]" +
       "_print[_constdouble:5.0[]]")
   }
-  test("testParseCommandLambda3") {
+  test("testParseCommandTask3") {
     // it would be nice if this resulted in a CompilerException instead
     // of failing at runtime - ST 2/6/11
     runTest("__ignore runresult task [__ignore 5]",
-      "_ignore[_runresult[_task[_lambda:(command task from: procedure __TEST)[]]]]" +
+      "_ignore[_runresult[_task[_commandtask:(command task from: procedure __TEST)[]]]]" +
         "_ignore[_constdouble:5.0[]]")
   }
   test("testParseDiffuse") {

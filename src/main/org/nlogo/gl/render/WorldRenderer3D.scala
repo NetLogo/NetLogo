@@ -25,7 +25,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     var dx = observer.dx
     var dy = observer.dy
     var dz = observer.dz
-    if(observer.perspective == Perspective.FOLLOW || observer.perspective == Perspective.RIDE) {
+    if(observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
       val turtle = observer.targetAgent.asInstanceOf[Turtle3D]
       var distance: Double = observer.followDistance
       // try and skip the area where you're way too close to the turtle to be interesting

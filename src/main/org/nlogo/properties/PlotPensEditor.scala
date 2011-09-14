@@ -4,7 +4,7 @@ import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
 import javax.swing.BorderFactory._
 import java.awt.{List => AWTList, _}
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{OptionDialog, PimpedJButton}
 import org.nlogo.editor.{Colorizer, EditorField}
@@ -36,7 +36,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   def changed() {} // seemingly no need to do anything here
   def set(value: List[PlotPen]) {} // seemingly no need to do anything here either
 
-  private def frame = org.nlogo.awt.Utils.getFrame(this)
+  private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
   override def get: Option[List[PlotPen]] = {
     if(table.isEditing) table.getCellEditor.stopCellEditing
@@ -131,12 +131,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       setGridColor(Color.BLACK)
       setShowGrid(true)
       setRowSelectionAllowed(false)
+      getTableHeader.setReorderingAllowed(false)
 
       getSelectionModel.addListSelectionListener(new RowListener())
       getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
 
       nameColumn.setCellRenderer(new NameRenderer)
-      nameColumn.setMinWidth(80)
+      nameColumn.setMinWidth(100)
+      nameColumn.setMaxWidth(160)
 
       colorColumn.setCellEditor(new ColorEditor)
       colorColumn.setMaxWidth(40)
@@ -149,6 +151,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
       buttonsColumn.setCellRenderer(new ButtonCellEditor)
       buttonsColumn.setCellEditor(new ButtonCellEditor)
+      buttonsColumn.setMaxWidth(90)
+      buttonsColumn.setMinWidth(90)
       buttonsColumn.setHeaderValue("")
 
       // finally add all the actual plot pens to the table
@@ -380,7 +384,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         try {intervalField.getText.toDouble; true}
         catch {
           case ex: NumberFormatException =>
-            OptionDialog.show(org.nlogo.awt.Utils.getWindow(this),
+            OptionDialog.show(org.nlogo.awt.Hierarchy.getWindow(this),
               "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
             false
         }

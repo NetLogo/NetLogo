@@ -941,7 +941,7 @@ Experiment with different infection scenarios, for example once a turtle is cure
 Disease
 Disease Solo
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

@@ -2,6 +2,8 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
+import org.nlogo.api.Syntax;
+import org.nlogo.api.TypeNames;
 
 /**
  * Passes arguments to extension primitives.
@@ -24,7 +26,7 @@ public strictfp class Argument
     }
     if (cached instanceof org.nlogo.agent.Agent &&
         ((org.nlogo.agent.Agent) cached).id == -1) {
-      cached = org.nlogo.api.Nobody.NOBODY;
+      cached = org.nlogo.api.Nobody$.MODULE$;
     }
     return cached;
   }
@@ -37,7 +39,7 @@ public strictfp class Argument
     } catch (ClassCastException ex) {
       throw new org.nlogo.api.ExtensionException
           (getExceptionMessage
-              (Syntax.TYPE_AGENTSET, obj));
+           (Syntax.AgentsetType(), obj));
     }
   }
 
@@ -48,8 +50,8 @@ public strictfp class Argument
     try {
       return (org.nlogo.api.Agent) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_AGENT, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.AgentType(), obj));
     }
   }
 
@@ -59,8 +61,8 @@ public strictfp class Argument
     try {
       return (Boolean) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_BOOLEAN, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.BooleanType(), obj));
     }
   }
 
@@ -70,8 +72,8 @@ public strictfp class Argument
     try {
       return ((Boolean) obj).booleanValue();
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_BOOLEAN, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.BooleanType(), obj));
     }
   }
 
@@ -81,8 +83,8 @@ public strictfp class Argument
     try {
       return ((Double) obj).doubleValue();
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_NUMBER, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.NumberType(), obj));
     }
   }
 
@@ -92,8 +94,8 @@ public strictfp class Argument
     try {
       return ((Double) obj).intValue();
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_NUMBER, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.NumberType(), obj));
     }
   }
 
@@ -103,8 +105,8 @@ public strictfp class Argument
     try {
       return (org.nlogo.api.LogoList) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_LIST, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.ListType(), obj));
     }
   }
 
@@ -114,8 +116,8 @@ public strictfp class Argument
     try {
       return (org.nlogo.api.Patch) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_PATCH, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.PatchType(), obj));
     }
   }
 
@@ -125,8 +127,8 @@ public strictfp class Argument
     try {
       return (String) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_STRING, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.StringType(), obj));
     }
   }
 
@@ -137,8 +139,8 @@ public strictfp class Argument
     try {
       return (org.nlogo.api.Turtle) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_TURTLE, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.TurtleType(), obj));
     }
   }
 
@@ -148,8 +150,30 @@ public strictfp class Argument
     try {
       return (org.nlogo.api.Link) obj;
     } catch (ClassCastException ex) {
-      throw new org.nlogo.api.ExtensionException(getExceptionMessage
-          (org.nlogo.nvm.Syntax.TYPE_LINK, obj));
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.LinkType(), obj));
+    }
+  }
+
+  public org.nlogo.api.ReporterTask getReporterTask()
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.api.ReporterTask) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.ReporterTaskType(), obj));
+    }
+  }
+
+  public org.nlogo.api.CommandTask getCommandTask()
+      throws org.nlogo.api.ExtensionException, org.nlogo.api.LogoException {
+    Object obj = get();
+    try {
+      return (org.nlogo.api.CommandTask) obj;
+    } catch (ClassCastException ex) {
+      throw new org.nlogo.api.ExtensionException(
+        getExceptionMessage(Syntax.CommandTaskType(), obj));
     }
   }
 
@@ -164,10 +188,10 @@ public strictfp class Argument
 
   private String getExceptionMessage(int wantedType, Object badValue) {
     String result = "Expected this input to be "
-        + org.nlogo.nvm.Syntax.aTypeName(wantedType) + " but got "
-        + (badValue instanceof org.nlogo.api.Nobody
+        + TypeNames.aName(wantedType) + " but got "
+        + (badValue == org.nlogo.api.Nobody$.MODULE$
         ? "NOBODY"
-        : "the " + org.nlogo.nvm.Syntax.typeName(badValue)
+        : "the " + TypeNames.name(badValue)
         + " " + Dump.logoObject(badValue))
         + " instead.";
 

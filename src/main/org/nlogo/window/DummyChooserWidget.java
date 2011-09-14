@@ -22,7 +22,7 @@ public strictfp class DummyChooserWidget
 
   @Override
   public String classDisplayName() {
-    return I18N.gui().get("tabs.run.widgets.chooser");
+    return I18N.guiJ().get("tabs.run.widgets.chooser");
   }
 
   public List<Property> propertySet() {
@@ -79,7 +79,7 @@ public strictfp class DummyChooserWidget
     int x2 = Integer.parseInt(strings[3]);
     int y2 = Integer.parseInt(strings[4]);
     setSize(x2 - x1, y2 - y1);
-    name(org.nlogo.api.File.restoreLines(strings[5]));
+    name(org.nlogo.api.ModelReader.restoreLines(strings[5]));
     choicesWrapper(strings[7]);
     index(Integer.parseInt(strings[8]));
     return this;

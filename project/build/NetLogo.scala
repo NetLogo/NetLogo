@@ -1,5 +1,6 @@
 import com.sun.jmx.snmp.tasks.Task
 import sbt._
+import com.github.olim7t.sbtscalariform._
 
 // - use Java 1.5 libraries as compiler bootclasspath?
 // - use "package" to build NetLogo.jar, NetLogoLite.jar, BehaviorSpace.jar?
@@ -16,6 +17,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   with Depend
   with PMD
   with Classycle
+  with ScalariformPlugin
   with ModelIndex
   with BehaviorSpaceSources {
 
@@ -115,4 +117,10 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
     runTask(Some("org.nlogo.tools.InfoTabDocGenerator"), testClasspath).dependsOn(testCompile).run
   }
 
+  // scalariform
+  override def formatBeforeCompiling = false
+  override def scalaSourcesEncoding = "us-ascii"
+  override def scalariformOptions =
+    Seq(DoubleIndentClassDeclaration(true), AlignParameters(true))
+    
 }

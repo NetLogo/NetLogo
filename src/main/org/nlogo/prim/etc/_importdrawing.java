@@ -3,22 +3,22 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _importdrawing
     extends org.nlogo.nvm.Command {
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_STRING},
+        (new int[]{Syntax.StringType()},
             "O---", true);
   }
 
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
-    if (world.program().is3D) {
+    if (world.program().is3D()) {
       throw new EngineException(context, this,
-          I18N.errors().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D"));
+          I18N.errorsJ().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D"));
     }
     try {
       workspace.importDrawing

@@ -965,7 +965,7 @@ public strictfp class Importer
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
         List<String> breedOwns =
-            world.program().breedsOwn.get(breed.printName());
+          world.program().breedsOwn().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
             allBreedOwns.add(breedOwns.get(i));
@@ -984,7 +984,7 @@ public strictfp class Importer
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
         List<String> breedOwns =
-            world.program().linkBreedsOwn.get(breed.printName());
+          world.program().linkBreedsOwn().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
             allBreedOwns.add(breedOwns.get(i));
@@ -1173,10 +1173,10 @@ public strictfp class Importer
       return AgentVariables.getImplicitObserverVariables();
     }
     if (agentClass == Turtle.class) {
-      return AgentVariables.getImplicitTurtleVariables(world.program().is3D);
+      return AgentVariables.getImplicitTurtleVariables(world.program().is3D());
     }
     if (agentClass == Patch.class) {
-      return AgentVariables.getImplicitPatchVariables(world.program().is3D);
+      return AgentVariables.getImplicitPatchVariables(world.program().is3D());
     }
     if (agentClass == Link.class) {
       return AgentVariables.getImplicitLinkVariables();

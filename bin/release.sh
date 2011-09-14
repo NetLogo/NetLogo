@@ -9,6 +9,8 @@ CHMOD=chmod
 CP=cp
 DU=du
 FIND=find
+GIT=git
+GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
 JAVA=java
@@ -18,23 +20,24 @@ MAKE=make
 MKDIR=mkdir
 MV=mv
 OPEN=open
-OSASCRIPT=osascript
+PACK200=pack200
 PERL=perl
 RM=rm
+RSYNC=rsync
 SED=sed
 TAR=tar
-TOUCH=touch
 XARGS=xargs
 
 # other
-SCALA=2.9.0-1
+SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.8
 IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server
 
 # make sure we have proper versions of tools
-# (htmldoc 1.8.27 is available from htmldoc.org; it's a simple
+# ("brew install htmldoc"; or if you don't want to involve homebrew,
+# 1.8.27 is also available from htmldoc.org as a simple
 # configure/make/make install)
 if test `htmldoc --version` != 1.8.27 ;
 then
@@ -44,7 +47,7 @@ fi
 
 # maybe we should be using the "submodules" feature of git for this? - ST 5/7/11
 if [ ! -d "Mathematica-Link" ]; then
-  git clone git@github.com:NetLogo/Mathematica-Link.git
+  $GIT clone git@github.com:NetLogo/Mathematica-Link.git
 fi
 
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
@@ -124,15 +127,15 @@ do
   fi
 done
 
-until [ -n "$RSYNC" ]
+until [ -n "$DO_RSYNC" ]
 do
   read -p "Rsync to CCL server when done? " -n 1 ANSWER
   echo
   if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-    RSYNC=1
+    DO_RSYNC=1
   fi
   if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-    RSYNC=0
+    DO_RSYNC=0
   fi
 done
 
@@ -141,16 +144,12 @@ done
 bin/sbt update
 $MAKE -s
 bin/sbt behaviorspace-sources
-# zzz TODO $MAKE -s javadoc-public
+$MAKE -s docs/scaladoc
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
 export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
-
-# eject any leftover dmg's from last run
-$OSASCRIPT -e "tell application \"Finder\"" -e "eject disk \"NetLogo\"" -e "end" > /dev/null 2>&1 || true
-$OSASCRIPT -e "tell application \"Finder\"" -e "eject disk \"NetLogo "$COMPRESSEDVERSION"\"" -e "end" > /dev/null 2>&1 || true
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -164,10 +163,10 @@ $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
-pack200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
+$PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 $MKDIR lib
-$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.11.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-0.11.0.jar ../../lib_managed/scala_$SCALA/compile/pegdown-0.9.1.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
+$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.4.2.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.4.2.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
 $CP -p ../../BehaviorSpace.jar ../../BehaviorSpace-src.zip lib
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
@@ -195,16 +194,16 @@ $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
 
 # verify all VERSION sections are gone, as a guard against malformed
 # sections missed by the previous step
-grep -rw ^VERSION models && echo "no VERSION sections please; exiting" && exit 1
-grep -rw \\\$Id models && echo "no \$Id please; exiting" && exit 1
+$GREP -rw ^VERSION models && echo "no VERSION sections please; exiting" && exit 1
+$GREP -rw \\\$Id models && echo "no \$Id please; exiting" && exit 1
 
 # put copyright notices in code and/or info tabs
-ln -s ../../dist        # notarize script needs this
-ln -s ../../resources   # and this
-ln -s ../../scala       # and this
-ln -s ../../bin         # and this
+$LN -s ../../dist        # notarize script needs this
+$LN -s ../../resources   # and this
+$LN -s ../../scala       # and this
+$LN -s ../../bin         # and this
 ../../bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
-rm dist resources scala bin
+$RM dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/*.html
@@ -218,7 +217,7 @@ $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
 cd docs
 echo "-- we ignore htmldoc errors because the docs contain a bunch"
-echo "-- of links to the javadocs, but the javadocs aren't included"
+echo "-- of links to the scaladoc, but the scaladoc isn't included"
 echo "-- in the PDF so htmldoc flags those as broken links."
 echo "-- please be on the lookout for other kinds of errors."
 ../../../bin/htmldoc.sh || echo "htmldoc errors ignored"
@@ -291,7 +290,7 @@ $FIND . -path \*/.svn -prune -o -empty -print
 # make sure no empty directories or files are
 # lying around. do twice, once to print them all,
 # the second time to halt if any are found
-find . -empty
+$FIND . -empty
 if [ "`find . -empty`" != "" ]
 then
   echo "empty files/directories found; exiting"
@@ -310,6 +309,7 @@ $RM -rf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 # the qtj extension doesn't work on linux
 $TAR czf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz --exclude ._\* --exclude qtj --exclude Mac\ OS\ X --exclude Windows netlogo-$COMPRESSEDVERSION
 $DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz 
+pwd
 cd netlogo-$COMPRESSEDVERSION
 
 # done with Unix release; now do Mac release
@@ -347,29 +347,19 @@ $FIND . \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
 
 # make the dmg
 $CHMOD -R go+rX .
-cd ../$COMPRESSEDVERSION
-$RM -rf NetLogo\ "$VERSION".dmg
-$CP ../../dist/NetLogo.sparseimage.bz2 .
-$BUNZIP NetLogo.sparseimage.bz2
-$HDIUTIL attach -quiet NetLogo.sparseimage
-$CP -rp ../netlogo-$COMPRESSEDVERSION/* /Volumes/NetLogo/NetLogo
-$FIND /Volumes/NetLogo/NetLogo -name Windows -print0 | $XARGS -0 $RM -rf
-$FIND /Volumes/NetLogo/NetLogo -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
-$FIND /Volumes/NetLogo/NetLogo -name Linux-x86 -print0 | $XARGS -0 $RM -rf
-sync ; sleep 5 ; sync    # I get zeroed-out files sometimes resulting in 300K dmg... this is blind stab to try to avoid - ST 1/27/05; since adding this problem has not reoccurred - ST 8/2/05
-$OSASCRIPT -e "tell application \"Finder\"" -e "make new alias file at folder \"NetLogo\" of disk \"NetLogo\" to file \"NetLogo User Manual.pdf\" of folder \"docs\" of folder \"NetLogo\" of disk \"NetLogo\"" -e "end"
-$OSASCRIPT -e "tell application \"Finder\"" -e "set name of folder \"NetLogo\" of disk \"NetLogo\" to \"NetLogo ""$VERSION""\"" -e "end"
-$OSASCRIPT -e "tell application \"Finder\"" -e "set name of disk \"NetLogo\" to \"NetLogo ""$VERSION""\"" -e "end"
-$FIND /Volumes/NetLogo\ "$VERSION" -name .Trashes -prune -o -print0 | $XARGS -0 $CHMOD go=rX
-sync ; sleep 10 ; sync    # I got an image without the version number in the volume name once... another blind stab - ST 1/27/05; since adding this problem has not reoccurred - ST 8/2/05
-$OSASCRIPT -e "tell application \"Finder\"" -e "eject disk \"NetLogo ""$VERSION""\"" -e "end"
-sync ; sleep 10 ; sync    # same as above
-$HDIUTIL convert -quiet NetLogo.sparseimage -format UDZO -o NetLogo\ "$VERSION".dmg
-$RM NetLogo.sparseimage
+cd ..
+$RM -rf dmg
+$MKDIR dmg
+$CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
+( cd dmg/NetLogo\ "$VERSION"; $LN -s docs/NetLogo\ User\ Manual.pdf )
+$FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
+$FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
+$FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
+$HDIUTIL create NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
-cd ../netlogo-$COMPRESSEDVERSION
-
+$RM -rf dmg
+cd netlogo-$COMPRESSEDVERSION
 
 # remove Mac-only stuff
 $RM -r *.app
@@ -461,8 +451,8 @@ cd ../..
 $FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store \) -print0 | $XARGS -0 $RM -rf
 
 # done
-if [ $RSYNC -eq 1 ]; then
-  rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
+if [ $DO_RSYNC -eq 1 ]; then
+  $RSYNC -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
 else
   echo "to upload to CCL server, do:"
   echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"

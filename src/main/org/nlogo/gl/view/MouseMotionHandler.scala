@@ -2,7 +2,7 @@ package org.nlogo.gl.view
 
 import org.nlogo.api.Perspective
 import java.awt.event.{ MouseEvent, MouseWheelEvent }
-import org.nlogo.awt.Utils.button1Mask
+import org.nlogo.awt.Mouse.hasButton1
 
 object MouseMotionHandler {
   sealed trait Mode
@@ -48,7 +48,7 @@ with java.awt.event.MouseWheelListener {
   def mousePressed(evt: MouseEvent) {
     prevMouseX = evt.getX
     prevMouseY = evt.getY
-    if (!evt.isPopupTrigger && movementMode == InteractMode && button1Mask(evt))
+    if (!evt.isPopupTrigger && movementMode == InteractMode && hasButton1(evt))
       view.renderer.mouseDown(true)
     else {
       if (evt.isPopupTrigger)
@@ -59,7 +59,7 @@ with java.awt.event.MouseWheelListener {
 
   def mouseReleased(evt: MouseEvent) {
     view.renderer.showCrossHairs(false)
-    if (!evt.isPopupTrigger && (movementMode == InteractMode) && button1Mask(evt))
+    if (!evt.isPopupTrigger && (movementMode == InteractMode) && hasButton1(evt))
       view.renderer.mouseDown(false)
     else if (evt.isPopupTrigger)
       view.doPopup(evt)
@@ -69,7 +69,7 @@ with java.awt.event.MouseWheelListener {
   def mouseWheelMoved(e: MouseWheelEvent) {
     val observer = world.observer
     var zoomDist = -e.getUnitsToScroll.toDouble
-    if (observer.perspective == Perspective.FOLLOW || observer.perspective == Perspective.RIDE) {
+    if (observer.perspective == Perspective.Follow || observer.perspective == Perspective.Ride) {
       zoomDist = zoomDist min observer.followDistance
       val newDist = (observer.followDistance - zoomDist).toInt
       // slider values from ViewControlToolBar
@@ -117,7 +117,7 @@ with java.awt.event.MouseWheelListener {
     val observer = world.observer
     import observer.{ oxcor, oycor, ozcor, dist }
 
-    if (world.observer.perspective == Perspective.FOLLOW || world.observer.perspective == Perspective.RIDE) {
+    if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride) {
       val newDist = (observer.followDistance - thetaY).toInt
       // slider values from ViewControlToolBar
       if (newDist >= 0 && newDist <= 100)

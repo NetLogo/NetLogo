@@ -346,6 +346,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 10
@@ -362,6 +363,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 10
@@ -378,6 +380,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 98
@@ -595,63 +598,61 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model simulates the behavior of gas particles in a closed box, or a container with a fixed volume.  The path of single particle is visualized by a gray colored trace of the particle's most recent positions.
 
 This model is part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow (speed less than 5), green for medium (above 5 and below 15), and red for high speeds (above 15).
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow (speed less than 5), green for medium (above 5 and below 15), and red for high speeds (above 15).
 
 The basic principle of all GasLab models, including this one, is the following algorithm:
 
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch.
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each particle is assigned its new velocity, energy, and heading.
-6. If a particle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch.  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each particle is assigned its new velocity, energy, and heading.  
+6. If a particle finds itself on or very close to a wall of the container, it "bounces" --- that is, reflects its direction and keeps its same speed.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- NUMBER-OF-PARTICLES: number of gas particles
-- INIT-PARTICLE-SPEED: initial speed of the particles
-- PARTICLE-MASS: mass of the particles
+Initial settings:  
+- NUMBER-OF-PARTICLES: number of gas particles  
+- INIT-PARTICLE-SPEED: initial speed of the particles  
+- PARTICLE-MASS: mass of the particles  
 - BOX-SIZE: size of the box. (percentage of the world-width)
 
-The SETUP button will set the initial conditions.
+The SETUP button will set the initial conditions.  
 The GO button will run the simulation.
 
-Other settings:
-- TRACE?: Traces the path of one of the particles.
+Other settings:  
+- TRACE?: Traces the path of one of the particles.  
 - COLLIDE?: Turns collisions between particles on and off.
 
-Monitors:
-- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).
-- AVERAGE SPEED: average speed of the particles.
+Monitors:  
+- FAST, MEDIUM, SLOW: numbers of particles with different speeds: fast (red), medium (green), and slow (blue).  
+- AVERAGE SPEED: average speed of the particles.  
 - AVERAGE ENERGY: average kinetic energy of the particles.
 
-Plots:
-- SPEED COUNTS: plots the number of particles in each range of speed.
-- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.
+Plots:  
+- SPEED COUNTS: plots the number of particles in each range of speed.  
+- SPEED HISTOGRAM: speed distribution of all the particles.  The gray line is the average value, and the black line is the initial average.  
 - ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as  m*(v^2)/2.  The gray line is the average value, and the black line is the initial average.
 
 Initially, all the particles have the same speed but random directions. Therefore the first histogram plots of speed and energy should show only one column each.  As the particles repeatedly collide, they exchange energy and head off in new directions, and the speeds are dispersed -- some particles get faster, some get slower.  The histogram distribution changes accordingly.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 What is happening to the numbers of particles of different colors?  Does this match what's happening in the histograms?  Why are there more blue particles than red ones?
 
 Can you observe collisions and color changes as they happen?  For instance, when a red particle hits a green particle, what color do they each become?
@@ -662,22 +663,18 @@ The particle histograms quickly converge on the classic Maxwell-Boltzmann distri
 
 Watch the particle whose path is traced in gray.  Does the trace resemble Brownian motion?  Can you recognize when a collision happens?  What factors affect the frequency of collisions?   What about the how much the angles in the path vary?  Can you get a particle to remain in a relatively small area as it moves, instead of traveling across the entire box?
 
+## THINGS TO TRY
 
-
-THINGS TO TRY
--------------
 Set all the particles in a region of the box to have the the same heading -- what happens?  Does this correspond to a physical possibility?
 
 Try different settings, especially the extremes.  Are the histograms different?  Does the trace pattern change?
 
 Are there other interesting quantities to keep track of?
 
-Look up or calculate the REAL number, size, mass and speed of particles in a typical gas.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?  Try adjusting these variables in the model to better match the numbers you look up.  Does this affect the outcome of the model?  What physical phenomena might be observed if there really were a small number of big particles in the space around us?
+Look up or calculate the *real* number, size, mass and speed of particles in a typical gas.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?  Try adjusting these variables in the model to better match the numbers you look up.  Does this affect the outcome of the model?  What physical phenomena might be observed if there really were a small number of big particles in the space around us?
 
+## EXTENDING THE MODEL
 
-
-EXTENDING THE MODEL
--------------------
 Could you find a way to measure or express the "temperature" of this imaginary gas?  Try to construct a thermometer.
 
 What happens if there are particles of different masses?  (See GasLab Two Gas model.)
@@ -694,19 +691,18 @@ Find a way to monitor how often particles collide, and how far they go between c
 
 In what ways is this idealization different from the idealization that is used to derive the Maxwell-Boltzmann distribution?  Specifically, what other code could be used to represent the two-body collisions of particles?
 
-If MORE than two particles arrive on the same patch, the current code says they don't collide.  Is this a mistake?  How does it affect the results?
+If *more* than two particles arrive on the same patch, the current code says they don't collide.  Is this a mistake?  How does it affect the results?
 
 Is this model valid for fluids in any aspect?  How could it be made to be fluid-like?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
-Notice the use of the histogram primitive.
+Notice the use of the `histogram` primitive.
 
 Notice how collisions are detected by the particles and how the code guarantees that the same two particles do not collide twice.  What happens if we let the patches detect them?
 
-
 ## CREDITS AND REFERENCES
+
 Wilensky, U. (2003). Statistical mechanics for secondary school: The GasLab modeling toolkit. International Journal of Computers for Mathematical Learning, 8(1), 1-41 (special issue on agent-based modeling).
 
 Wilensky, U., Hazzard, E & Froemke, R. (1999). GasLab: An Extensible Modeling Toolkit for Exploring Statistical Mechanics. Paper presented at the Seventh European Logo Conference - EUROLOGO '99, Sofia, Bulgaria
@@ -1006,7 +1002,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

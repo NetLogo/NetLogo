@@ -335,7 +335,7 @@ CA 1D Elementary- the elementary two-state 1D cellular automaton
 CA 1D Totalistic- a three-state totalistic 1D cellular automaton
 Turbulence (in the Chemistry & Physics section)- a 1D continuous cellular automaton which demonstrates turbulence
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Pattern Dynamics in Spatiotemporal Chaos: Kunihiko Kaneko. 1989 Physics D 34 1-41
 A New Kind of Science. Wolfram, S. 2002. Wolfram Media Inc.  Champaign, IL.

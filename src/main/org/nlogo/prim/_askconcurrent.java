@@ -5,7 +5,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _askconcurrent
     extends Command
@@ -13,7 +13,7 @@ public final strictfp class _askconcurrent
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_AGENTSET, Syntax.TYPE_COMMAND_BLOCK},
+        (new int[]{Syntax.AgentsetType(), Syntax.CommandBlockType()},
             "OTPL", "?", true);
   }
 
@@ -28,11 +28,11 @@ public final strictfp class _askconcurrent
     if (!(context.agent instanceof org.nlogo.agent.Observer)) {
       if (agentset == world.turtles()) {
         throw new EngineException
-            (context, this, I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
       }
       if (agentset == world.patches()) {
         throw new EngineException
-            (context, this, I18N.errors().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
       }
     }
     if (context.makeChildrenExclusive()) {

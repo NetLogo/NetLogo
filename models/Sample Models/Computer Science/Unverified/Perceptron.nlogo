@@ -330,11 +330,11 @@ end
 GRAPHICS-WINDOW
 217
 11
-462
-246
+493
+280
 9
 8
-12.0
+14.0
 1
 10
 1
@@ -352,7 +352,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 143
@@ -389,9 +389,9 @@ NIL
 1
 
 BUTTON
-584
+632
 41
-647
+695
 74
 test
 test
@@ -406,9 +406,9 @@ NIL
 1
 
 CHOOSER
-468
+516
 90
-660
+708
 135
 test-input-node-1-value
 test-input-node-1-value
@@ -416,9 +416,9 @@ test-input-node-1-value
 1
 
 CHOOSER
-468
+516
 144
-660
+708
 189
 test-input-node-2-value
 test-input-node-2-value
@@ -427,9 +427,9 @@ test-input-node-2-value
 
 MONITOR
 218
-254
+287
 275
-299
+332
 output
 [activation] of perceptron
 3
@@ -485,9 +485,9 @@ NIL
 HORIZONTAL
 
 PLOT
-465
+513
 203
-665
+713
 353
 Rule Learned
 x1
@@ -506,9 +506,9 @@ PENS
 
 CHOOSER
 282
-256
+289
 454
-301
+334
 target-function
 target-function
 "or" "xor" "and" "nor" "nand"
@@ -516,9 +516,9 @@ target-function
 
 SWITCH
 218
-314
-455
 347
+455
+380
 show-weights?
 show-weights?
 0
@@ -536,9 +536,9 @@ TEXTBOX
 0
 
 TEXTBOX
-465
+513
 41
-579
+627
 59
 3. Test perceptron:
 11
@@ -919,7 +919,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta2
+NetLogo 5.0beta5
 @#$#@#$#@
 setup
 @#$#@#$#@

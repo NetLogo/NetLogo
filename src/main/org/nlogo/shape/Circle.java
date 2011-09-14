@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 import org.nlogo.api.GraphicsInterface;
 
-import static org.nlogo.api.RendererInterface.SHAPE_WIDTH;
+import static org.nlogo.api.Constants.ShapeWidth;
 
 public strictfp class Circle
     extends Element
@@ -112,7 +112,7 @@ public strictfp class Circle
   public void rotateLeft() {
     int oldX = x;
     x = y;
-    y = SHAPE_WIDTH - oldX - yDiameter;
+    y = ShapeWidth() - oldX - yDiameter;
     int oldXDiameter = xDiameter;
     xDiameter = yDiameter;
     yDiameter = oldXDiameter;
@@ -121,7 +121,7 @@ public strictfp class Circle
   @Override
   public void rotateRight() {
     int oldX = x;
-    x = SHAPE_WIDTH - y - xDiameter;
+    x = ShapeWidth() - y - xDiameter;
     y = oldX;
     int oldXDiameter = xDiameter;
     xDiameter = yDiameter;
@@ -130,12 +130,12 @@ public strictfp class Circle
 
   @Override
   public void flipHorizontal() {
-    x = SHAPE_WIDTH - x - xDiameter;
+    x = ShapeWidth() - x - xDiameter;
   }
 
   @Override
   public void flipVertical() {
-    y = SHAPE_WIDTH - y - yDiameter;
+    y = ShapeWidth() - y - yDiameter;
   }
 
   @Override

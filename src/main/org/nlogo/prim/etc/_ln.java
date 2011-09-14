@@ -1,19 +1,18 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _ln extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_NUMBER);
+    int[] right = {Syntax.NumberType()};
+    return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
 
   @Override
@@ -24,7 +23,7 @@ public final strictfp class _ln extends Reporter implements Pure {
   public double report_1(Context context, double d) throws LogoException {
     if (d <= 0) {
       throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", d));
+          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", d));
     }
     return validDouble(StrictMath.log(d));
   }

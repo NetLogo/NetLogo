@@ -4,7 +4,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _withlocalrandomness
     extends Command
@@ -12,7 +12,7 @@ public final strictfp class _withlocalrandomness
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_COMMAND_BLOCK});
+        (new int[]{Syntax.CommandBlockType()});
   }
 
   @Override

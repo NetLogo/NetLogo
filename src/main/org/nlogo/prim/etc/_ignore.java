@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 // This is only used for testing purposes.  It's better not to
 // rejigger this, because when we test the bytecode generator, we get
@@ -15,7 +15,7 @@ public final strictfp class _ignore
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_WILDCARD});
+        (new int[]{Syntax.WildcardType()});
   }
 
   @Override

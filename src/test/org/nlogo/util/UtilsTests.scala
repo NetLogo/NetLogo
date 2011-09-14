@@ -1,9 +1,7 @@
 package org.nlogo.util
 
-import org.scalatest.FunSuite
-
-import org.scalacheck.{Properties, Prop}
-import Prop._
+import org.scalatest.{ FunSuite, PropSpec }
+import org.scalatest.prop.PropertyChecks
 
 // These are actually tests for the Utils class.
 // Not to be confused with utilities for tests (TestUtils)
@@ -20,19 +18,26 @@ class UtilsTests extends FunSuite {
   }
 }
 
-object UtilsTests2 extends Properties("Utils") {
+class UtilsTests2 extends PropSpec with PropertyChecks {
 
-  property("unescape is inverse of escape") =
+  import org.scalacheck.{ Properties, Prop, Gen, Arbitrary }
+  import Arbitrary.arbitrary
+  import Prop._
+
+  property("unescape is inverse of escape") {
     forAll((ns: String) =>
-      ns == Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns)))
+      expect(ns)(
+        Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns))))}
 
-  property("escape is inverse of unescape") =
+  property("escape is inverse of unescape") {
     forAll((ns: String) =>
-      ns == Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns)))
+      expect(ns)(
+        Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns))))}
 
-  property("reader2String is inverse of StringReader") =
-    forAll((ns: String, bufferSize: Int) =>
-      (bufferSize > 0 && bufferSize <= 4096) ==>  // we don't need to test gigantic buffers - ST 12/22/09
-        { ns == Utils.reader2String(new java.io.StringReader(ns), bufferSize) })
+  property("reader2String is inverse of StringReader") {
+    forAll(arbitrary[String], Gen.chooseNum(1, 4096))(
+      (ns, bufferSize) =>
+        expect(ns)(
+          Utils.reader2String(new java.io.StringReader(ns), bufferSize)))}
 
 }

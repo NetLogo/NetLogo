@@ -1022,7 +1022,7 @@ Include territory boundaries to create geographically isolated sections of the w
 
 All BEAGLE Evolution models.  In particular:  Bug Hunt Speeds, Bug Hunt Camouflage, Wolf Sheep Predation, and GENE DRIFT T INTERACT
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

@@ -51,7 +51,7 @@ strictfp class ModelsLibraryDialog
       new LinkedList<javax.swing.tree.TreePath>();
 
   javax.swing.Action openAction =
-      new javax.swing.AbstractAction(I18N.gui().get("modelsLibrary.open")) {
+      new javax.swing.AbstractAction(I18N.guiJ().get("modelsLibrary.open")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           path = selected.getFilePath();
           try {
@@ -80,7 +80,7 @@ strictfp class ModelsLibraryDialog
       };
 
   javax.swing.Action cancelAction =
-      new javax.swing.AbstractAction(I18N.gui().get("common.buttons.cancel")) {
+      new javax.swing.AbstractAction(I18N.guiJ().get("common.buttons.cancel")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           source = null;
           path = null;
@@ -89,7 +89,7 @@ strictfp class ModelsLibraryDialog
       };
 
   javax.swing.Action communityAction =
-      new javax.swing.AbstractAction(I18N.gui().get("modelsLibrary.community")) {
+      new javax.swing.AbstractAction(I18N.guiJ().get("modelsLibrary.community")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
           org.nlogo.swing.BrowserLauncher.openURL
               (me, "http://ccl.northwestern.edu/netlogo/models/community/", false);
@@ -99,7 +99,7 @@ strictfp class ModelsLibraryDialog
   //
 
   private ModelsLibraryDialog(java.awt.Frame parent) {
-    super(parent, I18N.gui().get("menu.file.modelsLibrary"), true);
+    super(parent, I18N.guiJ().get("menu.file.modelsLibrary"), true);
     setResizable(true);
     openAction.setEnabled(false);
     toggleOrOpenAction.setEnabled(false);
@@ -114,7 +114,7 @@ strictfp class ModelsLibraryDialog
     final SearchableModelTree[] smt = new SearchableModelTree[1];
     if (ModelsLibrary.needsModelScan() || smt[0] == null) {
       org.nlogo.swing.ModalProgressTask.apply(
-        parent, I18N.gui().get("modelsLibrary.loading"),
+        parent, I18N.guiJ().get("modelsLibrary.loading"),
         new Runnable() {
           public void run() {
             ModelsLibrary.scanForModels(false);
@@ -191,7 +191,7 @@ strictfp class ModelsLibraryDialog
     searchField.setMaximumSize(new java.awt.Dimension(
         Short.MAX_VALUE,
         searchField.getMinimumSize().height));
-    final javax.swing.JButton clearSearchButton = new javax.swing.JButton(I18N.gui().get("modelsLibrary.clear"));
+    final javax.swing.JButton clearSearchButton = new javax.swing.JButton(I18N.guiJ().get("modelsLibrary.clear"));
     clearSearchButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         searchField.setText("");
@@ -257,7 +257,7 @@ strictfp class ModelsLibraryDialog
         });
 
     this.setSize(740, 680);
-    org.nlogo.awt.Utils.center(this, parent);
+    org.nlogo.awt.Positioning.center(this, parent);
   }
 
   //
@@ -526,7 +526,7 @@ strictfp class ModelsLibraryDialog
     void setImage(String imagePath) {
       image = null;
       if (imagePath != null) {
-        image = org.nlogo.awt.Utils.loadImageFile
+        image = org.nlogo.awt.Images.loadImageFile
             (imagePath, false); // false = don't cache
       }
       repaint();

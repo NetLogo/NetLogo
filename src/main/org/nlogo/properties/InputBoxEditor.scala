@@ -2,7 +2,6 @@ package org.nlogo.properties
 
 import org.nlogo.api.Options
 import org.nlogo.window.InputBox
-import org.nlogo.util.JCL._
 import org.nlogo.swing.Implicits._
 
 import java.awt.FlowLayout
@@ -22,7 +21,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   add(new JLabel(accessor.displayName))
   add(typeCombo)
 
-  for (t <- options.getValues)
+  for (t <- options.values)
     typeCombo.addItem(t)
   typeCombo.addActionListener{() =>
     multiline.setEnabled(selected.enableMultiline)

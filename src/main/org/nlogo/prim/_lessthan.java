@@ -5,22 +5,22 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _lessthan
     extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_NUMBER | Syntax.TYPE_STRING | Syntax.TYPE_AGENT;
-    int[] right = {Syntax.TYPE_NUMBER | Syntax.TYPE_STRING | Syntax.TYPE_AGENT};
-    int ret = Syntax.TYPE_BOOLEAN;
-    return Syntax.reporterSyntax(left, right, ret, Syntax.NORMAL_PRECEDENCE - 4);
+    int left = Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType();
+    int[] right = {Syntax.NumberType() | Syntax.StringType() | Syntax.AgentType()};
+    int ret = Syntax.BooleanType();
+    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() - 4);
   }
 
   @Override
@@ -48,8 +48,8 @@ public final strictfp class _lessthan
       }
     }
     throw new EngineException
-        (context, this, I18NJava.errors().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            Syntax.aTypeName(o1), Syntax.aTypeName(o2)));
+        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
+            TypeNames.aName(o1), TypeNames.aName(o2)));
   }
 
   public boolean report_2(Context context, String arg0, String arg1) {
@@ -77,8 +77,8 @@ public final strictfp class _lessthan
       return arg0 < ((Double) arg1).doubleValue();
     }
     throw new EngineException
-        (context, this, I18NJava.errors().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)));
+        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
+            TypeNames.aName(arg0), TypeNames.aName(arg1)));
 
 
   }
@@ -88,7 +88,7 @@ public final strictfp class _lessthan
       return ((Double) arg0).doubleValue() < arg1;
     }
     throw new EngineException
-        (context, this, I18NJava.errors().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            Syntax.aTypeName(arg0), Syntax.aTypeName(arg1)));
+        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
+            TypeNames.aName(arg0), TypeNames.aName(arg1)));
   }
 }

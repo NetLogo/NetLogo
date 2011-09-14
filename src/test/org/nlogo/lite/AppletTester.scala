@@ -1,6 +1,6 @@
 package org.nlogo.lite
 
-import org.nlogo.awt.Utils.invokeLater
+import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window.{ Event, VMCheck }
 import org.nlogo.workspace.AbstractWorkspace
 

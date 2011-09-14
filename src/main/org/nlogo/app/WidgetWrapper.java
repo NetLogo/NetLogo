@@ -478,7 +478,7 @@ public strictfp class WidgetWrapper
       doPopup(e);
       return;
     }
-    if (!org.nlogo.awt.Utils.button1Mask(e)) {
+    if (!org.nlogo.awt.Mouse.hasButton1(e)) {
       return;
     }
     foreground();
@@ -489,8 +489,8 @@ public strictfp class WidgetWrapper
     java.awt.Dimension d = getSize();
     int x = e.getX();
     int y = e.getY();
-    java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Utils.convertPointToScreen(p, this);
+    java.awt.Point p = 
+      org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
     startPressX = p.x;
     startPressY = p.y;
 
@@ -541,12 +541,10 @@ public strictfp class WidgetWrapper
   private boolean constrainToVertical = false;
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    int x = e.getX();
-    int y = e.getY();
-    java.awt.Point p = new java.awt.Point(x, y);
-    org.nlogo.awt.Utils.convertPointToScreen(p, this);
-    x = p.x;
-    y = p.y;
+    java.awt.Point p = 
+      org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
+    int x = p.x;
+    int y = p.y;
     if (mouseMode() == MouseMode.DRAG) {
       if ((e.getModifiers() & java.awt.event.InputEvent.SHIFT_MASK) == 0) {
         constrainToHorizontal = false;
@@ -582,7 +580,7 @@ public strictfp class WidgetWrapper
     if (e.isPopupTrigger()) {
       doPopup(e);
       return;
-    } else if (org.nlogo.awt.Utils.button1Mask(e)) {
+    } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
         interfacePanel().dropSelectedWidgets();
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW

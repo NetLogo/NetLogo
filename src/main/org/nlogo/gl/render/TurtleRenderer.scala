@@ -2,16 +2,15 @@ package org.nlogo.gl.render
 
 import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
-import org.nlogo.api.{ Agent, Perspective, Turtle, World }
-import org.nlogo.util.JCL._
+import org.nlogo.api.{ Agent, Constants, Perspective, Turtle, World }
 
 private class TurtleRenderer(world: World, shapeRenderer: ShapeRenderer)
 extends AgentRenderer(world, shapeRenderer) {
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.FOLLOW || 
-         world.observer.perspective == Perspective.RIDE)
+      if(world.observer.perspective == Perspective.Follow || 
+         world.observer.perspective == Perspective.Ride)
         world.observer.followDistance
       else
         world.observer.dist
@@ -24,8 +23,9 @@ extends AgentRenderer(world, shapeRenderer) {
   def renderTurtles(gl: GL, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
     if (world.turtles == null)
       return
-    for(turtle <- world.turtles.agents.map(_.asInstanceOf[Turtle]))
-      if ((world.observer.perspective != Perspective.RIDE || world.observer.targetAgent != turtle)
+    import collection.JavaConverters._
+    for(turtle <- world.turtles.agents.asScala.map(_.asInstanceOf[Turtle]))
+      if ((world.observer.perspective != Perspective.Ride || world.observer.targetAgent != turtle)
           && !turtle.hidden)
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)
   }
@@ -52,9 +52,9 @@ extends AgentRenderer(world, shapeRenderer) {
     val headingRadians = math.toRadians(turtle.heading)
     var cos = math.cos(headingRadians)
     var sin = math.sin(headingRadians)
-    if(math.abs(cos) < org.nlogo.api.World.INFINITESIMAL)
+    if(math.abs(cos) < Constants.Infinitesimal)
       cos = 0
-    if(math.abs(sin) < org.nlogo.api.World.INFINITESIMAL)
+    if(math.abs(sin) < Constants.Infinitesimal)
       sin = 0
     Array(dist * sin * Renderer.WORLD_SCALE,
           dist * cos * Renderer.WORLD_SCALE,

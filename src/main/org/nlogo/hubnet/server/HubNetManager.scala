@@ -7,7 +7,6 @@ import org.nlogo.hubnet.mirroring.{LinkStamp, TurtleStamp, Line, ClearDrawing}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.util.JCL.toScalaSeq
 import org.nlogo.agent.{Link, Turtle}
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -139,7 +138,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// clients
   @throws(classOf[HubNetException])
-  def setClientInterface(interfaceType:String, interfaceInfo: LogoList){
+  def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
     resetPlotManager()
   }

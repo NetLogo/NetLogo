@@ -4,10 +4,10 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
-import org.nlogo.api.File.stripLines
+import org.nlogo.api.ModelReader.stripLines
 import org.nlogo.swing.ButtonPanel
-import org.nlogo.awt.Utils.platformMonospacedFont
-import org.nlogo.awt.Utils.platformFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformFont
 import org.nlogo.swing.Implicits._
 import org.nlogo.api.{Options, I18N, ValueConstraint, CompilerException, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Frame, Dimension, Font, Component}
@@ -113,7 +113,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
     setBorder(widgetBorder)
     setOpaque(true)
-    org.nlogo.awt.Utils.adjustDefaultFont(this)
+    org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
     val layout = new java.awt.GridBagLayout()
     setLayout(layout)
@@ -165,7 +165,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
                 showError(ex.asInstanceOf[Exception])
-                org.nlogo.awt.Utils.invokeLater(() => InputBox.this.textArea.requestFocus())
+                org.nlogo.awt.EventQueue.invokeLater(() => InputBox.this.textArea.requestFocus())
             }
             editing = false
           }
@@ -181,7 +181,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     def actionPerformed(e: ActionEvent) {
       if (!editing) {
         editing = true
-        dialog = new InputDialog(org.nlogo.awt.Utils.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
+        dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
         dialog.setVisible(true)
         editDialogTextArea.setText(textArea.getText)
         editDialogTextArea.selectAll()
@@ -191,7 +191,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
   private class SelectColorActionListener extends ActionListener {
     def actionPerformed(e: ActionEvent) {
-      val colorDialog = new ColorDialog(org.nlogo.awt.Utils.getFrame(InputBox.this), true)
+      val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       valueObject(colorDialog.showInputBoxDialog(
         if (value.isInstanceOf[Double])
           org.nlogo.api.Color.modulateDouble(value.asInstanceOf[Double])
@@ -201,7 +201,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   private def showError(ex: Exception) {
-    val frame = org.nlogo.awt.Utils.getFrame(this)
+    val frame = org.nlogo.awt.Hierarchy.getFrame(this)
     if (frame != null) {
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
@@ -308,7 +308,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def load(strings:Array[String], helper:Widget.LoadHelper) = {
     val displayName = strings(5)
     if(displayName ==  "NIL") name("") else name(displayName)
-    var contents = org.nlogo.api.File.restoreLines(strings(6))
+    var contents = org.nlogo.api.ModelReader.restoreLines(strings(6))
     if(contents == "NIL") contents = ""
     if(strings.length > 8) multiline(strings(8) == "1")
 
@@ -434,7 +434,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       org.nlogo.swing.Utils.addEscKeyAction(this, cancelAction)
 
       pack()
-      org.nlogo.awt.Utils.center(this, parent)
+      org.nlogo.awt.Positioning.center(this, parent)
       addWindowListener(new WindowAdapter() {
         override def windowClosing(e: WindowEvent) {
           dispose()
@@ -541,18 +541,19 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       scroller.setVisible(false)
       panel.setOpaque(true)
 
-      val (colorval, c) = if (value.isInstanceOf[Double]) {
-        val cv = modulateDouble(value.asInstanceOf[Double])
-        (cv, getColor(cv))
-      } else (0d, Color.BLACK)
+      val (colorval, c) =
+        if (value.isInstanceOf[Double]) {
+          val cv = modulateDouble(value.asInstanceOf[Double]): java.lang.Double
+          (cv, getColor(cv))
+        }
+        else (0d: java.lang.Double, Color.BLACK)
 
       panel.setBackground(c)
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
       panel.setText(colorval match {
-        // this logic is duplicated in ColorEditor
-        // black and white are special cases
-        case 0 => "0 (black)"
-        case 9.9 => "9.9 (white)"
+        // this logic is duplicated in ColorEditor; black and white are special cases
+        case d: java.lang.Double if d.doubleValue == 0.0 => "0 (black)"
+        case d: java.lang.Double if d.doubleValue == 9.9 => "9.9 (white)"
         case c =>
           val index = (c / 10).toInt
           val baseColor = index * 10 + 5

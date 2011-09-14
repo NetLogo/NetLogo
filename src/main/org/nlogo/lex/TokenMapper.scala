@@ -25,7 +25,7 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
     AgentVariables.getImplicitPatchVariables(is3D) ++
     AgentVariables.getImplicitLinkVariables
   private val constants = Map(
-    "FALSE" -> false, "TRUE" -> true, "NOBODY" -> Nobody.NOBODY,
+    "FALSE" -> false, "TRUE" -> true, "NOBODY" -> Nobody,
     "E" -> StrictMath.E, "PI" -> StrictMath.PI) ++
     (for ((name, index) <- Color.getColorNamesArray.zipWithIndex) yield (name.toUpperCase -> Color.getColorNumberByIndex(index))) +
     ("GREY" -> Color.getColorNumberByIndex(Color.getColorNamesArray.indexOf("gray")))

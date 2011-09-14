@@ -1,6 +1,7 @@
 package org.nlogo.prim.gui
 
-import org.nlogo.nvm.{ Command, Context, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 class _beep extends Command {
   override def syntax =

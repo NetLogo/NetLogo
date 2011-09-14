@@ -7,7 +7,7 @@ import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.Equality;
 
 public final strictfp class _remove
@@ -29,7 +29,7 @@ public final strictfp class _remove
       return listCopy.toLogoList();
     } else if (obj instanceof String) {
       if (!(value instanceof String)) {
-        throw new ArgumentTypeException(context, this, 0, Syntax.TYPE_STRING, value);
+        throw new ArgumentTypeException(context, this, 0, Syntax.StringType(), value);
       }
       String string = (String) obj;
       String elt = (String) value;
@@ -53,15 +53,15 @@ public final strictfp class _remove
       }
     } else {
       throw new ArgumentTypeException
-          (context, this, 1, Syntax.TYPE_LIST | Syntax.TYPE_STRING, obj);
+          (context, this, 1, Syntax.ListType() | Syntax.StringType(), obj);
     }
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD,
-        Syntax.TYPE_LIST | Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_LIST | Syntax.TYPE_STRING;
+    int[] right = {Syntax.WildcardType(),
+        Syntax.ListType() | Syntax.StringType()};
+    int ret = Syntax.ListType() | Syntax.StringType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

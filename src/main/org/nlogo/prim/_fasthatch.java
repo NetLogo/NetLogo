@@ -4,7 +4,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 // replaces _hatch when initialization block is empty
 
@@ -19,7 +19,7 @@ public final strictfp class _fasthatch
   @Override
   public Syntax syntax() {
     return Syntax.commandSyntax
-        (new int[]{Syntax.TYPE_NUMBER},
+        (new int[]{Syntax.NumberType()},
             "-T--", true);
   }
 

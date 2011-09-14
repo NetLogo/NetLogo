@@ -18,10 +18,10 @@ strictfp class CommandLine
 //java.awt.event.FocusListener ,
     org.nlogo.window.Events.CompiledEvent.Handler {
   static final String PROMPT = ">";
-  static final String OBSERVER_PROMPT = I18N.gui().get("common.observer") + PROMPT;
-  static final String TURTLE_PROMPT = I18N.gui().get("common.turtles") + PROMPT;
-  static final String PATCH_PROMPT = I18N.gui().get("common.patches") + PROMPT;
-  static final String LINK_PROMPT = I18N.gui().get("common.links") + PROMPT;
+  static final String OBSERVER_PROMPT = I18N.guiJ().get("common.observer") + PROMPT;
+  static final String TURTLE_PROMPT = I18N.guiJ().get("common.turtles") + PROMPT;
+  static final String PATCH_PROMPT = I18N.guiJ().get("common.patches") + PROMPT;
+  static final String LINK_PROMPT = I18N.guiJ().get("common.links") + PROMPT;
 
   private final org.nlogo.window.CommandCenterInterface commandCenter;
   private final boolean echoCommandsToOutput;
@@ -51,10 +51,10 @@ strictfp class CommandLine
     textField =
         new org.nlogo.editor.EditorField<TokenType>
             (30,
-                new java.awt.Font(org.nlogo.awt.Utils.platformMonospacedFont(),
+                new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
                     java.awt.Font.PLAIN, 12),
                 true, new EditorColorizer(workspace),
-                I18N.gui().fn());
+                I18N.guiJ().fn());
     textField.setFont(textField.getFont().deriveFont((float) fontSize));
     textField.addKeyListener(this);
     setLayout(new java.awt.BorderLayout());

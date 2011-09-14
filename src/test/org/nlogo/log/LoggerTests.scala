@@ -42,7 +42,7 @@ class LoggerTests extends FunSuite {
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version() + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
+      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"ticks\">\n    " +
       "<name>ticks</name>\n    <value>50.0</value>\n  </event>\n</eventSet>\n"
     expect(expected)(log)
@@ -54,14 +54,13 @@ class LoggerTests extends FunSuite {
     expect(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
-    println(log)
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version() + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
+      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>foo</code>\n    <errorMessage startPos=\"99\" endPos=\"999\">error!!!</errorMessage>\n  </event>\n</eventSet>\n"
     expect(expected)(log)
@@ -73,14 +72,13 @@ class LoggerTests extends FunSuite {
     expect(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
-    println(log)
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
-      org.nlogo.api.Version.version() + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
+      org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>bar</code>\n    <errorMessage startPos=\"0\" endPos=\"0\">success</errorMessage>\n  </event>\n</eventSet>\n"
     expect(expected)(log)

@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _fileopen
     extends Command {
@@ -24,7 +24,7 @@ public final strictfp class _fileopen
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
+    int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }
 }

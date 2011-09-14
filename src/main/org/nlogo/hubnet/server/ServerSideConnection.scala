@@ -4,7 +4,7 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import java.util.Date
 import org.nlogo.api.{I18N, Version}
-import org.nlogo.hubnet.connection.{ClientRoles , Streamable , AbstractConnection}
+import org.nlogo.hubnet.connection.{ClientRole , Streamable , AbstractConnection}
 
 // TODO remove die hard. fix ALL of this business.
 // the multiple disconnect methds
@@ -57,7 +57,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
           AwaitingEnterMessage
         } else {
           sendData(new LoginFailure("The version of the HubNet Client you are using does not "
-                  + "match the version of the server. Please use the HubNet Client that comes with " + Version.version))
+                  + "match the version of the server.  Please use the HubNet Client that comes with " + Version.version))
           disconnect(false, "")
           Disconnected
         }
@@ -69,7 +69,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
 
       case (AwaitingEnterMessage, EnterMessage(userId, clientType, clientRole)) =>
         clientRole match {
-          case ClientRoles.Participant =>
+          case ClientRole.Participant =>
             try output.synchronized {
               if (server.finalizeConnection(this, desiredClientId = userId)){
                 clientId = userId
@@ -93,7 +93,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
                 org.nlogo.util.Exceptions.handle(ex)
                 Disconnected
             }
-          case ClientRoles.Controller =>
+          case ClientRole.Controller =>
             try output.synchronized {
               server.finalizeControllerClientConnection(this)
               sendData(server.createControllerClientHandshakeMessage)
@@ -187,11 +187,11 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
         stopWriting()
         super.disconnect(e.toString)
       }
-      if( e.isInstanceOf[ClassNotFoundException]) {
+      if(e.isInstanceOf[ClassNotFoundException]) {
         val message =
-          "An incompatible version of the HubNet Client tried logging in. " +
+          "An incompatible version of the HubNet Client tried logging in.\n" +
           "Please ensure that everyone is using the version of the HubNet Client that  came with this release. " +
-          Version.version()
+          Version.version
         org.nlogo.util.Exceptions.handle(new Exception(message, e))
       } else {
         if (!sendingEx) org.nlogo.util.Exceptions.handle(e)

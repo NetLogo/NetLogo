@@ -3,16 +3,16 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _fput
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_WILDCARD,
-        Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_LIST;
+    int[] right = {Syntax.WildcardType(),
+        Syntax.ListType()};
+    int ret = Syntax.ListType();
     return Syntax.reporterSyntax(right, ret);
   }
 

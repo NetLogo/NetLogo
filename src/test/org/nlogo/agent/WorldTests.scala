@@ -43,7 +43,7 @@ class WorldTests extends AbstractTestWorld with FunSuite {
   test("ShortestPath_2D") {
     testShortestPath(worldRectangle)
   }
-  test("ShortestPathHorzontalCylinder") {
+  test("ShortestPathHorizontalCylinder") {
     val world = makeWorld(worldRectangle)
     world.changeTopology(false, true)
     expect(3.0)(world.topology.shortestPathY(2, -2))

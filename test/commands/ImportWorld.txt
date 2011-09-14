@@ -106,28 +106,6 @@ ImportExportLinkBreedOrder
   O> export-round-trip
   [list [who] of end1 [who] of end2 ] of one-of links = glob1 => true
 
-ArraysBug716a
-  extensions [array]
-  O> __mkdir "tmp/ImportWorld"
-  O> set glob1 array:from-list [1 2]
-  O> set glob2 (word "tmp/ImportWorld/test-file-" __nano-time ".csv")
-  O> export-world glob2
-  O> set glob1 0
-  O> import-world glob2
-  array:length glob1 => 2
-  (word glob1) => "{{array: 1 2}}"
-
-ArraysBug716b
-  extensions [array]
-  O> __mkdir "tmp/ImportWorld"
-  O> set glob1 (list array:from-list [1 2] array:from-list [3 4])
-  O> set glob2 (word "tmp/ImportWorld/test-file-" __nano-time ".csv")
-  O> export-world glob2
-  O> set glob1 0
-  O> import-world glob2
-  map [array:length ?] glob1 => [2 2]
-  (word glob1) => "[{{array: 1 2}} {{array: 3 4}}]"
-
 RoundTripWithUTF8Chars
   to export-round-trip let file (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )  export-world file ca import-world file end
   O> set glob1 "AêñüC"

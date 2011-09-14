@@ -109,50 +109,50 @@ public abstract strictfp class WorldViewSettings
   }
 
   public void addCornerChoices() {
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.corner.bottomLeft"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.corner.bottomLeft"),
         new boolean[]{false, true, false, true},
         new boolean[]{true, false, true, false}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.corner.topLeft"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.corner.topLeft"),
         new boolean[]{false, true, true, false},
         new boolean[]{true, false, false, true}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.corner.topRight"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.corner.topRight"),
         new boolean[]{true, false, true, false},
         new boolean[]{false, true, false, true}));
-    cornerChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.corner.bottomRight"),
+    cornerChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.corner.bottomRight"),
         new boolean[]{true, false, false, true},
         new boolean[]{false, true, true, false}));
   }
 
   public void addEdgeChoices() {
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.edge.bottom"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.edge.bottom"),
         new boolean[]{true, true, false, true},
         new boolean[]{false, false, true, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.edge.top"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.edge.top"),
         new boolean[]{true, true, true, false},
         new boolean[]{false, false, false, true}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.edge.right"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.edge.right"),
         new boolean[]{true, false, true, true},
         new boolean[]{false, true, false, false}));
-    edgeChoices.add(new OriginConfiguration(I18N.gui().get("edit.viewSettings.origin.location.edge.left"),
+    edgeChoices.add(new OriginConfiguration(I18N.guiJ().get("edit.viewSettings.origin.location.edge.left"),
         new boolean[]{false, true, true, true},
         new boolean[]{true, false, false, false}));
   }
 
   public void addOriginConfigurations() {
     originConfigurations.add(new OriginConfiguration
-        (I18N.gui().get("edit.viewSettings.origin.location.center"),
+        (I18N.guiJ().get("edit.viewSettings.origin.location.center"),
             new boolean[]{false, true, false, true},
             new boolean[]{false, false, false, false}));
     originConfigurations.add(new OriginConfiguration
-        (I18N.gui().get("edit.viewSettings.origin.location.corner"),
+        (I18N.guiJ().get("edit.viewSettings.origin.location.corner"),
             new boolean[]{true, true, true, true},
             new boolean[]{false, false, false, false}));
     originConfigurations.add(new OriginConfiguration
-        (I18N.gui().get("edit.viewSettings.origin.location.edge"),
+        (I18N.guiJ().get("edit.viewSettings.origin.location.edge"),
             new boolean[]{true, true, true, true},
             new boolean[]{false, false, false, false}));
     originConfigurations.add(new OriginConfiguration
-        (I18N.gui().get("edit.viewSettings.origin.location.custom"),
+        (I18N.guiJ().get("edit.viewSettings.origin.location.custom"),
             new boolean[]{true, true, true, true},
             new boolean[]{false, false, false, false}));
   }
@@ -470,7 +470,7 @@ public abstract strictfp class WorldViewSettings
   }
 
   public void setDimensions(org.nlogo.api.WorldDimensions d) {
-    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor);
+    setDimensions(d.minPxcor(), d.maxPxcor(), d.minPycor(), d.maxPycor());
   }
 
   public void setDimensions(int minPxcor, int maxPxcor,

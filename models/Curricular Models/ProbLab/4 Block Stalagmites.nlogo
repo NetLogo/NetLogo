@@ -818,7 +818,7 @@ o  How symmetrical is the set of stalagmites?  How would you define "symmetry?" 
 
 Some of the other ProbLab (curricular) models, including SAMPLER-a HubNet Participatory Simulation-feature related visuals and activities.  In Stochastic Patchwork and especially in Sample Stalagmite you will see larger blocks, such as an arrays of green and blue squares.  In the Stochastic Patchwork model and especially in 9-Blocks model, we see frequency distribution histograms.  These histograms compare in interesting ways with the shape of the stalagmites in this model.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Thanks to Dor Abrahamson for the design and of this model as well as the implementation of the original model. Thanks to Josh Unterman for implementing the advanced procedures.
 This model is a part of the ProbLab Curriculum, originally under development at Northwestern's Center for Connected Learning and Computer-Based Modeling and now also at the Embodied Design Research Laboratory at UC Berkeley.  For more information about ProbLab, please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.

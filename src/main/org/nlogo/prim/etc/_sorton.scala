@@ -1,15 +1,15 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ Dump, LogoListBuilder }
-import org.nlogo.nvm.{ Context, EngineException, Reporter, Syntax }
+import org.nlogo.api.{ Dump, LogoListBuilder, Syntax, TypeNames }
+import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _sorton extends Reporter {
 
   override def syntax =
     Syntax.reporterSyntax(
-      Array(Syntax.TYPE_REPORTER_BLOCK, Syntax.TYPE_AGENTSET),
-      Syntax.TYPE_LIST,
+      Array(Syntax.ReporterBlockType, Syntax.AgentsetType),
+      Syntax.ListType,
       "OTPL", "?")  // ? = reporter block has unknown agent type
 
   override def report(context: Context) = {
@@ -46,7 +46,7 @@ class _sorton extends Reporter {
             throw new EngineException(
               context, _sorton.this , 
               "SORT-ON works on numbers, strings, or agents of the same type, " +
-              "but not on " + Syntax.aTypeName(o1) + " and " + Syntax.aTypeName(o2))
+              "but not on " + TypeNames.aName(o1) + " and " + TypeNames.aName(o2))
         }
     }
 

@@ -11,7 +11,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace) extends JPanel {
   val displaySwitch = new org.nlogo.window.DisplaySwitch(workspace)
   updateTicks()
   val controls = new ViewUpdatePanel(workspace, displaySwitch, true)
-  org.nlogo.awt.Utils.adjustDefaultFont(tickCounter)
+  org.nlogo.awt.Fonts.adjustDefaultFont(tickCounter)
   setLayout(new java.awt.BorderLayout)
   add(tickCounter, BorderLayout.WEST)
   controls.setOpaque(false)

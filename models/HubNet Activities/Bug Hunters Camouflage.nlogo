@@ -665,7 +665,7 @@ Bug Hunt Camouflage
 Peppered Moths
 Guppy Spots
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Inspired by this BugHunt! Macintosh freeware: http://bcrc.bio.umass.edu/BugHunt/.
 

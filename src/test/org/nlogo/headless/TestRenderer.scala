@@ -2,7 +2,6 @@ package org.nlogo.headless
 
 import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
-import org.nlogo.util.JCL._
 import org.nlogo.api.Perspective
 import MockGraphics._
 import org.nlogo.util.WorldType
@@ -63,7 +62,7 @@ class TestRenderer extends AbstractTestRenderer {
     workspace.command("create-nodes 2 [ ht setxy ((who - 1) * 5) 0 ] ask node 0 [ create-link-with node 1 ]")
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
-      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.FOLLOW))
+      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow))
     testOperations(g,List(
       Rect(Location(0.0, 0.0), Size(2022.0,2022.0), filled=true),
       Line(Location(-91.92857142857143,214.5),Location(214.5,214.5))))
@@ -87,7 +86,7 @@ class TestRenderer extends AbstractTestRenderer {
                                "ask turtle 0 [ create-link-with turtle 1 ]")
     val g = new MockGraphics(this)
     workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=3,viewOffsetY= -3,
-      renderPerspective=true, perspective=Perspective.FOLLOW))
+      renderPerspective=true, perspective=Perspective.Follow))
     testOperations(g,List(
       Rect(Location(0.0,0.0), Size(210.0,210.0), filled=true),
       Line(Location(15.0,75.0),Location(-75.0,75.0)),
@@ -146,9 +145,9 @@ class TestColorRendering extends AbstractTestRenderer {
   class PimpedWorkspace(workspace: HeadlessWorkspace){
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
-      for (shape <- workspace.world.turtleShapeList().getShapes) {
+      import collection.JavaConverters._
+      for (shape <- workspace.world.turtleShapeList().getShapes.asScala)
         workspace.world.turtleShapeList().removeShape(shape)
-      }
       // add one non-recolorable shape
       shapes.foreach(workspace.world.turtleShapeList().add)
     }

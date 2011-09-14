@@ -32,7 +32,7 @@ public final strictfp class FileDialog {
   public static String show(java.awt.Component component, String title,
                             int mode, String file)
       throws org.nlogo.awt.UserCancelException {
-    return show(org.nlogo.awt.Utils.getFrame(component),
+    return show(org.nlogo.awt.Hierarchy.getFrame(component),
         title, mode, false, file);
   }
 

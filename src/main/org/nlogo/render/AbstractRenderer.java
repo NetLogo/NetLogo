@@ -48,6 +48,7 @@ ST 8/19/05
 
 import org.nlogo.api.ShapeList;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.GraphicsInterface;
@@ -214,12 +215,12 @@ public abstract strictfp class AbstractRenderer
   }
 
   protected boolean darkenPeripheral(ViewSettings settings) {
-    return (settings.perspective() == Perspective.WATCH) && settings.renderPerspective();
+    return (settings.perspective() == PerspectiveJ.WATCH()) && settings.renderPerspective();
   }
 
   protected boolean spotlightAgent(Perspective perspective) {
-    return (perspective == Perspective.WATCH ||
-        perspective == Perspective.FOLLOW ||
-        perspective == Perspective.RIDE);
+    return (perspective == PerspectiveJ.WATCH() ||
+        perspective == PerspectiveJ.FOLLOW() ||
+        perspective == PerspectiveJ.RIDE());
   }
 }

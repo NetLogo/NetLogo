@@ -3,12 +3,11 @@ package org.nlogo.hubnet.client
 import org.nlogo.swing.Implicits._
 import org.nlogo.window.ClientAppInterface
 import java.awt.BorderLayout
-import java.awt.event.{WindowAdapter, WindowEvent}
-import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.swing.{ModalProgressTask, OptionDialog}
-import org.nlogo.awt.Utils
-import org.nlogo.hubnet.connection.{ClientRoles , Ports}
+import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.api.{I18N, CompilerServices}
+import javax.swing.{WindowConstants, JFrame}
+import org.nlogo.hubnet.connection.{ClientRole, Ports}
 
 
 /**
@@ -30,7 +29,7 @@ object ClientApp {
       var userid = ""
       var hostip = ""
       var port = Ports.DEFAULT_PORT_NUMBER
-      var role = ClientRoles.Participant
+      var role = ClientRole.Participant
 
       for (i <- 0 until args.length) {
         if (args(i).equalsIgnoreCase("--robo")) {
@@ -48,8 +47,8 @@ object ClientApp {
         else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
         else if (args(i).equalsIgnoreCase("--role")) {
           role = args(i + 1).toLowerCase match {
-            case "participant" => ClientRoles.Participant
-            case "controller" => ClientRoles.Controller
+            case "participant" => ClientRole.Participant
+            case "controller" => ClientRole.Controller
             case _ => throw new RuntimeException("Invalid client role specified in " +
                     "the \"--role\" parameter. Client role must be either \"participant\" " +
                     "or \"controller\".")
@@ -76,8 +75,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   def startup(editorFactory: org.nlogo.window.EditorFactory, userid: String, hostip: String,
-              port: Int, role: ClientRoles.Value, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
-    Utils.invokeLater(() => {
+              port: Int, role: ClientRole, isLocal: Boolean, isRobo: Boolean, waitTime: Long, workspace: CompilerServices) {
+    EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         def uncaughtException(t: Thread, e: Throwable) {
           org.nlogo.util.Exceptions.handle(e)
@@ -85,16 +84,16 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       })
 
       this.isLocal = isLocal
-      setIconImage(Utils.loadImageResource("/images/arrowhead.gif"))
+      setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
       getContentPane.setLayout(new BorderLayout())
-      loginDialog = new LoginDialog(this, userid, hostip, port, true)
+      loginDialog = new LoginDialog(this, userid, hostip, port, false)
       clientPanel =
         if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, workspace)
         else new ClientPanel(editorFactory, this, workspace)
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
       pack()
-      Utils.center(this, null)
+      Positioning.center(this, null)
 
       if (isLocal) {
         val killLocalListener = () => {
@@ -113,7 +112,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       }
       else {
         addWindowListener(() => handleExit())
-        Utils.center(loginDialog, null)
+        Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
         doLogin()
       }
@@ -123,61 +122,71 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private def doLogin() {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
-    if (!isLocal) {
-      dispose()
-      loginDialog.doLogin()
-      login(loginDialog.getUserName, loginDialog.getServer, loginDialog.getPort, loginDialog.getClientRole)
+    if (!isLocal){
+      loginDialog.go(new LoginCallback {
+        def apply(user: String, host: String, port: Int, role:ClientRole) { login(user, host, port, role) }
+      })
     }
   }
 
-  def completeLogin() {setVisible(true)}
+  def completeLogin() { setVisible(true) }
 
-  private def login(userid: String, hostip: String, port: Int, role: ClientRoles.Value) {
-    val exs = Array[String](null)
-    ModalProgressTask(
-      Utils.getFrame(this), "Entering...",
-      () => exs(0) = clientPanel.login(userid, hostip, port, role))
-    if (exs(0) != null) {
-      handleLoginFailure(exs(0))
-      clientPanel.disconnect(exs(0).toString)
+  private def login(userid: String, hostip: String, port: Int, role: ClientRole) {
+    var exs: Option[String] = None
+    ModalProgressTask(Hierarchy.getFrame(this), "Entering...", () => {
+      exs = clientPanel.login(userid, hostip, port, role)
+    })
+    exs match {
+      case Some(ex) =>
+        handleLoginFailure(ex)
+        clientPanel.disconnect(ex.toString)
+      case None =>
+        loginDialog.setVisible(false)
+        clientPanel.requestFocus()
     }
   }
 
   def showExitMessage(title: String, message: String): Boolean = {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
-    0 == org.nlogo.swing.OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
+    0 == OptionDialog.show(loginDialog, "Confirm " + title, message, buttons)
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
-    Utils.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else {
-      if (connected) Utils.invokeLater(() => {
+      if (connected) {
         OptionDialog.show(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+        dispose()
+        doLogin()
         ()
-      })
-      doLogin()
+      }
     }
   }
 
   def handleLoginFailure(errorMessage: String) {
-    Utils.mustBeEventDispatchThread()
-    OptionDialog.show(loginDialog, "Login Failed", errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    EventQueue.mustBeEventDispatchThread()
+    OptionDialog.show(ClientApp.this, "Login Failed",
+      errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    loginDialog.setVisible(true)
   }
 
   def handleExit() {
-    Utils.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?"))
+    EventQueue.mustBeEventDispatchThread()
+    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
       clientPanel.logout()
+      setVisible(false)
+      dispose()
+      doLogin()
+    }
   }
 
   def handleQuit() {
-    Utils.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.quit"), "Do you really want to quit HubNet?")) destroy()
-  }
-
-  def destroy() {
-    Utils.invokeLater(() => System.exit(0))
+    EventQueue.mustBeEventDispatchThread()
+    val shouldExit = showExitMessage(
+      I18N.gui.get("common.buttons.quit"),
+      "Do you really want to quit HubNet?")
+    if (shouldExit) System.exit(0)
   }
 }

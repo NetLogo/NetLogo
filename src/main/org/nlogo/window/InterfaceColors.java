@@ -1,6 +1,6 @@
 package org.nlogo.window;
 
-import org.nlogo.api.RendererInterface;
+import org.nlogo.api.Constants;
 
 public final strictfp class InterfaceColors {
 
@@ -36,7 +36,7 @@ public final strictfp class InterfaceColors {
   public static final java.awt.Color SLIDER_HANDLE = MEDIUM_RED;
   public static final java.awt.Color SWITCH_BACKGROUND = LIGHT_TURQUOISE;
   public static final java.awt.Color SWITCH_HANDLE = MEDIUM_RED;
-  public static final java.awt.Color GRAPHICS_BACKGROUND = RendererInterface.VIEW_BACKGROUND;
+  public static final java.awt.Color GRAPHICS_BACKGROUND = Constants.ViewBackground();
   public static final java.awt.Color GRAPHICS_HANDLE = MEDIUM_BLUE;
   public static final java.awt.Color MONITOR_BACKGROUND = STRAW;
   public static final java.awt.Color PLOT_BACKGROUND = STRAW;

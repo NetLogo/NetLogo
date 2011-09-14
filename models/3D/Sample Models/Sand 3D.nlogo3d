@@ -77,6 +77,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 180
@@ -128,43 +129,38 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This is a model of how sand particles interact with each other.  The sand particles move according to the following rules:
 
-1.) If the cell directly below is empty, move there.
+1.) If the cell directly below is empty, move there.  
 2.) If the cell directly below is not empty, randomly move to one of the empty neighbors of the cell below.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 GO: Starts and stops the simulation.
 
 SETUP: Sets up the model.
 
 SPACING: Determines how long the spout waits before releasing the next particle of sand.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Observe how sand rolls down a "mountain" of sand particles.  Consider how this phenomenon is supported by the rules.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Observe how the spout will form a uniform pyramid of sand.  Try DUMP SAND at a low density once you have a relatively large pyramid shape.  How does this effect the shape of the pyramid?  Does the pyramid ever return to its original shape?
 
 Set the SPACING to 1.  (You'll have to edit the slider, since the normal minimum is 2.)  What happens?  Is this just a limitation of the model rules, or does it have some plausible physical interpretation?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Does this model accurately reflect how sand behaves?  If not what rules could you devise to more accurately model sand's behavior?  How could they be incorporated into the model?
 
 What effect does weight have on sand particles?  Should particles with lots of particles above them behave differently?  If so, how would this change the rules?
 
 Try simulating erosion with this model.  How could you simulate wind?  What effect would this have on the shape of the piles?  How could you simulate rain?  What effect would this have on the shape of the piles?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -448,7 +444,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup
 repeat 200 [ go ]

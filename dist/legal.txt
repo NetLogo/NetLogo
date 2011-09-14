@@ -200,6 +200,7 @@ Sample Models/Earth Science/Erosion: 2004 Cite: Dunham, G., Tisue, S.
 Sample Models/Earth Science/Fire: 1997 2001 MIT
 Sample Models/Earth Science/Grand Canyon: 2006
 Sample Models/Earth Science/Percolation: 1998 2001
+Sample Models/Earth Science/Unverified/Lightning: 2011 Cite: Atrash, Z.
 Sample Models/Games/Frogger: 2002
 Sample Models/Games/Lunar Lander: 2005 
 Sample Models/Games/Minesweeper: 2005

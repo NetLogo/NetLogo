@@ -6,15 +6,15 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _mod extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_NUMBER;
-    int[] right = {Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(left, right, Syntax.TYPE_NUMBER,
-        Syntax.NORMAL_PRECEDENCE - 2);
+    int left = Syntax.NumberType();
+    int[] right = {Syntax.NumberType()};
+    return Syntax.reporterSyntax(left, right, Syntax.NumberType(),
+        org.nlogo.api.Syntax.NormalPrecedence() - 2);
   }
 
   @Override
@@ -26,7 +26,7 @@ public final strictfp class _mod extends Reporter implements Pure {
 
   public double report_1(Context context, double d0, double d1) throws LogoException {
     if (d1 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
     return validDouble(d0 - (StrictMath.floor(d0 / d1) * d1));
   }

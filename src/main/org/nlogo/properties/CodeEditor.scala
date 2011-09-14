@@ -11,7 +11,7 @@ import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL
 import java.awt.{Font, BorderLayout}
 import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
 import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
-import org.nlogo.awt.Utils.platformMonospacedFont
+import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
 import org.nlogo.api.DummyEditable
 
@@ -50,7 +50,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   // the panel that should collapse
   private lazy val collapso = new JPanel(new BorderLayout()) {
     add(errorLabel, BorderLayout.NORTH)
-    add(scrollPane)
+    add(scrollPane, BorderLayout.CENTER)
     if (collapseWhenEmpty) setVisible(false)
   }
   private def collapsed = !collapso.isVisible()
@@ -76,7 +76,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     if (collapsable && collapseWhenEmpty) {
       collapso setVisible newVisibility
       arrow.updateDirection()
-      org.nlogo.awt.Utils.getWindow(this).pack()
+      org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
     }
   }

@@ -1,12 +1,11 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _sublist
     extends Reporter
@@ -19,14 +18,14 @@ public final strictfp class _sublist
     int size = list.size();
     if (start < 0) {
       throw new EngineException
-          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.startIsLessThanZero", start));
+          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.startIsLessThanZero", start));
     } else if (stop < start) {
       throw new EngineException
-          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.endIsLessThanStart", stop, start));
+          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.endIsLessThanStart", stop, start));
 
     } else if (stop > size) {
       throw new EngineException
-          (context, this, I18NJava.errors().getN("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize", stop, size));
+          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize", stop, size));
     }
     return list.logoSublist(start, stop);
   }
@@ -34,7 +33,7 @@ public final strictfp class _sublist
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_LIST, Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
-            Syntax.TYPE_LIST);
+        (new int[]{Syntax.ListType(), Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.ListType());
   }
 }

@@ -1,25 +1,12 @@
 package org.nlogo.api;
 
-public class I18NJava {
-
-  static public BundleKindWrapper gui(){
-    return new BundleKindWrapper(I18N.gui());
-  }
-
-  static public BundleKindWrapper errors(){
-    return new BundleKindWrapper(I18N.errors());
-  }
-
-  static public class BundleKindWrapper {
-    private final I18N.BundleKind bk;
-    public BundleKindWrapper(I18N.BundleKind bk){
-      this.bk = bk;
-    }
-    public String get(String key){
-      return bk.get(key);
-    }
-    public String getN(String key, Object... args){
-      return bk.getNJava(key, args);
-    }
-  }
+/**
+ * The Scala compiler won't generate a Java varargs forwarder for a Scala varargs
+ * method unless the method comes from a Java class or interface.  So this is in
+ * Java to be implemented from Scala by I18N.BundleKind.
+ */
+public interface I18NJava {
+  String get(String key);
+  String getN(String key, Object... args);
+  scala.Function1<String, String> fn();
 }

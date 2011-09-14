@@ -14,7 +14,7 @@ class VertCylinderTests extends FunSuite {
       val world = new World
       world.createPatches(-x, x, -y, y)
       for(a <- world.patches.agents.asScala)
-        a.setVariable(Patch.VAR_PLABEL, random.nextInt(100).toDouble)
+        a.setVariable(Patch.VAR_PLABEL, random.nextInt(100): java.lang.Double)
       world.diffuse(0.5, Patch.VAR_PLABEL)
     }
   }

@@ -5,9 +5,10 @@ import java.util.Iterator;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
-import org.nlogo.util.JCL;
+import org.nlogo.api.Syntax;
+import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsendusermessage
     extends org.nlogo.nvm.Command {
@@ -24,9 +25,9 @@ public final strictfp class _hubnetsendusermessage
         if (!(node instanceof String)) {
           throw new EngineException
               (context, this, "HUBNET-SEND expected "
-                  + Syntax.aTypeName(Syntax.TYPE_STRING | Syntax.TYPE_LIST)
+                  + TypeNames.aName(Syntax.StringType() | Syntax.ListType())
                   + " of strings as the first input, but one item is the "
-                  + Syntax.typeName(node) + " " +
+                  + TypeNames.name(node) + " " +
                   Dump.logoObject(node)
                   + " instead");
         }
@@ -36,16 +37,16 @@ public final strictfp class _hubnetsendusermessage
       nodes.add((String) clients);
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
-          (context, this, 0, Syntax.TYPE_LIST | Syntax.TYPE_STRING, clients);
+          (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    workspace.getHubNetManager().sendUserMessage(JCL.toScalaSeq(nodes), Dump.logoObject(data));
+    workspace.getHubNetManager().sendUserMessage(asScalaBuffer(nodes), Dump.logoObject(data));
     context.ip = next;
   }
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING | Syntax.TYPE_LIST, Syntax.TYPE_WILDCARD};
+    int[] right = {Syntax.StringType() | Syntax.ListType(), Syntax.WildcardType()};
     return Syntax.commandSyntax(right);
   }
 }

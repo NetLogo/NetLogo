@@ -5,13 +5,13 @@ import org.nlogo.render.AbstractRenderer
 import org.nlogo.api.{GraphicsInterface,ShapeList,ViewSettings}
 
 class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new ShapeList, new ShapeList) {
-  import org.nlogo.util.JCL._
+  import collection.JavaConverters._
   override def paintTurtles(g: GraphicsInterface, patchSize: Double) {
-    for(data <- world.getTurtles)
+    for(data <- world.getTurtles.asScala)
       turtleDrawer.drawTurtle(g, topology, data, patchSize)
   }
   override def paintLinks(g: GraphicsInterface, patchSize: Double) {
-    for(data <- world.getLinks)
+    for(data <- world.getLinks.asScala)
       linkDrawer.drawLink(g, topology, data, patchSize, false)
   }
   override def paintPatchLabels(g: GraphicsInterface, patchSize: Double) {
@@ -24,7 +24,8 @@ class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new Sha
                              patch.plabel, patch.plabelColor,
                              patchSize, 1)
   }
-  override def anyTurtles:Boolean = world.getTurtles.isEmpty
+  override def anyTurtles:Boolean =
+    world.getTurtles.asScala.isEmpty
   override def getSpotlightImage(settings: ViewSettings): java.awt.image.BufferedImage =
     spotlightDrawer.getImage(topology,
                              world.targetAgent.xcor, world.targetAgent.ycor,

@@ -25,13 +25,21 @@ object Exceptions
     System.err.println("Warning -- Ignoring exception: " + t)
     t.printStackTrace(System.err)
   }
+
+  // "catchingPromiscuously" rather than "catching" because the latter won't let us catch
+  // InterruptedException, it wants to rethrow it because ignoring it is considered bad practice.
+  // However there are a ton of places in NetLogo where we ignore it and only noticed this issue
+  // very late in the game for NetLogo 5.0, so it seems safer not to rock the boat on this
+  // at the moment. - ST 8/5/11
+
   def ignoring(cs: Class[_]*)(body: =>Unit) {
-    util.control.Exception.catching(cs: _*).withApply(ignore) { body }
+    util.control.Exception.catchingPromiscuously(cs: _*).withApply(ignore) { body }
   }
   def handling(cs: Class[_]*)(body: =>Unit) {
-    util.control.Exception.catching(cs: _*).withApply(handle) { body }
+    util.control.Exception.catchingPromiscuously(cs: _*).withApply(handle) { body }
   }
   def warning(cs: Class[_]*)(body: =>Unit) {
-    util.control.Exception.catching(cs: _*).withApply(warn) { body }
+    util.control.Exception.catchingPromiscuously(cs: _*).withApply(warn) { body }
   }
+
 }

@@ -54,6 +54,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 85
@@ -229,61 +230,55 @@ If a living cell with n living neighbors has n < r3 or n > r4, the cell dies.
 0
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This program is an example of a three-dimensional cellular automaton, it is a 3D version of the Life model. A cellular automaton is a computational machine that performs actions based on certain rules.  It can be thought of as a world which is divided into cubic cells.  Each cell can be either "alive" or "dead."  This is called the "state" of the cell.  According to specified rules, each cell will be alive or dead at the next time step.
 
 This particular cellular automaton is called The Game of Life. The rules of the game are as follows.  Each cell checks the state of itself and its twenty-six surrounding neighbors and then sets itself to either alive or dead.
 
 If an empty cell has n living neighbors, and r1 <= n <= r2, the cell becomes alive. If an alive cell has n living neighbors and n < r3 or n > r4, the cell dies. This is done in parallel and continues forever.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 The INITIAL-DENSITY slider determines the initial density of cells that are alive.  SETUP-RANDOM places these cells.  GO-FOREVER runs the rule forever.  GO-ONCE runs the rule once.
 
 R1, R2, R3, and R4 determine the rules of the world.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 Find some objects that are alive, but motionless.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
-Are there any recurring shapes?
+Are there any recurring shapes?  
 What happens when you change the rules?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
-Give some different rules to life and see what happens.
+Give some different rules to the cells and see what happens.
 
-Experiment with using neighbors6 instead of neighbors3d (see below).
+Experiment with using `neighbors6` instead of `neighbors3d` (see below).
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-The neighbors3d primitive returns the agentset of the patches to the north, south, east, west, northeast, northwest, southeast, and southwest as well as up, down, up-north, down-north, up-south, down-south, up-east, and so on.  So "count neighbors3d with [pcolor = red]" counts how many of those twenty-six patches have the living? patch variable set to true.
+The `neighbors3d` primitive returns the agentset of the patches to the north, south, east, west, northeast, northwest, southeast, and southwest as well as up, down, up-north, down-north, up-south, down-south, up-east, and so on.  So `count neighbors3d with [pcolor = red]` counts how many of those twenty-six patches have the `living?` patch variable set to true.
 
-neighbors6 is like neighbors but only uses the patches to the north, south, east, west, up and down.  Some cellular automata, like this one, are defined using the 26-neighbors rule, others the 6-neighbors.
+`neighbors6` is like `neighbors` but only uses the patches to the north, south, east, west, up and down.  Some cellular automata, like this one, are defined using the 26-neighbors rule, others the 6-neighbors.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
-Life - 2D version of this model
-Life Turtle-Based - same as this, but implemented using turtles instead of patches, for a more attractive display in the graphics window
-CA 1D Elementary - a model that shows all 256 possible simple 1D cellular automata
-CA 1D Totalistic - a model that shows all 2,187 possible 1D 3-color totalistic cellular automata
-CA 1D Rule 30 - the basic rule 30 model
-CA 1D Rule 30 Turtle - the basic rule 30 model implemented using turtles
-CA 1D Rule 90 - the basic rule 90 model
-CA 1D Rule 110 - the basic rule 110 model
+Life - 2D version of this model  
+Life Turtle-Based - same as this, but implemented using turtles instead of patches, for a more attractive display in the graphics window  
+CA 1D Elementary - a model that shows all 256 possible simple 1D cellular automata  
+CA 1D Totalistic - a model that shows all 2,187 possible 1D 3-color totalistic cellular automata  
+CA 1D Rule 30 - the basic rule 30 model  
+CA 1D Rule 30 Turtle - the basic rule 30 model implemented using turtles  
+CA 1D Rule 90 - the basic rule 90 model  
+CA 1D Rule 110 - the basic rule 110 model  
 CA 1D Rule 250 - the basic rule 250 model
 
-
 ## CREDITS AND REFERENCES
+
 The Game of Life was invented by John Horton Conway.
 
 See also:
@@ -594,7 +589,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta1
+NetLogo 3D 5.0beta4
 @#$#@#$#@
 setup-normal
 repeat 20 [ go ]

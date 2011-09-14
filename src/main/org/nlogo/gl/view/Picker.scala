@@ -3,10 +3,9 @@ package org.nlogo.gl.view
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.gl.render.PickListener
 import org.nlogo.window.SyntaxColors
-import org.nlogo.awt.Utils.colorize
+import org.nlogo.awt.Colors.colorize
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
-import org.nlogo.util.JCL._
 
 class Picker(view: View) extends PickListener with ActionListener {
 
@@ -58,7 +57,8 @@ class Picker(view: View) extends PickListener with ActionListener {
     }
 
     var last: Class[_] = null
-    for(agent <- agents) {
+    import collection.JavaConverters._
+    for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
         menu.add(new javax.swing.JPopupMenu.Separator)
         last = agent.getClass
@@ -127,17 +127,17 @@ class Picker(view: View) extends PickListener with ActionListener {
       case Inspect =>
         view.viewManager.workspace.inspectAgent(item.agent, 3)
       case Follow =>
-        observer.setPerspective(Perspective.FOLLOW, item.agent)
+        observer.setPerspective(Perspective.Follow, item.agent)
         val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt
         observer.followDistance(1 max distance min 100)
         update()
       case Ride =>
-        observer.setPerspective(Perspective.RIDE, item.agent)
+        observer.setPerspective(Perspective.Ride, item.agent)
         observer.followDistance(0)
         update()
       case Watch =>
         observer.home()
-        observer.setPerspective(Perspective.WATCH, item.agent)
+        observer.setPerspective(Perspective.Watch, item.agent)
     }
   }
   

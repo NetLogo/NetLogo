@@ -389,7 +389,7 @@ else
                         <string>23</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="7">
+                        <array class="java.lang.String" length="8">
                           <void index="0">
                             <string>-Djava.ext.dirs=</string>
                           </void>
@@ -400,15 +400,18 @@ else
                             <string>-XX:MaxPermSize=128m</string>
                           </void>
                           <void index="3">
-                            <string>-Xmx${installer:maxheap}M</string>
+                            <string>-Xss16m</string>
                           </void>
                           <void index="4">
-                            <string>-Xms16M</string>
+                            <string>-Xmx${installer:maxheap}m</string>
                           </void>
                           <void index="5">
-                            <string>-Dfile.encoding=UTF-8</string>
+                            <string>-Xms16M</string>
                           </void>
                           <void index="6">
+                            <string>-Dfile.encoding=UTF-8</string>
+                          </void>
+                          <void index="7">
                             <string />
                           </void>
                         </array>
@@ -426,7 +429,7 @@ else
                         <string>10808</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="7">
+                        <array class="java.lang.String" length="8">
                           <void index="0">
                             <string>-Djava.ext.dirs=</string>
                           </void>
@@ -437,15 +440,18 @@ else
                             <string>-XX:MaxPermSize=128m</string>
                           </void>
                           <void index="3">
-                            <string>-Xmx${installer:maxheap}M</string>
+                            <string>-Xss16m</string>
                           </void>
                           <void index="4">
-                            <string>-Xms16M</string>
+                            <string>-Xmx${installer:maxheap}m</string>
                           </void>
                           <void index="5">
-                            <string>-Dfile.encoding=UTF-8</string>
+                            <string>-Xms16M</string>
                           </void>
                           <void index="6">
+                            <string>-Dfile.encoding=UTF-8</string>
+                          </void>
+                          <void index="7">
                             <string />
                           </void>
                         </array>
@@ -463,7 +469,7 @@ else
                         <string>18030</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="7">
+                        <array class="java.lang.String" length="8">
                           <void index="0">
                             <string>-Djava.ext.dirs=</string>
                           </void>
@@ -474,15 +480,18 @@ else
                             <string>-XX:MaxPermSize=128m</string>
                           </void>
                           <void index="3">
-                            <string>-Xmx${installer:maxheap}M</string>
+                            <string>-Xss16m</string>
                           </void>
                           <void index="4">
-                            <string>-Xms16M</string>
+                            <string>-Xmx${installer:maxheap}m</string>
                           </void>
                           <void index="5">
-                            <string>-Dfile.encoding=UTF-8</string>
+                            <string>-Xms16M</string>
                           </void>
                           <void index="6">
+                            <string>-Dfile.encoding=UTF-8</string>
+                          </void>
+                          <void index="7">
                             <string />
                           </void>
                         </array>
@@ -511,10 +520,10 @@ else
                             <string>-XX:MaxPermSize=128m</string>
                           </void>
                           <void index="3">
-                            <string>-Xmx${installer:maxheap}M</string>
+                            <string>-Xss16m</string>
                           </void>
                           <void index="4">
-                            <string>-Xms16M</string>
+                            <string>-Xmx${installer:maxheap}m</string>
                           </void>
                           <void index="5">
                             <string>-Dorg.nlogo.is3d=true</string>

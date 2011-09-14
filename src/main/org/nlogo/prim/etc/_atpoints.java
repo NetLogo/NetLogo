@@ -14,13 +14,12 @@ import org.nlogo.api.Dump;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _atpoints
     extends Reporter {
@@ -32,7 +31,7 @@ public final strictfp class _atpoints
     LogoList points = argEvalList(context, 1);
     for (Iterator<Object> it = points.iterator(); it.hasNext();) {
       if (!validateListEntry(it.next())) {
-        throw new EngineException(context, this, I18NJava.errors().getN(
+        throw new EngineException(context, this, I18N.errorsJ().getN(
             "org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
     }
@@ -92,7 +91,7 @@ public final strictfp class _atpoints
     if (entry instanceof LogoList) {
       LogoList entryList = (LogoList) entry;
       if (entryList.size() == 2 ||
-          ((world.program().is3D)
+          ((world.program().is3D())
               && (entryList.size() == 3))) {
         for (Iterator<Object> iter = entryList.iterator(); iter.hasNext();) {
           if (!(iter.next() instanceof Double)) {
@@ -111,7 +110,7 @@ public final strictfp class _atpoints
     // predictable ordering so runs are reproducible - ST 8/13/03
     LinkedHashSet<Patch> result =
         new LinkedHashSet<Patch>();
-    boolean is3D = world.program().is3D;
+    boolean is3D = world.program().is3D();
     for (Iterator<Object> it = points.iterator(); it.hasNext();) {
       LogoList entry = (LogoList) it.next();
       Double x = null;
@@ -129,20 +128,20 @@ public final strictfp class _atpoints
           case 2:
             if (!is3D) {
               throw new EngineException(context, this,
-                  I18NJava.errors().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+                  I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
 
             }
             z = (Double) it2.next();
             break;
           default:
             throw new EngineException(context, this,
-                I18NJava.errors().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+                I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
         }
         j++;
       }
       if (x == null || y == null) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+            I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
       try {
         Patch patch = null;
@@ -165,9 +164,9 @@ public final strictfp class _atpoints
 
   @Override
   public Syntax syntax() {
-    int left = Syntax.TYPE_TURTLESET | Syntax.TYPE_PATCHSET;
-    int[] right = {Syntax.TYPE_LIST};
-    int ret = Syntax.TYPE_AGENTSET;
-    return Syntax.reporterSyntax(left, right, ret, Syntax.NORMAL_PRECEDENCE + 2);
+    int left = Syntax.TurtlesetType() | Syntax.PatchsetType();
+    int[] right = {Syntax.ListType()};
+    int ret = Syntax.AgentsetType();
+    return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2);
   }
 }

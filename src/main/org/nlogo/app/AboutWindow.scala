@@ -11,7 +11,7 @@ import org.nlogo.swing.{BrowserLauncher, PimpedAction, IconHolder}
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
   private val system: JTextArea = new JTextArea() {
-    setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont(), Font.PLAIN, 12))
+    setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setLineWrap(true)
     setWrapStyleWord(true)
     setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10))
@@ -20,8 +20,8 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   }
   private var graphicsInfo = ""
   private val staticInfo =
-    Version.version() +
-      " (" + Version.buildDate() + ")\n" +
+    Version.version +
+      " (" + Version.buildDate + ")\n" +
       "Extension API version: " + APIVersion.version + "\n" +
       SysInfo.getVMInfoString + "\n" +
       SysInfo.getOSInfoString + "\n" +
@@ -35,8 +35,8 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       setText(
           "<html>\n"
           + "<center>"
-          + "<b>" + Version.version()
-          + " <font color=\"#666666\">(" + Version.buildDate()
+          + "<b>" + Version.version
+          + " <font color=\"#666666\">(" + Version.buildDate
           + ")</font>" + "</b><br><br>\n"
           + "<font size=-1><b>web site</b> "
           + "<a href=\"http://ccl.northwestern.edu/netlogo/\">ccl.northwestern.edu/netlogo</a><br><br>"
@@ -64,7 +64,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     getContentPane.add(graphic,BorderLayout.NORTH)
 
     val credits = new JTextArea(org.nlogo.util.Utils.getResourceAsString("/system/about.txt"),15,0){
-      setFont(new Font(org.nlogo.awt.Utils.platformMonospacedFont(),Font.PLAIN,12))
+      setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont,Font.PLAIN,12))
       setDragEnabled(false)
       setLineWrap(true)
       setWrapStyleWord(true)
@@ -81,7 +81,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
 
     org.nlogo.swing.Utils.addEscKeyAction(this, PimpedAction{ _ => dispose() } )
     pack()
-    org.nlogo.awt.Utils.center(this,null)
+    org.nlogo.awt.Positioning.center(this,null)
 
     // Bring the parent frame (the main NetLogo window) to front.
     // Otherwise this will be obscured (sometimes completely) by

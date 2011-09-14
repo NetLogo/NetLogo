@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _exportoutput
     extends org.nlogo.nvm.Command {
@@ -13,7 +13,7 @@ public final strictfp class _exportoutput
     final String filename = argEvalString(context, 0);
     if (filename.equals("")) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
+          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
     }
     final org.nlogo.nvm.Command comm = this;
     workspace.waitFor
@@ -36,7 +36,7 @@ public final strictfp class _exportoutput
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
+    int[] right = {Syntax.StringType()};
     return Syntax.commandSyntax(right);
   }
 }

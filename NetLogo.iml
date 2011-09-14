@@ -22,6 +22,8 @@
       <sourceFolder url="file://$MODULE_DIR$/extensions/array/classes" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/extensions/unit-test/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tools" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/plugins/ReviewTab/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/plugins/ReviewTab/classes" />
       <excludeFolder url="file://$MODULE_DIR$/project/build/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>

@@ -711,7 +711,7 @@ Currently, this activity only allows numeric data to be entered by the client.  
 
 Right now the activity allows you to clear all the questions, clear all the clients and questions, and clear the data for one question.  However, it does not allow you to clear all the data for all the questions.  Make it do so.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 @#$#@#$#@
 default
 true

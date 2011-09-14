@@ -4,7 +4,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _breedvariable
     extends Reporter {
@@ -17,7 +17,7 @@ public final strictfp class _breedvariable
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (Syntax.TYPE_WILDCARD | Syntax.TYPE_REFERENCE,
+        (Syntax.WildcardType() | Syntax.ReferenceType(),
             "-T--");
   }
 

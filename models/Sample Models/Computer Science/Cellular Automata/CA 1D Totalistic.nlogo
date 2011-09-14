@@ -517,7 +517,7 @@ CA 1D Rule 250 - the basic rule 250 model
 CA 1D Elementary - a simple one-dimensional 2-state cellular automata model
 CA Continuous - a totalistic continuous-valued cellular automata with thousands of states
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Thanks to Eytan Bakshy for his help with this model.
 

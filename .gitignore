@@ -5,6 +5,9 @@ classes/
 target/
 tmp/
 
+# common filenames
+.DS_Store
+
 # wildcards
 *.class
 *.tmp

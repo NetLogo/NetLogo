@@ -28,7 +28,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   setBackground(InterfaceColors.SWITCH_BACKGROUND)
   setBorder(widgetBorder)
   setOpaque(true)
-  org.nlogo.awt.Utils.adjustDefaultFont(this)
+  org.nlogo.awt.Fonts.adjustDefaultFont(this)
   add(dragger)
   add(channel)
   addMouseWheelListener(this)
@@ -92,7 +92,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       StrictMath.max(fontMetrics.stringWidth("On"), fontMetrics.stringWidth("Off")) + controlRect.width + 2 * BORDERX
     g.setColor(getForeground)
     g.drawString(
-      org.nlogo.awt.Utils.shortenStringToFit(displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics),
+      org.nlogo.awt.Fonts.shortenStringToFit(displayName, getWidth - 3 * BORDERX - controlLabelWidth, fontMetrics),
       controlLabelWidth + 2 * BORDERX,
       (getHeight - fontMetrics.getHeight - (2 * BORDERY)) / 2 + stringAscent + 1)
   }
@@ -113,11 +113,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   protected class Channel extends javax.swing.JComponent {
     setOpaque(false)
-    setBackground(org.nlogo.awt.Utils.mixColors(InterfaceColors.SWITCH_BACKGROUND, java.awt.Color.BLACK, 0.5))
+    setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SWITCH_BACKGROUND, java.awt.Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Channel.this)
-        if (org.nlogo.awt.Utils.button1Mask(e)) {
+        if (org.nlogo.awt.Mouse.hasButton1(e)) {
           isOn = ! isOn
         }
       }

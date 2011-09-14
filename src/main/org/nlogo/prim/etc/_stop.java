@@ -1,12 +1,11 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Procedure;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _stop
     extends Command {
@@ -31,9 +30,9 @@ public final strictfp class _stop
       // immediately.  first we must check that it's a command procedure
       // and not a reporter procedure.
       if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
-          context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
+          context.activation.procedure.isTask() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
       context.stop();
     }
@@ -45,9 +44,9 @@ public final strictfp class _stop
       context.finished = true;
     } else {
       if (context.activation.procedure.tyype == Procedure.Type.REPORTER ||
-          context.activation.procedure.isLambda() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
+          context.activation.procedure.isTask() && context.activation.procedure.parent.tyype == Procedure.Type.REPORTER) {
         throw new EngineException(context, this,
-            I18NJava.errors().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
+            I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
       }
       workspace.profilingTracer().closeCallRecord(context, context.activation);
       context.stop();

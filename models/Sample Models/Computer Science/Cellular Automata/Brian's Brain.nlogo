@@ -264,7 +264,7 @@ Many other interesting 3-state 2D automata exist.  Experiment with variations on
 
 See all of the other models in the Cellular Automata subsection of the Computer Science section of the NetLogo Models Library.
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 Brian's Brain was invented by Brian Silverman.
 @#$#@#$#@

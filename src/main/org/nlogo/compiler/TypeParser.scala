@@ -1,4 +1,5 @@
 package org.nlogo.compiler
+
 // The purpose of this class is to determine which portions of the
 // code are usable by which agent types.  For example "fd 1" is
 // turtle-only, but "print 2 + 2" could be any of the four agent
@@ -59,10 +60,12 @@ package org.nlogo.compiler
 // the same answer for all the procedures, we can stop.
 //
 // Whew!  Got all that?
+
 import org.nlogo.compiler.CompilerExceptionThrowers._
-import org.nlogo.api.CompilerException
-import org.nlogo.nvm.{Command,Instruction,Procedure,Reporter,Syntax}
-import org.nlogo.prim.{_call,_callreport}
+import org.nlogo.api.{ CompilerException, Syntax }
+import org.nlogo.nvm.{ Command, Instruction, Procedure, Reporter }
+import org.nlogo.prim.{ _call, _callreport }
+
 private class TypeParser(defs: Seq[ProcedureDefinition]) {
   def parse() {
     def usables = defs.map(_.procedure.usableBy).toList
@@ -117,14 +120,14 @@ private class TypeParser(defs: Seq[ProcedureDefinition]) {
     }
     def getReportedAgentType(app:ReporterApp):String = {
       app.reporter.syntax.ret match {
-        case Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET => "-T--"
-        case Syntax.TYPE_PATCH  | Syntax.TYPE_PATCHSET  => "--P-"
-        case Syntax.TYPE_LINK   | Syntax.TYPE_LINKSET   => "---L"
+        case Syntax.TurtleType | Syntax.TurtlesetType => "-T--"
+        case Syntax.PatchType  | Syntax.PatchsetType  => "--P-"
+        case Syntax.LinkType   | Syntax.LinksetType   => "---L"
         // This is kludgy.  We assume the agent type is the same as that
         // reported by the first argument to the command. ("with" and "at-points"
         // are examples of this, also "one-of".)   Careful, this assumption
         // could break someday. - ST 12/8/02, 12/15/05, 2/21/08
-        case Syntax.TYPE_AGENT  | Syntax.TYPE_AGENTSET  =>
+        case Syntax.AgentType  | Syntax.AgentsetType  =>
           app.args match {
             case Seq(app:ReporterApp,_*) => getReportedAgentType(app)
             case _ => "-TPL"

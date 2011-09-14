@@ -34,11 +34,12 @@ class Worker(val protocol: Protocol)
       runners =
         (for((settings, runNumber) <- protocol.elements zip Stream.from(1).iterator)
          yield new Runner(runNumber, settings, fn)).toSeq
-      val futures =
-        org.nlogo.util.JCL.iterableToScalaIterable(
-          executor.invokeAll(
-            org.nlogo.util.JCL.toJavaList[Callable[Unit]](
-              runners)))
+      val futures = {
+        import collection.JavaConverters._
+        // The explicit use of JavaConversions here with a type parameter, instead of just plain
+        // "asJava", is required to compile against Java 5 - ST 8/17/11
+        executor.invokeAll(collection.JavaConversions.asJavaCollection[Callable[Unit]](runners)).asScala
+      }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
       listeners.foreach(_.experimentCompleted())
@@ -157,7 +158,7 @@ class Worker(val protocol: Protocol)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
-      if(protocol.runMetricsEveryStep) {
+      if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
       }
@@ -167,14 +168,14 @@ class Worker(val protocol: Protocol)
       {
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
-        if(protocol.runMetricsEveryStep && !listeners.isEmpty) {
+        if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         }
         ws.updateDisplay(false)
         if(aborted) return
       }
-      if(!protocol.runMetricsEveryStep) {
+      if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
       }

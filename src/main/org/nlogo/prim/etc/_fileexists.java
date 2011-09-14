@@ -3,7 +3,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _fileexists
     extends Reporter {
@@ -27,8 +27,8 @@ public final strictfp class _fileexists
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_STRING};
-    int ret = Syntax.TYPE_BOOLEAN;
+    int[] right = {Syntax.StringType()};
+    int ret = Syntax.BooleanType();
     return Syntax.reporterSyntax(right, ret);
   }
 }

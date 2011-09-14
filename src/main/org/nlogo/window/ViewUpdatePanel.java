@@ -34,13 +34,13 @@ public strictfp class ViewUpdatePanel
             }
           }
         });
-    org.nlogo.awt.Utils.adjustDefaultFont(displaySwitch);
+    org.nlogo.awt.Fonts.adjustDefaultFont(displaySwitch);
     settings = workspace.viewWidget.settings();
     add(speedSlider);
     SettingsButton settingsButton = new SettingsButton();
-    viewUpdates.addItem(I18N.gui().get("tabs.run.viewUpdates.dropdown.onticks"));
-    viewUpdates.addItem(I18N.gui().get("tabs.run.viewUpdates.dropdown.continuous"));
-    viewUpdates.setToolTipText(I18N.gui().get("tabs.run.viewUpdates.dropdown.tooltip"));
+    viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"));
+    viewUpdates.addItem(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"));
+    viewUpdates.setToolTipText(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.tooltip"));
     // we don't want a settings button in the applet ev 2/28/06
     if (editable) {
       javax.swing.JPanel panel = new javax.swing.JPanel
@@ -49,7 +49,7 @@ public strictfp class ViewUpdatePanel
                   java.awt.Component.CENTER_ALIGNMENT,
                   java.awt.Component.CENTER_ALIGNMENT));
       panel.add(displaySwitch);
-      org.nlogo.awt.Utils.adjustDefaultFont(viewUpdates);
+      org.nlogo.awt.Fonts.adjustDefaultFont(viewUpdates);
       panel.setOpaque(false);
       panel.add(viewUpdates);
       add(panel);
@@ -83,7 +83,7 @@ public strictfp class ViewUpdatePanel
     java.awt.Component[] comps = getComponents();
     for (int i = 0; i < comps.length; i++) {
       comps[i].setFocusable(false);
-      org.nlogo.awt.Utils.adjustDefaultFont(comps[i]);
+      org.nlogo.awt.Fonts.adjustDefaultFont(comps[i]);
       if (comps[i] instanceof javax.swing.AbstractButton &&
           // kinda kludgy but we don't want to have the text below
           // the checker in the checkbox in the Code tab ev 8/24/06
@@ -99,12 +99,12 @@ public strictfp class ViewUpdatePanel
   private class SettingsButton
       extends javax.swing.JButton {
     public SettingsButton() {
-      super(I18N.gui().get("tabs.run.settingsButton"));
+      super(I18N.guiJ().get("tabs.run.settingsButton"));
       setFont
-          (new java.awt.Font(org.nlogo.awt.Utils.platformFont(),
+          (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
               java.awt.Font.PLAIN, 10));
       setFocusable(false);
-      setToolTipText(I18N.gui().get("tabs.run.settingsButton.tooltip"));
+      setToolTipText(I18N.guiJ().get("tabs.run.settingsButton.tooltip"));
       addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -131,9 +131,9 @@ public strictfp class ViewUpdatePanel
   }
 
   private void setMode(String name) {
-    if (name.equals(I18N.gui().get("tabs.run.viewUpdates.dropdown.onticks"))) {
+    if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.onticks"))) {
       workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.TICK_BASED);
-    } else if (name.equals(I18N.gui().get("tabs.run.viewUpdates.dropdown.continuous"))) {
+    } else if (name.equals(I18N.guiJ().get("tabs.run.viewUpdates.dropdown.continuous"))) {
       workspace.updateMode(org.nlogo.nvm.Workspace.UpdateMode.CONTINUOUS);
     } else {
       throw new IllegalStateException();

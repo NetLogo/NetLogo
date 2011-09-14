@@ -44,7 +44,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   def getWidgetsForSaving: java.util.List[org.nlogo.window.Widget] = interfacePanel.getWidgetsForSaving
 
   def getWidgetsAsStrings: Seq[String] = {
-    val widgets = org.nlogo.util.JCL.toScalaSeq(getWidgetsForSaving)
+    val widgets = scala.collection.JavaConversions.asScalaBuffer(getWidgetsForSaving)
     def widgetToStrings(w:Widget): List[String] = {
       try {
         val br = new BufferedReader(new StringReader(w.save))
@@ -83,6 +83,6 @@ class HubNetClientEditor(workspace: GUIWorkspace,
       I18N.gui.get("menu.tools.hubNetClientEditor") + " " + 8212.toChar + " " + title
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
-    if (mt == ModelType.NORMAL) t + " {" + directory + "}" else t
+    if (mt == ModelType.Normal) t + " {" + directory + "}" else t
   }
 }

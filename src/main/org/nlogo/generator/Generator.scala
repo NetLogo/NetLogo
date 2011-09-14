@@ -1,6 +1,7 @@
 package org.nlogo.generator
 
-import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter, Syntax }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, CustomGenerated, GeneratorInterface, Instruction, Procedure, Reporter }
 
 object Generator {
   private[generator] val KEPT_INSTRUCTION_PREFIX = "keptinstr"
@@ -130,11 +131,11 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         new CustomGenerator(profilingEnabled).generate(instr.asInstanceOf[CustomGenerated], nlgen, thisInstrUID, ip)
         nlgen.markLineNumber(parentInstrUID)
         val actualReturnType = instr.syntax.ret match {
-          case Syntax.TYPE_BOOLEAN => classOf[Boolean]
-          case Syntax.TYPE_LIST => classOf[org.nlogo.api.LogoList]
-          case Syntax.TYPE_STRING => classOf[String]
-          case Syntax.TYPE_WILDCARD => classOf[Object]
-          case Syntax.TYPE_VOID => java.lang.Void.TYPE
+          case Syntax.BooleanType => classOf[Boolean]
+          case Syntax.ListType => classOf[org.nlogo.api.LogoList]
+          case Syntax.StringType => classOf[String]
+          case Syntax.WildcardType => classOf[Object]
+          case Syntax.VoidType => java.lang.Void.TYPE
         }
         nlgen.generateConversion(actualReturnType, retTypeWanted, parentInstr, argIndex)
       } else {
@@ -332,8 +333,8 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
         descriptor)
     }
     def generateKeptFields() {
-      import org.nlogo.util.JCL._
-      for (fieldName <- keptThings.keySet) {
+      import collection.JavaConverters._
+      for (fieldName <- keptThings.keySet.asScala) {
         val descriptor = keptThingsTypes.get(fieldName).getDescriptor
         var accessCode = keptThingsAccessCodes.get(fieldName).intValue
         // remove "final" flag, so we can set the fields after construction.
@@ -342,8 +343,8 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
       }
     }
     def setAllKeptFields(resultInstr: Instruction) {
-      import org.nlogo.util.JCL._
-      for (fieldName <- keptThings.keySet) {
+      import collection.JavaConverters._
+      for (fieldName <- keptThings.keySet.asScala) {
         val f = resultInstr.getClass.getDeclaredField(fieldName)
         f.setAccessible(true)
         f.set(resultInstr, keptThings.get(fieldName))

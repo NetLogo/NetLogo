@@ -3,15 +3,15 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _patchatheadinganddistance
     extends Reporter {
   @Override
   public Syntax syntax() {
     return Syntax.reporterSyntax
-        (new int[]{Syntax.TYPE_NUMBER, Syntax.TYPE_NUMBER},
-            Syntax.TYPE_PATCH, "-TP-");
+        (new int[]{Syntax.NumberType(), Syntax.NumberType()},
+            Syntax.PatchType(), "-TP-");
   }
 
   @Override
@@ -27,7 +27,7 @@ public final strictfp class _patchatheadinganddistance
               heading,
               argEvalDoubleValue(context, 1));
     } catch (org.nlogo.api.AgentException exc) {
-      return org.nlogo.api.Nobody.NOBODY;
+      return org.nlogo.api.Nobody$.MODULE$;
     }
   }
 }

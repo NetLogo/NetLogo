@@ -15,18 +15,18 @@ else
 JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.25
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
-JAVA = $(JAVA_HOME)/bin/java -server -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024M -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
-SCALA_VERSION = 2.9.0-1
+JAVA = $(JAVA_HOME)/bin/java -server -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
+SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 LIBS = lib_managed/scala_$(SCALA_VERSION)/compile
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):$(LIBS)/asm-all-3.3.1.jar:$(LIBS)/picocontainer-2.11.1.jar:$(LIBS)/log4j-1.2.16.jar
+CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):`ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
 
 ### common prerequisites
 tmp:
 	@echo "@@@ making tmp"
 	mkdir -p tmp
 bin/sbt-launch.jar:
-	curl -s 'http://ccl.northwestern.edu/devel/sbt-launch-0.7.6.RC0.jar' -o bin/sbt-launch.jar
+	curl -s 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
 $(SCALA_JAR): | bin/sbt-launch.jar
 	bin/sbt update
 
@@ -57,19 +57,14 @@ models/index.txt:
 	@echo "@@@ building models/index.txt"
 	bin/sbt model-index
 
-###
 ### JAR building
-###
 
 JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
 
-
-###
-### extensions (and plugins too)
-###
+### extensions
 
 EXTENSIONS=\
 	extensions/array/array.jar \
@@ -82,8 +77,7 @@ EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
-	extensions/qtj/qtj.jar \
-	plugins/ReviewTab/ReviewTab.jar
+	extensions/qtj/qtj.jar
 
 .PHONY: extensions
 extensions: $(EXTENSIONS)
@@ -102,7 +96,6 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
-	if [ ! -d plugins/ReviewTab/src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
@@ -111,35 +104,70 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 github:
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
-	cd extensions/array; git pull; git st
+	cd extensions/array; git pull; git status
 	if [ ! -d extensions/bitmap/src ] ; then git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
-	cd extensions/bitmap; git pull; git st
+	cd extensions/bitmap; git pull; git status
 	if [ ! -d extensions/gis/src ] ; then git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis ; fi
-	cd extensions/gis; git pull; git st
+	cd extensions/gis; git pull; git status
 	if [ ! -d extensions/gogo/src ] ; then git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo ; fi
-	cd extensions/gogo; git pull; git st
+	cd extensions/gogo; git pull; git status
 	if [ ! -d extensions/matrix/src ] ; then git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	cd extensions/matrix; git pull; git st
+	cd extensions/matrix; git pull; git status
 	if [ ! -d extensions/profiler/src ] ; then git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler ; fi
-	cd extensions/profiler; git pull; git st
+	cd extensions/profiler; git pull; git status
 	if [ ! -d extensions/qtj/src ] ; then git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj ; fi
-	cd extensions/qtj; git pull; git st
+	cd extensions/qtj; git pull; git status
 	if [ ! -d extensions/sample/src ] ; then git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample ; fi
-	cd extensions/sample; git pull; git st
+	cd extensions/sample; git pull; git status
 	if [ ! -d extensions/sample-scala/src ] ; then git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
-	cd extensions/sample-scala; git pull; git st
+	cd extensions/sample-scala; git pull; git status
 	if [ ! -d extensions/sound/src ] ; then git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound ; fi
-	cd extensions/sound; git pull; git st
+	cd extensions/sound; git pull; git status
 	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
-	cd extensions/table; git pull; git st
-	mkdir -p plugins
-	if [ ! -d plugins/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
-	cd plugins/ReviewTab; git pull; git st
+	cd extensions/table; git pull; git status
+
+### Scaladoc
+
+# for internal devel team use
+tmp/scaladoc: netlogo | tmp
+	-rm -rf tmp/scaladoc
+	-mkdir -p tmp/scaladoc
+	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
+	bin/scaladoc \
+	  -d tmp/scaladoc \
+	  -doc-title 'NetLogo' \
+	  -doc-version `cat tmp/version.txt` \
+	  -classpath $(CLASSPATH) \
+	  -sourcepath src/main \
+	  -encoding us-ascii \
+          `find src/main -name \*.scala -o -name \*.java`
+
+# these are the docs we include with the User Manual
+docs/scaladoc: netlogo
+	-rm -rf docs/scaladoc
+	-mkdir -p docs/scaladoc
+	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
+	bin/scaladoc \
+	  -d docs/scaladoc \
+	  -doc-title 'NetLogo API' \
+	  -doc-version `cat tmp/version.txt` \
+	  -classpath $(CLASSPATH) \
+	  -sourcepath src/main \
+	  -encoding us-ascii \
+	  src/main/org/nlogo/app/App.scala \
+	  src/main/org/nlogo/lite/InterfaceComponent.scala \
+	  src/main/org/nlogo/lite/Applet.scala \
+	  src/main/org/nlogo/lite/AppletPanel.scala \
+	  src/main/org/nlogo/headless/HeadlessWorkspace.scala \
+          src/main/org/nlogo/api/*.*a \
+          src/main/org/nlogo/agent/*.*a \
+          src/main/org/nlogo/workspace/*.*a \
+          src/main/org/nlogo/nvm/*.*a
 
 ### misc targets
 
 # cleaning
-.PHONY: clean clean-extensions realclean
+.PHONY: clean clean-extensions distclean
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
@@ -147,20 +175,33 @@ clean:
 	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
-	rm -rf tmp target docs/javadoc
+	rm -rf tmp target docs/scaladoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
 clean-extensions:
 	rm -rf $(foreach foo,$(EXTENSIONS),$(dir $(foo)))
-realclean:
-	git clean -fdX
+distclean:
+	git clean -fd
+	git clean -fX
 
 # benchmarking
 .PHONY: benches
 benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
 
-### Scala scripting library
+# Scala scripting library
 bin/Scripting.class: bin/Scripting.scala | $(SCALA_JAR)
 	@echo "@@@ building bin/Scripting.class"
 	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
+
+# count lines of code
+.PHONY: cloc
+cloc: tmp/cloc.pl
+	tmp/cloc.pl \
+          --exclude-ext=m,xml,html,css,dtd \
+          --exclude-dir=tmp,project/build/classycle,project/plugins/src_managed \
+          --progress-rate=0 \
+          .
+tmp/cloc.pl: | tmp
+	curl -s 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
+	chmod +x tmp/cloc.pl

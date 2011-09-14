@@ -3,9 +3,9 @@ package org.nlogo.agent
 import java.io.PrintWriter
 import java.util.{ ArrayList, Collections, HashMap => JHashMap, List => JList, Map => JMap }
 import java.lang.{ Integer => JInteger, Long => JLong }
-import org.nlogo.util.JCL._
 import org.nlogo.api.{ Dump, LogoList, Nobody }
 import Dump.csv
+import collection.JavaConverters._
 
 // I converted this from Java without (for now, at least) making any effort to clean it up and make
 // it more Scalatastic. - ST 4/12/11
@@ -27,14 +27,14 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
   private def exportLinks() {
     println(csv.encode("LINKS"))
     val allLinkVars = new ArrayList[String]
-    for(v <- world.program.linksOwn)
+    for(v <- world.program.linksOwn.asScala)
       allLinkVars.add(v)
     val linkVarSize = world.program.linksOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that
     // var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
-    for{current <- world.program.linkBreedsOwn.keySet
-        breedVarName <- world.program.linkBreedsOwn.get(current)}
+    for{current <- world.program.linkBreedsOwn.keySet.asScala
+        breedVarName <- world.program.linkBreedsOwn.get(current).asScala}
       if(breedVarIndices.get(breedVarName) == null) {
         allLinkVars.add(breedVarName)
         breedVarIndices.put(breedVarName, JInteger.valueOf(allLinkVars.size - 1))
@@ -100,7 +100,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.zipWithIndex) {
+    for((g, i) <- globals.asScala.zipWithIndex) {
       globalVarIndices.put(g, JInteger.valueOf(i))
       sortedGlobals.add(g)
     }
@@ -108,7 +108,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
     Collections.sort(sortedGlobals)
     val subject =
-      Option(world.observer.targetAgent).getOrElse(Nobody.NOBODY)
+      Option(world.observer.targetAgent).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
     print(csv.encode(JInteger.toString(world.minPxcor)) + "," 
@@ -121,7 +121,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.data(if (world.links.isDirected) "DIRECTED" else
                      if (world.links.isUndirected) "UNDIRECTED" else "NEITHER") + ","
           + csv.encode(Dump.number(world.tickCounter.ticks)))
-    for(g <- sortedGlobals) {
+    for(g <- sortedGlobals.asScala) {
       print(",")
       print(csv.data(world.observer.getObserverVariable(
         globalVarIndices.get(g).intValue)))
@@ -136,9 +136,9 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val turtlesVarSize = world.program.turtlesOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
-    for(current <- world.program.breedsOwn.keySet) {
+    for(current <- world.program.breedsOwn.keySet.asScala) {
       val breedOwns = world.program.breedsOwn.get(current)
-      for(breedVarName <- breedOwns)
+      for(breedVarName <- breedOwns.asScala)
         if(breedVarIndices.get(breedVarName) == null) {
           allTurtleVars.add(breedVarName)
           breedVarIndices.put(breedVarName, JInteger.valueOf(allTurtleVars.size - 1))

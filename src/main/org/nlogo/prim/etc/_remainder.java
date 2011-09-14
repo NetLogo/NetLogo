@@ -6,14 +6,14 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _remainder extends Reporter implements Pure {
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_NUMBER,
-        Syntax.TYPE_NUMBER};
-    return Syntax.reporterSyntax(right, Syntax.TYPE_NUMBER);
+    int[] right = {Syntax.NumberType(),
+        Syntax.NumberType()};
+    return Syntax.reporterSyntax(right, Syntax.NumberType());
   }
 
   @Override
@@ -26,7 +26,7 @@ public final strictfp class _remainder extends Reporter implements Pure {
   public double report_1(Context context, double d1, double d2)
       throws LogoException {
     if (d2 == 0) {
-      throw new EngineException(context, this, I18N.errors().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
     }
     return validDouble(d1 % d2);
   }

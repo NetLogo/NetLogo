@@ -1067,7 +1067,7 @@ Add a button that allows the creation of colonias in explicit locations.
 
 This model is related to all of the other models in the "Urban Suite".
 
-## ## CREDITS AND REFERENCES
+## CREDITS AND REFERENCES
 
 The original version of this model was developed during the Sprawl/Swarm Class at Illinois Institute of Technology in Fall 2006 under the supervision of Sarah Dunn and Martin Felsen, by the following student: Federico Diaz De Leon.  See http://www.sprawlcity.us/ for more information about this course.
 

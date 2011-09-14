@@ -1,6 +1,7 @@
 package org.nlogo.prim
 
-import org.nlogo.nvm.{Command, Context, Syntax}
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Command, Context }
 
 // We insert this as the last command in top-level procedures that we don't want to return.  That
 // way the tight inner loop that steps through the commands never needs to do a bounds check when

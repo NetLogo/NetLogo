@@ -3,14 +3,13 @@ package org.nlogo.prim;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 
 public final strictfp class _turtlevariableof
     extends Reporter {
@@ -27,7 +26,7 @@ public final strictfp class _turtlevariableof
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getTurtleVariable(vn);
@@ -49,7 +48,7 @@ public final strictfp class _turtlevariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }
@@ -65,8 +64,8 @@ public final strictfp class _turtlevariableof
 
   @Override
   public Syntax syntax() {
-    int[] right = {Syntax.TYPE_TURTLE | Syntax.TYPE_TURTLESET};
-    int ret = Syntax.TYPE_WILDCARD;
+    int[] right = {Syntax.TurtleType() | Syntax.TurtlesetType()};
+    int ret = Syntax.WildcardType();
     return Syntax.reporterSyntax(right, ret);
   }
 
@@ -75,7 +74,7 @@ public final strictfp class _turtlevariableof
       Agent agent = (Agent) agentOrSet;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       try {
         return agent.getTurtleVariable(vn);
@@ -97,7 +96,7 @@ public final strictfp class _turtlevariableof
     } else {
       throw new org.nlogo.nvm.ArgumentTypeException
           (context, this, 0,
-              Syntax.TYPE_TURTLESET | Syntax.TYPE_TURTLE,
+              Syntax.TurtlesetType() | Syntax.TurtleType(),
               agentOrSet);
     }
   }
@@ -106,7 +105,7 @@ public final strictfp class _turtlevariableof
       throws LogoException {
     if (agent.id == -1) {
       throw new EngineException(context, this,
-        I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
     try {
       return agent.getTurtleVariable(vn);

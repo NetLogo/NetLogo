@@ -5,7 +5,6 @@ import java.util.Observable;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.ValueConstraint;
@@ -26,6 +25,7 @@ public abstract strictfp class Agent
     return id;
   }
 
+  public Object[] variables() { return variables; }
   public Object[] variables = null; // public ONLY for __fire
   ValueConstraint[] variableConstraints = null;
 
@@ -119,7 +119,7 @@ public abstract strictfp class Agent
 
   void wrongTypeForVariable(String name, Class<?> expectedClass, Object value)
       throws AgentException {
-    throw new AgentException(I18NJava.errors().getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
+    throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
         classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)));
   }
 
@@ -140,13 +140,13 @@ public abstract strictfp class Agent
         allowAlpha
             ? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
             : "org.nlogo.agent.Agent.rgbListSizeError.3";
-    throw new AgentException(I18N.errors().get(key));
+    throw new AgentException(I18N.errorsJ().get(key));
   }
 
   private void validRGB(int c)
       throws AgentException {
     if (c < 0 || c > 255) {
-      throw new AgentException(I18N.errors().get("org.nlogo.agent.Agent.rgbValueError"));
+      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Agent.rgbValueError"));
     }
   }
 
@@ -155,5 +155,11 @@ public abstract strictfp class Agent
   public abstract Class<? extends Agent> getAgentClass();
 
   public abstract int getAgentBit();
+
+  public boolean isPartiallyTransparent() {
+    int alpha = alpha();
+    return alpha > 0 && alpha < 255;
+  }
+
 }
 

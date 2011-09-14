@@ -4,7 +4,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.LogoException;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -14,7 +14,7 @@ public final strictfp class _patchvariabledouble extends Reporter {
 
   @Override
   public Syntax syntax() {
-    return Syntax.reporterSyntax(Syntax.TYPE_NUMBER, "-TP-");
+    return Syntax.reporterSyntax(Syntax.NumberType(), "-TP-");
   }
 
   @Override

@@ -1,8 +1,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.Constants;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 
 public strictfp class Protractor
     implements org.nlogo.api.Protractor {
@@ -192,16 +192,16 @@ public strictfp class Protractor
     double sin;
     int integerHeading = (int) heading;
     if (heading == integerHeading) {
-      cos = TrigTables.cos[integerHeading];
-      sin = TrigTables.sin[integerHeading];
+      cos = TrigTables.cos()[integerHeading];
+      sin = TrigTables.sin()[integerHeading];
     } else {
       double headingRadians = StrictMath.toRadians(heading);
       cos = StrictMath.cos(headingRadians);
       sin = StrictMath.sin(headingRadians);
-      if (StrictMath.abs(cos) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(cos) < Constants.Infinitesimal()) {
         cos = 0;
       }
-      if (StrictMath.abs(sin) < org.nlogo.api.World.INFINITESIMAL) {
+      if (StrictMath.abs(sin) < Constants.Infinitesimal()) {
         sin = 0;
       }
     }
@@ -215,7 +215,7 @@ public strictfp class Protractor
     double x, y;
     if (fromAgent == toAgent) {
       throw new AgentException
-          (I18N.errors().get("org.nlogo.agent.Protractor.noHeadingFromAgentToSelf"));
+          (I18N.errorsJ().get("org.nlogo.agent.Protractor.noHeadingFromAgentToSelf"));
     }
     if (toAgent instanceof Turtle) {
       Turtle turtle = (Turtle) toAgent;
@@ -271,7 +271,7 @@ public strictfp class Protractor
       throws AgentException {
     if (fromX == toX && fromY == toY) {
       throw new AgentException
-          (I18NJava.errors().getN("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", fromX, fromY));
+          (I18N.errorsJ().getN("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", fromX, fromY));
     }
     double dx = toX - fromX;
     double dy = toY - fromY;

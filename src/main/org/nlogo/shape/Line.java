@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 import org.nlogo.api.GraphicsInterface;
 
-import static org.nlogo.api.RendererInterface.SHAPE_WIDTH;
+import static org.nlogo.api.Constants.ShapeWidth;
 
 public strictfp class Line
     extends Element
@@ -79,32 +79,32 @@ public strictfp class Line
   public void rotateLeft() {
     int temp = start.x;
     start.x = start.y;
-    start.y = SHAPE_WIDTH - temp;
+    start.y = ShapeWidth() - temp;
     temp = end.x;
     end.x = end.y;
-    end.y = SHAPE_WIDTH - temp;
+    end.y = ShapeWidth() - temp;
   }
 
   @Override
   public void rotateRight() {
     int temp = start.x;
-    start.x = SHAPE_WIDTH - start.y;
+    start.x = ShapeWidth() - start.y;
     start.y = temp;
     temp = end.x;
-    end.x = SHAPE_WIDTH - end.y;
+    end.x = ShapeWidth() - end.y;
     end.y = temp;
   }
 
   @Override
   public void flipHorizontal() {
-    start.x = SHAPE_WIDTH - start.x;
-    end.x = SHAPE_WIDTH - end.x;
+    start.x = ShapeWidth() - start.x;
+    end.x = ShapeWidth() - end.x;
   }
 
   @Override
   public void flipVertical() {
-    start.y = SHAPE_WIDTH - start.y;
-    end.y = SHAPE_WIDTH - end.y;
+    start.y = ShapeWidth() - start.y;
+    end.y = ShapeWidth() - end.y;
   }
 
   // Draws the line defined by the start and endpoint

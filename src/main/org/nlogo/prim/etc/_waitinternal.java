@@ -2,7 +2,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.Command;
 import org.nlogo.api.Let;
-import org.nlogo.nvm.Syntax;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
 
@@ -24,7 +24,7 @@ public final strictfp class _waitinternal extends Command {
   }
 
   public void perform_1(Context context) {
-    if (System.nanoTime() >= ((MutableLong) context.getLet(let)).value) {
+    if (System.nanoTime() >= ((MutableLong) context.getLet(let)).value()) {
       context.ip = next;
     }
   }

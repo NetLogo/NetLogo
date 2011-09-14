@@ -47,7 +47,7 @@ end
 
 ;;creates the fish, initializes variables and graphs
 to setup
-  ca
+  clear-all
 
   setup-misc-globals
   setup-dimensions
@@ -481,6 +481,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 TEXTBOX
 9
@@ -547,6 +548,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 3
@@ -563,6 +565,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 3
@@ -676,6 +679,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 MONITOR
 150
@@ -736,6 +740,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 3
@@ -937,49 +942,55 @@ setup-apart?
 -1000
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 Expected Value Advanced illustrates expected-value analysis under the special condition that the sample size varies.  This model extends the ProbLab model Expected Value, where the sample size is fixed.
 
-Expected-value analyses look at the 'value' of outcomes in probability experiments in terms of some utilitarian framework, such as money or points. As in life, some events are more significant to us -- they are "worth" more for our endeavors. In that sense, expected-value simulations go beyond looking just at chance -- how often or how rarely something happens -- they introduce a "worth" factor (weight, coefficient) associated with experimental outcomes. Value and worth are not synonymous; sometimes a low value has a high worth. For instance, in golf, the lowest value has the highest worth. These simulations examine not only the issue of what I should expect from a phenomenon involving random behavior, but also, what it would be worth for me.  For instance, if I draw 12 coins randomly from a sack containing an equal number of pennies, nickels, dimes, and quarters, we could talk about which 12 'coins' I could expect to get (a nominal classification) -- 3 'pennies,' 3 'nickels,' 3 'dimes,' and 3 'quarters,' on average. But we could extend the discussion to how much money I would get, that is, what would be the 'value' of my draw. To do this, we'd have to multiply the expected frequency of each type of coin by its value:
-|                3 * 1 + 3 * 5 + 3 * 10 + 3 * 25 = 123 cents.
+Expected-value analyses look at the 'value' of outcomes in probability experiments in terms of some utilitarian framework, such as money or points. As in life, some events are more significant to us --- they are "worth" more for our endeavors. In that sense, expected-value simulations go beyond looking just at chance --- how often or how rarely something happens --- they introduce a "worth" factor (weight, coefficient) associated with experimental outcomes. Value and worth are not synonymous; sometimes a low value has a high worth. For instance, in golf, the lowest value has the highest worth. These simulations examine not only the issue of what I should expect from a phenomenon involving random behavior, but also, what it would be worth for me.  For instance, if I draw 12 coins randomly from a sack containing an equal number of pennies, nickels, dimes, and quarters, we could talk about which 12 'coins' I could expect to get (a nominal classification) --- 3 'pennies,' 3 'nickels,' 3 'dimes,' and 3 'quarters,' on average. But we could extend the discussion to how much money I would get, that is, what would be the 'value' of my draw. To do this, we'd have to multiply the expected frequency of each type of coin by its value:
+
+>3 * 1 + 3 * 5 + 3 * 10 + 3 * 25 = 123 cents.
+
 A more general way of putting this all together -- the sample size (12), the probabilities of each coin (1/4 for each of them), and the value of each coin (1, 5, 10, and 25) -- is:
-|                12 * (1/4 * 1 + 1/4 * 5 + 1/4 * 10 + 1/4 * 25) = 123 cents.
+
+>12 * (1/4 * 1 + 1/4 * 5 + 1/4 * 10 + 1/4 * 25) = 123 cents.
+
 Thus, the term 'expected value' may be defined as the sum of the products of the probability of each possible event and the value of that event multiplied by the sample size.
 
 This model is a part of the ProbLab curriculum.  The ProbLab curriculum is currently under development at the CCL.  For more information about the ProbLab curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The analogy in the model is a lake with fish swimming around.  Each type of fish is worth a certain number of dollars (1, 2, 3, 4 or 5) [other currencies or point systems apply just as well]. The distribution of types of fish by amount-of-worth -- how many $1-fish, $2-fish, ..., or $5-fish there are in the pond -- is set by the sliders on the left. With the sliders, we can set the distribution of fish by type and, therefore, the chance of catching each type of fish. That is, the higher you have set a given slider as compared to other sliders (see the % IN POPULATION monitors), the higher the chance of catching a fish with that worth. For instance, the more $2-fish there are, the higher is the chance of catching a $2-fish in a random sample.  Note that the more valuable the fish, the lighter its body color. You can press CLICK SELECTION and then click in the view to "catch" a random sample, or press RANDOM SELECTION to have the choosing done for you. The computer selects randomly. You, too, can select "blindly," if you turn on the BLIND? switch.
+The analogy in the model is a lake with fish swimming around.  Each type of fish is worth a certain number of dollars (1, 2, 3, 4 or 5) [other currencies or point systems apply just as well]. The distribution of types of fish by amount-of-worth -- how many $1-fish, $2-fish, ..., or $5-fish there are in the pond --- is set by the sliders on the left. With the sliders, we can set the distribution of fish by type and, therefore, the chance of catching each type of fish. That is, the higher you have set a given slider as compared to other sliders (see the % IN POPULATION monitors), the higher the chance of catching a fish with that worth. For instance, the more $2-fish there are, the higher is the chance of catching a $2-fish in a random sample.  Note that the more valuable the fish, the lighter its body color. You can press CLICK SELECTION and then click in the view to "catch" a random sample, or press RANDOM SELECTION to have the choosing done for you. The computer selects randomly. You, too, can select "blindly," if you turn on the BLIND? switch.
 
-Note that the sampling in this model is of arrays, e.g., a 2-by-3 array of 6 squares. There are as many fish in this model as there are squares. One might expect to catch 6 fish when one samples from 6 squares. However, when the WANDER button is pressed, the fish wander randomly, and so sometimes 6 squares have more than 6 fish and sometimes they have less. You can think of each selection as a fishing net that is dipped into the lake -- the fisher doesn't know how many fish will be in the net. This feature of the model creates variation in sample size. Thus, one idea that this model explores is that even under variation in sample size, we still receive outcomes that correspond to the expected value that we calculate before taking samples.
+Note that the sampling in this model is of arrays, e.g., a 2-by-3 array of 6 squares. There are as many fish in this model as there are squares. One might expect to catch 6 fish when one samples from 6 squares. However, when the WANDER button is pressed, the fish wander randomly, and so sometimes 6 squares have more than 6 fish and sometimes they have less. You can think of each selection as a fishing net that is dipped into the lake --- the fisher doesn't know how many fish will be in the net. This feature of the model creates variation in sample size. Thus, one idea that this model explores is that even under variation in sample size, we still receive outcomes that correspond to the expected value that we calculate before taking samples.
 
+## PEDAGOGICAL NOTE
 
-PEDAGOGICAL NOTE
--------------
 The idea of 'expected value' is that we can formulate an educated guess of the dollar worth of the fish we catch. It's similar to asking, "How much does the average fish cost?" We need to somehow take into account both the chance of getting each type of fish and its dollar value. The computer program will do much of the calculations for us, but here's the gist of what it does:
 
 Let's say that the ratio units we set up for $1, $2, $3, $4 and $5 fish were, respectively,
-|    1 : 6 : 5 : 0 : 4.
+
+>1 : 6 : 5 : 0 : 4.
+
 The number '6,' for example, indicates our ratio setting for fish worth 2 dollars. You can immediately see that the chance of getting a $2-fish is greater than the chance of getting a $3-fish, because the chance of getting a $2-fish (6 units) has more ratio units than the $3-fish (5 units). But in order to determine precisely the chance is of getting each type of fish, we need to state the ratio units relative to each other. We need a common denominator. In this particular setting, there is a total of 16 'ratio units':
-|    1 + 6 + 5 + 0 + 4 = 16.
+
+>1 + 6 + 5 + 0 + 4 = 16.
+
 Now we can say that if we catch a fish, there is, for instance, a 4-in-16 chance that it is a $5-fish. That is a 25% chance of catching a fish that is worth exactly 5 dollars. We can also say that this relative proportion of $5-fish in the lake contributes .25 * 5, that is, $1.25, to the mean value of a single fish in the lake. Similarly, we can say there is a 5-in-16 chance of getting a $3-fish, a 6-in-16 chance of getting a $2-fish, etc. If we sum up all products of 'value' and 'probability,' we get the expected value per single fish:
 
-|  (1 * 1/16) + (2 * 6/16) + (3 * 5/16) + (4 * 0/16) + (5 * 4/16)
-|     = 48/16 = 3 dollars per fish.
+>(1 * 1/16) + (2 * 6/16) + (3 * 5/16) + (4 * 0/16) + (5 * 4/16)
+>= 48/16 = 3 dollars per fish.
 
 This tells us that if you pick any single fish under these settings, you should expect to get a value of 3 dollars.  If you were to select a sample of 6 fish, then you would expect to pocket 18 dollars (6 fish * 3 dollars-per-fish).
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 Begin by setting fish-value ratios (or just use the default settings). Click SETUP and watch the information updated in the view. Below are more features of the model that will let you change the way it looks and runs.
 
 If you change any of the sliders you will have to press SETUP for the changes to take effect.
 
-Sliders:
+### Sliders
+
 $1-FISH, $2-FISH, $3-FISH, $4-FISH, $5-FISH -- ratio-unit settings for the distribution of fish by value.  Note that the ratios are set in proportion to each other. The labels under the sliders indicate that the higher-valued fish have the lighter fish body color.
 
 HEIGHT-OF-SAMPLE -- sets the height of the sample selection.
@@ -988,14 +999,16 @@ WIDTH-OF-SAMPLE -- sets the width of the sample selection.
 
 The two previous sliders determine the selection area (width x height).
 
-Switches:
+### Switches
+
 SETUP-APART? -- when set to 'On,' and the SETUP button is pressed, the fish populations group by value, wait 3 seconds, and then swim to a random locations in the display.
 
 BLIND? -- if 'On,' you will only see the fish you caught in the currently-selected sample; if 'Off,' you will always see all of the fish.
 
 SHOW-VAL? -- when set to 'On,' selected fish display their monetary value (worth).
 
-Buttons:
+### Buttons
+
 SETUP -- initializes variables, re-colors the fish, and resets monitors and graphs.
 
 CLICK SELECTION -- waits for the user to select an area in the pool, counts up the total number of fish in that area as well as their values, calculates, and graphs totals of these values.
@@ -1004,7 +1017,8 @@ RANDOM SELECTION-- randomly chooses sample areas in the pool.
 
 WANDER -- moves all fish in random directions.
 
-Monitors:
+### Monitors
+
 % IN POPULATION -- shows the percentage of each type of fish in the population. For instance, if the % IN POPULATION monitor for $3-FISH is at 50%, then half of all the fish in the lake will have a value of exactly 3 dollars.
 
 EXPECTED VALUE CALCULATION -- This monitor reports the calculation of the expected number of dollars per sample. The calculation first determines the value of the 'average fish, ' given the $-unit slider settings for the population distribution by value, and then multiplies this value by the number of fish in an average sample of size 'height * width.' Thus, 'average value' * 'sample-size' = total is the expected value of sample.
@@ -1023,16 +1037,16 @@ SQUARES -- monitors the number of squares in the selection area. The value of SQ
 
 RUNS -- monitors the number of times that the user or computer sampled from the pool.
 
-Plots:
+### Plots
+
 VALUE PER SAMPLE -- plots the number of occurrences of specific value totals in the samples.  For instance, it shows how many times your sample was worth exactly $4. It also plots the expected value (in red) and the mean value per sample (in green),
 
 NUMBER PER SAMPLE -- plots the number of fish in the samples.  It also plots the average number of fish per sample (in green) as well as the number of squares, that is, the expected average number of fish in samples (in red).
 
 MEAN VALUE OVER TIME -- plots, over time, the values of each sample (in black), as well as the expected value (in red), which does not change after Setup.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 In NetLogo, the location of a turtle in terms of the world coordinate system is determined by the location of the center of its shape. So when one selects an area in this model, a fish may be sampled even though it is not completely inside the selected area (for instance, its tail might be sticking out of that area).
 
 Fish may be unevenly distributed throughout the 'lake.'  This feature distinguishes the Expected Value Advanced model from the Expected Value model, where the elements (tiles) are evenly distributed (1 tile per patch).  The model monitors the number of fish per sample in the NUMBER PER SAMPLE plot.
@@ -1045,38 +1059,34 @@ At setup, the distribution of fish by value in the sample space is often an appr
 
 Look at the plot MEAN VALUE OVER TIME. The more samples you take, the closer the red line gets to the black line. Can you explain this?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Run the model under different setting of the switches. Does it take longer for the model to converge on the expected values when you are not working entirely randomly?
 
 Change the height and width of the selection area.  Run the experiment, looking at the MEAN VALUE OVER TIME plot. Does this plot behave differently for different height and width settings?
 
-As noted above, the relative ratios of the $1-fish, $2-fish, etc. in the lake are determined by relative values of all of the sliders on the left.  In other words, if you set the ratio units to 1 : 1 : 1 : 1 : 1, it is going to mean the same to the computer as the setting of 2 : 2 : 2 : 2 : 2 or 5 : 5 : 5 : 5 : 5.  The sliders are designed to allow an exploration of a rich range of proportions of the different fish.  Try extending the maximum value of the ratio sliders, to obtain an even richer range of proportions of fish populations.
+As noted above, the relative ratios of the $1-fish, $2-fish, etc. in the lake are determined by relative values of all of the sliders on the left.  In other words, if you set the ratio units to 1 : 1 : 1 : 1 : 1, it is going to mean the same to the computer as the setting of 2 : 2 : 2 : 2 : 2 or 5 : 5 : 5 : 5 : 5.  The sliders are designed to allow an exploration of a rich range of proportions of the different fish.  Try extending the maximum value of the ratio sliders, to obtain an even richer range of proportions of fish populations.  
 In the Code tab, go to the 'setup-misc-globals' procedure and change the color value assigned to the 'c-color' local variable.  This will change the fish base color.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
-----------------
-Currently, samples wrap around the view. Edit the code in the 'select-area' procedure so the selection does not wrap around.  One way to go about this may be to shift the selected area. For instance, if the user clicks near the right side of the window, a procedure could translate the location of the mouse-click as many patches to the left as necessary.
+Currently, samples wrap around the view. Edit the code in the `select-area` procedure so the selection does not wrap around.  One way to go about this may be to shift the selected area. For instance, if the user clicks near the right side of the window, a procedure could translate the location of the mouse-click as many patches to the left as necessary.
 
 Add another ratio-unit slider, either for 0 value or beyond 5. It could also be a decimal value between 1 and 5, such as 1.7. It could even be a 'negative value,' which could be interpreted as an added expense, like catching a whale that breaks your fishing rod.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
------------------
 This utilizes the mouse-clicking capabilities of NetLogo.  Note that in order to use the mouse-clicking functionality a forever button must be running, so that there are active procedures to "catch" your clicks.
 
+## RELATED MODELS
 
-RELATED MODELS
---------------
 This model is considered more advanced than Expected Value. Both models utilize the idea of 'expected value,' but Expected Value Advanced supplements this with variation in sample size.
 
 The SETUP-APART? functionality arranges the raw data (the fish themselves) in "histograms" as in 9-Block Stalagmite. Also, the BLIND? functionality produces an effect that is similar to that in HubNet SAMPLER, where the population is hidden and only the sample is visible.
 
-
 ## CREDITS AND REFERENCES
-This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. . For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
+
+This model is a part of the ProbLab curriculum. The ProbLab Curriculum is currently under development at Northwestern's Center for Connected Learning and Computer-Based Modeling. For more information about the ProbLab Curriculum please refer to http://ccl.northwestern.edu/curriculum/ProbLab/.
 @#$#@#$#@
 default
 true
@@ -1372,7 +1382,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 setup
 repeat 75 [ random-select ]

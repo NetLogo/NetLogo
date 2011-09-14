@@ -3,6 +3,7 @@ package org.nlogo.agent;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Vect;
 import org.nlogo.api.ValueConstraint;
 
@@ -176,7 +177,7 @@ public strictfp class Observer
 
   ///
 
-  Perspective perspective = Perspective.OBSERVE;
+  Perspective perspective = PerspectiveJ.OBSERVE();
 
   public Perspective perspective() {
     return perspective;
@@ -217,14 +218,14 @@ public strictfp class Observer
   }
 
   public double followOffsetX() {
-    if (perspective == Perspective.FOLLOW || perspective == Perspective.RIDE) {
+    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
       return _oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
     }
     return 0.0;
   }
 
   public double followOffsetY() {
-    if (perspective == Perspective.FOLLOW || perspective == Perspective.RIDE) {
+    if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
       return _oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
     }
     return 0.0;
@@ -312,7 +313,7 @@ public strictfp class Observer
   public double dx() {
     double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
         StrictMath.sin(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
@@ -321,7 +322,7 @@ public strictfp class Observer
   public double dy() {
     double value = StrictMath.cos(StrictMath.toRadians(pitch)) *
         StrictMath.cos(StrictMath.toRadians(heading));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
@@ -329,7 +330,7 @@ public strictfp class Observer
 
   public double dz() {
     double value = StrictMath.sin(StrictMath.toRadians(pitch));
-    if (StrictMath.abs(value) < org.nlogo.api.World.INFINITESIMAL) {
+    if (StrictMath.abs(value) < org.nlogo.api.Constants.Infinitesimal()) {
       value = 0;
     }
     return value;
@@ -392,9 +393,9 @@ public strictfp class Observer
   public boolean updatePosition() {
     boolean changed = false;
 
-    if (perspective == Perspective.OBSERVE) {
+    if (perspective == PerspectiveJ.OBSERVE()) {
       return false;
-    } else if (perspective == Perspective.WATCH) {
+    } else if (perspective == PerspectiveJ.WATCH()) {
       if (targetAgent.id() == -1) {
         resetPerspective();
         return true;
@@ -412,7 +413,7 @@ public strictfp class Observer
       Turtle turtle = (Turtle) targetAgent;
       oxyandzcor(turtle.xcor(), turtle.ycor(), 0);
       double newHeading = headingSmoother.follow(targetAgent);
-      if (perspective == Perspective.FOLLOW) {
+      if (perspective == PerspectiveJ.FOLLOW()) {
         changed = heading != newHeading;
         heading(newHeading);
       } else {
@@ -453,7 +454,7 @@ public strictfp class Observer
   }
 
   public void resetPerspective() {
-    setPerspective(Perspective.OBSERVE, null);
+    setPerspective(PerspectiveJ.OBSERVE(), null);
     home();
   }
 
@@ -468,12 +469,12 @@ public strictfp class Observer
   }
 
   public boolean atHome2D() {
-    return (perspective == Perspective.OBSERVE) && (_oxcor == 0) && (_oycor == 0);
+    return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0);
   }
 
   // This is a hack for now, there is prob. a better way of doing this - jrn 6/9/05
   public boolean atHome3D() {
-    return (perspective == Perspective.OBSERVE) && (_oxcor == 0) && (_oycor == 0) &&
+    return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0) &&
         (_ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
         (heading == 0) && (pitch == 90) && (roll == 0) &&
         (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
@@ -556,4 +557,9 @@ public strictfp class Observer
         rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),
         rotationPoint.z());
   }
+
+  public int alpha() {
+    return 0;
+  }
+
 }

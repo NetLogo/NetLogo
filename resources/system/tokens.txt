@@ -2,7 +2,6 @@ C __bench gui._bench
 C __change-language etc._changelanguage
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
-C __create-network-preferential etc._createnetworkpreferential
 C __delete-log-files gui._deletelogfiles
 C __done _done
 C __edit etc._edit
@@ -33,9 +32,6 @@ C __hubnet-wait-for-clients hubnet._hubnetwaitforclients
 C __hubnet-wait-for-messages hubnet._hubnetwaitformessages
 C __ignore etc._ignore
 C __inspect-with-radius gui._inspectwithradius
-C __layout-magspring etc._layoutmagspring
-C __layout-quick etc._layoutquick
-C __layout-sphere threed._layoutsphere
 C __let _let
 C __life etc._life
 C __linkcode etc._linkcode
@@ -265,7 +261,6 @@ R = _equal
 R > _greaterthan
 R >= etc._greaterorequal
 R ^ etc._pow
-R __average-path-length etc._averagepathlength
 R __boom etc._boom
 R __check-syntax etc._checksyntax
 R __dump etc._dump
@@ -274,16 +269,12 @@ R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
-R __in-network-radius etc._innetworkradius
 R __in-rectangle etc._inrect
 R __max-n-of-with-ties etc._maxnofwithties
 R __min-n-of-with-ties etc._minnofwithties
 R __monitorprecision etc._monitorprecision
 R __mouse-patch gui._mousepatch
 R __nano-time etc._nanotime
-R __network-distance etc._networkdistance
-R __network-shortest-path-links etc._networkshortestpathlinks
-R __network-shortest-path-nodes etc._networkshortestpathnodes
 R __oheading threed._oheading
 R __opitch threed._opitch
 R __oroll threed._oroll
@@ -436,7 +427,7 @@ R no-patches etc._nopatches
 R no-turtles etc._noturtles
 R not _not
 R of _of
-R one-of etc._oneof
+R one-of _oneof
 R or _or
 R other _other
 R other-end etc._otherend

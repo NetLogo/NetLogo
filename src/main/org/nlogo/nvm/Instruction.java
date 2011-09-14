@@ -10,9 +10,9 @@ import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.I18NJava;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.util.Thunk;
 
 public abstract strictfp class Instruction
@@ -65,7 +65,7 @@ public abstract strictfp class Instruction
   public String agentClassString = "OTPL";
   public int agentBits = 0;
 
-  // for primitives which use TYPE_REFERENCE
+  // for primitives which use ReferenceType
   public Reference reference = null;
 
   /// store frequently used stuff where it's fast to get at
@@ -253,7 +253,7 @@ public abstract strictfp class Instruction
       throws EngineException {
     if (!world.linkManager.checkBreededCompatibility(breed == world.links())) {
       throw new EngineException
-          (context, this, I18N.errors().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
+          (context, this, I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
     }
   }
 
@@ -361,11 +361,11 @@ public abstract strictfp class Instruction
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
       if (agent.id == -1) {
         throw new EngineException(context, this,
-          I18NJava.errors().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
       return agent;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_AGENT, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentType(), obj);
     }
   }
 
@@ -374,7 +374,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.AgentSet) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_AGENTSET, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentsetType(), obj);
     }
   }
 
@@ -385,11 +385,11 @@ public abstract strictfp class Instruction
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
       if (set.type() != type) {
         throw new ArgumentTypeException(context, this, argIndex,
-            Syntax.getAgentSetMask(type), obj);
+            getAgentSetMask(type), obj);
       }
       return set;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_AGENTSET, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.AgentsetType(), obj);
     }
   }
 
@@ -398,7 +398,7 @@ public abstract strictfp class Instruction
     try {
       return (Boolean) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_BOOLEAN, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.BooleanType(), obj);
     }
   }
 
@@ -407,7 +407,7 @@ public abstract strictfp class Instruction
     try {
       return ((Boolean) obj).booleanValue();
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_BOOLEAN, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.BooleanType(), obj);
     }
   }
 
@@ -424,7 +424,7 @@ public abstract strictfp class Instruction
     try {
       return (LogoList) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_LIST, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.ListType(), obj);
     }
   }
 
@@ -433,7 +433,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Patch) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_PATCH, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.PatchType(), obj);
     }
   }
 
@@ -442,7 +442,7 @@ public abstract strictfp class Instruction
     try {
       return (String) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_STRING, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.StringType(), obj);
     }
   }
 
@@ -452,7 +452,7 @@ public abstract strictfp class Instruction
     try {
       return (Double) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_NUMBER, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.NumberType(), obj);
     }
   }
 
@@ -461,7 +461,7 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Turtle) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_TURTLE, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.TurtleType(), obj);
     }
   }
 
@@ -470,26 +470,39 @@ public abstract strictfp class Instruction
     try {
       return (org.nlogo.agent.Link) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_LINK, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.LinkType(), obj);
     }
   }
 
-  public ReporterLambda argEvalReporterLambda(Context context, int argIndex) throws LogoException {
+  public ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (ReporterLambda) obj;
+      return (ReporterTask) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_REPORTER_LAMBDA, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.ReporterTaskType(), obj);
     }
   }
 
-  public CommandLambda argEvalCommandLambda(Context context, int argIndex) throws LogoException {
+  public CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
-      return (CommandLambda) obj;
+      return (CommandTask) obj;
     } catch (ClassCastException ex) {
-      throw new ArgumentTypeException(context, this, argIndex, Syntax.TYPE_COMMAND_LAMBDA, obj);
+      throw new ArgumentTypeException(context, this, argIndex, Syntax.CommandTaskType(), obj);
     }
+  }
+
+  private static int getAgentSetMask(Class<? extends Agent> type) {
+    if (org.nlogo.api.Turtle.class.isAssignableFrom(type)) {
+      return Syntax.TurtlesetType();
+    }
+    if (org.nlogo.api.Patch.class.isAssignableFrom(type)) {
+      return Syntax.PatchsetType();
+    }
+    if (org.nlogo.api.Link.class.isAssignableFrom(type)) {
+      return Syntax.LinksetType();
+    }
+    return Syntax.AgentsetType();
   }
 
   public void copyFieldsFrom(Instruction sourceInstr) {

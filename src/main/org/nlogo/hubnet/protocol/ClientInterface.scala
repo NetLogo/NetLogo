@@ -33,5 +33,3 @@ case class ClientInterface(widgets: Iterable[WidgetSpec],
     }.toMap
   }
 }
-
-

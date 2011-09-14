@@ -445,6 +445,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 7
@@ -461,6 +462,7 @@ NIL
 NIL
 NIL
 NIL
+0
 
 BUTTON
 7
@@ -477,6 +479,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 95
@@ -680,6 +683,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 8
@@ -734,47 +738,45 @@ piston-position
 11
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 This model is one in a series of GasLab models. They use the same basic rules for simulating the behavior of gases.  Each model integrates different features in order to highlight different aspects of gas behavior.
 
-The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide - either with other particles or with any other objects such as walls.
+The basic principle of the models is that gas particles are assumed to have two elementary actions: they move and they collide --- either with other particles or with any other objects such as walls.
 
 This model simulates the behavior of gas particles in a piston, or a container with a changing volume.  The volume in which the gas is contained can be changed by moving the piston in and out.  "Isothermal" means that the temperature of the gas is not changed by moving the piston.
 
 This model is part of the Connected Mathematics "Making Sense of Complex Phenomena" Modeling Project.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
-The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed -- blue for slow, green for medium, and red for high speeds.
+The particles are modeled as hard balls with no internal energy except that which is due to their motion.  Collisions between particles are elastic.  Particles are colored according to speed --- blue for slow, green for medium, and red for high speeds.
 
 Coloring of the particles is with respect to one speed (10).  Particles with a speed less than 5 are blue, ones that are more than 15 are red, while all in those in-between are green.
 
-Particles behave according to the following rules:
-1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.
-2. Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches).
-3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.
-4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.
-5. Each turtle is assigned its new velocity, energy, and heading.
+Particles behave according to the following rules:  
+1. A particle moves in a straight line without changing its speed, unless it collides with another particle or bounces off the wall.  
+2. Two particles "collide" if they find themselves on the same patch (NetLogo's View is composed of a grid of small squares called patches).  
+3. A random axis is chosen, as if they are two balls that hit each other and this axis is the line connecting their centers.  
+4. They exchange momentum and energy along that axis, according to the conservation of momentum and energy.  This calculation is done in the center of mass system.  
+5. Each turtle is assigned its new velocity, energy, and heading.  
 6. If a turtle finds itself on or very close to a wall of the container, it "bounces" -- that is, reflects its direction and keeps its same speed.
 
 Pressure is calculated as the force per unit area (or length in this two-dimensional model).  Pressure is calculated by adding up the momentum transferred to the walls of the box by the particles when they bounce off and divided by the length of the wall, which they hit.
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
-Initial settings:
-- NUMBER-OF-PARTICLES: number of particles
-- INIT-PARTICLE-SPEED: initial speed of the particles
-- PARTICLE-MASS: initial mass of the molecules
-- BOX-WIDTH: width of the container
+Initial settings:  
+- NUMBER-OF-PARTICLES: number of particles  
+- INIT-PARTICLE-SPEED: initial speed of the particles  
+- PARTICLE-MASS: initial mass of the molecules  
+- BOX-WIDTH: width of the container  
 - BOX-HEIGHT: height of the container
 
-Other settings:
+Other settings:  
 - COLLIDE?: Turns collisions between particles on and off.  It can be changed in the middle of the run.
 
-The SETUP button will set the initial conditions.
+The SETUP button will set the initial conditions.  
 The GO button will run the simulation.
 
 Pushing the MOVE-PISTON button allows you to reposition the piston by clicking on the view with the mouse, hence changing the volume. When this button is pressed, the model stops.  Once the reposition is done, push the GO button to continue.
@@ -783,23 +785,22 @@ The intention in this model is for the user to quickly pull the piston back thus
 
 The physically accurate version of piston compression is shown in the "Adiabatic Piston" model.
 
-Monitors:
-- PISTON POSITION: position of the piston with respect to the x-axis
-- VOLUME: volume (or area) of the piston
-- PRESSURE
-- AVERAGE SPEED: average speed of the particles
+Monitors:  
+- PISTON POSITION: position of the piston with respect to the x-axis  
+- VOLUME: volume (or area) of the piston  
+- PRESSURE  
+- AVERAGE SPEED: average speed of the particles  
 - AVERAGE ENERGY: average energy of the particles, calculated as m*(v^2)/2.
 
-Plots:
-- PRESSURE: pressure in the piston over time.
-- VOLUME: volume of the piston vs time.
-- WALL HITS PER PARTICLE: the number of wall hits averaged for the particles during each time unit
-- SPEED HISTOGRAM: particles' speed distribution
+Plots:  
+- PRESSURE: pressure in the piston over time.  
+- VOLUME: volume of the piston vs time.  
+- WALL HITS PER PARTICLE: the number of wall hits averaged for the particles during each time unit  
+- SPEED HISTOGRAM: particles' speed distribution  
 - ENERGY HISTOGRAM: distribution of energies of all the particles, calculated as m*(v^2)/2.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 How does the pressure change as you change the volume of the box by moving the piston?  Compare the two plots of volume and pressure.
 
 Measure changes in pressure and volume. Is there a clear quantitative relationship? Boyle's Law describes the relationship between pressure and volume, when all else is kept constant.
@@ -810,31 +811,27 @@ What shapes do the energy and velocity histograms reach after a while?  Why aren
 
 Change different kinds of settings and observe the number of wall hits per particle.  What causes this number to change?  What changes do not affect this number?  Can you connect these relationships with those between the number of particles and pressure?  Volume and pressure?
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 How would you calculate pressure?  How does this code do it?
 
 Change the number, mass, and initial velocity of the molecules.  Does this affect the pressure?   Why? Do the results make intuitive sense?  Look at the extremes:  very few or very many molecules, high or low volumes.
 
-Figure out how many molecules there REALLY are in a box this size -- say a 10-cm cube.  Look up or calculate the REAL mass and speed of a typical molecule.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?
+Figure out how many molecules there *really* are in a box this size --- say a 10-cm cube.  Look up or calculate the *real* mass and speed of a typical molecule.  When you compare those numbers to the ones in the model, are you surprised this model works as well as it does?
 
 Observe the number of wall hits per particle with and without collisions.  Does this number change?  Why?
 
 If you change the number of particles in the piston: will the pressure change?  will the number of wall hits change?  Why?
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Are there other ways one might calculate pressure?
 
 When the piston is moved out, the gas is not evenly distributed for a while.  What's the pressure during this time?  Does this ever happen in the real world?   What does pressure mean when it's not the same throughout a gas?
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
 Notice how collisions are detected by the turtles and how the code guarantees that the same two particles do not collide twice.  What happens if we let the patches detect them?
-
 
 ## CREDITS AND REFERENCES
 @#$#@#$#@
@@ -1133,7 +1130,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
