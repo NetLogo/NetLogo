@@ -1,8 +1,14 @@
-// Scala 2.9 includes equivalents for this stuff under sys.process, so once we upgrade,
-// we should be able to get rid of most or all of this. - ST 4/11/11
+import sys.process._
 
 object Scripting {
 
+  // run shell command (discarding output)
+  def shellDo(cmd: String, requireZeroExitStatus: Boolean = true) {
+    val result = Seq("/bin/sh", "-c", cmd).!
+    require(!requireZeroExitStatus || result == 0,
+            "exit status " + result + ": " + cmd)
+  }
+  
   // pipe a string through a shell command
   def pipe(input: String, cmd: String): Iterator[String] = {
     val process = exec(cmd)
@@ -12,18 +18,7 @@ object Scripting {
     io.Source.fromInputStream(process.getInputStream)("UTF-8").getLines
   }
 
-  // get result code from unix shell command
-  def exitValue(cmd: String): Int = {
-    val process = exec(cmd)
-    process.waitFor()
-    process.exitValue
-  }
-
-  def shellDo(cmd: String, requireZeroExitStatus: Boolean = true) {
-    shell(cmd, requireZeroExitStatus).foreach(_ => ())
-  }
-  
-  // get iterator over lines of output from a unix shell command
+  // run shell command, get iterator over lines of output
   def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] =
     new Iterator[String] {
       val process = exec(cmd)
@@ -39,8 +34,8 @@ object Scripting {
     }
 
   // run a shell command
-  def exec(cmd: String): Process = {
-    val builder = new ProcessBuilder("/bin/sh", "-c", cmd)
+  private def exec(cmd: String): java.lang.Process = {
+    val builder = new java.lang.ProcessBuilder("/bin/sh", "-c", cmd)
     builder.redirectErrorStream(true)
     builder.start()
   }
