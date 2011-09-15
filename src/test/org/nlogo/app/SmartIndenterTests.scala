@@ -63,7 +63,7 @@ class SmartIndenterTests extends FunSuite {
     def offsetToLine(offset: Int): Int = lines.indices.find(lineToEndOffset(_) > offset)
             .getOrElse(lines.size - 1)
 
-    def lineToStartOffset(line: Int) = lines.take(line).foldLeft(0)(_ + _.length + 1)
+    def lineToStartOffset(line: Int) = lines.take(line).map(_.length + 1).sum
 
     def lineToEndOffset(line: Int) = lineToStartOffset(line) + lines(line).length
 

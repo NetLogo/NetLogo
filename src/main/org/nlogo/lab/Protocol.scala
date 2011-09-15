@@ -13,7 +13,7 @@ case class Protocol(name: String,
                     metrics: List[String],
                     valueSets: List[ValueSet])
 {
-  def countRuns = repetitions * valueSets.foldLeft(1)(_ * _.toList.size)
+  def countRuns = repetitions * valueSets.map(_.toList.size).product
   // careful, gui.ManagerDialog shows this to the user
   override def toString =
     name + " (" + countRuns + " run" + (if(countRuns != 1) "s" else "") + ")"

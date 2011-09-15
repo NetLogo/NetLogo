@@ -167,7 +167,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
             // pop off the stack into local vars, in backwards order because this is where the
             // inlined code expects to find the args.
             val paramJVMTypes = Type.getArgumentTypes(bestEvalMethod)
-            var totalLocalSlots = paramJVMTypes.map(_.getSize).foldLeft(0)(_ + _)
+            var totalLocalSlots = paramJVMTypes.map(_.getSize).sum
             for (i <- paramJVMTypes.length - 1 to 1 by -1) {
               totalLocalSlots -= paramJVMTypes(i).getSize
               nlgen.visitVarInsn(paramJVMTypes(i).getOpcode(ISTORE),

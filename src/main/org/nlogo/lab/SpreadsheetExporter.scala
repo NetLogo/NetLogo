@@ -165,7 +165,7 @@ class SpreadsheetExporter(modelFileName: String,
     def meanMeasurement(metricNumber: Int): Option[Double] = {
       val d = doubles(metricNumber)
       if(d.size < measurements.size) None
-      else Some(d.reduceLeft(_ + _) / measurements.size)
+      else Some(d.sum / measurements.size)
     }
   }
 }
