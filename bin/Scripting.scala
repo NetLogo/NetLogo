@@ -29,6 +29,7 @@ object Scripting {
   private def exec(cmd: String): ProcessBuilder = {
     // We drop down to j.l.P here in order to merge the output and error streams.  (Why?
     // I forget.  Maybe it was useful in benches.scala or something? - ST 9/14/11)
+    // This could maybe be done instead using sys.process.ProcessIO?
     val builder = new java.lang.ProcessBuilder("/bin/sh", "-c", cmd)
     builder.redirectErrorStream(true)
     builder
