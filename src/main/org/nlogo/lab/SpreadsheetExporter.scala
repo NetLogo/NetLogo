@@ -51,7 +51,7 @@ class SpreadsheetExporter(modelFileName: String,
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
         j <- 0 until (1 max protocol.metrics.length)
-        output = fn(runs(runNumber), j).map(Dump.csv.data)
+        output = fn(runs(runNumber), j).map(Dump.csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
   }
