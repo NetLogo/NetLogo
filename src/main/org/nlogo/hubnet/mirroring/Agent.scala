@@ -17,7 +17,7 @@ class Agent private (val id: Long, val tyype: AgentType) extends Serializable {
   }
 
   def toByteArray= {
-    val bos = new java.io.ByteArrayOutputStream
+    val bos = new ByteArrayOutputStream
     serialize(new DataOutputStream(bos))
     bos.toByteArray
   }

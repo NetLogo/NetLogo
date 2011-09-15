@@ -7,9 +7,9 @@ import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.agent.{Link, Turtle}
-import org.nlogo.hubnet.mirroring.{ClearDrawing, Line, LinkStamp, TurtleStamp}
-
 import java.util.concurrent.LinkedBlockingQueue
+import org.nlogo.hubnet.mirroring
+import mirroring.{AgentType, OverrideList, ClearDrawing, Line, LinkStamp, TurtleStamp}
 
 abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetInterface with ConnectionInterface {
 
@@ -148,9 +148,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   /// Individualized client views
 
   def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
-    mirroring.OverrideList.getOverrideIndex(
-      mirroring.Agent.AgentType.fromAgentClass(agentType),
-      varName) != -1
+    OverrideList.getOverrideIndex(AgentType.fromAgentClass(agentType), varName) != -1
 
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                        varName: String, overrides: Map[java.lang.Long, AnyRef]) {

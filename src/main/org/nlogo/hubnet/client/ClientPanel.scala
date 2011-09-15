@@ -44,7 +44,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def sendMouseMessage(mouseXCor: Double, mouseYCor: Double, down: Boolean) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val coords = LogoList(mouseXCor.asInstanceOf[AnyRef], mouseYCor.asInstanceOf[AnyRef])
-   sendDataAndWait(new ActivityCommand(WidgetTypes.MouseCommand, if (down) "View" else "Mouse Up", coords)) 
+   sendDataAndWait(new ActivityCommand(WidgetTypes.MouseCommand, if (down) "View" else "Mouse Up", coords))
   }
 
   def handlePlotUpdate(msg: PlotInterface) {
@@ -171,9 +171,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         // however, this is only the case in narrowcast plotting
         // plot mirroring always sends both coordinates even if
         // auto-plot is on. ev 8/18/08
-        if (p.specifiesXCor) plotWidget.plot.currentPen.get.plot(p.xcor, p.ycor)
-        // if not, we'll just let the plot use the next one.
-        else plotWidget.plot.currentPen.get.plot(p.ycor)
+        p.xcor match {
+          case Some(x) => plotWidget.plot.currentPen.get.plot(x, p.ycor)
+          case None => plotWidget.plot.currentPen.get.plot(p.ycor)
+        }
         plotWidget.makeDirty()
         plotWidget.repaintIfNeeded()
       // These instances do various plotting commands
@@ -243,7 +244,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
-    clientGUI.setChoices(clientInterface.chooserChoices(compiler)) 
+    clientGUI.setChoices(clientInterface.chooserChoices(compiler))
     viewWidget.renderer.replaceTurtleShapes(
       scala.collection.JavaConversions.seqAsJavaList(clientInterface.turtleShapes.toSeq))
     viewWidget.renderer.replaceLinkShapes(
@@ -300,7 +301,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     this.userid = userid
     this.hostip = hostip
     this.port = port
-    this.role = role 
+    this.role = role
 
     try {
       val socket = new java.net.Socket(hostip, port)

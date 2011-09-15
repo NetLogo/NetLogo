@@ -33,7 +33,7 @@ class ServerSideConnectionTests extends MockSuite {
     conn.receiveData("NetLogo 1.0")
 
     val error = "The version of the HubNet Client you are using does not " +
-                "match the version of the server.\nPlease use the HubNet Client that comes with " + Version.version
+                "match the version of the server.  Please use the HubNet Client that comes with " + Version.version
     conn.nextOutgoingMessage match {
       case LoginFailure(reason) => assert(reason === error)
       case _ => fail("expected LoginFailure")
