@@ -18,13 +18,6 @@ object Scripting {
             "exit status " + status + ": " + cmd)
   }
   
-  // pipe a string through a shell command
-  def pipe(input: String, cmd: String): Iterator[String] = {
-    val inputStream =
-      new java.io.ByteArrayInputStream(input.getBytes("UTF-8"))
-    exec(cmd).#<(inputStream).lines.iterator
-  }
-
   // run shell command, get iterator over lines of output
   def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] =
     if(requireZeroExitStatus)
