@@ -35,7 +35,7 @@ trait MultiErrorHandler {
   def anyErrors = !errors.isEmpty
   def removeAllErrors() = errors.clear()
   def error(key: Object): Exception = errors.get(key).orNull
-  def error(key: Object, e: Exception) {errors += (key -> e) }
+  def error(key: Object, e: Exception) {errors(key) = e}
 }
 
 trait SingleErrorHandler {
