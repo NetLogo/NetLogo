@@ -26,7 +26,7 @@ case class Protocol(name: String,
   def elements:SettingsIterator = {
     def combinations(sets: List[ValueSet]): SettingsIterator =
       sets match {
-        case Nil => Iterator.single(Nil)
+        case Nil => Iterator(Nil)
         case set::sets =>
           set.iterator.flatMap(v =>
             combinations(sets).map(m =>

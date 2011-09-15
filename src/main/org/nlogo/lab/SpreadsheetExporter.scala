@@ -42,17 +42,17 @@ class SpreadsheetExporter(modelFileName: String,
   override def experimentCompleted() { finish() }
   override def experimentAborted() { finish() }
   def runNumbers = runs.keySet.toList.sorted
-  def foreachRun(fn: (Run,Int) => Option[Any]) {
+  def foreachRun(fn: (Run, Int) => Option[Any]) {
     // if the experiment was aborted, the completed run numbers might not be
     // consecutive, so we have to be careful - ST 3/31/09
     val outputs =
-      for{runNumber <- runNumbers
-          // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
-          // nothing at all - ST 12/17/04, 5/6/08
-          j <- 0 until (1 max protocol.metrics.length)
-          output = fn(runs(runNumber),j) match {case Some(value) => Dump.csv.data(value)
-                                                case None => ""}}
-      yield output
+      for {
+        runNumber <- runNumbers
+        // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
+        // nothing at all - ST 12/17/04, 5/6/08
+        j <- 0 until (1 max protocol.metrics.length)
+        output = fn(runs(runNumber), j).map(Dump.csv.data)
+      } yield output
     out.println(outputs.mkString(","))
   }
   def writeSummary() {
@@ -148,24 +148,20 @@ class SpreadsheetExporter(modelFileName: String,
     def lastMeasurement(metricNumber: Int): AnyRef =
       measurements.last(metricNumber)
     def doubles(metricNumber: Int): Seq[Double] =
-      measurements.flatMap(_(metricNumber) match {
-        case d: java.lang.Double => Some(d.doubleValue)
-        case _ => None })
-    def minMeasurement(metricNumber: Int): Option[Double] = {
-      val d = doubles(metricNumber)
-      if(d.isEmpty) None
-      else Some(d.min)
-    }
-    def maxMeasurement(metricNumber: Int): Option[Double] = {
-      val d = doubles(metricNumber)
-      if(d.isEmpty) None
-      else Some(d.max)
-    }
+      measurements.map(_(metricNumber)).collect{
+        case d: java.lang.Double => d.doubleValue}
+    def minMeasurement(metricNumber: Int): Option[Double] =
+      Some(doubles(metricNumber))
+        .filter(_.nonEmpty)
+        .map(_.min)
+    def maxMeasurement(metricNumber: Int): Option[Double] =
+      Some(doubles(metricNumber))
+        .filter(_.nonEmpty)
+        .map(_.max)
     // includes initial measurement
-    def meanMeasurement(metricNumber: Int): Option[Double] = {
-      val d = doubles(metricNumber)
-      if(d.size < measurements.size) None
-      else Some(d.sum / measurements.size)
-    }
+    def meanMeasurement(metricNumber: Int): Option[Double] =
+      Some(doubles(metricNumber))
+        .filter(_.size == measurements.size)
+        .map(_.sum / measurements.size)
   }
 }
