@@ -996,11 +996,11 @@ ask one-of friendships [ set breed links ] ;; produces a runtime error
       Normally, a button is labeled with the code that it runs. For
       example, a button that says &quot;go&quot; on it usually contains the
       code &quot;go&quot;, which means &quot;run the go procedure&quot;.
-      (Procedures are defined in the Code tab; see below.) But you
-      can also edit a button and enter a &quot;display name&quot; for the
-      button, which is a text that appears on the button instead of the
-      code. You might use this feature if you think the actual code would
-      be confusing to your users.
+      (Procedures are defined in the Code tab; see below.) But you can also
+      edit a button and enter a &quot;display name&quot; for the button,
+      which is a text that appears on the button instead of the code. You
+      might use this feature if you think the actual code would be
+      confusing to your users.
     <p>
       When you put code in a button, you must also specify which agents you
       want to run that code. You can choose to have the observer run the
@@ -1353,8 +1353,8 @@ show (list)
       agentset of links, the result is a list of links, sorted in ascending
       order first by <a href="dictionary.html#end1"><tt>end1</tt></a> then
       by <a href="dictionary.html#end2"><tt>end2</tt></a> any remaining
-      ties are resolved by breed in the order they are declared in the
-      Code tab.
+      ties are resolved by breed in the order they are declared in the Code
+      tab.
     <p>
       If you need descending order instead, you can combine <a href=
       "dictionary.html#reverse"><tt>reverse</tt></a> with <a href=
@@ -2067,8 +2067,8 @@ end</code>
     <p>
       If you want to plot individual points instead of lines, or you want
       to draw bars instead of lines or points, you need to change the plot
-      pen's &quot;mode&quot;. Three modes are available: line, bar,
-      and point. Line is the default mode.
+      pen's &quot;mode&quot;. Three modes are available: line, bar, and
+      point. Line is the default mode.
     <p>
       Normally, you change a pen's mode by editing the plot. This
       changes the pen's default mode. It's also possible to change
@@ -2162,10 +2162,10 @@ end</code>
       You can show the legend of a plot by selecting the &quot;Show
       legend&quot; checkbox in the edit dialog. If you don't want a
       particular pen to show up in the legend you can uncheck the
-      &quot;Show in Legend&quot; checkbox for that pen also in the
-      advanced plot pen settings (the advanced plot pen settings can be
-      opened by clicking the pencil button for that pen in the plot pens
-      table in the plot edit dialog).
+      &quot;Show in Legend&quot; checkbox for that pen also in the advanced
+      plot pen settings (the advanced plot pen settings can be opened by
+      clicking the pencil button for that pen in the plot pens table in the
+      plot edit dialog).
     <h4>
       Temporary plot pens
     </h4>
@@ -2174,8 +2174,8 @@ end</code>
       have more complex needs; they may need to have the number of pens
       vary depending on conditions. In such cases, you can make
       &quot;temporary&quot; plot pens from code and then plot with them.
-      These pens are called &quot;temporary&quot; because they vanish
-      when the plot is cleared (by the <code>clear-plot</code>,
+      These pens are called &quot;temporary&quot; because they vanish when
+      the plot is cleared (by the <code>clear-plot</code>,
       <code>clear-all-plots</code>, or <code>clear-all</code> commands).
     <p>
       To create a temporary plot pen, use the
@@ -3050,18 +3050,16 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
     <p class="screenshot">
       <img alt="screen shot" src="images/tutte-layout.gif">
     <p>
-      <a href="dictionary.html#layout-spring"><tt>layout-spring</tt></a>
-      is useful for many kinds of networks. The
-      drawback is that is relatively slow since  it takes many
-      iterations to converge. In this layout the links act as springs that
-      pull the nodes they connect toward each other and the nodes repel
-      each other. The strength of
-      the forces is controlled by inputs to the primitives. These
-      inputs will always have a value between 0 and 1; keep in mind that
-      very small changes can still affect the appearance of the network.
-      The springs also have a length (in patch units), however, because of
-      all the forces involved the nodes will not end up exactly that
-      distance from each other.
+      <a href="dictionary.html#layout-spring"><tt>layout-spring</tt></a> is
+      useful for many kinds of networks. The drawback is that is relatively
+      slow since it takes many iterations to converge. In this layout the
+      links act as springs that pull the nodes they connect toward each
+      other and the nodes repel each other. The strength of the forces is
+      controlled by inputs to the primitives. These inputs will always have
+      a value between 0 and 1; keep in mind that very small changes can
+      still affect the appearance of the network. The springs also have a
+      length (in patch units), however, because of all the forces involved
+      the nodes will not end up exactly that distance from each other.
     <blockquote>
       <p>
         <b>Code Examples:</b>Network Example, Network Import Example, Giant
@@ -3386,9 +3384,9 @@ while [any? turtles with [steps &gt; 0]] [
       menu will appear in the toolbar. From the includes menu you can
       select from the files included in this model.
     <p>
-      When you open included files they appear in additional 
-      tabs. See the <a href="interface.html#includes">Interface Guide</a>
-      for more details.
+      When you open included files they appear in additional tabs. See the
+      <a href="interface.html#includes">Interface Guide</a> for more
+      details.
     <p>
       You can have anything in external source files (<tt>.nls</tt>) that
       you would normally put in the Code tab: <a href=
@@ -3399,8 +3397,8 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#breeds-own"><tt>breeds-own</tt></a>, procedure
       definitions, etc. Note though that these declarations all share the
       same namespace. That is, if you declare a global <tt>my-global</tt>
-      in the Code tab you cannot declare a global (or anything else)
-      with the name <tt>my-global</tt> in any file that is included in the
+      in the Code tab you cannot declare a global (or anything else) with
+      the name <tt>my-global</tt> in any file that is included in the
       model. <tt>my-global</tt> will be accessible from all the included
       files. The same would be true if <tt>my-global</tt> were declared in
       one of the included files.
@@ -3411,8 +3409,8 @@ while [any? turtles with [steps &gt; 0]] [
       Colors
     </h3>
     <p>
-      In the Code tab and elsewhere in the NetLogo user interface,
-      program code is color-coded by the following scheme:
+      In the Code tab and elsewhere in the NetLogo user interface, program
+      code is color-coded by the following scheme:
     <ul>
       <li>Keywords are green
       <li>Constants are orange
@@ -3577,8 +3575,8 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#or"><tt>or</tt></a> reporters are special forms, not
       ordinary functions, and they &quot;short circuit&quot;, that is, they
       only evaluate their second input if necessary.
-      <li>Procedures can only be defined in the Code tab, not
-      interactively in the Command Center.
+      <li>Procedures can only be defined in the Code tab, not interactively
+      in the Command Center.
       <li>Reporter procedures, that is, procedures that &quot;report&quot;
       (return) a value, must be defined with <a href=
       "dictionary.html#to-report"><tt>to-report</tt></a> instead of

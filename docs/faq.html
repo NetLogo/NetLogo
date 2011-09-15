@@ -240,8 +240,7 @@
         ticks?</b></a>
       <li>
         <a href="#bsglobals"><b>I'm varying a global variable I
-        declared in the Code tab, but it doesn't work.
-        Why?</b></a>
+        declared in the Code tab, but it doesn't work. Why?</b></a>
       <li>
         <a href="#columns"><b>Why are some of my results cut off in
         Excel?</b></a>
@@ -485,14 +484,16 @@
     <h3>
       <a name="ipad" id="ipad"></a>Can I run NetLogo on my iPad or iPhone?
     </h3>
-    <p>No.  It's because NetLogo
-       is based on Java, which Apple doesn't support (or even allow!)
-       on iOS.  Hopefully Apple will change their minds on this someday.
-    <p>We are seeking funding for an alternate implementation on a
-       JavaScript/HTML5 base.  It would work on a variety of tablets
-       and phones.  But the many man-years of development
-       effort that have gone into the Java version can't cheaply or
-       easily be replicated on another platform.
+    <p>
+      No. It's because NetLogo is based on Java, which Apple
+      doesn't support (or even allow!) on iOS. Hopefully Apple will
+      change their minds on this someday.
+    <p>
+      We are seeking funding for an alternate implementation on a
+      JavaScript/HTML5 base. It would work on a variety of tablets and
+      phones. But the many man-years of development effort that have gone
+      into the Java version can't cheaply or easily be replicated on
+      another platform.
     <h2>
       Downloading
     </h2>
@@ -577,16 +578,16 @@ NetLogo@@@VERSION@@@Installer.exe -q
       memory allocation.
     <p>
       If you are using Firefox 4 on Mac OS X, try updating Java through
-      Software Update, and if that doesn't help, try a different browser
-      such as Safari.  (Why? There are two different Java applet browser plugins Mac OS X,
-      known as &quot;plugin1&quot; and &quot;plugin2&quot;.  Safari uses plugin1 by
-      default, Firefox 4 uses plugin2.  plugin1 works with NetLogo,
-      plugin2 doesn't.  Plugin1 is considered legacy; Oracle and Apple
-      are now only improving plugin2.  In a future version of Mac OS X,
-      only plugin2 will be available.  Unfortunately, plugin2 is not
-      in very good shape yet on Mac OS X.  But Apple seems to be
-      improving it with every Java update that
-      comes through Software Update.)
+      Software Update, and if that doesn't help, try a different
+      browser such as Safari. (Why? There are two different Java applet
+      browser plugins Mac OS X, known as &quot;plugin1&quot; and
+      &quot;plugin2&quot;. Safari uses plugin1 by default, Firefox 4 uses
+      plugin2. plugin1 works with NetLogo, plugin2 doesn't. Plugin1 is
+      considered legacy; Oracle and Apple are now only improving plugin2.
+      In a future version of Mac OS X, only plugin2 will be available.
+      Unfortunately, plugin2 is not in very good shape yet on Mac OS X. But
+      Apple seems to be improving it with every Java update that comes
+      through Software Update.)
     <h3>
       <a name="appletmaxheap" id="appletmaxheap"></a>When running my model
       as an applet, I get the following error: java.lang.OutOfMemoryError:
@@ -692,11 +693,10 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       We recommend Sun's Java runtime when using NetLogo on Linux.
     <p>
-      In theory, any Java 5 or later runtime will run NetLogo. In
-      practice, some Java implementations aren't high enough
-      quality. GNU libgcj does not work. Very recent versions of
-      OpenJDK (1.6.0.0-22.b22 or newer) may work; older
-      ones don't.
+      In theory, any Java 5 or later runtime will run NetLogo. In practice,
+      some Java implementations aren't high enough quality. GNU libgcj
+      does not work. Very recent versions of OpenJDK (1.6.0.0-22.b22 or
+      newer) may work; older ones don't.
     <p>
       Ubuntu users should consult <a href=
       "http://help.ubuntu.com/community/Java">http://help.ubuntu.com/community/Java</a>.
@@ -1169,8 +1169,8 @@ if is-turtle? turtle 0 [ ... ]
       singly-linked lists and therefore these operations took linear time.
       The data structure underlying NetLogo's lists now is the
       immutable Vector class from the Scala 2.8 collections library, which
-      uses 32-wide hash array mapped tries, as developed by Tiark Rompf, based
-      in part on work by Phil Bagwell and Rich Hickey.
+      uses 32-wide hash array mapped tries, as developed by Tiark Rompf,
+      based in part on work by Phil Bagwell and Rich Hickey.
     <p>
       If you are certain you want to use raw, mutable JVM arrays in your
       model, they are provided by the array extension. See the Arrays &amp;
@@ -1265,8 +1265,7 @@ repeat 10 [ go ]
       one experiment step equal 10 ticks.
     <h3>
       <a name="bsglobals" id="bsglobals"></a>I'm varying a global
-      variable I declared in the Code tab, but it doesn't work.
-      Why?
+      variable I declared in the Code tab, but it doesn't work. Why?
     </h3>
     <p>
       It's probably because your setup commands or setup procedure are
