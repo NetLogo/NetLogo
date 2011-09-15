@@ -253,8 +253,9 @@ class ConnectionManager(val connection: ConnectionInterface,
   private def turtleShapes =  world.turtleShapeList.getShapes.asScala.toList
   private def linkShapes = world.linkShapeList.getShapes.asScala.toList
 
-  private def createClientInterfaceSpec =
-    new ClientInterface(connection.getClientInterface.toList, turtleShapes, linkShapes)
+  private def createClientInterfaceSpec = {
+    new ClientInterface(connection.getClientInterface, turtleShapes, linkShapes)
+  }
 
   /**
    * Enqueues a message from the client to the manager.
