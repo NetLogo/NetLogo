@@ -47,8 +47,6 @@ object Scripting {
     io.Source.fromFile(name).mkString
 
   // get iterator over lines in a text file
-  def read: Iterator[String] =
-    io.Source.fromInputStream(System.in).getLines
   def read(name: String): Iterator[String] =
     io.Source.fromFile(name).getLines
 
