@@ -22,8 +22,8 @@ case class Protocol(name: String,
   // we're done with it, instead of them all being held in memory until the end of the experiment.
   // Does it really matter? Probably not.  Do I actually *know* that the following code lets us
   // iterate through the combinations without holding them all in memory?  No. - ST 5/1/08)
-  type SettingsIterator = Iterator[List[Pair[String,Any]]]
-  def elements:SettingsIterator = {
+  type SettingsIterator = Iterator[List[Pair[String, Any]]]
+  def elements: SettingsIterator = {
     def combinations(sets: List[ValueSet]): SettingsIterator =
       sets match {
         case Nil => Iterator(Nil)
