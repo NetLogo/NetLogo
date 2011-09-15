@@ -9,27 +9,18 @@
       GIS Extension
     </h1>
     <p>
-      This extension provides the ability to load vector GIS data (points,
-      lines, and polygons), and raster GIS data (grids) into NetLogo. The
-      extension supports vector data in the form of ESRI shapefiles. The
+      This extension adds GIS (Geographic Information Systems) support
+      to NetLogo.  It provides the ability to load vector GIS data (points,
+      lines, and polygons), and raster GIS data (grids) into your model.
+     <p>The extension supports vector data in the form of ESRI shapefiles. The
       shapefile (.shp) format is the most common format for storing and
       exchanging vector GIS data. The extension supports raster data in the
-      form of ESRI ascii Grid files. The ascii grid file (.asc or .grd) is
+      form of ESRI ASCII Grid files. The ASCII grid file (.asc or .grd) is
       not as common as the shapefile, but is supported as an interchange
       format by most GIS platforms.
-    <p>
-      We would love to hear your suggestions on how to improve the GIS
-      extension -- or just about what you're using it for. Please send
-      all correspondence to Eric Russell and the NetLogo team at <a href=
-      "mailto:ccl-gis@northwestern.edu">ccl-gis@northwestern.edu</a>.
     <h2>
-      How to use
+      How to use it
     </h2>
-    <p>
-      See the included code example GIS General Examples for general
-      examples of how to use the extension, or the code example GIS
-      Gradient Example for a more advanced example of raster dataset
-      analysis.
     <p>
       In general, you first define a transformation between GIS data space
       and NetLogo space, then load datasets and perform various operations
@@ -48,7 +39,7 @@
       projection, regardless of what that projection is.
     <p>
       Once the coordinate system is defined, you can load datasets using
-      the <a href="#gis:load-dataset">gis:load-dataset</a> primitive. This
+      <a href="#gis:load-dataset">gis:load-dataset</a>. This
       primitive reports either a VectorDataset or a RasterDataset,
       depending on what type of file you pass it.
     <p>
@@ -86,11 +77,19 @@
       re-sampling a raster to a different resolution. You can also apply a
       raster to a given patch variable, and convolve a raster using an
       arbitrary convolution matrix.
+      <blockquote>
+      <p>
+        <b>Code Example:</b> GIS General Examples has general
+      examples of how to use the extension
+      <p>
+        <b>Code Example:</b> GIS Gradient Example is a more advanced
+      example of raster dataset analysis.
+      </blockquote>
     <h2>
       Known issues
     </h2>
     <p>
-      The values of type RasterDataset, VectorDataset, VectorFeature, and
+      Values of type RasterDataset, VectorDataset, VectorFeature, and
       Vertex are not handled properly by <tt>export-world</tt> and
       <tt>import-world</tt>. To save datasets, you must use the
       <tt>gis:store-dataset</tt> primitive.
@@ -99,6 +98,27 @@
       &quot;shell&quot; polygons from negative-area &quot;hole&quot;
       polygons, or to determine which holes are associated with which
       shells.
+    <h2>
+      Credits
+    </h2>
+    <p>
+      The primary developer of the GIS extension was Eric Russell.
+    <p>
+      The GIS extension makes use of several open-source software
+      libraries.  For copyright and license information on those, see the
+      <a href="copyright.html">copyright</a> section of the manual.
+      The extension also contains elements borrowed from <a href=
+      "http://www.myworldgis.org">My World GIS</a>.
+    <p>
+      This documentation and the example NetLogo models are in the public
+      domain.  The GIS extension itself is free and open source software.
+      See the README.md file
+      in the extension/gis directory for details.
+    <p>
+      We would love to hear your suggestions on how to improve the GIS
+      extension -- or just about what you're using it for. Please send
+      all correspondence to Eric Russell and the NetLogo team at <a href=
+      "mailto:ccl-gis@northwestern.edu">ccl-gis@northwestern.edu</a>.
     <h2>
       GIS primitives
     </h2>
@@ -199,7 +219,7 @@
         The <i>gis-envelope</i> and <i>netlogo-envelope</i> parameters must
         each be four-element lists consisting of:
       <pre>
-        [ minimum-x maximum-x minimum-y maximum-y ]
+        [minimum-x maximum-x minimum-y maximum-y]
       
 </pre>
       <p>
@@ -212,7 +232,7 @@
         (latitude and longitude) space in degrees to NetLogo world space,
         regardless of the current dimensions of the NetLogo world:
       <pre>
-        (list -180 180 -90 90 )
+        (list -180 180 -90 90)
         (list min-pxcor max-pxcor min-pycor max-pycor)
       
 </pre>
@@ -321,7 +341,7 @@
         transformed into GIS space. An envelope consists of a four-element
         list of the form:
       <pre>
-        [ minimum-x maximum-x minimum-y maximum-y ]
+        [minimum-x maximum-x minimum-y maximum-y]
       
 </pre>
     </div>
@@ -338,7 +358,7 @@
         RasterDataset, a VectorDataset, or a VectorFeature. An envelope
         consists of a four-element list of the form:
       <pre>
-        [ minimum-x maximum-x minimum-y maximum-y ]
+        [minimum-x maximum-x minimum-y maximum-y]
       
 </pre>
     </div>
@@ -357,7 +377,7 @@
         given envelopes. An envelope consists of a four-element list of the
         form
       <pre>
-        [ minimum-x maximum-x minimum-y maximum-y ]
+        [minimum-x maximum-x minimum-y maximum-y]
       
 </pre>
       <p>
@@ -490,9 +510,9 @@
         <li>&quot;<b>.shp</b>&quot; (ESRI shapefile): contains vector data,
         consisting of points, lines, or polygons. When the target file is a
         shapefile, <tt>load-dataset</tt> reports a VectorDataset.
-        <li>&quot;<b>.asc</b>&quot; or &quot;<b>.grd</b>&quot; (ESRI ascii
+        <li>&quot;<b>.asc</b>&quot; or &quot;<b>.grd</b>&quot; (ESRI ASCII
         grid): contains raster data, consisting of a grid of values. When
-        the target file is an ascii grid file, <tt>load-dataset</tt>
+        the target file is an ASCII grid file, <tt>load-dataset</tt>
         reports a RasterDataset.
         </ul>
     </div>
@@ -512,7 +532,7 @@
         home directory if the current model hasn't been saved yet.
       <p>
         Currently, this primitive only works for RasterDatasets, and it can
-        only save those datasets as ESRI ascii grid files.
+        only save those datasets as ESRI ASCII grid files.
       </div>
     <div class="dict_entry">
       <h3>
@@ -1421,7 +1441,7 @@
         location may be any of the following:
       <ul>
         <li>A list of length 2, which is taken to represent a point in
-        netlogo space (<tt>[ xcor ycor ]</tt>) of the sort reported by
+        netlogo space (<tt>[xcor ycor]</tt>) of the sort reported by
         <a href="#gis:location-of">location-of</a> Vertex. The raster
         dataset is sampled at the point of that location.
         <li>A list of length 4, which is taken to represent an envelope in
@@ -1596,7 +1616,7 @@
             -1
           </table>would be specified as follows:
       <pre>
- let horizontal-gradient gis:convolve dataset 3 3 [ 1 0 -1 2 0 -2 1 0 -1 ] 1 1
+ let horizontal-gradient gis:convolve dataset 3 3 [1 0 -1 2 0 -2 1 0 -1] 1 1
  
 </pre>
     </div>
@@ -1790,35 +1810,3 @@
         World GIS.
     </div>
     -->
-    <h2>
-      Acknowledgments
-    </h2>
-    <p>
-      The GIS extension makes use of the following open-source software
-      libraries, for information on copyrights and licenses see the
-      <a href="copyright.html">copyright</a> section of the manual.
-    <ul>
-      <li>
-        <a href="http://sourceforge.net/projects/jts-topo-suite/">Java
-        Topology Suite</a>,
-      <li>
-        <a href="http://jscience.org/">JScience</a>
-      <li>
-        <a href="https://jai.dev.java.net/">Java Advanced Imaging</a>
-      <li>
-        <a href="http://commons.apache.org/codec/">Apache Commons Codec</a>
-      <li>
-        <a href="http://hc.apache.org/httpclient-3.x/">Apache Jakarta
-        HttpClient</a>
-      <li>
-        <a href="http://commons.apache.org/logging/">Apache Commons
-        Logging</a>
-      </ul>
-    <p>
-      The extension also contains elements borrowed from <a href=
-      "http://www.myworldgis.org">My World GIS</a>.
-    <p>
-      This documentation and the example NetLogo models are in the public
-      domain, but the GIS extension itself is not. See the file LICENSE.txt
-      in the extension/gis directory for details.
-

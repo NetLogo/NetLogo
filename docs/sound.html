@@ -9,15 +9,15 @@
       Sound Extension
     </h1>
     <p>
-      The Sound Extension for NetLogo provides primitives to add sound to
-      NetLogo models. It supports two ways of making sound: MIDI sounds,
-      and playback of pre-recorded sound files.
+      The Sound Extension lets NetLogo models make two kinds of sounds:
+      MIDI sounds and playback of pre-recorded sound files.
+    <p>The Java API's used are javax.sound.midi and java.applet.AudioClip.
     <h2>
       Using the Sound Extension
     </h2>
     <p>
       The sound extension comes preinstalled. To use the extension in your
-      model, add a line to the top of your Code tab:
+      model, add this at the top of your Code tab:
     <pre>
 extensions [sound]
 </pre>
@@ -35,7 +35,7 @@ extensions [sound]
       MIDI support
     </h2>
     <p>
-      The MIDI part simulates a 128-key electronic keyboard with <a href=
+      The MIDI part of the extension simulates a 128-key electronic keyboard with <a href=
       "#drumnames">47 drums</a> and <a href="#instrumentnames">128 melodic
       instruments</a>, as provided by <a href=
       "http://www.midi.org/about-midi/gm/gm1_spec.shtml">General MIDI Level

@@ -178,7 +178,7 @@ to bounce  ;; particle procedure
   ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
   ;; due to the reversing of direction of travel from the collision with the wall
 
-      set momentum-instant  (abs (sin heading * 2 * mass * speed) / delta-vertical-surface)
+      set momentum-instant  (abs (dx * 2 * mass * speed) / delta-vertical-surface)
       set momentum-difference momentum-difference + momentum-instant
  ]
 
@@ -190,7 +190,7 @@ to bounce  ;; particle procedure
   ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
   ;; due to the reversing of direction of travel from the collision with the wall
 
-    set momentum-instant  (abs (cos heading * 2 * mass * speed) / delta-horizontal-surface)
+    set momentum-instant  (abs (dy * 2 * mass * speed) / delta-horizontal-surface)
     set momentum-difference momentum-difference + momentum-instant  ]
 
 

@@ -155,15 +155,15 @@ class TestConstraintModels extends AbstractTestModels {
     val con = world.observer().variableConstraint(index).asInstanceOf[SliderConstraint]
 
     // the maximum should be 40
-    var coerced = con.coerceValue(java.lang.Double.valueOf(41)).asInstanceOf[java.lang.Double]
-    assert(java.lang.Double.valueOf(41) === coerced)
+    var coerced = con.coerceValue(Double.box(41)).asInstanceOf[java.lang.Double]
+    assert(Double.box(41) === coerced)
 
     // the minumum should be -16
-    coerced = con.coerceValue(java.lang.Double.valueOf(-17)).asInstanceOf[java.lang.Double]
-    assert(java.lang.Double.valueOf(-17) === coerced)
+    coerced = con.coerceValue(Double.box(-17)).asInstanceOf[java.lang.Double]
+    assert(Double.box(-17) === coerced)
 
     // the increment should be 1
-    coerced = con.coerceValue(java.lang.Double.valueOf(10.23123)).asInstanceOf[java.lang.Double]
-    assert(java.lang.Double.valueOf(10.23123) === coerced)
+    coerced = con.coerceValue(Double.box(10.23123)).asInstanceOf[java.lang.Double]
+    assert(Double.box(10.23123) === coerced)
   }
 }

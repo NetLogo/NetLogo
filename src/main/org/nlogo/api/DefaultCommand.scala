@@ -25,13 +25,4 @@ abstract class DefaultCommand extends Command {
    */
   override def getSwitchesBoolean = false
 
-  /**
-   * Returns a new instance of this class, created by invoking
-   * the empty constructor.
-   *
-   * @return <code>(Command) this.getClass().newInstance()</code>
-   */
-  override def newInstance(name: String) =
-    getClass.newInstance.asInstanceOf[Command]
-
 }

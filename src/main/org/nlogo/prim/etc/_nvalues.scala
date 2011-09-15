@@ -22,7 +22,7 @@ class _nvalues extends Reporter {
       throw new EngineException(
         context, this, task.missingInputs(1))
     for (i <- 0 until n)
-      result.add(task.report(context, Array(java.lang.Double.valueOf(i))))
+      result.add(task.report(context, Array[AnyRef](Double.box(i))))
     result.toLogoList
   }
 

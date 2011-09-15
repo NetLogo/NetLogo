@@ -1,13 +1,13 @@
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.api.{WidgetIO, LogoList, HubNetInterface}
+import org.nlogo.api.HubNetInterface
 import org.nlogo.api.WidgetIO.WidgetSpec
-import org.nlogo.hubnet.mirroring.{LinkStamp, TurtleStamp, Line, ClearDrawing}
+import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.agent.{Link, Turtle}
+import org.nlogo.hubnet.mirroring.{ClearDrawing, Line, LinkStamp, TurtleStamp}
 
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -147,12 +147,15 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// Individualized client views
 
-  @throws(classOf[org.nlogo.api.LogoException])
+  def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
+    mirroring.OverrideList.getOverrideIndex(
+      mirroring.Agent.AgentType.fromAgentClass(agentType),
+      varName) != -1
+
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                        varName: String, overrides: Map[java.lang.Long, AnyRef]) {
     connectionManager.sendOverrideList(client, agentType, varName, overrides)
   }
-  @throws(classOf[org.nlogo.api.LogoException])
   def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                     varName: String, overrides: Seq[java.lang.Long]) {
     connectionManager.clearOverride(client, agentType, varName, overrides)

@@ -270,8 +270,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        return binding.value();
+      if (let == binding.let) {
+        return binding.value;
       }
       rest = rest.tail();
     }
@@ -283,8 +283,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let()) {
-        binding.value_$eq(value);
+      if (let == binding.let) {
+        binding.value = value;
         return;
       }
       rest = rest.tail();
@@ -321,7 +321,12 @@ public final strictfp class Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
-    return StackTraceBuilder.getStackTrace(activation, agent, instruction, throwable);
+    if(throwable instanceof EngineException &&
+       ((EngineException) throwable).cachedRuntimeErrorMessage.isDefined()) {
+      return ((EngineException) throwable).cachedRuntimeErrorMessage.get();
+    }
+    return StackTraceBuilder.build(
+      activation, agent, instruction, scala.Option.apply(throwable));
   }
 
   /// coming up for air

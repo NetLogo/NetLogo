@@ -285,10 +285,13 @@ class _hubnetclearoverride extends Command {
       case set: AgentSet =>
         set
     }
+    if(!workspace.getHubNetManager.isOverridable(set.`type`, varName))
+      throw new EngineException(context, this,
+        "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
     val iter = set.iterator
     while(iter.hasNext)
-      overrides += java.lang.Long.valueOf(iter.next().id)
+      overrides += Long.box(iter.next().id)
     workspace.waitFor(
       new CommandRunnable() {
         override def run() {

@@ -147,7 +147,7 @@ to bounce  ;; particle procedure
   ;;  if the particle is hitting a vertical wall, only the horizontal component of the speed
   ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
   ;;  due to the reversing of direction of travel from the collision with the wall
-      set momentum-difference momentum-difference + (abs (sin heading * 2 * mass * speed) / length-vertical-surface) ]
+      set momentum-difference momentum-difference + (abs (dx * 2 * mass * speed) / length-vertical-surface) ]
   ;; if hitting top or bottom wall, reflect heading around y axis
   if (abs new-py = raw-height)
     [ set heading (180 - heading)
@@ -155,7 +155,7 @@ to bounce  ;; particle procedure
   ;;  if the particle is hitting a horizontal wall, only the vertical component of the speed
   ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
   ;;  due to the reversing of direction of travel from the collision with the wall
-      set momentum-difference momentum-difference + (abs (cos heading * 2 * mass * speed) / length-horizontal-surface)  ]
+      set momentum-difference momentum-difference + (abs (dy * 2 * mass * speed) / length-horizontal-surface)  ]
   ;;  every time a particle hits the wall, it produces a short-living "flash" so assist in visualization
   ask patch new-px new-py
   [ sprout-flashes 1 [

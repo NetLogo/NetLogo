@@ -31,7 +31,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
     }
   class StringReaderTest extends Importer.StringReader {
     def readFromString(s: String): AnyRef = {
-      try { Integer.valueOf(s) }
+      try Int.box(s.toInt)
       catch { case ex: NumberFormatException =>
         throw new Importer.StringReaderException("invalid integer")
       }
@@ -55,10 +55,10 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
   }
 
   test("Jikes115BugTest1") {
-    testGetTokenValue("5", false, java.lang.Integer.valueOf(5))
+    testGetTokenValue("5", false, Int.box(5))
   }
   test("Jikes115BugTest2") {
-    testGetTokenValue("5", true, java.lang.Integer.valueOf(5))
+    testGetTokenValue("5", true, Int.box(5))
   }
   test("Jikes115BugInvalidTest1") {
     testInvalidGetTokenValue("23fish", false)

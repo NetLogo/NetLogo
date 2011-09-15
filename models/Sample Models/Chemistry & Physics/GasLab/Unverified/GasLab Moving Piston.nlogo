@@ -107,13 +107,13 @@ to bounce
   if (abs new-px = raw-width)
     ; if so, reflect heading around x axis
     [ set heading (- heading)
-      set pressure pressure + abs (sin heading * mass * speed)
+      set pressure pressure + abs (dx * mass * speed)
     ]
   ; check: hitting piston or bottom wall?
   if (abs new-py = raw-height) or (new-py = round piston-position)
     ; if so, reflect heading around y axis
     [ set heading (180 - heading)
-      set pressure pressure + abs (cos heading * mass * speed)
+      set pressure pressure + abs (dy * mass * speed)
     ]
 end
 

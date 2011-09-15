@@ -15,11 +15,13 @@ else
 JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.25
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
-JAVA = $(JAVA_HOME)/bin/java -server -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
+JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
-LIBS = lib_managed/scala_$(SCALA_VERSION)/compile
-CLASSPATH = target/scala_$(SCALA_VERSION)/classes:target/scala_$(SCALA_VERSION)/test-classes:resources:$(SCALA_JAR):`ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+# note that LIBS has a trailing colon
+LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+CLASSES = target/scala_$(SCALA_VERSION)/classes
+CLASSPATH = $(LIBS)$(CLASSES):resources:$(SCALA_JAR)
 
 ### common prerequisites
 tmp:
@@ -72,6 +74,7 @@ EXTENSIONS=\
 	extensions/gis/gis.jar \
 	extensions/gogo/gogo.jar \
 	extensions/matrix/matrix.jar \
+	extensions/network/network.jar \
 	extensions/profiler/profiler.jar \
 	extensions/sample/sample.jar \
 	extensions/sample-scala/sample-scala.jar \
@@ -90,6 +93,7 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
 	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
 	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
+	if [ ! -d extensions/network/src ] ; then git clone http://github.com/NetLogo/Network-Extension.git extensions/network ; fi
 	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
 	if [ ! -d extensions/sample/src ] ; then git clone http://github.com/NetLogo/Sample-Extension.git extensions/sample ; fi
@@ -113,6 +117,8 @@ github:
 	cd extensions/gogo; git pull; git status
 	if [ ! -d extensions/matrix/src ] ; then git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix ; fi
 	cd extensions/matrix; git pull; git status
+	if [ ! -d extensions/network/src ] ; then git clone git@github.com:/NetLogo/Network-Extension.git extensions/network ; fi
+	cd extensions/network; git pull; git status
 	if [ ! -d extensions/profiler/src ] ; then git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler ; fi
 	cd extensions/profiler; git pull; git status
 	if [ ! -d extensions/qtj/src ] ; then git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj ; fi
@@ -137,7 +143,7 @@ tmp/scaladoc: netlogo | tmp
 	  -d tmp/scaladoc \
 	  -doc-title 'NetLogo' \
 	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(CLASSPATH) \
+	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
@@ -147,11 +153,12 @@ docs/scaladoc: netlogo
 	-rm -rf docs/scaladoc
 	-mkdir -p docs/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
+	echo "'contains wrong class package' errors here are just Scaladoc being whiny"
 	bin/scaladoc \
 	  -d docs/scaladoc \
 	  -doc-title 'NetLogo API' \
 	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(CLASSPATH) \
+	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
 	  -encoding us-ascii \
 	  src/main/org/nlogo/app/App.scala \
@@ -172,7 +179,6 @@ clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
-	rm -f models/under\ development/intro/output.txt models/benchmarks/other/coords.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/scaladoc
@@ -185,7 +191,9 @@ distclean:
 	git clean -fX
 
 # benchmarking
-.PHONY: benches
+.PHONY: bench benches
+bench: netlogo
+	$(JAVA) -classpath $(CLASSPATH) org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
 

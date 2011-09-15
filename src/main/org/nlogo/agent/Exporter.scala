@@ -37,7 +37,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
         breedVarName <- world.program.linkBreedsOwn.get(current).asScala}
       if(breedVarIndices.get(breedVarName) == null) {
         allLinkVars.add(breedVarName)
-        breedVarIndices.put(breedVarName, JInteger.valueOf(allLinkVars.size - 1))
+        breedVarIndices.put(breedVarName, Int.box(allLinkVars.size - 1))
       }
     println(csv.variableNameRow(allLinkVars))
     // when we get the list it's sorted and I think it's cool to export in who number order rather
@@ -101,7 +101,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
     for((g, i) <- globals.asScala.zipWithIndex) {
-      globalVarIndices.put(g, JInteger.valueOf(i))
+      globalVarIndices.put(g, Int.box(i))
       sortedGlobals.add(g)
     }
     // we want to make sure to export the globals in alphabetical order so that the world files are
@@ -141,7 +141,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       for(breedVarName <- breedOwns.asScala)
         if(breedVarIndices.get(breedVarName) == null) {
           allTurtleVars.add(breedVarName)
-          breedVarIndices.put(breedVarName, JInteger.valueOf(allTurtleVars.size - 1))
+          breedVarIndices.put(breedVarName, Int.box(allTurtleVars.size - 1))
         }
     }
     println(csv.variableNameRow(allTurtleVars))

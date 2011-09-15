@@ -19,7 +19,7 @@ class _usermessage extends Command {
           new ReporterRunnable[java.lang.Boolean] {
             override def run = {
               gw.view.mouseDown(false)
-              java.lang.Boolean.valueOf(1 ==
+              Boolean.box(1 ==
                 OptionDialog.show(gw.getFrame, "User Message", message,
                                   Array(I18N.gui.get("common.buttons.ok"),
                                         I18N.gui.get("common.buttons.halt"))))

@@ -29,20 +29,20 @@ object ScalaConversions {
   def toLogoObject(a: Any): AnyRef = a match {
 
     // booleans
-    case x: Boolean => jl.Boolean.valueOf(x)
+    case x: Boolean => Boolean.box(x)
 
     // chars and strings
     case x: String => x
-    case x: Char => String.valueOf(x)
+    case x: Char => x.toString
     case x: jl.Character => x.toString
 
     // numbers
-    case x: Byte => jl.Double.valueOf(x)
-    case x: Short => jl.Double.valueOf(x)
-    case x: Int => jl.Double.valueOf(x)
-    case x: Float => jl.Double.valueOf(x)
-    case x: Double => jl.Double.valueOf(x)
-    case x: Long => jl.Double.valueOf(x)
+    case x: Byte => Double.box(x)
+    case x: Short => Double.box(x)
+    case x: Int => Double.box(x)
+    case x: Float => Double.box(x)
+    case x: Double => Double.box(x)
+    case x: Long => Double.box(x)
 
     // netlogo types
     case x: ExtensionObject => x

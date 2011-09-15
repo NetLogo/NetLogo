@@ -21,5 +21,5 @@ class SteppedValueSet(variableName: String,
   def self = Stream.from(0)
                    .map(firstValue + step * _)
                    .takeWhile(_ <= lastValue)
-                   .map(java.lang.Double.valueOf(_))
+                   .map(Double.box(_))
 }

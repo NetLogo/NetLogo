@@ -1,7 +1,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.api.Pow;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Pure;
@@ -25,6 +24,6 @@ public final strictfp class _pow extends Reporter implements Pure {
 
   public double report_1(Context context, double d0, double d1)
       throws LogoException {
-    return validDouble(Pow.pow(d0, d1));
+    return validDouble(StrictMath.pow(d0, d1));
   }
 }

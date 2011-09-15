@@ -173,7 +173,7 @@ to bounce  ;; particles procedure
       ;;  if the particle is hitting a vertical wall, only the horizontal component of the speed
       ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
       ;; due to the reversing of direction of travel from the collision with the wall
-      set momentum-difference momentum-difference + (abs (sin heading * 2 * mass * speed) / length-vertical-surface)
+      set momentum-difference momentum-difference + (abs (dx * 2 * mass * speed) / length-vertical-surface)
       set heading (- heading) ]
 
   ; check: hitting top or bottom wall? (Should never hit top, but this would handle it.)
@@ -182,18 +182,18 @@ to bounce  ;; particles procedure
     ;;  if the particle is hitting a horizontal wall, only the vertical component of the speed
     ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
     ;; due to the reversing of direction of travel from the collision with the wall
-    set momentum-difference momentum-difference + (abs (cos heading * 2 * mass * speed) / length-horizontal-surface)
+    set momentum-difference momentum-difference + (abs (dy * 2 * mass * speed) / length-horizontal-surface)
     set heading (180 - heading)
   ]
 
   ; check: hitting piston?
-  if (new-py = [pycor] of one-of pistons and (speed * cos heading) > piston-vel)
+  if (new-py = [pycor] of one-of pistons and (speed * dy) > piston-vel)
   [
     ;;  if the particle is hitting the piston, only the vertical component of the speed
     ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
     ;; due to the reversing of direction of travel from the collision with the wall
     ;; make sure that each particle finishes exchanging energy before any others can
-    set momentum-difference momentum-difference + (abs (cos heading * 2 * mass * speed) / length-horizontal-surface)
+    set momentum-difference momentum-difference + (abs (dy * 2 * mass * speed) / length-horizontal-surface)
     exchange-energy-with-piston
   ]
 
@@ -413,16 +413,16 @@ to move-piston
     set speed piston-vel ;; just used for tick-delta calculations
     set pcolor color
     if (piston-vel < 0) ;; piston can't hit particles when moving upwards
-    [ if (any? particles-here with [(speed * (cos heading)) > piston-vel])
+    [ if (any? particles-here with [(speed * dy) > piston-vel])
       [ ;; only bounce particles that are moving down slower than the piston
         ;; faster ones should outrun it
-        ask particles-here with [(speed * (cos heading)) > piston-vel]
+        ask particles-here with [(speed * dy) > piston-vel]
         [
           ;;  if the particle is hitting the piston, only the vertical component of the speed
           ;;  vector can change.  The change in velocity for this component is 2 * the speed of the particle,
           ;; due to the reversing of direction of travel from the collision with the wall
           ;; make sure that each particle finishes exchanging energy before any others can
-          set momentum-difference momentum-difference + (abs (cos heading * 2 * mass * speed) / length-horizontal-surface)
+          set momentum-difference momentum-difference + (abs (dy * 2 * mass * speed) / length-horizontal-surface)
           exchange-energy-with-piston
         ]
       ]
@@ -432,8 +432,8 @@ end
 
 
 to exchange-energy-with-piston  ;; particle procedure -- piston and particle exchange energy
-  let vx (speed * (sin heading))
-  let vy (speed * (cos heading))         ;;only along y-axis
+  let vx (speed * dx)         ;;only along x-axis
+  let vy (speed * dy)         ;;only along y-axis
   let old-vy vy
   let old-piston-vel piston-vel
   set piston-vel ((((piston-mass - mass) / (piston-mass + mass)) * old-piston-vel) +

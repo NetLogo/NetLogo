@@ -15,7 +15,7 @@ public strictfp class EngineException
   // messages were not correct. ev 8/3/05
   public EngineException(Context context, Instruction instruction,
                          String message) {
-    super(message);
+    super(message, null);
     this.context = context;
     this.instruction = instruction;
   }
@@ -25,7 +25,7 @@ public strictfp class EngineException
   // Later, when we catch the exception, we can use line number
   // information to figure out what token the error happened on.
   public EngineException(Context context, String message) {
-    super(message);
+    super(message, null);
     if (!org.nlogo.api.Version.useGenerator()) {
       throw new IllegalStateException();
     }
@@ -70,6 +70,19 @@ public strictfp class EngineException
     }
     hasBeenResolved = true;
     instruction = instruction.extractErrorInstruction(this);
+  }
+
+  scala.Option<String> cachedRuntimeErrorMessage = scala.Option.apply(null);
+
+  @Override
+  public Throwable fillInStackTrace() {
+    super.fillInStackTrace();
+    if(context != null && !cachedRuntimeErrorMessage.isDefined()) {
+      cachedRuntimeErrorMessage = scala.Option.apply(
+        context.buildRuntimeErrorMessage(
+          instruction, this));
+    }
+    return this;
   }
 
 }

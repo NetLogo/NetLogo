@@ -66,10 +66,9 @@ trait HubNetInterface extends ViewInterface {
   def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
-  @throws(classOf[LogoException])
+  def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                        varName: String, overrides: Map[java.lang.Long, AnyRef])
-  @throws(classOf[LogoException])
   def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
                     varName: String, overrides: Seq[java.lang.Long])
   def clearOverrideLists(client: String)

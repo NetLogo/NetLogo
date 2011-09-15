@@ -299,7 +299,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
     def keep(fieldName: String, obj: Object, tyype: Type, accessCode: Int) {
       keptThings.put(fieldName, obj)
       keptThingsTypes.put(fieldName, tyype)
-      keptThingsAccessCodes.put(fieldName, Integer.valueOf(accessCode))
+      keptThingsAccessCodes.put(fieldName, Int.box(accessCode))
     }
     def loadKept(fieldName: String) {
       val descriptor = keptThingsTypes.get(fieldName).getDescriptor

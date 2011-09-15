@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
 <title>
-      NetLogo User Manual: GoGo Extension
+      NetLogo User Manual: NetLogoLab and the GoGo Board Extension
     </title>
     <link rel="stylesheet" href="netlogo.css" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
@@ -37,29 +37,30 @@
       </ol>
     <p>
       NetLogo's robotics/data-logging board of choice is the <a href=
-      "http://www.gogoboard.org/" target="_blank">GoGo Board</a> - an
+      "http://www.gogoboard.org/" target="_blank">GoGo Board</a>, an
       open-source, easy-to-build, low-cost interface originally designed at
       the MIT Media Lab by <a href="http://web.media.mit.edu/~arnans/"
       target="_blank">Arnan Sipitakiat</a>. Other robotics hardware can be
       used with NetLogo, including those that are commercially available,
-      such as <a href="http://www.vernier.com/" target="_blank">Vernier</a>
+      such as 
+      <a href="http://www.arduino.cc/" target="_blank">Arduino</a> boards,
+      <a href="http://www.vernier.com/" target="_blank">Vernier</a>
       and <a href="http://www.pasco.com/" target="_blank">Pasco</a> sensors
       and actuators, <a href="http://www.phidgets.com/" target=
       "_blank">Phidgets</a>, <a href="http://mindstorms.lego.com/" target=
       "_blank">Lego robotics</a> kits, and <a href=
-      "http://www.vexrobotics.com/" target="_blank">VEX</a> kits - but
-      specific extensions still need to be developed for each of those
+      "http://www.vexrobotics.com/" target="_blank">VEX</a> kits, but
+      specific extensions have not yet been developed for each of those
       platforms. So far, only the GoGo Board extension is available with
       NetLogo's standard distribution.
     <h3>
       The GoGo Board NetLogo extension
     </h3>
     <p>
-      The GoGo Board extension is a software component that enables the
+      The GoGo Extension for NetLogo provides primitives to communicate with
+      a GoGo board.  This enables the
       user to connect NetLogo with the physical world using sensors,
-      motors, light bulbs, LEDs, relays and other devices. The GoGo
-      Extension for NetLogo provides simple primitives to communicate with
-      a GoGo board.
+      motors, light bulbs, LEDs, relays and other devices. 
     <h3>
       GoGo Board: a low-cost robotics and data-logging board
     </h3>
@@ -170,7 +171,7 @@
       "http://groups.yahoo.com/group/gogoboard/" target="_blank">Yahoo
       groups</a>. The GoGo Board wiki can be found at <a href=
       "http://edudesign.org/gogowiki" target=
-      "_blank">www.edudesign.org/gogowiki</a>
+      "_blank">edudesign.org/gogowiki</a>
     <h2>
       Installing and testing the GoGo Extension
     </h2>
@@ -278,7 +279,7 @@ print gogo:ports
       "dictionary.html#gogo:ports"><tt>gogo:ports</tt></a> primitive (see
       below), or you can find out by using the Device Manager on a Windows
       computer (in the Control Panel, click on the System icon), or the
-      System Profiler on Macintosh OS X.
+      System Profiler on Mac OS X.
     <p>
       On Windows:
     <pre>
@@ -315,8 +316,8 @@ print gogo:ping
     </h3>
     <p>
       The first step when creating a NetLogoLab model is to add the
-      <a href="dictionary.html#extensions"><tt>extensions</tt></a> command
-      to NetLogo's procedure tab. Just go to the Code tab and add
+      <a href="dictionary.html#extensions"><tt>extensions</tt></a> keyword
+      to NetLogo's Code tab. Just go to the Code tab and add
       this line:
     <pre>
 extensions [gogo]

@@ -31,7 +31,7 @@ extends Thread("JobThread") {
   start()
 
   @throws(classOf[InterruptedException])
-  private[job] def die() {
+  def die() {
     // Ignore NPE because sometimes setPriority throws it for no good reason.
     // It was happening to me when using the controlling API with multiple HeadlessWorkspaces,
     // on both Sun Java 1.5.0_07 and IBM Java 1.5.0, both on 64 bit linux machines.  It wasn't
@@ -70,7 +70,7 @@ extends Thread("JobThread") {
             } } } }
   }
 
-  private[job] def maybeRunSecondaryJobs() {
+  def maybeRunSecondaryJobs() {
     // our owner will tell us when it's time - ST 8/10/03
     if (isTimeToRunSecondaryJobs) {
       val now = System.currentTimeMillis()

@@ -67,6 +67,7 @@ trait Depend extends DefaultProject {
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
+      "prim/file" -> List("nvm"),
       "prim/gui" -> List("window"),
       "prim/hubnet" -> List("nvm"),
       "prim/plot" -> List("nvm","plot"),

@@ -13,7 +13,7 @@ object SliderConstraint {
   class ConstraintCompilerException(val spec: Spec, ex: CompilerException) extends
     CompilerException(ex.getMessage, ex.startPos, ex.endPos, ex.fileName) with SliderConstraintException
   class ConstraintRuntimeException(val spec:Spec, message: String) extends
-    LogoException("Constraint runtime error for " + spec.displayName + ": " + message) with SliderConstraintException
+    RuntimeException("Constraint runtime error for " + spec.displayName + ": " + message) with SliderConstraintException
 
   class ConstraintExceptionHolder(errors: List[SliderConstraintException]) extends Exception {
     def getErrors: List[SliderConstraintException] = errors

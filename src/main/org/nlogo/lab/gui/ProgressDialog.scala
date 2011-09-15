@@ -184,7 +184,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       plotWidget.clear()
       for (metricNumber <- 0 until protocol.metrics.length) yield {
         val pen = plotWidget.plot.createPlotPen(getPenName(metricNumber), true)
-        pen.color = org.nlogo.api.Color.getColor(java.lang.Double.valueOf(metricNumber % 14 * 10 + 5)).getRGB
+        pen.color = org.nlogo.api.Color.getColor(Double.box(metricNumber % 14 * 10 + 5)).getRGB
         pen
       }
     }}

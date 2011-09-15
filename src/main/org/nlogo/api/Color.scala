@@ -306,14 +306,14 @@ object Color {
     // prim will reconstruct the original number (or rather the floor of the original number to the
     // nearest 0.1) - ST 10/25/05
     result.add(
-      java.lang.Double.valueOf(
+      Double.box(
         org.nlogo.api.Approximate.approximate(((argb >> 16) & 0xff), 3)))
     result.add(
-      java.lang.Double.valueOf(
+      Double.box(
         org.nlogo.api.Approximate.approximate(((argb >> 8) & 0xff), 3)))
-    result.add(java.lang.Double.valueOf(
+    result.add(Double.box(
       org.nlogo.api.Approximate.approximate(((argb) & 0xff), 3)))
-    result.add(java.lang.Double.valueOf(
+    result.add(Double.box(
       org.nlogo.api.Approximate.approximate(((argb >> 24) & 0xff), 3)))
     result.toLogoList
   }
@@ -341,13 +341,13 @@ object Color {
     // 3 is just enough digits of precision so that passing the resulting values through the hsb
     // prim will reconstruct the original number (or rather the floor of the original number to the
     // nearest 0.1) - ST 10/25/05
-    result.add(java.lang.Double.valueOf
+    result.add(Double.box
         (org.nlogo.api.Approximate.approximate
             (hsb(0) * 255, 3)))
-    result.add(java.lang.Double.valueOf
+    result.add(Double.box
         (org.nlogo.api.Approximate.approximate
             (hsb(1) * 255, 3)))
-    result.add(java.lang.Double.valueOf
+    result.add(Double.box
         (org.nlogo.api.Approximate.approximate
             (hsb(2) * 255, 3)))
     result.toLogoList

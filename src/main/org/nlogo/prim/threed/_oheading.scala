@@ -7,5 +7,5 @@ class _oheading extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    java.lang.Double.valueOf(world.observer.heading)
+    Double.box(world.observer.heading)
 }

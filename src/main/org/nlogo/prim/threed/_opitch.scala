@@ -7,5 +7,5 @@ class _opitch extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType)
   override def report(context: Context) =
-    java.lang.Double.valueOf(world.observer.pitch)
+    Double.box(world.observer.pitch)
 }

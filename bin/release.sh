@@ -166,7 +166,7 @@ $CP ../../NetLogoLite.jar .
 $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 $MKDIR lib
-$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.4.2.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.4.2.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
+$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
 $CP -p ../../BehaviorSpace.jar ../../BehaviorSpace-src.zip lib
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
@@ -359,6 +359,7 @@ $HDIUTIL create NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSI
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
 $RM -rf dmg
+mv NetLogo\ "$VERSION".dmg $COMPRESSEDVERSION
 cd netlogo-$COMPRESSEDVERSION
 
 # remove Mac-only stuff

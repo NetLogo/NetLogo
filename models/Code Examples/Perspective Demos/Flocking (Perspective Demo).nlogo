@@ -62,8 +62,8 @@ to-report average-flockmate-heading  ;; turtle procedure
   ;; Theoretically this could fail if both sums are 0
   ;; since atan 0 0 is undefined, but in practice that's
   ;; vanishingly unlikely.
-  report atan sum [sin heading] of flockmates
-              sum [cos heading] of flockmates
+  report atan sum [dx] of flockmates
+              sum [dy] of flockmates
 end
 
 ;;; COHERE

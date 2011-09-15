@@ -137,8 +137,8 @@ class InterfaceComponentTester extends JFrame {
       ))
     onNewThread {
       val (t, p) = (comp.report("count turtles"), comp.report("count patches"))
-      assert(p == java.lang.Double.valueOf(49), p)
-      assert(t == java.lang.Double.valueOf(1), t)
+      assert(p == Double.box(49), p)
+      assert(t == Double.box(1), t)
       comp.command("ask patches [ set pcolor item ((pxcor + pycor) mod 2) [black gray] ]")
       println("success!")
     }

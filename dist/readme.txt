@@ -121,7 +121,7 @@ directory.
 Some parts of NetLogo are written in the Scala language and use the
 Scala standard libraries.  The license for Scala is as follows:
 
-Copyright (c) 2002-2010 EPFL, Lausanne, unless otherwise specified.
+Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
 All rights reserved.
 
 This software was developed by the Programming Methods Laboratory of the
@@ -397,7 +397,7 @@ redistribute the Software for such purposes.
 For Java bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
 
-Copyright (c) 2000-2005 INRIA, France Telecom
+Copyright (c) 2000-2010 INRIA, France Telecom
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -432,7 +432,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 For logging, NetLogo uses the Log4j library.  The copyright and license
 for the library are as follows:
 
-Copyright 1999-2005 The Apache Software Foundation
+Copyright 2007 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -451,7 +451,7 @@ limitations under the License.
 For dependency injection, NetLogo uses the PicoContainer library.  The
 copyright and license for the library are as follows:
 
-Copyright (c) 2003-2004, PicoContainer Organization
+Copyright (c) 2003-2006, PicoContainer Organization
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 
@@ -496,7 +496,7 @@ pegdown is released under the Apache License 2.0.
 
 The copyright and license for Parboiled are as follows:
 
-parboiled - Copyright (C) 2009 Mathias Doenitz
+parboiled - Copyright (C) 2009-2011 Mathias Doenitz
 
 This product includes software developed by
 Mathias Doenitz (http://www.parboiled.org/).

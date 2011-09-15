@@ -41,10 +41,10 @@ class ConstantParserTests extends FunSuite with MockSuite {
     expect(java.lang.Boolean.TRUE)(toConstant("true"))
     expect(java.lang.Boolean.FALSE)(toConstant("false"))
   }
-  test("constantInt") { expect(java.lang.Double.valueOf(4))(toConstant("4")) }
-  test("constantIntWhitespace") { expect(java.lang.Double.valueOf(4))(toConstant("  4\t")) }
-  test("constantIntParens") { expect(java.lang.Double.valueOf(4))(toConstant(" (4)\t")) }
-  test("constantIntParens2") { expect(java.lang.Double.valueOf(4))(toConstant(" ((4)\t)")) }
+  test("constantInt") { expect(Double.box(4))(toConstant("4")) }
+  test("constantIntWhitespace") { expect(Double.box(4))(toConstant("  4\t")) }
+  test("constantIntParens") { expect(Double.box(4))(toConstant(" (4)\t")) }
+  test("constantIntParens2") { expect(Double.box(4))(toConstant(" ((4)\t)")) }
   test("constantIntBadParens") { testError("((4)", "Expected a closing parenthesis.") }
   test("constantIntBadParens2") { testError("((4)))", "Extra characters after constant.") }
   test("largeConstant1") { testError("9999999999999999999999999999999999999999999999999", "Illegal number format") }

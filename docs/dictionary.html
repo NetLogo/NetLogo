@@ -7173,27 +7173,29 @@ file-open &quot;my-file.txt&quot;
       <h4>
         set-default-shape turtles <i>string</i>
         <br>
+        set-default-shape links <i>string</i>
+        <br>
         set-default-shape <i>breed</i> <i>string</i>
         <br>
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Specifies a default initial shape for all turtles, or for a
-        particular breed. When a turtle is created, or it changes breeds,
+        Specifies a default initial shape for all turtles or links, or for a
+        particular breed of turtles or links. When a turtle or link is created, or it changes breeds,
         it shape is set to the given shape.
       <p>
-        This command doesn't affect existing turtles, only turtles you
+        This command doesn't affect existing agents, only agents you
         create afterwards.
       <p>
-        The specified breed must be either turtles or a breed defined by
-        the <a href="#breed">breed</a> keyword, and the specified string
+        The given breed must be either turtles, links, or the name of a breed.
+        The given string
         must be the name of a currently defined shape.
       <p>
         In new models, the default shape for all turtles is
         &quot;default&quot;.
       <p>
         Note that specifying a default shape does not prevent you from
-        changing an individual turtle's shape later; turtles don't
+        changing an agent's shape later.  Agents don't
         have to be stuck with their breed's default shape.
       <pre>
 create-turtles 1 ;; new turtle's shape is &quot;default&quot;

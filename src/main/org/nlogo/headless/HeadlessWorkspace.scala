@@ -6,9 +6,8 @@ package org.nlogo.headless
 
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.nvm.{ CompilerResults, LabInterface }
-import org.nlogo.plot.{ Plot, PlotPen, PlotException }
-import org.nlogo.nvm.{ Workspace, DefaultCompilerServices, CompilerInterface }
+import org.nlogo.nvm.{ CompilerResults, LabInterface,
+                       Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter

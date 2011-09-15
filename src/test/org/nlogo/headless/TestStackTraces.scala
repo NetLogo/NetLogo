@@ -78,7 +78,7 @@ class TestStackTraces extends AbstractTestModels {
       Plot(name = "p", pens = Pens(Pen(name = "pp", updateCode = code)))
   }
 
-  def trace = workspace.lastErrorReport.getNetLogoStackTrace.get.trim
+  def trace = workspace.lastErrorReport.stackTrace.get.trim
 
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
     testModel("direct call to " + prim + " with failure in " + codeType,

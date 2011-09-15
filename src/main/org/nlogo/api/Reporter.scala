@@ -3,19 +3,8 @@ package org.nlogo.api
 /**
  * Interface for NetLogo reporters. Reporters are primitives that
  * return a value.  All new reporters must implement this interface.
- * <p>Note that NetLogo will not call your contructor directly, it will
- * call <code>newInstance(String)</code> instead.
  */
 trait Reporter extends Primitive {
-
-  /**
-   * Returns a new instance of this <code>Reporter</code>.  Called by NetLogo
-   * every time this <code>Reporter</code> is encountered during compilation.
-   *
-   * @param name the name that was found in the code (without the JAR identifer)
-   * @return the <code>Reporter</code> to be called during runtime
-   */
-  def newInstance(name: String): Reporter
 
   /**
    * Executes this <code>Reporter</code>. Called by NetLogo when this <code>Reporter</code> is

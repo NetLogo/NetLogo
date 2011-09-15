@@ -98,13 +98,6 @@ class PlotTests extends SimplePlotTest {
     expect(2.0)(pen.points(4).y)
     expect(2.0)(pen.points(5).y)
   }
-  testPlot("HistogramException") { plot =>
-    val pen = plot.createPlotPen("test", false)
-    pen.interval = 0
-    intercept[PlotException] {
-      plot.beginHistogram(pen)
-    }
-  }
   testPlot("HistogramGrowHeight") { plot =>
     plot.yMax=5
     val pen = plot.createPlotPen("test", false)

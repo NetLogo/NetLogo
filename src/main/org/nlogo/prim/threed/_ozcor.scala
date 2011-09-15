@@ -7,5 +7,5 @@ class _ozcor extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.NumberType, "O---")
   override def report(context: Context) =
-    java.lang.Double.valueOf(world.observer.ozcor)
+    Double.box(world.observer.ozcor)
 }

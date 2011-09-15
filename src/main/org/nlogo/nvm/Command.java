@@ -4,18 +4,9 @@ import org.nlogo.api.LogoException;
 
 public abstract strictfp class Command
     extends Instruction {
-  public Command() {
-    this(false);
-  }
-
-  public Command(boolean callsOtherCode) {
-    this._callsOtherCode = callsOtherCode;
-  }
-
-  private boolean _callsOtherCode = false;
 
   public boolean callsOtherCode() {
-    return this._callsOtherCode;
+    return false;
   }
 
   public abstract void perform(Context context)

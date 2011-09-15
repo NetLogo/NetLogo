@@ -11,7 +11,7 @@ class _randomzcor extends Reporter {
     val w = world.asInstanceOf[World3D]
     val min = w.minPzcor - 0.5
     val max = w.maxPzcor + 0.5
-    java.lang.Double.valueOf(
+    Double.box(
       min + context.job.random.nextDouble() * (max - min))
   }
 }

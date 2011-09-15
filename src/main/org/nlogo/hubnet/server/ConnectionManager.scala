@@ -8,6 +8,7 @@ import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
+import org.nlogo.api.{WorldPropertiesInterface, LogoList, I18N, ModelReader, PlotInterface}
 import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.api._
@@ -75,7 +76,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     // as they need be evaluated each time.
     // i wanted to avoid giving the entire plot manager to ServerPlotManager
     // JC - 12/20/10
-    workspace.plotManager.plots, workspace.plotManager.currentPlotOrBust) {
+    workspace.plotManager.plots, workspace.plotManager.currentPlot.get) {
     workspace.plotManager.listener = this
   }
 

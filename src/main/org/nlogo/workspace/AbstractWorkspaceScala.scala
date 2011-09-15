@@ -5,7 +5,7 @@ import org.nlogo.api.{
   PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
   CompilerException, JobOwner, SimpleJobOwner, WidgetIO}
 import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
-import org.nlogo.plot.{PlotExporter,PlotException,PlotManager}
+import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 
 import java.io.{IOException,PrintWriter}
@@ -70,7 +70,7 @@ object AbstractWorkspaceTraits {
 
     // methods used when importing plots
     def currentPlot(plot: String) {
-      plotManager.setCurrentPlot(plotManager.getPlot(plot))
+      plotManager.currentPlot = Some(plotManager.getPlot(plot))
     }
 
     def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
@@ -117,12 +117,9 @@ object AbstractWorkspaceTraits {
 
     def exportPlotsToCSV(writer: PrintWriter) {
       writer.println(Dump.csv.encode("PLOTS"))
-      try {
-        writer.println(Dump.csv.encode(plotManager.currentPlotOrBust.name))
-      } catch {
-        case e: PlotException => writer.println(Dump.csv.encode(""))
-      }
-
+      writer.println(
+        Dump.csv.encode(
+          plotManager.currentPlot.map(_.name).getOrElse("")))
       plotManager.getPlotNames.foreach { name =>
         new PlotExporter(plotManager.getPlot(name),Dump.csv).export(writer)
         writer.println()

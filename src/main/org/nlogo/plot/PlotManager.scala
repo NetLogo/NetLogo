@@ -15,11 +15,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
-  private var currentPlotOption: Option[Plot] = None
-  @throws(classOf[PlotException])
-  def currentPlotOrBust = currentPlotOption.getOrElse({
-    throw new PlotException(I18N.errors.get("org.nlogo.plot.noPlotSelected"))})
-  def setCurrentPlot(plot: Plot) {currentPlotOption = Some(plot)}
+  var currentPlot: Option[Plot] = None
 
   // plot creation
   def newPlot(name:String) = {
@@ -34,7 +30,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
     // JC - 3/22/11
     compilePlot(plot)
     _plots += plot
-    setCurrentPlot(plot)
+    currentPlot = Some(plot)
     plot
   }
 
@@ -46,12 +42,12 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
 
   def forgetPlot(goner: Plot) {
-    if (currentPlotOption == Some(goner)) currentPlotOption = None
+    if (currentPlot == Some(goner)) currentPlot = None
     _plots -= goner
   }
   def forgetAll() {
     _plots.clear()
-    currentPlotOption = None
+    currentPlot = None
   }
   def clearAll() {
     _plots.foreach(_.clear())
@@ -115,13 +111,13 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   private def runCode(codeType: CodeType) {
     // save the currently selected plot
-    val oldCurrentPlotOption = currentPlotOption
+    val oldCurrentPlot = currentPlot
     for (plot <- _plots) {
       // TODO: investigate possibly not setting current plot and current pen if the plot
       // has no code. using the current design of plot mirroring in hubnet, this
       // would reduce traffic. another TODO is to possibly redesign plot mirroring
       // so that this is no longer an issue.
-      setCurrentPlot(plot)
+      currentPlot = Some(plot)
       // run the plot code (and pens), only if it was compiled successfully.
       // this line below runs the code if there is any to run, and it tells
       // us if stop was called from the code. if so, we dont run the pens code.
@@ -155,7 +151,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
       }
     }
     // restore the currently selected plot
-    currentPlotOption = oldCurrentPlotOption
+    currentPlot = oldCurrentPlot
   }
 
   abstract case class CodeType(name:String){

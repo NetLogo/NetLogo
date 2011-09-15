@@ -48,7 +48,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   private var _currentPen: Option[PlotPen] = None
   // take the first pen if there is no current pen set
   def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
-  def currentPenOrBust: PlotPen = currentPen.getOrElse(throw new PlotException("Plot '"+name+"' has no pens!"))
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
@@ -212,19 +211,11 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
 
   var histogram: Option[Histogram] = None
 
-  @throws(classOf[PlotException])
-  def beginHistogram(pen:PlotPen){
-    if(pen.interval == 0){
-      throw new PlotException("You cannot histogram with a plot-pen-interval of 0.")
-    }
+  def beginHistogram(pen:PlotPen) {
     histogram = Some(new Histogram(xMin, xMax, pen.interval))
   }
 
-  @throws(classOf[PlotException])
   def beginHistogram(pen:PlotPen, bars:Array[Int]){
-    if(pen.interval == 0){
-      throw new PlotException("You cannot histogram with a plot-pen-interval of 0.")
-    }
     histogram = Some(new Histogram(xMin, pen.interval, bars))
   }
 

@@ -150,14 +150,14 @@ to check-for-particle-collision
   let my-x xcor
   let my-y ycor
   let my-particle-size size
-  let my-x-speed speed * sin heading
-  let my-y-speed speed * cos heading
+  let my-x-speed speed * dx
+  let my-y-speed speed * dy
   ask other particles
   [
     let dpx (xcor - my-x)   ;; relative distance between particles in the x direction
     let dpy (ycor - my-y)    ;; relative distance between particles in the y direction
-    let x-speed (speed * sin heading) ;; speed of other particle in the x direction
-    let y-speed (speed * cos heading) ;; speed of other particle in the x direction
+    let x-speed (speed * dx) ;; speed of other particle in the x direction
+    let y-speed (speed * dy) ;; speed of other particle in the x direction
     let dvx (x-speed - my-x-speed) ;; relative speed difference between particles in x direction
     let dvy (y-speed - my-y-speed) ;; relative speed difference between particles in y direction
     let sum-r (((my-particle-size) / 2 ) + (([size] of self) / 2 )) ;; sum of both particle radii
@@ -255,7 +255,7 @@ end
 ;; determines when a particle will hit any of the four walls
 to check-for-wall-collision  ;; particle procedure
   ;; right & left walls
-  let x-speed (speed * sin heading)
+  let x-speed (speed * dx)
   if x-speed != 0
     [ ;; solve for how long it will take particle to reach right wall
       let right-interval (box-edge - 0.5 - xcor - size / 2) / x-speed
@@ -266,7 +266,7 @@ to check-for-wall-collision  ;; particle procedure
       if left-interval > 0
         [ assign-colliding-wall left-interval "left wall" ] ]
   ;; top & bottom walls
-  let y-speed (speed * cos heading)
+  let y-speed (speed * dy)
   if y-speed != 0
     [ ;; solve for time it will take particle to reach top wall
       let top-interval (box-edge - 0.5 - ycor - size / 2) / y-speed

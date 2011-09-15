@@ -41,6 +41,9 @@
 -keep public class org.nlogo.prim.plot.* {
     *;
 }
+-keep public class org.nlogo.prim.file.* {
+    *;
+}
 
 # pull in the extensions API
 -keep public class org.nlogo.api.* {

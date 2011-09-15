@@ -16,15 +16,6 @@ trait Command extends Primitive {
   def getSwitchesBoolean: Boolean
 
   /**
-   * Returns a new instance of this <code>Command</code>.  Called by NetLogo
-   * every time this <code>Command</code> is encountered during compilation.
-   *
-   * @param name the name that was found in the code (without the JAR identifer)
-   * @return <code>Command</code> to be peformed during runtime
-   */
-  def newInstance(name: String): Command
-
-  /**
    * Executes this <code>Command</code>. Called by NetLogo when this <code>Command</code> is called at run-time.
    *
    * @param args    the <code>Argument</code>s that were passed to

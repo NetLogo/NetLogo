@@ -1,7 +1,6 @@
 package org.nlogo.hubnet.mirroring 
 
 @SerialVersionUID(0)
-@throws(classOf[org.nlogo.api.LogoException])
 class ClearOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String, var agents: Seq[java.lang.Long])
         extends OverrideList(agentClass, varName) with Serializable {
 
@@ -16,7 +15,7 @@ class ClearOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String,
   private def readObject(in:java.io.ObjectInputStream){
     val numOverrides = in.readInt()
     agents = (for(i <- 0 until numOverrides)
-              yield java.lang.Long.valueOf(in.readLong()))
+              yield Long.box(in.readLong()))
              .toSeq
   }
 }
