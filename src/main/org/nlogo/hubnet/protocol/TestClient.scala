@@ -20,8 +20,6 @@ object TestClient{
 case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="127.0.0.1", port:Int=9173,
                        executor: ExecutorService=TestClient.pool){
 
-  println("creating basic client")
-  
   import org.nlogo.hubnet.protocol.{ViewUpdate => ViewUp}
 
   private val socket = new Socket(ip, port) {setSoTimeout(0)}
@@ -49,7 +47,6 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // attempts the handshake and explodes if it fails
   // called from the constructor.
   private def handshake(): (String, Iterable[AnyRef]) = {
-    println("handshaking")
     def sendAndReceive(a: AnyRef): AnyRef = {
       rawSend(a)
       in.readObject()
@@ -63,7 +60,6 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
           (h.activityName, h.interfaceSpecList.toIterable)
         case r => throw new IllegalStateException(userId + " handshake failed. response:" + r)
       }
-      println("handshaking: " + result)
       result
     }catch {
       case e:Exception => throw new IllegalStateException("dead client: " + userId)
