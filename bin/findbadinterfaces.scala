@@ -7,7 +7,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 
 // find models with malformed interface tabs
 
-import Scripting.{shell,readChars}
+import Scripting.{shell,slurp}
 
 val allowedLengths = Map("BUTTON" -> (11,16),
                          "SLIDER" -> (12,14),
@@ -23,7 +23,7 @@ val allowedLengths = Map("BUTTON" -> (11,16),
 
 // it would be better if we handled .nlogo3d too - ST 7/8/06, 4/19/11
 for{path <- shell("find models -name \\*.nlogo")
-    interface = readChars(path).mkString.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(1)
+    interface = slurp(path).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(1)
     widget <- interface.split("\n\n")}
 {
   val kind = widget.split("\n").head

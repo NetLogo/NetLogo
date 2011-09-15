@@ -167,7 +167,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   def hasErrors(plot:Plot): Boolean = {
     getPlotSetupError(plot).isDefined || getPlotUpdateError(plot).isDefined ||
-    plot.pens.foldLeft(false){ (b:Boolean,p:PlotPen) => b || hasErrors(p) }
+    plot.pens.exists(hasErrors)
   }
   def getPlotSetupError(plot:Plot) = plotThunks(plot).setup.left.toOption
   def getPlotUpdateError(plot:Plot) = plotThunks(plot).update.left.toOption

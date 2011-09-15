@@ -18,7 +18,7 @@ JAVA_OPTS=-Dfile.encoding=UTF-8 exec bin/scala -classpath bin -deprecation -noco
 ///
 /// The NetLogo version comes from resources/system/version.txt; ditto on release.sh and symlinking.
 
-import Scripting.{read, readChars, shell}
+import Scripting.{ read, slurp, shell }
 import java.io.File
 
 // Bomb if previews are missing?
@@ -107,7 +107,7 @@ def munge(path: String): String = {
       name.replaceFirst(" 3D$", "")
     else name
   val sections =
-    readChars("models/" + path).mkString.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n", -1).toList
+    slurp("models/" + path).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n", -1).toList
   def copyright = {
     if(keywords.contains("Steiner"))
       "Copyright " + year + " Uri Wilensky. Some rights reserved. Includes code by James P. Steiner. "

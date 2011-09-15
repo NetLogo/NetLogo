@@ -20,7 +20,7 @@ private object MethodSelector {
       val argResults = i.args.toList.map(evaluate(_, profilingEnabled))
       val pairs = for (m <- ms; cost <- totalCostOption(m, argResults))
         yield (m, cost)
-      group(pairs)(_._1.getReturnType).map(_.reduceLeft(cheapest))
+      group(pairs)(_._1.getReturnType).map(_.minBy(_._2))
     }
   }
   private def cheapest(p1: (Method, Long), p2: (Method, Long)) =
@@ -35,7 +35,7 @@ private object MethodSelector {
       for ((typeTo, arg) <- m.getParameterTypes.toList.tail zip args) // tail = skip Context
         yield cheapestOption(typeTo, arg).map(_._2)
     if (!costOptions.forall(_.isDefined)) None
-    else Some(costOptions.foldLeft(0L)(_ + _.get))
+    else Some(costOptions.flatten.sum)
   }
   private def cheapestOption(typeTo: Class[_], arg: Result): Option[(Method, Long)] = {
     val results = for ((method, cost1) <- arg; cost2 <- conversionCost(method.getReturnType, typeTo))

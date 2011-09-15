@@ -140,7 +140,7 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     else if(isCloser(tok)) -1
     else 0
   private def totalValue(s:String):Int = totalValue(tokenize(s))
-  private def totalValue(tokens:List[Token]):Int = tokens.map(value).foldLeft(0)(_ + _)
+  private def totalValue(tokens:List[Token]):Int = tokens.map(value).sum
   private def findMatchingOpenerBackward(s:String,startDiff:Int):Token = {
     val tokens = tokenize(s)
     var diff = startDiff

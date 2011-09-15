@@ -155,20 +155,20 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       def parseSlider(widget: Array[String]) {
         interfaceGlobals += widget(6)
         interfaceGlobalCommands.append("set " + widget(6) + " " + widget(9) + "\n")
-        constraints += widget(6) -> List("SLIDER", widget(7), widget(8), widget(10), widget(9))
+        constraints(widget(6)) = List("SLIDER", widget(7), widget(8), widget(10), widget(9))
       }
 
       def parseSwitch(widget: Array[String]) {
         interfaceGlobals += widget(6)
         val defaultAsString = (widget(7).toDouble == 0).toString
         interfaceGlobalCommands.append("set " + widget(6) + " " + defaultAsString + "\n")
-        constraints += widget(6) -> List("SWITCH", defaultAsString)
+        constraints(widget(6)) = List("SWITCH", defaultAsString)
       }
 
       def parseChoiceOrChooser(widget: Array[String]) {
         interfaceGlobals += widget(6)
         val valSpec = "[" + widget(7) + "]"
-        constraints += widget(6) -> List("CHOOSER", valSpec, widget(8))
+        constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
       }
 
       def parseInputBox(widget: Array[String]) {
@@ -178,7 +178,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           interfaceGlobalCommands.append("set " + widget(5) + " " + defaultVal + "\n")
         else
           interfaceGlobalCommands.append("set " + widget(5) + " \"" + defaultVal + "\"\n")
-        constraints += widget(5) -> List("INPUTBOX", defaultVal, widget(9))
+        constraints(widget(5)) = List("INPUTBOX", defaultVal, widget(9))
       }
 
       def parsePlot(widget: Array[String]) {

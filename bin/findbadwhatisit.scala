@@ -8,10 +8,10 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // finds models that have first paragraphs of their WHAT IS IT? sections that are too long, or
 // otherwise malformed
 
-import Scripting.{shell,readChars}
+import Scripting.{ shell, slurp }
 
 for{path <- shell("find models -name \\*.nlogo -o -name \\*.nlogo3d")
-    info = readChars(path).mkString.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)}
+    info = slurp(path).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)}
 {
   val what = "## WHAT IS IT?\n\n"
   if(!info.startsWith(what))

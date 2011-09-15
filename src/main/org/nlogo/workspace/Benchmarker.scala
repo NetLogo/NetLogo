@@ -22,8 +22,8 @@ object Benchmarker {
       result
     }
     def average = total / times.size
-    def total = times.foldLeft(0.0)(_ + _)
-    def squareOfDifference = times.foldLeft(0.0)((sum,item) => sum + math.pow(item - average,2))
+    def total = times.sum
+    def squareOfDifference = times.map(time => math.pow(time - average, 2)).sum
     def stddev = math.sqrt(squareOfDifference / times.size)
     def runs = 2 max math.ceil(math.pow(Z * stddev / (TOLERANCE * average),2)).toInt
     def warmUp() {

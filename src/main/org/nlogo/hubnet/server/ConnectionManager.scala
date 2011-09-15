@@ -110,7 +110,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     running = true
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
-    clientInterfaceMap += (ConnectionTypes.COMP_CONNECTION -> LogoList(createClientInterfaceSpec))
+    clientInterfaceMap(ConnectionTypes.COMP_CONNECTION) = LogoList(createClientInterfaceSpec)
 
     // try every port from DEFAULT_PORT_NUMBER to MAX_PORT_NUMBER until
     // we find one that works
@@ -239,16 +239,15 @@ class ConnectionManager(val connection: ConnectionInterface,
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType:ClientType, interfaceInfo:Iterable[AnyRef]) {
+  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[AnyRef]) {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
     // its usually assumed that a call to hubnet-reset will happen right after this call
     // but, it doesn't hurt to keep this here. JC 12/28/10
-    if(interfaceType == ConnectionTypes.COMP_CONNECTION)
-      clientInterfaceMap += (interfaceType -> LogoList(createClientInterfaceSpec))
-    else
-      clientInterfaceMap += (interfaceType -> LogoList(interfaceInfo.toSeq:_*))
+    clientInterfaceMap(interfaceType) =
+      if(interfaceType == ConnectionTypes.COMP_CONNECTION) LogoList(createClientInterfaceSpec)
+      else LogoList(interfaceInfo.toSeq:_*)
   }
 
   private def turtleShapes =  world.turtleShapeList.getShapes.asScala.toList
