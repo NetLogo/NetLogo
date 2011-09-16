@@ -311,7 +311,7 @@ R can-move? etc._canmove
 R ceiling etc._ceil
 R cos etc._cos
 R count _count
-R date-and-time etc._time
+R date-and-time etc._dateandtime
 R distance etc._distance
 R distance-nowrap etc._distancenowrap
 R distancexy etc._distancexy

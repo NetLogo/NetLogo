@@ -45,6 +45,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_checksyntax string,string,OTPL,null,10,1,1
                      |_cos number,number,OTPL,null,10,1,1
                      |_count agentset,number,OTPL,null,10,1,1
+                     |_dateandtime ,string,OTPL,null,10,0,0
                      |_distance turtle or patch,number,-TP-,null,10,1,1
                      |_distancenowrap turtle or patch,number,-TP-,null,10,1,1
                      |_distancexy number/number,number,-TP-,null,10,2,2
@@ -248,7 +249,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_tan number,number,OTPL,null,10,1,1
                      |_task reporter task or command task,reporter task or command task,OTPL,null,10,1,1
                      |_ticks ,number,OTPL,null,10,0,0
-                     |_time ,string,OTPL,null,10,0,0
                      |_timer ,number,OTPL,null,10,0,0
                      |_tostring anything,string,OTPL,null,10,1,1
                      |_towards turtle or patch,number,-TP-,null,10,1,1
