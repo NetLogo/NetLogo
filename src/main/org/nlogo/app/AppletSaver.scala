@@ -164,7 +164,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     line("<a href=\"" + org.nlogo.util.Utils.escapeSpacesInURL(fileName) +
          "\">" + fileName + "</a></p>")
     line(InfoFormatter.toInnerHtml(infoText) + "\n")
-    line(InfoFormatter.toInnerHtml("# PROCEDURES"))
+    line(InfoFormatter.toInnerHtml("# CODE"))
     line(proceduresToHtml.convert(procedures))
     line("</body>")
     line("</html>")

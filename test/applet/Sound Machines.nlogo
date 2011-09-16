@@ -17,7 +17,7 @@ levers-own [
 ]
 
 ;;;
-;;; SETUP PROCEDURES
+;;; SETUP CODE
 ;;;
 
 to setup-begin
@@ -82,7 +82,7 @@ to setup-crazy-machine
 end
 
 ;;;
-;;; RUNTIME PROCEDURES
+;;; RUNTIME CODE
 ;;;
 
 to go
@@ -173,7 +173,7 @@ to-report sign [a]
 end
 
 ;;;
-;;; SELECTION & DRAGGING PROCEDURES
+;;; SELECTION & DRAGGING CODE
 ;;;
 
 to monitor-mouse
@@ -197,7 +197,7 @@ to select-lever [which-lever]
 end
 
 ;;;
-;;; SOUND PROCEDURES
+;;; SOUND CODE
 ;;;
 
 to bonk! [coordinate]
