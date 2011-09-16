@@ -19,11 +19,11 @@ p.c1 {font-style: italic}
       NetLogo includes the NetLogo 3D application, a preview release that
       allows you to create 3D worlds.
     <p>
-      <b>Caution!</b> NetLogo's support for 3D is experimental. Models
+      <b>Notice:</b> NetLogo's support for 3D is experimental. Models
       created with this release may not be compatible with future versions.
-      While we've made efforts to ensure a quality product, the preview
-      has not been subject to the same rigorous quality-control processes
-      as 2D NetLogo.
+      While we've made efforts to ensure a quality product, NetLogo 3D
+      has not been subject to the same level of quality control as
+      the main application.
     <ul>
       <li>
         <a href="#introduction">Introduction</a>
@@ -40,34 +40,37 @@ p.c1 {font-style: italic}
     <p>
       To get started using NetLogo 3D, launch the NetLogo 3D application
       and check out the Sample Models in the 3D section of the Models
-      Library. (On Windows, the NetLogo installer doesn't add a NetLogo
-      3D shortcut to your Start menu. You'll find the NetLogo 3D icon
-      in the folder where you installed NetLogo, which is usually under
-      Program Files.)
+      Library.
     <p>
       When you're ready to write your own 3D model, look at the Code
-      Examples in the 3D section of the Models Library. &quot;Turtle
-      Perspective Example 3D&quot; helps you learn about the different
-      perspectives. &quot;Turtle and Observer Motion Example 3D&quot; helps
-      you understand how turtles and the Observer move in 3D. You can also
+      Examples in the 3D section of the Models Library.
+    <blockquote>
+      <p>
+        <b>Code Example:</b> Turtle Perspective Example 3D helps you
+         learn about the different perspectives. 
+      <p>
+        <b>Code Example:</b> Turtle and Observer Motion Example 3D helps
+      you understand how turtles and the observer move in 3D. You can also
       step through this model with the tutorial below.
+      </blockquote>
     <h4>
       3D Worlds
     </h4>
-    <p class="bookquote c1">
-      An unspeakable horror seized me. There was a darkness; then a dizzy,
+    <p class="bookquote">
+      <i>An unspeakable horror seized me. There was a darkness; then a dizzy,
       sickening sensation of sight that was not like seeing; I saw a Line
       that was no Line; Space that was not Space: I was myself, and not
       myself. When I could find voice, I shrieked loud in agony,
-      &quot;Either this is madness or it is Hell.&quot;
+      &quot;Either this is madness or it is Hell.&quot;</i>
     <p class="bookquote">
       <i>&quot;It is neither,&quot; calmly replied the voice of the Sphere,
       &quot;it is Knowledge; it is Three Dimensions: open your eye once
       again and try to look steadily.&quot;</i>
       <br>
-      -- Edwin A. Abbott from <i>Flatland: A romance in many dimensions</i>
+      -- Edwin A. Abbott, <i>Flatland: A romance in many dimensions</i>
     <p>
-      In 3D the NetLogo world has width, height and depth. In addition to
+      NetLogo 3D's world has width, height and depth. Patches are cubes.
+      In addition to
       <tt><a href="dictionary.html#pxcor">pxcor</a></tt> and <tt><a href=
       "dictionary.html#pycor">pycor</a></tt>, patches have <tt><a href=
       "3dprims.html#pzcor">pzcor</a></tt>.
@@ -97,7 +100,7 @@ p.c1 {font-style: italic}
       orientation of the turtle more than one of the internal turtle
       variables may change as the result of a turn.
     <h4>
-      The Observer and the 3D view
+      The observer and the 3D view
     </h4>
     <p>
       The point of view that you see the world from is considered the
@@ -105,20 +108,20 @@ p.c1 {font-style: italic}
       view in NetLogo 2D. However, there are a few more ways to control the
       observer. You can set the point that the observer is facing by using
       <tt>face</tt> and <tt>facexyz</tt> which work the same way as the
-      turtle commands, the Observer turns so the center of the view is on
+      turtle commands, the observer turns so the center of the view is on
       the given point or the location of the given agent at the time it is
-      called. You can change the location of the Observer using
-      <tt>setxyz</tt>. The Observer will move to view the world as if
+      called. You can change the location of the observer using
+      <tt>setxyz</tt>. The observer will move to view the world as if
       standing on the given location, the point the observer faces will
-      stay the same. For example create a new model and Observer will be
+      stay the same. For example create a new model and observer will be
       located at (0, 0, 49.5), that is, on the z-axis 49.5 patch units away
-      from the origin and the Observer is facing the origin, (0, 0, 0). If
-      you <tt>setxyz 0 49.5 0</tt> the Observer will move so it is on the
+      from the origin and the observer is facing the origin, (0, 0, 0). If
+      you <tt>setxyz 0 49.5 0</tt> the observer will move so it is on the
       positive y-axis but it will keep the origin at the center of the
       view. You can also move the observer using the rotation primitives
       that will allow you to move the observer around the world as if on
-      the surface of a sphere where the center is the location the Observer
-      is facing. You may notice from the above examples that the Observer
+      the surface of a sphere where the center is the location the observer
+      is facing. You may notice from the above examples that the observer
       is not constrained to be within the bounds of the world.
     <h4>
       <a name="custom-shapes" id="custom-shapes">Custom Shapes</a>
@@ -203,19 +206,20 @@ end-shape
       "3dprims.html#max-pxcor"><tt>max-pzcor</tt></a> and <a href=
       "3dprims.html#min-pzcor"><tt>min-pzcor</tt></a>.
     <p class="screenshot">
-      <img alt="screen shot" src="images/threed/properties.gif">
+      <img alt="screen shot" src="images/threed/properties.png">
     <p>
       The z-axis is perpendicular to both the x-axis and the y-axis, when
       you <tt>reset-perspective</tt> it is the axis that comes straight out
       of the screen. In the default position <tt>max-pzcor</tt> is the face
       of the cube nearest to you and <tt>min-pzcor</tt> is the face
       farthest from you. As always <tt>min-pxcor</tt> is on the left,
-      <tt>max-pxcor</tt> on the right, <tt>min-pycor</tt> on the bottom and
-      <tt>max-pycor</tt> on the top. You'll also notice on the left
+      <tt>max-pxcor</tt> on the right, <tt>min-pycor</tt> on the bottom, and
+      <tt>max-pycor</tt> on the top.
+    <p>You'll also notice on the left
       side of the Model Settings that there are options for wrapping in all
       three directions, however, they are all checked and grayed out.
-      Topologies are not yet functional in NetLogo 3D so all worlds wrap in
-      all three directions.
+      Topologies are not yet supported in NetLogo 3D, so the world
+      always wraps in all dimensions.
     <blockquote>
       <ul>
         <li>Move to the Command Center and type <tt>print count
@@ -225,7 +229,7 @@ end-shape
         Is the number smaller or larger than you expected?
       </blockquote>
     <p>
-      In a 3D World the number of patches grows very quickly since
+      In a 3D world the number of patches grows very quickly since
       <tt>count patches = world-width * world-height * world-depth</tt>.
       It's important to keep this in mind when you are building your
       model. Lots of patches can slow your model down or even cause NetLogo
@@ -246,16 +250,16 @@ end-shape
     </h4>
     <blockquote>
       <ul>
-        <li>Open the Models Library in the File Menu, (if you are on a Mac
-        and you don't have a File Menu click on the NetLogo window and
-        it should reappear)
+        <li>Open the Models Library in the File menu.  (If you are on a Mac
+        and you don't have a File menu, click on the main NetLogo window first and
+        it should reappear.)
         <li>Open Turtle and Observer Motion Example 3D in 3D/Code Examples
         </ul>
     </blockquote>
     <p>
       Take a moment to look for the controls and monitors. In the bottom
       left you'll notice a group of monitors that describe the location
-      and orientation of the turtle, though until you press the SETUP
+      and orientation of the turtle, though until you press the setup
       button they'll all say &quot;N/A&quot;.
     <blockquote>
       <ul>
@@ -263,25 +267,25 @@ end-shape
         </ul>
     </blockquote>
     <p>
-      Heading, pitch, and roll are turtle variables that describe the
+      Heading, pitch, and roll are turtle variables that represent the
       orientation of the turtle. Heading is absolute in relation to the
-      xy-plane, it is the rotation of the turtle around the z-axis.
+      x/y plane; it is the rotation of the turtle around the z-axis.
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/heading.gif">
     <p>
-      Pitch is the angle between the nose of the turtle and the xy-plane,
-      it is relative to heading.
+      Pitch is the angle between the nose of the turtle and the xy-plane.
+      It is relative to heading.
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/pitch.gif">
     <p>
-      Roll is the rotation around the turtle's forward vector, it is
+      Roll is the rotation around the turtle's forward vector. It is
       relative to heading and pitch.
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/roll.gif">
     <p>
-      When a group of turtles are created (using crt 10 for example) the
-      heading will be evenly spaced around the 360 degrees as in 2D
-      NetLogo, however, pitch and roll will always be zero.
+      When turtles are created with <tt>create-turtles</tt>
+      or <tt>create-ordered-turtles</tt>, their initial headings 
+      vary but their initial pitch and roll are always zero.
     <p>
       Take a look at the &quot;Turtle Movement&quot; buttons.
     <blockquote>
@@ -310,33 +314,33 @@ end-shape
     </blockquote>
     <p>
       You probably noticed that often more than one of the turtle variables
-      change for a single turn; for this reason we suggest that you use the
+      may change for a single turn.  For this reason we suggest that you use the
       turtle commands rather than setting the orientation variables
       directly.
     <h4>
       Step 3: Observer Movement
     </h4>
     <p>
-      At the bottom of the interface you will see a group of buttons
-      labeled &quot;Observer (point of view)&quot;. If you have ever used
+      At the bottom of the interface you will see Orbit, Zoom, and Move
+      buttons. If you have ever used
       the 3D view in NetLogo 2D or if you have been using the mouse
       controls in the 3D view through this tutorial you have been moving
-      the Observer. Changing the point of view in the 3D is actually moving
-      and changing the orientation of the Observer. The Observer has x, y
+      the observer. Changing the point of view in the 3D view is actually moving
+      and changing the orientation of the observer. The observer has x, y
       and z coordinates, just like a turtle or patch, while turtles and
-      patches are constrained to be inside the world the Observer can be
-      anywhere. Like a turtle the Observer has a heading, pitch and roll,
-      these variables control where the Observer is looking, that is, what
-      you see in the View.
+      patches are constrained to be inside the world the observer can be
+      anywhere. Like a turtle the observer has a heading, pitch and roll,
+      these variables control where the observer is looking, that is, what
+      you see in the view.
     <blockquote>
       <ul>
-        <li>Move to the 3D View, and make sure &quot;Orbit&quot; is
+        <li>Move to the 3D view, and make sure &quot;Orbit&quot; is
         selected in the bottom left corner of the view.
         <li>Click and hold the mouse button in the middle of the view, move
         the mouse left, right, up, and down.
         </ul>
       <p class="question">
-        How does the position and orientation of the Observer change?
+        How does the position and orientation of the observer change?
       <ul>
         <li>Press the reset-perspective button in the lower right corner of
         the view and select &quot;Zoom&quot; in the lower left corner.
@@ -344,7 +348,7 @@ end-shape
         move the mouse up and down.
         </ul>
       <p class="question">
-        Which of the Observer variables change? Which stay the same?
+        Which of the observer variables change? Which stay the same?
       <ul>
         <li>Try rotating the world a bit and then zoom again.
         <li>Press the &quot;Move&quot; button in the lower left corner of
@@ -353,21 +357,22 @@ end-shape
         move the mouse up, down, left and right.
         </ul>
       <p class="question">
-        How does the view change? How do the Observer variables change?
+        How does the view change? How do the observer variables change?
       </blockquote>
     <p>
       After you are done exploring the world using the mouse controls you
-      can take a look at the Observer control buttons in the lower left
+      can take a look at the observer control buttons in the lower left
       portion of the interface.
     <p>
-      If you are familiar the latest versions of NetLogo you should be
-      familiar with the first three buttons in the Observer group. Watch,
+      You may already be
+      familiar with the first three buttons in the observer group from
+      your experience with NetLogo 2D. Watch,
       follow, and ride, are special modes that automatically update the
-      position and orientation of the Observer. When in follow or ride
+      position and orientation of the observer. When in follow or ride
       mode, the observer position and orientation are the same as the
       turtle's. Note that follow and ride are functionally exactly the
       same, the difference is only visual in the 3D view. When in watch
-      mode the Observer does not move but updates to face the target agent.
+      mode the observer does not move but updates to face the target agent.
     <blockquote>
       <ul>
         <li>Press the &quot;setup&quot; button again so you are back to the
@@ -384,42 +389,39 @@ end-shape
     </blockquote>
     <p>
       The direction of the the orbit commands refer to the direction that
-      the Observer moves. That is, imagine that the Observer is on the
+      the observer moves. That is, imagine that the observer is on the
       surface of a sphere, the center of the sphere is the point that the
-      Observer is facing represented by the blue cross, by default (0,0,0).
-      The Observer will always face the center of the sphere and the radius
+      observer is facing represented by the blue cross, by default (0,0,0).
+      The observer will always face the center of the sphere and the radius
       of the sphere will remain constant. The directions, up, down, left,
       and right, refer to moving along the lines of latitude and the lines
       of longitude of the sphere. When you zoom the radius of the sphere
-      changes but the center and the Observer's orientation in relation
+      changes but the center and the observer's orientation in relation
       to the center of the sphere will remain the same.
     <blockquote>
       <ul>
         <li>Press one of the &quot;setxyz&quot; buttons.
         </ul>
       <p class="question">
-        How does the view change? How do the Observer variables change?
+        How does the view change? How do the observer variables change?
       <ul>
         <li>Press the &quot;facexyz&quot; button.
         </ul>
       <p class="question">
-        How does the view change? How do the Observer variables change?
+        How does the view change? How do the observer variables change?
       </blockquote>
     <p>
       When you <tt>setxyz</tt> the center of the sphere remains the same
-      (so the Observer automatically keeps that point in the center of the
+      (so the observer automatically keeps that point in the center of the
       view.) However, the radius of the sphere may change as well as the
-      Observer's orientation in relation to the center. When you
+      observer's orientation in relation to the center. When you
       <tt>facexyz</tt> or <tt>face</tt>, the center of the sphere changes
-      but the Observer does not move. The radius of the sphere may change,
-      as well as the orientation of the Observer.
+      but the observer does not move. The radius of the sphere may change,
+      as well as the orientation of the observer.
     <h2>
       <a name="faq" id="faq">FAQ (Frequently Asked Questions)</a>
     </h2>
     <ul class="smaller">
-      <li>
-        <a href="#translucent"><b>Can I make patches or turtles
-        translucent?</b></a>
       <li>
         <a href="#applet"><b>Can I make a 3D applet?</b></a>
       <li>
@@ -428,13 +430,6 @@ end-shape
       <li>
         <a href="#shapes"><b>Can I make custom 3D shapes?</b></a>
       </ul>
-    <h4>
-      <a name="translucent" id="translucent"></a>Can I make patches or
-      turtles translucent?
-    </h4>
-    <p>
-      Not at this time. We have tentative plans to make this possible
-      sometime in the future.
     <h4>
       <a name="applet" id="applet"></a>Can I make a 3D applet?
     </h4>
