@@ -53,10 +53,15 @@ public strictfp class Renderer
     Collection<Object> breeds = world.program().linkBreeds().values();
     for (Iterator<Object> iter = breeds.iterator();
          iter.hasNext();) {
-      AgentSet breed = (AgentSet) iter.next();
-      for (Agent a : breed.agents()) {
-        linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
-        linksDrawn++;
+      Object next = iter.next();
+      // I'm unable to reproduce bug #1400, but a user did see it, and
+      // this instanceof check should prevent it - ST 9/21/11
+      if(next instanceof AgentSet) {
+        AgentSet breed = (AgentSet) iter.next();
+        for (Agent a : breed.agents()) {
+          linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
+          linksDrawn++;
+        }
       }
     }
     if (linksDrawn < world.links().count()) {
@@ -80,11 +85,16 @@ public strictfp class Renderer
     Collection<Object> breeds = world.program().breeds().values();
     for (Iterator<Object> iter = breeds.iterator();
          iter.hasNext();) {
-      AgentSet breed = (AgentSet) iter.next();
-      if (Turtle.class.isAssignableFrom(breed.type())) {
-        for (Agent a : breed.agents()) {
-          turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
-          turtlesDrawn++;
+      Object next = iter.next();
+      // I'm unable to reproduce bug #1400, but a user did see it, and
+      // this instanceof check should prevent it - ST 9/21/11
+      if(next instanceof AgentSet) {
+        AgentSet breed = (AgentSet) next;
+        if (Turtle.class.isAssignableFrom(breed.type())) {
+          for (Agent a : breed.agents()) {
+            turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
+            turtlesDrawn++;
+          }
         }
       }
     }
