@@ -85,7 +85,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
     else synchronized {
       // we're on the event thread, so don't sleep for very long or we'll turn the UI to molasses.
       // return false; the caller should process UI events and then call us again - ST 9/21/11
-      try waitNanos(10000000L min (timeSmoothingWillBeDone - now))
+      try sleep(10000000L min (timeSmoothingWillBeDone - now))
       catch { case ex: InterruptedException =>
         // if we were interrupted, it's because the model is being halted, so we need to make sure
         // we re-interrupt so the halt will happen - ST 8/16/07
@@ -124,7 +124,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   def nudgeSleeper() { synchronized { notifyAll() } }
   private def sleep(nanos: Long) {
     synchronized {
-      try waitNanos(nanos)
+      try wait(nanos / 1000000, (nanos % 1000000).toInt)
       catch { case ex: InterruptedException =>
         // if we were interrupted, it's because the model is being halted, so we need to make sure
         // we re-interrupt so the halt will happen - ST 8/16/07
@@ -152,10 +152,6 @@ abstract class UpdateManager extends UpdateManagerInterface {
     }
   }
   
-  private def waitNanos(nanos: Long) {
-    wait(nanos / 1000000, (nanos % 1000000).toInt)
-  }
-
   // used for unit testing and debugging
   def debugInfo =
     "speed = %.0f, frameRateGap = %.2f fps, nanoGap = %.2f fps, slowdown = %.1f ms, every %.3f ticks".format(
