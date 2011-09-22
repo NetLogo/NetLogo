@@ -37,17 +37,15 @@ PREREQUISITES:
 
 ahead of time:
 - ask Seth for the NetLogo change list
-  or construct it yourself using git and/or Trac and/or
-  the ltps-cvs archives; for details see:
+  or construct it yourself using git and/or Trac.
+  for details see:
   https://ccl.northwestern.edu/mailman/private/ccl-devel/2008/030764.html
   in Trac, you might look both at the Timeline, and at the "Roadmap"
   where you can get a list of closed tickets for a given target.
   sometimes other people can supply pieces of the change list, for
   example, Josh/HubNet.  the change list will be used to construct
   the release announcement, so it should include even stuff like changes
-  to secret prims.
-- ask Michelle (or Seth?) for the models change list (or construct it
-  yourself using trac, https://trac.assembla.com/nlogo/timeline)
+  to secret prims.  don't forget to include changes to the Models Library.
 - decide if you need to upgrade the bundled java with the windows
   installer.  consult
     http://java.sun.com/javase/6/webnotes/ReleaseNotes.html
@@ -65,6 +63,7 @@ ahead of time:
  
 misc:
 - build all of the model previews (takes quite a while!)
+  use "sbt previews"
 - do all of the checks in netlogo/devel/checks.txt
   (or maybe skip some, especially if it's not a public release...)
 - update version number and date in resources/system/version.txt
