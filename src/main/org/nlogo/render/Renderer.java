@@ -57,7 +57,7 @@ public strictfp class Renderer
       // I'm unable to reproduce bug #1400, but a user did see it, and
       // this instanceof check should prevent it - ST 9/21/11
       if(next instanceof AgentSet) {
-        AgentSet breed = (AgentSet) iter.next();
+        AgentSet breed = (AgentSet) next;
         for (Agent a : breed.agents()) {
           linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
           linksDrawn++;
