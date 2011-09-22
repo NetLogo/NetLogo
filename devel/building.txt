@@ -162,6 +162,8 @@ testing:
 - are the right models included?
   - are recent model changes included?
   - was "make copymodels" done?
+- do all of the test applets work?  url is e.g.
+  http://ccl.northwestern.edu/netlogo/5.0RC1/applet/
 - do extensions work, e.g. the sound models?
 - does the 3D view work?  does the 3D app work?
 - does the system dynamics modeler work?
@@ -173,6 +175,7 @@ testing:
   from the directory.  It's ugly and maybe it should be
   handled by the scripts on the webserver but it's not, so do it by hand
   or modify the scripts yourself :)
+- does it work on Java 5, such as on Mac OS X 10.4 and 10.5?
 
 IF PUBLIC:
 - on ccl (using zsh, so ** syntax works):
