@@ -1,5 +1,5 @@
 NetLogo 5.0RC1
-September 21, 2011
+September 22, 2011
 NetLogo 5.0beta
 NetLogo 4.
 NetLogo 3.
