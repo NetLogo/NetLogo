@@ -74,9 +74,30 @@ abstract class UpdateManager extends UpdateManagerInterface {
       frameDone()
   }
   
+  private var timeSmoothingWillBeDone = 0L
+
+  def isDoneSmoothing() = {
+    val now = nanoTime
+    if(now > timeSmoothingWillBeDone) {
+      lastUpdateNanos = now
+      true
+    }
+    else synchronized {
+      // we're on the event thread, so don't sleep for very long or we'll turn the UI to molasses.
+      // return false; the caller should process UI events and then call us again - ST 9/21/11
+      try wait(10)
+      catch { case ex: InterruptedException =>
+        // if we were interrupted, it's because the model is being halted, so we need to make sure
+        // we re-interrupt so the halt will happen - ST 8/16/07
+        Thread.currentThread.interrupt()
+      }
+      false
+    }
+  }
+
   private def frameDone() {
     val now = nanoTime
-    pauseUntil(() => now + updatePolicy.smoothingPause(nanoTime))
+    timeSmoothingWillBeDone = now + updatePolicy.smoothingPause(now)
     lastUpdateNanos = nanoTime
     lastUpdateTicks = ticks
     pseudoTicks = 0

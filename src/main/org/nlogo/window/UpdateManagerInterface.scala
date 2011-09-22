@@ -11,5 +11,6 @@ trait UpdateManagerInterface {
   def pseudoTick(): Unit
   def beginPainting(): Unit
   def donePainting(): Unit
+  def isDoneSmoothing(): Boolean
   def nudgeSleeper(): Unit
 }

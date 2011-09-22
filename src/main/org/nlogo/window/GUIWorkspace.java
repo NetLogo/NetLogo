@@ -604,6 +604,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                 viewManager.incrementalUpdateFromEventThread();
               }
             });
+        // don't block the event thread during a smoothing pause
+        // or the UI will go sluggish (issue #1263) - ST 9/21/11
+        while(!updateManager().isDoneSmoothing()) {
+          ThreadUtils.waitForQueuedEvents(this);
+        }
       } catch (org.nlogo.nvm.HaltException ex) {
         org.nlogo.util.Exceptions.ignore(ex);
       } catch (LogoException ex) {
