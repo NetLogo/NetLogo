@@ -30,7 +30,7 @@ import StrictMath.pow
 // The DISPLAY command always causes a pseudo-tick, regardless of update mode.
 //
 // With continuous updates only, GUIWorkspace generates a pseudo-tick every time the engine comes up
-// for air, which basically means every time one agents runs one command.
+// for air, which basically means every time one agent runs one command.
 
 abstract class UpdateManager extends UpdateManagerInterface {
   
