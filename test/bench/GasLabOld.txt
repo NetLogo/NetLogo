@@ -769,9 +769,10 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DDIV
            L7
             DSTORE 2
+            GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
             DLOAD 2
             ICONST_0
-            INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+            INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -1016,9 +1017,10 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             DDIV
            L7
             DSTORE 2
+            GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
             DLOAD 2
             ICONST_0
-            INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+            INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
            L8
             DSTORE 2
             NEW java/lang/Double
@@ -3106,9 +3108,10 @@ procedure FADE:[]{-TP-}:
           ATHROW
          L6
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L7
           LDC 40.0
          L8
@@ -4344,9 +4347,10 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           DMUL
          L8
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L9
           DSTORE 2
           NEW java/lang/Double
@@ -5036,9 +5040,10 @@ procedure SETUP:[]{O---}:
           DDIV
          L12
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L13
           DSTORE 2
           NEW java/lang/Double

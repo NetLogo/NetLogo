@@ -1051,9 +1051,10 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           DDIV
          L12
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L13
           DSTORE 2
           NEW java/lang/Double
@@ -1290,9 +1291,10 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           DDIV
          L12
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L13
           DSTORE 2
           NEW java/lang/Double

@@ -11210,9 +11210,10 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           ATHROW
          L14
           DSTORE 2
+          GETSTATIC org/nlogo/api/Approximate$.MODULE$ : Lorg/nlogo/api/Approximate$;
           DLOAD 2
           ICONST_0
-          INVOKESTATIC org/nlogo/api/Approximate.approximate (DI)D
+          INVOKEVIRTUAL org/nlogo/api/Approximate$.approximate (DI)D
          L15
           DCONST_0
          L16
