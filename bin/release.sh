@@ -88,7 +88,7 @@ if [ $WINDOWS -eq 1 ]; then
     echo "for custom id: server"
     exit 1
   fi
-  if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.8 (build 5311), built on 2011-04-13" ; 
+  if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.9 (build 5372), built on 2011-07-08" ; 
   then
     echo "install4j " $IJDIR/$IJ "not found"
     exit 1
