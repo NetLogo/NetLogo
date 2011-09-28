@@ -33,7 +33,7 @@ SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR=/Applications/install4j-$IJVERSION
-VM=windows-x86-1.6.0_25_server
+VM=windows-x86-1.6.0_27_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -83,8 +83,8 @@ if [ $WINDOWS -eq 1 ]; then
     echo "or if we don't have one for this Java version yet,"
     echo "you can make it from inside install4j, but only on a windows machine"
     echo "go to Project -> Create JRE Bundles"
-    echo "for path e.g.: c:\\jdk1.6.0_25"
-    echo "for java version e.g.: 1.6.0_25"
+    echo "for path e.g.: c:\\jdk1.6.0_27"
+    echo "for java version e.g.: 1.6.0_27"
     echo "for custom id: server"
     exit 1
   fi
