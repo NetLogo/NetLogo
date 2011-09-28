@@ -31,7 +31,7 @@ XARGS=xargs
 # other
 SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
-IJVERSION=5.0.8
+IJVERSION=5.0.9
 IJDIR=/Applications/install4j-$IJVERSION
 VM=windows-x86-1.6.0_25_server
 
