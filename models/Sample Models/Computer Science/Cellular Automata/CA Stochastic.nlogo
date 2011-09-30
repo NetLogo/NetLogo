@@ -1,7 +1,7 @@
-globals
-[
-  row    ;; current row we are now calculating
-  done?  ;; flag set to allow you to press the go button multiple times
+globals [
+  row        ;; current row we are now calculating
+  done?      ;; flag set to allow you to press the go button multiple times
+  prob-list  ;; list of the probabilities of each pattern occurring
 ]
 
 patches-own [on?]
@@ -12,7 +12,7 @@ patches-own [on?]
 
 ;; setup general working environment.  the other setup procedures call this.
 to setup-general
-  cp
+  clear-patches
   set row max-pycor   ;; reset current row
   set done? false
 end
@@ -20,15 +20,15 @@ end
 ;; setup a random selection of patches in the top row to have on? true
 to setup-random
   setup-general
-  reset-ticks
-  clear-plot
-
+  clear-all-plots
   ;; randomly place cells across the top of the world
   ask patches with [pycor = row]
   [
     set on? ((random-float 100) < density)
     color-patch
   ]
+  build-prob-list
+  reset-ticks
 end
 
 ;; setup the patches to continue a particular model run.  this will copy the bottom
@@ -109,12 +109,11 @@ to go
   ask patches with [ pycor = row ]  ;; apply rule
     [ do-rule ]
 
-  if plot? [plot-entropy]
-
   set row (row - 1)
   ask patches with [ pycor = row ]  ;; color in changed cells
     [ color-patch ]
 
+  build-prob-list
   tick
 end
 
@@ -140,8 +139,8 @@ to do-rule  ;; patch procedure
   ask patch-at 0 -1 [ set on? new-value ]
 end
 
-;; plot topologic / metric entropy
-to plot-entropy
+;; for plotting
+to build-prob-list
   let i min-pxcor  ;; index of where in the row we are currently doing calculations
   ;; make a 16 element list for storing the number of occurrences of each distinct 4-patch pattern
   let counter-list n-values 16 [0]
@@ -156,16 +155,7 @@ to plot-entropy
   ]
 
   ;; make a list of the probabilities of each pattern occurring
-  let prob-list map [? / (sum counter-list)] counter-list
-
-  ;; X = 4 (correlation length): size of subsequences analyzed
-  ;; topological entropy = 1/X * the log of the sum of the probabilities rounded up
-  set-current-plot-pen "topologic"
-  plotxy ticks 1 / 4 * (log (sum (map [1] (filter [? > 0] prob-list))) 2)
-
-  ;; metric entropy = -1/X * the sum of the products of each probability and its log
-  set-current-plot-pen "metric"
-  plotxy ticks -1 / 4 * sum ( map[? * log ? 2] (filter [? > 0] prob-list) )
+  set prob-list map [? / (sum counter-list)] counter-list
 end
 
 
@@ -236,7 +226,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 11
@@ -309,7 +299,7 @@ IOO
 IOO
 0
 100
-66
+50
 0.5
 1
 %
@@ -514,10 +504,10 @@ entropy
 1.0
 true
 true
-"" ""
+"" "if not plot? [ stop ]"
 PENS
-"topologic" 1.0 0 -8630108 true "" ""
-"metric" 1.0 0 -955883 true "" ""
+"topologic" 1.0 0 -8630108 true "" ";; X = 4 (correlation length): size of subsequences analyzed\n;; topological entropy = 1/X * the log of the sum of the probabilities rounded up\nplotxy ticks 1 / 4 * (log (sum (map [1] (filter [? > 0] prob-list))) 2)\n"
+"metric" 1.0 0 -955883 true "" ";; metric entropy = -1/X * the sum of the products of each probability and its log\nset-current-plot-pen \"metric\"\nplotxy ticks -1 / 4 * sum ( map[? * log ? 2] (filter [? > 0] prob-list))"
 
 SWITCH
 249
@@ -937,7 +927,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 set example 4
 setup-example
