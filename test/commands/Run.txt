@@ -30,3 +30,10 @@ LuisIzquierdoRunResult2
   to foo [x] __ignore runresult "color" end
   O> setup
   glob1 => 100000
+
+run-evaluate-string-input-only-once
+  to-report foo set glob1 glob1 + 1 report "__ignore glob1" end
+  O> run foo
+  glob1 => 1
+
+
