@@ -1096,60 +1096,71 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L16
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L16
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L17
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L18
-          DCONST_0
+          ICONST_0
           GOTO L19
          L18
-          LDC 180.0
+          SIPUSH 180
          L19
+          I2D
           GOTO L20
          L17
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L21
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L22
-          LDC 90.0
+          BIPUSH 90
           GOTO L23
          L22
-          LDC 270.0
+          SIPUSH 270
          L23
+          I2D
           GOTO L20
          L21
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L20
           DSTORE 2
@@ -2679,60 +2690,71 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L16
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L16
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L16
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L17
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L18
-          DCONST_0
+          ICONST_0
           GOTO L19
          L18
-          LDC 180.0
+          SIPUSH 180
          L19
+          I2D
           GOTO L20
          L17
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L21
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L22
-          LDC 90.0
+          BIPUSH 90
           GOTO L23
          L22
-          LDC 270.0
+          SIPUSH 270
          L23
+          I2D
           GOTO L20
          L21
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L20
           DSTORE 2

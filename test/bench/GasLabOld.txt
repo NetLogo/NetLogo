@@ -10353,60 +10353,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L24
-          DCONST_0
+          ICONST_0
           GOTO L25
          L24
-          LDC 180.0
+          SIPUSH 180
          L25
+          I2D
           GOTO L26
          L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L27
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L28
-          LDC 90.0
+          BIPUSH 90
           GOTO L29
          L28
-          LDC 270.0
+          SIPUSH 270
          L29
+          I2D
           GOTO L26
          L27
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L26
           DSTORE 4
@@ -10733,60 +10744,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L26
-          DCONST_0
+          ICONST_0
           GOTO L27
          L26
-          LDC 180.0
+          SIPUSH 180
          L27
+          I2D
           GOTO L28
          L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L29
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L30
-          LDC 90.0
+          BIPUSH 90
           GOTO L31
          L30
-          LDC 270.0
+          SIPUSH 270
          L31
+          I2D
           GOTO L28
          L29
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L28
           DSTORE 4
@@ -11113,60 +11135,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L26
-          DCONST_0
+          ICONST_0
           GOTO L27
          L26
-          LDC 180.0
+          SIPUSH 180
          L27
+          I2D
           GOTO L28
          L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L29
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L30
-          LDC 90.0
+          BIPUSH 90
           GOTO L31
          L30
-          LDC 270.0
+          SIPUSH 270
          L31
+          I2D
           GOTO L28
          L29
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L28
           DSTORE 4
@@ -11483,60 +11516,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L24
-          DCONST_0
+          ICONST_0
           GOTO L25
          L24
-          LDC 180.0
+          SIPUSH 180
          L25
+          I2D
           GOTO L26
          L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L27
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L28
-          LDC 90.0
+          BIPUSH 90
           GOTO L29
          L28
-          LDC 270.0
+          SIPUSH 270
          L29
+          I2D
           GOTO L26
          L27
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L26
           DSTORE 4
@@ -12232,60 +12276,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L24
-          DCONST_0
+          ICONST_0
           GOTO L25
          L24
-          LDC 180.0
+          SIPUSH 180
          L25
+          I2D
           GOTO L26
          L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L27
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L28
-          LDC 90.0
+          BIPUSH 90
           GOTO L29
          L28
-          LDC 270.0
+          SIPUSH 270
          L29
+          I2D
           GOTO L26
          L27
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L26
           DSTORE 4
@@ -12612,60 +12667,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L26
-          DCONST_0
+          ICONST_0
           GOTO L27
          L26
-          LDC 180.0
+          SIPUSH 180
          L27
+          I2D
           GOTO L28
          L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L29
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L30
-          LDC 90.0
+          BIPUSH 90
           GOTO L31
          L30
-          LDC 270.0
+          SIPUSH 270
          L31
+          I2D
           GOTO L28
          L29
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L28
           DSTORE 4
@@ -12992,60 +13058,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L24
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L24
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L26
-          DCONST_0
+          ICONST_0
           GOTO L27
          L26
-          LDC 180.0
+          SIPUSH 180
          L27
+          I2D
           GOTO L28
          L25
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L29
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L30
-          LDC 90.0
+          BIPUSH 90
           GOTO L31
          L30
-          LDC 270.0
+          SIPUSH 270
          L31
+          I2D
           GOTO L28
          L29
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L28
           DSTORE 4
@@ -13362,60 +13439,71 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DSTORE 4
           DSTORE 2
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L22
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.atan.bothInputsCannotBeZero"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L22
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L24
-          DCONST_0
+          ICONST_0
           GOTO L25
          L24
-          LDC 180.0
+          SIPUSH 180
          L25
+          I2D
           GOTO L26
          L23
           DLOAD 4
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFNE L27
           DLOAD 2
-          DCONST_0
+          ICONST_0
+          I2D
           DCMPL
           IFLE L28
-          LDC 90.0
+          BIPUSH 90
           GOTO L29
          L28
-          LDC 270.0
+          SIPUSH 270
          L29
+          I2D
           GOTO L26
          L27
           DLOAD 2
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DADD
-          LDC 360.0
+          SIPUSH 360
+          I2D
           DREM
          L26
           DSTORE 4
