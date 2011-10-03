@@ -13,7 +13,6 @@ to setup
     [ become-infected ]
   ask links [ set color white ]
   reset-ticks
-  update-plot
 end
 
 to setup-nodes
@@ -57,7 +56,6 @@ to go
   spread-virus
   do-virus-checks
   tick
-  update-plot
 end
 
 to become-infected  ;; turtle procedure
@@ -97,17 +95,6 @@ to do-virus-checks
     ]
   ]
 end
-
-
-to update-plot
-  set-current-plot "Network Status"
-  set-current-plot-pen "susceptible"
-  plot (count turtles with [not infected? and not resistant?]) / (count turtles) * 100
-  set-current-plot-pen "infected"
-  plot (count turtles with [infected?]) / (count turtles) * 100
-  set-current-plot-pen "resistant"
-  plot (count turtles with [resistant?]) / (count turtles) * 100
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 265
@@ -134,7 +121,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 SLIDER
 25
@@ -231,9 +218,9 @@ true
 true
 "" ""
 PENS
-"susceptible" 1.0 0 -10899396 true "" ""
-"infected" 1.0 0 -2674135 true "" ""
-"resistant" 1.0 0 -7500403 true "" ""
+"susceptible" 1.0 0 -10899396 true "" "plot (count turtles with [not infected? and not resistant?]) / (count turtles) * 100"
+"infected" 1.0 0 -2674135 true "" "plot (count turtles with [infected?]) / (count turtles) * 100"
+"resistant" 1.0 0 -7500403 true "" "plot (count turtles with [resistant?]) / (count turtles) * 100"
 
 SLIDER
 25
@@ -636,7 +623,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
