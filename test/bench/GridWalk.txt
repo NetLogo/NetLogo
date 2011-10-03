@@ -266,9 +266,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -281,8 +282,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
           ANEWARRAY java/lang/Object
           DUP
@@ -290,32 +293,43 @@ procedure SETUP:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L10
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
           ALOAD 2
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.face (Lorg/nlogo/agent/Agent;Z)V
           GOTO L11
          L10
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_face_2.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
+          ALOAD 3
+          INSTANCEOF org/nlogo/agent/Observer
+          IFEQ L12
+          ALOAD 3
+          CHECKCAST org/nlogo/agent/Observer
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
          L11
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L13
          L12
+          NEW scala/MatchError
+          DUP
+          ALOAD 3
+          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          ATHROW
+         L13
           RETURN
 [5]_asm_proceduresetup_done_3 "" => void
          L0
@@ -450,9 +464,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"
-          INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -465,8 +480,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/api/I18N.errorsJ ()Lorg/nlogo/api/I18NJava;
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
           LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
           ICONST_1
           ANEWARRAY java/lang/Object
           DUP
@@ -474,32 +491,43 @@ procedure GO:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 3
+          ALOAD 3
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L10
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
           ALOAD 2
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/Turtle.face (Lorg/nlogo/agent/Agent;Z)V
           GOTO L11
          L10
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_face_1.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
+          ALOAD 3
+          INSTANCEOF org/nlogo/agent/Observer
+          IFEQ L12
+          ALOAD 3
+          CHECKCAST org/nlogo/agent/Observer
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Observer.face (Lorg/nlogo/api/Agent;)V
          L11
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L13
          L12
+          NEW scala/MatchError
+          DUP
+          ALOAD 3
+          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          ATHROW
+         L13
           RETURN
 [2]_asm_procedurego_fd1_2 "fd" => void
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
