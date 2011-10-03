@@ -949,6 +949,7 @@ class AppFrame extends JFrame with LinkParent {
   setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
+  org.nlogo.awt.FullScreenUtilities.setWindowCanFullScreen(this, true)
   private val linkComponents = new collection.mutable.ListBuffer[Object]()
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
