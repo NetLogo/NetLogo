@@ -8,9 +8,6 @@ object FullScreenUtilities {
                    classOf[java.awt.Window],
                    classOf[Boolean])
         .invoke(null, w, Boolean.box(can))
-    catch {
-      case e: Exception =>
-        org.nlogo.util.Exceptions.ignore(e)
-    }
+    catch { case e: Exception => } // ignore
   }
 }
