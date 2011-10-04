@@ -467,13 +467,13 @@ count
 10.0
 false
 true
-"set-plot-x-range 0 (0.5 * (init-particle-speed * 3) * (init-particle-speed * 3) * particle-mass)\nset-plot-y-range 0 ceiling (number-of-particles / 10)\nset-current-plot-pen \"medium\"\nset-histogram-num-bars 45\nset-current-plot-pen \"slow\"\nset-histogram-num-bars 45\nset-current-plot-pen \"fast\"\nset-histogram-num-bars 45\nset-current-plot-pen \"init-avg-energy\"\ndraw-vert-line init-avg-energy" ""
+"set-plot-x-range 0 (0.5 * (init-particle-speed * 3) * (init-particle-speed * 3) * particle-mass)\nset-plot-y-range 0 ceiling (number-of-particles / 10)" ""
 PENS
-"fast" 1.0 1 -2674135 true "" "histogram [ energy ] of particles with [color = red]"
-"medium" 1.0 1 -10899396 true "" "histogram [ energy ] of particles with [color = green]"
-"slow" 1.0 1 -13345367 true "" "histogram [ energy ] of particles with [color = blue]"
+"fast" 1.0 1 -2674135 true "set-histogram-num-bars 45" "histogram [ energy ] of particles with [color = red]"
+"medium" 1.0 1 -10899396 true "set-histogram-num-bars 45" "histogram [ energy ] of particles with [color = green]"
+"slow" 1.0 1 -13345367 true "set-histogram-num-bars 45" "histogram [ energy ] of particles with [color = blue]"
 "avg-energy" 1.0 0 -7500403 true "" "plot-pen-reset   draw-vert-line avg-energy"
-"init-avg-energy" 1.0 0 -16777216 true "" ""
+"init-avg-energy" 1.0 0 -16777216 true "draw-vert-line init-avg-energy" ""
 
 PLOT
 13
@@ -520,13 +520,13 @@ count
 40.0
 false
 true
-"set-plot-x-range 0 (init-particle-speed * 3)\nset-plot-y-range 0 ceiling (number-of-particles / 10)\nset-current-plot-pen \"medium\"\nset-histogram-num-bars 45\nset-current-plot-pen \"slow\"\nset-histogram-num-bars 45\nset-current-plot-pen \"fast\"\nset-histogram-num-bars 45\nset-current-plot-pen \"init-avg-speed\"\ndraw-vert-line init-avg-speed" ""
+"set-plot-x-range 0 (init-particle-speed * 3)\nset-plot-y-range 0 ceiling (number-of-particles / 10)\n" ""
 PENS
-"fast" 5.0 1 -2674135 true "" "histogram [ speed ] of particles with [color = red]"
-"medium" 5.0 1 -10899396 true "" "histogram [ speed ] of particles with [color = green]"
-"slow" 5.0 1 -13345367 true "" "histogram [ speed ] of particles with [color = blue]"
+"fast" 5.0 1 -2674135 true "set-histogram-num-bars 45" "histogram [ speed ] of particles with [color = red]"
+"medium" 5.0 1 -10899396 true "set-histogram-num-bars 45" "histogram [ speed ] of particles with [color = green]"
+"slow" 5.0 1 -13345367 true "set-histogram-num-bars 45" "histogram [ speed ] of particles with [color = blue]"
 "avg-speed" 1.0 0 -7500403 true "" "plot-pen-reset   draw-vert-line avg-speed"
-"init-avg-speed" 1.0 0 -16777216 true "" ""
+"init-avg-speed" 1.0 0 -16777216 true "draw-vert-line init-avg-speed" ""
 
 SLIDER
 7
@@ -1095,7 +1095,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta4
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
