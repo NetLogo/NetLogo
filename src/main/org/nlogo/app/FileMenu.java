@@ -899,31 +899,14 @@ public strictfp class FileMenu
       // FileDialog dir.
       newDirectoryName = app.workspace().getModelDir();
     }
-    while (true) {
-
-      org.nlogo.swing.FileDialog.setDirectory(newDirectoryName);
-      String path = org.nlogo.swing.FileDialog.show(
-          this, "Save As", java.awt.FileDialog.SAVE,
-          newFileName);
-      java.io.File file = new java.io.File(path);
-      newFileName = file.getName();
-      newDirectoryName = path.substring(0, path.lastIndexOf(newFileName));
-      int suffixIndex = newFileName.lastIndexOf("." + modelSuffix());
-      // make sure it ends with .nlogo and there's at least one
-      // character first.
-      if (suffixIndex > 0 && suffixIndex == newFileName.length() - (modelSuffix().length() + 1)) {
-        return path;
-      }
-      int dotIndex = newFileName.lastIndexOf('.');
-      if (dotIndex != -1) {
-        newFileName = newFileName.substring(0, dotIndex);
-      }
-      newFileName = newFileName + "." + modelSuffix();
-      String[] options = {"Try Again"};
-      String message = "You must choose a name ending with: ." + modelSuffix();
-      org.nlogo.swing.OptionDialog.show
-          (this, I18N.guiJ().get("common.messages.error"), message, options);
+    org.nlogo.swing.FileDialog.setDirectory(newDirectoryName);
+    String path = org.nlogo.swing.FileDialog.show(
+      this, "Save As", java.awt.FileDialog.SAVE,
+      newFileName);
+    if(!path.endsWith("." + modelSuffix())) {
+      path += "." + modelSuffix();
     }
+    return path;
   }
 
   private boolean userWantsToSaveFirst()
