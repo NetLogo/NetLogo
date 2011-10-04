@@ -444,7 +444,7 @@ false
 true
 "" ""
 PENS
-"lorenz" 1.0 0 -2674135 true "" "plot-pen-reset\nset-plot-pen-interval 100 / num-people\nplot 0\nforeach lorenz-points [ plot ? ]"
+"lorenz" 1.0 0 -2674135 true "" "plot-pen-reset\nset-plot-pen-interval 100 / num-people\nplot 0\nforeach lorenz-points plot"
 "equal" 100.0 0 -16777216 true "plot 0\nplot 100" ""
 
 PLOT
