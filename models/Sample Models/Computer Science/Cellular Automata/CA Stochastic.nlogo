@@ -202,9 +202,9 @@ to color-patch  ;; patch procedure
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-385
+348
 10
-717
+680
 363
 80
 80
@@ -491,9 +491,9 @@ NIL
 HORIZONTAL
 
 PLOT
-249
+212
 365
-717
+680
 536
 entropy-plot
 time
@@ -507,12 +507,12 @@ true
 "" "if not plot? [ stop ]"
 PENS
 "topologic" 1.0 0 -8630108 true "" ";; X = 4 (correlation length): size of subsequences analyzed\n;; topological entropy = 1/X * the log of the sum of the probabilities rounded up\nplotxy ticks 1 / 4 * (log (sum (map [1] (filter [? > 0] prob-list))) 2)\n"
-"metric" 1.0 0 -955883 true "" ";; metric entropy = -1/X * the sum of the products of each probability and its log\nset-current-plot-pen \"metric\"\nplotxy ticks -1 / 4 * sum ( map[? * log ? 2] (filter [? > 0] prob-list))"
+"metric" 1.0 0 -955883 true "" ";; metric entropy = -1/X * the sum of the products of each probability and its log\nplotxy ticks -1 / 4 * sum ( map[? * log ? 2] (filter [? > 0] prob-list))"
 
 SWITCH
-249
+225
 298
-369
+345
 331
 plot?
 plot?
@@ -521,9 +521,9 @@ plot?
 -1000
 
 SWITCH
-249
+225
 330
-369
+345
 363
 auto-clear?
 auto-clear?

@@ -98,7 +98,7 @@ to rewire-one
     ]
     ;; plot the results
     let connected? do-calculations
-    do-plotting
+    update-plots
   ]
   [ user-message "all edges have already been rewired once" ]
 end
@@ -157,7 +157,7 @@ to rewire-all
   ]
 
   ;; do the plotting
-  do-plotting
+  update-plots
 end
 
 ;; do-calculations reports true if the network is connected,
@@ -394,41 +394,6 @@ to do-highlight
     ]
   ]
 end
-
-;;;;;;;;;;;;;;;;
-;;; Plotting ;;;
-;;;;;;;;;;;;;;;;
-
-to do-plotting
-
-   if rewire-one? [
-     ;; plot the rewire-one graph
-     set-current-plot "Network Properties Rewire-One"
-     set-current-plot-pen "apl"
-     ;; note: dividing by value at initial value to normalize the plot
-     plotxy number-rewired / count links
-            average-path-length / average-path-length-of-lattice
-
-     set-current-plot-pen "cc"
-     ;; note: dividing by initial value to normalize the plot
-     plotxy number-rewired / count links
-            clustering-coefficient / clustering-coefficient-of-lattice
-   ]
-
-   if rewire-all? [
-     ;; plot the rewire-all graph
-     set-current-plot "Network Properties Rewire-All"
-     set-current-plot-pen "apl"
-     ;; note: dividing by value at initial value to normalize the plot
-     plotxy rewiring-probability
-            average-path-length / average-path-length-of-lattice
-
-     set-current-plot-pen "cc"
-     ;; note: dividing by initial value to normalize the plot
-     plotxy rewiring-probability
-            clustering-coefficient / clustering-coefficient-of-lattice
-   ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 387
@@ -455,7 +420,7 @@ GRAPHICS-WINDOW
 0
 0
 ticks
-30
+30.0
 
 SLIDER
 472
@@ -486,10 +451,10 @@ NIL
 1.0
 true
 true
-"" ""
+"" "if not rewire-one? [ stop ]"
 PENS
-"apl" 1.0 2 -65485 true "" ""
-"cc" 1.0 2 -10899396 true "" ""
+"apl" 1.0 2 -65485 true "" "plotxy number-rewired / count links\n       average-path-length / average-path-length-of-lattice\n"
+"cc" 1.0 2 -10899396 true "" ";; note: dividing by initial value to normalize the plot\nplotxy number-rewired / count links\n       clustering-coefficient / clustering-coefficient-of-lattice\n"
 
 BUTTON
 283
@@ -604,10 +569,10 @@ NIL
 1.0
 true
 true
-"" ""
+"" "if not rewire-all? [ stop ]"
 PENS
-"apl" 1.0 2 -2674135 true "" ""
-"cc" 1.0 2 -10899396 true "" ""
+"apl" 1.0 2 -2674135 true "" ";; note: dividing by value at initial value to normalize the plot\nplotxy rewiring-probability\n       average-path-length / average-path-length-of-lattice\n"
+"cc" 1.0 2 -10899396 true "" ";; note: dividing by initial value to normalize the plot\nplotxy rewiring-probability\n       clustering-coefficient / clustering-coefficient-of-lattice\n"
 
 BUTTON
 398
@@ -988,7 +953,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 setup
 repeat 5 [rewire-one]
