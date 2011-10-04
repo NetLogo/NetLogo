@@ -12,11 +12,11 @@
       NetLogo User Manual&nbsp;&nbsp;&nbsp;
     </div>
     <p>
-      In Tutorial #1, you had the opportunity to view some of the NetLogo
-      models, and you have successfully navigated your way through opening
-      and running models, pressing buttons, changing slider and switch
-      values, and gathering information from a model using plots and
-      monitors. In this section, the focus will start to shift from
+      So far you've successfully navigated your way through opening
+      and running models, pressing buttons, changing sliders and switches,
+      and gathering information from a model using plots and
+      monitors.
+    <p>In this section, the focus will start to shift from
       observing models to manipulating models. You will start to see the
       inner workings of the models and be able to change how they look.
     <h2>
@@ -24,23 +24,20 @@
     </h2>
     <blockquote>
       <ul>
-        <li>Go to the Models Library (File menu).
-        <li>Open up Traffic Basic, found in the &quot;Social Science&quot;
+        <li>Open the Models Library (from the File menu).
+        <li>Open Traffic Basic, found in the &quot;Social Science&quot;
         section.
-        <li>Run the model for a couple minutes to get a feel for it.
-        <li>Consult the Info tab for any questions you may have about this
-        model.
+        <li>Run the model for a while to get a feel for it.
+        <li>Consult the Info tab for any questions you may have.
         </ul>
     </blockquote>
     <p>
       In this model, you will notice one red car in a stream of blue cars.
       The stream of cars are all moving in the same direction. Every so
       often they &quot;pile up&quot; and stop moving. This is modeling how
-      traffic jams can form without any cause such as an accident, a broken
-      bridge, or an overturned truck. No &quot;centralized cause&quot; is
-      needed for a traffic jam to form.
+      traffic jams can form without a specific cause like an accident.
     <p>
-      You may alter the settings and observe a few runs to get a full
+      You may alter the settings and observe a few runs to get a fuller
       understanding of the model.
     <blockquote>
       <p class="question">
@@ -53,8 +50,8 @@
       blue cars and one red car. Changes that could be made to the model
       include: changing the color and shape of the cars, adding a house or
       street light, creating a stop light, or even creating another lane of
-      traffic. Some of these suggested changes are cosmetic and would
-      enhance the look of the model while the others are more behavioral.
+      traffic. Some of these suggested changes are visual, to
+      enhance the look of the model, while others are more behavioral.
       We will be focusing more on the simpler or cosmetic changes
       throughout most of this tutorial. (<a href="tutorial3.html">Tutorial
       #3</a> will go into greater detail about behavioral changes, which
@@ -62,15 +59,13 @@
     <p>
       To make these simple changes we will be using the Command Center.
     <h2>
-      The Command Center
+      Command Center
     </h2>
     <p>
-      The Command Center is located in the Interface Tab and allows you to
-      enter commands or directions to the model. Commands are instructions
+      The Command Center is found in the Interface tab.  It allows you to
+      enter commands or directions to a model. Commands are instructions
       you can give to NetLogo's agents: turtles, patches, links, and
-      the observer. (Refer to the <a href="interface.html">Interface
-      Guide</a> for details explaining the different parts of the Command
-      Center.)
+      the observer.
     <blockquote>
       <p>
         In Traffic Basic:
@@ -97,19 +92,19 @@
         Looking back at the command that was written, we asked only the
         patches to change their color. In this model, the cars are
         represented by a different kind of agent, called
-        &quot;turtles&quot;. Therefore, the cars did not received these
+        &quot;turtles&quot;. Therefore, the cars did not receive these
         instructions and thus did not change.
       <p class="question">
         What happened in the Command Center?
       <p>
         You may have noticed that the command you just typed is now
-        displayed in the white box in the middle of the Command Center as
+        displayed in the Command Center as
         shown below:
       <p class="screenshot">
         <img alt="screen shot" src=
         "images/tutorial2/commandcenterhistory.gif">
       <ul>
-        <li>Type in the white box at the bottom of the Command Center the
+        <li>Type in the bottom of the Command Center the
         text shown below:
         </ul>
       <p class="screenshot">
@@ -117,7 +112,7 @@
       <p class="question">
         Was the result what you expected?
       <p>
-        Your View should have a yellow background with a line of brown cars
+        The view should have a yellow background with a line of brown cars
         in the middle:
       <p class="screenshot">
         <img alt="screen shot" width="90%" src=
@@ -125,17 +120,17 @@
       </blockquote>
     <p>
       The NetLogo world is a two dimensional world that is made up of
-      turtles, patches and an observer. The patches create the ground in
-      which the turtles can move around on and the observer is a being that
-      oversee everything that is going on in the world. (For a detailed
-      description and specifics about this world, refer to the <a href=
+      turtles, patches, links, and an observer. The patches are the ground over
+      which the turtles move.  Links are connections between turtles.
+      And the observer is a being that
+      oversees everything that is going on. (For more
+      specifics, refer to the <a href=
       "programming.html">NetLogo Programming Guide</a>.)
     <p>
-      In the Command Center, we have the ability to give the observer a
-      command, the turtles a command, or the patches a command. We choose
-      between these options by using the popup menu located in the bottom
-      left corner of the Command Center. You can also use the tab key on
-      your keyboard to cycle through the different options.
+      In the Command Center you can give commands to any of these types
+      of agents.  You choose which type to talk to by using the popup menu located in the bottom
+      left corner. You can also use the tab key on
+      your keyboard to cycle through the different types.
     <blockquote>
       <ul>
         <li>In the Command Center, click on the &quot;observer&gt;&quot; in
@@ -176,10 +171,9 @@
       Why did the View revert back to the old version, with the black
       background and white road? Upon pressing the &quot;setup&quot;
       button, the model will reconfigure itself back to the settings
-      outlined in the Code tab. The Command Center is not often used to
-      permanently change the model. It is most often used as a tool to
-      customize current models and allows for you to manipulate the NetLogo
-      world to further answer those &quot;What if&quot; questions that pop
+      outlined in the Code tab. The Command Center doesn't
+      permanently change the model. It allows you to manipulate the NetLogo
+      world directly to further answer those &quot;What if&quot; questions that pop
       up as you are investigating the models. (The Code tab is explained in
       the next tutorial, and in the <a href="programming.html">Programming
       Guide</a>.)
@@ -187,7 +181,7 @@
       Now that we have familiarized ourselves with the Command Center,
       let's look at some more details about how colors work in NetLogo.
     <h2>
-      Working With Colors
+      Working with colors
     </h2>
     <p>
       You may have noticed in the previous section that we used two
@@ -236,7 +230,7 @@
       <!--<p align=center style='text-align:center'><img alt="screen shot"   
 src="images/tutorial2/image006.jpg">-->
     <p>
-      In NetLogo, all colors have a numeric value. In all of the exercises
+      In NetLogo, colors have a numeric value. In all of the exercises
       we have been using the name of the color. This is because NetLogo
       recognizes 16 different color names. This does not mean that NetLogo
       only recognizes 16 colors. There are many shades in between these
@@ -245,7 +239,7 @@ src="images/tutorial2/image006.jpg">-->
     <p class="screenshot">
       <img alt="[color chart]" src="images/colors.jpg">
     <p>
-      To get a color that doesn't have its own name, you just refer to
+      To get an intermediate shade, you refer to
       it by a number instead, or by adding or subtracting a number from a
       name. For example, when you type <tt>set color red</tt>, this does
       the same thing as if you had typed <tt>set color 15</tt>. And you can
@@ -355,16 +349,14 @@ Basic model?</i>
       Agent Monitors and Agent Commanders
     </h2>
     <p>
-      In the previous activity, we used the set command to change the
+      In the previous activity, we used the <tt>set</tt> command to change the
       colors of all the cars. But if you recall, the original model
       contained one red car amongst a group of blue cars. Let's look at
       how to change only one car's color.
     <blockquote>
       <ul>
         <li>Press &quot;setup&quot; to get the red car to reappear.
-        <li>If you are on a Mac, hold down the Control key and click on the
-        red car. On other operating systems, click on the red car with the
-        right mouse button.
+        <li>Right-click on the red car.
         <li>If there is another turtle close to the red turtle you'll
         see more than one turtle listed at the bottom of the menu. Move
         your mouse over the turtle selections, notice when your mouse
@@ -379,16 +371,13 @@ Basic model?</i>
       </blockquote>
     <p>
       The mini-view at the top of the agent monitor will always stay
-      centered this agent. You can zoom the view in and out using the
+      centered on this agent. You can zoom the view in and out using the
       slider below the view and you can watch this turtle in the main view
-      by pressing the &quot;watch me&quot; button.
+      by pressing the &quot;watch-me&quot; button.
     <p>
       Taking a closer look at this turtle monitor, we can see all of the
-      variables that belong to the red car. A variable is a place that
-      holds a value that can be changed. Remember when it was mentioned
-      that all colors are represented in the computer as numbers? The same
-      is true for the agents. For example, every turtle has an ID number we
-      call its &quot;who number&quot;.
+      variables that belong to the red car. A variable is a location that
+      holds a value.
     <p>
       Let's take a closer look at the turtle monitor:
     <blockquote>
@@ -401,11 +390,10 @@ Basic model?</i>
       </blockquote>
     <p>
       This turtle monitor is showing a turtle who that has a who number of
-      0, a color of 15 (red -- see above chart), and the shape of a car.
+      0, a color of 15 (red -- see chart above), and the shape of a car.
     <p>
       There are two other ways to open a turtle monitor besides
-      right-clicking (or control-clicking, depending on your operating
-      system). One way is to choose &quot;Turtle Monitor&quot; from the
+      right-clicking. One way is to choose &quot;Turtle Monitor&quot; from the
       Tools menu, then type the who number of the turtle you want to
       inspect into the &quot;who&quot; field and press return. The other
       way is to type <tt>inspect turtle 0</tt> (or other who number) into
@@ -491,10 +479,10 @@ Basic model?</i>
         "dictionary.html#pxcor"><tt>pxcor</tt></a> variable is -19 and its
         <a href="dictionary.html#pycor"><tt>pycor</tt></a> variable is 0.
         If we go back to the analogy of the coordinate plane and wanted to
-        plot this point, the point would be found in the lower left
-        quadrant of the coordinate plane where x=-19 and y=0.
+        plot this point, the point would be found on the x axis left of the origin,
+        where x=-19 and y=0.
       <p>
-        To tell this particular patch to change color, use its coordinates.
+        To tell this particular patch to change color:
       <ul>
         <li>In the bottom of the patch monitor, enter <tt>set pcolor
         blue</tt> and press return.
