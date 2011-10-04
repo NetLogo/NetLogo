@@ -33,9 +33,7 @@ to setup
   update-variables
   set init-avg-speed avg-speed
   set init-avg-energy avg-energy
-  setup-histograms
   reset-ticks
-  do-plotting
   if trace?
   [ ask one-of particles [ pd ] ]
 end
@@ -79,7 +77,7 @@ to go
 
   if floor ticks > floor (ticks - tick-delta) [
     update-variables
-    do-plotting
+    update-plots
   ]
 
   display
@@ -479,69 +477,6 @@ end
 ;;; plotting procedures
 ;;;
 
-to setup-histograms
-  set-current-plot "Speed Histogram"
-  set-plot-x-range 0 (init-particle-speed * 2)
-  set-plot-y-range 0 ceiling (number-of-particles / 6)
-  set-current-plot-pen "medium"
-  set-histogram-num-bars 40
-  set-current-plot-pen "slow"
-  set-histogram-num-bars 40
-  set-current-plot-pen "fast"
-  set-histogram-num-bars 40
-  set-current-plot-pen "init-avg-speed"
-  draw-vert-line init-avg-speed
-
-  set-current-plot "Energy Histogram"
-  set-plot-x-range 0 (0.5 * (init-particle-speed * 2) * (init-particle-speed * 2) * particle-mass)
-  set-plot-y-range 0 ceiling (number-of-particles / 6)
-  set-current-plot-pen "medium"
-  set-histogram-num-bars 40
-  set-current-plot-pen "slow"
-  set-histogram-num-bars 40
-  set-current-plot-pen "fast"
-  set-histogram-num-bars 40
-  set-current-plot-pen "init-avg-energy"
-  draw-vert-line init-avg-energy
-end
-
-
-to do-plotting
-  set-current-plot "Speed Counts"
-  set-current-plot-pen "fast"
-  plotxy ticks percent-fast
-  set-current-plot-pen "medium"
-  plotxy ticks percent-medium
-  set-current-plot-pen "slow"
-  plotxy ticks percent-slow
-
-  plot-histograms
-end
-
-to plot-histograms
-  set-current-plot "Energy histogram"
-  set-current-plot-pen "fast"
-  histogram [ energy ] of particles with [ speed > ( 1.5 * 10 ) ]
-  set-current-plot-pen "medium"
-  histogram [ energy ] of particles with [ speed < ( 1.5 * 10 ) and speed > ( 0.5 * 10 ) ]
-  set-current-plot-pen "slow"
-  histogram [ energy ] of particles with [ speed < ( 0.5 * 10 ) ]
-  set-current-plot-pen "avg-energy"
-  plot-pen-reset
-  draw-vert-line avg-energy
-
-  set-current-plot "Speed histogram"
-  set-current-plot-pen "fast"
-  histogram [ speed ] of particles with [ speed > ( 1.5 * 10 ) ]
-  set-current-plot-pen "medium"
-  histogram [ speed ] of particles with [ speed < ( 1.5 * 10 ) and speed > ( 0.5 * 10 ) ]
-  set-current-plot-pen "slow"
-  histogram [ speed ] of particles with [ speed < ( 0.5 * 10 ) ]
-  set-current-plot-pen "avg-speed"
-  plot-pen-reset
-  draw-vert-line avg-speed
-end
-
 ;; histogram procedure
 to draw-vert-line [ xval ]
   plotxy xval plot-y-min
@@ -653,13 +588,13 @@ NIL
 10.0
 false
 true
-"" ""
+"set-plot-x-range 0 (0.5 * (init-particle-speed * 2) * (init-particle-speed * 2) * particle-mass)\nset-plot-y-range 0 ceiling (number-of-particles / 6)" ""
 PENS
-"fast" 10.0 1 -2674135 true "" ""
-"medium" 10.0 1 -10899396 true "" ""
-"slow" 10.0 1 -13345367 true "" ""
-"avg-energy" 1.0 0 -7500403 true "" ""
-"init-avg-energy" 1.0 0 -16777216 true "" ""
+"fast" 10.0 1 -2674135 true "set-histogram-num-bars 40" "histogram [ energy ] of particles with [ speed > ( 1.5 * 10 ) ]"
+"medium" 10.0 1 -10899396 true "set-histogram-num-bars 40" "histogram [ energy ] of particles with [ speed < ( 1.5 * 10 ) and speed > ( 0.5 * 10 ) ]"
+"slow" 10.0 1 -13345367 true "set-histogram-num-bars 40" "histogram [ energy ] of particles with [ speed < ( 0.5 * 10 ) ]"
+"avg-energy" 1.0 0 -7500403 true "" "plot-pen-reset\ndraw-vert-line avg-energy"
+"init-avg-energy" 1.0 0 -16777216 true "draw-vert-line init-avg-energy" ""
 
 MONITOR
 328
@@ -688,9 +623,9 @@ true
 true
 "" ""
 PENS
-"fast" 1.0 0 -2674135 true "" ""
-"medium" 1.0 0 -10899396 true "" ""
-"slow" 1.0 0 -13345367 true "" ""
+"fast" 1.0 0 -2674135 true "" "plotxy ticks percent-fast"
+"medium" 1.0 0 -10899396 true "" "plotxy ticks percent-medium"
+"slow" 1.0 0 -13345367 true "" "plotxy ticks percent-slow"
 
 SWITCH
 52
@@ -717,13 +652,13 @@ NIL
 100.0
 false
 true
-"" ""
+"set-plot-x-range 0 (init-particle-speed * 2)\nset-plot-y-range 0 ceiling (number-of-particles / 6)\n" ""
 PENS
-"fast" 5.0 1 -2674135 true "" ""
-"medium" 5.0 1 -10899396 true "" ""
-"slow" 5.0 1 -13345367 true "" ""
-"avg-speed" 1.0 0 -7500403 true "" ""
-"init-avg-speed" 1.0 0 -16777216 true "" ""
+"fast" 5.0 1 -2674135 true "set-histogram-num-bars 40" "histogram [ speed ] of particles with [ speed > ( 1.5 * 10 ) ]"
+"medium" 5.0 1 -10899396 true "set-histogram-num-bars 40" "histogram [ speed ] of particles with [ speed < ( 1.5 * 10 ) and speed > ( 0.5 * 10 ) ]"
+"slow" 5.0 1 -13345367 true "set-histogram-num-bars 40" "histogram [ speed ] of particles with [ speed < ( 0.5 * 10 ) ]"
+"avg-speed" 1.0 0 -7500403 true "" "plot-pen-reset\ndraw-vert-line avg-speed"
+"init-avg-speed" 1.0 0 -16777216 true "draw-vert-line init-avg-speed" ""
 
 MONITOR
 13
@@ -1219,7 +1154,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta5
+NetLogo 3D 5.0RC2
 @#$#@#$#@
 set trace? false
 setup

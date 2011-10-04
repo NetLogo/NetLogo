@@ -162,11 +162,10 @@ end
 ;;
 
 ;; if there are any turtles with turtle-rule as their rule, plot the
-;; mean distance from the origin with the appropriate plot pen
+;; mean distance from the origin
 to plot-rule-mean [turtle-rule]
   if any? (turtles with [rule = turtle-rule])
-  [ set-current-plot-pen turtle-rule
-    plot mean [distance origin] of (turtles with [rule = turtle-rule]) ]
+  [ plot mean [distance origin] of (turtles with [rule = turtle-rule]) ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -194,7 +193,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 SLIDER
 36
@@ -334,13 +333,13 @@ average distance
 100.0
 true
 false
-"set-plot-x-range 0 30\nset-plot-y-range  0 5 ; set initial y range to half of height" ";; for each type of turtle, plots the average distance of each\n;; of the turtles from its starting spot\nplot-rule-mean \"random-min\"\nplot-rule-mean \"random-away\"\nplot-rule-mean \"random\"\nplot-rule-mean \"open-min\"\nplot-rule-mean \"open-min-max\""
+"set-plot-x-range 0 30\nset-plot-y-range  0 5 ; set initial y range to half of height" ""
 PENS
-"random-min" 1.0 0 -8630108 true "" ""
-"random-away" 1.0 0 -2064490 true "" ""
-"random" 1.0 0 -6459832 true "" ""
-"open-min" 1.0 0 -13345367 true "" ""
-"open-min-max" 1.0 0 -955883 true "" ""
+"random-min" 1.0 0 -8630108 true "" "plot-rule-mean \"random-min\""
+"random-away" 1.0 0 -2064490 true "" "plot-rule-mean \"random-away\""
+"random" 1.0 0 -6459832 true "" "plot-rule-mean \"random\""
+"open-min" 1.0 0 -13345367 true "" "plot-rule-mean \"open-min\""
+"open-min-max" 1.0 0 -955883 true "" "plot-rule-mean \"open-min-max\""
 
 SLIDER
 724
@@ -843,7 +842,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 set too-close 1.5
 set too-far 2.0
