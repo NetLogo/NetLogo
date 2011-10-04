@@ -14,7 +14,7 @@
     <p>
       If you read the <a href="sample.html">Sample Model: Party</a>
       section, you got a brief introduction to what it's like to
-      interact with a NetLogo model. This section will go into more depth
+      explore a NetLogo model. This section will go into more depth
       about the features that are available while you're exploring the
       models in the Models Library.
     <p>
@@ -24,10 +24,8 @@
       these surprises are exciting and provide excellent opportunities for
       learning.
     <p>
-      Some people have found it helpful to print out the tutorials in order
-      to work through them. When the tutorials are printed out, there's
-      more room on your computer screen for the NetLogo model you're
-      looking at.
+      You may want to print out the tutorials to make them easier to refer
+      to while you're using NetLogo.
     <h2>
       Sample Model: Wolf Sheep Predation
     </h2>
@@ -52,9 +50,10 @@
       Monitors and plots are beige; they display data.
     <p>
       If you'd like to make the window larger so that everything is
-      easier to see, you can use the zoom menu at the top of the window.
+      easier to see, you can use the Zoom menu.
     <p>
-      When you first open the model, you will notice that the view is empty
+      When you first open the model, you will notice that the &quot;view&quot;
+      (the graphical display of the agents in the model) is empty
       (all black). To begin the model, you will first need to set it up.
     <blockquote>
       <ul>
@@ -103,13 +102,13 @@
       Using a once button like this lets you watch the progress of the
       model more closely.
     <p>
-      Stopping a forever button is the normal way to stop a model. It's
-      safe to pause a model by stopping a forever button, then make it go
-      on by pressing the button again. You can also stop a model with the
+      Stopping a forever button is the normal way to pause or stop a model.
+      After pausing you can make it resume by pressing the button again.
+      (You can also stop a model with the
       &quot;Halt&quot; item on the Tools menu, but you should only do this
       if the model is stuck for some reason. Using &quot;Halt&quot; may
       interrupt the model in the middle of an action, and as the result the
-      model could get confused.
+      model could get confused.)
     <blockquote>
       <ul>
         <li>If you like, experiment with the &quot;setup&quot; and
@@ -133,26 +132,26 @@
       to see what is happening. You might even slow the model down so far
       as to see exactly what a single turtle is doing.
     <p>
-      When you move the speed slider to the right of the center the model
-      will speed up. NetLogo will start skipping frames, that is, it
+      When you move the speed slider to the right the model
+      speeds up. NetLogo will start skipping frames, that is, it
       won't update the view at the end of every tick, only some ticks.
-      Showing the state of the world takes time, so showing it less often
-      means the model progresses faster.
+      Updating takes time, so fewer view updates means the model
+      progresses faster.
     <p>
       Note that if you push the speed slider well to the right, the view
-      update may update so frequently that the model appears to have slowed
-      down. It hasn't, as you can see by watching the tick counter.
-      Only the frequency of updates has lessened.
+      may update so infrequently that the model appears to have slowed
+      down. It hasn't, as you can see by watching the tick counter race
+      ahead. Only the frequency of view updates has lessened.
     <h2>
       Adjusting Settings: Sliders and Switches
     </h2>
     <p>
-      The settings within a model give you an opportunity to work out
+      A model's settings let you explore
       different scenarios or hypotheses. Altering the settings and then
-      running the model to see how it reacts to those changes can give you
-      a deeper understanding of the phenomena being modeled. Switches and
+      running the model to see how it reacts can give you
+      a deeper understanding of the phenomena being modeled.
+    <p>Switches and
       sliders give you access to a model's settings.
-    <p>
       Here are the switches and sliders in Wolf Sheep Predation:
     <p class="screenshot">
       <img alt="screen shot" src="images/tutorial1/image010.gif">
@@ -162,41 +161,36 @@
       <ul>
         <li>Open Wolf Sheep Predation if it's not open already.
         <li>Press &quot;setup&quot; and &quot;go&quot; and let the model
-        run for about a 100 time-ticks. (Note: there is a readout of the
-        number of ticks right above the plot.)
+        run for about 100 ticks.  (The tick count is shown above the view.)
         <li>Stop the model by pressing the &quot;go&quot; button.
         </ul>
       <p class="question">
         What happened to the sheep over time?
       <p>
         Let's take a look and see what would happen to the sheep if we
-        change one of the settings.
+        change a setting.
       <ul>
         <li>Turn the &quot;grass?&quot; switch on.
         <li>Press &quot;setup&quot; and &quot;go&quot; and let the model
         run for a similar amount of time as before.
         </ul>
       <p class="question">
-        What did this switch do to the model? Was the outcome the same as
+        What did the switch do? Was the outcome the same as
         your previous run?
       </blockquote>
     <p>
-      Just like buttons, switches have information attached to them. Their
-      information is set up in an on/off format. Switches turn on/off a
-      separate set of directions. These directions are usually not
-      necessary for the model to run, but might add another dimension to
-      the model. Turning the &quot;grass?&quot; switch on affected the
-      outcome of the model. Prior to this run, the growth of the grass
-      stayed constant. This is not a realistic look at the predator-prey
-      relationship; so by setting and turning on a grass growth rate, we
-      were able to model all three factors: sheep, wolf and grass
-      populations.
+      Turning the &quot;grass?&quot; switch on affected the
+      outcome of the model. With the switch off, the amount of grass
+      available always stayed the same. This is not a realistic look
+      at the predator-prey relationship; so by setting and turning on
+      a grass regrowth rate, we were able to model all three factors:
+      sheep, wolf and grass populations.
     <p>
       Another type of setting is called a slider.
     <p>
-      Sliders are a different type of setting then a switch. A switch has
-      two values: on or off. A slider has a range of numeric values that
-      can be adjusted. For example, the &quot;initial-number-sheep&quot;
+      Besides switches, a model may also have sliders. While a switch has
+      only two values, on and off, a slider has a whole range of numeric values.
+      For example, the &quot;initial-number-sheep&quot;
       slider has a minimum value of 0 and a maximum value of 250. The model
       could run with 0 sheep or it could run with 250 sheep, or anywhere in
       between. Try this out and see what happens. As you move the marker
@@ -207,8 +201,8 @@
       <p>
         Let's investigate Wolf Sheep Predation's sliders.
       <ul>
-        <li>Read the contents of the Info tab, located above the toolbar,
-        to learn what each of this models' sliders represents.
+        <li>Change from the Interface to the Info tab to learn
+            what each of this models' sliders represents.
         </ul>
     </blockquote>
     <p>
@@ -219,8 +213,8 @@
       experimenting, then look at the Info tab later.
     <blockquote>
       <p class="question">
-        What would happen to the sheep population if there was more initial
-        sheep and less initial wolves at the beginning of the simulation?
+        What would happen to the sheep population if there were more 
+        sheep and less wolves initially?
       <ul>
         <li>Turn the &quot;grass?&quot; switch off.
         <li>Set the &quot;initial-number-sheep&quot; slider to 100.
@@ -230,7 +224,7 @@
 <UL>
 -->
         <li>Press &quot;setup&quot; and then &quot;go&quot;.
-        <li>Let the model run for about 100 time-ticks.
+        <li>Let the model run for about 100 ticks.
         </ul>
       <p>
         Try running the model several times with these settings.
@@ -255,16 +249,16 @@
       setting. If you open a new model or exit the program, your changed
       settings will not be saved, unless you choose to save them.
     <p>
-      (Note: in addition to sliders and switches, some models have a third
-      kind of setting, called a chooser. The Wolf Sheep Predation
+      (Note: in addition to sliders and switches, some models have
+      choosers and input boxes. The Wolf Sheep Predation
       doesn't have any of these, though.)
     <h2>
       Gathering Information: Plots and Monitors
     </h2>
     <p>
-      A purpose to modeling is to gather data on a subject or topic that
-      would be very difficult to do in a laboratory situation. NetLogo has
-      two main ways of displaying data to the user: plots and monitors.
+      The view lets you see what's going on in a model.  NetLogo also
+      provides has other ways of giving you information about model
+      run, such as plots and monitors.
     <h3>
       Plots
     </h3>
@@ -272,10 +266,8 @@
       The plot in Wolf Sheep Predation contains three lines: sheep, wolves,
       and grass / 4. (The grass count is divided by four so it doesn't
       make the plot too tall.) The lines show what's happening in the
-      model over time. To see which line is which, click on
-      &quot;Pens&quot; in the upper right corner of the plot window to open
-      the plot pens legend. A key appears that indicates what each line is
-      plotting. In this case, it's the population counts. <!--
+      model over time. The plot legend shows what each line indicates.
+      In this case, it's the population counts. <!--
 <LI>Using any settings you would like and press
   "setup" and "go".
 <LI>Let the model run for 100 time-ticks.
@@ -288,12 +280,12 @@ slider back to its original value.
 -->
     <p>
       When a plot gets close to becoming filled up, the horizontal axis
-      increases in size and all of the data from before gets squeezed into
+      is compressed and all of the data from before gets squeezed into
       a smaller space. In this way, more room is made for the plot to grow.
     <p>
       If you want to save the data from a plot to view or analyze it in
-      another program, you can use the &quot;Export Plot&quot; item on the
-      File menu. It saves this information to your computer in a format
+      another application, use the &quot;Export Plot&quot; item on the
+      File menu. It saves the plot data in a format
       that can by read back by spreadsheet and database programs such as
       Excel. You can also export a plot by right-clicking it and choosing
       &quot;Export...&quot; from the popup menu. <!--
@@ -348,17 +340,16 @@ covered more extensively in %%%%Tutorial #3 and the %%%%Programming Guide.
       Monitors
     </h3>
     <p>
-      Monitors are another method of displaying information in a model.
+      Monitors are another means of displaying information from a model.
       Here are the monitors in Wolf Sheep Predation:
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial1/image016.gif">
+      <img alt="screen shot" src="images/tutorial1/image016.png">
     <p>
-      The monitor labeled &quot;time-ticks&quot; tells us how much time has
-      passed in the model. The other monitors show us the population of
+      The monitors show us the population of
       sheep and wolves, and the amount of grass. (Remember, the amount of
       grass is divided by four to keep the plot from getting too tall.)
     <p>
-      The numbers displayed in the monitors update continuously as the
+      The numbers displayed in the monitors change as the
       model runs, whereas the plots show you data from the whole course of
       the model run. <!--
 
@@ -374,11 +365,6 @@ the reproductive rate of the sheep, with the result of all sheep and no wolves.
 three populations: grass, sheep and wolf?  When you have mastered this
 challenge, export the data to an Excel spreadsheet.</b>
 
--->
-    <p>
-      Note that NetLogo has also another kind of monitor, called
-      &quot;agent monitors&quot;. These will be introduced in Tutorial #2. 
-      <!--
 <p>####B. <u>Resizing the Interface Elements:</u>
 
 <p>When running models, you may need to move a button or
@@ -412,9 +398,8 @@ button, slider, monitor, Plot Window or View.
       Controlling the View
     </h2>
     <p>
-      If you look at the interface tab, you'll see a strip of controls
-      along the top edge in the toolbar. These controls change various
-      aspects of the view.
+      In the Interface tab, you'll see a toolbar of controls.
+      Some of these control aspects of the view.
     <blockquote>
       <p>
         Let's experiment with the effect of these controls.
@@ -431,7 +416,7 @@ button, slider, monitor, Plot Window or View.
       <ul>
         <li>Move the speed slider to the middle.
         <li>Try moving the speed slider to the right.
-        <li>Now try checking and unchecking the view updates checkbox.
+        <li>Now try checking and unchecking the &quot;view updates&quot; checkbox.
         </ul>
       <p class="question">
         What happens?
@@ -444,13 +429,13 @@ button, slider, monitor, Plot Window or View.
       used for running the model itself.
     <p>
       When view updates are off completely, the model continues to run in
-      the background, and plots and monitors still update; but if you want
+      the background, and plots and monitors still update.  But if you want
       to see what's happening, you need to turn view updates back on by
       rechecking the box. Many models run much faster when view updates are
-      off; for others, it makes little difference.
+      off.  For others, it makes little difference.
     <p>
-      The size of the view is determined by five separate settings: Min and
-      Max X, Min and Max Y and Patch Size. Let's take a look at what
+      The size of the view is determined by five separate settings: min-pxcor,
+      max-pxcor, min-pycor, max-pycor, and patch size. Let's take a look at what
       happens when we change the size of the view in the &quot;Wolf Sheep
       Predation&quot; model. <!--<blockquote>
 <ul>
@@ -476,12 +461,12 @@ warns you the first time you press an arrow.-->
         <li>Press the &quot;Settings...&quot; button in the toolbar.
         </ul>
       <p>
-        A dialog box will open containing all the settings for the view:
+        A dialog will open containing all the settings for the view:
       <p class="screenshot">
-        <img alt="screen shot" src="images/tutorial1/image005.gif">
+        <img alt="screen shot" src="images/tutorial1/image005.png">
       <p class="question">
-        What are the current settings for max-pxcor, min-pxcor, max-pycor,
-        min-pycor, and Patch size?
+        What are the current settings for min-pxcor, max-pxcor, min-pycor,
+        max-pycor, and patch size?
       <ul>
         <li>Press &quot;cancel&quot; to make this window go away without
         changing the settings.
@@ -515,10 +500,9 @@ selected like this, you can move it around the Interface Tab or resize it.  -->
     <p>
       The NetLogo world is a two dimensional grid of &quot;patches&quot;.
       Patches are the individual squares in the grid.
-    <p>
       In Wolf Sheep Predation, when the &quot;grass?&quot; switch is on the
-      individual patches are easily seen, because some of them are green,
-      while others are brown.
+      individual patches are easily seen, because some are green,
+      others brown.
     <p>
       Think of the patches as being like square tiles in a room with a tile
       floor. By default, exactly in the middle of the room is a tile
@@ -553,8 +537,8 @@ the value for screen edge y?
       and min-pycor is -2.
     <p>
       When you change the patch size, the number of patches (tiles)
-      doesn't change, the patches only get larger or smaller on the
-      screen. <!--
+      doesn't change, the patches only get larger or smaller in the
+      view. <!--
 For example, when the "Wolf Sheep Predation" model opens up it has a
 screen edge x and screen edge y value of 20.  Therefore, the total
 number of patches or tiles would be 20 * 20 + 1 = 401 with each patch
@@ -602,17 +586,17 @@ edge y values alters the dimension of the View.-->
       want to take some time just to explore some of the other models
       available in the Models Library.
     <h2>
-      The Models Library
+      Models Library
     </h2>
     <p>
-      The library contains five sections: Sample Models, Curricular Models,
+      The library contains four sections: Sample Models, Curricular Models,
       Code Examples, and HubNet Activities.
     <h3>
       Sample Models
     </h3>
     <p>
       The Sample Models section is organized by subject area and currently
-      contains more than 210 models. We are continuously working on adding
+      contains more than 200 models. We are continuously working on adding
       new models to it, so come visit this section at a later date to view
       the new additions to the library.
     <p>
@@ -627,7 +611,7 @@ edge y values alters the dimension of the View.-->
       These are models designed to be used in schools in the context of
       curricula developed by the CCL at Northwestern University. Some of
       these are models are also listed under Sample Models; others are
-      unique to this section. See the info tabs of the models for more
+      unique to this section. See the Info tabs of the models for more
       information on the curricula they go with.
     <h3>
       Code Examples
@@ -635,15 +619,15 @@ edge y values alters the dimension of the View.-->
     <p>
       These are simple demonstrations of particular features of NetLogo.
       They'll be useful to you later when you're extending existing
-      models or building new ones. For example, if you wanted to put a
-      histogram within your model, you'd look at &quot;Histogram
+      models or building new ones. For example, if you wanted to add
+      a histogram to your model, you'd look at &quot;Histogram
       Example&quot; to find out how.
     <h3>
       HubNet Activities
     </h3>
     <p>
-      This section contains participatory simulations for use in the
-      classroom. For more information about HubNet, see the <a href=
+      This section contains participatory simulations for use with groups.
+      For more information about HubNet, see the <a href=
       "hubnet.html">HubNet Guide</a>.
     <h2>
       What's Next?
@@ -654,5 +638,6 @@ edge y values alters the dimension of the View.-->
       to the NetLogo modeling language.
     <p>
       In <a href="tutorial3.html">Tutorial #3: Procedures</a> you can learn
-      how to alter and extend existing models and build your own models.
+      how to alter and extend existing models and build new ones.
+
 
