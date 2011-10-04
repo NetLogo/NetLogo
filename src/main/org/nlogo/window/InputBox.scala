@@ -290,7 +290,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     s.append(getBoundsString)
     if((null != name) && (name.trim != "")) s.append(name + "\n")
     else s.append("NIL\n")
-    if(value != null) s.append(stripLines(Dump.logoObject(value).replaceAll("\r\n", "\n")) + "\n")
+    val nilValue = value == null || (value.isInstanceOf[String] && value.asInstanceOf[String].trim == "")
+    if(! nilValue) s.append(stripLines(Dump.logoObject(value).replaceAll("\r\n", "\n")) + "\n")
     else s.append("NIL\n")
     s.append("1\n")  //7
     s.append((if(multiline) "1" else "0") + "\n")  //8
