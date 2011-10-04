@@ -61,15 +61,23 @@ HOW TO BUILD
 Make sure you are using Scala 2.9.1.
 
 The build script expects to find the unzipped Scala distribution
-directory at /usr/local/scala-2.9.1.  If you have it in another
+directory at /usr/local/scala-2.9.1.final.  If you have it in another
 location, edit the build script to point the location you are using.
 
-Unjar the sources jar.  cd into the resulting BehaviorSpace directory
-and run the included shell script, build.sh.
+Unjar the sources jar.
+
+Inside the resulting directory, add a copy of ScalaTest 1.6.1 for Scala
+2.9.1.  You can download it from 
+http://scala-tools.org/repo-releases/org/scalatest/scalatest_2.9.1/1.6.1/scalatest_2.9.1-1.6.1.jar
+
+Inside the same directory, run the included shell script, build.sh.
 
 If the build succeeds, a new BehaviorSpace.jar will be generated.  To
 test the jar, copy it into NetLogo's lib directory, overwriting the
 old BehaviorSpace.jar, and then run NetLogo (in GUI or headless mode).
+
+
+RUNNING TESTS
 
 After building BehaviorSpace.jar, you can run the ScalaTest unit tests
 with the included test.sh script.  The tests run using the
