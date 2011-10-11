@@ -1,5 +1,5 @@
 # comment out if you want, when debugging this
-.SILENT:
+#.SILENT:
 # sadly this only works on plain files not directories.
 .DELETE_ON_ERROR:
 
@@ -65,6 +65,21 @@ JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
+
+# experimenting with signing jars for Java Web Start - ST 10/11/11
+$(HOME)/.keystore:
+	keytool -genkeypair
+tmp/signedjars.zip: $(HOME)/.keystore $(JARS)
+	-rm -rf tmp/signedjars*
+	-mkdir -p tmp/signedjars
+	cp NetLogo.jar BehaviorSpace.jar $(SCALA_JAR) lib_managed/scala_$(SCALA_VERSION)/compile/*.jar tmp/signedjars
+	cp project/build/proguard/manifest.txt tmp/signedjars
+        # seems likely the lib/ thing would confuse Web Start - ST 10/11/11
+	perl -pi -e "s@lib/@@g" tmp/signedjars/manifest.txt
+	jar umf tmp/signedjars/manifest.txt tmp/signedjars/NetLogo.jar
+	rm tmp/signedjars/manifest.txt
+	for jar in tmp/signedjars/*.jar; do jarsigner -keystore $(HOME)/.keystore -storepass bamsix40 -keypass bamsix40 $$jar mykey; done
+	(cd tmp; zip -0 -r signedjars signedjars)
 
 ### extensions
 
