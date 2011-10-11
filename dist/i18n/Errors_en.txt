@@ -5,8 +5,7 @@ org.nlogo.agent.Agent.wrongTypeOnSetError = can''t set {0} variable {1} to non-{
 org.nlogo.agent.Agent.rgbListSizeError.3 = An rgb list must contain 3 numbers 0-255
 org.nlogo.agent.Agent.rgbListSizeError.3or4 = An rgb list must contain 3 or 4 numbers 0-255
 org.nlogo.agent.Agent.rgbValueError = RGB values must be 0-255
-org.nlogo.agent.Agent.shapeUndefined = \" {0} \" is not a currently defined shape.
-
+org.nlogo.agent.Agent.shapeUndefined = \"{0}\" is not a currently defined shape.
 
 org.nlogo.agent.BooleanConstraint.bool = Value must be a boolean.
 org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world's edge.
