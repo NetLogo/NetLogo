@@ -6,7 +6,7 @@
 ### top level targets; "netlogo" is default target.  the "dict.txt" is
 ### because we also need to generate the "split dictionary.html" files
 .PHONY: netlogo
-netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.class docs/infotab.html | tmp
+netlogo: resources/system/dict.txt extensions plugins models/index.txt bin/Scripting.class docs/infotab.html | tmp
 
 ### misc variables
 ifneq (,$(findstring Darwin,$(shell uname)))
@@ -65,6 +65,20 @@ JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
+
+### plugins
+
+PLUGINS =\
+	plugins/ReviewTab/ReviewTab.jar
+
+.PHONY: plugins
+plugins: $(PLUGINS)
+
+$(PLUGINS): | NetLogo.jar
+	mkdir -p plugins
+	if [ ! -d plugins/ReviewTab//src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
+	@echo "@@@ building" $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 ### extensions
 
@@ -131,6 +145,9 @@ github:
 	cd extensions/sound; git pull; git status
 	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
 	cd extensions/table; git pull; git status
+	mkdir -p plugins
+	if [ ! -d extensions/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
+	cd plugins/ReviewTab; git pull; git status
 
 ### Scaladoc
 
