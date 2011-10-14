@@ -30,7 +30,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
         popMenu.add(new JMenuItem(name) {
           addActionListener(() => {
             commandLine.agentClass(clazz)
-            repaint()
+            LinePrompt.this.repaint()
             commandLine.requestFocus()
           })
         })
