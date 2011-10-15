@@ -1,4 +1,4 @@
-package org.nlogo.util
+package org.nlogo.compiler
 
 class CountedIterator[T](it: Iterator[T]) extends Iterator[T] {
   private var _count = 0
