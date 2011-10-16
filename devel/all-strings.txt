@@ -556,7 +556,7 @@ src/main/org/nlogo/app/AppletSaver.scala:159:    line("<p>powered by")
 src/main/org/nlogo/app/AppletSaver.scala:162:    line("<p>view/download model file:")
 src/main/org/nlogo/app/AppletSaver.scala:163:    line("<a href=\"" + org.nlogo.util.Utils.escapeSpacesInURL(fileName) +
 src/main/org/nlogo/app/AppletSaver.scala:164:         "\">" + fileName + "</a></p>")
-src/main/org/nlogo/app/AppletSaver.scala:166:    line(InfoFormatter.toInnerHtml("# PROCEDURES"))
+src/main/org/nlogo/app/AppletSaver.scala:166:    line(InfoFormatter.toInnerHtml("# CODE"))
 src/main/org/nlogo/app/AppletSaver.scala:168:    line("</body>")
 src/main/org/nlogo/app/AppletSaver.scala:169:    line("</html>")
 src/main/org/nlogo/app/AppletSaver.scala:173:    line("<html>")

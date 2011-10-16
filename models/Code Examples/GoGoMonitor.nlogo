@@ -11,7 +11,6 @@ to setup
   [ if not gogo:ping
     [ user-message "The GoGo Board is not responding." ] ]
   gogo:talk-to-output-ports [ "a" "b" "c" "d" ]
-  set-current-plot "Sensors"
 end
 
 to gogo-ping
@@ -46,6 +45,7 @@ GRAPHICS-WINDOW
 0
 0
 ticks
+30.0
 
 BUTTON
 16
@@ -1055,7 +1055,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 need-to-manually-make-preview-for-this-model
 @#$#@#$#@

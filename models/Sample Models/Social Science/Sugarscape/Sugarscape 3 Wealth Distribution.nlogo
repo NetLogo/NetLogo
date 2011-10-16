@@ -1,3 +1,8 @@
+globals [
+  gini-index-reserve
+  lorenz-points
+]
+
 turtles-own [
   sugar           ;; the amount of sugar this turtle has
   metabolism      ;; the amount of sugar that each turtles loses each tick
@@ -24,8 +29,8 @@ to setup
   clear-all
   create-turtles initial-population [ turtle-setup ]
   setup-patches
+  update-lorenz-and-gini
   reset-ticks
-  update-lorenz-and-gini-plots
 end
 
 to turtle-setup ;; turtle procedure
@@ -83,8 +88,8 @@ to go
     ]
     run visualization
   ]
+  update-lorenz-and-gini
   tick
-  update-lorenz-and-gini-plots
 end
 
 to turtle-move ;; turtle procedure
@@ -113,45 +118,23 @@ to patch-growback ;; patch procedure
   set psugar min (list max-psugar (psugar + 1))
 end
 
-;;
-;; Plotting Procedures
-;;
-to update-lorenz-and-gini-plots
-  set-current-plot "Lorenz curve"
-  clear-plot
-
-  ;; draw a straight line from lower left to upper right
-  set-current-plot-pen "equal"
-  plot 0
-  plot 100
-
+to update-lorenz-and-gini
   let num-people count turtles
-
-  set-current-plot-pen "lorenz"
-  set-plot-pen-interval 100 / num-people
-  plot 0
-
   let sorted-wealths sort [sugar] of turtles
   let total-wealth sum sorted-wealths
   let wealth-sum-so-far 0
   let index 0
-  let gini-index-reserve 0
-
-  ;; now actually plot the Lorenz curve -- along the way, we also
-  ;; calculate the Gini index.
+  set gini-index-reserve 0
+  set lorenz-points []
   repeat num-people [
     set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths)
-    plot (wealth-sum-so-far / total-wealth) * 100
+    set lorenz-points lput ((wealth-sum-so-far / total-wealth) * 100) lorenz-points
     set index (index + 1)
     set gini-index-reserve
       gini-index-reserve +
       (index / num-people) -
       (wealth-sum-so-far / total-wealth)
   ]
-
-  ;; plot Gini Index
-  set-current-plot "Gini index vs. time"
-  plot (gini-index-reserve / num-people) / 0.5
 end
 
 ;;
@@ -330,8 +313,8 @@ false
 true
 "" ""
 PENS
-"equal" 100.0 0 -16777216 true "" ""
-"lorenz" 1.0 0 -2674135 true "" ""
+"equal" 100.0 0 -16777216 true ";; draw a straight line from lower left to upper right\nset-current-plot-pen \"equal\"\nplot 0\nplot 100\n" ""
+"lorenz" 1.0 0 -2674135 true "" "plot-pen-reset\nset-plot-pen-interval 100 / count turtles\nplot 0\nforeach lorenz-points plot\n"
 
 PLOT
 720
@@ -349,7 +332,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -13345367 true "" ""
+"default" 1.0 0 -13345367 true "" "plot (gini-index-reserve / count turtles) * 2\n"
 
 SLIDER
 10
@@ -715,7 +698,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta2
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

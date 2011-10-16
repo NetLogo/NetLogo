@@ -1,17 +1,17 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0beta4, available for free download from our site at
+NetLogo 5.0RC2, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
-This is a BETA release of NetLogo. As such, there may be a few bugs.
-Please try it out and send us bug reports at bugs@ccl.northwestern.edu
-and other suggestions and comments at
+This is a release candidate for NetLogo 5.0. As such, there may be a
+few bugs.  Please try it out and send us bug reports at
+bugs@ccl.northwestern.edu and other suggestions and comments at
 feedback@ccl.northwestern.edu. We really value your feedback and look
 forward to hearing from you. Please let us know about bugs you find,
 features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0beta4, perhaps with minor updates to the code. If you have
+NetLogo 5.0RC2, perhaps with minor updates to the code. If you have
 any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
@@ -33,19 +33,13 @@ your local character set and report to us about successes or problems
 that you find.
 
 The following is a (partial) list of changes made since NetLogo
-5.0beta3:
+5.0RC1:
   
-changes since 5.0beta3:
-- new HubNet prims: hubnet-clients-list, hubnet-kick-client,
-  hubnet-kick-all-clients
-- API docs are included again
-- misc. fixes to Unicode support
-- fixed longstanding bug where 3D objects became brighter the smaller they got
-- misc. HubNet fixes
-
-Note also that because of extensions API changes, all extensions must
-be recompiled (even extensions that have already been recompiled for
-5.0beta3).
+- new fixes:
+  - app now automatically adds .nlogo (or .nlogo3d) extension when saving
+- fixed regressions:
+  - "run" was evaluating string input twice
+  - some models with input boxes wouldn't reload after save
 
 Please send bug reports to bugs@ccl.northwestern.edu and other
 suggestions and comments to feedback@ccl.northwestern.edu.
@@ -68,9 +62,9 @@ NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
 support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
 DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
-DRL-RED-9552950, and DRL-REC-9632612. Additional support came from the
-Spencer Foundation, Texas Instruments, the Brady Fund, and the
-Northwestern Institute for Complex Systems.
+DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
+support came from the Spencer Foundation, Texas Instruments, the
+Brady Fund, and the Northwestern Institute for Complex Systems.
 
 Enjoy,
 

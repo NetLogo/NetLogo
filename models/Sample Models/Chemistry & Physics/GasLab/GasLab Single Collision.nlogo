@@ -32,7 +32,6 @@ to setup
   update-variables
   clear-drawing  ;; erase the line made by initially moving the center of mass
   reset-ticks
-  do-plotting
 end
 
 to update-variables
@@ -61,7 +60,7 @@ to go
   calculate-tick-delta
   tick-advance tick-delta
   display
-  do-plotting
+  update-plots
 
 end
 
@@ -266,23 +265,6 @@ to setup-particle  ;; particle procedure
   set size 2
   set energy (0.5 * mass * speed ^ 2 )
   set last-collision nobody
-end
-
-;;; plotting procedure
-to do-plotting
-  set-current-plot "Speeds"
-  ifelse after-collision?
-     [set plot-clock (ticks - (tick-delta))]
-     [set plot-clock ticks]
-
-  ifelse [speed] of turtle 0 = [speed] of turtle 1
-     [set-current-plot-pen "both"
-      plotxy plot-clock ([speed] of turtle 0)]
-
-     [set-current-plot-pen "pink"
-      plotxy plot-clock ([speed] of turtle 0)
-      set-current-plot-pen "blue"
-      plotxy plot-clock ([speed] of turtle 1)]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -510,11 +492,11 @@ speed
 20.0
 true
 true
-"" ""
+"" "ifelse after-collision?\n   [set plot-clock (ticks - (tick-delta))]\n   [set plot-clock ticks]\n"
 PENS
-"pink" 1.0 0 -2064490 true "" ""
-"blue" 1.0 0 -13345367 true "" ""
-"both" 1.0 0 -16777216 true "" ""
+"pink" 1.0 0 -2064490 true "" "if [speed] of turtle 0 != [speed] of turtle 1\n  [ plotxy plot-clock ([speed] of turtle 0) ]"
+"blue" 1.0 0 -13345367 true "" "if [speed] of turtle 0 != [speed] of turtle 1\n  [ plotxy plot-clock ([speed] of turtle 1) ]\n"
+"both" 1.0 0 -16777216 true "" "if [speed] of turtle 0 = [speed] of turtle 1\n  [ plotxy plot-clock ([speed] of turtle 0) ]"
 
 BUTTON
 299
@@ -923,7 +905,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta4
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

@@ -137,6 +137,8 @@ public strictfp class ExtensionManager
       jarPath = resolvePathAsURL(jarPath);
       if (AbstractWorkspace.isApplet()) {
         java.net.URL url = new java.net.URL(jarPath);
+        // added in r43348. motivation: https://trac.assembla.com/nlogo/ticket/647 .
+        // we need to work around http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6785446
         url.openConnection().setUseCaches(false);
       }
     } catch (RuntimeException ex) {

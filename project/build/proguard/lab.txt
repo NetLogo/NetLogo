@@ -10,6 +10,6 @@
 
 -libraryjars NetLogo.jar
 -libraryjars project/boot/scala-2.9.1/lib/scala-library.jar
--libraryjars lib_managed/scala_2.9.1/test/scalatest_2.9.0-1.6.1.jar
+-libraryjars lib_managed/scala_2.9.1/test/scalatest_2.9.1-1.6.1.jar
 -injars target/scala_2.9.1/classes(org/nlogo/lab/**)
 -outjar BehaviorSpace.jar

@@ -57,13 +57,8 @@ to setup
     if ( pxcor = listening-point and pycor > 0 and pycor < 4 )
       [ set pcolor white ]
   ]
+  get-a-point
   reset-ticks
-  setup-plot
-  if plot?
-  [
-    get-a-point
-    plot-the-point
-  ]
 end
 
 
@@ -80,14 +75,8 @@ to go
       [ interfere ]
   ]
 
+  get-a-point
   tick
-
-  ;; Update the plot
-  if plot?
-  [
-    get-a-point
-    plot-the-point
-  ]
 
   ;; Reset the velocities
   ask turtles [
@@ -133,41 +122,6 @@ to interfere ;; procedure for red turtles
     [ hide-turtle ]
 end
 
-to setup-plot
-  set-current-plot "Speaker amplitude"
-  clear-plot
-  set-current-plot-pen "left"
-  set-plot-pen-color yellow
-  set-current-plot-pen "right"
-  set-plot-pen-color cyan
-  set-current-plot-pen "sum"
-  set-plot-pen-color red
-  set-plot-y-range ( ( - amplitude-left ) - amplitude-right ) ( amplitude-left + amplitude-right )
-  set-plot-x-range 0 250
-  auto-plot-on
-end
-
-to plot-the-point
-  if ((ticks mod 200) = 0)
-    [
-      ifelse (not show-only-recent-plot?)
-        [ set-plot-x-range 0 (ticks + 200) ]
-        [ set-plot-x-range max list 0 (ticks - 210) (ticks + 210)]
-    ]
-
-  set-current-plot-pen "left"
-  if show-left? and any? lefts with [ round xcor = listening-point ]
-    [ plotxy ticks [ypos-new] of one-of lefts with [ round xcor = listening-point ] ]
-
-  set-current-plot-pen "right"
-  if show-right? and any? rights with [ round xcor = listening-point ]
-   [ plotxy ticks [ypos-new] of one-of rights with [ round xcor = listening-point ] ]
-
-  set-current-plot-pen "sum"
-  if show-sum? and any? sums with [ round xcor = listening-point ]
-      [ plotxy ticks [ypos-new] of one-of sums with [ round xcor = listening-point  ] ]
-end
-
 to get-a-point
   ;; Changes the listening-point if the mouse is down
   if mouse-down? [
@@ -202,27 +156,27 @@ to draw-left-speaker ;; patch procedure
 end
 
 to show-or-hide
-    ;; The sums are hidden in the interference procedure because they may
-    ;; move outside the world
-    ifelse show-left?
-      [
-        if any? lefts with [ hidden? ]
-          [ ask lefts [ st ] ]
-      ]
-      [
-        if any? lefts with [ not hidden? ]
-          [ ask lefts [ ht ] ]
-      ]
+  ;; The sums are hidden in the interference procedure because they may
+  ;; move outside the world
+  ifelse show-left?
+    [
+      if any? lefts with [ hidden? ]
+        [ ask lefts [ st ] ]
+    ]
+    [
+      if any? lefts with [ not hidden? ]
+        [ ask lefts [ ht ] ]
+    ]
 
-     ifelse show-right?
-      [
-        if any? rights with [ hidden? ]
-          [ ask rights [ st ] ]
-      ]
-      [
-        if any? rights with [ not hidden? ]
-          [ ask rights [ ht ] ]
-      ]
+   ifelse show-right?
+    [
+      if any? rights with [ hidden? ]
+        [ ask rights [ st ] ]
+    ]
+    [
+      if any? rights with [ not hidden? ]
+        [ ask rights [ ht ] ]
+    ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -250,7 +204,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 85
@@ -367,11 +321,11 @@ Amplitude
 50.0
 false
 true
-"" ""
+"set-plot-y-range ((- amplitude-left) - amplitude-right)\n                  (  amplitude-left  + amplitude-right)\n" "if ticks mod 200 = 0 [\n  ifelse show-only-recent-plot?\n    [ set-plot-x-range max list 0 (ticks - 210) (ticks + 210)]\n    [ set-plot-x-range 0 (ticks + 200) ]\n]\n"
 PENS
-"left" 1.0 0 -1184463 true "" ""
-"right" 1.0 0 -11221820 true "" ""
-"sum" 1.0 0 -2674135 true "" ""
+"left" 1.0 0 -1184463 true "" "if show-left? and any? lefts with [round xcor = listening-point]\n[ plotxy ticks [ypos-new] of one-of lefts with [ round xcor = listening-point ] ]"
+"right" 1.0 0 -11221820 true "" "if show-right? and any? rights with [ round xcor = listening-point ]\n [ plotxy ticks [ypos-new] of one-of rights with [ round xcor = listening-point ] ]\n"
+"sum" 1.0 0 -2674135 true "" "if show-sum? and any? sums with [ round xcor = listening-point ]\n  [ plotxy ticks [ypos-new] of one-of sums with [ round xcor = listening-point  ] ]\n"
 
 SWITCH
 11
@@ -815,7 +769,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta2
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

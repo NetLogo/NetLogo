@@ -24,7 +24,7 @@ to setup
     setxy random-xcor random-ycor
   ]
   display-labels
-  update-plot
+  reset-ticks
 end
 
 to go
@@ -75,14 +75,6 @@ to death  ;; turtle procedure
   if energy < 0 [ die ]
 end
 
-to update-plot
-  set-current-plot "agent-populations"
-  set-current-plot-pen "sheep"
-  plot count sheep
-  set-current-plot-pen "wolves"
-  plot count wolves
-end
-
 to display-labels
   ask turtles [ set label "" ]
   if show-energy? [
@@ -108,7 +100,7 @@ to compare
   step-aggregate
   set-current-plot "populations"
   system-dynamics-do-plot
-  update-plot
+  update-plots
   display-labels
 end
 @#$#@#$#@
@@ -137,6 +129,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 SLIDER
 3
@@ -251,7 +244,7 @@ BUTTON
 159
 71
 go
-go\ntick\nupdate-plot\ndisplay-labels\n
+go\ntick\ndisplay-labels\n
 T
 1
 T
@@ -278,8 +271,8 @@ true
 true
 "" ""
 PENS
-"sheep" 1.0 0 -13345367 true "" ""
-"wolves" 1.0 0 -2674135 true "" ""
+"sheep" 1.0 0 -13345367 true "" "plot count sheep"
+"wolves" 1.0 0 -2674135 true "" "plot count wolves"
 
 MONITOR
 67
@@ -965,7 +958,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 setup
 setup-aggregate

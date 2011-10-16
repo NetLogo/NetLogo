@@ -2,7 +2,7 @@ to setup-simple-random
   clear-all
   ;; Make a circle of turtles
   create-turtles num-nodes
-  layout-circle turtles (world-width / 2 - 1)
+  layout-circle turtles (max-pxcor - 1)
   ;; Now make links one at a time until we have enough
   while [count links < num-links] [
     ;; Note that if the link already exists, nothing happens

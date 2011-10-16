@@ -58,6 +58,7 @@ to setup
     fd 1.75
     set in-team? false
   ]
+  find-all-components
   reset-ticks
 end
 
@@ -88,7 +89,7 @@ to go
   ]
 
   if layout? [ layout ]
-  if plot? [ do-plot ]
+  find-all-components
   tick
 end
 
@@ -170,37 +171,6 @@ to layout
 end
 
 
-to do-plot
-  ;; plot stacked histogram of link types
-  set-current-plot "Link counts"
-  let total 0
-  set-current-plot-pen "previous collaborators"
-  plot-pen-up plotxy ticks total
-  set total total + count links with [color = red]
-  plot-pen-down plotxy ticks total
-  set-current-plot-pen "incumbent-incumbent"
-  plot-pen-up plotxy ticks total
-  set total total + count links with [color = yellow]
-  plot-pen-down plotxy ticks total
-  set-current-plot-pen "newcomer-incumbent"
-  plot-pen-up plotxy ticks total
-  set total total + count links with [color = green]
-  plot-pen-down plotxy ticks total
-  set-current-plot-pen "newcomer-newcomer"
-  plot-pen-up plotxy ticks total
-  set total total + count links with [color = blue]
-  plot-pen-down plotxy ticks total
-
-  ;; calculate and plot connected component metrics
-  find-all-components
-  set-current-plot "% of agents in the giant component"
-  plotxy ticks (giant-component-size / (count turtles))
-  set-current-plot "Average component size"
-  plotxy ticks (mean components)
-end
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Network Exploration ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -265,7 +235,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 8
@@ -425,7 +395,7 @@ cumulative count
 10.0
 true
 false
-"" ""
+"" ";; plot stacked histogram of link types\nlet total 0\nset-current-plot-pen \"previous collaborators\"\nplot-pen-up plotxy ticks total\nset total total + count links with [color = red]\nplot-pen-down plotxy ticks total\nset-current-plot-pen \"incumbent-incumbent\"\nplot-pen-up plotxy ticks total\nset total total + count links with [color = yellow]\nplot-pen-down plotxy ticks total\nset-current-plot-pen \"newcomer-incumbent\"\nplot-pen-up plotxy ticks total\nset total total + count links with [color = green]\nplot-pen-down plotxy ticks total\nset-current-plot-pen \"newcomer-newcomer\"\nplot-pen-up plotxy ticks total\nset total total + count links with [color = blue]\nplot-pen-down plotxy ticks total"
 PENS
 "newcomer-newcomer" 1.0 0 -13345367 true "" ""
 "newcomer-incumbent" 1.0 0 -10899396 true "" ""
@@ -474,7 +444,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" ""
+"default" 1.0 0 -16777216 true "" "plotxy ticks (giant-component-size / (count turtles))"
 
 PLOT
 795
@@ -492,7 +462,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" ""
+"default" 1.0 0 -16777216 true "" "plotxy ticks (mean components)"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -857,7 +827,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 set layout? false
 setup repeat 175 [ go ]

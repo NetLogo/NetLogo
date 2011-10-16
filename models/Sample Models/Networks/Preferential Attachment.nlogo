@@ -22,7 +22,6 @@ to go
                                  ;; point for new node
   tick
   if layout? [ layout ]
-  if plot? [ do-plotting ]
 end
 
 ;; used for creating a new node
@@ -61,36 +60,6 @@ to-report find-partner
     ]
   ]
   report partner
-end
-
-;;;;;;;;;;;;;;;;
-;;; Plotting ;;;
-;;;;;;;;;;;;;;;;
-
-to do-plotting ;; plotting procedure
-  let max-degree max [count link-neighbors] of turtles
-
-  set-current-plot "Degree Distribution"
-  plot-pen-reset  ;; erase what we plotted before
-  set-plot-x-range 1 (max-degree + 1)  ;; + 1 to make room for the width of the last bar
-  histogram [count link-neighbors] of turtles
-
-  ;; for this plot, the axes are logarithmic, so we can't
-  ;; use "histogram-from"; we have to plot the points
-  ;; ourselves one at a time
-  set-current-plot "Degree Distribution (log-log)"
-  plot-pen-reset  ;; erase what we plotted before
-  ;; the way we create the network there is never a zero degree node,
-  ;; so start plotting at degree one
-  let degree 1
-  while [degree <= max-degree]
-  [
-    let matches turtles with [count link-neighbors = degree]
-    if any? matches
-      [ plotxy log degree 10
-               log (count matches) 10 ]
-    set degree degree + 1
-  ]
 end
 
 ;;;;;;;;;;;;;;
@@ -162,7 +131,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 PLOT
 8
@@ -180,7 +149,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 2 -16777216 true "" ""
+"default" 1.0 2 -16777216 true "" "if not plot? [ stop ]\nlet max-degree max [count link-neighbors] of turtles\n;; for this plot, the axes are logarithmic, so we can't\n;; use \"histogram-from\"; we have to plot the points\n;; ourselves one at a time\nplot-pen-reset  ;; erase what we plotted before\n;; the way we create the network there is never a zero degree node,\n;; so start plotting at degree one\nlet degree 1\nwhile [degree <= max-degree] [\n  let matches turtles with [count link-neighbors = degree]\n  if any? matches\n    [ plotxy log degree 10\n             log (count matches) 10 ]\n  set degree degree + 1\n]\n"
 
 PLOT
 8
@@ -198,7 +167,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 1 -16777216 true "" ""
+"default" 1.0 1 -16777216 true "" "if not plot? [ stop ]\nlet max-degree max [count link-neighbors] of turtles\nplot-pen-reset  ;; erase what we plotted before\nset-plot-x-range 1 (max-degree + 1)  ;; + 1 to make room for the width of the last bar\nhistogram [count link-neighbors] of turtles\n"
 
 BUTTON
 6
@@ -269,7 +238,7 @@ SWITCH
 97
 layout?
 layout?
-0
+1
 1
 -1000
 
@@ -679,7 +648,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC1
 @#$#@#$#@
 set layout? false
 set plot? false

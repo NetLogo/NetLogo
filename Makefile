@@ -12,7 +12,7 @@ netlogo: resources/system/dict.txt extensions plugins models/index.txt bin/Scrip
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.25
+JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.26
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
@@ -170,7 +170,6 @@ docs/scaladoc: netlogo
 	-rm -rf docs/scaladoc
 	-mkdir -p docs/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
-	echo "'contains wrong class package' errors here are just Scaladoc being whiny"
 	bin/scaladoc \
 	  -d docs/scaladoc \
 	  -doc-title 'NetLogo API' \

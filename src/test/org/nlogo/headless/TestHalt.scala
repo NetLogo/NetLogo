@@ -19,6 +19,7 @@ class TestHalt extends FunSuite with SlowTest {
   if(!Version.is3D)
     test("halt") {
       import TestHalt._
+      finalized = false
       var workspace =
         HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
       workspace.initForTesting(0, 0, 0, 0, "globals [x]")

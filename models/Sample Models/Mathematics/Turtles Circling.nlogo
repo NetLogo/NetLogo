@@ -1,6 +1,6 @@
 to setup
   setup-circle radius number
-  setup-plot
+  setup-plots
 end
 
 to setup-circle [r n]
@@ -14,11 +14,6 @@ to setup-circle [r n]
   ]
 end
 
-to setup-plot
-  set-current-plot "Distance from the origin"
-  set-plot-y-range 0 max-pxcor
-end
-
 to all-circle
   circle radius
   display
@@ -26,7 +21,7 @@ end
 
 to circle [r]
   ask turtles [ move-along-circle r ]
-  if plot? [ plot [distancexy 0 0] of turtle 0 ]
+  if plot? [ update-plots ]
 end
 
 to move-along-circle [r]
@@ -76,7 +71,7 @@ GRAPHICS-WINDOW
 1
 0
 ticks
-30
+30.0
 
 BUTTON
 3
@@ -231,9 +226,9 @@ dist
 30.0
 true
 false
-"" ""
+"set-plot-y-range 0 max-pxcor" ""
 PENS
-"distance" 1.0 0 -10899396 true "" ""
+"distance" 1.0 0 -10899396 true "" "plot [distancexy 0 0] of turtle 0"
 
 BUTTON
 147
@@ -660,7 +655,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 setup
 repeat 400 [ all-circle ]

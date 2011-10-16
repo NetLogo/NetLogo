@@ -1,4 +1,3 @@
-import com.sun.jmx.snmp.tasks.Task
 import sbt._
 import com.github.olim7t.sbtscalariform._
 

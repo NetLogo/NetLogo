@@ -20,14 +20,12 @@ end
 
 ;; observer procedure to set up model
 to setup
-  reset-ticks
-  clear-turtles                    ;; clears view -- don't use ca so MM plot doesn't clear
-  set-current-plot "Concentrations"
-  clear-plot
+  clear-turtles                    ;; clears view -- don't use clear-all so MM plot doesn't clear
   set substrate-added 0
   set v 0
   add enzymes 150                   ;; starts with constant number of enzymes
   add substrates volume             ;; add substrate based on slider
+  reset-ticks
 end
 
 ;; observer procedure to add molecules to reaction
@@ -67,15 +65,14 @@ end
 
 ;; main procedure
 to go
-  tick
+  if pause? and (ticks >= 30)
+    [ stop ]
   ask turtles [ move ]                ;; only non-complexed turtles will move
   ask enzymes [ form-complex ]         ;; enzyme may form complexes with substrate or inhibitor
   ask substrates [ react-forward ]     ;; complexed substrate may turn into product
   ask enzymes [ dissociate ]           ;; or complexes may just split apart
   calculate-velocity                  ;; calculate V for use in the Michaelis-Menten curve
-  plot-concentrations                 ;; plots variables
-  if pause? and (ticks >= 30)
-    [ stop ]
+  tick
 end
 
 to move  ;; turtle procedure
@@ -127,20 +124,11 @@ end
 to calculate-velocity
   let initial-conc substrate-added
   let current-conc count substrates with [partner = nobody]
-  set v (initial-conc - current-conc) / ticks
+  if ticks > 0
+    [ set v (initial-conc - current-conc) / ticks ]
 end
 
 ;;; plotting procedures
-
-to plot-concentrations
-  set-current-plot "Concentrations"
-  set-current-plot-pen "Substrate"
-  plot count substrates with [partner = nobody]
-  set-current-plot-pen "Complex"
-  plot count enzymes with [partner != nobody]
-  set-current-plot-pen "Product"
-  plot count products
-end
 
 to setup-mm-plot
   set-current-plot "Michaelis-Menten Curve"
@@ -178,7 +166,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 4
@@ -320,9 +308,9 @@ true
 true
 "" ""
 PENS
-"Substrate" 1.0 0 -10899396 true "" ""
-"Complex" 1.0 0 -2674135 true "" ""
-"Product" 1.0 0 -13345367 true "" ""
+"Substrate" 1.0 0 -10899396 true "" "plot count substrates with [partner = nobody]"
+"Complex" 1.0 0 -2674135 true "" "plot count enzymes with [partner != nobody]"
+"Product" 1.0 0 -13345367 true "" "plot count products"
 
 PLOT
 3
@@ -786,7 +774,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

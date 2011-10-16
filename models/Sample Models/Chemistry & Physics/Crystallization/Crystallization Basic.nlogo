@@ -38,7 +38,6 @@ to setup
   ]
   set ave-metal-temp init-metal-temp
   reset-ticks
-  do-histogram
 end
 
 
@@ -52,9 +51,7 @@ to go
   ask turtles [ rotate ]
   set ave-metal-temp (mean [temp] of turtles)
   tick
-  do-histogram
 end
-
 
 ;; turtle procedure -- if metal is liquid and it is next to a solid,
 ;; change its heading to that of the solid; otherwise, just rotate
@@ -91,20 +88,6 @@ to set-color
     set color item index colors
   ]
 end
-
-to do-histogram
-  if histogram? [
-    set-current-plot "Temperatures"
-    let index 0
-    foreach colors [
-      set-current-plot-pen (item index pens)
-      plot-pen-reset
-      if any? turtles with [color = ?]
-      [ plotxy index count turtles with [color = ?] ]
-      set index index + 1
-    ]
-  ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 342
@@ -131,7 +114,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 261
@@ -303,7 +286,7 @@ quantity
 625.0
 false
 true
-"set-plot-y-range 0 count turtles\nset-histogram-num-bars 1 + (length colors)\n\nlet bottom (round room-temp)\nlet top (round melting-temp)\nlet index 0\nforeach colors [\n  create-temporary-plot-pen (word bottom \" - \" top)\n  set-plot-pen-mode 1\n  set-plot-pen-color ?\n  set pens lput (word bottom \" - \" top) pens\n\n  set index index + 1\n  set bottom top\n  set top (round ((index * temp-range) + melting-temp))\n]" ""
+"set-plot-y-range 0 count turtles\nset-histogram-num-bars 1 + (length colors)\n\nlet bottom (round room-temp)\nlet top (round melting-temp)\nlet index 0\nforeach colors [\n  create-temporary-plot-pen (word bottom \" - \" top)\n  set-plot-pen-mode 1\n  set-plot-pen-color ?\n  set pens lput (word bottom \" - \" top) pens\n\n  set index index + 1\n  set bottom top\n  set top (round ((index * temp-range) + melting-temp))\n]" "if histogram? [\n  let index 0\n  foreach colors [\n    set-current-plot-pen (item index pens)\n    plot-pen-reset\n    if any? turtles with [color = ?]\n    [ plotxy index count turtles with [color = ?] ]\n    set index index + 1\n  ]\n]\n"
 PENS
 "quantity" 1.0 1 -2674135 false "" ""
 
@@ -715,7 +698,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0RC2
 @#$#@#$#@
 setup
 repeat 20 [ go ]

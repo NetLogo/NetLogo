@@ -47,7 +47,6 @@ to setup
   set avg-energy-cyan mean [energy] of turtles with [color = cyan]
   set avg-energy-magenta mean [ energy ] of turtles with [color = magenta]
   reset-ticks
-  do-plotting
 end
 
 to go
@@ -101,7 +100,7 @@ to go
   set avg-energy-cyan mean [energy] of turtles with [color = cyan]
   set avg-energy-magenta mean [energy] of turtles with [color = magenta]
 
-  do-plotting
+  update-plots
   display
 end
 
@@ -631,25 +630,6 @@ to-report orth-projection [ x1 y1 z1 x2 y2 z2 ]
   [ report dproduct / speed-of-2 ]
   [ report 0 ]
 end
-
-;;;
-;;; plotting procedures
-;;;
-
-
-to do-plotting
-  set-current-plot "Average Speeds"
-  set-current-plot-pen "cyan"
-  plotxy ticks avg-speed-cyan
-  set-current-plot-pen "magenta"
-  plotxy ticks avg-speed-magenta
-
-  set-current-plot "Average Energies"
-  set-current-plot-pen "cyan"
-  plotxy ticks avg-energy-cyan
-  set-current-plot-pen "magenta"
-  plotxy ticks avg-energy-magenta
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 0
@@ -745,8 +725,8 @@ true
 true
 "" ""
 PENS
-"cyan" 10.0 0 -11221820 true "" ""
-"magenta" 10.0 0 -5825686 true "" ""
+"cyan" 10.0 0 -11221820 true "" "plotxy ticks avg-energy-cyan"
+"magenta" 10.0 0 -5825686 true "" "plotxy ticks avg-energy-magenta"
 
 PLOT
 389
@@ -764,8 +744,8 @@ false
 true
 "" ""
 PENS
-"cyan" 5.0 0 -11221820 true "" ""
-"magenta" 5.0 0 -5825686 true "" ""
+"cyan" 5.0 0 -11221820 true "" "plotxy ticks avg-speed-cyan"
+"magenta" 5.0 0 -5825686 true "" "plotxy ticks avg-speed-magenta"
 
 SLIDER
 20
@@ -1403,7 +1383,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 3D 5.0beta5
+NetLogo 3D 5.0RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
