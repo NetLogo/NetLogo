@@ -84,7 +84,7 @@ private class StructureParser(
     // the special string "" (tab or widget) or "aggregate" (for the SDM).  Also confusing is that
     // we're iterating over usingFiles at the same time that we're adding entries to it; that's
     // because we are discovering the __include calls in the code as we go.  The index variable
-    // keeps track of our current location in usingFiles.  All of this is damned confusing and ought
+    // keeps track of our current location in usingFiles.  All of this is very confusing and ought
     // to be cleaned up. - ST 12/19/08
     val usingFiles = new collection.mutable.ArrayBuffer[(String, Token)]
     var fileName = ""

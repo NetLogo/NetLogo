@@ -357,7 +357,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     viewWidget.view.renderer.changeTopology(wrapX, wrapY);
   }
 
-  /// kludgy-as-hell stuff for communicating with stuff in app
+  /// very kludgy stuff for communicating with stuff in app
   /// package without having any compile-time dependencies on it
 
   // called from an "other" thread (neither event thread nor job thread)
