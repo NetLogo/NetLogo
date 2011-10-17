@@ -92,10 +92,6 @@
         <a href="#appletjava"><b>I tried to run one of the applets on your
         site, but it didn't work. What should I do?</b></a>
       <li>
-        <a href="#appletmaxheap"><b>When running my model as an applet, I
-        get the following error: java.lang.OutOfMemoryError: Java heap
-        space.</b></a>
-      <li>
         <a href="#secretweb"><b>Can I make my model available as an applet
         while keeping the code secret?</b></a>
       <li>
@@ -171,18 +167,11 @@
     </h3>
     <ul class="smaller">
       <li>
-        <a href="#lang"><b>How is the NetLogo language different from the
-        StarLogo and StarLogoT languages? How do I convert my StarLogo or
-        StarLogoT model to NetLogo?</b></a>
-      <li>
         <a href="#logodiffs"><b>How does the NetLogo language differ from
         other Logos?</b></a>
       <li>
         <a href="#transition"><b>How come my model from an earlier NetLogo
         doesn't work right?</b></a>
-      <li>
-        <a href="#locale"><b>Why does my code have strange characters in
-        it?</b></a>
       <li>
         <a href="#unaryminus"><b>How do I take the negative of a
         number?</b></a>
@@ -350,7 +339,9 @@
     </h3>
     <p>
       We offer workshops from time to time. If a workshop has been
-      scheduled, we will announce it on the netlogo-users group.
+      scheduled, we will announce it on the
+      the <a href="http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
+      Group</a>.
     <h3>
       <a name="books" id="books"></a>Are there any NetLogo textbooks?
     </h3>
@@ -373,22 +364,20 @@
       Spanish version, Chinese version, (your language here) version, etc.?
     </h3>
     <p>
-      At present, NetLogo is available only in English.
+      At present, NetLogo is available in English and Spanish.  Both
+      languages are included in the standard download.
     <p>
-      We plan to eventually make it possible for users to produce their own
-      foreign-language &quot;packs&quot; for NetLogo and share them with
-      each other. In order to do this, we need to separate all of the
-      English text from the rest of the source code, so that is separately
-      editable. We're not sure when this will happen.
-    <p>
-      The user manual has been translated into Chinese and Czech. The
+      So far volunteers have translated the user manual into Chinese and Czech. The
       translated versions are available from the NetLogo web site.
+    <p>
+      We are seeking volunteers to improve the incomplete Spanish localization
+      and to translate the NetLogo software and manual into other languages.
     <h3>
       <a name="compilation" id="compilation"></a>Is NetLogo compiled or
       interpreted?
     </h3>
     <p>
-      Short answer: partially compiled; we are working towards a full
+      Short answer: partially compiled.  We are working towards a full
       compiler.
     <p>
       Long answer: NetLogo does include a compiler that generates Java byte
@@ -417,7 +406,7 @@
       scientifically reproducible?
     </h3>
     <p>
-      Yes. NetLogo's agent scheduling algorithms are deterministic, and
+      Yes. NetLogo's pseudorandom number generator and agent scheduling algorithms are deterministic, and
       NetLogo always uses Java's &quot;strict math&quot; library, which
       gives bit-for-bit identical results regardless of platform. But keep
       the following cautions in mind:
@@ -449,12 +438,12 @@
       3D remain separate?
     </h3>
     <p>
-      Although NetLogo 3D is now included in the NetLogo download, it is
+      For now, yes.  NetLogo 3D is included with NetLogo, but it is
       still a separate application.
     <p>
-      However, the split is temporary. Eventually a single unified
-      application will support both 2D and 3D modeling. We will be sure to
-      design the 3D world support in such a way that it doesn't get in
+      Eventually a single unified
+      application will support both 2D and 3D modeling. We will
+      design the 3D world support so it doesn't get in
       the way when you are building 2D models.
     <p>
       Models built in NetLogo 3D may require changes in order to run in the
@@ -468,7 +457,7 @@
       change their minds on this someday.
     <p>
       We are seeking funding for an alternate implementation on a
-      JavaScript/HTML5 base. It would work on a variety of tablets and
+      JavaScript and HTML5 base. It would work on a variety of tablets and
       phones. But the many man-years of development effort that have gone
       into the Java version can't cheaply or easily be replicated on
       another platform.
@@ -546,37 +535,8 @@ NetLogo@@@VERSION@@@Installer.exe -q
       applets on your site, but it didn't work. What should I do?
     </h3>
     <p>
-      Current versions of NetLogo require that your web browser support
-      Java 5 or later. For more details about Java requirements see the
+      Your web browser must support Java 5 or later. For details on Java requirements see the
       <a href="applet.html#java">Applet guide</a>.
-    <p>
-      Some NetLogo applets may require more memory than the browser
-      normally makes available. See the <a href="applet.html#memory">memory
-      section</a> of the Applet guide for details on how to change the
-      memory allocation.
-    <p>
-      If you are using Firefox 4 on Mac OS X, try updating Java through
-      Software Update, and if that doesn't help, try a different
-      browser such as Safari. (Why? There are two different Java applet
-      browser plugins Mac OS X, known as &quot;plugin1&quot; and
-      &quot;plugin2&quot;. Safari uses plugin1 by default, Firefox 4 uses
-      plugin2. plugin1 works with NetLogo, plugin2 doesn't. Plugin1 is
-      considered legacy; Oracle and Apple are now only improving plugin2.
-      In a future version of Mac OS X, only plugin2 will be available.
-      Unfortunately, plugin2 is not in very good shape yet on Mac OS X. But
-      Apple seems to be improving it with every Java update that comes
-      through Software Update.)
-    <h3>
-      <a name="appletmaxheap" id="appletmaxheap"></a>When running my model
-      as an applet, I get the following error: java.lang.OutOfMemoryError:
-      Java heap space.
-    </h3>
-    <p>
-      The Java Plug-In is not allocating sufficient space to run the model.
-      Details on how big a model can be in NetLogo can be found <a href=
-      "#howbig">here</a>. You will need to increase the amount of memory
-      available to the Java Plug-In. See the instructions <a href=
-      "applet.html#memory">here</a>.
     <h3>
       <a name="secretweb" id="secretweb"></a>Can I make my model available
       as an applet while keeping the code secret?
@@ -590,6 +550,10 @@ NetLogo@@@VERSION@@@Installer.exe -q
       download the model file. If you want, you can remove the source code
       and the link. Removing the link will make it harder for the user to
       access the model file, but not impossible.
+    <p>
+     However, Peter Brooks has developed a NetLogo obfuscator which
+     makes the code &quot;as indecipherable as possible&quot;. It is
+     online <a href="http://bert.stuy.edu/pbrooks/netlogo/obfuscator">here</a>.
     <h3>
       <a name="appletfiles" id="appletfiles"></a>Can a model saved as an
       applet use <tt>import-world</tt>, <tt>file-open</tt>, and other
@@ -693,7 +657,7 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       Try changing the 1024m a smaller number like 512m. This should permit
       NetLogo to start, although the lower heap size limit may affect your
-      ability to run models with very large numbers of agents. (See
+      ability to run models with many agents. (See
       <a href="#howbig">How big can my model be?</a>.)
     <p>
       If running with the lower heap size limit is unacceptable, read on.
@@ -714,11 +678,11 @@ org.apache.commons.logging.impl.LogFactoryImpl
     <p>
       Yes. The easiest way is to set up your model run or runs as a
       BehaviorSpace experiment. No additional programming is required. See
-      the BehaviorSpace section of the User Manual for details.
+      the <a href="behaviorspace.html">BehaviorSpace Guide</a> for details.
     <p>
       Another option is to use our Controlling API. Some light Java
-      programming is required. See the &quot;Controlling&quot; section of
-      the User Manual for details and sample code.
+      programming is required. See the <a href="controlling.html">Controlling Guide</a>
+      for details and sample code.
     <h3>
       <a name="multiprocessing" id="multiprocessing"></a>Does NetLogo take
       advantage of multiple processors?
@@ -727,9 +691,9 @@ org.apache.commons.logging.impl.LogFactoryImpl
       Only when using BehaviorSpace. BehaviorSpace does parallel runs, one
       per processor.
     <p>
-      For a single model run, only one processor is used. The NetLogo
-      engine is single threaded and we expect it to remain that way. We
-      don't have any plans to make it possible to split a single model
+      For a single model run, only one processor is used.
+    <p>
+      We are seeking funding to make it possible to split a single model
       run across multiple processors or multiple computers.
     <h3>
       <a name="cluster" id="cluster"></a>Can I distribute NetLogo model
@@ -780,11 +744,11 @@ org.apache.commons.logging.impl.LogFactoryImpl
       apart. When several seconds pass between updates, it may seem like
       your model has stopped. It hasn't. It's running at full
       speed. Watch the tick counter! (If your model uses it. If it
-      doesn't, watch something else, such as a plot.)
+      doesn't, watch something else, like a plot.)
     <p>
-      To get a feel for what's going on, it may help to gradually move
-      the slider to the right, rather than moving it all the way to the
-      right all at once. If you find the updates too infrequent at the
+      To get a feel for what's going on, try moving
+      the slider to the right gradually rather than suddenly.
+      If you find the updates too infrequent at the
       rightmost position, just don't push the slider that far.
     <h3>
       <a name="paint" id="paint"></a>Can I use the mouse to
@@ -847,7 +811,7 @@ org.apache.commons.logging.impl.LogFactoryImpl
       <a name="gisimport" id="gisimport"></a>Can I use GIS data in NetLogo?
     </h3>
     <p>
-      Yes, using the GIS extension. See the GIS section of the User Manual.
+      Yes, using the GIS extension. See the <a href="gis.html">GIS Extension Guide</a>.
     <p>
       A simpler way is to use <tt>import-pcolors</tt>, but that only works
       for importing maps that are images, not maps in other formats. It is
@@ -920,48 +884,17 @@ org.apache.commons.logging.impl.LogFactoryImpl
       Programming
     </h2>
     <h3>
-      <a name="lang" id="lang"></a>How is the NetLogo language different
-      from the StarLogo and StarLogoT languages? How do I convert my
-      StarLogo or StarLogoT model to NetLogo?
-    </h3>
-    <p>
-      We don't have a document that specifically summarizes the
-      differences between these programs. If you have built models in
-      StarLogo or StarLogoT before, then we suggest reading the <a href=
-      "programming.html">Programming Guide</a> section of this manual to
-      learn about NetLogo, particularly the sections on &quot;Ask&quot; and
-      &quot;Agentsets&quot;. Looking at some of the sample models and code
-      examples in the Models Library may help as well. The <a href=
-      "http://groups.yahoo.com/group/netlogo-users/">NetLogo Users
-      Group</a> is a useful resource.
-    <h3>
       <a name="logodiffs" id="logodiffs"></a>How does the NetLogo language
       differ from other Logos?
     </h3>
     <p>
-      This is answered in detail at the end of the Programming Guide in the
-      User Manual.
+      This is answered in detail at the end of the <a href="programming.html">Programming Guide</a>.
     <h3>
       <a name="transition" id="transition"></a>How come my model from an
       earlier NetLogo doesn't work right?
     </h3>
     <p>
-      See the <a href="transition.html">Transition Guide</a> section of the
-      User Manual for help.
-    <h3>
-      <a name="locale" id="locale"></a>Why does my code have strange
-      characters in it?
-    </h3>
-    <p>
-      NetLogo only works in &quot;en&quot; locales. A locale is a setting
-      which tells NetLogo which language you are using, as well as how to
-      display dates and numbers. You may need to switch to to an English
-      locale before launching NetLogo. This is usually done in the
-      &quot;Regional Settings&quot; or &quot;Internationalization&quot;
-      panel of the operating system.
-    <p>
-      In a future version of NetLogo we plan to support different languages
-      and locales.
+      See the <a href="transition.html">Transition Guide</a> for help.
     <h3>
       <a name="unaryminus" id="unaryminus"></a>How do I take the negative
       of a number?
@@ -1082,8 +1015,8 @@ move-to one-of patches
       0.10000000004 and 0.799999999999 instead of 0.1 and 0.8. Why?
     </h3>
     <p>
-      See the &quot;Math&quot; section of the Programming Guide in the User
-      Manual for a discussion of this issue.
+      See the &quot;Math&quot; section of the <a href="programming.html">Programming Guide</a>
+      for a discussion of this issue.
     <h3>
       <a name="onepointoh" id="onepointoh"></a>The documentation says that
       <tt>random-float 1</tt> might return 0 but will never return 1. What
