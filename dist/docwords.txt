@@ -245,7 +245,6 @@ Panel's
 Pasco
 Paulo
 Paus
-Pegdown
 PepperedMoths
 Phidgets
 PicoContainer
@@ -663,7 +662,6 @@ pcolor
 pcolors
 pd
 pe
-pegdown
 pen's
 pendown
 penname

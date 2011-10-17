@@ -474,30 +474,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 ===
 
-For the Info tab, NetLogo uses the Pegdown and Parboiled libraries.
-
-The copyright and license for Pegdown are as follows:
-
-pegdown - Copyright (C) 2010-2011 Mathias Doenitz
-
-Based on peg-markdown - markdown in c, implemented using PEG grammar
-Copyright (c) 2008 John MacFarlane (http://github.com/jgm/peg-markdown)
-
-pegdown is released under the Apache License 2.0.
-(http://www.apache.org/licenses/LICENSE-2.0)
-
-The copyright and license for Parboiled are as follows:
-
-parboiled - Copyright (C) 2009-2011 Mathias Doenitz
-
-This product includes software developed by
-Mathias Doenitz (http://www.parboiled.org/).
-
-pegdown is released under the Apache License 2.0.
-(http://www.apache.org/licenses/LICENSE-2.0)
-
-===
-
 The GIS Extension uses several external libraries:
 
 JScience - Java(TM) Tools and Libraries for the Advancement of Sciences.

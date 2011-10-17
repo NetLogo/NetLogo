@@ -331,7 +331,6 @@ Code Examples/Hex Turtles Example: 2004
 Code Examples/Hill Climbing Example: 2007
 Code Examples/Histogram Example: 2004
 Code Examples/Image Import Example: 2005
-Code Examples/Info Tab Example: 2010
 Code Examples/Intersecting Lines Example: 2006
 Code Examples/Intersecting Links Example: 2007
 Code Examples/Label Position Example: 2011

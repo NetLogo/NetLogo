@@ -2,7 +2,6 @@
 
 package org.nlogo.app
 
-import org.pegdown.{ PegDownProcessor, Extensions }
 import java.io.InputStream
 
 // This gets tested by TestAppletSaver and TestInfoFormatter. - ST 9/7/10
@@ -31,12 +30,7 @@ object InfoFormatter {
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
             replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
 
-  def toInnerHtml(str: MarkDownString): HTML =
-    new PegDownProcessor(Extensions.SMARTYPANTS |       // beautifies quotes, dashes, etc.
-                         Extensions.AUTOLINKS |         // angle brackets around URLs and email addresses not needed
-                         Extensions.HARDWRAPS |         // GitHub flavored newlines
-                         Extensions.FENCED_CODE_BLOCKS) // delimit code blocks with ```
-      .markdownToHtml(str)
+  def toInnerHtml(str: MarkDownString): HTML = "<pre>" + str + "</pre>"
 
   def wrapHtml(body: HTML, fontSize:Int=defaultFontSize): HTML = {
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
