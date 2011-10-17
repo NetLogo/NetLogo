@@ -10,6 +10,8 @@ The CCL gratefully acknowledges over a decade of support for our NetLogo work. M
 
 To reference this software in academic publications, please use: Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
+The source code is hosted here: https://github.com/NetLogo/NetLogo
+
 ===
 
 NetLogo

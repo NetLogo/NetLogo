@@ -24,6 +24,8 @@ The NetLogo home page is at:
   http://ccl.northwestern.edu/netlogo/
 for contact information, or to report a bug, visit
   http://ccl.northwestern.edu/netlogo/contact.shtml
+the source code is hosted here:
+  https://github.com/NetLogo/NetLogo
 
 ===
 
