@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, Observer, Turtle, Patch, Link}
@@ -30,7 +32,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
         popMenu.add(new JMenuItem(name) {
           addActionListener(() => {
             commandLine.agentClass(clazz)
-            repaint()
+            LinePrompt.this.repaint()
             commandLine.requestFocus()
           })
         })

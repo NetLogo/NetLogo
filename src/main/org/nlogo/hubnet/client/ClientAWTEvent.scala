@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.hubnet.client
 
 class ClientAWTEvent(source: AnyRef, val info: AnyRef, val receivedData: Boolean = false)

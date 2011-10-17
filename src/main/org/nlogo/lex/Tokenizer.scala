@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.lex
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, Token, TokenHolder, TokenizerInterface, TokenType }

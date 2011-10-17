@@ -758,7 +758,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 56
@@ -1086,7 +1086,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "if length pressure-history > 0\n  [ plotxy ticks (mean pressure-history) ]\n"
+"default" 1.0 0 -16777216 true "" "if is-list? pressure-history \n  [ plotxy ticks (mean pressure-history) ]\n"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1226,7 +1226,7 @@ false
 Rectangle -7500403 true true 0 0 297 299
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

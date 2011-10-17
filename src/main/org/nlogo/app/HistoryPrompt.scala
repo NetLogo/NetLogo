@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 // pulled this out of CommandLine.java so I could translate it separately to Scala - ST 8/19/10

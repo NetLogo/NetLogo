@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app;
 
 // leaving this in Java for now since our superclass is in Java - ST 8/13/10

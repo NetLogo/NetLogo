@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 
 // Note that in the Scaladoc we distribute, this class is included, but Workspace and

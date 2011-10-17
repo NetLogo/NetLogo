@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.api
 
 // This class handles output of CSV files.  Input of CSV files is handled elsewhere, in

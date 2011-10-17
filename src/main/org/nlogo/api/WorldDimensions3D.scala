@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.api
 
 /** for wrapping up dimensions to resize the world using WorldResizer */

@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.window;
 
 // implemented by InterfacePanel and InterfacePanelLite - ST 10/14/03

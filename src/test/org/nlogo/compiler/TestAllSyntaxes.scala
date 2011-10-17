@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.compiler
 
 // We have this because in the future we might change how primitives specify their syntax, or how

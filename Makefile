@@ -61,7 +61,7 @@ models/index.txt:
 
 ### JAR building
 
-JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
+JARS = NetLogo.jar NetLogoLite.jar HubNet.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
@@ -204,7 +204,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
+	rm -f $(JARS) test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/scaladoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
