@@ -534,7 +534,6 @@ end
 to turn-labels-on
  ;; [ask turtles [ set label who set label-color orange + 3 ]]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 212
