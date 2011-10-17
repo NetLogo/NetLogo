@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.compiler
 
 // here is the AstNode (AST = Abstract Syntax Tree) trait, along with its extending traits

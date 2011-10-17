@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.hubnet.client
 
 private class AppletEditor(rows: Int, columns: Int, disableFocusTraversal: Boolean)

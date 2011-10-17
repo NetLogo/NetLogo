@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.agent
 
 // only used as a place holder by agent monitors

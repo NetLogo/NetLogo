@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.api
 
 /** used by Importer for resizing the world during an import.  also used by BehaviorSpace when the

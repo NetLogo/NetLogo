@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.api
 
 // it's very tempting to get rid of ride entirely but for the interface

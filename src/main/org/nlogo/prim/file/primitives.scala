@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.prim.file
 
 import org.nlogo.api.{ CompilerException, FileMode, Syntax }

@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.shape.editor;
 
 // Class that handles the rendering of items in the colorSelection

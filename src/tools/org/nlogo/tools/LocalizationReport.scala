@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 import java.util.Locale
 import org.nlogo.api.I18N
 import org.nlogo.api.I18N.BundleKind

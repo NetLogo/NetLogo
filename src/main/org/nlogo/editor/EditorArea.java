@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 // the code in this package is based on the sample code sketched out
 // in the second half of this page:
 // http://www.cs.bris.ac.uk/Teaching/Resources/COMS30122/tools/highlight/design.html

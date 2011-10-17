@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.widget
 
 // Property is more convenient to use from Scala than Java, thanks to named and default arguments,

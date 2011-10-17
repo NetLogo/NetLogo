@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.sdm
 object Model {
   class ModelException(message:String) extends Exception(message)

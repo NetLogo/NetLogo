@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, ExecutionException, Executors, TimeUnit}

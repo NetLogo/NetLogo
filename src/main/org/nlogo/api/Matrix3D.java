@@ -1,8 +1,8 @@
 package org.nlogo.api;
 
 /*
- *  This code  was derived from Sun source, with some modification and extensions
- *  copyright 2006 Uri Wilenksy
+ *  This code  was derived from Sun source, with some modification and extensions.
+ *
  *   Original License follows:
  * @(#)Matrix3D.java    1.2 96/12/06 *
  * Copyright (c) 1994-1996 Sun Microsystems, Inc. All Rights Reserved.

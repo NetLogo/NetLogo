@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.agent
 
 // Exists so export-world can bring up a warning if someone exports tasks, since they can't be

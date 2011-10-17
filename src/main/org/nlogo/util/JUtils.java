@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.util;
 
 // we leave this in Java so we can use @SuppressWarnings
