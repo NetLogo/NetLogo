@@ -116,7 +116,7 @@ def munge(path: String): String = {
     else if(keywords.contains("NIELS"))
       "Copyright " + year + " Pratim Sengupta and Uri Wilensky. All rights reserved."
     else if(path.containsSlice("Code Examples/") && !keywords.contains("specialCE"))
-      "Copyright " + year + " Uri Wilensky."
+      "Public Domain"
     else
       "Copyright " + year + " Uri Wilensky. All rights reserved."
   }
@@ -126,8 +126,9 @@ def munge(path: String): String = {
     code + "\n\n" +
       (if(path.containsSlice("Code Examples/") && !keywords.contains("specialCE")) {
         require(!year2.isDefined, "can't specify two years for code examples")
-        "; " + copyright + " This code may be freely copied, distributed,\n" +
-        "; altered, or otherwise used by anyone for any legal purpose.\n"
+        "; " + copyright + ":\n" +
+        "; To the extent possible under law, Uri Wilensky has waived all\n" +
+        "; copyright and related or neighboring rights to this Code Example.\n"
       }
       else
         "; " + copyright + "\n" + "; The full copyright notice is in the Info tab.\n"

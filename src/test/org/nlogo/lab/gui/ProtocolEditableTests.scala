@@ -1,5 +1,3 @@
-// (c) 2009 Uri Wilensky. See README.txt for terms of use.
-
 package org.nlogo.lab.gui
 
 import org.scalatest.FunSuite

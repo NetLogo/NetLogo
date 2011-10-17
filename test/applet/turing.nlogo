@@ -113,37 +113,6 @@ to-report number-to-direction [number]
   if number = 270
     [ report "Left" ]
 end
-
-
-; *** NetLogo Model Copyright Notice ***
-;
-; This model was created as part of the project:
-; PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN
-; CLASSROOMS.  The project gratefully acknowledges the support of the
-; National Science Foundation (REPP program) -- grant number REC #9814682.
-;
-; Copyright 2002 by Uri Wilensky.  Updated 2003.  All rights reserved.
-;
-; Permission to use, modify or redistribute this model is hereby granted,
-; provided that both of the following requirements are followed:
-; a) this copyright notice is included.
-; b) this model will not be redistributed for profit without permission
-;    from Uri Wilensky.
-; Contact Uri Wilensky for appropriate licenses for redistribution for
-; profit.
-;
-; To refer to this model in academic publications, please use:
-; Wilensky, U. (2002).  NetLogo Turing Machine 2D model.
-; http://ccl.northwestern.edu/netlogo/models/TuringMachine2D.
-; Center for Connected Learning and Computer-Based Modeling,
-; Northwestern University, Evanston, IL.
-;
-; In other publications, please use:
-; Copyright 1998 by Uri Wilensky.  All rights reserved.  See
-; http://ccl.northwestern.edu/netlogo/models/TuringMachine2D
-; for terms of use.
-;
-; *** End of NetLogo Model Copyright Notice ***
 @#$#@#$#@
 GRAPHICS-WINDOW
 493
@@ -571,10 +540,6 @@ Wolfram, S. 2002. A New Kind of Science. Wolfram Media Inc.  Champaign, IL.
 Pegg, E. 2002. Turmite. http://mathworld.wolfram.com/Turmite.html.
 
 Thanks to Ethan Bakshy for his work on this model.
-
-To refer to this model in academic publications, please use: Wilensky, U. (2002).  NetLogo Turing Machine 2D model. http://ccl.northwestern.edu/netlogo/models/TuringMachine2D. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-In other publications, please use: Copyright 2002 by Uri Wilensky.  All rights reserved.  See http://ccl.northwestern.edu/netlogo/models/TuringMachine2D for terms of use.
 @#$#@#$#@
 default
 true

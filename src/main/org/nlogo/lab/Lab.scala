@@ -1,5 +1,3 @@
-// (c) 2009-2011 Uri Wilensky. See README.txt for terms of use.
-
 package org.nlogo.lab
 
 import org.nlogo.api.LogoException
