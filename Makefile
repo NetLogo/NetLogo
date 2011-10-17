@@ -72,7 +72,7 @@ $(HOME)/.keystore:
 tmp/signedjars.zip: $(HOME)/.keystore $(JARS)
 	-rm -rf tmp/signedjars*
 	-mkdir -p tmp/signedjars
-	cp NetLogo.jar BehaviorSpace.jar $(SCALA_JAR) lib_managed/scala_$(SCALA_VERSION)/compile/*.jar tmp/signedjars
+	cp NetLogo.jar $(SCALA_JAR) lib_managed/scala_$(SCALA_VERSION)/compile/*.jar tmp/signedjars
 	cp project/build/proguard/manifest.txt tmp/signedjars
         # seems likely the lib/ thing would confuse Web Start - ST 10/11/11
 	perl -pi -e "s@lib/@@g" tmp/signedjars/manifest.txt
@@ -83,7 +83,7 @@ tmp/signedjars.zip: $(HOME)/.keystore $(JARS)
 tmp/unsignedjars.zip: $(JARS)
 	-rm -rf tmp/unsignedjars*
 	-mkdir -p tmp/unsignedjars
-	cp NetLogo.jar BehaviorSpace.jar $(SCALA_JAR) lib_managed/scala_$(SCALA_VERSION)/compile/*.jar tmp/unsignedjars
+	cp NetLogo.jar $(SCALA_JAR) lib_managed/scala_$(SCALA_VERSION)/compile/*.jar tmp/unsignedjars
 	cp project/build/proguard/manifest.txt tmp/unsignedjars
         # seems likely the lib/ thing would confuse Web Start - ST 10/11/11
 	perl -pi -e "s@lib/@@g" tmp/unsignedjars/manifest.txt
