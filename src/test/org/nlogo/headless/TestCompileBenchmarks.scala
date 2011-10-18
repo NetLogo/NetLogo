@@ -14,7 +14,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
     "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   // this is here to help us remember that when the list of benchmarks changes, this file and the
-  // contents of test/bench both need updating too - ST 2/11/09
+  // contents of models/test/bench both need updating too - ST 2/11/09
   test("names") {
     assert(names.mkString("\n") === ChecksumsAndPreviews.allBenchmarks.mkString("\n"))
   }
@@ -29,6 +29,6 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           workspace.dispose()
           result
         }
-        assert(dump === io.Source.fromFile("test/bench/" + name + ".txt").getLines.mkString("","\n","\n"))
+        assert(dump === io.Source.fromFile("models/test/bench/" + name + ".txt").getLines.mkString("","\n","\n"))
       }
 }
