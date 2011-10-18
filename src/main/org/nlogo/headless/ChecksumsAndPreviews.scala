@@ -148,7 +148,10 @@ object ChecksumsAndPreviews {
       val cmds = Array("git", "log", "--pretty=format:%h", modelPath)
       val stdInput = new java.io.BufferedReader(
         new java.io.InputStreamReader(
-          Runtime.getRuntime().exec(cmds).getInputStream))
+          Runtime.getRuntime().exec(cmds,
+                                    Array[String](),
+                                    new java.io.File("models"))
+          .getInputStream))
       stdInput.readLine().trim
     }
   }
