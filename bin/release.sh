@@ -185,7 +185,7 @@ $RM -rf extensions/*/classes
 
 # include models
 $CP -rp ../../models .
-$RM -rf models/README.md models/bin models/test models/legal.txt
+$RM -rf models/README.md models/bin models/test
 
 # blow away version control and Mac junk
 $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
@@ -202,6 +202,7 @@ $LN -s ../../resources   # and this
 $LN -s ../../scala       # and this
 $LN -s ../../bin         # and this
 ../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
+$RM -f models/legal.txt
 $RM dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
