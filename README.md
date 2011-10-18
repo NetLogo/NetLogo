@@ -16,4 +16,4 @@ The User Manual is published under a Creative Commons Attribution-ShareAlike lic
 
 Source code for all of the extensions bundled with NetLogo is here on GitHub, in separate repositories, at [https://github.com/NetLogo/](https://github.com/NetLogo/).  All of the bundled extensions are either public domain or open source.
 
-The NetLogo Models Library is hosted in a Git repository on Assembla, at [https://www.assembla.com/code/models/git/nodes](https://www.assembla.com/code/models/git/nodes).  Code Examples are in the public domain; most of the other models in the library are published under a permissive but non-open-source license.
+The NetLogo Models Library is hosted in a Git repository on Assembla, at [https://www.assembla.com/spaces/models](https://www.assembla.com/spaces/models).  Code Examples are in the public domain; most of the other models in the library are published under a permissive but non-open-source license.
