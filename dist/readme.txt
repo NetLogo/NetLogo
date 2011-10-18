@@ -70,6 +70,14 @@ Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo.
 Center for Connected Learning and Computer-Based Modeling,
 Northwestern University, Evanston, IL.
 
+For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
+http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
+Connected Learning and Computer-Based Modeling, Northwestern
+University. Evanston, IL.
+
+For models in the Models Library, the correct citation is included in
+the "Credits and References" section of each model's Info tab.
+
 The CCL gratefully acknowledges over a decade of support for our
 NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
