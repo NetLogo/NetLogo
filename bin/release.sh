@@ -415,7 +415,7 @@ $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
 $CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
-$CP -rp ../test/applet $COMPRESSEDVERSION
+$CP -rp ../models/test/applet $COMPRESSEDVERSION
 $CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
