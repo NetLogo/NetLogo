@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.plot
 
 // this could even go in org.nlogo.util, it's just abstract logic, nothing to do with the specifics

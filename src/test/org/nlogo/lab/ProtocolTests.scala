@@ -1,4 +1,4 @@
-// (c) 2009 Uri Wilensky. See README.txt for terms of use.
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 

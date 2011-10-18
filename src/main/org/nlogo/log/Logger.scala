@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.log
 
 // A note on log4j: Reuven, who was one of the main clients for this logging stuff, requested log4j.

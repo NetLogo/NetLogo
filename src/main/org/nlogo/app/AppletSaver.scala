@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 // The need to do buf.clear() here is peculiar -- this should be refactored to be

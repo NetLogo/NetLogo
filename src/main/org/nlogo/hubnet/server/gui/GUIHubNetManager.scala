@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.hubnet.server.gui
 
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}

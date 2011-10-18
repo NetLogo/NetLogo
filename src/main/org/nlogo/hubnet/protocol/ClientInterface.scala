@@ -1,4 +1,6 @@
-package org.nlogo.hubnet.protocol
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.hubnet.protocol 
 
 import org.nlogo.api.WidgetIO.{PlotSpec, ChooserSpec, ViewSpec, WidgetSpec}
 import org.nlogo.api.{WidgetIO, CompilerServices, LogoList, Shape}

@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.hubnet.mirroring
 
 // Points may leave the X coordinate unspecified, in which case the

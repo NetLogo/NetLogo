@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.gl.render
 
 private case class GLShape(shapeName: String, displayListIndex: Int, rotatable: Boolean = true) {

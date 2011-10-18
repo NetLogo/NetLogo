@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 import org.nlogo.util.SysInfo
@@ -40,7 +42,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
           + ")</font>" + "</b><br><br>\n"
           + "<font size=-1><b>web site</b> "
           + "<a href=\"http://ccl.northwestern.edu/netlogo/\">ccl.northwestern.edu/netlogo</a><br><br>"
-          + "<font color=\"#333333\">&copy 1999-2011 Uri Wilensky. All rights reserved.<br><br>"
+          + "<font color=\"#333333\">&copy 1999-2011 Uri Wilensky<br><br>"
           + "Please cite as:<br>"
           + "Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>"
           + "Center for Connected Learning and Computer-Based Modeling,<br>"

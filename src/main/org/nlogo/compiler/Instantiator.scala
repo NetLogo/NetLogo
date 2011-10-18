@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.compiler
 private object Instantiator {
   def newInstance[T](clazz:Class[_ <: T],args:AnyRef*) =

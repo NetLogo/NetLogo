@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.agent;
 
 // the next few methods (dealing with the breedShapes Map) need to be 

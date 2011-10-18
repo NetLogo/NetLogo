@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.agent
 
 class LinkManager3D(world3D: World3D) extends LinkManager(world3D) {

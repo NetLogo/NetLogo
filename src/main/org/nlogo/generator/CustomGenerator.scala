@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.generator
 
 // This is where the knowledge of how to custom-bytecode-generate some special primitives resides.

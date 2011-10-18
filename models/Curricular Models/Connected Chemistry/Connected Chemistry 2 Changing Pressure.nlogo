@@ -534,15 +534,6 @@ end
 to turn-labels-on
  ;; [ask turtles [ set label who set label-color orange + 3 ]]
 end
-
-;;;
-;;; reporters
-;;;
-
-
-;;;
-;;; plotting procedures
-;;;
 @#$#@#$#@
 GRAPHICS-WINDOW
 212
@@ -569,7 +560,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 140
@@ -697,7 +688,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "if length pressure-history > 0\n  [ plotxy ticks (mean pressure-history) ]"
+"default" 1.0 0 -16777216 true "" "if is-list? pressure-history [\n   plotxy ticks (mean pressure-history) \n  ]"
 
 OUTPUT
 130
@@ -856,7 +847,7 @@ false
 Rectangle -7500403 true true 0 0 300 300
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

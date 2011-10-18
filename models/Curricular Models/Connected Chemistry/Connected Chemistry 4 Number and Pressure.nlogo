@@ -41,6 +41,7 @@ particles-own
 
 to setup
   ca reset-ticks
+  set pressure-history [0 0 0]  ;; plotted pressure will be averaged over the past 3 entries
   set show-dark? false
   set-default-shape particles "circle"
   set maxparticles 400
@@ -48,7 +49,6 @@ to setup
    ;; starting this at zero means that no particles will move until we've
    ;; calculated vsplit, which we won't even try to do until there are some
    ;; particles.
-  set pressure-history [0 0 0]  ;; plotted pressure will be averaged over the past 3 entries
   set pressure 0
   set particles-to-add 0
   set labels? false
@@ -560,10 +560,6 @@ end
 to turn-labels-on
  ;; [ask turtles [ set label who set label-color orange + 3 ]]
 end
-
-;;;
-;;; reporters
-;;;
 @#$#@#$#@
 GRAPHICS-WINDOW
 212
@@ -590,7 +586,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-30
+30.0
 
 BUTTON
 140
@@ -718,7 +714,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "if length pressure-history > 0\n  [ plotxy ticks (mean pressure-history) ]"
+"default" 1.0 0 -16777216 true "" "if is-list? pressure-history [\n   plotxy ticks (mean pressure-history) \n  ]"
 
 CHOOSER
 3
@@ -905,7 +901,7 @@ true
 0
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0beta3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
