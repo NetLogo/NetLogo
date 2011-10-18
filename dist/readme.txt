@@ -112,7 +112,7 @@ View, California, 94041, USA.
 
 ===
 
-Some parts of NetLogo are written in the Scala language and use the
+Much of NetLogo is written in the Scala language and uses the
 Scala standard libraries.  The license for Scala is as follows:
 
 Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.

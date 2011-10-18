@@ -32,7 +32,7 @@ This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unpo
 
 ===
 
-Some parts of NetLogo are written in the Scala language and use the Scala standard libraries.  The license for Scala is as follows:
+Much of NetLogo is written in the Scala language and uses the Scala standard libraries.  The license for Scala is as follows:
 
 Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.  All rights reserved.
 
