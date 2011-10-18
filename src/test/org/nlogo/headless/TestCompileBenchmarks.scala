@@ -24,7 +24,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
       test(name) {
         val dump = {
           val workspace = HeadlessWorkspace.newInstance
-          workspace.open("test/models/benchmarks/" + name + " Benchmark.nlogo")
+          workspace.open("models/test/benchmarks/" + name + " Benchmark.nlogo")
           val result = workspace.report("__dump")
           workspace.dispose()
           result

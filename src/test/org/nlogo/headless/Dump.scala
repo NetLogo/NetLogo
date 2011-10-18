@@ -31,7 +31,7 @@ object Dump {
     }
     finally { workspace.dispose() }
   }
-  def benchPath(name:String) = "test/models/benchmarks/" + name + " Benchmark.nlogo"
+  def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
       writeFile("test/bench/" + name + ".txt",

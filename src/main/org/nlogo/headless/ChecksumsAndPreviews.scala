@@ -15,7 +15,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val benchmarks = allBenchmarks.map("test/models/benchmarks/" + _ + " Benchmark.nlogo")
+      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
         ModelsLibrary.getModelPaths(true)
           .filter(fn)
