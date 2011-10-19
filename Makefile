@@ -106,8 +106,8 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
-.PHONY: github
-github:
+.PHONY: repos
+repos:
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
 	mkdir -p extensions
