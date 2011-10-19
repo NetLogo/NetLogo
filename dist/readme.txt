@@ -107,6 +107,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301, USA.
 
+==
+
+Commercial licenses are also available. To inquire about commercial
+licenses, please contact Uri Wilensky at uri@northwestern.edu .
+
 ===
 
 NetLogo User Manual
