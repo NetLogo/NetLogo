@@ -1,0 +1,407 @@
+# COMMON
+
+common.observer = observer
+common.turtle = черепаха
+common.patch = пятно
+common.link = связь
+common.turtles = черепахи
+common.patches = пятна
+common.links = связи
+
+common.buttons.ok = OK
+common.buttons.cancel = Отмена
+common.buttons.apply = Apply
+common.buttons.help = Помощь
+common.buttons.quit = Завершение
+common.buttons.exit = Выход
+common.buttons.continue = Продолжить
+common.buttons.save = Сохранить
+common.buttons.halt = Halt
+common.buttons.yes = Да
+common.buttons.no = Нет
+
+common.messages.error = Ошибка
+common.messages.warning = Предупреждение
+
+# GUI
+
+menu.file = Файл
+menu.file.new = Новый
+menu.file.open = Открыть...
+menu.file.modelsLibrary = Библиотека моделей
+menu.file.save = Сохранить
+menu.file.saveAs = Сохранить как...
+menu.file.saveAsApplet = Save As Applet...
+menu.file.saveClientAsApplet = Save Client As Applet...
+menu.file.print = Печатать...
+menu.file.export = Экспорт
+menu.file.export.world = Экспортировать мир...
+menu.file.export.plot = Экспортировать график...
+menu.file.export.allPlots = Экспортировать все графики...
+menu.file.export.view = Экспортировать вид...
+menu.file.export.interface = Экспортировать интерфейс...
+menu.file.export.output = Экспортировать данные...
+menu.file.import = Импорт
+menu.file.import.world = Импортировать мир...
+menu.file.import.patchColors = Импортировать цвета пятен...
+menu.file.import.patchColorsRGB = Import Patch Colors RGB...
+menu.file.import.drawing = Импортировать рисунок...
+menu.file.import.hubNetClientInterface = Import HubNet Client Interface...
+menu.file.quit = Quit
+
+menu.edit = Редактировать
+menu.edit.cut = Вырезать
+menu.edit.copy = Копировать
+menu.edit.paste = Вставить
+menu.edit.delete = Удалить
+menu.edit.undo = Отмена
+menu.edit.redo = Redo
+menu.edit.selectAll = Выбрать все
+menu.edit.find = Найти
+menu.edit.findNext = Найти следующий
+menu.edit.shiftLeft = Shift Left
+menu.edit.shiftRight = Shift Right
+menu.edit.comment = Комментарий
+menu.edit.uncomment = Uncomment
+menu.edit.snapToGrid = Snap to Grid
+
+menu.tools = Средства
+menu.tools.halt = Стоп
+menu.tools.globalsMonitor = Общий экран
+menu.tools.turtleMonitor = Экран черепах
+menu.tools.patchMonitor = Экран пятен
+menu.tools.linkMonitor = Экран связей
+menu.tools.closeAllAgentMonitors = Закрыть экраны всех агентов
+menu.tools.hideCommandCenter = Спрятать командный центр
+menu.tools.showCommandCenter = Показать командный центр
+menu.tools.3DView = 3D просмотр
+menu.tools.colorSwatches = Color Swatches
+menu.tools.turtleShapesEditor = Редактор форм черепах
+menu.tools.linkShapesEditor = Редактор форм связей
+menu.tools.behaviorSpace = Пространство поведения
+menu.tools.systemDynamicsModeler = System Dynamics Modeler
+menu.tools.hubNetClientEditor = HubNet Client Editor
+menu.tools.hubNetControlCenter = HubNet Control Center
+
+menu.zoom = Zoom
+menu.zoom.larger = Larger
+menu.zoom.normalSize = Normal Size
+menu.zoom.smaller = Smaller
+
+menu.tabs = Tabs
+
+menu.help = Help
+menu.help.lookUpInDictionary(F1) = поиск в словаре (F1)
+menu.help.netLogoUserManual = NetLogo руководство
+menu.help.netLogoDictionary = NetLogo словарь
+menu.help.netLogoUsersGroup = NetLogo группа
+menu.help.donate = Поддержать
+
+tabs.run = Интерфей
+tabs.run.editButton = Редактировать
+tabs.run.editButton.tooltip = редактировать выбранные объекты  интерфейса
+tabs.run.deleteButton = Удалить
+tabs.run.deleteButton.tooltip = Удалить выбранные объекты интерфейса
+tabs.run.addButton = Добавить
+tabs.run.addButton.tooltip = добавить новые объекты интерфейса
+tabs.run.settingsButton = Установки...
+tabs.run.settingsButton.tooltip = Редактировать установки модели
+tabs.run.view.ticks = ticks
+tabs.run.viewUpdates.checkbox = view updates
+tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
+tabs.run.viewUpdates.dropdown.onticks = on ticks
+tabs.run.viewUpdates.dropdown.continuous = continuous
+tabs.run.viewUpdates.dropdown.tooltip = change view update mode
+
+tabs.run.speedslider.normalspeed = нормальная скорость
+tabs.run.speedslider.faster = быстрее
+tabs.run.speedslider.slower = медленнее
+
+tabs.run.widgets.button = Кнопка
+tabs.run.widgets.slider = Рычажок
+tabs.run.widgets.switch = Переход
+tabs.run.widgets.chooser = Выбор
+tabs.run.widgets.input = Ввод
+tabs.run.widgets.monitor = Экран
+tabs.run.widgets.plot = График
+tabs.run.widgets.output = Результат
+tabs.run.widgets.note = Заметка
+tabs.run.widgets.view = Просмотр
+tabs.run.widgets.tooltip = choose type of interface item to add
+
+tabs.run.commandcenter = Command Center
+tabs.run.commandcenter.clearButton = Clear
+tabs.run.commandcenter.nohistory = No History
+tabs.run.commandcenter.orusetabkey = or use Tab key
+tabs.run.commandcenter.exporting = Exporting
+tabs.run.commandcenter.history = History
+tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
+tabs.run.commandcenter.clearHistory = Clear History
+
+tabs.info = Info
+tabs.info.edit = Edit
+tabs.info.help = Help
+
+tabs.code = Code
+tabs.code.rightclick.quickhelp = Quick Help
+tabs.code.checkButton = Check
+tabs.code.procedures = Procedures
+tabs.code.procedures.none = none
+tabs.code.indentAutomatically = Indent automatically
+
+# find actions and dialog
+dialog.find.title = Find
+dialog.find.find = Find:
+dialog.find.replaceWith = Replace With:
+dialog.find.ignoreCase = Ignore case
+dialog.find.wrapAround = Wrap around
+dialog.find.notFound = phrase not found
+dialog.find.next = Next
+dialog.find.previous = Previous
+dialog.find.replaceAndFind = Replace & Find
+dialog.find.replace = Replace
+dialog.find.replaceAll = Replace All
+
+# widget editors
+
+edit.button.agents = Agent(s)
+edit.button.forever = Forever
+edit.button.disable = Disable until ticks start
+edit.button.commands = Commands
+edit.button.displayName = Display name
+edit.button.actionKey = Action key
+
+edit.plot.name = Name
+edit.plot.xLabel = X axis label
+edit.plot.xmin = X min
+edit.plot.xmax = X max
+edit.plot.yLabel = Y axis label
+edit.plot.ymin = Y min
+edit.plot.ymax = Y max
+edit.plot.autoScale = Auto Scale?
+edit.plot.showLegend = Show legend?
+edit.plot.setupCode = Plot setup commands
+edit.plot.updateCode = Plot update commands
+edit.plot.pen.plotPens = Plot pens
+edit.plot.pen.color = Color
+edit.plot.pen.name = Pen Name
+edit.plot.pen.updateCommands = Pen Update Commands
+edit.plot.pen.add = Add Pen
+edit.plot.pen.editing = Editing:
+edit.plot.pen.advanced = Advanced Pen Options
+edit.plot.pen.mode = Mode
+edit.plot.pen.mode.line = Line
+edit.plot.pen.mode.bar = Bar
+edit.plot.pen.mode.point = Point
+edit.plot.pen.interval = Interval
+edit.plot.pen.showInLegend = Show in legend
+edit.plot.pen.setupCommands = Setup commands
+edit.plot.pen.updateCommands = Update commands
+
+edit.chooser.globalVar = Global variable
+edit.chooser.choices = Choices
+
+edit.slider.globalVar = Global variable
+edit.slider.minimum = Minimum
+edit.slider.increment = Increment
+edit.slider.maximum = Maximum
+edit.slider.value = Value
+edit.slider.units = Units (optional)
+edit.slider.vertical = vertical?
+
+edit.monitor.reporter = Reporter
+edit.monitor.name = Display Name
+edit.monitor.decimalPlaces = Decimal places
+edit.monitor.fontSize = Font Size
+
+edit.output.fontSize = Font Size
+
+edit.input.globalVar = Global Variable
+edit.input.type = Type
+edit.input.type.number = Number
+edit.input.type.string = String
+edit.input.type.string.reporter = String (reporter)
+edit.input.type.string.commands = String (commands)
+edit.input.type.color = Color
+
+edit.text.text = Text
+edit.text.fontSize = Font size
+edit.text.transparency = Transparent background
+edit.text.color = Text color
+
+edit.switch.globalVar = Global Variable
+
+edit.viewSettings.world = World
+edit.viewSettings.view = View
+edit.viewSettings.tickCounter = Tick counter
+edit.viewSettings.origin.location = Location of origin:
+
+edit.viewSettings.origin.location.center = Center
+edit.viewSettings.origin.location.corner = Corner
+edit.viewSettings.origin.location.edge = Edge
+edit.viewSettings.origin.location.custom = Custom
+
+edit.viewSettings.origin.location.corner.bottomLeft = Bottom Left
+edit.viewSettings.origin.location.corner.topLeft = Top Left
+edit.viewSettings.origin.location.corner.topRight = Top Right
+edit.viewSettings.origin.location.corner.bottomRight = Buttom Right
+
+edit.viewSettings.origin.location.edge.bottom = Bottom
+edit.viewSettings.origin.location.edge.top = Top
+edit.viewSettings.origin.location.edge.right = Right
+edit.viewSettings.origin.location.edge.left = Left
+
+edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Bottom Southwest
+edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Bottom Northwest
+edit.viewSettings.3D.origin.location.corner.bottomNortheast = Bottom Northeast
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Buttom Southeast
+edit.viewSettings.3D.origin.location.corner.topSouthwest = Top Southwest
+edit.viewSettings.3D.origin.location.corner.topNorthwest = Top Northwest
+edit.viewSettings.3D.origin.location.corner.topNortheast = Top Northeast
+edit.viewSettings.3D.origin.location.corner.topSoutheast = Top Southeast
+
+edit.viewSettings.3D.origin.location.edge.south = South
+edit.viewSettings.3D.origin.location.edge.north = North
+edit.viewSettings.3D.origin.location.edge.east = East
+edit.viewSettings.3D.origin.location.edge.west = West
+edit.viewSettings.3D.origin.location.edge.bottom = Bottom
+edit.viewSettings.3D.origin.location.edge.top = Top
+
+edit.viewSettings.showTickCounter = Show tick counter
+edit.viewSettings.tickCounterLabel = Tick counter label
+
+edit.viewSettings.2D.patchSize = Patch size
+edit.viewSettings.2D.patchSize.info = measured in pixels
+edit.viewSettings.2D.fontSize = Font size
+edit.viewSettings.2D.fontSize.info = of labels on agents
+edit.viewSettings.2D.wrapX = World wraps horizontally
+edit.viewSettings.2D.wrapY = World wraps vertically
+edit.viewSettings.2D.frameRate = Frame rate
+edit.viewSettings.2D.frameRate.info = Frames per second at normal speed
+
+edit.viewSettings.2D.minPxcor = minimum x coordinate for patches
+edit.viewSettings.2D.maxPxcor = maximum x coordinate for patches
+edit.viewSettings.2D.minPycor = minimum y coordinate for patches
+edit.viewSettings.2D.maxPycor = maximum y coordinate for patches
+
+edit.viewSettings.3D.smooth = Smooth edges (slower)
+edit.viewSettings.3D.affects = only affects 3D view
+edit.viewSettings.3D.wireFrame = Show wire frame
+edit.viewSettings.3D.fontSize.info = of labels on agents
+edit.viewSettings.3D.dualView = Update 2D view
+edit.viewSettings.3D.wrapX = World wraps X (east/west)
+edit.viewSettings.3D.wrapY = World wraps Y (north/south)
+edit.viewSettings.3D.wrapZ = World wraps Z (top/bottom)
+edit.viewSettings.3D.minPxcor = minimum x coordinate for patches
+edit.viewSettings.3D.maxPxcor = maximum x coordinate for patches
+edit.viewSettings.3D.minPycor = minimum y coordinate for patches
+edit.viewSettings.3D.maxPycor = maximum y coordinate for patches
+edit.viewSettings.3D.minPzcor = minimum z coordinate for patches
+edit.viewSettings.3D.maxPzcor = maximum z coordinate for patches
+
+edit.hubnet.tag = Tag
+edit.hubnet.view.width = Width (pixels)
+edit.hubnet.view.height = Height (pixels)
+
+# tools
+
+tools.colorswatch = Color Swatches
+tools.colorswatch.preview = Preview
+tools.colorswatch.copy = Copy selected color
+tools.colorswatch.numbers = Numbers
+tools.colorswatch.increment = Increment
+
+tools.shapesEditor.importFromModel = Import from Model...
+tools.shapesEditor.importFromLibrary = Import from Library...
+tools.shapesEditor.edit = Edit
+tools.shapesEditor.new = New
+tools.shapesEditor.delete = Delete
+tools.shapesEditor.duplicate = Duplicate
+tools.shapesEditor.info = (many more shapes are available in the library)
+tools.shapesEditor.import.note = Import Shapes from Model
+tools.shapesEditor.import.error = No shapes found in this file.
+
+tools.sdm.diagram = Diagram
+tools.sdm.stock = Stock
+tools.sdm.variable = Variable
+tools.sdm.flow = Flow
+tools.sdm.link = Link
+tools.sdm.check = Check
+tools.sdm.edit = Edit
+tools.sdm.delete = Delete
+tools.sdm.dtNumberError = dt must be a number
+tools.sdm.dtZeroError = dt must be greater than 0
+
+tools.behaviorSpace.experiments = Experiments:
+tools.behaviorSpace.new = New
+tools.behaviorSpace.edit = Edit
+tools.behaviorSpace.duplicate = Duplicate
+tools.behaviorSpace.delete = Delete
+tools.behaviorSpace.run = Run
+tools.behaviorSpace.close = Close
+
+tools.behaviorSpace.experimentName = Experiment name
+tools.behaviorSpace.vary = Vary variables as follows (note brackets and quotation marks):
+
+# this property extends across several lines, and has HTML breaks in it.
+tools.behaviorSpace.vary.info = Either list values to use, for example:<br>\
+["my-slider" 1 2 7 8]<br>\
+or specify start, increment, and end, for example:<br>\
+["my-slider" [0 1 10]] (note additional brackets)<br>\
+to go from 0, 1 at a time, to 10.<br>\
+You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
+
+tools.behaviorSpace.repetitions = Repetitions
+tools.behaviorSpace.repetitions.info = run each combination this many times
+tools.behaviorSpace.metrics = Measure runs using these reporters:
+# this property has an HTML break in it.
+tools.behaviorSpace.metrics.info = one reporter per line; you may not split a reporter<br>across multiple lines
+tools.behaviorSpace.runMetricsEveryStep = Measure runs at every step
+tools.behaviorSpace.runMetricsEveryStep.info = if unchecked, runs are measured only when they are over
+tools.behaviorSpace.setupCommands = Setup commands:
+tools.behaviorSpace.goCommands = Go commands:
+tools.behaviorSpace.exitCondition = Stop condition:
+tools.behaviorSpace.exitCondition.info = the run stops if this reporter becomes true
+tools.behaviorSpace.finalCommands = Final commands:
+tools.behaviorSpace.finalCommands.info = run at the end of each run
+tools.behaviorSpace.timeLimit = Time limit
+tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
+
+# Models Library
+
+modelsLibrary.clear = Clear
+modelsLibrary.community = Go to User Community Models web page
+modelsLibrary.open = Open
+modelsLibrary.loading = Loading Models Library...
+
+
+# CONTROL CENTER
+menu.tools.hubnetControlCenter.removedViaControlCenter = Removed via Control Center.
+menu.tools.hubnetControlCenter.kick = Kick
+menu.tools.hubnetControlCenter.local = Local
+menu.tools.hubnetControlCenter.reset = Reset
+menu.tools.hubnetControlCenter.clientName = CLIENT NAME
+menu.tools.hubnetControlCenter.clients = Clients:
+menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
+menu.tools.hubnetControlCenter.broadcastMessage = Broadcast Message
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Mirror 2D view on clients
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Mirror plots on clients (experimental)
+menu.tools.hubnetControlCenter.name = Name:
+menu.tools.hubnetControlCenter.activity = Activity:
+menu.tools.hubnetControlCenter.unknown = UNKNOWN
+menu.tools.hubnetControlCenter.serverAddress = Server address:
+menu.tools.hubnetControlCenter.portNumber = Port number:
+menu.tools.hubnetControlCenter.settings = Settings:
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' joined from: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' disconnected.
+
+view.3d.orbit = Orbit
+view.3d.zoom = Zoom
+view.3d.move = Move
+view.3d.interact = Interact
+view.3d.watching = Watching
+view.3d.riding = Riding
+view.3d.following = Following
+view.3d.fullScreen = Full Screen
+view.3d.resetPerspective = Reset Perspective
+view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.
