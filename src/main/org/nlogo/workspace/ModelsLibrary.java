@@ -26,7 +26,8 @@ public strictfp class ModelsLibrary {
     List<String> result = new ArrayList<String>();
     for (Enumeration<?> models = rootNode.depthFirstEnumeration(); models.hasMoreElements();) {
       Node node = (Node) models.nextElement();
-      if (!node.isFolder()) {
+      if (!node.isFolder() &&
+          node.path.indexOf("/models/test/") == -1) {
         result.add(node.path);
       }
     }

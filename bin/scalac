@@ -1,5 +1,8 @@
 #!/bin/bash --posix
-#
+
+# This is a slightly modified version of a script included in the Scala
+# distribution. - ST 10/18/11
+
 ##############################################################################
 # Copyright 2002-2011, LAMP/EPFL
 #

@@ -15,7 +15,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val benchmarks = allBenchmarks.map("test/models/benchmarks/" + _ + " Benchmark.nlogo")
+      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
         ModelsLibrary.getModelPaths(true)
           .filter(fn)
@@ -85,8 +85,8 @@ object ChecksumsAndPreviews {
         }
         else true)
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "test/checksums3d.txt"
-                 else "test/checksums.txt"
+      val path = if(Version.is3D) "models/test/checksums3d.txt"
+                 else "models/test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)
@@ -145,10 +145,14 @@ object ChecksumsAndPreviews {
       fw.close()
     }
     def getRevisionNumber(modelPath: String): String = {
-      val cmds = Array("git", "log", "--pretty=format:%h", modelPath)
+      val cmds = Array("git", "log", "--pretty=format:%h",
+                       new java.io.File(modelPath).getAbsolutePath)
       val stdInput = new java.io.BufferedReader(
         new java.io.InputStreamReader(
-          Runtime.getRuntime().exec(cmds).getInputStream))
+          Runtime.getRuntime().exec(cmds,
+                                    Array[String](),
+                                    new java.io.File("models"))
+          .getInputStream))
       stdInput.readLine().trim
     }
   }

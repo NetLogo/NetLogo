@@ -1,7 +1,0 @@
-to foo2
-  show "it works!"
-end
-
-to cause-runtime-error
-  show __boom
-end

@@ -6,20 +6,14 @@ Other users should visit the NetLogo home page at [http://ccl.northwestern.edu/n
 
 ## License
 
+### In this repository
+
 NetLogo itself is free, open source software under the [GPL (GNU General Public License), version 2](http://www.gnu.org/licenses/gpl-2.0.html).
 
 The User Manual is published under a Creative Commons Attribution-ShareAlike license ([CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)).
 
-Source code for all of the extensions bundled with NetLogo is here on GitHub, in separate repositories, at [https://github.com/NetLogo/](https://github.com/NetLogo/).
+### In other repositories
 
-The Code Examples in the the Models Library are in the public domain ([CC0 notice](http://creativecommons.org/about/cc0
-)).
+Source code for all of the extensions bundled with NetLogo is here on GitHub, in separate repositories, at [https://github.com/NetLogo/](https://github.com/NetLogo/).  All of the bundled extensions are either public domain or open source.
 
-### Non-open source files
-
-The contents of the following directories are provided under a non-open-source license:
-
- * `models/Sample Models`
- * `models/HubNet Activities`
- * `models/Curricular Models`
- * `models/3D/Sample Models`
+The NetLogo Models Library is hosted in a Git repository on Assembla, at [https://www.assembla.com/spaces/models](https://www.assembla.com/spaces/models).  Code Examples are in the public domain; most of the other models in the library are published under a permissive but non-open-source license.
