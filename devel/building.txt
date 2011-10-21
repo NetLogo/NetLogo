@@ -12,10 +12,7 @@ PREREQUISITES:
 - You must have install4j.  You get it off Seth's Mac.
   or I think maybe you can download it from here:
   http://www.ej-technologies.com/download/install4j/files.php
-  and here's the license key:
-  L-NORTHWESTERN_UNIVERSITY#18014459500010001-uny0c317kffiu#160
-  I didn't try this so I'm not sure it works, if all else fails just
-  get it from Seth's computer.
+  You'll need a license key. Seth has one owned by Northwestern.
   The release building script expects to find it in /Applications.
   The script checks to be sure you have the right version.
   The folder can be copied from machine to machine.
