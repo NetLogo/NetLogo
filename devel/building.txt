@@ -7,15 +7,14 @@ As you work through these instructions, look for things which could be
 more fully automated -- and automate them!
 
 PREREQUISITES:
-- You must be on Mac OS X 10.6.  (The dmg-building stuff is
-  Mac-only.)
-- You must have install4j.  You get it off Seth's Mac.
-  or I think maybe you can download it from here:
+- You must be on Mac OS X 10.7.  (The dmg-building stuff is
+  Mac-only.)  Well, 10.6 might work.
+- You must have install4j, which you can download from here:
   http://www.ej-technologies.com/download/install4j/files.php
-  You'll need a license key. Seth has one owned by Northwestern.
-  The release building script expects to find it in /Applications.
-  The script checks to be sure you have the right version.
-  The folder can be copied from machine to machine.
+  You'll need a license key. Seth has one owned by Uri.
+  The release building script expects to find install4j in
+  /Applications. The script checks to be sure you have the
+  right version. The folder can be copied from machine to machine.
 - You must have the exact right version of htmldoc in your path.
   release.sh will test for this and complain if it doesn't find it.
   If it doesn't find it, then here's how to install it.  (The URL
@@ -34,8 +33,7 @@ PREREQUISITES:
 
 ahead of time:
 - ask Seth for the NetLogo change list
-  or construct it yourself using git and/or Trac.
-  for details see:
+  or construct it yourself using the Trac and/or git. details:
   https://ccl.northwestern.edu/mailman/private/ccl-devel/2008/030764.html
   in Trac, you might look both at the Timeline, and at the "Roadmap"
   where you can get a list of closed tickets for a given target.
@@ -43,11 +41,13 @@ ahead of time:
   example, Josh/HubNet.  the change list will be used to construct
   the release announcement, so it should include even stuff like changes
   to secret prims.  don't forget to include changes to the Models Library.
+  devel folks are encouraged to make a ticket every time they make a bullet-
+  worthy change, so the roadmap will have the changes already.
 - decide if you need to upgrade the bundled java with the windows
   installer.  consult
     http://java.sun.com/javase/6/webnotes/ReleaseNotes.html
-  for details on Java 6 updates.
-  If you do make it using install4j on a windows
+  for details on Java 6 updates. (at some point we should move to Java 7)
+  If you do, make a new bundle using install4j on a windows
   machine (Project -> Create JRE Bundles). The JDK of the target
   version should be installed before you can make the vm pack,
   remember to install the JDK not just the jre so you get the server
@@ -132,19 +132,25 @@ tagging:
 - make sure any uncommitted changes have been committed and pushed
   (by doing "git st")
 - tag the release in git
+  - since the contents of the release bundles are spread across
+    multiple repos (main repo, models repo, extensions repo,
+    Mathematica Link repo) you need to tag the release in every
+    repo.  (it'd be nice if we automated this)
 
 building installers:
 - you may want to do a fresh checkout instead of using an old one
+- run make
 - run bin/release.sh
 - if you had to change NetLogo.install4j, commit the changes, if you
   saved it from the app make sure to convert from windows line endings
   and you need to preserve the @@@VM@@@ placeholder.
-- TAG THE RELEASE!!!!!!!  DON'T FORGET!!!!!!!!!!!  send yourself an
+- TAG THE RELEASE!  IN EVERY REPO! DON'T FORGET!!  send yourself an
   email to remind yourself, do it right now!
 - release.sh prints out the appropriate rsync command when it finishes
   to copy it to the server
-- ssh ccl.northwestern.edu chmod -R go+rX /var/www/netlogo/4.1.1
-- ssh ccl.northwestern.edu chgrp -R web /var/www/netlogo/4.1.1
+- if the permissions on the server don't come out right:
+  - ssh ccl.northwestern.edu chmod -R go+rX /var/www/netlogo/4.1.1
+  - ssh ccl.northwestern.edu chgrp -R web /var/www/netlogo/4.1.1
 - on the CCL wiki main page, update the link to the latest version
 
 testing:
@@ -160,11 +166,12 @@ testing:
   - are recent model changes included?
   - was "make copymodels" done?
 - do all of the test applets work?  url is e.g.
-  http://ccl.northwestern.edu/netlogo/5.0RC1/applet/
+  http://ccl.northwestern.edu/netlogo/5.0RC3/applet/
 - do extensions work, e.g. the sound models?
 - does the 3D view work?  does the 3D app work?
 - does the system dynamics modeler work?
 - does the logging launcher work?
+- does BehaviorSpace work?
 - Windows:
   - after installing, does double clicking a model file open
     the new version?
@@ -173,6 +180,7 @@ testing:
   handled by the scripts on the webserver but it's not, so do it by hand
   or modify the scripts yourself :)
 - does it work on Java 5, such as on Mac OS X 10.4 and 10.5?
+  (it'd be nice if we had an easy way to test this)
 
 IF PUBLIC:
 - on ccl (using zsh, so ** syntax works):
