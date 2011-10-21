@@ -37,10 +37,11 @@ The following is a (partial) list of changes made since NetLogo
   - source code is online at https://github.com/NetLogo/NetLogo
   - NetLogo license is the GPL (GNU General Public License), version 2
     or later
-  - User Manual license is Creative Commons Share-Alike (CC BY-SA)
+  - User Manual license is Creative Commons Attribution-ShareAlike
+    (CC BY-SA)
   - code examples and most extension are in the public domain (CC0)
-- new models license: Sample Models and Curricular Models are now
-  under a Creative Commons Noncommercial Share-Alike license
+- new models license: Sample Models and Curricular Models license is
+  now Creative Commons Attribution-NonCommercial-ShareAlike
   (CC BY-NC-SA)
 - added preliminary Russian localization
 - bundle Java 6 Update 29 for Windows users
