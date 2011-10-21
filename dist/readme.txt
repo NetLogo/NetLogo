@@ -78,7 +78,7 @@ University. Evanston, IL.
 For models in the Models Library, the correct citation is included in
 the "Credits and References" section of each model's Info tab.
 
-The CCL gratefully acknowledges over a decade of support for our
+The CCL gratefully acknowledges almost two decades of support for our
 NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
 support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
