@@ -309,7 +309,9 @@
     <p>
       Today there are two StarLogo descendents under active
       development: NetLogo (from the CCL at Northwestern University)
-      and StarLogo TNG (from MIT).  The latter is distinguished by
+      and StarLogo TNG (from MIT).  NetLogo is the most widely used
+      agent-based modeling environment in both education and research.
+      StarLogo TNG is distinguished by
       its programming interface based on colored blocks.
     <h3>
       <a name="license" id="license"></a>Under what license is NetLogo
@@ -366,14 +368,17 @@
       Spanish version, Chinese version, (your language here) version, etc.?
     </h3>
     <p>
+      Volunteers have translated the user manual into Chinese and Czech. The
+      translated versions are available from the NetLogo web site.
+    <p>
       At present, NetLogo is available in English and Spanish.  Both
       languages are included in the standard download.
     <p>
-      So far volunteers have translated the user manual into Chinese and Czech. The
-      translated versions are available from the NetLogo web site.
-    <p>
       We are seeking volunteers to improve the incomplete Spanish localization
-      and to translate the NetLogo software and manual into other languages.
+      and to translate the NetLogo software and manual into as many other
+      languages as possible.  If you're able to help in this endeavor, please
+      email us at <a href=
+      "mailto:feedback@ccl.northwestern.edu">feedback@ccl.northwestern.edu</a>.
     <h3>
       <a name="compilation" id="compilation"></a>Is NetLogo compiled or
       interpreted?
@@ -460,7 +465,7 @@
     <p>
       We are seeking funding for an alternate implementation on a
       JavaScript and HTML5 base. It would work on a variety of tablets and
-      phones. But the many man-years of development effort that have gone
+      phones. But the many person-years of development effort that have gone
       into the Java version can't cheaply or easily be replicated on
       another platform.
     <h2>
@@ -544,13 +549,16 @@ NetLogo@@@VERSION@@@Installer.exe -q
       as an applet while keeping the code secret?
     </h3>
     <p>
-      No. In order for the applet to operate, the model file must be
-      accessible also.
+      Normally, the code is not secret.
+      In order for the applet to operate, the model file containing
+      the code must be accessible.
     <p>
-      When you use &quot;Save as applet&quot; on the File menu, the HTML
-      page generated contains the source code and a link where the user can
-      download the model file. If you want, you can remove the source code
-      and the link. Removing the link will make it harder for the user to
+      When you use &quot;Save as applet&quot; on the File menu, the
+      HTML page generated contains the source code and a link where
+      the user can download the model file.
+    <p>If you want to keep the
+      code secret, you can remove the source code and the
+      link. Removing the link will make it harder for the user to
       access the model file, but not impossible.
     <p>
      However, Peter Brooks has developed a NetLogo obfuscator which
@@ -813,12 +821,17 @@ org.apache.commons.logging.impl.LogFactoryImpl
       <a name="gisimport" id="gisimport"></a>Can I use GIS data in NetLogo?
     </h3>
     <p>
-      Yes, using the GIS extension. See the <a href="gis.html">GIS Extension Guide</a>.
+      Yes, many users are using GIS data with NetLogo. The most complete way
+      to do that is with the GIS extension.
+      See the <a href="gis.html">GIS Extension Guide</a>.
     <p>
       A simpler way is to use <tt>import-pcolors</tt>, but that only works
-      for importing maps that are images, not maps in other formats. It is
+      for importing maps that are images, not maps in other formats.
+    <p>It is
       also possible to write NetLogo code that reads GIS data using our
-      file I/O primitives such as <tt>file-open</tt>.
+      file I/O primitives such as <tt>file-open</tt>.  For example,
+      see the Grand Canyon model in the Earth Science section of
+      Sample Models.
     <h3>
       <a name="speed" id="speed"></a>My model runs slowly. How can I speed
       it up?
