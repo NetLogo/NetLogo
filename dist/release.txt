@@ -45,7 +45,7 @@ The following is a (partial) list of changes made since NetLogo
   (CC BY-NC-SA)
 - new sample model: Preferential Attachment 3D
 - new curricular models: Bug Hunt Consumers, epiDEM Basic, epiDEM
-  Travel and Control Measures
+  Travel and Control
 - added preliminary Russian localization
 - bundle Java 6 Update 29 for Windows users
 
