@@ -1,6 +1,6 @@
-# COMMON
+# Общие
 
-common.observer = observer
+common.observer = наблюдатель
 common.turtle = черепаха
 common.patch = пятно
 common.link = связь
@@ -10,13 +10,13 @@ common.links = связи
 
 common.buttons.ok = OK
 common.buttons.cancel = Отмена
-common.buttons.apply = Apply
+common.buttons.apply = Применить
 common.buttons.help = Помощь
 common.buttons.quit = Завершение
 common.buttons.exit = Выход
 common.buttons.continue = Продолжить
 common.buttons.save = Сохранить
-common.buttons.halt = Halt
+common.buttons.halt = Остановить
 common.buttons.yes = Да
 common.buttons.no = Нет
 
@@ -31,8 +31,8 @@ menu.file.open = Открыть...
 menu.file.modelsLibrary = Библиотека моделей
 menu.file.save = Сохранить
 menu.file.saveAs = Сохранить как...
-menu.file.saveAsApplet = Save As Applet...
-menu.file.saveClientAsApplet = Save Client As Applet...
+menu.file.saveAsApplet = Сохранить как апплет...
+menu.file.saveClientAsApplet = Сохранить клиент как апплет...
 menu.file.print = Печатать...
 menu.file.export = Экспорт
 menu.file.export.world = Экспортировать мир...
@@ -44,10 +44,10 @@ menu.file.export.output = Экспортировать данные...
 menu.file.import = Импорт
 menu.file.import.world = Импортировать мир...
 menu.file.import.patchColors = Импортировать цвета пятен...
-menu.file.import.patchColorsRGB = Import Patch Colors RGB...
+menu.file.import.patchColorsRGB = Импортировать цвета пятен RGB...
 menu.file.import.drawing = Импортировать рисунок...
-menu.file.import.hubNetClientInterface = Import HubNet Client Interface...
-menu.file.quit = Quit
+menu.file.import.hubNetClientInterface = Импортировать интерфейс клиента...
+menu.file.quit = Выход
 
 menu.edit = Редактировать
 menu.edit.cut = Вырезать
@@ -55,15 +55,15 @@ menu.edit.copy = Копировать
 menu.edit.paste = Вставить
 menu.edit.delete = Удалить
 menu.edit.undo = Отмена
-menu.edit.redo = Redo
+menu.edit.redo = Переделать
 menu.edit.selectAll = Выбрать все
 menu.edit.find = Найти
 menu.edit.findNext = Найти следующий
 menu.edit.shiftLeft = Shift Left
 menu.edit.shiftRight = Shift Right
 menu.edit.comment = Комментарий
-menu.edit.uncomment = Uncomment
-menu.edit.snapToGrid = Snap to Grid
+menu.edit.uncomment = УбратьКоммент
+menu.edit.snapToGrid = Привязка к сетке
 
 menu.tools = Средства
 menu.tools.halt = Стоп
@@ -75,29 +75,29 @@ menu.tools.closeAllAgentMonitors = Закрыть экраны всех аген
 menu.tools.hideCommandCenter = Спрятать командный центр
 menu.tools.showCommandCenter = Показать командный центр
 menu.tools.3DView = 3D просмотр
-menu.tools.colorSwatches = Color Swatches
+menu.tools.colorSwatches = Образцы цветов
 menu.tools.turtleShapesEditor = Редактор форм черепах
 menu.tools.linkShapesEditor = Редактор форм связей
 menu.tools.behaviorSpace = Пространство поведения
-menu.tools.systemDynamicsModeler = System Dynamics Modeler
-menu.tools.hubNetClientEditor = HubNet Client Editor
-menu.tools.hubNetControlCenter = HubNet Control Center
+menu.tools.systemDynamicsModeler = Симулятор системной динамики
+menu.tools.hubNetClientEditor = редактор клиента HubNet 
+menu.tools.hubNetControlCenter = Управляющий центр HubNet 
 
-menu.zoom = Zoom
-menu.zoom.larger = Larger
-menu.zoom.normalSize = Normal Size
-menu.zoom.smaller = Smaller
+menu.zoom = Увеличение
+menu.zoom.larger = Больше
+menu.zoom.normalSize = Нормальный размер
+menu.zoom.smaller = Меньше
 
-menu.tabs = Tabs
+menu.tabs = Табы
 
-menu.help = Help
+menu.help = Помощь
 menu.help.lookUpInDictionary(F1) = поиск в словаре (F1)
 menu.help.netLogoUserManual = NetLogo руководство
 menu.help.netLogoDictionary = NetLogo словарь
 menu.help.netLogoUsersGroup = NetLogo группа
 menu.help.donate = Поддержать
 
-tabs.run = Интерфей
+tabs.run = Интерфейс
 tabs.run.editButton = Редактировать
 tabs.run.editButton.tooltip = редактировать выбранные объекты  интерфейса
 tabs.run.deleteButton = Удалить
@@ -106,12 +106,12 @@ tabs.run.addButton = Добавить
 tabs.run.addButton.tooltip = добавить новые объекты интерфейса
 tabs.run.settingsButton = Установки...
 tabs.run.settingsButton.tooltip = Редактировать установки модели
-tabs.run.view.ticks = ticks
-tabs.run.viewUpdates.checkbox = view updates
-tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
-tabs.run.viewUpdates.dropdown.onticks = on ticks
-tabs.run.viewUpdates.dropdown.continuous = continuous
-tabs.run.viewUpdates.dropdown.tooltip = change view update mode
+tabs.run.view.ticks = тики
+tabs.run.viewUpdates.checkbox = посмотреть обновления
+tabs.run.viewUpdates.checkbox.tooltip = Заморозить или разморозить вид
+tabs.run.viewUpdates.dropdown.onticks = на тике
+tabs.run.viewUpdates.dropdown.continuous = непрерывно
+tabs.run.viewUpdates.dropdown.tooltip = изменить просмотр
 
 tabs.run.speedslider.normalspeed = нормальная скорость
 tabs.run.speedslider.faster = быстрее
@@ -127,281 +127,280 @@ tabs.run.widgets.plot = График
 tabs.run.widgets.output = Результат
 tabs.run.widgets.note = Заметка
 tabs.run.widgets.view = Просмотр
-tabs.run.widgets.tooltip = choose type of interface item to add
+tabs.run.widgets.tooltip = выбрать объект интерфейса для добавления
 
-tabs.run.commandcenter = Command Center
-tabs.run.commandcenter.clearButton = Clear
-tabs.run.commandcenter.nohistory = No History
-tabs.run.commandcenter.orusetabkey = or use Tab key
-tabs.run.commandcenter.exporting = Exporting
-tabs.run.commandcenter.history = History
-tabs.run.commandcenter.useArrowKeys = or use up and down arrow keys
-tabs.run.commandcenter.clearHistory = Clear History
+tabs.run.commandcenter = Командный центр
+tabs.run.commandcenter.clearButton = Очистить
+tabs.run.commandcenter.nohistory = Без истории
+tabs.run.commandcenter.orusetabkey = или использовать клавиши Tab
+tabs.run.commandcenter.exporting = Экспорт
+tabs.run.commandcenter.history = История
+tabs.run.commandcenter.useArrowKeys = или использовать клавиши Up Down
+tabs.run.commandcenter.clearHistory = Очистить историю
 
-tabs.info = Info
-tabs.info.edit = Edit
-tabs.info.help = Help
+tabs.info = Инфо
+tabs.info.edit = Редактировать
+tabs.info.help = Помощь
 
-tabs.code = Code
-tabs.code.rightclick.quickhelp = Quick Help
-tabs.code.checkButton = Check
-tabs.code.procedures = Procedures
-tabs.code.procedures.none = none
-tabs.code.indentAutomatically = Indent automatically
+tabs.code = Код
+tabs.code.rightclick.quickhelp = Быстрая подсказка
+tabs.code.checkButton = Проверка
+tabs.code.procedures = Процедуры
+tabs.code.procedures.none = ничто
+tabs.code.indentAutomatically = автоматический отступ
 
-# find actions and dialog
-dialog.find.title = Find
-dialog.find.find = Find:
-dialog.find.replaceWith = Replace With:
-dialog.find.ignoreCase = Ignore case
-dialog.find.wrapAround = Wrap around
-dialog.find.notFound = phrase not found
-dialog.find.next = Next
-dialog.find.previous = Previous
-dialog.find.replaceAndFind = Replace & Find
-dialog.find.replace = Replace
-dialog.find.replaceAll = Replace All
+# действия поиска
+dialog.find.title = Найти
+dialog.find.find = Найти:
+dialog.find.replaceWith = Заменить:
+dialog.find.ignoreCase = Игнорировать регистр
+dialog.find.wrapAround = Оборвать вокруг
+dialog.find.notFound = фраза не найдена
+dialog.find.next = Следующий
+dialog.find.previous = Предыдущий
+dialog.find.replaceAndFind = Найти и Заменить
+dialog.find.replace = Заменить
+dialog.find.replaceAll = Заменить всё
 
-# widget editors
+# редакторы виджетов
 
-edit.button.agents = Agent(s)
-edit.button.forever = Forever
-edit.button.disable = Disable until ticks start
-edit.button.commands = Commands
-edit.button.displayName = Display name
-edit.button.actionKey = Action key
+edit.button.agents = Агент(ы)
+edit.button.forever = Всегда
+edit.button.disable = Выключить до начала тиков
+edit.button.commands = Команды
+edit.button.displayName = Показать имя
+edit.button.actionKey = Клавиша действия
 
-edit.plot.name = Name
-edit.plot.xLabel = X axis label
-edit.plot.xmin = X min
-edit.plot.xmax = X max
-edit.plot.yLabel = Y axis label
-edit.plot.ymin = Y min
-edit.plot.ymax = Y max
-edit.plot.autoScale = Auto Scale?
-edit.plot.showLegend = Show legend?
-edit.plot.setupCode = Plot setup commands
-edit.plot.updateCode = Plot update commands
-edit.plot.pen.plotPens = Plot pens
-edit.plot.pen.color = Color
-edit.plot.pen.name = Pen Name
-edit.plot.pen.updateCommands = Pen Update Commands
-edit.plot.pen.add = Add Pen
-edit.plot.pen.editing = Editing:
-edit.plot.pen.advanced = Advanced Pen Options
-edit.plot.pen.mode = Mode
-edit.plot.pen.mode.line = Line
-edit.plot.pen.mode.bar = Bar
-edit.plot.pen.mode.point = Point
-edit.plot.pen.interval = Interval
-edit.plot.pen.showInLegend = Show in legend
-edit.plot.pen.setupCommands = Setup commands
-edit.plot.pen.updateCommands = Update commands
+edit.plot.name = Имя
+edit.plot.xLabel = имя оси X 
+edit.plot.xmin = X мин
+edit.plot.xmax = X мах
+edit.plot.yLabel = имя оси Y
+edit.plot.ymin = Y минимум
+edit.plot.ymax = Y максимум
+edit.plot.autoScale = Авто настрой?
+edit.plot.showLegend = Показать?
+edit.plot.setupCode = Команды установки пера 
+edit.plot.updateCode = Команды обновления пера 
+edit.plot.pen.plotPens = Перья графика
+edit.plot.pen.color = Цвет
+edit.plot.pen.name = Имя пера
+edit.plot.pen.updateCommands = Команды обновления перьев
+edit.plot.pen.add = Добавить перо
+edit.plot.pen.editing = Редактировать:
+edit.plot.pen.advanced = Дополнительная настройка перьев
+edit.plot.pen.mode = Режим
+edit.plot.pen.mode.line = Линия
+edit.plot.pen.mode.bar = Баг-график
+edit.plot.pen.mode.point = Точка
+edit.plot.pen.interval = Интервал
+edit.plot.pen.showInLegend = Показать в легенде
+edit.plot.pen.setupCommands = Команды запуска
+edit.plot.pen.updateCommands = Команды обновления
 
-edit.chooser.globalVar = Global variable
-edit.chooser.choices = Choices
+edit.chooser.globalVar = Глобальные переменные
+edit.chooser.choices = Выборы
 
-edit.slider.globalVar = Global variable
-edit.slider.minimum = Minimum
-edit.slider.increment = Increment
-edit.slider.maximum = Maximum
-edit.slider.value = Value
-edit.slider.units = Units (optional)
-edit.slider.vertical = vertical?
+edit.slider.globalVar = Глобальная переменная
+edit.slider.minimum = Минимум
+edit.slider.increment = Приращение
+edit.slider.maximum = Максимум
+edit.slider.value = Значение
+edit.slider.units = Единицы (на выбор)
+edit.slider.vertical = вертикально?
 
-edit.monitor.reporter = Reporter
-edit.monitor.name = Display Name
-edit.monitor.decimalPlaces = Decimal places
-edit.monitor.fontSize = Font Size
+edit.monitor.reporter = Датчик
+edit.monitor.name = Имя экрана
+edit.monitor.decimalPlaces = Десятичных знаки
+edit.monitor.fontSize = Размер шрифта
 
-edit.output.fontSize = Font Size
+edit.output.fontSize = Размер шрифта
 
-edit.input.globalVar = Global Variable
-edit.input.type = Type
-edit.input.type.number = Number
-edit.input.type.string = String
-edit.input.type.string.reporter = String (reporter)
-edit.input.type.string.commands = String (commands)
-edit.input.type.color = Color
+edit.input.globalVar = Глобальная переменная
+edit.input.type = Тип
+edit.input.type.number = Число
+edit.input.type.string = Строка
+edit.input.type.string.reporter = Строка (датчик)
+edit.input.type.string.commands = Строка (команды)
+edit.input.type.color = Цвет
 
-edit.text.text = Text
-edit.text.fontSize = Font size
-edit.text.transparency = Transparent background
-edit.text.color = Text color
+edit.text.text = Текст
+edit.text.fontSize = Размер шрифта
+edit.text.transparency = Прозрачный фон
+edit.text.color = Цвет текста
 
-edit.switch.globalVar = Global Variable
+edit.switch.globalVar = Глобальная переменная
 
-edit.viewSettings.world = World
-edit.viewSettings.view = View
-edit.viewSettings.tickCounter = Tick counter
-edit.viewSettings.origin.location = Location of origin:
+edit.viewSettings.world = Мир
+edit.viewSettings.view = Просмотр
+edit.viewSettings.tickCounter = Счетчик тиков
+edit.viewSettings.origin.location = Место происхождения:
 
-edit.viewSettings.origin.location.center = Center
-edit.viewSettings.origin.location.corner = Corner
-edit.viewSettings.origin.location.edge = Edge
+edit.viewSettings.origin.location.center = Центр
+edit.viewSettings.origin.location.corner = Угол
+edit.viewSettings.origin.location.edge = Ребро
 edit.viewSettings.origin.location.custom = Custom
 
-edit.viewSettings.origin.location.corner.bottomLeft = Bottom Left
-edit.viewSettings.origin.location.corner.topLeft = Top Left
-edit.viewSettings.origin.location.corner.topRight = Top Right
-edit.viewSettings.origin.location.corner.bottomRight = Buttom Right
+edit.viewSettings.origin.location.corner.bottomLeft = Нижний левый
+edit.viewSettings.origin.location.corner.topLeft = Верхний левый
+edit.viewSettings.origin.location.corner.topRight = Верхний правый
+edit.viewSettings.origin.location.corner.bottomRight = Нижний правый
 
-edit.viewSettings.origin.location.edge.bottom = Bottom
-edit.viewSettings.origin.location.edge.top = Top
-edit.viewSettings.origin.location.edge.right = Right
-edit.viewSettings.origin.location.edge.left = Left
+edit.viewSettings.origin.location.edge.bottom = Низ
+edit.viewSettings.origin.location.edge.top = Верх
+edit.viewSettings.origin.location.edge.right = Вправо
+edit.viewSettings.origin.location.edge.left = Влево
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Bottom Southwest
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Bottom Northwest
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = Bottom Northeast
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Buttom Southeast
-edit.viewSettings.3D.origin.location.corner.topSouthwest = Top Southwest
-edit.viewSettings.3D.origin.location.corner.topNorthwest = Top Northwest
-edit.viewSettings.3D.origin.location.corner.topNortheast = Top Northeast
-edit.viewSettings.3D.origin.location.corner.topSoutheast = Top Southeast
+edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Низ Югозапад
+edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Низ Северозапад
+edit.viewSettings.3D.origin.location.corner.bottomNortheast = Низ Северовосток
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Низ  Юговосток
+edit.viewSettings.3D.origin.location.corner.topSouthwest = Верх Югозапад
+edit.viewSettings.3D.origin.location.corner.topNorthwest = Верх Северозапад
+edit.viewSettings.3D.origin.location.corner.topNortheast = Верх Северовосток
+edit.viewSettings.3D.origin.location.corner.topSoutheast = Верх Юговосток
 
-edit.viewSettings.3D.origin.location.edge.south = South
-edit.viewSettings.3D.origin.location.edge.north = North
-edit.viewSettings.3D.origin.location.edge.east = East
-edit.viewSettings.3D.origin.location.edge.west = West
-edit.viewSettings.3D.origin.location.edge.bottom = Bottom
-edit.viewSettings.3D.origin.location.edge.top = Top
+edit.viewSettings.3D.origin.location.edge.south = Юг
+edit.viewSettings.3D.origin.location.edge.north = Север
+edit.viewSettings.3D.origin.location.edge.east = Восток
+edit.viewSettings.3D.origin.location.edge.west = Запад
+edit.viewSettings.3D.origin.location.edge.bottom = Низ
+edit.viewSettings.3D.origin.location.edge.top = Верх
 
-edit.viewSettings.showTickCounter = Show tick counter
-edit.viewSettings.tickCounterLabel = Tick counter label
+edit.viewSettings.showTickCounter = Показать тик счетчик
+edit.viewSettings.tickCounterLabel = Ярлык тик счетчика
 
-edit.viewSettings.2D.patchSize = Patch size
-edit.viewSettings.2D.patchSize.info = measured in pixels
-edit.viewSettings.2D.fontSize = Font size
-edit.viewSettings.2D.fontSize.info = of labels on agents
-edit.viewSettings.2D.wrapX = World wraps horizontally
-edit.viewSettings.2D.wrapY = World wraps vertically
-edit.viewSettings.2D.frameRate = Frame rate
-edit.viewSettings.2D.frameRate.info = Frames per second at normal speed
+edit.viewSettings.2D.patchSize = Размер пятна
+edit.viewSettings.2D.patchSize.info = в пикселях
+edit.viewSettings.2D.fontSize = Размер шрифта
+edit.viewSettings.2D.fontSize.info = наклеек на агентах
+edit.viewSettings.2D.wrapX = Границы мира горизонтально
+edit.viewSettings.2D.wrapY = Границы мира вертикально
+edit.viewSettings.2D.frameRate = Скорость смены кадров
+edit.viewSettings.2D.frameRate.info = Число кадров в секунду при нормальной скорости
 
-edit.viewSettings.2D.minPxcor = minimum x coordinate for patches
-edit.viewSettings.2D.maxPxcor = maximum x coordinate for patches
-edit.viewSettings.2D.minPycor = minimum y coordinate for patches
-edit.viewSettings.2D.maxPycor = maximum y coordinate for patches
+edit.viewSettings.2D.minPxcor = минимальная координата х для пятен
+edit.viewSettings.2D.maxPxcor = максимальная координата х для пятен
+edit.viewSettings.2D.minPycor = минимальная координата у для пятен
+edit.viewSettings.2D.maxPycor = максимальная координата у для пятен
 
-edit.viewSettings.3D.smooth = Smooth edges (slower)
-edit.viewSettings.3D.affects = only affects 3D view
-edit.viewSettings.3D.wireFrame = Show wire frame
-edit.viewSettings.3D.fontSize.info = of labels on agents
-edit.viewSettings.3D.dualView = Update 2D view
-edit.viewSettings.3D.wrapX = World wraps X (east/west)
-edit.viewSettings.3D.wrapY = World wraps Y (north/south)
-edit.viewSettings.3D.wrapZ = World wraps Z (top/bottom)
-edit.viewSettings.3D.minPxcor = minimum x coordinate for patches
-edit.viewSettings.3D.maxPxcor = maximum x coordinate for patches
-edit.viewSettings.3D.minPycor = minimum y coordinate for patches
-edit.viewSettings.3D.maxPycor = maximum y coordinate for patches
-edit.viewSettings.3D.minPzcor = minimum z coordinate for patches
-edit.viewSettings.3D.maxPzcor = maximum z coordinate for patches
+edit.viewSettings.3D.smooth = Выравнивание ребер (медленно)
+edit.viewSettings.3D.affects = действует только в  3D режиме
+edit.viewSettings.3D.wireFrame = Показать рамку
+edit.viewSettings.3D.fontSize.info = ярлыки на агентах
+edit.viewSettings.3D.dualView = Обновить 2D вид
+edit.viewSettings.3D.wrapX = Границы мира X  (восток/запад)
+edit.viewSettings.3D.wrapY = Границы мира Y  (север/юг)
+edit.viewSettings.3D.wrapZ = Границы мира Z  (верх/низ)
+edit.viewSettings.3D.minPxcor = минимальная координата х для пятен
+edit.viewSettings.3D.maxPxcor = максимальная координата х для пятен
+edit.viewSettings.3D.minPycor = минимальная координата у для пятен
+edit.viewSettings.3D.maxPycor = максимальная координата у для пятен
+edit.viewSettings.3D.minPzcor = минимальная координата z для пятен
+edit.viewSettings.3D.maxPzcor = максимальная координата z для пятен
 
-edit.hubnet.tag = Tag
-edit.hubnet.view.width = Width (pixels)
-edit.hubnet.view.height = Height (pixels)
+edit.hubnet.tag = Тег
+edit.hubnet.view.width = Ширина (пиксели)
+edit.hubnet.view.height = Высота (пиксели)
 
-# tools
+# Средства
 
-tools.colorswatch = Color Swatches
-tools.colorswatch.preview = Preview
-tools.colorswatch.copy = Copy selected color
-tools.colorswatch.numbers = Numbers
-tools.colorswatch.increment = Increment
+tools.colorswatch = Образцы цветов
+tools.colorswatch.preview = Предпросмотр
+tools.colorswatch.copy = Скопировать выбранный цвет
+tools.colorswatch.numbers = Числа
+tools.colorswatch.increment = Приращение
 
-tools.shapesEditor.importFromModel = Import from Model...
-tools.shapesEditor.importFromLibrary = Import from Library...
-tools.shapesEditor.edit = Edit
-tools.shapesEditor.new = New
-tools.shapesEditor.delete = Delete
-tools.shapesEditor.duplicate = Duplicate
-tools.shapesEditor.info = (many more shapes are available in the library)
-tools.shapesEditor.import.note = Import Shapes from Model
-tools.shapesEditor.import.error = No shapes found in this file.
+tools.shapesEditor.importFromModel = Импорт из модели...
+tools.shapesEditor.importFromLibrary = Импорт из библиотеки...
+tools.shapesEditor.edit = Редактировать
+tools.shapesEditor.new = Новая
+tools.shapesEditor.delete = Удалить
+tools.shapesEditor.duplicate = Дублировать
+tools.shapesEditor.info = (много других форм доступны в библиотеке)
+tools.shapesEditor.import.note = Импорт форм из модели
+tools.shapesEditor.import.error = В файле не найдены формы.
 
-tools.sdm.diagram = Diagram
-tools.sdm.stock = Stock
-tools.sdm.variable = Variable
-tools.sdm.flow = Flow
-tools.sdm.link = Link
-tools.sdm.check = Check
-tools.sdm.edit = Edit
-tools.sdm.delete = Delete
-tools.sdm.dtNumberError = dt must be a number
-tools.sdm.dtZeroError = dt must be greater than 0
+tools.sdm.diagram = Диаграмма
+tools.sdm.stock = Хранилище
+tools.sdm.variable = Переменная
+tools.sdm.flow = Поток
+tools.sdm.link = Связь
+tools.sdm.check = Проверить
+tools.sdm.edit = Редактировать
+tools.sdm.delete = Удалить
+tools.sdm.dtNumberError = dt должен быть числом
+tools.sdm.dtZeroError = dt должен быть больше 0
 
-tools.behaviorSpace.experiments = Experiments:
-tools.behaviorSpace.new = New
-tools.behaviorSpace.edit = Edit
-tools.behaviorSpace.duplicate = Duplicate
-tools.behaviorSpace.delete = Delete
-tools.behaviorSpace.run = Run
-tools.behaviorSpace.close = Close
+tools.behaviorSpace.experiments = Эксперименты:
+tools.behaviorSpace.new = Новый
+tools.behaviorSpace.edit = Редактировать
+tools.behaviorSpace.duplicate = Удвоить
+tools.behaviorSpace.delete = Удалить
+tools.behaviorSpace.run = Запуск
+tools.behaviorSpace.close = Закрыть
 
-tools.behaviorSpace.experimentName = Experiment name
-tools.behaviorSpace.vary = Vary variables as follows (note brackets and quotation marks):
-
-# this property extends across several lines, and has HTML breaks in it.
-tools.behaviorSpace.vary.info = Either list values to use, for example:<br>\
+tools.behaviorSpace.experimentName = Имя эксперимента
+tools.behaviorSpace.vary = Изменяйте переменные следующим образом (обратите внимание, скобки и кавычки):
+# свойство на несколько строк с html <BR>
+tools.behaviorSpace.vary.info = Либо список значений для использования, например: <br>\
 ["my-slider" 1 2 7 8]<br>\
-or specify start, increment, and end, for example:<br>\
-["my-slider" [0 1 10]] (note additional brackets)<br>\
-to go from 0, 1 at a time, to 10.<br>\
-You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
+или укажите начало, прирост, и конец, например::<br>\
+["my-slider" [0 1 10]] (обратите внимание на объединяющие скобки)<br>\
+идти от 0, 1 за один раз, до 10.<br>\
+Можно варьировать max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.
 
-tools.behaviorSpace.repetitions = Repetitions
-tools.behaviorSpace.repetitions.info = run each combination this many times
-tools.behaviorSpace.metrics = Measure runs using these reporters:
-# this property has an HTML break in it.
-tools.behaviorSpace.metrics.info = one reporter per line; you may not split a reporter<br>across multiple lines
-tools.behaviorSpace.runMetricsEveryStep = Measure runs at every step
-tools.behaviorSpace.runMetricsEveryStep.info = if unchecked, runs are measured only when they are over
-tools.behaviorSpace.setupCommands = Setup commands:
-tools.behaviorSpace.goCommands = Go commands:
-tools.behaviorSpace.exitCondition = Stop condition:
-tools.behaviorSpace.exitCondition.info = the run stops if this reporter becomes true
-tools.behaviorSpace.finalCommands = Final commands:
-tools.behaviorSpace.finalCommands.info = run at the end of each run
-tools.behaviorSpace.timeLimit = Time limit
-tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
+tools.behaviorSpace.repetitions = Повторы
+tools.behaviorSpace.repetitions.info = запуск каждой комбинации этом много раз
+tools.behaviorSpace.metrics = Измерение использует эти датчики:
+# HTML break на строке
+tools.behaviorSpace.metrics.info = один датчик в каждой строке, вы не можете разделить датчик <br> на несколько строк
+tools.behaviorSpace.runMetricsEveryStep = Мера работает на каждом шаге
+tools.behaviorSpace.runMetricsEveryStep.info = если нет проверки, то измеряется только по завершении 
+tools.behaviorSpace.setupCommands = Команды установки:
+tools.behaviorSpace.goCommands = Команды шага:
+tools.behaviorSpace.exitCondition = Условия установки:
+tools.behaviorSpace.exitCondition.info = остановка, если датчик передал истина 
+tools.behaviorSpace.finalCommands = Заключительные команды:
+tools.behaviorSpace.finalCommands.info =  запуск в конце каждого запуска
+tools.behaviorSpace.timeLimit = Предел времени
+tools.behaviorSpace.timeLimit.info = остановка после этого множества шагов (0 = нет предела)
 
 # Models Library
 
-modelsLibrary.clear = Clear
-modelsLibrary.community = Go to User Community Models web page
-modelsLibrary.open = Open
-modelsLibrary.loading = Loading Models Library...
+modelsLibrary.clear = Очистить
+modelsLibrary.community = Перейти к моделям сообщества
+modelsLibrary.open = Открыть
+modelsLibrary.loading = Загрузить библиотеку меделей...
 
 
 # CONTROL CENTER
-menu.tools.hubnetControlCenter.removedViaControlCenter = Removed via Control Center.
-menu.tools.hubnetControlCenter.kick = Kick
-menu.tools.hubnetControlCenter.local = Local
-menu.tools.hubnetControlCenter.reset = Reset
-menu.tools.hubnetControlCenter.clientName = CLIENT NAME
-menu.tools.hubnetControlCenter.clients = Clients:
+menu.tools.hubnetControlCenter.removedViaControlCenter = Удалить через Центр управления
+menu.tools.hubnetControlCenter.kick = удар
+menu.tools.hubnetControlCenter.local = локальная
+menu.tools.hubnetControlCenter.reset = Перезагрузить
+menu.tools.hubnetControlCenter.clientName = Имя клиента
+menu.tools.hubnetControlCenter.clients = Клиенты:
 menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
-menu.tools.hubnetControlCenter.broadcastMessage = Broadcast Message
-menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Mirror 2D view on clients
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Mirror plots on clients (experimental)
-menu.tools.hubnetControlCenter.name = Name:
-menu.tools.hubnetControlCenter.activity = Activity:
-menu.tools.hubnetControlCenter.unknown = UNKNOWN
-menu.tools.hubnetControlCenter.serverAddress = Server address:
-menu.tools.hubnetControlCenter.portNumber = Port number:
-menu.tools.hubnetControlCenter.settings = Settings:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' joined from: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' disconnected.
+menu.tools.hubnetControlCenter.broadcastMessage = Передать сообщение
+menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Зеркало 2D  вида на клиентов
+menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Зеркало графиков на клиентах (экспериментально)
+menu.tools.hubnetControlCenter.name = Имя:
+menu.tools.hubnetControlCenter.activity = Активность:
+menu.tools.hubnetControlCenter.unknown = Неизвестно
+menu.tools.hubnetControlCenter.serverAddress = Адрес сервера:
+menu.tools.hubnetControlCenter.portNumber = Номер порта:
+menu.tools.hubnetControlCenter.settings = Установки:
+menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' соединен через: {1}.
+menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' отсоединен.
 
-view.3d.orbit = Orbit
-view.3d.zoom = Zoom
-view.3d.move = Move
-view.3d.interact = Interact
-view.3d.watching = Watching
-view.3d.riding = Riding
-view.3d.following = Following
-view.3d.fullScreen = Full Screen
-view.3d.resetPerspective = Reset Perspective
-view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.
+view.3d.orbit = Орбита
+view.3d.zoom = Увеличение
+view.3d.move = Переместить
+view.3d.interact = Взаимодействовать
+view.3d.watching = Следить
+view.3d.riding = Скакать
+view.3d.following = Следовать
+view.3d.fullScreen = Полный экран
+view.3d.resetPerspective = Перегрузить перспективу
+view.3d.fullScreenWarning = На некоторых системах полноэкранный режим может привести к зависанию.
