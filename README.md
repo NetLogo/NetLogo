@@ -11,6 +11,10 @@ and internationalization of NetLogo.
 
 We invite our users to help localize NetLogo in your language, write extensions and publicize them to the NetLogo community ([here](http://ccl.northwestern.edu/netlogo/resources.shtml) and [here](http://groups.yahoo.com/group/netlogo-users/)), contribute models to the [NetLogo community models page](http://ccl.northwestern.edu/netlogo/models/community/), and make improvements to NetLogo itself and the NetLogo User Manual and send us the changes for integration (in the form of pull requests here on GitHub).
 
+## Documentation for developers
+
+We are currently assembling documentation for developers including build instructions.  Watch this space.
+
 ## License
 
 For full copyright and license information on NetLogo, including third party components, see the [NetLogo User Manual](http://ccl.northwestern.edu/netlogo/5.0/docs/copyright.html). A brief summary follows.
