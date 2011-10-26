@@ -85,7 +85,7 @@ support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
 DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
 DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
 support came from the Spencer Foundation, Texas Instruments, the
-Brady Fund, and the Northwestern Institute for Complex Systems.
+Brady Fund, and the Northwestern Institute on Complex Systems.
 
 ===
 
