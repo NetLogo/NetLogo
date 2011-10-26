@@ -65,10 +65,10 @@ The release package for this version of NetLogo includes:
 
 ===
 
-To reference this software in academic publications, please use:
-Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo.
-Center for Connected Learning and Computer-Based Modeling,
-Northwestern University, Evanston, IL.
+If you use or refer to NetLogo in a publication, we ask that you cite
+it.  The correct citation is: Wilensky, U. (1999). NetLogo.
+http://ccl.northwestern.edu/netlogo.  Center for Connected Learning
+and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
 http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
