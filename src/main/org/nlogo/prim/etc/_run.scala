@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ CompilerException, Syntax }
@@ -18,8 +20,7 @@ class _run extends Command {
           throw new EngineException(context, this,
             token.name + " doesn't accept further inputs if the first is a string")
         try {
-          val procedure = workspace.compileForRun(
-            argEvalString(context, 0), context, false)
+          val procedure = workspace.compileForRun(s, context, false)
           // the procedure returned by compileForRun is executed without switching Contexts, only
           // activations.  so we create a new activation...
           context.activation = new Activation(procedure, context.activation, next)

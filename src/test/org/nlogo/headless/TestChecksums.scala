@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 
 import org.nlogo.api.{CompilerException, LogoException, Version}
@@ -31,8 +33,8 @@ class TestChecksums extends FunSuite with SlowTest {
 
 object TestChecksums extends ChecksumTester(println _) {
   def checksums = {
-    val path = if (Version.is3D) "test/checksums3d.txt"
-               else "test/checksums.txt"
+    val path = if (Version.is3D) "models/test/checksums3d.txt"
+               else "models/test/checksums.txt"
     ChecksumsAndPreviews.Checksums.load(path)
   }
 

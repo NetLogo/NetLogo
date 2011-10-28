@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 
 import org.nlogo.workspace.ModelsLibrary
@@ -5,7 +7,7 @@ import org.nlogo.agent.Observer
 import org.nlogo.api.SimpleJobOwner
 
 // This is used by the "bench" target in the Makefile.  You can __dump a compiled model
-// to stdout, or replace all of the benchmark model dumps in test/bench, or dump
+// to stdout, or replace all of the benchmark model dumps in models/test/bench, or dump
 // the whole models library to tmp/dumps. - ST 2/11/09
 
 object Dump {
@@ -29,10 +31,10 @@ object Dump {
     }
     finally { workspace.dispose() }
   }
-  def benchPath(name:String) = "test/models/benchmarks/" + name + " Benchmark.nlogo"
+  def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
-      writeFile("test/bench/" + name + ".txt",
+      writeFile("models/test/bench/" + name + ".txt",
                 dump(benchPath(name)))
   }
   def dumpAll() {

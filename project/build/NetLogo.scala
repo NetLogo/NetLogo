@@ -1,10 +1,8 @@
-import com.sun.jmx.snmp.tasks.Task
 import sbt._
 import com.github.olim7t.sbtscalariform._
 
 // - use Java 1.5 libraries as compiler bootclasspath?
-// - use "package" to build NetLogo.jar, NetLogoLite.jar, BehaviorSpace.jar?
-// - generate scaladoc for BehaviorSpace?
+// - use "package" to build our jars?
 
 class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   with Libraries
@@ -18,8 +16,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   with PMD
   with Classycle
   with ScalariformPlugin
-  with ModelIndex
-  with BehaviorSpaceSources {
+  with ModelIndex {
 
   // we tried this out for a while, but it suppresses too much.  better for now
   // to accept the default (Level.Info) - ST 6/8/10

@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
@@ -17,7 +19,7 @@ private class IdentifierParser(program:Program,
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
     checkProcedureName(procedure)
-    val it = new org.nlogo.util.CountedIterator(tokens)
+    val it = new CountedIterator(tokens)
     def processToken(token:Token):Token = {
       // This is pretty gruesome.  In NetLogo 3.1 and earlier, we allowed + to be used with strings
       // and lists.  In order to be able to autoconvert old models, we disable type checking on +

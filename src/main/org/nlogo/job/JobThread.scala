@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.job
 
 import org.nlogo.api.{ JobOwner, LogoException, PeriodicUpdateDelay }

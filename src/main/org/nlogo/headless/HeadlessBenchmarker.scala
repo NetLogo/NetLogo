@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 import org.nlogo.api.{CompilerException,LogoException,Version}
 import org.nlogo.workspace.Benchmarker
@@ -15,7 +17,7 @@ object HeadlessBenchmarker {
     println("@@@@@@ warmup " + minTime + " seconds, min " + minTime + " seconds, max " + maxTime + " seconds")
     val workspace = HeadlessWorkspace.newInstance
     try {
-      workspace.open("test/models/benchmarks/" + name + " Benchmark.nlogo")
+      workspace.open("models/test/benchmarks/" + name + " Benchmark.nlogo")
       Benchmarker.benchmark(workspace,minTime,maxTime)
     }
     finally { workspace.dispose() }

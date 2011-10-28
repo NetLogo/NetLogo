@@ -1,14 +1,15 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.window
 
-import java.util.List
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.api.{CompilerServices, Property}
+import org.nlogo.api.CompilerServices
 import java.awt.Component
 
 class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
                           nextComponent: Component, compiler: CompilerServices) extends
   InputBox(textArea, dialogTextArea, compiler, nextComponent) {
 
-  override def propertySet: List[Property] = return Properties.dummyInput
+  override def propertySet = Properties.dummyInput
 }
 

@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.swing
 
 class CollapsiblePane(element: javax.swing.JComponent, parent: javax.swing.JWindow)

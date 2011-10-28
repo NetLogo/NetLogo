@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.prim;
 
 // This is used by IdentifierParser's "forgiving" mode, used by

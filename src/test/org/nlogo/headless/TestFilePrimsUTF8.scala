@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.headless
 
 // this test is modeled after info found in:
@@ -9,7 +11,7 @@ globals [f utf-string]
 
 to write-out
  __mkdir "/tmp"
- set f (word "test/models/file-prim-files/utf8-file-written-by-test.txt" )
+ set f (word "models/test/file-prim-files/utf8-file-written-by-test.txt" )
  if file-exists? f [ file-delete f ]
  file-open f
  file-write utf-string
@@ -18,7 +20,7 @@ to write-out
 end
 
 to-report read-string [a-file]
- set f (word "test/models/file-prim-files/" a-file)
+ set f (word "models/test/file-prim-files/" a-file)
  file-open f
  set utf-string file-read
  file-close
@@ -26,7 +28,7 @@ to-report read-string [a-file]
 end
 
 to-report read-line [a-file]
- set f (word "test/models/file-prim-files/" a-file)
+ set f (word "models/test/file-prim-files/" a-file)
  file-open f
  set utf-string file-read-line
  file-close

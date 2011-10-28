@@ -12,7 +12,7 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.25
+JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.26
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
@@ -61,7 +61,7 @@ models/index.txt:
 
 ### JAR building
 
-JARS = NetLogo.jar NetLogoLite.jar HubNet.jar BehaviorSpace.jar
+JARS = NetLogo.jar NetLogoLite.jar HubNet.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
@@ -87,6 +87,8 @@ extensions: $(EXTENSIONS)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+	mkdir -p models
+	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
@@ -104,8 +106,10 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
-.PHONY: github
-github:
+.PHONY: repos
+repos:
+	mkdir -p models
+	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
 	cd extensions/array; git pull; git status
@@ -179,7 +183,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) BehaviorSpace-src.zip test/applet/NetLogoLite.jar test/applet/HubNet.jar
+	rm -f $(JARS) test/applet/NetLogoLite.jar test/applet/HubNet.jar
 	rm -rf tmp target docs/scaladoc
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties

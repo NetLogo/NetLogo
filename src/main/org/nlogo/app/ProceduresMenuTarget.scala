@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 // Normally we create interfaces like these to resolve an inter-package dependency problem. In this

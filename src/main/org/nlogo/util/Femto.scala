@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.util
 
 // Sometimes we need to do dependency injection in low-level packages that aren't allowed to use

@@ -24,6 +24,8 @@ The NetLogo home page is at:
   http://ccl.northwestern.edu/netlogo/
 for contact information, or to report a bug, visit
   http://ccl.northwestern.edu/netlogo/contact.shtml
+the source code is hosted here:
+  https://github.com/NetLogo/NetLogo
 
 ===
 
@@ -63,62 +65,67 @@ The release package for this version of NetLogo includes:
 
 ===
 
-To reference this software in academic publications, please use:
-Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo.
-Center for Connected Learning and Computer-Based Modeling,
-Northwestern University, Evanston, IL.
+If you use or refer to NetLogo in a publication, we ask that you cite
+it.  The correct citation is: Wilensky, U. (1999). NetLogo.
+http://ccl.northwestern.edu/netlogo.  Center for Connected Learning
+and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-The CCL gratefully acknowledges over a decade of support for our
+For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
+http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
+Connected Learning and Computer-Based Modeling, Northwestern
+University. Evanston, IL.
+
+For models in the Models Library, the correct citation is included in
+the "Credits and References" section of each model's Info tab.
+
+The CCL gratefully acknowledges almost two decades of support for our
 NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
 support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
 DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
-DRL-RED-9552950, and DRL-REC-9632612. Additional support came from the
-Spencer Foundation, Texas Instruments, the Brady Fund, and the
-Northwestern Institute for Complex Systems.
+DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
+support came from the Spencer Foundation, Texas Instruments, the
+Brady Fund, and the Northwestern Institute on Complex Systems.
 
 ===
 
-NetLogo is Copyright 1999-2011 by Uri Wilensky. All rights reserved.
+NetLogo
+Copyright (C) 1999-2011 Uri Wilensky
 
-The NetLogo software, models and documentation are distributed free of
-charge for use by the public to explore and construct
-models. Permission to copy or modify the NetLogo software, models and
-documentation for educational and research purposes only and without
-fee is hereby granted, provided that this copyright notice and the
-original author's name appears on all copies and supporting
-documentation. For any other uses of this software, in original or
-modified form, including but not limited to distribution in whole or
-in part, specific prior permission must be obtained from Uri
-Wilensky. The software, models and documentation shall not be used,
-rewritten, or adapted as the basis of a commercial software or
-hardware product without first obtaining appropriate licenses from Uri
-Wilensky. We make no representations about the suitability of this
-software for any purpose. It is provided "as is" without express or
-implied warranty.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-===
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-BehaviorSpace is Copyright 2009-2011 by Uri Wilensky. All rights reserved.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.
 
-BehaviorSpace is free and open source software.  You can redistribute
-it and/or modify it under the terms of the GNU Lesser General Public
-License (LGPL) as published by the Free Software Foundation, either
-version 3 of the License, or (at your option) any later version.
+==
 
-A copy of the LGPL is included in the NetLogo distribution.  See also
-http://www.gnu.org/licenses/.
+Commercial licenses are also available. To inquire about commercial
+licenses, please contact Uri Wilensky at uri@northwestern.edu .
 
 ===
 
-The extensions included with NetLogo are free and open source
-software.  The exact copyright and licensing information varies from
-extension to extension.  See the README file in each extension
-directory.
+NetLogo User Manual
+Copyright (C) 1999-2011 Uri Wilensky
+
+This work is licensed under the Creative Commons
+Attribution-ShareAlike 3.0 Unported License. To view a copy of this
+license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send
+a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain
+View, California, 94041, USA.
 
 ===
 
-Some parts of NetLogo are written in the Scala language and use the
+Much of NetLogo is written in the Scala language and uses the
 Scala standard libraries.  The license for Scala is as follows:
 
 Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.

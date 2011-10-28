@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.compiler
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
 import org.nlogo.agent.{AgentSet,ArrayAgentSet,Link,Observer,Patch,Turtle,World,World3D}

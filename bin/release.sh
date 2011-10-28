@@ -31,9 +31,9 @@ XARGS=xargs
 # other
 SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
-IJVERSION=5.0.8
+IJVERSION=5.0.9
 IJDIR=/Applications/install4j-$IJVERSION
-VM=windows-x86-1.6.0_25_server
+VM=windows-x86-1.6.0_29_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -83,12 +83,12 @@ if [ $WINDOWS -eq 1 ]; then
     echo "or if we don't have one for this Java version yet,"
     echo "you can make it from inside install4j, but only on a windows machine"
     echo "go to Project -> Create JRE Bundles"
-    echo "for path e.g.: c:\\jdk1.6.0_25"
-    echo "for java version e.g.: 1.6.0_25"
+    echo "for path e.g.: c:\\jdk1.6.0_29"
+    echo "for java version e.g.: 1.6.0_29"
     echo "for custom id: server"
     exit 1
   fi
-  if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.8 (build 5311), built on 2011-04-13" ; 
+  if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.9 (build 5372), built on 2011-07-08" ; 
   then
     echo "install4j " $IJDIR/$IJ "not found"
     exit 1
@@ -143,7 +143,6 @@ done
 # compile, build jars etc.
 bin/sbt update
 $MAKE -s
-bin/sbt behaviorspace-sources
 $MAKE -s docs/scaladoc
 
 # remember version number
@@ -167,7 +166,6 @@ $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-orde
 
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.1.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
-$CP -p ../../BehaviorSpace.jar ../../BehaviorSpace-src.zip lib
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
@@ -187,6 +185,7 @@ $RM -rf extensions/*/classes
 
 # include models
 $CP -rp ../../models .
+$RM -rf models/README.md models/bin models/test
 
 # blow away version control and Mac junk
 $FIND models \( -path \*/.svn -or -name .DS_Store -or -path \*/.git \) -print0 \
@@ -202,7 +201,8 @@ $LN -s ../../dist        # notarize script needs this
 $LN -s ../../resources   # and this
 $LN -s ../../scala       # and this
 $LN -s ../../bin         # and this
-../../bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
+../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
+$RM -f models/legal.txt
 $RM dist resources scala bin
 
 # build the PDF with the proper version numbers inserted everywhere
@@ -416,7 +416,7 @@ $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
 $CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
-$CP -rp ../test/applet $COMPRESSEDVERSION
+$CP -rp ../models/test/applet $COMPRESSEDVERSION
 $CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet

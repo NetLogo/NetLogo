@@ -1,3 +1,5 @@
+// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.agent
 
 // This is the old AnimationRenderer class. It doesn't depend on opengl though and really all it does
