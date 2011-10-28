@@ -44,9 +44,7 @@ tmp/
 /out/
 /project/boot/
 /project/plugins/project/
-/resources/Errors_en.properties
-/resources/Errors_es.properties
-/resources/GUI_Strings_en.properties
-/resources/GUI_Strings_es.properties
+/resources/Errors_??.properties
+/resources/GUI_Strings_??.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
