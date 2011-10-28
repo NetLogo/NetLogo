@@ -21,7 +21,7 @@ We also hope users will continue to build and contribute extensions. Access to t
 
 ## Developer documentation
 
-We are currently assembling documentation for developers including build instructions and a list of projects we'd love to get help with.  Watch this space.
+Some docs are already available at https://github.com/NetLogo/NetLogo/wiki, including build instructions.  We will be expanding this soon.
 
 ## Licenses
 
