@@ -8,7 +8,7 @@ import org.nlogo.workspace.ModelsLibrary
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("Ants", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc", 
+    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc", 
          "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach", 
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
