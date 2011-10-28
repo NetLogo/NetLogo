@@ -32,7 +32,7 @@ case object ExtensionTestsDotTxt extends TestFinder {
 
 class TestCommands extends TestLanguage(TxtsInDir("test/commands"))
 class TestReporters extends TestLanguage(TxtsInDir("test/reporters"))
-class TestModels extends TestLanguage(TxtsInDir("test/models"))
+class TestModels extends TestLanguage(TxtsInDir("models/test"))
 class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 
 // The output of the parser is lists of instances of these classes:

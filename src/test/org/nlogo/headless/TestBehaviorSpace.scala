@@ -164,15 +164,15 @@ with OneInstancePerTest with BeforeAndAfterEach {
   if(!Version.is3D)
     test("ExportGraphics") {
       val workspace = newWorkspace()
-      workspace.open("test/lab/FireWithExperiments.nlogo")
+      workspace.open("models/test/lab/FireWithExperiments.nlogo")
       HeadlessWorkspace.newLab.newWorker("testExportGraphics",
         new java.io.File("test/lab/protocols.xml"))
         .run(workspace, () => workspace, 1)
     }
   if(!Version.is3D)
     test("ModelWithIncludedExperiments") {
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test1", "test/lab/FireWithExperiments1")
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test2", "test/lab/FireWithExperiments2")
+      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
+      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
     }
   if(!Version.is3D)
     test("ResizingWorld3") {

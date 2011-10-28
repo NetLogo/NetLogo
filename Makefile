@@ -101,6 +101,8 @@ extensions: $(EXTENSIONS)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+	mkdir -p models
+	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
 	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
@@ -118,8 +120,10 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
-.PHONY: github
-github:
+.PHONY: repos
+repos:
+	mkdir -p models
+	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
 	cd extensions/array; git pull; git status

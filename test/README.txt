@@ -10,7 +10,8 @@ RUNNING TESTS
     tc InCone 
     tr Numbers
     tm Fire
-  for any of the files in the commands/reporters/models directories
+  for any of the files in the test/commands, test/reporters,
+  and models/test directories
 
 ALL TESTS
 
@@ -71,12 +72,12 @@ COMMAND TESTS
 
 MODEL TESTS
 
-* you can open a model at the start using OPEN>. see test/models
+* you can open a model at the start using OPEN>. see models/test
   for examples.  by convention, we don't use OPEN> in test/reporters
-  or test/commands, only test/models.
+  or test/commands, only models/test.
 
 * if the test uses a model that isn't used anywhere else, it can go
-  next to the test in the test/models directory.
+  next to the test in the models/test directory.
 
 STACK TRACE TESTS
 

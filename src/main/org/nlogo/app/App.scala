@@ -41,6 +41,7 @@ object App{
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
+  private var commandLineURL: String = null
   private var logger: Logger = null
   private var loggingName: String = null
 
@@ -165,7 +166,9 @@ object App{
       if (token == "--events") org.nlogo.window.Event.logEvents = true;
       else if (token == "--open" || token == "--launch") {
         commandLineModelIsLaunch = token == "--launch"
-        if (commandLineModel != null || commandLineMagic != null)
+        require(commandLineModel == null &&
+                commandLineMagic == null &&
+                commandLineURL == null)
           throw new IllegalStateException("Error parsing command line arguments: you can only specify one model to open at startup.")
         val modelFile = new java.io.File(nextToken())
         // Best to check if the file exists here, because after the GUI thread has started,
@@ -174,8 +177,16 @@ object App{
         commandLineModel = modelFile.getAbsolutePath()
       }
       else if (token == "--magic") {
-        if (commandLineModel != null || commandLineMagic != null) throw new IllegalStateException()
+        require(commandLineModel == null &&
+                commandLineMagic == null &&
+                commandLineURL == null)
         commandLineMagic = nextToken()
+      }
+      else if (token == "--url") {
+        require(commandLineModel == null &&
+                commandLineMagic == null &&
+                commandLineURL == null)
+        commandLineURL = nextToken()
       }
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
@@ -194,8 +205,9 @@ object App{
       }
       else { // we assume it's a filename to "launch"
         commandLineModelIsLaunch = true
-        if (commandLineModel != null || commandLineMagic != null)
-          throw new IllegalStateException("Error parsing command line arguments: you can only specify one model to open at startup.")
+        if (commandLineModel != null || commandLineMagic != null || commandLineURL != null)
+          throw new IllegalStateException(
+            "Error parsing command line arguments: you can only specify one model to open at startup.")
         val modelFile = new java.io.File(token)
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
@@ -250,7 +262,7 @@ class App extends
     AboutToQuitEvent.Handler with
     Controllable {
 
-  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineModelIsLaunch, loggingName}
+  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
 
   val frame = new AppFrame
 
@@ -476,7 +488,12 @@ class App extends
       }
       else libraryOpen(commandLineModel) // --open from command line
     }
-    else if (commandLineMagic != null) workspace.magicOpen(commandLineMagic)
+    else if (commandLineMagic != null)
+      workspace.magicOpen(commandLineMagic)
+    else if (commandLineURL != null)
+      fileMenu.openFromSource(
+        org.nlogo.util.Utils.url2String(commandLineURL),
+        null, "Starting...", ModelType.Library)
     else fileMenu.newModel()
   }
 

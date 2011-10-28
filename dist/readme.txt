@@ -65,19 +65,27 @@ The release package for this version of NetLogo includes:
 
 ===
 
-To reference this software in academic publications, please use:
-Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo.
-Center for Connected Learning and Computer-Based Modeling,
-Northwestern University, Evanston, IL.
+If you use or refer to NetLogo in a publication, we ask that you cite
+it.  The correct citation is: Wilensky, U. (1999). NetLogo.
+http://ccl.northwestern.edu/netlogo.  Center for Connected Learning
+and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-The CCL gratefully acknowledges over a decade of support for our
+For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
+http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
+Connected Learning and Computer-Based Modeling, Northwestern
+University. Evanston, IL.
+
+For models in the Models Library, the correct citation is included in
+the "Credits and References" section of each model's Info tab.
+
+The CCL gratefully acknowledges almost two decades of support for our
 NetLogo work. Much of that support came from the National Science
 Foundation -- grant numbers REC-9814682 and REC-0126227, with further
 support from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542,
 DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619,
 DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101. Additional
 support came from the Spencer Foundation, Texas Instruments, the
-Brady Fund, and the Northwestern Institute for Complex Systems.
+Brady Fund, and the Northwestern Institute on Complex Systems.
 
 ===
 
@@ -99,6 +107,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301, USA.
 
+==
+
+Commercial licenses are also available. To inquire about commercial
+licenses, please contact Uri Wilensky at uri@northwestern.edu .
+
 ===
 
 NetLogo User Manual
@@ -112,7 +125,7 @@ View, California, 94041, USA.
 
 ===
 
-Some parts of NetLogo are written in the Scala language and use the
+Much of NetLogo is written in the Scala language and uses the
 Scala standard libraries.  The license for Scala is as follows:
 
 Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
