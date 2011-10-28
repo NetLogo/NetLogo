@@ -69,7 +69,9 @@ misc:
 - update the version compatibility tests in org.nlogo.api.TestVersion?
 - update copyright year in org/nlogo/app/AboutWindow.java,
   dist/readme.txt, docs/copyright.html system/resources/about.txt
-  dist/lab-readme.txt
+  dist/lab-readme.txt, and at the top of all source files.  if the
+  year changed, it's a good time to make sure all source files have
+  the copyright and GitHub link at the top.
 - also bump the version number in the sample manifest
   in docs/extension.html (should match the version in
   org.nlogo.api.APIVersion) (note: this really ought to be handled
