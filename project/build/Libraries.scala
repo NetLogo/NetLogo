@@ -26,7 +26,7 @@ trait Libraries extends DefaultProject {
   val log4j = "log4j" % "log4j" % "1.2.16"
   val jmf = "javax.media" % "jmf" % "2.1.1e"
   val pegdown = "org.pegdown" % "pegdown" % "1.1.0"
-  val parboiled = "org.parboiled" % "parboiled-java" % "1.0.1"
+  val parboiled = "org.parboiled" % "parboiled-java" % "1.0.2"
   val mrjadapter = "steveroy" % "mrjadapter" % "1.2" from
     "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar"
   val jhotdraw = "org.jhotdraw" % "jhotdraw" % "6.0b1" from
