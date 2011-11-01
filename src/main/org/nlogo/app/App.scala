@@ -168,8 +168,8 @@ object App{
         commandLineModelIsLaunch = token == "--launch"
         require(commandLineModel == null &&
                 commandLineMagic == null &&
-                commandLineURL == null)
-          throw new IllegalStateException("Error parsing command line arguments: you can only specify one model to open at startup.")
+                commandLineURL == null,
+          "Error parsing command line arguments: you can only specify one model to open at startup.")
         val modelFile = new java.io.File(nextToken())
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
@@ -205,9 +205,10 @@ object App{
       }
       else { // we assume it's a filename to "launch"
         commandLineModelIsLaunch = true
-        if (commandLineModel != null || commandLineMagic != null || commandLineURL != null)
-          throw new IllegalStateException(
-            "Error parsing command line arguments: you can only specify one model to open at startup.")
+        require(commandLineModel == null &&
+                commandLineMagic == null &&
+                commandLineURL == null,
+          "Error parsing command line arguments: you can only specify one model to open at startup.")
         val modelFile = new java.io.File(token)
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
