@@ -8,10 +8,12 @@ object I18N {
 
   def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(available)
 
-  def available(locale:Locale) =
+  def available(locale: Locale) =
     try {
-      val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
-      rb.getLocale == locale
+      val rb = ResourceBundle.getBundle("GUI_Strings", locale, getClass.getClassLoader)
+      // if there's a bundle with the right language, that's good enough.
+      // don't worry if the country code doesn't match. - ST 10/31/11
+      rb.getLocale.getLanguage == locale.getLanguage
     }
     catch { case m: MissingResourceException => false }
 
