@@ -30,8 +30,6 @@ p.c1 {font-style: italic}
       <li>
         <a href="#tutorial">Tutorial</a>
       <li>
-        <a href="#faq">FAQ</a>
-      <li>
         <a href="#dictionary">Dictionary</a>
       </ul>
     <h2>
@@ -127,12 +125,13 @@ p.c1 {font-style: italic}
       <a name="custom-shapes" id="custom-shapes">Custom Shapes</a>
     </h4>
     <p>
-      You can load your own shapes using the <tt>load-shapes-3d</tt>
-      primitive, which takes a text file as an input. Once you have loaded
-      the shapes into the model you can use them just like the built-in
-      shapes.
+      NetLogo automatically interprets 2D shapes so they are extruded, like
+      a cookie cutter shape in the 3D view. You can also use the primitive
+      <a href="3dprims.html#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
+      load shapes described in an external file in a custom format
+      described here.  Currently we do not import shapes in any standard formats.
     <p>
-      Note that a 2D shape of the same name must exist as well. You can
+      For each shape in a custom 3D shape file, a 2D shape of the same name must exist as well. You can
       create the 2D shape in the Turtle Shapes Editor.
     <p>
       The input file may contain any number of shapes with any number of
@@ -418,45 +417,6 @@ end-shape
       <tt>facexyz</tt> or <tt>face</tt>, the center of the sphere changes
       but the observer does not move. The radius of the sphere may change,
       as well as the orientation of the observer.
-    <h2>
-      <a name="faq" id="faq">FAQ (Frequently Asked Questions)</a>
-    </h2>
-    <ul class="smaller">
-      <li>
-        <a href="#applet"><b>Can I make a 3D applet?</b></a>
-      <li>
-        <a href="#stereo"><b>Does NetLogo 3D work with my stereoscopic
-        device?</b></a>
-      <li>
-        <a href="#shapes"><b>Can I make custom 3D shapes?</b></a>
-      </ul>
-    <h4>
-      <a name="applet" id="applet"></a>Can I make a 3D applet?
-    </h4>
-    <p>
-      Not at this time. We are looking into alternatives to make this
-      possible, however, it may be quite some time before it is completed.
-    <h4>
-      <a name="stereo" id="stereo"></a>Does NetLogo work with my
-      stereoscopic device?
-    </h4>
-    <p>
-      NetLogo supports fullscreen exclusive mode. If that is all your
-      device needs then, possibly yes. However, it can be tricky to get it
-      working. We don't have any such devices so it is difficult for us
-      to make the process easier. If your device needs something else, for
-      example, quadbuffers enabled, the answer is probably no.
-    <h4>
-      <a name="shapes" id="shapes"></a>Can I make my own 3D shapes?
-    </h4>
-    <p>
-      NetLogo automatically interprets 2D shapes so they are extruded, like
-      a cookie cutter shape in the 3D view. You can also use the primitive
-      <a href="3dprims.html#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
-      load shapes described in an external file in a custom format
-      described in the <a href="3d.html#custom-shapes">Custom Shapes</a>
-      section. Currently we do not import shapes in any standard formats,
-      though we may allow this in the future.
     <h2>
       <a name="dictionary" id="dictionary">Dictionary</a>
     </h2>
