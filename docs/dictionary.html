@@ -7786,12 +7786,14 @@ show standard-deviation [energy] of turtles
       </h4>
       <p>
         User-defined procedure which, if it exists, will be called when a
-        model is first loaded.
+        model is first loaded in the NetLogo application.
       <pre>
 to startup
   setup
 end
 </pre>
+     <p><tt>startup</tt> does not run when a model is run headless from
+        the command line, or by parallel BehaviorSpace.
     </div>
     <div class="dict_entry">
       <h3>
@@ -7962,6 +7964,9 @@ show sum [energy] of turtles
       <p>
         Advances the tick counter by one and updates all plots.
       <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
+      <p>
         See also <a href="#ticks">ticks</a>, <a href=
         "#tick-advance">tick-advance</a>, <a href=
         "#reset-ticks">reset-ticks</a>, <a href="#clear-ticks">clear-ticks</a>,
@@ -7981,6 +7986,9 @@ show sum [energy] of turtles
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
       <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
+      <p>
         Does not update plots.
       <p>
         See also <a href="#tick">tick</a>, <a href="#ticks">ticks</a>,
@@ -7997,6 +8005,9 @@ show sum [energy] of turtles
       <p>
         Reports the current value of the tick counter. The result is always
         a number and never negative.
+      <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
       <p>
         Most models use the <tt>tick</tt> command to advance the tick
         counter, in which case <tt>ticks</tt> will always report an
