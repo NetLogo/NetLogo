@@ -834,16 +834,16 @@ end
       number of turtles.
     <blockquote>
       <ul>
-        <li>Create a slider variable called 'number', (click the
-        Add icon on the Toolbar, select Slider next to it, and click on an
-        open spot in the Interface). Try changing the minimum and maximum
+        <li>Create a slider named &quot;number&quot;: click the
+        Add icon on the toolbar, select Slider next to it, and click on an
+        open spot in the interface.
+        <li>Try changing the minimum and maximum
         values in the slider.
         <li>Then inside of <tt>setup-turtles</tt>, instead of
         <tt>create-turtles 100</tt> you can type:
           <pre>
 to setup-turtles
-  create-turtles number
-  ask turtles [ setxy random-xcor random-ycor ]
+  create-turtles number [ setxy random-xcor random-ycor ]
 end
 </pre>
         </ul>
@@ -894,10 +894,11 @@ end
       What's next?
     </h2>
     <p>
-      So now you have a simple model of an ecosystem. Patches grow grass;
-      turtles wander, eat the grass, reproduce, and die. You have created
+      So now you have a simple model of an ecosystem. Patches grow grass.
+      Turtles wander, eat the grass, reproduce, and die.
+    <p>You have created
       an interface containing buttons, sliders, switches, monitors, and
-      plots. You've even written a series of procedures to give the
+      a plot. You've even written a series of procedures to give the
       turtles something to do.
     <p>
       That's where this tutorial leaves off.
@@ -1003,8 +1004,8 @@ end
 to reproduce
   ask turtles [
     if energy &gt; birth-energy [
-    set energy energy - birth-energy  ;; take away birth-energy to give birth
-    hatch 1 [ set energy birth-energy ] ;; give this birth-energy to the offspring
+      set energy energy - birth-energy  ;; take away birth-energy to give birth
+      hatch 1 [ set energy birth-energy ] ;; give this birth-energy to the offspring
     ]
   ]
 end
