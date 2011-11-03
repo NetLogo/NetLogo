@@ -5,6 +5,7 @@
 
 make bin/sbt-launch.jar
 bin/sbt update
+make repos
 make clean clean-extensions
 make
 

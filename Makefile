@@ -110,6 +110,7 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 repos:
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
+	cd models; git pull; git status
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
 	cd extensions/array; git pull; git status
