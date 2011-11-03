@@ -841,22 +841,52 @@ show mean [sum assets] of turtles
       about all of the agentset primitives.
     <p>
       More examples of using agentsets are provided in the individual
-      entries for these primitives in the NetLogo Dictionary. In developing
-      familiarity with programming in NetLogo, it is important to begin to
-      think of compound commands in terms of how each element passes
-      information to the next one. Agentsets are an important part of this
-      conceptual scheme and provide the NetLogo developer with a lot of
-      power and flexibility, as well as being more similar to natural
-      language.
-    <blockquote>
-      <p>
-        <b>Code Example:</b> Ask Ordering Example
-      </blockquote>
+      entries for these primitives in the NetLogo Dictionary.
+    <h3>
+      Special agentsets
+    </h3>
+     <p>The agentsets <tt>turtles</tt> and <tt>links</tt> have special behavior
+        because they always hold the sets of <i>all</i> turtles and <i>all</i>
+        links.  Therefore, these agentsets can grow.  
+     <p>
+        The following interaction shows the special behavior.  Assume the
+        Code tab has <tt>globals [g]</tt>.  Then:
+<pre>
+observer> clear-all
+observer> create-turtles 5
+observer> set g turtles
+observer> print count g
+5
+observer> create-turtles 5
+observer> print count g
+10
+observer> set g turtle-set turtles
+observer> print count g
+10
+observer> create-turtles 5
+observer> print count g
+10
+observer> print count turtles
+15
+</pre>
+     <p>The <tt>turtles</tt> agentset grows when new turtles are born,
+        but other agents don't grow.  If I write <tt>turtle-set turtles</tt>,
+        I get a new, normal agentset containing just the turtles that <i>currently</i>
+        exist.  New turtles don't join when they're born.
+     <p>Breed agentsets are special in the same way as <tt>turtles</tt>
+        and <tt>links</tt>.  Breeds are introduced and explained below.
+    <h3>
+      Agentsets and lists
+    </h3>
     <p>
       Earlier, we said that agentsets are always in random order, a
       different random order every time. If you need your agents to do
       something in a fixed order, you need to make a list of the agents
       instead. See the Lists section below.
+    <blockquote>
+      <p>
+        <b>Code Example:</b> Ask Ordering Example
+      </blockquote>
     <h2>
       <a name="breeds" id="breeds">Breeds</a>
     </h2>
@@ -953,7 +983,7 @@ end
         <b>Code Example:</b> Breeds and Shapes Example
       </blockquote>
     <h3>
-      Link Breeds
+      Link breeds
     </h3>
     <p>
       Link breeds are very similar to turtle breeds, however, there are a
@@ -1152,9 +1182,9 @@ ask one-of friendships [ set breed links ] ;; produces a runtime error
     </h2>
     <p>
       In the simplest models, each variable holds only one piece of
-      information, usually a number or a string. The list feature lets you
-      store multiple pieces of information in a single variable by
-      collecting those pieces of information in a list. Each value in the
+      information, usually a number or a string. Lists let you
+      store multiple pieces of information in a single value by
+      collecting that information in a list. Each value in the
       list can be any type of value: a number, or a string, an agent or
       agentset, or even another list.
     <p>
@@ -1300,8 +1330,12 @@ set mylist (replace-item 3 mylist
     <p>
       <a href="dictionary.html#foreach"><tt>foreach</tt></a> is used to run
       a command or commands on each item in a list. It takes an input list
-      and a block of commands, like this:
+      and a command name or block of commands, like this:
     <pre>
+foreach [1 2 3] show
+=&gt; 1
+=&gt; 2
+=&gt; 3
 foreach [2 4 6]
   [ crt ?
     show (word &quot;created &quot; ? &quot; turtles&quot;) ]
@@ -1325,11 +1359,11 @@ foreach [true false true true] [ ask turtles [ if ? [ fd 1 ] ] ]
     <p>
       <a href="dictionary.html#map"><tt>map</tt></a> is similar to <a href=
       "dictionary.html#foreach"><tt>foreach</tt></a>, but it is a reporter.
-      It takes an input list and another reporter. Note that unlike
+      It takes an input list and a reporter name or reporter block. Note that unlike
       <a href="dictionary.html#foreach"><tt>foreach</tt></a>, the reporter
       comes first, like this:
     <pre>
-show map [round ?] [1.2 2.2 2.7]
+show map round [1.2 2.2 2.7]
 ;; prints [1 2 3]
 </pre>
     <p>
@@ -1338,36 +1372,30 @@ show map [round ?] [1.2 2.2 2.7]
       input list. Again, use <a href="dictionary.html#ques"><tt>?</tt></a>
       to refer to the current item in the list.
     <p>
-      Here is another example of <a href=
+      Here are a  couple more examples of <a href=
       "dictionary.html#map"><tt>map</tt></a>:
     <pre>
 show map [? &lt; 0] [1 -1 3 4 -2 -10]
 ;; prints [false true false false true true]
+show map [? * ?] [1 2 3]
+;; prints [1 4 9]
 </pre>
     <p>
-      <a href="dictionary.html#foreach"><tt>foreach</tt></a> and <a href=
-      "dictionary.html#map"><tt>map</tt></a> won't necessarily be
-      useful in every situation in which you want to operate on an entire
+      Besides <tt>map</tt> and <tt>foreach</tt>, other primitives
+      for processing entire lists include
+      <a href="dictionary.html#filter"><tt>filter</tt></a>,
+      <a href="dictionary.html#reduce"><tt>reduce</tt></a>, and
+      <a href="dictionary.html#sort-by"><tt>sort-by</tt></a>.
+    <p>
+      These primitives aren't always the solution
+      for every situation in which you want to operate on an entire
       list. In some situations, you may need to use some other technique
       such as a loop using <a href=
       "dictionary.html#repeat"><tt>repeat</tt></a> or <a href=
       "dictionary.html#while"><tt>while</tt></a>, or a recursive procedure.
-    <p>
-      The <a href="dictionary.html#sort-by"><tt>sort-by</tt></a> primitive
-      uses a similar syntax to <a href=
-      "dictionary.html#map"><tt>map</tt></a> and <a href=
-      "dictionary.html#foreach"><tt>foreach</tt></a>, except that since the
-      reporter needs to compare two objects, the two special variables
-      <a href="dictionary.html#ques"><tt>?1</tt></a> and <a href=
-      "dictionary.html#ques"><tt>?2</tt></a> are used in place of <a href=
-      "dictionary.html#ques"><tt>?</tt></a>.
-    <p>
-      Here is an example of <a href=
-      "dictionary.html#sort-by"><tt>sort-by</tt></a>:
-    <pre>
-show sort-by [?1 &lt; ?2] [4 1 3 2]
-;; prints [1 2 3 4]
-</pre>
+    <p>The blocks of code we're giving to <tt>map</tt> and <tt>foreach</tt>
+       in these examples are actually <b>tasks</b>.  Tasks are explained
+       in more detail in <a href="#tasks">Tasks</a>, below.
     <p>
       <a name="variadic" id="variadic"><b>Varying number of inputs</b></a>
     <p>
@@ -1474,26 +1502,27 @@ foreach sort turtles [
       <a name="list-performance" id="list-performance"></a><b>Performance
       of lists</b>
     <p>
-      The data structure underlying NetLogo's lists now is the
-      immutable Vector class from the Scala collections library. It
-      uses 32-wide hash array mapped tries, as implemented by Tiark Rompf,
-      based in part on work by Phil Bagwell and Rich Hickey.
-   <p>
-      Nearly all local operations on this data structure run in near-constant time.
+      The data structure underlying NetLogo's lists is a sophisticated
+      tree-based data structure on which most operations run in near-constant time.
       That includes <tt>fput</tt>, <tt>lput</tt>, <tt>butfirst</tt>, <tt>butlast</tt>,
       <tt>length</tt>, <tt>item</tt>, and <tt>replace-item</tt>.
-      Technically, it's logarithmic time, but the base of the logarithm is
-      high because the tries have large nodes and a high branching factor
-      so they can never get very deep.  This
-      means that changes can be made in at most a few steps.  The
-      tries are immutable, but new tries share structure heavily with
-      old ones, so the whole trie doesn't need to be copied to make a
-      change.
     <p>
       One exception to the fast-performance rule is that concatenating
       two lists with <tt>sentence</tt> requires traversing and copying
-      the whole second list.  (This may be fixed in a future version
-      of the data structure.)
+      the whole second list.  (This may be fixed in a future version.)
+    <p>
+      Technically, &quot;near-constant time&quot; is actually logarithmic time, proportional to the depth
+      of the underlying tree, but these trees have large nodes and a high branching factor,
+      so they are never more than a few levels deep.  This
+      means that changes can be made in at most a few steps.  The
+      trees are immutable, but they share structure with each other,
+      so the whole tree doesn't need to be copied to make a
+      changed version.
+    <p>
+      The actual data structure used is the immutable Vector class
+      from the Scala collections library. These are 32-wide hash array
+      mapped tries, as implemented by Tiark Rompf, based in part on
+      work by Phil Bagwell and Rich Hickey.
     <h2>
       <a name="math" id="math">Math</a>
     </h2>
@@ -1835,12 +1864,12 @@ ask turtles [ set shape one-of shapes ]
     <p>
       Continuous updates are very simple. With continuous updates, NetLogo
       updates the view a certain number of times per second -- by default,
-      50 times a second when the speed slider is in the default, middle
+      30 times a second when the speed slider is in the default, middle
       setting.
     <p>
       If you move the speed slider to a slower setting, NetLogo will update
-      more than 50 times a second, effectively slowing down the model. On a
-      faster setting, NetLogo will update less than 50 times a second. On
+      more than 30 times a second, effectively slowing down the model. On a
+      faster setting, NetLogo will update less than 30 times a second. On
       the fastest setting, updates will be separated by several seconds.
     <p>
       At extremely slow settings, NetLogo will be updating so often that
@@ -1872,7 +1901,7 @@ ask turtles [ set shape one-of shapes ]
       you use the <a href="dictionary.html#display"><tt>display</tt></a>
       command.
     <p>
-      If you move the speed slider to a faster setting, NetLogo will skip
+      If you move the speed slider to a fast enough setting, eventually NetLogo will skip
       some of the updates that would ordinarily have happened. Moving the
       speed slider to a slower setting doesn't cause additional
       updates; rather, it makes NetLogo pause after each update. The slower
@@ -1927,11 +1956,31 @@ ask turtles [ set shape one-of shapes ]
       agents moving one at a time. Don't forget to change back to
       tick-based updates when you are done, as the choice of update mode is
       saved with the model.
+    <h3>
+      Frame rate
+    </h3>
+    <p>
+      One of the model settings in NetLogo's &quot;Settings...&quot dialog
+      is &quot;Frame rate&quot; which defaults to 30 frames per second.
+    <p>The frame rate setting affects both continuous updates and tick-based
+       updates.
+    <p>With continuous updates, the setting directly determines the frequency
+       of updates.
+    <p>
+       With tick-based updates, the setting is a <i>ceiling</i> on how
+       many updates per second you want.  If the frame rate is 30, then
+       if then NetLogo will ensure that the model never runs faster than that
+       when the speed slider is in the default position.  If any frame takes
+       less than 1/30 of a second to compute and display, NetLogo will pause
+       and wait until the full 1/30 of a second has passed before continuing.
+    <p>The frame rate settings lets you set what you consider to be a normal
+       speed for your model.  Then you, or the user of your model, can use
+       the speed slider to temporarily get a faster or slower speed.
     <h2>
       <a name="plotting" id="plotting">Plotting</a>
     </h2>
     <p>
-      NetLogo';s plotting features let you create plots to help you
+      NetLogo's plotting features let you create plots to help you
       understand what's going on in your model.
     <p>
       Before you can plot, you need to create one or more plots in the
@@ -2248,6 +2297,7 @@ end</code>
     <h2>
       <a name="strings" id="strings">Strings</a>
     </h2>
+    <p>Strings may contain any Unicode characters.
     <p>
       To input a constant string in NetLogo, surround it with double
       quotes.
@@ -2712,9 +2762,9 @@ movie-close
         <b>Code Example:</b> Neighbors Example
       </blockquote>
     <p>
-      Since NetLogo 3.0 there have been settings to enable wrapping
-      visually, so if a turtle shape extends past an edge, part of the
-      shape will appear on the other edge of the view. (Turtles themselves
+      When coordinates wrap, turtles and links wrap visually in the view, too.
+      If a turtle shape or link extends past an edge, part of it
+      will appear at the other edge. (Turtles themselves
       are points that take up no space, so they cannot be on both sides of
       the world at once, but in the view, they appear to take up space
       because they have a shape.)
@@ -2735,19 +2785,9 @@ movie-close
         Perspective Demo (box)
       </blockquote>
     <p>
-      Instead of 3.0's settings that only control the <i>appearance</i>
-      of wrapping in the view, NetLogo 3.1 has settings that control
-      whether the world <i>actually</i> wraps or not, that is, whether
-      opposite edges are in fact connected. These new wrapping settings
-      determine the world topology, that is, whether the world is a torus,
-      box, or cylinder. This affects the behavior and not just the visual
-      appearance of the model.
-    <p>
-      In the past, model authors were required to write extra code to
-      simulate a box world, with the aid of special &quot;no-wrap&quot;
-      primitives. No-wrap versions were provided for distance(xy),
-      in-radius, in-cone, face(xy), and towards(xy). In 3.1 the special
-      no-wrap versions are no longer necessary. Instead, the topology
+      The topology settings also control the behavior of the
+      distance(xy), in-radius, in-cone, face(xy), and towards(xy)
+      primitives.  The topology
       controls whether the primitives wrap or not. They always use the
       shortest path allowed by the topology. For example, the distance from
       the center of the patches in the bottom right corner (min-pxcor,
@@ -2764,108 +2804,12 @@ movie-close
       </ul>
     <p>
       All the other primitives will act similarly to distance. If you
-      formerly used no-wrap primitives in your model we recommend removing
+      formerly used <tt>-nowrap</tt> primitives in your model we recommend removing
       them and changing the topology of the world instead.
     <p>
-      There are a number of reasons to change your model to use topologies
-      rather than no-wrap primitives.
-    <p>
-      First, we expect if you are using no-wrap primitives, you are
-      actually modeling a world that is not a torus. If you use a topology
-      that matches the world you are modeling NetLogo does automatic bounds
-      checking for you, it should make your life easier, your code simpler
-      to understand and it adds visual cues to help the model user
-      understand what you are modeling. Note that even with no-wrap
-      primitives it was very difficult to model cylinders since the no-wrap
-      primitives report the distance or heading when wrapping is not
-      allowed in either direction.
-    <p>
-      You might have bugs in your model. If you are using a combination of
-      no-wrap and wrap primitives, either it doesn't matter for some
-      reason or there is a bug in your model (we found a few bugs in our
-      models). For example, the Conductor model compared distance-no-wrap
-      to distance to determine whether the next position is wrapped around
-      the world, in which case the electron exits the system. This is a
-      clever way to solve the problem, but unfortunately it is flawed.
-      Electrons that wrap in the y direction were also exiting the system
-      which is incorrect in this case. The only correct way to exit is to
-      reach the cathode at the left end of the wire.
-    <p>
-      If you remove no-wrap commands the topology is no longer hard coded
-      into the model so it's easier to test out your model on a
-      different shape of world without a lot of extra coding (you may have
-      to add a few extra checks to go from torus to box, this is explained
-      more in-depth in the How to convert section.)
-    <p>
-      Note that though we've removed the no-wrap primitives from the
-      dictionary they are still available for you to use; we did this so
-      that old models don't have to be changed in order to run.
-    <p>
-      <b>How to convert your model</b>
-    <p>
-      When you first open up your model in 3.1 NetLogo will automatically
-      change all cases of <tt>( -screen-edge-x )</tt> to <a href=
-      "dictionary.html#min-pxcor"><tt>min-pxcor</tt></a> and all cases of
-      <tt>screen-edge-x</tt> to <a href=
-      "dictionary.html#max-pxcor"><tt>max-pxcor</tt></a> (and similarly for
-      y) Though this is not directly related to the topology changes, you
-      may also want to think about whether moving the origin off-center
-      makes sense in your model at this time. Before NetLogo 3.1 the world
-      had to be symmetrical around the origin, thus, the world had to have
-      an odd width and height. This is no longer true since you may use any
-      min and max combinations you wish, given that the point (0,0) still
-      exists in the world. If you are logically only modeling in one or two
-      quadrants, or if it makes your code simpler to only use positive
-      numbers you might want to consider changing your model. If you've
-      modeled something that requires and even grid you'll certainly
-      want to remove the programming hacks required to make that possible
-      in the past.
-    <blockquote>
-      <p>
-        <b>Code Examples:</b> Lattice Gas Automaton, Binomial Rabbits,
-        Rugby
-      </blockquote>
-    <p>
-      For NetLogo 3.1 we added new primitives which are essential if you
-      change the topology, and quite convenient even if you don't.
-      <a href="dictionary.html#random-pxcor"><tt>random-pxcor</tt></a>,
-      <a href="dictionary.html#random-pycor"><tt>random-pycor</tt></a>,
-      <a href="dictionary.html#random-xcor"><tt>random-xcor</tt></a>, and
-      <a href="dictionary.html#random-ycor"><tt>random-ycor</tt></a> report
-      random values within the range between maximum and minimum (x and y).
-      In older versions of NetLogo we often relied on wrapping to place
-      turtles randomly across the world by writing <tt>setxy random-float
-      screen-size-x random-float screen-size-y</tt>. However, if wrapping
-      is not allowed in one direction or the other this no longer works
-      (you get a runtime error for trying to place turtles outside the
-      world). Regardless of topology, it is simpler and more straight
-      forward to use <tt>setxy random-xcor random-ycor</tt> instead.
-    <p>
-      To convert a model to use a topology you must first decide what
-      settings best describe the world. If the answer is not immediately
-      obvious to you based on the real world, (a room is a box, a wire is a
-      cylinder) there are a few clues that will help you. If anywhere in
-      the code you are checking the bounds of the world or if some patches
-      are not considered neighbors of the patches on the other side of the
-      view it is likely that you are not using a torus. If you check bounds
-      in both the x and y directions it's a box, in the x direction
-      only, a horizontal cylinder, the y a vertical cylinder.
-    <p>
-      If you use no-wrap primitives you are probably not modeling a torus,
-      however, be careful with this criterion if you use a mix of no-wrap
-      and wrap primitives. It may be that you were using a no-wrap
-      primitive for a visual element but the rest of the NetLogo world is
-      still a torus.
-    <p>
-      After you've determined the topology and changed it by editing
-      the view, you may have to make a few small changes to the code. If
-      you've decided that the world is a torus you probably don't
-      have to make any changes at all. If your model only uses patch
-      neighbors and diffuse you probably will not need to make many
-      changes.
-    <p>
-      If your model has turtles that move around your next step is to
-      determine what happens to them when they reach the edge of the world.
+      If your model has turtles that move around you'll need to think about
+      what happens to them when they reach the edge of the world, if the
+      topology you're using has some non-wrapping edges.
       There are a few common options: the turtle is reflected back into the
       world (either systematically or randomly), the turtle exits the
       system (dies), or the turtle is hidden. It is no longer necessary to
@@ -2905,9 +2849,9 @@ if patch-at 0 dy = nobody [
 if not can-move? distance[ die ]
 </pre>
     <p>
-      If you are moving turtles using setxy rather than forward you should
+      If you are moving turtles using <tt>setxy</tt> rather than <tt>forward</tt> you should
       test to make sure the patch you are about to move to exists since
-      setxy throws a runtime error if it is given coordinates outside the
+      <tt>setxy</tt> throws a runtime error if it is given coordinates outside the
       world. This is a common situation when the model is simulating an
       infinite plane and turtles outside the view should simply be hidden.
     <pre>
@@ -2923,13 +2867,12 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Several models in the Models Library use this technique, Gravitation,
       N-Bodies, and Electrostatics are good examples.
     <p>
-      By using a different topology you get diffuse for free (which was
-      fairly difficult to do in the past). Each patch diffuses and equal
+      The <tt>diffuse</tt> and <tt>diffuse4</tt> commands behave
+      correctly in all topologies.  Each patch diffuses and equal
       amount of the diffuse variable to each of its neighbors, if it has
-      fewer than 8 neighbors (or 4 if you are using diffuse4) the remainder
+      fewer than 8 neighbors (or 4 if you are using <tt>diffuse4</tt>), the remainder
       stays on the diffusing patch. This means that the overall sum of
-      patch-variable across the world remains constant. If you had special
-      code to handle diffuse then you can remove it. However, if you want
+      patch-variable across the world remains constant. However, if you want
       the diffuse matter to still fall off the edges of the world as it
       would on an infinite plane you still need to clear the edges each
       step as in the Diffuse Off Edges Example.
@@ -2937,8 +2880,9 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       <a name="links" id="links">Links</a>
     </h2>
     <p>
-      A link is an agent that connects two turtles. The two turtles are
-      called nodes. The link is always drawn as a line between the two
+      A link is an agent that connects two turtles. These turtles are
+      sometimes also called nodes.
+   <p>The link is always drawn as a line between the two
       turtles. Links do not have a location as turtles do, they are not
       considered to be on any patch and you cannot find the distance from a
       link to another point.
@@ -3070,9 +3014,9 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Tasks let you store code to be run later. There are two kinds,
       command tasks and reporter tasks.
     <p>
-      Both kinds may be passed as input, reported as a result, or stored in
-      a variable. A given task may be run once, multiple times, or not at
-      all.
+      Tasks are values, which means that a task may be passed as
+      input, reported as a result, or stored in a variable.
+    <p>A given task might be run once, multiple times, or not at all.
     <p>
       In other programming languages tasks are known as first-class
       functions, closures, or lambda.
@@ -3091,8 +3035,8 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
     <p>
       These primitives also accept tasks: <tt>foreach</tt>, <tt>map</tt>,
       <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
-      <tt>sort-by</tt>. The syntax is backward-compatible with existing
-      code.
+      <tt>sort-by</tt>. (The syntax is backward-compatible with existing
+      code from previous NetLogo versions.)
     <p>
       The <tt>task</tt> primitive creates a task. The task it reports might
       be a command task or a reporter task, depending on what kind of block
@@ -3180,15 +3124,17 @@ foreach [1 2 3 4] [ print ? ]
       <li>Tasks can't be variadic (accept a varying number of inputs).
       <li>Reporter tasks can't contain commands, like the body of a
       reporter procedure can.
+      <li>Tasks are not interchangeable with command blocks and reporter
+          blocks.  Only the primitives listed above accept tasks as input.
+          Control primitives such as <tt>ifelse</tt> and <tt>while</tt>
+          and agent primitives such as <tt>of</tt> and <tt>with</tt>
+          don't accept tasks.  So for example if I have a reporter task r
+          and two command tasks c1 and c2, I can't write <tt>ifelse r c1 c2</tt>,
+          I must write <tt>ifelse runresult r [ run c1 ] [ run c2 ]</tt>.
       </ul>
     <h3>
-      More info
+      Code example
     </h3>
-    <p>
-      For more examples and technical details, see these slides: <a href=
-      "http://www.slideshare.net/SethTisue/tasks-in-netlogo-50beta1">http://www.slideshare.net/SethTisue/tasks-in-netlogo-50beta1</a>.
-      (Note: there is technical terminology in some of the slides which may
-      be unfamiliar if you don't have a computer science background.)
     <blockquote>
       <p>
         <b>Code Example:</b> State Machine Example
@@ -3197,9 +3143,9 @@ foreach [1 2 3 4] [ print ? ]
       <a name="ask-concurrent" id="ask-concurrent">Ask-Concurrent</a>
     </h2>
     <p>
-      In previous versions of NetLogo, <a href=
-      "dictionary.html#ask"><tt>ask</tt></a> was concurrent by default. As
-      of NetLogo 4.0, <a href="dictionary.html#ask"><tt>ask</tt></a> is
+      In very old versions of NetLogo, <a href=
+      "dictionary.html#ask"><tt>ask</tt></a> was concurrent by default. Since
+      NetLogo 4.0 (2007), <a href="dictionary.html#ask"><tt>ask</tt></a> is
       serial, that is, the agents run the commands inside the ask one at a
       time.
     <p>
@@ -3430,7 +3376,7 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#to-report"><tt>to-report</tt></a>, and <a href=
       "dictionary.html#end"><tt>end</tt></a>, plus <a href=
       "dictionary.html#extensions"><tt>extensions</tt></a> and the
-      experimental <a href="dictionary.html#includes">__includes</a>
+      experimental <a href="dictionary.html#includes"><tt>__includes</tt></a>
       keyword. (Built-in primitive names may not be shadowed or redefined,
       so they are effectively a kind of keyword as well.)
     <h3>
@@ -3623,30 +3569,22 @@ end
       run&quot;</tt> (a string) or <tt>[&quot;see&quot; &quot;spot&quot;
       &quot;run&quot;]</tt> (a list of strings) instead.
       <li>NetLogo's <a href="dictionary.html#run"><tt>run</tt></a>
-      command works on strings, not lists (since we have no
+      command works on tasks and strings, not lists (since we have no
       &quot;word&quot; data type), and does not permit the definition or
       redefinition of procedures.
       <li>Control structures such as <a href=
       "dictionary.html#if"><tt>if</tt></a> and <a href=
       "dictionary.html#while"><tt>while</tt></a> are special forms, not
       ordinary functions. You can't define your own special forms, so
-      you can't define your own control structures. (NetLogo's
-      <a href="dictionary.html#run"><tt>run</tt></a> command is no help
-      here.)
-      <li>As in most Logos, functions as values are not supported. Most
-      Logos provide similar if less general functionality, though, by
-      allowing passing and manipulation of fragments of source code in list
-      form. NetLogo's capabilities in this area are presently limited.
-      A few of our built-in special forms use UCBLogo-style
-      ``templates'' to accomplish a similar purpose, for example,
-      <tt>sort-by [length ?1 &lt; length ?2] string-list</tt>. In some
-      circumstances, using <a href="dictionary.html#run"><tt>run</tt></a>
-      and <a href="dictionary.html#runresult"><tt>runresult</tt></a>
-      instead is workable, but unlike most Logos they operate on strings,
-      not lists.
+      you can't define your own control structures.  (You can do something
+      similar using tasks, but you must use the <tt>task</tt>, <tt>run</tt>, and
+      <tt>runresult</tt> primitives for that, you cannot make them implicit.)
+      <li>Tasks (aka function values or lambda) are true
+          lexically-scoped closures.  This feature is available in
+          NetLogo and in modern Lisps, but not in standard Logo.
       </ul>
     <p>
-      Of course, the NetLogo language also contains many additional
-      features not found in most other Logos, most importantly agents and
+      Of course, the NetLogo language also contains other
+      features not found in most Logos, most importantly agents and
       agentsets.
 
