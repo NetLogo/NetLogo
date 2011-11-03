@@ -12,7 +12,7 @@
       NetLogo User Manual&nbsp;&nbsp;&nbsp;
     </div>
     <p>
-      This section describes the NetLogo programming language.
+      This section describes the NetLogo programming language in detail.
     <p>
       The Code Example models mentioned throughout can be found in the Code
       Examples section of the Models Library.
@@ -23,6 +23,8 @@
         <a href="#procedures">Procedures</a>
       <li>
         <a href="#variables">Variables</a>
+      <li>
+        <a href="#ticks">Tick counter</a>
       <li>
         <a href="#colors">Colors</a>
       <li>
@@ -38,15 +40,13 @@
       <li>
         <a href="#math">Math</a>
       <li>
-        <a href="#random">Random Numbers</a>
+        <a href="#random">Random numbers</a>
       <li>
-        <a href="#shapes">Turtle Shapes</a>
+        <a href="#shapes">Turtle shapes</a>
       <li>
-        <a href="#link-shapes">Link Shapes</a>
+        <a href="#link-shapes">Link shapes</a>
       <li>
-        <a href="#ticks">Tick Counter</a>
-      <li>
-        <a href="#updates">View Updates</a>
+        <a href="#updates">View updates</a>
       <li>
         <a href="#plotting">Plotting</a>
       <li>
@@ -80,22 +80,25 @@
       <a name="agents" id="agents">Agents</a>
     </h2>
     <p>
-      The NetLogo world is made up of agents. Agents are beings that can
-      follow instructions. Each agent can carry out its own activity, all
-      simultaneously.
+      The NetLogo world is made up of <b>agents</b>. Agents are beings that can
+      follow instructions.
     <p>
-      In NetLogo, there are four types of agents: turtles, patches, links,
-      and the observer. Turtles are agents that move around in the world.
+      In NetLogo, there are four types of agents: <b>turtles</b>, <b>patches</b>, <b>links</b>,
+      and the <b>observer</b>.
+    <p>Turtles are agents that move around in the <b>world</b>.
       The world is two dimensional and is divided up into a grid of
       patches. Each patch is a square piece of &quot;ground&quot; over
       which turtles can move. Links are agents that connect two turtles.
       The observer doesn't have a location -- you can imagine it as
       looking out over the world of turtles and patches.
     <p>
-      When NetLogo starts up, there are no turtles yet. The observer can
+      The observer doesn't observe passively -- it gives instructions to the
+      other agents.
+    <p>
+      When NetLogo starts up, there are no turtles. The observer can
       make new turtles. Patches can make new turtles too. (Patches
       can't move, but otherwise they're just as &quot;alive&quot;
-      as turtles and the observer are.)
+      as turtles.)
     <p>
       Patches have coordinates. The patch at coordinates (0, 0) is called
       the origin and the coordinates of the other patches are the
@@ -132,33 +135,22 @@
       within its patch; it doesn't have to be in the center of the
       patch.
     <p>
-      Links do not have coordinates, instead they have two endpoints (each
-      a turtle). Links appear between the two endpoints, along the shortest
-      path possible even if that means wrapping around the world.
-    <p>
-      The way the world of patches is connected can change. By default the
-      world is a torus which means it isn't bounded, but
-      &quot;wraps&quot; -- so when a turtle moves past the edge of the
-      world, it disappears and reappears on the opposite edge and every
-      patch has the same number of &quot;neighbor&quot; patches; if
-      you're a patch on the edge of the world, some of your
-      &quot;neighbors&quot; are on the opposite edge. However, you can
-      change the wrap settings with the Settings button. If wrapping is not
-      allowed in a given direction then in that direction (x or y) the
-      world is bounded. Patches along that boundary will have fewer than 8
-      neighbors and turtles will not move beyond the edge of the world. See
-      the <a href="#topology">Topology</a> section for more information.
+      Links do not have coordinates.  Every link has two ends, and
+      each end is a turtle. If either turtle dies, the link dies too.
+      A link is represented visually as a line connecting the two
+      turtles.
     <h2>
       <a name="procedures" id="procedures">Procedures</a>
     </h2>
     <p>
-      In NetLogo, commands and reporters tell agents what to do. A
-      <b>command</b> is an action for an agent to carry out. A
-      <b>reporter</b> computes a result and report it.
+      In NetLogo, <b>commands</b> and <b>reporters</b> tell agents what to do. A
+      command is an action for an agent to carry out, resulting in some effect.
+      A reporter is instructions for computing a value, which
+      the agent then &quot;reports&quot; to whoever asked it.
     <p>
-      Most commands begin with verbs (&quot;create&quot;, &quot;die&quot;,
-      &quot;jump&quot;, &quot;inspect&quot;, &quot;clear&quot;), while most
-      reporters are nouns or noun phrases.
+      Typically, a command name begins with a verb, such as &quot;create&quot;, &quot;die&quot;,
+      &quot;jump&quot;, &quot;inspect&quot;, or &quot;clear&quot;.  Most
+      reporter names are nouns or noun phrases.
     <p>
       Commands and reporters built into NetLogo are called
       <b>primitives</b>. <a href="dictionary.html">The NetLogo
@@ -167,31 +159,39 @@
     <p>
       Commands and reporters you define yourself are called
       <b>procedures</b>. Each procedure has a name, preceded by the keyword
-      <a href="dictionary.html#to"><tt>to</tt></a>. The keyword <a href=
+      <a href="dictionary.html#to"><tt>to</tt></a> or
+      <a href="dictionary.html#to-report"><tt>to-report</tt></a>, depending
+      on whether it is a command procedure or a reporter procedure.
+      The keyword <a href=
       "dictionary.html#end"><tt>end</tt></a> marks the end of the commands
       in the procedure. Once you define a procedure, you can use it
       elsewhere in your program.
     <p>
       Many commands and reporters take <b>inputs</b> -- values that the
-      command or reporter uses in carrying out its actions.
+      command or reporter uses in carrying out its actions or computing
+      its result.
     <p>
-      Examples: Here are two command procedures:
+      Here are two command procedures:
     <pre>
 to setup
-  clear-all      ;; clear the world
-  crt 10         ;; make 10 new turtles
+  clear-all
+  create-turtles 10
+  reset-ticks
 end
 
 to go
-  ask turtles
-    [ fd 1             ;; all turtles move forward one step
-      rt random 10     ;; ...and turn a random amount
-      lt random 10 ]
+  ask turtles [
+    fd 1            ;; forward 1 step
+    rt random 10    ;; turn right
+    lt random 10    ;; turn left
+  ]
+  tick
 end
 </pre>
     <p>
       Note the use of semicolons to add &quot;comments&quot; to the
-      program. Comments make your program easier to read and understand.
+      program. Comments can make your code easier to read and understand,
+      but they don't affect its behavior.
     <p>
       In this program,
     <ul>
@@ -199,12 +199,14 @@ end
         <tt>setup</tt> and <tt>go</tt> are user-defined commands.
       <li>
         <a href="dictionary.html#clear-all"><tt>clear-all</tt></a>,
-        <a href="dictionary.html#create-turtles"><tt>crt</tt></a>
-        (&quot;create turtles&quot;), <a href=
-        "dictionary.html#ask"><tt>ask</tt></a>, <a href=
-        "dictionary.html#left"><tt>lt</tt></a> (&quot;left turn&quot;), and
+        <a href="dictionary.html#create-turtles"><tt>create-turtles</tt></a>,
+        <a href="dictionary.html#reset-ticks"><tt>reset-ticks</tt></a>,
+        <a href="dictionary.html#ask"><tt>ask</tt></a>, <a href=
+        "dictionary.html#left"><tt>lt</tt></a> (&quot;left turn&quot;),
         <a href="dictionary.html#right"><tt>rt</tt></a> (&quot;right
-        turn&quot;) are all primitive commands.
+        turn&quot;) and
+        <a href="dictionary.html#tick"><tt>tick</tt></a>,
+        are all primitive commands.
       <li>
         <a href="dictionary.html#random"><tt>random</tt></a> and <a href=
         "dictionary.html#turtles"><tt>turtles</tt></a> are primitive
@@ -216,23 +218,25 @@ end
         later.)
       </ul>
     <p>
-      <tt>setup</tt> and <tt>go</tt> can be called by other procedures or
-      by buttons. Many NetLogo models have a once button that calls a
-      procedure called <tt>setup</tt>, and a forever button that calls a
+      <tt>setup</tt> and <tt>go</tt> can be called by other procedures, or
+      by buttons, or from the Command Center.
+    <p>Many NetLogo models have a once button that calls a
+      procedure called <tt>setup</tt> and a forever button that calls a
       procedure called <tt>go</tt>.
     <p>
-      In NetLogo, you must specify which agents -- turtles, patches, links,
-      or the observer -- are to run each command. (If you don't
-      specify, the code is run by the observer.) In the code above, the
+      In NetLogo, you may specify which agents -- turtles, patches, or links
+      -- are to run each command. If you don't
+      specify, the code is run by the observer.  In the code above, the
       observer uses <a href="dictionary.html#ask"><tt>ask</tt></a> to make
       the set of all turtles run the commands between the square brackets.
     <p>
       <a href="dictionary.html#clear-all"><tt>clear-all</tt></a> and
-      <a href="dictionary.html#crt"><tt>crt</tt></a> can only be run by the
+      <a href="dictionary.html#crt"><tt>create-turtles</tt></a> can only be run by the
       observer. <a href="dictionary.html#fd"><tt>fd</tt></a>, on the other
       hand, can only be run by turtles. Some other commands and reporters,
-      such as <a href="dictionary.html#set"><tt>set</tt></a>, can be run by
-      different agent types.
+      such as <a href="dictionary.html#set"><tt>set</tt></a> and
+      <a href="dictionary.html#ticks"><tt>ticks</tt></a>,
+      can be run by different agent types.
     <p>
       Here are some more advanced features you can take advantage of when
       defining your own procedures.
@@ -240,19 +244,20 @@ end
       <a name="procedureswinputs" id="procedureswinputs"></a><b>Procedures
       with inputs</b>
     <p>
-      Your own procedures can take inputs, just like primitives do. To
-      create a procedure that accepts inputs, include a list of input names
+      Procedures can take inputs, just like many primitives do. To
+      create a procedure that accepts inputs, put their names
       in square brackets after the procedure name. For example:
     <pre>
-to draw-polygon [num-sides len]
+to draw-polygon [num-sides len]  ;; turtle procedure
   pen-down
-  repeat num-sides
-    [ fd len
-      rt 360 / num-sides ]
+  repeat num-sides [
+    fd len
+    rt 360 / num-sides
+  ]
 end
 </pre>
     <p>
-      Elsewhere in the program, you could ask turtles to each draw an
+      Elsewhere in the program, you might use the procedure by asking the turtles to each draw an
       octagon with a side length equal to its who number:
     <pre>
 ask turtles [ draw-polygon 8 who ]
@@ -290,15 +295,16 @@ end
       variables as belonging to the observer.
     <p>
       Turtle, patch, and link variables are different. Each turtle has its
-      own value for every turtle variable, and each patch has its own value
-      for every patch variable, and the same for links.
+      <i>own</i> value for every turtle variable.  The same goes for
+      patches and links.
     <p>
-      Some variables are built into NetLogo. For example, all turtles have
+      Some variables are built into NetLogo. For example, all turtles and links have
       a <a href="dictionary.html#color"><tt>color</tt></a> variable, and
       all patches have a <a href=
       "dictionary.html#pcolor"><tt>pcolor</tt></a> variable. (The patch
       variable begins with &quot;p&quot; so it doesn't get confused
-      with the turtle variable.) If you set the variable, the turtle or
+      with the turtle variable, since turtles have direct access to
+      patch variables.) If you set the variable, the turtle or
       patch changes color. (See next section for details.)
     <p>
       Other built-in turtle variables including <a href=
@@ -310,11 +316,11 @@ end
       complete list <a href="dictionary.html#builtinvariables">here</a>.)
     <p>
       You can also define your own variables. You can make a global
-      variable by adding a switch or a slider to your model, or by using
+      variable by adding a switch, slider, chooser, or input box to your model, or by using
       the <a href="dictionary.html#globals"><tt>globals</tt></a> keyword at
       the beginning of your code, like this:
     <pre>
-globals [ score ]
+globals [score]
 </pre>
     <p>
       You can also define new turtle, patch and link variables using the
@@ -330,8 +336,7 @@ links-own [strength]
     <p>
       These variables can then be used freely in your model. Use the
       <a href="dictionary.html#set"><tt>set</tt></a> command to set them.
-      (If you don't set them, they'll start out storing a value of
-      zero.)
+      (Any variable you don't set has a starting value of zero.)
     <p>
       Global variables can be read and set at any time by any agent. As
       well, a turtle can read and set patch variables of the patch it is
@@ -365,7 +370,7 @@ show [xcor + ycor] of turtle 5
       A local variable is defined and used only in the context of a
       particular procedure or part of a procedure. To create a local
       variable, use the <a href="dictionary.html#let"><tt>let</tt></a>
-      command. You can use this command anywhere. If you use it at the top
+      command. If you use <tt>let</tt> at the top
       of a procedure, the variable will exist throughout the procedure. If
       you use it inside a set of square brackets, for example inside an
       &quot;ask&quot;, then it will exist only inside those brackets.
@@ -377,12 +382,78 @@ to swap-colors [turtle1 turtle2]
 end
 </pre>
     <h2>
+      <a name="ticks" id="ticks">Tick counter</a>
+    </h2>
+    <p>
+      In many NetLogo models, time passes in discrete steps, called
+      &quot;ticks&quot;. NetLogo includes a built-in tick counter so you
+      can keep track of how many ticks have passed.
+    <p>
+      The current value of the tick counter is shown above the view. (You
+      can use the Settings button to hide the tick counter, or change the
+      word &quot;ticks&quot; to something else.)
+    <p>
+      In code, to retrieve the current value of the tick counter, use the
+      <a href="dictionary.html#ticks"><tt>ticks</tt></a> reporter. The
+      <a href="dictionary.html#tick"><tt>tick</tt></a> command advances the
+      tick counter by 1. The <a href=
+      "dictionary.html#clear-all"><tt>clear-all</tt></a> command clears
+      the tick counter along with everything else.
+   <p>When the tick counter is clear, it's an error to try to read or
+      modify it.  Use the <a href=
+      "dictionary.html#reset-ticks"><tt>reset-ticks</tt></a> command
+      when your model is done setting up, to start the tick counter.
+    <p>
+      If your model is set to use tick-based updates, then the <a href=
+      "dictionary.html#tick"><tt>tick</tt></a> command will usually also
+      update the view. See the later section, <a href="#updates">View
+      Updates</a>.
+    <h3>
+      When to tick
+    </h3>
+    <p>
+      Use <a href="dictionary.html#reset-ticks"><tt>reset-ticks</tt></a> at the end
+      of your setup procedure.
+    <p>
+      Use <a href="dictionary.html#tick"><tt>tick</tt></a>
+      at the end of your go procedure.
+    <pre>
+to setup
+  clear-all
+  create-turtles 10
+  reset-ticks
+end
+
+to go
+  ask turtles [ fd 1 ]
+  tick
+end
+</pre>
+    <h3>
+      Fractional ticks
+    </h3>
+    <p>
+      In most models, the tick counter starts at 0 and goes up 1 at a time,
+      from integer to integer. But it's also possible for the tick
+      counter to take on in-between floating point values.
+    <p>
+      To advance the tick counter by a fractional amount, use the <a href=
+      "dictionary.html#tick-advance"><tt>tick-advance</tt></a> command.
+      This command takes a numeric input specifying how far to advance the
+      tick counter.
+    <p>
+      A typical use of fractional ticks is to approximate continuous or
+      curved motion. See, for example, the GasLab models in the Models
+      Library (under Chemistry &amp; Physics). These models calculate the
+      exact time at which a future event is to occur, then advance the tick
+      counter to exactly that time.
+    <h2>
       <a name="colors" id="colors">Colors</a>
     </h2>
     <p>
-      NetLogo represents colors in different ways. First, as numbers in the
-      range 0 to 140, with the exception of 140 itself. Below is a chart
-      showing the range of colors you can use in NetLogo.
+      NetLogo represents colors in different ways. A color can be number
+      in the range 0 to 140, with the exception of 140 itself. Below is a chart
+      showing the range of such colors you can use in NetLogo.
     <p class="screenshot">
       <img alt="[color chart]" src="images/colors.jpg">
     <p>
@@ -395,8 +466,8 @@ end
       <li>On either side of each named color are darker and lighter shades
       of the color.
       <li>0 is pure black. 9.9 is pure white.
-      <li>10, 20, and so on are all so dark they appear black.
-      <li>19.9, 29.9 and so on are all so light they appear white.
+      <li>10, 20, and so on are all so dark they are very nearly black.
+      <li>19.9, 29.9 and so on are all so light they are very nearly white.
       </ul>
     <blockquote>
       <p>
@@ -410,11 +481,12 @@ end
       are orange too, and so are -115, -255, -395, etc. This calculation is
       done automatically whenever you set the turtle variable <a href=
       "dictionary.html#color"><tt>color</tt></a> or the patch variable
-      <a href="dictionary.html#pcolor"><tt>pcolor</tt></a>. Should you need
+      <a href="dictionary.html#pcolor"><tt>pcolor</tt></a>. 
+      Should you need
       to perform this calculation in some other context, use the <a href=
       "dictionary.html#wrap-color"><tt>wrap-color</tt></a> primitive.
     <p>
-      If you want a color that's not on the chart, more can be found
+      If you want a color that's not on the chart, more exist
       between the integers. For example, 26.5 is a shade of orange halfway
       between 26 and 27. This doesn't mean you can make any color in
       NetLogo; the NetLogo color space is only a subset of all possible
@@ -437,7 +509,7 @@ end
       primitive is useful for converting numeric data into colors.
     <p>
       <a href="dictionary.html#shade-of"><tt>shade-of?</tt></a> will tell
-      you if two colors are &quot;shades&quot; of the same basic hue. For
+      you if two colors are both &quot;shades&quot; of the same basic hue. For
       example, <tt>shade-of? orange 27</tt> is true, because 27 is a
       lighter shade of orange.
     <blockquote>
@@ -472,15 +544,10 @@ set pcolor [255 0 0]
 set color [255 0 0 125]
 </pre>
     <p>
-      You can convert between RGB, HSB (hue/saturation/brightness), and
-      NetLogo colors using <a href=
-      "dictionary.html#approximate-hsb"><tt>approximate-hsb</tt></a> and
-      <a href=
-      "dictionary.html#approximate-rgb"><tt>approximate-rgb</tt></a> from
-      RGB/HSB to NetLogo colors, and <a href=
+      You can convert from a NetLogo color to RGB or HSB (hue/saturation/brightness)
+      using <a href=
       "dictionary.html#extract-hsb"><tt>extract-hsb</tt></a> and <a href=
-      "dictionary.html#extract-rgb"><tt>extract-rgb</tt></a> in the
-      opposite direction. You can use <a href=
+      "dictionary.html#extract-rgb"><tt>extract-rgb</tt></a>. You can use <a href=
       "dictionary.html#rgb"><tt>rgb</tt></a> to generate rgb lists and
       <a href="dictionary.html#hsb"><tt>hsb</tt></a> to convert from an HSB
       color to RGB.
@@ -492,7 +559,7 @@ set color [255 0 0 125]
       can't give you the exact color you ask for, but they try to come
       as close as possible.
     <p>
-      You can change any turtle from it's existing NetLogo color to a
+      Example: you can change any turtle from it's existing NetLogo color to a
       half transparent version of that color using:
     <pre>
 set color lput 125 extract-rgb color
@@ -525,7 +592,7 @@ set color lput 125 extract-rgb color
     <p>
       NetLogo uses the <a href="dictionary.html#ask"><tt>ask</tt></a>
       command to give commands to turtles, patches, and links. All code to
-      be run by turtles <b>must</b> be located in a turtle
+      be run by turtles <i>must</i> be located in a turtle
       &quot;context&quot;. You can establish a turtle context in any of
       three ways:
     <ul>
@@ -533,7 +600,8 @@ set color lput 125 extract-rgb color
       Any code you put in the button will be run by all turtles.
       <li>In the Command Center, by choosing &quot;Turtles&quot; from the
       popup menu. Any commands you enter will be run by all the turtles.
-      <li>By using <tt>ask turtles</tt>.
+      <li>By using <tt>ask turtles</tt>, <tt>hatch</tt>, or other commands
+        which establish a turtle context.
       </ul>
     <p>
       The same goes for patches, links, and the observer, except that you
@@ -546,13 +614,14 @@ set color lput 125 extract-rgb color
     <pre>
 to setup
   clear-all
-  crt 100              ;; create 100 turtles with random headings
+  create-turtles 100   ;; create 100 turtles with random headings
   ask turtles
     [ set color red    ;; turn them red
       fd 50 ]          ;; spread them around
   ask patches
     [ if pxcor &gt; 0         ;; patches on the right side
         [ set pcolor green ] ]  ;; of the view turn green
+  reset-ticks
 end
 </pre>
     <p>
@@ -588,6 +657,7 @@ to setup
     [ create-link-with turtle 1 ] ;; ...make a link with the second 
   ask link 0 1                    ;; tell the link between turtle 0 and 1
     [ set color blue ]            ;; ...to become blue
+  reset-ticks
 end
 </pre>
     <p>
@@ -607,9 +677,8 @@ end
       itself.
     <p>
       You can also select a subset of turtles, or a subset of patches, or a
-      subset of links and ask them to do something. This involves a concept
-      called &quot;agentsets&quot;. The next section explains this concept
-      in detail.
+      subset of links and ask them to do something. This involves using
+      <b>agentsets</b>. The next section explains them in detail.
     <p>
       When you ask a set of agents to run more than one command, each agent
       must finish before the next agent starts. One agent runs all of the
@@ -630,8 +699,7 @@ ask turtles [ fd 1 ]
 ask turtles [ set color red ]
 </pre>
     <p>
-      first all of the turtles move. After they have all moved, they all
-      turn red.
+      first all the turtles move, then they all turn red.
     <p>
       (Another form of the <a href="dictionary.html#ask"><tt>ask</tt></a>
       command, with a different ordering rule, is also available. See
@@ -877,6 +945,7 @@ to setup
       set cheese random 10 ]
   create-frogs 50
     [ set color green ]
+  reset-ticks
 end
 </pre>
     <blockquote>
@@ -1405,41 +1474,26 @@ foreach sort turtles [
       <a name="list-performance" id="list-performance"></a><b>Performance
       of lists</b>
     <p>
-      If your model makes especially heavy use of lists, especially long
-      lists, you may need to know the speed of the various NetLogo list
-      operations, to help you write code that runs fast.
+      The data structure underlying NetLogo's lists now is the
+      immutable Vector class from the Scala collections library. It
+      uses 32-wide hash array mapped tries, as implemented by Tiark Rompf,
+      based in part on work by Phil Bagwell and Rich Hickey.
+   <p>
+      Nearly all local operations on this data structure run in near-constant time.
+      That includes <tt>fput</tt>, <tt>lput</tt>, <tt>butfirst</tt>, <tt>butlast</tt>,
+      <tt>length</tt>, <tt>item</tt>, and <tt>replace-item</tt>.
+      Technically, it's logarithmic time, but the base of the logarithm is
+      high because the tries have large nodes and a high branching factor
+      so they can never get very deep.  This
+      means that changes can be made in at most a few steps.  The
+      tries are immutable, but new tries share structure heavily with
+      old ones, so the whole trie doesn't need to be copied to make a
+      change.
     <p>
-      NetLogo lists are &quot;singly linked&quot; lists. This is a
-      technical term from computer science that means that when NetLogo
-      needs to find an item in a list, it must start at the beginning of
-      the list and go from item to item until it finds the one it wants.
-      For example, to find the 100th item, NetLogo must step through the
-      previous 99 items, one at a time.
-    <p>
-      It also means that certain operations are especially efficient,
-      namely operations at the front of the list. The <a href=
-      "dictionary.html#first"><tt>first</tt></a>, <a href=
-      "dictionary.html#but-first"><tt>but-first</tt></a>, and <a href=
-      "dictionary.html#fput"><tt>fput</tt></a> reporters are all very fast;
-      they take the same amount of time to run, no matter how long the list
-      is. So if you're building up a list by adding items to it one at
-      a time, it's much faster to use <a href=
-      "dictionary.html#fput"><tt>fput</tt></a> than <a href=
-      "dictionary.html#lput"><tt>lput</tt></a>. (If that causes your list
-      to end up backwards from how you wanted it, you can always use
-      <a href="dictionary.html#reverse"><tt>reverse</tt></a> to reverse the
-      list once you're done building it.)
-    <p>
-      The <a href="dictionary.html#length"><tt>length</tt></a> reporter is
-      also fast; NetLogo always keeps track of how long every list is, so
-      it never needs to actually measure.
-    <p>
-      Examples of reporters which are slower on longer lists include
-      <a href="dictionary.html#item"><tt>item</tt></a>, <a href=
-      "dictionary.html#lput"><tt>lput</tt></a>, <a href=
-      "dictionary.html#but-last"><tt>but-last</tt></a>, <a href=
-      "dictionary.html#last"><tt>last</tt></a>, and <a href=
-      "dictionary.html#one-of"><tt>one-of</tt></a>.
+      One exception to the fast-performance rule is that concatenating
+      two lists with <tt>sentence</tt> requires traversing and copying
+      the whole second list.  (This may be fixed in a future version
+      of the data structure.)
     <h2>
       <a name="math" id="math">Math</a>
     </h2>
@@ -1577,7 +1631,7 @@ show cos 90
       NetLogo monitors round the numbers they display to a configurable
       number of decimal places, too.
     <h2>
-      <a name="random" id="random">Random Numbers</a>
+      <a name="random" id="random">Random numbers</a>
     </h2>
     <p>
       The random numbers used by NetLogo are what is called
@@ -1718,7 +1772,7 @@ ask turtles [ set shape one-of shapes ]
         Example
       </blockquote>
     <h2>
-      <a name="link-shapes" id="link-shapes">Link Shapes</a>
+      <a name="link-shapes" id="link-shapes">Link shapes</a>
     </h2>
     <p>
       Link Shapes are similar to turtle shapes, only you use the Link Shape
@@ -1737,75 +1791,7 @@ ask turtles [ set shape one-of shapes ]
       <a href="dictionary.html#thickness"><tt>thickness</tt></a> link
       variable.
     <h2>
-      <a name="ticks" id="ticks">Tick Counter</a>
-    </h2>
-    <p>
-      In many NetLogo models, time passes in discrete steps, called
-      &quot;ticks&quot;. NetLogo includes a built-in tick counter so you
-      can keep track of how many ticks have passed.
-    <p>
-      The current value of the tick counter is shown above the view. (You
-      can use the Settings button to hide the tick counter, or change the
-      word &quot;ticks&quot; to something else.)
-    <p>
-      In code, to retrieve the current value of the tick counter, use the
-      <a href="dictionary.html#ticks"><tt>ticks</tt></a> reporter. The
-      <a href="dictionary.html#tick"><tt>tick</tt></a> command advances the
-      tick counter by 1. The <a href=
-      "dictionary.html#clear-all"><tt>clear-all</tt></a> command resets the
-      tick counter to 0. If you want to reset the counter to 0 without
-      clearing everything, use the <a href=
-      "dictionary.html#reset-ticks"><tt>reset-ticks</tt></a> command.
-    <p>
-      If your model is set to use tick-based updates, then the <a href=
-      "dictionary.html#tick"><tt>tick</tt></a> command will usually also
-      update the view. See the next section, <a href="#updates">View
-      Updates</a>.
-    <h3>
-      When to tick
-    </h3>
-    <p>
-      We suggest using the <a href="dictionary.html#tick"><tt>tick</tt></a>
-      command after your agents have completed all their movements and
-      actions, but before you plot or calculate statistics. That way, if
-      the plotting or calculating code refers to the tick counter, it will
-      get the new value, reflecting that the tick is now complete. Example:
-    <pre>
-to go
-  ask turtles [ move ]
-  ask patches [ grow ]
-  tick
-  do-plots
-end
-to do-plots
-  plotxy ticks count turtles
-end
-</pre>
-    <p>
-      By putting <a href="dictionary.html#tick"><tt>tick</tt></a> before
-      <tt>do-plots</tt>, the plotting code gets the right value of the tick
-      counter when it uses the <a href=
-      "dictionary.html#ticks"><tt>ticks</tt></a> reporter.
-    <h3>
-      Fractional ticks
-    </h3>
-    <p>
-      In most models, the tick counter starts at 0 and goes up 1 at a time,
-      from integer to integer. But it's also possible for the tick
-      counter to take on in-between floating point values.
-    <p>
-      To advance the tick counter by a fractional amount, use the <a href=
-      "dictionary.html#tick-advance"><tt>tick-advance</tt></a> command.
-      This command takes a numeric input specifying how far to advance the
-      tick counter.
-    <p>
-      A typical use of fractional ticks is to approximate continuous or
-      curved motion. See, for example, the GasLab models in the Models
-      Library (under Chemistry &amp; Physics). These models calculate the
-      exact time at which a future event is to occur, then advance the tick
-      counter to exactly that time.
-    <h2>
-      <a name="updates" id="updates">View Updates</a>
+      <a name="updates" id="updates">View updates</a>
     </h2>
     <p>
       The &quot;view&quot; in NetLogo lets you see the agents in your model
@@ -2687,11 +2673,23 @@ movie-close
       <a name="topology" id="topology">Topology</a>
     </h2>
     <p>
+      The way the world of patches is connected can change. By default the
+      world is a torus which means it isn't bounded, but
+      &quot;wraps&quot; -- so when a turtle moves past the edge of the
+      world, it disappears and reappears on the opposite edge and every
+      patch has the same number of &quot;neighbor&quot; patches.  If
+      you're a patch on the edge of the world, some of your
+      &quot;neighbors&quot; are on the opposite edge.
+   <p>However, you can
+      change the wrap settings with the Settings button. If wrapping is not
+      allowed in a given direction then in that direction (x or y) the
+      world is bounded. Patches along that boundary will have fewer than 8
+      neighbors and turtles will not move beyond the edge of the world.
+    <p>
       The topology of the NetLogo world has four potential values, torus,
       box, vertical cylinder, or horizontal cylinder. The topology is
       controlled by enabling or disabling wrapping in the x or y
-      directions. The default world is a torus, as were all NetLogo worlds
-      before NetLogo 3.1.
+      directions. The default world is a torus.
     <p>
       A torus wraps in both directions, meaning that the top and bottom
       edges of the world are connected and the left and right edges are

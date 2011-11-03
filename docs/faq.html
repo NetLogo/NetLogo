@@ -1108,8 +1108,8 @@ if is-turtle? turtle 0 [ ... ]
       Lists in earlier versions of NetLogo (4.1 and 4.0) were simple
       singly-linked lists and therefore these operations took linear time.
       The data structure underlying NetLogo's lists now is the
-      immutable Vector class from the Scala 2.8 collections library, which
-      uses 32-wide hash array mapped tries, as developed by Tiark Rompf,
+      immutable Vector class from the Scala collections library. It
+      uses 32-wide hash array mapped tries, as implemented by Tiark Rompf,
       based in part on work by Phil Bagwell and Rich Hickey.
     <p>
       If you are certain you want to use raw, mutable JVM arrays in your
