@@ -5,8 +5,9 @@
 
 make bin/sbt-launch.jar
 bin/sbt update
-make repos
-make clean clean-extensions
+make clean
+rm -rf models extensions
+
 make
 
 rm -rf tmp/nightly
