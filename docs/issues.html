@@ -24,13 +24,14 @@
     <ul>
       <li>
         <tt>export-world</tt> and <tt>import-world</tt> don't save and
-        restore the effect of <tt>set-default-shape</tt>.
+        restore the effect of <tt>set-default-shape</tt> (<a href=
+        "https://github.com/NetLogo/NetLogo/issues/11">issue #11</a>)
       <li>
         <tt>import-world</tt> doesn't work on arrays or tables that
-        contain other arrays or tables.
+        contain other arrays or tables. (<a href="https://github.com/NetLogo/NetLogo/issues/12">issue #12</a>)
       <li>Strings run with the <tt>run</tt> and <tt>runresult</tt>
-      primitives are sometimes not able to read or set variables
-      created with <tt>let</tt>.
+      primitives are sometimes not able to read or set variables created
+      with <tt>let</tt>.
       <li>Not all mathematical operations are checked, so it's possible
       to get &quot;Infinity&quot; or &quot;NaN&quot; (Not a Number) as an
       answer without a runtime error being signaled.
@@ -111,6 +112,11 @@
       This has been known to happen on Fedora Core 3, after upgrading
       packages. Restarting the X Font Server (xfs) has resolved the problem
       in all reported cases.
+      <li>Under window managers which do not reparent root windows, such as
+      DWM, there will be various menu and window drawing issues. Windows
+      may appear blank, and menus may pop-up and disappear. To resolve
+      these issue, please refer to the solutions suggested at <a href=
+      "http://awesome.naquadah.org/wiki/Problems_with_Java">http://awesome.naquadah.org/wiki/Problems_with_Java</a>.
       </ul>
     <h2>
       HubNet issues

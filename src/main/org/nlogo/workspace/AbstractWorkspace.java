@@ -740,6 +740,10 @@ public abstract strictfp class AbstractWorkspace
     return compiler().isValidIdentifier(s, world.program().is3D());
   }
 
+  public boolean isReporter(String s) {
+    return compiler().isReporter(s, getProcedures(), world.program().is3D());
+  }
+
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
       (s, getExtensionManager(), world.program().is3D());

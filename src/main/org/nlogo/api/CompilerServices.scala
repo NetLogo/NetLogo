@@ -13,6 +13,7 @@ trait CompilerServices {
   def checkReporterSyntax(source: String)
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String)
+  def isReporter(s: String): Boolean
   def isValidIdentifier(s: String): Boolean
   def tokenizeForColorization(source: String): Array[Token]
   def getTokenAtPosition(source: String, position: Int): Token

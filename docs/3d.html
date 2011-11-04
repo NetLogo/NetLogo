@@ -22,15 +22,13 @@ p.c1 {font-style: italic}
       <b>Notice:</b> NetLogo's support for 3D is experimental. Models
       created with this release may not be compatible with future versions.
       While we've made efforts to ensure a quality product, NetLogo 3D
-      has not been subject to the same level of quality control as
-      the main application.
+      has not been subject to the same level of quality control as the main
+      application.
     <ul>
       <li>
         <a href="#introduction">Introduction</a>
       <li>
         <a href="#tutorial">Tutorial</a>
-      <li>
-        <a href="#faq">FAQ</a>
       <li>
         <a href="#dictionary">Dictionary</a>
       </ul>
@@ -46,21 +44,21 @@ p.c1 {font-style: italic}
       Examples in the 3D section of the Models Library.
     <blockquote>
       <p>
-        <b>Code Example:</b> Turtle Perspective Example 3D helps you
-         learn about the different perspectives. 
+        <b>Code Example:</b> Turtle Perspective Example 3D helps you learn
+        about the different perspectives.
       <p>
         <b>Code Example:</b> Turtle and Observer Motion Example 3D helps
-      you understand how turtles and the observer move in 3D. You can also
-      step through this model with the tutorial below.
+        you understand how turtles and the observer move in 3D. You can
+        also step through this model with the tutorial below.
       </blockquote>
     <h4>
       3D Worlds
     </h4>
     <p class="bookquote">
-      <i>An unspeakable horror seized me. There was a darkness; then a dizzy,
-      sickening sensation of sight that was not like seeing; I saw a Line
-      that was no Line; Space that was not Space: I was myself, and not
-      myself. When I could find voice, I shrieked loud in agony,
+      <i>An unspeakable horror seized me. There was a darkness; then a
+      dizzy, sickening sensation of sight that was not like seeing; I saw a
+      Line that was no Line; Space that was not Space: I was myself, and
+      not myself. When I could find voice, I shrieked loud in agony,
       &quot;Either this is madness or it is Hell.&quot;</i>
     <p class="bookquote">
       <i>&quot;It is neither,&quot; calmly replied the voice of the Sphere,
@@ -69,9 +67,9 @@ p.c1 {font-style: italic}
       <br>
       -- Edwin A. Abbott, <i>Flatland: A romance in many dimensions</i>
     <p>
-      NetLogo 3D's world has width, height and depth. Patches are cubes.
-      In addition to
-      <tt><a href="dictionary.html#pxcor">pxcor</a></tt> and <tt><a href=
+      NetLogo 3D's world has width, height and depth. Patches are
+      cubes. In addition to <tt><a href=
+      "dictionary.html#pxcor">pxcor</a></tt> and <tt><a href=
       "dictionary.html#pycor">pycor</a></tt>, patches have <tt><a href=
       "3dprims.html#pzcor">pzcor</a></tt>.
     <p>
@@ -127,13 +125,16 @@ p.c1 {font-style: italic}
       <a name="custom-shapes" id="custom-shapes">Custom Shapes</a>
     </h4>
     <p>
-      You can load your own shapes using the <tt>load-shapes-3d</tt>
-      primitive, which takes a text file as an input. Once you have loaded
-      the shapes into the model you can use them just like the built-in
-      shapes.
+      NetLogo automatically interprets 2D shapes so they are extruded, like
+      a cookie cutter shape in the 3D view. You can also use the primitive
+      <a href="3dprims.html#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
+      load shapes described in an external file in a custom format
+      described here. Currently we do not import shapes in any standard
+      formats.
     <p>
-      Note that a 2D shape of the same name must exist as well. You can
-      create the 2D shape in the Turtle Shapes Editor.
+      For each shape in a custom 3D shape file, a 2D shape of the same name
+      must exist as well. You can create the 2D shape in the Turtle Shapes
+      Editor.
     <p>
       The input file may contain any number of shapes with any number of
       rectangular or triangular surfaces. The format of the input file
@@ -213,13 +214,13 @@ end-shape
       of the screen. In the default position <tt>max-pzcor</tt> is the face
       of the cube nearest to you and <tt>min-pzcor</tt> is the face
       farthest from you. As always <tt>min-pxcor</tt> is on the left,
-      <tt>max-pxcor</tt> on the right, <tt>min-pycor</tt> on the bottom, and
-      <tt>max-pycor</tt> on the top.
-    <p>You'll also notice on the left
-      side of the Model Settings that there are options for wrapping in all
-      three directions, however, they are all checked and grayed out.
-      Topologies are not yet supported in NetLogo 3D, so the world
-      always wraps in all dimensions.
+      <tt>max-pxcor</tt> on the right, <tt>min-pycor</tt> on the bottom,
+      and <tt>max-pycor</tt> on the top.
+    <p>
+      You'll also notice on the left side of the Model Settings that
+      there are options for wrapping in all three directions, however, they
+      are all checked and grayed out. Topologies are not yet supported in
+      NetLogo 3D, so the world always wraps in all dimensions.
     <blockquote>
       <ul>
         <li>Move to the Command Center and type <tt>print count
@@ -250,9 +251,9 @@ end-shape
     </h4>
     <blockquote>
       <ul>
-        <li>Open the Models Library in the File menu.  (If you are on a Mac
-        and you don't have a File menu, click on the main NetLogo window first and
-        it should reappear.)
+        <li>Open the Models Library in the File menu. (If you are on a Mac
+        and you don't have a File menu, click on the main NetLogo
+        window first and it should reappear.)
         <li>Open Turtle and Observer Motion Example 3D in 3D/Code Examples
         </ul>
     </blockquote>
@@ -268,8 +269,8 @@ end-shape
     </blockquote>
     <p>
       Heading, pitch, and roll are turtle variables that represent the
-      orientation of the turtle. Heading is absolute in relation to the
-      x/y plane; it is the rotation of the turtle around the z-axis.
+      orientation of the turtle. Heading is absolute in relation to the x/y
+      plane; it is the rotation of the turtle around the z-axis.
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/heading.gif">
     <p>
@@ -283,9 +284,9 @@ end-shape
     <p class="screenshot">
       <img alt="screen shot" src="images/threed/roll.gif">
     <p>
-      When turtles are created with <tt>create-turtles</tt>
-      or <tt>create-ordered-turtles</tt>, their initial headings 
-      vary but their initial pitch and roll are always zero.
+      When turtles are created with <tt>create-turtles</tt> or
+      <tt>create-ordered-turtles</tt>, their initial headings vary but
+      their initial pitch and roll are always zero.
     <p>
       Take a look at the &quot;Turtle Movement&quot; buttons.
     <blockquote>
@@ -314,24 +315,23 @@ end-shape
     </blockquote>
     <p>
       You probably noticed that often more than one of the turtle variables
-      may change for a single turn.  For this reason we suggest that you use the
-      turtle commands rather than setting the orientation variables
+      may change for a single turn. For this reason we suggest that you use
+      the turtle commands rather than setting the orientation variables
       directly.
     <h4>
       Step 3: Observer Movement
     </h4>
     <p>
       At the bottom of the interface you will see Orbit, Zoom, and Move
-      buttons. If you have ever used
-      the 3D view in NetLogo 2D or if you have been using the mouse
-      controls in the 3D view through this tutorial you have been moving
-      the observer. Changing the point of view in the 3D view is actually moving
-      and changing the orientation of the observer. The observer has x, y
-      and z coordinates, just like a turtle or patch, while turtles and
-      patches are constrained to be inside the world the observer can be
-      anywhere. Like a turtle the observer has a heading, pitch and roll,
-      these variables control where the observer is looking, that is, what
-      you see in the view.
+      buttons. If you have ever used the 3D view in NetLogo 2D or if you
+      have been using the mouse controls in the 3D view through this
+      tutorial you have been moving the observer. Changing the point of
+      view in the 3D view is actually moving and changing the orientation
+      of the observer. The observer has x, y and z coordinates, just like a
+      turtle or patch, while turtles and patches are constrained to be
+      inside the world the observer can be anywhere. Like a turtle the
+      observer has a heading, pitch and roll, these variables control where
+      the observer is looking, that is, what you see in the view.
     <blockquote>
       <ul>
         <li>Move to the 3D view, and make sure &quot;Orbit&quot; is
@@ -364,15 +364,14 @@ end-shape
       can take a look at the observer control buttons in the lower left
       portion of the interface.
     <p>
-      You may already be
-      familiar with the first three buttons in the observer group from
-      your experience with NetLogo 2D. Watch,
-      follow, and ride, are special modes that automatically update the
-      position and orientation of the observer. When in follow or ride
-      mode, the observer position and orientation are the same as the
-      turtle's. Note that follow and ride are functionally exactly the
-      same, the difference is only visual in the 3D view. When in watch
-      mode the observer does not move but updates to face the target agent.
+      You may already be familiar with the first three buttons in the
+      observer group from your experience with NetLogo 2D. Watch, follow,
+      and ride, are special modes that automatically update the position
+      and orientation of the observer. When in follow or ride mode, the
+      observer position and orientation are the same as the turtle's.
+      Note that follow and ride are functionally exactly the same, the
+      difference is only visual in the 3D view. When in watch mode the
+      observer does not move but updates to face the target agent.
     <blockquote>
       <ul>
         <li>Press the &quot;setup&quot; button again so you are back to the
@@ -418,45 +417,6 @@ end-shape
       <tt>facexyz</tt> or <tt>face</tt>, the center of the sphere changes
       but the observer does not move. The radius of the sphere may change,
       as well as the orientation of the observer.
-    <h2>
-      <a name="faq" id="faq">FAQ (Frequently Asked Questions)</a>
-    </h2>
-    <ul class="smaller">
-      <li>
-        <a href="#applet"><b>Can I make a 3D applet?</b></a>
-      <li>
-        <a href="#stereo"><b>Does NetLogo 3D work with my stereoscopic
-        device?</b></a>
-      <li>
-        <a href="#shapes"><b>Can I make custom 3D shapes?</b></a>
-      </ul>
-    <h4>
-      <a name="applet" id="applet"></a>Can I make a 3D applet?
-    </h4>
-    <p>
-      Not at this time. We are looking into alternatives to make this
-      possible, however, it may be quite some time before it is completed.
-    <h4>
-      <a name="stereo" id="stereo"></a>Does NetLogo work with my
-      stereoscopic device?
-    </h4>
-    <p>
-      NetLogo supports fullscreen exclusive mode. If that is all your
-      device needs then, possibly yes. However, it can be tricky to get it
-      working. We don't have any such devices so it is difficult for us
-      to make the process easier. If your device needs something else, for
-      example, quadbuffers enabled, the answer is probably no.
-    <h4>
-      <a name="shapes" id="shapes"></a>Can I make my own 3D shapes?
-    </h4>
-    <p>
-      NetLogo automatically interprets 2D shapes so they are extruded, like
-      a cookie cutter shape in the 3D view. You can also use the primitive
-      <a href="3dprims.html#load-shapes-3d"><tt>load-shapes-3d</tt></a> to
-      load shapes described in an external file in a custom format
-      described in the <a href="3d.html#custom-shapes">Custom Shapes</a>
-      section. Currently we do not import shapes in any standard formats,
-      though we may allow this in the future.
     <h2>
       <a name="dictionary" id="dictionary">Dictionary</a>
     </h2>

@@ -85,9 +85,9 @@ extensions [sound speech]
       Models saved as applets (using &quot;Save as Applet&quot; on
       NetLogo's File menu) can make use of extensions. Copy the entire
       extension directory into the directory that contains the model file.
-      Applets can use almost any extension, even those that require
-      external jars. However, applets still cannot use extensions that
-      require native libraries; this includes the GoGo and QuickTime
+      Applets can use many extensions, even those that require
+      external jars. They cannot use extensions that
+      require native libraries, though, such as the GoGo and QuickTime
       extensions.
     <h2>
       <a name="writing" id="writing">Writing Extensions</a>
@@ -98,8 +98,8 @@ extensions [sound speech]
       related tools and practices.
     <p>
       Our API's are also usable from other languages for the Java
-      Virtual Machine, such as Scala. Following the Java information is a
-      section on how to write an extension in Scala.
+      Virtual Machine, such as Scala. Following the Java
+      information is a section on how to write an extension in Scala.
     <h3>
       Summary
     </h3>
@@ -155,9 +155,14 @@ extensions [sound speech]
       Examples
     </h3>
     <p>
-      Several sample extensions with full Java (or Scala) source code are
-      included with NetLogo. Some others are available for download
+      Several sample extensions are included with NetLogo.
+      The full Java (or Scala) source code for all of them is hosted
+      on line <a href="https://github.com/NetLogo/">on GitHub</a>.
+      Most are in the public domain; some are copyrighted, but under
+      an open-source license.
+    <p>Additional extensions developed outside the CCL are available for download
       <a href="http://ccl.northwestern.edu/netlogo/resources.shtml">here</a>.
+      Many of them include source code too.
     <h3>
       Tutorial
     </h3>
@@ -220,7 +225,7 @@ public class IntegerList extends DefaultReporter {
   // take one number as input, report a list
   public Syntax getSyntax() {
     return Syntax.reporterSyntax(
-        new int[] {Syntax.TYPE_NUMBER}, Syntax.TYPE_LIST});
+        new int[] {Syntax.Number.Type()}, Syntax.ListType());
   }
   public Object report(Argument args[], Context context)
       throws ExtensionException {
@@ -343,9 +348,11 @@ NetLogo-Extension-API-Version: 5.0
       <b>Important:</b> You must add <tt>NetLogo.jar</tt> (from the NetLogo
       distribution) to your classpath when compiling, and the lib directory
       must be accessible in the same location as <tt>NetLogo.jar</tt>.
+    <p>Each of our sample extensions on GitHub includes a command-line
+       build in a Makefile, invoked with the <tt>make</tt> command.
     <p>
       Here's an example of how compiling your extension might look from
-      the command line:
+      the command line if you aren't using our Makefile:
     <pre>
 $ mkdir -p classes     # create the classes subfolder if it does not exist
 $ javac -classpath NetLogo.jar -d classes src/IntegerList.java src/SampleExtension.java
@@ -421,15 +428,15 @@ class SampleScalaExtension extends DefaultClassManager {
 }
 
 class IntegerList extends DefaultReporter {
-  override def getSyntax = reporterSyntax(Array(TYPE_NUMBER), TYPE_LIST)
-
+  override def getSyntax = reporterSyntax(Array(NumberType), ListType)
   def report(args: Array[Argument], context: Context): AnyRef = {
-    val n = try {args(0).getIntValue}
+    val n = try args(0).getIntValue
     catch {
-      case e: LogoException =&gt; throw new ExtensionException(e.getMessage)
+      case e: LogoException =&gt;
+        throw new ExtensionException(e.getMessage)
     }
-    if (n &lt; 0) throw new ExtensionException(&quot;input must be positive&quot;)
-
+    if (n &lt; 0)
+      throw new ExtensionException(&quot;input must be positive&quot;)
     (0 until n).toLogoList
   }
 }
@@ -452,85 +459,85 @@ class IntegerList extends DefaultReporter {
       <code>toLogoObject</code> are:
     <table border="1">
       <tr>
-        <td>
+        <th>
           Input Type
-        <td>
+        <th>
           Output Type
         <tr>
         <td>
-          String
+          <code>String</code>
         <td>
-          String
+          <code>String</code>
         <tr>
         <td>
-          scala.Boolean, java.lang.Boolean
+          <code>scala.Boolean, java.lang.Boolean</code>
         <td>
-          java.lang.Boolean
+          <code>java.lang.Boolean</code>
         <tr>
         <td>
-          scala.Char, java.lang.Character
+          <code>scala.Char, java.lang.Character</code>
         <td>
-          String
+          <code>String</code>
         <tr>
         <td>
-          scala.Byte, java.lang.Byte
+          <code>scala.Byte, java.lang.Byte</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          scala.Short, java.lang.Short
+          <code>scala.Short, java.lang.Short</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          scala.Int, java.lang.Integer
+          <code>scala.Int, java.lang.Integer</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          scala.Float, java.lang.Float
+          <code>scala.Float, java.lang.Float</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          scala.Double, java.lang.Double
+          <code>scala.Double, java.lang.Double</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          scala.Long, java.lang.Long
+          <code>scala.Long, java.lang.Long</code>
         <td>
-          java.lang.Double
+          <code>java.lang.Double</code>
         <tr>
         <td>
-          org.nlogo.api.Agent
+          <code>org.nlogo.api.Agent</code>
         <td>
-          org.nlogo.api.Agent
+          <code>org.nlogo.api.Agent</code>
         <tr>
         <td>
-          org.nlogo.api.AgentSet
+          <code>org.nlogo.api.AgentSet</code>
         <td>
-          org.nlogo.api.AgentSet
+          <code>org.nlogo.api.AgentSet</code>
         <tr>
         <td>
-          org.nlogo.api.Nobody
+          <code>org.nlogo.api.Nobody</code>
         <td>
-          org.nlogo.api.Nobody
+          <code>org.nlogo.api.Nobody</code>
         <tr>
         <td>
-          org.nlogo.api.ExtensionObject
+          <code>org.nlogo.api.ExtensionObject</code>
         <td>
-          org.nlogo.api.ExtensionObject
+          <code>org.nlogo.api.ExtensionObject</code>
         <tr>
         <td>
-          scala.Seq
+          <code>scala.Seq</code>
         <td>
-          org.nlogo.api.LogoList
+          <code>org.nlogo.api.LogoList</code>
         <tr>
         <td>
-          org.nlogo.api.LogoList
+          <code>org.nlogo.api.LogoList</code>
         <td>
-          org.nlogo.api.LogoList
+          <code>org.nlogo.api.LogoList</code>
         <tr>
         <td>
           (anything else)
@@ -604,11 +611,8 @@ $ jar tf scala-library.jar
       Instantiation
     </h4>
     <p>
-      Your class manager is instantiated at the time a model using the
-      extension is loaded.
-    <p>
-      Command and reporter objects are instantiated whenever NetLogo code
-      is compiled that uses your commands and reporters.
+      Your class manager is instantiated in a fresh JVM classloader at
+      the time a model using the extension is loaded.
     <h4>
       Classpath
     </h4>
@@ -678,6 +682,23 @@ $ jar tf scala-library.jar
       from a Java installation bundle for Linux.) This ensures that your
       code doesn't make any Java-6-or-later-only Java API calls.
       </ul>
+    <h4>
+      Applet support
+    </h4>
+      <p>If you want your extension to work in applets, compile it using
+       <tt>NetLogoLite.jar</tt> instead of <tt>NetLogo.jar</tt>, to be sure
+       you are only referencing classes and methods that are available in the
+       applet jar.
+     <p>To keep the size of <tt>NetLogoLite.jar</tt> down, we use ProGuard to 
+        aggressively strip out unreferenced classes and methods.  If ProGuard
+        is removing something that your extension needs, let us know.
+    <h4>
+      Documenting your extension
+    </h4>
+    <p>
+      Note that there is no way for the modeler to get a list of commands
+      and reporters provided by an extension, so it's important that
+      you provide adequate documentation.
     <h3>
       Conclusion
     </h3>
@@ -685,10 +706,9 @@ $ jar tf scala-library.jar
       Don't forget to consult the <a href="scaladoc/index.html">NetLogo
       API Specification</a> for full details on these classes, interfaces,
       and methods.
-    <p>
-      Note that there is no way for the modeler to get a list of commands
-      and reporters provided by an extension, so it's important that
-      you provide adequate documentation.
+    <p>You may also find it useful to consult the NetLogo source code,
+       which is hosted <a href=
+      "https://github.com/NetLogo/NetLogo">on GitHub</a>.
     <p>
       The extensions facility is not yet complete. The API doesn't
       include everything you might expect to be present. Some facilities

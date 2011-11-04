@@ -140,6 +140,23 @@ object Compiler extends CompilerInterface {
   // used by VariableNameEditor
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
 
+  // used by CommandLine
+  def isReporter(s: String, procedures: ProceduresMap, is3D: Boolean) =
+    tokenizer(is3D)
+      .tokenizeRobustly(s)
+      .dropWhile(_.tyype == TokenType.OPEN_PAREN)
+      .headOption
+      .exists(tok =>
+        procedures.get(tok.name.toUpperCase) match {
+          case null => reporterTokenTypes.contains(tok.tyype)
+          case proc => proc.tyype == Procedure.Type.REPORTER
+        })
+
+  private val reporterTokenTypes: Set[TokenType] = {
+    import TokenType._
+    Set(OPEN_BRACKET, CONSTANT, IDENT, REPORTER, VARIABLE)
+  }
+
   // used by the indenter. we always use the 2D tokenizer since it doesn't matter in this context
   def getTokenAtPosition(source: String, position: Int): Token =
     tokenizer(false).getTokenAtPosition(source, position)

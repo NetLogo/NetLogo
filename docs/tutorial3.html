@@ -13,8 +13,7 @@
     </div>
     <p>
       This tutorial leads you through the process of building a complete
-      model, built up stage by stage, with every step explained along the
-      way.
+      model, built up in stages, with every step explained along the way.
     <h2>
       Agents and procedures
     </h2>
@@ -24,12 +23,11 @@
       you're ready to learn about the real heart of a NetLogo model:
       the Code tab.
     <p>
-      You've already used types of agents you can give commands to in
-      NetLogo: patches, turtles, links, and the observer. Patches are
-      stationary and arranged in a grid. Turtles move over that grid. Links
-      connect two turtles. The observer oversees everything that's
-      going on and does whatever the turtles, patches and links can't
-      do for themselves.
+      You've seen that agents in NetLogo are divided into patches,
+      turtles, links, and the observer. Patches are stationary and arranged
+      in a grid. Turtles move over that grid. Links connect two turtles.
+      The observer oversees everything that's going on and does
+      whatever the turtles, patches and links can't do for themselves.
     <p>
       All four types of agents can run NetLogo commands. All four can also
       run &quot;procedures&quot;. A procedure combines a series of NetLogo
@@ -38,7 +36,7 @@
       You will now learn to write procedures that make turtles move, eat,
       reproduce, and die. You will also learn how to make monitors,
       sliders, and plots. The model we'll build is a simple ecosystem
-      model not unlike parts of Wolf Sheep Predation from Tutorial #1.
+      model not unlike Wolf Sheep Predation from Tutorial #1.
     <h2>
       Making the setup button
     </h2>
@@ -62,11 +60,11 @@
     <p>
       Now you have a setup button. Pressing the button runs a procedure
       called &quot;setup&quot;. A procedure is a sequence of NetLogo
-      commands that we assign a new name. We haven't defined that
-      procedure yet (we will soon). Because the button refers to a
-      procedure that doesn't exist yet, the button turns red:
+      commands that we assign a new name. We'll define that procedure
+      soon, but we haven't yet. The button refers to a procedure that
+      doesn't exist, so the button turns red:
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/errors.gif">
+      <img alt="screen shot" src="images/tutorial3/errors.png">
     <p>
       If you want to see the actual error message, click the button.
     <p>
@@ -79,8 +77,8 @@
           <pre>
 to setup
   clear-all
-  create-turtles 100
-  ask turtles [ setxy random-xcor random-ycor ]
+  create-turtles 100 [ setxy random-xcor random-ycor ]
+  reset-ticks
 end
 </pre>
         </ul>
@@ -88,14 +86,16 @@ end
     <p>
       When you're done, the Code tab looks like this:
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/setupcode.gif">
+      <img alt="screen shot" src="images/tutorial3/setupcode.png">
     <p>
-      Note that the lines are indented different amounts. Most people find
-      it helpful to indent their code like this, but it is not mandatory.
-      It makes the code easier to read and change. Your procedure began
-      with the word <a href="dictionary.html#to"><tt>to</tt></a> and ended
-      with the word <a href="dictionary.html#end"><tt>end</tt></a>. Every
-      new procedure you create will begin and end with these two words.
+      Note that some lines are indented. Most people find it helpful to
+      indent their code. It isn't mandatory, but it makes the code
+      easier to read and change.
+    <p>
+      Your procedure begins with <a href=
+      "dictionary.html#to"><tt>to</tt></a> and ends with <a href=
+      "dictionary.html#end"><tt>end</tt></a>. Every procedure begins and
+      ends with these words.
     <p>
       Let's look at what you typed in and see what each line of your
       procedure does:
@@ -111,14 +111,8 @@ end
       <li>
         <tt>create-turtles 100</tt> creates 100 turtles. They start out
         standing at the origin, that is, the center of patch 0,0.
-      <li>
-        <tt>ask turtles [ ... ]</tt> tells each turtle to run,
-        independently, the commands inside the brackets. (Every command in
-        NetLogo is run by some agent. <a href=
-        "dictionary.html#ask"><tt>ask</tt></a> is a command too. Here, the
-        observer is running the <a href=
-        "dictionary.html#ask"><tt>ask</tt></a> command itself, in turn
-        causing the turtles to run commands.)
+      <li>After <tt>create-turtles</tt> we can put commands for the new
+      turtles to run, enclosed by square brackets.
       <li>
         <tt>setxy random-xcor random-ycor</tt> is a command using
         &quot;reporters&quot;. A reporter, as opposed to a command, reports
@@ -131,6 +125,9 @@ end
         "dictionary.html#setxy"><tt>setxy</tt></a> command with those two
         numbers as inputs. That makes the turtle move to the point with
         those coordinates.
+      <li>
+        <a href="dictionary.html#reset-ticks"><tt>reset-ticks</tt></a>
+        starts the tick counter, now that setup is otherwise complete.
       <li>
         <a href="dictionary.html#end"><tt>end</tt></a> completes the
         definition of the &quot;setup&quot; procedure.
@@ -158,6 +155,24 @@ end
       back over the directions to see if there is any step you might have
       missed.
     <h2>
+      Switching to tick-based view updates
+    </h2>
+    <p>
+      Now that we're using the tick counter (with
+      <tt>reset-ticks</tt>), we should tell NetLogo that it only needs to
+      update the view once per tick, instead of continuously updating it.
+    <blockquote>
+      <ul>
+        <li>Find the view updates menu. It's above the view and by
+        default says &quot;continuous&quot;.
+        <li>Choose &quot;on ticks&quot; instead.
+        </ul>
+    </blockquote>
+    <p>
+      This makes your model run faster and ensures a consistent appearance
+      (since the updates will happen at consistent times). See the
+      Programming Guide for a fuller discussion of view updates.
+    <h2>
       Making the go button
     </h2>
     <p>
@@ -166,31 +181,37 @@ end
     <blockquote>
       <ul>
         <li>For Commands enter <tt>go</tt> instead of <tt>setup</tt>.
-        <li>Check the &quot;forever&quot; checkbox in the edit dialog.
+        <li>Check the &quot;Forever&quot; checkbox in the edit dialog.
+        <li>Check the &quot;Disable until ticks start&quot; checkbox too.
         </ul>
     </blockquote>
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/gobutton.gif">
+      <img alt="screen shot" src="images/tutorial3/gobutton.png">
     <p>
-      The &quot;forever&quot; checkbox makes the button stay down once
+      The &quot;Forever&quot; checkbox makes the button stay down once
       pressed, so its commands run over and over again, not just once.
+    <p>
+      The &quot;Disable until ticks start&quot; prevents you from pressing
+      go before setup.
     <blockquote>
       <ul>
         <li>Then add a go procedure to the Code tab:
           <pre>
 to go
   move-turtles
+  tick
 end
 </pre>
         </ul>
     </blockquote>
     <p>
+      <a href="dictionary.html#tick"><tt>tick</tt></a> is a primitive that
+      advances the tick counter by one tick.
+    <p>
       But what is <tt>move-turtles</tt>? Is it a primitive (in other words,
-      built-in to NetLogo), like <a href=
-      "dictionary.html#clear-all"><tt>clear-all</tt></a> is? No, it's
-      another procedure that you're about to add. So far, you have
-      introduced two procedures that you added yourself: <tt>setup</tt> and
-      <tt>go</tt>.
+      built-in to NetLogo)? No, it's another procedure that you're
+      about to add. So far, you have introduced two procedures that you
+      added yourself: <tt>setup</tt> and <tt>go</tt>.
     <blockquote>
       <ul>
         <li>Add the <tt>move-turtles</tt> procedure after the
@@ -198,6 +219,7 @@ end
           <pre>
 to go
   move-turtles
+  tick
 end
 
 to move-turtles
@@ -210,8 +232,8 @@ end
         </ul>
     </blockquote>
     <p>
-      Note there are no spaces around the dash in <tt>move-turtles</tt>. In
-      Tutorial #2 we used <tt>red - 2</tt>, with spaces, in order to
+      Note there are no spaces around the hyphen in <tt>move-turtles</tt>.
+      In Tutorial #2 we used <tt>red - 2</tt>, with spaces, in order to
       subtract two numbers, but here we want <tt>move-turtles</tt>, without
       spaces. The &quot;-&quot; combines &quot;move&quot; and
       &quot;turtles&quot; into a single name.
@@ -265,12 +287,13 @@ end
       <tt>move-turtles</tt>.
     <p>
       Note that when you enter commands in the Command Center, you must
-      choose <tt>turtles&gt;</tt>, <tt>patches&gt;</tt>, or
-      <tt>observer&gt;</tt> in the popup menu on the left, depending on
-      which agents are going to run the commands. It's just like using
-      <tt>ask turtles</tt> or <tt>ask patches</tt>, but saves typing. You
-      can also use the tab key to switch agent types, which you might find
-      more convenient than using the menu.
+      choose <tt>turtles&gt;</tt>, <tt>patches&gt;</tt>,
+      <tt>links&gt;</tt>, or <tt>observer&gt;</tt> in the popup menu on the
+      left, depending on which agents are going to run the commands.
+      It's just like using <tt>ask turtles</tt> or <tt>ask
+      patches</tt>, but saves typing. You can also use the tab key to
+      switch agent types, which you might find more convenient than using
+      the menu.
     <p>
       You might try typing <tt>turtles&gt;</tt> <tt>pen-down</tt> into the
       Command Center and then pressing the go button.
@@ -300,6 +323,7 @@ to setup
   clear-all
   setup-patches
   setup-turtles
+  reset-ticks
 end
 </pre>
         <li>The new definition of <tt>setup</tt> refers to two new
@@ -372,6 +396,7 @@ turtles-own [energy]
 to go
   move-turtles
   eat-grass
+  tick
 end
 </pre>
     <p>
@@ -385,6 +410,7 @@ end
 to go
   move-turtles
   eat-grass
+  tick
 end
 </pre>
         <li>Add a new <tt>eat-grass</tt> procedure:
@@ -393,7 +419,7 @@ to eat-grass
   ask turtles [
     if pcolor = green [
       set pcolor black
-      set energy (energy + 10)
+      set energy energy + 10
     ]
   ]
 end
@@ -411,8 +437,8 @@ end
       the commands inside the brackets (otherwise it skips them). The
       commands make the turtle change the patch color to black and increase
       its own energy by 10. The patch turns black to signify that the grass
-      at that spot has been eaten and the turtle is given more energy, from
-      having just eaten the grass.
+      at that spot has been eaten. And the turtle is given more energy,
+      from having just eaten.
     <p>
       Next, let's make the movement of turtles use up some of the
       turtle's energy.
@@ -447,20 +473,19 @@ end
     </h2>
     <p>
       Next you will create two monitors in the Interface tab with the
-      Toolbar. (You make them just like buttons and sliders, using the Add
-      icon on the Toolbar.) Let's make the first monitor now.
+      toolbar. (You make them just like buttons and sliders, using the Add
+      icon on the toolbar.) Let's make the first monitor now.
     <blockquote>
       <ul>
-        <li>Create a monitor by clicking the Add icon on the Toolbar,
+        <li>Create a monitor by clicking the Add icon on the toolbar,
         selecting Monitor next to it, and clicking on an open spot in the
         Interface.
         </ul>
       <p class="question">
         A dialog box will appear.
       <ul>
-        <li>In the dialog box type: <tt>count turtles</tt> (see image
-        below).
-        <li>Press the OK button to close the dialog box.
+        <li>In the dialog type: <tt>count turtles</tt> (see image below).
+        <li>Press the OK button to close the dialog.
         </ul>
     </blockquote>
     <p class="screenshot">
@@ -474,7 +499,7 @@ end
       Let's make the second monitor now:
     <blockquote>
       <ul>
-        <li>Create a monitor by clicking the Add icon on the Toolbar,
+        <li>Create a monitor by clicking the Add icon on the toolbar,
         selecting Monitor next to it, and clicking on an open spot in the
         Interface.
         </ul>
@@ -516,7 +541,7 @@ end
       Switches and labels
     </h2>
     <p>
-      The turtles aren't just turning the patches black; they're
+      The turtles aren't just turning the patches black. They're
       also gaining and losing energy. As the model runs, try using a turtle
       monitor to watch one turtle's energy go up and down.
     <p>
@@ -525,16 +550,16 @@ end
       the extra visual information on and off.
     <blockquote>
       <ul>
-        <li>Click on the Add icon on the Toolbar (in the Interface tab).
+        <li>Click on the Add icon on the toolbar (in the Interface tab).
         <li>Select Switch from the menu next to Add.
-        <li>Click on an open spot in the Interface.
+        <li>Click on an open spot in the interface.
         </ul>
       <p class="question">
-        A dialog box will appear.
+        A dialog will appear.
       <ul>
-        <li>In the Global variable section of the dialog box type:
-        <tt>show-energy?</tt> Don't forget to include the question mark
-        in the name. (See image below.)
+        <li>Into the Global variable field, type <tt>show-energy?</tt>
+        Don't forget to include the question mark in the name. (See
+        image below.)
         </ul>
     </blockquote>
     <p class="screenshot">
@@ -549,7 +574,7 @@ to eat-grass
   ask turtles [
     if pcolor = green [
       set pcolor black
-      set energy (energy + 10)
+      set energy energy + 10
     ]
   ifelse show-energy?
     [ set label energy ]
@@ -571,12 +596,12 @@ end
       second set of brackets. In this case, it removes the text labels (by
       setting the label of the turtle to be nothing).
     <p>
-      (In NetLogo, a piece of text is called a &quot;string&quot;. A string
-      is a sequence of letters and other characters, written between double
-      quotes. Here we have two double quotes right next to each other, with
-      nothing in between them. That's an empty string. If a
-      turtle's label is an empty string, no text is attached to the
-      turtle.)
+      (In NetLogo, a piece of text is called a &quot;string&quot;, short
+      for string of characters. A string is a sequence of letters or other
+      characters, written between double quotes. Here we have two double
+      quotes right next to each other, with nothing in between them.
+      That's an empty string. If a turtle's label is an empty
+      string, no text is attached to the turtle.)
     <blockquote>
       <ul>
         <li>Test this in the Interface tab, by running the model (using the
@@ -589,13 +614,13 @@ end
       each time it eats grass. You'll also see its energy going down
       whenever it moves.
     <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/show-energy.gif">
+      <img alt="screen shot" src="images/tutorial3/show-energy.png">
     <h2>
       More procedures
     </h2>
     <p>
-      Now our turtles are eating; let's make them reproduce and die,
-      too. Let's also make the grass grow back. We'll add all three
+      Now our turtles are eating. Let's make them reproduce and die,
+      too. And let's make the grass grow back. We'll add all three
       of these of these behaviors now, by making three separate procedures,
       one for each behavior.
     <blockquote>
@@ -609,6 +634,7 @@ to go
   reproduce
   check-death
   regrow-grass
+  tick
 end
 </pre>
         <li>Add the procedures for <tt>reproduce</tt>,
@@ -687,124 +713,72 @@ end
     </h2>
     <p>
       To make plotting work, we'll need to create a plot in the
-      Interface tab, and set some settings in it. Then we'll add one
-      more procedure to the Code tab, which will update the plot for us.
+      Interface tab and put some commands inside it.
     <p>
-      Let's do the Code tab part first.
+      The commands we put in the plots will run automatically when our
+      <tt>setup</tt> procedure calls <tt>reset-ticks</tt> and when our
+      <tt>go</tt> procedure calls <tt>tick</tt>.
     <blockquote>
       <ul>
-        <li>Change <tt>setup</tt> to call the new procedure,
-        <tt>do-plots</tt>, which we're about to add:
-          <pre>
-to setup
-  clear-all        
-  setup-patches
-  setup-turtles
-  do-plots
-end
-</pre>
-        <li>Also, change <tt>go</tt> to call the <tt>do-plots</tt>
-        procedure:
-          <pre>
-to go
-  move-turtles
-  eat-grass
-  check-death
-  reproduce
-  regrow-grass
-  do-plots
-end
-</pre>
-        <li>Now add the new procedure. What we're plotting will be be
-        the number of turtles and the number of green patches versus time.
-        At each time step (a single run through the <tt>go</tt> procedure)
-        these values are added to the plot.
-          <pre>
-to do-plots
-  set-current-plot &quot;Totals&quot;
-  set-current-plot-pen &quot;turtles&quot;
-  plot count turtles
-  set-current-plot-pen &quot;grass&quot;
-  plot count patches with [pcolor = green]
-end
-</pre>
-        </ul>
-    </blockquote>
-    <p>
-      Note that we use the <a href="dictionary.html#plot"><tt>plot</tt></a>
-      command to add the next point to a plot. However, before doing that,
-      we need to tell NetLogo two things. First, we need to specify what
-      plot we will be using (since later our model might have more than one
-      plot) and second, we need to specify which pen we want to plot with
-      (we will be using two pens on this plot).
-    <p>
-      The <a href="dictionary.html#plot"><tt>plot</tt></a> command moves
-      the current plot pen to the point that has an X coordinate equal to 1
-      greater than the previously plotted X coordinate and a Y coordinate
-      equal to the value given in the plot command (in the first case, the
-      number of turtles, and in the second case, the number of green
-      patches). As the pens move they each draw a line.
-    <p>
-      In order for <tt>set-current-plot &quot;Totals&quot;</tt> to work,
-      you'll have to add a plot to your model in the Interface tab,
-      then edit it so its name is the same name used in the procedures.
-      Even one extra space in the name will throw it off -- it must be
-      exactly the same in both places.
-    <blockquote>
-      <ul>
-        <li>Create a plot by clicking the Add icon on the Toolbar,
+        <li>Create a plot by clicking the Add icon on the toolbar,
         selecting Plot next to it, and clicking on an open spot in the
         Interface.
         <li>Set its Name to &quot;Totals&quot; (see image below)
         <li>Set the X axis label to &quot;time&quot;
-        <li>Set the Y axis label to &quot;total&quot;
+        <li>Set the Y axis label to &quot;totals&quot;
+        <li>Change the name of the &quot;default&quot; pen to
+        &quot;turtles&quot;.
+        <li>Enter <tt>plot count turtles</tt> under Pen Update Commands.
+        <li>Press the &quot;Add Pen&quot; button.
+        <li>Change the name of the new pen to &quot;grass&quot;.
+        <li>Enter <tt>plot count patches with [pcolor = green]</tt> under
+        Pen Update Commands.
         </ul>
     </blockquote>
-    <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/totals.gif">
     <p>
-      Next you will need to create two pens.
+      When you're done, the dialog should look like this:
+    <p class="screenshot">
+      <img alt="screen shot" src="images/tutorial3/totals.png">
     <blockquote>
       <ul>
-        <li>With the Plot dialog box still open, press the 'Create'
-        button in the Plot dialog, to create a new pen.
-        <li>Enter the name of this pen as &quot;turtles&quot; and press OK
-        in the &quot;Enter Pen Name&quot; dialog. (see image below)
-        <li>Press the 'Create' button in the Plot dialog again, to
-        create a second new pen.
-        <li>Enter the name of this pen as &quot;grass&quot; and press OK in
-        the &quot;Enter Pen Name&quot; dialog. (see image below)
-        <li>Select the color for this pen and change it to green.
-        <li>Select OK in the Plot dialog box.
+        <li>Press OK in the Plot dialog to finish editing.
         </ul>
     </blockquote>
-    <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/penname.gif">
     <p>
       Note that when you create the plot you can also set the minimum and
       maximum values on the X and Y axes. You'll want to leave the
-      &quot;Autoplot?&quot; checkbox checked, so that if anything you plot
+      &quot;Auto Scale&quot; checkbox checked, so that if anything you plot
       exceeds the minimum and maximum values for the axes, the axes will
       automatically grow so you can see all the data.
+    <p>
+      Note that we used the <a href=
+      "dictionary.html#plot"><tt>plot</tt></a> command to add the next
+      point to a plot. This command moves the current plot pen to the point
+      that has an X coordinate equal to 1 greater than the previously
+      plotted X coordinate and a Y coordinate equal to the value given in
+      the plot command (in the first case, the number of turtles, and in
+      the second case, the number of green patches). As the pens move they
+      each draw a line.
     <blockquote>
       <ul>
         <li>Setup and run the model again.
         </ul>
-      <p>
-        You can now watch the plot being drawn as the model is running.
-        Your plot should have the general shape of the one below, though
-        your plot might not look exactly the same.
-      <p>
-        Remember that we left &quot;Autoplot?&quot; on. This allows the
-        plot to readjust itself when it runs out of room.
-      </blockquote>
-    <p class="screenshot">
-      <img alt="screen shot" src="images/tutorial3/plotwindow.gif">
+    </blockquote>
     <p>
-      If you forget which pen is which, click on the Pens label on the top
-      right corner of the plot. You might try running the model several
-      times to see what aspects of the plot are the same and which are
-      different.
+      You can now watch the plot being drawn as the model is running. Your
+      plot should have the general shape of the one below, though your plot
+      might not look exactly the same.
+    <p>
+      Remember that we left &quot;Auto Scale?&quot; on. This allows the
+      plot to readjust itself when it runs out of room.
+    <p class="screenshot">
+      <img alt="screen shot" src="images/tutorial3/plotwindow.png">
+    <p>
+      If you forget which pen is which, you can edit the plot and check the
+      &quot;Show legend?&quot; checkbox.
+    <p>
+      You might try running the model several times to see what aspects of
+      the plot are the same and which are different from run to run.
     <h2>
       Tick counter
     </h2>
@@ -814,10 +788,15 @@ end
       run. Learning how to stop or start an action at a specific time can
       help make this happen by stopping the model at the same point each
       model run. Keeping track of how many times the <tt>go</tt> procedure
-      is run is a useful way to cue these actions.
+      is run is a useful way to cue these actions. That's what the tick
+      counter does.
     <p>
-      To keep track of this, we will use NetLogo's built-in tick
-      counter.
+      You're already using the tick counter in your model, with the
+      <tt>reset-ticks</tt> and <tt>tick</tt> commands, which also trigger
+      plotting.
+    <p>
+      You can also use the tick counter for other things, such as to set a
+      limit on the total length of a run.
     <blockquote>
       <ul>
         <li>Change the <tt>go</tt> procedure:
@@ -830,7 +809,6 @@ to go
   reproduce
   regrow-grass
   tick
-  do-plots
 end
 </pre>
         <li>Now setup and run the model.
@@ -845,44 +823,26 @@ end
       the tick counter by 1. <a href=
       "dictionary.html#ticks"><tt>ticks</tt></a> is a reporter which
       reports the current value of the tick counter. <a href=
-      "dictionary.html#clear-all"><tt>clear-all</tt></a> takes care of
-      resetting the tick counter to 0 when a new run starts.
-    <p>
-      Note that we put <a href="dictionary.html#tick"><tt>tick</tt></a>
-      before <tt>do-plots</tt>. That's so if we write plotting code
-      that uses the value of the tick counter, it will see the new value,
-      not the old value. (In this tutorial we won't actually write any
-      code like that, but nonetheless, it is generally good practice to
-      call <a href="dictionary.html#tick"><tt>tick</tt></a> after your
-      agents have done their actions but before you plot.)
-    <p>
-      Now that your model uses ticks, you'll probably want to use the
-      menu at the top of the Interface tab to change from
-      &quot;continuous&quot; updates to &quot;tick-based&quot; updates.
-      That means that NetLogo will only update (that is, redraw) the view
-      (that is, the display area where you see your agents) between ticks,
-      never in the middle of a tick. This makes your model run faster and
-      ensures a consistent appearance (since the updates will happen at
-      consistent times). See the Programming Guide for a fuller discussion
-      of view updates.
+      "dictionary.html#reset-ticks"><tt>reset-ticks</tt></a>, in your
+      <tt>setup</tt> procedure, takes care of restarting the tick counter
+      at 0 when a new run is set up and ready to begin.
     <h2>
       Some more details
     </h2>
     <p>
-      First, instead of always using 100 turtles, you can have a variable
+      First, instead of always using 100 turtles, you can have a varying
       number of turtles.
     <blockquote>
       <ul>
-        <li>Create a slider variable called 'number', (click the
-        Add icon on the Toolbar, select Slider next to it, and click on an
-        open spot in the Interface). Try changing the minimum and maximum
-        values in the slider.
+        <li>Create a slider named &quot;number&quot;: click the Add icon on
+        the toolbar, select Slider next to it, and click on an open spot in
+        the interface.
+        <li>Try changing the minimum and maximum values in the slider.
         <li>Then inside of <tt>setup-turtles</tt>, instead of
         <tt>create-turtles 100</tt> you can type:
           <pre>
 to setup-turtles
-  create-turtles number
-  ask turtles [ setxy random-xcor random-ycor ]
+  create-turtles number [ setxy random-xcor random-ycor ]
 end
 </pre>
         </ul>
@@ -933,11 +893,12 @@ end
       What's next?
     </h2>
     <p>
-      So now you have a simple model of an ecosystem. Patches grow grass;
-      turtles wander, eat the grass, reproduce, and die. You have created
-      an interface containing buttons, sliders, switches, monitors, and
-      plots. You've even written a series of procedures to give the
-      turtles something to do.
+      So now you have a simple model of an ecosystem. Patches grow grass.
+      Turtles wander, eat the grass, reproduce, and die.
+    <p>
+      You have created an interface containing buttons, sliders, switches,
+      monitors, and a plot. You've even written a series of procedures
+      to give the turtles something to do.
     <p>
       That's where this tutorial leaves off.
     <p>
@@ -996,7 +957,7 @@ to setup
   clear-all
   setup-patches
   setup-turtles
-  do-plots
+  reset-ticks
 end
 
 to setup-patches
@@ -1016,7 +977,6 @@ to go
   reproduce
   regrow-grass
   tick                    ;; increase the tick counter by 1 each time through
-  do-plots
 end
 
 to move-turtles
@@ -1032,7 +992,7 @@ to eat-grass
     if pcolor = green [
       set pcolor black
            ;; the value of energy-from-grass slider is added to energy
-      set energy (energy + energy-from-grass)
+      set energy energy + energy-from-grass
     ]
   ifelse show-energy?
     [ set label energy ] ;; the label is set to be the value of the energy
@@ -1043,8 +1003,8 @@ end
 to reproduce
   ask turtles [
     if energy &gt; birth-energy [
-    set energy energy - birth-energy  ;; take away birth-energy to give birth
-    hatch 1 [ set energy birth-energy ] ;; give this birth-energy to the offspring
+      set energy energy - birth-energy  ;; take away birth-energy to give birth
+      hatch 1 [ set energy birth-energy ] ;; give this birth-energy to the offspring
     ]
   ]
 end
@@ -1059,14 +1019,6 @@ to regrow-grass
   ask patches [ ;; 3 out of 100 times, the patch color is set to green
     if random 100 &lt; 3 [ set pcolor green ]
   ]
-end
-
-to do-plots
-  set-current-plot &quot;Totals&quot; ;; which plot we want to use next
-  set-current-plot-pen &quot;turtles&quot; ;; which pen we want to use next
-  plot count turtles ;; what will be plotted by the current pen
-  set-current-plot-pen &quot;grass&quot; ;; which pen we want to use next
-  plot count patches with [pcolor = green] ;; what will be plotted by the current pen
 end
 </pre>
 

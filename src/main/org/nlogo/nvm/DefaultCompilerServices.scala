@@ -27,6 +27,8 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
     compiler.isValidIdentifier(s, false)
   def isValidIdentifier(s: String) = 
     compiler.isValidIdentifier(s, false)
+  def isReporter(s: String) = 
+    compiler.isReporter(s, new java.util.HashMap[String, Procedure], false)
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(
       source, new org.nlogo.api.DummyExtensionManager, false)
