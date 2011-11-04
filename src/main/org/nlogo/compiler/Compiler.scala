@@ -149,7 +149,7 @@ object Compiler extends CompilerInterface {
       .exists(tok =>
         procedures.get(tok.name.toUpperCase) match {
           case null => reporterTokenTypes.contains(tok.tyype)
-          case proc => proc.tyype == Procedure.Type.REPORTER
+          case proc => tok.tyype == TokenType.IDENT && proc.tyype == Procedure.Type.REPORTER
         })
 
   private val reporterTokenTypes: Set[TokenType] = {
@@ -166,4 +166,3 @@ object Compiler extends CompilerInterface {
     tokenizer(is3D).tokenizeForColorization(source, extensionManager)
 
 }
-  
