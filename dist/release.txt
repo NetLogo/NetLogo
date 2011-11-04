@@ -19,7 +19,7 @@ As befits the number 5.0, this release has major new features.  Among
 those major features are: open source, internationalization, smart
 plot widgets which eliminate the need for plotting code in the Code
 tab, rich formatting features for the Info tab, transparency in 3D,
-and support for functions as first class objects.  We invite and
+and support for functions as first-class values.  We invite and
 welcome your comments on the features as well as reports on bugs that
 you find.
 
