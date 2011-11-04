@@ -1,6 +1,6 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0RC3, available for free download from our site at
+NetLogo 5.0RC4, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
 This is a release candidate for NetLogo 5.0. As such, there may be a
@@ -11,7 +11,7 @@ forward to hearing from you. Please let us know about bugs you find,
 features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0RC3, perhaps with minor updates to the code. If you have
+NetLogo 5.0RC4, perhaps with minor updates to the code. If you have
 any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
@@ -31,23 +31,15 @@ community models page, and make improvements to NetLogo itself and the
 NetLogo User Manual and send us the changes for integration.
 
 The following is a (partial) list of changes made since NetLogo
-5.0RC2:
+5.0RC3:
   
-- NetLogo is now open source software:
-  - source code is online at https://github.com/NetLogo/NetLogo
-  - NetLogo license is the GPL (GNU General Public License), version 2
-    or later
-  - User Manual license is Creative Commons Attribution-ShareAlike
-    (CC BY-SA)
-  - code examples and most extension are in the public domain (CC0)
-- new models license: Sample Models and Curricular Models license is
-  now Creative Commons Attribution-NonCommercial-ShareAlike
-  (CC BY-NC-SA)
-- new sample model: Preferential Attachment 3D
-- new curricular models: Bug Hunt Consumers, epiDEM Basic, epiDEM
-  Travel and Control
-- added preliminary Russian localization
-- bundle Java 6 Update 29 for Windows users
+- reporters may now be entered in the Command Center (the "show"
+  command is supplied for you)
+- the Spanish and Russian localizations now appear by default
+  if your operating system is set to that language
+- fixed regression where models weren't double-clickable on Windows
+- fixed GIS extension bug
+
 
 Please send bug reports to bugs@ccl.northwestern.edu and other
 suggestions and comments to feedback@ccl.northwestern.edu.
