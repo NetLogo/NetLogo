@@ -149,4 +149,23 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                              "foos-own [weight]")
   }
 
+  /// isReporter
+
+  val reporters = Seq("3", "[]", "[", "((5))", "timer", "gkjhfgjkhfg")
+  val nonReporters = Seq("", ";", " ; ", "ca", "((ca))", "5984783478344387487348734")
+  for(x <- reporters)
+    test("is a reporter: '" + x + "'") {
+      expect(true) { workspace.isReporter(x) }
+    }
+  for(x <- nonReporters)
+    test("isn't a reporter: '" + x + "'") {
+      expect(false) { workspace.isReporter(x) }
+    }
+
+  test("isReporter on user-defined procedures") {
+    workspace.initForTesting(-5, 5, -5, 5, "to foo end to-report bar [] report 5 end")
+    expect(false) { workspace.isReporter("foo") }
+    expect(true) { workspace.isReporter("bar") }
+  }
+
 }
