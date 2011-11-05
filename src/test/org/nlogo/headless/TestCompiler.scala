@@ -151,27 +151,33 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
 
   /// isReporter
 
-  val reporters = Seq("3", "[]", "[", "((5))", "timer", "gkjhfgjkhfg")
-  val nonReporters = Seq("", ";", " ; ", "ca", "((ca))", "5984783478344387487348734")
+  val reporters = Seq("3", "[]", "[", "((5))", "timer", "glob1")
+  val nonReporters = Seq("", ";", " ; ", "ca", "((ca))",
+                         "5984783478344387487348734", "gkhjfghkjfhjkg")
   for(x <- reporters)
     test("is a reporter: '" + x + "'") {
+      workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
       expect(true) { workspace.isReporter(x) }
     }
   for(x <- nonReporters)
     test("isn't a reporter: '" + x + "'") {
+      workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
       expect(false) { workspace.isReporter(x) }
     }
 
   test("isReporter on user-defined procedures") {
-    workspace.initForTesting(-5, 5, -5, 5, "to foo end to-report bar [] report 5 end")
+    workspace.initForTesting(5, "to foo end to-report bar [] report 5 end")
+    import collection.JavaConverters._
+    println(workspace.getProcedures.asScala.toMap)
     expect(false) { workspace.isReporter("foo") }
     expect(true) { workspace.isReporter("bar") }
   }
 
   test("isReporter on extension prims") {
-    workspace.initForTesting(-5, 5, -5, 5, "extensions [profiler]")
+    workspace.initForTesting(5, "extensions [profiler]")
     expect(false) { workspace.isReporter("profiler:start") }
     expect(true) { workspace.isReporter("profiler:report") }
+    expect(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }
