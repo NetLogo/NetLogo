@@ -159,6 +159,7 @@ strictfp class CommandLine
     }
     if(workspace.isReporter(inner)) {
       inner = "show " + inner;
+      setText(inner);
     }
     String header = "to __commandline [] ";
     String footer = "__done end";

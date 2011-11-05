@@ -42,7 +42,7 @@ trait CompilerInterface {
   def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]]
   def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String]
   def isValidIdentifier(s: String, is3D: Boolean): Boolean
-  def isReporter(s: String, procedures: java.util.Map[String, Procedure], is3D: Boolean): Boolean
+  def isReporter(s: String, program: Program, procedures: java.util.Map[String, Procedure], extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token]
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{CompilerServices, Program, Token}
+import org.nlogo.api.{ CompilerServices, Program, Token }
 
 // We use this in contexts where we want to do compiler stuff (not full compilation) like
 // colorization but it's OK to assume that we are 2D not 3D and no extensions are loaded.  The
@@ -28,7 +28,8 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def isValidIdentifier(s: String) = 
     compiler.isValidIdentifier(s, false)
   def isReporter(s: String) = 
-    compiler.isReporter(s, new java.util.HashMap[String, Procedure], false)
+    compiler.isReporter(s, new Program(false), new java.util.HashMap[String, Procedure],
+                        new org.nlogo.api.DummyExtensionManager)
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(
       source, new org.nlogo.api.DummyExtensionManager, false)

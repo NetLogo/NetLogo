@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
+import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Syntax, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
 import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
@@ -141,16 +141,26 @@ object Compiler extends CompilerInterface {
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
 
   // used by CommandLine
-  def isReporter(s: String, procedures: ProceduresMap, is3D: Boolean) =
-    tokenizer(is3D)
-      .tokenizeRobustly(s)
-      .dropWhile(_.tyype == TokenType.OPEN_PAREN)
-      .headOption
-      .exists(tok =>
-        procedures.get(tok.name.toUpperCase) match {
-          case null => reporterTokenTypes.contains(tok.tyype)
-          case proc => proc.tyype == Procedure.Type.REPORTER
-        })
+  def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
+    try {
+      implicit val t = tokenizer(program.is3D)
+      val results =
+        new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
+                            None, program, procedures, extensionManager)
+          .parse(subprogram = true)
+      val identifierParser =
+        new IdentifierParser(program, procedures, results.procedures, forgiving = false)
+      import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
+      val proc = results.procedures.values.asScala.head
+      val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
+      tokens
+        .tail  // skip _report
+        .map(_.tyype)
+        .dropWhile(_ == TokenType.OPEN_PAREN)
+        .headOption
+        .exists(reporterTokenTypes)
+    }
+    catch { case _: CompilerException => false }
 
   private val reporterTokenTypes: Set[TokenType] = {
     import TokenType._
@@ -166,4 +176,3 @@ object Compiler extends CompilerInterface {
     tokenizer(is3D).tokenizeForColorization(source, extensionManager)
 
 }
-  

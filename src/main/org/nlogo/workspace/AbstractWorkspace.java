@@ -741,7 +741,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isReporter(String s) {
-    return compiler().isReporter(s, getProcedures(), world.program().is3D());
+    return compiler().isReporter(s, world.program(), getProcedures(), getExtensionManager());
   }
 
   public Token[] tokenizeForColorization(String s) {
