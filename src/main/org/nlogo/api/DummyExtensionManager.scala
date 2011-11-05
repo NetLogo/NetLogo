@@ -2,6 +2,9 @@
 
 package org.nlogo.api
 
+// This isn't a singleton because in testing contexts it's sometimes useful
+// to override a few methods. - ST 11/5/11
+
 class DummyExtensionManager extends ExtensionManager {
   private def unsupported = throw new UnsupportedOperationException
   def storeObject(obj: AnyRef) { }
