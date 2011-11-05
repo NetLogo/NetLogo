@@ -168,4 +168,10 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
     expect(true) { workspace.isReporter("bar") }
   }
 
+  test("isReporter on extension prims") {
+    workspace.initForTesting(-5, 5, -5, 5, "extensions [profiler]")
+    expect(false) { workspace.isReporter("profiler:start") }
+    expect(true) { workspace.isReporter("profiler:report") }
+  }
+
 }

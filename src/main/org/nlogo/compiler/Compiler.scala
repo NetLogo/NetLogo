@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
+import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Syntax, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
 import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
@@ -141,15 +141,19 @@ object Compiler extends CompilerInterface {
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
 
   // used by CommandLine
-  def isReporter(s: String, procedures: ProceduresMap, is3D: Boolean) =
+  def isReporter(s: String, procedures: ProceduresMap, extensionManager: ExtensionManager, is3D: Boolean) =
     tokenizer(is3D)
       .tokenizeRobustly(s)
       .dropWhile(_.tyype == TokenType.OPEN_PAREN)
       .headOption
       .exists(tok =>
         procedures.get(tok.name.toUpperCase) match {
-          case null => reporterTokenTypes.contains(tok.tyype)
-          case proc => tok.tyype == TokenType.IDENT && proc.tyype == Procedure.Type.REPORTER
+          case null =>
+            Option(extensionManager.replaceIdentifier(tok.name.toUpperCase))
+              .map(_.getSyntax.ret != Syntax.VoidType)
+              .getOrElse(reporterTokenTypes.contains(tok.tyype))
+          case proc =>
+            tok.tyype == TokenType.IDENT && proc.tyype == Procedure.Type.REPORTER
         })
 
   private val reporterTokenTypes: Set[TokenType] = {
