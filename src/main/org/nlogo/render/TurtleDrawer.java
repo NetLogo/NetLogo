@@ -1,9 +1,8 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
-
 package org.nlogo.render;
 
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Turtle;
+import org.nlogo.shape.BitMapDrawable;
 import org.nlogo.shape.VectorShape;
 
 // public because the HubNet client uses it - ST 3/1/05
@@ -32,8 +31,18 @@ public strictfp class TurtleDrawer {
   }
 
   void drawTurtleShape(GraphicsInterface g, TopologyRenderer topology, org.nlogo.api.Turtle turtle, double patchSize) {
-    Drawable d = getShapeFromCacheOrCreateDrawable(turtle, patchSize, shapes.getShape(turtle));
+    Drawable d = null;
+    if(turtle.shape().startsWith("!")) {
+      d = createBitMapShapeDrawable(turtle, patchSize);
+    }
+    else {
+      d = getShapeFromCacheOrCreateDrawable(turtle, patchSize, shapes.getShape(turtle));
+    }
     topology.wrapDrawable(d, g, turtle.xcor(), turtle.ycor(), turtle.size(), patchSize);
+  }
+
+  private Drawable createBitMapShapeDrawable(Turtle turtle, double patchSize){
+    return new BitMapDrawable(turtle, patchSize);
   }
 
   private Drawable getShapeFromCacheOrCreateDrawable(Turtle turtle, double patchSize, VectorShape shape) {
