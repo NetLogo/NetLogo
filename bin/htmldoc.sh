@@ -13,7 +13,6 @@ htmldoc \
   copyright.html \
   versions.html \
   requirements.html \
-  issues.html \
   contact.html \
   sample.html \
   tutorial1.html \

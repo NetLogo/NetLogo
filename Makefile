@@ -12,7 +12,7 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.26
+JAVA_HOME = /usr/lib/jvm/java-1.6.0-sun-1.6.0.29
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)

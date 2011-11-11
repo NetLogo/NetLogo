@@ -870,7 +870,7 @@ observer> print count turtles
 15
 </pre>
      <p>The <tt>turtles</tt> agentset grows when new turtles are born,
-        but other agents don't grow.  If I write <tt>turtle-set turtles</tt>,
+        but other agentsets don't grow.  If I write <tt>turtle-set turtles</tt>,
         I get a new, normal agentset containing just the turtles that <i>currently</i>
         exist.  New turtles don't join when they're born.
      <p>Breed agentsets are special in the same way as <tt>turtles</tt>
@@ -1000,7 +1000,7 @@ directed-link-breed [streets street]
 undirected-link-breed [friendships friendship]
 </pre>
     <p>
-      once you have created a breeded link you cannot create unbreeded
+      Once you have created a breeded link you cannot create unbreeded
       links and vice versa. (You can, however, have directed and undirected
       links in the same world, just not in the same breed)
     <p>
@@ -1053,9 +1053,9 @@ undirected-link-breed [friendships friendship]
       "dictionary.html#link-breeds-own"><tt>&lt;link-breeds&gt;-own</tt></a>
       to declare variables of each link breed separately.
     <p>
-      You can change the breed of links, like turtles, however, you cannot
-      the breed of links to be unbreeded links, to prevent having breeded
-      and unbreeded links in the same world.
+      You can change the breed of a link with <tt>set breed</tt>.  (However, you cannot change
+      a breeded link to an unbreeded one, to prevent having breeded
+      and unbreeded links in the same world.)
     <pre>
 ask one-of friendships [ set breed streets ]
 ask one-of friendships [ set breed links ] ;; produces a runtime error
@@ -1382,7 +1382,7 @@ show map [? * ?] [1 2 3]
 </pre>
     <p>
       Besides <tt>map</tt> and <tt>foreach</tt>, other primitives
-      for processing entire lists include
+      for processing whole lists in a configurable way include
       <a href="dictionary.html#filter"><tt>filter</tt></a>,
       <a href="dictionary.html#reduce"><tt>reduce</tt></a>, and
       <a href="dictionary.html#sort-by"><tt>sort-by</tt></a>.
@@ -1490,10 +1490,6 @@ foreach sort turtles [
       Substitute &quot;patches&quot; for &quot;turtles&quot; to ask patches
       in left-to-right, top-to-bottom order.
     <p>
-      If you use foreach like this, the agents in the list run the commands
-      inside the ask sequentially, not concurrently. Each agent finishes
-      the commands before the next agent begins them.
-    <p>
       Note that you can't use <a href=
       "dictionary.html#ask"><tt>ask</tt></a> directly on a list of turtles.
       <a href="dictionary.html#ask"><tt>ask</tt></a> only works with
@@ -1520,8 +1516,8 @@ foreach sort turtles [
       changed version.
     <p>
       The actual data structure used is the immutable Vector class
-      from the Scala collections library. These are 32-wide hash array
-      mapped tries, as implemented by Tiark Rompf, based in part on
+      from the Scala collections library. These are 32-wide <a href="http://en.wikipedia.org/wiki/Hash_array_mapped_trie">hash array
+      mapped tries</a>, as implemented by Tiark Rompf, based in part on
       work by Phil Bagwell and Rich Hickey.
     <h2>
       <a name="math" id="math">Math</a>
@@ -2073,7 +2069,7 @@ end</code>
       Note that in this example we plot from both the <code>setup</code>
       and <code>go</code> procedures (because <code>reset-ticks</code> runs
       plot setup and plot update commands). We do this because we want our
-      plot to include the initial state of the system at the end up
+      plot to include the initial state of the system at the end of
       <code>setup</code>. We plot at the end of the <code>go</code>
       procedure, not the beginning, because we want the plot always to be
       up to date after the go button stops.
@@ -2131,7 +2127,7 @@ end</code>
       Note that using the histogram command doesn't automatically
       switch the current plot pen to bar mode. If you want bars, you have
       to set the plot pen to bar mode yourself. (As we said before, you can
-      change a pen's default mode by editing the plot in the Run tab.)
+      change a pen's default mode by editing the plot in the Interface tab.)
     <p>
       The width of the bars in a histogram is controlled by the plot
       pen's interval. You can set a plot pen's default interval by
@@ -2149,13 +2145,13 @@ end</code>
       Clearing and resetting
     </h4>
     <p>
-      You can clear the current plot with the <code>clear-plot
-      command</code>, or clear every plot in your model with
-      <code>clear-all-plot</code>s. The <code>clear-all command</code> also
+      You can clear the current plot with the <code>clear-plot</code>
+      command, or clear every plot in your model with
+      <code>clear-all-plots</code>. The <code>clear-all command</code> also
       clears all plots, in addition to clearing everything else in your
       model.
     <p>
-      If you only want to remove only the points that the current plot pen
+      If you want to remove only the points that a particular pen
       has drawn, use <code>plot-pen-reset</code>.
     <p>
       When a whole plot is cleared, or when a pen is reset, that
@@ -2194,7 +2190,7 @@ end</code>
       Using a Legend
     </h4>
     <p>
-      You can show the legend of a plot by selecting the &quot;Show
+      You can show the legend of a plot by checking the &quot;Show
       legend&quot; checkbox in the edit dialog. If you don't want a
       particular pen to show up in the legend you can uncheck the
       &quot;Show in Legend&quot; checkbox for that pen also in the advanced
@@ -2215,7 +2211,7 @@ end</code>
     <p>
       To create a temporary plot pen, use the
       <code>create-temporary-plot-pen</code> command. Typically, this would
-      be done in the code tab, but it is also possible to use this command
+      be done in the Code tab, but it is also possible to use this command
       from plot setup or plot update code (in the edit dialog). By default,
       the new pen is down, is black in color, has an interval of 1, and
       plots in line mode. Commands are available to change all of these
@@ -2259,7 +2255,7 @@ end</code>
 </pre>
     <p>
       Once the current pen is set, then commands like <code>plot count
-      turtles</code> be executed for that pen.
+      turtles</code> can be executed for that pen.
     <p>
       Older models with plots usually had their own
       <code>do-plotting</code> procedure that looked something like this:
