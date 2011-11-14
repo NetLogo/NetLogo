@@ -39,13 +39,13 @@ p { margin-left: 1.5em ; }
           <div align="center">
             <font size="-1">Categories: <a href="#turtlegroup">Turtle</a> -
             <a href="#patchgroup">Patch</a> - <a href=
-            "#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a>
+            "#agentsetgroup">Agentset</a> - <a href="#colorgroup">Color</a> - <a href="#taskgroup">Task</a>
             - <a href="#controlgroup">Control/Logic</a> - <a href=
             "#worldgroup">World</a> - <a href=
             "#perspectivegroup">Perspective</a>
             <br>
             <a href="#iogroup">Input/Output</a> - <a href=
-            "#fileiogroup">Files</a> - <a href="#listsgroup">List</a> -
+            "#fileiogroup">File</a> - <a href="#listsgroup">List</a> -
             <a href="#stringgroup">String</a> - <a href=
             "#mathematicalgroup">Math</a> - <a href=
             "#plottinggroup">Plotting</a> - <a href="#linkgroup">Links</a>
@@ -189,6 +189,7 @@ Go figure! - ST 12/2/04
       "#link-length">link-length</a> <a href="#link-set">link-set</a>
       <a href="#link-shapes">link-shapes</a> <a href=
       "#max-n-of">max-n-of</a> <a href="#max-one-of">max-one-of</a>
+      <a href="#member">member?</a> 
       <a href="#min-n-of">min-n-of</a> <a href="#min-one-of">min-one-of</a>
       <a href="#n-of">n-of</a> <a href="#neighbors">neighbors</a> <a href=
       "#neighbors4">neighbors4</a> <a href="#no-patches">no-patches</a>
@@ -225,10 +226,9 @@ Go figure! - ST 12/2/04
       "#carefully">carefully</a> <a href="#end">end</a> 
       <a href="#error">error</a>      
       <a href="#error-message">error-message</a> <a href="#every">every</a>
-      <a href="#foreach">foreach</a> <a href="#if">if</a> <a href=
+      <a href="#if">if</a> <a href=
       "#ifelse">ifelse</a> <a href="#ifelse-value">ifelse-value</a>
-      <a href="#let">let</a> <a href="#loop">loop</a> <a href=
-      "#map">map</a> <a href="#not">not</a> <a href="#or">or</a> <a href=
+      <a href="#let">let</a> <a href="#loop">loop</a> <a href="#not">not</a> <a href="#or">or</a> <a href=
       "#repeat">repeat</a> <a href="#report">report</a> <a href=
       "#run">run</a> <a href="#runresult">runresult</a> <a href=
       "#semicolon">; (semicolon)</a> <a href="#set">set</a> <a href=
@@ -239,6 +239,22 @@ Go figure! - ST 12/2/04
       "#without-interruption">without-interruption</a> <a href=
       "#xor">xor</a> <!-- ======================================== -->
     <h3>
+      <a name="taskgroup" id="taskgroup">Task</a>
+    </h3>
+    <p>
+      <a href="#filter">filter</a>
+      <a href="#foreach">foreach</a>
+      <a href="#is-command-task">is-command-task?</a>
+      <a href="#is-reporter-task">is-reporter-task?</a>
+      <a href="#map">map</a>
+      <a href="#n-values">n-values</a>
+      <a href="#reduce">reduce</a>
+      <a href="#run">run</a>
+      <a href="#runresult">runresult</a>
+      <a href="#sort-by">sort-by</a>
+      <a href="#task">task</a>
+      <!-- ======================================== -->
+    <h3>
       <a name="worldgroup" id="worldgroup">World</a>
     </h3>
     <p>
@@ -246,6 +262,7 @@ Go figure! - ST 12/2/04
       <a href="#clear-drawing">clear-drawing</a> (<a href=
       "#clear-drawing">cd</a>) <a href="#clear-patches">clear-patches</a>
       (<a href="#clear-patches">cp</a>) <a href=
+      "#clear-ticks">clear-ticks</a> <a href=
       "#clear-turtles">clear-turtles</a> (<a href="#clear-turtles">ct</a>)
       <a href="#display">display</a> <a href=
       "#import-drawing">import-drawing</a> <a href=
@@ -448,8 +465,10 @@ Go figure! - ST 12/2/04
       "#set-plot-pen-interval">set-plot-pen-interval</a> <a href=
       "#set-plot-pen-mode">set-plot-pen-mode</a> <a href=
       "#set-plot-x-range">set-plot-x-range</a> <a href=
-      "#set-plot-y-range">set-plot-y-range</a> 
-      <!-- ======================================== -->
+      "#set-plot-y-range">set-plot-y-range</a> <a href=
+      "#setup-plots">setup-plots</a> 
+      <a href="#update-plots">update-plots</a>
+        <!-- ======================================== -->
     <h3>
       <a name="linkgroup" id="linkgroup">Links</a>
     </h3>
@@ -1314,7 +1333,7 @@ show ceiling -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Resets all global variables to zero, and calls reset-ticks,
+        Resets all global variables to zero, and calls clear-ticks,
         clear-turtles, clear-patches, clear-drawing, clear-all-plots, and
         clear-output.
       </div>
@@ -1413,6 +1432,22 @@ show ceiling -4.5
         </ul>
       <p>
         See also <a href="#clear-all-plots">clear-all-plots</a>.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="clear-ticks" id="clear-ticks">clear-ticks</a>
+      </h3>
+      <h4>
+        clear-ticks
+        <br>
+        <img alt="Observer Command" src="images/observer.gif">
+      </h4>
+      <p>Clears the tick counter.
+      <p>Does not set the counter to zero.
+         After this command runs, the tick counter has no value.
+         Attempting to access or update it is an error until
+         <a href="#reset-ticks">reset-ticks</a> is called.
+      <p>See also <a href="#reset-ticks">reset-ticks</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -2751,16 +2786,15 @@ ask turtles
         <a name="filter" id="filter">filter</a>
       </h3>
       <h4>
-        filter [<i>reporter</i>] <i>list</i>
+        filter <i>reporter-task</i> <i>list</i>
       </h4>
       <p>
         Reports a list containing only those items of <i>list</i> for which
-        the boolean <i>reporter</i> is true -- in other words, the items
+        the task reports true -- in other words, the items
         satisfying the given condition.
-      <p>
-        In <i>reporter</i>, use <a href="#ques">?</a> to refer to the
-        current item of <i>list</i>.
       <pre>
+show filter is-number? [1 "2" 3]
+=&gt; [1 3]
 show filter [? &lt; 3] [1 3 2]
 =&gt; [1 2]
 show filter [first ? != &quot;t&quot;] [&quot;hi&quot; &quot;there&quot; &quot;everyone&quot;]
@@ -2842,15 +2876,18 @@ show floor -4.5
         <a name="foreach" id="foreach">foreach</a>
       </h3>
       <h4>
-        foreach <i>list</i> [ <i>commands</i> ]
+        foreach <i>list</i> <i>command-task</i>
         <br>
-        (foreach <i>list1</i> ... [ <i>commands</i> ])
+        (foreach <i>list1</i> ... <i>command-task</i>)
       </h4>
       <p>
-        With a single list, runs <i>commands</i> for each item of
-        <i>list</i>. In <i>commands</i>, use <a href="#ques">?</a> to refer
-        to the current item of <i>list</i>.
+        With a single list, runs the task for each item of
+        <i>list</i>.
       <pre>
+foreach [1.1 2.2 2.6] show
+=&gt; 1.1
+=&gt; 2.2
+=&gt; 2.6
 foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
 =&gt; 1.1 -&gt; 1
 =&gt; 2.2 -&gt; 2
@@ -2860,8 +2897,6 @@ foreach [1.1 2.2 2.6] [ show (word ? &quot; -&gt; &quot; round ?) ]
         With multiple lists, runs <i>commands</i> for each group of items
         from each list. So, they are run once for the first items, once for
         the second items, and so on. All the lists must be the same length.
-        In <i>commands</i>, use <a href="#ques">?1</a> through <a href=
-        "#ques">?n</a> to refer to the current item of each list.
       <p>
         Some examples make this clearer:
       <pre>
@@ -3924,6 +3959,8 @@ show int -3.5
         <br>
         <a name="is-breed" id="is-breed">is-<i>&lt;breed&gt;</i>?</a>
         <br>
+        <a name="is-command-task" id="is-command-task">is-command-task?</a>
+        <br>
         <a name="is-directed-link" id=
         "is-directed-link">is-directed-link?</a>
         <br>
@@ -3938,6 +3975,8 @@ show int -3.5
         <a name="is-patch" id="is-patch">is-patch?</a>
         <br>
         <a name="is-patch-set" id="is-patch-set">is-patch-set?</a>
+        <br>
+        <a name="is-reporter-task" id="is-reporter-task">is-reporter-task?</a>
         <br>
         <a name="is-string" id="is-string">is-string?</a>
         <br>
@@ -3957,6 +3996,8 @@ show int -3.5
         <br>
         is-<i>&lt;breed&gt;</i>? <i>value</i>
         <br>
+        is-command-task? <i>value</i>
+        <br>
         is-directed-link? <i>value</i>
         <br>
         is-link? <i>value</i>
@@ -3970,6 +4011,8 @@ show int -3.5
         is-patch? <i>value</i>
         <br>
         is-patch-set? <i>value</i>
+        <br>
+        is-reporter-task? <i>value</i>
         <br>
         is-string? <i>value</i>
         <br>
@@ -4551,19 +4594,16 @@ set mylist lput 42 mylist
           <a name="map" id="map">map</a>
         </h3>
         <h4>
-          map [<i>reporter</i>] <i>list</i>
+          map <i>reporter-task</i> <i>list</i>
           <br>
-          (map [<i>reporter</i>] <i>list1</i> ...)
+          (map <i>reporter-task</i> <i>list1</i> ...)
         </h4>
         <p>
-          With a single <i>list</i>, the given reporter is run for each
+          With a single <i>list</i>, the given task is run for each
           item in the list, and a list of the results is collected and
           reported.
-        <p>
-          In <i>reporter</i>, use <a href="#ques">?</a> to refer to the
-          current item of <i>list</i>.
         <pre>
-show map [round ?] [1.1 2.2 2.7]
+show map round [1.1 2.2 2.7]
 =&gt; [1 2 3]
 show map [? * ?] [1 2 3]
 =&gt; [1 4 9]
@@ -4573,13 +4613,9 @@ show map [? * ?] [1 2 3]
           items from each list. So, it is run once for the first items,
           once for the second items, and so on. All the lists must be the
           same length.
-        <p>
-          In <i>reporter</i>, use <a href="#ques">?1</a> through <a href=
-          "#ques">?n</a> to refer to the current item of each list.
-        <p>
-          Some examples make this clearer:
+ <p>Some examples make this clearer:
         <pre>
-show (map [?1 + ?2] [1 2 3] [2 4 6])
+show (map + [1 2 3] [2 4 6])
 =&gt; [3 6 9]
 show (map [?1 + ?2 = ?3] [1 2 3] [2 4 6] [3 5 9])
 =&gt; [true false true]
@@ -5251,20 +5287,20 @@ ask n-of 50 patches [ set pcolor green ]
           <a name="n-values" id="n-values">n-values</a>
         </h3>
         <h4>
-          n-values <i>size</i> [<i>reporter</i>]
+          n-values <i>size</i> <i>reporter-task</i>
         </h4>
         <p>
           Reports a list of length <i>size</i> containing values computed
-          by repeatedly running <i>reporter</i>.
+          by repeatedly running the task.
         <p>
-          In <i>reporter</i>, use <a href="#ques">?</a> to refer to the
+          If the task accepts inputs, the input will be the
           number of the item currently being computed, starting from zero.
         <pre>
 show n-values 5 [1]
 =&gt; [1 1 1 1 1]
 show n-values 5 [?]
 =&gt; [0 1 2 3 4]
-show n-values 3 [turtle ?]
+show n-values 3 turtle
 =&gt; [(turtle 0) (turtle 1) (turtle 2)]
 show n-values 5 [? * ?]
 =&gt; [0 1 4 9 16]
@@ -6407,7 +6443,8 @@ show random-float 2.5
       <p>
         Reports an accordingly distributed random number with the
         <i>mean</i> and, in the case of the normal distribution, the
-        <i>standard-deviation</i>.
+        <i>standard-deviation</i>.  (The standard deviation may not
+        be negative.)
       <p>
         random-exponential reports an exponentially distributed random
         floating point number.  It is equivalent to
@@ -6546,26 +6583,26 @@ crt read-from-string user-input &quot;Make how many turtles?&quot;
         <a name="reduce" id="reduce">reduce</a>
       </h3>
       <h4>
-        reduce [<i>reporter</i>] <i>list</i>
+        reduce <i>reporter-task</i> <i>list</i>
       </h4>
       <p>
-        Reduces a list from left to right using <i>reporter</i>, resulting
+        Reduces a list from left to right using the given task, resulting
         in a single value. This means, for example, that <tt>reduce [?1 +
         ?2] [1 2 3 4]</tt> is equivalent to <i>(((1 + 2) + 3) + 4)</i>. If
         <i>list</i> has a single item, that item is reported. It is an
         error to reduce an empty list.
       <p>
-        In <i>reporter</i>, use <tt>?1</tt> and <tt>?2</tt> to refer to the
-        two objects being combined.
+        The first input passed to the task is the result so far, and the
+        second input is the next item in the list.
       <p>
         Since it can be difficult to develop an intuition about what
         <tt>reduce</tt> does, here are some simple examples which, while
         not useful in themselves, may give you a better understanding of
         this primitive:
       <pre>
-show reduce [?1 + ?2] [1 2 3]
+show reduce + [1 2 3]
 =&gt; 6
-show reduce [?1 - ?2] [1 2 3]
+show reduce - [1 2 3]
 =&gt; -4
 show reduce [?2 - ?1] [1 2 3]
 =&gt; 2
@@ -6573,7 +6610,7 @@ show reduce [?1] [1 2 3]
 =&gt; 1
 show reduce [?2] [1 2 3]
 =&gt; 3
-show reduce [sentence ?1 ?2] [[1 2] [3 [4]] 5]
+show reduce sentence [[1 2] [3 [4]] 5]
 =&gt; [1 2 3 [4] 5]
 show reduce [fput ?2 ?1] (fput [] [1 2 3 4 5])
 =&gt; [5 4 3 2 1]
@@ -6781,10 +6818,14 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Resets the tick counter to zero.
+        Resets the tick counter to zero, sets up all plots, then updates all plots
+        (so that the initial state of the world is plotted).
       <p>
-        See also <a href="#tick">tick</a>, <a href="#ticks">ticks</a>,
-        <a href="#tick-advance">tick-advance</a>.
+        See also <a href="#clear-ticks">clear-ticks</a>,
+        <a href="#tick">tick</a>, <a href="#ticks">ticks</a>,
+        <a href="#tick-advance">tick-advance</a>,
+        <a href="#setup-plots">setup-plots</a>.
+        <a href="#update-plots">update-plots</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -6937,55 +6978,32 @@ show round -4.5
     <div class="dict_entry">
       <h3>
         <a name="run" id="run">run</a>
+        <br><a name="runresult" id="runresult">runresult</a>
       </h3>
       <h4>
-        run <i>string</i>
+        run <i>command-task</i>
+        <br>run <i>string</i>
+        <br>runresult <i>reporter-task</i>
+        <br>runresult <i>string</i>
       </h4>
+      <p>The <tt>run</tt> form expects a command task or a string containing commands.
+         This agent then runs them.
+      <p>The <tt>runresult</tt> form expects a reporter task or a string containing a reporter.
+         This agent runs it and  reports the result.
       <p>
-        This agent interprets the given string as a sequence of one or more
-        NetLogo commands and runs them.
-      <p>
-        The code runs in the agent's current context, which means it
+        If the input is a string, it runs in the agent's current context, which means it
         has access to the values of local variables, &quot;myself&quot;,
-        and so on.
-      <p>
-        The code must be compiled first which takes time, however, compiled
-        bits of code are cached by NetLogo and thus using <tt>run</tt> on
-        the same string over and over is much faster than running on
-        different bits of code.
-      <p>
-        See also <a href="#runresult">runresult</a>.
-      <p>
+        and so on.        
         Note that you can't use <tt>run</tt> to define or redefine
         procedures.
-      <p>
-        Note that running code through <tt>run</tt> or <tt>runresult</tt>
-        may be many times slower than running the same code directly.
-      </div>
-    <div class="dict_entry">
-      <h3>
-        <a name="runresult" id="runresult">runresult</a>
-      </h3>
-      <h4>
-        runresult <i>string</i>
-      </h4>
-      <p>
-        This agent interprets the given string as a NetLogo reporter and
-        runs it, reporting the result obtained.
-      <p>
-        The code runs in the agent's current context, which means it
-        has access to the values of local variables, &quot;myself&quot;,
-        and so on.
-      <p>
-        The code must be compiled first which takes time, however, compiled
-        bits of code are cached by NetLogo and thus using
-        <tt>runresult</tt> on the same string over and over is much faster
-        than running on different bits of code.
-      <p>
-        See also <a href="#run">run</a>.
-      <p>
-        Note that running code through <tt>run</tt> or <tt>runresult</tt>
-        may be many times slower than running the same code directly.
+        If you care about performance, note that the code must be compiled first which takes time.  However, compiled
+        bits of code are cached by NetLogo and thus using <tt>run</tt> on
+        the same string over and over is much faster than running different strings.
+        The first run, though, will be may be many times slower than running 
+        the same code directly, or in a command task.
+     <p>Tasks are recommended over strings whenever possible.
+        (An example of when you must use strings is if you accept pieces of code
+        from the user of your model.)
       </div><!-- ======================================== -->
     <h2>
       <a name="S" id="S">S</a>
@@ -7319,6 +7337,24 @@ ask cats [ set breed dogs ]
       </div>
     <div class="dict_entry">
       <h3>
+        <a name="setup-plots" id="setup-plots">setup-plots</a>
+      </h3>
+      <h4>
+        setup-plots
+      </h4>
+      <p>
+        For each plot, runs that plot's setup commands, including the setup
+        code for any pens in the plot.
+      <p>
+        <a href="#reset-ticks">reset-ticks</a> has the same effect, so in models
+        that use the tick counter, this primitive is not normally used.
+      <p>See the <a href="programming.html#plotting">Plotting section</a> of the Programming Guide for
+        more details.
+      <p>
+        See also <a href="#update-plots">update-plots</a>.
+      </div>
+    <div class="dict_entry">
+      <h3>
         <a name="set-plot-x-range" id=
         "set-plot-x-range">set-plot-x-range</a>
         <br>
@@ -7584,17 +7620,17 @@ foreach sort patches [
         <a name="sort-by" id="sort-by">sort-by</a>
       </h3>
       <h4>
-        sort-by [<i>reporter</i>] <i>list</i>
+        sort-by <i>reporter-task</i> <i>list</i>
         <br>
-        sort-by [<i>reporter</i>] <i>agentset</i>
+        sort-by <i>reporter-task</i> <i>agentset</i>
       </h4>
       <p>
         If the input is a list, reports a new list containing the same
         items as the input list, in a sorted order defined by the boolean
-        (true or false) <i>reporter</i>.
+        reporter task.
       <p>
-        In <i>reporter</i>, use <tt>?1</tt> and <tt>?2</tt> to refer to the
-        two objects being compared. <i>reporter</i> should be true if
+        The two inputs to the reporter task are the
+        values being compared. The task should report true if
         <tt>?1</tt> comes strictly before <tt>?2</tt> in the desired sort
         order, and false otherwise.
       <p>
@@ -7604,9 +7640,9 @@ foreach sort patches [
         If the input is a list, the sort is stable, that is, the order of items considered equal by
         the reporter is not disturbed.  If the input is an agentset, ties are broken randomly.
       <pre>
-show sort-by [?1 &lt; ?2] [3 1 4 2]
+show sort-by < [3 1 4 2]
 =&gt; [1 2 3 4]
-show sort-by [?1 &gt; ?2] [3 1 4 2]
+show sort-by > [3 1 4 2]
 =&gt; [4 3 2 1]
 show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
@@ -7751,12 +7787,14 @@ show standard-deviation [energy] of turtles
       </h4>
       <p>
         User-defined procedure which, if it exists, will be called when a
-        model is first loaded.
+        model is first loaded in the NetLogo application.
       <pre>
 to startup
   setup
 end
 </pre>
+     <p><tt>startup</tt> does not run when a model is run headless from
+        the command line, or by parallel BehaviorSpace.
     </div>
     <div class="dict_entry">
       <h3>
@@ -7885,6 +7923,22 @@ show sum [energy] of turtles
       </div>
     <div class="dict_entry">
       <h3>
+        <a name="task" id="task">task</a>
+      </h3>
+      <h4>
+        task [ <i>commands</i> ]
+        <br>task [ <i>reporter</i> ]
+        <br>task <i>command-name</i>
+        <br>task <i>reporter-name</i>
+      </h4>
+    <p>
+      Creates and reports a task, either a command task or a reporter task,
+      depending on the input.
+    <p>See the <a href="programming.html#tasks">Tasks section</a> of the Programming Guide for
+        details.
+      </div>
+    <div class="dict_entry">
+      <h3>
         <a name="thickness" id="thickness">thickness</a>
       </h3>
       <h4>
@@ -7909,11 +7963,15 @@ show sum [energy] of turtles
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Advances the tick counter by one.
+        Advances the tick counter by one and updates all plots.
+      <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
       <p>
         See also <a href="#ticks">ticks</a>, <a href=
         "#tick-advance">tick-advance</a>, <a href=
-        "#reset-ticks">reset-ticks</a>.
+        "#reset-ticks">reset-ticks</a>, <a href="#clear-ticks">clear-ticks</a>,
+        <a href="#update-plots">update-plots</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -7929,8 +7987,14 @@ show sum [energy] of turtles
         integer or a floating point number. (Some models divide ticks more
         finely than by ones.) The input may not be negative.
       <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
+      <p>
+        Does not update plots.
+      <p>
         See also <a href="#tick">tick</a>, <a href="#ticks">ticks</a>,
-        <a href="#reset-ticks">reset-ticks</a>.
+        <a href="#reset-ticks">reset-ticks</a>,
+        <a href="#clear-ticks">clear-ticks</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -7943,6 +8007,9 @@ show sum [energy] of turtles
         Reports the current value of the tick counter. The result is always
         a number and never negative.
       <p>
+        If the tick counter has not been started yet with <tt>reset-ticks</tt>,
+        an error results.
+      <p>
         Most models use the <tt>tick</tt> command to advance the tick
         counter, in which case <tt>ticks</tt> will always report an
         integer. If the <tt>tick-advance</tt> command is used, then
@@ -7950,7 +8017,8 @@ show sum [energy] of turtles
       <p>
         See also <a href="#tick">tick</a>, <a href=
         "#tick-advance">tick-advance</a>, <a href=
-        "#reset-ticks">reset-ticks</a>.
+        "#reset-ticks">reset-ticks</a>, <a href=
+        "#clear-ticks">clear-ticks</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -8005,7 +8073,7 @@ show sum [energy] of turtles
         mode of the link. You can also set tie-mode to &quot;free&quot; to
         create a non-rigid joint between two turtles (see the <a href=
         "programming.html#tie">Tie section</a> of the Programming Guide for
-        details. By default links are not tied.
+        details). By default links are not tied.
       <p>
         See also: <a href="#tie">tie</a>, <a href="#untie">untie</a>
       </div>
@@ -8404,6 +8472,24 @@ ask turtle 0 [ show sort my-links ]
       <p>
         See the <a href="programming.html#tie">Tie</a> section of the
         Programming Guide for more details.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="update-plots" id="update-plots">update-plots</a>
+      </h3>
+      <h4>
+        update-plots
+      </h4>
+      <p>
+        For each plot, runs that plot's update commands, including the update
+        code for any pens in the plot.
+      <p>
+        <a href="#tick">tick</a> has the same effect, so in models
+        that use the tick counter, this primitive is not normally used.
+      <p>See the <a href="programming.html#plotting">Plotting section</a> of the Programming Guide for
+        more details.
+      <p>
+        See also <a href="#setup-plots">setup-plots</a>.
       </div>
     <div class="dict_entry">
       <h3>
@@ -9033,17 +9119,18 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
         ?, ?1, ?2, ?3, ...
       </h4>
       <p>
-        These are special local variables. They hold the current inputs to
-        a reporter or command block for certain primitives (for example,
-        the current item of a list being visited by <a href=
-        "#foreach">foreach</a> or <a href="#map">map</a>).
+        These special variable names refer to the inputs to a task, in order
+        by number.
       <p>
         <tt>?</tt> is always equivalent to <tt>?1</tt>.
       <p>
         You may not set these variables, and you may not use them except
-        with certain primitives, currently <a href="#foreach">foreach</a>,
+        in the context of a task.
+      <p>Tasks are commonly used with the primitives <a href="#foreach">foreach</a>,
         <a href="#map">map</a>, <a href="#reduce">reduce</a>, <a href=
         "#filter">filter</a>, <a href="#sort-by">sort-by</a>, and <a href=
         "#n-values">n-values</a>. See those entries for example usage.
+    <p>See the <a href="programming.html#tasks">Tasks section</a> of the Programming Guide for
+        more details.
       </div>
 

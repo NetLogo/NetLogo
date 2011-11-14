@@ -173,11 +173,7 @@ object Example1 {
       <tt>NetLogo.jar</tt>.
     <p>
       If you are using Scala, you'll need to make sure you are using
-      Scala 2.9.1. (Note that if you are a JVM wizard, you may actually be
-      able to run your own Scala code using a different Scala version than
-      NetLogo requires, by using the two Scala versions in different class
-      loaders. At least, we don't know of a reason why this
-      wouldn't work.)
+      Scala 2.9.1.
     <p>
       Note the use of <tt>EventQueue.invokeAndWait</tt> to ensure that a
       method is called from the right thread. This is because most of the
@@ -457,7 +453,7 @@ public class Example3 {
       java.awt.EventQueue.invokeAndWait(
         new Runnable() {
           public void run() {
-            frame.setSize(1000,700);
+            frame.setSize(1000, 700);
             frame.add(comp);
             frame.setVisible(true);
             try {
@@ -485,11 +481,11 @@ public class Example3 {
     <pre>
 import org.nlogo.lite.InterfaceComponent
 object Example3 {
-  def main(args:Array[String]) {
+  def main(args: Array[String]) {
     val frame = new javax.swing.JFrame
     val comp = new InterfaceComponent(frame)
     wait {
-      frame.setSize(1000,700)
+      frame.setSize(1000, 700)
       frame.add(comp)
       frame.setVisible(true)
       comp.open(
@@ -501,7 +497,7 @@ object Example3 {
     comp.command(&quot;repeat 50 [ go ]&quot;)
     println(comp.report(&quot;burned-trees&quot;))
   }
-  def wait(block: =&gt;Unit) {
+  def wait(block: =&gt; Unit) {
     java.awt.EventQueue.invokeAndWait(
       new Runnable() { def run() { block } } ) }
 }
@@ -522,12 +518,13 @@ object Example3 {
     <p>
       Don't forget to consult the <a href="scaladoc/index.html">NetLogo
       API Specification</a> for full details on these classes and methods.
+    <p>You may also find it useful to consult the NetLogo source code,
+       which is hosted <a href=
+      "https://github.com/NetLogo/NetLogo">on GitHub</a>.
     <p>
       Some API facilities exist, but are not yet documented. So if you
       don't see the capability you want, contact us; we may be able to
-      help you do you what you want. Please do not hesitate to contact us
-      at <a href=
-      "mailto:feedback@ccl.northwestern.edu">feedback@ccl.northwestern.edu</a>
-      with questions, as we may be able to find a workaround or provide
-      additional guidance where our documentation is thin.
-
+      help you do you what you want. Please do not hesitate
+      to <a href="contact.html">contact us</a> with questions, as we
+      may be able to find a workaround or provide additional guidance
+      where our documentation is thin.
