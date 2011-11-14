@@ -243,7 +243,7 @@ edit.viewSettings.origin.location.custom = Custom
 edit.viewSettings.origin.location.corner.bottomLeft = Bottom Left
 edit.viewSettings.origin.location.corner.topLeft = Top Left
 edit.viewSettings.origin.location.corner.topRight = Top Right
-edit.viewSettings.origin.location.corner.bottomRight = Buttom Right
+edit.viewSettings.origin.location.corner.bottomRight = Bottom Right
 
 edit.viewSettings.origin.location.edge.bottom = Bottom
 edit.viewSettings.origin.location.edge.top = Top
@@ -253,7 +253,7 @@ edit.viewSettings.origin.location.edge.left = Left
 edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Bottom Southwest
 edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Bottom Northwest
 edit.viewSettings.3D.origin.location.corner.bottomNortheast = Bottom Northeast
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Buttom Southeast
+edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Bottom Southeast
 edit.viewSettings.3D.origin.location.corner.topSouthwest = Top Southwest
 edit.viewSettings.3D.origin.location.corner.topNorthwest = Top Northwest
 edit.viewSettings.3D.origin.location.corner.topNortheast = Top Northeast

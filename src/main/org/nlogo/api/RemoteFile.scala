@@ -68,10 +68,7 @@ class RemoteFile(filepath: String) extends File {
     mode = FileMode.None
   }
 
-  override def getAbsolutePath =
-    new java.io.File(filepath).getAbsolutePath
-
-  override def getPath =
-    new java.io.File(filepath).getPath
+  override def getAbsolutePath = filepath
+  override def getPath = filepath
 
 }

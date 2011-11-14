@@ -17,7 +17,6 @@ strictfp class CommandLine
     implements
     java.awt.event.ActionListener,
     java.awt.event.KeyListener,
-//java.awt.event.FocusListener ,
     org.nlogo.window.Events.CompiledEvent.Handler {
   static final String PROMPT = ">";
   static final String OBSERVER_PROMPT = I18N.guiJ().get("common.observer") + PROMPT;
@@ -28,6 +27,7 @@ strictfp class CommandLine
   private final org.nlogo.window.CommandCenterInterface commandCenter;
   private final boolean echoCommandsToOutput;
   public final org.nlogo.editor.EditorField<TokenType> textField;
+  private final org.nlogo.nvm.Workspace workspace;
 
   // this is needed for if we're embedded in an agent monitor instead
   // of the command center - ST 7/30/03
@@ -49,6 +49,7 @@ strictfp class CommandLine
     super(workspace.world().mainRNG);
     this.commandCenter = commandCenter;
     this.echoCommandsToOutput = echoCommandsToOutput;
+    this.workspace = workspace;
     agentClass(org.nlogo.agent.Observer.class);
     textField =
         new org.nlogo.editor.EditorField<TokenType>
@@ -155,6 +156,10 @@ strictfp class CommandLine
     if (inner.trim().equals("")) {
       setText("");
       return;
+    }
+    if(workspace.isReporter(inner)) {
+      inner = "show " + inner;
+      setText(inner);
     }
     String header = "to __commandline [] ";
     String footer = "__done end";

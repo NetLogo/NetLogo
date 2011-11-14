@@ -240,6 +240,10 @@ public strictfp class ClientApplet
       return source;
     }
 
+    public boolean isReporter(String s) {
+      throw new UnsupportedOperationException();
+    }
+
     public boolean isValidIdentifier(String s) {
       return true;
     }

@@ -27,7 +27,12 @@ object Shell {
   }
 
   def run(workspace: HeadlessWorkspace, line: String) {
-    try workspace.command(line)
+    val command =
+      if (workspace.isReporter(line))
+        "print " + line
+      else
+        line
+    try workspace.command(command)
     catch {
       case ex: CompilerException =>
         println("COMPILER ERROR: " + ex.getMessage)

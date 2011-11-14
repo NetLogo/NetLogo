@@ -86,9 +86,6 @@ misc:
   that just says 4.1)
 - update versions.html (consider: if the release is on a branch,
   does the trunk need to be updated as well?)
-- update issues.html (remove anything that was fixed, and consider
-  whether more entries should be added) and also the known issues
-  lists in hubnet.html and arraystables.html
 - update requirements.html.  
 - update the Scala version in dist/lab-readme.txt, dist/lab-build.sh,
   docs/controlling.html, docs/extensions.html, docs/versions.html
