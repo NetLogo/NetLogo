@@ -1286,10 +1286,10 @@ src/main/org/nlogo/lab/gui/ProgressDialog.scala:44:      val plotWidget = PlotWi
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:50:      plotWidget.xLabel("Time")
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:51:      plotWidget.yLabel("Behavior")
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:65:    setTitle("Running Experiment: " + protocol.name)
-src/main/org/nlogo/lab/gui/ProgressDialog.scala:126:  lazy val abortAction = PimpedAction("Abort") { _ =>
-src/main/org/nlogo/lab/gui/ProgressDialog.scala:130:  lazy val periodicUpdateAction = PimpedAction("update elapsed time") { _ =>
-src/main/org/nlogo/lab/gui/ProgressDialog.scala:134:  lazy val displaySwitchAction = PimpedAction("Update view") { e =>
-src/main/org/nlogo/lab/gui/ProgressDialog.scala:137:  lazy val plotsAndMonitorsSwitchAction = PimpedAction("Update plots and monitors") { e =>
+src/main/org/nlogo/lab/gui/ProgressDialog.scala:126:  lazy val abortAction = RichAction("Abort") { _ =>
+src/main/org/nlogo/lab/gui/ProgressDialog.scala:130:  lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
+src/main/org/nlogo/lab/gui/ProgressDialog.scala:134:  lazy val displaySwitchAction = RichAction("Update view") { e =>
+src/main/org/nlogo/lab/gui/ProgressDialog.scala:137:  lazy val plotsAndMonitorsSwitchAction = RichAction("Update plots and monitors") { e =>
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:162:      for ((name, value) <- settings) settingsString += name + " = " + Dump.logoObject(value) + "\n"
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:222:    val newElapsed = hours + ":" + minutes + ":" + seconds
 src/main/org/nlogo/lab/gui/ProgressDialog.scala:227:          progressArea.setText("Run #" + runCount + " of " + totalRuns + ", " +
@@ -1727,8 +1727,8 @@ src/main/org/nlogo/properties/PlotPensEditor.scala:50:      org.nlogo.swing.Opti
 src/main/org/nlogo/properties/PlotPensEditor.scala:88:    override def toString = "Pen(" + name + ", " + updateCode + "," + color + ")"
 src/main/org/nlogo/properties/PlotPensEditor.scala:120:    val ButtonsColumnName = "Buttons"
 src/main/org/nlogo/properties/PlotPensEditor.scala:164:      val nextName = "pen-" + model.pens.size
-src/main/org/nlogo/properties/PlotPensEditor.scala:234:      val editButton = PimpedJButton(new javax.swing.ImageIcon(getClass.getResource("/images/edit.gif"))) {
-src/main/org/nlogo/properties/PlotPensEditor.scala:237:      val deleteButton = PimpedJButton(new javax.swing.ImageIcon(getClass.getResource("/images/delete.gif"))) {
+src/main/org/nlogo/properties/PlotPensEditor.scala:234:      val editButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/edit.gif"))) {
+src/main/org/nlogo/properties/PlotPensEditor.scala:237:      val deleteButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/delete.gif"))) {
 src/main/org/nlogo/properties/PlotPensEditor.scala:243:      editButton.putClientProperty("JComponent.sizeVariant", "small")
 src/main/org/nlogo/properties/PlotPensEditor.scala:244:      deleteButton.putClientProperty("JComponent.sizeVariant", "small")
 src/main/org/nlogo/properties/PropertyAccessor.scala:19:        target.getClass.getMethod(accessString + "_$eq", erasure)
@@ -1957,8 +1957,8 @@ src/main/org/nlogo/swing/BrowserLauncher.java:79:                  "Please insta
 src/main/org/nlogo/swing/BrowserLauncher.java:80:                  "is in your executable PATH.  Firefox is available here:\n " +
 src/main/org/nlogo/swing/BrowserLauncher.java:82:                  "The full error message was:\n " + ex.getLocalizedMessage()
 src/main/org/nlogo/swing/MessageDialog.java:61:        new javax.swing.AbstractAction("Dismiss") {
-src/main/org/nlogo/swing/Popup.scala:18:    PimpedJButton(i18n("common.buttons.ok")){ if(ok) die() },
-src/main/org/nlogo/swing/Popup.scala:19:    PimpedJButton(i18n("common.buttons.cancel")){ cancel; die() }),
+src/main/org/nlogo/swing/Popup.scala:18:    RichJButton(i18n("common.buttons.ok")){ if(ok) die() },
+src/main/org/nlogo/swing/Popup.scala:19:    RichJButton(i18n("common.buttons.cancel")){ cancel; die() }),
 src/main/org/nlogo/swing/PrinterManager.java:62:    String pageNumString = " - page " + pageNum;
 src/main/org/nlogo/swing/PrinterManager.java:69:      new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 9);
 src/main/org/nlogo/swing/SelectableJLabel.scala:10:class SelectableJLabel(str: String) extends JTextField(" " + str + " ") {  
@@ -2177,13 +2177,13 @@ src/main/org/nlogo/window/NetLogoListenerManager.java:50:        } else if (e.wi
 src/main/org/nlogo/window/NetLogoListenerManager.java:65:              ("unknown widget type: " + e.widget);
 src/main/org/nlogo/window/NetLogoListenerManager.java:92:            ("unexpected agent class: " + e.sourceOwner.agentClass());
 src/main/org/nlogo/window/OutputWidget.scala:27:  override def getDefaultExportName = "output.txt"
-src/main/org/nlogo/window/OutputWidget.scala:40:    val copyItem = PimpedJMenuItem("Copy Selected Text"){ outputArea.text.copy }
+src/main/org/nlogo/window/OutputWidget.scala:40:    val copyItem = RichJMenuItem("Copy Selected Text"){ outputArea.text.copy }
 src/main/org/nlogo/window/OutputWidget.scala:50:    e.writer.println(Dump.csv.encode("OUTPUT")) 
 src/main/org/nlogo/window/OutputWidget.scala:56:    s.append("OUTPUT\n") 
 src/main/org/nlogo/window/PlotWidget.scala:15:    plot.createPlotPen("default", false, "", "plot count turtles")
 src/main/org/nlogo/window/PlotWidget.scala:34:  override def getDefaultExportName = plotName + ".csv"
-src/main/org/nlogo/window/PlotWidget.scala:47:    val copyItem = PimpedJMenuItem("Copy Image"){
-src/main/org/nlogo/window/PlotWidget.scala:55:    PimpedJMenuItem("Clear"){ clear() }
+src/main/org/nlogo/window/PlotWidget.scala:47:    val copyItem = RichJMenuItem("Copy Image"){
+src/main/org/nlogo/window/PlotWidget.scala:55:    RichJMenuItem("Clear"){ clear() }
 src/main/org/nlogo/window/Properties.scala:38:      "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>")
 src/main/org/nlogo/window/Properties.scala:43:      "min, increment, and max may be numbers or reporters",
 src/main/org/nlogo/window/Properties.scala:74:    P("patchSize", P.Double,

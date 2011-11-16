@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.swing.PimpedAction
+import org.nlogo.swing.RichAction
 import org.nlogo.nvm.{LabInterface,Workspace}
 import LabInterface.ProgressListener
 import org.nlogo.window.{DisplaySwitch, PlotWidget, ViewUpdatePanel}
@@ -123,18 +123,18 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   // The following actions are declared lazy so we can use them in the
   // initialization code above.  Two cheers for Scala. - ST 11/12/08
 
-  lazy val abortAction = PimpedAction("Abort") { _ =>
+  lazy val abortAction = RichAction("Abort") { _ =>
     supervisor.interrupt()
     close()
   }
-  lazy val periodicUpdateAction = PimpedAction("update elapsed time") { _ =>
+  lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if(updatePlots) plotWidget.handle(null) }
   }
-  lazy val displaySwitchAction = PimpedAction("Update view") { e =>
+  lazy val displaySwitchAction = RichAction("Update view") { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
   }
-  lazy val plotsAndMonitorsSwitchAction = PimpedAction("Update plots and monitors") { e =>
+  lazy val plotsAndMonitorsSwitchAction = RichAction("Update plots and monitors") { e =>
     updatePlots = e.getSource.asInstanceOf[JCheckBox].isSelected
     if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
     else {
