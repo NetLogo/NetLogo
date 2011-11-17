@@ -17,8 +17,8 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   dialog.add(panel, BorderLayout.CENTER)
 
   dialog.add(ButtonPanel(
-    PimpedJButton(i18n("common.buttons.ok")){ if(ok) die() },
-    PimpedJButton(i18n("common.buttons.cancel")){ cancel; die() }),
+    RichJButton(i18n("common.buttons.ok")){ if(ok) die() },
+    RichJButton(i18n("common.buttons.cancel")){ cancel; die() }),
     BorderLayout.SOUTH)
 
   def show() {

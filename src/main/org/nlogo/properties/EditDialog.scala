@@ -7,7 +7,7 @@ package org.nlogo.properties
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Implicits._
 import javax.swing.JButton
-import org.nlogo.swing.{BrowserLauncher, ButtonPanel, PimpedJButton}
+import org.nlogo.swing.{BrowserLauncher, ButtonPanel, RichJButton}
 import org.nlogo.api.{I18N, CompilerServices, TokenType}
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
@@ -53,7 +53,7 @@ trait EditDialog extends javax.swing.JDialog {
     }}
 
   var sendEditFinishedOnCancel = false
-  val applyButton = PimpedJButton(I18N.gui.get("common.buttons.apply")){
+  val applyButton = RichJButton(I18N.gui.get("common.buttons.apply")){
     if(editPanel.valid) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
@@ -61,8 +61,8 @@ trait EditDialog extends javax.swing.JDialog {
     }
   }
 
-  val cancelButton = PimpedJButton(I18N.gui.get("common.buttons.cancel")){ cancel(target) }
-  val helpButton = PimpedJButton(I18N.gui.get("common.buttons.help")){
+  val cancelButton = RichJButton(I18N.gui.get("common.buttons.cancel")){ cancel(target) }
+  val helpButton = RichJButton(I18N.gui.get("common.buttons.help")){
     val link = target.helpLink.getOrElse("")
     val mainLink = if(link.contains('#')) link.takeWhile(_!='#') else link
     val anchor = if(link.contains('#')) link.dropWhile(_!='#') else ""
