@@ -423,7 +423,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_outputshow anything,OTPL,null,0,1,1
                     |_outputtype anything,OTPL,null,0,1,1
                     |_outputwrite number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
-                    |_parallelupdate agentset/variable/reporter block,OTPL,?,0,3,3 *
                     |_patchcode ,--P-,null,0,0,0
                     |_pendown ,-T--,null,0,0,0 *
                     |_penerase ,-T--,null,0,0,0 *
