@@ -3,10 +3,10 @@
 package org.nlogo.app
 
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.PimpedAction
+import org.nlogo.swing.RichAction
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
-import org.nlogo.swing.PimpedAction
+import org.nlogo.swing.RichAction
 import org.nlogo.api.I18N
 
 class Tabs(val workspace: GUIWorkspace,
@@ -175,13 +175,13 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   def addMenuItem(i: Int, name: String) {
-    tabsMenu.addMenuItem(('1' + i).toChar, PimpedAction{ _ => Tabs.this.setSelectedIndex(i) })
+    tabsMenu.addMenuItem(('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
   }
 
   private def stripPath(filename: String): String =
     filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
 
-  val printAction = PimpedAction("print-current-tab") { _ =>
+  val printAction = RichAction("print-current-tab") { _ =>
     currentTab match {
       case printable: org.nlogo.swing.Printable =>
         try org.nlogo.swing.PrinterManager.print(printable, workspace.modelNameForDisplay)

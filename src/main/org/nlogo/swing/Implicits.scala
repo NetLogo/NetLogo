@@ -30,11 +30,11 @@ object Implicits {
     new java.awt.event.ItemListener() {
       override def itemStateChanged(e: java.awt.event.ItemEvent) { fn() } }
 
-  implicit def pimpMyComboBox(combo: JComboBox) = PimpedJComboBox(combo)
-  implicit def pimpMyContainer(c:Container) = new PimpedComponent(c)
+  implicit def EnrichComboBox(combo: JComboBox) = RichJComboBox(combo)
+  implicit def EnrichContainer(c:Container) = new RichComponent(c)
 }
 
-object PimpedJButton{
+object RichJButton{
   def apply(name:String)(f: => Unit) = {
     new JButton(name){
       addActionListener(new ActionListener{
@@ -58,13 +58,13 @@ object PimpedJButton{
   }
 }
 
-class PimpedComponent(c:Container){
+class RichComponent(c:Container){
   def addAll(comps:Component*){
     for(c2<-comps) c.add(c2)
   }
 }
 
-object PimpedAction{
+object RichAction{
   def apply(name:String)(f: ActionEvent => Unit): AbstractAction = new AbstractAction(name){
     def actionPerformed(e: ActionEvent) { f(e) }
   }
@@ -74,8 +74,8 @@ object PimpedAction{
 }
 
 // open question
-// can we use structural typing to pimp anything with an addActionListener method?
-object PimpedJMenuItem {
+// can we use structural typing to add this method to anything with an addActionListener method?
+object RichJMenuItem {
   def apply(name:String)(f: => Unit) = {
     new JMenuItem(name){
       addActionListener(new ActionListener{
@@ -85,7 +85,7 @@ object PimpedJMenuItem {
   }
 }
 
-case class PimpedJComboBox(combo: JComboBox) {
+case class RichJComboBox(combo: JComboBox) {
   class PossibleSelection[T](t: T) {
     def becomesSelected(f: => Unit) {
       combo.addItemListener(new ItemListener {

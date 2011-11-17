@@ -144,7 +144,7 @@ class TestColorRendering extends AbstractTestRenderer {
     workspace.testColors(127,127,127,255)
   }
 
-  class PimpedWorkspace(workspace: HeadlessWorkspace){
+  class RichWorkspace(workspace: HeadlessWorkspace){
     def setShapes(shapes: VectorShape*) {
       // remove all shapes from the world
       import collection.JavaConverters._
@@ -171,7 +171,7 @@ class TestColorRendering extends AbstractTestRenderer {
     }
   }
 
-  implicit def pimpMyWorkspace(workspace: HeadlessWorkspace): PimpedWorkspace = new PimpedWorkspace(workspace)
+  implicit def EnrichWorkspace(workspace: HeadlessWorkspace): RichWorkspace = new RichWorkspace(workspace)
 }
 
 class TestRendererForPatchLabels extends AbstractTestRenderer{

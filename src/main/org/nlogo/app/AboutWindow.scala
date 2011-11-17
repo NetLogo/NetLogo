@@ -8,7 +8,7 @@ import org.nlogo.swing.Implicits._
 import java.awt._
 import event._
 import javax.swing._
-import org.nlogo.swing.{BrowserLauncher, PimpedAction, IconHolder}
+import org.nlogo.swing.{BrowserLauncher, RichAction, IconHolder}
 
 class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   private val refreshTimer: Timer = new Timer(2000, () => refreshSystemText())
@@ -81,7 +81,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
     getContentPane.add(label,BorderLayout.CENTER)
     getContentPane.add(tabs,BorderLayout.SOUTH)
 
-    org.nlogo.swing.Utils.addEscKeyAction(this, PimpedAction{ _ => dispose() } )
+    org.nlogo.swing.Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
     pack()
     org.nlogo.awt.Positioning.center(this,null)
 

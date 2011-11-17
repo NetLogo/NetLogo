@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.PimpedAction
+import org.nlogo.swing.RichAction
 import java.awt._
 import event.{MouseAdapter, MouseEvent}
 import javax.swing._
@@ -51,7 +51,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
         // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
         override def getInsets = new Insets(2, 4, 3, 4)
       }
-    val clearButton = new JButton(PimpedAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
+    val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
       setFocusable(false)
       setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 9))
       // get right appearance on Mac - ST 10/4/05
