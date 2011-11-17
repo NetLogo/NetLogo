@@ -96,7 +96,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_inlinkneighbors ,agentset,-T--,null,10,0,0
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,null,12,1,1
                      |_inradiusnowrap agentset,number,agentset,-TP-,null,12,1,1
-                     |_inrect agentset,number/number,agentset,-TP-,null,12,2,2
                      |_int number,number,OTPL,null,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,null,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,null,10,1,1
@@ -135,7 +134,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_map reporter task/list,list,OTPL,null,10,2,2
                      |_max list,number,OTPL,null,10,1,1
                      |_maxnof number/agentset/number block,agentset,OTPL,?,10,3,3
-                     |_maxnofwithties agentset,number/number block,agentset,OTPL,?,10,2,2
                      |_maxoneof agentset/number block,agent,OTPL,?,10,2,2
                      |_maxpxcor ,number,OTPL,null,10,0,0
                      |_maxpycor ,number,OTPL,null,10,0,0
@@ -144,7 +142,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_member anything/string or list or agentset,TRUE/FALSE,OTPL,null,10,2,2
                      |_min list,number,OTPL,null,10,1,1
                      |_minnof number/agentset/number block,agentset,OTPL,?,10,3,3
-                     |_minnofwithties agentset,number/number block,agentset,OTPL,?,10,2,2
                      |_minoneof agentset/number block,agent,OTPL,?,10,2,2
                      |_minpxcor ,number,OTPL,null,10,0,0
                      |_minpycor ,number,OTPL,null,10,0,0
@@ -154,7 +151,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_monitorprecision anything/number,number,O---,null,10,2,2
                      |_mousedown ,TRUE/FALSE,OTPL,null,10,0,0
                      |_mouseinside ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_mousepatch ,patch,OTPL,null,10,0,0
                      |_mousexcor ,number,OTPL,null,10,0,0
                      |_mouseycor ,number,OTPL,null,10,0,0
                      |_moviestatus ,string,OTPL,null,10,0,0
@@ -426,7 +422,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_outputshow anything,OTPL,null,0,1,1
                     |_outputtype anything,OTPL,null,0,1,1
                     |_outputwrite number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
-                    |_parallelupdate agentset/variable/reporter block,OTPL,?,0,3,3 *
                     |_patchcode ,--P-,null,0,0,0
                     |_pendown ,-T--,null,0,0,0 *
                     |_penerase ,-T--,null,0,0,0 *

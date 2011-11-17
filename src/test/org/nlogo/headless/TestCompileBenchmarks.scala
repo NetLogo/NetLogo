@@ -19,7 +19,25 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
     assert(names.mkString("\n") === ChecksumsAndPreviews.allBenchmarks.mkString("\n"))
   }
 
-  if(Version.useGenerator && !Version.is3D)
+  if(Version.useGenerator && !Version.is3D) {
+    // the benchmarks dumps may be different on some branches, but since the benchmark models aren't
+    // open source, they're in a separate repo.  so, in that separate repo, we have a "master"
+    // directory with the dumps for the master branch here in the main repo, and for any branch here
+    // which needs different dumps, there's a corresponding directory in the models repo.
+    // A bit kludgy I guess, but it's OK. - ST 11/17/11
+    val branch =
+      try {
+        val branch = sys.process.Process("git name-rev --name-only HEAD").lines.head.trim
+        if (new java.io.File("models/test/bench/" + branch).exists)
+          branch
+        else
+          "master"
+      }
+      catch {
+        case e: java.io.IOException =>
+          System.err.println("couldn't get name of current git branch: " + e.getMessage)
+          "master"
+      }
     for(name <- names)
       test(name) {
         val dump = {
@@ -29,6 +47,9 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           workspace.dispose()
           result
         }
-        assert(dump === io.Source.fromFile("models/test/bench/" + name + ".txt").getLines.mkString("","\n","\n"))
+        val source =
+          io.Source.fromFile("models/test/bench/" + branch + "/" + name + ".txt")
+        assert(dump === source.getLines.mkString("","\n","\n"))
       }
+  }
 }

@@ -39,7 +39,6 @@ C __magic-open etc._magicopen
 C __make-preview etc._makepreview
 C __mkdir etc._mkdir
 C __observercode etc._observercode
-C __parallel-update etc._parallelupdate
 C __patchcode etc._patchcode
 C __plot-pen-hide plot._plotpenhide
 C __plot-pen-show plot._plotpenshow
@@ -269,11 +268,7 @@ R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
-R __in-rectangle etc._inrect
-R __max-n-of-with-ties etc._maxnofwithties
-R __min-n-of-with-ties etc._minnofwithties
 R __monitorprecision etc._monitorprecision
-R __mouse-patch gui._mousepatch
 R __nano-time etc._nanotime
 R __oheading threed._oheading
 R __opitch threed._opitch
