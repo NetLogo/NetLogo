@@ -2,7 +2,7 @@
 
 package org.nlogo.window 
 
-import org.nlogo.swing.PimpedJMenuItem
+import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.{I18N, Editable}
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
@@ -39,7 +39,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    val copyItem = PimpedJMenuItem("Copy Selected Text"){ outputArea.text.copy }
+    val copyItem = RichJMenuItem("Copy Selected Text"){ outputArea.text.copy }
     menu.add(copyItem)
     p
   }
