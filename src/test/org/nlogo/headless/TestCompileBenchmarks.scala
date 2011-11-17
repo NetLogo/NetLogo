@@ -29,6 +29,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           workspace.dispose()
           result
         }
-        assert(dump === io.Source.fromFile("models/test/bench/" + name + ".txt").getLines.mkString("","\n","\n"))
+        val source = io.Source.fromFile("models/test/bench/master/" + name + ".txt")
+        assert(dump === source.getLines.mkString("","\n","\n"))
       }
 }
