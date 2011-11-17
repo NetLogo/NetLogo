@@ -151,7 +151,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_monitorprecision anything/number,number,O---,null,10,2,2
                      |_mousedown ,TRUE/FALSE,OTPL,null,10,0,0
                      |_mouseinside ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_mousepatch ,patch,OTPL,null,10,0,0
                      |_mousexcor ,number,OTPL,null,10,0,0
                      |_mouseycor ,number,OTPL,null,10,0,0
                      |_moviestatus ,string,OTPL,null,10,0,0

@@ -269,7 +269,6 @@ R __dump1 etc._dump1
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
 R __monitorprecision etc._monitorprecision
-R __mouse-patch gui._mousepatch
 R __nano-time etc._nanotime
 R __oheading threed._oheading
 R __opitch threed._opitch
