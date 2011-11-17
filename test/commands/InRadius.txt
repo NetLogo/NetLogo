@@ -311,8 +311,3 @@ InRadiusLargeRadius5_3D
   [ count patches in-radius 14 ] of patch -3 0 0 => 1728
   [ count patches in-radius 14 ] of patch max-pxcor 0 0 => 1728
   [ count patches in-radius 14 ] of patch 0 min-pycor 0 => 1728
-
-InRectangle_2D
-  O> resize-world 0 31 0 31
-  O> ask one-of patches [ ask patches __in-rectangle 17 17 [ set pcolor blue ] ]
-  count patches with [ pcolor != blue ] => 0

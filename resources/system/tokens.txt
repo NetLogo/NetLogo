@@ -269,7 +269,6 @@ R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
-R __in-rectangle etc._inrect
 R __max-n-of-with-ties etc._maxnofwithties
 R __min-n-of-with-ties etc._minnofwithties
 R __monitorprecision etc._monitorprecision

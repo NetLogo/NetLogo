@@ -96,7 +96,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_inlinkneighbors ,agentset,-T--,null,10,0,0
                      |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,null,12,1,1
                      |_inradiusnowrap agentset,number,agentset,-TP-,null,12,1,1
-                     |_inrect agentset,number/number,agentset,-TP-,null,12,2,2
                      |_int number,number,OTPL,null,10,1,1
                      |_isagent anything,TRUE/FALSE,OTPL,null,10,1,1
                      |_isagentset anything,TRUE/FALSE,OTPL,null,10,1,1
