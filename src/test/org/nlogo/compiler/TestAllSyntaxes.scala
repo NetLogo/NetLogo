@@ -134,7 +134,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_map reporter task/list,list,OTPL,null,10,2,2
                      |_max list,number,OTPL,null,10,1,1
                      |_maxnof number/agentset/number block,agentset,OTPL,?,10,3,3
-                     |_maxnofwithties agentset,number/number block,agentset,OTPL,?,10,2,2
                      |_maxoneof agentset/number block,agent,OTPL,?,10,2,2
                      |_maxpxcor ,number,OTPL,null,10,0,0
                      |_maxpycor ,number,OTPL,null,10,0,0
@@ -143,7 +142,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_member anything/string or list or agentset,TRUE/FALSE,OTPL,null,10,2,2
                      |_min list,number,OTPL,null,10,1,1
                      |_minnof number/agentset/number block,agentset,OTPL,?,10,3,3
-                     |_minnofwithties agentset,number/number block,agentset,OTPL,?,10,2,2
                      |_minoneof agentset/number block,agent,OTPL,?,10,2,2
                      |_minpxcor ,number,OTPL,null,10,0,0
                      |_minpycor ,number,OTPL,null,10,0,0
