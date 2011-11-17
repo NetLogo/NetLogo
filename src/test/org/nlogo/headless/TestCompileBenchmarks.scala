@@ -25,19 +25,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
     // directory with the dumps for the master branch here in the main repo, and for any branch here
     // which needs different dumps, there's a corresponding directory in the models repo.
     // A bit kludgy I guess, but it's OK. - ST 11/17/11
-    val branch =
-      try {
-        val branch = sys.process.Process("git name-rev --name-only HEAD").lines.head.trim
-        if (new java.io.File("models/test/bench/" + branch).exists)
-          branch
-        else
-          "master"
-      }
-      catch {
-        case e: java.io.IOException =>
-          System.err.println("couldn't get name of current git branch: " + e.getMessage)
-          "master"
-      }
+    val branch = "master"
     for(name <- names)
       test(name) {
         val dump = {
