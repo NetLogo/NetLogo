@@ -20,7 +20,7 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
     "RESERVOIR"        -> "org.nlogo.sdm.gui.WrappedReservoir", 
     "CONVERTER_FIGURE" -> "org.nlogo.sdm.gui.ConverterFigure",
     "BINDING_CONN"     -> "org.nlogo.sdm.gui.BindingConnection",
-    "CHOP_ELLIPSE"     -> "org.jhotdraw.figures.ChopEllipseConnector",  
+    "CHOP_ELLIPSE"     -> "org.jhotdraw.figures.ChopEllipseConnector",
     "CHOP_RATE"        -> "org.nlogo.sdm.gui.ChopRateConnector"
  )
 
@@ -63,7 +63,7 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
     // file so we can find them later to connect rates. - EV
     // not every line results in an object, so we use a map instead of an ArrayList (an ArrayList
     // with some nulls in it would have worked too) - ST 1/25/05
-    val lineMap = collection.mutable.Map[Int,ModelElement]()
+    val lineMap = collection.mutable.Map[Int, ModelElement]()
     var model: Model = null
     var validLines = 0
     while(tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
