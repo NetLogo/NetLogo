@@ -54,10 +54,10 @@ class Translator(model:Model,compiler:CompilerServices) {
     globals += "]\n\n"
     procedures += "end\n\n"
     procedures += ";; Step through the system dynamics model by performing next iteration of Euler's method.\n"
-    procedures += ";; Call this in your model's GO procedure.\n"
+    procedures += ";; Call this in your plot's update commands.\n"
     procedures += "to system-dynamics-go\n"
     plots += ";; Plot the current state of the system dynamics model's stocks\n"
-    plots += ";; Call this procedure in your model's GO procedure.\n"
+    plots += ";; Call this procedure in your plot's update commands.\n"
     plots += "to system-dynamics-do-plot\n"
     if(!converters.isEmpty || !rates.isEmpty) {
       procedures += "\n  ;; compute variable and flow values once per step\n"
