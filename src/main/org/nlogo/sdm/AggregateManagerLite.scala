@@ -2,29 +2,15 @@
 
 package org.nlogo.sdm
 
+import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
 import java.io.StreamTokenizer
-import org.nlogo.api.CompilerServices
+import StreamTokenizer.{ TT_EOF, TT_EOL, TT_WORD, TT_NUMBER }
 
-class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
-
-  private val validTokens = Map(
-    "MODEL"            -> "org.nlogo.sdm.gui.AggregateDrawing",
-    "STOCK"            -> "org.nlogo.sdm.gui.WrappedStock",
-    "RATE"             -> "org.nlogo.sdm.gui.WrappedRate",
-    "CONVERTER"        -> "org.nlogo.sdm.gui.WrappedConverter",
-    "RESERVOIR_FIGURE" -> "org.nlogo.sdm.gui.ReservoirFigure",
-    "STOCK_FIGURE"     -> "org.nlogo.sdm.gui.StockFigure",
-    "RATE_CONN"        -> "org.nlogo.sdm.gui.RateConnection",
-    "CHOP_DIAMOND"     -> "org.jhotdraw.contrib.ChopDiamondConnector",
-    "CHOP_BOX"         -> "org.jhotdraw.standard.ChopBoxConnector",  
-    "RESERVOIR"        -> "org.nlogo.sdm.gui.WrappedReservoir", 
-    "CONVERTER_FIGURE" -> "org.nlogo.sdm.gui.ConverterFigure",
-    "BINDING_CONN"     -> "org.nlogo.sdm.gui.BindingConnection",
-    "CHOP_ELLIPSE"     -> "org.jhotdraw.figures.ChopEllipseConnector",
-    "CHOP_RATE"        -> "org.nlogo.sdm.gui.ChopRateConnector"
- )
+class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
+
+  private type LineMap = collection.Map[Int, ModelElement]
 
   /// implementations of SourceOwner methods
   var source = ""
@@ -46,7 +32,7 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
 
   def load(lines: String, compiler: CompilerServices) {
     if(lines.trim.nonEmpty) {
-      val lines2 = org.nlogo.sdm.Model.mungeClassNames(lines)
+      val lines2 = Model.mungeClassNames(lines)
       // parse out dt first, since StreamTokenizer doesn't handle scientific notation
       val br = new java.io.BufferedReader(new java.io.StringReader(lines2))
       val dt = br.readLine().toDouble
@@ -66,36 +52,32 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
     val lineMap = collection.mutable.Map[Int, ModelElement]()
     var model: Model = null
     var validLines = 0
-    while(tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+    while(tokenizer.nextToken() != TT_EOF) {
       // ignore blank lines
-      if(tokenizer.ttype != StreamTokenizer.TT_EOL) {
+      if(tokenizer.ttype != TT_EOL) {
         // translate pre-4.1 save format
         tokenizer.sval = tokenizer.sval.replaceAll(
           "org.nlogo.aggregate.gui", "org.nlogo.sdm.gui")
-        if(!validTokens.valuesIterator.contains(tokenizer.sval))
-          throw new java.io.IOException(
-            "invalid token: \"" + tokenizer.sval + "\"")
         validLines += 1
         val me = processElement(tokenizer)
-        if(me != null) {
-          if(me.isInstanceOf[Model]) {
-            if(model != null)
-              throw new IllegalStateException
-            model = me.asInstanceOf[Model]
+        me match {
+          case m: Model =>
+            require(model == null)
+            model = m
             model.setDt(dt.toDouble)
-          }
-          else if(me.isInstanceOf[Stock]) {
-            lineMap(validLines) = me
+          case s: Stock =>
+            lineMap(validLines) = s
             // I don't understand why we have to do this - ev 7/22/09
             validLines += 1
-          }
-          else if(me.isInstanceOf[Rate])
-            setSourceSink(me.asInstanceOf[Rate], tokenizer, lineMap)
-          model.addElement(me)
+          case r: Rate =>
+            setSourceSink(r, tokenizer, lineMap)
+          case _ =>
         }
+        if(me != null)
+          model.addElement(me)
         // skip GUI-only stuff, until eol - ST 1/25/05
-        while(tokenizer.ttype != StreamTokenizer.TT_EOL &&
-              tokenizer.ttype != StreamTokenizer.TT_EOF)
+        while(tokenizer.ttype != TT_EOL &&
+              tokenizer.ttype != TT_EOF)
           tokenizer.nextToken()
       }
     }
@@ -103,37 +85,55 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
   }
 
   private def processElement(st: StreamTokenizer): ModelElement = {
-    if(st.ttype != StreamTokenizer.TT_WORD)
+    val validTokens = Set(
+      "org.nlogo.sdm.gui.AggregateDrawing",
+      "org.nlogo.sdm.gui.WrappedStock",
+      "org.nlogo.sdm.gui.WrappedRate",
+      "org.nlogo.sdm.gui.WrappedConverter",
+      "org.nlogo.sdm.gui.ReservoirFigure",
+      "org.nlogo.sdm.gui.StockFigure",
+      "org.nlogo.sdm.gui.RateConnection",
+      "org.jhotdraw.contrib.ChopDiamondConnector",
+      "org.jhotdraw.standard.ChopBoxConnector",  
+      "org.nlogo.sdm.gui.WrappedReservoir", 
+      "org.nlogo.sdm.gui.ConverterFigure",
+      "org.nlogo.sdm.gui.BindingConnection",
+      "org.jhotdraw.figures.ChopEllipseConnector",
+      "org.nlogo.sdm.gui.ChopRateConnector")
+    if(!validTokens(st.sval))
+      throw new java.io.IOException(
+        "invalid token: \"" + st.sval + "\"")
+    if(st.ttype != TT_WORD)
       null
-    else if(st.sval == validTokens("STOCK")) {
-      val stock = new Stock ()
+    else if(st.sval == "org.nlogo.sdm.gui.WrappedStock") {
+      val stock = new Stock
       stock.setName(readString(st))
       stock.setInitialValueExpression(readString(st))
       stock.setNonNegative(readBoolean(st))
       stock
     }
-    else if(st.sval == validTokens("RATE")) {
-      val rate = new Rate()
+    else if(st.sval == "org.nlogo.sdm.gui.WrappedRate") {
+      val rate = new Rate
       rate.setExpression(readString(st))
       rate.setName(readString(st))
       rate
     }
-    else if(st.sval == validTokens("CONVERTER")) {
-      val converter = new Converter()                     
+    else if(st.sval == "org.nlogo.sdm.gui.WrappedConverter") {
+      val converter = new Converter
       converter.setExpression(readString(st))
       converter.setName(readString(st))
       converter
     }
-    else if(st.sval == validTokens("MODEL"))
+    else if(st.sval == "org.nlogo.sdm.gui.AggregateDrawing")
       new Model("Test Model", 1)
     else null
   }
 
-  private def setSourceSink(rate: Rate, st: StreamTokenizer, lineMap: collection.Map[Int,ModelElement]) {
-    if(st.nextToken() == StreamTokenizer.TT_WORD && st.sval.equals("REF")) {
+  private def setSourceSink(rate: Rate, st: StreamTokenizer, lineMap: LineMap) {
+    if(st.nextToken() == TT_WORD && st.sval.equals("REF")) {
       rate.setSource(getSourceOrSink(st, lineMap))
       rate.setSink(
-        if(st.nextToken() == StreamTokenizer.TT_WORD && st.sval.equals("REF"))
+        if(st.nextToken() == TT_WORD && st.sval.equals("REF"))
           getSourceOrSink(st, lineMap)
         else
           new Reservoir
@@ -147,7 +147,7 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
     }
   }
 
-  private def getSourceOrSink(st: StreamTokenizer, lineMap: collection.Map[Int,ModelElement]): Stock = {
+  private def getSourceOrSink(st: StreamTokenizer, lineMap: LineMap): Stock = {
     // the ref numbers actually point to the valid line that contains the the declaration of the
     // StockFigure object the Stock object will always be in the line directly following the
     // StockFigure.  Thus, when we put it in the hash table the key (corresponding to the valid
@@ -166,12 +166,12 @@ class AggregateManagerLite extends org.nlogo.api.AggregateManagerInterface {
     else
       throw new java.io.IOException("expected string token")
   private def readBoolean(st: StreamTokenizer): Boolean =
-    if(st.nextToken() == StreamTokenizer.TT_NUMBER)
+    if(st.nextToken() == TT_NUMBER)
       st.nval == 1
     else 
       throw new java.io.IOException("expected integer (boolean)")
   private def readInt(st: StreamTokenizer) =
-    if(st.nextToken() == StreamTokenizer.TT_NUMBER)
+    if(st.nextToken() == TT_NUMBER)
       st.nval.toInt
     else
       throw new java.io.IOException("expected integer")
