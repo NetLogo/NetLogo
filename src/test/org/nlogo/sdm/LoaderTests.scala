@@ -5,18 +5,16 @@ package org.nlogo.sdm
 import org.scalatest.FunSuite
 import org.nlogo.api.DummyCompilerServices
 
-class TestLoading extends FunSuite {
+class LoaderTests extends FunSuite {
   test("scientific notation") {
-    val manager = new AggregateManagerLite()
-    manager.load(SCI_NOT_MODEL,new DummyCompilerServices)
-    expect(expected)(manager.innerSource)
+    expect(expected)(Loader.load(ScientificDT, new DummyCompilerServices))
   }
-  val SCI_NOT_MODEL =
+  val ScientificDT =
     "1.0E-4\n" +
     "    org.nlogo.sdm.gui.AggregateDrawing 1 \n" +
     "        org.nlogo.sdm.gui.StockFigure \"attributes\" \"attributes\" "+
     "1 \"FillColor\" \"Color\" 225 225 182 164 119 60 40 \n" +
-    "            org.nlogo.sdm.gui.WrappedStock \"foo\" \"0\" 0\n" ;
+    "            org.nlogo.sdm.gui.WrappedStock \"foo\" \"0\" 0\n"
   val expected =
     ";; System dynamics model globals\n" +
     "globals [\n" +
@@ -49,5 +47,5 @@ class TestLoading extends FunSuite {
     "    set-current-plot-pen \"foo\"\n" +
     "    plotxy ticks foo\n" +
     "  ]\n" +
-    "end\n\n" ;
+    "end\n\n"
 }
