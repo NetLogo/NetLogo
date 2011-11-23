@@ -10,42 +10,49 @@ class LoaderTests extends FunSuite {
     expect(expected)(Loader.load(ScientificDT, new DummyCompilerServices))
   }
   val ScientificDT =
-    "1.0E-4\n" +
-    "    org.nlogo.sdm.gui.AggregateDrawing 1 \n" +
-    "        org.nlogo.sdm.gui.StockFigure \"attributes\" \"attributes\" "+
-    "1 \"FillColor\" \"Color\" 225 225 182 164 119 60 40 \n" +
-    "            org.nlogo.sdm.gui.WrappedStock \"foo\" \"0\" 0\n"
+    """|1.0E-4
+       |    org.nlogo.sdm.gui.AggregateDrawing 1
+       |        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 164 119 60 40
+       |            org.nlogo.sdm.gui.WrappedStock "foo" "0" 0
+       |""".stripMargin
   val expected =
-    ";; System dynamics model globals\n" +
-    "globals [\n" +
-    "  ;; stock values\n" +
-    "  foo\n" +
-    "  ;; size of each step, see SYSTEM-DYNAMICS-GO\n" +
-    "  dt\n" +
-    "]\n\n" +
-    ";; Initializes the system dynamics model.\n" +
-    ";; Call this in your model's SETUP procedure.\n" +
-    "to system-dynamics-setup \n" +
-    "  reset-ticks\n" +
-    "  set dt 1.0E-4\n" +
-    "  ;; initialize stock values\n" +
-    "  set foo 0\n" +
-    "end\n\n" +
-    ";; Step through the system dynamics model by performing next iteration of Euler's method.\n" +
-    ";; Call this in your model's GO procedure.\n" +
-    "to system-dynamics-go\n\n" +
-    "  ;; update stock values\n" + 
-    "  ;; use temporary variables so order of computation doesn't affect result.\n" +
-    "  let new-foo ( foo )\n" +
-    "  set foo new-foo\n\n" +
-    "  tick-advance dt\n" + 
-    "end\n\n" +
-    ";; Plot the current state of the system dynamics model's stocks\n" +
-    ";; Call this procedure in your plot's update commands.\n" + 
-    "to system-dynamics-do-plot\n" +
-    "  if plot-pen-exists? \"foo\" [\n" +
-    "    set-current-plot-pen \"foo\"\n" +
-    "    plotxy ticks foo\n" +
-    "  ]\n" +
-    "end\n\n"
+    """|;; System dynamics model globals
+       |globals [
+       |  ;; stock values
+       |  foo
+       |  ;; size of each step, see SYSTEM-DYNAMICS-GO
+       |  dt
+       |]
+       |
+       |;; Initializes the system dynamics model.
+       |;; Call this in your model's SETUP procedure.
+       |to system-dynamics-setup 
+       |  reset-ticks
+       |  set dt 1.0E-4
+       |  ;; initialize stock values
+       |  set foo 0
+       |end
+       |
+       |;; Step through the system dynamics model by performing next iteration of Euler's method.
+       |;; Call this in your model's GO procedure.
+       |to system-dynamics-go
+       |
+       |  ;; update stock values
+       |  ;; use temporary variables so order of computation doesn't affect result.
+       |  let new-foo ( foo )
+       |  set foo new-foo
+       |
+       |  tick-advance dt
+       |end
+       |
+       |;; Plot the current state of the system dynamics model's stocks
+       |;; Call this procedure in your plot's update commands.
+       |to system-dynamics-do-plot
+       |  if plot-pen-exists? "foo" [
+       |    set-current-plot-pen "foo"
+       |    plotxy ticks foo
+       |  ]
+       |end
+       |
+       |""".stripMargin
 }
