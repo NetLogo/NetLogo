@@ -2,29 +2,29 @@
 
 package org.nlogo.sdm
 
-// in the GUI we load and save the diagram using JHotDraw's built-in facilities for that.
-// headless, we can't use the JHotDraw stuff because it depends on AWT and Swing, so we have to
-// roll our own loading stuff - ST 1/24/05, 11/11/09, 11/23/11
+// in the GUI we load and save the diagram using JHotDraw's built-in facilities for that.  headless,
+// we can't use the JHotDraw stuff because it depends on AWT and Swing, so we have to roll our own
+// loading stuff. we also use this in the applet since we don't want to have to include JHotDraw in
+// the lite jar - ST 1/24/05, 11/11/09, 11/23/11
 
 import org.nlogo.api.CompilerServices
-import java.io.StreamTokenizer
-import StreamTokenizer.{ TT_EOF, TT_EOL, TT_WORD, TT_NUMBER }
 
 object Loader {
   
-  def load(lines: String, compiler: CompilerServices): String = {
-    if(lines.trim.isEmpty)
-      ""
-    else {
-      val lines2 = mungeClassNames(lines)
-      // parse out dt first, since StreamTokenizer doesn't handle scientific notation
-      val br = new java.io.BufferedReader(new java.io.StringReader(lines2))
-      val dt = br.readLine().toDouble
-      val str = br.readLine()
-      val lines3 = lines2.substring(lines.indexOf(str))
-      val tokenizer = new StreamTokenizer(new java.io.StringReader(lines3))
-      tokenizer.eolIsSignificant(true)
-      new Translator(buildModel(tokenizer, dt), compiler).source
+  def load(input: String, compiler: CompilerServices): String = {
+    val lines =
+      io.Source.fromString(mungeClassNames(input))
+        .getLines
+        .map(_.trim)
+        .filter(_.nonEmpty)
+        .toSeq
+    // get dt first, since StreamTokenizer doesn't know scientific notation
+    lines.headOption match {
+      case None => ""
+      case Some(dt) =>
+        val model = buildModel(new Tokenizer(lines.tail.mkString("", "\n", "\n")),
+                               dt.toDouble)
+        new Translator(model, compiler).source
     }
   }
   
@@ -36,78 +36,76 @@ object Loader {
   // have the real objects, the org.nlogo.sdm objects, stored inside them, and the read methods on
   // the GUI classes can do the unwrapping.  When saving, now, we output the wrapper class names
   // instead of the original class names. - ST 1/27/05
-  def mungeClassNames(text: String) =
-    text.replaceAll(" *org.nlogo.sdm.Stock ",
-                    "org.nlogo.sdm.gui.WrappedStock ")
-        .replaceAll(" *org.nlogo.sdm.Rate ",
-                    "org.nlogo.sdm.gui.WrappedRate ")
-        .replaceAll(" *org.nlogo.sdm.Reservoir ",
-                    "org.nlogo.sdm.gui.WrappedReservoir")
-        .replaceAll(" *org.nlogo.sdm.Converter ",
-                    "org.nlogo.sdm.gui.WrappedConverter")
+  def mungeClassNames(input: String) =
+    input.replaceAll(" *org.nlogo.sdm.Stock ",
+                     "org.nlogo.sdm.gui.WrappedStock ")
+         .replaceAll(" *org.nlogo.sdm.Rate ",
+                     "org.nlogo.sdm.gui.WrappedRate ")
+         .replaceAll(" *org.nlogo.sdm.Reservoir ",
+                     "org.nlogo.sdm.gui.WrappedReservoir")
+         .replaceAll(" *org.nlogo.sdm.Converter ",
+                     "org.nlogo.sdm.gui.WrappedConverter")
+         // also translate pre-4.1 save format
+         .replaceAll("org.nlogo.aggregate.gui",
+                     "org.nlogo.sdm.gui")
 
   private type LineMap = collection.Map[Int, ModelElement]
 
-  private def buildModel(tokenizer: StreamTokenizer, dt: Double): Model = {
+  private def buildModel(tokens: Tokenizer, dt: Double): Model = {
     // lineMap keeps track of the objects we create with keys corresponding to the valid line in the
     // file so we can find them later to connect rates. - EV
-    // not every line results in an object, so we use a map instead of an ArrayList (an ArrayList
-    // with some nulls in it would have worked too) - ST 1/25/05
+    // not every line results in an object, so we use a map - ST 1/25/05
     val lineMap = collection.mutable.Map[Int, ModelElement]()
     var model: Model = null
     var validLines = 0
-    while(tokenizer.nextToken() != TT_EOF) {
-      // ignore blank lines
-      if(tokenizer.ttype != TT_EOL) {
-        // translate pre-4.1 save format
-        tokenizer.sval = tokenizer.sval.replaceAll(
-          "org.nlogo.aggregate.gui", "org.nlogo.sdm.gui")
-        validLines += 1
-        val me = processElement(tokenizer)
-        me match {
-          case m: Model =>
-            require(model == null, tokenizer.toString)
-            model = m
-            model.setDt(dt.toDouble)
-          case s: Stock =>
-            lineMap(validLines) = s
-            // I don't understand why we have to do this - ev 7/22/09
-            validLines += 1
-          case r: Rate =>
-            setSourceSink(r, tokenizer, lineMap)
-          case _ =>
-        }
-        if(me != null)
-          model.addElement(me)
-        // skip GUI-only stuff, until eol - ST 1/25/05
-        while(tokenizer.ttype != TT_EOL &&
-              tokenizer.ttype != TT_EOF)
-          tokenizer.nextToken()
+    while(tokens.hasNext)
+      tokens.next() match {
+        case WordToken(name) =>
+          validLines += 1
+          for(me <- readElement(name, tokens)) {
+            me match {
+              case m: Model =>
+                require(model == null, tokens.diagnostics)
+                model = m
+                model.setDt(dt.toDouble)
+              case s: Stock =>
+                lineMap(validLines) = s
+                // I don't understand why we have to do this - ev 7/22/09
+                validLines += 1
+              case r: Rate =>
+                setSourceSink(r, tokens, lineMap)
+              case _ =>
+            }
+            model.addElement(me)
+          }
+          // skip GUI-only stuff, until eol - ST 1/25/05
+          while(tokens.hasNext && tokens.next() != EOLToken)
+            { }
       }
-    }
     model
   }
 
-  private def processElement(st: StreamTokenizer): ModelElement =
-    st.sval match {
+  private def readElement(name: String, tokens: Tokenizer): Option[ModelElement] =
+    name match {
       case "org.nlogo.sdm.gui.WrappedStock" =>
         val stock = new Stock
-        stock.setName(readString(st))
-        stock.setInitialValueExpression(readString(st))
-        stock.setNonNegative(readBoolean(st))
-        stock
+        stock.setName(tokens.string())
+        stock.setInitialValueExpression(tokens.string())
+        stock.setNonNegative(tokens.boolean())
+        Some(stock)
       case "org.nlogo.sdm.gui.WrappedRate" =>
         val rate = new Rate
-        rate.setExpression(readString(st))
-        rate.setName(readString(st))
-        rate
+        rate.setExpression(tokens.string())
+        rate.setName(tokens.string())
+        Some(rate)
       case "org.nlogo.sdm.gui.WrappedConverter" =>
         val converter = new Converter
-        converter.setExpression(readString(st))
-        converter.setName(readString(st))
-        converter
+        converter.setExpression(tokens.string())
+        converter.setName(tokens.string())
+        Some(converter)
       case "org.nlogo.sdm.gui.AggregateDrawing" =>
-        new Model("Test Model", 1)
+        val model = new Model("Test Model", 1)        
+        Some(model)
       case "org.nlogo.sdm.gui.ReservoirFigure" |
            "org.nlogo.sdm.gui.StockFigure" |
            "org.nlogo.sdm.gui.RateConnection" |
@@ -118,54 +116,85 @@ object Loader {
            "org.nlogo.sdm.gui.BindingConnection" |
            "org.jhotdraw.figures.ChopEllipseConnector" |
            "org.nlogo.sdm.gui.ChopRateConnector" =>
-        null
+        None
     }
 
-  private def setSourceSink(rate: Rate, st: StreamTokenizer, lineMap: LineMap) {
-    if(st.nextToken() == TT_WORD && st.sval.equals("REF")) {
-      rate.setSource(getSourceOrSink(st, lineMap))
-      rate.setSink(
-        if(st.nextToken() == TT_WORD && st.sval.equals("REF"))
-          getSourceOrSink(st, lineMap)
-        else
-          new Reservoir
-       )
-    }
-    else {
-      st.nextToken()
-      st.nextToken()
-      rate.setSink(getSourceOrSink(st, lineMap))
-      rate.setSource(getSourceOrSink(st, lineMap))
+  private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap) {
+    tokens.next() match {
+      case WordToken("REF") =>
+        rate.setSource(getSourceOrSink(tokens, lineMap))
+        rate.setSink(
+          tokens.next() match {
+            case WordToken("REF") =>
+              getSourceOrSink(tokens, lineMap)
+            case _ =>
+              new Reservoir
+          })
+      case _ =>
+        tokens.next()
+        tokens.next()
+        rate.setSink(getSourceOrSink(tokens, lineMap))
+        rate.setSource(getSourceOrSink(tokens, lineMap))
     }
   }
 
-  private def getSourceOrSink(st: StreamTokenizer, lineMap: LineMap): Stock = {
+  private def getSourceOrSink(tokens: Tokenizer, lineMap: LineMap): Stock = {
     // the ref numbers actually point to the valid line that contains the the declaration of the
     // StockFigure object the Stock object will always be in the line directly following the
     // StockFigure.  Thus, when we put it in the hash table the key (corresponding to the valid
     // line number) is the ref num + 1 - ev 1/31/05
-    val key = readInt(st) + 1
+    val key = tokens.number() + 1
     if(lineMap.contains(key))
       lineMap(key).asInstanceOf[Stock]
     else
       new Reservoir
   }
 
-  /// helpers
-  private def readString(st: StreamTokenizer): String =
-    if(st.nextToken() == '"')
-      st.sval
-    else
-      throw new java.io.IOException("expected string token: " + st.toString)
-  private def readBoolean(st: StreamTokenizer): Boolean =
-    if(st.nextToken() == TT_NUMBER)
-      st.nval == 1
-    else 
-      throw new java.io.IOException("expected integer (boolean): " + st.toString)
-  private def readInt(st: StreamTokenizer) =
-    if(st.nextToken() == TT_NUMBER)
-      st.nval.toInt
-    else
-      throw new java.io.IOException("expected integer: " + st.toString)
+}
 
+// java.io.StreamTokenizer is weird, so we wrap it.  parser combinators or some such might be nicer
+// but I don't want to bloat the applet jar. - ST 11/23/11
+
+sealed trait Token
+case class WordToken(s: String) extends Token
+case class StringToken(s: String) extends Token
+case class NumberToken(n: Int) extends Token
+case object EOLToken extends Token
+
+class Tokenizer(input: String) {
+  import java.io.StreamTokenizer
+  import StreamTokenizer.{ TT_EOF, TT_EOL, TT_WORD, TT_NUMBER }
+  val st = new StreamTokenizer(new java.io.StringReader(input))
+  st.eolIsSignificant(true)
+  def diagnostics = st.toString
+  def hasNext = {
+    st.nextToken()
+    val tokenType = st.ttype
+    st.pushBack()
+    st.ttype != TT_EOF
+  }
+  def next() = st.nextToken() match {
+    case '"' => StringToken(st.sval)
+    case TT_WORD => WordToken(st.sval)
+    case TT_NUMBER => NumberToken(st.nval.toInt)
+    case TT_EOL => EOLToken
+    case TT_EOF => sys.error("unexpected end of file: " + st)
+  }
+  def word() = next() match {
+    case WordToken(s) => s
+    case _ => sys.error("expected word: " + st)
+  }
+  def string() = next() match {
+    case StringToken(s) => s
+    case _ => sys.error("expected string: " + st)
+  }
+  def number() = next() match {
+    case NumberToken(n) => n
+    case _ => sys.error("expected number: " + st)
+  }
+  def boolean() = next() match {
+    case NumberToken(0) => false
+    case NumberToken(1) => true
+    case _ => sys.error("expected boolean (0 or 1): " + st)
+  }
 }
