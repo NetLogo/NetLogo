@@ -61,7 +61,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
 
   override def load(text: String, compiler: CompilerServices) {
     if(text.trim.nonEmpty) {
-      var text2 = org.nlogo.sdm.Model.mungeClassNames(text)
+      var text2 = org.nlogo.sdm.Loader.mungeClassNames(text)
       // first parse out dt on our own as jhotdraw does not deal with scientific notation
       // properly. ev 10/11/05
       val br = new java.io.BufferedReader(new java.io.StringReader(text2))
