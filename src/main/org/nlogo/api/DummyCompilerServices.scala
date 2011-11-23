@@ -13,6 +13,8 @@ class DummyCompilerServices extends CompilerServices {
         s match {
           case "true" => true: java.lang.Boolean
           case "false" => false: java.lang.Boolean
+          case _ => throw new CompilerException(
+            "not a constant recognized by DummyCompilerServices", 0, s.size, "")
         }
     }
   def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
