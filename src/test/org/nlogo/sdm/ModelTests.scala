@@ -36,7 +36,7 @@ class ModelTests extends FunSuite {
       "  set stock 1\n" +
       "end\n\n" +
       ";; Step through the system dynamics model by performing next iteration of Euler's method.\n" +
-      ";; Call this in your plot's update commands.\n" +
+      ";; Call this in your model's GO procedure.\n" +
       "to system-dynamics-go\n\n" +
       "  ;; compute variable and flow values once per step\n" +
       "  let local-inflow inflow\n\n" +

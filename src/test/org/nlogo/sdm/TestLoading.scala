@@ -34,7 +34,7 @@ class TestLoading extends FunSuite {
     "  set foo 0\n" +
     "end\n\n" +
     ";; Step through the system dynamics model by performing next iteration of Euler's method.\n" +
-    ";; Call this in your plot's update commands.\n" +
+    ";; Call this in your model's GO procedure.\n" +
     "to system-dynamics-go\n\n" +
     "  ;; update stock values\n" + 
     "  ;; use temporary variables so order of computation doesn't affect result.\n" +
