@@ -66,7 +66,7 @@ object Loader {
         val me = processElement(tokenizer)
         me match {
           case m: Model =>
-            require(model == null)
+            require(model == null, tokenizer.toString)
             model = m
             model.setDt(dt.toDouble)
           case s: Stock =>
@@ -156,16 +156,16 @@ object Loader {
     if(st.nextToken() == '"')
       st.sval
     else
-      throw new java.io.IOException("expected string token")
+      throw new java.io.IOException("expected string token: " + st.toString)
   private def readBoolean(st: StreamTokenizer): Boolean =
     if(st.nextToken() == TT_NUMBER)
       st.nval == 1
     else 
-      throw new java.io.IOException("expected integer (boolean)")
+      throw new java.io.IOException("expected integer (boolean): " + st.toString)
   private def readInt(st: StreamTokenizer) =
     if(st.nextToken() == TT_NUMBER)
       st.nval.toInt
     else
-      throw new java.io.IOException("expected integer")
+      throw new java.io.IOException("expected integer: " + st.toString)
 
 }
