@@ -10,7 +10,7 @@ package org.nlogo.sdm
 import org.nlogo.api.CompilerServices
 
 object Loader {
-  
+
   def load(input: String, compiler: CompilerServices): String = {
     val lines =
       io.Source.fromString(mungeClassNames(input))
@@ -27,7 +27,7 @@ object Loader {
         new Translator(model, compiler).source
     }
   }
-  
+
   // here comes kludginess!  we don't want the classes in org.nlogo.sdm to depend on JHotDraw, but
   // if they don't depend on JHotDraw, then JHotDraw's StorableInput stuff can't read them.  But in
   // our old save format, the org.nlogo.sdm class names are hardcoded, so to speak.  In order to
@@ -100,14 +100,14 @@ object Loader {
         converter.setName(tokens.string())
         Some(converter)
       case "org.nlogo.sdm.gui.AggregateDrawing" =>
-        val model = new Model("Test Model", 1)        
+        val model = new Model("Test Model", 1)
         Some(model)
       case "org.nlogo.sdm.gui.ReservoirFigure" |
            "org.nlogo.sdm.gui.StockFigure" |
            "org.nlogo.sdm.gui.RateConnection" |
            "org.jhotdraw.contrib.ChopDiamondConnector" |
-           "org.jhotdraw.standard.ChopBoxConnector" |  
-           "org.nlogo.sdm.gui.WrappedReservoir" | 
+           "org.jhotdraw.standard.ChopBoxConnector" |
+           "org.nlogo.sdm.gui.WrappedReservoir" |
            "org.nlogo.sdm.gui.ConverterFigure" |
            "org.nlogo.sdm.gui.BindingConnection" |
            "org.jhotdraw.figures.ChopEllipseConnector" |
