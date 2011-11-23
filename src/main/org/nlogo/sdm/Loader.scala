@@ -138,17 +138,12 @@ object Loader {
     }
   }
 
-  private def getSourceOrSink(tokens: Tokenizer, lineMap: LineMap): Stock = {
-    // the ref numbers actually point to the valid line that contains the the declaration of the
-    // StockFigure object the Stock object will always be in the line directly following the
-    // StockFigure.  Thus, when we put it in the hash table the key (corresponding to the valid
-    // line number) is the ref num + 1 - ev 1/31/05
-    val key = tokens.number() + 1
-    if(lineMap.contains(key))
-      lineMap(key).asInstanceOf[Stock]
-    else
-      new Reservoir
-  }
+  private def getSourceOrSink(tokens: Tokenizer, lineMap: LineMap): Stock =
+    // the REF number points to the line containing the StockFigure. the Stock is on the following line,
+    // hence the + 1 - EV 1/31/05, ST 11/23/11
+    lineMap.get(tokens.number() + 1)
+      .map(_.asInstanceOf[Stock])
+      .getOrElse(new Reservoir)
 
 }
 
@@ -178,23 +173,23 @@ class Tokenizer(input: String) {
     case TT_WORD => WordToken(st.sval)
     case TT_NUMBER => NumberToken(st.nval.toInt)
     case TT_EOL => EOLToken
-    case TT_EOF => sys.error("unexpected end of file: " + st)
+    case TT_EOF => sys.error("unexpected end of file: " + diagnostics)
   }
   def word() = next() match {
     case WordToken(s) => s
-    case _ => sys.error("expected word: " + st)
+    case _ => sys.error("expected word: " + diagnostics)
   }
   def string() = next() match {
     case StringToken(s) => s
-    case _ => sys.error("expected string: " + st)
+    case _ => sys.error("expected string: " + diagnostics)
   }
   def number() = next() match {
     case NumberToken(n) => n
-    case _ => sys.error("expected number: " + st)
+    case _ => sys.error("expected number: " + diagnostics)
   }
   def boolean() = next() match {
     case NumberToken(0) => false
     case NumberToken(1) => true
-    case _ => sys.error("expected boolean (0 or 1): " + st)
+    case _ => sys.error("expected boolean (0 or 1): " + diagnostics)
   }
 }
