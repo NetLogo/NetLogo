@@ -52,16 +52,14 @@ object Loader {
   private type LineMap = collection.Map[Int, ModelElement]
 
   private def buildModel(tokens: Tokenizer, dt: Double): Model = {
-    // lineMap keeps track of the objects we create with keys corresponding to the valid line in the
+    // lineMap keeps track of the objects we create with keys corresponding to the line numbers
     // file so we can find them later to connect rates. - EV
     // not every line results in an object, so we use a map - ST 1/25/05
     val lineMap = collection.mutable.Map[Int, ModelElement]()
     var model: Model = null
-    var validLines = 0
     while(tokens.hasNext)
       tokens.next() match {
         case WordToken(name) =>
-          validLines += 1
           for(me <- readElement(name, tokens)) {
             me match {
               case m: Model =>
@@ -69,9 +67,7 @@ object Loader {
                 model = m
                 model.setDt(dt.toDouble)
               case s: Stock =>
-                lineMap(validLines) = s
-                // I don't understand why we have to do this - ev 7/22/09
-                validLines += 1
+                lineMap(tokens.lineNumber) = s
               case r: Rate =>
                 setSourceSink(r, tokens, lineMap)
               case _ =>
@@ -162,6 +158,7 @@ class Tokenizer(input: String) {
   val st = new StreamTokenizer(new java.io.StringReader(input))
   st.eolIsSignificant(true)
   def diagnostics = st.toString
+  def lineNumber = st.lineno
   def hasNext = {
     st.nextToken()
     val tokenType = st.ttype
