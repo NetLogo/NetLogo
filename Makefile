@@ -12,7 +12,7 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun-1.6.0.26
+JAVA_HOME = /usr/lib/jvm/java-1.6.0-sun-1.6.0.29
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
@@ -135,6 +135,7 @@ $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 repos:
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
+	cd models; git pull; git status
 	mkdir -p extensions
 	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
 	cd extensions/array; git pull; git status

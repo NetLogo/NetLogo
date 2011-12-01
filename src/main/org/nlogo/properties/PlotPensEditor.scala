@@ -8,7 +8,7 @@ import javax.swing.BorderFactory._
 import java.awt.{List => AWTList, _}
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{OptionDialog, PimpedJButton}
+import org.nlogo.swing.{OptionDialog, RichJButton}
 import org.nlogo.editor.{Colorizer, EditorField}
 import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}
 import org.nlogo.window.{ColorDialog, PlotWidget}
@@ -28,7 +28,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   setPreferredSize(new Dimension(600, 200))
 
   add(new JScrollPane(table), BorderLayout.CENTER)
-  add(new JPanel {add(PimpedJButton(I18N.gui("add")) {table.newPen})}, BorderLayout.SOUTH)
+  add(new JPanel {add(RichJButton(I18N.gui("add")) {table.newPen})}, BorderLayout.SOUTH)
 
   // border
   val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("plotPens"))
@@ -193,7 +193,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     // pops up the color swatch when the user clicks the cell
     class ColorEditor extends AbstractCellEditor with TableCellEditor {
       var currentColor = ColorInfo(Color.BLACK)
-      val button: JButton = PimpedJButton(""){
+      val button: JButton = RichJButton(""){
         button.setBackground(model.pens(getSelectedRow).color.color)
         val plotPenColorDialog = new ColorDialog(null, true)
         val newColor = plotPenColorDialog.showPlotPenDialog(currentColor.color)
@@ -237,10 +237,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val editButton = PimpedJButton(new javax.swing.ImageIcon(getClass.getResource("/images/edit.gif"))) {
+      val editButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/edit.gif"))) {
         openAdvancedPenEditor(model.pens(getSelectedRow))
       }
-      val deleteButton = PimpedJButton(new javax.swing.ImageIcon(getClass.getResource("/images/delete.gif"))) {
+      val deleteButton = RichJButton(new javax.swing.ImageIcon(getClass.getResource("/images/delete.gif"))) {
         val index = getSelectedRow
         removeEditor()
         clearSelection()

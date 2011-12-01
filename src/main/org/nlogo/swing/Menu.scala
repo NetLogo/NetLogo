@@ -4,9 +4,9 @@ package org.nlogo.swing
 
 class Menu(text: String) extends javax.swing.JMenu(text) {
   def addMenuItem(name: String, fn: () => Unit): javax.swing.JMenuItem =
-    addMenuItem(PimpedAction(name) { _ => fn() })
+    addMenuItem(RichAction(name) { _ => fn() })
   def addMenuItem(name: String, c: Char, shifted: Boolean, fn: () => Unit): javax.swing.JMenuItem =
-    addMenuItem(c, shifted, PimpedAction(name) { _ => fn() })
+    addMenuItem(c, shifted, RichAction(name) { _ => fn() })
   def addMenuItem(text: String): javax.swing.JMenuItem =
     addMenuItem(text, 0.toChar, false, null: javax.swing.Action)
   def addMenuItem(text: String, shortcut: Char): javax.swing.JMenuItem =

@@ -2,28 +2,33 @@
 
 package org.nlogo.api
 
-import java.util.{MissingResourceException, Locale, ResourceBundle}
+import java.util.{ MissingResourceException, Locale, ResourceBundle }
 
 object I18N {
 
-  def availableLocales: Array[Locale] = Locale.getAvailableLocales.filter(available)
+  def availableLocales: Array[Locale] =
+    Locale.getAvailableLocales.filter(available)
 
-  def available(locale:Locale) =
+  def available(locale: Locale) =
     try {
-      val rb = ResourceBundle.getBundle("GUI_Strings", locale, Thread.currentThread.getContextClassLoader)
-      rb.getLocale == locale
+      val rb = ResourceBundle.getBundle("GUI_Strings", locale, getClass.getClassLoader)
+      // if there's a bundle with the right language, that's good enough.
+      // don't worry if the country code doesn't match. - ST 10/31/11
+      rb.getLocale.getLanguage == locale.getLanguage
     }
     catch { case m: MissingResourceException => false }
 
-  def localeIfAvailable(loc:Locale): Option[Locale] = if(available(loc)) Some(loc) else None
+  def localeIfAvailable(loc: Locale): Option[Locale] =
+    if(available(loc)) Some(loc)
+    else None
 
-  case class Prefix(name:String)
+  case class Prefix(name: String)
 
-  class BundleKind(name:String) extends I18NJava {
+  class BundleKind(name: String) extends I18NJava {
 
     val defaultLocale = {
       import java.util.prefs._
-      def getPref(p:String): Option[String] =
+      def getPref(p: String): Option[String] =
         try {
           val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
           Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
@@ -33,12 +38,13 @@ object I18N {
             None  // we must be in the applet
         }
       // loads the locale data from the users preferences
-      // but only if that locale is available. 
-      val localeFromPreferences: Option[Locale] = (getPref("user.language"), getPref("user.region")) match {
-        case (Some(l), Some(r)) => localeIfAvailable(new Locale(l,r))
-        case (Some(l), _) => localeIfAvailable(new Locale(l))
-        case _ => None
-      }
+      // but only if that locale is available.
+      val localeFromPreferences: Option[Locale] =
+        (getPref("user.language"), getPref("user.region")) match {
+          case (Some(l), Some(r)) => localeIfAvailable(new Locale(l, r))
+          case (Some(l), _) => localeIfAvailable(new Locale(l))
+          case _ => None
+        }
       // if the users locale from the preferences is available, use it.
       localeFromPreferences.getOrElse(
         // if not, see if the default (from the OS or JVM) is available. if so, use it.
@@ -55,21 +61,22 @@ object I18N {
     // defaultBundle IS the english bundle, but that is ok.
     private var defaultBundle = getBundle(defaultLocale)
     private val englishBundle = getBundle(Locale.US)
-    def getBundle(locale:Locale) = ResourceBundle.getBundle(name, locale)
-    def apply(key:String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
-    override def get(key:String) = getN(key)
-    override def getN(key:String, args: AnyRef*) = {
+    def getBundle(locale: Locale) = ResourceBundle.getBundle(name, locale)
+    def apply(key: String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
+    override def get(key: String) = getN(key)
+    override def getN(key: String, args: AnyRef*) = {
       def getFromBundle(bundle: ResourceBundle): Option[String] =
-        try Some(bundle.getString(key)) catch { case m:MissingResourceException => None }
+        try Some(bundle.getString(key))
+        catch { case m: MissingResourceException => None }
       val preformattedText = getFromBundle(defaultBundle).getOrElse{
         // fallback to english here.
         println("unable to find translation for: " + key + " in " + name + " for locale: " + defaultBundle.getLocale)
         getFromBundle(englishBundle).getOrElse(sys.error("coding error, bad translation key: " + key + " for " + name))
       }
-      java.text.MessageFormat.format(preformattedText, args:_*)
+      java.text.MessageFormat.format(preformattedText, args: _*)
     }
     // internal use only
-    def withLanguage[T](locale:Locale)(f: => T): T = {
+    def withLanguage[T](locale: Locale)(f: => T): T = {
       val oldBundle = defaultBundle
       defaultBundle = getBundle(locale)
       val v = f
@@ -83,7 +90,9 @@ object I18N {
       getBundle(locale).getKeys.asScala
     }
     // internal use only, used to set the locale for error messages in the GUI only.
-    def setLanguage(locale:Locale) { defaultBundle = getBundle(locale) }
+    def setLanguage(locale: Locale) {
+      defaultBundle = getBundle(locale)
+    }
     // for use in Java classes that we don't want to depend on I18N
     override val fn = get _
   }
@@ -94,4 +103,5 @@ object I18N {
   // for easy use from Java
   def guiJ: I18NJava = gui
   def errorsJ: I18NJava = errors
+
 }

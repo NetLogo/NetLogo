@@ -189,7 +189,7 @@ end</code>
     </h3>
     <p>
       NetLogo 5.0 uses the Markdown markup language to allow you to format
-      your info tab, including headers, bold and italics, images, and so
+      your Info tab, including headers, bold and italics, images, and so
       forth.
     <p>
       Earlier versions of NetLogo used a custom markup language with much
@@ -198,7 +198,7 @@ end</code>
       When opening a model from an older version, NetLogo 5.0 translates
       your old markup into Markdown. Most of the time this produces good
       results, but you may want to check the results yourself and make sure
-      that your info tab still looks good.
+      that your Info tab still looks good.
     <h3>
       Model speed
     </h3>
@@ -220,6 +220,33 @@ end</code>
       Some old models used the <tt>every</tt> command to set a default
       speed. In most case this can be now removed from the code, and the
       target frame rate setting used instead.
+    <h3>
+      List performance
+    </h3>
+     <p>
+       The underlying data structure for NetLogo lists has changed.
+     <p>
+       In NetLogo 4.1, a NetLogo list was represented internally as a singly
+       linked list.  Some operations on singly linked lists are fast
+       (such as <tt>first</tt> and <tt>butfirst</tt>) but others are slow
+       because they could require traversing the whole list (such as
+       <tt>item</tt> and <tt>last</tt>).
+    <p>In NetLogo 5.0, lists are now actually trees internally.  As a result,
+       some operations are a little slower, but other operations are drastically
+       faster on long lists. See
+       the <a href="programming.html#lists">Lists section of the Programming
+       Guide</a> for details.
+    <p>
+      Some models may run a little slower with the new data structure, especially
+      if you make heavy use of short lists.  But other models will run faster --
+      perhaps dramatically faster.
+    <p>
+      Some special ways of writing list-processing code that were useful in NetLogo 4.1 are no longer
+      needed in 5.0.  For example, since in 4.1 <tt>fput</tt> was fast and <tt>lput</tt>
+      was slow, modelers sometimes built up lists in reverse order using <tt>fput</tt>,
+      perhaps calling <tt>reverse</tt> later to restore the intended order.  In
+      NetLogo 5.0, you don't need to code that way anymore.  <tt>fput</tt> and
+      <tt>lput</tt> are the same speed.
     <h3>
       Extensions API
     </h3>

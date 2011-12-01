@@ -149,10 +149,9 @@ public strictfp class RuntimeErrorDialog
   private void buildTexts() {
     String extra = "";
     if (askForBugReport) {
-      extra = "NetLogo is unable to supply you with more details "
-          + "about this error.  Please report the problem to "
-          + "bugs@ccl.northwestern.edu and paste the contents "
-          + "of this window into your E-mail.\n\n";
+      extra = "NetLogo is unable to supply you with more details about this error.  Please report the problem\n"
+          + "to bugs@ccl.northwestern.edu, or at https://github.com/NetLogo/NetLogo/issues, and paste the\n"
+          + "contents of this window into your report.\n\n";
     }
     textWithoutDetails = "";
     if (errorMessage != null) {

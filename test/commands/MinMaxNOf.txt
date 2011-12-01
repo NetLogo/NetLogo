@@ -13,19 +13,6 @@ MinNOf
   count min-n-of 5 links [[who] of end1] => 5
   min-n-of -1 links [color] => ERROR First input to MIN-N-OF can't be negative.
 
-WithMinNValues
-  count (patches __min-n-of-with-ties 5 [pcolor]) = count patches => true
-  any? (patches __min-n-of-with-ties 5 [pxcor]) with [pxcor != min-pxcor] => false
-  count (patches __min-n-of-with-ties 5 [pxcor]) = count patches with [pxcor = min-pxcor] => true
-  O> crt 10
-  any? (turtles __min-n-of-with-ties 5 [who]) with [who > 4] => false
-  O> ask turtles [ ifelse who < 2 [ set tvar who ][ set tvar 2 ] ]
-  count (turtles __min-n-of-with-ties 5 [tvar]) = count turtles => true
-  links __min-n-of-with-ties 2 [color] => ERROR Requested 2 random agents from a set of only 0 agents.
-  T> create-links-with other turtles
-  count (links __min-n-of-with-ties 5 [[who] of end1]) => 9
-  links __min-n-of-with-ties -1 [color] => ERROR First input to __MIN-N-OF-WITH-TIES can't be negative.
-
 MaxNOf
   count max-n-of 5 patches [pcolor] => 5
   any? (max-n-of 5 patches [pxcor]) with [pxcor != max-pxcor] => false
@@ -40,17 +27,3 @@ MaxNOf
   T> create-links-with other turtles
   count max-n-of 5 links [[who] of end1] => 5
   max-n-of -1 links [color] => ERROR First input to MAX-N-OF can't be negative.
-
-WithMaxNValues
-  count (patches __max-n-of-with-ties 5 [pcolor]) = count patches => true
-  any? (patches __max-n-of-with-ties 5 [pxcor]) with [pxcor != max-pxcor] => false
-  count (patches __max-n-of-with-ties 5 [pxcor]) = count patches with [pxcor = max-pxcor] => true
-  O> crt 10
-  any? (turtles __max-n-of-with-ties 5 [who]) with [who < 5] => false
-  O> ask turtles [ ifelse who > 7 [ set tvar who ][ set tvar 7 ] ]
-  count (turtles __max-n-of-with-ties 5 [tvar]) = count turtles => true
-  links __max-n-of-with-ties 2 [color] => ERROR Requested 2 random agents from a set of only 0 agents.
-  T> create-links-with other turtles
-  count (links __max-n-of-with-ties 5 [[who] of end2]) => 9
-  links __max-n-of-with-ties -1 [color] => ERROR First input to __MAX-N-OF-WITH-TIES can't be negative.
-

@@ -1,5 +1,3 @@
-import sys.process._
-
 // At one time, io.Source was flaky and sys.process wasn't in the standard library, so this class
 // was important to have, because it replaced flaky io.Source and wrapped the low-level
 // java.lang.Process/ProcessBuilder stuff and made it easy to use from Scala.  But Scala 2.9 has
@@ -7,7 +5,7 @@ import sys.process._
 // call those APIs.  What's left is just some thin wrappers that aren't strictly needed anymore.
 // But I find them handy. - ST 9/14/11
 
-object Scripting {
+object Scripting extends sys.process.ProcessImplicits {  // adds methods such as !
 
   implicit val codec: io.Codec = io.Codec.UTF8
 

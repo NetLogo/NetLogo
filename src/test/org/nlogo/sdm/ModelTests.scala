@@ -51,7 +51,7 @@ class ModelTests extends FunSuite {
       "  report ( stock ;; I am a comment\n  ) * dt\n" +
       "end\n\n" +
       ";; Plot the current state of the system dynamics model's stocks\n" +
-      ";; Call this procedure in your model's GO procedure.\n" +
+      ";; Call this procedure in your plot's update commands.\n" +
       "to system-dynamics-do-plot\n" +
       "  if plot-pen-exists? \"stock\" [\n" +
       "    set-current-plot-pen \"stock\"\n" +

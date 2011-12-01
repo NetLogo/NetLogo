@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{OptionDialog, ToolBar, Printable, PrinterManager, BrowserLauncher, PimpedJButton}
+import org.nlogo.swing.{OptionDialog, ToolBar, Printable, PrinterManager, BrowserLauncher, RichJButton}
 import org.nlogo.awt.Hierarchy
 
 import java.awt.{Font, Dimension, BorderLayout, Graphics}
@@ -56,7 +56,7 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
     addHyperlinkListener(InfoTab.this)
   }
   private val editableButton = new JToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
-  private val helpButton = PimpedJButton(I18N.gui.get("tabs.info.help")) {
+  private val helpButton = RichJButton(I18N.gui.get("tabs.info.help")) {
     BrowserLauncher.openURL(this, baseDocUrl, "#information", true)
   }
   helpButton.setIcon(new ImageIcon(classOf[FindDialog].getResource("/images/questionmark.gif")))

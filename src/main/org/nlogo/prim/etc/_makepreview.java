@@ -21,6 +21,9 @@ public final strictfp class _makepreview
     try {
       // based on _run.perform - ST 1/25/11
       String modelPath = workspace.getModelPath();
+      if(modelPath == null) {
+        throw new EngineException(context, this, "no model loaded");
+      }
       String previewPath = modelPath.substring(0, modelPath.lastIndexOf(".nlogo")) + ".png";
       String escaped = org.nlogo.api.StringUtils.escapeString(previewPath);
       Procedure procedure =
