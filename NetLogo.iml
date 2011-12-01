@@ -5,7 +5,8 @@
       <configuration>
         <option name="compilerLibraryLevel" value="Project" />
         <option name="compilerLibraryName" value="all" />
-        <option name="compilerOptions" value="-g -unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation" />
+        <option name="compilerOptions" value="-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation" />
+        <option name="fsc" value="true" />
       </configuration>
     </facet>
   </component>
