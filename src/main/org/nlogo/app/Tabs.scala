@@ -26,14 +26,19 @@ class Tabs(val workspace: GUIWorkspace,
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val proceduresTab = new MainProceduresTab(workspace)
+  val deltaTickTab = new DeltaTickTab(workspace, proceduresTab)
+  val plotTab = new PlotTab(workspace, deltaTickTab)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
 
   def init(moreTabs: (String, java.awt.Component) *) {
-    addTab(I18N.gui.get("tabs.run"), interfaceTab)
-    addTab(I18N.gui.get("tabs.info"), infoTab)
+    addTab("Build", deltaTickTab)
+    addTab("Record", plotTab)
+    // addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
+    addTab(I18N.gui.get("tabs.run"), interfaceTab)
+    interfaceTab.setEnabled(false)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
@@ -47,7 +52,7 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   override def requestFocus() { currentTab.requestFocus() }
-  def handle(e: LoadBeginEvent) { setSelectedComponent(interfaceTab) }
+  def handle(e: LoadBeginEvent) { setSelectedComponent(deltaTickTab) }
   def handle(e: RuntimeErrorEvent) {
     if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget])
       if(e.sourceOwner == proceduresTab)
@@ -109,7 +114,7 @@ class Tabs(val workspace: GUIWorkspace,
         // we've deleted that last widget. not a great sol'n - AZS 5/16/05
       )) {
       if(e.error != null) setSelectedIndex(0)
-      recolorTab(interfaceTab, e.error != null) 
+      recolorTab(deltaTickTab, e.error != null) 
     }
   }
 
