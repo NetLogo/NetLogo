@@ -54,7 +54,7 @@ abstract class Controller(val plotTab: PlotTab, val workspace: AbstractWorkspace
       // if we have a hotlink plot for the netlogo plot
       if( plotTab.getPlotPanel().getPlot(netLogoPlot) != null ) {
         // update the name in case it's been changed
-        plotTab.getPlotPanel().getPlot(netLogoPlot).setName(netLogoPlot.getName);
+        plotTab.getPlotPanel().getPlot(netLogoPlot).setName(netLogoPlot.name)
       } else { // else make a new plot
         val plotType = if (netLogoPlot.pens.exists(pp => pp.mode == 1)) Plot.HISTOGRAM else Plot.LINE
         //plotTab.getPlotPanel.addPlot(netLogoPlot.name, plotType, netLogoPlot)

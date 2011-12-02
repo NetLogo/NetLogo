@@ -8,7 +8,7 @@ class Recorder(plotTab: PlotTab, workspace: AbstractWorkspace)
   override def run {
     System.setProperty("org.nlogo.loggingEnabled", "true")
     // start listening to the logger for ticks
-    org.nlogo.log.Logger.GLOBALS.addAppender(new TickListeningAppender(this))
+    org.nlogo.log.Logger.Globals.addAppender(new TickListeningAppender(this))
   }
 
   def tick(ticks: Double) {

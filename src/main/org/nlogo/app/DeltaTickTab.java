@@ -446,8 +446,5 @@ public class DeltaTickTab
     public void load( String theXml ) {
         //TODO...
     }
-        };
 
-
-
-
+}

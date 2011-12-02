@@ -1,10 +1,16 @@
 package org.nlogo.hotlink.controller
 
+import org.nlogo.api.SimpleJobOwner
+import org.nlogo.agent.Observer
 import org.nlogo.app.PlotTab
 import org.nlogo.workspace.AbstractWorkspace
 import java.io.File
 
 class Runner(plotTab: PlotTab, workspace: AbstractWorkspace) extends Controller(plotTab, workspace) {
+
+  val defaultOwner =
+    new SimpleJobOwner("HotLink Runner", workspace.world.mainRNG,
+                       classOf[Observer])
 
   @volatile var step: Boolean = false
   @volatile var notDone: Boolean = true
@@ -18,7 +24,7 @@ class Runner(plotTab: PlotTab, workspace: AbstractWorkspace) extends Controller(
     val filesystemWorker = new File("tmp/" + plotTab.getNumberOfRuns)
     if (!filesystemWorker.isDirectory) {
       filesystemWorker.mkdir
-      workspace.evaluateCommands("setup")
+      workspace.evaluateCommands(defaultOwner, "setup")
       if (!plotTab.getPlotPanel.alreadyPopulated()) {
         initializePlots
         //populateGraphPanel(plotTab.getNumberOfRuns , ticks);
@@ -34,7 +40,7 @@ class Runner(plotTab: PlotTab, workspace: AbstractWorkspace) extends Controller(
   def ticks = workspace.world.tickCounter.ticks.asInstanceOf[Int]
   def export() = workspace.exportView("tmp/" + plotTab.getNumberOfRuns + "/" + ticks, "png")
 
-  def tick { this.workspace.evaluateCommands("go"); record; }
+  def tick { this.workspace.evaluateCommands(defaultOwner, "go"); record; }
 
   def record: Unit = {
     export()
