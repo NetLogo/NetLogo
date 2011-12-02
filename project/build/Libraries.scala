@@ -44,6 +44,7 @@ trait Libraries extends DefaultProject {
     
   /// for DeltaTick
   val jfreechart = "jfree" % "jfreechart" % "1.0.12"
+  val swingx = "org.swinglabs" % "swingx" % "0.9"
 
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
