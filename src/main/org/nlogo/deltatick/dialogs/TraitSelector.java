@@ -8,7 +8,6 @@ import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
 
 import org.nlogo.deltatick.dnd.PrettyInput;
-import org.scalacheck.Pretty;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
