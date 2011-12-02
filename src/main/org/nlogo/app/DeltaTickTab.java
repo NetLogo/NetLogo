@@ -1,5 +1,7 @@
 package org.nlogo.app;
 
+import org.nlogo.agent.Observer;
+import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
 import org.nlogo.deltatick.dialogs.BreedTypeSelector;
@@ -65,6 +67,10 @@ public class DeltaTickTab
     GUIWorkspace workspace;
 
     DeltaTickTab deltaTickTab = this;
+
+    private final SimpleJobOwner defaultOwner =
+      new SimpleJobOwner("HotLink Runner", workspace.world.mainRNG,
+                         Observer.class);
 
     //constructor -A. (sept 8)
     public DeltaTickTab( GUIWorkspace workspace , ProceduresTab pt ) {
@@ -357,7 +363,7 @@ public class DeltaTickTab
     org.nlogo.swing.ToolBar getToolBar() {
 		return new org.nlogo.swing.ToolBar() {
             @Override
-            protected void addControls() {
+            public void addControls() {
                 this.add( new JButton( loadAction ) ) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 addBreed = new JButton( addBreedAction );
@@ -408,7 +414,7 @@ public class DeltaTickTab
 
     public void run( String command ) {
         try {
-            workspace.evaluateCommands(command);
+            workspace.evaluateCommands(defaultOwner, command);
         } catch (CompilerException e) {
             throw new RuntimeException(e);  //To change body of catch statement use File | Settings | File Templates.
         }
