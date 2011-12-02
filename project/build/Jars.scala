@@ -4,12 +4,6 @@ import java.net.URL
 
 trait Jars extends DefaultProject {
 
-  private val java5Path = "dist" / "java5" / "classes.jar"
-  lazy val java5 = fileTask(Seq(java5Path)) {
-    ("curl -s -o " + java5Path.asFile.toString + " http://ccl.northwestern.edu/devel/java5-classes.jar").!
-    None
-  }
-
   private val jarPaths: List[Path] =
     List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar").map(path)
 
@@ -37,7 +31,7 @@ trait Jars extends DefaultProject {
   // let's always use delete() first - ST 5/17/11
 
   lazy val mainJar =
-    fileTask(Seq(path("NetLogo.jar")) from Set(java5Path) ++ configs) {
+    fileTask(Seq(path("NetLogo.jar")) from configs) {
       path("NetLogo.jar").asFile.delete()
       build("main") orElse {
         addManifest("NetLogo", "manifest")
@@ -46,7 +40,7 @@ trait Jars extends DefaultProject {
     }.dependsOn(compile)
 
   lazy val hubnetJar =
-    fileTask(Seq(path("HubNet.jar")) from Set(java5Path) ++ configs) {
+    fileTask(Seq(path("HubNet.jar")) from configs) {
       path("HubNet.jar").asFile.delete()
       build("hubnet") orElse {
         addManifest("HubNet", "manifesthubnet")
@@ -55,7 +49,7 @@ trait Jars extends DefaultProject {
     }.dependsOn(compile)
 
   lazy val liteJar =
-    fileTask(Seq(path("NetLogoLite.jar")) from Set(java5Path) ++ configs) {
+    fileTask(Seq(path("NetLogoLite.jar")) from configs) {
       path("NetLogoLite.jar").asFile.delete()
       build("lite") orElse { None }
     }.dependsOn(compile)

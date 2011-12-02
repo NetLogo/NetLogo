@@ -121,7 +121,7 @@ trait PMD extends DefaultProject {
   
   private def violations(src: String, ruleset: String): Iterator[String] = {
     import net.sourceforge.pmd.PMD
-    val args = Array(src, "text", "rulesets/" + ruleset + ".xml", "-targetjdk", "1.5")
+    val args = Array(src, "text", "rulesets/" + ruleset + ".xml", "-targetjdk", "1.6")
     for {
       line <- captureOutput(PMD.main(args))
       if !line.matches("""\s*""") // skip empty lines

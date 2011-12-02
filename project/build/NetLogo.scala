@@ -38,12 +38,12 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   override def copyResourcesAction = super.copyResourcesAction dependsOn(native2ascii)
   // had to put copyResourcesAction here even though it seems like it shouldn't be needed.
   // its possible that this is an sbt bug, but I don't have the time to look into it. - JC 3/8/11
-  override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, java5, nativeJoglLibs)
+  override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, nativeJoglLibs)
   override def compileOptions =
     "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
      .split(" ").map(CompileOption).toSeq ++ super.compileOptions
   override def javaCompileOptions =
-    "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
      .split(" ").map(JavaCompileOption).toSeq ++ super.javaCompileOptions
 
   override def cleanAction = super.cleanAction dependsOn(cleanAutogenFiles)
