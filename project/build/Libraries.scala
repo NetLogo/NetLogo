@@ -42,6 +42,9 @@ trait Libraries extends DefaultProject {
   val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
     
+  /// for DeltaTick
+  val jfreechart = "jfree" % "jfreechart" % "1.0.12"
+
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
                              "lib" / "Mac OS X" / "libjogl_awt.jnilib",
