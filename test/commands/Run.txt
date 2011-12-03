@@ -4,8 +4,6 @@ RunRejectExtraArgumentsIfFirstArgIsString
 RunResultRejectExtraArgumentsIfFirstArgIsString
   O> __ignore (runresult "5" 1) => ERROR runresult doesn't accept further inputs if the first is a string
 
-### bug #464 in Trac
-
 LuisIzquierdoRun1
   to foo [x] run "reset-timer" end
   O> run "reset-timer"
