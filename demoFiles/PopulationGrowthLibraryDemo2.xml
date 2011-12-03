@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Population Growth" version="1.0">
+<breed singular="person" plural="people" setupNumber="100">
+	<ownVar name="age">
+		<setupReporter>random 50</setupReporter>
+	</ownVar>
+	<setupCode>
+setxy random-xcor random-ycor
+if breeds-last-tick = 0 [ set breeds-last-tick (list (list breed count breed)) ]
+if filter [first ? != breed] breeds-last-tick = breeds-last-tick [
+  set breeds-last-tick lput (list breed count breed) breeds-last-tick
+]
+	</setupCode>
+    <updateCode>
+    let counter 0
+    foreach breeds-last-tick [
+      if item 0 ? = breed and item 1 ? != count breed [
+          set breeds-last-tick replace-item counter breeds-last-tick (
+          replace-item 1 ? count breed )
+      ]
+      set counter counter + 1
+    ]
+    set age age + 1
+    </updateCode>
+</breed>
+
+<setup>
+if breeds-last-tick = 0 [ set breeds-last-tick (list (list turtles count turtles)) ]
+ask patches [ set pcolor white ]
+</setup>
+
+<global name="breeds-last-tick">
+	<setupReporter>fput (list turtles count turtles) breeds-last-tick </setupReporter>
+	<updateReporter>replace-item 0 breeds-last-tick (list turtles count turtles)</updateReporter>
+</global>
+
+<behavior name="wander">
+	<commands>
+rt random 360
+fd .5
+	</commands>
+</behavior>
+
+<behavior name="reproduce-with-probability">
+	<input name="probability" default=".01"></input>
+	<commands>
+if random-float 1 &lt; probability [ 
+hatch 1 [
+set age 0
+;; move a little so we can see you
+rt random 360
+fd .5 
+]
+]
+	</commands>
+</behavior>
+
+<behavior name="die-with-probability">
+	<input name="probability" default=".01"></input>
+	<commands>
+if random-float 1 &lt; probability [ 
+die
+]
+	</commands>
+</behavior>
+
+<quantity name="count-of">
+    <input name="breed-type" default="people"></input>
+	<reporter>count turtles with [ breed = breed-type ]</reporter>
+</quantity>
+
+<quantity name="change-of">
+    <input name="breed-type" default="people"></input>
+	<reporter>count turtles with [ breed = breed-type ] - item 1 item 0  filter [ first ? = breed-type ] breeds-last-tick</reporter>
+</quantity>
+
+<quantity name="total-count">
+	<reporter>count turtles</reporter>
+</quantity>
+
+<quantity name="total-change">
+	<reporter>count turtles - item 1 item 0 breeds-last-tick</reporter>
+</quantity>
+
+<condition name="any-here?">
+    <input name="breed-type" default="people"></input>
+	<test>any? other turtles-here with [ breed = breed-type ]</test>
+</condition>
+
+<condition name="at-least-this-much-space?">
+	<input name="number-patches" default="4"></input>
+	<test>count neighbors with [ not any? people-here ] >= number-patches</test>
+</condition>
+
+<condition name="age-between?">
+    <input name="min-age" default="18"></input>
+    <input name="max-age" default="50"></input>
+    <test>age &lt; max-age and age &gt; min-age</test>
+</condition>
+
+<condition name="age-greater-than?">
+    <input name="max-age" default="100"></input>
+    <test>age &gt; max-age</test>
+</condition>
+</library>

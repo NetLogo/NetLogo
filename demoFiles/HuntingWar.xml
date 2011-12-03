@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="HuntingWar" version="0.5">
+    <breed singular="person" plural="people" setupNumber="100">
+        <ownVar name="age">
+            <setupReporter>random 50</setupReporter>
+        </ownVar>
+        <ownVar name="energy">
+            <setupReporter>random 50</setupReporter>
+        </ownVar>
+        <ownVar name="running?">
+            <setupReporter>false</setupReporter>
+        </ownVar>
+        <ownVar name="running-time">
+            <setupReporter>0</setupReporter>
+        </ownVar>
+        <setupCode>
+    setxy random-xcor random-ycor
+        </setupCode>
+        <updateCode>
+    set age age + 1
+    set energy energy - 1
+        </updateCode>
+    </breed>
+
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>
+    </global>
+
+    <go>
+if not any? turtles [ stop ]
+if count turtles > 10000 [ stop ]
+    </go>
+
+    <behavior name="move">
+        <commands>
+            ifelse not running? [
+    rt random 360
+    fd .5
+            ] [
+            fd 1
+            set running-time running-time + 1
+            if running-time > 5 [
+            set running? false
+            set running-time 0
+            set energy energy - 1
+            ]
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="run-away-from">
+        <input name="the-breed" default="people"></input>
+        <commands>
+    if count neighbors with [ any? other turtles-here with [ breed = the-breed ] ] > 0 [
+            face one-of neighbors with [ any? other turtles-here with [ breed = the-breed ] ] 
+            rt 180
+            set running? true
+            set running-time 0
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="reproduce-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    hatch 1 [
+    set age 0
+    ;; move a little so we can see you
+    rt random 360
+    fd .5 
+    ]
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="die-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    die
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="become-with-probability">
+        <input name="the-breed" default="people"></input>
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [
+    set breed the-breed
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="kill-with-probability">
+        <input name="the-breed" default="people"></input>
+        <input name="probability" default=".25"></input>
+        <commands>
+            ask other turtles-here with [ breed = the-breed ] [
+    if random-float 1 &lt; probability [
+    die
+    ]
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="eat-for-energy">
+        <input name="the-breed" default="people"></input>
+        <input name="energy-gain" default="5"></input>
+        <commands>
+            set energy energy + energy-gain
+            ask other turtles-here with [ breed = the-breed ] [
+    die
+            ]
+        </commands>
+    </behavior>
+
+    <quantity name="count-of">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+
+    <quantity name="change-in-all">
+        <reporter>count turtles - turtles-last-tick</reporter>
+    </quantity>
+    
+    <condition name="any-here?">
+        <input name="breed-type" default="people"></input>
+        <test>any? other turtles-here with [ breed = breed-type ]</test>
+    </condition>
+    
+    <condition name="age-between?">
+        <input name="min-age" default="15"></input>
+        <input name="max-age" default="55"></input>
+        <test>age &gt; min-age and age &lt; max-age</test>
+    </condition>
+    
+    <condition name="older-than?">
+        <input name="min-age" default="65"></input>        
+        <test>age &gt; min-age</test>
+    </condition>
+
+    <condition name="energy-more-than?">
+        <input name="min-energy" default="25"></input>
+        <test>energy &gt; min-energy</test>
+    </condition>
+
+    <condition name="energy-between?">
+        <input name="min-energy" default="15"></input>
+        <input name="max-energy" default="55"></input>
+        <test>age &gt; min-energy and age &lt; max-energy</test>
+    </condition>
+
+    <condition name="energy-less-than?">
+        <input name="max-energy" default="1"></input>
+        <test>energy &lt; max-energy</test>
+    </condition>
+</library>

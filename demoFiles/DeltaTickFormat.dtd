@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='us-ascii'?>
+
+<!--
+This file specifies the XML format for DeltaTick libraries.
+WARNING: Work in progress.  ~Michelle (03/02/2010)
+-->
+
+<!ELEMENT library 	(go?,setup?,global*,breed*,behavior*,quantity*,condition*)>
+
+<!ELEMENT go		(#PCDATA)>
+
+<!ELEMENT setup		(#PCDATA)>
+
+<!ELEMENT global 	(setupReporter*,updateReporter*)>
+
+<!ELEMENT breed 	(ownVar*,setupCode*,updateCode*)>
+<!ELEMENT ownVar	(setupReporter*,updateReporter*)>
+<!ELEMENT setupCode (#PCDATA)>
+<!ELEMENT updateCode (#PCDATA)>
+<!ELEMENT setupReporter (#PCDATA)>
+<!ELEMENT updateReporter (#PCDATA)>
+
+<!ELEMENT behavior 	(commands, input*)>
+<!ELEMENT commands 	(#PCDATA)>
+
+<!ELEMENT condition (test, input*)>
+<!ELEMENT test 		(#PCDATA)>
+<!ELEMENT input 	EMPTY>
+
+<!ELEMENT quantity 	(reporter, input*)>
+<!ELEMENT reporter 	(#PCDATA)>
+
+<!ATTLIST library
+	name 	CDATA #REQUIRED
+>
+
+<!ATTLIST global
+	name 	CDATA #REQUIRED
+>
+
+<!ATTLIST breed
+	singular CDATA #REQUIRED
+	plural	 CDATA #REQUIRED
+	setupNumber CDATA #REQUIRED>
+
+<!ATTLIST ownVar
+	name 	CDATA #REQUIRED>
+
+<!ATTLIST behavior
+	name CDATA #REQUIRED>
+
+<!ATTLIST condition
+	name CDATA #REQUIRED>
+
+<!ATTLIST input
+	name CDATA #REQUIRED
+	default CDATA #REQUIRED>
+
+<!ATTLIST quantity
+	name CDATA #REQUIRED
+	histo CDATA "false"
+	bars CDATA "0">

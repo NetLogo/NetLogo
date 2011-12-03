@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Disease" version="0.5">
+    <breed singular="person" plural="people" setupNumber="100">
+        <ownVar name="age">
+            <setupReporter>random 50</setupReporter>
+        </ownVar>
+        <ownVar name="sick?">
+            <setupReporter>false</setupReporter>
+        </ownVar>
+        <ownVar name="sick-for-ticks">
+            <setupReporter>0</setupReporter>
+        </ownVar>
+        <ownVar name="protected-probability">
+            <setupReporter>0</setupReporter>
+        </ownVar>
+        <ownVar name="immune?">
+            <setupReporter>false</setupReporter>
+        </ownVar>
+        <ownVar name="running?">
+            <setupReporter>false</setupReporter>
+        </ownVar>
+        <ownVar name="running-time">
+            <setupReporter>false</setupReporter>
+        </ownVar>
+        <setupCode>
+    setxy random-xcor random-ycor
+            set color lime + 1
+        </setupCode>
+        <updateCode>
+    if sick? [
+            set sick-for-ticks sick-for-ticks + 1
+            ]
+    set age age + 1
+        </updateCode>
+    </breed>
+
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>
+    </global>
+
+    <setup>
+ask patches [ set pcolor white ]
+    </setup>
+
+    <go>
+if not any? turtles [ stop ]
+if count turtles > 10000 [ stop ]
+    </go>
+
+    <behavior name="move">
+        <commands>
+            ifelse not running? [
+    rt random 360
+    fd .5
+            ] [
+            fd 1
+            set running-time running-time + 1
+            if running-time > 5 [
+            set running? false
+            set running-time 0
+            ]
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="run-away-from-sick">
+        <input name="the-breed" default="people"></input>
+        <commands>
+    if count neighbors with [ any? other turtles-here with [ breed = the-breed and sick? ] ] > 0 [
+            face one-of neighbors with [ any? other turtles-here with [ breed = the-breed ] ] 
+            rt 180
+            set running? true
+            set running-time 0
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="reproduce-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    hatch 1 [
+    set age 0
+    ;; move a little so we can see you
+    rt random 360
+    fd .5 
+    ]
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="die-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    die
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="heal-with-probability">
+        <input name="probability" default=".25"></input>
+        <commands>
+    if random-float 1 &lt; probability [
+    set sick? false
+            set sick-for-ticks 0
+            set color lime + 1
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="catch-with-probability">
+        <input name="probability" default=".25"></input>
+        <commands>
+            if random-float 1 &lt; probability and not immune? [
+            if random-float 1 &gt; protected-probability [
+    set sick? true
+            set sick-for-ticks 0
+            set color red
+    ]
+            ]
+        </commands>
+    </behavior>
+
+    <behavior name="immune-with-probability">
+        <input name="probability" default=".25"></input>
+        <commands>
+            if random-float 1 &lt; probability [
+    set immune? true
+            set sick? false
+            set sick-for-ticks 0
+            set color lime - 3
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="protect-with-probability">
+        <input name="probability" default=".25"></input>
+        <commands>
+            set protected-probability probability
+        </commands>
+    </behavior>
+
+    <quantity name="count-of">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+
+    <quantity name="count-of-sick">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type and sick? ]</reporter>
+    </quantity>
+
+    <quantity name="count-of-well">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type and not sick? ]</reporter>
+    </quantity>
+
+    <quantity name="count-of-immune">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type and immune? ]</reporter>
+    </quantity>
+
+    <quantity name="change-in-all">
+        <reporter>count turtles - turtles-last-tick</reporter>
+    </quantity>
+
+    <condition name="is-not-sick?">
+        <test>not sick?</test>
+    </condition>
+
+    <condition name="is-sick?">
+        <test>sick?</test>
+    </condition>
+
+    <condition name="anything-sick-here?">
+        <test>any? other turtles-here with [ sick? ]</test>
+    </condition>
+
+    <condition name="any-sick-here?">
+        <input name="breed-type" default="people"></input>
+        <test>any? other turtles-here with [ breed = breed-type and sick? ]</test>
+    </condition>
+    
+    <condition name="older-than?">
+        <input name="min-age" default="65"></input>        
+        <test>age &gt; min-age</test>
+    </condition>
+
+    <condition name="sick-longer-than?">
+        <input name="min-sick" default="10"></input>
+        <test>sick-for-ticks &gt; min-sick</test>
+    </condition>
+</library>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Population Growth" version="0.5">
+    <breed singular="male" plural="males" setupNumber="100">
+        <ownVar name="age">
+            <setupReporter>random 50</setupReporter>
+        </ownVar>
+        <setupCode>
+    setxy random-xcor random-ycor
+    set color blue
+        </setupCode>
+    </breed>
+    
+    <breed singular="female" plural="females" setupNumber="100">
+        <ownVar name="age">
+            <setupReporter>random 50</setupReporter>
+        </ownVar>
+        <setupCode>
+    setxy random-xcor random-ycor
+    set color pink
+        </setupCode>
+    </breed>
+
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>
+    </global>
+
+    <behavior name="wander">
+        <commands>
+    rt random 360
+    fd .5
+        </commands>
+    </behavior>
+
+    <behavior name="reproduce-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    hatch 1 [
+    set age 0
+    ;; move a little so we can see you
+    rt random 360
+    fd .5 
+    ]
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="reproduce-randomly">
+        <commands>
+    if random-float 1 &lt; .01 [ 
+    hatch 1 [
+    set age 0
+    ;; move a little so we can see you
+    rt random 360
+    fd .5 
+    ]
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="die-at-age">
+        <input name="old-age" default="75"></input>
+        <commands>
+    if age &gt; old-age [
+    die
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="get-older">
+        <commands>set age age + 1</commands>
+    </behavior>
+
+    <behavior name="die-randomly-with-probability">
+        <input name="probability" default=".01"></input>
+        <commands>
+    if random-float 1 &lt; probability [ 
+    die
+    ]
+        </commands>
+    </behavior>
+
+    <behavior name="die-randomly">
+        <commands>
+    if random-float 1 &lt; .02 [ 
+    die
+    ]
+        </commands>
+    </behavior>
+
+    <quantity name="count-all">
+        <reporter>count turtles</reporter>
+    </quantity>
+
+    <quantity name="count-of">
+        <input name="breed-type" default="people"></input>
+        <reporter>count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+
+    <quantity name="change-in-all">
+        <reporter>count turtles - turtles-last-tick</reporter>
+    </quantity>
+    
+    <quantity name="age-of" histo="true" bars="10">
+        <input name="breed-type" default="people"></input>
+        <reporter>[age] of turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+
+    <condition name="any-here?">
+        <input name="breed-type" default="males"></input>
+        <test>any? other turtles-here with [breed = breed-type]</test>
+    </condition>
+
+    <condition name="at-least-this-much-space?">
+        <input name="number-patches" default="4"></input>
+        <test>count neighbors with [ not any? people-here ] >= number-patches</test>
+    </condition>
+
+    <condition name="enough-space?">
+        <test>count neighbors with [ not any? people-here ] >= 4</test>
+    </condition>
+</library>
