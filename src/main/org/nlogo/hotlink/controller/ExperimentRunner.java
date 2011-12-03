@@ -43,7 +43,7 @@ public class ExperimentRunner extends Controller {
                     run <  plotTab().getRunExperiment().getRunCount() + plotTab().getNumberOfRuns() ; run++ ) {
                 try {
 
-                    workspace().evaluateCommands("setup");
+                    workspace().evaluateCommands(plotTab().dT.defaultOwner, "setup");
                     if( run == 0 && !plotTab().getPlotPanel().alreadyPopulated() ) {  // only initialize plots on first run or else we'll have a ton
                         initializePlots();
                     }
@@ -55,7 +55,7 @@ public class ExperimentRunner extends Controller {
                     workspace().exportView("tmp/" + Integer.toString(run) + "/" + Integer.toString(0), "png");
 
                     for( int tick = 1 ; tick < plotTab().getNumberOfTicks() ; tick++ ) {
-                        workspace().evaluateCommands("go");
+                        workspace().evaluateCommands(plotTab().dT.defaultOwner, "go");
 
                         // populate graphs
                         populateGraphPanel( run , plotTab().getNumberOfTicks() );

@@ -42,7 +42,7 @@ public strictfp class PlotTab
     int focusRunNumber = 1;
     int totalRunCount = 0;
 
-    DeltaTickTab dT;
+    public DeltaTickTab dT;
     DtDialog dtDialog;
 
 
@@ -160,7 +160,6 @@ public strictfp class PlotTab
 
     public int print( java.awt.Graphics g , java.awt.print.PageFormat
 					  pageFormat , int pageIndex , org.nlogo.swing.PrinterManager printer )
-		throws java.io.IOException
 	{ return 0; }
 
     public ViewPanel getViewPanel() {
@@ -180,7 +179,7 @@ public strictfp class PlotTab
 		return new org.nlogo.swing.ToolBar()
 			{
 				@Override
-				protected void addControls()
+				public void addControls()
 				{
 		            this.add( stepButton ) ;
 		            this.add( recordButton ) ;

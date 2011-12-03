@@ -60,7 +60,7 @@ public class ModelRecorder extends Thread implements TickListener {
 
         // start listening to the logger for ticks
         TickListeningAppender mySuperCoolAppender = new TickListeningAppender(this);
-        org.nlogo.log.Logger.GLOBALS.addAppender(mySuperCoolAppender);
+        org.nlogo.log.Logger.Globals().addAppender(mySuperCoolAppender);
 	}
 	/*
 	public static void initializePlots( final PlotPanel graphPanel ) throws Exception, InvocationTargetException {
@@ -148,7 +148,7 @@ public class ModelRecorder extends Thread implements TickListener {
     public void tick(double ticks) {
         //System.out.println( ticks );
         
-        fileName = App.app.workspace.getModelFileName();
+        fileName = App.app().workspace().getModelFileName();
 
         if( ticks == 0.0 ) {
             try {
@@ -171,7 +171,7 @@ public class ModelRecorder extends Thread implements TickListener {
         }
         try {
             Double myTicks = ticks;
-            App.app.workspace.exportView("tmp/" + Integer.toString(myTicks.intValue()), "png");
+            App.app().workspace().exportView("tmp/" + Integer.toString(myTicks.intValue()), "png");
             //mainWindow.getViewPanel().refresh();
         } catch (IOException ex) {
             System.out.println("blah!: " + ex.getMessage() );

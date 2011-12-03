@@ -104,7 +104,7 @@ public class View extends javax.swing.JPanel
     public void showImage( int index ) {
         //System.out.println("show image " + index);
         if( getImageCount() > 0 ) {
-            image = org.nlogo.awt.Utils.loadImageFile("tmp/" + Integer.toString( viewPanel.getPlotTab().getFocusRunNumber() ) + "/" + Integer.toString( index ), false);
+            image = org.nlogo.awt.Images.loadImageFile("tmp/" + Integer.toString( viewPanel.getPlotTab().getFocusRunNumber() ) + "/" + Integer.toString( index ), false);
             currentImageIndex = index;
         }
         repaint();

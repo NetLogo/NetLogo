@@ -68,8 +68,8 @@ public class DeltaTickTab
 
     DeltaTickTab deltaTickTab = this;
 
-    private final SimpleJobOwner defaultOwner =
-      new SimpleJobOwner("HotLink Runner", workspace.world.mainRNG,
+    public final SimpleJobOwner defaultOwner =
+      new SimpleJobOwner("DeltaTick Runner", workspace.world.mainRNG,
                          Observer.class);
 
     //constructor -A. (sept 8)
@@ -399,7 +399,7 @@ public class DeltaTickTab
             populateProcedures();
             pt.setIndenter(true);
             pt.select(0, pt.innerSource().length() );
-            pt.getIndenter().handleTab();
+            // pt.getIndenter().handleTab();
             pt.select(0,0);
             populatePlots();
             new org.nlogo.window.Events.CompileAllEvent()
