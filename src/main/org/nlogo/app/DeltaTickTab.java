@@ -68,9 +68,7 @@ public class DeltaTickTab
 
     DeltaTickTab deltaTickTab = this;
 
-    public final SimpleJobOwner defaultOwner =
-      new SimpleJobOwner("DeltaTick Runner", workspace.world.mainRNG,
-                         Observer.class);
+    public final SimpleJobOwner defaultOwner ;
 
     //constructor -A. (sept 8)
     public DeltaTickTab( GUIWorkspace workspace , ProceduresTab pt ) {
@@ -84,6 +82,9 @@ public class DeltaTickTab
         this.variationSelector = new VariationSelector(workspace.getFrame());
         this.envtTypeSelector = new EnvtTypeSelector(workspace.getFrame());
 
+        defaultOwner =
+          new SimpleJobOwner("DeltaTick Runner", workspace.world.mainRNG,
+                             Observer.class);
         //creates new ToolBar - method declared below -A. (sept 8)
         toolBar = getToolBar();
 
