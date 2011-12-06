@@ -59,8 +59,7 @@ class TestRenderer extends AbstractTestRenderer {
       Rect(Location(46.8, 46.8), Size(38.4,38.4), filled=true)))
   }
 
-  // Corey's link drawing issue (#914)
-  testUsingWorkspace("Bug 914", radius=16){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
     workspace.command("create-nodes 2 [ ht setxy ((who - 1) * 5) 0 ] ask node 0 [ create-link-with node 1 ]")
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
