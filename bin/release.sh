@@ -144,6 +144,7 @@ done
 bin/sbt update
 $MAKE -s
 $MAKE -s docs/scaladoc
+$MAKE -s plugins
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -182,6 +183,11 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
 $RM -rf extensions/*/classes
+
+# include plugins
+$MKDIR plugins
+$CP -rp ../../plugins/* plugins
+$RM -rf plugins/*/classes
 
 # include models
 $CP -rp ../../models .
