@@ -4,7 +4,7 @@ package org.nlogo.shape.editor;
 
 import org.nlogo.shape.DrawableShape;
 
-strictfp class ShapeCellRenderer
+public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JPanel
     implements javax.swing.ListCellRenderer {
 
@@ -16,7 +16,7 @@ strictfp class ShapeCellRenderer
       new javax.swing.JLabel("blah", javax.swing.SwingConstants.LEFT);
   final DrawableList list;
 
-  ShapeCellRenderer(DrawableList list) {
+  public ShapeCellRenderer(DrawableList list) {
     this.list = list;
     shapeComponent = getShapeComponent();
     setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));

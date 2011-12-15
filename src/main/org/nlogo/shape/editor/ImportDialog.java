@@ -9,7 +9,7 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.ShapeList;
 import org.nlogo.api.Shape;
 
-strictfp class ImportDialog
+public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JDialog
     implements javax.swing.event.ListSelectionListener {
 
@@ -18,7 +18,7 @@ strictfp class ImportDialog
 
   ///
 
-  ImportDialog(java.awt.Frame frame,
+  public ImportDialog(java.awt.Frame frame,
                ManagerDialog manager,
                String[] shapes, String version,
                ShapeParser shapeParser) {
