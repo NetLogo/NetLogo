@@ -60,9 +60,6 @@ PatchAtHeadingAndDistanceBox_2D
   P> sprout 1 [ if (patch-at-heading-and-distance 464643 1 ) != nobody [ ask (patch-at-heading-and-distance 464643 1 ) [ set pcolor blue ] ] ]
   count patches with [pcolor != blue] => 11
 
-# these next tests are for the patch-at(-heading-and-distance) bug Gordon Purves reported;
-# see https://monk.ccl.northwestern.edu/newbrain/ticket/1038 - ST 7/19/10
-
 PatchAtHeadingAndDistanceCornerOrigin1_2D
   O> resize-world 0 1 0 1
   remove-duplicates [is-patch? patch-at-heading-and-distance 209.99999999 1] of patches => [true]

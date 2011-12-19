@@ -282,8 +282,7 @@ SimpleLinkAgentset
   O> ask link 0 1 [ die ]
   [list [who] of end1 [who] of end2 ] of one-of links => [1 0]
 
-# https://monk.ccl.northwestern.edu/newbrain/ticket/457
-CountTurtlesOptimizationTicket457
+CountTurtlesOptimization
   0 < count turtles with [true] => false
   count turtles with [true] > 0 => false
   O> crt 1

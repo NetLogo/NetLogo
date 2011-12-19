@@ -208,35 +208,24 @@ class TokenizerTests extends FunSuite {
                  "Token(\"foo\",CONSTANT,foo)")(
       tokens.mkString)
   }
-  test("ListOfArrays") { // bug #452 in Trac
+  test("ListOfArrays") {
     val tokens = tokenize("[{{array: 0}} {{array: 1}}]")
     expect("Token([,OPEN_BRACKET,null)" +
                  "Token({{array: 0}},LITERAL,{{array: 0}})" +
                  "Token({{array: 1}},LITERAL,{{array: 1}})" +
                  "Token(],CLOSE_BRACKET,null)")(
       tokens.mkString)
-    // bug #1049 in Trac
     expect(1)(tokens(1).startPos)
     expect(13)(tokens(1).endPos)
     expect(14)(tokens(2).startPos)
     expect(26)(tokens(2).endPos)
   }
 
-  // bug #986 in Trac
   test("ArrayOfArrays") {
     val tokens = tokenize("{{array: 2: {{array: 0}} {{array: 1}}}}")
     expect("Token({{array: 2: {{array: 0}} {{array: 1}}}},LITERAL,{{array: 2: {{array: 0}} {{array: 1}}}})")(
       tokens.mkString)
   }
-
-  /* bug #1041, not fixed yet
-  test("array of strings containing doubled curly braces") {
-    val tokens = tokenize("{{array: 0: \"}}\" \"{{\"}}")
-    expect(1)(tokens.size)
-    expect("Token({{array: 0: \"}}\" \"{{\"}},LITERAL,{{array: 0: \"}}\" \"{{\"}})")(
-      tokens.mkString)
-  }
-  */
 
   test("UnclosedExtensionLiteral1") {
     val tokens = tokenizeRobustly("{{array: 1: ")
@@ -248,7 +237,7 @@ class TokenizerTests extends FunSuite {
     expect("Token(,BAD,End of file reached unexpectedly)")(
       tokens.mkString)
   }
-  test("UnclosedExtensionLiteral3") {  // bug #1100 in Trac
+  test("UnclosedExtensionLiteral3") {
     val tokens = tokenizeRobustly("{{\n")
     expect("Token(,BAD,End of line reached unexpectedly)")(
       tokens.mkString)
@@ -281,6 +270,5 @@ class TokenizerTests extends FunSuite {
     val expected = "Token(\"foo\u216C\",CONSTANT,foo\u216C)"
     expect(expected)(tokens.mkString)
   }
-
 
 }

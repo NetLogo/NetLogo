@@ -143,13 +143,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "directed-link-breed [shipments shipment]")
   }
 
-  /* ticket #1041, not fixed yet
-  test("testImportingArrayContainingStringsWithBraces") {
-    roundTripHelper("set a array:from-list [\"}}\" \"{{\"]",
-                    "extensions [array] globals [a]")
-  }
-  */
-
   test("testRoundTripAllTurtlesAllPatches2") {
     // the bug we're testing for is elusive and may only appear if we actually change the world size
     // around - ST 12/21/04

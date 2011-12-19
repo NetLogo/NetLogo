@@ -65,8 +65,6 @@ public final strictfp class FileDialog {
     // On Linux:
     // 1) java.awt.FileDialog has a weird bug where it returns OK even
     //       if the user clicks the X on the dialog to cancel it.
-    //     see Trac Ticket #529, which the devel team elected not to fix, but
-    //     I just couldn't stand the pain anymore. ;-)
     // 2) The AWT dialog looks unbelievably ugly, shows all the hidden files
     //  and folders in my HOME directory (and yes, there are a million),
     //  won't autocomplete names, won't let me start typing names to select files,

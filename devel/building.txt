@@ -32,17 +32,13 @@ PREREQUISITES:
       sudo make install
 
 ahead of time:
-- ask Seth for the NetLogo change list
-  or construct it yourself using the Trac and/or git. details:
-  https://ccl.northwestern.edu/mailman/private/ccl-devel/2008/030764.html
-  in Trac, you might look both at the Timeline, and at the "Roadmap"
-  where you can get a list of closed tickets for a given target.
-  sometimes other people can supply pieces of the change list, for
-  example, Josh/HubNet.  the change list will be used to construct
-  the release announcement, so it should include even stuff like changes
-  to secret prims.  don't forget to include changes to the Models Library.
-  devel folks are encouraged to make a ticket every time they make a bullet-
-  worthy change, so the roadmap will have the changes already.
+- ask Seth for the NetLogo change list or construct it yourself using
+  GitHub issues.  devel folks are extremely strongly encouraged to
+  make a ticket for every bullet-worthy change, associated with the
+  right milestone, so this method of writing release bullets will
+  work.  don't forget to include changes to the Models Library; you
+  can check legal.txt to see if there are any new or removed models,
+  and look at the git log in the models repo.
 - decide if you need to upgrade the bundled java with the windows
   installer.  consult
     http://java.sun.com/javase/6/webnotes/ReleaseNotes.html
@@ -221,7 +217,7 @@ IF PUBLIC:
 
 announcements & web pages:
 - DID YOU TAG THE RELEASE YET?
-- mark the milestone as closed in Trac
+- mark the milestone as closed on GitHub
 - if public, update the NetLogo pages (including the download forms
   -- be sure to actually grep for the old version number, because if
   you don't, you're almost certain to miss some) and PartSims home page,
