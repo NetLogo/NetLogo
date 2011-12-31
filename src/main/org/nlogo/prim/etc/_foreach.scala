@@ -33,6 +33,8 @@ class _foreach extends Command {
         j += 1
       }
       task.perform(context, actuals)
+      if(context.stopping)
+        return
       i += 1
     }
     context.ip = next

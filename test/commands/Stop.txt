@@ -16,9 +16,20 @@ ReportFromDynamicallyNestedForeach
   count turtles => 5
   glob1 => 9
 
-StopFromForeach
+StopFromForeach1
   O> foreach [1 2 3 4] [ set glob1 glob1 + ?  if ? = 3 [ stop ] ] error "oops"
   glob1 => 6 
+
+StopFromForeach2
+  to test foreach [1 2 3] [ if ? = 2 [ stop ] set glob1 glob1 + ? ] end
+  O> test
+  glob1 => 1
+
+StopFromForeach3
+  to test1 test2 test2 end
+  to test2 foreach [1 2 3 4 5] [ set glob1 glob1 + ? stop ] end
+  O> test1
+  glob1 => 2
 
 StopFromForeachInsideReporterProcedure
   to-report foo foreach [1 2 3] [ stop ] end
