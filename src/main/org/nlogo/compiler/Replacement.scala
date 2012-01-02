@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
 private class Replacement(start:Int,end:Int,before:String,after:String) {
