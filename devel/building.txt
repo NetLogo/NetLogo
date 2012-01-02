@@ -1,5 +1,7 @@
 DON'T FORGET TO CHANGE NETLOGO.SCALA AND PROGUARD/COMMON.TXT SO THE
-BUILD WILL WORK ON JAVA 5!!! (#844, #1186)
+BUILD WILL WORK ON JAVA 5!!! (#844, #1186) the java5 branch has the
+needed changes, so just merge master onto that branch, push, and build
+from there.
 
 ===
 
