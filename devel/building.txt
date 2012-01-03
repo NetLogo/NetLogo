@@ -3,6 +3,9 @@ BUILD WILL WORK ON JAVA 5!!! (#844, #1186) the java5 branch has the
 needed changes, so just merge master onto that branch, push, and build
 from there.
 
+DON'T FORGET to do "make repos" to pull changes from all
+subrepositories
+
 ===
 
 As you work through these instructions, look for things which could be
