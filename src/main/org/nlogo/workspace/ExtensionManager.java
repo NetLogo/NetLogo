@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.workspace;
 
@@ -15,14 +15,11 @@ import org.nlogo.api.Primitive;
 import org.nlogo.api.ExtensionException;
 
 /**
- * Further notes on bug 1031 (http://trac.assembla.com/nlogo/ticket/1031)
- * And the commit that fixed it: [47402] (https://trac.assembla.com/nlogo/changeset/47402)
- * <p/>
- * First, some simple notes on loading and unloading extensions:
+ * Some simple notes on loading and unloading extensions:
  * - The load method is called when an extension appears in the extensions block when it wasn't
  * there in the last compilation
  * - The unload method is called when an extension is removed from the extensions block
- * <p/>
+ * 
  * Before a compilation, N extensions might be loaded.
  * For example, if the extensions block previously said: extensions [ array table ]
  * Then the array and table extensions will have their loaded and live flags set to true.
@@ -43,20 +40,20 @@ import org.nlogo.api.ExtensionException;
  * will have live=false, and if they call table:make, then error.
  * At the end of main compilation, the compiler calls the finishFullCompilation,
  * and the ExtensionManager calls unload on any extensions that have loaded=true and live=false.
- * <p/>
+ * 
  * Subprogram compilations just check the live flag in the same way, and everyone is happy.
- * <p/>
- * That is how it works now, but here is some info on what the bug was.
- * (You shouldn't really have to read this, but maybe it might someday be useful).
- * <p/>
- * After a main compile, the ExtensionManager would set reloaded to false on all extensions.
- * During the main compile, extensions previously and currently in the extensions block would have loaded=true.
- * When we encountered a primitive during the main compile, we checked the loaded flag.
- * But this was true even for extensions that had been removed from the extensions block!
- * So we would say that table:make was valid, even if table had just been removed.
- * Subprograms managed to still work because they would run after the main compile,
- * after the loaded flags were set to false. They would get set to false if reloaded!=true.
- * It was only during the main compile that there was confusion.
+ * 
+ * That is how it works now, but here is some info on the bug was that led to the addition
+ * of the live flag. (You shouldn't really have to read this, but maybe it might someday
+ * be useful).  After a main compile, the ExtensionManager would set reloaded to false on
+ * all extensions.  During the main compile, extensions previously and currently in the
+ * extensions block would have loaded=true.  When we encountered a primitive during the
+ * main compile, we checked the loaded flag.  But this was true even for extensions that
+ * had been removed from the extensions block!  So we would say that table:make was valid,
+ * even if table had just been removed.  Subprograms managed to still work because they
+ * would run after the main compile, after the loaded flags were set to false. They would
+ * get set to false if reloaded!=true.  It was only during the main compile that there was
+ * confusion.
  */
 public strictfp class ExtensionManager
     implements org.nlogo.api.ExtensionManager {

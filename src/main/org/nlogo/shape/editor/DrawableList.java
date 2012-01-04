@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.shape.editor;
 
@@ -19,7 +19,7 @@ public strictfp class DrawableList
   private final ShapeChangeListener shapeChangeListener;
   private java.awt.Component parent;
 
-  DrawableList(ShapeList shapeList, ShapeChangeListener listener,
+  public DrawableList(ShapeList shapeList, ShapeChangeListener listener,
                int rows, int height) {
     this.shapeChangeListener = listener;
     this.shapeList = shapeList;
@@ -30,7 +30,7 @@ public strictfp class DrawableList
     setFixedCellHeight(height);
   }
 
-  void setParent(java.awt.Component parent) {
+  public void setParent(java.awt.Component parent) {
     this.parent = parent;
   }
 

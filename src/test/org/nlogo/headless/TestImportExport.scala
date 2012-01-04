@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -142,13 +142,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "ask turtle 1 [ set label sort shipments]\n",
       "directed-link-breed [shipments shipment]")
   }
-
-  /* ticket #1041, not fixed yet
-  test("testImportingArrayContainingStringsWithBraces") {
-    roundTripHelper("set a array:from-list [\"}}\" \"{{\"]",
-                    "extensions [array] globals [a]")
-  }
-  */
 
   test("testRoundTripAllTurtlesAllPatches2") {
     // the bug we're testing for is elusive and may only appear if we actually change the world size
