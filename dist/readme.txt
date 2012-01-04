@@ -90,7 +90,7 @@ Brady Fund, and the Northwestern Institute on Complex Systems.
 ===
 
 NetLogo
-Copyright (C) 1999-2011 Uri Wilensky
+Copyright (C) 1999-2012 Uri Wilensky
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -115,7 +115,7 @@ licenses, please contact Uri Wilensky at uri@northwestern.edu .
 ===
 
 NetLogo User Manual
-Copyright (C) 1999-2011 Uri Wilensky
+Copyright (C) 1999-2012 Uri Wilensky
 
 This work is licensed under the Creative Commons
 Attribution-ShareAlike 3.0 Unported License. To view a copy of this

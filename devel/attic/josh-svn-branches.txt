@@ -1,0 +1,33 @@
+=== 4.1.2-android ===
+
+This branch is a slightly modified version of 4.1.2 branch to support the HubNet Android client. 
+
+TODO document what the changes were.
+
+=== 4.2-pluggable-widgets ===
+
+This branch is really just a quick and dirty hack. I hacked extensions to allow for adding widgets, tabs, and extra menu items. Those changes are reflected in this file: https://trac.assembla.com/nlogo/browser/branches/4.2-pluggable-widgets/src/org/nlogo/api/ExtensionManager.java
+
+While this worked as a quick and dirty way to get these things working, Seth says it shouldn't be the long term way to go about this. In the abmplus branch we have a new plugin system that could be leverages here. We used it to plug in the Review tab. It would need to be improved/extended to allow for plugging in widgets, menu items, and additional tabs.  
+
+=== 4.2-hide-view-controls ===
+
+This branch has an implementation of a feature that allows users to hide the view controls above the world, just showing the world as a black box. For some models, it can make them look nicer. The implementation of this was surprisingly non-trivial. The view code is nasty. 
+
+TODO: show where some of the changes are.
+
+=== 4.2-i18n-save-as-english ===
+
+For a while, we tossed around the idea of supporting translation of primitives. This branch was an experiment in that area. I thought that we could always save the English version of the primitives in the NetLogo file, and we could translate them to the language of the user when they opened the model. They could then write their code in their own language, and resave. The saving would be done in English. In this sense, the English version of the primitive is like the primary key. 
+
+TODO: show where some of the code is that does this.
+
+===  4.2-xml-save-format ===
+
+This is a mostly abandoned idea, however I did get all the shapes saving as xml and it was very nice. If someone wanted to revisit this idea, it would be a good place to start.
+
+TODO: show where some of the code is.
+
+=== polyglot ===
+
+This branch allows you to write Scala (or maybe Java code, or maybe both, I can't remember) right in the code tab along with NetLogo code. It's been a very long time since we worked on it, and I suspect that the code would have to be changed quite a bit to be made to work with the newest Scala version. Since Seth and I worked on this together, I don't think I need to add any additional information here.

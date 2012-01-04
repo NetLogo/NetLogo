@@ -7016,7 +7016,10 @@ show round -4.5
         scale-color <i>color number range1 range2</i>
       </h4>
       <p>
-        Reports a shade of <i>color</i> proportional to <i>number</i>.
+        Reports a shade of <i>color</i> proportional to the value of <i>number</i>.
+      <p>
+        Typically <i>number</i> is an agent variable, but may be
+        any numeric reporter.
       <p>
         If <i>range1</i> is less than <i>range2</i>, then the larger the
         number, the lighter the shade of <i>color</i>. But if <i>range2</i>
@@ -7640,9 +7643,9 @@ foreach sort patches [
         If the input is a list, the sort is stable, that is, the order of items considered equal by
         the reporter is not disturbed.  If the input is an agentset, ties are broken randomly.
       <pre>
-show sort-by < [3 1 4 2]
+show sort-by &lt; [3 1 4 2]
 =&gt; [1 2 3 4]
-show sort-by > [3 1 4 2]
+show sort-by &gt; [3 1 4 2]
 =&gt; [4 3 2 1]
 show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]

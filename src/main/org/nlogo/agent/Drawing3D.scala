@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.agent
 
@@ -41,20 +41,20 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   def drawLine(x0: Double, y0: Double, z0: Double,
                x1: Double, y1: Double, z1: Double,
                width: Double, color: AnyRef) {
-    wrap(new DrawingLine3D(
+    wrap(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
-      pitch(x0, y0, z0, x1, y1, z1),
       heading(x0, y0, x1, y1),
+      pitch(x0, y0, z0, x1, y1, z1),
       width, color))
   }
 
   def addLine(x0: Double, y0: Double, z0: Double,
               x1: Double, y1: Double, z1: Double,
               width: Double, color: AnyRef) {
-    lines.add(new DrawingLine3D(
+    lines.add(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
-      pitch(x0, y0, z0, x1, y1, z1),
       heading(x0, y0, x1, y1),
+      pitch(x0, y0, z0, x1, y1, z1),
       width, color))
   }
 
@@ -211,11 +211,11 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
           newStartX = minx
       }
 
-      lines.add(new DrawingLine3D(startX, startY, startZ,
-                                  endX, endY, endZ,
-                                  pitch(startX, startY, startZ, endX, endY, endZ),
-                                  heading(startX, startY, endX, endY),
-                                  l.width, l.color))
+      lines.add(DrawingLine3D(startX, startY, startZ,
+                              endX, endY, endZ,
+                              heading(startX, startY, endX, endY),
+                              pitch(startX, startY, startZ, endX, endY, endZ),
+                              l.width, l.color))
 
       distX -= (endX - startX)
       distY -= (endY - startY)
