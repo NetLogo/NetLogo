@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim.etc
 
@@ -33,6 +33,8 @@ class _foreach extends Command {
         j += 1
       }
       task.perform(context, actuals)
+      if(context.stopping)
+        return
       i += 1
     }
     context.ip = next

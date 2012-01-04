@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
@@ -38,11 +38,11 @@ object App{
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
+  var logger: Logger = null
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
-  private var logger: Logger = null
   private var loggingName: String = null
 
   /**
