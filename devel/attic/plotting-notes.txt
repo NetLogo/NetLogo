@@ -1,0 +1,119 @@
+= Plotting redesign =
+
+== things that MUST be done ==
+ * Go back over the Plotting example models. Some of them will need to be commented.
+ * make sure the tab key (and shift-tab) tabs to where you would want/expect
+ 
+== open questions / TODO ==
+
+ * perhaps we should allow the ranges and interval to be reporters. this would eliminate a lot of plot setup code
+ * have the ability for a pen to display its current value, like a monitor
+ * there was some talk about whether the names "Setup commands" and "Update commands" were ambiguous, and suggested rewordings - "Commands at Setup", "Commands on Update"
+ * make sure the plot editor is the correct width. 
+ * we need to rename autoplot. what name should we use? auto range? auto scale? i threw up auto scale for now, but maybe we should change it.
+ * do you think clicking in a code cell that has multiple lines of code should open the advanced dialog?
+ * investigate possibly not setting current plot and current pen if the plot has no code. using the current design of plot mirroring in hubnet, this would reduce traffic. 
+ * possibly redesign plot mirroring so that this is no longer an issue. 
+ * there was a bit of discussion around the add button and adding pens in general. 
+   * maybe the add button could some how be in the first free row
+   * or maybe the last row could be white, and rows underneath it could be gray, somehow inviting the user to click into it to add a new pen. then the add pen button wouldnt be needed at all. 
+ * when you add a pen, it should probably go to that row and the cursor should be in the update code section or name section.
+
+== design decisions == 
+
+(this stuff should go in the User Manual and/or the [wiki:Style_Guide Style Guide]
+
+we are going to add the following code fields to the plot widget
+
+ * Plot Setup Code
+ * Plot Update Code
+ * Plot Pen Setup Code
+ * Plot Pen Update Code
+
+plotting code always uses the auxiliary RNG, not the main RNG
+
+tick-advance never causes plotting
+
+== major design consideration ==
+
+while the plot editor dialog itself seems to have approval, there was a lot of talk about also including something to better handle the simplest case - you have one pen that just plots some reporter value over time. the current interface handles that in a somewhat awkward way, putting plot pen code into the update section of the plot itself. this is pretty easy, but its also confusing for beginners, and confusing what to do when you want to add a new pen. do we offer to move the code from the plot update section to the default pen? its very unclear what do do there, and any decision is likely to confuse beginners anyway. some important ideas to resolve the situation were:
+ * covert a monitor into a historical monitor. an historical monitor would just be a plot using ticks for x axis. this seems like it could be done in a couple of ways. one suggestion was a checkbox on the monitor creation/edit dialog - "historical". important concerns remain: what happens when you edit it again? do you see the plot editor, or the monitor editor? can you convert an historical monitor to an "advanced" plot?
+ * have a simple plot widget option. you just enter a reporter. this is much like the last idea, but it would be clear that its always a plot. but once again, what happens when you edit it? do you see the simple dialog? can you convert to the more advanced plot?
+ * a plot creation wizard
+ * a single unified dialog when there's only pen, and only split off the pens once you have multiple
+
+== design considerations ==
+
+ * several models seem to contain procedures that we might consider making primitives (Decay, Plot Axis Example, GasLab Isothermal Piston, etc):
+   * draw-vertical-line
+   * draw-horizontal-line
+ * some models (including most GasLab models) need to have reporter procedures in the procs tab because they have code called by multiple pens, and possibly even multiple plots. consider a way to 'fix' this. Seth says: you can imagine having a button in the plot editing dialogs "Plotting Procedures..." and when you opened it up you could edit procedures used only by plots.
+ * should we keep the - and ... buttons in each row? right now the row gets highlighted very awkwardly. we should either have it not get highlighted at all, and keep the - and ... buttons, Or, have it highlighted properly, and move the - and ... buttons to the bottom, calling them "Remove Pen" and "Edit Pen" or something similar. 
+ * can temporary plot pens have code?
+
+== design considerations/TODO completed ==
+
+ * we don't want the widget to be overly complicated, and might consider hiding certain code fields in an advance tab, or make them shrunken by default. 
+ * it seems like we'll need (at the very least) a way to expand a code section (each of the four). some models might have several lines of code (Crystallization models have ~20LOC in plot setup) and we need to make this code easy to read.
+ * do pens really have to have names? - No - JC 4-26-10
+ * reinvestigate WeakHashMap problems in PlotManager - Done for now, keep an eye on it. - JC 4-26-10
+ * runtime errors - should show which bit of code failed (plot or pen, setup or update)
+ * use of the "stop" command in the plot's update commands should prevent the rest of the update code (including any pen update code) from running. runCompiledCommands returns a boolean that indicates if the code was stopped. that 
+ * it seems like plots with errors arent red when you first open the model
+ * "maybe the procedures tab being recompiled isn't triggering recompilation of the plots" - make it happen. 
+ * Josh suggested replacing the - and ... buttons with a trash can and a pen, and no one seemed to object to that. therefore, it seems worthwhile. 
+ * when I twist open a code field, that field should get the input focus.
+ * move "plot count turtles" into GUI code only
+ * do we really need a rule that you can't delete the last pen? when you only use temporary plot pens, you have to rename the pen "not-used" or something. its just awkward. why do we have this rule? ANSWER: No, we dont. I cleaned all of this up so that you dont have to keep one pen on your plot. just have to clean up a few models that only use temporary pens. 
+ * we should change the names Update Code and Setup Code on plot to Plot Update Code and Plot Setup Code, and in the pens table put Pen Update Code, to minimize confusion.
+ * some people seemed to be against the idea of not naming pens. i agree with this at this point. it seems like the name is needed, especially for the legend.
+   * update: you can now leave a pen name blank, if you want to. and, each pen gets a default name (pen-1, pen-2 ...). this seems to address the issue very well.
+ * it seems reasonable to keep "plot count turtles" for the first pen, but dont put it there when you click the Add Pen button (done)
+ * do we need a way to setup, and a way to update, only a single plot, instead of all of them? if we do, does the prim take an arg, or does it require set-current-plot to be used beforehand? Strong Acid is a decent example of this. It has a button that makes a plot do it's thing.  
+   * update: this isnt really needed. in the few cases that we've found a need for it, its simple enough to say if not some-condition [stop] in the plot update code. 
+ * auto-converter needs to convert plot code now too.
+ * Provide Help button
+   *  we used to have this, but have decided to take it out for now: 
+   * the Commands Examples needs work. 
+     * Seth was actually imagining just using the hints feature of PropertyEditor. the hints feature is used in the BehaviorSpace experiment editor and the chooser editor. maybe we could/should do something a little more ambitious like what you did, but it's also really easy for now just to add hint texts. it might be nice to have the hints link to the User Manual.
+     * if we did keep the current dialog
+       * need examples for the plot itself, not just pens
+       * make sure we have the best examples
+       * should the dialog have a close button
+ * use the aux rng for all plotting code. 
+ * 'Show Legend' doesnt do 'live update' anymore. thats ok because the apply button works. 
+ * documentation
+   * plot docs, obviously. 
+   * tick docs will have to be updated as well. 
+ 
+== plots needing plot update code ==
+
+ * Rolling Plot Example
+ * Gas Lab Circulation
+ * Crystallization Basic, Directed, Moving
+ * GasLab Circular Particles
+
+== plots needing pen setup code ==
+
+ * Ising
+ * Plot Axis Example
+ * GasLab Free Gas
+ * Most models that have a pen that draws a single line as an Axis. 
+
+== plots calling procedures in the procedures tab == 
+
+(any model with plotting code left in the procedures tab, that code should be clearly commented as to why it's there and who calls it)
+
+ * Most GasLab models
+ * Solid Diffusion
+
+== plots needing draw-vertical-line or draw-horizontal-line ==
+
+  * Plot Coalescing Benchmark.nlogo (which amusingly does: plotxy 0 0 plotxy 1000000000000000 0)
+  * Most GasLab models
+  * Decay
+
+== plots with one pen, with code in plot update section only ==
+
+  * Solid Diffusion
+  * Shepherds
