@@ -1,6 +1,6 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0RC4, available for free download from our site at
+NetLogo 5.0RC5, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
 This is a release candidate for NetLogo 5.0. As such, there may be a
@@ -11,7 +11,7 @@ forward to hearing from you. Please let us know about bugs you find,
 features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0RC4, perhaps with minor updates to the code. If you have
+NetLogo 5.0RC5, perhaps with minor updates to the code. If you have
 any trouble, please consult:
 http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
 
@@ -31,14 +31,18 @@ community models page, and make improvements to NetLogo itself and the
 NetLogo User Manual and send us the changes for integration.
 
 The following is a (partial) list of changes made since NetLogo
-5.0RC3:
+5.0RC4:
   
-- reporters may now be entered in the Command Center (the "show"
-  command is supplied for you)
-- the Spanish and Russian localizations now appear by default
-  if your operating system is set to that language
-- fixed regression where models weren't double-clickable on Windows
-- fixed GIS extension bug
+- new models: Sandpile, Bug Hunt Predators and Invasive Species
+- add Chinese localization contributed by Yu Yanfei
+- fixed broken Russian localization
+- fixed bug where some SDM models behaved incorrectly run headless
+- fixed 5.0-only regression: GoGo extension didn't work on 64 bit Macs
+- fixed 5.0-only regression: GIS extension wasn't working in applets
+- fixed 5.0-only regression: "stop" inside "foreach" didn't work
+  properly in some cases
+- fixed 5.0-only regression: 3D turtle trails were rendered incorrectly
+- bundle Java 6 Update 30 for Windows users
 
 
 Please send bug reports to bugs@ccl.northwestern.edu and other

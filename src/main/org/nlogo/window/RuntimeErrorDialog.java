@@ -1,4 +1,4 @@
-// (C) 2011 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window;
 
@@ -93,8 +93,8 @@ public strictfp class RuntimeErrorDialog
     // http://bugs.sun.com/view_bug.do?bug_id=6828938
     // http://bugs.sun.com/view_bug.do?bug_id=6899297
     // http://bugs.sun.com/view_bug.do?bug_id=6857057
-    // see:
-    // https://monk.ccl.northwestern.edu/newbrain/ticket/847
+    // the underlying issue was fixed as of Java 6 Update 20, but we might
+    // as well still be careful
     // - ST 9/12/09
     if (textWithDetails.indexOf("sun.font.FontDesignMetrics.charsWidth") == -1) {
       showJavaDetails(CHECKBOX.isSelected());

@@ -7640,9 +7640,9 @@ foreach sort patches [
         If the input is a list, the sort is stable, that is, the order of items considered equal by
         the reporter is not disturbed.  If the input is an agentset, ties are broken randomly.
       <pre>
-show sort-by < [3 1 4 2]
+show sort-by &lt; [3 1 4 2]
 =&gt; [1 2 3 4]
-show sort-by > [3 1 4 2]
+show sort-by &gt; [3 1 4 2]
 =&gt; [4 3 2 1]
 show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quot;Happy&quot;]
 =&gt; [&quot;Doc&quot; &quot;Happy&quot; &quot;Grumpy&quot;]
