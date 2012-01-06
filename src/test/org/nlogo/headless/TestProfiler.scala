@@ -24,7 +24,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
 
-  val noGenerator = java.lang.Boolean.getBoolean("org.nlogo.noGenerator")
+  val noGenerator = !org.nlogo.api.Version.useGenerator
   if(noGenerator)
     test("no generator") {
       defineProcedures("extensions [profiler]")
