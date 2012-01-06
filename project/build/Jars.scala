@@ -12,10 +12,17 @@ trait Jars extends DefaultProject {
     println("building " + config + " jar")
     def doIt() {
       val home = System.getProperty("java.home")
+      // DeltaTick: the jar1/jar2 thing is a kludge because on Linux it's one jar, Mac two.
       System.setProperty(
-        "org.nlogo.java-jars",
+        "org.nlogo.java-jar1",
 	if (System.getProperty("os.name").startsWith("Mac"))
-          home + "/bundle/Classes/classes.jar:" + home + "/bundle/Classes/ui.jar"
+          home + "/bundle/Classes/classes.jar"
+        else
+          home + "/lib/rt.jar")
+      System.setProperty(
+        "org.nlogo.java-jar2",
+	if (System.getProperty("os.name").startsWith("Mac"))
+          home + "/bundle/Classes/ui.jar"
         else
           home + "/lib/rt.jar")
       proguard.ProGuard.main(Array("@project/build/proguard/" + config + ".txt"))

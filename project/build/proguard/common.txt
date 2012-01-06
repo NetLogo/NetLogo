@@ -1,5 +1,7 @@
-# DeltaTick assumes Java 6, so just 
--libraryjars <org.nlogo.java-jars>
+# DeltaTick assumes Java 6, so we need pick up the system jars.
+# the jar1/jar2 thing is a kludge because on Linux it's one jar, Mac two.
+-libraryjars <org.nlogo.java-jar1>
+-libraryjars <org.nlogo.java-jar2>
 
 # pull in both managed and unmanaged libraries
 -libraryjars ../../../lib_managed/scala_2.9.1/compile
