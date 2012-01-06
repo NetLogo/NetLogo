@@ -11,6 +11,13 @@ trait Jars extends DefaultProject {
     // ProGuard prints stuff straight to stdout, so we do the same
     println("building " + config + " jar")
     def doIt() {
+      val home = System.getProperty("java.home")
+      System.setProperty(
+        "org.nlogo.java-jars",
+	if (System.getProperty("os.name").startsWith("Mac"))
+          home + "/bundle/Classes/classes.jar:" + home + "/bundle/Classes/ui.jar"
+        else
+          home + "/lib/rt.jar")
       proguard.ProGuard.main(Array("@project/build/proguard/" + config + ".txt"))
     }
     TrapExit(doIt(), log) match {
