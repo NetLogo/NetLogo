@@ -1,5 +1,5 @@
 # DeltaTick assumes Java 6, so just 
--libraryjars <java.home>/bundle/Classes/classes.jar <java.home>/bundle/Classes/ui.jar
+-libraryjars <java.home>/bundle/Classes/classes.jar:<java.home>/bundle/Classes/ui.jar
 
 # pull in both managed and unmanaged libraries
 -libraryjars ../../../lib_managed/scala_2.9.1/compile
