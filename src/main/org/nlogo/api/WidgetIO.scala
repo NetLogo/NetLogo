@@ -10,6 +10,10 @@ import collection.mutable.ArrayBuffer
 // option, but maybe we should get rid of the option and set the default value here instead.
 // im not sure yet the best way to handle this.
 
+// TODO handle old models better. models from old NetLogo versions are
+// missing some of the lines these parse methods require, resulting in
+// ArrayIndexOutOfBoundsExceptions at load time. - ST 1/6/2012
+
 object WidgetIO {
 
   object Loc{
