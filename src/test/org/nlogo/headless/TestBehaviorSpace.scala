@@ -224,7 +224,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       run3DExperiment("testResizingWorld23d")
     }
   /*
-  zzz TODO this keeps failing in Jenkins depending on CPU load.
+  TODO this keeps failing in Jenkins depending on CPU load.
   I either need to make it less sensitive or just get rid of it. - ST 6/9/10
   test("ParallelOperationOfWait1") {
     val processors = Runtime.getRuntime.availableProcessors
