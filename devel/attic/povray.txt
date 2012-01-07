@@ -1,0 +1,130 @@
+= Notes by Rumou and Forrest about the POVRay ray-tracing extension for NetLogo =
+
+== Goals for THURSDAY ==
+ * commit everything to SVN!
+ * make it so the povray path is not specific to your computer (load from INI file)
+ * clean up code, remove old junk, add comments.
+ * Final report, describing all work done this term.  Lots of pretty pictures!!!
+ * Code examples for using it too (similar to the test model probably?)
+ * Documentation (help file describing all primitives - see docs/matrix.html for example)
+    * Explain what POVRAY is, what ray-tracing is, where to install povray from, why you might want to use it.
+    * explain camera (uses same camera angle as the 3D view)
+    * explain lighting (uses headlight by default, otherwise you can add lights using the xxx primitive)
+    * search for "matrix" and make sure it's not left over
+    * need a list of textures they can use, or how to find such a list...
+    * remove all mentions "agent-id", add code example to show that you do "ASK TURTLES [ POVRAY:SET-REFLECTIVITY 0.5 ]"
+ * PNGs are better in general, but maybe check file extension, if they gave you one?  Or just use PNGs... either way.
+
+== Goals week ending in 3/14 ==
+ * commit to SVN!
+ * make it so the povray path is not specific to your computer (load from INI file)
+ * clean up code, remove old junk, add comments.
+ * Final report, describing all work done this term.  Lots of pretty pictures!!!
+ * Code examples for using it too (similar to the test model probably?)
+ * Documentation (help file describing all primitives - see docs/matrix.html for example)
+
+== Goals for week ending in 3/9 ==
+ * commit to SVN!  COMMIT EXTRA FILES TOO!  (nlogo, txt)
+ * add "interpolate 2" to image_map
+ * customize "map_type xxx" to image_map, based on shape?
+ * Finish SHAPES Fix-up
+   * Fix car (and other shapes) so the rotations all happen inside the shape text file.
+   * check size of other shapes as well...
+ * Continue: refactor the way turtle shapes are handled in your code, so it's shorter & cleaner.
+ * Make it work in the 3D view of NetLogo 2D (e.g., by assuming turtle ZCOR's are slightly above 0, and PATCH ZCORS are 0 -- something like that. :-) )
+   * Use org.nlogo.api.Version.is3D() to check.
+ * Documentation (help file describing all primitives - see docs/matrix.html for example)
+
+
+== Goals for week ending in Feb. 28 ==
+ * commit to SVN!  Commit early, commit often!
+ * Image mapping for individual agents (image_map)
+ * sky_sphere 
+ * Main task: Finish SHAPES Fix-up
+   * Check car shape & displacement
+   * check size of other shapes as well...
+ * Continue: refactor the way turtle shapes are handled in your code, so it's shorter & cleaner.  (Maybe define ahead of time a set of NetLogo-like shapes which are already in the correct size/orientation?)
+ * Make it work in the 3D view of NetLogo 2D (e.g., by assuming turtle ZCOR's are slightly above 0, and PATCH ZCORS are 0 -- something like that. :-) )
+   * Use org.nlogo.api.Version.is3D() to check.
+ * Consider the idea of archetypes -- for each breed (sheep, wolves) or object type (turtles patches), can we create a template object in the POVRay file that contains all of the attributes (color, size, texture) that the breed has in common?  (This would make it easier to manually edit the POV file, for power users.)
+ * povray:make-scene-file  (does the same thing as render, but you give it "myfile.pov" and it creates it without calling POVRAY.)
+
+
+== Goals for week ending in Feb. 21  ==
+ * commit to SVN!  Commit early, commit often!
+ * minor point: remove extraneous println statements from rendering in the 3D branch.
+ * Main task: Fix up SHAPES 
+   * Size of "car" shape is wrong. Add wheels!
+   * Size of "default" shape.
+   * check size of other shapes as well...
+ * Continue: refactor the way turtle shapes are handled in your code, so it's shorter & cleaner.  (Maybe define ahead of time a set of NetLogo-like shapes which are already in the correct size/orientation?)
+ * change povray:set-background COLOR to use NetLogo-style colors
+   * what about skybox IMAGE?  wouldn't that be cool?
+ * implement headlamp (for when no lights have been defined) - possibly try positioning it a little above the camera? or maybe not.
+ * Make it work in the 3D view of NetLogo 2D (e.g., by assuming turtle ZCOR's are slightly above 0, and PATCH ZCORS are 0 -- something like that. :-) )
+ * Consider the idea of archetypes -- for each breed (sheep, wolves) or object type (turtles patches), can we create a template object in the POVRay file that contains all of the attributes (color, size, texture) that the breed has in common?  (This would make it easier to manually edit the POV file, for power users.)
+
+
+== Goals for week ending in Feb. 14 ==
+ * commit to SVN!  Commit early, commit often!
+ * Main task: Fix up SHAPES 
+   * Size of spheres (shape "circle") is still wrong... 
+   * make patch shapes a little larger, so they border perfectly.
+   * scale down link sizes a little more (can't match NetLogo on links, because NetLogo renders links the same size regardless of camera distance!  crazy...)
+ * Default values for resolution width/height - match dimensions of workspace.exportView() (PROBLEM: workspace.exportView() is hanging for 3D - filed NetLogo bug)
+ * New primitive: povray:match-window-size (scratched, see message above)
+ * New primitive: povray:set-background COLOR (or what about skybox IMAGE?)  
+   * default to black, so matches NetLogo
+ * Support for changing anti-aliasing options. (povray:render-option "+A3.2")
+ * something to think about: do we want to have default lighting for the scene, or do we want people to have to add lights?
+ * eventually: more lighting primitives!  directed light sources?  other fancy lighting stuff? 
+
+
+== Goals for week ending in 2/7 ==
+ * Matching camera 
+    * includes switching z-coordinate (no more flipping Z!)
+    * set right vector to be negative aspect ratio (W/H) times a scaling factor F  <-W/H*F,0,0>
+    * set up vector to be <0,F,0>
+    * check in simple model, with squares - does povray view match NetLogo's view
+ * Filenames - try using context.attachModelFolder()
+    * test with absolute paths "C:\temp\blahblah.png"
+    * test when you haven't saved the model yet (File->New model) - where does attachModelFolder put that???  (maybe use temp folder instead, in that case?)
+ * Support quality as second argument to render.  e.g. povray:render "test.png" 5 uses quality level 5 (hand +Q5 as command line option)
+ * change to "povray:set-texture" instead of add-texture.
+
+
+== Goals for week ending 1/31 ==
+ * Refactor the way turtle shapes are handled in your code, so it's shorter & cleaner.  (Maybe define ahead of time a set of NetLogo-like shapes which are already in the correct size/orientation?)
+ * Lighting (povray:add-light-source primitive?  povray:clear-light-sources ) 
+    * change 4th argument to color, which can either be a single number (NetLogo palette), or a 3-element LogoList (RGB triplet)
+ * support for image resolution +W +H, quality +Q, and maybe other command line options?
+   * look into aspect ratio of camera -- what to do if user specifies WxH that doesn't match aspect ratio?  can we fix camera?
+ * separate reflection & refraction -- maybe phong highlights too?
+ * What about preset textures/materials?  (I know there are a lot in the povray library - can we make it easy to set materials on objects from NetLogo?)
+ * transparency? (*)
+ * reflections (HashMap of properties for each agent,  e.g. ASK TURTLE 0 [ povray:set-reflectivity 0.78 ])  (*)
+ * It would be great to make a simple NetLogo (3D) model, which puts several different shapes in known locations, as a test for the system.
+    * sample scenes for "unit testing"!
+ * commit to SVN!  Commit early, commit often!
+ 
+
+== Current status: ==
+
+ * Turtles, patches, and links
+ * Camera-position matching
+
+== Need to fix: ==
+ * Get it working on Linux 
+ * check on extension version matching NetLogo warning...
+
+== Wish-list features ==
+ * extra support for making movies? (not clear - probably not needed...)
+ * option for only creating a scene file, without actually running povray.  (nice file names, instead of temp files?)
+ * In general, support NetLogo 2D shapes in POVRAY (either flattened like the butterfly, or stand-up images like wolves & sheep.)
+ * appropriate separation of location data from 3D shape prototypes.
+ * support turtle-trails drawing?  maybe we don't care enough about that.
+ * customize "map_type xxx" to image_map, based on shape?
+ * 
+ * Install POVRay on a mac, using fink?  Or using macports?  (Macports we ran into a "missing java headers" issue trying to install db46).  :-(
+ * Consider the idea of archetypes -- for each breed (sheep, wolves) or object type (turtles patches), can we create a template object in the POVRay file that contains all of the attributes (color, size, texture) that the breed has in common?  (This would make it easier to manually edit the POV file, for power users.)
+ 

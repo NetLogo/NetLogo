@@ -1,0 +1,75 @@
+= Notes and TO DO list for !NetLogo 3D transparency project =
+
+== Issues ==
+
+=== Flickering or disappearing agents ===
+
+In some models (particularly the Gas Lab one), agents have a tendency of disappearing for some camera angles. The issue here occurs due to large agents - when sorting all the agents by their distance from the observer, large agents can sometimes get sorted incorrectly and cause another agent behind them to fail OpenGL’s depth test completely, which makes them disappear. It’s important to keep in mind that when we sort objects by their distance, we are using their center point to determine the distance; this is an approximation that works well in most cases, but can cause weird behavior in others. This issue might be more difficult to solve. One approach might be to dynamically break down large agents into smaller ones when rendering.
+
+=== Trail transparency ===
+
+We are currently not supporting transparent turtle trails (trails are left by the turtles when you use the pen-down command). The difficulty with these is that they are not instances of Agent, so we would have to reimplement our code to use Objects instead, or create some sort of Renderable interface (but this would create more problems because we would need to make Agent implement this Renderable interface, so either we have to create a bad dependency from the the org.nlogo.api package to the render package, or else we have to put the Renderable interface in the org.nlogo.api package).
+
+There may also be a significant performance issue since the trails consist of a large number of small line segments, all of which would need to be sorted each frame for transparency to work properly.
+
+=== Transparency doesn't work properly when "following" an agent ===
+
+=== Adjustments to the sorting code ===
+
+Currently, if there's a single partially transparent object in the scene, this causes *all* of the objects to get sorted. Technically, we only need to sort the objects that are partially transparent -- the opaque objects can be rendered in any order, as long as they are rendered before the transparent objects.
+
+Potential solution: build a list and a priority queue.  The list contains objects for which rendering order doesn't matter (e.g., fully opaque objects), and the priority queue contains objects that need to be rendered in the correct order (e.g., partially transparent objects).
+
+This should not only improve performance, but also make our implementation more consistent with the [http://www.opengl.org/resources/faq/technical/transparency.htm guidelines].
+
+
+== Clarifications of some confusing aspects of the code ==
+
+=== Drawing layer in 2D and in 3D ===
+
+In !NetLogo, the drawing layer sits on top of the patch layer, but below the agent layer. It contains:
+
+ 1. Turtle and link stamps
+ 2. Turtle trails (left by the `pen-down` command)
+ 3. User-imported drawings (using the `import-drawing user-file` command)
+
+Note that the third item, user-imported drawings, is not supported in 3D.
+
+Previously, before we added support for transparency, we rendered the layers independently - that is, we rendered the patch layer, then rendered the drawing layer, and then rendered the agent layer. However, this approach is problematic in the 3D version if we want to support transparency because of the requirement that all transparent objects are rendered in back-to-front order.
+
+This is not an issue in 2D, as well as the 3D view in 2D, because patches and drawings are guaranteed to be opaque, and stamps are rasterized as bitmaps on the drawing layer. The only things that can be transparent are patches and links, which all live on the agent layer. Thus, it still makes sense to render the patch layer in its entirety, then render the drawing layer in its entirety, and then render the agent layer in its entirety. This is 
+
+However, in 3D, patches can be transparent and stamps are not rasterized. In effect, any object on any of the three layers has the possibility of being transparent, and thus partially obscuring some object on any of the other three layers.  Therefore, we can't render the three layers independently any more.
+
+In the code, this translates to the following:
+ * First, note that patches get rendered in different places depending on whether we're in true 3D, or in the 3D view in 2D. (See the next section: "Are patches getting rendered twice?")
+ * Note that in `GLRenderer.renderWorld()`, the version that gets called in the 3D view in 2D, calls `renderDrawing()`, whereas `Renderer3D.renderWorld()`, the version that gets called in the true 3D version, does not. Instead, the drawing layer gets rendered elsewhere in the body of GLRenderer.render():
+    * If we have determined that there are no transparent objects in the scene, we go ahead and call renderDrawing().
+    * If there are transparent objects, which necessitates sorting, then there is no one place where the drawing layer gets rendered. Instead, we sort and render all of the individual objects that comprise the drawing layer along with all of the objects from the other layers together.
+
+I'm aware this makes the code a bit confusing, but without completely abolishing the whole notion of layers in 3D, I'm not sure if there's a good way to fix this.
+
+=== Are patches getting rendered twice? ===
+
+In !NetLogo 3D, patches get rendered when you call worldRenderer.renderPatchShapes(), via the following pathway:
+{{{
+    GLRenderer.render() calls:
+    WorldRenderer3D.renderPatchShapes(), which calls:
+    PatchRenderer3D.renderPatches()           <-- Patches get rendered here
+}}}
+
+However, when you're in the 3D view in 2D, patches get rendered when you
+call renderWorld(), via the following pathway:
+{{{
+    GLRenderer.render() calls:
+    GLRenderer.renderWorld(), which calls:
+    WorldRenderer.renderWorld(), which calls:
+    PatchRenderer.renderPatches()             <-- Patches get rendered here
+}}}
+
+This might lead you to believe that patches are getting rendered twice, because we're calling renderWorld(), and then later we're calling worldRenderer.renderPatchShapes(). However, this is not the case because:
+
+  1. `WorldRenderer.renderPatchShapes()`, unlike `WorldRenderer3D.renderPatchShapes()`, does not call `patchRenderer.renderPatches()`, so patches DO NOT get rendered when we call `worldRenderer.renderPatchShapes()` when we're in the 3D view in 2D.
+  2. `WorldRenderer3D.renderWorld()`, unlike `WorldRenderer.renderWorld()`, does not call `patchRenderer.renderPatches()`, so patches do NOT get rendered when we call `renderWorld()` when we're in !NetLogo 3D.
+
+This is a bit confusing since functions that have the same name are doing drastically different things depending on whether we're in true 3D or if we're in the 3D view in 2D. I might get around to fixing this later, but I'm afraid that might be a big task, so for now I'm going to leave this comment in an attempt to clarify what's going on.

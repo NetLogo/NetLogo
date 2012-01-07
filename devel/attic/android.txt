@@ -1,0 +1,43 @@
+== Thoughts on Android and HubNet ==
+
+=== Supporting Different HubNet Client Types ===
+
+Right now our support for different client types is broken. This includes hubnet-set-client-interface "COMPUTER" [], where the first argument is only allowed to be "COMPUTER", the current code is not even using the second argument, and the statement is mandatory for all HubNet models.
+
+Even if something other than "COMPUTER" was allowed, users have no reasonable way of calling the registerAbstractConnectionManagerFactory(nodeType: String, factory: ConnectionManagerFactory) method on HubNetManager. It might be possible via an extension. That is something that I need to look into more. If they were able to register, the code still doesn't use the second argument which I believe is used for sending the interface data to the client. However, it does look like most of the pieces are in place to make this all work again. It would just take a few days or refactoring and testing.
+
+Another important point: Right now only COMPUTER clients are supported, and there is no way of distinguishing between different client types. We should change the Handshake message so that the client sends its type. Based on that, we send the correct interface spec. 
+
+To create a new client type, implementors have two options. 
+ 1. Parse the computer interface spec (which we could somehow help with by providing parsers) or 
+ 2. Roll their own...which means:
+   1. Write their own hubnet client editor from scratch, which just works with their system.
+   2. Use that second argument in hubnet-set-client-interface to supply enough data to their clients to create a view.
+
+=== Connecting an Android Phone ===
+
+In the 4.2 branch I've added a class: StandaloneHubNetClient that shows a solid example of how to get a minimal version up. It works as a COMPUTER client however, and does not parse the interface spec. It works with the Template model, and only has four hardcoded buttons. Still, I recommend that this code is ported to an Android phone as a first test. After that, we might choose to abandon COMPUTER and use ANDROID as a client. This might then include writing our own Android HubNet Client Editor. It's possible that doing so makes things considerably easier on the phone end, but it's also quite possible that we could just parse the COMPUTER interface spec without much difficulty. This is still to be determined. 
+
+Widgets: We should start with simple buttons (if we parse the COMPUTER interface spec, or roll our own). Then add other widgets on after. We should probably prioritize them. 
+
+The View: The view is pretty much out of the question unless we can somehow manage to re-use our code for the view. I suppose this might be possible, but I wouldn't count on it. So phone clients will start with just buttons, and maybe add some additional widgets later on. 
+
+ ==== *Update* ====
+
+(2/14/11) Tina has an Android client that is going in the right direction. It connects using COMPUTER, parses and displays the widgets, and able to send messages back to the server. This did require some hacking, and that can be found on a branch: https://subversion.assembla.com/svn/nlogo/branches/4.1.2-android. The one important hack to be aware of is that we were sending serialized awt.Shape classes over the wire, and android couldn't handle them. I had to remove those from the ClientInterfaceSpec that was sent in the handshake message. We certainly need some real resolution to this problem. Otherwise, everything is on track. 
+
+=== Connecting iPhones ===
+
+iPhone clients are pretty much out of the question at this point. The entire protocol would need to be rewritten because were using ObjectOutputStream and ObjectInputStream, which means were sending raw Java objects back and forth. This can't be done from Objective C. However, it might be possible to do with an extension. The extension could make connections with the iphones and then connect to hubnet, or just access the hubnet message boxes directly. This pretty much amounts to rewriting the hubnet protocol anyway, so if we ever did something like this, we might consider just swapping it in in place of what we have now. What we have now was done for ease of implementation though, and it certainly works, except for clients in other languages. 
+
+== Updates October 2011 ==
+
+The HubNet Android client lives in a modified version of the 4.1 branch, here: https://subversion.assembla.com/svn/nlogo/branches/4.1.2-android. Inside it, the code for the actual client itself can be found, here: https://subversion.assembla.com/svn/nlogo/branches/4.1.2-android/HubNetAndroidClient/.  Inside of that directory, you'll find Tina's writeup of the project which includes instructions on how to build and run it. That lives here: https://subversion.assembla.com/svn/nlogo/branches/4.1.2-android/HubNetAndroidClient/Independent%20Study%20Project%20Report.pdf.
+
+An original writeup of ideas on the project is above. However, it is long out of date. It needs to be updated with Tina's writeup. Other things that need to be done include:
+
+=== Additional Notes ===
+
+TODO (talk about hubnet protocol changes)
+
+Eventually, this project needs to work with the abmplus branch. However, this would require a few steps. The first major step is getting it to work with Scala. Originally, I couldn't get it to build with SBT at all, and so we wrote it in Java. But on top of that, I had to go back to the 4.1 branch because all of the HubNet messages are written in Java and we were having problems deserializing Scala messages on Android. I think this is a non trivial amount of work, but don't consider it to be insanely difficult.
