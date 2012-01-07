@@ -16,7 +16,7 @@ JAVA=$JAVA_HOME/bin/java
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 # add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
 $JAVA \
-  -Xss16m -Xmx1536m -XX:MaxPermSize=256m \
+  -Xss2m -Xmx1536m -XX:MaxPermSize=256m \
   -Dfile.encoding=UTF-8 \
   $JAVA_OPTS \
   -Djava.awt.headless=true \
