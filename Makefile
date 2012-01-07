@@ -151,7 +151,7 @@ repos:
 	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
 	cd extensions/table; git pull; git status
 	mkdir -p plugins
-	if [ ! -d extensions/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
+	if [ ! -d plugins/ReviewTab/src ] ; then git clone git@github.com:/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
 	cd plugins/ReviewTab; git pull; git status
 
 ### Scaladoc
