@@ -157,7 +157,7 @@ fi
 "${JAVACMD:=java}" \
   $JAVA_OPTS \
   "${java_args[@]}" \
-  ${CPSELECT}${TOOL_CLASSPATH} \
+  "${CPSELECT}${TOOL_CLASSPATH}" \
   -Dscala.usejavacp=true \
   -Dscala.home="$SCALA_HOME" \
   -Denv.emacs="$EMACS" \
