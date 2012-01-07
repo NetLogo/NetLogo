@@ -76,7 +76,7 @@ plugins: $(PLUGINS)
 
 $(PLUGINS): | NetLogo.jar
 	mkdir -p plugins
-	if [ ! -d plugins/ReviewTab//src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
+	if [ ! -d plugins/ReviewTab/src ] ; then git clone http://github.com/NetLogo/ReviewTab.git plugins/ReviewTab ; fi
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
