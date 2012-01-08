@@ -98,22 +98,29 @@ object PlotLoader {
   // Used to parse a line that may contain multiple string literals, surrounded by double quotes
   // and separated by spaces.  This is tricky because the string literals may contain escaped
   // double quotes, so it's nontrivial to figure out where one literal ends and the next starts.
-  // (right now this doesn't fail properly when the first quote in the code string is missing.
-  // it just thinks there is no code, and returns None. not sure if it's worth fixing.)
   private[plot] def parseStringLiterals(s: String): List[String] = {
-    def toCode(s: String) =
-      unEscapeString(s.trim.drop(1).dropRight(1)).trim
-    def isCloseQuote(tok: String) =
-      tok.endsWith("\"") && !tok.endsWith("\\\"")
-    def recurse(toks: List[String]): List[String] =
-      if(toks.isEmpty) Nil
-      else {
-        val (xs, more) = spanPlusOne(toks)(!isCloseQuote(_))
-        xs.mkString :: recurse(more)
-      }
-    val tokens = tokenize(s).toList
-    if (tokens.isEmpty) Nil
-    else recurse(tokens).map(toCode)
+    def parseOne(s: String): (String, String) =
+      if(s.isEmpty)
+        ("", "")
+      else if (s.head == '"')
+        ("", s.tail.trim)
+      else if(s.take(2) == "\\\"")
+        parseOne(s.drop(2)) match {
+          case (more1, more2) =>
+            ('"' +: more1, more2)
+        }
+      else
+        parseOne(s.tail) match {
+          case (more1, more2) =>
+            (s.head +: more1, more2)
+        }
+    s.headOption match {
+      case Some('"') =>
+        val (result, more) = parseOne(s.tail)
+        result :: parseStringLiterals(more)
+      case _ =>
+        Nil
+    }
   }
 
   // encapsulate ugly StringTokenizer

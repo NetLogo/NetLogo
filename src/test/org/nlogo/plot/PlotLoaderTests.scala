@@ -25,6 +25,15 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
   test("escaped quotes") {
     expect(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
   }
+  test("extra spaces") {  // bug #48
+    expect(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expect(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
+    expect(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
+    expect(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
+    expect(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
+    expect(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
+    expect(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
+  }
 
   // PlotLoader.parsePen
 
