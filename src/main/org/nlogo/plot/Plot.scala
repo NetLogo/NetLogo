@@ -142,7 +142,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
 
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
-    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
+    "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
   
   /// clearing
