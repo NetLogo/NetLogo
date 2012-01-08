@@ -7,10 +7,9 @@ import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
 
-  def parsePlot(widget: Array[String], plot: Plot, autoConverter: String => String) {
-    val (plotLines, penLines) = widget.toList.span(_ != "PENS")
-    def convert(os:Option[String]) = os.map(autoConverter).getOrElse("")
-
+  def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String) {
+    val (plotLines, penLines) =
+      widget.toList.span(_ != "PENS")
     plot.name(plotLines(5))
     if (11 < plotLines.length) {
       plot.defaultXMin = plotLines(8).toDouble
@@ -25,8 +24,8 @@ object PlotLoader {
         case Nil => // old style model, no new plot code. this is ok.
         case setup :: update :: Nil =>
           // the correct amount of plot code.
-          plot.setupCode = convert(setup)
-          plot.updateCode = convert(update)
+          plot.setupCode = autoConvert(setup)
+          plot.updateCode = autoConvert(update)
         case _ =>
           // 1, or 3 or more bits of code...error.
           sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
@@ -43,10 +42,15 @@ object PlotLoader {
     def loadPens(penLines: Seq[String], translateColors: Boolean) {
       plot.pens = Nil
       for (spec <- penLines.map(parsePen)) {
-        val pen = plot.createPlotPen(spec.name, false, convert(spec.setupCode), convert(spec.updateCode))
+        val pen = plot.createPlotPen(spec.name, false,
+                                     autoConvert(spec.setupCode),
+                                     autoConvert(spec.updateCode))
         pen.defaultInterval = spec.interval
         pen.defaultMode = spec.mode
-        pen.defaultColor = if (translateColors) translateSavedColor(spec.color) else spec.color
+        pen.defaultColor =
+          if (translateColors)
+            translateSavedColor(spec.color)
+          else spec.color
         pen.inLegend = spec.inLegend
       }
     }
@@ -57,35 +61,37 @@ object PlotLoader {
   // example pen line: "My Pen" 1.0 0 -16777216 true
   // name, default interval, mode, color, legend
   private[plot] case class PenSpec(name: String, interval: Double, mode: Int, color: Int, inLegend: Boolean,
-                                   setupCode: Option[String], updateCode: Option[String])
+                                   setupCode: String, updateCode: String)
 
   private[plot] def parsePen(s: String): PenSpec = {
     // the drop(1) skips the opening quote
     val tokens = tokenize(s.drop(1)).toList
 
-    // this is a bit messy. span() puts the last part of the name in the wrong
-    // part of the result, so we have to shuffle a token from one list to the other
+    // span would put the last part of the name in the wrong part of the result,
+    // so we need spanPlusOne
     val (nameTokens, moreTokens) =
-    spanPlusOne(tokens)(tok => !tok.endsWith("\"") || tok.endsWith("\\\""))
+      spanPlusOne(tokens)(tok => !tok.endsWith("\"") || tok.endsWith("\\\""))
 
     // dropRight drops the closing quote
     val name = unEscapeString(nameTokens.mkString.dropRight(1))
 
     // the rest of the line is easy to handle
     val (interval, mode, color, inLegend) =
-    moreTokens.filter(_.trim.nonEmpty) match {
-      case List(interval, mode, color, inLegend, _*) =>
-        if (!PlotPen.isValidPlotPenMode(mode.toInt))
-          sys.error(mode + " is not a valid plot pen mode")
-        (interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean)
-      case _ =>
-        sys.error("bad line: \"" + s + "\"")
-    }
+      moreTokens.filter(_.trim.nonEmpty) match {
+        case List(interval, mode, color, inLegend, _*) =>
+          if (!PlotPen.isValidPlotPenMode(mode.toInt))
+            sys.error(mode + " is not a valid plot pen mode")
+          (interval.toDouble, mode.toInt, color.toInt, inLegend.toBoolean)
+        case _ =>
+          sys.error("bad line: \"" + s + "\"")
+      }
 
     val codeString = moreTokens.dropWhile(!_.startsWith("\"")).mkString.trim
     parseStringLiterals(codeString) match {
-      case List(setup, update) => PenSpec(name, interval, mode, color, inLegend, setup, update)
-      case _ => PenSpec(name, interval, mode, color, inLegend, None, None)
+      case List(setup, update) =>
+        PenSpec(name, interval, mode, color, inLegend, setup, update)
+      case _ =>
+        PenSpec(name, interval, mode, color, inLegend, "", "")
     }
   }
 
@@ -94,12 +100,9 @@ object PlotLoader {
   // double quotes, so it's nontrivial to figure out where one literal ends and the next starts.
   // (right now this doesn't fail properly when the first quote in the code string is missing.
   // it just thinks there is no code, and returns None. not sure if it's worth fixing.)
-  private[plot] def parseStringLiterals(s: String): List[Option[String]] = {
-    def toCodeOption(s: String) = {
-      val code = unEscapeString(s.trim.drop(1).dropRight(1))
-      if (code.nonEmpty) Some(code)
-      else None
-    }
+  private[plot] def parseStringLiterals(s: String): List[String] = {
+    def toCode(s: String) =
+      unEscapeString(s.trim.drop(1).dropRight(1)).trim
     def isCloseQuote(tok: String) =
       tok.endsWith("\"") && !tok.endsWith("\\\"")
     def recurse(toks: List[String]): List[String] =
@@ -110,13 +113,13 @@ object PlotLoader {
       }
     val tokens = tokenize(s).toList
     if (tokens.isEmpty) Nil
-    else recurse(tokens).map(toCodeOption(_))
+    else recurse(tokens).map(toCode)
   }
 
   // encapsulate ugly StringTokenizer
   private def tokenize(s: String): Iterator[String] = {
     import java.util.StringTokenizer
-    val tokenizer = new StringTokenizer(s, " ", true)
+    val tokenizer = new StringTokenizer(s, " ", true) // returnDelims = true
     new Iterator[String]() {
       def hasNext = tokenizer.hasMoreTokens
       def next() = tokenizer.nextToken()

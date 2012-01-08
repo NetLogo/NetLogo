@@ -14,62 +14,62 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
     expect(Nil)(PlotLoader.parseStringLiterals(""))
   }
   test("one") {
-    expect(List(Some("foo")))(PlotLoader.parseStringLiterals("\"foo\""))
+    expect(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
   }
   test("one empty") {
-    expect(List(None))(PlotLoader.parseStringLiterals("\"\""))
+    expect(List(""))(PlotLoader.parseStringLiterals("\"\""))
   }
   test("two") {
-    expect(List(Some("foo"), Some("bar")))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expect(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
   }
   test("escaped quotes") {
-    expect(List(Some("print \"foo\"")))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
+    expect(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
   }
 
   // PlotLoader.parsePen
 
   test("easy pen") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,None,None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with spaces in name") {
-    expect("PenSpec(grass / 4,1.0,0,-10899396,true,None,None)")(
+    expect("PenSpec(grass / 4,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"grass / 4\" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with adjacent spaces in name") {
-    expect("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,None,None)")(
+    expect("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with double quotes in name") {
-    expect("PenSpec(\"\"\",1.0,0,-10899396,true,None,None)")(
+    expect("PenSpec(\"\"\",1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
   }
 
   test("a bunch of white space before code is ok.") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,Some(count turtles),None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,count turtles,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
   }
 
   test("pen with command code, with escaped quotes command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,Some(ticks \" \" ticks),None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
   }
 
   test("pen with simple command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,Some(crt 1),None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,crt 1,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
   }
 
   test("pen with no x and y axis code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,None,None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with empty command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,None,None)")(
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
   }
 
