@@ -6,68 +6,85 @@ import org.scalatest.FunSuite
 import org.nlogo.api.DummyLogoThunkFactory
 import org.nlogo.api.ModelCreator.{Plot => MCPlot, Pen, Pens}
 
-class TestPlotLoader extends TestPlotLoaderHelper{
+class PlotLoaderTests extends TestPlotLoaderHelper{
 
   // PlotLoader.parseStringLiterals
 
   test("none") {
-    assert(Nil === PlotLoader.parseStringLiterals(""))
+    expect(Nil)(PlotLoader.parseStringLiterals(""))
   }
   test("one") {
-    assert(List(Some("foo")) === PlotLoader.parseStringLiterals("\"foo\""))
+    expect(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
   }
   test("one empty") {
-    assert(List(None) === PlotLoader.parseStringLiterals("\"\""))
+    expect(List(""))(PlotLoader.parseStringLiterals("\"\""))
   }
   test("two") {
-    assert(List(Some("foo"), Some("bar")) === PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expect(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+  }
+  test("escaped quotes") {
+    expect(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
+  }
+  test("extra spaces") {  // bug #48
+    expect(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expect(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
+    expect(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
+    expect(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
+    expect(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
+    expect(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
+    expect(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
   }
 
   // PlotLoader.parsePen
 
   test("easy pen") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,None,None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with spaces in name") {
-    assert("PenSpec(grass / 4,1.0,0,-10899396,true,None,None)" ===
+    expect("PenSpec(grass / 4,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"grass / 4\" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with adjacent spaces in name") {
-    assert("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,None,None)" ===
+    expect("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with double quotes in name") {
-    assert("PenSpec(\"\"\",1.0,0,-10899396,true,None,None)" ===
+    expect("PenSpec(\"\"\",1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
   }
 
   test("a bunch of white space before code is ok.") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,Some(count turtles),None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,count turtles,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
   }
 
   test("pen with command code, with escaped quotes command code") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,Some(ticks \" \" ticks),None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
   }
 
   test("pen with simple command code") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,Some(crt 1),None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,crt 1,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
   }
 
   test("pen with no x and y axis code") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,None,None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with empty command code") {
-    assert("PenSpec(sheep,1.0,0,-13345367,true,None,None)" ===
+    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
+  }
+
+  test("pen with multi-line code") {
+    expect("PenSpec(sheep,1.0,0,-13345367,true,foo\nbar,)")(
+      PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"").toString)
   }
 
     // PlotLoader.parsePlot
@@ -89,43 +106,43 @@ Number
 true
 false"""
     val plot = load(plotLines)
-    assert(0 === plot.pens.size) // no default pen anymore. 
+    expect(0)(plot.pens.size) // no default pen anymore. 
   }
 
   def twice(s: String) = s + s
 
-  test("converter converts plot setup code"){
+  test("converter converts plot setup code") {
     val plot = load(MCPlot(setupCode = "crt 1").toString, twice)
-    assert(plot.setupCode === "crt 1crt 1")
+    expect("crt 1crt 1")(plot.setupCode)
   }
 
-  test("converter converts plot update code"){
+  test("converter converts plot update code") {
     val plot = load(MCPlot(updateCode = "crt 2").toString, twice)
-    assert(plot.updateCode === "crt 2crt 2")
+    expect("crt 2crt 2")(plot.updateCode)
   }
 
-  test("converter converts plot pen setup code"){
+  test("converter converts plot pen setup code") {
     val plot = load(MCPlot(pens = Pens(Pen(setupCode = "crt 3"))).toString, twice)
-    assert(plot.pens(0).setupCode === "crt 3crt 3")
+    expect("crt 3crt 3")(plot.pens(0).setupCode)
   }
 
-  test("converter converts plot pen update code"){
+  test("converter converts plot pen update code") {
     val plot = load(MCPlot(pens = Pens(Pen(updateCode = "crt 4"))).toString, twice)
-    assert(plot.pens(0).updateCode === "crt 4crt 4")
+    expect("crt 4crt 4")(plot.pens(0).updateCode)
   }
 
-  test("convert everything"){
+  test("convert everything") {
     val plot = load(
       MCPlot(setupCode = "crt 1", updateCode = "crt 2",
         pens = Pens(
           Pen(setupCode = "crt 3", updateCode = "crt 4"),
           Pen(setupCode = "crt 5", updateCode = "crt 6"))).toString, twice)
-    assert(plot.setupCode === "crt 1crt 1")
-    assert(plot.updateCode === "crt 2crt 2")
-    assert(plot.pens(0).setupCode === "crt 3crt 3")
-    assert(plot.pens(0).updateCode === "crt 4crt 4")
-    assert(plot.pens(1).setupCode === "crt 5crt 5")    
-    assert(plot.pens(1).updateCode === "crt 6crt 6")
+    expect("crt 1crt 1")(plot.setupCode)
+    expect("crt 2crt 2")(plot.updateCode)
+    expect("crt 3crt 3")(plot.pens(0).setupCode)
+    expect("crt 4crt 4")(plot.pens(0).updateCode)
+    expect("crt 5crt 5")(plot.pens(1).setupCode)
+    expect("crt 6crt 6")(plot.pens(1).updateCode)
   }
 }
 
@@ -355,7 +372,7 @@ PENS
 
 trait TestPlotLoaderHelper extends FunSuite {
 
-  def testPlotsFromModels(model:String, plots:List[String]){
+  def testPlotsFromModels(model:String, plots:List[String]) {
     plots.zipWithIndex.foreach{ case (lines,i) =>
       test("test "+model+" plots without exploding: " + i) { load(lines) }
     }

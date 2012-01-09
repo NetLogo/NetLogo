@@ -89,7 +89,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   def updateCode(code:String) { updateCode = if(code == null) "" else code }
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
-    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
+    "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 
   /// actual functionality
