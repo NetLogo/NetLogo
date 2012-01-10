@@ -13,7 +13,7 @@ object TestHalt {
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   var finalized = false
   class MyWorkspace(world: World, compiler: CompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
-  extends HeadlessWorkspace(world, compiler, renderer, aggregateManager, null) {
+  extends HeadlessWorkspace(world, compiler, renderer, aggregateManager) {
     override def finalize() { finalized = true; super.finalize() }
   }
 }

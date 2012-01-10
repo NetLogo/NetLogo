@@ -25,7 +25,7 @@ def skip(path:String):Boolean =
 val executableExtensions =
   "pl py sh rb command"
 val executableFullNames =
-  "bitten/startslave MacOS/HubNet MacOS/NetLogo bin/scala bin/scalac bin/sbt bin/xsbt bin/scaladoc"
+  "bitten/startslave MacOS/NetLogo bin/scala bin/scalac bin/sbt bin/xsbt bin/scaladoc"
 val nonExecutableExtensions =
   "java nlogo nlogo3d txt flex class classpath srcs css graph srcs-scala prefs launch scala xml png tgz " +
   "nim graffle html diff example xls ddf jar mk doc zip gif bz2 dtd ninfo project versioned log " +

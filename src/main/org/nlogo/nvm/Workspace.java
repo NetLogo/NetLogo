@@ -6,7 +6,6 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.CompilerServices;
-import org.nlogo.api.HubNetInterface;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
@@ -115,8 +114,6 @@ public interface Workspace
   void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
 
   java.awt.image.BufferedImage getAndCreateDrawing();
-
-  HubNetInterface getHubNetManager();
 
   void waitForQueuedEvents()
       throws LogoException;

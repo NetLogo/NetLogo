@@ -46,7 +46,6 @@ menu.file.import.world = Import World...
 menu.file.import.patchColors = Import Patch Colors...
 menu.file.import.patchColorsRGB = Import Patch Colors RGB...
 menu.file.import.drawing = Import Drawing...
-menu.file.import.hubNetClientInterface = Import HubNet Client Interface...
 menu.file.quit = Quit
 
 menu.edit = Edit
@@ -80,8 +79,6 @@ menu.tools.turtleShapesEditor = Turtle Shapes Editor
 menu.tools.linkShapesEditor = Link Shapes Editor
 menu.tools.behaviorSpace = BehaviorSpace
 menu.tools.systemDynamicsModeler = System Dynamics Modeler
-menu.tools.hubNetClientEditor = HubNet Client Editor
-menu.tools.hubNetControlCenter = HubNet Control Center
 
 menu.zoom = Zoom
 menu.zoom.larger = Larger
@@ -298,10 +295,6 @@ edit.viewSettings.3D.maxPycor = maximum y coordinate for patches
 edit.viewSettings.3D.minPzcor = minimum z coordinate for patches
 edit.viewSettings.3D.maxPzcor = maximum z coordinate for patches
 
-edit.hubnet.tag = Tag
-edit.hubnet.view.width = Width (pixels)
-edit.hubnet.view.height = Height (pixels)
-
 # tools
 
 tools.colorswatch = Color Swatches
@@ -372,27 +365,6 @@ modelsLibrary.clear = Clear
 modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library...
-
-
-# CONTROL CENTER
-menu.tools.hubnetControlCenter.removedViaControlCenter = Removed via Control Center.
-menu.tools.hubnetControlCenter.kick = Kick
-menu.tools.hubnetControlCenter.local = Local
-menu.tools.hubnetControlCenter.reset = Reset
-menu.tools.hubnetControlCenter.clientName = CLIENT NAME
-menu.tools.hubnetControlCenter.clients = Clients:
-menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
-menu.tools.hubnetControlCenter.broadcastMessage = Broadcast Message
-menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Mirror 2D view on clients
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Mirror plots on clients (experimental)
-menu.tools.hubnetControlCenter.name = Name:
-menu.tools.hubnetControlCenter.activity = Activity:
-menu.tools.hubnetControlCenter.unknown = UNKNOWN
-menu.tools.hubnetControlCenter.serverAddress = Server address:
-menu.tools.hubnetControlCenter.portNumber = Port number:
-menu.tools.hubnetControlCenter.settings = Settings:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  ''{0}'' joined from: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = ''{0}'' disconnected.
 
 view.3d.orbit = Orbit
 view.3d.zoom = Zoom

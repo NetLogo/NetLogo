@@ -47,13 +47,6 @@ trait Depend extends DefaultProject {
       "editor" -> Nil,
       "generator" -> List("prim","prim/dead","prim/threed"),
       "headless" -> List("shape","workspace"),
-      "headless/hubnet" -> List("headless", "hubnet/protocol"),
-      "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
-      "hubnet/connection" -> List("api"),
-      "hubnet/mirroring" -> List("api"),
-      "hubnet/protocol" -> List("api"),
-      "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol"),
-      "hubnet/server/gui" -> List("hubnet/server","window"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
       "lab/gui" -> List("lab","window"),
@@ -67,7 +60,6 @@ trait Depend extends DefaultProject {
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
       "prim/gui" -> List("window"),
-      "prim/hubnet" -> List("nvm"),
       "prim/plot" -> List("nvm","plot"),
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
@@ -97,13 +89,6 @@ trait Depend extends DefaultProject {
     }
     def generateFooter() {
       println("""
-### HubNet client dependencies (keep HubNet.jar small!)
-
-[HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.mirroring] [hubnet.protocol] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
-check [HubNet-client] independentOf [workspace]
-# Someday this should be completely independent, not just directly independent - ST 12/4/08
-check [HubNet-client] directlyIndependentOf [nvm]
-
 ### checks for packages with only one direct parent
 
 [not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
@@ -130,7 +115,7 @@ check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*
 
-[MRJAdapter-free-zone] = org.nlogo.* excluding [app] [hubnet.client] [swing]
+[MRJAdapter-free-zone] = org.nlogo.* excluding [app] [swing]
 check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
 
 [JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]

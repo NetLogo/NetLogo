@@ -46,7 +46,6 @@ menu.file.import.world = Импортировать мир...
 menu.file.import.patchColors = Импортировать цвета пятен...
 menu.file.import.patchColorsRGB = Импортировать цвета пятен RGB...
 menu.file.import.drawing = Импортировать рисунок...
-menu.file.import.hubNetClientInterface = Импортировать интерфейс клиента...
 menu.file.quit = Выход
 
 menu.edit = Редактировать
@@ -80,8 +79,6 @@ menu.tools.turtleShapesEditor = Редактор форм черепах
 menu.tools.linkShapesEditor = Редактор форм связей
 menu.tools.behaviorSpace = Пространство поведения
 menu.tools.systemDynamicsModeler = Симулятор системной динамики
-menu.tools.hubNetClientEditor = редактор клиента HubNet 
-menu.tools.hubNetControlCenter = Управляющий центр HubNet 
 
 menu.zoom = Увеличение
 menu.zoom.larger = Больше
@@ -299,10 +296,6 @@ edit.viewSettings.3D.maxPycor = максимальная координата у
 edit.viewSettings.3D.minPzcor = минимальная координата z для пятен
 edit.viewSettings.3D.maxPzcor = максимальная координата z для пятен
 
-edit.hubnet.tag = Тег
-edit.hubnet.view.width = Ширина (пиксели)
-edit.hubnet.view.height = Высота (пиксели)
-
 # Средства
 
 tools.colorswatch = Образцы цветов
@@ -372,27 +365,6 @@ modelsLibrary.clear = Очистить
 modelsLibrary.community = Перейти к моделям сообщества
 modelsLibrary.open = Открыть
 modelsLibrary.loading = Загрузить библиотеку меделей...
-
-
-# CONTROL CENTER
-menu.tools.hubnetControlCenter.removedViaControlCenter = Удалить через Центр управления
-menu.tools.hubnetControlCenter.kick = удар
-menu.tools.hubnetControlCenter.local = локальная
-menu.tools.hubnetControlCenter.reset = Перезагрузить
-menu.tools.hubnetControlCenter.clientName = Имя клиента
-menu.tools.hubnetControlCenter.clients = Клиенты:
-menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
-menu.tools.hubnetControlCenter.broadcastMessage = Передать сообщение
-menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Зеркало 2D  вида на клиентов
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Зеркало графиков на клиентах (экспериментально)
-menu.tools.hubnetControlCenter.name = Имя:
-menu.tools.hubnetControlCenter.activity = Активность:
-menu.tools.hubnetControlCenter.unknown = Неизвестно
-menu.tools.hubnetControlCenter.serverAddress = Адрес сервера:
-menu.tools.hubnetControlCenter.portNumber = Номер порта:
-menu.tools.hubnetControlCenter.settings = Установки:
-menu.tools.hubnetControlCenter.messagePanel.clientJoined =  '{0}' соединен через: {1}.
-menu.tools.hubnetControlCenter.messagePanel.clientDisconnected = '{0}' отсоединен.
 
 view.3d.orbit = Орбита
 view.3d.zoom = Увеличение

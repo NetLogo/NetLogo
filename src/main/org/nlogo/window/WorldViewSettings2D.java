@@ -60,17 +60,8 @@ public strictfp class WorldViewSettings2D
         if (edgesChanged) {
           /**
            * All turtles die when the world changes sizes.
-           * If hubnet is running, we need the user a choice
-           * of kicking out all the clients first, not kicking anyone,
-           * or cancelling altogether.
-           * This is because most hubnet clients will exhibit undefined
-           * behavior because their turtle has died.
            */
           new org.nlogo.window.Events.RemoveAllJobsEvent().raise(gWidget);
-          if (hubnetDecision() == KICK /* kick clients first, then resize world */) {
-            workspace.hubnetManager().reset();
-          }
-
           world.clearTurtles();
           world.clearLinks();
           world.createPatches(newMinX, newMaxX,
@@ -87,21 +78,6 @@ public strictfp class WorldViewSettings2D
           gWidget.view.renderer.trailDrawer().clearDrawing();
         } else {
           gWidget.view.renderer.trailDrawer().rescaleDrawing();
-        }
-      }
-
-      private int hubnetDecision() {
-        if (workspace.hubNetRunning()) {
-          String message = "Resizing the world kills all turtles. " +
-              "This may cause HubNet clients to be unresponsive. " +
-              "Consider kicking out all clients before proceeding.";
-          return org.nlogo.swing.OptionDialog.show
-              (workspace.getFrame(),
-                  "Kick clients?", message,
-                  /* these things show up in reverse order on the popup, not sure why */
-                  new String[]{"Kick clients", "Don't kick"});
-        } else {
-          return IGNORE;
         }
       }
     };

@@ -10,7 +10,7 @@ import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ Version, RendererInterface,
                        WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
-                       HubNetInterface, CommandRunnable, ReporterRunnable }
+                       CommandRunnable, ReporterRunnable }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -39,15 +39,7 @@ object HeadlessWorkspace {
     pico.addScalaObject("org.nlogo.compiler.Compiler")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
-    pico.add(classOf[HubNetInterface],
-             "org.nlogo.hubnet.server.HeadlessHubNetManager",
-             Array[Parameter](new ComponentParameter))
     pico.addComponent(subclass)
-    val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory {
-      override def newInstance(workspace: AbstractWorkspace) =
-        pico.getComponent(classOf[HubNetInterface])
-    }
-    pico.addComponent(hubNetManagerFactory)
     pico.getComponent(subclass)
   }
 
@@ -102,9 +94,8 @@ class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
   val renderer: RendererInterface,
-  val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: AbstractWorkspace.HubNetManagerFactory)
-extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
+  val aggregateManager: AggregateManagerInterface)
+extends AbstractWorkspaceScala(_world)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
@@ -426,10 +417,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(force: Boolean) {
-    if (hubnetManager != null)
-      hubnetManager.incrementalUpdateFromEventThread()
-  }
+  override def requestDisplayUpdate(force: Boolean) { }
 
   /**
    * Internal use only.

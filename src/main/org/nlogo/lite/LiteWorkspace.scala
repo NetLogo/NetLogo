@@ -10,7 +10,7 @@ import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
 import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: java.awt.Frame, listenerManager: NetLogoListenerManager)
-extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager) {
+extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, listenerManager) {
   val compiler = Femto.scalaSingleton(
     classOf[CompilerInterface], "org.nlogo.compiler.Compiler")
   // lazy to avoid initialization order snafu - ST 3/1/11

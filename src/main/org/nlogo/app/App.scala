@@ -110,12 +110,6 @@ object App{
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter(), new ComponentParameter()))
-    pico.add(classOf[HubNetInterface],
-          "org.nlogo.hubnet.server.gui.GUIHubNetManager",
-          Array[Parameter] (
-            new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -254,7 +248,6 @@ class App extends
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
-    LoadSectionEvent.Handler with
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     Events.SwitchedTabsEvent.Handler with
@@ -309,16 +302,10 @@ class App extends
     }
     pico.addComponent(interfaceFactory)
 
-    val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory() {
-      def newInstance(workspace: AbstractWorkspace): HubNetInterface = {
-        pico.getComponent(classOf[HubNetInterface])
-      }
-    }
-
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
-                                  frame, frame, hubNetManagerFactory, App.this, listenerManager) {
+                                  frame, frame, App.this, listenerManager) {
       val compiler = pico.getComponent(classOf[CompilerInterface])                                    
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
@@ -606,13 +593,8 @@ class App extends
   def handle(e:ModelSavedEvent) {
     workspace.modelSaved(e.modelPath)
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
-    if (AbstractWorkspace.isApp) {
+    if (AbstractWorkspace.isApp)
       frame.setTitle(makeFrameTitle)
-      if (workspace.hubnetManager() != null) {
-        workspace.hubnetManager().setTitle(workspace.modelNameForDisplay,
-          workspace.getModelDir, workspace.getModelType)
-      }
-    }
   }
   
   /**
@@ -622,7 +604,6 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
-    if(workspace.hubnetManager() != null) workspace.hubnetManager().closeClientEditor()
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
@@ -936,14 +917,6 @@ class App extends
    */
   // used both from HelpMenu and MacHandlers - ST 2/2/09
   def showAboutWindow() { new AboutWindow(frame).setVisible(true) }
-
-  /**
-   * Internal use only.
-   */
-  def handle(e:LoadSectionEvent){
-    if(e.section == ModelSection.HubNetClient && e.lines.length > 0)
-      frame.addLinkComponent(workspace.getHubNetManager.clientEditor)
-  }
 
   /**
    * Internal use only.

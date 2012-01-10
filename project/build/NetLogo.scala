@@ -95,8 +95,6 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
     task { args => task {
       Run.run("org.nlogo.app.App", runClasspath.get, args, log)
     }.dependsOn(compile) }
-  lazy val hubnetClient =
-    runTask(Some("org.nlogo.hubnet.client.App"), runClasspath).dependsOn(compile)
 
   // e.g. dump "models/Sample\ Models/Earth\ Science/Fire.nlogo"
   // e.g. dump Fire   (to dump a benchmark model)

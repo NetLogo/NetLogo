@@ -26,7 +26,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     extends org.nlogo.workspace.AbstractWorkspaceScala
     implements
     org.nlogo.window.Event.LinkChild,
-    org.nlogo.window.Events.AboutToQuitEvent.Handler,
     org.nlogo.window.Events.AddJobEvent.Handler,
     org.nlogo.window.Events.AfterLoadEvent.Handler,
     org.nlogo.window.Events.BeforeLoadEvent.Handler,
@@ -64,16 +63,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GUIWorkspace(final org.nlogo.agent.World world,
                       KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
-                      org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
                       ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager) {
-    super(world, hubNetManagerFactory);
+    super(world);
     this.kioskLevel = kioskLevel;
     this.frame = frame;
     this.linkParent = linkParent;
     this.externalFileManager = externalFileManager;
     this.listenerManager = listenerManager;
-    hubNetControlCenterAction.setEnabled(false);
 
     viewWidget = new ViewWidget(this);
     view = viewWidget.view;
@@ -155,9 +152,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
     view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
     view.renderer.trailDrawer().stamp(agent, erase);
-    if (hubNetManager != null) {
-      hubNetManager.sendStamp(agent, erase);
-    }
   }
 
   @Override
@@ -187,9 +181,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void clearDrawing() {
     world.clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
-    if (hubNetManager != null) {
-      hubNetManager.sendClear();
-    }
   }
 
   @Override
@@ -792,9 +783,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
                        Object color, double size, String mode) {
     view.renderer.trailDrawer().drawLine
         (x0, y0, x1, y1, color, size, mode);
-    if (hubNetManager != null) {
-      hubNetManager.sendLine(x0, y0, x1, y1, color, size, mode);
-    }
   }
 
   public void setColors(int[] colors) {
@@ -1206,8 +1194,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// keep track of model name
 
   /**
-   * sets new model name and type, and, if necessary, disconnects
-   * HubNetManager. This must be done at BeforeLoadEvent time, because the
+   * sets new model name and type.
+   * This must be done at BeforeLoadEvent time, because the
    * model name needs to be available for setting titles and so on by the
    * time we handle LoadBeginEvent.
    */
@@ -1216,9 +1204,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (!isApplet()) {
       setModelPath(e.modelPath);
       setModelType(e.modelType);
-    }
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
     }
     getExtensionManager().reset();
     fileManager.handleModelChange();
@@ -1242,33 +1227,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     setModelType(ModelTypeJ.NORMAL());
   }
 
-  public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
-    }
-  }
-
-  @Override
-  public void hubNetRunning(boolean hubNetRunning) {
-    if (this.hubNetRunning != hubNetRunning) {
-      if (hubNetRunning) {
-        viewManager.add(hubNetManager);
-      } else {
-        viewManager.remove(hubNetManager);
-      }
-    }
-
-    this.hubNetRunning = hubNetRunning;
-    hubNetControlCenterAction.setEnabled(hubNetRunning);
-  }
-
-  public final javax.swing.Action hubNetControlCenterAction =
-      new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          hubNetManager.showControlCenter();
-        }
-      };
-
   public final javax.swing.Action switchTo3DViewAction =
       new javax.swing.AbstractAction("3D View") {
         public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -1282,11 +1240,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
         e.text.trim().length() > 0) {
       previewCommands_$eq(e.text);
-    }
-    if (e.section == ModelSectionJ.CLIENT() &&
-        e.lines.length > 0 &&
-        !isApplet()) {
-      getHubNetManager().load(e.lines, e.version);
     }
     if (e.section == ModelSectionJ.SHAPES()) {
       world.turtleShapeList().replaceShapes

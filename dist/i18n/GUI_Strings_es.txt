@@ -46,7 +46,6 @@ menu.file.import.world = Importar Mundo...
 menu.file.import.patchColors = Importar Colores de Parcelas...
 menu.file.import.patchColorsRGB = Importar Colores de Parcelas de Formato RGB...
 menu.file.import.drawing = Importar Imagen...
-menu.file.import.hubNetClientInterface = Importar Interfaz del Cliente HubNet Client...
 menu.file.quit = Salir
 
 menu.edit = Editar
@@ -80,8 +79,6 @@ menu.tools.turtleShapesEditor = Editor de Formas para Tortugas
 menu.tools.linkShapesEditor = Editor de Formas para Enlaces
 menu.tools.behaviorSpace = Analizador de Comportamiento
 menu.tools.systemDynamicsModeler = Modelador de Dinámicas de Sistemas
-menu.tools.hubNetClientEditor = Editor del Cliente HubNet
-menu.tools.hubNetControlCenter = Centro de Control del HubNet
 
 menu.zoom = Tamaño
 menu.zoom.larger = Más grande
@@ -292,10 +289,6 @@ edit.viewSettings.3D.minPycor = mínima coordenada y para las parcelas
 edit.viewSettings.3D.maxPycor = máxima coordenada y para las parcelas
 edit.viewSettings.3D.minPzcor = mínima coordenada z para las parcelas
 edit.viewSettings.3D.maxPzcor = máxima coordenada z para las parcelas
-
-edit.hubnet.tag = Pestaña
-edit.hubnet.view.width = Ancho (píxeles)
-edit.hubnet.view.height = Alto (píxeles)
 
 # tools
 

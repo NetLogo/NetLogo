@@ -586,7 +586,7 @@ public strictfp class World
 
   // we assign an unique ID to links, like turtles, except that
   // it's not visible to anyone and it can't affect the outcome of
-  // the model. I added it because it greatly complicates hubnet
+  // the model. I added it because it greatly complicates
   // view mirroring to have the only unique identifier be a
   // 3 element list. ev 5/1/08
   private long nextLinkIndex = 0;

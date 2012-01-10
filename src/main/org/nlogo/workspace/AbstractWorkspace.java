@@ -11,7 +11,6 @@ package org.nlogo.workspace;
 //import org.nlogo.agent.Importer;
 //import org.nlogo.api.CompilerException;
 //import org.nlogo.api.Dump;
-//import org.nlogo.api.HubNetInterface;
 //import org.nlogo.api.LogoException;
 //import org.nlogo.api.ModelType;
 //import org.nlogo.api.ModelTypeJ;
@@ -46,8 +45,7 @@ import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,
-    org.nlogo.api.LogoThunkFactory,
-    org.nlogo.api.HubNetWorkspaceInterface {
+    org.nlogo.api.LogoThunkFactory {
 
   /// globals
   /// (some of these probably should be changed not to be public - ST 12/11/01)
@@ -79,8 +77,6 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public final org.nlogo.nvm.JobManagerInterface jobManager;
-  private final HubNetManagerFactory hubNetManagerFactory;
-  protected HubNetInterface hubNetManager;
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
@@ -109,8 +105,7 @@ public abstract strictfp class AbstractWorkspace
   /**
    * path to the directory from which the current model was loaded. NetLogo
    * uses this as the default path for file I/O, when reloading models,
-   * locating HubNet clients, etc. This is null if this is a new (unsaved)
-   * model.
+   * etc. This is null if this is a new (unsaved) model.
    */
   private String modelDir;
 
@@ -124,10 +119,8 @@ public abstract strictfp class AbstractWorkspace
 
   /// startup
 
-  protected AbstractWorkspace(org.nlogo.agent.World world,
-                              AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
+  protected AbstractWorkspace(org.nlogo.agent.World world) {
     this.world = world;
-    this.hubNetManagerFactory = hubNetManagerFactory;
     modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator(this);
     world.compiler_$eq(this);
@@ -163,9 +156,6 @@ public abstract strictfp class AbstractWorkspace
       throws InterruptedException {
     getExtensionManager().reset();
     jobManager.die();
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
-    }
   }
 
   /// headless?
@@ -212,34 +202,6 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean getIsApplet() {
     return isApplet;
-  }
-
-  /// hubnet
-
-  public HubNetInterface getHubNetManager() {
-    if (hubNetManager == null && hubNetManagerFactory != null) {
-      hubNetManager = hubNetManagerFactory.newInstance(this);
-    }
-    return hubNetManager;
-  }
-
-  // merely return, don't create if it isn't already there.
-  public HubNetInterface hubnetManager() {
-    return hubNetManager;
-  }
-
-  public interface HubNetManagerFactory {
-    HubNetInterface newInstance(AbstractWorkspace workspace);
-  }
-
-  protected boolean hubNetRunning = false;
-
-  public boolean hubNetRunning() {
-    return hubNetRunning;
-  }
-
-  public void hubNetRunning(boolean hubNetRunning) {
-    this.hubNetRunning = hubNetRunning;
   }
 
   public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {

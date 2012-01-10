@@ -63,8 +63,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
-
     ws.init()
     ws.world.program(results.program)
 

@@ -51,7 +51,7 @@ models/index.txt:
 
 ### JAR building
 
-JARS = NetLogo.jar HubNet.jar
+JARS = NetLogo.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
@@ -131,7 +131,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) test/applet/HubNet.jar
+	rm -f $(JARS)
 	rm -rf tmp target
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties

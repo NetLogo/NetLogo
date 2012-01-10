@@ -6,7 +6,6 @@ import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, Arra
 import org.nlogo.api.{PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
 import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
 import org.nlogo.plot.{ PlotExporter, PlotManager }
-import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 
 import java.io.{IOException,PrintWriter}
 
@@ -16,8 +15,8 @@ object AbstractWorkspaceScala {
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
 }
 
-abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFactory: HubNetManagerFactory)
-  extends AbstractWorkspace(_world, hubNetManagerFactory)
+abstract class AbstractWorkspaceScala(private val _world: World)
+  extends AbstractWorkspace(_world)
   with Plotting with Exporting with Evaluating {
 
   /**

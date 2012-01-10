@@ -41,7 +41,7 @@ object Dump {
     Runtime.getRuntime().exec("rm -r tmp/dumps").waitFor()
     Runtime.getRuntime().exec("mkdir -p tmp/dumps").waitFor()
     // 
-    for(path <- ModelsLibrary.getModelPaths; if include(path))
+    for(path <- ModelsLibrary.getModelPaths)
     {
       val name = path.split("/").last.toList.dropRight(".nlogo".size).mkString
       print('.')
@@ -54,9 +54,4 @@ object Dump {
     w.write(s)
     w.close()
   }
-  // HubNet models are excluded only because HeadlessWorkspace can't open them;
-  // if this class used TestCompileAll's compilerTestingMode code, like it ought to, then
-  // HubNet could be included. - ST 2/11/09
-  def include(path:String) =
-    !path.toUpperCase.containsSlice("HUBNET")
 }

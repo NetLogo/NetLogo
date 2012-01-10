@@ -12,8 +12,7 @@ import org.nlogo.api.{AggregateManagerInterface, Version}
 
 class DummyAbstractWorkspace
 extends AbstractWorkspaceScala(
-    if(Version.is3D) new World3D else new World,
-    null) // no hubNetManagerFactory
+    if(Version.is3D) new World3D else new World)
 {
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true

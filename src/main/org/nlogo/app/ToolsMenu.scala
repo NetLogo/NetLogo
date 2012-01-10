@@ -29,9 +29,6 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
               () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
   addMenuItem(I18N.gui("behaviorSpace"), 'B', true, () => app.labManager.show())
   addMenuItem(I18N.gui("systemDynamicsModeler"), 'D', true, app.aggregateManager.showEditor _)
-  addSeparator()
-  addMenuItem(I18N.gui("hubNetClientEditor"), openHubNetClientEditor _)
-  addMenuItem('H', true, app.workspace.hubNetControlCenterAction)
 
   def openColorDialog() {
     if(app.colorDialog == null) {     
@@ -44,9 +41,5 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
       org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
       app.colorDialog.setVisible(true)
     }
-  }
-  def openHubNetClientEditor() {
-    app.workspace.getHubNetManager.openClientEditor()
-    app.frame.addLinkComponent(app.workspace.getHubNetManager.clientEditor)
   }
 }

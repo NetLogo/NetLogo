@@ -9,7 +9,6 @@ class DummyExtensionManager extends ExtensionManager {
   private def unsupported = throw new UnsupportedOperationException
   def storeObject(obj: AnyRef) { }
   def retrieveObject(): AnyRef = unsupported
-  def initializeHubNet() { }
   def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = unsupported
   def readFromString(src: String): AnyRef = unsupported
   def reset() = unsupported

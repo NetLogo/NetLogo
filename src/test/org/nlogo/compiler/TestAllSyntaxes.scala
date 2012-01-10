@@ -79,15 +79,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,null,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,null,6,1,1
                      |_hsb number/number/number,list,OTPL,null,10,3,3
-                     |_hubnetclientslist ,list,OTPL,null,10,0,0
-                     |_hubnetentermessage ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_hubnetexitmessage ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_hubnetinqsize ,number,OTPL,null,10,0,0
-                     |_hubnetmessage ,anything,OTPL,null,10,0,0
-                     |_hubnetmessagesource ,string,OTPL,null,10,0,0
-                     |_hubnetmessagetag ,string,OTPL,null,10,0,0
-                     |_hubnetmessagewaiting ,TRUE/FALSE,OTPL,null,10,0,0
-                     |_hubnetoutqsize ,number,OTPL,null,10,0,0
                      |_ifelsevalue TRUE/FALSE/reporter block/reporter block,anything,OTPL,null,10,3,3
                      |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,OTPL,-T--,12,2,2
                      |_inconenowrap agentset,number/number,agentset,OTPL,-T--,12,2,2
@@ -350,41 +341,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_histogram list,OTPL,null,0,1,1
                     |_histogramfrom agentset/number block,OTPL,null,0,2,2
                     |_home ,-T--,null,0,0,0 *
-                    |_hubnetbroadcast string/anything,OTPL,null,0,2,2
-                    |_hubnetbroadcastclearoutput ,OTPL,null,0,0,0
-                    |_hubnetbroadcastmessage anything,OTPL,null,0,1,1
-                    |_hubnetbroadcastusermessage anything,OTPL,null,0,1,1
-                    |_hubnetclearoverride string/agent or agentset/string,OTPL,?,0,3,3
-                    |_hubnetclearoverrides string,OTPL,null,0,1,1
-                    |_hubnetclearplot string,OTPL,null,0,1,1
-                    |_hubnetcreateclient ,O---,null,0,0,0
-                    |_hubnetfetchmessage ,OTPL,null,0,0,0
-                    |_hubnetkickallclients ,OTPL,null,0,0,0 *
-                    |_hubnetkickclient string,OTPL,null,0,1,1
-                    |_hubnetmakeplotnarrowcast string,OTPL,null,0,1,1
-                    |_hubnetplot string/number,OTPL,null,0,2,2
-                    |_hubnetplotpendown string,OTPL,null,0,1,1
-                    |_hubnetplotpenup string,OTPL,null,0,1,1
-                    |_hubnetplotxy string/number/number,OTPL,null,0,3,3
-                    |_hubnetreset ,O---,null,0,0,0
-                    |_hubnetresetperspective string,OTPL,null,0,1,1
-                    |_hubnetroboclient number,O---,null,0,1,1
-                    |_hubnetsend string or list/string/anything,OTPL,null,0,3,3
-                    |_hubnetsendclearoutput string or list,OTPL,null,0,1,1
-                    |_hubnetsendfollow string/agent/number,OTPL,null,0,3,3
-                    |_hubnetsendfromlocalclient string/string/anything,OTPL,null,0,3,3
-                    |_hubnetsendmessage string or list/anything,OTPL,null,0,2,2
-                    |_hubnetsendoverride string/agent or agentset/string/reporter block,OTPL,?,0,4,4
-                    |_hubnetsendusermessage string or list/anything,OTPL,null,0,2,2
-                    |_hubnetsendwatch string/agent,OTPL,null,0,2,2
-                    |_hubnetsetclientinterface string/list,O---,null,0,2,2
-                    |_hubnetsethistogramnumbars string/number,OTPL,null,0,2,2
-                    |_hubnetsetplotmirroring TRUE/FALSE,OTPL,null,0,1,1
-                    |_hubnetsetplotpeninterval string/number,OTPL,null,0,2,2
-                    |_hubnetsetplotpenmode string/number,OTPL,null,0,2,2
-                    |_hubnetsetviewmirroring TRUE/FALSE,OTPL,null,0,1,1
-                    |_hubnetwaitforclients number/number,OTPL,null,0,2,2
-                    |_hubnetwaitformessages number/number,OTPL,null,0,2,2
                     |_if TRUE/FALSE/command block,OTPL,null,0,2,2
                     |_ifelse TRUE/FALSE/command block/command block,OTPL,null,0,3,3
                     |_ignore anything,OTPL,null,0,1,1

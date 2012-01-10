@@ -72,8 +72,6 @@ class ModelSaver(app: App) {
 
     // reserved for HubNet client 
     section {
-      for(manager <- Option(app.tabs.workspace.hubnetManager))
-        manager.save(buf)
     }
 
     //link shapes
