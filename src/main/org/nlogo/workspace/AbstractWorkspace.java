@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
@@ -21,6 +20,11 @@ import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 import org.nlogo.util.Femto;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public abstract strictfp class AbstractWorkspace
     implements Workspace,

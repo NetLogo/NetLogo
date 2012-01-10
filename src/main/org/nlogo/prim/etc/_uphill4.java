@@ -2,16 +2,16 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.AgentException;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final strictfp class _uphill4
     extends Command {

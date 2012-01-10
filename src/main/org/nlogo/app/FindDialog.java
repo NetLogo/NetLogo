@@ -2,14 +2,13 @@
 
 package org.nlogo.app;
 
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JDialog;
-
 import org.nlogo.api.I18N;
 import org.nlogo.swing.NonemptyTextFieldActionEnabler;
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public strictfp class FindDialog
     extends JDialog

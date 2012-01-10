@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.agent.Agent
 import org.nlogo.api.{ I18N, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 

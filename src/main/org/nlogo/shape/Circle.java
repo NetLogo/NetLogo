@@ -2,11 +2,10 @@
 
 package org.nlogo.shape;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.util.StringTokenizer;
-
 import org.nlogo.api.GraphicsInterface;
+
+import java.awt.*;
+import java.util.StringTokenizer;
 
 import static org.nlogo.api.Constants.ShapeWidth;
 

@@ -2,15 +2,15 @@
 
 package org.nlogo.app;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.nlogo.api.I18N;
 import org.nlogo.window.DummyPlotWidget;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.GUIWorkspace;
 import org.nlogo.window.Widget;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.

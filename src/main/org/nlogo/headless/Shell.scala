@@ -2,8 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ CompilerException, LogoException, Version }
-import org.nlogo.util.SysInfo
+import org.nlogo.api.{ CompilerException, Version }
 import java.io.{ BufferedReader, InputStreamReader }
 
 object Shell {

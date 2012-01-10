@@ -2,7 +2,7 @@
 
 package org.nlogo.awt
 
-import java.awt.{ Component, Container, Dimension, Insets, LayoutManager }
+import java.awt.{ Component, Container }
 
 class RowLayout(hGap: Int, hAlign: Float, vAlign: Float) extends java.awt.LayoutManager {
 

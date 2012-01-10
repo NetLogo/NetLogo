@@ -2,11 +2,10 @@
 
 package org.nlogo.log
 
-import javax.xml.transform.{ OutputKeys, Transformer, TransformerConfigurationException,
+import javax.xml.transform.{ OutputKeys,
                              TransformerFactory }
 import javax.xml.transform.sax.{ SAXTransformerFactory, TransformerHandler }
 import javax.xml.transform.stream.StreamResult
-import org.xml.sax.SAXException
 import org.xml.sax.helpers.AttributesImpl
 import org.apache.log4j.FileAppender 
 import scala.reflect.BeanProperty

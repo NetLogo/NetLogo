@@ -3,7 +3,7 @@
 package org.nlogo.generator
 
 import org.scalatest.FunSuite
-import org.objectweb.asm.{ClassReader, MethodVisitor}
+import org.objectweb.asm.ClassReader
 import org.objectweb.asm.commons.EmptyVisitor
 
 class TestStrictFP extends FunSuite {

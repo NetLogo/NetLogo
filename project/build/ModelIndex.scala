@@ -1,5 +1,4 @@
 import sbt._
-import Process._
 
 //  creates an index of the models in the Models Library and the first paragraph of the info
 //  tabs. we read this when we open the Models Library dialog instead of sifting through all the

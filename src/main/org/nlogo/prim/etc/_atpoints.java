@@ -2,26 +2,17 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.nlogo.agent.Agent;
-import org.nlogo.api.AgentException;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
-import org.nlogo.api.Dump;
+import org.nlogo.agent.*;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.api.*;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
+
+import java.util.*;
 
 public final strictfp class _atpoints
     extends Reporter {

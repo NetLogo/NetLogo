@@ -2,7 +2,6 @@
 
 package org.nlogo.generator
 
-import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, EngineException, Instruction, Reporter }
 
 trait GeneratedInstruction extends Instruction {

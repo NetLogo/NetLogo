@@ -71,7 +71,6 @@ trait Libraries extends DefaultProject {
                                 else "-1.1.1.").reverse)
           .reverse
       val url = "http://ccl.northwestern.edu/devel/" + filename
-      import Process._
       List("curl", "-s", "-o", pathString, url).!
     }
     None

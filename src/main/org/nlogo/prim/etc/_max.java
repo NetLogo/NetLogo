@@ -2,15 +2,11 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.LogoList;
+import org.nlogo.api.*;
 import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Pure;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _max extends Reporter implements Pure {
   @Override

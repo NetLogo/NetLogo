@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ Component, Frame }
 import org.nlogo.awt.Hierarchy.getFrame
-import javax.swing.{ JOptionPane, JTextField }
+import javax.swing.JOptionPane
 
 object InputDialog {
   def show(owner: Component, title: String, message: String, defaultInput: String, options: Array[String]): String =

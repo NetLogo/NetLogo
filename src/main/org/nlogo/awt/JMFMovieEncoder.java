@@ -97,27 +97,7 @@
 
 package org.nlogo.awt;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.media.Buffer;
-import javax.media.ConfigureCompleteEvent;
-import javax.media.Controller;
-import javax.media.ControllerEvent;
-import javax.media.ControllerListener;
-import javax.media.DataSink;
-import javax.media.EndOfMediaEvent;
-import javax.media.Format;
-import javax.media.Manager;
-import javax.media.MediaLocator;
-import javax.media.PrefetchCompleteEvent;
-import javax.media.Processor;
-import javax.media.RealizeCompleteEvent;
-import javax.media.ResourceUnavailableEvent;
-import javax.media.Time;
+import javax.media.*;
 import javax.media.control.TrackControl;
 import javax.media.datasink.DataSinkErrorEvent;
 import javax.media.datasink.DataSinkEvent;
@@ -128,6 +108,9 @@ import javax.media.protocol.FileTypeDescriptor;
 import javax.media.protocol.PullBufferDataSource;
 import javax.media.protocol.PullBufferStream;
 import javax.media.util.ImageToBuffer;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Encodes a sequence of BufferedImages into a QuickTime movie.

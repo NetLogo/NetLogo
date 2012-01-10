@@ -3,7 +3,6 @@
 package org.nlogo.gl.render
 
 import org.nlogo.api.{ Agent, Constants, Turtle3D, World, World3D }
-import javax.media.opengl.GL
 
 private class TurtleRenderer3D(world: World, shapeRenderer: ShapeRenderer)
 extends TurtleRenderer(world, shapeRenderer) {

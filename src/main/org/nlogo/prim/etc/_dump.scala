@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Context, Procedure, Reporter }
+import org.nlogo.nvm.{ Context, Reporter }
 import collection.JavaConverters._
 
 class _dump extends Reporter {

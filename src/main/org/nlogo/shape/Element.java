@@ -2,11 +2,10 @@
 
 package org.nlogo.shape;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.util.List;
-
 import org.nlogo.api.GraphicsInterface;
+
+import java.awt.*;
+import java.util.List;
 
 public abstract strictfp class Element
     implements java.io.Serializable, Cloneable {

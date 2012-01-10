@@ -2,9 +2,6 @@
 
 package org.nlogo.sdm.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jhotdraw.figures.RectangleFigure;
 import org.jhotdraw.framework.FigureAttributeConstant;
 import org.jhotdraw.framework.HandleEnumeration;
@@ -12,6 +9,9 @@ import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
 import org.nlogo.api.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public strictfp class StockFigure
     extends RectangleFigure

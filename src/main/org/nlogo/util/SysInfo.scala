@@ -2,7 +2,6 @@
 
 package org.nlogo.util
 
-import Exceptions.ignoring
 
 object SysInfo
 {

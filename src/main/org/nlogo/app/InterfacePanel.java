@@ -2,22 +2,17 @@
 
 package org.nlogo.app;
 
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.api.I18N;
+import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;
 import org.nlogo.api.VersionHistory;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
-import org.nlogo.window.JobWidget;
-import org.nlogo.window.PlotWidget;
-import org.nlogo.window.SliderWidget;
-import org.nlogo.api.ModelSectionJ;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 strictfp class InterfacePanel
     extends WidgetPanel

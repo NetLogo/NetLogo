@@ -6,11 +6,11 @@ package org.nlogo.app;
 // Widget that should be cleaned up at some point
 //   - ST 8/9/03, 10/14/03
 
+import org.nlogo.window.Widget;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.nlogo.window.Widget;
 
 strictfp class Zoomer {
 

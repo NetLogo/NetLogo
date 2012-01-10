@@ -2,7 +2,7 @@
 
 package org.nlogo.editor;
 
-import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;

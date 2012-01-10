@@ -2,19 +2,15 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.Iterator;
-
-import org.nlogo.agent.Agent;
-import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.Link;
-import org.nlogo.agent.Patch;
-import org.nlogo.agent.Turtle;
+import org.nlogo.agent.*;
 import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
+
+import java.util.Iterator;
 
 public final strictfp class _member
     extends Reporter

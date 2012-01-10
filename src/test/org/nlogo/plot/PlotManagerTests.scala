@@ -2,7 +2,7 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.{ DummyLogoThunkFactory, LogoThunkFactory }
+import org.nlogo.api.DummyLogoThunkFactory
 
 class PlotManagerTests extends SimplePlotTest {
 

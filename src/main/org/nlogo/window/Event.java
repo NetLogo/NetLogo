@@ -2,12 +2,7 @@
 
 package org.nlogo.window;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // I had an itch to try and generify this so e.g. instead of
 // FooEvent.Handler we'd have Event.Handler<Foo>, but when I tried it

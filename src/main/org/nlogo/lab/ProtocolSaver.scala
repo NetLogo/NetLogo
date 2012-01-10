@@ -3,11 +3,10 @@
 package org.nlogo.lab
 
 import javax.xml.transform
-import transform.{OutputKeys,Transformer,TransformerFactory}
+import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
 import transform.stream.StreamResult
 import org.xml.sax
-import sax.Attributes
 import sax.helpers.AttributesImpl
 import org.nlogo.api.Dump
 

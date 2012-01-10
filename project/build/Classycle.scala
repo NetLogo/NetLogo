@@ -1,5 +1,4 @@
 import sbt._
-import Process._
 import classycle.Analyser
 
 trait Classycle extends DefaultProject {

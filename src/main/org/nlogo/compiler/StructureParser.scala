@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ CompilerException, ErrorSource, ExtensionManager, Let,
+import org.nlogo.api.{ ErrorSource, ExtensionManager, Let,
                        Program, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let

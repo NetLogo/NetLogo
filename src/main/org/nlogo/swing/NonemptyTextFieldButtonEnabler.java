@@ -2,11 +2,9 @@
 
 package org.nlogo.swing;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.JButton;
-import javax.swing.JTextField;
 
 /**
  * Makes a JButton enabled only if a set of TextFields are not empty.

@@ -5,7 +5,7 @@ package org.nlogo.generator
 import org.objectweb.asm.Opcodes._
 import java.lang.reflect.{ Field, Method }
 import org.objectweb.asm
-import asm.{ ClassReader, Label, MethodAdapter, MethodVisitor, Type }
+import asm.{ Label, MethodAdapter, MethodVisitor, Type }
 import org.nlogo.nvm.Instruction
 
 private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {

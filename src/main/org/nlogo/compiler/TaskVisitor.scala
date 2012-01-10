@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.cAssert
 import org.nlogo.api.{ I18N, Let }
-import org.nlogo.nvm.{ Procedure, Reporter }
+import org.nlogo.nvm.Procedure
 import org.nlogo.prim.{ _reportertask, _letvariable, _taskvariable }
 
 private class TaskVisitor extends DefaultAstVisitor {

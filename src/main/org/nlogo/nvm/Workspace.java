@@ -2,19 +2,11 @@
 
 package org.nlogo.nvm;
 
+import org.nlogo.agent.Agent;
+import org.nlogo.api.*;
+
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import org.nlogo.agent.Agent;
-import org.nlogo.api.CompilerException;
-import org.nlogo.api.CompilerServices;
-import org.nlogo.api.RandomServices;
-import org.nlogo.api.HubNetInterface;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.ImporterUser;
-import org.nlogo.api.ReporterRunnable;
-import org.nlogo.api.CommandRunnable;
-import org.nlogo.api.JobOwner;
 
 public interface Workspace
     extends ImporterUser, JobManagerOwner, CompilerServices, RandomServices {

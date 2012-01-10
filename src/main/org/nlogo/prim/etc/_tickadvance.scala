@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.{ I18N, LogoException, Syntax }
+import org.nlogo.api.{ I18N, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _tickadvance extends Command {

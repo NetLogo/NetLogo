@@ -4,8 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.api.I18N;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 
 public strictfp class SpeedSliderPanel
     extends javax.swing.JPanel

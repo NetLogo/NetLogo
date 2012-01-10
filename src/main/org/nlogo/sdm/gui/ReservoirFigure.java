@@ -2,12 +2,12 @@
 
 package org.nlogo.sdm.gui;
 
-import java.util.ArrayList;
-
 import org.jhotdraw.figures.EllipseFigure;
 import org.jhotdraw.framework.FigureAttributeConstant;
 import org.jhotdraw.framework.HandleEnumeration;
 import org.jhotdraw.standard.HandleEnumerator;
+
+import java.util.ArrayList;
 
 public strictfp class ReservoirFigure
     extends EllipseFigure

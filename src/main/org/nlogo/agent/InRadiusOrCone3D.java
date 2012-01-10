@@ -2,10 +2,10 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentException;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.nlogo.api.AgentException;
 
 public strictfp class InRadiusOrCone3D
     extends InRadiusOrCone {

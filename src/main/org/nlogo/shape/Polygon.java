@@ -2,13 +2,12 @@
 
 package org.nlogo.shape;
 
-import java.awt.Color;
-import java.awt.Point;
+import org.nlogo.api.GraphicsInterface;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import org.nlogo.api.GraphicsInterface;
 
 // Polygons are closed curves (i.e. the first point equals the last) 
 public strictfp class Polygon

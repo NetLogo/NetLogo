@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.swing.RichAction
-import org.nlogo.nvm.{LabInterface,Workspace}
+import org.nlogo.nvm.{ Workspace, LabInterface }
 import LabInterface.ProgressListener
 import org.nlogo.window.{DisplaySwitch, PlotWidget, ViewUpdatePanel}
 import javax.swing.ScrollPaneConstants._

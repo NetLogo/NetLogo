@@ -2,7 +2,6 @@
 
 package org.nlogo.nvm;
 
-import org.nlogo.api.CompilerException;
 import org.nlogo.util.MersenneTwisterFast;
 
 public strictfp class ExtensionContext

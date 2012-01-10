@@ -3,7 +3,7 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{I18N, CompilerException, LogoThunkFactory, CommandLogoThunk}
+import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.

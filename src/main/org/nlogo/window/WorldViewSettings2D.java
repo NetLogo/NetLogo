@@ -3,8 +3,6 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.World;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.Property;
 
 public strictfp class WorldViewSettings2D
     extends WorldViewSettings {
