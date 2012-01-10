@@ -82,7 +82,6 @@ object App{
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
     pico.addScalaObject("org.nlogo.compiler.Compiler")
-    pico.addComponent(classOf[AppletSaver])
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
@@ -305,10 +304,6 @@ class App extends
       def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
         new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
           pico.getComponent(classOf[EditDialogFactoryInterface])) {
-          override def addControls() {
-            super.addControls()
-            add(new JButton(fileMenu.saveClientAppletAction()))
-          }
         }
       }
     }

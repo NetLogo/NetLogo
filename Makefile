@@ -51,7 +51,7 @@ models/index.txt:
 
 ### JAR building
 
-JARS = NetLogo.jar NetLogoLite.jar HubNet.jar
+JARS = NetLogo.jar HubNet.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
 	bin/sbt alljars
@@ -70,8 +70,7 @@ EXTENSIONS=\
 .PHONY: extensions
 extensions: $(EXTENSIONS)
 
-# most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
-$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+$(EXTENSIONS): | NetLogo.jar
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
 	mkdir -p extensions
@@ -132,7 +131,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) test/applet/NetLogoLite.jar test/applet/HubNet.jar
+	rm -f $(JARS) test/applet/HubNet.jar
 	rm -rf tmp target
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties

@@ -11,7 +11,7 @@ trait Jars extends DefaultProject {
   }
 
   private val jarPaths: List[Path] =
-    List("NetLogo.jar", "NetLogoLite.jar", "HubNet.jar").map(path)
+    List("NetLogo.jar", "HubNet.jar").map(path)
 
   private def build(config: String): Option[String] = {
     // ProGuard prints stuff straight to stdout, so we do the same
@@ -54,13 +54,7 @@ trait Jars extends DefaultProject {
       }
     }.dependsOn(compile)
 
-  lazy val liteJar =
-    fileTask(Seq(path("NetLogoLite.jar")) from Set(java5Path) ++ configs) {
-      path("NetLogoLite.jar").asFile.delete()
-      build("lite") orElse { None }
-    }.dependsOn(compile)
-
   lazy val alljars =
-    task { None }.dependsOn(mainJar, hubnetJar, liteJar)
+    task { None }.dependsOn(mainJar, hubnetJar)
 
 }
