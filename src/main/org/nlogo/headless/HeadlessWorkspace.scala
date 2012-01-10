@@ -454,21 +454,6 @@ with org.nlogo.api.ViewSettings {
    */
   def openPrevious() = unsupported
 
-  /**
-   * Internal use only.
-   */
-  def startLogging(properties: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def zipLogFiles(filename: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def deleteLogFiles() = unsupported
-
   // This lastLogoException stuff is gross.  We should write methods that are declared to throw
   // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
 

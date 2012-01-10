@@ -295,7 +295,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_createorderedturtles number/command block (optional),O---,-T--,0,2,2 *
                     |_createtemporaryplotpen string,OTPL,null,0,1,1
                     |_createturtles number/command block (optional),O---,-T--,0,2,2 *
-                    |_deletelogfiles ,O---,null,0,0,0 *
                     |_die ,-T-L,null,0,0,0 *
                     |_diffuse variable/number,O---,null,0,2,2 *
                     |_diffuse4 variable/number,O---,null,0,2,2 *
@@ -441,6 +440,5 @@ class TestAllSyntaxes extends FunSuite {
                     |_while TRUE/FALSE block/command block,OTPL,null,0,2,2
                     |_withlocalrandomness command block,OTPL,null,0,1,1
                     |_withoutinterruption command block,OTPL,null,0,1,1
-                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
-                    |_ziplogfiles string,O---,null,0,1,1 *""".stripMargin
+                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1""".stripMargin
 }

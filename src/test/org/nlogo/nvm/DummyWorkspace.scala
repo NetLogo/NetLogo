@@ -68,9 +68,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def openIndex() = unsupported
   override def openNext() = unsupported
   override def openPrevious() = unsupported
-  override def startLogging(properties: String) = unsupported
-  override def zipLogFiles(filename: String) = unsupported
-  override def deleteLogFiles() = unsupported
   override def getIsApplet() = unsupported
   override def lastRunTimes() = unsupported
   override def completedActivations() = unsupported

@@ -221,12 +221,6 @@ public interface Workspace
 
   void openPrevious();
 
-  void startLogging(String properties);
-
-  void zipLogFiles(String filename);
-
-  void deleteLogFiles();
-
   boolean getIsApplet();
 
   CompilerInterface compiler();

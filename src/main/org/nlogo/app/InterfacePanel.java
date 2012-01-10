@@ -219,9 +219,6 @@ strictfp class InterfacePanel
     new org.nlogo.window.Events.RemoveConstraintEvent
         (wrapper.widget().displayName())
         .raise(this);
-
-    org.nlogo.log.Logger.logWidgetRemoved(wrapper.widget().classDisplayName(),
-        wrapper.widget().displayName());
   }
 
   /// loading and saving

@@ -298,21 +298,15 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         }
         // a forever button or a once button that is now down because
         // it was just clicked.  it needs to run.
-        else {
+        else
           new Events.AddJobEvent(this, agents(), procedure()).raise(this)
-          if(Version.isLoggingEnabled)
-            org.nlogo.log.Logger.logButtonPressed(displayName)
-        }
       }
     }
   }
 
   def handle(e: Events.JobRemovedEvent) {
-    if (e.owner == this) {
-      if(Version.isLoggingEnabled)
-        org.nlogo.log.Logger.logButtonStopped(displayName, buttonUp, stopping)
+    if (e.owner == this)
       popUpStoppingButton()
-    }
   }
 
   def handle(e: Events.TickStateChangeEvent) {

@@ -6,8 +6,6 @@ import java.util.{ ArrayList, List => JList }
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
 import java.util.StringTokenizer
 import org.nlogo.api.{ CompilerException, Version }
-import org.nlogo.log.Logger
-import org.apache.log4j.xml.DOMConfigurator
 import collection.JavaConverters._
 
 /**
@@ -31,8 +29,6 @@ extends AppletPanel(frame,
                       }},
                     false)
 with Event.LinkChild {
-
-  var logger: Logger = null
 
   addLinkComponent(listenerManager)
 
@@ -111,38 +107,6 @@ with Event.LinkChild {
     if (source == null)
       sys.error("couldn't open: '" + path + "'")
     openFromSource(path, path, source)
-  }
-
-  /**
-   * Starts NetLogo logging using the given file and username
-   *
-   * @param properties path to the XML properties file as defined by the log4j dtd
-   * @param username   user defined username, this should be a unique identifier
-   */
-  def startLogging(properties: String, username: String) {
-    createLogger(username)
-    DOMConfigurator.configure(properties)
-    logger.modelOpened(workspace.getModelPath)
-  }
-
-  /**
-   * Starts NetLogo logging using the given file and username
-   *
-   * @param reader   a reader that contains an XML properties file as defined by the log4j dtd
-   * @param username user defined username, this should be a unique identifier
-   */
-  def startLogging(reader: java.io.Reader, username: String) {
-    createLogger(username)
-    logger.configure(reader)
-    logger.modelOpened(workspace.getModelPath)
-  }
-
-  def createLogger(username: String) {
-    if (logger == null) {
-      logger = new Logger(username)
-      listenerManager.addListener(logger)
-    }
-    Version.startLogging()
   }
 
   /**

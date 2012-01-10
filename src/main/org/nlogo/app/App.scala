@@ -5,7 +5,6 @@ package org.nlogo.app
 import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
-import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Pico
@@ -38,12 +37,10 @@ object App{
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
-  var logger: Logger = null
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
-  private var loggingName: String = null
 
   /**
    * Should be called once at startup to create the application and
@@ -78,7 +75,6 @@ object App{
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
-    Logger.beQuiet()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
     pico.addScalaObject("org.nlogo.compiler.Compiler")
@@ -183,13 +179,6 @@ object App{
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--logging") loggingName = nextToken()
-      else if (token == "--log-directory") {
-        if (logger != null) logger.changeLogDirectory(nextToken())
-        else JOptionPane.showConfirmDialog(null,
-          "You need to initialize the logger using the --logging options before specifying a directory.",
-          "NetLogo", JOptionPane.DEFAULT_OPTION)
-      }
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -251,10 +240,9 @@ class App extends
     LoadEndEvent.Handler with
     ModelSavedEvent.Handler with
     Events.SwitchedTabsEvent.Handler with
-    AboutToQuitEvent.Handler with
     Controllable {
 
-  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
+  import App.{pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch}
 
   val frame = new AppFrame
 
@@ -360,10 +348,6 @@ class App extends
     frame.addLinkComponent(listenerManager)
 
     org.nlogo.util.Exceptions.setHandler(this)
-
-    if(loggingName != null)
-     startLogging(loggingName)
-
   }
 
   private def finishStartup() {
@@ -421,22 +405,6 @@ class App extends
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
   }
   
-  def startLogging(properties:String) {
-    if(new java.io.File(properties).exists) {
-      val username =
-        JOptionPane.showInputDialog(null, "Enter your name:", "",
-          JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
-      if(username != null){
-        logger = new Logger(username)
-        listenerManager.addListener(logger)
-        Logger.configure(properties)
-        org.nlogo.api.Version.startLogging()
-      }
-    }
-    else JOptionPane.showConfirmDialog(null, "The file " + properties + " does not exist.",
-      "NetLogo", JOptionPane.DEFAULT_OPTION)
-  }
-
   // This is for other windows to get their own copy of the menu
   // bar.  It's needed especially for OS X since the screen menu bar
   // doesn't get shared across windows.  -- AZS 6/17/2005
@@ -505,20 +473,6 @@ class App extends
       case OPEN_INDEX => openIndex
       case OPEN_NEXT => openNext(1)
       case OPEN_PREVIOUS => openNext(-1)
-      case START_LOGGING =>
-        startLogging(e.args(0).toString)
-        if(logger!=null)
-          logger.modelOpened(workspace.getModelPath())
-      case ZIP_LOG_FILES =>
-        if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
-        else
-          logger.zipSessionFiles(e.args(0).toString)
-      case DELETE_LOG_FILES =>
-        if(logger==null)
-          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
-          logger.deleteSessionFiles()
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -656,11 +610,6 @@ class App extends
     frame.toFront()
     tabs.interfaceTab.requestFocus()
   }
-
-  /**
-   * Internal use only.
-   */
-  def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
 
   /**
    * Generates OS standard frame title. 

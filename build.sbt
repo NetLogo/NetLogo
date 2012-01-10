@@ -24,7 +24,6 @@ resolvers += "java.net" at "http://download.java.net/maven/2"
 
 libraryDependencies ++= Seq("asm" % "asm-all" % "3.3.1",
                             "org.picocontainer" % "picocontainer" % "2.13.6",
-                            "log4j" % "log4j" % "1.2.16",
                             "org.pegdown" % "pegdown" % "1.1.0",
                             "org.parboiled" % "parboiled-java" % "1.0.2",
                             "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",

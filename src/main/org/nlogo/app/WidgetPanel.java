@@ -568,7 +568,6 @@ public strictfp class WidgetPanel
           (java.awt.Cursor.getPredefinedCursor
               (java.awt.Cursor.CROSSHAIR_CURSOR));
     }
-    org.nlogo.log.Logger.logAddWidget(widget.classDisplayName(), widget.displayName());
     return wrapper;
   }
 
@@ -624,8 +623,6 @@ public strictfp class WidgetPanel
       view = null;
     }
     remove(wrapper);
-    org.nlogo.log.Logger.logWidgetRemoved(wrapper.widget().classDisplayName(),
-        wrapper.widget().displayName());
   }
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent

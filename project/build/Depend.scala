@@ -52,7 +52,6 @@ trait Depend extends DefaultProject {
       "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
       "lite" -> List("window"),
-      "log" -> List("api"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
@@ -71,7 +70,7 @@ trait Depend extends DefaultProject {
       "swing" -> List("awt"),
       "util" -> Nil,
       "widget" -> List("window"),
-      "window" -> List("editor","log","shape","swing","workspace"),
+      "window" -> List("editor","shape","swing","workspace"),
       "workspace" -> List("nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
@@ -120,9 +119,6 @@ check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
 
 [JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
-
-[Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
-check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 
 [Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
 check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*
