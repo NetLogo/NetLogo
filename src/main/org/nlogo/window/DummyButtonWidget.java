@@ -2,12 +2,11 @@
 
 package org.nlogo.window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
+
+import java.util.List;
 
 public strictfp class DummyButtonWidget
     extends SingleErrorWidget

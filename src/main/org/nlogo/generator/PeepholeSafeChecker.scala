@@ -3,7 +3,6 @@
 package org.nlogo.generator
 
 import java.lang.reflect.Method
-import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ ClassReader, MethodVisitor, Type }
 import org.objectweb.asm.commons.EmptyVisitor
 import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }

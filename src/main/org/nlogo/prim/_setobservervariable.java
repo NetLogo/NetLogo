@@ -3,8 +3,8 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Command;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Command;
 
 public final strictfp class _setobservervariable
     extends Command {

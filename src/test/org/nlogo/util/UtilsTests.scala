@@ -22,9 +22,8 @@ class UtilsTests extends FunSuite {
 
 class UtilsTests2 extends PropSpec with PropertyChecks {
 
-  import org.scalacheck.{ Properties, Prop, Gen, Arbitrary }
-  import Arbitrary.arbitrary
-  import Prop._
+  import org.scalacheck.Gen
+  import org.scalacheck.Arbitrary.arbitrary
 
   property("unescape is inverse of escape") {
     forAll((ns: String) =>

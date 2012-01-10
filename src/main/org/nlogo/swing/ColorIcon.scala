@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Component, Graphics }
+import java.awt.{ Color, Graphics }
 import javax.swing.Icon
 
 class ColorIcon(color: Color, width: Int, height: Int) extends Icon {

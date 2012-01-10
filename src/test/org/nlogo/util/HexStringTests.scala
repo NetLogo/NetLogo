@@ -23,8 +23,6 @@ class HexStringTests extends FunSuite {
 
 class HexStringTests2 extends PropSpec with PropertyChecks {
 
-  import org.scalacheck.Prop
-  import Prop._
 
   property("8 characters per Int") {
     forAll((ns: Array[Int]) =>

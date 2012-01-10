@@ -7,21 +7,18 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.BooleanConstraint;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.SliderConstraint;
-import org.nlogo.api.I18N;
-import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.CommandRunnable;
-import org.nlogo.api.RendererInterface;
 import org.nlogo.api.CompilerException;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
-import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.ModelType;
-import org.nlogo.api.ModelTypeJ;
 import org.nlogo.api.ModelSectionJ;
+import org.nlogo.api.ModelTypeJ;
+import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.RendererInterface;
+import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
-import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
-import org.nlogo.workspace.BufferedReaderImporter;
 
 import java.util.HashMap;
 

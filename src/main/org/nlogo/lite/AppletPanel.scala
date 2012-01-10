@@ -5,7 +5,6 @@ package org.nlogo.lite
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ Observer, World, World3D }
 import org.nlogo.api.{ CompilerException, LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
-import org.nlogo.nvm.Workspace
 import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
 import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }

@@ -2,12 +2,12 @@
 
 package org.nlogo.shape;
 
+import org.nlogo.api.GraphicsInterface;
+import org.nlogo.api.VersionHistory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-
-import org.nlogo.api.GraphicsInterface;
-import org.nlogo.api.VersionHistory;
 
 import static org.nlogo.api.Constants.ShapeWidth;
 

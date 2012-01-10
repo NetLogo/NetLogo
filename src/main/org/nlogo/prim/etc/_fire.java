@@ -4,9 +4,9 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.World;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
 
 // Note: this is for the old patch-based Fire Benchmark model, not the
 // new turtle-based Fire model. - ST 11/5/03

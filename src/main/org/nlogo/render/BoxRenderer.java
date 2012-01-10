@@ -2,8 +2,8 @@
 
 package org.nlogo.render;
 
-import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Constants;
+import org.nlogo.api.GraphicsInterface;
 
 public strictfp class BoxRenderer extends AbstractTopologyRenderer {
   public BoxRenderer(org.nlogo.api.World world) {

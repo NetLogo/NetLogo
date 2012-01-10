@@ -3,8 +3,7 @@
 package org.nlogo.generator
 
 import org.objectweb.asm.Opcodes._
-import org.nlogo.api.CompilerException
-import org.nlogo.nvm.{ Instruction }
+import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ Label, MethodVisitor, Type }
 
 private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])

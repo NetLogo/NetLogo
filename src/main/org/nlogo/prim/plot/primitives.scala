@@ -4,7 +4,7 @@ package org.nlogo.prim.plot
 
 import org.nlogo.api.{ CommandRunnable, I18N, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
-import org.nlogo.plot.{ Plot, PlotManager }
+import org.nlogo.plot.PlotManager
 
 //
 // base classes

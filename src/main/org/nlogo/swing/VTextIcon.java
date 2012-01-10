@@ -6,14 +6,13 @@ package org.nlogo.swing;
 //   http://www.macdevcenter.com/pub/a/mac/2002/03/22/vertical_text.html
 //   http://www.macdevcenter.com/mac/2002/03/22/examples/VTextIcon.java
 
+import javax.swing.Icon;
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.Icon;
 
 /**
  * VTextIcon is an Icon implementation which draws a short string vertically.

@@ -2,11 +2,16 @@
 
 package org.nlogo.window;
 
-import java.util.ArrayList;
+import org.nlogo.api.CompilerException;
+import org.nlogo.api.CompilerServices;
+import org.nlogo.api.Dump;
+import org.nlogo.api.Editable;
+import org.nlogo.api.I18N;
+import org.nlogo.api.LogoList;
+import org.nlogo.api.Property;
+
 import java.util.Iterator;
 import java.util.List;
-
-import org.nlogo.api.*;
 
 public strictfp class DummyChooserWidget
     extends Chooser

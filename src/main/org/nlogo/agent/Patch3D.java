@@ -2,14 +2,14 @@
 
 package org.nlogo.agent;
 
-import java.util.List;
-
+import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentVariableNumbers;
+import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentVariables;
-import org.nlogo.api.AgentVariableNumbers;
+
+import java.util.List;
 
 public final strictfp class Patch3D
     extends Patch

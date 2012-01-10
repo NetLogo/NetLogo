@@ -2,8 +2,8 @@
 
 package org.nlogo.render;
 
-import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.GraphicsInterface;
 
 public strictfp class SpotlightDrawer
     implements Drawable {

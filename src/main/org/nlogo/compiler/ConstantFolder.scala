@@ -21,11 +21,7 @@ import org.nlogo.compiler.CompilerExceptionThrowers._
 
 import org.nlogo.api.CompilerException
 import org.nlogo.api.LogoException
-import org.nlogo.api.LogoList
-import org.nlogo.api.Nobody
 import org.nlogo.nvm.Pure
-import org.nlogo.nvm.Reporter
-import org.nlogo.prim._
 
 private class ConstantFolder extends DefaultAstVisitor {
   override def visitReporterApp(app:ReporterApp) {

@@ -2,10 +2,9 @@
 
 package org.nlogo.swing;
 
+import javax.swing.JComponent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JComponent;
 
 public strictfp class MessageDialog
     extends javax.swing.JDialog {

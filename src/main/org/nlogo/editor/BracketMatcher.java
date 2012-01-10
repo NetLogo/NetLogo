@@ -2,11 +2,10 @@
 
 package org.nlogo.editor;
 
-import java.util.List;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
+import java.util.List;
 
 /**
  * Highlights two corresponding parentheses/brackets and identifies if they are

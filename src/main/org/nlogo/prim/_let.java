@@ -2,11 +2,11 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Let;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
 
 // This isn't rejiggered yet because of the extra, unevaluated
 // argument. (I say "yet" because this shouldn't be that hard to work

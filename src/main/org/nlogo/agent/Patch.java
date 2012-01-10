@@ -2,17 +2,16 @@
 
 package org.nlogo.agent;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import org.nlogo.api.AgentVariables;
+import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariableNumbers;
+import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
+import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.AgentException;
-import org.nlogo.api.I18N;
+
+import java.util.ArrayList;
 
 public strictfp class Patch
     extends Agent

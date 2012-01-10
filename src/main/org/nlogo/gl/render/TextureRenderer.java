@@ -2,8 +2,9 @@
 
 package org.nlogo.gl.render;
 
-import javax.media.opengl.GL;
 import org.nlogo.api.World;
+
+import javax.media.opengl.GL;
 
 class TextureRenderer {
   int texture = 0;

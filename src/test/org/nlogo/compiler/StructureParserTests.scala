@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program, Token }
+import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm.Procedure
 
 class StructureParserTests extends FunSuite {

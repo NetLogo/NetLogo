@@ -6,7 +6,6 @@ import org.scalatest.FunSuite
 import org.nlogo.nvm.{ CompilerInterface, DefaultCompilerServices }
 import org.nlogo.util.Femto
 import org.xml.sax.SAXException
-import scala.collection.mutable.ListBuffer
 import java.io.{ File, FileNotFoundException }
 
 class TestLoadAndSave extends FunSuite {

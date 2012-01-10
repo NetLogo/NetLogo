@@ -2,7 +2,6 @@
 
 package org.nlogo.properties
 
-import org.nlogo.agent.Agent
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}

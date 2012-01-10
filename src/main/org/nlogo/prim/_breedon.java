@@ -2,9 +2,6 @@
 
 package org.nlogo.prim;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
@@ -12,11 +9,14 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
+import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
-import org.nlogo.nvm.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final strictfp class _breedon
     extends Reporter {

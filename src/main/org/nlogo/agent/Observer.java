@@ -2,12 +2,12 @@
 
 package org.nlogo.agent;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.Vect;
 import org.nlogo.api.ValueConstraint;
+import org.nlogo.api.Vect;
 
 public strictfp class Observer
     extends Agent

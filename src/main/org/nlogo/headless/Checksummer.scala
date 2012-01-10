@@ -2,7 +2,6 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{CompilerException, LogoException}
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter

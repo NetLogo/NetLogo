@@ -2,9 +2,8 @@
 
 package org.nlogo.compiler
 
-import java.lang.reflect.ParameterizedType
-import org.nlogo.agent.{ Patch, Turtle }
-import org.nlogo.api.{ CompilerException, LogoException, Version }
+import org.nlogo.agent.Patch
+import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
 
