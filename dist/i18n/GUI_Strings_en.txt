@@ -78,7 +78,6 @@ menu.tools.colorSwatches = Color Swatches
 menu.tools.turtleShapesEditor = Turtle Shapes Editor
 menu.tools.linkShapesEditor = Link Shapes Editor
 menu.tools.behaviorSpace = BehaviorSpace
-menu.tools.systemDynamicsModeler = System Dynamics Modeler
 
 menu.zoom = Zoom
 menu.zoom.larger = Larger
@@ -312,17 +311,6 @@ tools.shapesEditor.duplicate = Duplicate
 tools.shapesEditor.info = (many more shapes are available in the library)
 tools.shapesEditor.import.note = Import Shapes from Model
 tools.shapesEditor.import.error = No shapes found in this file.
-
-tools.sdm.diagram = Diagram
-tools.sdm.stock = Stock
-tools.sdm.variable = Variable
-tools.sdm.flow = Flow
-tools.sdm.link = Link
-tools.sdm.check = Check
-tools.sdm.edit = Edit
-tools.sdm.delete = Delete
-tools.sdm.dtNumberError = dt must be a number
-tools.sdm.dtZeroError = dt must be greater than 0
 
 tools.behaviorSpace.experiments = Experiments:
 tools.behaviorSpace.new = New

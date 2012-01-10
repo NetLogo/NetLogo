@@ -54,8 +54,6 @@ public interface Workspace
 
   void setProcedures(Map<String, Procedure> procedures);
 
-  org.nlogo.api.AggregateManagerInterface aggregateManager();
-
   void requestDisplayUpdate(boolean force);
 
   void breathe(); // called when engine comes up for air

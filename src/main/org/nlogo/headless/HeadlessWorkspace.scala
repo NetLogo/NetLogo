@@ -8,7 +8,7 @@ package org.nlogo.headless
 
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ Version, RendererInterface,
-                       WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
+                       WorldDimensions, WorldDimensions3D,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable }
 import org.nlogo.agent.{ World, World3D }
@@ -37,7 +37,6 @@ object HeadlessWorkspace {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
     pico.addScalaObject("org.nlogo.compiler.Compiler")
-    pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
     pico.getComponent(subclass)
@@ -93,8 +92,7 @@ object HeadlessWorkspace {
 class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
-  val renderer: RendererInterface,
-  val aggregateManager: AggregateManagerInterface)
+  val renderer: RendererInterface)
 extends AbstractWorkspaceScala(_world)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface

@@ -647,9 +647,6 @@ public abstract strictfp class AbstractWorkspace
 
   public String getSource(String filename)
       throws java.io.IOException {
-    if (filename.equals("aggregate")) {
-      return aggregateManager().innerSource();
-    }
     // when we stick a string into a JTextComponent, \r\n sequences
     // on Windows will get translated to just \n.  This is a problem
     // because when an error occurs we want to highlight the location

@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ AggregateManagerInterface, CompilerException, RendererInterface, Version }
+import org.nlogo.api.{ CompilerException, RendererInterface, Version }
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ CompilerInterface, HaltException }
 import org.nlogo.util.SlowTest
@@ -12,8 +12,8 @@ object TestHalt {
   // This is ugly, but since we use PicoContainer to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   var finalized = false
-  class MyWorkspace(world: World, compiler: CompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
-  extends HeadlessWorkspace(world, compiler, renderer, aggregateManager) {
+  class MyWorkspace(world: World, compiler: CompilerInterface, renderer: RendererInterface)
+  extends HeadlessWorkspace(world, compiler, renderer) {
     override def finalize() { finalized = true; super.finalize() }
   }
 }

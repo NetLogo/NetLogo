@@ -38,10 +38,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
     }
 
-    // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.SystemDynamics)
-    if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
-
     // read procedures, compile them.
     val results = {
       val code = map.get(ModelSection.Code).mkString("", "\n", "\n")

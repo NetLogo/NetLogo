@@ -3,7 +3,7 @@
 package org.nlogo.lite
 
 import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, RendererInterface }
+import org.nlogo.api.RendererInterface
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
@@ -19,9 +19,6 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
     override def updateMode = LiteWorkspace.this.updateMode
     override def ticks = world.tickCounter.ticks
   }
-  val aggregateManager =
-    Femto.get(classOf[AggregateManagerInterface],
-              "org.nlogo.sdm.AggregateManagerLite", Array())
   override def doImport(importer: BufferedReaderImporter) {
     if(isApplet)
       // it's pretty gruesome here efficiency-wise that we slurp

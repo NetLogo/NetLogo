@@ -63,8 +63,6 @@ trait Depend extends DefaultProject {
       "prim/threed" -> List("nvm"),
       "properties" -> List("window"),
       "render" -> List("shape"),
-      "sdm" -> List("api"),
-      "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
       "shape/editor" -> List("shape","swing"),
       "swing" -> List("awt"),
@@ -116,9 +114,6 @@ check org.nlogo.* independentOf com.wolfram.*
 
 [MRJAdapter-free-zone] = org.nlogo.* excluding [app] [swing]
 check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
-
-[JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
-check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 
 [Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
 check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*

@@ -89,11 +89,6 @@ object ModelLoader {
             // the default shapes when opened. - ST 9/2/03
             case (ModelSection.TurtleShapes, 0) => ModelReader.defaultShapes
             case (ModelSection.LinkShapes, 0) => ModelReader.defaultLinkShapes
-            // Another kludge: pre-4.1 model files have
-            // org.nlogo.aggregate.gui in them instead of org.nlogo.sdm.gui,
-            // so translate on the fly - ST 2/18/08
-            case (ModelSection.SystemDynamics, _) =>
-              map.get(section).map(_.replaceAll("org.nlogo.aggregate.gui", "org.nlogo.sdm.gui"))
             case _ => map.get(section)
           }
           new LoadSectionEvent(version, section, lines, lines.mkString("\n"))

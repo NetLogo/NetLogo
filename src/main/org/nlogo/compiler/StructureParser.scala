@@ -81,7 +81,7 @@ private class StructureParser(
     // store paths paired with tokens.  But sometimes we don't have a real token, because some code
     // isn't in an include file at all; it's in the main Code tab (or button or whatever) or
     // it comes from the system dynamics modeler.  In those cases the token is null and the path is
-    // the special string "" (tab or widget) or "aggregate" (for the SDM).  Also confusing is that
+    // the empty string.  Also confusing is that
     // we're iterating over usingFiles at the same time that we're adding entries to it; that's
     // because we are discovering the __include calls in the code as we go.  The index variable
     // keeps track of our current location in usingFiles.  All of this is very confusing and ought
@@ -90,8 +90,6 @@ private class StructureParser(
     var fileName = ""
     var index = 1
     usingFiles += (("", null))
-    if(!subprogram)
-      usingFiles += (("aggregate", null))
     var totallyDone = false
     while(!totallyDone) {
       var haveGlobals = subprogram

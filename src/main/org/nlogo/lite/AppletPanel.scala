@@ -51,7 +51,6 @@ with Event.LinkParent {
     setLayout(gridbag)
     val world = if(Version.is3D) new World3D() else new World
     val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
-    addLinkComponent(workspace.aggregateManager)
     addLinkComponent(workspace)
     val procedures = new ProceduresLite(workspace, workspace)
     addLinkComponent(procedures)
@@ -60,11 +59,6 @@ with Event.LinkParent {
       override def handle(e: CompiledEvent) {
         if (e.error != null)
           e.error.printStackTrace()
-      }})
-    addLinkComponent(new LoadSectionEvent.Handler {
-      override def handle(e: LoadSectionEvent) {
-        if (e.section == ModelSection.SystemDynamics)
-          workspace.aggregateManager.load(e.text, workspace)
       }})
     val iP =
       new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,

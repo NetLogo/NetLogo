@@ -58,11 +58,6 @@ class ModelSaver(app: App) {
 
     // system dynamics modeler
     section {
-      if(app.aggregateManager != null) {
-        val s = app.aggregateManager.save
-        if(s != null)
-          buf.append(s + "\n")
-      }
     }
 
     // BehaviorSpace

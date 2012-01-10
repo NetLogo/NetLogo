@@ -1204,8 +1204,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         }
       };
 
-  /// preview commands & aggregate
-
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
     if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
         e.text.trim().length() > 0) {

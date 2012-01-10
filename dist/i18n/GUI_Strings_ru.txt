@@ -78,7 +78,6 @@ menu.tools.colorSwatches = Образцы цветов
 menu.tools.turtleShapesEditor = Редактор форм черепах
 menu.tools.linkShapesEditor = Редактор форм связей
 menu.tools.behaviorSpace = Пространство поведения
-menu.tools.systemDynamicsModeler = Симулятор системной динамики
 
 menu.zoom = Увеличение
 menu.zoom.larger = Больше
@@ -313,17 +312,6 @@ tools.shapesEditor.duplicate = Дублировать
 tools.shapesEditor.info = (много других форм доступны в библиотеке)
 tools.shapesEditor.import.note = Импорт форм из модели
 tools.shapesEditor.import.error = В файле не найдены формы.
-
-tools.sdm.diagram = Диаграмма
-tools.sdm.stock = Хранилище
-tools.sdm.variable = Переменная
-tools.sdm.flow = Поток
-tools.sdm.link = Связь
-tools.sdm.check = Проверить
-tools.sdm.edit = Редактировать
-tools.sdm.delete = Удалить
-tools.sdm.dtNumberError = dt должен быть числом
-tools.sdm.dtZeroError = dt должен быть больше 0
 
 tools.behaviorSpace.experiments = Эксперименты:
 tools.behaviorSpace.new = Новый

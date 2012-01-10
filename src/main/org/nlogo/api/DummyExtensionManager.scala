@@ -21,9 +21,7 @@ class DummyExtensionManager extends ExtensionManager {
   def resolvePathAsURL(path: String): String = unsupported
   def dumpExtensions(): String = unsupported
   def dumpExtensionPrimitives(): String = unsupported
-  def getSource(filename: String): String =
-    if(filename == "aggregate") ""
-    else unsupported
+  def getSource(filename: String): String = unsupported
   def wrap(prim: Primitive, name: String): TokenHolder = unsupported
   def addToLibraryPath(classManager: AnyRef, directory: String) = unsupported
   def getFile(path: String) = unsupported

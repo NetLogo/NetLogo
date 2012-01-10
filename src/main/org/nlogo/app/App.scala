@@ -100,12 +100,6 @@ object App{
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
-    pico.add(classOf[AggregateManagerInterface],
-          "org.nlogo.sdm.gui.GUIAggregateManager",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter(), new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -256,7 +250,6 @@ class App extends
   var helpMenu:HelpMenu = null
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
-  var aggregateManager: AggregateManagerInterface = null
   var colorDialog: ColorDialog = null
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
@@ -301,7 +294,6 @@ class App extends
         override def ticks = _workspace.world.tickCounter.ticks
         override def updateMode = _workspace.updateMode
       }
-      def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
         monitorManager.inspect(a.getAgentClass(), a, radius)
@@ -352,9 +344,6 @@ class App extends
 
   private def finishStartup() {
     pico.addComponent(new MenuBarFactory())
-    aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
-    frame.addLinkComponent(aggregateManager)
-    
     pico.addComponent(new EditorFactory(workspace))
     
     labManager = pico.getComponent(classOf[LabManagerInterface])

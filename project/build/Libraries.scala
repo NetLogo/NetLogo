@@ -21,8 +21,6 @@ trait Libraries extends DefaultProject {
   val parboiled = "org.parboiled" % "parboiled-java" % "1.0.2"
   val mrjadapter = "steveroy" % "mrjadapter" % "1.2" from
     "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar"
-  val jhotdraw = "org.jhotdraw" % "jhotdraw" % "6.0b1" from
-    "http://ccl.northwestern.edu/devel/jhotdraw-6.0b1.jar"
   val quaqua = "ch.randelshofer" % "quaqua" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar"
   // 7.3.4 isn't the real version number, it's just "the version that comes

@@ -11,7 +11,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   val world = new World
   override def getProcedures():java.util.Map[String,Procedure] = java.util.Collections.emptyMap()
   override def setProcedures(procedures: java.util.Map[String,Procedure]) { }
-  override def aggregateManager() = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe() = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported

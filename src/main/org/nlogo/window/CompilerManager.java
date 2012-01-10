@@ -112,8 +112,6 @@ public strictfp class CompilerManager
       for (Procedure procedure : workspace.getProcedures().values()) {
         if (procedure.fileName.equals("")) {
           procedure.setOwner(proceduresInterface);
-        } else if (procedure.fileName.equals("aggregate")) {
-          procedure.setOwner(workspace.aggregateManager());
         } else {
           procedure.setOwner(new ExternalFileInterface(procedure.fileName));
         }
@@ -135,10 +133,6 @@ public strictfp class CompilerManager
       if (error.fileName().equals("")) {
         new org.nlogo.window.Events.CompiledEvent
             (proceduresInterface, null, null, error)
-            .raise(this);
-      } else if (error.fileName().equals("aggregate")) {
-        new org.nlogo.window.Events.CompiledEvent
-            (workspace.aggregateManager(), null, null, error)
             .raise(this);
       } else {
         new org.nlogo.window.Events.CompiledEvent

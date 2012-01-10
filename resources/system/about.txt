@@ -87,10 +87,6 @@ NetLogo uses the Quaqua Look and Feel library, which is Copyright (c) 2003-2005 
 
 ===
 
-For the system dynamics modeler, NetLogo uses the JHotDraw library, which is Copyright (c) 1996, 1997 by IFA Informatik and Erich Gamma.  The library is covered by the GNU LGPL (Lesser General Public License).  The text of that license is included in the "docs" folder which accompanies the NetLogo download, and is also available from http://www.gnu.org/copyleft/lesser.html .
-
-===
-
 For 3D matrix operations, NetLogo uses the Matrix3D class.  It is distributed under the following license:
 
 Copyright (c) 1994-1996 Sun Microsystems, Inc. All Rights Reserved.

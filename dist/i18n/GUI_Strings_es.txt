@@ -78,7 +78,6 @@ menu.tools.colorSwatches = Muestras de Colores Disponibles
 menu.tools.turtleShapesEditor = Editor de Formas para Tortugas
 menu.tools.linkShapesEditor = Editor de Formas para Enlaces
 menu.tools.behaviorSpace = Analizador de Comportamiento
-menu.tools.systemDynamicsModeler = Modelador de Dinámicas de Sistemas
 
 menu.zoom = Tamaño
 menu.zoom.larger = Más grande
@@ -307,17 +306,6 @@ tools.shapesEditor.duplicate = Duplicar
 tools.shapesEditor.info = (hay muchas más formas disponibles en la biblioteca)
 tools.shapesEditor.import.note = Importar Formas de un Modelo
 tools.shapesEditor.import.error = No hay formas en este archivo.
-
-tools.sdm.diagram = Diagrama
-tools.sdm.stock = Nivel
-tools.sdm.variable = Variable
-tools.sdm.flow = Flujo
-tools.sdm.link = Enlace
-tools.sdm.check = Comprobar
-tools.sdm.edit = Editar
-tools.sdm.delete = Eliminar
-tools.sdm.dtNumberError = dt debe ser un número
-tools.sdm.dtZeroError = dt debe ser mayor que 0
 
 tools.behaviorSpace.experiments = Experimentos:
 tools.behaviorSpace.new = Nuevo

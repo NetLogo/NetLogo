@@ -28,7 +28,6 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("linkShapesEditor"),
               () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
   addMenuItem(I18N.gui("behaviorSpace"), 'B', true, () => app.labManager.show())
-  addMenuItem(I18N.gui("systemDynamicsModeler"), 'D', true, app.aggregateManager.showEditor _)
 
   def openColorDialog() {
     if(app.colorDialog == null) {     

@@ -78,7 +78,6 @@ menu.tools.colorSwatches = 色板
 menu.tools.turtleShapesEditor = 海龟形状编辑器
 menu.tools.linkShapesEditor = 连接形状编辑器
 menu.tools.behaviorSpace = 行为空间
-menu.tools.systemDynamicsModeler = 系统动态模拟器
 
 menu.zoom = 缩放
 menu.zoom.larger = 放大
@@ -312,17 +311,6 @@ tools.shapesEditor.duplicate = 创建副本
 tools.shapesEditor.info = (更多形状请查看库)
 tools.shapesEditor.import.note = 从模型中导入形状
 tools.shapesEditor.import.error = 文件不包含任何形状.
-
-tools.sdm.diagram = Diagram
-tools.sdm.stock = Stock
-tools.sdm.variable = Variable
-tools.sdm.flow = Flow
-tools.sdm.link = Link
-tools.sdm.check = 检查
-tools.sdm.edit = 编辑
-tools.sdm.delete = 删除
-tools.sdm.dtNumberError = dt 必须是数值
-tools.sdm.dtZeroError = dt 必须大于0
 
 tools.behaviorSpace.experiments = 实验:
 tools.behaviorSpace.new = 新建
