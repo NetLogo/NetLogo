@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{AgentSet, Patch, Turtle, World}
-import org.nlogo.api.{CompilerException, Dump, ExtensionManager, ExtensionObject, LogoList, Token, TokenType, Version}
+import org.nlogo.api.{CompilerException, Dump, ExtensionManager, ExtensionObject, LogoList}
 import org.nlogo.util.MockSuite
 
 class ConstantParserTests extends FunSuite with MockSuite {

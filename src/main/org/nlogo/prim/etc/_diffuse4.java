@@ -2,15 +2,10 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.AgentException;
-import org.nlogo.api.Dump;
 import org.nlogo.agent.PatchException;
-import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.TypeNames;
+import org.nlogo.api.*;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _diffuse4
     extends Command {

@@ -2,17 +2,9 @@
 
 package org.nlogo.workspace;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import org.nlogo.api.*;
 
-import org.nlogo.api.CompilerException;
-import org.nlogo.api.Dump;
-import org.nlogo.api.ErrorSource;
-import org.nlogo.api.Primitive;
-import org.nlogo.api.ExtensionException;
+import java.util.*;
 
 /**
  * Some simple notes on loading and unloading extensions:

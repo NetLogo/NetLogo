@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.api.{LogoList, HubNetInterface}
+import org.nlogo.api.HubNetInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
 import org.nlogo.hubnet.connection.MessageEnvelope._

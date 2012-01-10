@@ -3,13 +3,12 @@
 package org.nlogo.hubnet.client;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.Token;
 import org.nlogo.hubnet.connection.Ports;
 import org.nlogo.window.EditorFactory;
-
-import java.awt.Frame;
-
 import org.nlogo.window.VMCheck;
-import org.nlogo.api.Token;
+
+import java.awt.*;
 
 public strictfp class ClientApplet
     extends javax.swing.JApplet

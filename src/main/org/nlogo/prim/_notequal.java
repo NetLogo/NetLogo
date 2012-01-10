@@ -2,17 +2,17 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.LogoException;
-import org.nlogo.agent.Turtle;
 import org.nlogo.agent.Agent;
-import org.nlogo.agent.Patch;
 import org.nlogo.agent.Link;
-import org.nlogo.api.Nobody$;
+import org.nlogo.agent.Patch;
+import org.nlogo.agent.Turtle;
 import org.nlogo.api.Equality;
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Reporter;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.Nobody$;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _notequal
     extends Reporter implements Pure {

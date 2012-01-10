@@ -3,9 +3,9 @@
 package org.nlogo.prim;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _fastrecurse
     extends Command {

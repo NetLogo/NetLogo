@@ -4,7 +4,6 @@ package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
 import org.nlogo.api.Syntax
-import org.nlogo.api.Constants.Infinitesimal
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _dz extends Reporter {

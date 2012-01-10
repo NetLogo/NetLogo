@@ -2,11 +2,11 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.LogoList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-
-import org.nlogo.api.LogoList;
 
 // ArrayAgentSets are only used for agentsets which are never added to
 // after they are initially created.  However note that turtles and

@@ -2,15 +2,10 @@
 
 package org.nlogo.agent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.nlogo.api.AgentException;
-
 import org.nlogo.api.LogoList;
+
+import java.util.*;
 
 // All methods in this class assume their AgentSet arguments
 // have already been checked that they are turtle sets, not

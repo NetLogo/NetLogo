@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{ConnectionInterface, HubNetException}
 import collection.mutable.ListBuffer
-import org.nlogo.api.{LogoList, PlotInterface}
+import org.nlogo.api.PlotInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 class MockControlCenter extends ClientEventListener() {

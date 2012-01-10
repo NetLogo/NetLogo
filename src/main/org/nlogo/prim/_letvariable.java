@@ -2,10 +2,10 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.nvm.Context;
 import org.nlogo.api.Let;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Context;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _letvariable
     extends Reporter {

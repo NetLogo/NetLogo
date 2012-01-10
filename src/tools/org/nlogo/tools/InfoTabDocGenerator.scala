@@ -4,7 +4,7 @@ package org.nlogo.tools
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.InfoFormatter
-import java.io.{IOException, FileInputStream, FileOutputStream}
+import java.io.{FileInputStream, FileOutputStream}
 
 /**
  * inputs: models/Code Examples/Info Tab Example.nlogo

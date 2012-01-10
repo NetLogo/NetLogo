@@ -3,9 +3,9 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
 
 // This is only used for testing purposes.  It's better not to
 // rejigger this, because when we test the bytecode generator, we get

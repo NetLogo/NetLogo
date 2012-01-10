@@ -3,7 +3,6 @@
 package org.nlogo.headless
 
 import org.nlogo.plot.{PlotPoint, PlotPen}
-import org.nlogo.api._
 
 class TestPlotModels extends AbstractTestModels {
   

@@ -2,18 +2,7 @@
 
 package org.nlogo.sdm.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-
-import javax.swing.JMenuBar;
-
-import org.jhotdraw.framework.DrawingEditor;
-import org.jhotdraw.framework.DrawingView;
-import org.jhotdraw.framework.Figure;
-import org.jhotdraw.framework.FigureEnumeration;
-import org.jhotdraw.framework.Tool;
-import org.jhotdraw.framework.ViewChangeListener;
+import org.jhotdraw.framework.*;
 import org.jhotdraw.util.UndoManager;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.CompilerServices;
@@ -21,6 +10,9 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.TokenType;
 import org.nlogo.sdm.Model;
 import org.nlogo.window.EditDialogFactoryInterface;
+
+import javax.swing.*;
+import java.awt.*;
 
 strictfp class AggregateModelEditor
     extends javax.swing.JFrame

@@ -2,9 +2,7 @@
 
 package org.nlogo.sdm.gui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.FontMetrics;
+import java.awt.*;
 
 public final strictfp class Utils {
 

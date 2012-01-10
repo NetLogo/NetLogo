@@ -2,11 +2,6 @@
 
 package org.nlogo.sdm.gui;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jhotdraw.figures.LineConnection;
 import org.jhotdraw.framework.Connector;
 import org.jhotdraw.framework.Figure;
@@ -15,6 +10,9 @@ import org.nlogo.api.Property;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
+
+import java.awt.*;
+import java.util.List;
 
 public strictfp class RateConnection
     extends LineConnection

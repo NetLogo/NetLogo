@@ -3,10 +3,10 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 // In testing I sometimes use this as an example of an unrejiggered
 // primitive, so don't rejigger it (unless you go find and change

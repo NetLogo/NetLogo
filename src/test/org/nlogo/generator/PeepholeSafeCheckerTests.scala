@@ -3,7 +3,6 @@
 package org.nlogo.generator
 
 import org.scalatest.FunSuite
-import java.lang.reflect.Method
 import org.nlogo.nvm.Context
 import org.nlogo.prim.{_plus,_equal}
 

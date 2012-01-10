@@ -2,15 +2,15 @@
 
 package org.nlogo.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.I18N;
 import org.nlogo.api.TokenType;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
+
+import java.util.ArrayList;
+import java.util.List;
 
 strictfp class CommandLine
     extends org.nlogo.window.JobWidget

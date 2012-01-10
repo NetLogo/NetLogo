@@ -3,11 +3,10 @@
 package org.nlogo.window;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.workspace.AbstractWorkspace;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.nlogo.workspace.AbstractWorkspace;
 
 public strictfp class RuntimeErrorDialog
     extends org.nlogo.swing.MessageDialog {

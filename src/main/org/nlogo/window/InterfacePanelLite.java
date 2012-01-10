@@ -2,17 +2,12 @@
 
 package org.nlogo.window;
 
+import org.nlogo.api.*;
+
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.nlogo.api.ModelReader;
-import org.nlogo.api.CompilerServices;
-import org.nlogo.api.ModelSectionJ;
-import org.nlogo.api.RandomServices;
-import org.nlogo.api.Version;
-import org.nlogo.api.VersionHistory;
 
 public strictfp class InterfacePanelLite
     extends javax.swing.JLayeredPane

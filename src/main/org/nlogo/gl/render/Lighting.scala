@@ -7,7 +7,7 @@ import javax.media.opengl.glu.GLU
 import org.nlogo.api.World3D
 import java.nio.FloatBuffer
 import collection.mutable.ArrayBuffer
-import java.lang.{IndexOutOfBoundsException, IllegalStateException, Float => JFloat, Double => JDouble}
+import java.lang.{Float => JFloat, Double => JDouble}
 
 /**
  * This is a small library for managing and debugging lighting.  It includes

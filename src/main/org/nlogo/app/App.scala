@@ -8,7 +8,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.{ Femto, Pico }
+import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
@@ -21,7 +21,7 @@ import org.picocontainer.Parameter
 
 import javax.swing._
 import java.awt.event.{WindowAdapter, WindowEvent}
-import java.awt.{Toolkit, Dimension, Frame, Component}
+import java.awt.{Toolkit, Dimension, Frame}
 
 /**
  * The main class for the complete NetLogo application.

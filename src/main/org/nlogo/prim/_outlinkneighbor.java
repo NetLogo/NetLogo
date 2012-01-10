@@ -5,8 +5,8 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _outlinkneighbor
     extends Reporter {

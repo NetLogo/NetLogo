@@ -5,7 +5,7 @@ package org.nlogo.generator
 import org.scalatest.FunSuite
 import java.lang.reflect.Method
 import org.objectweb.asm.Opcodes.ATHROW
-import org.objectweb.asm.{ ClassReader, Label, MethodVisitor, Type }
+import org.objectweb.asm.{ ClassReader, Label, Type }
 import org.objectweb.asm.commons.EmptyVisitor
 import org.nlogo.api.Version
 import org.nlogo.nvm.Reporter

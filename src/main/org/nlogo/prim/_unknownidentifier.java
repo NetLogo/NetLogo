@@ -7,8 +7,8 @@ package org.nlogo.prim;
 // references to global variables that the compiler doesn't know
 // about. - ST 7/7/06
 
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _unknownidentifier
     extends Reporter {

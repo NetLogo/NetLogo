@@ -2,9 +2,9 @@
 
 package org.nlogo.sdm.gui;
 
-import java.awt.BorderLayout;
-
 import org.nlogo.window.ErrorLabel;
+
+import java.awt.*;
 
 strictfp class AggregateEditorTab
     extends javax.swing.JPanel {

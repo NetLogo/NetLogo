@@ -2,22 +2,11 @@
 
 package org.nlogo.agent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.nlogo.api.*;
 
-import org.nlogo.api.AgentVariables;
-import org.nlogo.api.PlotInterface;
-import org.nlogo.api.PlotPenInterface;
-import org.nlogo.api.AgentException;
-import org.nlogo.api.Perspective;
-import org.nlogo.api.ImporterUser;
-import org.nlogo.api.WorldDimensions;
+import java.util.*;
+
+import org.nlogo.agent.Observer;
 
 public strictfp class Importer
     implements org.nlogo.api.ImportErrorHandler {

@@ -2,8 +2,7 @@
 
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Syntax, Token,
+import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
 import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto

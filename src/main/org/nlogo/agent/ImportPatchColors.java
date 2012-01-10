@@ -2,19 +2,14 @@
 
 package org.nlogo.agent;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.SampleModel;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
 import org.nlogo.api.AgentException;
 import org.nlogo.api.I18N;
+
+import javax.imageio.ImageIO;
+import java.awt.geom.AffineTransform;
+import java.awt.image.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public strictfp class ImportPatchColors {
   public static void importPatchColors(org.nlogo.api.File imageFile, World world,

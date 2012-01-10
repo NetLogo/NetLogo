@@ -2,9 +2,9 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.nvm.Command;
 import org.nlogo.api.Let;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
 

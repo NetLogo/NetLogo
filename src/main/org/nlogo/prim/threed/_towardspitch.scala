@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.agent.Agent
 import org.nlogo.api.{ AgentException, I18N, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 

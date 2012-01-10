@@ -2,12 +2,12 @@
 
 package org.nlogo.window;
 
-import java.awt.event.MouseWheelListener;
-
 import org.nlogo.agent.ChooserConstraint;
+import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.CompilerServices;
+
+import java.awt.event.MouseWheelListener;
 
 public abstract strictfp class Chooser
     extends SingleErrorWidget

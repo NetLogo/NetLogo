@@ -6,11 +6,7 @@ package org.nlogo.agent;
  * LinkManager -- Keeps track of links.
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public strictfp class LinkManager {
 

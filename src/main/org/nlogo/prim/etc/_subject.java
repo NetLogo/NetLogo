@@ -3,9 +3,9 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Agent;
-import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _subject
     extends Reporter {

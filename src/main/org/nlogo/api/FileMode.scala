@@ -2,12 +2,13 @@
 
 package org.nlogo.api
 
-abstract sealed trait FileMode
+sealed abstract class FileMode(val modeFlag: Int)
+
 object FileMode {
-  case object None extends FileMode
-  case object Read extends FileMode
-  case object Write extends FileMode
-  case object Append extends FileMode
+  case object None   extends FileMode(0)
+  case object Read   extends FileMode(1)
+  case object Write  extends FileMode(2)
+  case object Append extends FileMode(3)
 }
 
 /**

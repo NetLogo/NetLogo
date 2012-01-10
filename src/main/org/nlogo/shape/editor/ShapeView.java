@@ -2,15 +2,10 @@
 
 package org.nlogo.shape.editor;
 
+import org.nlogo.shape.*;
+
 import java.util.List;
 import java.util.Observable;
-
-import org.nlogo.shape.Circle;
-import org.nlogo.shape.Element;
-import org.nlogo.shape.Line;
-import org.nlogo.shape.Polygon;
-import org.nlogo.shape.Rectangle;
-import org.nlogo.shape.VectorShape;
 
 strictfp class ShapeView
     extends javax.swing.JPanel

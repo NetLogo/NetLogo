@@ -3,7 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.{ Observer3D, Turtle3D }
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _setxyz extends Command {

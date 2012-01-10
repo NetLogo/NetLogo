@@ -4,11 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.Dump;
-import org.nlogo.api.I18N;
-import org.nlogo.api.Nobody$;
-import org.nlogo.api.LogoException;
-import org.nlogo.api.Syntax;
+import org.nlogo.api.*;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
