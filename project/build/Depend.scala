@@ -46,8 +46,6 @@ trait Depend extends DefaultProject {
       "compiler" -> List("prim","prim/dead","prim/threed"),
       "editor" -> Nil,
       "generator" -> List("prim","prim/dead","prim/threed"),
-      "gl/render" -> List("shape"),
-      "gl/view" -> List("gl/render","window"),
       "headless" -> List("shape","workspace"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
@@ -111,7 +109,7 @@ check [HubNet-client] directlyIndependentOf [nvm]
 [not-job-not-workspace] = org.nlogo.* excluding [job] [workspace]
 check [not-job-not-workspace] directlyIndependentOf [job]
 
-### checks on AWT, Swing, JOGL
+### checks on AWT, Swing
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode
 [Sun-AWT] = java.awt.*
@@ -124,13 +122,8 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 check [util+] independentOf [Sun-AWT]
 check [awt+] independentOf [Sun-Swing]
 check [headless+] independentOf [Sun-Swing] [bad-AWT]
-check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
-
-[JOGL-free-zone] = org.nlogo.* excluding [gl.render] [gl.view]
-[JOGL] = net.java.games.* javax.media.opengl.*
-check [JOGL-free-zone] independentOf [JOGL]
 
 [ASM-free-zone] = org.nlogo.* excluding [generator]
 check [ASM-free-zone] independentOf org.objectweb.*
@@ -144,7 +137,7 @@ check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 
 [JMF-free-zone] = org.nlogo.* excluding org.nlogo.awt.JMFMovieEncoder org.nlogo.awt.JMFMovieEncoderDataStream org.nlogo.awt.JMFMovieEncoderDataSource
-[JMF] = javax.media.* excluding javax.media.opengl.*
+[JMF] = javax.media.*
 check [JMF-free-zone] directlyIndependentOf [JMF]
 
 [Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent

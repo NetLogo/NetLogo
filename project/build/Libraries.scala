@@ -33,50 +33,11 @@ trait Libraries extends DefaultProject {
     "http://ccl.northwestern.edu/devel/jhotdraw-6.0b1.jar"
   val quaqua = "ch.randelshofer" % "quaqua" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar"
-  val jogl = "org.jogl" % "jogl" % "1.1.1" from
-    "http://ccl.northwestern.edu/devel/jogl-1.1.1.jar"
-  val gluegen = "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from
-    "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar"
   // 7.3.4 isn't the real version number, it's just "the version that comes
   // with Quaqua 7.3.4" - ST 9/2/11
   val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
     
-  /// native libraries for JOGL and Quaqua
-  private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
-                             "lib" / "Mac OS X" / "libjogl_awt.jnilib",
-                             "lib" / "Mac OS X" / "libgluegen-rt.jnilib",
-                             "lib" / "Mac OS X" / "libquaqua.jnilib",
-                             "lib" / "Mac OS X" / "libquaqua64.jnilib")
-  private val libs_win = Seq("lib" / "Windows" / "jogl.dll",
-                             "lib" / "Windows" / "jogl_awt.dll",
-                             "lib" / "Windows" / "gluegen-rt.dll")
-  private val libs_x86 = Seq("lib" / "Linux-x86" / "libjogl.so",
-                             "lib" / "Linux-x86" / "libjogl_awt.so",
-                             "lib" / "Linux-x86" / "libgluegen-rt.so")
-  private val libs_amd64 = Seq("lib" / "Linux-amd64" / "libjogl.so",
-                               "lib" / "Linux-amd64" / "libjogl_awt.so",
-                               "lib" / "Linux-amd64" / "libgluegen-rt.so")
-  private val libs_all = libs_mac ++ libs_win ++ libs_x86 ++ libs_amd64
-  lazy val nativeJoglLibs = fileTask(libs_all) {
-    sbt.FileUtilities.createDirectory("lib" / "Mac OS X", log)
-    sbt.FileUtilities.createDirectory("lib" / "Windows", log)
-    sbt.FileUtilities.createDirectory("lib" / "Linux-amd64", log)
-    sbt.FileUtilities.createDirectory("lib" / "Linux-x86", log)
-    for(path <- libs_all) {
-      val pathString = path.asFile.toString
-      val filename =
-        pathString.reverse.takeWhile(_ != '/').mkString
-          .replaceFirst("\\.", (if(pathString.containsSlice("quaqua")) "-7.3.4."
-                                else "-1.1.1.").reverse)
-          .reverse
-      val url = "http://ccl.northwestern.edu/devel/" + filename
-      import Process._
-      List("curl", "-s", "-o", pathString, url).!
-    }
-    None
-  }
-
   /// test dependencies
   val jmock = "org.jmock" % "jmock" % "2.5.1" % "test"
   val jmockLegacy = "org.jmock" % "jmock-legacy" % "2.5.1" % "test"

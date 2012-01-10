@@ -60,10 +60,6 @@ public strictfp class ViewControlStrip
       speedSlider.setOpaque(false);
       add(speedSlider, java.awt.BorderLayout.CENTER);
     }
-    if (workspace.kioskLevel == GUIWorkspace.KioskLevel.NONE) {
-      ThreedButton threedButton = new ThreedButton();
-      add(threedButton, java.awt.BorderLayout.EAST);
-    }
   }
 
   @Override
@@ -121,32 +117,6 @@ public strictfp class ViewControlStrip
   }
 
   /// subparts
-
-  private class ThreedButton
-      extends javax.swing.JButton {
-    public ThreedButton() {
-      super(" 3D "); // spaces so it isn't so tiny
-      setFont
-          (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
-              java.awt.Font.PLAIN, 10));
-      setBackground(InterfaceColors.GRAPHICS_BACKGROUND);
-      setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-      setFocusable(false);
-      setToolTipText("Switch to 3D view");
-      addActionListener(workspace.switchTo3DViewAction);
-    }
-
-    @Override
-    public java.awt.Point getToolTipLocation(java.awt.event.MouseEvent e) {
-      return TOOL_TIP_OFFSET;
-    }
-
-    @Override
-    public void updateUI() {
-      // without this it looks funny on Windows - ST 9/18/03
-      setUI(new javax.swing.plaf.basic.BasicButtonUI());
-    }
-  }
 
   private class SizeControl
       extends javax.swing.JButton

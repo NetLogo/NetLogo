@@ -37,7 +37,6 @@ public final strictfp class Utils {
       // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
       javax.swing.UIManager.put("Slider.paintValue", Boolean.FALSE);
       if (System.getProperty("os.name").startsWith("Mac")) {
-        preloadQuaquaNativeLibraries();
         javax.swing.UIManager.setLookAndFeel
             (ch.randelshofer.quaqua.QuaquaManager
                 .getLookAndFeelClassName());
@@ -67,36 +66,6 @@ public final strictfp class Utils {
       throw new IllegalStateException(ex);
     }
   }
-
-  // For full Quaqua functionality, including having our application icon appear
-  // when we bring up a Swing alert dialog, Quaqua needs native libraries.
-  // If we can't get them, it's not the end of the world, but we want them.
-  // It might be possible somehow to just allow Quaqua to load them itself,
-  // but that might require fiddling with java.library.path and I'm terrified
-  // to do that because Esther has struggled a bunch with that in the past
-  // and has a bunch of code (JavaLibraryPath, etc.) she put together in order
-  // to make JOGL work, and also make extensions with native libraries (such
-  // as QTJ) work, and I don't understand any of it and I'm scared of it.
-  // So I think the safest thing to do is to manually load the libraries
-  // ourselves here, without relying on the value of java.library.path or
-  // any other settings. - ST 4/29/10
-  private static void preloadQuaquaNativeLibraries() {
-    try {
-      String libraryName = (QuaquaManager.getOS() >= QuaquaManager.LEOPARD)
-          && QuaquaManager.getProperty("os.arch").equals("x86_64")
-          ? "quaqua64"
-          : "quaqua";
-      System.load(new java.io.File(".").getCanonicalPath() + "/lib/Mac OS X/lib" + libraryName + ".jnilib");
-      System.setProperty("Quaqua.jniIsPreloaded", "true");
-    } catch (java.io.IOException ex) // NOPMD
-    {
-      // ignore
-    } catch (UnsatisfiedLinkError ex) // NOPMD
-    {
-      // ignore
-    }
-  }
-
 
   /// borders
 

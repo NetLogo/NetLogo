@@ -29,7 +29,6 @@ val okDeclarations =
        "class TokenLexer") // let's not bother making JFlex emit "strictfp"
 for {
   path <- shell("""find src -name \*.java""")
-  if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
 } {
   val lines = for{line <- withoutComments(read(path))
                   if !line.matches("""\s*""")
@@ -43,7 +42,6 @@ for {
 // now do the StrictMath check
 
 for{path <- shell("""find src -name \*.java""")
-    if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
     if path != "src/org/nlogo/headless/TestCommands.java"}
   // this isn't the absolutely correct check to be doing, but it seems like a good enough heuristic
   // for now - ST 5/8/03

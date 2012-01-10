@@ -22,7 +22,6 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
   addSeparator() 
-  addMenuItem(I18N.gui("3DView"), 'T', true, open3DView _)
   addMenuItem(I18N.gui("colorSwatches"), openColorDialog _)
   addMenuItem(I18N.gui("turtleShapesEditor"),
               () => app.turtleShapesManager.init(I18N.gui("turtleShapesEditor")))
@@ -45,16 +44,6 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
       org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
       app.colorDialog.setVisible(true)
     }
-  }
-  def open3DView() {
-    try {        
-      app.workspace.glView.open()
-      app.workspace.set2DViewEnabled(false)
-    }        
-    catch {
-      case ex: org.nlogo.window.JOGLLoadingException =>
-        org.nlogo.swing.Utils.alert("3D", ex.getMessage, "" + ex.getCause, I18N.gui("common.buttons.continue") )
-    }        
   }
   def openHubNetClientEditor() {
     app.workspace.getHubNetManager.openClientEditor()

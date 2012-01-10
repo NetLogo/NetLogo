@@ -88,7 +88,6 @@ object App{
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
     pico.addComponent(classOf[ToolsMenu])
-    pico.add("org.nlogo.gl.view.ViewManager")
     // Anything that needs a parent Frame, we need to use ComponentParameter
     // and specify classOf[AppFrame], otherwise PicoContainer won't know which
     // Frame to use - ST 6/16/09

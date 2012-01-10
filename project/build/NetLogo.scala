@@ -38,7 +38,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   override def copyResourcesAction = super.copyResourcesAction dependsOn(native2ascii)
   // had to put copyResourcesAction here even though it seems like it shouldn't be needed.
   // its possible that this is an sbt bug, but I don't have the time to look into it. - JC 3/8/11
-  override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, java5, nativeJoglLibs)
+  override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, java5)
   override def compileOptions =
     "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
      .split(" ").map(CompileOption).toSeq ++ super.compileOptions
