@@ -2,12 +2,12 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.api.AgentException;
 import org.nlogo.agent.Turtle;
-import org.nlogo.nvm.Command;
+import org.nlogo.api.AgentException;
 import org.nlogo.api.Let;
-import org.nlogo.nvm.Context;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Command;
+import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableDouble;
 
 // note that this and _bkinternal are pretty much carbon copies of each other

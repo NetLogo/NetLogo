@@ -4,7 +4,6 @@ package org.nlogo.compiler
 
 import org.nlogo.api.I18N
 import org.nlogo.compiler.CompilerExceptionThrowers._
-import org.nlogo.nvm.{Command,Reporter}
 import org.nlogo.prim._
 
 /**

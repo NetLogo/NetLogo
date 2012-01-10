@@ -2,11 +2,11 @@
 
 package org.nlogo.prim.hubnet;
 
-import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
-import org.nlogo.api.PerspectiveJ;
 import org.nlogo.agent.Agent;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Context;
 
 public strictfp class _hubnetsendfollow
     extends org.nlogo.nvm.Command {

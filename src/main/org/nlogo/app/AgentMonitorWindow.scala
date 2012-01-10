@@ -2,10 +2,8 @@
 
 package org.nlogo.app
 
-import java.util.ArrayList
-import java.util.List
 
-import org.nlogo.agent.{Agent, AgentSet, Link, Observer, Patch, Turtle}
+import org.nlogo.agent.{Agent, Link, Observer, Patch, Turtle}
 
 class AgentMonitorWindow(agentClass: Class[_ <: Agent], _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: java.awt.Frame)

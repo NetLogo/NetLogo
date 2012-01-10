@@ -7,7 +7,6 @@ import javax.media.opengl.GL
 import org.nlogo.api.World
 import org.nlogo.api.Perspective
 import org.nlogo.api.Agent
-import org.nlogo.api.Observer
 
 private class ShapeRenderer(world: World) {
 

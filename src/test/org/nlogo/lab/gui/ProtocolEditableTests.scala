@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import org.scalatest.FunSuite
 
-import org.nlogo.api.{ DummyCompilerServices, Program }
+import org.nlogo.api.DummyCompilerServices
 import org.nlogo.lab.{ ProtocolLoader, ProtocolSaver }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto

@@ -6,7 +6,6 @@ import java.awt.event._
 import javax.swing.Action
 import javax.swing.text._
 import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, InsertContentAction}
-import org.nlogo.api.I18N
 
 object Actions {
 

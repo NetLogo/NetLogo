@@ -2,12 +2,12 @@
 
 package org.nlogo.workspace;
 
+import org.nlogo.api.CompilerException;
+import org.nlogo.api.I18N;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.nlogo.api.CompilerException;
-import org.nlogo.api.I18N;
 
 public final strictfp class DefaultFileManager
     implements org.nlogo.nvm.FileManager {

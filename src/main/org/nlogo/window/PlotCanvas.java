@@ -2,7 +2,6 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.LogoThunkFactory;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPainter;
 

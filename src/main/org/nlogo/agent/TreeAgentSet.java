@@ -2,10 +2,10 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.LogoList;
+
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.nlogo.api.LogoList;
 
 // Used only for the all-turtles, all-links and the breed agentsets.
 

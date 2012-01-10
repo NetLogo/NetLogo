@@ -4,8 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.agent.ConstantSliderConstraint
 import org.nlogo.agent.SliderConstraint
-import org.nlogo.api.Approximate
-import Approximate.approximate
+import org.nlogo.api.Approximate.approximate
 
 class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: Double = 1) {
 

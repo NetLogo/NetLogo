@@ -2,15 +2,15 @@
 
 package org.nlogo.app;
 
-import java.util.Map;
-
 import org.nlogo.api.I18N;
-import org.nlogo.api.ModelType;
-import org.nlogo.api.ModelTypeJ;
-import org.nlogo.awt.UserCancelException;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
 import org.nlogo.api.ModelSectionJ;
+import org.nlogo.api.ModelType;
+import org.nlogo.api.ModelTypeJ;
+import org.nlogo.awt.UserCancelException;
+
+import java.util.Map;
 
 /*
  * note that multiple instances of this class may exist

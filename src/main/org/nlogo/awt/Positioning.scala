@@ -2,8 +2,8 @@
 
 package org.nlogo.awt
 
-import java.awt.{ Component, Point, Rectangle, Window, GraphicsEnvironment }
-import GraphicsEnvironment.getLocalGraphicsEnvironment
+import java.awt.{ Component, Window }
+import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 
 object Positioning {
 

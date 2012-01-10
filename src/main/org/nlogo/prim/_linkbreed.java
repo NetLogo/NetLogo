@@ -3,9 +3,9 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _linkbreed
     extends Reporter {

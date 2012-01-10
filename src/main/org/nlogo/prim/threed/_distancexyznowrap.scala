@@ -3,7 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Protractor3D
-import org.nlogo.api.{ LogoException, Syntax }
+import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _distancexyznowrap extends Reporter {

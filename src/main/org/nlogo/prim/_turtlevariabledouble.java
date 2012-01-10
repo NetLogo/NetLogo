@@ -2,13 +2,13 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.LogoException;
-import org.nlogo.agent.Turtle;
 import org.nlogo.api.Syntax;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
+import org.nlogo.nvm.Reporter;
 
 public final strictfp class _turtlevariabledouble extends Reporter {
   public int vn;

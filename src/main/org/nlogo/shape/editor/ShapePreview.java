@@ -2,10 +2,10 @@
 
 package org.nlogo.shape.editor;
 
-import java.util.Observable;
-
 import org.nlogo.shape.Element;
 import org.nlogo.shape.VectorShape;
+
+import java.util.Observable;
 
 strictfp class ShapePreview
     extends javax.swing.JPanel

@@ -2,14 +2,13 @@
 
 package org.nlogo.nvm;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.nlogo.api.Dump;
-import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Let;
+import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static scala.collection.JavaConversions.asJavaIterable;
 

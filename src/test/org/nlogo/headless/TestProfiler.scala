@@ -11,7 +11,6 @@ package org.nlogo.headless
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
-import org.nlogo.api.{CompilerException, LogoException}
 import org.nlogo.util.SlowTest
 
 class TestProfiler extends AbstractTestLanguage with FunSuite

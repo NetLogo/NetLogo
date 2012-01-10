@@ -3,7 +3,7 @@
 package org.nlogo.app
 import java.awt.Color
 import org.nlogo.window.EditorColorizer
-import org.nlogo.api.{CompilerServices,Version}
+import org.nlogo.api.CompilerServices
 object ProceduresToHtml {
   // for standalone use, for example on a web server
   def main(argv:Array[String]) {

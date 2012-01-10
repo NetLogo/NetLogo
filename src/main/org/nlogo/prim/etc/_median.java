@@ -2,18 +2,18 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final strictfp class _median
     extends Reporter

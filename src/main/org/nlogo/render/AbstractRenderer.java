@@ -48,12 +48,12 @@ ST 8/19/05
 
 */
 
-import org.nlogo.api.ShapeList;
+import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.ViewSettings;
+import org.nlogo.api.ShapeList;
 import org.nlogo.api.TrailDrawerInterface;
-import org.nlogo.api.GraphicsInterface;
+import org.nlogo.api.ViewSettings;
 
 public abstract strictfp class AbstractRenderer
     implements org.nlogo.api.RendererInterface {

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.agent.{ Agent3D, Patch }
+import org.nlogo.agent.Agent3D
 import org.nlogo.api.{ AgentException, Nobody, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 

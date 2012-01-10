@@ -4,7 +4,7 @@ package org.nlogo.hubnet.mirroring
 
 import org.scalatest.FunSuite
 
-import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream, IOException }
+import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream }
 
 class ClientWorldTests extends FunSuite {
 
