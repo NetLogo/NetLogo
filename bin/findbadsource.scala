@@ -14,7 +14,6 @@ import Scripting.{shell, read}
 import collection.mutable.Buffer
 
 def ignore(path: String) =
-  path.contains("/extensions/gis/") ||
   path.contains("/src_managed/") ||
   path.contains("/tmp/") ||
   path.endsWith("Lexer.java") ||
