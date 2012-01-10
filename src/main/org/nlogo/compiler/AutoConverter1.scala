@@ -350,8 +350,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   private val CONVERSIONS4 = Map("pen-down?" -> "pen-mode != \"up\"")
   private val CONVERSIONS5 = Map("cg" -> "cp ct",
                                  "clear-graphics" -> "cp ct",
-                                 "export-graphics" -> "export-view",
-                                 "movie-grab-graphics" -> "movie-grab-view")
+                                 "export-graphics" -> "export-view")
   private val CONVERSIONS6 = Map("stamp" -> "set pcolor")
   private val CONVERSIONS7 = Map("get-date-and-time" -> "date-and-time")
   private val CONVERSIONS8 = Map("screen-max-x" -> "max-pxcor",

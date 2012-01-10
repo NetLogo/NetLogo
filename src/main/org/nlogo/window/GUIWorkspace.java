@@ -56,8 +56,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GLViewManagerInterface glView = null;
   public ViewManager viewManager = new ViewManager();
   private final ExternalFileManager externalFileManager;
-  // for movie capture
-  public org.nlogo.awt.MovieEncoder movieEncoder = null;
   public final NetLogoListenerManager listenerManager;
 
   // for grid snap

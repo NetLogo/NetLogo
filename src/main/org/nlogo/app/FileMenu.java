@@ -866,20 +866,6 @@ public strictfp class FileMenu
   public void offerSave()
       throws UserCancelException {
 
-    // check if we have an open movie
-    if (app.workspace().movieEncoder != null) {
-      String[] options = {I18N.guiJ().get("common.buttons.ok"), I18N.guiJ().get("common.buttons.cancel")};
-      String message = "There is a movie in progress. " +
-          "Are you sure you want to exit this model? " +
-          "You will lose the contents of your movie.";
-      if (org.nlogo.swing.OptionDialog.show
-          (this, "NetLogo", message, options) == 1) {
-        throw new UserCancelException();
-      }
-      app.workspace().movieEncoder.cancel();
-      app.workspace().movieEncoder = null;
-    }
-
     if (app.dirtyMonitor().dirty() && userWantsToSaveFirst()) {
       save();
     }

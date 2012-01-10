@@ -153,7 +153,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_mouseinside ,TRUE/FALSE,OTPL,null,10,0,0
                      |_mousexcor ,number,OTPL,null,10,0,0
                      |_mouseycor ,number,OTPL,null,10,0,0
-                     |_moviestatus ,string,OTPL,null,10,0,0
                      |_mult number,number,number,OTPL,null,8,1,1
                      |_myinlinks ,agentset,-T--,null,10,0,0
                      |_mylinks ,agentset,-T--,null,10,0,0
@@ -410,12 +409,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_makepreview ,O---,null,0,0,0
                     |_mkdir string,OTPL,null,0,1,1
                     |_moveto turtle or patch,OT--,null,0,1,1 *
-                    |_moviecancel ,OTPL,null,0,0,0
-                    |_movieclose ,OTPL,null,0,0,0
-                    |_moviegrabinterface ,OTPL,null,0,0,0
-                    |_moviegrabview ,OTPL,null,0,0,0
-                    |_moviesetframerate number,OTPL,null,0,1,1
-                    |_moviestart string,OTPL,null,0,1,1
                     |_nodisplay ,OTPL,null,0,0,0
                     |_observercode ,O---,null,0,0,0
                     |_outputprint anything,OTPL,null,0,1,1

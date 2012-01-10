@@ -93,38 +93,6 @@ For the system dynamics modeler, NetLogo uses the JHotDraw library, which is Cop
 
 ===
 
-For movie-making, NetLogo uses code adapted from sim.util.media.MovieEncoder.java by Sean Luke, distributed under the MASON Open Source License. The copyright for that code is as follows:
-
-This software is Copyright 2003 by Sean Luke. Portions Copyright 2003 by Gabriel Catalin Balan, Liviu Panait, Sean Paus, and Dan Kuebrich. All Rights Reserved
-
-Developed in Conjunction with the George Mason University Center for Social Complexity
-
-By using the source code, binary code files, or related data included in this distribution, you agree to the following terms of usage for this software distribution. All but a few source code files in this distribution fall under this license; the exceptions contain open source licenses embedded in the source code files themselves. In this license the Authors means the Copyright Holders listed above, and the license itself is Copyright 2003 by Sean Luke.
-
-The Authors hereby grant you a world-wide, royalty-free, non-exclusive license, subject to third party intellectual property claims:
-
-to use, reproduce, modify, display, perform, sublicense and distribute all or any portion of the source code or binary form of this software or related data with or without modifications, or as part of a larger work; and under patents now or hereafter owned or controlled by the Authors, to make, have made, use and sell ("Utilize") all or any portion of the source code or binary form of this software or related data, but solely to the extent that any such patent is reasonably necessary to enable you to Utilize all or any portion of the source code or binary form of this software or related data, and not to any greater extent that may be necessary to Utilize further modifications or combinations.
-
-In return you agree to the following conditions:
-
-If you redistribute all or any portion of the source code of this software or related data, it must retain the above copyright notice and this license and disclaimer. If you redistribute all or any portion of this code in binary form, you must include the above copyright notice and this license and disclaimer in the documentation and/or other materials provided with the distribution, and must indicate the use of this software in a prominent, publically accessible location of the larger work. You must not use the Authors's names to endorse or promote products derived from this software without the specific prior written permission of the Authors.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS, NOR THEIR EMPLOYERS, NOR GEORGE MASON UNIVERSITY, BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-===
-
-For movie-making, NetLogo uses code adapted from JpegImagesToMovie.java by Sun Microsystems. The copyright for that code is as follows:
-
-Copyright (c) 1999-2001 Sun Microsystems, Inc. All Rights Reserved.
-
-Sun grants you ("Licensee") a non-exclusive, royalty free, license to use, modify and redistribute this software in source and binary code form, provided that i) this copyright notice and license appear on all copies of the software; and ii) Licensee does not utilize the software in a manner which is disparaging to Sun.
-
-This software is provided "AS IS," without a warranty of any kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING THE SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-This software is not designed or intended for use in on-line control of aircraft, air traffic, aircraft navigation or aircraft communications; or in the design, construction, operation or maintenance of any nuclear facility. Licensee represents and warrants that it will not use or redistribute the Software for such purposes.
-
-===
-
 For 3D matrix operations, NetLogo uses the Matrix3D class.  It is distributed under the following license:
 
 Copyright (c) 1994-1996 Sun Microsystems, Inc. All Rights Reserved.
