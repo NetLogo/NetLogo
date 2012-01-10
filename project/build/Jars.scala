@@ -1,4 +1,6 @@
 import sbt._
+import Process._
+import java.net.URL
 
 trait Jars extends DefaultProject {
 

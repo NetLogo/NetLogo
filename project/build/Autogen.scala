@@ -1,3 +1,4 @@
+import java.io.File
 import sbt._
 import sbt.FileUtilities.{readString, write => writeFile}
 
