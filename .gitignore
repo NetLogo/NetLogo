@@ -37,14 +37,9 @@ tmp/
 /build/
 /.idea/workspace.xml
 /devel/depend.ddf
-/docs/Perspective Example.png
-/docs/dict/
-/docs/infotab.html
 /lib/
 /out/
 /project/boot/
 /project/plugins/project/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties
-/resources/system/dict.txt
-/resources/system/dict3d.txt

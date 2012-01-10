@@ -108,12 +108,6 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
     Run.run("org.nlogo.headless.Dump", testClasspath.get, args, log)
   } }
 
-  val infotabDocs = "docs" / "infotab.html"
-  val infoTabModel = "models" / "Code Examples" / "Info Tab Example.nlogo"
-  lazy val genInfoTabDocs = fileTask(infotabDocs from infoTabModel) {
-    runTask(Some("org.nlogo.tools.InfoTabDocGenerator"), testClasspath).dependsOn(testCompile).run
-  }
-
   // scalariform
   override def formatBeforeCompiling = false
   override def scalaSourcesEncoding = "us-ascii"

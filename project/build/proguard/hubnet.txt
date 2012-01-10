@@ -16,7 +16,7 @@
 
 -injars target/scala_2.9.1/classes
 
--injars resources(!**.svn**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
+-injars resources(!**.svn**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/info.css,!i18n/**,!images/title.jpg,**)
 
 
 -outjar HubNet.jar

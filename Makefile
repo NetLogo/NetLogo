@@ -3,10 +3,9 @@
 # sadly this only works on plain files not directories.
 .DELETE_ON_ERROR:
 
-### top level targets; "netlogo" is default target.  the "dict.txt" is
-### because we also need to generate the "split dictionary.html" files
+### top level targets; "netlogo" is default target
 .PHONY: netlogo
-netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.class docs/infotab.html | tmp
+netlogo: extensions models/index.txt bin/Scripting.class | tmp
 
 ### misc variables
 ifneq (,$(findstring Darwin,$(shell uname)))
@@ -45,15 +44,6 @@ profile:
 	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_2.7.7/perfanal-1.0.jar tmp/profiles/$(ARGS).txt
 profiles:
 	bin/profiles.scala $(ARGS)
-
-# This also generates the docs/dict folder
-resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
-	@echo "@@@ building dict.txt"
-	@rm -rf docs/dict
-	python bin/dictsplit.py
-
-docs/infotab.html: models/Code\ Examples/Info\ Tab\ Example.nlogo
-	bin/sbt gen-info-tab-docs
 
 models/index.txt:
 	@echo "@@@ building models/index.txt"
@@ -153,28 +143,6 @@ tmp/scaladoc: netlogo | tmp
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
 
-# these are the docs we include with the User Manual
-docs/scaladoc: netlogo
-	-rm -rf docs/scaladoc
-	-mkdir -p docs/scaladoc
-	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
-	bin/scaladoc \
-	  -d docs/scaladoc \
-	  -doc-title 'NetLogo API' \
-	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(LIBS)$(CLASSES) \
-	  -sourcepath src/main \
-	  -encoding us-ascii \
-	  src/main/org/nlogo/app/App.scala \
-	  src/main/org/nlogo/lite/InterfaceComponent.scala \
-	  src/main/org/nlogo/lite/Applet.scala \
-	  src/main/org/nlogo/lite/AppletPanel.scala \
-	  src/main/org/nlogo/headless/HeadlessWorkspace.scala \
-          src/main/org/nlogo/api/*.*a \
-          src/main/org/nlogo/agent/*.*a \
-          src/main/org/nlogo/workspace/*.*a \
-          src/main/org/nlogo/nvm/*.*a
-
 ### misc targets
 
 # cleaning
@@ -182,10 +150,10 @@ docs/scaladoc: netlogo
 clean:
 	bin/sbt clean
 	rm -f bin/*.class devel/depend.ddf
-	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
+	rm -rf cobertura.ser models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
 	rm -f $(JARS) test/applet/NetLogoLite.jar test/applet/HubNet.jar
-	rm -rf tmp target docs/scaladoc
+	rm -rf tmp target
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
 clean-extensions:
