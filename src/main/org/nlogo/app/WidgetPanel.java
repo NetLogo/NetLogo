@@ -3,7 +3,6 @@
 package org.nlogo.app;
 
 import org.nlogo.api.I18N;
-import org.nlogo.window.DummyPlotWidget;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.GUIWorkspace;
 import org.nlogo.window.Widget;
@@ -26,7 +25,6 @@ public strictfp class WidgetPanel
     java.awt.event.MouseMotionListener,
     java.awt.event.FocusListener,
     org.nlogo.window.Events.WidgetEditedEvent.Handler,
-    org.nlogo.window.Events.WidgetRemovedEvent.Handler,
     org.nlogo.window.Events.LoadBeginEvent.Handler,
     org.nlogo.window.Events.ZoomedEvent.Handler {
   static final int GRID_SNAP = 5;  // set the size of the grid, in pixels
@@ -403,60 +401,7 @@ public strictfp class WidgetPanel
   // new widgets in the UI.  For most widget types, the same type string
   // is used in both places. - ST 3/17/04
   public Widget makeWidget(String type, boolean loading) {
-    type = "DUMMY " + type.toUpperCase();
-    Widget fromRegistry = org.nlogo.window.WidgetRegistry.apply(type);
-    if (fromRegistry != null) {
-      return fromRegistry;
-    } else if (type.equals("DUMMY SLIDER")) {
-      return new org.nlogo.window.DummySliderWidget();
-    } else if (type.equals("DUMMY CHOOSER") || // current name
-        type.equals("DUMMY CHOICE"))   // old name, used in old models
-    {
-      return new org.nlogo.window.DummyChooserWidget
-          (new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
-    } else if (type.equals("DUMMY BUTTON")) {
-      return new org.nlogo.window.DummyButtonWidget();
-    } else if (type.equals("DUMMY PLOT")) {
-      // note that plots on the HubNet client must have the name of a plot
-      // on the server, thus, feed the dummy plot widget the names of
-      // the current plots so the user can select one. We override
-      // this method in InterfacePanel since regular plots are handled
-      // differently ev 1/25/07
-      String[] names = workspace.plotManager().getPlotNames();
-      if (names.length > 0) {
-        return DummyPlotWidget.apply(names[0], workspace.plotManager());
-      } else {
-        return DummyPlotWidget.apply("plot 1", workspace.plotManager());
-      }
-    } else if (type.equals("DUMMY MONITOR")) {
-      return new org.nlogo.window.DummyMonitorWidget();
-    } else if (type.equals("DUMMY INPUT") ||  // in the GUI, it's "Input Box"
-        type.equals("DUMMY INPUTBOX"))  // in saved models, it's "INPUTBOX"
-    {
-      java.awt.Font font = new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont(),
-          java.awt.Font.PLAIN, 12);
-      return new org.nlogo.window.DummyInputBoxWidget
-          (new org.nlogo.window.CodeEditor
-              (1, 20, font, false, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
-              new org.nlogo.window.CodeEditor
-                  (5, 20, font, true, null, new EditorColorizer(workspace), I18N.guiJ().fn()),
-              this, new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
-    } else if (type.equals("DUMMY OUTPUT"))  // currently in saved models only - ST 3/17/04
-    {
-      return new org.nlogo.window.OutputWidget();
-    } else if (type.equals("DUMMY CC-WINDOW")) // definitely in saved models only
-    {
-      // in current NetLogo versions, the command center goes in
-      // a JSplitPane instead of in the InterfacePanel, so we ignore
-      // the entry in the model - ST 7/13/04, 3/14/06
-      return null;
-    } else if (type.equals("DUMMY GRAPHICS-WINDOW") || type.equals("DUMMY VIEW") || type.equals("VIEW")) {
-      view = new org.nlogo.window.DummyViewWidget(workspace.world);
-      return view;
-    } else {
-      throw new IllegalStateException
-          ("unknown widget type: " + type);
-    }
+    throw new IllegalStateException("unknown widget type: " + type);
   }
 
   public void mouseReleased(java.awt.event.MouseEvent e) {
@@ -672,27 +617,6 @@ public strictfp class WidgetPanel
   public void handle(org.nlogo.window.Events.WidgetEditedEvent e) {
     new org.nlogo.window.Events.DirtyEvent().raise(this);
     zoomer.updateZoomInfo(e.widget);
-  }
-
-  public void handle(org.nlogo.window.Events.WidgetRemovedEvent e) {
-    // since all plot widgets on the client are subordinate to
-    // plot widgets on the server remove the plot widget
-    // on the client when the plot in the server is removed
-    // ev 1/18/07
-    if (e.widget instanceof org.nlogo.window.PlotWidget) {
-      java.awt.Component[] comps = getComponents();
-      for (int i = 0; i < comps.length; i++) {
-        if (comps[i] instanceof WidgetWrapper) {
-          WidgetWrapper wrapper = (WidgetWrapper) comps[i];
-          Widget widget = wrapper.widget();
-          if (widget instanceof DummyPlotWidget &&
-              e.widget.displayName().equals(widget.displayName())) {
-            removeWidget(wrapper);
-          }
-        }
-      }
-      repaint();
-    }
   }
 
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {

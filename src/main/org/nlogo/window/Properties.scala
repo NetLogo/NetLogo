@@ -110,46 +110,4 @@ object Properties {
     P("maxPzcor", P.PositiveInteger, "max-pzcor", I18N.gui("viewSettings.3D.maxPzcor"), setLive = true)
   )
 
-  // dummies for HubNet clients
-  val dummyButton = javaList(
-    P("name", P.String, I18N.gui("hubnet.tag")),
-    P("actionKey", P.Key, I18N.gui("button.actionKey"))
-  )
-  val dummyChooser = javaList(
-    P("name", P.String, I18N.gui("hubnet.tag")),
-    P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
-      "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>")
-  )
-  val dummyInput = javaList(
-    P("nameWrapper", P.String, I18N.gui("hubnet.tag")),
-    P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
-  )
-  val dummyMonitor = javaList(
-    P("name", P.String, I18N.gui("hubnet.tag")),
-    P("decimalPlaces", P.Integer, "Decimal places", gridWidth = RELATIVE)
-  )
-  val dummyPlot = javaList(
-    P("nameOptions", P.PlotOptions, I18N.gui("plot.name")),
-    P("xLabel", P.String, I18N.gui("plot.xLabel"), gridWidth = 1),
-    P("defaultXMin", P.Double, I18N.gui("plot.xmin"), gridWidth = RELATIVE),
-    P("defaultXMax", P.Double, I18N.gui("plot.xmax")),
-    P("yLabel", P.String, I18N.gui("plot.yLabel"), gridWidth = 1),
-    P("defaultYMin", P.Double, I18N.gui("plot.ymin"), gridWidth = RELATIVE),
-    P("defaultYMax", P.Double, I18N.gui("plot.ymax")),
-    P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale")),
-    P("showLegend", P.Boolean, I18N.gui("plot.showLegend"))
-  )
-  val dummySlider = javaList(
-    P("name", P.String, I18N.gui("hubnet.tag")),
-    P("min", P.Double, I18N.gui("slider.minimum"), gridWidth = 1),
-    P("inc", P.Double, I18N.gui("slider.increment"), gridWidth = RELATIVE),
-    P("max", P.Double, I18N.gui("slider.maximum")),
-    P("value", P.Double, I18N.gui("slider.value"), gridWidth = RELATIVE),
-    P("units", P.String, I18N.gui("slider.units")),
-    P("vertical", P.Boolean, I18N.gui("slider.vertical"))
-  )
-  val dummyView = javaList(
-    P("width", P.Integer, I18N.gui("hubnet.view.width")),
-    P("height", P.Integer, I18N.gui("hubnet.view.height"))
-  )
 }

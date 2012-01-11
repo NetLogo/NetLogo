@@ -325,10 +325,6 @@ strictfp class InterfacePanel
     return super.contains(w);
   }
 
-  @Override
-  public void handle(org.nlogo.window.Events.WidgetRemovedEvent e) {
-  }
-
   public void handle(org.nlogo.window.Events.ExportInterfaceEvent e) {
     try {
       javax.imageio.ImageIO.write

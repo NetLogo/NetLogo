@@ -20,7 +20,4 @@ object Properties {
   val swiitch = List(
     P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar"))
   ).asJava
-  val dummySwitch = List(
-    P("name", P.String, I18N.gui("hubnet.tag"))
-  ).asJava
 }
