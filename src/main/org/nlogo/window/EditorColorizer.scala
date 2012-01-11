@@ -97,8 +97,4 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
     Option(compiler.getTokenAtPosition(text, position))
       .map(_.name).orNull
 
-  def doHelp(comp: java.awt.Component, name: String) {
-    QuickHelp.doHelp(comp, name)
-  }
-
 }

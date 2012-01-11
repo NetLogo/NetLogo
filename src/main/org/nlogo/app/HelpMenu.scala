@@ -23,16 +23,6 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
   def launch(name: String, isLocal: Boolean, url: String) =
     action(name, () => BrowserLauncher.openURL(HelpMenu.this, url, isLocal))
   addMenuItem(
-    I18N.gui("lookUpInDictionary(F1)"),
-    Actions.quickHelpAction(colorizer, I18N.gui.get _))
-  addSeparator()
-  addMenuItem(
-    launch(I18N.gui("netLogoUserManual"), true,
-           "docs/index.html"))
-  addMenuItem(
-    launch(I18N.gui("netLogoDictionary"), true,
-           "docs/index2.html"))
-  addMenuItem(
     launch(I18N.gui("netLogoUsersGroup"), false,
            "http://groups.yahoo.com/group/netlogo-users/"))
   addSeparator()

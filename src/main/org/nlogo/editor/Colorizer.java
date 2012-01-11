@@ -22,7 +22,4 @@ public interface Colorizer<TokenType> {
   // same spots.  ev 1/17/07
   String getTokenAtPosition(String text, int position);
 
-  // this isn't colorizing either.. - ST 3/28/08
-  void doHelp(java.awt.Component comp, String name);
-
 }

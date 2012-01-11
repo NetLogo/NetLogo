@@ -35,12 +35,6 @@ object Actions {
   class UncommentAction extends MyTextAction("uncomment-line", _.uncomment())
   class ShiftLeftAction extends MyTextAction("shift-line-left", _.shiftLeft() )
   class ShiftRightAction extends MyTextAction("shift-line-right", _.insertBeforeEachSelectedLine(" ") )
-  def quickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
-    new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-                     e => colorizer.doHelp(e, e.getHelpTarget(e.getSelectionStart)))
-  def mouseQuickHelpAction(colorizer: Colorizer[_], i18n: String => String) =
-    new MyTextAction(i18n("tabs.code.rightclick.quickhelp"),
-                     e => colorizer.doHelp(e, e.getHelpTarget(e.getMousePos)))
   class MyTextAction(name:String, f: EditorArea[_] => Unit) extends TextAction(name) {
     override def actionPerformed(e:ActionEvent){
       val component = getTextComponent(e)

@@ -92,12 +92,6 @@ public strictfp class EditorArea<TokenType>
         (javax.swing.KeyStroke.getKeyStroke
             (java.awt.event.KeyEvent.VK_Y, mask),
             UndoManager.redoAction());
-
-    // add key binding, for getting quick "contexthelp", based on where
-    // the cursor is...
-    getInputMap().put
-        (javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0),
-            Actions.quickHelpAction(colorizer, i18n));
   }
 
   @Override
@@ -155,8 +149,7 @@ public strictfp class EditorArea<TokenType>
         (super.getActions(),
             new javax.swing.Action[]{
                 Actions.commentAction(), Actions.uncommentAction(),
-                Actions.shiftLeftAction(), Actions.shiftRightAction(),
-                Actions.quickHelpAction(colorizer, i18n),
+                Actions.shiftLeftAction(), Actions.shiftRightAction()
             });
   }
 
@@ -411,8 +404,6 @@ public strictfp class EditorArea<TokenType>
     Actions.CUT_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.cut"));
     menu.add(new javax.swing.JMenuItem(Actions.PASTE_ACTION()));
     Actions.PASTE_ACTION().putValue(javax.swing.Action.NAME, i18n.apply("menu.edit.paste"));
-    menu.addSeparator();
-    menu.add(new javax.swing.JMenuItem(Actions.mouseQuickHelpAction(colorizer, i18n)));
     menu.show(this, e.getX(), e.getY());
   }
 
