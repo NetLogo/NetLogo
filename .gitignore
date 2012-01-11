@@ -43,3 +43,6 @@ tmp/
 /project/plugins/project/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties
+/docs/
+/resources/system/dict.txt
+/resources/system/dict3d.txt
