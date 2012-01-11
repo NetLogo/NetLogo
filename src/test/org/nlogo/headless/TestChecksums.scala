@@ -20,7 +20,12 @@ class TestChecksums extends FunSuite with SlowTest {
   // prevent annoying JAI message on Linux when using JAI extension
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
-  for (entry <- TestChecksums.checksums.values) {
+  for {
+    entry <- TestChecksums.checksums.values
+    if !entry.path.containsSlice("/GIS/")
+    if !entry.path.containsSlice("/System Dynamics/")
+    if !entry.path.containsSlice("Movie Example")
+  } {
     test(entry.path) {
       val tester = new ChecksumTester(info(_))
       tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
