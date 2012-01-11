@@ -1,5 +1,5 @@
 # comment out if you want, when debugging this
-#.SILENT:
+.SILENT:
 # sadly this only works on plain files not directories.
 .DELETE_ON_ERROR:
 
