@@ -23,6 +23,13 @@ class TestCompileAll extends FunSuite with SlowTest{
         // letting the textbook team deal with these should help ensure
         // the book gets updated too - ST 4/22/10
         pathMatches("TEXTBOOK MODELS") ||
+        // core branch doesn't have these features - ST 1/11/12
+        pathMatches("SYSTEM DYNAMICS") ||
+        pathMatches("GIS") ||
+        pathMatches("QUICKTIME EXTENSION") ||
+        pathMatches("HUBNET ACTIVITIES") ||
+        path.containsSlice("GoGoMonitor") ||
+        path.containsSlice("Movie Example") ||
         !Version.is3D && path.endsWith(".nlogo3d") ||
         // in 3D skip models that aren't in the 3D directory.
         Version.is3D && !pathMatches("3D"))
