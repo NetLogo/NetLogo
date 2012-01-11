@@ -17,8 +17,6 @@ trait Libraries extends DefaultProject {
   /// regular dependencies
   val asm = "asm" % "asm-all" % "3.3.1"
   val picocontainer = "org.picocontainer" % "picocontainer" % "2.13.6"
-  val pegdown = "org.pegdown" % "pegdown" % "1.1.0"
-  val parboiled = "org.parboiled" % "parboiled-java" % "1.0.2"
   val mrjadapter = "steveroy" % "mrjadapter" % "1.2" from
     "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar"
   val quaqua = "ch.randelshofer" % "quaqua" % "7.3.4" from

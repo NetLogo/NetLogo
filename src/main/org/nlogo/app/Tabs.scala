@@ -23,7 +23,6 @@ class Tabs(val workspace: GUIWorkspace,
   var tabsMenu: org.nlogo.swing.TabsMenu = null
 
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
-  val infoTab = new InfoTab(workspace.attachModelDir(_))
   val proceduresTab = new MainProceduresTab(workspace)
 
   var previousTab: java.awt.Component = interfaceTab
@@ -31,7 +30,6 @@ class Tabs(val workspace: GUIWorkspace,
 
   def init(moreTabs: (String, java.awt.Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
-    addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
@@ -188,13 +186,6 @@ class Tabs(val workspace: GUIWorkspace,
           case abortEx: java.awt.print.PrinterAbortException => org.nlogo.util.Exceptions.ignore(abortEx)
         }
     }
-  }
-
-  override def processMouseMotionEvent(e: java.awt.event.MouseEvent) {
-    // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
-    // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
-    // see any reason why it needs to. It's causing flickering in the info tabs on the affected
-    // platforms ev 2/2/09
   }
 
   /// LinkComponent stuff

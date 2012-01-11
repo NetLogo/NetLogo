@@ -33,9 +33,8 @@ class ModelSaver(app: App) {
 
     // info
     section {
-      buf ++= app.tabs.infoTab.info
     }
-    
+
     // turtle shapes
     section {
       for(shape <- app.tabs.workspace.world.turtleShapeList.getShapes.asScala) {
