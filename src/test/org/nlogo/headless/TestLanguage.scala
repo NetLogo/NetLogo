@@ -11,22 +11,22 @@ import org.nlogo.util.SlowTest
 
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
-abstract class TestLanguage(testFinder: TestFinder) extends FunSuite with SlowTest {
-  for(t:LanguageTest <- TestParser.parseFiles(testFinder.files); if(t.shouldRun))
+abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
+  for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       t.run
     }
 }
 
-trait TestFinder{ def files: Iterable[File] }
+trait TestFinder extends Iterable[File]
 case class TxtsInDir(dir:String) extends TestFinder {
-  def files: Iterable[File] = new File(dir).listFiles.filter(_.getName.endsWith(".txt"))
+  override def iterator = new File(dir).listFiles.filter(_.getName.endsWith(".txt")).iterator
 }
 case object ExtensionTestsDotTxt extends TestFinder {
-  def files: Iterable[File] = {
+  def iterator = {
     def filesInDir(parent:File): Iterable[File] =
       parent.listFiles.flatMap{f => if(f.isDirectory) filesInDir(f) else List(f)}
-    filesInDir(new File("extensions")).filter(_.getName == "tests.txt")
+    filesInDir(new File("extensions")).filter(_.getName == "tests.txt").iterator
   }
 }
 
