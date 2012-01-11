@@ -60,12 +60,11 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
       if (testName.endsWith("_2D")) !Version.is3D
       else if (testName.endsWith("_3D")) Version.is3D
       else true
-    val noGenerator = java.lang.Boolean.getBoolean("org.nlogo.noGenerator")
+    val useGenerator = org.nlogo.api.Version.useGenerator
     val generatorCorrect =
-      if (testName.startsWith("Generator")) !noGenerator
-      else if (testName.startsWith("NoGenerator")) noGenerator
+      if (testName.startsWith("Generator")) useGenerator
+      else if (testName.startsWith("NoGenerator")) !useGenerator
       else true
-
     envCorrect && generatorCorrect
   }
 
