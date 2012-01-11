@@ -41,10 +41,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // read procedures, compile them.
     val results = {
       val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
-      // we could convert right here.
-      // we'd still need to convert slider constraints, plots, monitors and buttons.
-      // JC - 9/14/10
-      // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
       import collection.JavaConverters._
       ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager)
     }
@@ -87,8 +83,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec(0) match {
-        // to autoconvert sliders, we would have to convert spec 1, 2 and 3.
-        // JC - 9/14/10
         case "SLIDER" =>
           SliderConstraint.makeSliderConstraint(
             ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
@@ -116,9 +110,6 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
     for (widgetSource <- buttons ::: monitors)
-      // we could convert monitors and buttons by using this line:
-      // ws.autoConvert(widgetSource, true, false, netLogoVersion)
-      // JC - 9/14/10
       try ws.compileCommands(widgetSource)
       catch {
         case ex: CompilerException =>
@@ -176,7 +167,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         // ick, side effects.
         // might replace identity soon as we might actually convert old models for headless.
         // JC - 9/14/10
-        PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""), identity)
+        PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""))
       }
 
       def parseButton(widget: Array[String]) {
@@ -201,7 +192,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       }
 
       def parseGraphicsWindow(widget: Array[String]) {
-        ws.loadWorld(widget, netLogoVersion, ws)
+        ws.loadWorld(widget, ws)
       }
 
       // finally parse all the widgets in the WIDGETS section

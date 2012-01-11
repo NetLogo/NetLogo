@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ I18N, VersionHistory, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ I18N, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.Workspace.UpdateMode
 
 class WorldLoader {
@@ -12,8 +12,8 @@ class WorldLoader {
   val tickCounterLabelIndex = 24
   val frameRateIndex = 25
 
-  def load(strings: Array[String], version: String, worldInterface: WorldLoaderInterface) {
-    val d = getWorldDimensions(strings, version)
+  def load(strings: Array[String], worldInterface: WorldLoaderInterface) {
+    val d = getWorldDimensions(strings)
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
     if(strings.length > tickCounterLabelIndex)
@@ -40,9 +40,7 @@ class WorldLoader {
     // ignore item 13, which was for old, now-removed hex support - ST 1/4/07
     var wrapX = true
     var wrapY = true
-    // if this model was not saved in some version of 3.1 or later.  ignore the wrap settings,
-    // default is on ev 4/13/06
-    if(strings.length > 15 && !VersionHistory.olderThan31pre1(version)) {
+    if(strings.length > 15) {
       wrapX = 0 != strings(14).toInt
       wrapY = 0 != strings(15).toInt
     }
@@ -61,7 +59,7 @@ class WorldLoader {
     worldInterface.setSize(width, height)
   }
 
-  def getWorldDimensions(strings: Array[String], version: String): WorldDimensions = {
+  def getWorldDimensions(strings: Array[String]): WorldDimensions = {
     var maxx = strings(5).toInt
     var maxy = strings(6).toInt
     var minx = -1 
@@ -109,7 +107,7 @@ class WorldLoader3D extends WorldLoader {
     strings(4).toInt - strings(2).toInt
   override def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]) =
     patchSize
-  override def getWorldDimensions(strings: Array[String], version: String) = {
+  override def getWorldDimensions(strings: Array[String]) = {
     var maxX = strings(5).toInt
     var maxY = strings(6).toInt
     var minX = -1 
@@ -126,9 +124,7 @@ class WorldLoader3D extends WorldLoader {
       minY = strings(19).toInt
       maxY = strings(20).toInt
     }
-    if(strings.length > 14 &&
-       (version.containsSlice("3-D Preview 1") ||
-        version.containsSlice("3-D Preview 2"))) {
+    if(strings.length > 14) {
       maxZ = strings(14).toInt
       minZ = - maxZ
     }

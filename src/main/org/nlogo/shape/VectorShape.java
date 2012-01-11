@@ -3,7 +3,6 @@
 package org.nlogo.shape;
 
 import org.nlogo.api.GraphicsInterface;
-import org.nlogo.api.VersionHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -293,10 +292,6 @@ public strictfp class VectorShape
   }
 
   public void addElement(String line) {
-    addElement(line, false);
-  }
-
-  public void addElement(String line, boolean translateClassicColorToNewColors) {
     org.nlogo.shape.Element element = null;
     if (line.startsWith("Line"))        // See what shape it is, and parse it accordingly
     {
@@ -318,12 +313,6 @@ public strictfp class VectorShape
           ("Invalid shape format in file: " + line);
     }
     if (element != null) {
-      if (translateClassicColorToNewColors) {
-        element.setColor
-            (new java.awt.Color
-                (org.nlogo.api.Color.translateSavedColor
-                    (element.getColor().getRGB())));
-      }
       add(element);
     }
   }
@@ -368,18 +357,11 @@ public strictfp class VectorShape
 
     shape.setRotatable(getString(shapes, index++).equals("true"));
     int rgb = Integer.valueOf(getString(shapes, index++)).intValue();
-    boolean translateColors = version != null &&
-        (VersionHistory.olderThan30pre5(version) ||
-            VersionHistory.olderThan3DPreview3(version));
-
-    if (translateColors) {
-      rgb = org.nlogo.api.Color.translateSavedColor(rgb);
-    }
     shape.setEditableColorIndex(rgb);
     // Read in the elements of that shape
     while (0 != getString(shapes, index).length()) {
       shape.addElement
-          (getString(shapes, index++), translateColors);
+          (getString(shapes, index++));
     }
 
     return index;

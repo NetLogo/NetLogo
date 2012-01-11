@@ -94,7 +94,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.toString
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper) = {
+  def load(strings: Array[String]) = {
     text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
     if (strings.length >= 7) fontSize = strings(6).toInt
     if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble: java.lang.Double)

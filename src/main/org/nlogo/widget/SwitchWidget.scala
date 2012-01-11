@@ -66,7 +66,7 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
     s.toString
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef = {
+  def load(strings: Array[String]): AnyRef = {
     name(org.nlogo.api.ModelReader.restoreLines(strings(6)), true)
     isOn = strings(7).toDouble == 0
     val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)

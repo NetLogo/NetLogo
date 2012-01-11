@@ -5,7 +5,6 @@ package org.nlogo.app;
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;
-import org.nlogo.api.VersionHistory;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.Widget;
 
@@ -234,17 +233,6 @@ strictfp class InterfacePanel
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
   private Widget loadWidget(String[] strings, final String modelVersion, int x, int y) {
-    Widget.LoadHelper helper =
-        new Widget.LoadHelper() {
-          public String version() {
-            return modelVersion;
-          }
-
-          public String convert(String source, boolean reporter) {
-            return workspace.autoConvert
-                (source, true, reporter, modelVersion);
-          }
-        };
     String type = strings[0];
     if (x == 0) {
       x = Integer.parseInt(strings[1]);
@@ -252,16 +240,10 @@ strictfp class InterfacePanel
     if (y == 0) {
       y = Integer.parseInt(strings[2]);
     }
-    if (viewWidget instanceof org.nlogo.window.ViewWidget &&
-        !type.equals("GRAPHICS-WINDOW") &&
-        VersionHistory.olderThan13pre1(modelVersion)) {
-      y += ((org.nlogo.window.ViewWidget) viewWidget).getExtraHeight() +
-          ((org.nlogo.window.ViewWidget) viewWidget).controlStrip.getHeight();
-    }
     if (type.equals("GRAPHICS-WINDOW")) {
       // the graphics widget (and the command center) are special cases because
       // they are not recreated at load time, but reused
-      viewWidget.asWidget().load(strings, helper);
+      viewWidget.asWidget().load(strings);
       // in 3D we don't add the viewWidget to the interface panel
       // so don't worry about all the sizing junk ev 7/5/07
       java.awt.Container parent = viewWidget.asWidget().getParent();
@@ -285,7 +267,7 @@ strictfp class InterfacePanel
       Widget newGuy = null;
       newGuy = makeWidget(type, true);
       if (newGuy != null) {
-        newGuy.load(strings, helper);
+        newGuy.load(strings);
         enforceMinimumAndMaximumWidgetSizes(newGuy);
         addWidget(newGuy, x, y, false, true);
       }

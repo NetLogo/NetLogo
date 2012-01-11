@@ -198,7 +198,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_randomfloat number,number,OTPL,null,10,1,1
                      |_randomgamma number/number,number,OTPL,null,10,2,2
                      |_randomnormal number/number,number,OTPL,null,10,2,2
-                     |_randomorrandomfloat number,number,OTPL,null,10,1,1
                      |_randompoisson number,number,OTPL,null,10,1,1
                      |_randompxcor ,number,OTPL,null,10,0,0
                      |_randompycor ,number,OTPL,null,10,0,0
@@ -255,8 +254,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_usernewfile ,TRUE/FALSE or string,OTPL,null,10,0,0
                      |_useroneof anything/list,anything,OTPL,null,10,2,2
                      |_useryesorno anything,TRUE/FALSE,OTPL,null,10,1,1
-                     |_valuefrom agent/reporter block,anything,OTPL,null,10,2,2
-                     |_valuesfrom agentset/reporter block,list,OTPL,null,10,2,2
                      |_variance list,number,OTPL,null,10,1,1
                      |_with agentset,TRUE/FALSE block,agentset,OTPL,?,12,1,1
                      |_withmax agentset,number block,agentset,OTPL,?,12,1,1
@@ -338,7 +335,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_hidelink ,---L,null,0,0,0 *
                     |_hideturtle ,-T--,null,0,0,0 *
                     |_histogram list,OTPL,null,0,1,1
-                    |_histogramfrom agentset/number block,OTPL,null,0,2,2
                     |_home ,-T--,null,0,0,0 *
                     |_if TRUE/FALSE/command block,OTPL,null,0,2,2
                     |_ifelse TRUE/FALSE/command block/command block,OTPL,null,0,3,3

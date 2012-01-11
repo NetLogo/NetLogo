@@ -17,10 +17,6 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
   def tokenizeRobustly(source: String): Seq[Token] =
     doTokenize(source, false, false, "", false)
 
-  // for use by AutoConverter with org.nlogo.prim.dead - ST 2/20/08
-  def tokenizeAllowingRemovedPrims(source: String): Seq[Token] =
-    doTokenize(source, false, true, "", false);
-
   // and here's versions that throw CompilerException as soon as they hit a bad token - ST 2/20/08
   def tokenize(source: String): Seq[Token] =
     tokenize(source, "")

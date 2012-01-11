@@ -17,7 +17,6 @@ class DummyCompilerServices extends CompilerServices {
             "not a constant recognized by DummyCompilerServices", 0, s.size, "")
         }
     }
-  def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, modelVersion: String) = source
   def readNumberFromString(source: String) = source
   def checkReporterSyntax(source: String) { }
   def checkCommandSyntax(source: String) { }

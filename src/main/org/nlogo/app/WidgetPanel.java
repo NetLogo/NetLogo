@@ -592,22 +592,12 @@ public strictfp class WidgetPanel
   /// loading and saving
 
   public Widget loadWidget(String[] strings, final String modelVersion) {
-    Widget.LoadHelper helper =
-        new Widget.LoadHelper() {
-          public String version() {
-            return modelVersion;
-          }
-
-          public String convert(String source, boolean reporter) {
-            return workspace.autoConvert(source, true, reporter, modelVersion);
-          }
-        };
     String type = strings[0];
     int x = Integer.parseInt(strings[1]);
     int y = Integer.parseInt(strings[2]);
     Widget newGuy = makeWidget(type, true);
     if (newGuy != null) {
-      newGuy.load(strings, helper);
+      newGuy.load(strings);
       enforceMinimumAndMaximumWidgetSizes(newGuy);
       addWidget(newGuy, x, y, false, true);
     }

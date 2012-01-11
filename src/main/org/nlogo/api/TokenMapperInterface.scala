@@ -2,7 +2,6 @@
 
 package org.nlogo.api
 trait TokenMapperInterface {
-  def wasRemoved(s:String):Boolean
   def isCommand(s:String):Boolean
   def isKeyword(s:String):Boolean
   def isVariable(s:String):Boolean

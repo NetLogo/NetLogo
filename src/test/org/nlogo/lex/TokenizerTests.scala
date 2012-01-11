@@ -140,17 +140,6 @@ class TokenizerTests extends FunSuite {
     expect("Token(blue,CONSTANT,105.0)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
   }
-  // what about removed prims?
-  test("RemovedPrims") {
-    expect(TokenType.IDENT)(
-      tokenize("random-or-random-float").head.tyype)
-    expect(TokenType.IDENT)(
-      tokenize("histogram-from").head.tyype)
-    expect(TokenType.REPORTER)(
-      tokenizer.tokenizeAllowingRemovedPrims("random-or-random-float").head.tyype)
-    expect(TokenType.COMMAND)(
-      tokenizer.tokenizeAllowingRemovedPrims("histogram-from").head.tyype)
-  }
   // underscore stuff
   test("Empty1") {
     val tokens = tokenize("")

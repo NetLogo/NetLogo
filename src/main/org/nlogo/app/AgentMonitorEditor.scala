@@ -427,7 +427,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   override def save: String =
     throw new UnsupportedOperationException
   
-  override def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef =
+  override def load(strings: Array[String]): AnyRef =
     throw new UnsupportedOperationException
 
 }

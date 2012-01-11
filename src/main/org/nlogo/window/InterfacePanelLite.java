@@ -7,7 +7,6 @@ import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.RandomServices;
 import org.nlogo.api.Version;
-import org.nlogo.api.VersionHistory;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -308,29 +307,15 @@ public strictfp class InterfacePanelLite
   /// loading and saving
 
   public Widget loadWidget(String[] strings, final String modelVersion) {
-    Widget.LoadHelper helper =
-        new Widget.LoadHelper() {
-          public String version() {
-            return modelVersion;
-          }
-
-          public String convert(String source, boolean reporter) {
-            return compiler.autoConvert(source, true, reporter, modelVersion);
-          }
-        };
     try {
       String type = strings[0];
       int x = Integer.parseInt(strings[1]);
       int y = Integer.parseInt(strings[2]);
-      if (!type.equals("GRAPHICS-WINDOW") &&
-          VersionHistory.olderThan13pre1(modelVersion)) {
-        y += viewWidget.getAdditionalHeight();
-      }
       if (type.equals("GRAPHICS-WINDOW") || type.equals("VIEW")) {
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
         try {
-          viewWidget.asWidget().load(strings, helper);
+          viewWidget.asWidget().load(strings);
         } catch (RuntimeException ex) {
           org.nlogo.util.Exceptions.handle(ex);
         }
@@ -364,7 +349,7 @@ public strictfp class InterfacePanelLite
           org.nlogo.util.Exceptions.handle(ex);
         }
         if (newGuy != null) {
-          newGuy.load(strings, helper);
+          newGuy.load(strings);
           addWidget(newGuy, x, y);
         }
         return newGuy;

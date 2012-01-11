@@ -2,12 +2,11 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.Color.translateSavedColor
 import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
 
-  def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String) {
+  def parsePlot(widget: Array[String], plot: Plot) {
     val (plotLines, penLines) =
       widget.toList.span(_ != "PENS")
     plot.name(plotLines(5))
@@ -24,8 +23,8 @@ object PlotLoader {
         case Nil => // old style model, no new plot code. this is ok.
         case setup :: update :: Nil =>
           // the correct amount of plot code.
-          plot.setupCode = autoConvert(unEscapeString(setup))
-          plot.updateCode = autoConvert(unEscapeString(update))
+          plot.setupCode = unEscapeString(setup)
+          plot.updateCode = unEscapeString(update)
         case _ =>
           // 1, or 3 or more bits of code...error.
           sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
@@ -39,22 +38,19 @@ object PlotLoader {
       case _ => Nil
     }
 
-    def loadPens(penLines: Seq[String], translateColors: Boolean) {
+    def loadPens(penLines: Seq[String]) {
       plot.pens = Nil
       for (spec <- penLines.map(parsePen)) {
         val pen = plot.createPlotPen(spec.name, false,
-                                     autoConvert(spec.setupCode),
-                                     autoConvert(spec.updateCode))
+                                     spec.setupCode,
+                                     spec.updateCode)
         pen.defaultInterval = spec.interval
         pen.defaultMode = spec.mode
-        pen.defaultColor =
-          if (translateColors)
-            translateSavedColor(spec.color)
-          else spec.color
+        pen.defaultColor = spec.color
         pen.inLegend = spec.inLegend
       }
     }
-    loadPens(doubleCheckedPenLines, translateColors=false)
+    loadPens(doubleCheckedPenLines)
     plot.clear()
   }
 

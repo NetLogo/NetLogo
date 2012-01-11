@@ -87,9 +87,7 @@ import org.nlogo.api.TokenType;
 			return new Token( text , TokenType_KEYWORD , text.toUpperCase() ,
 							  yychar , yychar + text.length() , fileName ) ;
 		}
-		else if( tokenMapper.isCommand( text.toUpperCase() )
-				 && ( allowRemovedPrimitives ||
-					  ! tokenMapper.wasRemoved( text.toUpperCase() ) ) )
+		else if( tokenMapper.isCommand( text.toUpperCase() ) )
 		{
 			org.nlogo.api.TokenHolder instr = tokenMapper.getCommand( text ) ;
 			Token tok = new Token( text , TokenType_COMMAND , instr ,
@@ -97,9 +95,7 @@ import org.nlogo.api.TokenType;
 			instr.token( tok ) ;
 			return tok ;
 		}
-		else if( tokenMapper.isReporter( text )
-				 && ( allowRemovedPrimitives ||
-					  ! tokenMapper.wasRemoved( text.toUpperCase() ) ) )
+		else if( tokenMapper.isReporter( text ) )
 		{
 			org.nlogo.api.TokenHolder instr = tokenMapper.getReporter( text ) ;
 			Token tok = new Token( text , TokenType_REPORTER , instr ,

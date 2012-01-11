@@ -667,18 +667,12 @@ public abstract strictfp class AbstractWorkspace
     return source.replaceAll("\r\n", "\n");
   }
 
-  public String autoConvert(String source, boolean subprogram, boolean reporter, String modelVersion) {
-    return compiler().autoConvert
-        (source, subprogram, reporter, modelVersion,
-         this, true, world().program().is3D());
-  }
-
-  public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
+  public void loadWorld(String[] strings, WorldLoaderInterface worldInterface) {
     WorldLoader loader =
-        org.nlogo.api.Version.is3D(version)
+        org.nlogo.api.Version.is3D()
             ? new WorldLoader3D()
             : new WorldLoader();
-    loader.load(strings, version, worldInterface);
+    loader.load(strings, worldInterface);
   }
 
   public org.nlogo.util.MersenneTwisterFast auxRNG() {

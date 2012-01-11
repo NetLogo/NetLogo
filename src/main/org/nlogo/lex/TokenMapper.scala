@@ -11,7 +11,6 @@ object TokenMapper3D extends TokenMapper(true)
 
 class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
   /// public stuff
-  def wasRemoved(s: String) = removeds.contains(s.toUpperCase)
   def isCommand(s: String) = commands.contains(s.toUpperCase)
   def isKeyword(s: String) = keywords.contains(s.toUpperCase) || s.toUpperCase.endsWith("-OWN")
   def isVariable(s: String) = variables.contains(s.toUpperCase)
@@ -48,10 +47,6 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
     } yield primName.toUpperCase -> ("org.nlogo.prim." + className)
   private val commands = Map() ++ entries("C")
   private val reporters = Map() ++ entries("R")
-  private val removeds =
-    (for (
-      (primName, className) <- commands ++ reporters if className.startsWith("org.nlogo.prim.dead.")
-    ) yield primName).toSet
   /// private helper
   private def instantiate[T](name: String) =
     Class.forName(name).newInstance.asInstanceOf[T]

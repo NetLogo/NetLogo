@@ -445,7 +445,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     s.toString
   }
 
-  override def load(strings:Array[String], helper: Widget.LoadHelper) = {
+  override def load(strings:Array[String]) = {
     forever = strings(7) == "T"
     // ButtonType handles converting the saved button type name into a ButtonType object.
     if (10 < strings.length) buttonType = ButtonType(strings(10).toLowerCase)
@@ -461,7 +461,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     name = if(strings(5) != "NIL") strings(5) else ""
 
     val source = org.nlogo.api.ModelReader.restoreLines(strings(6))
-    wrapSource(helper.convert(if(source=="NIL") "" else source, false))
+    wrapSource(if(source=="NIL") "" else source)
 
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
     setSize(x2 - x1, y2 - y1)

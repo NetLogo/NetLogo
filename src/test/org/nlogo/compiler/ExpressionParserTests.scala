@@ -19,7 +19,7 @@ class ExpressionParserTests extends FunSuite {
     val program = new Program(is3D)
     implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
+      tokenizer.tokenize(wrappedSource), None,
       program, java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager)
       .parse(false)
@@ -213,66 +213,6 @@ class ExpressionParserTests extends FunSuite {
       "ReporterApp '5' " +
       "ReporterApp '[world-width]' " +
       "ReporterApp 'world-width' ")
-  }
-  test("testStartAndEndPositions3") {
-    testStartAndEnd("print values-from patches [5]",
-      "Statements 'print values-from patches [5]' " +
-      "Statement 'print values-from patches [5]' " +
-      "ReporterApp 'values-from patches [5]' " +
-      "ReporterApp 'patches' " +
-      "ReporterBlock '[5]' " +
-      "ReporterApp '5' ")
-  }
-  test("testStartAndEndPositions4") {
-    testStartAndEnd("print max values-from patches [5]",
-      "Statements 'print max values-from patches [5]' " +
-      "Statement 'print max values-from patches [5]' " +
-      "ReporterApp 'max values-from patches [5]' " +
-      "ReporterApp 'values-from patches [5]' " +
-      "ReporterApp 'patches' " +
-      "ReporterBlock '[5]' " +
-      "ReporterApp '5' ")
-  }
-  test("testStartAndEndPositions5") {
-    testStartAndEnd("print max values-from patches [5] > 15",
-      "Statements 'print max values-from patches [5] > 15' " +
-      "Statement 'print max values-from patches [5] > 15' " +
-      "ReporterApp 'max values-from patches [5] > 15' " +
-      "ReporterApp 'max values-from patches [5]' " +
-      "ReporterApp 'values-from patches [5]' " +
-      "ReporterApp 'patches' " +
-      "ReporterBlock '[5]' " +
-      "ReporterApp '5' " +
-      "ReporterApp '15' ")
-  }
-  test("testStartAndEndPositions6") {
-    testStartAndEnd("if max values-from patches [5] > 15 [ ]",
-      "Statements 'if max values-from patches [5] > 15 [ ]' " +
-      "Statement 'if max values-from patches [5] > 15 [ ]' " +
-      "ReporterApp 'max values-from patches [5] > 15' " +
-      "ReporterApp 'max values-from patches [5]' " +
-      "ReporterApp 'values-from patches [5]' " +
-      "ReporterApp 'patches' " +
-      "ReporterBlock '[5]' " +
-      "ReporterApp '5' " +
-      "ReporterApp '15' " +
-      "CommandBlock '[ ]' " +
-      "Statements '' ")
-  }
-  test("testStartAndEndPositions7") {
-    testStartAndEnd("if max values-from patches [5] > 15 [ die ]",
-      "Statements 'if max values-from patches [5] > 15 [ die ]' " +
-      "Statement 'if max values-from patches [5] > 15 [ die ]' " +
-      "ReporterApp 'max values-from patches [5] > 15' " +
-      "ReporterApp 'max values-from patches [5]' " +
-      "ReporterApp 'values-from patches [5]' " +
-      "ReporterApp 'patches' " +
-      "ReporterBlock '[5]' " +
-      "ReporterApp '5' " +
-      "ReporterApp '15' " +
-      "CommandBlock '[ die ]' " +
-      "Statements 'die' " +
-      "Statement 'die' ")
   }
   test("testStartAndEndPositions8") {
     testStartAndEnd("crt 1",

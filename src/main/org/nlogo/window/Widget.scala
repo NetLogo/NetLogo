@@ -10,10 +10,6 @@ import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler}
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 object Widget {
-  trait LoadHelper {
-    def version: String
-    def convert(source: String, reporter: Boolean): String
-  }
   val validWidgetTypes = List("BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUT", "MONITOR", "PLOT", "NOTE")
   def validWidgetType(name:String) = validWidgetTypes.contains(name)
 }
@@ -22,8 +18,6 @@ abstract class SingleErrorWidget extends Widget with SingleErrorHandler
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler
 
 abstract class Widget extends JPanel {
-
-  import Widget.LoadHelper
 
   def helpLink: Option[String] = None
   var originalFont: Font = null
@@ -40,7 +34,7 @@ abstract class Widget extends JPanel {
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
-  def load(strings: Array[String], helper: LoadHelper): Object
+  def load(strings: Array[String]): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)

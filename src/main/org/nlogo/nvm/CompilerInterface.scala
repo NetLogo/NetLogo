@@ -23,9 +23,6 @@ trait CompilerInterface {
   def checkReporterSyntax(source: String, program: Program, procedures: java.util.Map[String, Procedure],
                           extensionManager: ExtensionManager, parse: Boolean)
 
-  def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, version: String,
-                  workspace: AnyRef, ignoreErrors: Boolean, is3D: Boolean): String
-
   @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef
 

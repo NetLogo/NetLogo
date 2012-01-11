@@ -31,20 +31,8 @@ class LabManager(val workspace: GUIWorkspace,
     lastCompileAllWasSuccessful = false
   }
   def handle(e:LoadSectionEvent) {
-    // autoconversion of protocols from old NetLogo versions
-    def autoConvert(protocol:Protocol):Protocol = {
-      import protocol._
-      new Protocol(name,
-                   workspace.autoConvert(setupCommands, true, false, e.version),
-                   workspace.autoConvert(goCommands, true, false, e.version),
-                   workspace.autoConvert(finalCommands, true, false, e.version),
-                   repetitions, runMetricsEveryStep, timeLimit,
-                   workspace.autoConvert(exitCondition, true, true, e.version),
-                   metrics.map(workspace.autoConvert(_, true, true, e.version)),
-                   valueSets)
-    }
     if(e.section == ModelSection.BehaviorSpace && !e.text.trim.isEmpty)
-      protocols ++= new ProtocolLoader(workspace).loadAll(e.text).map(autoConvert)
+      protocols ++= new ProtocolLoader(workspace).loadAll(e.text)
   }
   def save =
     if(protocols.isEmpty) ""

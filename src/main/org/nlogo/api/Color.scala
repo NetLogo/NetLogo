@@ -355,30 +355,6 @@ object Color {
     result.toLogoList
   }
 
-  ///
-
-  private val ColorTranslations = "/system/color-translation.txt";
-  private val colorTranslations = {
-    val map = collection.mutable.HashMap[Double, Int]()
-    val lines = org.nlogo.util.Utils.getResourceAsStringArray(ColorTranslations)
-    for(line <- lines.map(_.trim).filter(_.nonEmpty).filter(_.head != '#')) {
-      val strs = line.split("\\s+")
-      val index = strs.head.toInt
-      map ++= (1 until strs.size).map(j => (strs(j).toDouble, index))
-    }
-    map
-  }
-
-  // this handles translation from pre-3.0 color palette to new palette
-  // input: ARGB
-  // output: ARGB
-  def translateSavedColor(color: Int): Int =
-    colorTranslations
-      .get(color.toDouble)
-      .map(_.intValue)
-      .map(org.nlogo.api.Color.getARGBByIndex)
-      .getOrElse(color)
-
   // this assumes that you have an RGB color that is actually one of the NetLogo colors
   def argbToColor(argb: Int): java.lang.Double =
     getClosestColorNumberByARGB(argb)

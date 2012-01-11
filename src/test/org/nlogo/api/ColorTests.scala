@@ -20,10 +20,4 @@ class ColorTests extends FunSuite {
                         0: java.lang.Double)
     expect((255 << 24))(Color.getARGBIntByRGBAList(list))
   }
-  test("translate") {
-    val color7 = Color.getARGBbyPremodulatedColorNumber(7 * 10 + 5)
-    // testing this line from color-translation.txt: 7 -16711738 -14967177
-    expect(color7)(Color.translateSavedColor(-14967177))
-    expect(color7)(Color.translateSavedColor(-16711738))
-  }
 }

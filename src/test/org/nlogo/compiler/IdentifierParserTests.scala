@@ -17,7 +17,7 @@ class IdentifierParserTests extends FunSuite {
     val program = new Program(interfaceGlobals, false)
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
+      tokenizer.tokenize(wrappedSource), None,
       program, java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager)
       .parse(false)

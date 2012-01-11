@@ -215,7 +215,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   }
 
   // LOADING AND SAVING
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  def load(strings: Array[String]): Object = {
     val min: String = ModelReader.restoreLines(strings(7))
     val max: String = ModelReader.restoreLines(strings(8))
     val v = strings(9).toDouble

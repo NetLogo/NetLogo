@@ -207,8 +207,8 @@ public abstract strictfp class WorldViewSettings
     }
   }
 
-  public Object load(String[] strings, String version) {
-    workspace.loadWorld(strings, version, this);
+  public Object load(String[] strings) {
+    workspace.loadWorld(strings, this);
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06
     // note that we clear turtles inside the load method so

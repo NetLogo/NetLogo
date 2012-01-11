@@ -27,13 +27,9 @@ class TokenMapperTests extends FunSuite {
   test("ColorConstant2") { expect(105d)(getConstant("BLUE")) }
   test("GrayAndGrey") { expect(getConstant("grey"))(getConstant("GRAY")) }
 
-  test("Removed1") { assert(!wasRemoved("random")) }
-  test("Removed2") { assert(wasRemoved("random-or-random-float")) }
-
   test("reporter1") { assert(isReporter("random")) }
   test("reporter2") { assert(!isReporter("fd")) }
   test("reporter3") { assert(!isReporter("gkhgkj")) }
-  test("reporter4") { assert(isReporter("random-or-random-float")) }
 
   test("command1") { assert(isCommand("fd")) }
   test("command2") { assert(isCommand("forward")) }

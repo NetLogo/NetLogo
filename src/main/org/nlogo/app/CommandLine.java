@@ -311,7 +311,7 @@ strictfp class CommandLine
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
+  public Object load(String[] strings) {
     throw new UnsupportedOperationException();
   }
 

@@ -102,7 +102,6 @@ C hatch _hatch
 C hide-link etc._hidelink
 C hide-turtle etc._hideturtle
 C histogram plot._histogram
-C histogram-from dead._histogramfrom
 C home etc._home
 C ht etc._hideturtle
 C if etc._if
@@ -401,7 +400,6 @@ R random-exponential etc._randomexponential
 R random-float etc._randomfloat
 R random-gamma etc._randomgamma
 R random-normal etc._randomnormal
-R random-or-random-float dead._randomorrandomfloat
 R random-poisson etc._randompoisson
 R random-pxcor etc._randompxcor
 R random-pycor etc._randompycor
@@ -464,8 +462,6 @@ R user-input gui._userinput
 R user-new-file gui._usernewfile
 R user-one-of gui._useroneof
 R user-yes-or-no? gui._useryesorno
-R value-from dead._valuefrom
-R values-from dead._valuesfrom
 R variance etc._variance
 R with _with
 R with-max etc._withmax

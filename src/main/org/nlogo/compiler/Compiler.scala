@@ -63,18 +63,6 @@ object Compiler extends CompilerInterface {
     }
   }
 
-  def autoConvert(source: String, subprogram: Boolean, reporter: Boolean, version: String, w: AnyRef, ignoreErrors: Boolean, is3D: Boolean): String = {
-    // well, this typecast is gruesome, but I really want to put CompilerInterface in
-    // api not nvm, and since AutoConverter2 is a grotesque hack anyway and can probably
-    // go away after 4.1, we'll just do it... - ST 2/23/09
-    val workspace = w.asInstanceOf[Workspace]
-    // AutoConverter1 handles the easy conversions
-    val result1 = new AutoConverter1()(tokenizer(is3D)).convert(source, subprogram, reporter, version)
-    // AutoConverter2 handles the hard ones that require parsing
-    new AutoConverter2(workspace, ignoreErrors)(tokenizer(is3D))
-      .convert(result1, subprogram, reporter, version)
-  }
-
   ///
 
   /// TODO: There are a few places below where we downcast api.World to agent.World in order to pass
