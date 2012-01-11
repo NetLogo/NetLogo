@@ -178,16 +178,6 @@ class Tabs(val workspace: GUIWorkspace,
   private def stripPath(filename: String): String =
     filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
 
-  val printAction = RichAction("print-current-tab") { _ =>
-    currentTab match {
-      case printable: org.nlogo.swing.Printable =>
-        try org.nlogo.swing.PrinterManager.print(printable, workspace.modelNameForDisplay)
-        catch {
-          case abortEx: java.awt.print.PrinterAbortException => org.nlogo.util.Exceptions.ignore(abortEx)
-        }
-    }
-  }
-
   /// LinkComponent stuff
 
   val linkComponents = new collection.mutable.ArrayBuffer[AnyRef]

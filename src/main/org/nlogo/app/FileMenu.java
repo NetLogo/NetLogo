@@ -38,8 +38,6 @@ public strictfp class FileMenu
     addMenuItem('S', new SaveAction());
     addMenuItem(new SaveAsAction());
     addSeparator();
-    addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
-    addSeparator();
     org.nlogo.swing.Menu exportMenu =
         new org.nlogo.swing.Menu(I18N.guiJ().get("menu.file.export"));
     exportMenu.addMenuItem(new ExportWorldAction());

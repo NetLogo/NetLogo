@@ -15,8 +15,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   with org.nlogo.window.Events.OutputEvent.Handler
   with org.nlogo.window.Events.ExportOutputEvent.Handler
   with org.nlogo.window.Events.Enable2DEvent.Handler
-  with Events.SwitchedTabsEvent.Handler
-  with org.nlogo.swing.Printable {
+  with Events.SwitchedTabsEvent.Handler {
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
@@ -98,21 +97,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     viewUpdatePanel.setVisible(e.enabled)
     viewUpdatePanel.handle(null)
   }
-
-  /// printing
-
-  // satisfy org.nlogo.swing.Printable
-  override def print(g: Graphics, pageFormat: java.awt.print.PageFormat,
-                     pageIndex: Int, printer: org.nlogo.swing.PrinterManager) =
-    // only allow printing on 1 page since printing graphics over multiple pages would require a lot
-    // more changes to the NetLogo source code --mag 10/23/02
-    if(pageIndex > 0) java.awt.print.Printable.NO_SUCH_PAGE
-    else {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.translate(pageFormat.getImageableX, pageFormat.getImageableY)
-      iP.printAll(g2d)
-      java.awt.print.Printable.PAGE_EXISTS
-    }
 
   /// command center stuff
 

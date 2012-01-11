@@ -8,7 +8,6 @@ import org.nlogo.workspace.AbstractWorkspace
 
 import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
-import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
 import org.nlogo.api.I18N
 
@@ -16,8 +15,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
   with Events.SwitchedTabsEvent.Handler
-  with org.nlogo.window.Events.CompiledEvent.Handler
-  with org.nlogo.swing.Printable {
+  with org.nlogo.window.Events.CompiledEvent.Handler {
 
   private val listener = new TextListener() {
     override def textValueChanged(e: TextEvent) {
@@ -129,13 +127,6 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   def select(startPos: Int, endPos: Int) { text.select(startPos, endPos) }
 
   def classDisplayName = "Code"
-
-  /// printing
-
-  // satisfy org.nlogo.swing.Printable
-  @throws(classOf[java.io.IOException])
-  def print(g: Graphics, pageFormat: PageFormat,pageIndex: Int, printer: org.nlogo.swing.PrinterManager): Int =
-    printer.printText(g, pageFormat, pageIndex, text.getText)
 
   def setIndenter(isSmart: Boolean) {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
