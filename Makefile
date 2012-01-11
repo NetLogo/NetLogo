@@ -67,6 +67,11 @@ EXTENSIONS=\
 	extensions/sound/sound.jar \
 	extensions/table/table.jar
 
+# The extensions want to build against the lite jar, but on the core branch we have
+# no lite jar, so we just build against a lite jar from a release.   For now, we
+# just hardcode a Mac-specific path. - ST 1/1/12
+NETLOGO_FOR_EXTENSIONS = /Applications/NetLogo\ 5.0RC6
+
 .PHONY: extensions
 extensions: $(EXTENSIONS)
 
@@ -82,7 +87,7 @@ $(EXTENSIONS): | NetLogo.jar
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
+	cd $(dir $@); NETLOGO="$(NETLOGO_FOR_EXTENSIONS)" JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
 .PHONY: repos
