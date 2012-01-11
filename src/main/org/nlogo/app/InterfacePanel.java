@@ -224,7 +224,7 @@ strictfp class InterfacePanel
 
   @Override
   public Widget loadWidget(String[] strings, final String modelVersion) {
-    return loadWidget(strings, modelVersion, 0, 0);
+    return loadWidget(strings, 0, 0);
   }
 
   // TODO: consider cleaning up this x and y business
@@ -232,7 +232,7 @@ strictfp class InterfacePanel
   // the regular loadWidget just uses the x and y from the string array
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
-  private Widget loadWidget(String[] strings, final String modelVersion, int x, int y) {
+  private Widget loadWidget(String[] strings, int x, int y) {
     String type = strings[0];
     if (x == 0) {
       x = Integer.parseInt(strings[1]);

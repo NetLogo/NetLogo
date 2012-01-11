@@ -8,20 +8,13 @@ import org.nlogo.awt.RowLayout;
 public strictfp class ViewControlStrip
     extends javax.swing.JPanel {
 
-  private final GUIWorkspace workspace;
   private final ViewWidget viewWidget;
 
   private static final int MIN_HEIGHT = 20;
-  // this is needed because we don't want the tooltips to overlap
-  // the graphics window itself, because that results in expensive
-  // repaints - ST 10/27/03
-  private static final java.awt.Point TOOL_TIP_OFFSET =
-      new java.awt.Point(0, -18);
 
   /// setup and layout
 
   ViewControlStrip(GUIWorkspace workspace, ViewWidget viewWidget) {
-    this.workspace = workspace;
     this.viewWidget = viewWidget;
     setBackground(InterfaceColors.GRAPHICS_BACKGROUND);
     java.awt.BorderLayout layout = new java.awt.BorderLayout();
