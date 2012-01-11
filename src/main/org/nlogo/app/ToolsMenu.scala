@@ -22,23 +22,9 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
   addSeparator() 
-  addMenuItem(I18N.gui("colorSwatches"), openColorDialog _)
   addMenuItem(I18N.gui("turtleShapesEditor"),
               () => app.turtleShapesManager.init(I18N.gui("turtleShapesEditor")))
   addMenuItem(I18N.gui("linkShapesEditor"),
               () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
   addMenuItem(I18N.gui("behaviorSpace"), 'B', true, () => app.labManager.show())
-
-  def openColorDialog() {
-    if(app.colorDialog == null) {     
-      app.colorDialog =
-        new org.nlogo.window.ColorDialog(app.frame, false) 
-      org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
-      app.colorDialog.showDialog()
-    }
-    else {
-      org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
-      app.colorDialog.setVisible(true)
-    }
-  }
 }
