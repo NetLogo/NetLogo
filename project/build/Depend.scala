@@ -49,7 +49,6 @@ trait Depend extends DefaultProject {
       "headless" -> List("shape","workspace"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
-      "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
       "lite" -> List("window"),
       "nvm" -> List("agent"),

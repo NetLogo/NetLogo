@@ -100,7 +100,6 @@ object App{
             new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
-    pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
     // HeadlessWorkspace uses picocontainer too, but it could get confusing
@@ -251,7 +250,6 @@ class App extends
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
   var colorDialog: ColorDialog = null
-  var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
 
   /**
@@ -346,9 +344,6 @@ class App extends
     pico.addComponent(new MenuBarFactory())
     pico.addComponent(new EditorFactory(workspace))
     
-    labManager = pico.getComponent(classOf[LabManagerInterface])
-    frame.addLinkComponent(labManager)
-
     tabs.init(Plugins.load(pico): _*)
 
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])

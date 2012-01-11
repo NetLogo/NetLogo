@@ -61,7 +61,6 @@ class ModelSaver(app: App) {
 
     // BehaviorSpace
     section {
-      buf ++= app.labManager.save
     }
 
     // reserved for HubNet client 
