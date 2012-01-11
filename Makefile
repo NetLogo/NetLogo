@@ -67,15 +67,17 @@ EXTENSIONS=\
 	extensions/sound/sound.jar \
 	extensions/table/table.jar
 
-# The extensions want to build against the lite jar, but on the core branch we have
-# no lite jar, so we just build against a lite jar from a release.   For now, we
-# just hardcode a Mac-specific path. - ST 1/1/12
-NETLOGO_FOR_EXTENSIONS = /Applications/NetLogo\ 5.0RC6
-
 .PHONY: extensions
 extensions: $(EXTENSIONS)
 
-$(EXTENSIONS): | NetLogo.jar
+# The extensions want to build against the lite jar, but on the core
+# branch we don't have the capability to build a lite jar, so we just
+# build the extensions against one from a release. - ST 1/1/12
+
+NetLogoLite.jar:
+	curl -s 'http://ccl.northwestern.edu/netlogo/5.0RC6/NetLogoLite.jar' -o NetLogoLite.jar
+
+$(EXTENSIONS): | NetLogoLite.jar
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
 	mkdir -p extensions
@@ -87,7 +89,7 @@ $(EXTENSIONS): | NetLogo.jar
 	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
 	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); NETLOGO="$(NETLOGO_FOR_EXTENSIONS)" JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
 
 # pull down versions core devel has rights to push to - ST 5/12/11
 .PHONY: repos
@@ -136,7 +138,7 @@ clean:
 	rm -f bin/*.class devel/depend.ddf
 	rm -rf cobertura.ser models/index.txt
 	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS)
+	rm -f $(JARS) NetLogoLite.jar
 	rm -rf tmp target
 	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
 	rm -f resources/*.properties
