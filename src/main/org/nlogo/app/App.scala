@@ -6,7 +6,6 @@ import org.nlogo.agent.{Agent, World3D, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
-import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
 import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -83,23 +82,6 @@ object App{
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
     pico.addComponent(classOf[ToolsMenu])
-    // Anything that needs a parent Frame, we need to use ComponentParameter
-    // and specify classOf[AppFrame], otherwise PicoContainer won't know which
-    // Frame to use - ST 6/16/09
-    // we need to give TurtleShapeManagerDialog and LinkShapeManagerDialog different
-    // ShapeSectionReader objects, so we use ConstantParameter for that - ST 6/16/09
-    pico.add(classOf[TurtleShapesManagerInterface],
-          "org.nlogo.shape.editor.TurtleShapeManagerDialog",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.TurtleShapes))))
-    pico.add(classOf[LinkShapesManagerInterface],
-          "org.nlogo.shape.editor.LinkShapeManagerDialog",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ConstantParameter(new ShapeSectionReader(ModelSection.LinkShapes))))
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
     // HeadlessWorkspace uses picocontainer too, but it could get confusing
@@ -312,16 +294,6 @@ class App extends
       }
     }
     pico.addComponent(new EditorColorizer(workspace))
-    pico.addComponent(new ShapeChangeListener() {
-      def shapeChanged(shape: Shape) {workspace.shapeChanged(shape)}
-      def shapeRemoved(shape: org.nlogo.api.Shape) {
-        if (shape.isInstanceOf[org.nlogo.shape.LinkShape]) {
-          workspace.world.linkBreedShapes.removeFromBreedShapes(shape.getName)
-        }
-        else workspace.world.turtleBreedShapes.removeFromBreedShapes(shape.getName)
-      }
-    })
-
     frame.addLinkComponent(workspace)
 
     dirtyMonitor = new DirtyMonitor(frame)
@@ -541,22 +513,10 @@ class App extends
             frame.getSize == frame.getPreferredSize
   }
 
-  private lazy val _turtleShapesManager: ShapesManagerInterface = {
-    pico.getComponent(classOf[TurtleShapesManagerInterface])
-  }
-  def turtleShapesManager: ShapesManagerInterface = _turtleShapesManager
-
-  private lazy val _linkShapesManager: ShapesManagerInterface = {
-    pico.getComponent(classOf[LinkShapesManagerInterface])
-  }
-  def linkShapesManager: ShapesManagerInterface = _linkShapesManager
-
   /**
    * Internal use only.
    */
   def handle(e:LoadEndEvent){
-    turtleShapesManager.reset()
-    linkShapesManager.reset()
     workspace.view.repaint()
 
     if(AbstractWorkspace.isApp){

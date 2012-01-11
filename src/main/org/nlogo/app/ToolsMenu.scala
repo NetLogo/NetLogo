@@ -21,9 +21,4 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("closeAllAgentMonitors"), app.workspace.closeAgentMonitors _)
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
-  addSeparator() 
-  addMenuItem(I18N.gui("turtleShapesEditor"),
-              () => app.turtleShapesManager.init(I18N.gui("turtleShapesEditor")))
-  addMenuItem(I18N.gui("linkShapesEditor"),
-              () => app.linkShapesManager.init(I18N.gui("linkShapesEditor")))
 }
