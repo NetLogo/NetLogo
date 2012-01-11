@@ -79,11 +79,6 @@ menu.tools.turtleShapesEditor = Editor de Formas para Tortugas
 menu.tools.linkShapesEditor = Editor de Formas para Enlaces
 menu.tools.behaviorSpace = Analizador de Comportamiento
 
-menu.zoom = Tamaño
-menu.zoom.larger = Más grande
-menu.zoom.normalSize = Tamaño normal
-menu.zoom.smaller = Más pequeño
-
 menu.tabs = Pestañas
 
 menu.help = Ayuda

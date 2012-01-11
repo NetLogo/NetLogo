@@ -17,7 +17,6 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   with ProceduresMenuTarget
   with Events.SwitchedTabsEvent.Handler
   with org.nlogo.window.Events.CompiledEvent.Handler
-  with org.nlogo.window.Events.ZoomedEvent.Handler
   with org.nlogo.swing.Printable {
 
   private val listener = new TextListener() {
@@ -104,15 +103,6 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   }
 
   private var originalFontSize = -1
-  private var zoomFactor = 1.0
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    if(zoomFactor != e.zoomFactor) {
-      zoomFactor = e.zoomFactor
-      if(originalFontSize == -1) originalFontSize = text.getFont.getSize
-      text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-      errorLabel.zoom(zoomFactor) 
-    }
-  }
   
   // Error code 
 

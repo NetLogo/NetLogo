@@ -79,11 +79,6 @@ menu.tools.turtleShapesEditor = Редактор форм черепах
 menu.tools.linkShapesEditor = Редактор форм связей
 menu.tools.behaviorSpace = Пространство поведения
 
-menu.zoom = Увеличение
-menu.zoom.larger = Больше
-menu.zoom.normalSize = Нормальный размер
-menu.zoom.smaller = Меньше
-
 menu.tabs = Табы
 
 menu.help = Помощь

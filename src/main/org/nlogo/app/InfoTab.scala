@@ -20,8 +20,7 @@ import java.io.File
 
 class InfoTab(attachModelDir: String => String) extends JPanel with
         DocumentListener with Printable with HyperlinkListener with
-        org.nlogo.window.Events.LoadSectionEvent.Handler with
-        org.nlogo.window.Events.ZoomedEvent.Handler {
+        org.nlogo.window.Events.LoadSectionEvent.Handler {
 
   val baseDocUrl = "docs/infotab.html"
 
@@ -143,16 +142,6 @@ class InfoTab(attachModelDir: String => String) extends JPanel with
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize
   private var originalFontSize = -1
-  private var zoomFactor = 1.0
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    if(zoomFactor != e.zoomFactor) {
-      zoomFactor = e.zoomFactor
-      if(originalFontSize == -1) { originalFontSize = textArea.getFont.getSize }
-      textArea.setFont(textArea.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-      editorPaneFontSize = StrictMath.ceil(InfoFormatter.defaultFontSize * zoomFactor).toInt
-      updateEditorPane()
-    }
-  }
 
   // the textArea will give us an outlandlishly large preferred size unless we restrain it
   override def getPreferredSize = new Dimension(100, 100)

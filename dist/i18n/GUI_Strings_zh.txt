@@ -79,11 +79,6 @@ menu.tools.turtleShapesEditor = 海龟形状编辑器
 menu.tools.linkShapesEditor = 连接形状编辑器
 menu.tools.behaviorSpace = 行为空间
 
-menu.zoom = 缩放
-menu.zoom.larger = 放大
-menu.zoom.normalSize = 正常尺寸
-menu.zoom.smaller = 缩小
-
 menu.tabs = 标签页
 
 menu.help = 帮助

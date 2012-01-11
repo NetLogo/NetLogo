@@ -25,8 +25,7 @@ public strictfp class WidgetPanel
     java.awt.event.MouseMotionListener,
     java.awt.event.FocusListener,
     org.nlogo.window.Events.WidgetEditedEvent.Handler,
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.ZoomedEvent.Handler {
+    org.nlogo.window.Events.LoadBeginEvent.Handler {
   static final int GRID_SNAP = 5;  // set the size of the grid, in pixels
 
   protected java.awt.Rectangle selectionRect;
@@ -581,12 +580,6 @@ public strictfp class WidgetPanel
 
   public void sliderEventOnReleaseOnly(boolean sliderEventOnReleaseOnly) {
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly;
-  }
-
-  public void handle(org.nlogo.window.Events.ZoomedEvent e) {
-    unselectWidgets();
-    zoomer.zoomWidgets(e.zoomFactor);
-    revalidate();
   }
 
   /// loading and saving
