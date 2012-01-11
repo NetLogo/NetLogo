@@ -99,7 +99,6 @@ object App{
     }
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
-    pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
     // for more than a fraction of a second, we want to initialize as
@@ -230,7 +229,6 @@ class App extends
   var dirtyMonitor:DirtyMonitor = null // accessed from FileMenu - ST 2/26/04
   var helpMenu:HelpMenu = null
   var fileMenu: FileMenu = null
-  var monitorManager:AgentMonitorManager = null
   var colorDialog: ColorDialog = null
   private val listenerManager = new NetLogoListenerManager
 
@@ -275,13 +273,9 @@ class App extends
         override def updateMode = _workspace.updateMode
       }
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
-        val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.getAgentClass(), a, radius)
       }
       override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
-        monitorManager.inspect(agentClass, agent, radius)
       }
-      override def closeAgentMonitors() { monitorManager.closeAll() }
       override def newRenderer: RendererInterface = {
         // yikes, it's really ugly that we do this stuff
         // way inside here (should be top level). not sure
@@ -298,9 +292,6 @@ class App extends
 
     dirtyMonitor = new DirtyMonitor(frame)
     frame.addLinkComponent(dirtyMonitor)
-
-    monitorManager = pico.getComponent(classOf[AgentMonitorManager])
-    frame.addLinkComponent(monitorManager)
 
     _tabs = pico.getComponent(classOf[Tabs])
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
@@ -477,8 +468,8 @@ class App extends
    * Internal use only.
    */
   def handle(e: Events.SwitchedTabsEvent) {
-    if(e.newTab == tabs.interfaceTab){ monitorManager.showAll(); frame.toFront() }
-    else if(e.oldTab == tabs.interfaceTab) monitorManager.hideAll()
+    if(e.newTab == tabs.interfaceTab)
+      frame.toFront()
   }
 
   /**

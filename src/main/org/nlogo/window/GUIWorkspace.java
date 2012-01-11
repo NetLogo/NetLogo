@@ -874,8 +874,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// agents
 
-  public abstract void closeAgentMonitors();
-
   public abstract void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
 
   public void inspectAgent(Class<? extends Agent> agentClass) {

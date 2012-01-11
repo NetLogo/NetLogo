@@ -9,7 +9,6 @@ import javax.swing.{JScrollPane, ScrollPaneConstants, Action, ImageIcon, Abstrac
 import java.awt.{Graphics2D, Graphics, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, BorderLayout}
 
 class InterfaceTab(workspace: GUIWorkspace,
-                   monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
   with org.nlogo.window.Events.LoadBeginEvent.Handler
   with org.nlogo.window.Events.OutputEvent.Handler
@@ -54,7 +53,6 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }, BorderLayout.NORTH)
   }
-  org.nlogo.swing.Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
