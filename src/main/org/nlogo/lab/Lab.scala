@@ -3,7 +3,7 @@
 package org.nlogo.lab
 
 import org.nlogo.api.LogoException
-import org.nlogo.nvm.{CompilerInterface,DefaultCompilerServices,EngineException,LabInterface,Workspace}
+import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
 // This is used when running headless. - ST 3/3/09
 

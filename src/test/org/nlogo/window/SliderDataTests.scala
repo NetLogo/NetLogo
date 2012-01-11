@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import org.scalacheck.Prop._
 import org.scalatest.PropSpec
 import org.scalatest.prop.PropertyChecks
 import org.scalacheck.{ Arbitrary, Gen }

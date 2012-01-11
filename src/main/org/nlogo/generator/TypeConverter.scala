@@ -6,7 +6,7 @@ import org.objectweb.asm
 import asm.Opcodes._
 import asm.{ Label, MethodVisitor }
 import org.nlogo.{ api, nvm }
-import api.{ CompilerException, Token }
+import api.CompilerException
 import nvm.{ ArgumentTypeException, Instruction }
 
 private object TypeConverter {

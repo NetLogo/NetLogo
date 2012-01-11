@@ -2,12 +2,10 @@
 
 package org.nlogo.app;
 
-import java.awt.Dimension;
-
 import org.nlogo.window.MouseMode;
 import org.nlogo.window.Widget;
 
-import javax.swing.*;
+import java.awt.Dimension;
 
 // public for widget extension - ST 6/12/08
 public strictfp class WidgetWrapper

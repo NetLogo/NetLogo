@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.List;
-
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Shape;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
+
+import java.util.List;
 
 public final strictfp class _shapes
     extends Reporter {

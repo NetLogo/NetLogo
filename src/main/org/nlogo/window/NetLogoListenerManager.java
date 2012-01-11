@@ -2,15 +2,15 @@
 
 package org.nlogo.window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.api.NetLogoListener;
 import org.nlogo.window.Events.AddJobEvent;
 import org.nlogo.window.Events.BeforeLoadEvent;
 import org.nlogo.window.Events.CompiledEvent;
 import org.nlogo.window.Events.InterfaceGlobalEvent;
 import org.nlogo.window.Events.JobRemovedEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public strictfp class NetLogoListenerManager
     implements

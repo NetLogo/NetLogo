@@ -4,8 +4,8 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Reporter;
 
 /**
  * A reporter that checks the syntax of NetLogo statements. This compiles code

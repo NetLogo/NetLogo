@@ -2,11 +2,11 @@
 
 package org.nlogo.agent;
 
-import java.util.Map;
-
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.WorldDimensions3D;
+
+import java.util.Map;
 
 public strictfp class Importer3D
     extends Importer {

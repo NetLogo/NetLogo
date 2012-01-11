@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ CompilerException, FileIO, Version, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTest

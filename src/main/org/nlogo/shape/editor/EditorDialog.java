@@ -2,10 +2,6 @@
 
 package org.nlogo.shape.editor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-
 import org.nlogo.api.I18N;
 import org.nlogo.api.Shape;
 import org.nlogo.shape.Circle;
@@ -14,6 +10,10 @@ import org.nlogo.shape.Line;
 import org.nlogo.shape.Polygon;
 import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 strictfp class EditorDialog
     extends javax.swing.JDialog

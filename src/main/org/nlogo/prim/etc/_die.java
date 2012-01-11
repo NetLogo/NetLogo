@@ -4,8 +4,8 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
-import org.nlogo.nvm.Command;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Command;
 
 public final strictfp class _die
     extends Command {

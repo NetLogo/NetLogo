@@ -4,7 +4,6 @@ package org.nlogo.prim.hubnet
 
 import org.nlogo.api.{ Dump, LogoList, Syntax, TypeNames }
 import org.nlogo.nvm.{ ArgumentTypeException, Command, Context, EngineException }
-import scala.collection.JavaConversions.asScalaBuffer
 
 class _hubnetsend extends Command {
   override def syntax =

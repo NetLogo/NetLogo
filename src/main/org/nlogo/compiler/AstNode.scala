@@ -8,10 +8,8 @@ package org.nlogo.compiler
 
 // see also AstVisitor.scala which implements the Visitor pattern on these AST's.
 
-import CompilerExceptionThrowers.exception
-import org.nlogo.api.{ CompilerException, Syntax }
+import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Procedure, Command, Reporter, Instruction }
-import org.nlogo.api.CompilerException
 
 /**
  * An interface representing a node in the NetLogo abstract syntax tree (AKA parse tree, in

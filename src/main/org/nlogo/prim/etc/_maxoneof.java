@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Reporter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final strictfp class _maxoneof
     extends Reporter {

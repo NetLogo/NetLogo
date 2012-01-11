@@ -2,7 +2,7 @@
 
 package org.nlogo.awt
 
-import java.awt.{ Component, Container, Frame, Window }
+import java.awt.{ Component, Frame, Window }
 
 object Hierarchy {
 

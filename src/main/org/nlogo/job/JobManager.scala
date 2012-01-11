@@ -3,7 +3,6 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.api.{LogoException, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List

@@ -7,12 +7,12 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ JobOwner, Version, RendererInterface, Perspective,
+import org.nlogo.api.{ Version, RendererInterface,
                        WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.nvm.{ CompilerResults, LabInterface,
+import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico

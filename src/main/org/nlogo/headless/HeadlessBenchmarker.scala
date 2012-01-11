@@ -1,9 +1,8 @@
 // (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
-import org.nlogo.api.{CompilerException,LogoException,Version}
+import org.nlogo.api.Version
 import org.nlogo.workspace.Benchmarker
-import org.nlogo.util.SysInfo
 object HeadlessBenchmarker {
   def main(argv:Array[String]) {
     Main.setHeadlessProperty()

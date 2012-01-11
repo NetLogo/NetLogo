@@ -97,12 +97,6 @@
 
 package org.nlogo.awt;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 import javax.media.Buffer;
 import javax.media.ConfigureCompleteEvent;
 import javax.media.Controller;
@@ -128,6 +122,11 @@ import javax.media.protocol.FileTypeDescriptor;
 import javax.media.protocol.PullBufferDataSource;
 import javax.media.protocol.PullBufferStream;
 import javax.media.util.ImageToBuffer;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Encodes a sequence of BufferedImages into a QuickTime movie.
