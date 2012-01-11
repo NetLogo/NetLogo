@@ -72,12 +72,13 @@ extensions: $(EXTENSIONS)
 
 # The extensions want to build against the lite jar, but on the core
 # branch we don't have the capability to build a lite jar, so we just
-# build the extensions against one from a release. - ST 1/1/12
+# build the extensions against one from a release. (Exception: profiler
+# extension builds against NetLogo.jar.) - ST 1/1/12
 
 NetLogoLite.jar:
 	curl -s 'http://ccl.northwestern.edu/netlogo/5.0RC6/NetLogoLite.jar' -o NetLogoLite.jar
 
-$(EXTENSIONS): | NetLogoLite.jar
+$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	mkdir -p models
 	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
 	mkdir -p extensions
