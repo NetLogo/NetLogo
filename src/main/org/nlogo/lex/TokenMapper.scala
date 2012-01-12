@@ -40,10 +40,6 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
       if !line.startsWith("#")
       val Array(tyype, primName, className) = line.split(" ")
       if tyype == entryType
-      // if a 3d version of the prim exists and we got to this point it
-      // should override the 2d version. ev 12/11/06  note the overriding
-      // 3d version must come after the 2d version in tokens.txt - ST 12/19/08
-      if is3D || !className.startsWith("threed.")
     } yield primName.toUpperCase -> ("org.nlogo.prim." + className)
   private val commands = Map() ++ entries("C")
   private val reporters = Map() ++ entries("R")

@@ -29,7 +29,7 @@ private object BreedIdentifierHandler {
                 case s:String => s == "UNDIRECTED-LINK-BREED" } ) 
   private val handlers2D = handlers(false)
   private val handlers3D = handlers(true)
-  private def handlers(is3D:Boolean) = List(
+  private def handlers(is3D: Boolean) = List(
     // prims for turtle breeds
     turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
     turtle("CREATE-ORDERED-*", COMMAND, false, classOf[_createorderedturtles]),
@@ -40,11 +40,7 @@ private object BreedIdentifierHandler {
     turtle("*-ON", REPORTER, false,classOf[_breedon]),
     turtle("*", REPORTER, false, classOf[_breed]),
     turtle("*", REPORTER, true, classOf[_breedsingular]),
-    // if we're in 3D point to the 3D version since
-    // the syntax is different in 3D ev 12/11/06
-    turtle("*-AT", REPORTER, false,
-           if(is3D) classOf[org.nlogo.prim.threed._breedat]
-           else classOf[_breedat]),
+    turtle("*-AT", REPORTER, false, classOf[_breedat]),
     // prims for link breeds
     directedLink("*", REPORTER, true, classOf[_linkbreedsingular]),
     undirectedLink("*", REPORTER, true, classOf[_linkbreedsingular]),

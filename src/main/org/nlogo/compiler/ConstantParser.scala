@@ -168,12 +168,6 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
         parseEnd(tokens),
         world.links)
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim.threed._patch]) {
-      val (pxcor,pycor,pzcor) = (parsePcor(tokens),parsePcor(tokens),parsePcor(tokens))
-      try { world.asInstanceOf[World3D].getPatchAt(pxcor,pycor,pzcor) }
-      catch{ case _:org.nlogo.api.AgentException =>
-               exception("Invalid patch coordinates ( " + pxcor + " , " + pycor +  " , " + pzcor + " ) " ,token) }
-    }
     else exception(BAD_AGENT,token)
   }
   /**
@@ -315,7 +309,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
       }
       agentset
     }
-    else if(List(classOf[_turtle],classOf[_patch],classOf[_link],classOf[threed._patch])
+    else if(List(classOf[_turtle],classOf[_patch],classOf[_link])
             .contains(token.value.getClass)) {
       // we have a single agent, turtle patch or link
       val result = parseConstantAgent(token,tokens)

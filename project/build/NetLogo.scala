@@ -86,9 +86,8 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val preview = checksumsAndPreviewsTask("--preview")
   lazy val previews = checksumsAndPreviewsTask("--previews")
 
-  // I think these two would be better implemented using
+  // I think this would be better implemented using
   // code.google.com/p/simple-build-tool/wiki/Properties - ST 1/27/11
-  lazy val threed = task {System.setProperty("org.nlogo.is3d", "true"); None}
   lazy val nogen = task {System.setProperty("org.nlogo.noGenerator", "true"); None}
 
   lazy val go =

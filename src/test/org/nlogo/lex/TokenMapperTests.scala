@@ -41,8 +41,4 @@ class TokenMapperTests extends FunSuite {
     expect("org.nlogo.prim._patch")(
       TokenMapper2D.getReporter("patch").getClass.getName)
   }
-  test("patch3D") {
-    expect("org.nlogo.prim.threed._patch")(
-      TokenMapper3D.getReporter("patch").getClass.getName)
-  }
 }

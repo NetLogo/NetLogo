@@ -111,16 +111,3 @@ class ConstantParserTests extends FunSuite with MockSuite {
   }
 
 }
-
-class ConstantParser3DTests extends FunSuite {
-  val world = new org.nlogo.agent.World3D
-  world.createPatches(-10, 10, -10, 10, -10, 10)
-  world.realloc()
-  def toConstant(input: String): Object =
-    new ConstantParser(world, null).getConstantValue(Compiler.Tokenizer3D.tokenize(input).iterator)
-  test("parsePatch") {
-    val result = toConstant("{patch 1 3 4}").asInstanceOf[Patch]
-    expect("(patch 1 3 4)")(
-      Dump.logoObject(result))
-  }
-}
