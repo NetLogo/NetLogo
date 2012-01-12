@@ -54,11 +54,7 @@ public strictfp class ViewWidget
     setLayout(null);
     add(view);
     add(controlStrip);
-    if (org.nlogo.api.Version.is3D()) {
-      settings = new WorldViewSettings3D(workspace, this);
-    } else {
-      settings = new WorldViewSettings2D(workspace, this);
-    }
+    settings = new WorldViewSettings2D(workspace, this);
   }
 
   private final WorldViewSettings settings;

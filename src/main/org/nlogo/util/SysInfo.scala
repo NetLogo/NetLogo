@@ -37,8 +37,6 @@ object SysInfo
       " MB, max = " + max +
       " MB"
   }
-  var getJOGLInfoString = "JOGL: (3D View not initialized)" 
-  var getGLInfoString = "OpenGL Graphics: (3D View not initialized)" 
   def getBrowserInfoString =
     try {
       var nulls = 0

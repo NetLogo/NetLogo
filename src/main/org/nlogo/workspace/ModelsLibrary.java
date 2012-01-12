@@ -201,8 +201,7 @@ public strictfp class ModelsLibrary {
       if (child.isFolder()) {
         scanDirectory(file, parent, child, exclusive);
       } else {
-        if (fileName.toUpperCase().endsWith(".NLOGO") ||
-            fileName.toUpperCase().endsWith(".NLOGO3D")) {
+        if (fileName.toUpperCase().endsWith(".NLOGO")) {
           parent.add(child);
         }
       }
@@ -232,9 +231,7 @@ public strictfp class ModelsLibrary {
       s = s.toUpperCase();
       return s.endsWith(".NLOGO")
           ? s.substring(0, s.length() - 6)
-          : (s.endsWith(".NLOGO3D")
-          ? s.substring(0, s.length() - 8)
-          : s);
+          : s;
     }
   }
 
@@ -309,9 +306,7 @@ public strictfp class ModelsLibrary {
     if (reference.endsWith(".nlogo")) {
       return reference.substring(0, reference.lastIndexOf(".nlogo"));
     }
-    if (reference.endsWith(".nlogo3d")) {
-      return reference.substring(0, reference.lastIndexOf(".nlogo3d"));
-    } else {
+    else {
       return reference;
     }
   }

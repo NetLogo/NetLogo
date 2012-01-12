@@ -37,11 +37,9 @@ class TestChecksums extends FunSuite with SlowTest {
 }
 
 object TestChecksums extends ChecksumTester(println _) {
-  def checksums = {
-    val path = if (Version.is3D) "models/test/checksums3d.txt"
-               else "models/test/checksums.txt"
-    ChecksumsAndPreviews.Checksums.load(path)
-  }
+
+  def checksums =
+    ChecksumsAndPreviews.Checksums.load("models/test/checksums.txt")
 
   def main(args: Array[String]) {
 

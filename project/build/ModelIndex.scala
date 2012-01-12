@@ -23,7 +23,7 @@ trait ModelIndex extends DefaultProject {
   }
   private def writeIndex(modelsPath: Path, w: java.io.PrintWriter) {
     import w.println
-    val command = "find " + modelsPath.toString + " -name test -prune -o -name *.nlogo -print -o -name *.nlogo3d -print"
+    val command = "find " + modelsPath.toString + " -name test -prune -o -name *.nlogo -print"
     val paths = (command).lines_!
     def infoTab(path: String) =
       io.Source.fromFile(path).mkString.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)

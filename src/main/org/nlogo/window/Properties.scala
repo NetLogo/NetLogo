@@ -81,33 +81,15 @@ object Properties {
     P("frameRate", P.StrictlyPositiveDouble,
       I18N.gui("viewSettings.2D.frameRate"), I18N.gui("viewSettings.2D.frameRate.info"))
   )
-  val view3D = javaList(
-    P("smooth", P.Boolean, I18N.gui("viewSettings.3D.smooth"), I18N.gui("viewSettings.3D.affects")),
-    P("wireframe", P.Boolean, I18N.gui("viewSettings.3D.wireFrame"), I18N.gui("viewSettings.3D.affects")),
-    P("dualView", P.Boolean, I18N.gui("viewSettings.3D.dualView"))
-  )
   val wrap2D = javaList(
     P("wrappingX", P.Boolean, I18N.gui("viewSettings.2D.wrapX"), setLive = true),
     P("wrappingY", P.Boolean, I18N.gui("viewSettings.2D.wrapY"), setLive = true)
-  )
-  val wrap3D = javaList(
-    P("wrappingX", P.Boolean, I18N.gui("viewSettings.3D.wrapX"), enabled = false, setLive = true),
-    P("wrappingY", P.Boolean, I18N.gui("viewSettings.3D.wrapY"), enabled = false, setLive = true),
-    P("wrappingZ", P.Boolean, I18N.gui("viewSettings.3D.wrapZ"), enabled = false, setLive = true)
   )
   val dims2D = javaList(
     P("minPxcor", P.NegativeInteger, "min-pxcor", I18N.gui("viewSettings.2D.minPxcor"), setLive = true),
     P("maxPxcor", P.PositiveInteger, "max-pxcor", I18N.gui("viewSettings.2D.maxPxcor"), setLive = true),
     P("minPycor", P.NegativeInteger, "min-pycor", I18N.gui("viewSettings.2D.minPycor"), setLive = true),
     P("maxPycor", P.PositiveInteger, "max-pycor", I18N.gui("viewSettings.2D.maxPycor"), setLive = true)
-  )
-  val dims3D = javaList(
-    P("minPxcor", P.NegativeInteger, "min-pxcor", I18N.gui("viewSettings.3D.minPxcor"), setLive = true),
-    P("maxPxcor", P.PositiveInteger, "max-pxcor", I18N.gui("viewSettings.3D.maxPxcor"), setLive = true),
-    P("minPycor", P.NegativeInteger, "min-pycor", I18N.gui("viewSettings.3D.minPycor"), setLive = true),
-    P("maxPycor", P.PositiveInteger, "max-pycor", I18N.gui("viewSettings.3D.maxPycor"), setLive = true),
-    P("minPzcor", P.NegativeInteger, "min-pzcor", I18N.gui("viewSettings.3D.minPzcor"), setLive = true),
-    P("maxPzcor", P.PositiveInteger, "max-pzcor", I18N.gui("viewSettings.3D.maxPzcor"), setLive = true)
   )
 
 }

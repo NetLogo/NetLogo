@@ -320,10 +320,6 @@ public abstract strictfp class AbstractWorkspace
     if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
       str = str.substring(0, str.length() - 6);
     }
-    suffixIndex = str.lastIndexOf(".nlogo3d");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
-      str = str.substring(0, str.length() - 8);
-    }
     return str;
   }
 

@@ -308,10 +308,6 @@ class App extends
     
     tabs.init(Plugins.load(pico): _*)
 
-    val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
-    workspace.init(viewManager)
-    frame.addLinkComponent(viewManager)    
-
     fileMenu = pico.getComponent(classOf[FileMenu])
     val menuBar = new JMenuBar(){
       add(fileMenu)

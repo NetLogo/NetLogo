@@ -354,7 +354,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_let anything/anything,OTPL,null,0,2,2
                     |_life ,O---,null,0,0,0 *
                     |_linkcode ,---L,null,0,0,0
-                    |_load3Dshapes string,O---,null,0,1,1 *
                     |_loop command block,OTPL,null,0,1,1
                     |_magicopen string,O---,null,0,1,1 *
                     |_makepreview ,O---,null,0,0,0

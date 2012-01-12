@@ -41,7 +41,6 @@ public strictfp class WorldViewSettings2D
     }
     gWidget.view.dirty();
     gWidget.view.repaint();
-    workspace.glView.editFinished();
     return true;
   }
 

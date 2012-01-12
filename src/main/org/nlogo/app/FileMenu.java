@@ -71,7 +71,7 @@ public strictfp class FileMenu
   ///
 
   private String modelSuffix() {
-    return org.nlogo.api.Version.is3D() ? "nlogo3d" : "nlogo";
+    return "nlogo";
   }
 
   private String emptyModelPath() {

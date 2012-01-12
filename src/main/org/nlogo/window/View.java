@@ -44,8 +44,7 @@ public strictfp class View
   }
 
   public boolean displayOn() {
-    return (!workspace.glView.isFullscreen() &&
-        workspace.world.displayOn() &&
+    return (workspace.world.displayOn() &&
         workspace.displaySwitchOn());
   }
 

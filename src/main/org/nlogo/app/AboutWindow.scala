@@ -101,15 +101,11 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
   }
 
   private def refreshSystemText() {
-    val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n\n" +
-            SysInfo.getJOGLInfoString + "\n" +SysInfo.getGLInfoString + "\n"
+    val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n"
     if (!newGraphicsInfo.equals(graphicsInfo)) {
       val start = system.getSelectionStart()
       val end = system.getSelectionEnd()
-      system.setText(staticInfo
-              + SysInfo.getMemoryInfoString + "\n\n"
-              + SysInfo.getJOGLInfoString + "\n"
-              + SysInfo.getGLInfoString + "\n")
+      system.setText(staticInfo + SysInfo.getMemoryInfoString + "\n")
       graphicsInfo = newGraphicsInfo
       system.setSelectionStart(start)
       system.setSelectionEnd(end)

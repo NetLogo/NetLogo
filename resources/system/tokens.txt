@@ -118,7 +118,6 @@ C layout-spring etc._layoutspring
 C layout-tutte etc._layouttutte
 C left etc._left
 C let _let
-C load-shapes-3D gui._load3Dshapes
 C loop etc._loop
 C lt etc._left
 C move-to etc._moveto

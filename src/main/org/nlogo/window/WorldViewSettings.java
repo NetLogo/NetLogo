@@ -98,12 +98,9 @@ public abstract strictfp class WorldViewSettings
     modelProperties.addAll(Properties.model());
   }
 
-  public void refreshViewProperties(boolean threedView) {
+  public void refreshViewProperties() {
     viewProperties.clear();
     addViewProperties();
-    if (threedView) {
-      viewProperties.addAll(Properties.view3D());
-    }
   }
 
   public void addCornerChoices() {
@@ -217,35 +214,6 @@ public abstract strictfp class WorldViewSettings
     workspace.world.clearPatches();
     workspace.world.displayOn(true);
     return this;
-  }
-
-  public boolean smooth() {
-    return workspace.glView.antiAliasingOn();
-  }
-
-  public void smooth(boolean smooth) {
-    if (workspace.glView.antiAliasingOn() != smooth) {
-      workspace.glView.antiAliasingOn(smooth);
-    }
-  }
-
-  public boolean wireframe() {
-    return workspace.glView.wireframeOn();
-  }
-
-  public void wireframe(boolean on) {
-    if (on != wireframe()) {
-      workspace.glView.wireframeOn_$eq(on);
-      workspace.glView.repaint();
-    }
-  }
-
-  public boolean dualView() {
-    return workspace.dualView();
-  }
-
-  public void dualView(boolean on) {
-    workspace.dualView(on);
   }
 
   public scala.Option<String> helpLink() {

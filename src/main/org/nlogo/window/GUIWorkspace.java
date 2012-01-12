@@ -52,7 +52,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public final ViewWidget viewWidget;
   public final View view;
   private WidgetContainer widgetContainer = null;
-  public GLViewManagerInterface glView = null;
   public ViewManager viewManager = new ViewManager();
   public final NetLogoListenerManager listenerManager;
 
@@ -125,10 +124,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         org.nlogo.util.Exceptions.ignore(ex);
       }
     }
-  }
-
-  public void init(GLViewManagerInterface glView) {
-    this.glView = glView;
   }
 
   private double _frameRate = 30.0;
@@ -419,63 +414,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     viewManager.getPrimary().displaySwitch(on);
   }
 
-  public void set2DViewEnabled(boolean enabled) {
-    if (enabled) {
-      displaySwitchOn(glView.displayOn());
-
-      viewManager.setPrimary(view);
-      viewManager.remove(glView);
-
-      view.dirty();
-      if (glView.displayOn()) {
-        view.thaw();
-      }
-      if ((world.observer().perspective() != PerspectiveJ.FOLLOW()) &&
-          (world.observer().perspective() != PerspectiveJ.RIDE())) {
-        world.observer().home();
-      }
-      viewWidget.setVisible(true);
-      try {
-        viewWidget.displaySwitch.setOn(glView.displaySwitch());
-      } catch (IllegalStateException e) {
-        org.nlogo.util.Exceptions.ignore(e);
-      }
-    } else {
-      viewManager.setPrimary(glView);
-
-      if (!dualView) {
-        viewManager.remove(view);
-        view.freeze();
-      }
-      glView.displaySwitch(viewWidget.displaySwitch.isSelected());
-      viewWidget.setVisible(dualView);
-    }
-    view.renderPerspective = enabled;
-    viewWidget.settings().refreshViewProperties(!enabled);
-    new org.nlogo.window.Events.Enable2DEvent(enabled).raise(this);
-  }
-
-  private boolean dualView;
-
-  public boolean dualView() {
-    return dualView;
-  }
-
-  public void dualView(boolean on) {
-    if (on != dualView) {
-      dualView = on;
-      if (dualView) {
-        view.thaw();
-        viewManager.setSecondary(view);
-      } else {
-        view.freeze();
-        viewManager.remove(view);
-      }
-      viewWidget.setVisible(on);
-    }
-  }
-
-
   // when we've got two views going the mouse reporters should
   // be smart about which view we might be in and return something that makes
   // sense ev 12/20/07
@@ -669,43 +607,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     world.observer().resetPerspective();
     updateManager().reset();
     updateManager().speed_$eq(0);
-    // even when we're in 3D close the window first
-    // then reopen it as the shapes won't get loaded
-    // properly otherwise ev 2/24/06
-    if (glView != null) {
-      glView.close();
-    }
-    if (world.program().is3D()) {
-      open3DView();
-    }
-
     try {
       evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, Observer.class),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);
-    }
-  }
-
-  private void open3DView() {
-    try {
-      glView.open();
-      set2DViewEnabled(false);
-    } catch (JOGLLoadingException jlex) {
-      String message = jlex.getMessage();
-      org.nlogo.swing.Utils.alert
-          ("3D View", message, "" + jlex.getCause(), I18N.guiJ().get("common.buttons.continue"));
-      switchTo3DViewAction.setEnabled(false);
-    }
-  }
-
-  public void addCustomShapes(String filename)
-      throws java.io.IOException,
-      org.nlogo.shape.InvalidShapeDescriptionException {
-    try {
-      glView.addCustomShapes(fileManager.attachPrefix(filename));
-    } catch (java.net.MalformedURLException ex) {
-      throw new IllegalStateException(ex);
     }
   }
 
@@ -1191,13 +1097,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     setModelPath(newModelPath);
     setModelType(ModelTypeJ.NORMAL());
   }
-
-  public final javax.swing.Action switchTo3DViewAction =
-      new javax.swing.AbstractAction("3D View") {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-          open3DView();
-        }
-      };
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
     if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&

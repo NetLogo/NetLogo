@@ -30,7 +30,6 @@ window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
-window.Load3DShapes - String filename
 window.LoadBegin
 window.LoadEnd
 window.LoadSection - String version - Object section - String[] lines - String text

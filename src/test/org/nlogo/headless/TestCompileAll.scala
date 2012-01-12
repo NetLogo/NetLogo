@@ -29,10 +29,7 @@ class TestCompileAll extends FunSuite with SlowTest{
         pathMatches("QUICKTIME EXTENSION") ||
         pathMatches("HUBNET ACTIVITIES") ||
         path.containsSlice("GoGoMonitor") ||
-        path.containsSlice("Movie Example") ||
-        !Version.is3D && path.endsWith(".nlogo3d") ||
-        // in 3D skip models that aren't in the 3D directory.
-        Version.is3D && !pathMatches("3D"))
+        path.containsSlice("Movie Example"))
       return
     val workspace = HeadlessWorkspace.newInstance
     // this keeps patches from being created, which we don't need,
