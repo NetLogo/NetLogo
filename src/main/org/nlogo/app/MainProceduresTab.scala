@@ -34,9 +34,6 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
         add(new javax.swing.JButton(compileAction))
         add(new org.nlogo.swing.ToolBar.Separator)
         add(new ProceduresMenu(MainProceduresTab.this))
-        // we add this here, however, unless there are includes it will not be displayed, as it sets
-        // it's preferred size to 0x0 -- CLB
-        add(new IncludesMenu(MainProceduresTab.this))
         // turning auto-indent checkbox back on
         add(new org.nlogo.swing.ToolBar.Separator)
         tabbing = new javax.swing.JCheckBox(smartTabAction)

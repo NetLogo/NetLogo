@@ -207,7 +207,6 @@ object App{
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
-    org.nlogo.window.ExternalFileManager with
     AppEvent.Handler with
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
@@ -264,8 +263,8 @@ class App extends
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
-                                  frame, frame, App.this, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])                                    
+                                  frame, frame, listenerManager) {
+      val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
@@ -785,11 +784,6 @@ class App extends
    */
   // used both from HelpMenu and MacHandlers - ST 2/2/09
   def showAboutWindow() { new AboutWindow(frame).setVisible(true) }
-
-  /**
-   * Internal use only.
-   */
-  def getSource(filename:String) = tabs.getSource(filename)
 
   /// AppFrame
   def getLinkParent: AppFrame = frame // for Event.LinkChild

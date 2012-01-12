@@ -112,8 +112,6 @@ public strictfp class CompilerManager
       for (Procedure procedure : workspace.getProcedures().values()) {
         if (procedure.fileName.equals("")) {
           procedure.setOwner(proceduresInterface);
-        } else {
-          procedure.setOwner(new ExternalFileInterface(procedure.fileName));
         }
       }
       workspace.init();
@@ -133,10 +131,6 @@ public strictfp class CompilerManager
       if (error.fileName().equals("")) {
         new org.nlogo.window.Events.CompiledEvent
             (proceduresInterface, null, null, error)
-            .raise(this);
-      } else {
-        new org.nlogo.window.Events.CompiledEvent
-            (new ExternalFileInterface(error.fileName()), null, null, error)
             .raise(this);
       }
       return false;

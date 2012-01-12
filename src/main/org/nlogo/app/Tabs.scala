@@ -45,17 +45,9 @@ class Tabs(val workspace: GUIWorkspace,
   override def requestFocus() { currentTab.requestFocus() }
   def handle(e: LoadBeginEvent) { setSelectedComponent(interfaceTab) }
   def handle(e: RuntimeErrorEvent) {
-    if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget])
-      if(e.sourceOwner == proceduresTab)
-        highlightRuntimeError(proceduresTab, e)
-      else if(e.sourceOwner.isInstanceOf[org.nlogo.window.ExternalFileInterface]) {
-        val filename = e.sourceOwner.asInstanceOf[org.nlogo.window.ExternalFileInterface].getFileName
-        val tab = getTabWithFilename(filename).getOrElse{
-          openTemporaryFile(filename, true)
-          getTabWithFilename(filename).get
-        }
-        highlightRuntimeError(tab, e)
-      }
+    if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget] &&
+       e.sourceOwner == proceduresTab)
+      highlightRuntimeError(proceduresTab, e)
   } 
 
   def highlightRuntimeError(tab: ProceduresTab, e: RuntimeErrorEvent) {
@@ -88,17 +80,6 @@ class Tabs(val workspace: GUIWorkspace,
       // so request the focus by a known component 7/18/07
       requestFocus()
     }
-    if(e.sourceOwner.isInstanceOf[org.nlogo.window.ExternalFileInterface]) {
-      val filename = e.sourceOwner.asInstanceOf[org.nlogo.window.ExternalFileInterface].getFileName
-      var tab = getTabWithFilename(filename)
-      if(! tab.isDefined && e.error != null) {
-        openTemporaryFile(filename, true)
-        tab = getTabWithFilename(filename)
-      }
-      if(e.error != null) setSelectedComponent(tab.get)
-      recolorTab(tab.get, e.error != null) 
-      requestFocus()
-    }
     if((e.sourceOwner.isInstanceOf[org.nlogo.window.JobWidget] &&
         !e.sourceOwner.asInstanceOf[org.nlogo.window.JobWidget].isCommandCenter
         || e.sourceOwner == null // i'm assuming this is only true when 
@@ -109,58 +90,8 @@ class Tabs(val workspace: GUIWorkspace,
     }
   }
 
-  def openTemporaryFile(filename: String, fileMustExist: Boolean) {
-    getTabWithFilename(filename) match {
-      case Some(tab) => setSelectedComponent(tab)
-      case _ => addNewTab(filename, fileMustExist)
-    }
-  }
-  
-  def getSource(filename: String): String = getTabWithFilename(filename).map(_.innerSource).orNull
-
-  private def getTabWithFilename(name: String): Option[TemporaryProceduresTab] =
-    // start at 3 because 0, 1, and 2 are the permanent tabs
-    (3 until getTabCount)
-      .map(getComponentAt)
-      .collect{case tab: TemporaryProceduresTab => tab}
-      .find(_.filename == name)
-
-  def newTemporaryFile() { addNewTab(TemporaryProceduresTab.NewFile, false) }
-
-  def addNewTab(name: String, fileMustExist: Boolean) {
-    val tab = new TemporaryProceduresTab(workspace, this, name, fileMustExist, proceduresTab.smartTabbingEnabled)
-    addTab(stripPath(name), tab)
-    addMenuItem(getTabCount() - 1, stripPath(name))
-    org.nlogo.window.Event.rehash()
-    tab.includesMenu.updateVisibility()
-    setSelectedComponent(tab)
-    // if I just call requestFocus the tab never gets the focus request because it's not yet
-    // visible.  There might be a more swing appropriate way to do this but I can't figure it out
-    // (if you know it feel free to fix) ev 7/24/07
-    org.nlogo.awt.EventQueue.invokeLater( () => requestFocus() )
-  }
-
-  def saveExternalFiles() {
-    (3 until getTabCount)
-      .map(getComponentAt)
-      .collect{case tab: TemporaryProceduresTab => tab}
-      .foreach(_.doSave())
-  }
-
-  def saveTemporaryFile(tab: TemporaryProceduresTab, filename: String) {
-    val index = getIndexOfComponent(tab)
-    setTitleAt(index, stripPath(filename))
-    tabsMenu.getItem(index).setText(filename)
-  }
-
   def getIndexOfComponent(tab: ProceduresTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
-
-  def closeTemporaryFile(tab: TemporaryProceduresTab) {
-    val index = getIndexOfComponent(tab)
-    remove(tab)
-    removeMenuItem(index)
-  }
 
   def removeMenuItem(index: Int) {
     // first remove all the menu items after this one...

@@ -54,7 +54,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
   public ViewManager viewManager = new ViewManager();
-  private final ExternalFileManager externalFileManager;
   public final NetLogoListenerManager listenerManager;
 
   // for grid snap
@@ -63,13 +62,11 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public GUIWorkspace(final org.nlogo.agent.World world,
                       KioskLevel kioskLevel, java.awt.Frame frame,
                       java.awt.Component linkParent,
-                      ExternalFileManager externalFileManager,
                       NetLogoListenerManager listenerManager) {
     super(world);
     this.kioskLevel = kioskLevel;
     this.frame = frame;
     this.linkParent = linkParent;
-    this.externalFileManager = externalFileManager;
     this.listenerManager = listenerManager;
 
     viewWidget = new ViewWidget(this);
@@ -1223,20 +1220,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public boolean snapOn() {
     return this.snapOn;
-  }
-
-  @Override
-  public String getSource(String filename)
-      throws java.io.IOException {
-
-    String source = null;
-    if (externalFileManager != null) {
-      source = externalFileManager.getSource(filename);
-    }
-    if (source == null) {
-      source = super.getSource(filename);
-    }
-    return source;
   }
 
 }

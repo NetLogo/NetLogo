@@ -725,7 +725,6 @@ public strictfp class FileMenu
     if (!saver.getResult()) {
       throw new UserCancelException();
     }
-    app.tabs().saveExternalFiles();
   }
 
   /// and now, a whole bunch of dialog boxes
