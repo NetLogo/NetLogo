@@ -43,12 +43,6 @@ with OneInstancePerTest with BeforeAndAfterEach {
       () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
     workspace
   }
-  def run3DExperiment(name: String) {
-    val workspace = newWorkspace()
-    workspace.initForTesting(0)
-    run("test/lab/" + name, 1, true, true, () => workspace,
-      () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
-  }
   def runParallelExperiment(name: String) {
     def workspace = {
       val w = newWorkspace()
@@ -161,23 +155,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
       workspace.report("behaviorspace-run-number"))
   }
   // test export-graphics in headless mode
-  if(!Version.is3D)
-    test("ExportGraphics") {
-      val workspace = newWorkspace()
-      workspace.open("models/test/lab/FireWithExperiments.nlogo")
-      HeadlessWorkspace.newLab.newWorker("testExportGraphics",
-        new java.io.File("test/lab/protocols.xml"))
-        .run(workspace, () => workspace, 1)
-    }
-  if(!Version.is3D)
-    test("ModelWithIncludedExperiments") {
-      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
-      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
-    }
-  if(!Version.is3D)
-    test("ResizingWorld3") {
-      run2DExperiment(0, 1, 0, 1, "", "testResizingWorld3")
-    }
+  test("ExportGraphics") {
+    val workspace = newWorkspace()
+    workspace.open("models/test/lab/FireWithExperiments.nlogo")
+    HeadlessWorkspace.newLab.newWorker("testExportGraphics",
+      new java.io.File("test/lab/protocols.xml"))
+      .run(workspace, () => workspace, 1)
+  }
+  test("ModelWithIncludedExperiments") {
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
+    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
+  }
+  test("ResizingWorld3") {
+    run2DExperiment(0, 1, 0, 1, "", "testResizingWorld3")
+  }
   test("Stopping1") {
     runExperiment(0, "globals [x]",
       "testStopping1")
@@ -215,14 +206,6 @@ with OneInstancePerTest with BeforeAndAfterEach {
       "globals [g] to-report metric set g g + 1 report g end",
       "metricsWithSideEffects")
   }
-  if(Version.is3D)
-    test("ResizingWorld13d") {
-      run3DExperiment("testResizingWorld13d")
-    }
-  if(Version.is3D)
-    test("ResizingWorld23d") {
-      run3DExperiment("testResizingWorld23d")
-    }
   /*
   TODO this keeps failing in Jenkins depending on CPU load.
   I either need to make it less sensitive or just get rid of it. - ST 6/9/10

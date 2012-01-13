@@ -73,7 +73,6 @@ menu.tools.linkMonitor = Monitor de Enlaces
 menu.tools.closeAllAgentMonitors = Cerrar Todos los Monitores de Agentes
 menu.tools.hideCommandCenter = Ocultar Entrada de Comandos
 menu.tools.showCommandCenter = Mostrar Entrada de Comandos
-menu.tools.3DView = Vista en 3D
 menu.tools.colorSwatches = Muestras de Colores Disponibles
 menu.tools.turtleShapesEditor = Editor de Formas para Tortugas
 menu.tools.linkShapesEditor = Editor de Formas para Enlaces
@@ -238,22 +237,6 @@ edit.viewSettings.origin.location.edge.top = Arriba
 edit.viewSettings.origin.location.edge.right = Derecha
 edit.viewSettings.origin.location.edge.left = Izquierda
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Abajo al Suroeste
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Abajo al Noroeste
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = Abajo al Noreste
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Abajo al Sudeste
-edit.viewSettings.3D.origin.location.corner.topSouthwest = Arriba al Suroeste
-edit.viewSettings.3D.origin.location.corner.topNorthwest = Arriba al Noroeste
-edit.viewSettings.3D.origin.location.corner.topNortheast = Arriba al Noreste
-edit.viewSettings.3D.origin.location.corner.topSoutheast = Arriba al Sudeste
-
-edit.viewSettings.3D.origin.location.edge.south = Sur
-edit.viewSettings.3D.origin.location.edge.north = Norte
-edit.viewSettings.3D.origin.location.edge.east = Oriente
-edit.viewSettings.3D.origin.location.edge.west = Oeste
-edit.viewSettings.3D.origin.location.edge.bottom = Abajo
-edit.viewSettings.3D.origin.location.edge.top = Arriba
-
 edit.viewSettings.showTickCounter = Mostrar el contador temporal
 edit.viewSettings.tickCounterLabel = Etiqueta para el contador temporal
 
@@ -268,21 +251,6 @@ edit.viewSettings.2D.minPxcor = mínima coordenada x para las parcelas
 edit.viewSettings.2D.maxPxcor = máxima coordenada x para las parcelas
 edit.viewSettings.2D.minPycor = mínima coordenada y para las parcelas
 edit.viewSettings.2D.maxPycor = máxima coordenada y para las parcelas
-
-edit.viewSettings.3D.smooth = Suavizar los bordes (ejecución más lenta)
-edit.viewSettings.3D.affects = sólo afecta a la vista 3D
-edit.viewSettings.3D.wireFrame = Visualización simplificada
-edit.viewSettings.3D.fontSize.info = de las etiquetas de agentes
-edit.viewSettings.3D.dualView = Actualizar la vista 2D
-edit.viewSettings.3D.wrapX = Mundo sín límite en el sentido X (este / oeste)
-edit.viewSettings.3D.wrapY = Mundo sín límite en el sentido  Y (norte / sur)
-edit.viewSettings.3D.wrapZ = Mundo sín límite en el sentido Z (arriba / abajo)
-edit.viewSettings.3D.minPxcor = mínima coordenada x para las parcelas
-edit.viewSettings.3D.maxPxcor = máxima coordenada x para las parcelas
-edit.viewSettings.3D.minPycor = mínima coordenada y para las parcelas
-edit.viewSettings.3D.maxPycor = máxima coordenada y para las parcelas
-edit.viewSettings.3D.minPzcor = mínima coordenada z para las parcelas
-edit.viewSettings.3D.maxPzcor = máxima coordenada z para las parcelas
 
 # tools
 

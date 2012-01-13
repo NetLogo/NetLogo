@@ -20,13 +20,12 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   }
 
   def testModelCompileError(testName: String, model: Model)(f: Throwable => Unit) = {
-    if (!Version.is3D)
-      test(testName){
-        val ex = intercept[Throwable]{
-          runModel(model){}
-        }
-        f(ex)
+    test(testName){
+      val ex = intercept[Throwable]{
+        runModel(model){}
       }
+      f(ex)
+    }
   }
 
   /**
@@ -71,11 +70,9 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
 
   // run a model
   private def run(openModel: HeadlessWorkspace => Unit)(f: => Unit) {
-    if (!Version.is3D) {
-      _workspace.withValue(HeadlessWorkspace.newInstance) {
-        openModel(workspace)
-        try f finally workspace.dispose()
-      }
+    _workspace.withValue(HeadlessWorkspace.newInstance) {
+      openModel(workspace)
+      try f finally workspace.dispose()
     }
   }
 

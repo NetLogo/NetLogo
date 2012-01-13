@@ -9,9 +9,9 @@ import org.nlogo.nvm.Procedure
 class TypeParserTests extends FunSuite {
 
   /// first some helpers
-  private def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
-    val program = new Program(is3D)
+  private def compile(source: String): Seq[ProcedureDefinition] = {
+    implicit val tokenizer = Compiler.Tokenizer2D
+    val program = new Program(false)
     val results = new StructureParser(tokenizer.tokenize(source), None, program,
       java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager)
@@ -29,24 +29,20 @@ class TypeParserTests extends FunSuite {
     defs
   }
   def testBoth(source: String, expected: String) {
-    testOne(source, expected, false)
-    testOne(source, expected, true)
+    testOne(source, expected)
   }
-  def testOne(source: String, expected: String, is3D: Boolean) {
-    val defs = compile(source, is3D)
+  def testOne(source: String, expected: String) {
+    val defs = compile(source)
     val buf = new StringBuilder
     expect(expected)(
       defs.map { pd: ProcedureDefinition => pd.procedure.name + ":" + pd.procedure.usableBy }
         .mkString(" "))
   }
   def testError(source: String, error: String) {
-    doTestError(source, error, false)
-    doTestError(source, error, true)
+    doTestError(source, error)
   }
-  def doTestError(source: String, error: String, is3D: Boolean) {
-    val e = intercept[CompilerException] {
-      compile(source, is3D)
-    }
+  def doTestError(source: String, error: String) {
+    val e = intercept[CompilerException] { compile(source) }
     expect(error)(e.getMessage)
   }
   /// tests not involving blocks (easy)

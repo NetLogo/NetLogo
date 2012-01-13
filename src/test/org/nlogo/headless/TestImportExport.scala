@@ -93,10 +93,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       worldSize = 5)
   }
 
-  if(!Version.is3D)
-    test("RoundTripComplexNewFormat") {
-      roundTripHelper("setup true", COMPLEX_SOURCE, worldSize = 3)
-    }
+  test("RoundTripComplexNewFormat") {
+    roundTripHelper("setup true", COMPLEX_SOURCE, worldSize = 3)
+  }
 
   test("testRoundTripSpecialCharacter") {
     // 8211 and 8212 are some arbitrary unicode values. we use numbers since we don't want non-ASCII
@@ -156,26 +155,25 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("y = patches", "true")
   }
 
-  if(!Version.is3D)
-    test("testImportDrawing") {
-      val filename = getUniqueFilename()
-      workspace.initForTesting(10)
-      testCommand("random-seed 2843")
-      testCommand("crt 10 [ pd  set pen-size random 5 ]")
-      testCommand("ask turtles [ fd random 5 ]")
-      val realColors = workspace.renderer.trailDrawer.colors
-      testCommand("export-world \"" + filename + "\"")
-      testCommand("ca")
-      testCommand("import-world \"" + filename + "\"")
-      val importedColors = workspace.renderer.trailDrawer.colors
+  test("testImportDrawing") {
+    val filename = getUniqueFilename()
+    workspace.initForTesting(10)
+    testCommand("random-seed 2843")
+    testCommand("crt 10 [ pd  set pen-size random 5 ]")
+    testCommand("ask turtles [ fd random 5 ]")
+    val realColors = workspace.renderer.trailDrawer.colors
+    testCommand("export-world \"" + filename + "\"")
+    testCommand("ca")
+    testCommand("import-world \"" + filename + "\"")
+    val importedColors = workspace.renderer.trailDrawer.colors
 
-      expect(realColors.size)(importedColors.size)
+    expect(realColors.size)(importedColors.size)
 
-      // right now we can't test the pixels because they are not pixel for pixel the same, what we
-      // import is exactly as was, however, when we copy it for one image to the drawing image the
-      // colors can change ever so slightly. (we copy images because of an apple bug, see the
-      // TrailDrawer for details.  ev 3/1/06
-    }
+    // right now we can't test the pixels because they are not pixel for pixel the same, what we
+    // import is exactly as was, however, when we copy it for one image to the drawing image the
+    // colors can change ever so slightly. (we copy images because of an apple bug, see the
+    // TrailDrawer for details.  ev 3/1/06
+  }
 
   test("testExportOutputArea") {
     val filename = getUniqueFilename()
@@ -207,38 +205,36 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("[heading] of node 1", "0")
   }
 
-  if(!Version.is3D)
-    test("testImportInvalidSize") {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
-            {
-              assert(!fatalError)
-              expect("Error Importing Drawing")(title)
-              expect("Invalid data length, the drawing will not be imported")(
-                errorDetails)
-              true
-            }
-        }
-      testCommand("import-world \"test/import/invalid-drawing.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("testImportDrawingIncompleteData") {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
+  test("testImportInvalidSize") {
+    workspace.initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
+          {
             assert(!fatalError)
             expect("Error Importing Drawing")(title)
             expect("Invalid data length, the drawing will not be imported")(
               errorDetails)
             true
           }
+      }
+    testCommand("import-world \"test/import/invalid-drawing.csv\"")
+  }
+
+  test("testImportDrawingIncompleteData") {
+    workspace.initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
+          assert(!fatalError)
+          expect("Error Importing Drawing")(title)
+          expect("Invalid data length, the drawing will not be imported")(
+            errorDetails)
+          true
         }
-      testCommand("import-world \"test/import/short-drawing.csv\"")
-    }
+      }
+    testCommand("import-world \"test/import/short-drawing.csv\"")
+  }
 
   test("testImportSubject") {
     val filename = getUniqueFilename()
@@ -269,50 +265,47 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     expect(workspace.world.observer().perspective())(Perspective.Ride)
   }
 
-  if(!Version.is3D)
-    test("testNonExistentPlot") {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+  test("testNonExistentPlot") {
+    workspace.initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+          assert(!fatalError)
+          expect("Error Importing Plots")(title)
+          expect("The plot \"plot 2\" does not exist.")(
+            errorDetails)
+          true
+        }
+      }
+    testCommand("import-world \"test/import/plot-simple.csv\"")
+  }
+
+  test("testNonExistentPen") {
+    workspace.open("test/import/plot-simple.nlogo")
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String,
+                      fatalError: Boolean) =
+          {
             assert(!fatalError)
             expect("Error Importing Plots")(title)
-            expect("The plot \"plot 2\" does not exist.")(
-              errorDetails)
+            expect("The pen \"default 1\" does not exist.")(errorDetails)
             true
-          }
-        }
-      testCommand("import-world \"test/import/plot-simple.csv\"")
-    }
+          }}
+    testCommand("import-world \"plot-simple.csv\"")
+  }
 
-  if(!Version.is3D)
-    test("testNonExistentPen") {
-      workspace.open("test/import/plot-simple.nlogo")
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String,
-                        fatalError: Boolean) =
-            {
-              assert(!fatalError)
-              expect("Error Importing Plots")(title)
-              expect("The pen \"default 1\" does not exist.")(errorDetails)
-              true
-            }}
-      testCommand("import-world \"plot-simple.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("testCustomPenColor") {
-      val filename = getUniqueFilename()
-      workspace.open("test/import/plot-custom-color.nlogo")
-      testCommand("export-world \"../../" + filename + "\"")
-      val export1 = org.nlogo.api.FileIO.file2String(filename)
-      testCommand("ca import-world \"../../" + filename + "\"")
-      testCommand("export-world \"../../" + filename + "\"")
-      val export2 = org.nlogo.api.FileIO.file2String(filename)
-      expect(dropLines(export1, 3))(
-        dropLines(export2, 3))
-    }
+  test("testCustomPenColor") {
+    val filename = getUniqueFilename()
+    workspace.open("test/import/plot-custom-color.nlogo")
+    testCommand("export-world \"../../" + filename + "\"")
+    val export1 = org.nlogo.api.FileIO.file2String(filename)
+    testCommand("ca import-world \"../../" + filename + "\"")
+    testCommand("export-world \"../../" + filename + "\"")
+    val export2 = org.nlogo.api.FileIO.file2String(filename)
+    expect(dropLines(export1, 3))(
+      dropLines(export2, 3))
+  }
 
   test("testImportingTurtlesDying") {
     val filename = getUniqueFilename()
@@ -419,75 +412,71 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   /// other tests (that don't use roundTripHelper)
 
-  if(!Version.is3D)
-    test("testTrailingCommas") {
-      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
-        "models/test/import/trailing-commas.nlogo").readFile())
-      testCommand("import-world \"models/test/import/trailing-commas.csv\"")
-    }
+  test("testTrailingCommas") {
+    workspace.initForTesting(35, new org.nlogo.api.LocalFile(
+      "models/test/import/trailing-commas.nlogo").readFile())
+    testCommand("import-world \"models/test/import/trailing-commas.csv\"")
+  }
 
-  if(!Version.is3D)
-    test("ImportWrongOrder") {
-      workspace.initForTesting(10)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
-              assert(fatalError)
-              expect("Fatal Error- Incorrect Structure For Import File")(title)
-              expect("The agents are in the wrong order in the import file. " +
-                "The global variables should be first, followed by the turtles, " +
-                "followed by the patches.  Found TURTLES but needed " +
-                "GLOBALS\n\nThe import will now abort.")(errorDetails)
-              true
-            }}
-      testCommand("import-world \"test/import/wrong-order.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("ImportSentinelName") {
-      workspace.initForTesting(10)
-      testCommand("import-world \"test/import/TURTLES.csv\"")
-    }
-
-  if(!Version.is3D)
-    test("ExtraFieldValue") {
-      workspace.initForTesting(35, new org.nlogo.api.LocalFile(
-        "models/test/import/trailing-commas.nlogo").readFile())
-      val errorNumber = Array(0)
-      workspace.importerErrorHandler =
-        new org.nlogo.agent.Importer.ErrorHandler() {
-          def showError(title: String, errorDetails: String, fatalError: Boolean) = {
-            assert(!fatalError)
-            expect("Warning: Too Many Values For Agent")(title)
-            errorNumber(0) match {
-              case 0 =>
-                expect("Error Importing at Line 7: There are a total of "
-                  + "10 Global variables declared in this model "
-                  + "(including built-in variables).  The import-world "
-                  + "file has at least one agent in the GLOBALS section "
-                  + "with more than this number of values.\n\n"
-                  + "Action to be Taken: All the extra values will "
-                  + "be ignored for this section.")(
-                  errorDetails)
-              case 1 =>
-                expect("Error Importing at Line 54: There are a total of "
-                  + "5 Patch variables declared in this model "
-                  + "(including built-in variables).  The import-world "
-                  + "file has at least one agent in the PATCHES section "
-                  + "with more than this number of values.\n\n"
-                  + "Action to be Taken: All the extra values will "
-                  + "be ignored for this section.")(
-                  errorDetails)
-              case _ =>
-                fail()
-            }
-            errorNumber(0) += 1
+  test("ImportWrongOrder") {
+    workspace.initForTesting(10)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+            assert(fatalError)
+            expect("Fatal Error- Incorrect Structure For Import File")(title)
+            expect("The agents are in the wrong order in the import file. " +
+              "The global variables should be first, followed by the turtles, " +
+              "followed by the patches.  Found TURTLES but needed " +
+              "GLOBALS\n\nThe import will now abort.")(errorDetails)
             true
+          }}
+    testCommand("import-world \"test/import/wrong-order.csv\"")
+  }
+
+  test("ImportSentinelName") {
+    workspace.initForTesting(10)
+    testCommand("import-world \"test/import/TURTLES.csv\"")
+  }
+
+  test("ExtraFieldValue") {
+    workspace.initForTesting(35, new org.nlogo.api.LocalFile(
+      "models/test/import/trailing-commas.nlogo").readFile())
+    val errorNumber = Array(0)
+    workspace.importerErrorHandler =
+      new org.nlogo.agent.Importer.ErrorHandler() {
+        def showError(title: String, errorDetails: String, fatalError: Boolean) = {
+          assert(!fatalError)
+          expect("Warning: Too Many Values For Agent")(title)
+          errorNumber(0) match {
+            case 0 =>
+              expect("Error Importing at Line 7: There are a total of "
+                + "10 Global variables declared in this model "
+                + "(including built-in variables).  The import-world "
+                + "file has at least one agent in the GLOBALS section "
+                + "with more than this number of values.\n\n"
+                + "Action to be Taken: All the extra values will "
+                + "be ignored for this section.")(
+                errorDetails)
+            case 1 =>
+              expect("Error Importing at Line 54: There are a total of "
+                + "5 Patch variables declared in this model "
+                + "(including built-in variables).  The import-world "
+                + "file has at least one agent in the PATCHES section "
+                + "with more than this number of values.\n\n"
+                + "Action to be Taken: All the extra values will "
+                + "be ignored for this section.")(
+                errorDetails)
+            case _ =>
+              fail()
           }
+          errorNumber(0) += 1
+          true
         }
-      testCommand("import-world \"test/import/extra-values.csv\"")
-      expect(2)(errorNumber(0))
-    }
+      }
+    testCommand("import-world \"test/import/extra-values.csv\"")
+    expect(2)(errorNumber(0))
+  }
 
   // this is a focused test with a small number of turtles
   // designed to catch one particular known bug
@@ -544,20 +533,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     val x = new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C")
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }
-
-  /// 3D tests
-
-  if(Version.is3D)
-    test("RoundTripDrawing") {
-      roundTripHelper("crt 10 [ pd repeat 5 [ fd random-float 5 rt random-float 360 ] ]",
-        worldSize = 5)
-    }
-
-  if(Version.is3D)
-    test("RoundTripStamp") {
-      roundTripHelper("crt 10 [ repeat 5 [ fd random-float 5 rt random-float 360 stamp ] ]",
-        worldSize = 5)
-    }
 
   ///
 

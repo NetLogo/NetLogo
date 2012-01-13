@@ -73,7 +73,6 @@ menu.tools.linkMonitor = 连接监视器
 menu.tools.closeAllAgentMonitors = 关闭所有监视器
 menu.tools.hideCommandCenter = 隐藏指令中心
 menu.tools.showCommandCenter = 显示指令中心
-menu.tools.3DView = 3D视图
 menu.tools.colorSwatches = 色板
 menu.tools.turtleShapesEditor = 海龟形状编辑器
 menu.tools.linkShapesEditor = 连接形状编辑器
@@ -241,22 +240,6 @@ edit.viewSettings.origin.location.edge.top = 顶
 edit.viewSettings.origin.location.edge.right = 右
 edit.viewSettings.origin.location.edge.left = 左
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = 底 西南
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = 底 西北
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = 底 东北
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = 底 东南
-edit.viewSettings.3D.origin.location.corner.topSouthwest = 顶 西南
-edit.viewSettings.3D.origin.location.corner.topNorthwest = 顶 西北
-edit.viewSettings.3D.origin.location.corner.topNortheast = 顶 东北
-edit.viewSettings.3D.origin.location.corner.topSoutheast = 顶 东南
-
-edit.viewSettings.3D.origin.location.edge.south = 南
-edit.viewSettings.3D.origin.location.edge.north = 北
-edit.viewSettings.3D.origin.location.edge.east = 东
-edit.viewSettings.3D.origin.location.edge.west = 西
-edit.viewSettings.3D.origin.location.edge.bottom = 底
-edit.viewSettings.3D.origin.location.edge.top = 顶
-
 edit.viewSettings.showTickCounter = 显示时间步计数器
 edit.viewSettings.tickCounterLabel = 时间步计数器标题
 
@@ -273,21 +256,6 @@ edit.viewSettings.2D.minPxcor = 网格的最小x坐标
 edit.viewSettings.2D.maxPxcor = 网格的最大x坐标
 edit.viewSettings.2D.minPycor = 网格的最小y坐标
 edit.viewSettings.2D.maxPycor = 网格的最大y坐标
-
-edit.viewSettings.3D.smooth = 边缘平滑 (较慢)
-edit.viewSettings.3D.affects = 仅在3D视图中有效
-edit.viewSettings.3D.wireFrame = 显示轮廓线
-edit.viewSettings.3D.fontSize.info = 主体标题
-edit.viewSettings.3D.dualView = 更新2D视图
-edit.viewSettings.3D.wrapX = 世界在X方向循环 (东/西)
-edit.viewSettings.3D.wrapY = 世界在Y方向循环 (北/南)
-edit.viewSettings.3D.wrapZ = 世界在Z方向循环 (顶/底)
-edit.viewSettings.3D.minPxcor = 网格的最小x坐标
-edit.viewSettings.3D.maxPxcor = 网格的最大x坐标
-edit.viewSettings.3D.minPycor = 网格的最小y坐标
-edit.viewSettings.3D.maxPycor = 网格的最大y坐标
-edit.viewSettings.3D.minPzcor = 网格的最小z坐标
-edit.viewSettings.3D.maxPzcor = 网格的最大z坐标
 
 # tools
 
@@ -348,14 +316,3 @@ modelsLibrary.clear = 清除
 modelsLibrary.community = 访问用户社区模型网页
 modelsLibrary.open = 打开
 modelsLibrary.loading = 加载模型库...
-
-view.3d.orbit = 旋转
-view.3d.zoom = 缩放
-view.3d.move = 移动
-view.3d.interact = 交互
-view.3d.watching = 观察
-view.3d.riding = 骑乘
-view.3d.following = 跟随
-view.3d.fullScreen = 全屏
-view.3d.resetPerspective = 重置视角
-view.3d.fullScreenWarning = 在某些系统中，全屏模式可能会导致Windows锁定.

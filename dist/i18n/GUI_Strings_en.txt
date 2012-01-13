@@ -73,7 +73,6 @@ menu.tools.linkMonitor = Link Monitor
 menu.tools.closeAllAgentMonitors = Close All Agent Monitors
 menu.tools.hideCommandCenter = Hide Command Center
 menu.tools.showCommandCenter = Show Command Center
-menu.tools.3DView = 3D View
 menu.tools.colorSwatches = Color Swatches
 menu.tools.turtleShapesEditor = Turtle Shapes Editor
 menu.tools.linkShapesEditor = Link Shapes Editor
@@ -241,22 +240,6 @@ edit.viewSettings.origin.location.edge.top = Top
 edit.viewSettings.origin.location.edge.right = Right
 edit.viewSettings.origin.location.edge.left = Left
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Bottom Southwest
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Bottom Northwest
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = Bottom Northeast
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Bottom Southeast
-edit.viewSettings.3D.origin.location.corner.topSouthwest = Top Southwest
-edit.viewSettings.3D.origin.location.corner.topNorthwest = Top Northwest
-edit.viewSettings.3D.origin.location.corner.topNortheast = Top Northeast
-edit.viewSettings.3D.origin.location.corner.topSoutheast = Top Southeast
-
-edit.viewSettings.3D.origin.location.edge.south = South
-edit.viewSettings.3D.origin.location.edge.north = North
-edit.viewSettings.3D.origin.location.edge.east = East
-edit.viewSettings.3D.origin.location.edge.west = West
-edit.viewSettings.3D.origin.location.edge.bottom = Bottom
-edit.viewSettings.3D.origin.location.edge.top = Top
-
 edit.viewSettings.showTickCounter = Show tick counter
 edit.viewSettings.tickCounterLabel = Tick counter label
 
@@ -273,21 +256,6 @@ edit.viewSettings.2D.minPxcor = minimum x coordinate for patches
 edit.viewSettings.2D.maxPxcor = maximum x coordinate for patches
 edit.viewSettings.2D.minPycor = minimum y coordinate for patches
 edit.viewSettings.2D.maxPycor = maximum y coordinate for patches
-
-edit.viewSettings.3D.smooth = Smooth edges (slower)
-edit.viewSettings.3D.affects = only affects 3D view
-edit.viewSettings.3D.wireFrame = Show wire frame
-edit.viewSettings.3D.fontSize.info = of labels on agents
-edit.viewSettings.3D.dualView = Update 2D view
-edit.viewSettings.3D.wrapX = World wraps X (east/west)
-edit.viewSettings.3D.wrapY = World wraps Y (north/south)
-edit.viewSettings.3D.wrapZ = World wraps Z (top/bottom)
-edit.viewSettings.3D.minPxcor = minimum x coordinate for patches
-edit.viewSettings.3D.maxPxcor = maximum x coordinate for patches
-edit.viewSettings.3D.minPycor = minimum y coordinate for patches
-edit.viewSettings.3D.maxPycor = maximum y coordinate for patches
-edit.viewSettings.3D.minPzcor = minimum z coordinate for patches
-edit.viewSettings.3D.maxPzcor = maximum z coordinate for patches
 
 # tools
 
@@ -348,14 +316,3 @@ modelsLibrary.clear = Clear
 modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library...
-
-view.3d.orbit = Orbit
-view.3d.zoom = Zoom
-view.3d.move = Move
-view.3d.interact = Interact
-view.3d.watching = Watching
-view.3d.riding = Riding
-view.3d.following = Following
-view.3d.fullScreen = Full Screen
-view.3d.resetPerspective = Reset Perspective
-view.3d.fullScreenWarning = On some systems, fullscreen mode may cause Windows to lock up.

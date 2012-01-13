@@ -150,7 +150,6 @@ org.nlogo.prim.$common.expectedBooleanValue = {0} expected a true/false value fr
 
 
 org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained a different type agentset: {2}.
-org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = You can''t import drawing in 3D.
 
 
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = There is no heading of a link whose endpoints are in the same position.

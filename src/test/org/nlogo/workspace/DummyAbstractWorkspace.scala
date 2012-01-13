@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{Agent, World, World3D}
+import org.nlogo.agent.{Agent, World}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.api.Version
 
@@ -11,8 +11,7 @@ import org.nlogo.api.Version
  */
 
 class DummyAbstractWorkspace
-extends AbstractWorkspaceScala(
-    if(Version.is3D) new World3D else new World)
+extends AbstractWorkspaceScala(new World)
 {
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true

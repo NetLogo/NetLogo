@@ -7,7 +7,7 @@ import Version._
 
 class VersionTests extends FunSuite {
   /// update this section every time the version changes -- ev 11/7/07
-  if (!is3D) test("currentVersion2D") {
+  test("currentVersion") {
     // these differ from the current version in suffix only
     assert(compatibleVersion("NetLogo 5.0"))
     assert(compatibleVersion("NetLogo 5.0RC1"))
@@ -17,11 +17,6 @@ class VersionTests extends FunSuite {
     assert(compatibleVersion("NetLogo 5.0.1"))
     assert(compatibleVersion("NetLogo 5.0.1weirdversion"))
     assert(compatibleVersion("NetLogo 5.0weirdversion"))
-  }
-  else test("currentVersion3D") {
-    assert(compatibleVersion("NetLogo 3D 5.0pre1"))
-    assert(!compatibleVersion("NetLogo 3D Preview 5"))
-    assert(!compatibleVersion("NetLogo 3D Preview 4"))
   }
   test("futureMinor") {
     // these differ from the current version by minor version only

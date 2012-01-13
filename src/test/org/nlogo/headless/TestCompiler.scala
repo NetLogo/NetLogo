@@ -7,11 +7,6 @@ import org.nlogo.api.{ CompilerException, Version }
 
 class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
-  // disable the whole suite in 3D
-  override def testNames =
-    if(Version.is3D) Set()
-    else super.testNames
-
   var workspace: HeadlessWorkspace = _
   override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
   override def afterEach() { workspace.dispose() }

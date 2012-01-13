@@ -23,20 +23,16 @@ trait TestUsingWorkspace extends MockSuite {
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: WorldType = WorldType.Torus)
                         (f: HeadlessWorkspace => Unit) {
-    if (!Version.is3D) {
-      test(testName) {
-        runWorkspaceTest(radius, worldType){f}
-      }
+    test(testName) {
+      runWorkspaceTest(radius, worldType){f}
     }
   }
 
   def mockTestUsingWorkspace(name:String, radius: Int = 5,
                              worldType: WorldType = WorldType.Torus)
                             (f: HeadlessWorkspace => Unit){
-    if (!Version.is3D) {
-      mockTest(name){
-        runWorkspaceTest(radius, worldType){ f }
-      }
+    mockTest(name){
+      runWorkspaceTest(radius, worldType){ f }
     }
   }
 

@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.Assertions
 import org.nlogo.agent.{Agent, Observer}
-import org.nlogo.api.{Equality, CompilerException, JobOwner, LogoException, Version, WorldDimensions, WorldDimensions3D}
+import org.nlogo.api.{Equality, CompilerException, JobOwner, LogoException, Version, WorldDimensions}
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
@@ -28,10 +28,7 @@ abstract class AbstractTestLanguage extends Assertions {
     workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     workspace.initForTesting(
-      if(Version.is3D)
-        new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
-      else
-        new WorldDimensions(-5, 5, -5, 5),
+      new WorldDimensions(-5, 5, -5, 5),
       HeadlessWorkspace.TestDeclarations)
   }
 
@@ -66,7 +63,7 @@ abstract class AbstractTestLanguage extends Assertions {
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(Equality.equals(actualResult,
-                           compiler.readFromString(expectedResult, workspace.world().program.is3D)),
+                           compiler.readFromString(expectedResult, false)),
            mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
   }
   private def privateTestReporterError(reporter: String,

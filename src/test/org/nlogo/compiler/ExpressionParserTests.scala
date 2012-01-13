@@ -14,10 +14,10 @@ class ExpressionParserTests extends FunSuite {
   val POSTAMBLE = "\nend"
 
   /// helpers
-  private def compile(source: String, is3D: Boolean): Seq[Statements] = { // must be private
+  private def compile(source: String): Seq[Statements] = { // must be private
     val wrappedSource = PREAMBLE + source + POSTAMBLE
-    val program = new Program(is3D)
-    implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
+    val program = new Program(false)
+    implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(wrappedSource), None,
       program, java.util.Collections.emptyMap[String, Procedure],
@@ -43,9 +43,7 @@ class ExpressionParserTests extends FunSuite {
     }).mkString
   /// helper
   def testStartAndEnd(source: String, preorderDump: String) {
-    expect(preorderDump)(statementsToString(compile(source, false), source))
-    expect(preorderDump)(
-      statementsToString(compile(source, true), source))
+    expect(preorderDump)(statementsToString(compile(source), source))
   }
   // preorder traversal
   private class PositionsCheckVisitor(source: String) extends DefaultAstVisitor { // must be private
@@ -69,21 +67,13 @@ class ExpressionParserTests extends FunSuite {
   }
 
   def runTest(input: String, result: String) {
-    expect(result)(compile(input, false).mkString)
-    expect(result)(compile(input, true).mkString)
-  }
-  def runTest(input: String, result2D: String, result3D: String) {
-    expect(result2D)(compile(input, false).mkString)
-    expect(result3D)(compile(input, true).mkString)
+    expect(result)(compile(input).mkString)
   }
   def runFailure(input: String, message: String, start: Int, end: Int) {
-    doFailure(input, message, start, end, false)
-    doFailure(input, message, start, end, true)
+    doFailure(input, message, start, end)
   }
-  def doFailure(input: String, message: String, start: Int, end: Int, is3D: Boolean) {
-    val e = intercept[CompilerException] {
-      compile(input, is3D)
-    }
+  def doFailure(input: String, message: String, start: Int, end: Int) {
+    val e = intercept[CompilerException] { compile(input) }
     expect(message)(e.getMessage)
     expect(start + PREAMBLE.length())(e.startPos)
     expect(end + PREAMBLE.length())(e.endPos)
@@ -190,8 +180,7 @@ class ExpressionParserTests extends FunSuite {
   }
   test("testParseDiffuse") {
     runTest("diffuse pcolor 1",
-      "_diffuse[_reference:Patch,2[], _constdouble:1.0[]]",
-      "_diffuse[_reference:Patch,3[], _constdouble:1.0[]]")
+      "_diffuse[_reference:Patch,2[], _constdouble:1.0[]]")
   }
   /// tests using testStartAndEnd
   test("testStartAndEndPositions0") {

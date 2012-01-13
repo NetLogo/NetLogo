@@ -73,7 +73,6 @@ menu.tools.linkMonitor = Экран связей
 menu.tools.closeAllAgentMonitors = Закрыть экраны всех агентов
 menu.tools.hideCommandCenter = Спрятать командный центр
 menu.tools.showCommandCenter = Показать командный центр
-menu.tools.3DView = 3D просмотр
 menu.tools.colorSwatches = Образцы цветов
 menu.tools.turtleShapesEditor = Редактор форм черепах
 menu.tools.linkShapesEditor = Редактор форм связей
@@ -242,22 +241,6 @@ edit.viewSettings.origin.location.edge.top = Верх
 edit.viewSettings.origin.location.edge.right = Вправо
 edit.viewSettings.origin.location.edge.left = Влево
 
-edit.viewSettings.3D.origin.location.corner.bottomSouthwest = Низ Югозапад
-edit.viewSettings.3D.origin.location.corner.bottomNorthwest = Низ Северозапад
-edit.viewSettings.3D.origin.location.corner.bottomNortheast = Низ Северовосток
-edit.viewSettings.3D.origin.location.corner.bottomSoutheast = Низ  Юговосток
-edit.viewSettings.3D.origin.location.corner.topSouthwest = Верх Югозапад
-edit.viewSettings.3D.origin.location.corner.topNorthwest = Верх Северозапад
-edit.viewSettings.3D.origin.location.corner.topNortheast = Верх Северовосток
-edit.viewSettings.3D.origin.location.corner.topSoutheast = Верх Юговосток
-
-edit.viewSettings.3D.origin.location.edge.south = Юг
-edit.viewSettings.3D.origin.location.edge.north = Север
-edit.viewSettings.3D.origin.location.edge.east = Восток
-edit.viewSettings.3D.origin.location.edge.west = Запад
-edit.viewSettings.3D.origin.location.edge.bottom = Низ
-edit.viewSettings.3D.origin.location.edge.top = Верх
-
 edit.viewSettings.showTickCounter = Показать тик счетчик
 edit.viewSettings.tickCounterLabel = Ярлык тик счетчика
 
@@ -274,21 +257,6 @@ edit.viewSettings.2D.minPxcor = минимальная координата х �
 edit.viewSettings.2D.maxPxcor = максимальная координата х для пятен
 edit.viewSettings.2D.minPycor = минимальная координата у для пятен
 edit.viewSettings.2D.maxPycor = максимальная координата у для пятен
-
-edit.viewSettings.3D.smooth = Выравнивание ребер (медленно)
-edit.viewSettings.3D.affects = действует только в  3D режиме
-edit.viewSettings.3D.wireFrame = Показать рамку
-edit.viewSettings.3D.fontSize.info = ярлыки на агентах
-edit.viewSettings.3D.dualView = Обновить 2D вид
-edit.viewSettings.3D.wrapX = Границы мира X  (восток/запад)
-edit.viewSettings.3D.wrapY = Границы мира Y  (север/юг)
-edit.viewSettings.3D.wrapZ = Границы мира Z  (верх/низ)
-edit.viewSettings.3D.minPxcor = минимальная координата х для пятен
-edit.viewSettings.3D.maxPxcor = максимальная координата х для пятен
-edit.viewSettings.3D.minPycor = минимальная координата у для пятен
-edit.viewSettings.3D.maxPycor = максимальная координата у для пятен
-edit.viewSettings.3D.minPzcor = минимальная координата z для пятен
-edit.viewSettings.3D.maxPzcor = максимальная координата z для пятен
 
 # Средства
 
@@ -348,14 +316,3 @@ modelsLibrary.clear = Очистить
 modelsLibrary.community = Перейти к моделям сообщества
 modelsLibrary.open = Открыть
 modelsLibrary.loading = Загрузить библиотеку меделей...
-
-view.3d.orbit = Орбита
-view.3d.zoom = Увеличение
-view.3d.move = Переместить
-view.3d.interact = Взаимодействовать
-view.3d.watching = Следить
-view.3d.riding = Скакать
-view.3d.following = Следовать
-view.3d.fullScreen = Полный экран
-view.3d.resetPerspective = Перегрузить перспективу
-view.3d.fullScreenWarning = На некоторых системах полноэкранный режим может привести к зависанию.

@@ -19,7 +19,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
     assert(names.mkString("\n") === ChecksumsAndPreviews.allBenchmarks.mkString("\n"))
   }
 
-  if(Version.useGenerator && !Version.is3D) {
+  if(Version.useGenerator) {
     // the benchmarks dumps may be different on some branches, but since the benchmark models aren't
     // open source, they're in a separate repo.  so, in that separate repo, we have a "master"
     // directory with the dumps for the master branch here in the main repo, and for any branch here
