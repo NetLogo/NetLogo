@@ -7,8 +7,15 @@ import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerOwner }
 import java.util.{ Collections => JCollections, List => JList, ArrayList => JArrayList }
 import org.nlogo.util.Exceptions.{ ignoring, handling }
 
+object JobThread {
+  // too little puts a ceiling on how deep recursion in user code can go,
+  // too much tends to cause OutOfMemoryErrors on Windows and/or Linux
+  // (even if there's plenty of extra heap)
+  def stackSize = 8 * 1024 * 1024  // 8 megabytes
+}
+
 class JobThread(manager: JobManager, owner: JobManagerOwner, lock: AnyRef)
-extends Thread("JobThread") {
+extends Thread(null, null, "JobThread", JobThread.stackSize) {
 
   val primaryJobs = JCollections.synchronizedList(new JArrayList[Job])
   val secondaryJobs = JCollections.synchronizedList(new JArrayList[Job])
