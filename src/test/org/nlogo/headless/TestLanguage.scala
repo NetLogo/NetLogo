@@ -57,8 +57,9 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   val (procs, nonProcs) = lineItems.partition(_.isInstanceOf[Proc])
   val proc = Proc(procs.map {_.asInstanceOf[Proc].content}.mkString("\n"))
 
-  // the rules on whether or not the test should be run
-  val shouldRun = {
+  // on the core branch the _3D tests are gone, but extensions tests still have them since we
+  // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
+  val shouldRun = !testName.endsWith("_3D") && {
     import org.nlogo.api.Version.useGenerator
     if (testName.startsWith("Generator"))
       useGenerator
