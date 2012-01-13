@@ -491,7 +491,7 @@ else
                         <string>18032</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="8">
+                        <array class="java.lang.String" length="7">
                           <void index="0">
                             <string>-Djava.ext.dirs=</string>
                           </void>
