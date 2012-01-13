@@ -18,11 +18,7 @@ public strictfp class ModelsLibrary {
   public static Node rootNode = null;
 
   public static String[] getModelPaths() {
-    return getModelPaths(false);
-  }
-
-  public static String[] getModelPaths(boolean exclusive) {
-    scanForModels(exclusive);
+    scanForModels();
     List<String> result = new ArrayList<String>();
     for (Enumeration<?> models = rootNode.depthFirstEnumeration(); models.hasMoreElements();) {
       Node node = (Node) models.nextElement();
@@ -35,7 +31,7 @@ public strictfp class ModelsLibrary {
   }
 
   public static String[] getModelPathsAtRoot(String path) {
-    Node rnode = scanForModelsAtRoot(path, false);
+    Node rnode = scanForModelsAtRoot(path);
     List<String> result = new ArrayList<String>();
     for (Enumeration<?> models = rnode.depthFirstEnumeration(); models.hasMoreElements();) {
       Node node = (Node) models.nextElement();
@@ -48,7 +44,7 @@ public strictfp class ModelsLibrary {
 
 
   public static List<String> findModelsBySubstring(String targetName) {
-    scanForModels(false);
+    scanForModels();
     List<String> result = new ArrayList<String>();
     // first look for exact match
     for (Enumeration<?> models = rootNode.depthFirstEnumeration(); models.hasMoreElements();) {
@@ -100,7 +96,7 @@ public strictfp class ModelsLibrary {
    *         library.
    */
   public static String getModelPath(String targetName) {
-    scanForModels(false);
+    scanForModels();
     for (Enumeration<?> models = rootNode.depthFirstEnumeration(); models.hasMoreElements();) {
       Node model = (Node) models.nextElement();
       String path = model.path.replace(
@@ -117,19 +113,19 @@ public strictfp class ModelsLibrary {
     return rootNode == null;
   }
 
-  public static void scanForModels(boolean exclusive) {
+  public static void scanForModels() {
     if (!needsModelScan()) {
       return;
     }
     java.io.File directoryRoot = new java.io.File("models", "");
     rootNode = new Node("models", "", true);
-    scanDirectory(directoryRoot, null, rootNode, exclusive);
+    scanDirectory(directoryRoot, null, rootNode);
   }
 
-  public static Node scanForModelsAtRoot(String path, boolean exclusive) {
+  public static Node scanForModelsAtRoot(String path) {
     java.io.File directoryRoot = new java.io.File(path, "");
     Node node = new Node(path, "", true);
-    scanDirectory(directoryRoot, null, node, exclusive);
+    scanDirectory(directoryRoot, null, node);
     return node;
   }
 
@@ -165,7 +161,7 @@ public strictfp class ModelsLibrary {
     return filePath + ".png";
   }
 
-  private static void scanDirectory(java.io.File directory, Node grandparent, Node parent, boolean exclusive) {
+  private static void scanDirectory(java.io.File directory, Node grandparent, Node parent) {
     if (!directory.isDirectory()) {
       return;
     }
@@ -175,7 +171,7 @@ public strictfp class ModelsLibrary {
     for (int i = 0; i < rawEntries.length; i++) {
       orderedEntries.add(rawEntries[i]);
     }
-    orderedEntries = orderItems(orderedEntries, parent.isRoot(), exclusive);
+    orderedEntries = orderItems(orderedEntries, parent.isRoot());
     // this test is so empty directories don't even show up at all
     // - ST 8/5/04
     if (!orderedEntries.isEmpty() && grandparent != null) {
@@ -192,7 +188,7 @@ public strictfp class ModelsLibrary {
               + (file.isDirectory() ? "/" : ""),
           file.isDirectory());
       if (child.isFolder()) {
-        scanDirectory(file, parent, child, exclusive);
+        scanDirectory(file, parent, child);
       } else {
         if (fileName.toUpperCase().endsWith(".NLOGO")) {
           parent.add(child);
@@ -228,7 +224,7 @@ public strictfp class ModelsLibrary {
     }
   }
 
-  private static List<String> orderItems(List<String> names, boolean topLevel, boolean exclusive) {
+  private static List<String> orderItems(List<String> names, boolean topLevel) {
     String[] orderednames;
     if (topLevel) {
       orderednames = new String[]{

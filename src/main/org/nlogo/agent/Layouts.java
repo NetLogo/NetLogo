@@ -67,7 +67,6 @@ public final strictfp class Layouts {
   public static void spring(AgentSet nodeset, AgentSet linkset,
                             double spr, double len, double rep,
                             org.nlogo.util.MersenneTwisterFast random) {
-    World world = nodeset.world();
     spring2D(nodeset, linkset, spr, len, rep, random);
   }
 

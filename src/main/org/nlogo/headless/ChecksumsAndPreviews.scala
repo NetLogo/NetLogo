@@ -17,7 +17,7 @@ object ChecksumsAndPreviews {
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
       val library =
-        ModelsLibrary.getModelPaths(true)
+        ModelsLibrary.getModelPaths()
           .filter(fn)
           .map(p => p.substring(p.indexOf("models/")))
           .toList

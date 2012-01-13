@@ -114,7 +114,6 @@ public final strictfp class _atpoints
       LogoList entry = (LogoList) it.next();
       Double x = null;
       Double y = null;
-      Double z = org.nlogo.agent.World.ZERO;
       int j = 0;
       for (Iterator<Object> it2 = entry.iterator(); it2.hasNext();) {
         switch (j) {

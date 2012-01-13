@@ -119,7 +119,7 @@ strictfp class ModelsLibraryDialog
         parent, I18N.guiJ().get("modelsLibrary.loading"),
         new Runnable() {
           public void run() {
-            ModelsLibrary.scanForModels(false);
+            ModelsLibrary.scanForModels();
             smt[0] = new SearchableModelTree
               (new Node(ModelsLibrary.rootNode, ModelsLibraryIndexReader.readInfoMap()));
           }});
