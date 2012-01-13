@@ -19,10 +19,6 @@ ALL TESTS
   the reporter on the left), must be a constant: a number, string,
   list, true/false, or nobody.
 
-* Tests that end with _2D will be run in a 2D environment only,
-  tests that end with _3D will be run in a 3D environment only
-  all other tests will be run in both environments.
-
 * Tests that start with Generator will only be run when the 
   code generator is enabled
   tests that start with NoGenerator will only be run when the 

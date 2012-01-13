@@ -72,41 +72,6 @@ FileReadWrite_2D
   O> file-close
   O> file-delete glob1
 
-FileReadWrite_3D
-  O> __mkdir "tmp/File"
-  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" ) 
-  O> if ( file-exists? glob1 ) [ file-delete glob1 ]
-  O> file-open glob1
-  O> cro 30
-  O> ask turtles [ fd who file-write xcor file-write ycor ]
-  O> file-close
-  O> file-open glob1
-  O> cro 30 [ setxy file-read file-read ]
-  count turtles with [any? other turtles-here] => 60
-  O> let t glob1 ca set glob1 t
-  O> file-close
-  O> file-delete glob1
-  O> file-open glob1
-  O> file-write map [[pcolor] of ?] sort patches
-  O> file-write "Once upon a time"
-  O> file-write "[1 2 3]"
-  O> file-write "true 5"
-  O> file-write count patches with [ pxcor = 0 ]
-  O> file-write ( 1 + -1 = 0 )
-  O> file-write turtle 1
-  O> file-close
-  O> file-open glob1
-  length file-read => 1331
-  word file-read "." => "Once upon a time."
-  file-read => "[1 2 3]"
-  file-read => "true 5"
-  file-read - 11 => 110
-  file-read => true
-  file-read => nobody
-  file-read => ERROR The end of file has been reached
-  O> file-close
-  O> file-delete glob1
-
 FileReadWhitespaceAtEndOfFile
   O> __mkdir "tmp/File"
   O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" ) 

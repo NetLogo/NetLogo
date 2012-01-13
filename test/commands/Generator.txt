@@ -26,9 +26,6 @@ DoubleGreaterThanDouble
 PatchVariable_2D
   [pcolor] of patch 0 0 => 0
 
-PatchVariable_3D
-  [pcolor] of patch 0 0 0 => 0
-  
 Not1
   not true => false
   not false => true

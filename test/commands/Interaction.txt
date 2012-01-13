@@ -35,20 +35,6 @@ Interaction2_2D
   map [[color] of ?] sort turtles => [5 55 25]
   map [[pcolor] of ?] sort patches => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
 
-Interaction2_3D
-  O> cro 3
-  O> ask turtle 0 [ fd 1 ]
-  O> ask turtle 1 [ set color green ]
-  O> ask turtle 2 [ rt 90 ]
-  O> ask patch 2 -2 0 [ set pcolor blue ]
-  O> ask turtle 0 [ ask patch-at 1 0 0 [ set pcolor red ] ]
-  map [[xcor] of ?] sort turtles => [0 0 0]
-  map [[ycor] of ?] sort turtles => [1 0 0]
-  map [[zcor] of ?] sort turtles => [0 0 0] 
-  map [precision [heading] of ? 12 ] sort turtles => [0 120 330]
-  map [[color] of ?] sort turtles => [5 55 25]
-  map [[pcolor] of ?] sort patches with [pzcor = 0] => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
-
 Interaction3a
   O> random-seed 4373
   O> ask one-of patches [ sprout 1 ]
@@ -138,24 +124,6 @@ Interaction11_2D
   max [towards-nowrap one-of patches with [self != [patch-here] of myself]] of turtles < 360 => true
   max [towards-nowrap one-of patches with [self != [patch-here] of myself]] of turtles >= 0 => true
 
-# slightly modified so we don't get turtles in our same column which causes an error
-# added similar tests for towards-pitch
-Interaction11_3D
-  O> random-seed 711
-  P> sprout 1 [ ]
-  max [towards one-of turtles with [xcor != [xcor] of myself or ycor != [ycor] of myself]] of turtles < 360 => true
-  min [towards one-of turtles with [xcor != [xcor] of myself or ycor != [ycor] of myself]] of turtles >= 0 => true
-  max [towards one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles < 360 => true
-  min [towards one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles >= 0 => true
-  max [towards-nowrap one-of turtles with [xcor != [xcor] of myself or ycor != [ycor] of myself]] of turtles < 360 => true
-  min [towards-nowrap one-of turtles with [xcor != [xcor] of myself or ycor != [ycor] of myself]] of turtles >= 0 => true
-  max [towards-nowrap one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles  < 360 => true
-  max [towards-nowrap one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles  >= 0 => true
-  max [towards-pitch one-of turtles with [self != myself ]] of turtles < 360 => true
-  min [towards-pitch one-of turtles with [xcor != [xcor] of myself or ycor != [ycor] of myself]] of turtles >= 0 => true
-  max [towards-pitch one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles < 360 => true
-  min [towards-pitch one-of patches with [pxcor != [pxcor] of myself or pycor != [pycor] of myself]] of turtles >= 0 => true
-
 Interaction12
   O> cro 20 [ fd 5 ]
   map [[towardsxy 0 0] of ?] sort turtles => [180 198 216 234 252 270 288 306 324 342 0 18 36 54 72 90 108 126 144 162]
@@ -174,13 +142,6 @@ Interaction14_2D
   O> crt 2 [ set heading 0 ]
   T> repeat 2 [ hatch 1 rt 1 ]
   sort [heading] of turtles => [0 0 1 1 2 2]
-
-# in 3D sometimes rt 1 doesn't result in exactly heading = 1 
-# floating point math. so be looser on the 3D test
-Interaction14_3D
-  O> crt 2 [ set heading 0 ]
-  T> repeat 2 [ hatch 1 [ ] rt 1 ]
-  sort [ precision heading 12 ] of turtles => [0 0 1 1 2 2]
 
 Interaction15
   O> create-mice 1 [ ask mice [ hatch 1 ] ]
@@ -239,35 +200,6 @@ Interaction20_2D
   O> ask turtles with-min [ tvar ] [ die ]
   count turtles => 8
 
-Interaction20_3D
-  O> ask patches with-max [ pxcor ] [ set pcolor red ]
-  count patches with [ pcolor = red ] => 121
-  O> ask patches with-min [ pycor ] [ set pcolor blue ]
-  count patches with [ pcolor = blue ] => 121
-  count patches with [ pcolor = red ] => 110
-  O> ask turtles with-max [ xcor ] [ die ]
-  count turtles => 0
-  O> cro 10
-  O> ask turtles with-min [ xcor ] [ set color red ]
-  count turtles with [ color = red ] => 10
-  O> ask turtles [ fd 4 ]
-  O> ask turtles with-max [ xcor ] [ die ]
-  count turtles => 9
-  O> ask turtles [ set tvar "a" ]
-  O> ask turtle 1 [ set tvar "b" ]
-  O> ask turtles with-max [ tvar ] [ set color green ]
-  count turtles with [ pcolor = green ] => 0
-  O> ask patches [ set pvar 0 ]
-  O> ask patches with-max [ pxcor ] [ set pvar 0.346754 ]
-  O> ask patches with-min [ pycor ] [ set pvar -0.3467 ]
-  O> ask patches with-max [ pvar ] [ set pcolor pink ]
-  O> ask turtles [ set tvar 1.7976931348623157E308 ]
-  O> ask turtles with-max [ tvar ] [ set color orange ]
-  count turtles with [ color = orange ] => 9
-  O> ask turtle 1 [ set tvar -1.7976931348623157E308 ]
-  O> ask turtles with-min [ tvar ] [ die ]
-  count turtles => 8
-
 Interaction21
   O> crt 1 [ set glob1 self ]
   is-turtle? turtle 0 => true
@@ -294,8 +226,4 @@ PatchTriesTurtleReporter
 
 BreedAt_2D
   P> set pvar 1 + count frogs-at 0 0
-  all? patches [pvar = 1] => true
-
-BreedAt_3D
-  P> set pvar 1 + count frogs-at 0 0 0
   all? patches [pvar = 1] => true

@@ -19,10 +19,6 @@ LetWithWith_2D
   O> let x 5 set glob1 count patches with [pxcor = x]
   glob1 => 11
 
-LetWithWith_3D
-  O> let x 5 set glob1 count patches with [pxcor = x]
-  glob1 => 121
-
 LetTwiceInDifferentBlocks
   O> set glob1 0
   O> foreach [true false] [ ifelse ? [ let x 5 set glob1 glob1 + x ] [ let x 6 set glob1 glob1 + x ] ]

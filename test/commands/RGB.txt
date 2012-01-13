@@ -97,21 +97,3 @@ RGBColorImport_2D
   [pcolor] of patch 0 0 => [0 0 255]
   [plabel-color] of patch 0 0 => [0 0 255]
   [pcolor] of patch 0 1 => 0
-
-RGBColorImport_3D
-  O> crt 2 [ create-links-with other turtles [ set color [255 0 0] set label-color [255 0 0]] ]
-  T> set color [0 255 0]
-  T> set label-color [0 255 0]
-  O> ask patch 0 0 0 [ set pcolor [0 0 255] set plabel-color [0 0 255] ]
-  O> __mkdir "tmp/RGB"
-  O> export-world "tmp/RGB/rgb-color.csv"
-  O> ca
-  O> import-world "tmp/RGB/rgb-color.csv"
-  [color] of link 0 1 => [255 0 0]
-  [label-color] of link 0 1 => [255 0 0]
-  [color] of turtle 0 => [0 255 0]
-  [label-color] of turtle 0 => [0 255 0]
-  [pcolor] of patch 0 0 0 => [0 0 255]
-  [plabel-color] of patch 0 0 0 => [0 0 255]
-  [pcolor] of patch 0 1 0 => 0
-

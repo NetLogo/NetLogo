@@ -5,15 +5,6 @@ Neighbors1Torus_2D
   min [count neighbors4] of patches => 4
   max [count neighbors4] of patches => 4
 
-Neighbors1Torus_3D
-  O> __change-topology true true
-  min [count neighbors] of patches => 26
-  max [count neighbors] of patches => 26
-  min [count neighbors4] of patches => 4
-  max [count neighbors4] of patches => 4
-  min [count neighbors6] of patches => 6
-  max [count neighbors6] of patches => 6
-
 Neighbors1Box_2D
   O> __change-topology false false
   min [count neighbors] of patches => 3

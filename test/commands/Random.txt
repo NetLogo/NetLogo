@@ -136,32 +136,6 @@ RandomNOfIsFairForPatches_2D
   sum [plabel] of patches => 100000
   ratio < 3 => true
 
-# take more samples since there is an order of magnitude
-# more patches
-RandomNOfIsFairForPatches_3D
-  to-report ratio let x [plabel] of patches report max x / min x end
-  O> random-seed 39823
-  P> set plabel 0
-  O> repeat 100000 [ ask n-of 1 patches [ set plabel plabel + 1 ] ]
-  sum [plabel] of patches => 100000
-  ratio < 3 => true
-  P> set plabel 0
-  O> repeat 100000 [ ask n-of 2 patches [ set plabel plabel + 1 ] ]
-  sum [plabel] of patches => 200000
-  ratio < 3 => true
-  P> set plabel 0
-  O> repeat 100000 [ ask n-of 3 patches [ set plabel plabel + 1 ] ]
-  sum [plabel] of patches => 300000
-  ratio < 3 => true
-  P> set plabel 0
-  O> repeat 100000 [ ask n-of 5 patches [ set plabel plabel + 1 ] ]
-  sum [plabel] of patches => 500000
-  ratio < 3 => true
-  P> set plabel 0
-  O> repeat 100000 [ ask n-of 10 patches [ set plabel plabel + 1 ] ]
-  sum [plabel] of patches => 1000000
-  ratio < 3 => true
-
 RandomNOfIsFairForTurtles
   to-report ratio let x [label] of turtles report max x / min x end
   O> random-seed 39823

@@ -45,22 +45,3 @@ ComparingPatches_2D
   patch 0 0 >= patch 0 0 => true
   patch 0 0 < patch 0 0 => false
   patch 0 0 <= patch 0 0 => true
-
-ComparingPatches_3D
-  patch 0 0 0 > patch 0 1 0 => true
-  patch 0 0 0 >= patch 0 1 0 => true
-  patch 0 0 0 < patch 0 1 0 => false
-  patch 0 0 0 <= patch 0 1 0 => false
-  patch 0 0 0 > patch 1 0 0 => false
-  patch 0 0 0 >= patch 1 0 0 => false
-  patch 0 0 0 < patch 1 0 0 => true
-  patch 0 0 0 <= patch 1 0 0 => true
-  patch 0 0 0 > patch 0 0 0 => false
-  patch 0 0 0 >= patch 0 0 0 => true
-  patch 0 0 0 < patch 0 0 0 => false
-  patch 0 0 0 <= patch 0 0 0 => true
-  patch 0 0 0 > patch 0 0 1 => true
-  patch 0 0 0 >= patch 0 0 1 => true
-  patch 0 0 0 < patch 0 0 1 => false
-  patch 0 0 0 <= patch 0 0 1 => false
-

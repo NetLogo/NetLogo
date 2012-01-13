@@ -8,11 +8,6 @@ TestRandomOrderInitializationSprout_2D
   O> ask patch 0 0 [ sprout 10 [ set glob1 who ] ]
   glob1 => 2
 
-TestRandomOrderInitializationSprout_3D
-  O> random-seed 1717
-  O> ask patch 0 0 0 [ sprout 10 [ set glob1 who ] ]
-  glob1 => 2
-
 TestRandomOrderInitializationHatch
   O> random-seed 1717
   O> crt 1

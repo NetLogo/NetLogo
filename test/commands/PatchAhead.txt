@@ -8,16 +8,6 @@ PatchAhead1_2D
   any? turtles with [patch-ahead 3 != patch-at (dx * 3) (dy * 3)] => false
   any? turtles with [patch-ahead 10000 != patch-at (dx * 10000) (dy * 10000)] => false
 
-PatchAhead1_3D
-  O> random-seed 223
-  O> crt 100 [ fd who ]
-  any? turtles with [patch-here != patch-ahead 0] => false
-  T> rt 45 * random 8
-  any? turtles with [patch-ahead 1 != patch-at dx dy dz ] => false
-  any? turtles with [patch-ahead 2 != patch-at (dx * 2) (dy * 2) (dz * 2)] => false
-  any? turtles with [patch-ahead 3 != patch-at (dx * 3) (dy * 3) (dz * 3)] => false
-  any? turtles with [patch-ahead 10000 != patch-at (dx * 10000) (dy * 10000) (dz * 10000)] => false
-
 PatchRightAndAhead
   O> random-seed 37823
   P> sprout 1 [ rt 90 * random 4 fd 0.5 rt 90 fd random-float 1 ]

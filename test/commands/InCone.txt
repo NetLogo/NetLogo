@@ -43,22 +43,6 @@ InconePatchWhoseCenterIAmOn_2D
   T> ask patches in-cone 0.1 0 [set pcolor green]
   [pcolor] of patch 0 0 = green => true
 
-InconePatchWhoseCentreIamOn_3D
-  O> cro 1
-  T> ask patches in-cone 0 0 [set pcolor red]
-  [pcolor] of patch 0 0 0 = red => true
-  T> fd 0.1
-  T> ask patches in-cone 0 0 [set pcolor green]
-  [pcolor] of patch 0 0 0 = red => true
-  T> set heading 180
-  T> ask patches in-cone 0 0 [set pcolor green]
-  [pcolor] of patch 0 0 0 = red => true
-  T> ask patches in-cone 0.1 0 [set pcolor green]
-  [pcolor] of patch 0 0 0 = green => true
-  T> tilt-up 45
-  T> ask patches in-cone 0.1 0  [ set pcolor yellow ]
-  [pcolor] of patch 0 0 0 = green => true
-
 InconeInvalidInputs
   O> crt 1
   T> ask patches in-cone -1 0 [set pcolor red] => ERROR IN-CONE cannot take a negative radius.
@@ -67,12 +51,6 @@ InconeInvalidInputs
 
 InconeLargeRadiusDuplicationCheck
   O> crt 1
-  T> set glob1 count patches in-cone 100 360
-  count patches = glob1 => true
-
-InconeLargeRadiusDuplicationCheck_3D
-  O> crt 1
-  T> tilt-up 90
   T> set glob1 count patches in-cone 100 360
   count patches = glob1 => true
 
@@ -88,14 +66,6 @@ InconeDontAskSomeOtherPatches_2D
   [pcolor] of patch 0 2 = black => true
   [pcolor] of patch 0 3 = black => true
   [pcolor] of patch 0 4 = red => true
-
-InconeDontAskSomeOtherPatches_3D
-  O> cro 1
-  T> ask patches with [distance-nowrap myself > 3] in-cone 4 30 [set pcolor red]
-  [pcolor] of patch 0 1 0 = black => true
-  [pcolor] of patch 0 2 0 = black => true
-  [pcolor] of patch 0 3 0 = black => true
-  [pcolor] of patch 0 4 0 = red => true
 
 InconeDontAskTurtlesOnYou
   O> crt 2
@@ -125,14 +95,6 @@ InconeTestForGridRoot1
   [color] of turtle 0 = red => true
   [color] of turtle 1 = green => true
 
-InconeTestForGridRoot1_3D
-  O> crt 2 [ set color green ]
-  O> ask turtle 0 [setxy -0.49 0.49 set heading -45]
-  O> ask turtle 1 [ setxyz -0.49 0.49 2.51 ]
-  O> ask turtle 0 [ask turtles in-cone 2.85 0 [set color blue]]
-  [color] of turtle 0 = blue => true
-  [color] of turtle 1 = green => true
-
 InconeTestForGridRoot2
   O> crt 2
   O> ask turtle 0 [setxy -0.49 0.49 set heading -45]
@@ -156,12 +118,6 @@ Incone360DiffTestForPatches_2D
   T> set heading -45
   O> ask turtle 0 [ask patches in-cone 4 150 [set pcolor red]]
   [pcolor] of patch 1 2 = red => true
-
-Incone360DiffTestForPatches_3D
-  O> crt 1
-  T> set heading -45
-  O> ask turtle 0 [ask patches in-cone 4 150 [set pcolor red]]
-  [pcolor] of patch 1 2 0 = red => true
 
 InconeManyTurtlesCountingTorus
   O> __change-topology true true
@@ -222,12 +178,6 @@ InConeCornerOrigin1_2D
   O> cro 10 [ setxy 17 15 fd 3 ]
   [count turtles in-cone 3 180] of turtle 0 => 6
 
-InConeCornerOrigin1_3D
-  O> resize-world 0 32 0 32 0 32
-  O> cro 1 [ setxy 17 15 ]
-  O> cro 10 [ setxy 17 15 fd 3 ]
-  [count turtles in-cone 3 180] of turtle 0 => 6   
-
 InConeCornerOrigin2_2D
   O> resize-world 0 32 0 32
   O> ask patch 9 0 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
@@ -268,83 +218,6 @@ InConeCornerOrigin2_2D
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
   T> rt 180
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-
-InConeCornerOrigin2_3D
-  O> resize-world 0 32 0 32 0 32
-  O> ask patch 9 0 0 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set heading 180
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> setxy ycor xcor  
-  T> set heading 270
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set heading 90
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  O> ca
-  O> ask patch 9 0 0 [ sprout 1 [ set heading 0 set pitch 90 hatch 32 [ fd who ] ] ]
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set pitch -90
   [count turtles in-cone 15 0] of turtle 0 => 16
   [count turtles in-cone 16 0] of turtle 0 => 17
   [count turtles in-cone 17 0] of turtle 0 => 18
@@ -409,83 +282,6 @@ InConeCornerOrigin3_2D
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
 
-InConeCornerOrigin3_3D
-  O> resize-world -32 0 -32 0 -32 0
-  O> ask patch -9 2 0 [ sprout 1 [ set heading 0 hatch 32 [ fd who ] ] ]
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set heading 180
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> setxy ycor xcor  
-  T> set heading 270
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set heading 90
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  O> ca
-  O> ask patch -9 2 0 [ sprout 1 [ set heading 0 set pitch 90 hatch 32 [ fd who ] ] ]
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-  T> set pitch -90
-  [count turtles in-cone 15 0] of turtle 0 => 16
-  [count turtles in-cone 16 0] of turtle 0 => 17
-  [count turtles in-cone 17 0] of turtle 0 => 18
-  [count turtles in-cone 18 0] of turtle 0 => 19
-  [count turtles in-cone 22 0] of turtle 0 => 23
-  [count turtles in-cone 30 0] of turtle 0 => 31
-  [count turtles in-cone 31 0] of turtle 0 => 32
-  [count turtles in-cone 32 0] of turtle 0 => 33
-  [count turtles in-cone 33 0] of turtle 0 => 33
-  [count turtles in-cone 100 0] of turtle 0 => 33
-  [count turtles in-cone 500 0] of turtle 0 => 33
-
 InConeCornerOrigin4_2D
   O> resize-world 0 5 0 5
   O> ask patch 1 2 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
@@ -499,24 +295,6 @@ InConeCornerOrigin4_2D
   T> rt 180
   [count turtles in-cone 100 0] of turtle 0 => 6
 
-InConeCornerOrigin4_3D
-  O> resize-world 0 5 0 5 0 5
-  O> ask patch 1 2 0 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
-  count turtles => 6
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set heading 180
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> setxy ycor xcor  
-  T> set heading 270
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set heading 90
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  O> ca
-  O> ask patch 1 2 0 [ sprout 1 [ set heading 0 set pitch 90 hatch 5 [ fd who ] ] ]
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set pitch -90
-  [count turtles in-cone 100 0] of turtle 0 => 6
-
 InConeCornerOrigin5_2D
   O> resize-world -5 0 -5 0
   O> ask patch -2 -3 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
@@ -528,22 +306,4 @@ InConeCornerOrigin5_2D
   T> rt 90
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> rt 180
-  [count turtles in-cone 100 0] of turtle 0 => 6
-
-InConeCornerOrigin5_3D
-  O> resize-world -5 0 -5 0 -5 0
-  O> ask patch -2 -3 0 [ sprout 1 [ set heading 0 hatch 5 [ fd who ] ] ]
-  count turtles => 6
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set heading 180
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> setxy ycor xcor  
-  T> set heading 270
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set heading 90
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  O> ca
-  O> ask patch -2 -3 0 [ sprout 1 [ set heading 0 set pitch 90 hatch 5 [ fd who ] ] ]
-  [count turtles in-cone 100 0] of turtle 0 => 6
-  T> set pitch -90
   [count turtles in-cone 100 0] of turtle 0 => 6

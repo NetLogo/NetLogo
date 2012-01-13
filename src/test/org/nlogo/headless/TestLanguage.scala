@@ -59,16 +59,12 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
 
   // the rules on whether or not the test should be run
   val shouldRun = {
-    val envCorrect =
-      if (testName.endsWith("_2D")) !Version.is3D
-      else if (testName.endsWith("_3D")) Version.is3D
-      else true
-    val useGenerator = org.nlogo.api.Version.useGenerator
-    val generatorCorrect =
-      if (testName.startsWith("Generator")) useGenerator
-      else if (testName.startsWith("NoGenerator")) !useGenerator
-      else true
-    envCorrect && generatorCorrect
+    import org.nlogo.api.Version.useGenerator
+    if (testName.startsWith("Generator"))
+      useGenerator
+    else if (testName.startsWith("NoGenerator"))
+      !useGenerator
+    else true
   }
 
   def fullName = suiteName + "::" + testName

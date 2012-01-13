@@ -13,11 +13,6 @@ SortingListsOfAgents_2D
   map [[who] of ?] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
   map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1) (patch -1 1) (patch 1 -1) (patch -1 -1)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
 
-SortingListsOfAgents_3D
-  O> crt 5
-  map [[who] of ?] sort (list (turtle 4) (turtle 2) (turtle 0) (turtle 3) (turtle 1)) => [0 1 2 3 4]
-  map [list [pxcor] of ? [pycor] of ?] sort (list (patch 1 1 0) (patch -1 1 0) (patch 1 -1 0) (patch -1 -1 0)) => [[-1 1] [1 1] [-1 -1] [1 -1]]
-
 SortingListsOfLinks
   O> crt 5
   T> create-links-with turtles with [ who > [who] of myself ]

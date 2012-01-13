@@ -30,15 +30,6 @@ Uphill1_2D
   T> rt 180 fd 1 move-to patch-here
   any? turtles with [patch-here != patch 0 0] => false
 
-Uphill1_3D
-  O> random-seed 287
-  P> if patch 0 0 0 != self [ set pcolor 1 ]
-  O> crt 100
-  T> uphill pcolor
-  any? turtles with [xcor != pxcor or ycor != pycor or zcor != pzcor] => false
-  T> rt 180 fd 1 move-to patch-here
-  any? turtles with [patch-here != patch 0 0 0] => false
-
 Uphill2
   O> crt 100
   O> ask turtle 0 [ set glob1 patch-here ask patches with [ self != glob1 ] [ set pcolor 1 ] ]
