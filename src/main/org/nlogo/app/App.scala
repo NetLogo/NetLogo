@@ -313,7 +313,6 @@ class App extends
       add(fileMenu)
       add(new EditMenu(App.this))
       add(pico.getComponent(classOf[ToolsMenu]))
-      add(tabs.tabsMenu)
     }
     // a little ugly we have to typecast here, but oh well - ST 10/11/05
     helpMenu = new MenuBarFactory().addHelpMenu(menuBar).asInstanceOf[HelpMenu]

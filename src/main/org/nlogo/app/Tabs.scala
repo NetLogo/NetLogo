@@ -19,8 +19,6 @@ class Tabs(val workspace: GUIWorkspace,
     addChangeListener(this)
   }
 
-  var tabsMenu: org.nlogo.swing.TabsMenu = null
-
   val interfaceTab = new InterfaceTab(workspace, dialogFactory)
   val proceduresTab = new MainProceduresTab(workspace)
 
@@ -32,7 +30,6 @@ class Tabs(val workspace: GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
-    tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
   }
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {
@@ -92,18 +89,6 @@ class Tabs(val workspace: GUIWorkspace,
 
   def getIndexOfComponent(tab: ProceduresTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
-
-  def removeMenuItem(index: Int) {
-    // first remove all the menu items after this one...
-    for(i <- tabsMenu.getItemCount() - 1 to index by -1) tabsMenu.remove(i)
-    // then add the ones that still exist back, there might be an easier way to do this by simply
-    // changing the actions in the other menu items but this seemed like more straight forward code.
-    for(i <- index until getTabCount) addMenuItem(i, getTitleAt(i))
-  }
-
-  def addMenuItem(i: Int, name: String) {
-    tabsMenu.addMenuItem(('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
-  }
 
   private def stripPath(filename: String): String =
     filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1, filename.length)
