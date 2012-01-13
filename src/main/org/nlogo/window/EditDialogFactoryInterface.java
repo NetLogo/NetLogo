@@ -2,10 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.api.TokenType;
-import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Editable;
-import org.nlogo.editor.Colorizer;
 
 // This is used so that other packages don't depend on the properties package.  It gets instantiated
 // by dependency injection. - ST 2/17/10

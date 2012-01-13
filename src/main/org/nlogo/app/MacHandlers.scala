@@ -5,7 +5,6 @@ package org.nlogo.app
 import net.roydesign.event.ApplicationEvent
 import net.roydesign.mac.MRJAdapter
 import org.nlogo.awt.UserCancelException
-import java.awt.event.ActionListener
 import org.nlogo.swing.Implicits.thunk2actionListener
 import org.nlogo.api.I18N
 

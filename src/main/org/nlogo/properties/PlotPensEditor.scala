@@ -7,7 +7,6 @@ import javax.swing._
 import javax.swing.BorderFactory._
 import java.awt.{List => AWTList, _}
 import org.nlogo.awt.Fonts.platformMonospacedFont
-import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{OptionDialog, RichJButton}
 import org.nlogo.editor.{Colorizer, EditorField}
 import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer}

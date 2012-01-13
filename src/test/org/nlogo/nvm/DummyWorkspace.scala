@@ -3,9 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
-import org.nlogo.util.MersenneTwisterFast
-import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, ExtensionManager,
-                      LogoException, AggregateManagerInterface, HubNetInterface, JobOwner,
+import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler}
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {

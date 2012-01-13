@@ -4,7 +4,6 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet}
 import org.nlogo.api.{JobOwner, LogoException}
-import org.nlogo.util.MersenneTwisterFast
 
 trait JobManagerInterface {
   def isInterrupted: Boolean

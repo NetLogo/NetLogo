@@ -3,9 +3,9 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Observer;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reference;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _observervariable
     extends Reporter {

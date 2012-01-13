@@ -2,14 +2,15 @@
 
 package org.nlogo.prim.hubnet;
 
-import java.util.Iterator;
-
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.api.Syntax;
+
+import java.util.Iterator;
+
 import static scala.collection.JavaConversions.asScalaBuffer;
 
 public final strictfp class _hubnetsendmessage

@@ -4,7 +4,6 @@ package org.nlogo.window;
 
 import org.nlogo.agent.World3D;
 import org.nlogo.api.I18N;
-import org.nlogo.api.Property;
 
 public strictfp class WorldViewSettings3D
     extends WorldViewSettings {

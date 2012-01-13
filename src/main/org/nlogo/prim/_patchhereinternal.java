@@ -4,9 +4,9 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.nvm.Reporter;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
+import org.nlogo.nvm.Reporter;
 
 // needed by _patchat.optimize() because regular _patchhere is turtle-only
 

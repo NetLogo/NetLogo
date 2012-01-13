@@ -3,12 +3,28 @@
 package org.nlogo.job
 
 import org.nlogo.api.{ JobOwner, LogoException, PeriodicUpdateDelay }
-import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerInterface, JobManagerOwner }
+import org.nlogo.nvm.{ ConcurrentJob, Job, JobManagerOwner }
 import java.util.{ Collections => JCollections, List => JList, ArrayList => JArrayList }
 import org.nlogo.util.Exceptions.{ ignoring, handling }
 
+object JobThread {
+
+  // too little limits recursion in user code, too much may cause OutOfMemoryErrors on Windows
+  // and/or Linux (even if there's plenty of extra heap).
+  private val defaultStackSize = 8   // megabytes
+
+  // allow override through property
+  def stackSize: Int =
+    try java.lang.Integer.getInteger("org.nlogo.stackSize", defaultStackSize)
+    // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+    catch {
+      case _: java.security.AccessControlException =>
+        defaultStackSize
+    }
+}
+
 class JobThread(manager: JobManager, owner: JobManagerOwner, lock: AnyRef)
-extends Thread("JobThread") {
+extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
 
   val primaryJobs = JCollections.synchronizedList(new JArrayList[Job])
   val secondaryJobs = JCollections.synchronizedList(new JArrayList[Job])

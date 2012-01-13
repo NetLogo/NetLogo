@@ -3,10 +3,10 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.RendererInterface;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.RendererInterface;
 import org.nlogo.workspace.AbstractWorkspace;
 
 public strictfp class View

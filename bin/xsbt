@@ -21,7 +21,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
 
 $JAVA \
-  -Xss16m -Xmx1536m -XX:MaxPermSize=256m \
+  -Xmx1536m -XX:MaxPermSize=256m \
   -Djava.library.path= \
   -Djava.ext.dirs= \
   -Dfile.encoding=UTF-8 \

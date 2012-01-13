@@ -2,7 +2,6 @@
 
 package org.nlogo.api
 
-import java.lang.reflect.Field
 import java.util.Properties
 
 /**

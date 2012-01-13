@@ -2,12 +2,12 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.api.Let;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Let;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _wait
     extends Command

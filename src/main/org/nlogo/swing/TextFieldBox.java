@@ -2,12 +2,6 @@
 
 package org.nlogo.swing;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -15,6 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A box for TextFields and their labels that keeps the fields and labels

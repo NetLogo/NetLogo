@@ -7,6 +7,12 @@ Want more want more..."<br>
 
 = Current notes =
 
+hey, maybe agentsets should be bitsets?  we don't want to waste memory
+though if the turtle numbers keep climbing and the old turtles are
+dead. oh but hey, the bitset could be tagged with the *range* of
+turtle ids that the agentset *covers*. yeah. and we could update the
+range when we wipe old turtles at iteration time?
+
 make nobody an Agent, so values that return agents can return Agent instead
 of Object. perhaps I should even have a nobody-turtle, a nobody-patch, and
 a nobody-link (and maybe a generic nobody or a nobody-observer) so that

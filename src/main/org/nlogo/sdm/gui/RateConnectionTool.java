@@ -2,13 +2,13 @@
 
 package org.nlogo.sdm.gui;
 
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-
 import org.jhotdraw.framework.ConnectionFigure;
 import org.jhotdraw.framework.Drawing;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.standard.SingleFigureEnumerator;
+
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 
 strictfp class RateConnectionTool

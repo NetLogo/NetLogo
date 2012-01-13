@@ -25,7 +25,6 @@ package org.nlogo.generator
 import org.objectweb.asm
 import asm.Label
 import asm.Opcodes._
-import org.nlogo.api.CompilerException
 import org.nlogo.nvm.CustomGenerated
 import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _sentence, _word }
 

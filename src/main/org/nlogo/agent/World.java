@@ -2,6 +2,21 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Color;
+import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ImporterUser;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.Nobody$;
+import org.nlogo.api.Program;
+import org.nlogo.api.Shape;
+import org.nlogo.api.ShapeList;
+import org.nlogo.api.TrailDrawerInterface;
+import org.nlogo.api.ValueConstraint;
+import org.nlogo.api.WorldDimensionException;
+import org.nlogo.api.WorldDimensions;
+import org.nlogo.util.MersenneTwisterFast;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,22 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.nlogo.api.Color;
-import org.nlogo.api.CompilerServices;
-import org.nlogo.api.LogoException;
-import org.nlogo.util.MersenneTwisterFast;
-import org.nlogo.api.Nobody$;
-import org.nlogo.api.Program;
-import org.nlogo.api.Shape;
-import org.nlogo.api.ShapeList;
-import org.nlogo.api.TrailDrawerInterface;
-import org.nlogo.api.WorldDimensions;
-import org.nlogo.api.ImporterUser;
-import org.nlogo.api.WorldDimensionException;
-import org.nlogo.api.ValueConstraint;
-
-import org.nlogo.api.AgentException;
 
 // A note on wrapping: normally whether x and y coordinates wrap is a
 // product of the topology.  But we also have the old "-nowrap" primitives

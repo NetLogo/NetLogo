@@ -2,13 +2,13 @@
 
 package org.nlogo.render;
 
+import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.GraphicsInterface;
+import org.nlogo.shape.VectorShape;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import org.nlogo.api.GraphicsInterface;
-import org.nlogo.shape.VectorShape;
-import org.nlogo.api.Graphics2DWrapper;
 
 // A lot of the code in this file is for the turtle shape cache.  The
 // purpose of the cache is to speed up rendering of turtles.  We need

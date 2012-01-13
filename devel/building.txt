@@ -132,6 +132,7 @@ tagging:
 - make sure any uncommitted changes have been committed and pushed
   (by doing "git st")
 - tag the release in git
+  - use an annotated tag (git tag -a), not a lightweight tag
   - since the contents of the release bundles are spread across
     multiple repos (main repo, models repo, extensions repo,
     Mathematica Link repo) you need to tag the release in every

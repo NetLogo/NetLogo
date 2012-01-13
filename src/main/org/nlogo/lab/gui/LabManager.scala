@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{ModelSection, Token, TokenType}
+import org.nlogo.api.ModelSection
 import org.nlogo.lab.{Protocol, ProtocolLoader, ProtocolSaver}
 import org.nlogo.window.{GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface}
 import org.nlogo.nvm.WorkspaceFactory

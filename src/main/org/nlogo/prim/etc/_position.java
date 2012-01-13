@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.Iterator;
-
+import org.nlogo.api.Equality;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
-import org.nlogo.api.Equality;
+
+import java.util.Iterator;
 
 public final strictfp class _position
     extends Reporter

@@ -2,9 +2,9 @@
 
 package org.nlogo.lab
 
-import java.util.concurrent.{Callable, ExecutionException, Executors, TimeUnit}
+import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.agent.Observer
-import org.nlogo.api.{CompilerException, Dump, LogoException, ValueConstraint,
+import org.nlogo.api.{Dump,
                       WorldDimensions, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.util.MersenneTwisterFast

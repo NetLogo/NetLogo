@@ -1294,10 +1294,10 @@ patch-ahead <i>distance</i> != nobody
         out what error was suppressed in <i>commands1</i>. See <a href=
         "#error-message">error-message</a>.
       <pre>
-carefully [ show 1 / 1 ] [ print error-message ]
-=&gt; 1
-carefully [ show 1 / 0 ] [ print error-message ]
-=&gt; division by zero
+carefully [ print one-of [1 2 3] ] [ print error-message ]
+=&gt; 3
+observer> carefully [ print one-of [] ] [ print error-message ]
+=&gt; ONE-OF got an empty list as input.
 </pre>
     </div>
     <div class="dict_entry">

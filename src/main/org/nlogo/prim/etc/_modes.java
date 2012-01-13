@@ -2,17 +2,17 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-
 import org.nlogo.agent.LogoHashObject;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.MutableInteger;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 public final strictfp class _modes
     extends Reporter

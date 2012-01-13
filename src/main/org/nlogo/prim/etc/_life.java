@@ -4,8 +4,8 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
-import org.nlogo.nvm.Command;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Command;
 
 /*
 to go

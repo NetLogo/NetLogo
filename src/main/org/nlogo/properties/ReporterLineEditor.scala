@@ -5,7 +5,7 @@ package properties
 
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import javax.swing.{JScrollPane, ScrollPaneConstants}
-import editor.{EditorField, Colorizer, EditorArea}
+import editor.{EditorField, Colorizer}
 import java.awt.{Dimension, Font}
 
 abstract class ReporterLineEditor(accessor: PropertyAccessor[String],

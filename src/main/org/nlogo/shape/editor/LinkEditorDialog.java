@@ -3,8 +3,8 @@
 package org.nlogo.shape.editor;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.ShapeList;
 import org.nlogo.api.Shape;
+import org.nlogo.api.ShapeList;
 import org.nlogo.shape.LinkShape;
 
 strictfp class LinkEditorDialog
