@@ -5,7 +5,6 @@ package org.nlogo.lex
 import org.nlogo.api.{ CompilerException, ExtensionManager, Token, TokenizerInterface, TokenType }
 
 object Tokenizer2D extends Tokenizer(TokenMapper2D)
-object Tokenizer3D extends Tokenizer(TokenMapper3D)
 
 class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
 

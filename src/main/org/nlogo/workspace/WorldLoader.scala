@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ I18N, WorldDimensions, WorldDimensions3D }
+import org.nlogo.api.{ I18N, WorldDimensions }
 import org.nlogo.nvm.Workspace.UpdateMode
 
 class WorldLoader {
@@ -93,46 +93,5 @@ class WorldLoader {
       world.computePatchSize(minWidth - world.insetWidth, d.width)
     else
       patchSize
-  }
-}
-
-class WorldLoader3D extends WorldLoader {
-  override val updateModeIndex = 24
-  override val tickCounterIndex = 25
-  override val tickCounterLabelIndex = 26
-  override val frameRateIndex = 27
-  override def getWidth(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]) =
-    strings(3).toInt - strings(1).toInt
-  override def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]) =
-    strings(4).toInt - strings(2).toInt
-  override def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]) =
-    patchSize
-  override def getWorldDimensions(strings: Array[String]) = {
-    var maxX = strings(5).toInt
-    var maxY = strings(6).toInt
-    var minX = -1 
-    var minY = -1
-    var minZ = 0
-    var maxZ = 0
-    if(maxX != -1 && maxY != -1) {
-      minX = - maxX
-      minY = - maxY
-    }
-    else if(strings.length > 20) {
-      minX = strings(17).toInt
-      maxX = strings(18).toInt
-      minY = strings(19).toInt
-      maxY = strings(20).toInt
-    }
-    if(strings.length > 14) {
-      maxZ = strings(14).toInt
-      minZ = - maxZ
-    }
-    // it's a 3D model saved since the merge. yay!
-    if (strings.length > 23) {
-      minZ = strings(21).toInt
-      maxZ = strings(22).toInt
-    }
-    new WorldDimensions3D(minX, maxX, minY, maxY, minZ, maxZ)
   }
 }

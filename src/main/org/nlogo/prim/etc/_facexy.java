@@ -14,22 +14,16 @@ public final strictfp class _facexy
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.NumberType(), Syntax.NumberType()},
-            "OT--", true);
+            "-T--", true);
   }
 
   @Override
   public void perform(final Context context)
       throws LogoException {
-    if (context.agent instanceof org.nlogo.agent.Turtle) {
-      Turtle turtle = (Turtle) context.agent;
-      turtle.face(argEvalDoubleValue(context, 0),
-          argEvalDoubleValue(context, 1),
-          true);
-    } else {
-      world.observer().
-          face(argEvalDoubleValue(context, 0),
-              argEvalDoubleValue(context, 1));
-    }
+    Turtle turtle = (Turtle) context.agent;
+    turtle.face(argEvalDoubleValue(context, 0),
+                argEvalDoubleValue(context, 1),
+                true);
     context.ip = next;
   }
 }

@@ -31,7 +31,7 @@ object ChecksumsAndPreviews {
       case Array("--checksum", path) =>
         Checksums.update(List(path))
       case Array("--checksums") =>
-        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        Checksums.update(paths(Checksums.okPath, includeBenchmarks = true))
       case Array("--preview", path) =>
         Previews.remake(path)
       case Array("--previews") =>
@@ -85,8 +85,7 @@ object ChecksumsAndPreviews {
         }
         else true)
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "models/test/checksums3d.txt"
-                 else "models/test/checksums.txt"
+      val path = "models/test/checksums.txt"
       val m = load(path)
       paths.foreach(updateOne(m, _))
       write(m, path)

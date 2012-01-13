@@ -242,7 +242,7 @@ public strictfp class Patch
           } else if (value instanceof LogoList) {
             pcolor((LogoList) value, VAR_PCOLOR, false);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(false)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables()[vn],
                 Double.class, value);
           }
           break;
@@ -257,7 +257,7 @@ public strictfp class Patch
           } else if (value instanceof LogoList) {
             labelColor((LogoList) value, VAR_PLABELCOLOR);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(false)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables()[vn],
                 Double.class, value);
           }
           break;

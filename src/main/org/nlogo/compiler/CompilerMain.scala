@@ -19,7 +19,7 @@ private object CompilerMain {
               oldProcedures: java.util.Map[String, Procedure],
               extensionManager: ExtensionManager): Seq[Procedure] = {
 
-    implicit val tokenizer = if(program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
+    implicit val tokenizer = Compiler.Tokenizer2D
     val structureResults = new StructureParser(tokenizer.tokenize(source), // tokenize
                                                displayName, program, oldProcedures, extensionManager)
       .parse(subprogram)  // process declarations
@@ -44,7 +44,7 @@ private object CompilerMain {
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
       procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
-      procdef.accept(new Optimizer(program.is3D))   // do various code-improving rewrites
+      procdef.accept(new Optimizer)   // do various code-improving rewrites
     }
     new TypeParser(defs).parse()  // catch agent type inconsistencies
     for(procdef <- defs) {

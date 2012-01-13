@@ -14,13 +14,12 @@ object Compiler extends CompilerInterface {
 
   // tokenizer singletons
   val Tokenizer2D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer2D")
-  val Tokenizer3D = Femto.scalaSingleton(classOf[TokenizerInterface], "org.nlogo.lex.Tokenizer3D")
   val TokenMapper2D = Femto.scalaSingleton(classOf[TokenMapperInterface], "org.nlogo.lex.TokenMapper2D")
 
   // some private helpers
   private type ProceduresMap = java.util.Map[String, Procedure]
   private val noProcedures: ProceduresMap = java.util.Collections.emptyMap[String, Procedure]
-  private def tokenizer(is3D: Boolean) = if(is3D) Tokenizer3D else Tokenizer2D
+  private def tokenizer = Tokenizer2D
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
@@ -50,7 +49,7 @@ object Compiler extends CompilerInterface {
   // that we don't know about.
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    implicit val t = tokenizer(program.is3D)
+    implicit val t = tokenizer
     val results = new StructureParser(t.tokenizeRobustly(source), None,
                                       program, oldProcedures, extensionManager)
       .parse(subprogram)
@@ -75,28 +74,28 @@ object Compiler extends CompilerInterface {
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
   @throws(classOf[CompilerException])
-  def readFromString(source: String, is3D: Boolean): AnyRef =
+  def readFromString(source: String): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new ConstantParser().getConstantValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
-  def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
+  def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef =
     NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-        .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+        .getConstantValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
-  def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
+  def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): java.lang.Double =
     NumberParser.parse(source).right.getOrElse(
       new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getNumberValue(tokenizer(is3D).tokenize(source).iterator))
+      .getNumberValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val tokens: Iterator[Token] =
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader", 
-                Array(currFile, tokenizer(world.program.is3D)))
+                Array(currFile, tokenizer))
     val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getConstantFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
@@ -117,20 +116,20 @@ object Compiler extends CompilerInterface {
   }
 
   // used for procedures menu
-  def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]] =
-    new StructureParserExtras()(tokenizer(is3D)).findProcedurePositions(source)
+  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]] =
+    new StructureParserExtras()(tokenizer).findProcedurePositions(source)
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String] =
-    new StructureParserExtras()(tokenizer(is3D)).findIncludes(sourceFileName, source)
+  def findIncludes(sourceFileName: String, source: String): java.util.Map[String, String] =
+    new StructureParserExtras()(tokenizer).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
-  def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
+  def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
     try {
-      implicit val t = tokenizer(program.is3D)
+      implicit val t = tokenizer
       val results =
         new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
                             None, program, procedures, extensionManager)
@@ -156,10 +155,10 @@ object Compiler extends CompilerInterface {
 
   // used by the indenter. we always use the 2D tokenizer since it doesn't matter in this context
   def getTokenAtPosition(source: String, position: Int): Token =
-    tokenizer(false).getTokenAtPosition(source, position)
+    tokenizer.getTokenAtPosition(source, position)
 
   // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token] =
-    tokenizer(is3D).tokenizeForColorization(source, extensionManager)
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token] =
+    tokenizer.tokenizeForColorization(source, extensionManager)
 
 }

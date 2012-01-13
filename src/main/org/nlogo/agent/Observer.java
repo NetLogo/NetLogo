@@ -7,7 +7,6 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ValueConstraint;
-import org.nlogo.api.Vect;
 
 public strictfp class Observer
     extends Agent
@@ -263,49 +262,6 @@ public strictfp class Observer
     this.roll = ((roll % 360) + 360) % 360;
   }
 
-  Vect rotationPoint;
-
-  public double dist() {
-    return StrictMath.sqrt((rotationPoint.x() - _oxcor) * (rotationPoint.x() - _oxcor)
-        + (rotationPoint.y() - _oycor) * (rotationPoint.y() - _oycor)
-        + ((rotationPoint.z() - _ozcor) * (rotationPoint.z() - _ozcor)));
-  }
-
-  public void setRotationPoint(Vect v) {
-    rotationPoint = v;
-  }
-
-  public void setRotationPoint(double x, double y, double z) {
-    rotationPoint = new Vect(x, y, z);
-  }
-
-  public void setRotationPoint(org.nlogo.api.Agent agent) {
-    if (agent instanceof org.nlogo.api.Turtle) {
-      org.nlogo.api.Turtle t = (org.nlogo.api.Turtle) agent;
-      setRotationPoint(t.xcor(), t.ycor(), 0);
-    } else if (agent instanceof org.nlogo.api.Link) {
-      org.nlogo.api.Link link = (org.nlogo.api.Link) agent;
-      setRotationPoint(link.midpointX(), link.midpointY(), 0);
-    } else {
-      org.nlogo.api.Patch p = (org.nlogo.api.Patch) agent;
-      setRotationPoint(p.pxcor(), p.pycor(), 0);
-    }
-  }
-
-  public Vect rotationPoint() {
-    return rotationPoint;
-  }
-
-  int followDistance = 5;
-
-  public int followDistance() {
-    return followDistance;
-  }
-
-  public void followDistance(int followDistance) {
-    this.followDistance = followDistance;
-  }
-
   public void setOrientation(double heading, double pitch, double roll) {
     this.heading = heading;
     this.pitch = pitch;
@@ -338,95 +294,13 @@ public strictfp class Observer
     return value;
   }
 
-  public void face(org.nlogo.api.Agent agent) {
-    try {
-      heading(world.protractor().towards(this, agent, false));
-    } catch (AgentException ex) {
-      heading(0.0);
-    }
-    try {
-      pitch(-world.protractor().towardsPitch(this, agent, false));
-    } catch (AgentException ex) {
-      pitch(0.0);
-    }
-
-    setRotationPoint(agent);
-  }
-
-  public void face(double x, double y) {
-    try {
-      heading(world.protractor().towards(this, x, y, false));
-    } catch (AgentException ex) {
-      heading(0.0);
-    }
-    try {
-      pitch(-world.protractor().towardsPitch(this, x, y, 0, false));
-    } catch (AgentException ex) {
-      pitch(0.0);
-    }
-
-    setRotationPoint(x, y, 0);
-  }
-
-  public void moveto(Agent otherAgent)
-      throws AgentException {
-    if (otherAgent instanceof Turtle) {
-      Turtle t = (Turtle) otherAgent;
-      oxyandzcor(t.xcor(), t.ycor(), 0);
-    } else if (otherAgent instanceof Patch) {
-      Patch p = (Patch) otherAgent;
-      oxyandzcor(p.pxcor, p.pycor, 0);
-    } else {
-      throw new AgentException("you can't move-to a link");
-    }
-    face(rotationPoint.x(), rotationPoint.y());
-  }
-
   public void setPerspective(Perspective perspective, org.nlogo.api.Agent agent) {
     this.perspective = perspective;
     targetAgent = agent;
-    updatePosition();
   }
 
   public void setPerspective(Perspective perspective) {
     this.perspective = perspective;
-  }
-
-  public boolean updatePosition() {
-    boolean changed = false;
-
-    if (perspective == PerspectiveJ.OBSERVE()) {
-      return false;
-    } else if (perspective == PerspectiveJ.WATCH()) {
-      if (targetAgent.id() == -1) {
-        resetPerspective();
-        return true;
-      }
-      setRotationPoint(targetAgent);
-      face(targetAgent);
-    } else // follow and ride are the same save initial conditions.
-    {
-      if (targetAgent.id() == -1) // he's dead!
-      {
-        resetPerspective();
-        return true;
-      }
-
-      Turtle turtle = (Turtle) targetAgent;
-      oxyandzcor(turtle.xcor(), turtle.ycor(), 0);
-      double newHeading = headingSmoother.follow(targetAgent);
-      if (perspective == PerspectiveJ.FOLLOW()) {
-        changed = heading != newHeading;
-        heading(newHeading);
-      } else {
-        heading(turtle.heading());
-      }
-
-      pitch(0);
-      roll(0);
-    }
-
-    return changed;
   }
 
   public double distance(org.nlogo.api.Agent agent) {
@@ -467,19 +341,10 @@ public strictfp class Observer
     heading = 0;
     pitch = 90;
     roll = 0;
-    setRotationPoint(_oxcor, _oycor, 0);
   }
 
   public boolean atHome2D() {
     return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0);
-  }
-
-  // This is a hack for now, there is prob. a better way of doing this - jrn 6/9/05
-  public boolean atHome3D() {
-    return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0) &&
-        (_ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
-        (heading == 0) && (pitch == 90) && (roll == 0) &&
-        (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
   }
 
   @Override
@@ -517,47 +382,6 @@ public strictfp class Observer
   public double size() {
     // how many observers can dance on the head of a pin?
     return 0;
-  }
-
-  public void orbitRight(double delta) {
-    delta = -delta;
-
-    double newHeading = heading + delta;
-    double dxy = dist() * StrictMath.cos(StrictMath.toRadians(pitch));
-    double x = -dxy * StrictMath.sin(StrictMath.toRadians(newHeading));
-    double y = -dxy * StrictMath.cos(StrictMath.toRadians(newHeading));
-
-    oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), _ozcor);
-    heading(newHeading);
-  }
-
-  public void orbitUp(double delta) {
-    delta = -delta;
-
-    double newPitch = pitch - delta;
-    double z = dist() * StrictMath.sin(StrictMath.toRadians(newPitch));
-    double dxy = dist() * StrictMath.cos(StrictMath.toRadians(newPitch));
-    double x = -dxy * StrictMath.sin(StrictMath.toRadians(heading));
-    double y = -dxy * StrictMath.cos(StrictMath.toRadians(heading));
-
-    // don't let observer go under patch-plane or be upside-down
-    if (z + rotationPoint.z() > 0 && newPitch < 90) {
-      oxyandzcor(x + rotationPoint.x(), y + rotationPoint.y(), z + rotationPoint.z());
-      pitch(newPitch);
-    }
-  }
-
-  public void translate(double thetaX, double thetaY) {
-    double headingR = StrictMath.toRadians(heading);
-    double sinH = StrictMath.sin(headingR);
-    double cosH = StrictMath.cos(headingR);
-
-    _oxcor -= ((cosH * thetaX + sinH * thetaY) * 0.1);
-    _oycor += ((sinH * thetaX - cosH * thetaY) * 0.1);
-
-    rotationPoint = new Vect(rotationPoint.x() - ((cosH * thetaX + sinH * thetaY) * 0.1),
-        rotationPoint.y() + ((sinH * thetaX - cosH * thetaY) * 0.1),
-        rotationPoint.z());
   }
 
   public int alpha() {

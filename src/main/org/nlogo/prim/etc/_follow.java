@@ -29,11 +29,6 @@ public final strictfp class _follow
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
     world.observer().setPerspective(PerspectiveJ.FOLLOW(), turtle);
-    // the following code is duplicated in _follow and _followme - ST 6/28/05
-    int distance = (int) turtle.size() * 5;
-    world.observer()
-        .followDistance
-            (StrictMath.max(1, StrictMath.min(distance, 100)));
     context.ip = next;
   }
 }

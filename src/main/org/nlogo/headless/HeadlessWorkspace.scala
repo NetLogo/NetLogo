@@ -7,11 +7,10 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Version, RendererInterface,
-                       WorldDimensions, WorldDimensions3D,
+import org.nlogo.api.{ Version, RendererInterface, WorldDimensions,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable }
-import org.nlogo.agent.{ World, World3D }
+import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
@@ -35,7 +34,7 @@ object HeadlessWorkspace {
    */
   def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
+    pico.addComponent(classOf[World])
     pico.addScalaObject("org.nlogo.compiler.Compiler")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
@@ -154,12 +153,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(worldSize: Int, modelString: String) {
-    if (Version.is3D)
-      initForTesting(new WorldDimensions3D(
-          -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
-          modelString)
-    else
-      initForTesting(-worldSize, worldSize, -worldSize, worldSize, modelString)
+    initForTesting(-worldSize, worldSize, -worldSize, worldSize, modelString)
   }
 
   /**

@@ -16,7 +16,7 @@ public final strictfp class _moveto
   @Override
   public Syntax syntax() {
     int[] right = {Syntax.TurtleType() | Syntax.PatchType()};
-    return Syntax.commandSyntax(right, "OT--", true);
+    return Syntax.commandSyntax(right, "-T--", true);
   }
 
   @Override
@@ -31,11 +31,7 @@ public final strictfp class _moveto
       throw new EngineException(context, this, "you can't move-to a link");
     }
     try {
-      if (context.agent instanceof Turtle) {
-        ((Turtle) context.agent).moveTo(otherAgent);
-      } else {
-        world.observer().moveto(otherAgent);
-      }
+      ((Turtle) context.agent).moveTo(otherAgent);
     } catch (AgentException ex) {
       throw new EngineException(context, this, ex.getMessage());
     }

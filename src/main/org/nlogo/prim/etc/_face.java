@@ -17,7 +17,7 @@ public final strictfp class _face
   public Syntax syntax() {
     return Syntax.commandSyntax
         (new int[]{Syntax.TurtleType() | Syntax.PatchType()},
-            "OT--", true);
+            "-T--", true);
   }
 
   @Override
@@ -36,11 +36,7 @@ public final strictfp class _face
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
     }
-    if (context.agent instanceof Turtle) {
-      ((Turtle) context.agent).face(target, true);
-    } else {
-      world.observer().face(target);
-    }
+    ((Turtle) context.agent).face(target, true);
     context.ip = next;
   }
 }

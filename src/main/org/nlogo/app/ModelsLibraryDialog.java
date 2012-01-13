@@ -140,11 +140,6 @@ strictfp class ModelsLibraryDialog
             .getName().equals("Sample Models")) {
       tree.expandRow(0);
     }
-    if (tree.getRowCount() > 0 &&
-        ((Node) tree.getPathForRow(0).getLastPathComponent())
-            .getName().equals("3D")) {
-      tree.expandRow(0);
-    }
     javax.swing.InputMap inputMap = new javax.swing.InputMap();
     inputMap.setParent(tree.getInputMap());
     inputMap.put

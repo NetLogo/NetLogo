@@ -27,7 +27,6 @@ public final strictfp class _ride
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
     world.observer().setPerspective(PerspectiveJ.RIDE(), turtle);
-    world.observer().followDistance(0);
     context.ip = next;
   }
 }

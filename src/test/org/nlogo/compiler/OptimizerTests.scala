@@ -15,7 +15,7 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
   private def compile(source:String):ProcedureDefinition = {
-    val program = new Program(false)
+    val program = new Program
     val results = new StructureParser(tokenizer.tokenize(source), None, program,
                                       java.util.Collections.emptyMap[String,Procedure],
                                       new DummyExtensionManager)
@@ -28,7 +28,7 @@ class OptimizerTests extends FunSuite {
       .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head
     procdef.accept(new ConstantFolder)
-    procdef.accept(new Optimizer(false))
+    procdef.accept(new Optimizer)
     procdef
   }
   test("testForward1") { expect("_fd1[]")(compileCommands("fd 1")) }

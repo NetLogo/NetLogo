@@ -5,9 +5,9 @@ package org.nlogo.api
 import java.util.{ ArrayList, LinkedHashMap, List => JList, Map => JMap }
 import collection.JavaConverters._
 
-final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
+final class Program(val interfaceGlobals: JList[String]) {
 
-  def this(is3D: Boolean) = this(new ArrayList[String], is3D)
+  def this() = this(new ArrayList[String])
 
   val globals: JList[String] = new ArrayList[String]
   for(s <- AgentVariables.getImplicitObserverVariables)
@@ -16,11 +16,11 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
     globals.add(s.toUpperCase)
 
   val turtlesOwn: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitTurtleVariables(is3D))
+  for(s <- AgentVariables.getImplicitTurtleVariables)
     turtlesOwn.add(s)
 
   val patchesOwn: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitPatchVariables(is3D))
+  for(s <- AgentVariables.getImplicitPatchVariables)
     patchesOwn.add(s)
 
   val linksOwn: JList[String] = new ArrayList[String]

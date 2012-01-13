@@ -311,9 +311,9 @@ class TestAllSyntaxes extends FunSuite {
                     |_exportplots string,OTPL,null,0,1,1
                     |_exportview string,OTPL,null,0,1,1
                     |_exportworld string,OTPL,null,0,1,1
-                    |_face turtle or patch,OT--,null,0,1,1 *
+                    |_face turtle or patch,-T--,null,0,1,1 *
                     |_facenowrap agent,-T--,null,0,1,1 *
-                    |_facexy number/number,OT--,null,0,2,2 *
+                    |_facexy number/number,-T--,null,0,2,2 *
                     |_facexynowrap number/number,-T--,null,0,2,2 *
                     |_fd number,-T--,null,0,1,1
                     |_fileclose ,OTPL,null,0,0,0
@@ -358,7 +358,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_magicopen string,O---,null,0,1,1 *
                     |_makepreview ,O---,null,0,0,0
                     |_mkdir string,OTPL,null,0,1,1
-                    |_moveto turtle or patch,OT--,null,0,1,1 *
+                    |_moveto turtle or patch,-T--,null,0,1,1 *
                     |_nodisplay ,OTPL,null,0,0,0
                     |_observercode ,O---,null,0,0,0
                     |_outputprint anything,OTPL,null,0,1,1

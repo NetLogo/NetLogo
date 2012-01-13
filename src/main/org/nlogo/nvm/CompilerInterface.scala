@@ -24,22 +24,22 @@ trait CompilerInterface {
                           extensionManager: ExtensionManager, parse: Boolean)
 
   @throws(classOf[CompilerException])
-  def readFromString(source: String, is3D: Boolean): AnyRef
+  def readFromString(source: String): AnyRef
 
   @throws(classOf[CompilerException])
-  def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef
+  def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef
 
   @throws(classOf[CompilerException])
-  def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef
+  def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef
 
   @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef
 
-  def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]]
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String]
-  def isValidIdentifier(s: String, is3D: Boolean): Boolean
+  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]]
+  def findIncludes(sourceFileName: String, source: String): java.util.Map[String, String]
+  def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: java.util.Map[String, Procedure], extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token]
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token]
 }

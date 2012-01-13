@@ -121,17 +121,10 @@ public strictfp class ModelsLibrary {
     if (!needsModelScan()) {
       return;
     }
-    if (!org.nlogo.api.Version.is3D() || !exclusive) {
-      java.io.File directoryRoot = new java.io.File("models", "");
-      rootNode = new Node("models", "", true);
-      scanDirectory(directoryRoot, null, rootNode, exclusive);
-    } else {
-      java.io.File directoryRoot = new java.io.File("models/3D", "");
-      rootNode = new Node("models/3D", "", true);
-      scanDirectory(directoryRoot, null, rootNode, exclusive);
-    }
+    java.io.File directoryRoot = new java.io.File("models", "");
+    rootNode = new Node("models", "", true);
+    scanDirectory(directoryRoot, null, rootNode, exclusive);
   }
-
 
   public static Node scanForModelsAtRoot(String path, boolean exclusive) {
     java.io.File directoryRoot = new java.io.File(path, "");
@@ -238,18 +231,8 @@ public strictfp class ModelsLibrary {
   private static List<String> orderItems(List<String> names, boolean topLevel, boolean exclusive) {
     String[] orderednames;
     if (topLevel) {
-      if (org.nlogo.api.Version.is3D()) {
-        if (exclusive) {
-          orderednames = new String[]{"3D"};
-        }
-        {
-          orderednames = new String[]{
-            "3D", "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES"};
-        }
-      } else {
-        orderednames = new String[]{
-          "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES"};
-      }
+      orderednames = new String[]{
+        "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES"};
     } else {
       orderednames = new String[0];
     }
@@ -295,11 +278,7 @@ public strictfp class ModelsLibrary {
             // for the Beatbox model
             name.equals("BEATS") ||
             // when we're not 3D ignore the 3D models.
-            (!org.nlogo.api.Version.is3D() &&
-                (name.equals("3D") ||
-                    // the vrml extension is our only 3D extension at present
-                    // so just special case it - ST 6/12/08
-                    name.equals("VRML")));
+            name.equals("3D") ;
   }
 
   private static String removeSuffix(String reference) {

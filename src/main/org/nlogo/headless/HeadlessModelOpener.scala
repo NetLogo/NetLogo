@@ -87,7 +87,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           SliderConstraint.makeSliderConstraint(
             ws.world.observer(), spec(1), spec(2), spec(3), spec(4).toDouble, vname, ws)
         case "CHOOSER" =>
-          val vals = ws.compiler.readFromString(spec(1), ws.world.program.is3D).asInstanceOf[LogoList]
+          val vals = ws.compiler.readFromString(spec(1)).asInstanceOf[LogoList]
           val defaultIndex = spec(2).toInt
           val defaultAsString = org.nlogo.api.Dump.logoObject(vals.get(defaultIndex), true, false)
           interfaceGlobalCommands.append("set " + vname + " " + defaultAsString + "\n")
@@ -97,8 +97,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           var defaultVal: AnyRef = spec(1)
           if (spec(2) == "Number" || spec(2) == "Color")
             defaultVal = ws.compiler.readNumberFromString(spec(1), ws.world,
-              ws.getExtensionManager,
-              ws.world.program.is3D)
+              ws.getExtensionManager)
           new InputBoxConstraint(spec(2), defaultVal)
       }
       ws.world.observer().variableConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)

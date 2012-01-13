@@ -31,11 +31,7 @@ strictfp class InterfacePanel
     super(workspace);
     this.viewWidget = viewWidget;
     workspace.setWidgetContainer(this);
-    // in 3d don't add the view widget since it's always
-    // disabled there's no reason for it to take space 7/5/07
-    if (!Version.is3D()) {
-      addWidget((Widget) viewWidget, 0, 0, false, false);
-    }
+    addWidget((Widget) viewWidget, 0, 0, false, false);
     ((Widget) viewWidget).deleteable_$eq(false);
     addKeyListener(this);
     addMouseListener(this);
@@ -244,8 +240,6 @@ strictfp class InterfacePanel
       // the graphics widget (and the command center) are special cases because
       // they are not recreated at load time, but reused
       viewWidget.asWidget().load(strings);
-      // in 3D we don't add the viewWidget to the interface panel
-      // so don't worry about all the sizing junk ev 7/5/07
       java.awt.Container parent = viewWidget.asWidget().getParent();
       if (parent != null) {
         parent.setSize(viewWidget.asWidget().getSize());
@@ -280,10 +274,6 @@ strictfp class InterfacePanel
     List<org.nlogo.window.Widget> result =
         new ArrayList<org.nlogo.window.Widget>();
     java.awt.Component[] comps = getComponents();
-    // automatically add the view widget in 3D isn't not
-    // in the comp list but we definitely want to save it
-    // it won't be added twice as we're checking contains
-    // below.  ev 7/5/07
     result.add((org.nlogo.window.Widget) viewWidget);
     // loop backwards so JLayeredPane gives us the components
     // in back-to-front order for saving - ST 9/29/03

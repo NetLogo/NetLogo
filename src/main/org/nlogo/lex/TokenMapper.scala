@@ -6,10 +6,9 @@ import org.nlogo.util.Utils
 import org.nlogo.api._
 
 // public for use from compiler.TestAllSyntaxes. yuck! - ST 1/21/09
-object TokenMapper2D extends TokenMapper(false)
-object TokenMapper3D extends TokenMapper(true)
+object TokenMapper2D extends TokenMapper
 
-class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
+class TokenMapper extends TokenMapperInterface {
   /// public stuff
   def isCommand(s: String) = commands.contains(s.toUpperCase)
   def isKeyword(s: String) = keywords.contains(s.toUpperCase) || s.toUpperCase.endsWith("-OWN")
@@ -22,8 +21,8 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
   def getReporter(s: String) = instantiate[TokenHolder](reporters(s.toUpperCase))
   private val variables = Set() ++
     AgentVariables.getImplicitObserverVariables ++
-    AgentVariables.getImplicitTurtleVariables(is3D) ++
-    AgentVariables.getImplicitPatchVariables(is3D) ++
+    AgentVariables.getImplicitTurtleVariables ++
+    AgentVariables.getImplicitPatchVariables ++
     AgentVariables.getImplicitLinkVariables
   private val constants = Map(
     "FALSE" -> false, "TRUE" -> true, "NOBODY" -> Nobody,

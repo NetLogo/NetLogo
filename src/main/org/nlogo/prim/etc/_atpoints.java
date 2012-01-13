@@ -92,9 +92,7 @@ public final strictfp class _atpoints
   private boolean validateListEntry(Object entry) {
     if (entry instanceof LogoList) {
       LogoList entryList = (LogoList) entry;
-      if (entryList.size() == 2 ||
-          ((world.program().is3D())
-              && (entryList.size() == 3))) {
+      if (entryList.size() == 2 ) {
         for (Iterator<Object> iter = entryList.iterator(); iter.hasNext();) {
           if (!(iter.next() instanceof Double)) {
             return false;
@@ -112,7 +110,6 @@ public final strictfp class _atpoints
     // predictable ordering so runs are reproducible - ST 8/13/03
     LinkedHashSet<Patch> result =
         new LinkedHashSet<Patch>();
-    boolean is3D = world.program().is3D();
     for (Iterator<Object> it = points.iterator(); it.hasNext();) {
       LogoList entry = (LogoList) it.next();
       Double x = null;
@@ -127,14 +124,6 @@ public final strictfp class _atpoints
           case 1:
             y = (Double) it2.next();
             break;
-          case 2:
-            if (!is3D) {
-              throw new EngineException(context, this,
-                  I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
-
-            }
-            z = (Double) it2.next();
-            break;
           default:
             throw new EngineException(context, this,
                 I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
@@ -146,16 +135,7 @@ public final strictfp class _atpoints
             I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
       }
       try {
-        Patch patch = null;
-        if (!is3D) {
-          patch = agent.getPatchAtOffsets(x.doubleValue(), y.doubleValue());
-        } else {
-          patch =
-              ((org.nlogo.agent.Agent3D) agent).getPatchAtOffsets(x.doubleValue(),
-                  y.doubleValue(),
-                  z.doubleValue());
-
-        }
+        Patch patch = agent.getPatchAtOffsets(x.doubleValue(), y.doubleValue());
         if (patch != null) {
           result.add(patch);
         }

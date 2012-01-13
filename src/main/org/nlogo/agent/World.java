@@ -823,7 +823,6 @@ public strictfp class World
       ((Patch) iter.next()).clearTurtles();
     }
     nextTurtleIndex = 0;
-    _observer.updatePosition();
   }
 
   public void clearLinks() {
@@ -1281,11 +1280,11 @@ public strictfp class World
   }
 
   public Program newProgram() {
-    return new Program(false);
+    return new Program();
   }
 
   public Program newProgram(List<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, false);
+    return new Program(interfaceGlobals);
   }
 
   List<String> oldTurtlesOwn = new ArrayList<String>();

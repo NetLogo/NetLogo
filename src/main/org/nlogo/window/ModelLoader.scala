@@ -30,9 +30,7 @@ object ModelLoader {
       if (version == null || !version.startsWith("NetLogo")) throw new InvalidVersionException()
 
       def decideToContinueBasedOnVersion() = {
-        // we don't want to show this warning if we're opening a 2D model in
-        // 3D or vice versa because we have different, better warnings. ev 11/1/07
-        val needsWarning = Version.is3D == Version.is3D(version) && !Version.compatibleVersion(version)
+        val needsWarning = !Version.compatibleVersion(version)
         type Decision = Boolean
         val Continue = true
         val Cancel = false

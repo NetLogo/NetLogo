@@ -53,9 +53,7 @@ public strictfp class FileMenu
     importMenu.addMenuItem(new ImportWorldAction());
     importMenu.addMenuItem(new ImportPatchColorsAction());
     importMenu.addMenuItem(new ImportPatchColorsRGBAction());
-    if (!org.nlogo.api.Version.is3D()) {
-      importMenu.addMenuItem(new ImportDrawingAction());
-    }
+    importMenu.addMenuItem(new ImportDrawingAction());
 
     add(importMenu);
     if (!System.getProperty("os.name").startsWith("Mac")) {
@@ -609,17 +607,8 @@ public strictfp class FileMenu
     if (version == null || !version.startsWith("NetLogo")) {
       notifyUserNotValidFile();
     }
-    if (org.nlogo.api.Version.is3D() &&
-        !org.nlogo.api.Version.is3D(version)) {
-      checkWithUserBeforeOpening2DModelin3D();
-    }
-    if (!org.nlogo.api.Version.is3D() &&
-        org.nlogo.api.Version.is3D(version)) {
-      checkWithUserBeforeOpening3DModelin2D(version);
-    } else {
-      if (!org.nlogo.api.Version.knownVersion(version)) {
-        checkWithUserBeforeOpeningModelFromFutureVersion(version);
-      }
+    if (!org.nlogo.api.Version.knownVersion(version)) {
+      checkWithUserBeforeOpeningModelFromFutureVersion(version);
     }
     openFromMap(map, path, message, modelType);
     savedVersion = version;
@@ -803,33 +792,6 @@ public strictfp class FileMenu
         "the model was created in " + version + ".) " +
         "NetLogo can try to open the model, but it may " +
         "or may not work.";
-    if (org.nlogo.swing.OptionDialog.show
-        (this, "NetLogo", message, options) != 0) {
-      throw new UserCancelException();
-    }
-  }
-
-  private void checkWithUserBeforeOpening3DModelin2D(String version)
-      throws UserCancelException {
-    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-    String message = "You are attempting to open a model that was created" +
-        " in a 3D version of NetLogo.  (This is " +
-        org.nlogo.api.Version.version() + "; " +
-        "the model was created in " + version + ".) " +
-        "NetLogo can try to open the model, but it may " +
-        "or may not work.";
-    if (org.nlogo.swing.OptionDialog.show
-        (this, "NetLogo", message, options) != 0) {
-      throw new UserCancelException();
-    }
-  }
-
-  private void checkWithUserBeforeOpening2DModelin3D()
-      throws UserCancelException {
-    String[] options = {I18N.guiJ().get("common.buttons.continue"), I18N.guiJ().get("common.buttons.cancel")};
-    String message = "You are attempting to open a 2D model in " +
-        org.nlogo.api.Version.version() + ". " +
-        "You might need to make changes before it will work in 3D.";
     if (org.nlogo.swing.OptionDialog.show
         (this, "NetLogo", message, options) != 0) {
       throw new UserCancelException();

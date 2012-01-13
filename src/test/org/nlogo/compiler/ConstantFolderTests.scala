@@ -10,7 +10,7 @@ class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
     implicit val tokenizer = Compiler.Tokenizer2D
-    val program = new Program(false)
+    val program = new Program
     val results = new StructureParser(
       tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
       program, java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)

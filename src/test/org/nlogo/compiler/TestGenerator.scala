@@ -10,7 +10,7 @@ class TestGenerator extends FunSuite {
 
   val program = {
     import collection.JavaConverters._
-    new Program(List("glob1").asJava, false)
+    new Program(List("glob1").asJava)
   }
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")

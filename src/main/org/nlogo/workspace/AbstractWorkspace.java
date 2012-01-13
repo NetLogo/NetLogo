@@ -518,7 +518,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-            (s, world, extensionManager, world.program().is3D());
+            (s, world, extensionManager);
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -641,10 +641,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public void loadWorld(String[] strings, WorldLoaderInterface worldInterface) {
-    WorldLoader loader =
-        org.nlogo.api.Version.is3D()
-            ? new WorldLoader3D()
-            : new WorldLoader();
+    WorldLoader loader = new WorldLoader();
     loader.load(strings, worldInterface);
   }
 
@@ -659,7 +656,7 @@ public abstract strictfp class AbstractWorkspace
   public Object readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString
-      (source, world, getExtensionManager(), world.program().is3D());
+      (source, world, getExtensionManager());
   }
 
   public void checkReporterSyntax(String source)
@@ -676,7 +673,7 @@ public abstract strictfp class AbstractWorkspace
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().is3D());
+      compiler().readFromString(s);
       return true;
     }
     catch(CompilerException e) {
@@ -685,7 +682,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().is3D());
+    return compiler().isValidIdentifier(s);
   }
 
   public boolean isReporter(String s) {
@@ -694,7 +691,7 @@ public abstract strictfp class AbstractWorkspace
 
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
-      (s, getExtensionManager(), world.program().is3D());
+      (s, getExtensionManager());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
@@ -702,7 +699,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().is3D());
+    return compiler().findProcedurePositions(source);
   }
 
   public abstract org.nlogo.nvm.CompilerInterface compiler();

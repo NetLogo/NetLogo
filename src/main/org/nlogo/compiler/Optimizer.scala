@@ -9,7 +9,7 @@ import org.nlogo.prim._
 
 // "asInstanceOf" is everywhere here. Could I make it more type-safe? - ST 1/28/09
 
-private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
+private class Optimizer extends DefaultAstVisitor {
 
   override def visitProcedureDefinition(defn: ProcedureDefinition) {
     if(Version.useOptimizer)
@@ -246,8 +246,6 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
   private object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
     def munge(root: Match) {
-      // this optimization doesn't work in 3D, we could fix it but not now - ev 6/27/07, ST 3/3/08
-      if(is3D) return
       root.matchArg(0, classOf[_patches])
       val arg1 = root.matchArg(1).matchReporterBlock().matchit(classOf[_equal])
       val pcor = arg1.matchOneArg(classOf[_patchvariabledouble])
@@ -451,7 +449,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
     val clazz = classOf[_patchvariable]
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_patchvariable].vn
-      if(org.nlogo.api.AgentVariables.isDoublePatchVariable(vn, is3D)) {
+      if(org.nlogo.api.AgentVariables.isDoublePatchVariable(vn)) {
         root.replace(classOf[_patchvariabledouble])
         root.reporter.asInstanceOf[_patchvariabledouble].vn = vn
       }
@@ -462,7 +460,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
     val clazz = classOf[_turtlevariable]
     def munge(root: Match) {
       val vn = root.reporter.asInstanceOf[_turtlevariable].vn
-      if(org.nlogo.api.AgentVariables.isDoubleTurtleVariable(vn, is3D)) {
+      if(org.nlogo.api.AgentVariables.isDoubleTurtleVariable(vn)) {
         root.replace(classOf[_turtlevariabledouble])
         root.reporter.asInstanceOf[_turtlevariabledouble].vn = vn
       }

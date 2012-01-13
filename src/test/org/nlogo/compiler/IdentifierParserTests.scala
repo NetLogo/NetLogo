@@ -14,7 +14,7 @@ class IdentifierParserTests extends FunSuite {
       import collection.JavaConverters._
       List("X").asJava
     }
-    val program = new Program(interfaceGlobals, false)
+    val program = new Program(interfaceGlobals)
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(wrappedSource), None,

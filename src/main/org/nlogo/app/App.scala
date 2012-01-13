@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.agent.{Agent, World3D, World}
+import org.nlogo.agent.{Agent, World}
 import org.nlogo.api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
@@ -260,7 +260,7 @@ class App extends
     }
     pico.addComponent(interfaceFactory)
 
-    val world = if(Version.is3D) new World3D() else new World()
+    val world = new World()
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
                                   frame, frame, listenerManager) {

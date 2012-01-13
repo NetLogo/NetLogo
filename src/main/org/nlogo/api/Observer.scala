@@ -14,10 +14,6 @@ trait Observer extends Agent {
   /** Returns the current perspective */
   def perspective: Perspective
 
-  /** Returns the current distance behind the followed turtle the 3D view is displaying */
-  def followDistance: Int
-
-  def dist: Double
   def heading: Double
   def pitch: Double
   def roll: Double

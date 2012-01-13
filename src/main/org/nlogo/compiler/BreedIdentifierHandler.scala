@@ -10,10 +10,8 @@ private object BreedIdentifierHandler {
   import org.nlogo.prim._
   import TokenType.COMMAND
   import TokenType.REPORTER
-  def process(token:Token,program:Program):Option[Token] = {
-    val handlers = if(program.is3D) handlers3D else handlers2D
+  def process(token:Token,program:Program):Option[Token] =
     handlers.toStream.flatMap(_.process(token,program)).headOption
-  }
   def turtle(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
                _.breeds, _.breedsSingular, (obj:AnyRef) => true)
@@ -27,9 +25,7 @@ private object BreedIdentifierHandler {
                _.linkBreeds, _.linkBreedsSingular,
                { case a:AgentSet => a.isUndirected
                 case s:String => s == "UNDIRECTED-LINK-BREED" } ) 
-  private val handlers2D = handlers(false)
-  private val handlers3D = handlers(true)
-  private def handlers(is3D: Boolean) = List(
+  private val handlers = List(
     // prims for turtle breeds
     turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
     turtle("CREATE-ORDERED-*", COMMAND, false, classOf[_createorderedturtles]),

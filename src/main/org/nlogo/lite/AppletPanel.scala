@@ -3,7 +3,7 @@
 package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
-import org.nlogo.agent.{ Observer, World, World3D }
+import org.nlogo.agent.{ Observer, World }
 import org.nlogo.api.{ CompilerException, LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
@@ -49,7 +49,7 @@ with Event.LinkParent {
     val gridbag = new java.awt.GridBagLayout()
     val c = new java.awt.GridBagConstraints
     setLayout(gridbag)
-    val world = if(Version.is3D) new World3D() else new World
+    val world = new World
     val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
     addLinkComponent(workspace)
     val procedures = new ProceduresLite(workspace, workspace)

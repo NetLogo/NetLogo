@@ -1043,14 +1043,14 @@ public strictfp class Importer
   }
 
   String[] getSpecialTurtleVariables() {
-    String[] vars = AgentVariables.getImplicitTurtleVariables(false);
+    String[] vars = AgentVariables.getImplicitTurtleVariables();
     return new String[]
         {vars[Turtle.VAR_WHO], vars[Turtle.VAR_BREED],
             vars[Turtle.VAR_LABEL], vars[Turtle.VAR_SHAPE]};
   }
 
   String[] getSpecialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(false);
+    String[] vars = AgentVariables.getImplicitPatchVariables();
     return new String[]
         {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR],
             vars[Patch.VAR_PLABEL]};
@@ -1112,11 +1112,11 @@ public strictfp class Importer
 
   String[] getEssentialTurtleVariables() {
     return new String[]
-        {AgentVariables.getImplicitTurtleVariables(false)[Turtle.VAR_WHO]};
+        {AgentVariables.getImplicitTurtleVariables()[Turtle.VAR_WHO]};
   }
 
   String[] getEssentialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(false);
+    String[] vars = AgentVariables.getImplicitPatchVariables();
     return new String[]
         {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR]};
   }
@@ -1175,10 +1175,10 @@ public strictfp class Importer
       return AgentVariables.getImplicitObserverVariables();
     }
     if (agentClass == Turtle.class) {
-      return AgentVariables.getImplicitTurtleVariables(world.program().is3D());
+      return AgentVariables.getImplicitTurtleVariables();
     }
     if (agentClass == Patch.class) {
-      return AgentVariables.getImplicitPatchVariables(world.program().is3D());
+      return AgentVariables.getImplicitPatchVariables();
     }
     if (agentClass == Link.class) {
       return AgentVariables.getImplicitLinkVariables();
@@ -1353,7 +1353,6 @@ public strictfp class Importer
     BLANK_TURTLE_ERROR,
     CSV_LEXING_ERROR,
     ILLEGAL_PCOR_ERROR,
-    IMPORT_3D_ERROR,
     UNKNOWN_ERROR
   }
 
@@ -1419,9 +1418,6 @@ public strictfp class Importer
           break;
         case CSV_LEXING_ERROR:
           message = "Invalid CSV File";
-          break;
-        case IMPORT_3D_ERROR:
-          message = "You cannot import a 2D world into 3D NetLogo";
           break;
         default:
           message = "Unknown Fatal Error";

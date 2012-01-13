@@ -81,7 +81,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         new javax.swing.AbstractAction() {
           public void actionPerformed(java.awt.event.ActionEvent e) {
             if (world.displayOn() && displaySwitchOn() && !jobManager.anyPrimaryJobs()) {
-              viewManager.paintImmediately(world.observer().updatePosition());
+              viewManager.paintImmediately(false);
             }
           }
         };

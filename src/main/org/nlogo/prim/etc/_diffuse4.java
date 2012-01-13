@@ -41,8 +41,6 @@ public final strictfp class _diffuse4
       world.diffuse4(diffuseparam, reference.vn());
     } catch (AgentException e) {
       throw new EngineException(context, this, e.getMessage());
-    } catch (UnsupportedOperationException e) {
-      throw new EngineException(context, this, "Diffuse4 is not supported in 3D");
     } catch (PatchException e) {
       Object value = e.patch().getPatchVariable(reference.vn());
       throw new EngineException
