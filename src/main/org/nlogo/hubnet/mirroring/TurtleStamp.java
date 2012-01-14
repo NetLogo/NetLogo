@@ -2,8 +2,8 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetTurtleStamp
-    extends HubNetDrawingMessage {
+public strictfp class TurtleStamp
+    extends DrawingMessage {
   static final long serialVersionUID = 0L;
 
   public double xcor;
@@ -16,12 +16,12 @@ public strictfp class HubNetTurtleStamp
   public double lineThickness;
   public boolean erase;
 
-  public HubNetTurtleStamp() {
-    super(HubNetDrawingMessage.Type.STAMP);
+  public TurtleStamp() {
+    super(DrawingMessage.Type.STAMP);
   }
 
-  public HubNetTurtleStamp(org.nlogo.api.Turtle turtle, boolean erase) {
-    super(HubNetDrawingMessage.Type.STAMP);
+  public TurtleStamp(org.nlogo.api.Turtle turtle, boolean erase) {
+    super(DrawingMessage.Type.STAMP);
     xcor = turtle.xcor();
     ycor = turtle.ycor();
     shape = turtle.shape();

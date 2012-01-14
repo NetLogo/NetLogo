@@ -2,8 +2,8 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetLine
-    extends HubNetDrawingMessage {
+public strictfp class Line
+    extends DrawingMessage {
   static final long serialVersionUID = 0L;
 
   public double x1;
@@ -14,13 +14,13 @@ public strictfp class HubNetLine
   public double size;
   public String mode;
 
-  public HubNetLine() {
-    super(HubNetDrawingMessage.Type.LINE);
+  public Line() {
+    super(DrawingMessage.Type.LINE);
   }
 
-  public HubNetLine(double x1, double y1, double x2, double y2,
+  public Line(double x1, double y1, double x2, double y2,
                     Object penColor, double penSize, String penMode) {
-    super(HubNetDrawingMessage.Type.LINE);
+    super(DrawingMessage.Type.LINE);
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;

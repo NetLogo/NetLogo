@@ -56,7 +56,7 @@ public strictfp class TurtleData
     labelColor = LogoList.Empty();
   }
 
-  public TurtleData(HubNetTurtleStamp turtle) {
+  public TurtleData(TurtleStamp turtle) {
     mask = COMPLETE;
     xcor = turtle.xcor;
     ycor = turtle.ycor;
