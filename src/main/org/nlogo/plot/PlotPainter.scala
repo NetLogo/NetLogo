@@ -2,7 +2,6 @@
 
 package org.nlogo.plot
 
-import collection.mutable.Buffer
 
 class PlotPainter(plot: Plot) {
 

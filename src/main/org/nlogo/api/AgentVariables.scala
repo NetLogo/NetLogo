@@ -28,15 +28,15 @@ object AgentVariables {
           "THICKNESS", "SHAPE", "TIE-MODE")
 
   private val doubleTurtleVariables2D = Set(
-    VAR_HEADING3D, VAR_PITCH3D, VAR_ROLL3D, VAR_XCOR3D, VAR_YCOR3D, VAR_ZCOR3D, VAR_SIZE3D, VAR_PENSIZE3D)
-  private val doubleTurtleVariables3D = Set(
     VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)
+  private val doubleTurtleVariables3D = Set(
+    VAR_HEADING3D, VAR_PITCH3D, VAR_ROLL3D, VAR_XCOR3D, VAR_YCOR3D, VAR_ZCOR3D, VAR_SIZE3D, VAR_PENSIZE3D)
 
   def isDoubleTurtleVariable(vn: Int, is3D: Boolean): Boolean =
     if (is3D)
-      doubleTurtleVariables2D(vn)
-    else
       doubleTurtleVariables3D(vn)
+    else
+      doubleTurtleVariables2D(vn)
 
   def isSpecialTurtleVariable(vn: Int) =
     vn == VAR_WHO

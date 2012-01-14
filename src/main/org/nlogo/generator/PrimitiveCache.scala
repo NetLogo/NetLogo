@@ -2,7 +2,6 @@
 
 package org.nlogo.generator
 
-import org.nlogo.nvm.Instruction
 import org.objectweb.asm.ClassReader
 
 /**

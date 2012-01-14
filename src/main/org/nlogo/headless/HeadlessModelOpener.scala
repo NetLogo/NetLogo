@@ -2,12 +2,10 @@
 
 package org.nlogo.headless
 
-import org.nlogo.agent.Observer
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList, SimpleJobOwner,
+import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList,
                       ModelReader, ModelSection, Program, ValueConstraint, Version}
-import org.nlogo.nvm.CompilerResults
-import org.nlogo.plot.{Plot,PlotLoader}
+import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.StringUtils.escapeString
 

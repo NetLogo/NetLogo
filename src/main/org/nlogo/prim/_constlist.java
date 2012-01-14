@@ -4,9 +4,9 @@ package org.nlogo.prim;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Pure;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _constlist
     extends Reporter implements Pure {

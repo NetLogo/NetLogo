@@ -2,15 +2,15 @@
 
 package org.nlogo.hubnet.mirroring;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.nlogo.api.Agent;
 import org.nlogo.api.Link;
 import org.nlogo.api.Patch;
 import org.nlogo.api.Turtle;
 import org.nlogo.api.World;
 import org.nlogo.api.WorldPropertiesInterface;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class implements a server-side cache of view mirroring-related world

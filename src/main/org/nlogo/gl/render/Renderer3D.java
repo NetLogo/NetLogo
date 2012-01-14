@@ -2,22 +2,19 @@
 
 package org.nlogo.gl.render;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.media.opengl.GL;
-import javax.media.opengl.glu.GLU;
-
 import org.nlogo.api.Agent;
+import org.nlogo.api.AgentException;
+import org.nlogo.api.DrawingInterface;
 import org.nlogo.api.Patch3D;
 import org.nlogo.api.Turtle;
 import org.nlogo.api.Turtle3D;
+import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 import org.nlogo.api.World3D;
-import org.nlogo.api.ViewSettings;
-import org.nlogo.api.DrawingInterface;
-import org.nlogo.api.AgentException;
+
+import javax.media.opengl.GL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Renderer3D
     extends org.nlogo.gl.render.Renderer {

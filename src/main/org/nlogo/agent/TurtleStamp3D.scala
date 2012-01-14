@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.{ Color, Shape }
+import org.nlogo.api.Color
 
 @annotation.strictfp
 case class TurtleStamp3D(shape: String, xcor: Double, ycor: Double, zcor: Double, size: Double,

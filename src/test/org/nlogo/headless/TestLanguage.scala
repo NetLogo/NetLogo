@@ -11,22 +11,22 @@ import org.nlogo.util.SlowTest
 
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
-abstract class TestLanguage(testFinder: TestFinder) extends FunSuite with SlowTest {
-  for(t:LanguageTest <- TestParser.parseFiles(testFinder.files); if(t.shouldRun))
+abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTest {
+  for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
     test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
       t.run
     }
 }
 
-trait TestFinder{ def files: Iterable[File] }
+trait TestFinder extends Iterable[File]
 case class TxtsInDir(dir:String) extends TestFinder {
-  def files: Iterable[File] = new File(dir).listFiles.filter(_.getName.endsWith(".txt"))
+  override def iterator = new File(dir).listFiles.filter(_.getName.endsWith(".txt")).iterator
 }
 case object ExtensionTestsDotTxt extends TestFinder {
-  def files: Iterable[File] = {
+  def iterator = {
     def filesInDir(parent:File): Iterable[File] =
       parent.listFiles.flatMap{f => if(f.isDirectory) filesInDir(f) else List(f)}
-    filesInDir(new File("extensions")).filter(_.getName == "tests.txt")
+    filesInDir(new File("extensions")).filter(_.getName == "tests.txt").iterator
   }
 }
 
@@ -60,12 +60,11 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
       if (testName.endsWith("_2D")) !Version.is3D
       else if (testName.endsWith("_3D")) Version.is3D
       else true
-    val noGenerator = java.lang.Boolean.getBoolean("org.nlogo.noGenerator")
+    val useGenerator = org.nlogo.api.Version.useGenerator
     val generatorCorrect =
-      if (testName.startsWith("Generator")) !noGenerator
-      else if (testName.startsWith("NoGenerator")) noGenerator
+      if (testName.startsWith("Generator")) useGenerator
+      else if (testName.startsWith("NoGenerator")) !useGenerator
       else true
-
     envCorrect && generatorCorrect
   }
 

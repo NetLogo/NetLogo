@@ -4,8 +4,7 @@ package org.nlogo.gl.view
 
 import javax.media.opengl.GLCanvas
 
-import org.nlogo.api.CompilerException
-import org.nlogo.gl.render.{ ExportRenderer, Renderer, PickListener }
+import org.nlogo.gl.render.Renderer
 import java.awt.image.BufferedImage
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 

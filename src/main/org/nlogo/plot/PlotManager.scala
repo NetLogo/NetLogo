@@ -3,7 +3,7 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{I18N, CompilerException, LogoThunkFactory, CommandLogoThunk}
+import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -169,7 +169,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   def hasErrors(plot:Plot): Boolean = {
     getPlotSetupError(plot).isDefined || getPlotUpdateError(plot).isDefined ||
-    plot.pens.exists(hasErrors)
+    plot.pens.filterNot(_.temporary).exists(hasErrors)
   }
   def getPlotSetupError(plot:Plot) = plotThunks(plot).setup.left.toOption
   def getPlotUpdateError(plot:Plot) = plotThunks(plot).update.left.toOption

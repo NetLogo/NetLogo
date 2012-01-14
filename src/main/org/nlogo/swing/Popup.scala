@@ -4,7 +4,6 @@ package org.nlogo.swing
 
 import javax.swing.{JDialog, JPanel}
 import java.awt.{BorderLayout, Frame}
-import org.nlogo.api.I18N
 
 /**
  * Pops up the given panel as a modal window above the parent frame.

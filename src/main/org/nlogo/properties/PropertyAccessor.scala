@@ -3,7 +3,6 @@
 package org.nlogo.properties
 
 import org.nlogo.api.Editable
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 class PropertyAccessor[T : ClassManifest](val target: Editable, val displayName: String, accessString: String) {

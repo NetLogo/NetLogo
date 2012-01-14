@@ -2,9 +2,9 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _goto  // , Matt
     extends Command {

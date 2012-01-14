@@ -2,13 +2,13 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.nlogo.api.AgentException;
 
 public strictfp class TieManager {
   private final World world;

@@ -8,7 +8,7 @@ package org.nlogo.compiler
 // are added to tokens.txt.) - ST 12/5/09
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm.{ Command, Instruction }
+import org.nlogo.nvm.Instruction
 
 class TestAllSyntaxes extends FunSuite {
   def shorten(name: String) =

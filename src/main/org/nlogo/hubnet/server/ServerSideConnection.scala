@@ -5,7 +5,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.protocol._
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import java.util.Date
-import org.nlogo.api.{I18N, Version}
+import org.nlogo.api.Version
 import org.nlogo.hubnet.connection.{Streamable, AbstractConnection}
 
 // TODO remove die hard. fix ALL of this business.

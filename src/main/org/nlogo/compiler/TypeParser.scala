@@ -64,8 +64,8 @@ package org.nlogo.compiler
 // Whew!  Got all that?
 
 import org.nlogo.compiler.CompilerExceptionThrowers._
-import org.nlogo.api.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Command, Instruction, Procedure, Reporter }
+import org.nlogo.api.Syntax
+import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport }
 
 private class TypeParser(defs: Seq[ProcedureDefinition]) {

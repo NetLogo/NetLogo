@@ -2,9 +2,7 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{CompilerException,Token,TokenizerInterface,TokenType,VersionHistory}
-import org.nlogo.nvm.{Command,Procedure,Reporter}
-import org.nlogo.prim._constdouble
+import org.nlogo.api.{Token,TokenizerInterface,TokenType,VersionHistory}
 import VersionHistory._  // olderThan* methods
 
 // AutoConverter1 handles easy conversions that don't require parsing.

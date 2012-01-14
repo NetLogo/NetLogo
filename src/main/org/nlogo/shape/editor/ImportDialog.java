@@ -2,12 +2,12 @@
 
 package org.nlogo.shape.editor;
 
+import org.nlogo.api.I18N;
+import org.nlogo.api.Shape;
+import org.nlogo.api.ShapeList;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.nlogo.api.I18N;
-import org.nlogo.api.ShapeList;
-import org.nlogo.api.Shape;
 
 public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JDialog

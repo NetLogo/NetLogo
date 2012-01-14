@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.Agent
-import org.nlogo.api.{ Dump, LogoListBuilder, Syntax, TypeNames }
+import org.nlogo.api.{ LogoListBuilder, Syntax, TypeNames }
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 
 class _sorton extends Reporter {

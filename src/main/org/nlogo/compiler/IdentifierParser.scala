@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{cAssert,exception}
-import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType,Version}
+import org.nlogo.api.{CompilerException,Let,Program,Token,TokenType}
 import org.nlogo.nvm.{Instruction,Procedure,Reporter}
 import org.nlogo.prim._
 import collection.JavaConverters._

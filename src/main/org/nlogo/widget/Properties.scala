@@ -6,7 +6,6 @@ package org.nlogo.widget
 // so we put all of our Properties for this package here - ST 2/23/10
 
 import collection.JavaConverters._
-import java.awt.GridBagConstraints.RELATIVE
 import org.nlogo.api.{ I18N, Property => P }
 
 object Properties {

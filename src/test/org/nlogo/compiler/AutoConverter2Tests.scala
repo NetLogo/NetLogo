@@ -4,7 +4,6 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.DummyWorkspace
-import org.nlogo.api.Version
 
 class AutoConverter2Tests extends FunSuite {
   val workspace = new DummyWorkspace

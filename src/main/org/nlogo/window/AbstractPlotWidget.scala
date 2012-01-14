@@ -8,7 +8,7 @@ import org.nlogo.swing.VTextIcon
 import org.nlogo.api.{I18N, Editable}
 import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
 
-import java.awt.GridBagConstraints.{REMAINDER,RELATIVE}
+import java.awt.GridBagConstraints.REMAINDER
 import java.awt.{List=>AWTList, _}
 import image.BufferedImage
 import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
@@ -141,6 +141,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     xAxis.setMax(getLabel(plot.xMax))
     yAxis.setMin(getLabel(plot.yMin))
     yAxis.setMax(getLabel(plot.yMax))
+    if(plot.pensDirty) {
+      legend.refresh()
+      plot.pensDirty = false
+    }
   }
 
   /// satisfy the usual obligations of top-level widgets

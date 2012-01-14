@@ -4,7 +4,7 @@ package org.nlogo.hubnet.mirroring
 
 import org.scalatest.FunSuite
 
-import java.io.{ ByteArrayInputStream, DataInputStream, IOException }
+import java.io.{ ByteArrayInputStream, DataInputStream }
 
 class DiffBufferTests extends FunSuite {
   test("empty -> byte array") {
