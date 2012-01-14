@@ -493,17 +493,17 @@ public strictfp class ClientWorld
 
   public void updateServerPerspective(AgentPerspective p) {
     if (perspectiveMode == PerspectiveMode.SERVER) {
-      perspective = Perspective.load(p.perspective);
-      radius = p.radius;
-      targetAgent = getAgent(p.agent);
+      perspective = Perspective.load(p.perspective());
+      radius = p.radius();
+      targetAgent = getAgent(p.agent());
     }
   }
 
   public void updateClientPerspective(AgentPerspective p) {
-    perspective = Perspective.load(p.perspective);
-    perspectiveMode = p.serverMode ? PerspectiveMode.SERVER : PerspectiveMode.CLIENT;
-    targetAgent = getAgent(p.agent);
-    radius = p.radius;
+    perspective = Perspective.load(p.perspective());
+    perspectiveMode = p.serverMode() ? PerspectiveMode.SERVER : PerspectiveMode.CLIENT;
+    targetAgent = getAgent(p.agent());
+    radius = p.radius();
   }
 
   public double followOffsetX() {
