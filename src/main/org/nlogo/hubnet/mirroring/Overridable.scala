@@ -7,6 +7,15 @@ import java.lang.reflect.{ InvocationTargetException, Method }
 object Overridable {
   def getOverrideIndex(variables: Array[String], varName: String): Int =
     variables.indexWhere(_ equalsIgnoreCase varName)
+  def getOverrideIndex(agentType: AgentType, varName: String) =
+    agentType match {
+      case AgentType.TURTLE =>
+        TurtleData.getOverrideIndex(varName)
+      case AgentType.PATCH =>
+        PatchData.getOverrideIndex(varName)
+      case AgentType.LINK =>
+        LinkData.getOverrideIndex(varName)
+    }
 }
 
 abstract class Overridable {

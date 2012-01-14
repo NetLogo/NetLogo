@@ -148,7 +148,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   /// Individualized client views
 
   def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
-    mirroring.OverrideList.getOverrideIndex(
+    mirroring.Overridable.getOverrideIndex(
       mirroring.AgentType.fromAgentClass(agentType),
       varName) != -1
 
