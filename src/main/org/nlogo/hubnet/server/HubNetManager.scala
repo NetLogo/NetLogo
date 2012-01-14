@@ -149,7 +149,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
     mirroring.OverrideList.getOverrideIndex(
-      mirroring.Agent.AgentType.fromAgentClass(agentType),
+      mirroring.AgentType.fromAgentClass(agentType),
       varName) != -1
 
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
