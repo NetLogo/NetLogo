@@ -556,13 +556,13 @@ public strictfp class ClientWorld
   }
 
   AgentData getAgent(Agent agent) {
-    if (agent.tyype() == AgentType.TURTLE) {
+    if (agent.tyype() == AgentTypeJ.TURTLE()) {
       return getTurtle(Long.valueOf(agent.id()));
     }
-    if (agent.tyype() == AgentType.PATCH) {
+    if (agent.tyype() == AgentTypeJ.PATCH()) {
       return patches[(int) agent.id()];
     }
-    if (agent.tyype() == AgentType.LINK) {
+    if (agent.tyype() == AgentTypeJ.LINK()) {
       return getLink(Long.valueOf(agent.id()));
     }
     return null;
@@ -576,15 +576,15 @@ public strictfp class ClientWorld
   }
 
   public void updateOverrides(SendOverride list) {
-    if (list.type() == AgentType.TURTLE) {
+    if (list.type() == AgentTypeJ.TURTLE()) {
       for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(getTurtle(id), list.variable(), list.overrides().apply(id));
       }
-    } else if (list.type() == AgentType.PATCH) {
+    } else if (list.type() == AgentTypeJ.PATCH()) {
       for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(patches[id.intValue()], list.variable(), list.overrides().apply(id));
       }
-    } else if (list.type() == AgentType.LINK) {
+    } else if (list.type() == AgentTypeJ.LINK()) {
       for (Long id : setAsJavaSet(list.overrides().keySet())) {
         addOverride(getLink(id), list.variable(), list.overrides().apply(id));
       }
@@ -601,15 +601,15 @@ public strictfp class ClientWorld
   }
 
   public void updateOverrides(ClearOverride list) {
-    if (list.type() == AgentType.TURTLE) {
+    if (list.type() == AgentTypeJ.TURTLE()) {
       for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(getTurtle(id), list.variable());
       }
-    } else if (list.type() == AgentType.PATCH) {
+    } else if (list.type() == AgentTypeJ.PATCH()) {
       for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(patches[id.intValue()], list.variable());
       }
-    } else if (list.type() == AgentType.LINK) {
+    } else if (list.type() == AgentTypeJ.LINK()) {
       for (Long id : seqAsJavaList(list.agents())) {
         removeOverride(getLink(id), list.variable());
       }

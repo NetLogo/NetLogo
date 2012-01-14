@@ -9,12 +9,14 @@ object Overridable {
     variables.indexWhere(_ equalsIgnoreCase varName)
   def getOverrideIndex(agentType: AgentType, varName: String) =
     agentType match {
-      case AgentType.TURTLE =>
+      case AgentType.Turtle =>
         TurtleData.getOverrideIndex(varName)
-      case AgentType.PATCH =>
+      case AgentType.Patch =>
         PatchData.getOverrideIndex(varName)
-      case AgentType.LINK =>
+      case AgentType.Link =>
         LinkData.getOverrideIndex(varName)
+      case AgentType.Observer =>
+        throw new IllegalArgumentException
     }
 }
 

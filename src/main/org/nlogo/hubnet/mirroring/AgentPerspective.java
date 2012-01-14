@@ -61,7 +61,7 @@ public strictfp class AgentPerspective {
   }
 
   public boolean equals(org.nlogo.api.Agent a, Perspective p) {
-    return a == null ? (agent.tyype() == AgentType.OBSERVER && agent.id() == 0 &&
+    return a == null ? (agent.tyype() == AgentTypeJ.OBSERVER() && agent.id() == 0 &&
         perspective == 0 && radius == -1) :
       ((agent.id() == a.id())
        && (agent.tyype() == AgentType.fromAgentClass(a.getClass()))
