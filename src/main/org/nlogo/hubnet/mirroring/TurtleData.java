@@ -58,14 +58,14 @@ public strictfp class TurtleData
 
   public TurtleData(TurtleStamp turtle) {
     mask = COMPLETE;
-    xcor = turtle.xcor;
-    ycor = turtle.ycor;
-    shape = turtle.shape;
-    color(turtle.color);
-    heading = turtle.heading;
-    size = turtle.size;
-    hidden = turtle.hidden;
-    lineThickness = turtle.lineThickness;
+    xcor = turtle.xcor();
+    ycor = turtle.ycor();
+    shape = turtle.shape();
+    color(turtle.color());
+    heading = turtle.heading();
+    size = turtle.size();
+    hidden = turtle.hidden();
+    lineThickness = turtle.lineThickness();
   }
 
   TurtleData(long who, short mask, double xcor, double ycor, String shape,

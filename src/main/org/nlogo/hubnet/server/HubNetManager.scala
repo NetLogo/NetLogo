@@ -5,7 +5,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.api.HubNetInterface
 import org.nlogo.hubnet.mirroring
-import org.nlogo.hubnet.mirroring.{LinkStamp, DrawingMessage, TurtleStamp, Line}
+import org.nlogo.hubnet.mirroring.{LinkStamp, TurtleStamp, Line, ClearDrawing}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -187,19 +187,26 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
     if (connectionManager.isRunning && someNodesHaveView) broadcast("VIEW", obj)
   }
 
-  def sendLine(x0: Double, y0: Double, x1: Double, y1: Double, color: Any, size: Double, mode: String) {
+  def sendLine(x0: Double, y0: Double, x1: Double, y1: Double, color: AnyRef, size: Double, mode: String) {
     broadcastViewMessage(new Line(x0, y0, x1, y1, color, size, mode))
   }
 
   def sendStamp(agent: org.nlogo.api.Agent, erase: Boolean) {
     agent match {
-      case t: Turtle => broadcastViewMessage(new TurtleStamp(t, erase))
-      case l: Link => broadcastViewMessage(new LinkStamp(l, erase))
+      case t: Turtle =>
+        broadcastViewMessage(
+          TurtleStamp(t.xcor, t.ycor, t.shape, t.color, t.heading,
+                      t.size, t.hidden, t.lineThickness, erase))
+      case l: Link =>
+        broadcastViewMessage(
+          LinkStamp(
+            l.x1, l.y1, l.x2, l.y2, l.shape, l.color, l.hidden, l.lineThickness,
+            l.isDirectedLink, l.linkDestinationSize, l.heading, l.size, erase))
       case _ =>
     }
   }
 
-  def sendClear() {broadcastViewMessage(new DrawingMessage(DrawingMessage.Type.CLEAR))}
+  def sendClear() {broadcastViewMessage(ClearDrawing)}
 
   /// network info
   @throws(classOf[HubNetException])

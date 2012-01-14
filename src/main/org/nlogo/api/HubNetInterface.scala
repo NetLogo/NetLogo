@@ -81,7 +81,7 @@ trait HubNetInterface extends ViewInterface {
 
   /// mirror drawing
   def sendLine(x0: Double, y0: Double, x1: Double, y1: Double,
-               color: Any, size: Double, mode: String)
+               color: AnyRef, size: Double, mode: String)
 
   def sendStamp(agent: Agent, erase: Boolean)
   def sendClear()
