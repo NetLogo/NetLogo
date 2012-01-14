@@ -72,7 +72,6 @@ object App{
     if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
 
     AbstractWorkspace.isApp(true)
-    AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT

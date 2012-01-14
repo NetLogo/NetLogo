@@ -63,18 +63,10 @@ public final strictfp class DefaultFileManager
   }
 
   public org.nlogo.api.File getFile(String fileName) {
-
-    if (AbstractWorkspace.isApplet()) {
-      return new org.nlogo.api.RemoteFile(fileName);
-    } else {
-      return new org.nlogo.api.LocalFile(fileName);
-    }
+    return new org.nlogo.api.LocalFile(fileName);
   }
 
   public void setPrefix(String newPrefix) {
-    if (AbstractWorkspace.isApplet()) {
-      return;
-    }
     // Ensure a slash so it isAbsolute() won't get mixed up with getModelDir()
     if (newPrefix.charAt(newPrefix.length() - 1) != java.io.File.separatorChar) {
       newPrefix += java.io.File.separatorChar;
@@ -96,24 +88,13 @@ public final strictfp class DefaultFileManager
 
   public String attachPrefix(String filename)
       throws java.net.MalformedURLException {
+    // Check to see if we were given an absolute File Path
+    java.io.File fileForm = new java.io.File(filename);
 
-    if (AbstractWorkspace.isApplet()) {
-      try {
-        return new java.net.URL
-            (new java.net.URL(prefix),
-                filename).toString();
-      } catch (java.net.MalformedURLException ex) {
-        throw new IllegalStateException(ex);
-      }
+    if (fileForm.isAbsolute() || prefix == null) {
+      return filename;
     } else {
-      // Check to see if we were given an absolute File Path
-      java.io.File fileForm = new java.io.File(filename);
-
-      if (fileForm.isAbsolute() || prefix == null) {
-        return filename;
-      } else {
-        return relativeToAbsolute(filename);
-      }
+      return relativeToAbsolute(filename);
     }
   }
 
@@ -136,22 +117,13 @@ public final strictfp class DefaultFileManager
   }
 
   private org.nlogo.api.File findOpenFile(String fileName) {
+    java.io.File newFile = new java.io.File(fileName);
 
-    if (AbstractWorkspace.isApplet()) {
-      for (org.nlogo.api.File nextFile : openFiles) {
-        if (fileName.equals(nextFile.getPath())) {
-          return nextFile;
-        }
-      }
-    } else {
-      java.io.File newFile = new java.io.File(fileName);
-
-      Iterator<org.nlogo.api.File> files = openFiles.iterator();
-      while (files.hasNext()) {
-        org.nlogo.api.File nextFile = files.next();
-        if (newFile.getAbsolutePath().equals(nextFile.getAbsolutePath())) {
-          return nextFile;
-        }
+    Iterator<org.nlogo.api.File> files = openFiles.iterator();
+    while (files.hasNext()) {
+      org.nlogo.api.File nextFile = files.next();
+      if (newFile.getAbsolutePath().equals(nextFile.getAbsolutePath())) {
+        return nextFile;
       }
     }
     return null;
@@ -189,15 +161,7 @@ public final strictfp class DefaultFileManager
   }
 
   public boolean fileExists(String filePath) {
-    if (AbstractWorkspace.isApplet()) {
-      try {
-        return org.nlogo.api.RemoteFile.exists(attachPrefix(filePath));
-      } catch (java.net.MalformedURLException ex) {
-        return false;
-      }
-    } else {
-      return new java.io.File(filePath).exists();
-    }
+    return new java.io.File(filePath).exists();
   }
 
   public void deleteFile(String filePath)
@@ -236,11 +200,7 @@ public final strictfp class DefaultFileManager
     org.nlogo.api.File newFile = findOpenFile(fullFileName);
 
     if (newFile == null) {
-      if (AbstractWorkspace.isApplet()) {
-        newFile = new org.nlogo.api.RemoteFile(fullFileName);
-      } else {
-        newFile = new org.nlogo.api.LocalFile(fullFileName);
-      }
+      newFile = new org.nlogo.api.LocalFile(fullFileName);
       openFiles.add(newFile);
     }
 

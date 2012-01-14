@@ -115,12 +115,7 @@ public strictfp class ExtensionManager
     // Extensions are folders which have a jar with the same name
     // in them (plus other things if needed) -- CLB
     if (!id.endsWith(".jar")) {
-      if (AbstractWorkspace.isApplet()) {
-        return id + "/" + id + ".jar";
-      } else {
-        return id + java.io.File.separator + id + ".jar";
-      }
-
+      return id + java.io.File.separator + id + ".jar";
     } else {
       return id;
     }
@@ -134,20 +129,10 @@ public strictfp class ExtensionManager
 
     try {
       jarPath = resolvePathAsURL(jarPath);
-      if (AbstractWorkspace.isApplet()) {
-        java.net.URL url = new java.net.URL(jarPath);
-        // added in r43348. motivation: https://trac.assembla.com/nlogo/ticket/647 .
-        // we need to work around http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6785446
-        url.openConnection().setUseCaches(false);
-      }
     } catch (RuntimeException ex) {
       ex.printStackTrace();
       errors.signalError("Can't find extension: " + extName);
       return;
-    } catch (java.net.MalformedURLException e) {
-      e.printStackTrace();
-    } catch (java.io.IOException e) {
-      e.printStackTrace();
     }
 
     try {
@@ -219,15 +204,11 @@ public strictfp class ExtensionManager
   public String resolvePath(String path) {
     try {
       java.io.File result = new java.io.File(workspace.attachModelDir(path));
-      if (AbstractWorkspace.isApplet()) {
+      try {
+        return result.getCanonicalPath();
+      } catch (java.io.IOException ex) {
         return result.getPath();
-      } else {
-        try {
-          return result.getCanonicalPath();
-        } catch (java.io.IOException ex) {
-          return result.getPath();
         }
-      }
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(path + " is not a valid pathname: " + ex);
     }
@@ -235,22 +216,6 @@ public strictfp class ExtensionManager
 
   public String resolvePathAsURL(String path) {
     java.net.URL jarURL;
-
-    if (AbstractWorkspace.isApplet()) {
-
-      try {
-        String jarPath = workspace.fileManager().attachPrefix(path);
-        if (org.nlogo.api.RemoteFile.exists(jarPath)) {
-          return jarPath;
-        } else {
-          throw new IllegalStateException
-              ("Can't find extension " + path + " using URL " + jarPath);
-        }
-      } catch (java.net.MalformedURLException ex) {
-        throw new IllegalStateException(path + " is not a valid pathname: " + ex);
-      }
-
-    }
 
     // Is this a URL right off the bat?
     try {
@@ -301,19 +266,6 @@ public strictfp class ExtensionManager
 
   public String getFullPath(String path)
       throws ExtensionException {
-    if (AbstractWorkspace.isApplet()) {
-      try {
-        String fullPath = workspace.fileManager().attachPrefix(path);
-        if (org.nlogo.api.RemoteFile.exists(fullPath)) {
-          return fullPath;
-        } else {
-          throw new ExtensionException("Can't find file " + path + " using " + fullPath);
-        }
-      } catch (java.net.MalformedURLException ex) {
-        throw new ExtensionException(path + " is not a valid pathname: " + ex);
-      }
-    }
-
     try {
       String fullPath = workspace.attachModelDir(path);
       java.io.File f = new java.io.File(fullPath);
@@ -632,8 +584,7 @@ public strictfp class ExtensionManager
   List<java.net.URL> getAdditionalJars(java.io.File folder) {
     List<java.net.URL> urls =
         new ArrayList<java.net.URL>();
-    if (!AbstractWorkspace.isApplet() &&
-        folder.exists() &&
+    if (folder.exists() &&
         folder.isDirectory()) {
       java.io.File[] files = folder.listFiles();
       for (int n = 0; n < files.length; n++) {

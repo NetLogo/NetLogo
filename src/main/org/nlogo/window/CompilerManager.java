@@ -121,13 +121,6 @@ public strictfp class CompilerManager
           .raise(this);
       return true;
     } catch (CompilerException error) {
-      if (AbstractWorkspace.isApplet()) {
-        System.err.println("CompilerException: " + error);
-        error.printStackTrace();
-        new org.nlogo.window.Events.CompiledEvent
-            (proceduresInterface, null, null, error)
-            .raise(this);
-      }
       if (error.fileName().equals("")) {
         new org.nlogo.window.Events.CompiledEvent
             (proceduresInterface, null, null, error)

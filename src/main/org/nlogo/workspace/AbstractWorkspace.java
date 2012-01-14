@@ -153,9 +153,9 @@ public abstract strictfp class AbstractWorkspace
     return true;
   }
 
-  /// isApp/isApplet
+  /// isApp
 
-  // Note that if using the embedding API, both isApp and isApplet are false.
+  // Note that if using the embedding API, isApp is false.
 
   private static boolean isApp = false;
 
@@ -165,20 +165,6 @@ public abstract strictfp class AbstractWorkspace
 
   public static void isApp(boolean isApp) {
     AbstractWorkspace.isApp = isApp;
-  }
-
-  private static boolean isApplet = true;
-
-  public static boolean isApplet() {
-    return isApplet;
-  }
-
-  public static void isApplet(boolean isApplet) {
-    AbstractWorkspace.isApplet = isApplet;
-  }
-
-  public boolean getIsApplet() {
-    return isApplet;
   }
 
   public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
@@ -213,7 +199,7 @@ public abstract strictfp class AbstractWorkspace
    */
   public String attachModelDir(String filePath)
       throws java.net.MalformedURLException {
-    if (isApplet() || new java.io.File(filePath).isAbsolute()) {
+    if (new java.io.File(filePath).isAbsolute()) {
       return filePath;
     }
     String path = getModelPath();
@@ -563,15 +549,7 @@ public abstract strictfp class AbstractWorkspace
   // protected because GUIWorkspace will override - ST 9/8/03
   protected void doImport(FileImporter importer)
       throws java.io.IOException {
-    final org.nlogo.api.File newFile;
-
-    if (AbstractWorkspace.isApplet()) {
-      newFile = new org.nlogo.api.RemoteFile(importer.filename);
-    } else {
-      newFile = new org.nlogo.api.LocalFile(importer.filename);
-    }
-
-    importer.doImport(newFile);
+    importer.doImport(new org.nlogo.api.LocalFile(importer.filename));
   }
 
   /// exporting
@@ -627,17 +605,7 @@ public abstract strictfp class AbstractWorkspace
     // but the removal of the \r characters will throw off that information.
     // So we do the stripping of \r here, *before* we run the tokenizer,
     // and that avoids the problem. - ST 9/14/04
-
-    final org.nlogo.api.File sourceFile;
-
-    if (AbstractWorkspace.isApplet()) {
-      String url = fileManager().attachPrefix(filename);
-      sourceFile = new org.nlogo.api.RemoteFile(url);
-    } else {
-      sourceFile = new org.nlogo.api.LocalFile(filename);
-    }
-    String source = sourceFile.readFile();
-    return source.replaceAll("\r\n", "\n");
+    return new org.nlogo.api.LocalFile(filename).readFile().replaceAll("\r\n", "\n");
   }
 
   public void loadWorld(String[] strings, WorldLoaderInterface worldInterface) {

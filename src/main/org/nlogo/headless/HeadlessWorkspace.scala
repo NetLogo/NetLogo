@@ -97,7 +97,6 @@ with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
 
-  AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
   val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, classOf[Observer])

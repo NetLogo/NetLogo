@@ -219,8 +219,6 @@ public interface Workspace
 
   void openPrevious();
 
-  boolean getIsApplet();
-
   CompilerInterface compiler();
 
   boolean isHeadless();

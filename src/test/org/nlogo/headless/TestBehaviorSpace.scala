@@ -18,7 +18,6 @@ with OneInstancePerTest with BeforeAndAfterEach {
     w
   }
 
-  override def beforeEach() { AbstractWorkspace.isApplet(false) }
   override def afterEach() { workspaces.foreach(_.dispose()) }
 
   // first 6 lines of results are header lines. we'll need to discard them

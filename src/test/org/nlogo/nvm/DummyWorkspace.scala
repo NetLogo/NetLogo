@@ -67,7 +67,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def openIndex() = unsupported
   override def openNext() = unsupported
   override def openPrevious() = unsupported
-  override def getIsApplet() = unsupported
   override def lastRunTimes() = unsupported
   override def completedActivations() = unsupported
   override def compiler() = unsupported

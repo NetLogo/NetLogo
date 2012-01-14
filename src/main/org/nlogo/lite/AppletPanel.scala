@@ -16,7 +16,7 @@ import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
  */
 
 abstract class AppletPanel(
-  frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
+  frame: java.awt.Frame, iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel
 with org.nlogo.util.Exceptions.Handler
 with Event.LinkParent {
@@ -37,7 +37,6 @@ with Event.LinkParent {
    */
   val listenerManager = new NetLogoListenerManager
 
-  org.nlogo.workspace.AbstractWorkspace.isApplet(isApplet)
   RuntimeErrorDialog.init(this)
   org.nlogo.util.Exceptions.setHandler(this)
 
@@ -50,7 +49,7 @@ with Event.LinkParent {
     val c = new java.awt.GridBagConstraints
     setLayout(gridbag)
     val world = new World
-    val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
+    val workspace = new LiteWorkspace(this, world, frame, listenerManager)
     addLinkComponent(workspace)
     val procedures = new ProceduresLite(workspace, workspace)
     addLinkComponent(procedures)

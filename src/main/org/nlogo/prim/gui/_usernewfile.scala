@@ -6,7 +6,6 @@ import org.nlogo.api.{ ReporterRunnable, Syntax }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{ Context, EngineException, Reporter }
 import org.nlogo.window.GUIWorkspace
-import org.nlogo.workspace.AbstractWorkspace.isApplet
 import org.nlogo.swing.FileDialog
 
 class _usernewfile extends Reporter {
@@ -15,9 +14,6 @@ class _usernewfile extends Reporter {
     Syntax.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
 
   override def report(context: Context) = {
-    if (isApplet)
-      throw new EngineException(
-        context, this, "You cannot choose a file from an applet.")
     var result: AnyRef = null
     workspace match {
       case gw: GUIWorkspace =>

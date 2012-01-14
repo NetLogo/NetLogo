@@ -26,8 +26,7 @@ extends AppletPanel(frame,
                       override def mouseClicked(e: java.awt.event.MouseEvent) {
                         org.nlogo.swing.BrowserLauncher.openURL(
                           frame, "http://ccl.northwestern.edu/netlogo/", false)
-                      }},
-                    false)
+                      }})
 with Event.LinkChild {
 
   addLinkComponent(listenerManager)

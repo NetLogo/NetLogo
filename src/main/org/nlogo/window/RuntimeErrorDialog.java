@@ -115,18 +115,16 @@ public strictfp class RuntimeErrorDialog
     List<javax.swing.JComponent> buttons =
         new ArrayList<javax.swing.JComponent>();
     buttons.addAll(super.makeButtons());
-    if (!AbstractWorkspace.isApplet()) {
-      javax.swing.JButton copyButton = new javax.swing.JButton("Copy");
-      copyButton.addActionListener
-          (new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-              textArea.selectAll();
-              textArea.copy();
-              textArea.setCaretPosition(0);
-            }
-          });
-      buttons.add(copyButton);
-    }
+    javax.swing.JButton copyButton = new javax.swing.JButton("Copy");
+    copyButton.addActionListener
+        (new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent e) {
+            textArea.selectAll();
+            textArea.copy();
+            textArea.setCaretPosition(0);
+          }
+        });
+    buttons.add(copyButton);
     CHECKBOX.addItemListener
         (new java.awt.event.ItemListener() {
           public void itemStateChanged(java.awt.event.ItemEvent e) {

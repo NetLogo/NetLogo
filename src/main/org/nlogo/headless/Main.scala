@@ -7,7 +7,6 @@ import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
 object Main {
   def main(args:Array[String]) {
-    AbstractWorkspace.isApplet(false)
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
   }
