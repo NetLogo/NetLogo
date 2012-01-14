@@ -372,22 +372,22 @@ public strictfp class ClientWorld
       throws java.io.IOException {
     short mask = is.readShort();
     boolean reallocatePatches = false;
-    if ((mask & DiffBuffer.MINX) == DiffBuffer.MINX) {
+    if ((mask & DiffBuffer.MINX()) == DiffBuffer.MINX()) {
       int minx = is.readInt();
       reallocatePatches = reallocatePatches || minx != minPxcor;
       minPxcor = minx;
     }
-    if ((mask & DiffBuffer.MINY) == DiffBuffer.MINY) {
+    if ((mask & DiffBuffer.MINY()) == DiffBuffer.MINY()) {
       int miny = is.readInt();
       reallocatePatches = reallocatePatches || miny != minPycor;
       minPycor = miny;
     }
-    if ((mask & DiffBuffer.MAXX) == DiffBuffer.MAXX) {
+    if ((mask & DiffBuffer.MAXX()) == DiffBuffer.MAXX()) {
       int maxx = is.readInt();
       reallocatePatches = reallocatePatches || maxx != maxPxcor;
       maxPxcor = maxx;
     }
-    if ((mask & DiffBuffer.MAXY) == DiffBuffer.MAXY) {
+    if ((mask & DiffBuffer.MAXY()) == DiffBuffer.MAXY()) {
       int maxy = is.readInt();
       reallocatePatches = reallocatePatches || maxy != maxPycor;
       maxPycor = maxy;
@@ -395,40 +395,40 @@ public strictfp class ClientWorld
     if (reallocatePatches) {
       createPatches(worldWidth() * worldHeight());
     }
-    if ((mask & DiffBuffer.SHAPES) == DiffBuffer.SHAPES) {
+    if ((mask & DiffBuffer.SHAPES()) == DiffBuffer.SHAPES()) {
       shapes = is.readBoolean();
     }
-    if ((mask & DiffBuffer.FONT_SIZE) == DiffBuffer.FONT_SIZE) {
+    if ((mask & DiffBuffer.FONT_SIZE()) == DiffBuffer.FONT_SIZE()) {
       fontSize = is.readInt();
     }
-    if ((mask & DiffBuffer.WRAPX) == DiffBuffer.WRAPX) {
+    if ((mask & DiffBuffer.WRAPX()) == DiffBuffer.WRAPX()) {
       xWrap = is.readBoolean();
     }
-    if ((mask & DiffBuffer.WRAPY) == DiffBuffer.WRAPY) {
+    if ((mask & DiffBuffer.WRAPY()) == DiffBuffer.WRAPY()) {
       yWrap = is.readBoolean();
     }
-    if ((mask & DiffBuffer.PERSPECTIVE) == DiffBuffer.PERSPECTIVE) {
+    if ((mask & DiffBuffer.PERSPECTIVE()) == DiffBuffer.PERSPECTIVE()) {
       updateServerPerspective(new AgentPerspective(is));
     }
-    if ((mask & DiffBuffer.PATCHES) == DiffBuffer.PATCHES) {
+    if ((mask & DiffBuffer.PATCHES()) == DiffBuffer.PATCHES()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
         updatePatch(new PatchData(is));
       }
     }
-    if ((mask & DiffBuffer.TURTLES) == DiffBuffer.TURTLES) {
+    if ((mask & DiffBuffer.TURTLES()) == DiffBuffer.TURTLES()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
         updateTurtle(new TurtleData(is));
       }
     }
-    if ((mask & DiffBuffer.LINKS) == DiffBuffer.LINKS) {
+    if ((mask & DiffBuffer.LINKS()) == DiffBuffer.LINKS()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
         updateLink(new LinkData(is));
       }
     }
-    if ((mask & DiffBuffer.DRAWING) == DiffBuffer.DRAWING) {
+    if ((mask & DiffBuffer.DRAWING()) == DiffBuffer.DRAWING()) {
       trailDrawer.readImage(is);
     }
   }

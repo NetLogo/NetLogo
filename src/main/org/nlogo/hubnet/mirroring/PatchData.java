@@ -312,7 +312,8 @@ public final strictfp class PatchData
   /**
    * Serializes this patch data object.
    */
-  void serialize(DataOutputStream os)
+  @Override
+  public void serialize(DataOutputStream os)
       throws IOException {
     os.writeLong(id);
     os.writeShort(mask);

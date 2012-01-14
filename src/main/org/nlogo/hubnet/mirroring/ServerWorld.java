@@ -309,9 +309,9 @@ public strictfp class ServerWorld {
   private void serialize(java.io.DataOutputStream os)
       throws java.io.IOException {
     // first the mask. we're just going to dump everything.
-    short mask = DiffBuffer.EVERYTHING;
+    short mask = DiffBuffer.EVERYTHING();
     if (drawing != null) {
-      mask |= DiffBuffer.DRAWING;
+      mask |= DiffBuffer.DRAWING();
     }
     os.writeShort(mask);
 

@@ -488,7 +488,8 @@ public strictfp class LinkData
     }
   }
 
-  void serialize(DataOutputStream os)
+  @Override
+  public void serialize(DataOutputStream os)
       throws IOException {
     os.writeLong(id);
     os.writeShort(mask);

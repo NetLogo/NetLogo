@@ -388,7 +388,8 @@ public strictfp class TurtleData
     }
   }
 
-  void serialize(DataOutputStream os)
+  @Override
+  public void serialize(DataOutputStream os)
       throws IOException {
     os.writeLong(who);
     os.writeShort(mask);
