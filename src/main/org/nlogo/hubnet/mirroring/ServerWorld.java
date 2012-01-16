@@ -216,7 +216,7 @@ public strictfp class ServerWorld {
    */
   private PatchData updatePatch(Patch patch) {
     // make a data object for this patch.
-    PatchData pd = new PatchData(patch.id(), PatchData.COMPLETE,
+    PatchData pd = new PatchData(patch.id(), (short) PatchData.COMPLETE(),
         patch.pxcor(), patch.pycor(),
         patch.pcolor(), patch.labelString(),
         patch.labelColor());

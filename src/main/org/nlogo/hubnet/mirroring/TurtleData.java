@@ -263,7 +263,11 @@ public strictfp class TurtleData
       {"color", "label", "labelColor", "lineThickness", "hidden", "heading", "shape", "size"};
 
   @Override
-  public String getMethodName(int index) {
+  public String getterName(int index) {
+    return OVERRIDE_METHODS[index];
+  }
+  @Override
+  public String setterName(int index) {
     return OVERRIDE_METHODS[index];
   }
 

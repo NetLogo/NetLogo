@@ -12,7 +12,7 @@ class OverridableTests extends FunSuite {
   val BLACK_INT = -16777216
   val GRAY_INT = -7500403
   test("patch") {
-    val p = new PatchData(10, PatchData.COMPLETE, 0, 0, BLACK, "label", WHITE)
+    val p = new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE)
     p.set(0, WHITE)
     p.set(1, "hiya!")
     p.set(2, BLACK)

@@ -94,8 +94,8 @@ public strictfp class ClientWorld
     patches = new PatchData[numPatches];
     patchColors = new int[numPatches];
     for (int i = 0; i < patches.length; i++) {
-      patches[i] = new PatchData(i, PatchData.COMPLETE, 0, 0, 0.0, "", 0.0);
-      patches[i].patchColors = patchColors;
+      patches[i] = new PatchData(i, (short) PatchData.COMPLETE(), 0, 0, 0.0, "", 0.0);
+      patches[i].patchColors_$eq(patchColors);
     }
   }
 
@@ -250,7 +250,7 @@ public strictfp class ClientWorld
 
     // otherwise, perform the update...
     bufPatch.updateFrom(patch);
-    patchColors[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList((org.nlogo.api.LogoList) bufPatch.pcolor());
+    patchColors[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList(bufPatch.pcolor());
   }
 
   void updateTurtle(TurtleData turtle) {
@@ -413,7 +413,7 @@ public strictfp class ClientWorld
     if ((mask & DiffBuffer.PATCHES()) == DiffBuffer.PATCHES()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
-        updatePatch(new PatchData(is));
+        updatePatch(PatchData.fromStream(is));
       }
     }
     if ((mask & DiffBuffer.TURTLES()) == DiffBuffer.TURTLES()) {

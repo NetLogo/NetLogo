@@ -309,7 +309,11 @@ public strictfp class LinkData
       {"color", "labelString", "labelColor", "lineThickness", "hidden", "shape"};
 
   @Override
-  public String getMethodName(int index) {
+  public String getterName(int index) {
+    return OVERRIDE_METHODS[index];
+  }
+  @Override
+  public String setterName(int index) {
     return OVERRIDE_METHODS[index];
   }
 

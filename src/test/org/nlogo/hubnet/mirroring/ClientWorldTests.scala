@@ -18,27 +18,27 @@ class ClientWorldTests extends FunSuite {
   val buf = new ClientWorld(20, false)
 
   test("creation") {
-    buf.updatePatch(new PatchData(10, PatchData.COMPLETE, 0, 0, BLACK, "label", WHITE))
+    buf.updatePatch(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE))
     // this one won't exist: we only allow a fixed number of patches.
-    buf.updatePatch(new PatchData(30, PatchData.COMPLETE, 0, 0, GRAY, "label", WHITE))
+    buf.updatePatch(new PatchData(30, PatchData.COMPLETE.toShort, 0, 0, GRAY, "label", WHITE))
     buf.updateTurtle(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       WHITE, 90, 1, true,
       "label", BLACK, 0, 0))
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
     for (i <- 0 until buf.patches.length)
       if (i != 10) {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
       } else {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
       }
   }
 
   test("updatesToExistingObjects") {
-    buf.updatePatch(new PatchData(10, PatchData.COMPLETE, 0, 0, BLACK, "label", WHITE))
+    buf.updatePatch(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE))
     buf.updateTurtle(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       BLACK, 90, 1, true, "label", WHITE,
       0, 0))
@@ -47,14 +47,14 @@ class ClientWorldTests extends FunSuite {
       0, 0))
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (1.0, 2.0, default, -16777216, 90.0, 1.0, true, label, -1, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
     for (i <- 0 until buf.patches.length)
       if (i != 10) {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
       } else {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
       }
   }
 
@@ -77,27 +77,27 @@ class ClientWorldTests extends FunSuite {
     buf.updateTurtle(new TurtleData(20))
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
   }
 
   test("updatesWithRoundTrips") {
-    buf.updatePatch(roundTripP(new PatchData(10, PatchData.COMPLETE, 0, 0, BLACK, "label", WHITE)))
+    buf.updatePatch(roundTripP(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE)))
     // no such patch... should be ignored.
-    buf.updatePatch(roundTripP(new PatchData(30, PatchData.COMPLETE, 0, 0, GRAY, "label", WHITE)))
+    buf.updatePatch(roundTripP(new PatchData(30, PatchData.COMPLETE.toShort, 0, 0, GRAY, "label", WHITE)))
     // create a turtle.
     buf.updateTurtle(roundTripT(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       WHITE, 90, 1, true,
       "label", BLACK, 0, 0)))
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
     for (i <- 0 until buf.patches.length)
       if (i != 10) {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
       } else {
         assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
       }
 
     buf.updateTurtle(roundTripT(new TurtleData(10, (TurtleData.XCOR | TurtleData.YCOR).toShort, 1, 2, "default",
@@ -108,7 +108,7 @@ class ClientWorldTests extends FunSuite {
 
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (1.0, 2.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
 
     // no such turtle... should be ignored.
     buf.updateTurtle(roundTripT(new TurtleData(20)))
@@ -129,7 +129,7 @@ class ClientWorldTests extends FunSuite {
     val bos = new ByteArrayOutputStream()
     val os = new DataOutputStream(bos)
     patch.serialize(os)
-    new PatchData(new DataInputStream(
+    PatchData.fromStream(new DataInputStream(
       new ByteArrayInputStream(bos.toByteArray())))
   }
 
@@ -140,9 +140,9 @@ class ClientWorldTests extends FunSuite {
     os.writeShort(DiffBuffer.PATCHES | DiffBuffer.TURTLES)
     // two patches to stream...
     os.writeInt(2)
-    new PatchData(10, PatchData.COMPLETE, 0, 0, BLACK, "label", WHITE).serialize(os)
+    new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE).serialize(os)
     // non-existent... will be ignored.
-    new PatchData(30, PatchData.COMPLETE, 0, 0, GRAY, "label", WHITE).serialize(os)
+    new PatchData(30, PatchData.COMPLETE.toShort, 0, 0, GRAY, "label", WHITE).serialize(os)
     // one turtle to stream...
     os.writeInt(1)
     new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
@@ -151,13 +151,13 @@ class ClientWorldTests extends FunSuite {
     buf.updateFrom(new DataInputStream(new ByteArrayInputStream(bos.toByteArray())))
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
     for (i <- 0 until buf.patches.length) {
       assert(buf.patches(i) != null)
       if (i != 10)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
       else
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
     }
 
     bos.reset()
@@ -180,7 +180,7 @@ class ClientWorldTests extends FunSuite {
 
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (1.0, 2.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
-      buf.getTurtleDataByWho(10).stringRep())
+      buf.getTurtleDataByWho(10).stringRep)
 
     bos.reset()
     // initialize stream...
@@ -199,9 +199,9 @@ class ClientWorldTests extends FunSuite {
     for (i <- 0 until buf.patches.length) {
       assert(buf.patches(i) != null)
       if (i != 10)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
       else
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep())
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
     }
   }
 }
