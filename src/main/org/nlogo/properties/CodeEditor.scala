@@ -77,6 +77,10 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   private def setVisibility(newVisibility: Boolean) {
     if (collapsible && collapseWhenEmpty) {
       collapso setVisible newVisibility
+      if(newVisibility)
+        add(collapso, BorderLayout.CENTER)
+      else
+        remove(collapso)
       arrow.updateDirection()
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
@@ -95,7 +99,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH
     c.weightx = 1.0
-    c.weighty = 1.0
+    c.weighty = if (collapsible) 0.0 else 1.0
     c
   }
 }

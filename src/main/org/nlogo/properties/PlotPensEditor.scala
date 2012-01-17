@@ -56,8 +56,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
   override def getConstraints = {
     val c = super.getConstraints
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
     c.gridheight = 1
+    c.weighty = 1.0
     c
   }
 
