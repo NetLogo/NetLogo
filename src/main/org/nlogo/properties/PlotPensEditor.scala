@@ -153,8 +153,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
       buttonsColumn.setCellRenderer(new ButtonCellEditor)
       buttonsColumn.setCellEditor(new ButtonCellEditor)
-      buttonsColumn.setMaxWidth(90)
-      buttonsColumn.setMinWidth(90)
+      buttonsColumn.setMaxWidth(120)
+      buttonsColumn.setMinWidth(120)
       buttonsColumn.setHeaderValue("")
 
       // finally add all the actual plot pens to the table
