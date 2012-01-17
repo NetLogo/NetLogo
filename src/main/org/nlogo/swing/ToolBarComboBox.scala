@@ -43,12 +43,13 @@ class ToolBarComboBox(val items: Array[JMenuItem]) extends JPanel {
     repaint()
   }
 
+  // handle the case where the item that was selected has now become disabled
   def updateSelected() {
-    val newGuy = items.find(_.isEnabled).getOrElse(selected)
-    if(newGuy != selected){
-      selected = newGuy
-      repaint()
-    }
+    if(!selected.isEnabled)
+      for(newGuy <- items.find(_.isEnabled)) {
+        selected = newGuy
+        repaint()
+      }
   }
 
   override def getMinimumSize = new Dimension(11,20)
