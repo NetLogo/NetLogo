@@ -35,5 +35,5 @@ case class Property(accessString: String, tyype: Property.Type, name: String,
                     focus: Boolean = false,
                     setLive: Boolean = false,
                     enabled: Boolean = true,
-                    collapsable: Boolean = false,
+                    collapsible: Boolean = false,
                     collapseByDefault: Boolean = false )
