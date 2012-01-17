@@ -19,7 +19,7 @@ import org.nlogo.api.DummyEditable
 
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer[_],
-            collapsable: Boolean = false,
+            collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false,
             rows: Int = 5, columns: Int = 30,
             err: Option[Exception] = None, changedFunc: => Unit = {}): CodeEditor = {
@@ -30,7 +30,7 @@ object CodeEditor {
       override def error = err
     }
     new CodeEditor(accessor, colorizer, rows=rows, columns=columns,
-      collapsable=collapsable, collapseWhenEmpty=collapseWhenEmpty){
+      collapsible=collapsible, collapseWhenEmpty=collapseWhenEmpty){
       def changed{ changedFunc }
     }
   }
@@ -38,7 +38,7 @@ object CodeEditor {
 
 abstract class CodeEditor(accessor: PropertyAccessor[String],
                               colorizer: Colorizer[_],
-                              collapsable: Boolean = false,
+                              collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)
   extends PropertyEditor(accessor){
@@ -68,15 +68,19 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     setLayout(new BorderLayout())
     // add the panel containing the button that forces the collapse, and a label.
     add(new JPanel(rowLayout(2)) {
-      if (collapsable) add(arrow)
+      if (collapsible) add(arrow)
       add(new JLabel(accessor.displayName))
     }, BorderLayout.NORTH)
     add(collapso, BorderLayout.CENTER)
   }
   
   private def setVisibility(newVisibility: Boolean) {
-    if (collapsable && collapseWhenEmpty) {
+    if (collapsible && collapseWhenEmpty) {
       collapso setVisible newVisibility
+      if(newVisibility)
+        add(collapso, BorderLayout.CENTER)
+      else
+        remove(collapso)
       arrow.updateDirection()
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if(!collapsed) editor.requestFocus()
@@ -95,7 +99,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH
     c.weightx = 1.0
-    c.weighty = 1.0
+    c.weighty = if (collapsible) 0.0 else 1.0
     c
   }
 }

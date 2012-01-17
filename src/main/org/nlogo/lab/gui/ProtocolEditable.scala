@@ -40,9 +40,9 @@ class ProtocolEditable(protocol: Protocol,
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
          Property("exitCondition", Property.ReporterOrEmpty, I18N.gui("exitCondition"),
                   "<html>"+I18N.gui("exitCondition.info")+"</html>",
-                  gridWidth = GridBagConstraints.RELATIVE, collapsable=true, collapseByDefault=true),
+                  gridWidth = GridBagConstraints.RELATIVE, collapsible=true, collapseByDefault=true),
          Property("finalCommands", Property.Commands, I18N.gui("finalCommands"),
-                  "<html>"+I18N.gui("finalCommands.info")+"</html>", collapsable=true, collapseByDefault=true),
+                  "<html>"+I18N.gui("finalCommands.info")+"</html>", collapsible=true, collapseByDefault=true),
          Property("timeLimit", Property.Integer, I18N.gui("timeLimit"),
                   "<html>"+I18N.gui("timeLimit.info")+"</html>")).asJava
   // These are the actual vars the user edits.  Before editing they are copied out of the
