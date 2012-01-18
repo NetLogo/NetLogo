@@ -150,6 +150,7 @@ tmp/scaladoc: netlogo | tmp
 	  -doc-version `cat tmp/version.txt` \
 	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
+          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
 
@@ -164,6 +165,7 @@ docs/scaladoc: netlogo
 	  -doc-version `cat tmp/version.txt` \
 	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
+          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
 	  src/main/org/nlogo/app/App.scala \
 	  src/main/org/nlogo/lite/InterfaceComponent.scala \
