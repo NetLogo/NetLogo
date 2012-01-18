@@ -2,7 +2,7 @@
 
 This page is for open source developers interested in the source code for NetLogo.
 
-Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](NetLogo users group) on Yahoo.
+Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](http://groups.yahoo.com/group/netlogo-users/) on Yahoo.
 
 ## Issues
 
