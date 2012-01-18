@@ -153,6 +153,8 @@ tmp/scaladoc: netlogo | tmp
           -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
+# compensate for issues.scala-lang.org/browse/SI-5388
+	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
 
 # these are the docs we include with the User Manual
 docs/scaladoc: netlogo
@@ -176,6 +178,8 @@ docs/scaladoc: netlogo
           src/main/org/nlogo/agent/*.*a \
           src/main/org/nlogo/workspace/*.*a \
           src/main/org/nlogo/nvm/*.*a
+# compensate for issues.scala-lang.org/browse/SI-5388
+	perl -pi -e 's/\.java.scala/.java/g' `find docs/scaladoc -name \*.html`
 
 ### misc targets
 
