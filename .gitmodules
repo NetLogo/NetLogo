@@ -39,4 +39,4 @@
 	url = http://github.com/NetLogo/Table-Extension.git
 [submodule "Mathematica-Link"]
 	path = Mathematica-Link
-	url = git@github.com:NetLogo/Mathematica-Link.git
+	url = http://github.com/NetLogo/Mathematica-Link.git
