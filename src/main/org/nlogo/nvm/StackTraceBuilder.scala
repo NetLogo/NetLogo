@@ -29,10 +29,10 @@ import org.nlogo.agent.Agent
  */
 object StackTraceBuilder {
 
-  def build(act: Activation, agent: Agent, instruction: Instruction, cause: Option[Throwable]): String = {
+  def build(act: Activation, agent: Agent, instruction: Instruction, cause: Option[Throwable], message: String = null): String = {
     val errorMessage = cause map {
       case l: LogoException =>
-        l.getMessage + "\nerror while "
+        Option(l.getMessage).getOrElse(message) + "\nerror while "
       case e =>
         "error (" + e.getClass.getSimpleName + ")\n while "
     }

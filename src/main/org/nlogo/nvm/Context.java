@@ -304,8 +304,8 @@ public final strictfp class Context {
       Instruction instruction = null;
       Context context = null;
       if (ex instanceof EngineException) {
-        instruction = ((EngineException) ex).instruction;
-        context = ((EngineException) ex).context;
+        instruction = ((EngineException) ex).instruction();
+        context = ((EngineException) ex).context();
       }
       if (instruction == null) {
         instruction = activation.procedure.code[ip];
@@ -324,12 +324,16 @@ public final strictfp class Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
+    return buildRuntimeErrorMessage(instruction, throwable, null);
+  }
+
+  public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable, String message) {
     if(throwable instanceof EngineException &&
-       ((EngineException) throwable).cachedRuntimeErrorMessage.isDefined()) {
-      return ((EngineException) throwable).cachedRuntimeErrorMessage.get();
+       ((EngineException) throwable).cachedRuntimeErrorMessage().isDefined()) {
+      return ((EngineException) throwable).cachedRuntimeErrorMessage().get();
     }
     return StackTraceBuilder.build(
-      activation, agent, instruction, scala.Option.apply(throwable));
+      activation, agent, instruction, scala.Option.apply(throwable), message);
   }
 
   /// coming up for air

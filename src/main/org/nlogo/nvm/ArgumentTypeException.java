@@ -33,8 +33,8 @@ public strictfp class ArgumentTypeException
   public String getMessage() {
     String result = "";
 
-    if (instruction != null) {
-      result += instruction.displayName();
+    if (instruction() != null) {
+      result += instruction().displayName();
     }
     result += " expected input to be " + TypeNames.aName(wantedType);
 
