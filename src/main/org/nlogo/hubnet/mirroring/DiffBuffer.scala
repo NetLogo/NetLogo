@@ -19,6 +19,7 @@ object DiffBuffer {
   val WRAPX       = 0x0400
   val WRAPY       = 0x0800
   val PERSPECTIVE = 0x1000
+  // note that "EVERYTHING" doesn't include DRAWING
   val EVERYTHING = (MINX | MINY | MAXX | MAXY | SHAPES | FONT_SIZE |
     TURTLES | PATCHES | LINKS | WRAPX | WRAPY | PERSPECTIVE).toShort
 }
