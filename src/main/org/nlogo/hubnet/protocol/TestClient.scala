@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.protocol
 
 import java.net.Socket
-import org.nlogo.api.{LogoList, Version}
+import org.nlogo.api.Version
 import java.io.{IOException, ObjectOutputStream}
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}

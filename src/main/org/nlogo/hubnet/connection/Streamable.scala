@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.connection
 
 import java.net.Socket
-import java.io.{ InputStream, ObjectStreamClass, InvalidClassException, ObjectInputStream, ObjectOutputStream }
+import java.io.{ InputStream, ObjectStreamClass, ObjectInputStream, ObjectOutputStream }
 
 trait Streamable {
   def getOutputStream: ObjectOutputStream

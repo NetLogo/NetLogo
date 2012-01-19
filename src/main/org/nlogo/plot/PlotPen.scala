@@ -52,9 +52,11 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
 
   def color = _color
   def color_=(newColor: Int) {
-    _color = newColor
-    plot.pensDirty = true
-    plot.plotListener.foreach(_.setPenColor(newColor))
+    if(_color != newColor) {
+      _color = newColor
+      plot.pensDirty = true
+      plot.plotListener.foreach(_.setPenColor(newColor))
+    }
   }
 
   def interval = _interval
@@ -64,9 +66,11 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   }
 
   def hidden = _hidden
-  def hidden_=(newIsHidden: Boolean){
-    _hidden = newIsHidden
-    plot.pensDirty = true
+  def hidden_=(newIsHidden: Boolean) {
+    if(_hidden != newIsHidden) {
+      _hidden = newIsHidden
+      plot.pensDirty = true
+    }
   }
 
   def isDown = _isDown
@@ -89,7 +93,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   def updateCode(code:String) { updateCode = if(code == null) "" else code }
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
-    "\"" + escapeString(setupCode) + "\"" + " " + "\"" + escapeString(updateCode) + "\""
+    "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 
   /// actual functionality

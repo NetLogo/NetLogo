@@ -4,12 +4,12 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.NonLocalExit$;
 import org.nlogo.nvm.Procedure;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _report
     extends Command {

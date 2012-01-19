@@ -2,16 +2,15 @@
 
 package org.nlogo.window;
 
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.Observer;
 import org.nlogo.api.Dump;
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.Property;
+
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 public strictfp class MonitorWidget
     extends JobWidget

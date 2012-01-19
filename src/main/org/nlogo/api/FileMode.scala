@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-abstract sealed trait FileMode
+sealed trait FileMode
 object FileMode {
   case object None extends FileMode
   case object Read extends FileMode

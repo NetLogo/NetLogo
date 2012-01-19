@@ -10,7 +10,6 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
-
 import org.nlogo.window.GUIWorkspace;
 
 public strictfp class AgentMonitorView

@@ -2,38 +2,29 @@
 
 package org.nlogo.gl.render;
 
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.PriorityQueue;
+import org.nlogo.api.Agent;
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Drawing3D;
+import org.nlogo.api.DrawingInterface;
+import org.nlogo.api.Link;
+import org.nlogo.api.Patch;
+import org.nlogo.api.Patch3D;
+import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.Turtle;
+import org.nlogo.api.ViewSettings;
+import org.nlogo.api.World;
+import org.nlogo.api.World3D;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-
-import org.nlogo.api.Agent;
-import org.nlogo.api.AgentException;
-import org.nlogo.api.Turtle;
-import org.nlogo.api.TurtleStamp3D;
-import org.nlogo.api.Patch;
-import org.nlogo.api.Patch3D;
-import org.nlogo.api.Link;
-import org.nlogo.api.Link3D;
-import org.nlogo.api.LinkStamp3D;
-import org.nlogo.api.Drawing3D;
-import org.nlogo.api.Vect;
-import org.nlogo.api.World;
-import org.nlogo.api.World3D;
-import org.nlogo.api.ViewSettings;
-import org.nlogo.api.DrawingInterface;
-import org.nlogo.api.Perspective;
-import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.ShapeList;
+import java.nio.DoubleBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Renderer
     implements GLEventListener {

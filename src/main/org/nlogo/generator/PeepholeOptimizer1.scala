@@ -12,7 +12,7 @@ package org.nlogo.generator
  */
 
 import org.objectweb.asm.Opcodes.GOTO
-import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
+import org.objectweb.asm.{ Label, MethodVisitor }
 
 private class PeepholeOptimizer1(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv) {
 

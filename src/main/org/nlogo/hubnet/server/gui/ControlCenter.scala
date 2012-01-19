@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 import javax.swing.border.EmptyBorder
-import java.net.{SocketAddress, UnknownHostException, InetAddress}
+import java.net.{UnknownHostException, InetAddress}
 import java.text.SimpleDateFormat
 import org.nlogo.swing.{SelectableJLabel, TextFieldBox, NonemptyTextFieldButtonEnabler}
 import java.awt.event.{ItemEvent, ItemListener, ActionEvent, ActionListener}
@@ -27,7 +27,6 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   private val messagePanel: MessagePanel = new MessagePanel()
 
   import org.nlogo.swing.Implicits._
-  import org.nlogo.awt.EventQueue.invokeLater
 
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)

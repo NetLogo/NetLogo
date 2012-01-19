@@ -2,6 +2,21 @@
 
 package org.nlogo.window;
 
+import org.nlogo.api.I18N;
+import org.nlogo.shape.VectorShape;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -28,22 +43,6 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
-
-import org.nlogo.api.I18N;
-import org.nlogo.shape.VectorShape;
 
 public strictfp class ColorDialog extends JDialog implements ActionListener,
     ItemListener,

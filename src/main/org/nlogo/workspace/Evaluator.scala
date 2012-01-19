@@ -5,7 +5,6 @@ package org.nlogo.workspace
 import java.util.ArrayList
 import org.nlogo.agent.ArrayAgentSet
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
-import org.nlogo.util.MersenneTwisterFast
 import org.nlogo.api.{CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
 

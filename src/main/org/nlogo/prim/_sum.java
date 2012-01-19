@@ -2,14 +2,14 @@
 
 package org.nlogo.prim;
 
-import java.util.Iterator;
-
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
-import org.nlogo.nvm.Context;
-import org.nlogo.nvm.Reporter;
-import org.nlogo.nvm.Pure;
 import org.nlogo.api.Syntax;
+import org.nlogo.nvm.Context;
+import org.nlogo.nvm.Pure;
+import org.nlogo.nvm.Reporter;
+
+import java.util.Iterator;
 
 public final strictfp class _sum extends Reporter implements Pure {
   @Override

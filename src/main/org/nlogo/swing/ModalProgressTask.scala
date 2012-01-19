@@ -2,8 +2,8 @@
 
 package org.nlogo.swing
 
-import java.awt.{ BorderLayout, Frame }
-import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, SwingConstants }
+import java.awt.BorderLayout
+import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, SwingConstants }
 import org.nlogo.awt.EventQueue.mustBeEventDispatchThread
 import org.nlogo.awt.Positioning.center
 

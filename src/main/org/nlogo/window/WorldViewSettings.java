@@ -2,14 +2,14 @@
 
 package org.nlogo.window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.Editable;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Property;
 import org.nlogo.nvm.Workspace;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract strictfp class WorldViewSettings
     implements Editable,

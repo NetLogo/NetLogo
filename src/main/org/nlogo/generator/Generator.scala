@@ -44,7 +44,7 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
   private[generator] class InstructionGenerator[A <: Instruction](original: A) {
     import org.objectweb.asm
     import asm.Opcodes._
-    import asm.{ ClassReader, ClassVisitor, ClassWriter, FieldVisitor, Label, MethodVisitor, Type }
+    import asm.{ ClassReader, ClassWriter, Label, Type }
     import asm.util.TraceClassVisitor
     val REPORT_PERFORM_ACCESS_CODES = ACC_PUBLIC + ACC_STRICT + ACC_FINAL
     // this is just used for debugging -- we can get rid of it eventually. it's placed at the end of

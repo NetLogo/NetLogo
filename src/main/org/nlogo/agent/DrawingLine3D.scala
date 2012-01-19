@@ -2,7 +2,6 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.AgentException
 
 @annotation.strictfp
 case class DrawingLine3D(x0: Double, y0: Double, z0: Double,

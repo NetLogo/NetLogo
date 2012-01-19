@@ -7,11 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
-import org.nlogo.api.Context;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.FileManager;

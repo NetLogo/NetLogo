@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import java.text.{ DecimalFormat, NumberFormat }
+import java.text.DecimalFormat
 import java.awt.{ Color => JColor }
 
 object Color {

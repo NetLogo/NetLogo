@@ -6,7 +6,6 @@ import javax.xml.transform.sax.TransformerHandler
 
 import org.apache.log4j.Layout
 import org.apache.log4j.spi.LoggingEvent
-import org.xml.sax.SAXException
 import org.xml.sax.helpers.AttributesImpl
 
 //  This class must be public because log4j needs to be able to find it and we refer to it in the

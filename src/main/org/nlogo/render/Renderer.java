@@ -2,18 +2,18 @@
 
 package org.nlogo.render;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.nlogo.api.Agent;
 import org.nlogo.api.AgentSet;
+import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.Link;
 import org.nlogo.api.Patch;
 import org.nlogo.api.Turtle;
-import org.nlogo.api.World;
 import org.nlogo.api.ViewSettings;
-import org.nlogo.api.GraphicsInterface;
-import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.World;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 public strictfp class Renderer
     extends AbstractRenderer {

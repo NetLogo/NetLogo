@@ -3,8 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.agent.Observer
-import org.nlogo.api.{ CompilerException, LogoException, Perspective, Version }
+import org.nlogo.api.{ Perspective, Version }
 import org.nlogo.util.SlowTest
 
 class TestImportExport extends AbstractTestLanguage with FunSuite

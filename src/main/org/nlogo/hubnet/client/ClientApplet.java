@@ -3,14 +3,14 @@
 package org.nlogo.hubnet.client;
 
 import org.nlogo.api.I18N;
+import org.nlogo.api.Token;
 import org.nlogo.hubnet.connection.ClientRole;
 import org.nlogo.hubnet.connection.Ports;
 import org.nlogo.window.EditorFactory;
+import org.nlogo.window.VMCheck;
 
 import java.awt.Frame;
 
-import org.nlogo.window.VMCheck;
-import org.nlogo.api.Token;
 import scala.Enumeration;
 
 public strictfp class ClientApplet

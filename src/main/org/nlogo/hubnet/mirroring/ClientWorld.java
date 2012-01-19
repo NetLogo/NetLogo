@@ -2,14 +2,15 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Perspective;
+import org.nlogo.api.PerspectiveJ;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.nlogo.api.Perspective;
-import org.nlogo.api.PerspectiveJ;
-import org.nlogo.api.AgentException;
 import static scala.collection.JavaConversions.seqAsJavaList;
 import static scala.collection.JavaConversions.setAsJavaSet;
 

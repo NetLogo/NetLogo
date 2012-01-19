@@ -2,11 +2,11 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.LogoList;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import org.nlogo.api.LogoList;
 
 /**
  * Describes a link.

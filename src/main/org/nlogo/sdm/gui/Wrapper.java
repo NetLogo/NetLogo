@@ -2,15 +2,15 @@
 
 package org.nlogo.sdm.gui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jhotdraw.util.Storable;
 import org.nlogo.sdm.Converter;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Rate;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
+
+import java.util.HashMap;
+import java.util.Map;
 
 strictfp final class Wrapper {
   // private constructor to enforce noninstantiability

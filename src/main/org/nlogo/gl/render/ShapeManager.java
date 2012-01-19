@@ -2,22 +2,21 @@
 
 package org.nlogo.gl.render;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.nlogo.api.Shape;
+import org.nlogo.api.ShapeList;
+import org.nlogo.shape.InvalidShapeDescriptionException;
+import org.nlogo.shape.LinkShape;
+import org.nlogo.shape.VectorShape;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import javax.media.opengl.glu.GLUtessellator;
-
-import org.nlogo.api.ShapeList;
-import org.nlogo.api.Shape;
-import org.nlogo.shape.InvalidShapeDescriptionException;
-import org.nlogo.shape.LinkShape;
-import org.nlogo.shape.VectorShape;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 // the use of "@@@" in here is ugly. maybe put the patch shape and
 // wireframe code in a diff. class? - ST 3/3/05

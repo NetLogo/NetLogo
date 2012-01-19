@@ -2,16 +2,16 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Color;
+import org.nlogo.api.ImporterUser;
+import org.nlogo.api.Program;
+import org.nlogo.api.WorldDimensionException;
+import org.nlogo.api.WorldDimensions;
+import org.nlogo.api.WorldDimensions3D;
+
 import java.util.Arrays;
 import java.util.Iterator;
-
-import org.nlogo.api.Color;
-import org.nlogo.api.Program;
-import org.nlogo.api.AgentException;
-import org.nlogo.api.WorldDimensions;
-import org.nlogo.api.WorldDimensionException;
-import org.nlogo.api.WorldDimensions3D;
-import org.nlogo.api.ImporterUser;
 
 public final strictfp class World3D
     extends World

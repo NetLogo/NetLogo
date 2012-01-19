@@ -2,14 +2,14 @@
 
 package org.nlogo.prim.etc;
 
-import java.util.WeakHashMap;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
-import org.nlogo.api.Syntax;
+
+import java.util.WeakHashMap;
 
 public final strictfp class _every
     extends Command

@@ -3,9 +3,9 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ DummyExtensionManager, Program, Version }
+import org.nlogo.api.{ DummyExtensionManager, Program }
 import org.nlogo.nvm.Procedure
-import Version.useGenerator
+import org.nlogo.api.Version.useGenerator
 
 class TestSourcePositions extends FunSuite {
   val program = new Program(false)

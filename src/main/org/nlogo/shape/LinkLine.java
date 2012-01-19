@@ -2,11 +2,11 @@
 
 package org.nlogo.shape;
 
+import org.nlogo.api.GraphicsInterface;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.QuadCurve2D;
 import java.util.StringTokenizer;
-
-import org.nlogo.api.GraphicsInterface;
 
 public strictfp class LinkLine
     implements java.io.Serializable, Cloneable {
