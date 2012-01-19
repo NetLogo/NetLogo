@@ -4,27 +4,12 @@
 [submodule "extensions/array"]
 	path = extensions/array
 	url = http://github.com/NetLogo/Array-Extension.git
-[submodule "extensions/bitmap"]
-	path = extensions/bitmap
-	url = http://github.com/NetLogo/Bitmap-Extension.git
-[submodule "extensions/gis"]
-	path = extensions/gis
-	url = http://github.com/NetLogo/GIS-Extension.git
-[submodule "extensions/gogo"]
-	path = extensions/gogo
-	url = http://github.com/NetLogo/GoGo-Extension.git
 [submodule "extensions/matrix"]
 	path = extensions/matrix
 	url = http://github.com/NetLogo/Matrix-Extension.git
-[submodule "extensions/network"]
-	path = extensions/network
-	url = http://github.com/NetLogo/Network-Extension.git
 [submodule "extensions/profiler"]
 	path = extensions/profiler
 	url = http://github.com/NetLogo/Profiler-Extension.git
-[submodule "extensions/qtj"]
-	path = extensions/qtj
-	url = http://github.com/NetLogo/QTJ-Extension.git
 [submodule "extensions/sample"]
 	path = extensions/sample
 	url = http://github.com/NetLogo/Sample-Extension.git
@@ -37,6 +22,3 @@
 [submodule "extensions/table"]
 	path = extensions/table
 	url = http://github.com/NetLogo/Table-Extension.git
-[submodule "Mathematica-Link"]
-	path = Mathematica-Link
-	url = http://github.com/NetLogo/Mathematica-Link.git
