@@ -22,8 +22,8 @@ object Properties {
     P("defaultYMax", P.Double, I18N.gui("plot.ymax")),
     P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale"), gridWidth = 1),
     P("showLegend", P.Boolean, I18N.gui("plot.showLegend")),
-    P("setupCode", P.Commands, I18N.gui("plot.setupCode"), collapsable = true, collapseByDefault = true),
-    P("updateCode", P.Commands, I18N.gui("plot.updateCode"), collapsable = true, collapseByDefault = true),
+    P("setupCode", P.Commands, I18N.gui("plot.setupCode"), collapsible = true, collapseByDefault = true),
+    P("updateCode", P.Commands, I18N.gui("plot.updateCode"), collapsible = true, collapseByDefault = true),
     P("editPlotPens", P.PlotPens, I18N.gui("plot.pen.plotPens"), gridWidth = REMAINDER)
   )
   val button = javaList(

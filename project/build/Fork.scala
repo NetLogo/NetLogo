@@ -9,7 +9,6 @@ trait Fork extends DefaultProject {
     }
     override def runJVMOptions = Seq(
       "-XX:MaxPermSize=128m",
-      "-Xss16m",
       "-Xmx1024m",
       "-Dfile.encoding=UTF-8",
       "-Djava.ext.dirs=",

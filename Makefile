@@ -14,7 +14,7 @@ else
 JAVA_HOME = /usr/lib/jvm/java-6-sun
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
-JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
+JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 # note that LIBS has a trailing colon
@@ -79,40 +79,9 @@ NetLogoLite.jar:
 	curl -s 'http://ccl.northwestern.edu/netlogo/5.0RC6/NetLogoLite.jar' -o NetLogoLite.jar
 
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
-	mkdir -p models
-	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
-	mkdir -p extensions
-	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
-	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
-	if [ ! -d extensions/sample/src ] ; then git clone http://github.com/NetLogo/Sample-Extension.git extensions/sample ; fi
-	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
-	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
-	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
+	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
-
-# pull down versions core devel has rights to push to - ST 5/12/11
-.PHONY: repos
-repos:
-	mkdir -p models
-	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
-	cd models; git pull; git status
-	mkdir -p extensions
-	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
-	cd extensions/array; git pull; git status
-	if [ ! -d extensions/matrix/src ] ; then git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	cd extensions/matrix; git pull; git status
-	if [ ! -d extensions/profiler/src ] ; then git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler ; fi
-	cd extensions/profiler; git pull; git status
-	if [ ! -d extensions/sample/src ] ; then git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample ; fi
-	cd extensions/sample; git pull; git status
-	if [ ! -d extensions/sample-scala/src ] ; then git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
-	cd extensions/sample-scala; git pull; git status
-	if [ ! -d extensions/sound/src ] ; then git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound ; fi
-	cd extensions/sound; git pull; git status
-	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
-	cd extensions/table; git pull; git status
 
 ### Scaladoc
 
@@ -127,8 +96,11 @@ tmp/scaladoc: netlogo | tmp
 	  -doc-version `cat tmp/version.txt` \
 	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
+          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
+# compensate for issues.scala-lang.org/browse/SI-5388
+	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
 
 ### misc targets
 

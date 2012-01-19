@@ -141,6 +141,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     xAxis.setMax(getLabel(plot.xMax))
     yAxis.setMin(getLabel(plot.yMin))
     yAxis.setMax(getLabel(plot.yMax))
+    if(plot.pensDirty) {
+      legend.refresh()
+      plot.pensDirty = false
+    }
   }
 
   /// satisfy the usual obligations of top-level widgets
