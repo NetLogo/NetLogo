@@ -16,7 +16,7 @@ class TestClientInterface extends TestUsingWorkspace {
 
   testUsingWorkspace("legit ClientInterface is serialiazble"){ workspace =>
     import collection.JavaConverters._
-    val model = "./models/HubNet Activities/Code Examples/Template.nlogo"
+    val model = "test/hubnet/client-interface.nlogo"
     val unparsedWidgets = getClientWidgets(model)
     val parsedWidgets = ModelReader.parseWidgets(unparsedWidgets).asScala.map(_.asScala.toList).toList
     val ci = new ClientInterface(parsedWidgets, unparsedWidgets.toList,

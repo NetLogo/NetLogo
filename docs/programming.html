@@ -3118,8 +3118,12 @@ foreach [1 2 3 4] [ print ? ]
       reporter tasks difficult. (Command tasks can use <tt>let</tt> to give
       their inputs names, if needed.)
       <li>Tasks can't be variadic (accept a varying number of inputs).
-      <li>Reporter tasks can't contain commands, like the body of a
-      reporter procedure can.
+      <li>Reporter tasks can't contain commands, only a single reporter
+          expression.  So for example you must
+         use <tt>ifelse-value</tt> not <tt>if</tt>, and you don't
+        use <tt>report</tt> at all.  If your code is too complex to be
+        written as one reporter, you'll need to move the code to a separate reporter procedure, and then
+        call that procedure from your task, passing it any needed inputs.
       <li>Tasks are not interchangeable with command blocks and reporter
           blocks.  Only the primitives listed above accept tasks as input.
           Control primitives such as <tt>ifelse</tt> and <tt>while</tt>
