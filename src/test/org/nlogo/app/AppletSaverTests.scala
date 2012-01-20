@@ -10,7 +10,7 @@ class AppletSaverTests extends FunSuite {
   val mockConverter = new ProceduresToHtmlInterface {def convert(code: String) = ""}
 
   def test(path: String, actual: String) {
-    val f = FileIO.file2String("models/test/applet/" + path)
+    val f = FileIO.file2String("test/applet/" + path)
             .replaceAll("\r\n","\n")
             .replaceAll("@@@VERSION_HERE@@@", Version.version)
     assert(f === actual.replaceAll("\r\n","\n"))
