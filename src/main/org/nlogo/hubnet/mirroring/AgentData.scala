@@ -3,6 +3,20 @@
 package org.nlogo.hubnet.mirroring
 
 import java.io.DataOutputStream
+import org.nlogo.api.Color.{ getRGBAListByARGB, getARGBbyPremodulatedColorNumber }
+import org.nlogo.api.LogoList
+
+object AgentData {
+  def toLogoList(color: AnyRef): LogoList =
+    color match {
+      case d: java.lang.Double =>
+        getRGBAListByARGB(
+          getARGBbyPremodulatedColorNumber(
+            d.doubleValue))
+      case l: LogoList =>
+        l
+    }
+}
 
 abstract class AgentData extends Overridable {
   def xcor: Double

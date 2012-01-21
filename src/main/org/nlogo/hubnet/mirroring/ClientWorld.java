@@ -419,7 +419,7 @@ public strictfp class ClientWorld
     if ((mask & DiffBuffer.TURTLES()) == DiffBuffer.TURTLES()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
-        updateTurtle(new TurtleData(is));
+        updateTurtle(TurtleData.fromStream(is));
       }
     }
     if ((mask & DiffBuffer.LINKS()) == DiffBuffer.LINKS()) {

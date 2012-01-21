@@ -121,7 +121,7 @@ class ClientWorldTests extends FunSuite {
     val bos = new ByteArrayOutputStream()
     val os = new DataOutputStream(bos)
     turtle.serialize(os)
-    new TurtleData(new DataInputStream(
+    TurtleData.fromStream(new DataInputStream(
       new ByteArrayInputStream(bos.toByteArray())))
   }
 

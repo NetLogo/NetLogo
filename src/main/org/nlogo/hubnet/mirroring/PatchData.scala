@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.mirroring
 
 import org.nlogo.api.LogoList
-import org.nlogo.api.Color.{ getARGBIntByRGBAList, getRGBAListByARGB, getARGBbyPremodulatedColorNumber }
+import org.nlogo.api.Color.{ getARGBIntByRGBAList, getRGBAListByARGB }
 import java.io.{ DataInputStream, DataOutputStream, IOException }
 
 object PatchData {
@@ -30,44 +30,31 @@ object PatchData {
     new PatchData(
       id, mask,
       if ((mask & PXCOR) == PXCOR)
-        in.readInt else 0,
+        in.readInt() else 0,
       if ((mask & PYCOR) == PYCOR)
-        in.readInt else 0,
+        in.readInt() else 0,
       if ((mask & PCOLOR) == PCOLOR)
-        getRGBAListByARGB(in.readInt) else null,
+        getRGBAListByARGB(in.readInt()) else null,
       if ((mask & PLABEL) == PLABEL)
-        in.readUTF else null,
+        in.readUTF() else null,
       if ((mask & PLABEL_COLOR) == PLABEL_COLOR)
-        getRGBAListByARGB(in.readInt) else null)
+        getRGBAListByARGB(in.readInt()) else null)
   }
 
-  def toLogoList(color: AnyRef): LogoList =
-    color match {
-      case d: java.lang.Double =>
-        getRGBAListByARGB(
-          getARGBbyPremodulatedColorNumber(
-            d.doubleValue))
-      case l: LogoList =>
-        l
-    }
-  
 }
 
 /**
- * The mask specifies which patch attributes are described by this
- * PatchData object.
- * The bitwise or of all the description masks that apply
- * to this PatchData.
+ * The mask specifies which patch attributes are described by this PatchData object, as the bitwise
+ * or of all the description masks that apply to this PatchData.
  *
- * For example: a PatchData that describes the color and
- * the label color of a patch, but not the label itself
- * should have mask <code>PCOLOR | LABEL_COLOR</code>.
+ * For example: a PatchData that describes the color and the label color of a patch, but not the
+ * label itself should have mask <code>PCOLOR | LABEL_COLOR</code>.
  */
 class PatchData private (val id: Long, var mask: Int, var pxcor: Int, var pycor: Int, var _pcolor: LogoList, var plabel: String, var _plabelColor: LogoList, var patchColors: Array[Int] = null)
 extends AgentData {
 
   def this(id: Long, mask: Int, pxcor: Int, pycor: Int, pcolor: AnyRef, plabel: String, plabelColor: AnyRef) =
-    this(id, mask, pxcor, pycor, PatchData.toLogoList(pcolor), plabel, PatchData.toLogoList(plabelColor), null)
+    this(id, mask, pxcor, pycor, AgentData.toLogoList(pcolor), plabel, AgentData.toLogoList(plabelColor), null)
 
   def this(id: Long) =
     this(id, PatchData.DEAD, 0, 0, null, null, null, null)
@@ -84,13 +71,13 @@ extends AgentData {
 
   def pcolor = _pcolor
   def pcolor_=(pc: AnyRef) {
-    _pcolor = PatchData.toLogoList(pc)
+    _pcolor = AgentData.toLogoList(pc)
     if (patchColors != null)
       patchColors(id.toInt) = getARGBIntByRGBAList(_pcolor)
   }
 
   def plabelColor = _plabelColor
-  def plabelColor_=(plc: AnyRef) { _plabelColor = PatchData.toLogoList(plc) }
+  def plabelColor_=(plc: AnyRef) { _plabelColor = AgentData.toLogoList(plc) }
 
   override def xcor = pxcor
   override def ycor = pycor

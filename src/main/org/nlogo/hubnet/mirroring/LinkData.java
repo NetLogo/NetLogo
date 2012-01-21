@@ -231,8 +231,8 @@ public strictfp class LinkData
     return hidden;
   }
 
-  public void hidden(Boolean hidden) {
-    this.hidden = hidden.booleanValue();
+  public void hidden(boolean hidden) {
+    this.hidden = hidden;
   }
 
   public String labelString() {
@@ -275,8 +275,8 @@ public strictfp class LinkData
     return lineThickness;
   }
 
-  public void lineThickness(Double lineThickness) {
-    this.lineThickness = lineThickness.doubleValue();
+  public void lineThickness(double lineThickness) {
+    this.lineThickness = lineThickness;
   }
 
   public double heading() {
