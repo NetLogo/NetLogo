@@ -202,7 +202,7 @@ class ServerWorld(settings: WorldPropertiesInterface) {
     // make a data object for this link
     val data = new LinkData(
       link.id, link.end1.id, link.end2.id, LinkData.COMPLETE, link.x1, link.y1, link.x2, link.y2,
-      link.shape, link.color, link.hidden, link.labelString, link.labelColor,
+      link.shape, AgentData.toLogoList(link.color), link.hidden, link.labelString, AgentData.toLogoList(link.labelColor),
       link.lineThickness, link.isDirectedLink,
       if (link.isDirectedLink) link.linkDestinationSize else 1,
       link.heading, link.size, link.getBreedIndex)

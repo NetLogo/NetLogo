@@ -313,7 +313,7 @@ public strictfp class ClientWorld
   }
 
   void updateLink(LinkData link) {
-    Long simpleKey = Long.valueOf(link.id);
+    Long simpleKey = Long.valueOf(link.id());
     LinkKey sortedKey = linkKeys.get(simpleKey);
 
     if (link.isDead()) {
@@ -335,7 +335,7 @@ public strictfp class ClientWorld
     if (sortedKey == null) {
       bufLink = uninitializedLinks.get(simpleKey);
       if (bufLink != null) {
-        sortedKey = new LinkKey(link.id, link.end1, link.end2, link.getBreedIndex());
+        sortedKey = new LinkKey(link.id(), link.end1Id(), link.end2Id(), link.getBreedIndex());
         linkKeys.put(simpleKey, sortedKey);
         sortedLinks.put(sortedKey, link);
         uninitializedLinks.remove(simpleKey);
@@ -349,7 +349,7 @@ public strictfp class ClientWorld
     // if we haven't got one, this link better have all its info...
     if (bufLink == null) {
       if (link.isComplete()) {
-        sortedKey = new LinkKey(link.id, link.end1, link.end2, link.getBreedIndex());
+        sortedKey = new LinkKey(link.id(), link.end1Id(), link.end2Id(), link.getBreedIndex());
         linkKeys.put(simpleKey, sortedKey);
         sortedLinks.put(sortedKey, link);
       } else {
@@ -361,7 +361,7 @@ public strictfp class ClientWorld
 
       if (link.isComplete() || bufLink.getBreedIndex() != sortedKey.breedIndex) {
         sortedLinks.remove(sortedKey);
-        sortedKey = new LinkKey(link.id, link.end1, link.end2, link.getBreedIndex());
+        sortedKey = new LinkKey(link.id(), link.end1Id(), link.end2Id(), link.getBreedIndex());
         sortedLinks.put(sortedKey, bufLink);
         linkKeys.put(simpleKey, sortedKey);
       }
@@ -425,7 +425,7 @@ public strictfp class ClientWorld
     if ((mask & DiffBuffer.LINKS()) == DiffBuffer.LINKS()) {
       int numToRead = is.readInt();
       for (int i = 0; i < numToRead; i++) {
-        updateLink(new LinkData(is));
+        updateLink(LinkData.fromStream(is));
       }
     }
     if ((mask & DiffBuffer.DRAWING()) == DiffBuffer.DRAWING()) {
