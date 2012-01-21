@@ -15,6 +15,8 @@ object AgentData {
             d.doubleValue))
       case l: LogoList =>
         l
+      case null =>
+        null
     }
 }
 
