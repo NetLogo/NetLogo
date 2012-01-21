@@ -104,23 +104,6 @@ tmp/scaladoc: netlogo | tmp
 
 ### misc targets
 
-# cleaning
-.PHONY: clean clean-extensions distclean
-clean:
-	bin/sbt clean
-	rm -f bin/*.class devel/depend.ddf
-	rm -rf cobertura.ser models/index.txt
-	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) NetLogoLite.jar
-	rm -rf tmp target
-	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
-	rm -f resources/*.properties
-clean-extensions:
-	rm -rf $(foreach foo,$(EXTENSIONS),$(dir $(foo)))
-distclean:
-	git clean -fd
-	git clean -fX
-
 # benchmarking
 .PHONY: bench benches
 bench: netlogo

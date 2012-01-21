@@ -156,4 +156,18 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("profiler:exclusive-time \"some-value\" = profiler:inclusive-time \"some-value\"", "true")
       testReporter("precision profiler:exclusive-time \"some-value\" -3", "1000")
     }
+
+  // kludginess ahead. this isn't really a test of the profiler extension per se.  the other
+  // isReporter tests are in TestCompiler.  but this test case involves an extension primitive.  it
+  // doesn't matter which extension, so we use profiler.  ideally we'd have a test scaffold that
+  // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
+  // and we don't want anything in test-fast or test-medium to depend on submodules like models and
+  // extensions, so we put it here because it's a SlowTest - ST 1/19/12
+  test("isReporter on extension prims") {
+    workspace.initForTesting(5, "extensions [profiler]")
+    expect(false) { workspace.isReporter("profiler:start") }
+    expect(true) { workspace.isReporter("profiler:report") }
+    expect(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
+  }
+
 }

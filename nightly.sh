@@ -3,9 +3,9 @@
 # -e makes the whole thing die with an error if any command does
 # -v lets you see the commands as they happen
 
-make bin/sbt-launch.jar
-bin/sbt update
-make clean clean-extensions
+git clean -fdX
+git submodule update --init
+git submodule foreach git clean -fdX
 make
 
 rm -rf tmp/nightly
