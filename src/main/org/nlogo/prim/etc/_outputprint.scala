@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Command, Context, Workspace }
+import org.nlogo.api.{ Syntax, OutputDestination }
+import org.nlogo.nvm.{ Command, Context }
 
 class _outputprint extends Command {
   override def syntax =
@@ -11,7 +11,7 @@ class _outputprint extends Command {
   override def perform(context: Context) {
     workspace.outputObject(
       args(0).report(context), null, true, false,
-      Workspace.OutputDestination.OUTPUT_AREA)
+      OutputDestination.OutputArea)
     context.ip = next
   }
 }

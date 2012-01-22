@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ Command, Context, Workspace }
+import org.nlogo.api.{ Syntax, OutputDestination }
+import org.nlogo.nvm.{ Command, Context }
 
 class _pwd extends Command {
   override def syntax =
@@ -13,7 +13,7 @@ class _pwd extends Command {
       Option(workspace.getModelPath)
         .getOrElse("no model loaded!")
     workspace.outputObject(path, null, true, true,
-      Workspace.OutputDestination.NORMAL)
+      OutputDestination.Normal)
     context.ip = next
   }
 }
