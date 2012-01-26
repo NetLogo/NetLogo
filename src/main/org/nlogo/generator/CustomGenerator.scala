@@ -105,7 +105,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context) 
       mv.visitInsn(DUP)
-      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;")
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
@@ -176,7 +176,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
       // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
-      mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Activation", "args", "()[Ljava/lang/Object;")
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)

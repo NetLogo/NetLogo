@@ -31,14 +31,14 @@ public final strictfp class _repeatlocal
   @Override
   public void perform(final Context context)
       throws LogoException {
-    context.activation.args[vn] =
+    context.activation.args()[vn] =
         new MutableLong(validLong(argEvalDoubleValue(context, 0)));
     context.ip = offset;
   }
 
   public void perform_1(final Context context, double arg0)
       throws LogoException {
-    context.activation.args[vn] = new MutableLong(validLong(arg0));
+    context.activation.args()[vn] = new MutableLong(validLong(arg0));
     context.ip = offset;
   }
 

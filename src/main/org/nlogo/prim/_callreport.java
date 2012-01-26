@@ -41,7 +41,7 @@ public final strictfp class _callreport
     Activation newActivation =
         new Activation(procedure, context.activation, context.ip);
     for (int i = 0; i < (procedure.args.size() - procedure.localsCount); i++) {
-      newActivation.args[i] = args[i].report(context);
+      newActivation.args()[i] = args[i].report(context);
     }
     Object result = context.callReporterProcedure(newActivation);
     if (result == null) {
