@@ -2,9 +2,6 @@
 
 package org.nlogo.nvm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
@@ -16,6 +13,9 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.util.Thunk;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract strictfp class Instruction
     implements org.nlogo.api.TokenHolder {

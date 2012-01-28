@@ -9,7 +9,6 @@ package org.nlogo.log
 import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager }
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version
-import org.nlogo.util.Exceptions.ignoring
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
 
 object Logger {

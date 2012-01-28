@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import javax.media.opengl.GL
-import org.nlogo.api.{ World, Observer, Patch, Patch3D, Perspective, DrawingInterface}
+import org.nlogo.api.{ World, Patch, Patch3D, Perspective, DrawingInterface}
 
 private class PatchRenderer(world: World, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends TextureRenderer(world) {

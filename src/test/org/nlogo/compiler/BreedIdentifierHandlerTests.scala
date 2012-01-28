@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ Program, Token, TokenType, Version }
+import org.nlogo.api.{ Program, Token, TokenType }
 import org.nlogo.prim._
 
 class BreedIdentifierHandlerTests extends FunSuite {

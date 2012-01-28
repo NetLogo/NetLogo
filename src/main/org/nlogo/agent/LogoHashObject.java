@@ -11,11 +11,11 @@ package org.nlogo.agent;
    to recursivelyEqual will need to be made to this class's hashCode()
    method to ensure that this general contract remains valid.*/
 
-import java.util.Iterator;
-
+import org.nlogo.api.Equality;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Nobody$;
-import org.nlogo.api.Equality;
+
+import java.util.Iterator;
 
 public final strictfp class LogoHashObject {
   private final Object sourceObject;

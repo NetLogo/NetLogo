@@ -9,7 +9,6 @@ CHMOD=chmod
 CP=cp
 DU=du
 FIND=find
-GIT=git
 GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
@@ -45,11 +44,6 @@ then
   exit 1
 fi
 
-# maybe we should be using the "submodules" feature of git for this? - ST 5/7/11
-if [ ! -d "Mathematica-Link" ]; then
-  $GIT clone git@github.com:NetLogo/Mathematica-Link.git
-fi
-
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
   echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
   echo "(it's needed to compile the link, but we don't have a license to distribute it)"
@@ -76,8 +70,7 @@ if [ $WINDOWS -eq 1 ]; then
   # make sure we have proper VM pack
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "$IJDIR/jres/$VM.tar.gz not found"
-    echo "You'll need to have Install4j installed. The license key is on the devel wiki,"
-    echo "at http://trac.assembla.com/nlogo/wiki/DevelSetup ."
+    echo "You'll need to have Install4j installed. Seth has the license key."
     echo "The Windows Edition is sufficient (Windows here refers to the target platform)."
     echo "as for the VM pack, you can grab it from http://ccl.northwestern.edu/devel/ using curl -O"
     echo "or if we don't have one for this Java version yet,"
@@ -95,24 +88,6 @@ if [ $WINDOWS -eq 1 ]; then
   fi
 else
   echo "OK, no Windows, just Mac and Linux/Unix"
-fi
-
-# ask user whether to make clean (yes for real releases, no when testing this script)
-until [ -n "$CLEAN" ]
-do
-  read -p "Do you want to run 'make clean' first? " -n 1 ANSWER
-  echo
-  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-    CLEAN=1
-  fi
-  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-    CLEAN=0
-  fi
-done
-
-# clean
-if [ $CLEAN -eq 1 ]; then
-  $MAKE -s clean
 fi
 
 until [ -n "$REQUIRE_PREVIEWS" ]

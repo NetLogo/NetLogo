@@ -2,7 +2,6 @@
 
 package org.nlogo.properties
 
-import org.nlogo.agent.Agent
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.WidgetWrapperInterface
 import javax.swing.{JPanel, JLabel}
@@ -166,7 +165,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       case Property.Color =>
         new ColorEditor(accessor, frame) with Changed
       case Property.Commands =>
-        new CodeEditor(accessor, colorizer, collapsable, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.Double =>
         new DoubleEditor(accessor) with Changed
       case Property.StrictlyPositiveDouble =>
@@ -205,10 +204,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new IntegerEditor(accessor) with Changed
         { override def get = super.get.filter(_ >= 0) }
       case Property.Reporter =>
-        new CodeEditor(accessor, colorizer, collapsable, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
         { override def get = super.get.map(_.trim).filter(_.nonEmpty) }
       case Property.ReporterOrEmpty =>
-        new CodeEditor(accessor, colorizer, collapsable, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.ReporterLine =>
         new ReporterLineEditor(accessor, colorizer) with Changed
       case Property.String =>

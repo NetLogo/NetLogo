@@ -3,7 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.Turtle3D
-import org.nlogo.api.{ LogoException, Syntax, Vect }
+import org.nlogo.api.{ Syntax, Vect }
 import org.nlogo.nvm.{ Command, Context }
 
 class _tiltdown extends Command {

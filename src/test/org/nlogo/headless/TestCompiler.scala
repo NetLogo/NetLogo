@@ -168,16 +168,8 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   test("isReporter on user-defined procedures") {
     workspace.initForTesting(5, "to foo end to-report bar [] report 5 end")
     import collection.JavaConverters._
-    println(workspace.getProcedures.asScala.toMap)
     expect(false) { workspace.isReporter("foo") }
     expect(true) { workspace.isReporter("bar") }
-  }
-
-  test("isReporter on extension prims") {
-    workspace.initForTesting(5, "extensions [profiler]")
-    expect(false) { workspace.isReporter("profiler:start") }
-    expect(true) { workspace.isReporter("profiler:report") }
-    expect(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }

@@ -15,7 +15,7 @@ import javax.swing._
 import javax.swing.event.{DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent}
 import javax.swing.text.JTextComponent
 import org.nlogo.api.{I18N, VersionHistory, ModelSection}
-import text.html.{HTMLDocument, HTMLEditorKit}
+import text.html.HTMLDocument
 import java.io.File
 
 class InfoTab(attachModelDir: String => String) extends JPanel with

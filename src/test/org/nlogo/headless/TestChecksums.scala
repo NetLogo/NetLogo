@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{CompilerException, LogoException, Version}
+import org.nlogo.api.Version
 import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
 import org.scalatest._

@@ -2,7 +2,6 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.SysInfo
 
 object Version {
 

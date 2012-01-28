@@ -2,9 +2,8 @@
 
 package org.nlogo.editor;
 
-import java.util.List;
-
 import javax.swing.text.JTextComponent;
+import java.util.List;
 
 /**
  * Highlights a section of code that lies between two matching

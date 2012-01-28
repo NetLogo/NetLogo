@@ -6,10 +6,10 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.Observer;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _myself
     extends Reporter {

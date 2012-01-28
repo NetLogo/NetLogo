@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.api.{ Dump, I18N, LogoList, ReporterRunnable, Syntax }
+import org.nlogo.api.{ Dump, I18N, ReporterRunnable, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
 import org.nlogo.window.GUIWorkspace
 

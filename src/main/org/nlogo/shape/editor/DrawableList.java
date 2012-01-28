@@ -2,13 +2,13 @@
 
 package org.nlogo.shape.editor;
 
+import org.nlogo.api.Shape;
+import org.nlogo.api.ShapeList;
+import org.nlogo.shape.ShapeChangeListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import org.nlogo.api.ShapeList;
-import org.nlogo.api.Shape;
-import org.nlogo.shape.ShapeChangeListener;
 
 public strictfp class DrawableList
     extends javax.swing.JList

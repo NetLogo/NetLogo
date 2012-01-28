@@ -2,7 +2,6 @@
 
 package org.nlogo.lab
 
-import java.io.FileNotFoundException
 import org.nlogo.api.Dump
 import org.nlogo.api.WorldDimensions
 import org.nlogo.nvm.Workspace

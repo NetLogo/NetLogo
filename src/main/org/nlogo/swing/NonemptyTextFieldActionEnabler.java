@@ -2,10 +2,9 @@
 
 package org.nlogo.swing;
 
+import javax.swing.JTextField;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.JTextField;
 
 /**
  * Makes an Action enabled only if a set of TextFields are not empty.

@@ -11,7 +11,6 @@ package org.nlogo.headless
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
 import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
-import org.nlogo.api.{CompilerException, LogoException}
 import org.nlogo.util.SlowTest
 
 class TestProfiler extends AbstractTestLanguage with FunSuite
@@ -24,8 +23,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   override def beforeEach() { init() }
   override def afterEach() { workspace.dispose() }
 
-  val noGenerator = !org.nlogo.api.Version.useGenerator
-  if(noGenerator)
+  val useGenerator = org.nlogo.api.Version.useGenerator
+  if(!useGenerator)
     test("no generator") {
       defineProcedures("extensions [profiler]")
       testCommandError(
@@ -34,7 +33,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         "generator, which is currently turned off. See the org.nlogo.noGenerator " +
         "property.")
     }
-  if(!noGenerator)
+  if(useGenerator)
     test("basics") {
       defineProcedures(
         "extensions [profiler]\n" +
@@ -53,7 +52,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("somethingelse")
       testReporter("profiler:calls \"somethingelse\"", "52")
     }
-  if(!noGenerator)
+  if(useGenerator)
     test("stop") {
       defineProcedures(
         "extensions [profiler]\n" +
@@ -66,7 +65,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("foo")
       testReporter("profiler:calls \"foo\"", "1")
     }
-  if(!noGenerator && timingSensitiveOK)
+  if(useGenerator && timingSensitiveOK)
     // uses precision primitive to not be too picky about exact times
     test("wait") {
       defineProcedures(
@@ -99,7 +98,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("profiler:inclusive-time \"test3\" >= 10", "true")
       testReporter("precision profiler:inclusive-time \"test3\" -1", "10")
     }
-  if(!noGenerator && timingSensitiveOK)
+  if(useGenerator && timingSensitiveOK)
     test("ask turtles") {
       defineProcedures(
         "extensions [profiler]\n" +
@@ -117,7 +116,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("set glob1 profiler:exclusive-time \"test1\" + profiler:exclusive-time \"test2\"")
       testReporter("precision (glob1 - profiler:inclusive-time \"test1\") 8", "0")
     }
-  if(!noGenerator && timingSensitiveOK)
+  if(useGenerator && timingSensitiveOK)
     test("nested asks") {
       defineProcedures(
         "extensions [profiler]\n" +
@@ -143,7 +142,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("precision (glob2 + glob3 - profiler:inclusive-time \"go-turtles2\") 13", "0")
       testReporter("precision (glob1 + glob2 + glob3 - profiler:inclusive-time \"go-turtles1\") 13", "0")
     }
-  if(!noGenerator && timingSensitiveOK)
+  if(useGenerator && timingSensitiveOK)
     test("reporter procedures") {
       defineProcedures(
         "extensions [profiler]\n" +
@@ -157,4 +156,18 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testReporter("profiler:exclusive-time \"some-value\" = profiler:inclusive-time \"some-value\"", "true")
       testReporter("precision profiler:exclusive-time \"some-value\" -3", "1000")
     }
+
+  // kludginess ahead. this isn't really a test of the profiler extension per se.  the other
+  // isReporter tests are in TestCompiler.  but this test case involves an extension primitive.  it
+  // doesn't matter which extension, so we use profiler.  ideally we'd have a test scaffold that
+  // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
+  // and we don't want anything in test-fast or test-medium to depend on submodules like models and
+  // extensions, so we put it here because it's a SlowTest - ST 1/19/12
+  test("isReporter on extension prims") {
+    workspace.initForTesting(5, "extensions [profiler]")
+    expect(false) { workspace.isReporter("profiler:start") }
+    expect(true) { workspace.isReporter("profiler:report") }
+    expect(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
+  }
+
 }

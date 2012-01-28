@@ -2,14 +2,12 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _turtleshere
     extends Reporter {

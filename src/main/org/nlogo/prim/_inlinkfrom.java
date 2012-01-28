@@ -6,9 +6,9 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
-import org.nlogo.api.Syntax;
 
 public final strictfp class _inlinkfrom
     extends Reporter {

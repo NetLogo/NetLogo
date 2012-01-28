@@ -4,9 +4,8 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Let;
-import org.nlogo.api.Dump;
+import org.nlogo.api.LogoException;
 
 public final strictfp class Context {
 

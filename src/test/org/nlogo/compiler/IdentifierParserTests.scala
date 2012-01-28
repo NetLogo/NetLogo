@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program, Token, TokenType }
+import org.nlogo.api.{ DummyExtensionManager, Program, Token, TokenType }
 import org.nlogo.nvm.Procedure
 
 class IdentifierParserTests extends FunSuite {

@@ -5,9 +5,9 @@ package org.nlogo.lab.gui
 import org.nlogo.awt.UserCancelException
 import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,Worker}
 import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
-import org.nlogo.nvm.{EngineException,LabInterface,Workspace,WorkspaceFactory}
-import LabInterface.ProgressListener
-import org.nlogo.api.{I18N, CompilerException, LogoException, WorldDimensions, WorldResizer}
+import org.nlogo.nvm.{EngineException, Workspace, WorkspaceFactory}
+import org.nlogo.nvm.LabInterface.ProgressListener
+import org.nlogo.api.{I18N, CompilerException, LogoException}
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean)

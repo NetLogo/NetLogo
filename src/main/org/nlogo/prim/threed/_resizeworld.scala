@@ -3,7 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.World3D
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _resizeworld extends Command {

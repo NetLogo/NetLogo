@@ -2,14 +2,14 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentException;
+import org.nlogo.api.Matrix3D;
+import org.nlogo.api.Vect;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.nlogo.api.AgentException;
-import org.nlogo.api.Matrix3D;
-import org.nlogo.api.Vect;
 
 public strictfp class TieManager3D
     extends TieManager {

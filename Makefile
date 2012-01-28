@@ -12,10 +12,10 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
-JAVA_HOME = /usr/lib/jvm/java-1.6.0-sun-1.6.0.29
+JAVA_HOME = /usr/lib/jvm/java-6-sun
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
-JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xss16m -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
+JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.1
 SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 # note that LIBS has a trailing colon
@@ -87,55 +87,9 @@ extensions: $(EXTENSIONS)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
-	mkdir -p models
-	if [ ! -d models/test ] ; then git clone git://git.assembla.com/models.git ; fi
-	mkdir -p extensions
-	if [ ! -d extensions/array/src ] ; then git clone http://github.com/NetLogo/Array-Extension.git extensions/array ; fi
-	if [ ! -d extensions/bitmap/src ] ; then git clone http://github.com/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
-	if [ ! -d extensions/gis/src ] ; then git clone http://github.com/NetLogo/GIS-Extension.git extensions/gis ; fi
-	if [ ! -d extensions/gogo/src ] ; then git clone http://github.com/NetLogo/GoGo-Extension.git extensions/gogo ; fi
-	if [ ! -d extensions/matrix/src ] ; then git clone http://github.com/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	if [ ! -d extensions/network/src ] ; then git clone http://github.com/NetLogo/Network-Extension.git extensions/network ; fi
-	if [ ! -d extensions/profiler/src ] ; then git clone http://github.com/NetLogo/Profiler-Extension.git extensions/profiler ; fi
-	if [ ! -d extensions/qtj/src ] ; then git clone http://github.com/NetLogo/QTJ-Extension.git extensions/qtj ; fi
-	if [ ! -d extensions/sample/src ] ; then git clone http://github.com/NetLogo/Sample-Extension.git extensions/sample ; fi
-	if [ ! -d extensions/sample-scala/src ] ; then git clone http://github.com/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
-	if [ ! -d extensions/sound/src ] ; then git clone http://github.com/NetLogo/Sound-Extension.git extensions/sound ; fi
-	if [ ! -d extensions/table/src ] ; then git clone http://github.com/NetLogo/Table-Extension.git extensions/table ; fi
+	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
-
-# pull down versions core devel has rights to push to - ST 5/12/11
-.PHONY: repos
-repos:
-	mkdir -p models
-	if [ ! -d models/test ] ; then git clone git@git.assembla.com:models.git ; fi
-	cd models; git pull; git status
-	mkdir -p extensions
-	if [ ! -d extensions/array/src ] ; then git clone git@github.com:/NetLogo/Array-Extension.git extensions/array ; fi
-	cd extensions/array; git pull; git status
-	if [ ! -d extensions/bitmap/src ] ; then git clone git@github.com:/NetLogo/Bitmap-Extension.git extensions/bitmap ; fi
-	cd extensions/bitmap; git pull; git status
-	if [ ! -d extensions/gis/src ] ; then git clone git@github.com:/NetLogo/GIS-Extension.git extensions/gis ; fi
-	cd extensions/gis; git pull; git status
-	if [ ! -d extensions/gogo/src ] ; then git clone git@github.com:/NetLogo/GoGo-Extension.git extensions/gogo ; fi
-	cd extensions/gogo; git pull; git status
-	if [ ! -d extensions/matrix/src ] ; then git clone git@github.com:/NetLogo/Matrix-Extension.git extensions/matrix ; fi
-	cd extensions/matrix; git pull; git status
-	if [ ! -d extensions/network/src ] ; then git clone git@github.com:/NetLogo/Network-Extension.git extensions/network ; fi
-	cd extensions/network; git pull; git status
-	if [ ! -d extensions/profiler/src ] ; then git clone git@github.com:/NetLogo/Profiler-Extension.git extensions/profiler ; fi
-	cd extensions/profiler; git pull; git status
-	if [ ! -d extensions/qtj/src ] ; then git clone git@github.com:/NetLogo/QTJ-Extension.git extensions/qtj ; fi
-	cd extensions/qtj; git pull; git status
-	if [ ! -d extensions/sample/src ] ; then git clone git@github.com:/NetLogo/Sample-Extension.git extensions/sample ; fi
-	cd extensions/sample; git pull; git status
-	if [ ! -d extensions/sample-scala/src ] ; then git clone git@github.com:/NetLogo/Sample-Scala-Extension.git extensions/sample-scala ; fi
-	cd extensions/sample-scala; git pull; git status
-	if [ ! -d extensions/sound/src ] ; then git clone git@github.com:/NetLogo/Sound-Extension.git extensions/sound ; fi
-	cd extensions/sound; git pull; git status
-	if [ ! -d extensions/table/src ] ; then git clone git@github.com:/NetLogo/Table-Extension.git extensions/table ; fi
-	cd extensions/table; git pull; git status
 
 ### Scaladoc
 
@@ -150,8 +104,11 @@ tmp/scaladoc: netlogo | tmp
 	  -doc-version `cat tmp/version.txt` \
 	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
+          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
           `find src/main -name \*.scala -o -name \*.java`
+# compensate for issues.scala-lang.org/browse/SI-5388
+	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
 
 # these are the docs we include with the User Manual
 docs/scaladoc: netlogo
@@ -164,6 +121,7 @@ docs/scaladoc: netlogo
 	  -doc-version `cat tmp/version.txt` \
 	  -classpath $(LIBS)$(CLASSES) \
 	  -sourcepath src/main \
+          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
 	  -encoding us-ascii \
 	  src/main/org/nlogo/app/App.scala \
 	  src/main/org/nlogo/lite/InterfaceComponent.scala \
@@ -174,25 +132,10 @@ docs/scaladoc: netlogo
           src/main/org/nlogo/agent/*.*a \
           src/main/org/nlogo/workspace/*.*a \
           src/main/org/nlogo/nvm/*.*a
+# compensate for issues.scala-lang.org/browse/SI-5388
+	perl -pi -e 's/\.java.scala/.java/g' `find docs/scaladoc -name \*.html`
 
 ### misc targets
-
-# cleaning
-.PHONY: clean clean-extensions distclean
-clean:
-	bin/sbt clean
-	rm -f bin/*.class devel/depend.ddf
-	rm -rf cobertura.ser docs/dict docs/infotab.html resources/system/dict.txt resources/system/dict3d.txt models/index.txt
-	rm -rf $(EXTENSIONS) extensions/*/build extensions/*/classes plugins/*/build plugins/*/classes
-	rm -f $(JARS) test/applet/NetLogoLite.jar test/applet/HubNet.jar
-	rm -rf tmp target docs/scaladoc
-	rm -rf project/plugins/lib_managed project/plugins/project project/plugins/src_managed project/plugins/target
-	rm -f resources/*.properties
-clean-extensions:
-	rm -rf $(foreach foo,$(EXTENSIONS),$(dir $(foo)))
-distclean:
-	git clean -fd
-	git clean -fX
 
 # benchmarking
 .PHONY: bench benches

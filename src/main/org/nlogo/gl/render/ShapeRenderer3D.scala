@@ -3,7 +3,7 @@
 package org.nlogo.gl.render
 
 import javax.media.opengl.GL
-import org.nlogo.api.{ World, World3D }
+import org.nlogo.api.World3D
 
 private class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {
 

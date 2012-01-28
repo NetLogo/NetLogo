@@ -2,19 +2,18 @@
 
 package org.nlogo.window;
 
+import org.nlogo.api.CompilerException;
+import org.nlogo.api.JobOwner;
+import org.nlogo.api.Program;
+import org.nlogo.nvm.CompilerResults;
+import org.nlogo.nvm.Procedure;
+import org.nlogo.workspace.AbstractWorkspace;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.nlogo.api.Program;
-import org.nlogo.api.CompilerException;
-import org.nlogo.api.JobOwner;
-import org.nlogo.api.SourceOwner;
-import org.nlogo.nvm.CompilerResults;
-import org.nlogo.nvm.Procedure;
-import org.nlogo.workspace.AbstractWorkspace;
 
 public strictfp class CompilerManager
     implements org.nlogo.window.Event.LinkChild,

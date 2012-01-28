@@ -3,7 +3,6 @@
 package org.nlogo.app
 
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.RichAction
 import org.nlogo.window.{EditDialogFactoryInterface, GUIWorkspace}
 import org.nlogo.window.Events._
 import org.nlogo.swing.RichAction

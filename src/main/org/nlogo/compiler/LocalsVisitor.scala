@@ -3,8 +3,8 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers._
-import org.nlogo.api.{ I18N, Let }
-import org.nlogo.nvm.{ Command, Procedure, Reporter }
+import org.nlogo.api.I18N
+import org.nlogo.nvm.Procedure
 import org.nlogo.prim._
 
 /**
