@@ -9,7 +9,6 @@ CHMOD=chmod
 CP=cp
 DU=du
 FIND=find
-GIT=git
 GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
@@ -43,11 +42,6 @@ if test `htmldoc --version` != 1.8.27 ;
 then
   echo "htmldoc 1.8.27 not found"
   exit 1
-fi
-
-# maybe we should be using the "submodules" feature of git for this? - ST 5/7/11
-if [ ! -d "Mathematica-Link" ]; then
-  $GIT clone git@github.com:NetLogo/Mathematica-Link.git
 fi
 
 if [ ! -f "Mathematica-Link/JLink.jar" ]; then
@@ -94,24 +88,6 @@ if [ $WINDOWS -eq 1 ]; then
   fi
 else
   echo "OK, no Windows, just Mac and Linux/Unix"
-fi
-
-# ask user whether to make clean (yes for real releases, no when testing this script)
-until [ -n "$CLEAN" ]
-do
-  read -p "Do you want to run 'make clean' first? " -n 1 ANSWER
-  echo
-  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-    CLEAN=1
-  fi
-  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-    CLEAN=0
-  fi
-done
-
-# clean
-if [ $CLEAN -eq 1 ]; then
-  $MAKE -s clean
 fi
 
 until [ -n "$REQUIRE_PREVIEWS" ]

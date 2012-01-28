@@ -20,9 +20,9 @@
       What issues may arise depends on what version of NetLogo the model
       was created with.
     <p>
-      This section does not list every change that was made in the NetLogo
-      versions discussed, only the changes most likely to cause issues for
-      users.
+      This guide only covers changes most likely to cause issues for
+      users.  <a href="versions.html">What's New?</a> has more details
+      on differences between versions.
     <ul>
       <li>
         <a href="#v50">Changes for NetLogo 5.0</a>
@@ -262,7 +262,8 @@ end</code>
     <p>
       The code for specifying the syntax of a primitive has changed
       slightly, for example <tt>Syntax.TYPE_STRING</tt> is now
-      <tt>Syntax.StringType()</tt>.
+      <tt>Syntax.StringType()</tt>.  (From Java, the pair of parentheses
+      at the end is required. In Scala, you can omit them.)
     <h4>
       LogoList construction
     </h4>
