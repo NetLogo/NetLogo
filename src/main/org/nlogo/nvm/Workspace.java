@@ -19,8 +19,6 @@ import java.util.WeakHashMap;
 public interface Workspace
     extends ImporterUser, JobManagerOwner, CompilerServices, RandomServices {
 
-  public enum BehaviorSpaceFormat {TABLE, SPREADSHEET}
-
   enum OutputDestination {NORMAL, OUTPUT_AREA, FILE}
 
   enum UpdateMode {
