@@ -72,7 +72,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val te = singleTestTask("org.nlogo.headless.TestExtensions")
 
   lazy val testSlow = runSubclassesOf("org.nlogo.util.SlowTest")
-  lazy val testMedium = task { None }.dependsOn(List(testFast, tc, tr, tm, te).map(_.apply(Array())):_*)
+  lazy val testMedium = task { None }.dependsOn(List(testFast, tc, tr).map(_.apply(Array())):_*)
   lazy val testFast = runEverythingButSubclassesOf("org.nlogo.util.SlowTest")
 
   def checksumsAndPreviewsTask(arg: String) =
