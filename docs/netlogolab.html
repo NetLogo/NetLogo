@@ -204,9 +204,20 @@
       Mac OS X
     </h3>
     <p>
-      Determining which device is the GoGo board may prove difficult at first.
-      To identify the GoGo board, open the GoGoMonitor example and press the <tt>setup</tt> button.
-      A dialog will pop up presenting a list of available ports. Select the
+      There is a bug either in Mac OS X or in the RXTX library that we use
+      for the serial connection which requires you to enter the following
+      commands in the Terminal application
+      (/Applications/Utilities/Terminal.app) before the GoGo board will
+      work:
+    <pre>
+sudo mkdir /var/lock
+sudo chmod 1777 /var/lock
+sudo rm /var/spool/uucp/*
+</pre>
+    <p>
+      Once you've completed the previous step you can start NetLogo.
+      Open the GoGoMonitor example and press the <tt>setup</tt> button. A
+      dialog will pop up presenting a list of available ports. Select the
       port that the GoGo board is plugged into. It might look something
       like this:
     <pre>
@@ -215,7 +226,7 @@
     <p>
       Where the words after <tt>/dev/tty.</tt> might be something related
       to the brand of adapter you have and include the word
-      &quot;serial&quot; or &quot;usbmodem&quot;. If you can't figure out which port is the
+      &quot;serial&quot;. If you can't figure out which port is the
       correct one you can find it in the System Profiler (Apple Menu -&gt;
       About This Mac -&gt; More Info) 
       <!-- note that I don't know where the port names are in this
