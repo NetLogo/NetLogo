@@ -31,7 +31,7 @@ def paths =
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString
   val problems = Buffer[String]()
-  if(contents.last != '\n')
+  if(contents.nonEmpty && contents.last != '\n')
     problems += "Missing newline at eof"
   if(contents.contains('\r'))
     problems += "Carriage return character(s) found"
