@@ -14,4 +14,4 @@ We've all got them. NetLogo's are here: https://github.com/NetLogo/NetLogo/issue
 
 ## Discussion group
 
-To talk about NetLogo internals, the NetLogo source code, usage of NetLogo APIs, etc., join <a href="http://groups.google.com/group/netlogo-devel">netlogo-devel</a> at Google Groups.
+To talk about NetLogo development, NetLogo internals, the NetLogo source code, usage of NetLogo APIs, etc., join <a href="http://groups.google.com/group/netlogo-devel">netlogo-devel</a> at Google Groups.
