@@ -67,8 +67,14 @@ trait Libraries extends DefaultProject {
       val pathString = path.asFile.toString
       val filename =
         pathString.reverse.takeWhile(_ != '/').mkString
-          .replaceFirst("\\.", (if(pathString.containsSlice("quaqua")) "-7.3.4."
-                                else "-1.1.1.").reverse)
+          .replaceFirst("\\.", (if(pathString.containsSlice("quaqua"))
+                                  "-7.3.4."
+                                else if(pathString.containsSlice("Linux-x86"))
+                                  "-x86-1.1.1."
+                                else if(pathString.containsSlice("Linux-amd64"))
+                                  "-amd64-1.1.1."
+                                else
+                                  "-1.1.1.").reverse)
           .reverse
       val url = "http://ccl.northwestern.edu/devel/" + filename
       import Process._
