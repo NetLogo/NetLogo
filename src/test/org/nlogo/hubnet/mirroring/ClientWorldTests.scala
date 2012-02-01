@@ -15,7 +15,7 @@ class ClientWorldTests extends FunSuite {
   // we pass "false" to the ClientWorld constructor so we don't
   // print out error messages since we are intending to trigger them
   // and it's confusing to see errors when there aren't any.
-  val buf = new ClientWorld(20, false)
+  val buf = new ClientWorld(numPatches = Some(20), printErrors = false)
 
   test("creation") {
     buf.updatePatch(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE))

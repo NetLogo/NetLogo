@@ -17,7 +17,7 @@ import static org.nlogo.hubnet.mirroring.ClientWorldS.TurtleKeyComparator;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKey;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKeyComparator;
 
-public strictfp class ClientWorld
+public strictfp class ClientWorldJ
     implements org.nlogo.api.World {
 
   /**
@@ -56,16 +56,15 @@ public strictfp class ClientWorld
 
   private boolean shapes;
 
-  public ClientWorld() {
-    this(true);
-  }
-
-  public ClientWorld(boolean printErrors) {
+  public ClientWorldJ(boolean printErrors, scala.Option<Integer> numPatches) {
     this.printErrors = printErrors;
     sortedTurtles = new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
     turtleKeys = new HashMap<Long, TurtleKey>();
     sortedLinks = new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
     linkKeys = new HashMap<Long, LinkKey>();
+    if (numPatches.isDefined()) {
+      createPatches(numPatches.get().intValue());
+    }
   }
 
   // temporary hack for the review tab experiments
@@ -74,11 +73,6 @@ public strictfp class ClientWorld
     turtleKeys = new HashMap<Long, TurtleKey>();
     sortedLinks = new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
     linkKeys = new HashMap<Long, LinkKey>();
-  }
-
-  public ClientWorld(int numPatches, boolean printErrors) {
-    this(printErrors);
-    createPatches(numPatches);
   }
 
   public double ticks() {

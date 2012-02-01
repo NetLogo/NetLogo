@@ -21,3 +21,6 @@ private object ClientWorldS {
   }
 
 }
+
+class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
+extends ClientWorldJ(printErrors, numPatches)
