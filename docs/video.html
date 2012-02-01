@@ -74,6 +74,21 @@
       <li>Copy <tt>/System/Library/Java/Extensions/libQTJNative.jnilib</tt>
       into the <tt>Mac OS X</tt> directory.
       </ul>
+    <p>
+      Also, on 64-bit Macs (which includes all currently sold models), you
+      will need to change NetLogo to run in 32-bit mode in order to
+      use the extension.  If you don't, the usual result is a
+      java.lang.UnsatisfiedLinkError dialog.  Here are the steps to
+      follow:
+     <ul>
+      <li>Select the NetLogo application icon in the Finder.
+      <li>On the File menu, choose Get Info.
+      <li>Check this checkbox: "Open in 32-bit mode"
+      <li>Open the application.
+     </ul>
+    <p>If you want, you can make a copy of the application first and performs these
+       steps on the copy, so the original still opens in 64-bit mode.  (64-bit mode
+       is the recommended default unless you are using this extension.)
     <h3>
       Linux
     </h3>
