@@ -133,8 +133,8 @@ extends AgentData with api.Link {
   def labelString = label
   def hasLabel = Option(label).exists(_.nonEmpty)
 
-  def getKey: ClientWorld.LinkKey =
-    new ClientWorld.LinkKey(id, end1Id, end2Id, breedIndex)
+  def getKey: ClientWorldS.LinkKey =
+    new ClientWorldS.LinkKey(id, end1Id, end2Id, breedIndex)
 
   def getBreedIndex = breedIndex
 
