@@ -11,3 +11,7 @@ We've all got them. NetLogo's are here: https://github.com/NetLogo/NetLogo/issue
 ## Developer documentation
 
 ...is in the [wiki](https://github.com/NetLogo/NetLogo/wiki).
+
+## Discussion group
+
+To talk about NetLogo internals, the NetLogo source code, usage of NetLogo APIs, etc., join <a href="http://groups.google.com/group/netlogo-devel">netlogo-devel</a> at Google Groups.
