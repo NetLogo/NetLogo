@@ -17,7 +17,7 @@ import static org.nlogo.hubnet.mirroring.ClientWorldS.TurtleKeyComparator;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKey;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKeyComparator;
 
-public strictfp class ClientWorldJ
+public abstract strictfp class ClientWorldJ
     implements org.nlogo.api.World {
 
   /**
@@ -42,7 +42,7 @@ public strictfp class ClientWorldJ
 
   Map<Long, LinkData> uninitializedLinks = new HashMap<Long, LinkData>();
 
-  public PatchData[] patches;
+  public PatchData[] patchData;
   private int[] patchColors;
 
   public int[] patchColors() {
@@ -88,11 +88,11 @@ public strictfp class ClientWorldJ
   }
 
   private void createPatches(int numPatches) {
-    patches = new PatchData[numPatches];
+    patchData = new PatchData[numPatches];
     patchColors = new int[numPatches];
-    for (int i = 0; i < patches.length; i++) {
-      patches[i] = new PatchData(i, (short) PatchData.COMPLETE(), 0, 0, 0.0, "", 0.0);
-      patches[i].patchColors_$eq(patchColors);
+    for (int i = 0; i < patchData.length; i++) {
+      patchData[i] = new PatchData(i, (short) PatchData.COMPLETE(), 0, 0, 0.0, "", 0.0);
+      patchData[i].patchColors_$eq(patchColors);
     }
   }
 
@@ -122,7 +122,7 @@ public strictfp class ClientWorldJ
    * Returns descriptions of the patches in this world.
    */
   public PatchData[] getPatches() {
-    return patches;
+    return patchData;
   }
 
   private int fontSize;
@@ -230,14 +230,14 @@ public strictfp class ClientWorldJ
   }
 
   void updatePatch(PatchData patch) {
-    if (patch.id() >= patches.length) {
+    if (patch.id() >= patchData.length) {
       handleError("ERROR: received update for "
           + "non-existent patch (" + patch.stringRep() + ").");
       return;
     }
 
     // otherwise, we'll need our version, if we've got one.
-    PatchData bufPatch = patches[(int) patch.id()];
+    PatchData bufPatch = patchData[(int) patch.id()];
 
     // if we haven't got one, this patch better have all its info...
     if (bufPatch == null && !patch.isComplete()) {
@@ -557,7 +557,7 @@ public strictfp class ClientWorldJ
       return getTurtle(Long.valueOf(agent.id()));
     }
     if (agent.tyype() == AgentTypeJ.PATCH()) {
-      return patches[(int) agent.id()];
+      return patchData[(int) agent.id()];
     }
     if (agent.tyype() == AgentTypeJ.LINK()) {
       return getLink(Long.valueOf(agent.id()));
@@ -579,7 +579,7 @@ public strictfp class ClientWorldJ
       }
     } else if (list.type() == AgentTypeJ.PATCH()) {
       for (Long id : setAsJavaSet(list.overrides().keySet())) {
-        addOverride(patches[id.intValue()], list.variable(), list.overrides().apply(id));
+        addOverride(patchData[id.intValue()], list.variable(), list.overrides().apply(id));
       }
     } else if (list.type() == AgentTypeJ.LINK()) {
       for (Long id : setAsJavaSet(list.overrides().keySet())) {
@@ -604,7 +604,7 @@ public strictfp class ClientWorldJ
       }
     } else if (list.type() == AgentTypeJ.PATCH()) {
       for (Long id : seqAsJavaList(list.agents())) {
-        removeOverride(patches[id.intValue()], list.variable());
+        removeOverride(patchData[id.intValue()], list.variable());
       }
     } else if (list.type() == AgentTypeJ.LINK()) {
       for (Long id : seqAsJavaList(list.agents())) {
@@ -633,114 +633,6 @@ public strictfp class ClientWorldJ
     for (Overridable rider : overrideMap.keySet()) {
       rider.rollback();
     }
-  }
-
-  public org.nlogo.api.AgentSet links() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.AgentSet turtles() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.AgentSet patches() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Program program() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.ShapeList turtleShapeList() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.ShapeList linkShapeList() {
-    throw new UnsupportedOperationException();
-  }
-
-  public int patchesWithLabels() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Patch getPatch(int i) {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Patch getPatchAt(double x, double y) {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Observer observer() {
-    throw new UnsupportedOperationException();
-  }
-
-  public Object getDrawing() {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean sendPixels() {
-    throw new UnsupportedOperationException();
-  }
-
-  public void markDrawingClean() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Protractor protractor() {
-    throw new UnsupportedOperationException();
-  }
-
-  public double wrappedObserverX(double x) {
-    throw new UnsupportedOperationException();
-  }
-
-  public double wrappedObserverY(double y) {
-    throw new UnsupportedOperationException();
-  }
-
-  public void markPatchColorsClean() {
-    throw new UnsupportedOperationException();
-  }
-
-  public void markPatchColorsDirty() {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean patchColorsDirty() {
-    throw new UnsupportedOperationException();
-  }
-
-  public org.nlogo.api.Patch fastGetPatchAt(int x, int y) {
-    throw new UnsupportedOperationException();
-  }
-
-  public int getVariablesArraySize(org.nlogo.api.Link link, org.nlogo.api.AgentSet breed) {
-    throw new UnsupportedOperationException();
-  }
-
-  public String linksOwnNameAt(int i) {
-    throw new UnsupportedOperationException();
-  }
-
-  public int getVariablesArraySize(org.nlogo.api.Turtle turtle, org.nlogo.api.AgentSet breed) {
-    throw new UnsupportedOperationException();
-  }
-
-  public String turtlesOwnNameAt(int i) {
-    throw new UnsupportedOperationException();
-  }
-
-  public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int i) {
-    throw new UnsupportedOperationException();
-  }
-
-  public scala.collection.Iterator<Object> allStoredValues() {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean mayHavePartiallyTransparentObjects() {
-    return false;
   }
 
 }

@@ -27,13 +27,13 @@ class ClientWorldTests extends FunSuite {
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
       buf.getTurtleDataByWho(10).stringRep)
-    for (i <- 0 until buf.patches.length)
+    for (i <- 0 until buf.patchData.length)
       if (i != 10) {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patchData(i).stringRep)
       } else {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patchData(i).stringRep)
       }
   }
 
@@ -48,13 +48,13 @@ class ClientWorldTests extends FunSuite {
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (1.0, 2.0, default, -16777216, 90.0, 1.0, true, label, -1, 0, 0.0)")(
       buf.getTurtleDataByWho(10).stringRep)
-    for (i <- 0 until buf.patches.length)
+    for (i <- 0 until buf.patchData.length)
       if (i != 10) {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patchData(i).stringRep)
       } else {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patchData(i).stringRep)
       }
   }
 
@@ -91,13 +91,13 @@ class ClientWorldTests extends FunSuite {
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
       buf.getTurtleDataByWho(10).stringRep)
-    for (i <- 0 until buf.patches.length)
+    for (i <- 0 until buf.patchData.length)
       if (i != 10) {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patchData(i).stringRep)
       } else {
-        assert(buf.patches(i) != null)
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
+        assert(buf.patchData(i) != null)
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patchData(i).stringRep)
       }
 
     buf.updateTurtle(roundTripT(new TurtleData(10, (TurtleData.XCOR | TurtleData.YCOR).toShort, 1, 2, "default",
@@ -152,12 +152,12 @@ class ClientWorldTests extends FunSuite {
     expect(1)(buf.sortedTurtles.size)
     expect("Turtle 10 (0.0, 0.0, default, -1, 90.0, 1.0, true, label, -16777216, 0, 0.0)")(
       buf.getTurtleDataByWho(10).stringRep)
-    for (i <- 0 until buf.patches.length) {
-      assert(buf.patches(i) != null)
+    for (i <- 0 until buf.patchData.length) {
+      assert(buf.patchData(i) != null)
       if (i != 10)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patchData(i).stringRep)
       else
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patchData(i).stringRep)
     }
 
     bos.reset()
@@ -196,12 +196,12 @@ class ClientWorldTests extends FunSuite {
     buf.updateFrom(new DataInputStream(new ByteArrayInputStream(bos.toByteArray())))
 
     expect(0)(buf.sortedTurtles.size())
-    for (i <- 0 until buf.patches.length) {
-      assert(buf.patches(i) != null)
+    for (i <- 0 until buf.patchData.length) {
+      assert(buf.patchData(i) != null)
       if (i != 10)
-        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patches(i).stringRep)
+        expect("Patch 0 0 (-16777216, , -16777216)")(buf.patchData(i).stringRep)
       else
-        expect("Patch 0 0 (-16777216, label, -1)")(buf.patches(i).stringRep)
+        expect("Patch 0 0 (-16777216, label, -1)")(buf.patchData(i).stringRep)
     }
   }
 }

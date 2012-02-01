@@ -22,5 +22,38 @@ private object ClientWorldS {
 
 }
 
+import org.nlogo.api
+
 class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors, numPatches)
+extends ClientWorldJ(printErrors, numPatches) {
+
+  override def links = unsupported
+  override def turtles = unsupported
+  override def patches = unsupported
+  override def program = unsupported
+  override def turtleShapeList = unsupported
+  override def linkShapeList = unsupported
+  override def patchesWithLabels = unsupported
+  override def getPatch(i: Int) = unsupported
+  override def getPatchAt(x: Double, y: Double) = unsupported
+  override def observer = unsupported
+  override def getDrawing = unsupported
+  override def sendPixels = unsupported
+  override def markDrawingClean = unsupported
+  override def protractor = unsupported
+  override def wrappedObserverX(x: Double) = unsupported
+  override def wrappedObserverY(y: Double) = unsupported
+  override def markPatchColorsClean = unsupported
+  override def markPatchColorsDirty = unsupported
+  override def patchColorsDirty = unsupported
+  override def fastGetPatchAt(x: Int, y: Int) = unsupported
+  override def getVariablesArraySize(link: api.Link, breed: api.AgentSet) = unsupported
+  override def linksOwnNameAt(i: Int) = unsupported
+  override def getVariablesArraySize(turtle: api.Turtle, breed: api.AgentSet) = unsupported
+  override def turtlesOwnNameAt(i: Int) = unsupported
+  override def breedsOwnNameAt(breed: api.AgentSet, i: Int) = unsupported
+  override def allStoredValues = unsupported
+  override def mayHavePartiallyTransparentObjects = false
+
+  private def unsupported = throw new UnsupportedOperationException
+}
