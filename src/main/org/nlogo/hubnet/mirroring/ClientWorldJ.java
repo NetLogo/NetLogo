@@ -73,10 +73,6 @@ public abstract strictfp class ClientWorldJ
     linkKeys = new HashMap<Long, LinkKey>();
   }
 
-  public double ticks() {
-    throw new UnsupportedOperationException();
-  }
-
   public void setWorldSize(int minx, int maxx, int miny, int maxy) {
     this.minPxcor = minx;
     this.maxPxcor = maxx;

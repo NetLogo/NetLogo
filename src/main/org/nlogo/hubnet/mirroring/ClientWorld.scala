@@ -54,6 +54,7 @@ extends ClientWorldJ(printErrors, numPatches) with Overrides {
   override def breedsOwnNameAt(breed: api.AgentSet, i: Int) = unsupported
   override def allStoredValues = unsupported
   override def mayHavePartiallyTransparentObjects = false
+  override def ticks = unsupported
 
   private def unsupported = throw new UnsupportedOperationException
 }
