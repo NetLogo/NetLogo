@@ -85,10 +85,9 @@ extensions [sound speech]
       Models saved as applets (using &quot;Save as Applet&quot; on
       NetLogo's File menu) can make use of extensions. Copy the entire
       extension directory into the directory that contains the model file.
-      Applets can use many extensions, even those that require
-      external jars. They cannot use extensions that
-      require native libraries, though, such as the GoGo and QuickTime
-      extensions.
+      Applets can use many extensions, even those that require external
+      jars. They cannot use extensions that require native libraries,
+      though, such as the GoGo and QuickTime extensions.
     <h2>
       <a name="writing" id="writing">Writing Extensions</a>
     </h2>
@@ -98,8 +97,11 @@ extensions [sound speech]
       related tools and practices.
     <p>
       Our API's are also usable from other languages for the Java
-      Virtual Machine, such as Scala. Following the Java
-      information is a section on how to write an extension in Scala.
+      Virtual Machine, such as Scala. Following the Java information is a
+      section on how to write an extension in Scala.
+    <p>
+      For discussion of NetLogo API's and NetLogo development in general,
+      visit <a href="http://groups.google.com/group/netlogo-devel">http://groups.google.com/group/netlogo-devel</a>.
     <h3>
       Summary
     </h3>
@@ -155,14 +157,15 @@ extensions [sound speech]
       Examples
     </h3>
     <p>
-      Several sample extensions are included with NetLogo.
-      The full Java (or Scala) source code for all of them is hosted
-      on line <a href="https://github.com/NetLogo/">on GitHub</a>.
-      Most are in the public domain; some are copyrighted, but under
-      an open-source license.
-    <p>Additional extensions developed outside the CCL are available for download
-      <a href="http://ccl.northwestern.edu/netlogo/resources.shtml">here</a>.
-      Many of them include source code too.
+      Several sample extensions are included with NetLogo. The full Java
+      (or Scala) source code for all of them is hosted on line <a href=
+      "https://github.com/NetLogo/">on GitHub</a>. Most are in the public
+      domain; some are copyrighted, but under an open-source license.
+    <p>
+      Additional extensions developed outside the CCL are available for
+      download <a href=
+      "http://ccl.northwestern.edu/netlogo/resources.shtml">here</a>. Many
+      of them include source code too.
     <h3>
       Tutorial
     </h3>
@@ -348,8 +351,9 @@ NetLogo-Extension-API-Version: 5.0
       <b>Important:</b> You must add <tt>NetLogo.jar</tt> (from the NetLogo
       distribution) to your classpath when compiling, and the lib directory
       must be accessible in the same location as <tt>NetLogo.jar</tt>.
-    <p>Each of our sample extensions on GitHub includes a command-line
-       build in a Makefile, invoked with the <tt>make</tt> command.
+    <p>
+      Each of our sample extensions on GitHub includes a command-line build
+      in a Makefile, invoked with the <tt>make</tt> command.
     <p>
       Here's an example of how compiling your extension might look from
       the command line if you aren't using our Makefile:
@@ -611,8 +615,8 @@ $ jar tf scala-library.jar
       Instantiation
     </h4>
     <p>
-      Your class manager is instantiated in a fresh JVM classloader at
-      the time a model using the extension is loaded.
+      Your class manager is instantiated in a fresh JVM classloader at the
+      time a model using the extension is loaded.
     <h4>
       Classpath
     </h4>
@@ -685,13 +689,15 @@ $ jar tf scala-library.jar
     <h4>
       Applet support
     </h4>
-      <p>If you want your extension to work in applets, compile it using
-       <tt>NetLogoLite.jar</tt> instead of <tt>NetLogo.jar</tt>, to be sure
-       you are only referencing classes and methods that are available in the
-       applet jar.
-     <p>To keep the size of <tt>NetLogoLite.jar</tt> down, we use ProGuard to 
-        aggressively strip out unreferenced classes and methods.  If ProGuard
-        is removing something that your extension needs, let us know.
+    <p>
+      If you want your extension to work in applets, compile it using
+      <tt>NetLogoLite.jar</tt> instead of <tt>NetLogo.jar</tt>, to be sure
+      you are only referencing classes and methods that are available in
+      the applet jar.
+    <p>
+      To keep the size of <tt>NetLogoLite.jar</tt> down, we use ProGuard to
+      aggressively strip out unreferenced classes and methods. If ProGuard
+      is removing something that your extension needs, let us know.
     <h4>
       Documenting your extension
     </h4>
@@ -706,16 +712,17 @@ $ jar tf scala-library.jar
       Don't forget to consult the <a href="scaladoc/index.html">NetLogo
       API Specification</a> for full details on these classes, interfaces,
       and methods.
-    <p>You may also find it useful to consult the NetLogo source code,
-       which is hosted <a href=
-      "https://github.com/NetLogo/NetLogo">on GitHub</a>.
+    <p>
+      You may also find it useful to consult the NetLogo source code, which
+      is hosted <a href="https://github.com/NetLogo/NetLogo">on GitHub</a>.
     <p>
       The extensions facility is not yet complete. The API doesn't
       include everything you might expect to be present. Some facilities
       exist but are not yet documented. If you don't see a capability
-      you want, please let us know. Do not hesitate to <a href="contact.html">contact us</a>
-      with questions, as we may be able to find a workaround or provide
-      additional guidance where our documentation is thin.
+      you want, please let us know. Do not hesitate to <a href=
+      "contact.html">contact us</a> with questions, as we may be able to
+      find a workaround or provide additional guidance where our
+      documentation is thin.
     <p>
       Hearing from users of this API will also allow us to appropriately
       focus our efforts for future releases. We are committed to making

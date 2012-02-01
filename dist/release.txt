@@ -48,11 +48,12 @@ The following is a (partial) list of changes made since NetLogo
 Please send bug reports to bugs@ccl.northwestern.edu and other
 suggestions and comments to feedback@ccl.northwestern.edu.
 
-We also have three mailing lists for NetLogo:
+We also have four mailing lists for NetLogo:
 - netlogo-announce: occasional release announcements only
-- netlogo-users: discussions about NetLogo
+- netlogo-users: discussions about using NetLogo
 - netlogo-educators: discussions about teaching with NetLogo
-http://ccl.northwestern.edu/netlogo/ has info on all three.
+- netlogo-devel: discussions about the development of NetLogo
+http://ccl.northwestern.edu/netlogo/ has info on all four.
 
 The NetLogo source code is hosted here:
 https://github.com/NetLogo/NetLogo
