@@ -305,7 +305,7 @@ public strictfp class ClientWorld
     // otherwise, perform the update...
     bufTurtle.updateFrom(turtle);
 
-    if (bufTurtle.getBreedIndex() != sortedKey.breedIndex) {
+    if (bufTurtle.getBreedIndex() != sortedKey.breedIndex()) {
       // the breed of this turtle changed so we need to make
       // a new key in the sortedTurtles map ev 5/19/08
       sortedTurtles.remove(sortedKey);
@@ -362,7 +362,7 @@ public strictfp class ClientWorld
     } else {
       bufLink.updateFrom(link);
 
-      if (link.isComplete() || bufLink.getBreedIndex() != sortedKey.breedIndex) {
+      if (link.isComplete() || bufLink.getBreedIndex() != sortedKey.breedIndex()) {
         sortedLinks.remove(sortedKey);
         sortedKey = new LinkKey(link.id(), link.end1Id(), link.end2Id(), link.getBreedIndex());
         sortedLinks.put(sortedKey, bufLink);
