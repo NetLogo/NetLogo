@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static scala.collection.JavaConversions.seqAsJavaList;
-import static scala.collection.JavaConversions.setAsJavaSet;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.TurtleKey;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.TurtleKeyComparator;
 import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKey;
@@ -563,76 +561,6 @@ public abstract strictfp class ClientWorldJ
       return getLink(Long.valueOf(agent.id()));
     }
     return null;
-  }
-
-  private final java.util.Map<Overridable, java.util.Map<Integer, Object>> overrideMap
-      = new java.util.HashMap<Overridable, java.util.Map<Integer, Object>>();
-
-  public void clearOverrides() {
-    overrideMap.clear();
-  }
-
-  public void updateOverrides(SendOverride list) {
-    if (list.type() == AgentTypeJ.TURTLE()) {
-      for (Long id : setAsJavaSet(list.overrides().keySet())) {
-        addOverride(getTurtle(id), list.variable(), list.overrides().apply(id));
-      }
-    } else if (list.type() == AgentTypeJ.PATCH()) {
-      for (Long id : setAsJavaSet(list.overrides().keySet())) {
-        addOverride(patchData[id.intValue()], list.variable(), list.overrides().apply(id));
-      }
-    } else if (list.type() == AgentTypeJ.LINK()) {
-      for (Long id : setAsJavaSet(list.overrides().keySet())) {
-        addOverride(getLink(id), list.variable(), list.overrides().apply(id));
-      }
-    }
-  }
-
-  private void addOverride(Overridable rider, int variable, Object value) {
-    java.util.Map<Integer, Object> map = overrideMap.get(rider);
-    if (map == null) {
-      map = new java.util.HashMap<Integer, Object>();
-      overrideMap.put(rider, map);
-    }
-    map.put(Integer.valueOf(variable), value);
-  }
-
-  public void updateOverrides(ClearOverride list) {
-    if (list.type() == AgentTypeJ.TURTLE()) {
-      for (Long id : seqAsJavaList(list.agents())) {
-        removeOverride(getTurtle(id), list.variable());
-      }
-    } else if (list.type() == AgentTypeJ.PATCH()) {
-      for (Long id : seqAsJavaList(list.agents())) {
-        removeOverride(patchData[id.intValue()], list.variable());
-      }
-    } else if (list.type() == AgentTypeJ.LINK()) {
-      for (Long id : seqAsJavaList(list.agents())) {
-        removeOverride(getLink(id), list.variable());
-      }
-    }
-  }
-
-  private void removeOverride(Overridable rider, int variable) {
-    java.util.Map<Integer, Object> map = overrideMap.get(rider);
-    if (map != null) {
-      map.remove(Integer.valueOf(variable));
-    }
-  }
-
-  public void applyOverrides() {
-    for (Overridable rider : overrideMap.keySet()) {
-      java.util.Map<Integer, Object> overrides = overrideMap.get(rider);
-      for (Integer var : overrides.keySet()) {
-        rider.set(var.intValue(), overrides.get(var));
-      }
-    }
-  }
-
-  public void rollbackOverrides() {
-    for (Overridable rider : overrideMap.keySet()) {
-      rider.rollback();
-    }
   }
 
 }

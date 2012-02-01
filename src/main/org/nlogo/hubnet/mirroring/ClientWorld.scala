@@ -25,7 +25,7 @@ private object ClientWorldS {
 import org.nlogo.api
 
 class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors, numPatches) {
+extends ClientWorldJ(printErrors, numPatches) with Overrides {
 
   override def links = unsupported
   override def turtles = unsupported
@@ -56,4 +56,67 @@ extends ClientWorldJ(printErrors, numPatches) {
   override def mayHavePartiallyTransparentObjects = false
 
   private def unsupported = throw new UnsupportedOperationException
+}
+
+trait Overrides extends ClientWorldJ {
+
+  private val overrideMap =
+    collection.mutable.Map[Overridable, collection.mutable.Map[Int, AnyRef]]()
+
+  def clearOverrides() {
+    overrideMap.clear()
+  }
+
+  def updateOverrides(list: SendOverride) {
+    list.`type` match {
+      case AgentType.Turtle =>
+        for(id <- list.overrides.keySet)
+          addOverride(getTurtle(id), list.variable, list.overrides(id))
+      case AgentType.Patch =>
+        for (id <- list.overrides.keySet)
+          addOverride(patchData(id.intValue), list.variable, list.overrides(id))
+      case AgentType.Link =>
+        for (id <- list.overrides.keySet)
+          addOverride(getLink(id), list.variable, list.overrides(id))
+      case _ =>
+    }
+  }
+
+  private def addOverride(rider: Overridable, variable: Int, value: AnyRef) {
+    val innerMap = overrideMap.getOrElseUpdate(rider, collection.mutable.HashMap())
+    innerMap(variable) = value
+  }
+
+  def updateOverrides(list: ClearOverride) {
+    list.`type` match {
+      case AgentType.Turtle =>
+        for (id <- list.agents)
+          removeOverride(getTurtle(id), list.variable)
+      case AgentType.Patch =>
+        for (id <- list.agents)
+          removeOverride(patchData(id.intValue), list.variable)
+      case AgentType.Link =>
+        for (id <- list.agents)
+          removeOverride(getLink(id), list.variable)
+      case _ =>
+    }
+  }
+
+  private def removeOverride(rider: Overridable, variable: Int) {
+    for(map <- overrideMap.get(rider))
+      map -= variable
+  }
+
+  def applyOverrides() {
+    for {
+      (rider, overrides) <- overrideMap
+      (variable, value) <- overrides
+    } rider.set(variable, value)
+  }
+
+  def rollbackOverrides() {
+    for (rider <- overrideMap.keySet)
+      rider.rollback()
+  }
+
 }
