@@ -45,12 +45,6 @@ then
   exit 1
 fi
 
-if [ ! -f "Mathematica-Link/JLink.jar" ]; then
-  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
-  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
-  exit 1
-fi
-
 # ask user whether to build Windows installers
 # (ordinarily you want to, but sometimes you want to 
 # skip it, such as when testing changes to this script)
@@ -150,6 +144,14 @@ $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/s
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
+if [ ! -f ../../Mathematica-Link/Makefile ]; then
+  (cd ../..; git submodule update --init Mathematica-Link) || exit 1
+fi
+if [ ! -f "../../Mathematica-Link/JLink.jar" ]; then
+  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
+  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
+  exit 1
+fi
 $CP -rp ../../Mathematica-Link Mathematica\ Link
 (cd Mathematica\ Link; NETLOGO=.. make) || exit 1
 $RM Mathematica\ Link/JLink.jar
