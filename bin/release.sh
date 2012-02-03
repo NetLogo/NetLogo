@@ -7,6 +7,7 @@
 BUNZIP=bunzip2
 CHMOD=chmod
 CP=cp
+CURL=curl
 DU=du
 FIND=find
 GREP=grep
@@ -31,7 +32,7 @@ XARGS=xargs
 SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
-IJDIR=/Applications/install4j-$IJVERSION
+IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_30_server
 
 # make sure we have proper versions of tools
@@ -67,28 +68,33 @@ done
 
 if [ $WINDOWS -eq 1 ]; then
   echo "OK, building for all platforms (Windows, Mac, Linux/Unix)"
-  # make sure we have proper VM pack
-  if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
-    echo "$IJDIR/jres/$VM.tar.gz not found"
-    echo "You'll need to have Install4j installed. Seth has the license key."
-    echo "The Windows Edition is sufficient (Windows here refers to the target platform)."
-    echo "as for the VM pack, you can grab it from http://ccl.northwestern.edu/devel/ using curl -O"
-    echo "or if we don't have one for this Java version yet,"
-    echo "you can make it from inside install4j, but only on a windows machine"
-    echo "go to Project -> Create JRE Bundles"
-    echo "for path e.g.: c:\\jdk1.6.0_30"
-    echo "for java version e.g.: 1.6.0_30"
-    echo "for custom id: server"
+  # make sure we have Install4J
+  if [ ! -d "$IJDIR/jres" ]; then
+    echo "$IJDIR/jres not found"
+    echo "You'll need to install Install4j. Seth has the license key."
     exit 1
   fi
+  # check install 4j version
   DESIRED_VERSION="install4j version 5.0.9 (build 5372), built on 2011-07-08"
-  FOUND_VERSION="`$IJDIR/$IJ --version`"
+  pushd "$IJDIR" > /dev/null
+  FOUND_VERSION=`./$IJ --version`
+  popd
   if test "$FOUND_VERSION" != "$DESIRED_VERSION" ; 
   then
     echo "desired version: " $DESIRED_VERSION
     echo "found version: " $FOUND_VERSION
     exit 1
   fi
+  # fetch VM pack if needed
+  if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
+    echo "fetching VM pack"
+    pushd "$IJDIR/jres" > /dev/null
+    $CURL -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    popd
+  fi
+  # make sure VM pack is complete and not corrupt
+  echo "checking VM pack integrity"
+  tar tzf "$IJDIR/jres/$VM.tar.gz" > /dev/null
 else
   echo "OK, no Windows, just Mac and Linux/Unix"
 fi
@@ -376,7 +382,7 @@ $CHMOD -R go+rX .
 if [ $WINDOWS -eq 1 ]
 then
   $PERL -pi -e "s/\@\@\@VM\@\@\@/$VM/g" NetLogo.install4j
-  $IJDIR/$IJ -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
+  "$IJDIR/$IJ" -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
   $CHMOD -R a+x *.exe
   $MV *.exe ../$COMPRESSEDVERSION
 fi
