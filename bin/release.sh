@@ -151,7 +151,7 @@ $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
 $CP -rp ../../Mathematica-Link Mathematica\ Link
-(cd Mathematica\ Link; NETLOGO=.. make)
+(cd Mathematica\ Link; NETLOGO=.. make) || exit 1
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
@@ -218,39 +218,38 @@ $PERL -p -i -e 's/NetLogo User Manual&nbsp;/NetLogo $ENV{"VERSION"} User Manual&
 $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $ENV{"VERSION"} User Manual</title>|gs' docs/*.html
 
 # put models in multiple categories
-( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Networks/Team\ Assembly* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Altruism* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Cooperation* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Unverified/Divide* Social\ Science/Unverified )
-( cd models/Sample\ Models     ; $CP -rp Biology/Simple\ Birth* Social\ Science )
-( cd models                    ; $MKDIR -p Curricular\ Models )
-( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/GasLab Curricular\ Models )
-( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/MaterialSim Curricular\ Models )
-echo "a warning here about Unverified not being copied is OK"
-( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/* Curricular\ Models/ProbLab )
-( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/Unverified/* Curricular\ Models/ProbLab )
-( cd models/Curricular\ Models ; $MKDIR -p EACH/Unverified )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/EACH )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/EACH )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Unverified/Divide* Curricular\ Models/EACH/Unverified )
-( cd models                    ; $CP -rp Sample\ Models/System\ Dynamics/Unverified/Tabonuco* Sample\ Models/Biology/Unverified )
+( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Networks/Team\ Assembly* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Altruism* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Cooperation* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Unverified/Divide* Social\ Science/Unverified ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Simple\ Birth* Social\ Science ) || exit 1
+( cd models                    ; $MKDIR -p Curricular\ Models ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/GasLab Curricular\ Models ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/MaterialSim Curricular\ Models ) || exit 1
+( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/*.{nlogo,png} Curricular\ Models/ProbLab ) || exit 1
+( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/Unverified/* Curricular\ Models/ProbLab ) || exit 1
+( cd models/Curricular\ Models ; $MKDIR -p EACH/Unverified ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/EACH ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/EACH ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Unverified/Divide* Curricular\ Models/EACH/Unverified ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/System\ Dynamics/Unverified/Tabonuco* Sample\ Models/Biology/Unverified ) || exit 1
 
 # BEAGLE curricular models
-( cd models                    ; $CP -rp Sample\ Models/Biology/Wolf\ Sheep\ Predation* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Genetic\ Drift/GenDrift\ T\ interact* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Speeds* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Camouflage* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution )
+( cd models                    ; $CP -rp Sample\ Models/Biology/Wolf\ Sheep\ Predation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Genetic\ Drift/GenDrift\ T\ interact* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Speeds* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Camouflage* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
-( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" )
+( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" ) || exit 1
 
 # add JOGL native library for Linux
 $CP -r ../../lib/Linux-amd64 lib/Linux-amd64
@@ -331,7 +330,7 @@ cd ..
 $RM -rf dmg
 $MKDIR dmg
 $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
-( cd dmg/NetLogo\ "$VERSION"; $LN -s docs/NetLogo\ User\ Manual.pdf )
+( cd dmg/NetLogo\ "$VERSION"; $LN -s docs/NetLogo\ User\ Manual.pdf ) || exit 1
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
