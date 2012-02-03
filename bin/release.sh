@@ -218,11 +218,7 @@ $PERL -0 -p -i -e 's|<div class="version">.+?</div>||gs;' docs/*.html
 $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
 cd docs
-echo "-- we ignore htmldoc errors because the docs contain a bunch"
-echo "-- of links to the scaladoc, but the scaladoc isn't included"
-echo "-- in the PDF so htmldoc flags those as broken links."
-echo "-- please be on the lookout for other kinds of errors."
-../../../bin/htmldoc.sh || echo "htmldoc errors ignored"
+../../../bin/htmldoc.sh
 cd ..
 
 # blow away the docs directory messed up by the PDF generation process
