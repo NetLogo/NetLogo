@@ -67,7 +67,6 @@ do
 done
 
 if [ $WINDOWS -eq 1 ]; then
-  echo "OK, building for all platforms (Windows, Mac, Linux/Unix)"
   # make sure we have Install4J
   if [ ! -d "$IJDIR/jres" ]; then
     echo "$IJDIR/jres not found"
@@ -78,7 +77,7 @@ if [ $WINDOWS -eq 1 ]; then
   DESIRED_VERSION="install4j version 5.0.9 (build 5372), built on 2011-07-08"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
-  popd
+  popd > /dev/null
   if test "$FOUND_VERSION" != "$DESIRED_VERSION" ; 
   then
     echo "desired version: " $DESIRED_VERSION
@@ -90,13 +89,10 @@ if [ $WINDOWS -eq 1 ]; then
     echo "fetching VM pack"
     pushd "$IJDIR/jres" > /dev/null
     $CURL -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
-    popd
+    popd > /dev/null
   fi
   # make sure VM pack is complete and not corrupt
-  echo "checking VM pack integrity"
   tar tzf "$IJDIR/jres/$VM.tar.gz" > /dev/null
-else
-  echo "OK, no Windows, just Mac and Linux/Unix"
 fi
 
 until [ -n "$REQUIRE_PREVIEWS" ]
@@ -127,6 +123,7 @@ done
 # compile, build jars etc.
 bin/sbt error update
 $MAKE -s
+echo "generating Scaladoc"
 $MAKE -s docs/scaladoc
 
 # remember version number
@@ -293,7 +290,6 @@ $RM -rf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 # the qtj extension doesn't work on linux
 $TAR czf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz --exclude ._\* --exclude qtj --exclude Mac\ OS\ X --exclude Windows netlogo-$COMPRESSEDVERSION
 $DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz 
-pwd
 cd netlogo-$COMPRESSEDVERSION
 
 # done with Unix release; now do Mac release
@@ -339,7 +335,7 @@ $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
-$HDIUTIL create NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
+$HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
 $RM -rf dmg
@@ -382,8 +378,9 @@ $CHMOD -R go+rX .
 if [ $WINDOWS -eq 1 ]
 then
   $PERL -pi -e "s/\@\@\@VM\@\@\@/$VM/g" NetLogo.install4j
-  "$IJDIR/$IJ" -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
+  "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
   $CHMOD -R a+x *.exe
+  $DU -h *.exe
   $MV *.exe ../$COMPRESSEDVERSION
 fi
 
