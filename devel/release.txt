@@ -93,7 +93,7 @@ misc:
   section about how to generate a nicely formatted E-mail from an HTML
   change list)
 
-release.txt bullets:
+announce.txt bullets:
 - where do you get the change list?
   if it's a full (non-beta) release (e.g. 3.0, 3.1, etc.) then
   the change list should be since the last full release, so it'll
@@ -119,7 +119,7 @@ release.txt bullets:
   it on your local machine) as follows to generate the text version:
     lynx -dump -nolist foo.html > foo.txt
   Then find the relevant section of foo.txt and insert it into
-  release.txt, replacing the old bullets.  Make sure that the
+  announce.txt, replacing the old bullets.  Make sure that the
   lines are no longer than 70 characters.  Also lynx has an
   annoying habit of using "o" (lowercase O) as a bullet character,
   which looks funny, so I suggest searching and replacing " o "
