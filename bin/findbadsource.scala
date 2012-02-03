@@ -17,7 +17,9 @@ def ignore(path: String) =
   path.contains("/src_managed/") ||
   path.contains("/tmp/") ||
   path.endsWith("Lexer.java") ||
-  path.startsWith(".idea")
+  path.startsWith("./.idea/") ||
+  path.startsWith("./docs/scaladoc/") ||
+  path.startsWith("./devel/i18n/")
 
 // probably there are a lot more that could be here
 val extensions =
@@ -30,7 +32,7 @@ def paths =
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString
   val problems = Buffer[String]()
-  if(contents.last != '\n')
+  if(contents.nonEmpty && contents.last != '\n')
     problems += "Missing newline at eof"
   if(contents.contains('\r'))
     problems += "Carriage return character(s) found"

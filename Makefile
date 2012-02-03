@@ -29,7 +29,7 @@ tmp:
 bin/sbt-launch.jar:
 	curl -s 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
 $(SCALA_JAR): | bin/sbt-launch.jar
-	bin/sbt update
+	bin/sbt error update
 
 ### targets for running
 goshell:
@@ -47,14 +47,14 @@ profiles:
 
 models/index.txt:
 	@echo "@@@ building models/index.txt"
-	bin/sbt model-index
+	bin/sbt warn model-index
 
 ### JAR building
 
 JARS = NetLogo.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
-	bin/sbt alljars
+	bin/sbt warn alljars
 
 ### extensions
 
