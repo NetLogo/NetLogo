@@ -101,6 +101,18 @@ do
   fi
 done
 
+until [ -n "$INCLUDE_SCALADOC" ]
+do
+  read -p "Generate Scaladoc? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    INCLUDE_SCALADOC=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    INCLUDE_SCALADOC=0
+  fi
+done
+
 until [ -n "$DO_RSYNC" ]
 do
   read -p "Rsync to CCL server when done? " -n 1 ANSWER
@@ -117,8 +129,15 @@ done
 # compile, build jars etc.
 bin/sbt error update
 $MAKE -s
-echo "generating Scaladoc"
-$MAKE -s docs/scaladoc
+
+# Scaladoc
+if [ $INCLUDE_SCALADOC -eq 1 ]
+then
+  echo "generating Scaladoc"
+  $MAKE -s docs/scaladoc
+else
+  $RM -rf docs/scaladoc
+fi
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
