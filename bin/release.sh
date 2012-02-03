@@ -437,6 +437,17 @@ $FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store -or -name .git
 if [ $DO_RSYNC -eq 1 ]; then
   $RSYNC -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
 else
+  echo
   echo "to upload to CCL server, do:"
   echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
+
+echo
+echo "to tag the release:"
+echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
+echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
+echo
+echo "and to push the tags:"
+echo git push --tags
+echo git submodule foreach git push --tags
+echo
