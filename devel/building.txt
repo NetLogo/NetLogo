@@ -51,7 +51,8 @@ ahead of time:
   remember to install the JDK not just the jre so you get the server
   vm.  For "Custom bundle id", enter "server"
   Note: when you update the vm pack you need to change the
-  version number in release.sh.
+  version number in release.sh and make the pack available on
+  the ccl server under http://ccl.northwestern.edu/devel/
 - do a trial run of release.sh now, including Windows installers,
   just to make sure something doesn't fail. this avoids nasty
   surprises later when you might be in a hurry
