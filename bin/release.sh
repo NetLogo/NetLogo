@@ -125,7 +125,7 @@ done
 
 
 # compile, build jars etc.
-bin/sbt update
+bin/sbt error update
 $MAKE -s
 $MAKE -s docs/scaladoc
 
@@ -253,7 +253,7 @@ echo "a warning here about Unverified not being copied is OK"
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution )
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution )
 
-( cd ../.. ; bin/sbt "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" )
+( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" )
 
 # add JOGL native library for Linux
 $CP -r ../../lib/Linux-amd64 lib/Linux-amd64
