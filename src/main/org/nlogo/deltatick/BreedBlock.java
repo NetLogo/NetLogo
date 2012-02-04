@@ -47,8 +47,8 @@ public strictfp class BreedBlock
     transient JButton breedShapeButton;
     transient PrettyInput number;
     transient PrettyInput plural;
-    TraitSelector traitSelector;
-    VariationSelector variationSelector;
+    //TraitSelector traitSelector;
+    //VariationSelector variationSelector;
 
 
     //String pluralGiven;
@@ -59,8 +59,36 @@ public strictfp class BreedBlock
     JTextField traitLabel;
     transient String variation;
 
+    // constructor for breedBlock without trait & variation
+    public BreedBlock( Breed breed , String plural, Frame frame )
+	{
+		super( plural , ColorSchemer.getColor(3) ) ;
+        this.parentFrame = frame;
+        this.addMouseMotionListener(this);
+        this.addMouseListener(this);
+        this.setLocation(0,0);
+        this.setForeground(color);
+        //this.id = id;
+        this.breed = breed;
+        number.setText( breed.getStartQuant() );
 
+        //this.singular() = singular;
+        //this.pluralGiven = plural;
+        //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
+		setBorder( org.nlogo.swing.Utils.createWidgetBorder() ) ;
 
+        flavors = new DataFlavor[] {
+          DataFlavor.stringFlavor,
+          codeBlockFlavor,
+          breedBlockFlavor,
+          //patchBlockFlavor
+        };
+
+        //setPreferredSize( 250 , 99 );
+        //setSize( 250 , 99 );
+    }
+
+    // second constructor for breedBlock with trait & variation
     public BreedBlock( Breed breed , String plural, String traitName, String variationName, Frame frame )
 	{
 		super( plural , ColorSchemer.getColor(3) ) ;
@@ -74,12 +102,9 @@ public strictfp class BreedBlock
         number.setText( breed.getStartQuant() );
         this.trait = traitName;
         this.variation = variationName;
-        traitLabel.setText(variation + " " + trait);
+        //traitLabel.setText(variation + " " + trait);
 
         TraitSelector traitSelector = new TraitSelector(frame);
-        //this.singular() = singular;
-        //this.pluralGiven = plural;
-        //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
 		setBorder( org.nlogo.swing.Utils.createWidgetBorder() ) ;
 
         flavors = new DataFlavor[] {
@@ -102,6 +127,7 @@ public strictfp class BreedBlock
     //this is where breeds-own variables show up in NetLogo code -A. (aug 25)
     public String breedVars() {
         String code = "";
+
         if( breed.getOwnVars().size() > 0 ){
             code += plural() + "-own [\n";
             for( OwnVar var : breed.getOwnVars() ) {
@@ -109,16 +135,11 @@ public strictfp class BreedBlock
             }
             code += "]\n";
         }
-         /* with this code, nothing shows up in the code tab
-         Nov 23: had been done so variationSelector could pass variable to breeds-own -A.
-        if ( variationSelector.getVariationList() != null ) {
-            code += plural() + "-own [\n";
-            for ( String var : variationSelector.getVariationList() ) {
-                System.out.println("newCode" + var + "\n");
-            }
-        }
-       */
 
+         // send Trait as turtles-own variable -A. (feb 3, 2012)
+        else if ( trait != null ) {
+            code += plural() + "-own [\n" + trait + "\n]";
+            }
         return code;
     }
 
@@ -157,11 +178,13 @@ public strictfp class BreedBlock
 
     // very smart! singular is just prefixed plural -A.
     public String singular() {
-        return "one-of-" + variation + plural.getText();
+        return "one-of-" + plural.getText();
     }
 
+
+    // returns "plural" of breed
     public String plural() {
-        return variation + plural.getText();
+        return plural.getText();
         //temp_plural = plural.getText();
         //plural = variation + temp_plural;
         //return plural;
@@ -219,10 +242,11 @@ public strictfp class BreedBlock
         number.setText( "100" );
         label.add( number );
 
-        traitLabel = new JTextField();
-        label.add(traitLabel);
-        traitLabel.setText(trait + variation);
-        //label.add( new JLabel( trait ));
+        //commented out on Feb 4 when breed block was separated from variation Block
+        //traitLabel = new JTextField();
+        //label.add(traitLabel);
+        //traitLabel.setText(trait + variation);
+
         
         /* name of the breed take from plural -a. Getting plural from textfield (Nov 24)
         name comes from getName in CodeBlock which takes the parameter passed to BreedBlock as name,

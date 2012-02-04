@@ -131,6 +131,7 @@ public class TraitSelector
     public String traitName() {
 
         Trait = enterTrait.getText();
+        System.out.println(Trait);
         return Trait;
         //return (String) enterTrait.getText();
     }

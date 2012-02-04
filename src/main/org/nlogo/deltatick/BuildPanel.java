@@ -4,6 +4,7 @@ import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.Envt;
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
 import org.nlogo.window.GUIWorkspace;
+import org.parboiled.support.Var;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,7 +213,20 @@ public class BuildPanel
         block.doLayout();
         block.validate();
         block.repaint();
-        //block.repaint();
+
+    }
+
+    // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
+    public void addVariation ( VariationBlock block ) {
+        // make some kind of string that keeps variations attached to a breed
+        block.setBounds( 0 ,
+                0 ,
+                block.getPreferredSize().width,
+                block.getPreferredSize().height );
+        add( block );
+        block.doLayout();
+        block.validate();
+        block.repaint();
     }
 /*
     public void addBreed( String name , int number , String shape , int x , int y , String breedName ) throws Exception {
@@ -346,7 +360,7 @@ public class BuildPanel
     }
 
     //number of breeds in buildPanel -A. (sept 8)
-    //No, I think it's breeds available in XML -A. (oct 5)
+    //No, it's breeds available in XML -A. (oct 5)
     public ArrayList<Breed> availBreeds() {
         return bgInfo.getBreeds();
     }

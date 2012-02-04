@@ -88,11 +88,7 @@ public class LibraryReader {
 
                 if( quantity.getAttributes().getNamedItem("histo").getTextContent().contains("true") ) {
                     histo = true;
-                    System.out.println(quantity.getAttributes().getNamedItem("bars").getTextContent());
                     bars = quantity.getAttributes().getNamedItem("bars").getTextContent();
-                    System.out.println(quantity.getAttributes().getNamedItem("trait").getTextContent());
-                    //trait = quantity.getAttributes().getNamedItem("trait").getTextContent();
-                    
                 }
                 block = new QuantityBlock( quantity.getAttributes().getNamedItem("name").getTextContent() , histo , bars, trait);
 

@@ -166,8 +166,21 @@ public class DeltaTickTab
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 BreedBlock newBreed;
+                VariationBlock variationBlock;
+                /*
+                // Two paths: either go ahead and select traits & variations, or just have a breed -A. (Feb 3)
+                if (buildPanel.availBreeds().size() > 1) {
+                    breedTypeSelector.showMe(buildPanel.getBgInfo());
+                    if (breedTypeSelector.selectedBreedType() != null )
+                    for ( Breed breed : buildPanel.getBgInfo().getBreeds()) {
+                             newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
+                        }
+                }
+                   */
 
                 // if more than 1 breed available in XML -A. (oct 5)
+                // can remove the next line of code because there will always be more than one type of available breeds
+                // (feb 4)
                 if( buildPanel.availBreeds().size() > 1 ) {
                     breedTypeSelector.showMe(buildPanel.getBgInfo());
                     if (breedTypeSelector.typedBreedType() != null) {
@@ -179,34 +192,31 @@ public class DeltaTickTab
                         buildPanel.addBreed(newBreed);
                         newBreed.getParent().setComponentZOrder(newBreed, 0 );
                         new BreedDropTarget(newBreed, deltaTickTab);
-                    } }
+                    }
+                }
                     else if( breedTypeSelector.selectedBreedType() != null ) {
                         traitSelector.showMe();
                         variationSelector.showMe();
                         for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
                             if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
-                                System.out.println("plural:" + breed.plural());
+                                newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
+                                if (variationSelector.getVariationList() != null ) {
                             for (String variation : variationSelector.getVariationList()) {
-                            //if( breed.plural() == breedTypeSelector.selectedBreedType() ) {
+                                    // {
+                                    //newBreed = new BreedBlock( breed , breed.plural(), traitSelector.printMe(), variation, workspace.getFrame() );
+                                System.out.println("I'm entering the variation 'for' loop");
+                                variationBlock = new VariationBlock( breed, variation );
 
-                                //if no breeds & if more than 1 breed (people1) -A. (sept 8)
-                                //if( buildPanel.breedCount() == 0 ) {
-                                     {
-                                    newBreed = new BreedBlock( breed , breed.plural(), traitSelector.printMe(), variation, workspace.getFrame() );
-
-                                    //traitSelector.clearTrait();
-                                //}
-                            } //else {
-                                //    newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), traitSelector.printMe(), variation, workspace.getFrame() );
-                                //}
-
+                           // }
                                 buildPanel.addBreed(newBreed);
+                                buildPanel.addVariation(variationBlock);
                                 newBreed.getParent().setComponentZOrder(newBreed, 0 );
+                                variationBlock.getParent().setComponentZOrder(variationBlock, 0);
                                 new BreedDropTarget(newBreed, deltaTickTab);
                             }
                         }
-                    //}
-                    }
+
+                    } }
                 } else {
                     Breed breed = buildPanel.availBreeds().get(0);
                    // for (String variation : variationSelector.getVariationList()) {
@@ -224,11 +234,27 @@ public class DeltaTickTab
                 }
                 //BreedBlock newBreed = new BreedBlock("people" , "person", workspace.getFrame() );
                 contentPanel.validate();
-                //traitSelector.clearTrait();
+
             }
         }
         }
         };
+
+    private final javax.swing.Action addTraits =
+		new javax.swing.AbstractAction( "Add Traits" ) {
+            public void actionPerformed( java.awt.event.ActionEvent e ) {
+                 VariationBlock newVariation;
+
+                for (String variation : variationSelector.getVariationList() ) {
+                    newVariation = new VariationBlock( "breedName", variation );
+
+                buildPanel.addVariation( newVariation );
+                newVariation.getParent().setComponentZOrder(newVariation, 0 );
+                contentPanel.validate();
+        }
+        };
+
+
 
     private final javax.swing.Action addPlotAction =
 		new javax.swing.AbstractAction( "Add Graph" ) {

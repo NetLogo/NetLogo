@@ -59,7 +59,6 @@ public abstract class CodeBlock
         setBorder( org.nlogo.swing.Utils.createWidgetBorder() );
         setName( name );
         makeLabel();
-        //System.out.println("In CodeBlock");
         add(label);
     }
 

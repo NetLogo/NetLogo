@@ -37,6 +37,7 @@ public class BreedTypeSelector extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private JButton addYourOwn;
     private JTextField yourOwnBreed;
+    private JButton addTrait;
 
     private javax.swing.JDialog thisDialog = this;
 
@@ -71,6 +72,13 @@ public class BreedTypeSelector extends javax.swing.JDialog {
         });
         */
 
+        addTrait.setText("Add trait");
+        addTrait.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                   // something about showing add Traits dialog
+                  thisDialog.setVisible(false);
+            }
+        });
         this.setVisible(false);
     }
 
@@ -90,7 +98,6 @@ public class BreedTypeSelector extends javax.swing.JDialog {
     }
 
     public String typedBreedType() {
-        //System.out.println(yourOwnBreed.getText());
         return yourOwnBreed.getText();
     }
 
@@ -110,6 +117,7 @@ public class BreedTypeSelector extends javax.swing.JDialog {
         breedList = new javax.swing.JList();
         addYourOwn = new JButton();
         yourOwnBreed = new JTextField();
+        addTrait = new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 

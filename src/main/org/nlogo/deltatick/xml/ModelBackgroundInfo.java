@@ -38,7 +38,6 @@ public class ModelBackgroundInfo {
     }
 
     public void populate( NodeList breedNodes , NodeList globalNodes , NodeList envtNodes, NodeList setup , NodeList go , NodeList library) throws Exception {
-        System.out.println("in the populate method, envtNodes: ");
         try {
             if( setup.getLength() > 0 ) {
                 this.setup = setup.item(0).getTextContent();
