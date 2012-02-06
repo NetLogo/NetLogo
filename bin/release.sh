@@ -142,6 +142,7 @@ fi
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
 export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # make fresh staging area
