@@ -185,6 +185,8 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
 $RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
+# Apple's license won't let us include this - ST 2/6/12
+$RM -f extensions/qtj/QTJava.jar
 
 # include models
 $CP -rp ../../models .
