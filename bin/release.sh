@@ -184,7 +184,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
-$RM -rf extensions/*/classes
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
 
 # include models
 $CP -rp ../../models .
