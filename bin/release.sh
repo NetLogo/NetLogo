@@ -130,15 +130,6 @@ done
 bin/sbt error update
 $MAKE -s
 
-# Scaladoc
-if [ $INCLUDE_SCALADOC -eq 1 ]
-then
-  echo "generating Scaladoc"
-  $MAKE -s docs/scaladoc
-else
-  $RM -rf docs/scaladoc
-fi
-
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
 export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
@@ -149,6 +140,15 @@ export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Ma
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
 $MKDIR -p tmp/netlogo-$COMPRESSEDVERSION
 cd tmp/netlogo-$COMPRESSEDVERSION
+
+# Scaladoc
+if [ $INCLUDE_SCALADOC -eq 1 ]
+then
+  echo "generating Scaladoc"
+  $MAKE -s docs/scaladoc
+else
+  $RM -rf docs/scaladoc
+fi
 
 # put most of the files in
 $CP -rp ../../docs .
