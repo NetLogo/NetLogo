@@ -127,6 +127,7 @@ done
 
 
 # compile, build jars etc.
+rm *.jar
 bin/sbt error update
 $MAKE -s
 
