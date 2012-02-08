@@ -2,9 +2,6 @@
 
 package org.nlogo.hubnet.mirroring;
 
-import org.nlogo.api.Perspective;
-import org.nlogo.api.PerspectiveJ;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -102,7 +99,7 @@ public abstract strictfp class ClientWorldJ
   }
 
   public double patchSize() {
-    return perspectiveMode == PerspectiveMode.SERVER ? patchSize : ((StrictMath.max(viewWidth, viewHeight)) / ((radius * 2) + 1));
+    return perspectiveMode() == PerspectiveMode.SERVER ? patchSize : ((StrictMath.max(viewWidth, viewHeight)) / ((radius() * 2) + 1));
   }
 
   public double zoom() {
@@ -156,61 +153,6 @@ public abstract strictfp class ClientWorldJ
     SERVER, CLIENT;
   }
 
-  private PerspectiveMode perspectiveMode = PerspectiveMode.SERVER;
-
-  public Perspective perspective = PerspectiveJ.OBSERVE();
-  public AgentData targetAgent;
-  public double radius;
-
-  public boolean serverMode() {
-    return perspectiveMode == PerspectiveMode.SERVER;
-  }
-
-  public void updateServerPerspective(AgentPerspective p) {
-    if (perspectiveMode == PerspectiveMode.SERVER) {
-      perspective = Perspective.load(p.perspective());
-      radius = p.radius();
-      targetAgent = getAgent(p.agent());
-    }
-  }
-
-  public void updateClientPerspective(AgentPerspective p) {
-    perspective = Perspective.load(p.perspective());
-    perspectiveMode = p.serverMode() ? PerspectiveMode.SERVER : PerspectiveMode.CLIENT;
-    targetAgent = getAgent(p.agent());
-    radius = p.radius();
-  }
-
-  public double followOffsetX() {
-    if (targetAgent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
-      return 0;
-    }
-
-    if (perspectiveMode == PerspectiveMode.CLIENT) {
-      return targetAgent.xcor() - ((viewWidth() - 1) / 2) - minPxcor();
-    } else {
-      return targetAgent.xcor() - ((minPxcor() - 0.5) + worldWidth() / 2.0);
-    }
-  }
-
-  public double followOffsetY() {
-    AgentData agent = targetAgent();
-
-    if (agent == null || (perspective != PerspectiveJ.FOLLOW() && perspective != PerspectiveJ.RIDE())) {
-      return 0;
-    }
-
-    if (perspectiveMode == PerspectiveMode.CLIENT) {
-      return targetAgent.ycor() + ((viewHeight() - 1) / 2) - maxPycor();
-    } else {
-      return targetAgent.ycor() - ((minPycor() - 0.5) + worldHeight() / 2.0);
-    }
-  }
-
-  public AgentData targetAgent() {
-    return targetAgent;
-  }
-
   private int viewWidth;
   private int viewHeight;
 
@@ -242,5 +184,9 @@ public abstract strictfp class ClientWorldJ
     }
     return null;
   }
+
+  public abstract double radius();
+  public abstract PerspectiveMode perspectiveMode();
+  public abstract void updateServerPerspective(AgentPerspective p);
 
 }
