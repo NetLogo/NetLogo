@@ -79,19 +79,6 @@ public abstract strictfp class ClientWorldJ
     return sortedLinks.values();
   }
 
-  public abstract int minPxcor();
-  public abstract int maxPxcor();
-  public abstract int minPycor();
-  public abstract int maxPycor();
-
-  public int worldWidth() {
-    return maxPxcor() - minPxcor() + 1;
-  }
-
-  public int worldHeight() {
-    return maxPycor() - minPycor() + 1;
-  }
-
   private double patchSize = 13;
 
   public void patchSize(double patchSize) {

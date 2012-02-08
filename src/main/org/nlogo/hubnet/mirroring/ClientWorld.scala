@@ -94,6 +94,9 @@ trait Updating extends ClientWorldJ with AgentUpdaters {
   var minPycor = -1
   var maxPycor = -1
 
+  def worldWidth = maxPxcor - minPxcor + 1
+  def worldHeight = maxPycor - minPycor + 1
+
   def setWorldSize(minx: Int, maxx: Int, miny: Int, maxy: Int) {
     minPxcor = minx
     maxPxcor = maxx
