@@ -2,7 +2,6 @@
 
 package org.nlogo.hubnet.mirroring;
 
-import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 
@@ -47,13 +46,6 @@ public abstract strictfp class ClientWorldJ
     return patchColors;
   }
 
-  private int minPxcor = -1;
-  private int maxPxcor = -1;
-  private int minPycor = -1;
-  private int maxPycor = -1;
-
-  private boolean shapes;
-
   public ClientWorldJ(boolean printErrors, scala.Option<Integer> numPatches) {
     this.printErrors = printErrors;
     sortedTurtles = new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
@@ -73,15 +65,7 @@ public abstract strictfp class ClientWorldJ
     linkKeys = new HashMap<Long, LinkKey>();
   }
 
-  public void setWorldSize(int minx, int maxx, int miny, int maxy) {
-    this.minPxcor = minx;
-    this.maxPxcor = maxx;
-    this.minPycor = miny;
-    this.maxPycor = maxy;
-    createPatches(worldWidth() * worldHeight());
-  }
-
-  private void createPatches(int numPatches) {
+  protected void createPatches(int numPatches) {
     patchData = new PatchData[numPatches];
     patchColors = new int[numPatches];
     for (int i = 0; i < patchData.length; i++) {
@@ -90,7 +74,7 @@ public abstract strictfp class ClientWorldJ
     }
   }
 
-  private org.nlogo.api.TrailDrawerInterface trailDrawer;
+  protected org.nlogo.api.TrailDrawerInterface trailDrawer;
 
   public void setTrailDrawer(org.nlogo.api.TrailDrawerInterface trailDrawer) {
     this.trailDrawer = trailDrawer;
@@ -119,77 +103,17 @@ public abstract strictfp class ClientWorldJ
     return patchData;
   }
 
-  private int fontSize;
-
-  public int fontSize() {
-    return (int) (fontSize * zoom());
-  }
-
-  public int minPxcor() {
-    return minPxcor;
-  }
-
-  public int maxPxcor() {
-    return maxPxcor;
-  }
-
-  public int minPycor() {
-    return minPycor;
-  }
-
-  public int maxPycor() {
-    return maxPycor;
-  }
+  public abstract int minPxcor();
+  public abstract int maxPxcor();
+  public abstract int minPycor();
+  public abstract int maxPycor();
 
   public int worldWidth() {
-    return maxPxcor - minPxcor + 1;
+    return maxPxcor() - minPxcor() + 1;
   }
 
   public int worldHeight() {
-    return maxPycor - minPycor + 1;
-  }
-
-  public boolean shapesOn() {
-    return shapes;
-  }
-
-  public double wrapX(double x)
-      throws AgentException {
-    double max = maxPxcor + 0.5;
-    double min = minPxcor - 0.5;
-    if (!xWrap) {
-      if (x >= max || x < min) {
-        throw new AgentException("Cannot move turtle beyond the world's edge.");
-      }
-      return x;
-    } else {
-      return wrap(x, min, max);
-    }
-  }
-
-  public double wrapY(double y)
-      throws AgentException {
-    double max = maxPycor + 0.5;
-    double min = minPycor - 0.5;
-    if (!yWrap) {
-      if (y >= max || y < min) {
-        throw new AgentException("Cannot move turtle beyond the world's edge.");
-      }
-      return y;
-    } else {
-      return wrap(y, min, max);
-    }
-  }
-
-  public double wrap(double pos, double min, double max) {
-    if (pos >= max) {
-      return (min + ((pos - max) % (max - min)));
-    } else if (pos < min) {
-      double result = ((min - pos) % (max - min));
-      return (result == 0) ? min : (max - result);
-    } else {
-      return pos;
-    }
+    return maxPycor() - minPycor() + 1;
   }
 
   private double patchSize = 13;
@@ -204,17 +128,6 @@ public abstract strictfp class ClientWorldJ
 
   public double zoom() {
     return patchSize() / patchSize;
-  }
-
-  private boolean xWrap;
-  private boolean yWrap;
-
-  public boolean wrappingAllowedInX() {
-    return xWrap;
-  }
-
-  public boolean wrappingAllowedInY() {
-    return yWrap;
   }
 
   // for now we're not keeping track of this on the client,
@@ -359,71 +272,6 @@ public abstract strictfp class ClientWorldJ
     }
   }
 
-  public void updateFrom(java.io.DataInputStream is)
-      throws java.io.IOException {
-    short mask = is.readShort();
-    boolean reallocatePatches = false;
-    if ((mask & DiffBuffer.MINX()) == DiffBuffer.MINX()) {
-      int minx = is.readInt();
-      reallocatePatches = reallocatePatches || minx != minPxcor;
-      minPxcor = minx;
-    }
-    if ((mask & DiffBuffer.MINY()) == DiffBuffer.MINY()) {
-      int miny = is.readInt();
-      reallocatePatches = reallocatePatches || miny != minPycor;
-      minPycor = miny;
-    }
-    if ((mask & DiffBuffer.MAXX()) == DiffBuffer.MAXX()) {
-      int maxx = is.readInt();
-      reallocatePatches = reallocatePatches || maxx != maxPxcor;
-      maxPxcor = maxx;
-    }
-    if ((mask & DiffBuffer.MAXY()) == DiffBuffer.MAXY()) {
-      int maxy = is.readInt();
-      reallocatePatches = reallocatePatches || maxy != maxPycor;
-      maxPycor = maxy;
-    }
-    if (reallocatePatches) {
-      createPatches(worldWidth() * worldHeight());
-    }
-    if ((mask & DiffBuffer.SHAPES()) == DiffBuffer.SHAPES()) {
-      shapes = is.readBoolean();
-    }
-    if ((mask & DiffBuffer.FONT_SIZE()) == DiffBuffer.FONT_SIZE()) {
-      fontSize = is.readInt();
-    }
-    if ((mask & DiffBuffer.WRAPX()) == DiffBuffer.WRAPX()) {
-      xWrap = is.readBoolean();
-    }
-    if ((mask & DiffBuffer.WRAPY()) == DiffBuffer.WRAPY()) {
-      yWrap = is.readBoolean();
-    }
-    if ((mask & DiffBuffer.PERSPECTIVE()) == DiffBuffer.PERSPECTIVE()) {
-      updateServerPerspective(new AgentPerspective(is));
-    }
-    if ((mask & DiffBuffer.PATCHES()) == DiffBuffer.PATCHES()) {
-      int numToRead = is.readInt();
-      for (int i = 0; i < numToRead; i++) {
-        updatePatch(PatchData.fromStream(is));
-      }
-    }
-    if ((mask & DiffBuffer.TURTLES()) == DiffBuffer.TURTLES()) {
-      int numToRead = is.readInt();
-      for (int i = 0; i < numToRead; i++) {
-        updateTurtle(TurtleData.fromStream(is));
-      }
-    }
-    if ((mask & DiffBuffer.LINKS()) == DiffBuffer.LINKS()) {
-      int numToRead = is.readInt();
-      for (int i = 0; i < numToRead; i++) {
-        updateLink(LinkData.fromStream(is));
-      }
-    }
-    if ((mask & DiffBuffer.DRAWING()) == DiffBuffer.DRAWING()) {
-      trailDrawer.readImage(is);
-    }
-  }
-
   private void handleError(Object o) {
     if (printErrors) {
       System.err.println("@ " + new java.util.Date() + " : ");
@@ -503,9 +351,9 @@ public abstract strictfp class ClientWorldJ
     }
 
     if (perspectiveMode == PerspectiveMode.CLIENT) {
-      return targetAgent.xcor() - ((viewWidth() - 1) / 2) - minPxcor;
+      return targetAgent.xcor() - ((viewWidth() - 1) / 2) - minPxcor();
     } else {
-      return targetAgent.xcor() - ((minPxcor - 0.5) + worldWidth() / 2.0);
+      return targetAgent.xcor() - ((minPxcor() - 0.5) + worldWidth() / 2.0);
     }
   }
 
@@ -517,9 +365,9 @@ public abstract strictfp class ClientWorldJ
     }
 
     if (perspectiveMode == PerspectiveMode.CLIENT) {
-      return targetAgent.ycor() + ((viewHeight() - 1) / 2) - maxPycor;
+      return targetAgent.ycor() + ((viewHeight() - 1) / 2) - maxPycor();
     } else {
-      return targetAgent.ycor() - ((minPycor - 0.5) + worldHeight() / 2.0);
+      return targetAgent.ycor() - ((minPycor() - 0.5) + worldHeight() / 2.0);
     }
   }
 

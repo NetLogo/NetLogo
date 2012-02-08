@@ -25,8 +25,9 @@ private object ClientWorldS {
 import org.nlogo.api
 
 class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors, numPatches) with Overrides {
+extends ClientWorldJ(printErrors, numPatches) with Overrides with Updating with Unsupported
 
+trait Unsupported extends ClientWorldJ {
   override def links = unsupported
   override def turtles = unsupported
   override def patches = unsupported
@@ -55,8 +56,119 @@ extends ClientWorldJ(printErrors, numPatches) with Overrides {
   override def allStoredValues = unsupported
   override def mayHavePartiallyTransparentObjects = false
   override def ticks = unsupported
-
   private def unsupported = throw new UnsupportedOperationException
+}
+
+trait Updating extends ClientWorldJ {
+
+  import api.AgentException
+
+  var minPxcor = -1
+  var maxPxcor = -1
+  var minPycor = -1
+  var maxPycor = -1
+
+  def setWorldSize(minx: Int, maxx: Int, miny: Int, maxy: Int) {
+    minPxcor = minx
+    maxPxcor = maxx
+    minPycor = miny
+    maxPycor = maxy
+    createPatches(worldWidth * worldHeight)
+  }
+
+  @throws(classOf[AgentException])
+  def wrapX(x: Double) = {
+    val max = maxPxcor + 0.5
+    val min = minPxcor - 0.5
+    if (!xWrap) {
+      if (x >= max || x < min)
+        throw new AgentException("Cannot move turtle beyond the world's edge.")
+      x
+    }
+    else wrap(x, min, max)
+  }
+
+  @throws(classOf[AgentException])
+  def wrapY(y: Double) = {
+    val max = maxPycor + 0.5
+    val min = minPycor - 0.5
+    if (!yWrap) {
+      if (y >= max || y < min)
+        throw new AgentException("Cannot move turtle beyond the world's edge.")
+      y
+    }
+    else wrap(y, min, max)
+  }
+
+  def wrap(pos: Double, min: Double, max: Double) =
+    if (pos >= max)
+      (min + ((pos - max) % (max - min)))
+    else if (pos < min) {
+      val result = ((min - pos) % (max - min))
+      if (result == 0) min else (max - result)
+    }
+    else pos
+
+  var shapes = false
+  def shapesOn = shapes
+
+  private var _fontSize = 0
+  def fontSize = (_fontSize * zoom).toInt
+
+  private var xWrap = false
+  private var yWrap = false
+  def wrappingAllowedInX = xWrap
+  def wrappingAllowedInY = yWrap
+
+  @throws(classOf[java.io.IOException])
+  def updateFrom(is: java.io.DataInputStream) {
+    val mask = is.readShort()
+    var reallocatePatches = false
+    if ((mask & DiffBuffer.MINX) == DiffBuffer.MINX) {
+      val minx = is.readInt()
+      reallocatePatches = reallocatePatches || minx != minPxcor
+      minPxcor = minx
+    }
+    if ((mask & DiffBuffer.MINY) == DiffBuffer.MINY) {
+      val miny = is.readInt()
+      reallocatePatches = reallocatePatches || miny != minPycor
+      minPycor = miny
+    }
+    if ((mask & DiffBuffer.MAXX) == DiffBuffer.MAXX) {
+      val maxx = is.readInt()
+      reallocatePatches = reallocatePatches || maxx != maxPxcor
+      maxPxcor = maxx
+    }
+    if ((mask & DiffBuffer.MAXY) == DiffBuffer.MAXY) {
+      val maxy = is.readInt()
+      reallocatePatches = reallocatePatches || maxy != maxPycor
+      maxPycor = maxy
+    }
+    if (reallocatePatches)
+      createPatches(worldWidth * worldHeight)
+    if ((mask & DiffBuffer.SHAPES) == DiffBuffer.SHAPES)
+      shapes = is.readBoolean()
+    if ((mask & DiffBuffer.FONT_SIZE) == DiffBuffer.FONT_SIZE)
+      _fontSize = is.readInt()
+    if ((mask & DiffBuffer.WRAPX) == DiffBuffer.WRAPX)
+      xWrap = is.readBoolean()
+    if ((mask & DiffBuffer.WRAPY) == DiffBuffer.WRAPY)
+      yWrap = is.readBoolean()
+    if ((mask & DiffBuffer.PERSPECTIVE) == DiffBuffer.PERSPECTIVE)
+      updateServerPerspective(new AgentPerspective(is))
+    if ((mask & DiffBuffer.PATCHES) == DiffBuffer.PATCHES)
+      for(_ <- 0 until is.readInt())
+        updatePatch(PatchData.fromStream(is))
+    if ((mask & DiffBuffer.TURTLES) == DiffBuffer.TURTLES)
+      for(_ <- 0 until is.readInt())
+        updateTurtle(TurtleData.fromStream(is))
+    if ((mask & DiffBuffer.LINKS) == DiffBuffer.LINKS)
+      for(_ <- 0 until is.readInt())
+        updateLink(LinkData.fromStream(is))
+    if ((mask & DiffBuffer.DRAWING) == DiffBuffer.DRAWING)
+      trailDrawer.readImage(is)
+  }
+
 }
 
 trait Overrides extends ClientWorldJ {

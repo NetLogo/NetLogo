@@ -52,7 +52,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
 
   private def setFontSize(g: Graphics) {
     val font = g.getFont()
-    g.setFont(new Font(font.getName(), font.getStyle(), world.fontSize()))
+    g.setFont(new Font(font.getName(), font.getStyle(), world.fontSize))
   }
 
   //Updates the world and draws it.
@@ -61,7 +61,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
       if (world != null) {
         try {
           world.updateFrom(new java.io.DataInputStream(new java.io.ByteArrayInputStream(worldData)))
-          renderer.changeTopology(world.wrappingAllowedInX(), world.wrappingAllowedInY())
+          renderer.changeTopology(world.wrappingAllowedInX, world.wrappingAllowedInY)
           renderer.resetCache(patchSize)
           _displayOn=true
         }
