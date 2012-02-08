@@ -8,16 +8,21 @@ import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, D
 
 class ClientWorldTests extends FunSuite {
 
-  val BLACK = new java.lang.Double(0)
-  val WHITE = new java.lang.Double(9.9)
-  val GRAY = new java.lang.Double(5)
+  val BLACK = Double.box(0)
+  val WHITE = Double.box(9.9)
+  val GRAY = Double.box(5)
 
-  // we pass "false" to the ClientWorld constructor so we don't
-  // print out error messages since we are intending to trigger them
-  // and it's confusing to see errors when there aren't any.
-  val buf = new ClientWorld(numPatches = Some(20), printErrors = false)
+  def testWithBuf(name: String)(fn: ClientWorld => Unit) {
+    // we pass "false" to the ClientWorld constructor so we don't
+    // print out error messages since we are intending to trigger them
+    // and it's confusing to see errors when there aren't any.
+    test(name) {
+      val buf = new ClientWorld(numPatches = Some(20), printErrors = false)
+      fn(buf)
+    }
+  }
 
-  test("creation") {
+  testWithBuf("creation") { buf =>
     buf.updatePatch(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE))
     // this one won't exist: we only allow a fixed number of patches.
     buf.updatePatch(new PatchData(30, PatchData.COMPLETE.toShort, 0, 0, GRAY, "label", WHITE))
@@ -37,7 +42,7 @@ class ClientWorldTests extends FunSuite {
       }
   }
 
-  test("updatesToExistingObjects") {
+  testWithBuf("updatesToExistingObjects") { buf =>
     buf.updatePatch(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE))
     buf.updateTurtle(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       BLACK, 90, 1, true, "label", WHITE,
@@ -58,7 +63,7 @@ class ClientWorldTests extends FunSuite {
       }
   }
 
-  test("death message") {
+  testWithBuf("death message") { buf =>
     buf.updateTurtle(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       WHITE, 90, 1, true,
       "label", BLACK, 0, 0))
@@ -67,7 +72,7 @@ class ClientWorldTests extends FunSuite {
     expect(0)(buf.sortedTurtles.size())
   }
 
-  test("updatesToNonexistentTurtles") {
+  testWithBuf("updatesToNonexistentTurtles") { buf =>
     buf.updateTurtle(new TurtleData(10, TurtleData.COMPLETE, 0, 0, "default",
       WHITE, 90, 1, true,
       "label", BLACK, 0, 0))
@@ -80,7 +85,7 @@ class ClientWorldTests extends FunSuite {
       buf.getTurtleDataByWho(10).stringRep)
   }
 
-  test("updatesWithRoundTrips") {
+  testWithBuf("updatesWithRoundTrips") { buf =>
     buf.updatePatch(roundTripP(new PatchData(10, PatchData.COMPLETE.toShort, 0, 0, BLACK, "label", WHITE)))
     // no such patch... should be ignored.
     buf.updatePatch(roundTripP(new PatchData(30, PatchData.COMPLETE.toShort, 0, 0, GRAY, "label", WHITE)))
@@ -133,7 +138,7 @@ class ClientWorldTests extends FunSuite {
       new ByteArrayInputStream(bos.toByteArray())))
   }
 
-  test("updateWorldBuf") {
+  testWithBuf("updateWorldBuf") { buf =>
     val bos = new ByteArrayOutputStream()
     val os = new DataOutputStream(bos)
     // initialize stream...

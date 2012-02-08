@@ -39,40 +39,26 @@ public abstract strictfp class ClientWorldJ
 
   Map<Long, LinkData> uninitializedLinks = new HashMap<Long, LinkData>();
 
-  public PatchData[] patchData;
-  private int[] patchColors;
+  public abstract int[] patchColors();
 
-  public int[] patchColors() {
-    return patchColors;
+  /**
+   * Returns descriptions of the patches in this world.
+   */
+  public PatchData[] getPatches() {
+    return patchData();
   }
 
-  public ClientWorldJ(boolean printErrors, scala.Option<Integer> numPatches) {
+  abstract PatchData[] patchData();
+
+  public ClientWorldJ(boolean printErrors) {
     this.printErrors = printErrors;
     sortedTurtles = new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
     turtleKeys = new HashMap<Long, TurtleKey>();
     sortedLinks = new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
     linkKeys = new HashMap<Long, LinkKey>();
-    if (numPatches.isDefined()) {
-      createPatches(numPatches.get().intValue());
-    }
   }
 
-  // temporary hack for the review tab experiments
-  public void reset(){
-    sortedTurtles = new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
-    turtleKeys = new HashMap<Long, TurtleKey>();
-    sortedLinks = new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
-    linkKeys = new HashMap<Long, LinkKey>();
-  }
-
-  protected void createPatches(int numPatches) {
-    patchData = new PatchData[numPatches];
-    patchColors = new int[numPatches];
-    for (int i = 0; i < patchData.length; i++) {
-      patchData[i] = new PatchData(i, (short) PatchData.COMPLETE(), 0, 0, 0.0, "", 0.0);
-      patchData[i].patchColors_$eq(patchColors);
-    }
-  }
+  abstract protected void createPatches(int numPatches);
 
   protected org.nlogo.api.TrailDrawerInterface trailDrawer;
 
@@ -94,13 +80,6 @@ public abstract strictfp class ClientWorldJ
    */
   public Iterable<LinkData> getLinks() {
     return sortedLinks.values();
-  }
-
-  /**
-   * Returns descriptions of the patches in this world.
-   */
-  public PatchData[] getPatches() {
-    return patchData;
   }
 
   public abstract int minPxcor();
@@ -137,14 +116,14 @@ public abstract strictfp class ClientWorldJ
   }
 
   void updatePatch(PatchData patch) {
-    if (patch.id() >= patchData.length) {
+    if (patch.id() >= getPatches().length) {
       handleError("ERROR: received update for "
           + "non-existent patch (" + patch.stringRep() + ").");
       return;
     }
 
     // otherwise, we'll need our version, if we've got one.
-    PatchData bufPatch = patchData[(int) patch.id()];
+    PatchData bufPatch = getPatches()[(int) patch.id()];
 
     // if we haven't got one, this patch better have all its info...
     if (bufPatch == null && !patch.isComplete()) {
@@ -154,7 +133,7 @@ public abstract strictfp class ClientWorldJ
 
     // otherwise, perform the update...
     bufPatch.updateFrom(patch);
-    patchColors[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList(bufPatch.pcolor());
+    patchColors()[(int) patch.id()] = org.nlogo.api.Color.getARGBIntByRGBAList(bufPatch.pcolor());
   }
 
   void updateTurtle(TurtleData turtle) {
@@ -399,7 +378,7 @@ public abstract strictfp class ClientWorldJ
       return getTurtle(Long.valueOf(agent.id()));
     }
     if (agent.tyype() == AgentTypeJ.PATCH()) {
-      return patchData[(int) agent.id()];
+      return getPatches()[(int) agent.id()];
     }
     if (agent.tyype() == AgentTypeJ.LINK()) {
       return getLink(Long.valueOf(agent.id()));

@@ -5,9 +5,9 @@ package org.nlogo.hubnet.mirroring
 import org.scalatest.FunSuite
 
 class OverridableTests extends FunSuite {
-  val BLACK = new java.lang.Double(0)
-  val WHITE = new java.lang.Double(9.9)
-  val GRAY = new java.lang.Double(5)
+  val BLACK = Double.box(0)
+  val WHITE = Double.box(9.9)
+  val GRAY = Double.box(5)
   val WHITE_INT = -1
   val BLACK_INT = -16777216
   val GRAY_INT = -7500403

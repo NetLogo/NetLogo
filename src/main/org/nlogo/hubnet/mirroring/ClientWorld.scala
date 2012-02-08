@@ -25,7 +25,33 @@ private object ClientWorldS {
 import org.nlogo.api
 
 class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors, numPatches) with Overrides with Updating with Unsupported
+extends ClientWorldJ(printErrors) with Overrides with Updating with Unsupported {
+
+  var patchData: Array[PatchData] = null
+  var patchColors: Array[Int] = null
+
+  for(num <- numPatches)
+    createPatches(num.intValue)
+
+  // temporary hack for the review tab experiments
+  def reset() {
+    import org.nlogo.hubnet.mirroring.ClientWorldS.{ TurtleKeyComparator, LinkKeyComparator }
+    sortedTurtles = new java.util.TreeMap(new TurtleKeyComparator)
+    turtleKeys = new java.util.HashMap
+    sortedLinks = new java.util.TreeMap(new LinkKeyComparator)
+    linkKeys = new java.util.HashMap
+  }
+
+  override def createPatches(numPatches: Int) {
+    patchData = new Array(numPatches)
+    patchColors = new Array(numPatches)
+    for(i <- 0 until numPatches) {
+      patchData(i) = new PatchData(i, PatchData.COMPLETE.toShort, 0, 0, Double.box(0), "", Double.box(0))
+      patchData(i).patchColors = patchColors
+    }
+  }
+
+}
 
 trait Unsupported extends ClientWorldJ {
   override def links = unsupported
@@ -187,7 +213,7 @@ trait Overrides extends ClientWorldJ {
           addOverride(getTurtle(id), list.variable, list.overrides(id))
       case AgentType.Patch =>
         for (id <- list.overrides.keySet)
-          addOverride(patchData(id.intValue), list.variable, list.overrides(id))
+          addOverride(patchData.apply(id.intValue), list.variable, list.overrides(id))
       case AgentType.Link =>
         for (id <- list.overrides.keySet)
           addOverride(getLink(id), list.variable, list.overrides(id))
@@ -207,7 +233,7 @@ trait Overrides extends ClientWorldJ {
           removeOverride(getTurtle(id), list.variable)
       case AgentType.Patch =>
         for (id <- list.agents)
-          removeOverride(patchData(id.intValue), list.variable)
+          removeOverride(patchData.apply(id.intValue), list.variable)
       case AgentType.Link =>
         for (id <- list.agents)
           removeOverride(getLink(id), list.variable)
