@@ -406,21 +406,16 @@ trait Overrides extends ClientWorldJ with AgentLookup {
 
 trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
 
-  import ClientWorldJ.PerspectiveMode
   import api.Perspective
 
-  var _perspectiveMode: PerspectiveMode = PerspectiveMode.SERVER
-  def perspectiveMode = _perspectiveMode
+  var serverMode = true
   var perspective: Perspective = Perspective.Observe
   var _targetAgent: AgentData = null
   def targetAgent = _targetAgent
   var radius = 0d
 
-  def serverMode =
-    perspectiveMode == PerspectiveMode.SERVER
-
   def updateServerPerspective(p: AgentPerspective) {
-    if (perspectiveMode == PerspectiveMode.SERVER) {
+    if (serverMode) {
       perspective = Perspective.load(p.perspective)
       radius = p.radius
       _targetAgent = getAgent(p.agent)
@@ -429,9 +424,7 @@ trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
 
   def updateClientPerspective(p: AgentPerspective) {
     perspective = Perspective.load(p.perspective)
-    _perspectiveMode =
-      if (p.serverMode) PerspectiveMode.SERVER
-      else PerspectiveMode.CLIENT
+    serverMode = p.serverMode
     _targetAgent = getAgent(p.agent)
     radius = p.radius
   }
@@ -439,18 +432,18 @@ trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
   def followOffsetX: Double =
     if (targetAgent == null || (perspective != Perspective.Follow && perspective != Perspective.Ride))
       0
-    else if (perspectiveMode == PerspectiveMode.CLIENT)
-      targetAgent.xcor - ((viewWidth - 1) / 2) - minPxcor
-    else
+    else if (serverMode)
       targetAgent.xcor - ((minPxcor - 0.5) + worldWidth / 2.0)
+    else
+      targetAgent.xcor - ((viewWidth - 1) / 2) - minPxcor
 
   def followOffsetY: Double =
     if (targetAgent == null || (perspective != Perspective.Follow && perspective != Perspective.Ride))
       0
-    else if (perspectiveMode == PerspectiveMode.CLIENT)
-      targetAgent.ycor + ((viewHeight - 1) / 2) - maxPycor
-    else
+    else if (serverMode)
       targetAgent.ycor - ((minPycor - 0.5) + worldHeight / 2.0)
+    else
+      targetAgent.ycor + ((viewHeight - 1) / 2) - maxPycor
 
 }
 
@@ -513,8 +506,6 @@ trait AgentLookup extends ClientWorldJ {
 
 trait Sizing extends ClientWorldJ {
 
-  import ClientWorldJ.PerspectiveMode
-
   private var _patchSize = 13d
 
   def patchSize(patchSize: Double) {
@@ -522,7 +513,7 @@ trait Sizing extends ClientWorldJ {
   }
 
   def patchSize =
-    if (perspectiveMode == PerspectiveMode.SERVER)
+    if (serverMode)
       _patchSize
     else
       (viewWidth max viewHeight) / ((radius() * 2) + 1)

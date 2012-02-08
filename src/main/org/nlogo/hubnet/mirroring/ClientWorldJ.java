@@ -52,12 +52,8 @@ public abstract strictfp class ClientWorldJ
     return false;
   }
 
-  public enum PerspectiveMode {
-    SERVER, CLIENT;
-  }
-
   public abstract double radius();
-  public abstract PerspectiveMode perspectiveMode();
+  public abstract boolean serverMode();
   public abstract void updateServerPerspective(AgentPerspective p);
 
 }
