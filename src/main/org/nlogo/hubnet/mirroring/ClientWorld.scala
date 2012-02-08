@@ -25,7 +25,7 @@ private object ClientWorldS {
 import org.nlogo.api
 
 class ClientWorld(val printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLookup with ErrorHandler with Unsupported {
+extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLookup with ErrorHandler with Unsupported with Sizing {
 
   var patchData: Array[PatchData] = null
   var patchColors: Array[Int] = null
@@ -102,7 +102,7 @@ trait Unsupported extends ClientWorldJ {
   private def unsupported = throw new UnsupportedOperationException
 }
 
-trait Updating extends ClientWorldJ with AgentUpdaters {
+trait Updating extends ClientWorldJ with AgentUpdaters with Sizing {
 
   import api.AgentException
 
@@ -404,7 +404,7 @@ trait Overrides extends ClientWorldJ with AgentLookup {
 
 }
 
-trait Perspectives extends ClientWorldJ with AgentLookup {
+trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
 
   import ClientWorldJ.PerspectiveMode
   import api.Perspective
@@ -508,5 +508,39 @@ trait AgentLookup extends ClientWorldJ {
     else
       null
   }
+
+}
+
+trait Sizing extends ClientWorldJ {
+
+  import ClientWorldJ.PerspectiveMode
+
+  private var _patchSize = 13d
+
+  def patchSize(patchSize: Double) {
+    _patchSize = patchSize
+  }
+
+  def patchSize =
+    if (perspectiveMode == PerspectiveMode.SERVER)
+      _patchSize
+    else
+      (viewWidth max viewHeight) / ((radius() * 2) + 1)
+
+  def zoom = patchSize / _patchSize
+
+  private var _viewWidth = 0
+  private var _viewHeight = 0
+
+  def viewWidth(viewWidth: Int) {
+    _viewWidth = viewWidth;
+  }
+
+  def viewHeight(viewHeight: Int) {
+    _viewHeight = viewHeight
+  }
+
+  def viewWidth = _viewWidth / _patchSize
+  def viewHeight = _viewHeight / _patchSize
 
 }

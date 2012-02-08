@@ -22,17 +22,17 @@ public abstract strictfp class ClientWorldJ
 
   final java.util.SortedMap<TurtleKey, TurtleData> sortedTurtles =
     new TreeMap<TurtleKey, TurtleData>(new TurtleKeyComparator());
-  Map<Long, TurtleKey> turtleKeys =
+  final Map<Long, TurtleKey> turtleKeys =
     new HashMap<Long, TurtleKey>();    
 
-  Map<Long, TurtleData> uninitializedTurtles = new HashMap<Long, TurtleData>();
+  final Map<Long, TurtleData> uninitializedTurtles = new HashMap<Long, TurtleData>();
 
-  java.util.SortedMap<LinkKey, LinkData> sortedLinks =
+  final java.util.SortedMap<LinkKey, LinkData> sortedLinks =
     new TreeMap<LinkKey, LinkData>(new LinkKeyComparator());
-  Map<Long, LinkKey> linkKeys =
+  final Map<Long, LinkKey> linkKeys =
     new HashMap<Long, LinkKey>();    
 
-  Map<Long, LinkData> uninitializedLinks = new HashMap<Long, LinkData>();
+  final Map<Long, LinkData> uninitializedLinks = new HashMap<Long, LinkData>();
 
   public abstract int[] patchColors();
 
@@ -46,20 +46,6 @@ public abstract strictfp class ClientWorldJ
     this.trailDrawer = trailDrawer;
   }
 
-  private double patchSize = 13;
-
-  public void patchSize(double patchSize) {
-    this.patchSize = patchSize;
-  }
-
-  public double patchSize() {
-    return perspectiveMode() == PerspectiveMode.SERVER ? patchSize : ((StrictMath.max(viewWidth, viewHeight)) / ((radius() * 2) + 1));
-  }
-
-  public double zoom() {
-    return patchSize() / patchSize;
-  }
-
   // for now we're not keeping track of this on the client,
   // but we could ev 4/24/08
   public boolean patchesAllBlack() {
@@ -68,25 +54,6 @@ public abstract strictfp class ClientWorldJ
 
   public enum PerspectiveMode {
     SERVER, CLIENT;
-  }
-
-  private int viewWidth;
-  private int viewHeight;
-
-  public void viewWidth(int viewWidth) {
-    this.viewWidth = viewWidth;
-  }
-
-  public void viewHeight(int viewHeight) {
-    this.viewHeight = viewHeight;
-  }
-
-  public double viewWidth() {
-    return (viewWidth / patchSize());
-  }
-
-  public double viewHeight() {
-    return (viewHeight / patchSize());
   }
 
   public abstract double radius();
