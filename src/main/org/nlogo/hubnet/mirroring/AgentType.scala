@@ -33,15 +33,3 @@ object AgentType {
       Observer
   }
 }
-
-/**
- * Java can't (I don't think) access Scala inner objects without reflection, so we provide these
- * convenience vals for use from Java.
- */
-object AgentTypeJ {
-  import AgentType._
-  val TURTLE = Turtle
-  val PATCH = Patch
-  val LINK = Link
-  val OBSERVER = Observer
-}

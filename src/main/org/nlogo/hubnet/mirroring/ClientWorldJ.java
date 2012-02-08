@@ -99,43 +99,6 @@ public abstract strictfp class ClientWorldJ
     return false;
   }
 
-  // used by TestClientWorld only
-  TurtleData getTurtleDataByWho(long who) {
-    TurtleKey key = turtleKeys.get(Long.valueOf(who));
-    if (key != null) {
-      return sortedTurtles.get(key);
-    }
-    return null;
-  }
-
-  LinkData getLink(Long id) {
-    LinkKey key = linkKeys.get(id);
-    if (key == null) {
-      LinkData link = uninitializedLinks.get(id);
-      if (link == null) {
-        link = new LinkData(id);
-        uninitializedLinks.put(id, link);
-      }
-      return link;
-    } else {
-      return sortedLinks.get(key);
-    }
-  }
-
-  TurtleData getTurtle(Long id) {
-    TurtleKey key = turtleKeys.get(id);
-    if (key == null) {
-      TurtleData turtle = uninitializedTurtles.get(id);
-      if (turtle == null) {
-        turtle = new TurtleData(id);
-        uninitializedTurtles.put(id, turtle);
-      }
-      return turtle;
-    } else {
-      return sortedTurtles.get(key);
-    }
-  }
-
   public enum PerspectiveMode {
     SERVER, CLIENT;
   }
@@ -157,19 +120,6 @@ public abstract strictfp class ClientWorldJ
 
   public double viewHeight() {
     return (viewHeight / patchSize());
-  }
-
-  AgentData getAgent(Agent agent) {
-    if (agent.tyype() == AgentTypeJ.TURTLE()) {
-      return getTurtle(Long.valueOf(agent.id()));
-    }
-    if (agent.tyype() == AgentTypeJ.PATCH()) {
-      return getPatches()[(int) agent.id()];
-    }
-    if (agent.tyype() == AgentTypeJ.LINK()) {
-      return getLink(Long.valueOf(agent.id()));
-    }
-    return null;
   }
 
   public abstract double radius();

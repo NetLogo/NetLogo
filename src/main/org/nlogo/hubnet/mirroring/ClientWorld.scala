@@ -25,7 +25,7 @@ private object ClientWorldS {
 import org.nlogo.api
 
 class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors) with Overrides with Updating with Perspectives with Unsupported {
+extends ClientWorldJ(printErrors) with Overrides with Updating with Perspectives with AgentLookup with Unsupported {
 
   var patchData: Array[PatchData] = null
   var patchColors: Array[Int] = null
@@ -321,7 +321,7 @@ trait AgentUpdaters extends ClientWorldJ {
 
 }
 
-trait Overrides extends ClientWorldJ {
+trait Overrides extends ClientWorldJ with AgentLookup {
 
   private val overrideMap =
     collection.mutable.Map[Overridable, collection.mutable.Map[Int, AnyRef]]()
@@ -384,7 +384,7 @@ trait Overrides extends ClientWorldJ {
 
 }
 
-trait Perspectives extends ClientWorldJ {
+trait Perspectives extends ClientWorldJ with AgentLookup {
 
   import ClientWorldJ.PerspectiveMode
   import api.Perspective
@@ -434,3 +434,59 @@ trait Perspectives extends ClientWorldJ {
 
 }
 
+trait AgentLookup extends ClientWorldJ {
+
+  def getAgent(agent: Agent): AgentData =
+    agent.tyype match {
+      case AgentType.Turtle =>
+        getTurtle(agent.id)
+      case AgentType.Patch =>
+        getPatches()(agent.id.toInt)
+      case AgentType.Link =>
+        getLink(agent.id)
+      case _ =>
+        null
+    }
+
+  def getLink(id: java.lang.Long) = {
+    val key = linkKeys.get(id)
+    if (key != null)
+      sortedLinks.get(key)
+    else {
+      val link = uninitializedLinks.get(id)
+      if (link != null)
+        link
+      else {
+        val link = new LinkData(id)
+        uninitializedLinks.put(id, link)
+        link
+      }
+    }
+  }
+
+  def getTurtle(id: java.lang.Long) = {
+    val key = turtleKeys.get(id)
+    if (key != null)
+      sortedTurtles.get(key)
+    else {
+      val turtle = uninitializedTurtles.get(id)
+      if (turtle != null)
+        turtle
+      else {
+        val turtle = new TurtleData(id)
+        uninitializedTurtles.put(id, turtle)
+        turtle
+      }
+    }
+  }
+
+  // used by ClientWorldTests only
+  def getTurtleDataByWho(who: Long): TurtleData = {
+    val key = turtleKeys.get(Long.box(who))
+    if (key != null)
+      sortedTurtles.get(key)
+    else
+      null
+  }
+
+}
