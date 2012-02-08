@@ -463,8 +463,8 @@ fi
 
 echo
 echo "to tag the release:"
-echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
-echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
+echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
+echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
 echo
 echo "and to push the tags:"
 echo git push --tags
