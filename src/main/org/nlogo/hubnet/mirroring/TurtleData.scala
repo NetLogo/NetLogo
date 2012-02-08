@@ -106,7 +106,7 @@ extends AgentData with api.Turtle {
   }
 
   def label_=(_label: AnyRef) {
-    label = _label.toString
+    label = api.Dump.logoObject(_label)
   }
   def hasLabel = Option(label).exists(_.nonEmpty)
   def labelString = label

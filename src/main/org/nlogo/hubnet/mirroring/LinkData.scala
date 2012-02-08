@@ -86,7 +86,7 @@ object LinkData {
 class LinkData(val id: Long, var end1Id: Long, var end2Id: Long, var mask: Int,
                var x1: Double, var y1: Double, var x2: Double, var y2: Double,
                var shape: String, var _color: LogoList, var hidden: Boolean,
-               var label: String, var _labelColor: LogoList, var lineThickness: Double, var isDirectedLink: Boolean,
+               var _label: String, var _labelColor: LogoList, var lineThickness: Double, var isDirectedLink: Boolean,
                var linkDestinationSize: Double, var heading: Double, var size: Double, var breedIndex: Int)
 extends AgentData with api.Link {
 
@@ -127,8 +127,9 @@ extends AgentData with api.Link {
   def labelColor_=(c: AnyRef) {
     _labelColor = AgentData.toLogoList(c)
   }
-  def label_=(_label: Any) {
-    label = _label.toString
+  def label = _label
+  def label_=(label: AnyRef) {
+    _label = api.Dump.logoObject(label)
   }
   def labelString = label
   def hasLabel = Option(label).exists(_.nonEmpty)

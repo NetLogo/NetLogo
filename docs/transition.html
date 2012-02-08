@@ -20,9 +20,9 @@
       What issues may arise depends on what version of NetLogo the model
       was created with.
     <p>
-      This guide only covers changes most likely to cause issues for
-      users.  <a href="versions.html">What's New?</a> has more details
-      on differences between versions.
+      This guide only covers changes most likely to cause issues for users.
+      <a href="versions.html">What's New?</a> has more details on
+      differences between versions.
     <ul>
       <li>
         <a href="#v50">Changes for NetLogo 5.0</a>
@@ -223,29 +223,31 @@ end</code>
     <h3>
       List performance
     </h3>
-     <p>
-       The underlying data structure for NetLogo lists has changed.
-     <p>
-       In NetLogo 4.1, a NetLogo list was represented internally as a singly
-       linked list.  Some operations on singly linked lists are fast
-       (such as <tt>first</tt> and <tt>butfirst</tt>) but others are slow
-       because they could require traversing the whole list (such as
-       <tt>item</tt> and <tt>last</tt>).
-    <p>In NetLogo 5.0, lists are now actually trees internally.  As a result,
-       some operations are a little slower, but other operations are drastically
-       faster on long lists. See
-       the <a href="programming.html#lists">Lists section of the Programming
-       Guide</a> for details.
     <p>
-      Some models may run a little slower with the new data structure, especially
-      if you make heavy use of short lists.  But other models will run faster --
-      perhaps dramatically faster.
+      The underlying data structure for NetLogo lists has changed.
     <p>
-      Some special ways of writing list-processing code that were useful in NetLogo 4.1 are no longer
-      needed in 5.0.  For example, since in 4.1 <tt>fput</tt> was fast and <tt>lput</tt>
-      was slow, modelers sometimes built up lists in reverse order using <tt>fput</tt>,
-      perhaps calling <tt>reverse</tt> later to restore the intended order.  In
-      NetLogo 5.0, you don't need to code that way anymore.  <tt>fput</tt> and
+      In NetLogo 4.1, a NetLogo list was represented internally as a singly
+      linked list. Some operations on singly linked lists are fast (such as
+      <tt>first</tt> and <tt>butfirst</tt>) but others are slow because
+      they could require traversing the whole list (such as <tt>item</tt>
+      and <tt>last</tt>).
+    <p>
+      In NetLogo 5.0, lists are now actually trees internally. As a result,
+      some operations are a little slower, but other operations are
+      drastically faster on long lists. See the <a href=
+      "programming.html#lists">Lists section of the Programming Guide</a>
+      for details.
+    <p>
+      Some models may run a little slower with the new data structure,
+      especially if you make heavy use of short lists. But other models
+      will run faster -- perhaps dramatically faster.
+    <p>
+      Some special ways of writing list-processing code that were useful in
+      NetLogo 4.1 are no longer needed in 5.0. For example, since in 4.1
+      <tt>fput</tt> was fast and <tt>lput</tt> was slow, modelers sometimes
+      built up lists in reverse order using <tt>fput</tt>, perhaps calling
+      <tt>reverse</tt> later to restore the intended order. In NetLogo 5.0,
+      you don't need to code that way anymore. <tt>fput</tt> and
       <tt>lput</tt> are the same speed.
     <h3>
       Extensions API
@@ -262,7 +264,8 @@ end</code>
     <p>
       The code for specifying the syntax of a primitive has changed
       slightly, for example <tt>Syntax.TYPE_STRING</tt> is now
-      <tt>Syntax.StringType()</tt>.
+      <tt>Syntax.StringType()</tt>. (From Java, the pair of parentheses at
+      the end is required. In Scala, you can omit them.)
     <h4>
       LogoList construction
     </h4>

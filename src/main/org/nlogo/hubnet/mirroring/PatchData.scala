@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.mirroring
 
+import org.nlogo.api
 import org.nlogo.api.LogoList
 import org.nlogo.api.Color.{ getARGBIntByRGBAList, getRGBAListByARGB }
 import java.io.{ DataInputStream, DataOutputStream, IOException }
@@ -60,6 +61,10 @@ extends AgentData {
     this(id, PatchData.DEAD, 0, 0, null, null, null, null)
 
   import PatchData._
+
+  def plabel_=(_label: AnyRef) {
+    plabel = api.Dump.logoObject(_label)
+  }
 
   def hasLabel = plabel.nonEmpty
 
@@ -143,6 +148,6 @@ extends AgentData {
     if ((mask & PLABEL) == PLABEL)
       out.writeUTF(plabel)
     if ((mask & PLABEL_COLOR) == PLABEL_COLOR)
-      out.writeInt(org.nlogo.api.Color.getARGBIntByRGBAList(plabelColor))
+      out.writeInt(api.Color.getARGBIntByRGBAList(plabelColor))
   }
 }

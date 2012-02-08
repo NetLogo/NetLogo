@@ -3,9 +3,6 @@ BUILD WILL WORK ON JAVA 5!!! (#844, #1186) the java5 branch has the
 needed changes, so just merge master onto that branch, push, and build
 from there.
 
-DON'T FORGET to do "make repos" to pull changes from all
-subrepositories
-
 ===
 
 As you work through these instructions, look for things which could be
@@ -54,7 +51,8 @@ ahead of time:
   remember to install the JDK not just the jre so you get the server
   vm.  For "Custom bundle id", enter "server"
   Note: when you update the vm pack you need to change the
-  version number in release.sh.
+  version number in release.sh and make the pack available on
+  the ccl server under http://ccl.northwestern.edu/devel/
 - do a trial run of release.sh now, including Windows installers,
   just to make sure something doesn't fail. this avoids nasty
   surprises later when you might be in a hurry
@@ -95,7 +93,7 @@ misc:
   section about how to generate a nicely formatted E-mail from an HTML
   change list)
 
-release.txt bullets:
+announce.txt bullets:
 - where do you get the change list?
   if it's a full (non-beta) release (e.g. 3.0, 3.1, etc.) then
   the change list should be since the last full release, so it'll
@@ -121,7 +119,7 @@ release.txt bullets:
   it on your local machine) as follows to generate the text version:
     lynx -dump -nolist foo.html > foo.txt
   Then find the relevant section of foo.txt and insert it into
-  release.txt, replacing the old bullets.  Make sure that the
+  announce.txt, replacing the old bullets.  Make sure that the
   lines are no longer than 70 characters.  Also lynx has an
   annoying habit of using "o" (lowercase O) as a bullet character,
   which looks funny, so I suggest searching and replacing " o "
