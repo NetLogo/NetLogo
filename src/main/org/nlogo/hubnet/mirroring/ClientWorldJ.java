@@ -14,8 +14,6 @@ import static org.nlogo.hubnet.mirroring.ClientWorldS.LinkKeyComparator;
 public abstract strictfp class ClientWorldJ
     implements org.nlogo.api.World {
 
-  // these are package protected for unit testing...
-
   // since we want to keep the turtles sorted, but we also
   // want to be able to look them up just by who number, we
   // keep two parallel maps, one sorted, one not -- AZS 11/16/04
@@ -33,27 +31,5 @@ public abstract strictfp class ClientWorldJ
     new HashMap<Long, LinkKey>();    
 
   final Map<Long, LinkData> uninitializedLinks = new HashMap<Long, LinkData>();
-
-  public abstract int[] patchColors();
-
-  abstract PatchData[] patchData();
-
-  abstract protected void createPatches(int numPatches);
-
-  protected org.nlogo.api.TrailDrawerInterface trailDrawer;
-
-  public void setTrailDrawer(org.nlogo.api.TrailDrawerInterface trailDrawer) {
-    this.trailDrawer = trailDrawer;
-  }
-
-  // for now we're not keeping track of this on the client,
-  // but we could ev 4/24/08
-  public boolean patchesAllBlack() {
-    return false;
-  }
-
-  public abstract double radius();
-  public abstract boolean serverMode();
-  public abstract void updateServerPerspective(AgentPerspective p);
 
 }

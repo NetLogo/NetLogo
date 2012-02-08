@@ -18,7 +18,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
 
   locally {
-    world.setTrailDrawer(renderer.trailDrawer())
+    world.trailDrawer = renderer.trailDrawer
     val mouser = new ViewMouseHandler(this, world, this) {
       override def mousePressed(e: MouseEvent) {
         super.mousePressed(e)

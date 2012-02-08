@@ -24,8 +24,20 @@ private object ClientWorldS {
 
 import org.nlogo.api
 
+abstract class AbstractClientWorld extends ClientWorldJ {
+
+  def patchData: Array[PatchData]
+  def createPatches(numPatches: Int)
+  def updateServerPerspective(p: AgentPerspective)
+  def radius: Double
+
+  var serverMode = true
+  var trailDrawer: api.TrailDrawerInterface = null
+
+}
+
 class ClientWorld(val printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLookup with ErrorHandler with Unsupported with Sizing {
+extends AbstractClientWorld with Overrides with Updating with Perspectives with AgentLookup with ErrorHandler with Unsupported with Sizing {
 
   var patchData: Array[PatchData] = null
   var patchColors: Array[Int] = null
@@ -68,9 +80,13 @@ extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLo
    */
   def getPatches: Array[PatchData] = patchData
 
+  // for now we're not keeping track of this on the client,
+  // but we could ev 4/24/08
+  override def patchesAllBlack = false
+
 }
 
-trait Unsupported extends ClientWorldJ {
+trait Unsupported extends AbstractClientWorld {
   override def links = unsupported
   override def turtles = unsupported
   override def patches = unsupported
@@ -102,7 +118,7 @@ trait Unsupported extends ClientWorldJ {
   private def unsupported = throw new UnsupportedOperationException
 }
 
-trait Updating extends ClientWorldJ with AgentUpdaters with Sizing {
+trait Updating extends AbstractClientWorld with AgentUpdaters with Sizing {
 
   import api.AgentException
 
@@ -216,7 +232,7 @@ trait Updating extends ClientWorldJ with AgentUpdaters with Sizing {
   }
 }
 
-trait AgentUpdaters extends ClientWorldJ with ErrorHandler {
+trait AgentUpdaters extends AbstractClientWorld with ErrorHandler {
 
   import ClientWorldS.TurtleKey
   import ClientWorldS.LinkKey
@@ -234,7 +250,7 @@ trait AgentUpdaters extends ClientWorldJ with ErrorHandler {
         "ERROR: received incremental update for non-existent patch (" + patch.stringRep + ").")
     // otherwise, perform the update...
     bufPatch.updateFrom(patch)
-    patchColors()(patch.id.toInt) = api.Color.getARGBIntByRGBAList(bufPatch.pcolor)
+    patchColors(patch.id.toInt) = api.Color.getARGBIntByRGBAList(bufPatch.pcolor)
   }
 
   def updateTurtle(turtle: TurtleData) {
@@ -341,7 +357,7 @@ trait ErrorHandler {
   }
 }
 
-trait Overrides extends ClientWorldJ with AgentLookup {
+trait Overrides extends AbstractClientWorld with AgentLookup {
 
   private val overrideMap =
     collection.mutable.Map[Overridable, collection.mutable.Map[Int, AnyRef]]()
@@ -404,11 +420,10 @@ trait Overrides extends ClientWorldJ with AgentLookup {
 
 }
 
-trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
+trait Perspectives extends AbstractClientWorld with AgentLookup with Sizing {
 
   import api.Perspective
 
-  var serverMode = true
   var perspective: Perspective = Perspective.Observe
   var _targetAgent: AgentData = null
   def targetAgent = _targetAgent
@@ -447,7 +462,7 @@ trait Perspectives extends ClientWorldJ with AgentLookup with Sizing {
 
 }
 
-trait AgentLookup extends ClientWorldJ {
+trait AgentLookup extends AbstractClientWorld {
 
   def getAgent(agent: Agent): AgentData =
     agent.tyype match {
@@ -504,7 +519,7 @@ trait AgentLookup extends ClientWorldJ {
 
 }
 
-trait Sizing extends ClientWorldJ {
+trait Sizing extends AbstractClientWorld {
 
   private var _patchSize = 13d
 
@@ -516,7 +531,7 @@ trait Sizing extends ClientWorldJ {
     if (serverMode)
       _patchSize
     else
-      (viewWidth max viewHeight) / ((radius() * 2) + 1)
+      (viewWidth max viewHeight) / ((radius * 2) + 1)
 
   def zoom = patchSize / _patchSize
 
