@@ -25,7 +25,7 @@ class ServerWorld(settings: WorldPropertiesInterface) {
 
   private var turtles = collection.mutable.HashMap[Long, TurtleData]()
   private val patches = collection.mutable.HashMap[Long, PatchData ]()
-  private var links   = collection.mutable.HashMap[ClientWorldS.LinkKey, LinkData]()
+  private var links   = collection.mutable.HashMap[ClientWorld.LinkKey, LinkData]()
 
   private var minPxcor, minPycor, maxPxcor, maxPycor = 0
   private var fontSize = 0
@@ -138,12 +138,12 @@ class ServerWorld(settings: WorldPropertiesInterface) {
    */
   private def updateLinks(world: World, buf: DiffBuffer) {
     // links can die too (see comments in updateTurtles)
-    val newLinks = collection.mutable.HashMap[ClientWorldS.LinkKey, LinkData]()
+    val newLinks = collection.mutable.HashMap[ClientWorld.LinkKey, LinkData]()
     for(link <- world.links.agents.iterator.asScala.map(_.asInstanceOf[Link])) {
       val diffs = updateLink(link)
       if (diffs != null)
         buf.addLink(diffs)
-      val key = new ClientWorldS.LinkKey(link.id, link.end1.id, link.end2.id, link.getBreedIndex)
+      val key = new ClientWorld.LinkKey(link.id, link.end1.id, link.end2.id, link.getBreedIndex)
       val tmp = links(key)
       links -= key
       newLinks(key) = tmp

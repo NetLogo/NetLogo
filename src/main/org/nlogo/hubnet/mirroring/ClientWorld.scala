@@ -2,7 +2,7 @@ package org.nlogo.hubnet.mirroring
 
 import java.util.Comparator
 
-private object ClientWorldS {
+object ClientWorld {
 
   case class TurtleKey(who: Long, breedIndex: Int)
   private val turtleOrdering = implicitly[Ordering[(Int, Long)]]
@@ -24,7 +24,7 @@ private object ClientWorldS {
 
 import org.nlogo.api
 
-abstract class AbstractClientWorld extends ClientWorldJ {
+abstract class AbstractClientWorld extends api.World {
 
   def patchData: Array[PatchData]
   def createPatches(numPatches: Int)
@@ -33,6 +33,25 @@ abstract class AbstractClientWorld extends ClientWorldJ {
 
   var serverMode = true
   var trailDrawer: api.TrailDrawerInterface = null
+
+  // since we want to keep the turtles sorted, but we also want to be able to look them up just by
+  // who number, we keep two parallel maps, one sorted, one not -- AZS 11/16/04
+
+  import java.util.{ Map => JMap, HashMap => JHashMap, TreeMap => JTreeMap, SortedMap => JSortedMap }
+  import ClientWorld.{ TurtleKey, TurtleKeyComparator, LinkKey, LinkKeyComparator }
+
+  protected[mirroring] val sortedTurtles: JSortedMap[TurtleKey, TurtleData] =
+    new JTreeMap(new TurtleKeyComparator)
+  protected[mirroring] val turtleKeys: JMap[java.lang.Long, TurtleKey] =
+    new JHashMap
+  protected[mirroring] val uninitializedTurtles: JMap[java.lang.Long, TurtleData] =
+    new JHashMap
+  protected[mirroring] val sortedLinks: JSortedMap[LinkKey, LinkData] =
+    new JTreeMap(new LinkKeyComparator)
+  protected[mirroring] val linkKeys: JMap[Long, LinkKey] =
+    new JHashMap
+  protected[mirroring] val uninitializedLinks: JMap[java.lang.Long, LinkData] =
+    new JHashMap
 
 }
 
@@ -47,7 +66,7 @@ extends AbstractClientWorld with Overrides with Updating with Perspectives with 
 
   // temporary hack for the review tab experiments
   def reset() {
-    import org.nlogo.hubnet.mirroring.ClientWorldS.{ TurtleKeyComparator, LinkKeyComparator }
+    import org.nlogo.hubnet.mirroring.ClientWorld.{ TurtleKeyComparator, LinkKeyComparator }
     sortedTurtles.clear()
     turtleKeys.clear()
     sortedLinks.clear()
@@ -234,8 +253,8 @@ trait Updating extends AbstractClientWorld with AgentUpdaters with Sizing {
 
 trait AgentUpdaters extends AbstractClientWorld with ErrorHandler {
 
-  import ClientWorldS.TurtleKey
-  import ClientWorldS.LinkKey
+  import ClientWorld.TurtleKey
+  import ClientWorld.LinkKey
 
   def updatePatch(patch: PatchData) {
     if (patch.id >= patchData.length) {
@@ -539,7 +558,7 @@ trait Sizing extends AbstractClientWorld {
   private var _viewHeight = 0
 
   def viewWidth(viewWidth: Int) {
-    _viewWidth = viewWidth;
+    _viewWidth = viewWidth
   }
 
   def viewHeight(viewHeight: Int) {
