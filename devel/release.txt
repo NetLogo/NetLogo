@@ -19,19 +19,21 @@ PREREQUISITES:
   right version. The folder can be copied from machine to machine.
 - You must have the exact right version of htmldoc in your path.
   release.sh will test for this and complain if it doesn't find it.
-  If it doesn't find it, then here's how to install it.  (The URL
-  below should work, but if you need to look up htmldoc on the web
-  yourself, be aware that the same company offers both a commercial
-  version and a free, open source version.  They make the free one a
-  bit hard to find, in an effort to steer you towards the version that
-  costs money.)
-  - go to http://htmldoc.org/software.php
-  - download a source tarball
-  - untar the tarball
-  - from the command line, cd into the untarred source tree, then do:
-      ./configure --prefix=/usr/local
-      make
-      sudo make install
+  If it doesn't find it, then installing it involves either:
+    1) install Homebrew, then `brew install htmldoc` (at the time
+       of writing, the recipe installs the right version)
+    2) install it from source as follows:
+       - go to http://htmldoc.org/software.php
+       - download a source tarball
+       - untar the tarball
+       - from the command line, cd into the untarred source tree, then do:
+	   ./configure --prefix=/usr/local
+	   make
+	   sudo make install
+       (If you need to look up htmldoc info on the web, be aware that
+       the same company offers both a commercial version and a free,
+       open source version.  They make the free one a bit hard to
+       find, in an effort to steer you towards the paid version.)
 
 ahead of time:
 - ask Seth for the NetLogo change list or construct it yourself using
