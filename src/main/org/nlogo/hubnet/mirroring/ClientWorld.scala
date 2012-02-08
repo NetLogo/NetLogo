@@ -85,7 +85,7 @@ trait Unsupported extends ClientWorldJ {
   private def unsupported = throw new UnsupportedOperationException
 }
 
-trait Updating extends ClientWorldJ {
+trait Updating extends ClientWorldJ with AgentUpdaters {
 
   import api.AgentException
 
@@ -193,6 +193,127 @@ trait Updating extends ClientWorldJ {
         updateLink(LinkData.fromStream(is))
     if ((mask & DiffBuffer.DRAWING) == DiffBuffer.DRAWING)
       trailDrawer.readImage(is)
+  }
+}
+
+trait AgentUpdaters extends ClientWorldJ {
+
+  import ClientWorldS.TurtleKey
+  import ClientWorldS.LinkKey
+
+  def updatePatch(patch: PatchData) {
+    if (patch.id >= getPatches().length) {
+      handleError("ERROR: received update for " + "non-existent patch (" + patch.stringRep + ").")
+      return
+    }
+    // otherwise, we'll need our version, if we've got one.
+    val bufPatch = getPatches.apply(patch.id.toInt)
+    // if we haven't got one, this patch better have all its info...
+    if (bufPatch == null && !patch.isComplete)
+      handleError(
+        "ERROR: received incremental update for non-existent patch (" + patch.stringRep + ").")
+    // otherwise, perform the update...
+    bufPatch.updateFrom(patch)
+    patchColors()(patch.id.toInt) = api.Color.getARGBIntByRGBAList(bufPatch.pcolor)
+  }
+
+  def updateTurtle(turtle: TurtleData) {
+    val simpleKey = Long.box(turtle.id)
+    var sortedKey = turtleKeys.get(simpleKey)
+    // if this turtle has died, just remove it...
+    if (turtle.isDead) {
+      if (sortedKey == null) {
+        handleError("ERROR: received death message for " + "non-existent turtle (" + turtle.stringRep + ").")
+        return
+      }
+      sortedTurtles.remove(sortedKey)
+      turtleKeys.remove(simpleKey)
+      return
+    }
+    // otherwise, we'll need our version, if we've got one.
+    var bufTurtle: TurtleData = null
+    if (sortedKey == null) {
+      bufTurtle = uninitializedTurtles.get(simpleKey)
+      if (bufTurtle != null) {
+        sortedKey = new TurtleKey(turtle.id, turtle.getBreedIndex)
+        sortedTurtles.put(sortedKey, bufTurtle)
+        turtleKeys.put(simpleKey, sortedKey)
+        uninitializedTurtles.remove(simpleKey)
+      }
+    }
+    if (sortedKey != null)
+      bufTurtle = sortedTurtles.get(sortedKey)
+    // if we haven't got one, this turtle better have all its info...
+    if (bufTurtle == null) {
+      if (turtle.isComplete) {
+        sortedKey = new TurtleKey(turtle.id, turtle.getBreedIndex)
+        sortedTurtles.put(sortedKey, turtle)
+        turtleKeys.put(simpleKey, sortedKey)
+      }
+      else handleError(
+        "ERROR: received incremental update for non-existent turtle (" + turtle.stringRep + ").")
+      return
+    }
+    // otherwise, perform the update...
+    bufTurtle.updateFrom(turtle)
+    if (bufTurtle.getBreedIndex != sortedKey.breedIndex) {
+      // the breed of this turtle changed so we need to make
+      // a new key in the sortedTurtles map ev 5/19/08
+      sortedTurtles.remove(sortedKey)
+      sortedKey = new TurtleKey(bufTurtle.id, turtle.getBreedIndex)
+      sortedTurtles.put(sortedKey, bufTurtle)
+      turtleKeys.put(simpleKey, sortedKey)
+    }
+  }
+
+  def updateLink(link: LinkData) {
+    val simpleKey = Long.box(link.id)
+    var sortedKey = linkKeys.get(simpleKey)
+    if (link.isDead) {
+      if (sortedKey == null) {
+        handleError("ERROR: received death message for non-existent link ( " + link.stringRep + " ).")
+        return
+      }
+      sortedLinks.remove(sortedKey)
+      linkKeys.remove(simpleKey)
+      return
+    }
+    var bufLink: LinkData = null
+    if (sortedKey == null) {
+      bufLink = uninitializedLinks.get(simpleKey)
+      if (bufLink != null) {
+        sortedKey = new LinkKey(link.id, link.end1Id, link.end2Id, link.getBreedIndex)
+        linkKeys.put(simpleKey, sortedKey)
+        sortedLinks.put(sortedKey, link)
+        uninitializedLinks.remove(simpleKey)
+      }
+    }
+    if (sortedKey != null)
+      bufLink = sortedLinks.get(sortedKey)
+    // if we haven't got one, this link better have all its info...
+    if (bufLink == null) {
+      if (link.isComplete) {
+        sortedKey = new LinkKey(link.id, link.end1Id, link.end2Id, link.getBreedIndex)
+        linkKeys.put(simpleKey, sortedKey)
+        sortedLinks.put(sortedKey, link)
+      }
+      else handleError(
+        "ERROR: received incremental update for " + "non-existent turtle (" + link.stringRep + ").")
+    }
+    else {
+      bufLink.updateFrom(link)
+      if (link.isComplete || bufLink.getBreedIndex != sortedKey.breedIndex) {
+        sortedLinks.remove(sortedKey)
+        sortedKey = new LinkKey(link.id, link.end1Id, link.end2Id, link.getBreedIndex)
+        sortedLinks.put(sortedKey, bufLink)
+        linkKeys.put(simpleKey, sortedKey)
+      }
+    }
+  }
+
+  private def handleError(x: AnyRef) {
+    if (printErrors)
+      Console.err.println("@ " + new java.util.Date + " : " + x.toString)
   }
 
 }
