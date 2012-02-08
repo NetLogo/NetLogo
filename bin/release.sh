@@ -127,7 +127,7 @@ done
 
 
 # compile, build jars etc.
-rm *.jar
+rm -f *.jar
 bin/sbt error update
 $MAKE -s
 
@@ -137,11 +137,6 @@ export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddat
 echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
-# make fresh staging area
-$RM -rf tmp/netlogo-$COMPRESSEDVERSION
-$MKDIR -p tmp/netlogo-$COMPRESSEDVERSION
-cd tmp/netlogo-$COMPRESSEDVERSION
-
 # Scaladoc
 if [ $INCLUDE_SCALADOC -eq 1 ]
 then
@@ -150,6 +145,11 @@ then
 else
   $RM -rf docs/scaladoc
 fi
+
+# make fresh staging area
+$RM -rf tmp/netlogo-$COMPRESSEDVERSION
+$MKDIR -p tmp/netlogo-$COMPRESSEDVERSION
+cd tmp/netlogo-$COMPRESSEDVERSION
 
 # put most of the files in
 $CP -rp ../../docs .
@@ -462,9 +462,9 @@ else
 fi
 
 echo
-echo "to tag the release:"
-echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
-echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
+echo "to tag the release (changing 'master' if necessary):"
+echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
+echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
 echo
 echo "and to push the tags:"
 echo git push --tags
