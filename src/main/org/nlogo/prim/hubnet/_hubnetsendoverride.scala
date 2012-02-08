@@ -3,7 +3,7 @@
 package org.nlogo.prim.hubnet
 
 import org.nlogo.agent.{ ArrayAgentSet, Agent, AgentSet }
-import org.nlogo.api.{ CommandRunnable, Syntax }
+import org.nlogo.api.{ CommandRunnable, Dump, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _hubnetsendoverride extends Command {
@@ -40,7 +40,15 @@ class _hubnetsendoverride extends Command {
     val it = set.iterator
     while(it.hasNext) {
       val agent = it.next
-      overrides(agent.id) = freshContext.evaluateReporter(agent, args(3))
+      overrides(agent.id) = {
+        val value = freshContext.evaluateReporter(agent, args(3))
+        // gross to special case this, and not even clear where to put the special-case
+        // code, but I guess it'll have to do until this all gets redone someday - ST 2/7/12
+        if(varName.equalsIgnoreCase("LABEL") || varName.equalsIgnoreCase("PLABEL"))
+          Dump.logoObject(value)
+        else
+          value
+      }
     }
 
     workspace.waitFor(new CommandRunnable() {
