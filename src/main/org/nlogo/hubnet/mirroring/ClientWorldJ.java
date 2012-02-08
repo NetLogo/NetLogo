@@ -36,13 +36,6 @@ public abstract strictfp class ClientWorldJ
 
   public abstract int[] patchColors();
 
-  /**
-   * Returns descriptions of the patches in this world.
-   */
-  public PatchData[] getPatches() {
-    return patchData();
-  }
-
   abstract PatchData[] patchData();
 
   abstract protected void createPatches(int numPatches);
@@ -51,22 +44,6 @@ public abstract strictfp class ClientWorldJ
 
   public void setTrailDrawer(org.nlogo.api.TrailDrawerInterface trailDrawer) {
     this.trailDrawer = trailDrawer;
-  }
-
-  /**
-   * Returns descriptions of the turtles in this world.
-   * In the correct order for drawing.
-   */
-  public Iterable<TurtleData> getTurtles() {
-    return sortedTurtles.values();
-  }
-
-  /**
-   * Returns descriptions of the turtles in this world.
-   * In the correct order for drawing.
-   */
-  public Iterable<LinkData> getLinks() {
-    return sortedLinks.values();
   }
 
   private double patchSize = 13;

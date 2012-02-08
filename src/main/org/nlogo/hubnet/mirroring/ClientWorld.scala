@@ -51,6 +51,23 @@ extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLo
     }
   }
 
+  /**
+   * Returns descriptions of the turtles in this world.  In the correct order for drawing.
+   */
+  def getTurtles: java.lang.Iterable[TurtleData] =
+    sortedTurtles.values
+
+  /**
+   * Returns descriptions of the links in this world.  In the correct order for drawing.
+   */
+  def getLinks: java.lang.Iterable[LinkData] =
+    sortedLinks.values
+
+  /**
+   * Returns descriptions of the patches in this world.
+   */
+  def getPatches: Array[PatchData] = patchData
+
 }
 
 trait Unsupported extends ClientWorldJ {
@@ -205,12 +222,12 @@ trait AgentUpdaters extends ClientWorldJ with ErrorHandler {
   import ClientWorldS.LinkKey
 
   def updatePatch(patch: PatchData) {
-    if (patch.id >= getPatches().length) {
+    if (patch.id >= patchData.length) {
       handleError("ERROR: received update for " + "non-existent patch (" + patch.stringRep + ").")
       return
     }
     // otherwise, we'll need our version, if we've got one.
-    val bufPatch = getPatches.apply(patch.id.toInt)
+    val bufPatch = patchData.apply(patch.id.toInt)
     // if we haven't got one, this patch better have all its info...
     if (bufPatch == null && !patch.isComplete)
       handleError(
@@ -444,7 +461,7 @@ trait AgentLookup extends ClientWorldJ {
       case AgentType.Turtle =>
         getTurtle(agent.id)
       case AgentType.Patch =>
-        getPatches()(agent.id.toInt)
+        patchData.apply(agent.id.toInt)
       case AgentType.Link =>
         getLink(agent.id)
       case _ =>
