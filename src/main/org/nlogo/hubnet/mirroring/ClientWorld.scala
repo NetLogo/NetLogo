@@ -24,8 +24,8 @@ private object ClientWorldS {
 
 import org.nlogo.api
 
-class ClientWorld(printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
-extends ClientWorldJ(printErrors) with Overrides with Updating with Perspectives with AgentLookup with Unsupported {
+class ClientWorld(val printErrors: Boolean = true, numPatches: Option[java.lang.Integer] = None)
+extends ClientWorldJ with Overrides with Updating with Perspectives with AgentLookup with ErrorHandler with Unsupported {
 
   var patchData: Array[PatchData] = null
   var patchColors: Array[Int] = null
@@ -36,10 +36,10 @@ extends ClientWorldJ(printErrors) with Overrides with Updating with Perspectives
   // temporary hack for the review tab experiments
   def reset() {
     import org.nlogo.hubnet.mirroring.ClientWorldS.{ TurtleKeyComparator, LinkKeyComparator }
-    sortedTurtles = new java.util.TreeMap(new TurtleKeyComparator)
-    turtleKeys = new java.util.HashMap
-    sortedLinks = new java.util.TreeMap(new LinkKeyComparator)
-    linkKeys = new java.util.HashMap
+    sortedTurtles.clear()
+    turtleKeys.clear()
+    sortedLinks.clear()
+    linkKeys.clear()
   }
 
   override def createPatches(numPatches: Int) {
@@ -199,7 +199,7 @@ trait Updating extends ClientWorldJ with AgentUpdaters {
   }
 }
 
-trait AgentUpdaters extends ClientWorldJ {
+trait AgentUpdaters extends ClientWorldJ with ErrorHandler {
 
   import ClientWorldS.TurtleKey
   import ClientWorldS.LinkKey
@@ -314,11 +314,14 @@ trait AgentUpdaters extends ClientWorldJ {
     }
   }
 
-  private def handleError(x: AnyRef) {
+}
+
+trait ErrorHandler {
+  def printErrors: Boolean
+  def handleError(x: AnyRef) {
     if (printErrors)
       Console.err.println("@ " + new java.util.Date + " : " + x.toString)
   }
-
 }
 
 trait Overrides extends ClientWorldJ with AgentLookup {
