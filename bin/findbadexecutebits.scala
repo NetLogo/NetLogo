@@ -21,7 +21,7 @@ def skip(path:String):Boolean =
   path.containsSlice("/target/")
 
 val executableExtensions =
-  "pl py sh rb command"
+  "sh py exe"
 val executableFullNames =
   "MacOS/HubNet MacOS/NetLogo bin/scala bin/scalac bin/sbt bin/xsbt bin/scaladoc"
 val nonExecutableExtensions =
@@ -29,7 +29,7 @@ val nonExecutableExtensions =
   "nim graffle html diff example xls ddf jar mk doc zip gif bz2 dtd ninfo project versioned log " +
   "ico install4j icns xsl plist jpg wrl dbf shp nb pdf prj shx sample gm m nls asc csv hs fbp " +
   "aif au ogg wav dat bsearch mf properties nbm java_NEW psd iml gitignore ensime sbt md " +
-  "dll so jnilib js"
+  "dll so jnilib js inf"
 val nonExecutableFullNames =
   "README PkgInfo Makefile COPYING .gitmodules"
 
