@@ -31,10 +31,8 @@ object LinkData {
 
   val OverrideVariables = Array(
     "COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "SHAPE")
-  val OverrideGetters = Array(
+  val OverrideMethods = Array(
     "color", "label", "labelColor", "lineThickness", "hidden", "shape")
-  val OverrideSetters = Array(
-    "color_$eq", "label_$eq", "labelColor_$eq", "lineThickness_$eq", "hidden_$eq", "shape_$eq")
 
   def getOverrideIndex(varName: String): Int =
     Overridable.getOverrideIndex(OverrideVariables, varName)
@@ -109,11 +107,8 @@ extends AgentData with api.Link {
     
   import LinkData._
 
-  def getterName(index: Int) =
-    LinkData.OverrideGetters(index)
-
-  def setterName(index: Int) =
-    LinkData.OverrideSetters(index)
+  def methodName(index: Int) =
+    LinkData.OverrideMethods(index)
 
   override def toString =
     "link " + id + " " + breedIndex

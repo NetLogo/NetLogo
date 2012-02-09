@@ -18,8 +18,7 @@ object PatchData {
   val COMPLETE = PCOLOR | PLABEL | PLABEL_COLOR | PXCOR | PYCOR
 
   val OverrideVariables = Array("PCOLOR", "PLABEL", "PLABEL-COLOR")
-  val OverrideGetters = Array("pcolor", "plabel", "plabelColor")
-  val OverrideSetters = Array("pcolor_$eq", "plabel_$eq", "plabelColor_$eq")
+  val OverrideMethods = Array("pcolor", "plabel", "plabelColor")
   
   def getOverrideIndex(varName: String): Int =
     Overridable.getOverrideIndex(OverrideVariables, varName)
@@ -68,11 +67,8 @@ extends AgentData {
 
   def hasLabel = plabel.nonEmpty
 
-  def getterName(index: Int) =
-    PatchData.OverrideGetters(index)
-
-  def setterName(index: Int) =
-    PatchData.OverrideSetters(index)
+  def methodName(index: Int) =
+    PatchData.OverrideMethods(index)
 
   def pcolor = _pcolor
   def pcolor_=(pc: AnyRef) {

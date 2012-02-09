@@ -24,13 +24,12 @@ abstract class Overridable {
 
   private var stack: List[(Method, AnyRef)] = Nil
 
-  def getterName(varName: Int): String  // abstract
-  def setterName(varName: Int): String  // abstract
+  def methodName(varName: Int): String  // abstract
 
   def set(variable: Int, value: Any) {
-    val gName = getterName(variable)
+    val gName = methodName(variable)
     val getter = getClass.getMethod(gName)
-    val sName = setterName(variable)
+    val sName = gName + "_$eq"
     val setter = getSetter(sName, value.getClass)
     // note that the setter for the old value might be different
     // than the setter for the new value ev 4/29/08

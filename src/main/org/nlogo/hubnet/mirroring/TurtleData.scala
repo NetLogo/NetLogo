@@ -28,10 +28,8 @@ object TurtleData {
 
   val OverrideVariables = Array(
     "COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "HEADING", "SHAPE", "SIZE")
-  val OverrideGetters = Array(
+  val OverrideMethods = Array(
     "color", "label", "labelColor", "lineThickness", "hidden", "heading", "shape", "size")
-  val OverrideSetters = Array(
-    "color_$eq", "label_$eq", "labelColor_$eq", "lineThickness_$eq", "hidden_$eq", "heading_$eq", "shape_$eq", "size_$eq")
 
   def getOverrideIndex(varName: String): Int =
     Overridable.getOverrideIndex(OverrideVariables, varName)
@@ -89,11 +87,8 @@ extends AgentData with api.Turtle {
 
   import TurtleData._
 
-  def getterName(index: Int) =
-    TurtleData.OverrideGetters(index)
-
-  def setterName(index: Int) =
-    TurtleData.OverrideSetters(index)
+  def methodName(index: Int) =
+    TurtleData.OverrideMethods(index)
 
   def color = _color
   def color_=(c: AnyRef) {
