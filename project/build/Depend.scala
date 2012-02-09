@@ -50,11 +50,10 @@ trait Depend extends DefaultProject {
       "gl/view" -> List("gl/render","window"),
       "headless" -> List("shape","workspace"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
-      "hubnet/client" -> List("hubnet/connection","hubnet/mirroring","hubnet/protocol","render","widget"),
+      "hubnet/client" -> List("mirror","render","widget", "hubnet/connection","hubnet/protocol",),
       "hubnet/connection" -> List("api"),
-      "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
-      "hubnet/server" -> List("workspace","hubnet/connection","hubnet/mirroring","hubnet/protocol"),
+      "hubnet/server" -> List("mirror","workspace","hubnet/connection","hubnet/protocol"),
       "hubnet/server/gui" -> List("hubnet/server","window"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
@@ -62,6 +61,7 @@ trait Depend extends DefaultProject {
       "lex" -> List("api"),
       "lite" -> List("window"),
       "log" -> List("api"),
+      "mirror" -> List("api"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
@@ -101,7 +101,7 @@ trait Depend extends DefaultProject {
       println("""
 ### HubNet client dependencies (keep HubNet.jar small!)
 
-[HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.mirroring] [hubnet.protocol] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
+[HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.protocol] [mirror] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
 check [HubNet-client] independentOf [workspace]
 # Someday this should be completely independent, not just directly independent - ST 12/4/08
 check [HubNet-client] directlyIndependentOf [nvm]

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.mirroring.PlotPoint
+import org.nlogo.mirror.PlotPoint
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.plot.{Plot, PlotListener}
 

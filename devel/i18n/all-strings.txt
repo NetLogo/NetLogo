@@ -1159,52 +1159,52 @@ src/main/org/nlogo/hubnet/connection/ConnectionTypes.scala:4:  val COMP_CONNECTI
 src/main/org/nlogo/hubnet/connection/MessageEnvelope.scala:32:    @throws(classOf[HubNetException]) def getTag: String = if (kind == Normal) tag.get else throwError(kind, "-tag")
 src/main/org/nlogo/hubnet/connection/MessageEnvelope.scala:36:        "hubnet-message" + messageSuffix + " cannot be used on an " + messageType.toString.toLowerCase + " message. " +
 src/main/org/nlogo/hubnet/connection/MessageEnvelope.scala:37:                "Use hubnet-" + messageType.toString.toLowerCase + "-message? instead.")
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:159:        throw new AgentException("Cannot move turtle beyond the world's edge.");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:173:        throw new AgentException("Cannot move turtle beyond the world's edge.");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:225:      handleError("ERROR: received update for "
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:226:          + "non-existent patch (" + patch.stringRep() + ").");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:236:          ("ERROR: received incremental update for non-existent patch (" + patch.stringRep() + ").");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:251:        handleError("ERROR: received death message for "
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:252:            + "non-existent turtle (" + turtle.stringRep() + ").");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:284:        handleError("ERROR: received incremental update for non-existent turtle ("
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:310:            ("ERROR: received death message for non-existent link ( "
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:344:        handleError("ERROR: received incremental update for "
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:345:            + "non-existent turtle (" + link.stringRep() + ").");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:426:      System.err.println("@ " + new java.util.Date() + " : ");
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:651:      return "(" + who + " " + breedIndex + ")";
-src/main/org/nlogo/hubnet/mirroring/ClientWorld.java:691:      return "(" + id + " " + breedIndex + ")";
-src/main/org/nlogo/hubnet/mirroring/DiffBuffer.java:169:      javax.imageio.ImageIO.write(drawing, "PNG", os);
-src/main/org/nlogo/hubnet/mirroring/HubNetLinkStamp.java:44:    return x1 + " " + y1 + " " + x2 + " " + y2 + " " + color + " "
-src/main/org/nlogo/hubnet/mirroring/HubNetLinkStamp.java:45:        + shape + " " + hidden + " " + lineThickness + " " + erase;
-src/main/org/nlogo/hubnet/mirroring/HubNetPlotPoint.java:50:    return "plot-point@" + xcor + "," + ycor;
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:68:    return "link " + id + " " + breedIndex;
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:305:      {"COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "SHAPE"};
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:307:      {"color", "labelString", "labelColor", "lineThickness", "hidden", "shape"};
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:358:      return "Link " + id + " (" + x1 + ", " + y1 + ", " + x2 + ", " + y2 + ", "
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:359:          + shape + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(color) + ", " + ", " + hidden + ", "
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:360:          + label + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(labelColor) + ", " + lineThickness + ")";
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:363:      return "Link " + id + " (dead)";
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:365:    return "Link " + id + " update (mask " + Integer.toBinaryString(mask) + ")";
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:386:      System.err.println("@ " + new java.util.Date() + " : ");
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:387:      System.err.println("ERROR: attempting incremental update of a "
-src/main/org/nlogo/hubnet/mirroring/LinkData.java:388:          + "dead link (" + stringRep() + ").");
-src/main/org/nlogo/hubnet/mirroring/OverrideList.java:17:      throw new OverrideException("you cannot override " + varName);
-src/main/org/nlogo/hubnet/mirroring/PatchData.java:217:  private static final String[] OVERRIDE_VARIABLES = new String[]{"PCOLOR", "PLABEL", "PLABEL-COLOR"};
-src/main/org/nlogo/hubnet/mirroring/PatchData.java:218:  private static final String[] OVERRIDE_METHODS = new String[]{"pcolor", "plabel", "plabelColor"};
-src/main/org/nlogo/hubnet/mirroring/PatchData.java:253:    return "Patch " + pxcor + " " + pycor + " (" + org.nlogo.api.Color.getARGBIntByRGBAList(pcolor)
-src/main/org/nlogo/hubnet/mirroring/PatchData.java:254:        + ", " + plabel + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(plabelColor) + ")";
-src/main/org/nlogo/hubnet/mirroring/ServerWorld.java:343:      javax.imageio.ImageIO.write(drawing, "PNG", os);
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:260:      {"COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "HEADING", "SHAPE", "SIZE"};
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:262:      {"color", "label", "labelColor", "lineThickness", "hidden", "heading", "shape", "size"};
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:285:      return "Turtle " + who + " (" + xcor + ", " + ycor + ", "
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:286:          + shape + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(color) + ", " + heading + ", " + size
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:287:          + ", " + hidden + ", " + label + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(labelColor)
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:288:          + ", " + breedIndex + ", " + lineThickness + ")";
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:291:      return "Turtle " + who + " (dead)";
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:293:    return "Turtle " + who + " update (mask "
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:315:      System.err.println("@ " + new java.util.Date() + " : ");
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:316:      System.err.println("ERROR: attempting incremental update of a "
-src/main/org/nlogo/hubnet/mirroring/TurtleData.java:317:          + "dead turtle (" + stringRep() + ").");
+src/main/org/nlogo/mirror/ClientWorld.java:159:        throw new AgentException("Cannot move turtle beyond the world's edge.");
+src/main/org/nlogo/mirror/ClientWorld.java:173:        throw new AgentException("Cannot move turtle beyond the world's edge.");
+src/main/org/nlogo/mirror/ClientWorld.java:225:      handleError("ERROR: received update for "
+src/main/org/nlogo/mirror/ClientWorld.java:226:          + "non-existent patch (" + patch.stringRep() + ").");
+src/main/org/nlogo/mirror/ClientWorld.java:236:          ("ERROR: received incremental update for non-existent patch (" + patch.stringRep() + ").");
+src/main/org/nlogo/mirror/ClientWorld.java:251:        handleError("ERROR: received death message for "
+src/main/org/nlogo/mirror/ClientWorld.java:252:            + "non-existent turtle (" + turtle.stringRep() + ").");
+src/main/org/nlogo/mirror/ClientWorld.java:284:        handleError("ERROR: received incremental update for non-existent turtle ("
+src/main/org/nlogo/mirror/ClientWorld.java:310:            ("ERROR: received death message for non-existent link ( "
+src/main/org/nlogo/mirror/ClientWorld.java:344:        handleError("ERROR: received incremental update for "
+src/main/org/nlogo/mirror/ClientWorld.java:345:            + "non-existent turtle (" + link.stringRep() + ").");
+src/main/org/nlogo/mirror/ClientWorld.java:426:      System.err.println("@ " + new java.util.Date() + " : ");
+src/main/org/nlogo/mirror/ClientWorld.java:651:      return "(" + who + " " + breedIndex + ")";
+src/main/org/nlogo/mirror/ClientWorld.java:691:      return "(" + id + " " + breedIndex + ")";
+src/main/org/nlogo/mirror/DiffBuffer.java:169:      javax.imageio.ImageIO.write(drawing, "PNG", os);
+src/main/org/nlogo/mirror/HubNetLinkStamp.java:44:    return x1 + " " + y1 + " " + x2 + " " + y2 + " " + color + " "
+src/main/org/nlogo/mirror/HubNetLinkStamp.java:45:        + shape + " " + hidden + " " + lineThickness + " " + erase;
+src/main/org/nlogo/mirror/HubNetPlotPoint.java:50:    return "plot-point@" + xcor + "," + ycor;
+src/main/org/nlogo/mirror/LinkData.java:68:    return "link " + id + " " + breedIndex;
+src/main/org/nlogo/mirror/LinkData.java:305:      {"COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "SHAPE"};
+src/main/org/nlogo/mirror/LinkData.java:307:      {"color", "labelString", "labelColor", "lineThickness", "hidden", "shape"};
+src/main/org/nlogo/mirror/LinkData.java:358:      return "Link " + id + " (" + x1 + ", " + y1 + ", " + x2 + ", " + y2 + ", "
+src/main/org/nlogo/mirror/LinkData.java:359:          + shape + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(color) + ", " + ", " + hidden + ", "
+src/main/org/nlogo/mirror/LinkData.java:360:          + label + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(labelColor) + ", " + lineThickness + ")";
+src/main/org/nlogo/mirror/LinkData.java:363:      return "Link " + id + " (dead)";
+src/main/org/nlogo/mirror/LinkData.java:365:    return "Link " + id + " update (mask " + Integer.toBinaryString(mask) + ")";
+src/main/org/nlogo/mirror/LinkData.java:386:      System.err.println("@ " + new java.util.Date() + " : ");
+src/main/org/nlogo/mirror/LinkData.java:387:      System.err.println("ERROR: attempting incremental update of a "
+src/main/org/nlogo/mirror/LinkData.java:388:          + "dead link (" + stringRep() + ").");
+src/main/org/nlogo/mirror/OverrideList.java:17:      throw new OverrideException("you cannot override " + varName);
+src/main/org/nlogo/mirror/PatchData.java:217:  private static final String[] OVERRIDE_VARIABLES = new String[]{"PCOLOR", "PLABEL", "PLABEL-COLOR"};
+src/main/org/nlogo/mirror/PatchData.java:218:  private static final String[] OVERRIDE_METHODS = new String[]{"pcolor", "plabel", "plabelColor"};
+src/main/org/nlogo/mirror/PatchData.java:253:    return "Patch " + pxcor + " " + pycor + " (" + org.nlogo.api.Color.getARGBIntByRGBAList(pcolor)
+src/main/org/nlogo/mirror/PatchData.java:254:        + ", " + plabel + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(plabelColor) + ")";
+src/main/org/nlogo/mirror/ServerWorld.java:343:      javax.imageio.ImageIO.write(drawing, "PNG", os);
+src/main/org/nlogo/mirror/TurtleData.java:260:      {"COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "HEADING", "SHAPE", "SIZE"};
+src/main/org/nlogo/mirror/TurtleData.java:262:      {"color", "label", "labelColor", "lineThickness", "hidden", "heading", "shape", "size"};
+src/main/org/nlogo/mirror/TurtleData.java:285:      return "Turtle " + who + " (" + xcor + ", " + ycor + ", "
+src/main/org/nlogo/mirror/TurtleData.java:286:          + shape + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(color) + ", " + heading + ", " + size
+src/main/org/nlogo/mirror/TurtleData.java:287:          + ", " + hidden + ", " + label + ", " + org.nlogo.api.Color.getARGBIntByRGBAList(labelColor)
+src/main/org/nlogo/mirror/TurtleData.java:288:          + ", " + breedIndex + ", " + lineThickness + ")";
+src/main/org/nlogo/mirror/TurtleData.java:291:      return "Turtle " + who + " (dead)";
+src/main/org/nlogo/mirror/TurtleData.java:293:    return "Turtle " + who + " update (mask "
+src/main/org/nlogo/mirror/TurtleData.java:315:      System.err.println("@ " + new java.util.Date() + " : ");
+src/main/org/nlogo/mirror/TurtleData.java:316:      System.err.println("ERROR: attempting incremental update of a "
+src/main/org/nlogo/mirror/TurtleData.java:317:          + "dead turtle (" + stringRep() + ").");
 src/main/org/nlogo/hubnet/protocol/ClientInterface.scala:27:      "ALL PLOTS" :: widgets.map{ widget =>
 src/main/org/nlogo/hubnet/protocol/ClientInterface.scala:28:        if (widget(0) == "VIEW") "VIEW"
 src/main/org/nlogo/hubnet/protocol/ClientInterface.scala:31:          if (widget(0) == "CHOOSER")

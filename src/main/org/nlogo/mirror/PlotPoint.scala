@@ -1,6 +1,6 @@
 // (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.mirroring
+package org.nlogo.mirror
 
 // Points may leave the X coordinate unspecified, in which case the
 // next X coordinate in the client-side plot will be used.

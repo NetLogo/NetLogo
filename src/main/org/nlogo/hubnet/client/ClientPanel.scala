@@ -8,7 +8,7 @@ import org.nlogo.plot.{PlotExporter, Plot, PlotManager}
 import java.io.{IOException, PrintWriter}
 import org.nlogo.window.Events.{AfterLoadEvent, LoadSectionEvent}
 import org.nlogo.swing.OptionDialog
-import org.nlogo.hubnet.mirroring.{OverrideList, LinkStamp, PlotPoint, Line, TurtleStamp}
+import org.nlogo.mirror.{OverrideList, LinkStamp, PlotPoint, Line, TurtleStamp}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.awt.AWTEvent
 import org.nlogo.hubnet.protocol._

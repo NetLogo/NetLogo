@@ -64,7 +64,7 @@
     java.lang.Object readResolve();
 }
 
--keep public class org.nlogo.hubnet.mirroring.* {
+-keep public class org.nlogo.mirror.* {
  *;
 }
 

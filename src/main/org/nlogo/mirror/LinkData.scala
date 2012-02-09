@@ -1,6 +1,6 @@
 // (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.mirroring
+package org.nlogo.mirror
 
 import org.nlogo.api
 import org.nlogo.api.LogoList
@@ -129,7 +129,7 @@ extends AgentData with api.Link {
   def labelString = label
   def hasLabel = Option(label).exists(_.nonEmpty)
 
-  private[mirroring] def getKey: ClientWorld.LinkKey =
+  private[mirror] def getKey: ClientWorld.LinkKey =
     new ClientWorld.LinkKey(id, end1Id, end2Id, breedIndex)
 
   def getBreedIndex = breedIndex

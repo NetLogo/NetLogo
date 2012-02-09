@@ -1,4 +1,4 @@
-package org.nlogo.hubnet.mirroring
+package org.nlogo.mirror
 
 import java.util.Comparator
 
@@ -40,17 +40,17 @@ abstract class AbstractClientWorld extends api.World {
   import java.util.{ Map => JMap, HashMap => JHashMap, TreeMap => JTreeMap, SortedMap => JSortedMap }
   import ClientWorld.{ TurtleKey, TurtleKeyComparator, LinkKey, LinkKeyComparator }
 
-  protected[mirroring] val sortedTurtles: JSortedMap[TurtleKey, TurtleData] =
+  protected[mirror] val sortedTurtles: JSortedMap[TurtleKey, TurtleData] =
     new JTreeMap(new TurtleKeyComparator)
-  protected[mirroring] val turtleKeys: JMap[java.lang.Long, TurtleKey] =
+  protected[mirror] val turtleKeys: JMap[java.lang.Long, TurtleKey] =
     new JHashMap
-  protected[mirroring] val uninitializedTurtles: JMap[java.lang.Long, TurtleData] =
+  protected[mirror] val uninitializedTurtles: JMap[java.lang.Long, TurtleData] =
     new JHashMap
-  protected[mirroring] val sortedLinks: JSortedMap[LinkKey, LinkData] =
+  protected[mirror] val sortedLinks: JSortedMap[LinkKey, LinkData] =
     new JTreeMap(new LinkKeyComparator)
-  protected[mirroring] val linkKeys: JMap[Long, LinkKey] =
+  protected[mirror] val linkKeys: JMap[Long, LinkKey] =
     new JHashMap
-  protected[mirroring] val uninitializedLinks: JMap[java.lang.Long, LinkData] =
+  protected[mirror] val uninitializedLinks: JMap[java.lang.Long, LinkData] =
     new JHashMap
 
 }
@@ -66,7 +66,7 @@ extends AbstractClientWorld with Overrides with Updating with Perspectives with 
 
   // temporary hack for the review tab experiments
   def reset() {
-    import org.nlogo.hubnet.mirroring.ClientWorld.{ TurtleKeyComparator, LinkKeyComparator }
+    import ClientWorld.{ TurtleKeyComparator, LinkKeyComparator }
     sortedTurtles.clear()
     turtleKeys.clear()
     sortedLinks.clear()

@@ -4,8 +4,8 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
 import org.nlogo.api.HubNetInterface
-import org.nlogo.hubnet.mirroring
-import org.nlogo.hubnet.mirroring.{LinkStamp, TurtleStamp, Line, ClearDrawing}
+import org.nlogo.mirror
+import org.nlogo.mirror.{LinkStamp, TurtleStamp, Line, ClearDrawing}
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -148,8 +148,8 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   /// Individualized client views
 
   def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
-    mirroring.Overridable.getOverrideIndex(
-      mirroring.AgentType.fromAgentClass(agentType),
+    mirror.Overridable.getOverrideIndex(
+      mirror.AgentType.fromAgentClass(agentType),
       varName) != -1
 
   def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],

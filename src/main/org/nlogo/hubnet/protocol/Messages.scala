@@ -55,7 +55,7 @@ case class AgentPerspectiveMessage(bytes: Array[Byte]) extends Message
 /**
  * Message from server tells client to update the view
  * @param worldData a serialized <code>ServerWorld</code>
- * @see org.nlogo.hubnet.mirroring.ServerWorld
+ * @see org.nlogo.mirror.ServerWorld
  */
 @SerialVersionUID(0)
 case class ViewUpdate(worldData: Array[Byte]) extends Message

@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import java.awt.{Font, Graphics2D, Graphics}
 import java.io.{ByteArrayInputStream, DataInputStream}
 import org.nlogo.api.{Perspective, Graphics2DWrapper, ViewSettings}
-import org.nlogo.hubnet.mirroring._
+import org.nlogo.mirror._
 import org.nlogo.window.{InterfaceColors, ViewMouseHandler, ViewWidgetInterface, Widget}
 
 // The view widget in the client.

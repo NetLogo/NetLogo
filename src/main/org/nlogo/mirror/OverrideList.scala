@@ -1,6 +1,6 @@
 // (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.mirroring
+package org.nlogo.mirror
 
 import org.nlogo.api
 

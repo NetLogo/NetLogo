@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.client
 
-import org.nlogo.hubnet.mirroring._
+import org.nlogo.mirror._
 import org.nlogo.render.AbstractRenderer
 import org.nlogo.api.{GraphicsInterface,ShapeList,ViewSettings}
 

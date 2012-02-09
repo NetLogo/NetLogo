@@ -7,7 +7,7 @@ import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.plot.Plot
 import org.nlogo.hubnet.protocol._
-import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
+import org.nlogo.mirror.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
 import org.nlogo.agent.AgentSet
 import java.net.{BindException, ServerSocket}
 import org.nlogo.api.{WorldPropertiesInterface, ModelReader, PlotInterface}
