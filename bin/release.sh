@@ -136,6 +136,7 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
+make clean-extensions
 rm -f *.jar
 bin/sbt error update
 $MAKE -s
