@@ -173,41 +173,64 @@
       Windows
     </h3>
     <p>
-      Before connecting the board, download and install the <a href=
-      "http://www.gogoboard.org/downloads-hardware" target="_blank">GoGo Monitor for Windows</a>). Connect the USB cable to the board and to the computer, and wait for the GoGo Board to be installed. If you have already installed some other robotics or sensing boards to your Windows machine, you might already have the driver installed and this step will not be necessary.
+      <ul>
+      <li>
+        <b>Windows 7 and Vista: </b>
+        <ul>
+          <li>When you start a NetLogo model with that uses the GoGo extension,
+              it will check to see if you have the proper drivers installed.  
+              If it detects that you do not, NetLogo will offer to launch a small program 
+              that will install the drivers for you (but note that you will need to have 
+              admin access to the computer in order to do so, and that you will need to 
+              accept an "unsigned" driver (though, truth be told, the actual driver file 
+              being installed comes from the GoGo board creators)).
+          </li>
+          <li>If you already have the drivers installed and <i>still</i> receive the popup,
+              please select "Halt and Don't Remind Me Again" to prevent any further notices.
+          </li>
+          <li>If installing the GoGo board drivers through NetLogo does not work correctly for you, please view the
+              instructions for Windows XP installation and see
+              <a href="contact.html">Contacting Us</a>.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <b>Windows XP: </b>
+        Unfortunately, GoGo installation on Windows XP is substantially less elegant 
+        than it is on Windows 7 and Vista.
+        <ol>
+          <li>You can download and install the <a href=
+              "http://www.gogoboard.org/downloads-hardware" target="_blank">GoGo Monitor for Windows</a>.</li>
+          <li>If you don't want to download the GoGo Monitor, you can also
+              install the driver more manually.  To do so, please follow these steps:
+             <ul>
+               <li>Go to your Windows Control Panel and open Device Manager</li>
+               <li>Look for a device called "SERIAL DEMO", right-click it,
+                   and select "Update driver software"</li>
+               <li>Choose to browse for the driver manually</li>
+               <li>Navigate to the "Windows" folder in your GoGo
+                   extension installation (likely something along 
+                   the lines of "C:\Program Files\NetLogo 5.x\extensions\gogo\Windows"), 
+                   and select the file named "gogo_cdc_NTXPVista.inf"</li>
+               <li>Proceed through the driver installation wizard 
+                   to complete the installation</li>
+            </ul>
+        </li>
+      </ol>
+      </ul>
     <h3>
       Mac OS X
     </h3>
     <p>
-      Determining which device is the GoGo board may prove difficult at first.
-      To identify the GoGo board, open the GoGoMonitor example and press the <tt>setup</tt> button.
-      A dialog will pop up presenting a list of available ports. Select the
-      port that the GoGo board is plugged into. It might look something
-      like this:
-    <pre>
-/dev/tty.KeySerial1
-</pre>
-    <p>
-      Where the words after <tt>/dev/tty.</tt> might be something related
-      to the brand of adapter you have and include the word
-      &quot;serial&quot; or &quot;usbmodem&quot;. If you can't figure out which port is the
-      correct one you can find it in the System Profiler (Apple Menu -&gt;
-      About This Mac -&gt; More Info) 
-      <!-- note that I don't know where the port names are in this
-          dialog but the old docs said they are there ev 7/11/08 -->
-    <p>
-      After you setup press the <tt>ping</tt> button, it should print
-      <tt>true</tt> in the command center. You should also notice values in
-      the sensor monitors that may be fluctuating slightly.
-    <p>
-      If this does not work, see <a href="contact.html">Contacting Us</a>.
+      The GoGo extension requires no special installation on Mac OS X.
     <h3>
       Linux
     </h3>
     <p>
-      You will need to be able to write to the serial devices, normally
-      <tt>/dev/ttyS*</tt>. In most Linux distributions this can be set up
-      through the User Manager.
+      Many versions of Linux require no special installation.  However, if
+      you face problems, ensure that you are able to write to the serial
+      devices (usually, this means <tt>/dev/ttyS*</tt>). In most Linux
+      distributions this can be set up through the User Manager.
     <h2>
       Using the GoGo Extension
     </h2>
