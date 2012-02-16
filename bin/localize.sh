@@ -66,10 +66,14 @@ jar xf NetLogo.jar
 cp "$LOCALIZE_DIR/GUI_Strings_$LANGUAGE_CODE.txt" .
 cp "$LOCALIZE_DIR/Errors_$LANGUAGE_CODE.txt" .
 
-# convert the text files to ascii
-echo "converting translated files to ascii"
-native2ascii -encoding UTF-8 "GUI_Strings_$LANGUAGE_CODE.txt" > "GUI_Strings_$LANGUAGE_CODE.properties"
-native2ascii -encoding UTF-8 "Errors_$LANGUAGE_CODE.txt" > "Errors_$LANGUAGE_CODE.properties"
+if [ `uname -o` != Cygwin ] ; then
+  # convert the text files to ascii
+  echo "converting translated files to ascii"
+  native2ascii -encoding UTF-8 "GUI_Strings_$LANGUAGE_CODE.txt" > "GUI_Strings_$LANGUAGE_CODE.properties"
+  native2ascii -encoding UTF-8 "Errors_$LANGUAGE_CODE.txt" > "Errors_$LANGUAGE_CODE.properties"
+else
+  echo I_AM_CYGWIN
+fi
 
 # remove the old jar (so that it doesn't end up inside the new jar)
 rm NetLogo.jar

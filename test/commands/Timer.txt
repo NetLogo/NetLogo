@@ -2,4 +2,7 @@ Timer1
   timer >= 0 => true
   O> reset-timer
   O> wait 0.5
-  timer >= 0.5 => true
+  O> set glob1 timer
+  O> print "ABOUT TO PRINT"
+  O> print glob1
+  glob1 >= 0.5 => true
