@@ -82,8 +82,10 @@ EXTENSIONS=\
 	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
 
-.PHONY: extensions
+.PHONY: extensions clean-extensions
 extensions: $(EXTENSIONS)
+clean-extensions:
+	rm -f $(EXTENSIONS)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
