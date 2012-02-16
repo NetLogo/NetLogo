@@ -197,14 +197,13 @@
           extension, it will check to see if you have the proper drivers
           installed. If it detects that you do not, NetLogo will offer to
           launch a small program that will install the drivers for you (but
-          note that you will need to have admin access to the computer in
-          order to do so, and that you will need to accept an
-          &quot;unsigned&quot; driver (though, truth be told, the actual
-          driver file being installed comes from the GoGo board creators)).
+          note that you will need to have "administrator" access to the computer in
+          order to do so (basically, Windows will ask you to click a button to confirm that you really want to run the program). You will also need to accept an
+          &quot;unsigned&quot; driver (this does not mean you are installing anything harmful, it just means that the driver file was not officially recognized by Microsoft as an "official" driver, but the file comes from the GoGo board creators and is 100% safe.)
           <li>If you already have the drivers installed and <i>still</i>
           receive the popup, please select &quot;Halt and Don't Remind
           Me Again&quot; to prevent any further notices.
-          <li>If installing the GoGo board drivers through NetLogo does not
+          <li>If installing the GoGo Board drivers through NetLogo does not
           work correctly for you, please view the instructions for Windows
           XP installation and see <a href="contact.html">Contacting Us</a>.
           </ul>
@@ -238,7 +237,7 @@
       Mac OS X
     </h3>
     <p>
-      The GoGo extension requires no special installation on Mac OS X.
+      The GoGo extension requires no special installation on Mac OS X. The only issue for now, due to a bug in the open source software we use for controlling the serial port, is that you CANNOT use the "gogo:close" command, or execute the "gogo:open" twice. This will be fixed as soon as we get the updated software from the RXTX team. If you are using any of the example models (GoGo Monitor and GoGo Monitor Simple), DO NOT click on "setup" twice -- click once and wait some seconds for the connection to be made.
     <h3>
       Linux
     </h3>
