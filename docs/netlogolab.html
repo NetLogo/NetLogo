@@ -209,10 +209,10 @@
           XP installation and see <a href="contact.html">Contacting Us</a>.
           </ul>
       <li>
-        <b>Windows XP:</b> Unfortunately, GoGo installation on Windows XP
+        <b>Windows XP:</b> Unfortunately, the driver installer does not work properly on Windows XP, so GoGo installation on Windows XP
         is substantially less elegant than it is on Windows 7 and Vista.
         <ol>
-          <li>You can download and install the <a href=
+          <li>One possible solution is to download and install the <a href=
           "http://www.gogoboard.org/downloads-hardware" target=
           "_blank">GoGo Monitor for Windows</a>.
           <li>If you don't want to download the GoGo Monitor, you can
@@ -230,6 +230,7 @@
               &quot;gogo_cdc_NTXPVista.inf&quot;
               <li>Proceed through the driver installation wizard to
               complete the installation
+              <li><u><b>Note</b></u>: Depending on your computer, this process may install the driver for <i>only</i> the current USB port that the GoGo board is plugged into.  That is, if the GoGo board is later connected to a different USB port, you may have to repeat this process in order for it to be recognized from that port.
               </ul>
           </ol>
       </ul>
@@ -427,7 +428,7 @@ gogo:sensor 1 / 30
       reading from the sensor. The code would look like this:
     <pre>
 to create-one-turtle
-  clear-all  
+  clear-all
   create-turtle
 end
     
@@ -452,7 +453,7 @@ end
     <pre>
 to turn-motor-on-with-heat
   if gogo:sensor 1 &lt; 500
-  [ 
+  [
     gogo:talk-to-output-ports [&quot;a&quot;]
     gogo:output-port-on
   ]
@@ -492,7 +493,7 @@ plot (gogo:sensor 1)
       "#gogo:output-port-off">gogo:output-port-off</a> <a href=
       "#gogo:output-port-reverse">gogo:output-port-reverse</a> <a href=
       "#gogo:output-port-thatway">gogo:output-port-[that|this]way</a>
-      <a href="#gogo:ping">gogo:ping</a> 
+      <a href="#gogo:ping">gogo:ping</a>
       <!-- <a href="#read-sensors">read-sensors</a> -->
        <a href="#gogo:sensor">gogo:sensor</a> <a href=
       "#gogo:set-burst-mode">gogo:set-burst-mode</a> <a href=
@@ -726,7 +727,7 @@ foreach [ 1 2 3 4 5 6 7 8 ]
 
 if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ]]<br>;; will move all turtles 10 steps forward if sensor 1's value is less than 500.
 
-loop [if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ] ] ]<br>;; will continuously check sensor 1's value and 
+loop [if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ] ] ]<br>;; will continuously check sensor 1's value and
 ;; move all turtles 10 steps forward every time
 ;; that the sensor value is less than 500.
 </pre>
@@ -749,13 +750,13 @@ loop [if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ] ] ]<br>;; will continuou
       Examples:
     <pre>
  
-  gogo:set-burst-mode [ 1 2 3 ] true 
-  ;; turns on high speed burst mode for sensors 1, 2 and 3 
+  gogo:set-burst-mode [ 1 2 3 ] true
+  ;; turns on high speed burst mode for sensors 1, 2 and 3
          
-  gogo:set-burst-mode [ 4 ] false 
-  ;; turns on low speed burst mode for sensor 4 
-  ;; this will also override any previous set-burst-mode calls 
-  ;; so there will be no new burst mode data for sensors 1, 2 and 3 
+  gogo:set-burst-mode [ 4 ] false
+  ;; turns on low speed burst mode for sensor 4
+  ;; this will also override any previous set-burst-mode calls
+  ;; so there will be no new burst mode data for sensors 1, 2 and 3
 </pre>
     <h3>
       <a name="gogo:set-output-port-power" id=
