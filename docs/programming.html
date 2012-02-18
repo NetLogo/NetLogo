@@ -1936,7 +1936,7 @@ ask turtles [ set shape one-of shapes ]
       them see model states they aren't supposed to see, which may be
       misleading.
       <li>Increased speed. Updating the view takes time, so if one update
-      per tick is enough, then enforcing than there is only one update per
+      per tick is enough, then enforcing there is only one update per
       tick will make your model faster.
       <li>Since <tt>setup</tt> buttons don't advance the tick counter,
       they are unaffected by the speed slider; this is normally the desired
@@ -1975,7 +1975,7 @@ ask turtles [ set shape one-of shapes ]
       frequency of updates.
     <p>
       With tick-based updates, the setting is a <i>ceiling</i> on how many
-      updates per second you get. If the frame rate is 30, then if then
+      updates per second you get. If the frame rate is 30, then
       NetLogo will ensure that the model never runs faster than that when
       the speed slider is in the default position. If any frame takes less
       than 1/30 of a second to compute and display, NetLogo will pause and
