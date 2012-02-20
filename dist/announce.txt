@@ -14,7 +14,7 @@ you. Please let us know about bugs you find, features you want, etc.
 Most models created in earlier versions of NetLogo will work in
 NetLogo 5.0, perhaps with minor updates to the code. If you have any
 trouble, please consult:
-http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
+http://ccl.northwestern.edu/netlogo/transition.html .
 
 We are excited by the opportunities resulting from the open sourcing
 and internationalization of NetLogo.  We invite our users to help
