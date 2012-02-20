@@ -26,60 +26,60 @@ NetLogo User Manual and send us the changes for integration.
 The following is a (partial) list of changes made since NetLogo 4.1.3:
 
 * features:
-     + open source (GPL license; source code online at
-       https://github.com/NetLogo/NetLogo)
-     + new license for Sample Models and Curricular Models is
-       Creative Commons Attribution-NonCommercial-ShareAlike
-     + international characters (Unicode) supported throughout
-       application
-     + GUI is localized in Spanish, Russian, and Chinese (volunteer
-       translators wanted)
-     + rich formatting and images in Info tabs using Markdown
-     + plotting code can go inside plots instead of in code tab
-     + authorable model speed (target frame rate setting)
-     + buttons optionally disable until ticks start
-     + translucent colors in 3D view and NetLogo 3D (for RGB colors
-       only)
+   + open source (GPL license; source code online at
+     https://github.com/NetLogo/NetLogo)
+   + new license for Sample Models and Curricular Models is
+     Creative Commons Attribution-NonCommercial-ShareAlike
+   + international characters (Unicode) supported throughout
+     application
+   + GUI is localized in Spanish, Russian, and Chinese (volunteer
+     translators wanted)
+   + rich formatting and images in Info tabs using Markdown
+   + plotting code can go inside plots instead of in code tab
+   + authorable model speed (target frame rate setting)
+   + buttons optionally disable until ticks start
+   + translucent colors in 3D view and NetLogo 3D (for RGB colors
+     only)
 * language changes:
-     + "tasks" store code to be run later
-	  - aka first-class functions, closures, lambda
-	  - new primitives: task, is-command-task?, is-reporter-task?
-	  - these primitives accept tasks: run, runresult, foreach,
-	    map, reduce, filter, n-values, sort-by
-     + improved overall list performance (many operations take
-       near-constant time instead of linear time)
-     + you must use reset-ticks to start the tick counter before
-       using tick or tick-advance
-     + new primitives setup-plots and update-plots
-     + new primitive sort-on lets you say e.g., sort-on [size] turtles
-     + new primitive error causes a runtime error
-     + random-normal rejects negative standard deviations
+   + "tasks" store code to be run later
+      - aka first-class functions, closures, lambda
+      - new primitives: task, is-command-task?, is-reporter-task?
+      - these primitives accept tasks: run, runresult, foreach,
+	map, reduce, filter, n-values, sort-by
+   + improved overall list performance (many operations take
+     near-constant time instead of linear time)
+   + you must use reset-ticks to start the tick counter before
+     using tick or tick-advance
+   + new primitives setup-plots and update-plots
+   + new primitive sort-on lets you say e.g., sort-on [size] turtles
+   + new primitive error causes a runtime error
+   + random-normal rejects negative standard deviations
 * HubNet:
-     + activities can run headless
-     + new primitives hubnet-clients-list, hubnet-kick-client,
-       hubnet-kick-all-clients
-     + hubnet-set-client-interface no longer required
+   + activities can run headless
+   + new primitives hubnet-clients-list, hubnet-kick-client,
+     hubnet-kick-all-clients
+   + hubnet-set-client-interface no longer required
 * other fixes and changes:
-     + tabs renamed to Interface/Info/Code
-     + Command Center allows reporters, adds show command
-       automatically
-     + NetLogo 3D uses .nlogo3d suffix, not .nlogo
-     + import-world is much faster
-     + startup no longer runs headless or in background BehaviorSpace
-       runs
-     + fixed 3D rendering bug where small turtles were too bright
-     + Pack200 enabled in applet for faster loading
-     + Mac app runs in 64 bit mode by default
-     + upgraded Windows installer
-     + GoGo extension getting-started experience now smoother on all
-       platforms
+   + tabs renamed to Interface/Info/Code
+   + Command Center allows reporters, adds show command
+     automatically
+   + NetLogo 3D uses .nlogo3d suffix, not .nlogo
+   + import-world is much faster
+   + startup no longer runs headless or in background BehaviorSpace
+     runs
+   + fixed 3D rendering bug where small turtles were too bright
+   + Pack200 enabled in applet for faster loading
+   + Mac app runs in 64 bit mode by default
+   + upgraded Windows installer
+   + GoGo extension getting-started experience now smoother on all
+     platforms
 * models:
-     + new Sample Models: Sandpile, Lightning, Osmotic Pressure,
-       Robby the Robot, Preferential Attachment 3D
-     + new Curricular Models: Bug Hunt Consumers, Bug Hunt Predators
-       and Invasive Species, Plant Speciation, epiDEM Basic, epiDEM
-       Travel and Control, Connected Chemistry Atmosphere
-     + new Code Examples: Info Tab Example, GoGoMonitorSimple
+   + new Sample Models: Sandpile, Lightning, Osmotic Pressure,
+     Robby the Robot, Preferential Attachment 3D
+   + new Curricular Models: Bug Hunt Consumers, Bug Hunt Predators
+     and Invasive Species, Plant Speciation, epiDEM Basic, epiDEM
+     Travel and Control, Connected Chemistry Atmosphere
+   + new Code Examples: Info Tab Example, GoGoMonitorSimple
 
 
 We have four mailing lists for NetLogo:
