@@ -67,8 +67,10 @@ EXTENSIONS=\
 	extensions/sound/sound.jar \
 	extensions/table/table.jar
 
-.PHONY: extensions
+.PHONY: extensions clean-extensions
 extensions: $(EXTENSIONS)
+clean-extensions:
+	rm -f $(EXTENSIONS)
 
 # The extensions want to build against the lite jar, but on the core
 # branch we don't have the capability to build a lite jar, so we just
