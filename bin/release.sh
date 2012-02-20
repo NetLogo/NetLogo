@@ -7,6 +7,7 @@
 BUNZIP=bunzip2
 CHMOD=chmod
 CP=cp
+CURL=curl
 DU=du
 FIND=find
 GREP=grep
@@ -31,7 +32,7 @@ XARGS=xargs
 SCALA=2.9.1
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
-IJDIR=/Applications/install4j-$IJVERSION
+IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_30_server
 
 # make sure we have proper versions of tools
@@ -41,12 +42,6 @@ VM=windows-x86-1.6.0_30_server
 if test `htmldoc --version` != 1.8.27 ;
 then
   echo "htmldoc 1.8.27 not found"
-  exit 1
-fi
-
-if [ ! -f "Mathematica-Link/JLink.jar" ]; then
-  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
-  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
   exit 1
 fi
 
@@ -66,28 +61,32 @@ do
 done
 
 if [ $WINDOWS -eq 1 ]; then
-  echo "OK, building for all platforms (Windows, Mac, Linux/Unix)"
-  # make sure we have proper VM pack
-  if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
-    echo "$IJDIR/jres/$VM.tar.gz not found"
-    echo "You'll need to have Install4j installed. Seth has the license key."
-    echo "The Windows Edition is sufficient (Windows here refers to the target platform)."
-    echo "as for the VM pack, you can grab it from http://ccl.northwestern.edu/devel/ using curl -O"
-    echo "or if we don't have one for this Java version yet,"
-    echo "you can make it from inside install4j, but only on a windows machine"
-    echo "go to Project -> Create JRE Bundles"
-    echo "for path e.g.: c:\\jdk1.6.0_30"
-    echo "for java version e.g.: 1.6.0_30"
-    echo "for custom id: server"
+  # make sure we have Install4J
+  if [ ! -d "$IJDIR/jres" ]; then
+    echo "$IJDIR/jres not found"
+    echo "You'll need to install Install4j. Seth has the license key."
     exit 1
   fi
-  if test "`$IJDIR/$IJ --version`" != "install4j version 5.0.9 (build 5372), built on 2011-07-08" ; 
+  # check install 4j version
+  DESIRED_VERSION="install4j version 5.0.9 (build 5372), built on 2011-07-08"
+  pushd "$IJDIR" > /dev/null
+  FOUND_VERSION=`./$IJ --version`
+  popd > /dev/null
+  if test "$FOUND_VERSION" != "$DESIRED_VERSION" ; 
   then
-    echo "install4j " $IJDIR/$IJ "not found"
+    echo "desired version: " $DESIRED_VERSION
+    echo "found version: " $FOUND_VERSION
     exit 1
   fi
-else
-  echo "OK, no Windows, just Mac and Linux/Unix"
+  # fetch VM pack if needed
+  if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
+    echo "fetching VM pack"
+    pushd "$IJDIR/jres" > /dev/null
+    $CURL -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    popd > /dev/null
+  fi
+  # make sure VM pack is complete and not corrupt
+  tar tzf "$IJDIR/jres/$VM.tar.gz" > /dev/null
 fi
 
 until [ -n "$REQUIRE_PREVIEWS" ]
@@ -99,6 +98,18 @@ do
   fi
   if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
     REQUIRE_PREVIEWS=0
+  fi
+done
+
+until [ -n "$INCLUDE_SCALADOC" ]
+do
+  read -p "Generate Scaladoc? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    INCLUDE_SCALADOC=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    INCLUDE_SCALADOC=0
   fi
 done
 
@@ -114,16 +125,36 @@ do
   fi
 done
 
+# fail early if JLink.jar is missing
+if [ ! -f Mathematica-Link/Makefile ]; then
+  git submodule update --init Mathematica-Link
+fi
+if [ ! -f Mathematica-Link/JLink.jar ]; then
+  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
+  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
+  exit 1
+fi
 
 # compile, build jars etc.
-bin/sbt update
+make clean-extensions
+rm -f *.jar
+bin/sbt error update
 $MAKE -s
-$MAKE -s docs/scaladoc
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
 export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+
+# Scaladoc
+if [ $INCLUDE_SCALADOC -eq 1 ]
+then
+  echo "generating Scaladoc"
+  $MAKE -s docs/scaladoc
+else
+  $RM -rf docs/scaladoc
+fi
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -132,20 +163,20 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 
 # put most of the files in
 $CP -rp ../../docs .
-
 $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
 $CP -p ../../NetLogo.jar ../../HubNet.jar .
 $CP ../../NetLogoLite.jar .
 $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
+# fill lib directory
 $MKDIR lib
 $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.1.0.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
 $CP -rp ../../Mathematica-Link Mathematica\ Link
-(cd Mathematica\ Link; NETLOGO=.. make)
+(cd Mathematica\ Link; NETLOGO=.. make) || exit 1
 $RM Mathematica\ Link/JLink.jar
 
 # stuff version number etc. into readme
@@ -156,7 +187,9 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
-$RM -rf extensions/*/classes
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
+# Apple's license won't let us include this - ST 2/6/12
+$RM -f extensions/qtj/QTJava.jar
 
 # include models
 $CP -rp ../../models .
@@ -191,11 +224,7 @@ $PERL -0 -p -i -e 's|<div class="version">.+?</div>||gs;' docs/*.html
 $PERL -p -i -e "s/\<h3\>/\<p\>\<hr\>\<h3\>/" docs/dictionary.html
 
 cd docs
-echo "-- we ignore htmldoc errors because the docs contain a bunch"
-echo "-- of links to the scaladoc, but the scaladoc isn't included"
-echo "-- in the PDF so htmldoc flags those as broken links."
-echo "-- please be on the lookout for other kinds of errors."
-../../../bin/htmldoc.sh || echo "htmldoc errors ignored"
+../../../bin/htmldoc.sh
 cd ..
 
 # blow away the docs directory messed up by the PDF generation process
@@ -212,39 +241,38 @@ $PERL -p -i -e 's/NetLogo User Manual&nbsp;/NetLogo $ENV{"VERSION"} User Manual&
 $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $ENV{"VERSION"} User Manual</title>|gs' docs/*.html
 
 # put models in multiple categories
-( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Networks/Team\ Assembly* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Altruism* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Cooperation* Social\ Science )
-( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Unverified/Divide* Social\ Science/Unverified )
-( cd models/Sample\ Models     ; $CP -rp Biology/Simple\ Birth* Social\ Science )
-( cd models                    ; $MKDIR -p Curricular\ Models )
-( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/GasLab Curricular\ Models )
-( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/MaterialSim Curricular\ Models )
-echo "a warning here about Unverified not being copied is OK"
-( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/* Curricular\ Models/ProbLab )
-( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/Unverified/* Curricular\ Models/ProbLab )
-( cd models/Curricular\ Models ; $MKDIR -p EACH/Unverified )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/EACH )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/EACH )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Unverified/Divide* Curricular\ Models/EACH/Unverified )
-( cd models                    ; $CP -rp Sample\ Models/System\ Dynamics/Unverified/Tabonuco* Sample\ Models/Biology/Unverified )
+( cd models/Sample\ Models     ; $CP -rp Biology/AIDS* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Networks/Team\ Assembly* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Altruism* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Cooperation* Social\ Science ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Evolution/Unverified/Divide* Social\ Science/Unverified ) || exit 1
+( cd models/Sample\ Models     ; $CP -rp Biology/Simple\ Birth* Social\ Science ) || exit 1
+( cd models                    ; $MKDIR -p Curricular\ Models ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/GasLab Curricular\ Models ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Chemistry\ \&\ Physics/MaterialSim Curricular\ Models ) || exit 1
+( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/*.{nlogo,png} Curricular\ Models/ProbLab ) || exit 1
+( cd models                    ; $CP -p Sample\ Models/Mathematics/Probability/ProbLab/Unverified/* Curricular\ Models/ProbLab ) || exit 1
+( cd models/Curricular\ Models ; $MKDIR -p EACH/Unverified ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/EACH ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/EACH ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Unverified/Divide* Curricular\ Models/EACH/Unverified ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/System\ Dynamics/Unverified/Tabonuco* Sample\ Models/Biology/Unverified ) || exit 1
 
 # BEAGLE curricular models
-( cd models                    ; $CP -rp Sample\ Models/Biology/Wolf\ Sheep\ Predation* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Genetic\ Drift/GenDrift\ T\ interact* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Speeds* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Camouflage* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution )
-( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution )
+( cd models                    ; $CP -rp Sample\ Models/Biology/Wolf\ Sheep\ Predation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Genetic\ Drift/GenDrift\ T\ interact* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Speeds* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Bug\ Hunt\ Camouflage* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/*.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/Guppy\ Spots* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Unverified/aquarium.jpg Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp HubNet\ Activities/Bug\ Hunters\ Camouflage* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Daisyworld* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Mimicry* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
+( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
-( cd ../.. ; bin/sbt "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" )
+( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" ) || exit 1
 
 # add JOGL native library for Linux
 $CP -r ../../lib/Linux-amd64 lib/Linux-amd64
@@ -284,7 +312,6 @@ $RM -rf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 # the qtj extension doesn't work on linux
 $TAR czf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz --exclude ._\* --exclude qtj --exclude Mac\ OS\ X --exclude Windows netlogo-$COMPRESSEDVERSION
 $DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz 
-pwd
 cd netlogo-$COMPRESSEDVERSION
 
 # done with Unix release; now do Mac release
@@ -326,11 +353,11 @@ cd ..
 $RM -rf dmg
 $MKDIR dmg
 $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
-( cd dmg/NetLogo\ "$VERSION"; $LN -s docs/NetLogo\ User\ Manual.pdf )
+( cd dmg/NetLogo\ "$VERSION"; $LN -s docs/NetLogo\ User\ Manual.pdf ) || exit 1
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
-$HDIUTIL create NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
+$HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
 $RM -rf dmg
@@ -373,8 +400,9 @@ $CHMOD -R go+rX .
 if [ $WINDOWS -eq 1 ]
 then
   $PERL -pi -e "s/\@\@\@VM\@\@\@/$VM/g" NetLogo.install4j
-  $IJDIR/$IJ -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
+  "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
   $CHMOD -R a+x *.exe
+  $DU -h *.exe
   $MV *.exe ../$COMPRESSEDVERSION
 fi
 
@@ -430,6 +458,17 @@ $FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store -or -name .git
 if [ $DO_RSYNC -eq 1 ]; then
   $RSYNC -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
 else
+  echo
   echo "to upload to CCL server, do:"
   echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
+
+echo
+echo "to tag the release (changing 'master' if necessary):"
+echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
+echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
+echo
+echo "and to push the tags:"
+echo git push --tags
+echo git submodule foreach git push --tags
+echo

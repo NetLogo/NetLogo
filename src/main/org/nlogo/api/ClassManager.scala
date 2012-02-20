@@ -23,7 +23,9 @@ import java.util.{ List => JList }
 
 trait ClassManager {
 
-  /** Initializes the extension. This is called once per NetLogo instance. */
+  /** Initializes the extension. This is called once per NetLogo instance.
+   * (In the NetLogo GUI, it is called on the AWT event thread.
+   */
   @throws(classOf[ExtensionException])
   def runOnce(em: ExtensionManager)
 
