@@ -9,9 +9,14 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.nlogo.agent.Agent;
-import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
-import org.nlogo.api.Context;
+import org.nlogo.api.CompilerException;
+import org.nlogo.api.Dump;
+import org.nlogo.api.HubNetInterface;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.ModelType;
+import org.nlogo.api.ModelTypeJ;
+import org.nlogo.api.Token;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.FileManager;
