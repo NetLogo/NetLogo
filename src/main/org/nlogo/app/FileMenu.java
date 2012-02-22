@@ -2,6 +2,8 @@
 
 package org.nlogo.app;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.nlogo.api.I18N;
@@ -232,8 +234,8 @@ public strictfp class FileMenu
               app.workspace().getModelFileName(),
               app.tabs().infoTab().info(),
               app.tabs().proceduresTab().getText(),
-              app.workspace().getExtensionManager().getJarPaths(),
-              app.workspace().getExtensionManager().getExtensionNames());
+              new ArrayList<String>(scala.collection.JavaConversions.asJavaCollection(app.workspace().getExtensionManager().getJarPaths())),
+              new ArrayList<String>(scala.collection.JavaConversions.asJavaCollection(app.workspace().getExtensionManager().getExtensionNames())));
     }
 
     String getExportPath(String suffix)

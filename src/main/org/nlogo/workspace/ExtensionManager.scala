@@ -75,7 +75,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   override def getFile(path: String) : org.nlogo.api.File = {
-    workspace.fileManager.getFile(getFullPath(path))
+    workspace.fileManager.getFile(getFullPath(path).get)
   }
 
   override def readFromString(source: String) : AnyRef = {
@@ -154,7 +154,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       // Check to see if he have seen this Jar before
       val container = if (containerOption.isEmpty || (containerOption.get.modified != modified)) {
 
-        containerOption foreach { case x => x.unload(this) }
+        containerOption foreach (_.classManager.unload(this))
 
         val innerContainer = new JarContainer(extName, jarPath, myClassLoader, modified)
 
@@ -311,12 +311,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  def getFullPath(path: String) : String = {
+  def getFullPath(path: String) : Option[String] = {
     if (AbstractWorkspace.isApplet) {
       try {
         val fullPath = workspace.fileManager.attachPrefix(path)
         if (org.nlogo.api.RemoteFile.exists(fullPath))
-          fullPath
+          Option(fullPath)
         else
           throw new ExtensionException("Can't find file " + path + " using " + fullPath)
       }
@@ -328,12 +328,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       try {
         val fullPath = workspace.attachModelDir(path)
         if (new java.io.File(fullPath).exists)
-          fullPath
+          Option(fullPath)
         else {
           // Then try the extensions folder
           val f = new java.io.File("extensions" + java.io.File.separator + path)
           if (f.exists)
-            f.getPath
+            Option(f.getPath)
           else {
             // Give up
             throw new ExtensionException("Can't find file " + path)
@@ -343,6 +343,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       catch {
         case ex: MalformedURLException => {
           org.nlogo.util.Exceptions.ignore(ex)
+          None
         }
       }
     }
@@ -352,7 +353,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader) : Option[URLClassLoader] = {
 
     jars.get(jarPath) match {
-      case Some(container) => container.jarClassLoader
+      case Some(container) => Some(container.jarClassLoader)
       case None            =>
 
         try {
@@ -363,11 +364,11 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           // and the others in the `extensions` folder
           val parentFolder = new java.io.File(new java.io.File(jarURL.getFile).getParent)
           val extensionsFolder = new java.io.File("extensions")
-          val urls = List(jarURL, getAdditionalJars(parentFolder), getAdditionalJars(extensionsFolder)).flatten
+          val urls = List(List(jarURL), getAdditionalJars(parentFolder), getAdditionalJars(extensionsFolder)).flatten
 
           // We use the URLClassLoader.newInstance method because that works with
           // the applet SecurityManager, even tho newLClassLoader(..) does not.
-          Option(java.net.URLClassLoader.newInstance(urls.toArray(new Array[URL](urls.size)), parentLoader))
+          Option(java.net.URLClassLoader.newInstance(urls.toArray, parentLoader))
 
         }
         catch {
@@ -384,7 +385,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   // We want a new ClassManager per Jar Load
   private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource) : Option[ClassManager] = {
 
-    jars.get(jarPath) foreach { case container if (container.loaded) => return container.classManager }
+    jars.get(jarPath) foreach { case container => if (container.loaded) return Option(container.classManager) }
 
     try {
       // Class must be named in Manifest file
@@ -416,7 +417,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
         throw new IllegalStateException(ex)
       }
       case ex: ClassNotFoundException => {
-        errors.signalError("Can't find class " + classMangName + " in extension")
+        errors.signalError("Can't find class " + getClassManagerName(jarPath, errors) + " in extension")
       }
     }
 
@@ -483,7 +484,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   def clearAll() {
-    jars.values foreach { _.classManager.clearAll() }
+    jars.values.toList foreach { _.classManager.clearAll() }
   }
 
   override def readExtensionObject(extName: String, typeName: String, value: String) : ExtensionObject = {
@@ -513,31 +514,24 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def replaceIdentifier(name: String) : Primitive = {
+  override def replaceIdentifier(name: String) : Option[Primitive] = {
 
-    def findPrim(name: String, containers: List[JarContainer]) : Option[Primitive] = {
+    val sepIndex = name.indexOf(':')
+    val (prefix, pname) = name.splitAt(sepIndex) match { case (x, y) => (x, y drop 1) } // Get rid of ':' at beginning of `y`
+    val isQualified = sepIndex != -1
 
-      val sepIndex = name.indexOf(':')
-      val (prefix, pname) = name.splitAt(sepIndex)
-      val isQualified = sepIndex != -1
-
-      containers foreach {
-        case container =>
-          if (container.live) {
-            if (isQualified && (prefix == container.primManager.name.toUpperCase))
-              return Option(container.primManager.getPrimitive(pname))
-            else if (!isQualified && container.primManager.autoImportPrimitives)
-              return Option(container.primManager.getPrimitive(name))
-          }
-      }
-
-      None
-
+    jars.values.toList foreach {
+      case container =>
+        if (container.live) {
+          if (isQualified && (prefix == container.primManager.name.toUpperCase))
+            return Option(container.primManager.getPrimitive(pname))
+          else if (!isQualified && container.primManager.autoImportPrimitives)
+            return Option(container.primManager.getPrimitive(name))
+        }
     }
 
+    None
 
-    findPrim(name, jars.values.toList).getOrElse(null) //  Nothing makes me want to throw up quite like this... --JAB
-    
   }
 
   /**
@@ -557,7 +551,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   override def getJarPaths : List[String] = {
-    jars.values flatMap {
+    import scala.collection.JavaConversions._
+    jars.values.toList flatMap {
       case jar =>
         val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ".jar"
         val additionalJarPaths = jar.classManager.additionalJars map { case aJar => jar.extensionName + java.io.File.separator + aJar }
@@ -566,7 +561,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   override def getExtensionNames : List[String] = {
-    jars.values map (_.extensionName)
+    jars.values.toList map (_.extensionName)
   }
 
   /**
@@ -595,7 +590,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   // Called by CompilerManager when a model is changed
   override def reset {
 
-    jars.values foreach {
+    jars.values.toList foreach {
       case container =>
 
         try {
@@ -625,7 +620,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   private def getAdditionalJars(folder: java.io.File) : List[URL] = {
     if (!AbstractWorkspace.isApplet && folder.exists && folder.isDirectory) {
-      folder.listFiles() collect {
+      folder.listFiles().toList collect {
         case file if (file.isFile && file.getName.toUpperCase.endsWith(".JAR")) =>
           try {
             ExtensionManager.toURL(file)
@@ -644,23 +639,25 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   // forget which extensions are in the extensions [ ... ] block
   override def startFullCompilation {
-    jars.values foreach (_.live = false)
+    jars.values.toList foreach (_.live = false)
   }
 
   // Used to see if any IMPORT keywords have been removed since last compilation
   override def finishFullCompilation {
-    jars.values foreach {
-      case container if (container.loaded && !container.live) =>
-        try {
-          jarsLoaded -= 1
-          jars.remove(container.prefix)
-          container.loaded = false
-          container.classManager.unload(this)
-        }
-        catch {
-          case ex: ExtensionException => {
-            // i'm not sure how to handle this yet
-            System.err.println("Error unloading extension: " + ex)
+    jars.values.toList foreach {
+      case container =>
+        if (container.loaded && !container.live) {
+          try {
+            jarsLoaded -= 1
+            jars.remove(container.prefix)
+            container.loaded = false
+            container.classManager.unload(this)
+          }
+          catch {
+            case ex: ExtensionException => {
+              // i'm not sure how to handle this yet
+              System.err.println("Error unloading extension: " + ex)
+            }
           }
         }
     }
@@ -700,7 +697,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     writer.println(Dump.csv.encode("EXTENSIONS"))
     writer.println()
 
-    jars.values foreach {
+    jars.values.toList foreach {
       case container =>
         val data = container.classManager.exportWorld
         if (data.length > 0) {
@@ -712,7 +709,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  def importExtensionData(name: String, data: List[Array[String]], handler: ImportErrorHandler) {
+  def importExtensionData(name: String, data: java.util.List[Array[String]], handler: ImportErrorHandler) {
     getJarContainerByIdentifier(name)
             .getOrElse(throw new ExtensionException("there is no extension named " + name + "in this model"))
             .classManager.importWorld(data, this, handler)
@@ -723,7 +720,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   private def getJarContainerByIdentifier(identifier: String) : Option[JarContainer] = {
-    jars.values collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
+    jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
   }
 
 
@@ -734,7 +731,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     var live = false                                     /* live means the extension is currently in the extensions [ ... ] block in the code.
                                                           * if an extension is live, then its primitives are available to be called. JC - 12/3/10
                                                           */
-    
+
     var loaded = false                                   /* loaded means that the load method has been called for this extension.
                                                           * any further recompiles with extension still in it should not call the load method.
                                                           * the extension can later be unloaded by removing it from the extensions [ ... ] block

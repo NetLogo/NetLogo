@@ -2,8 +2,6 @@
 
 package org.nlogo.api
 
-import java.util.{ List => JList }
-
 /**
  * <code>ExtensionManager</code> provides some methods that can be used in runOnce
  */
@@ -60,7 +58,7 @@ trait ExtensionManager {
   def anyExtensionsLoaded: Boolean
 
   /** Returns the identifier "name" by its imported implementation, if any, or null if not. */
-  def replaceIdentifier(name: String): Primitive
+  def replaceIdentifier(name: String): Option[Primitive]
 
   /**
    * Loads the extension contained in the jar at jarPath.
@@ -89,9 +87,9 @@ trait ExtensionManager {
   @throws(classOf[ExtensionException])
   def getFile(path: String): File
 
-  def getJarPaths: JList[String]
+  def getJarPaths: List[String]
 
-  def getExtensionNames: JList[String]
+  def getExtensionNames: List[String]
 
   def profilingEnabled: Boolean
 

@@ -252,13 +252,15 @@ private class StructureParser(
       token
     else {
       val name = token.value.asInstanceOf[String]
-      val replacement = extensionManager.replaceIdentifier(name) 
+      val replacement = extensionManager.replaceIdentifier(name)
       replacement match {
         // if there's no replacement, make no change.
-        case null => token
-        case prim =>
-          val newType = if(prim.isInstanceOf[org.nlogo.api.Command]) TokenType.COMMAND
-                        else TokenType.REPORTER
+        case None       => token
+        case Some(prim) =>
+          val newType = prim match {
+            case c: org.nlogo.api.Command => TokenType.COMMAND
+            case _                        => TokenType.REPORTER
+          }
           val instruction = wrap(prim,name)
           val newToken = new Token(token.name, newType, instruction)(token.startPos, token.endPos, token.fileName)
           instruction.token(newToken)

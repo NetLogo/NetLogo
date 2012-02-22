@@ -16,7 +16,7 @@ class DummyExtensionManager extends ExtensionManager {
   def startFullCompilation() { } 
   def finishFullCompilation() { }
   def anyExtensionsLoaded() = false
-  def replaceIdentifier(name: String): Primitive = null
+  def replaceIdentifier(name: String): Option[Primitive] = None
   def importExtension(jarPath: String, errors: ErrorSource) = unsupported
   def resolvePath(path: String): String = unsupported
   def resolvePathAsURL(path: String): String = unsupported
