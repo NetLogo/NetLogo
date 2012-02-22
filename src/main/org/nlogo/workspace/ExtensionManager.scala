@@ -101,17 +101,13 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     // Extensions are folders which have a jar with the same name
     // in them (plus other things if needed) -- CLB
     val ending = {
-      if (!id.endsWith(".jar")) {
-        if (AbstractWorkspace.isApplet) {
+      if (!id.endsWith(".jar"))
+        if (AbstractWorkspace.isApplet)
           "/" + id + ".jar"
-        }
-        else {
+        else
           java.io.File.separator + id + ".jar"
-        }
-      }
-      else {
+      else
         ""
-      }
     }
     id + ending
   }
@@ -131,19 +127,24 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       }
     }
     catch {
-      case ex: RuntimeException => {
+      case ex: RuntimeException =>
         ex.printStackTrace()
         errors.signalError("Can't find extension: " + extName)
         return
-      }
-      case e: MalformedURLException => {
+      case e: MalformedURLException =>
         e.printStackTrace()
-      }
-      case e: IOException => {
+      case e: IOException =>
         e.printStackTrace()
-      }
     }
 
+    jarPath = {
+      val temp = this.getClass.getClassLoader.getResource("extensions/" + extName + ".jar")
+      if (temp != null)
+        temp.toString
+      else
+        jarPath
+    }
+    
     try {
 
       val myClassLoader = getClassLoader(jarPath, errors, getClass.getClassLoader).getOrElse(return)
@@ -160,16 +161,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
         try {
           // compilation tests shouldn't initialize the extension
-          if (!workspace.compilerTestingMode) {
+          if (!workspace.compilerTestingMode)
             classManager.runOnce(this)
-          }
         }
         catch {
-          case ex: ExtensionException => {
+          case ex: ExtensionException =>
             System.err.println("Error while initializing extension.")
             System.err.println("Error is: " + ex)
             throw ex
-          }
         }
 
         jars.put(jarPath, innerContainer)
@@ -196,16 +195,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
 
     catch {
-      case ex: ExtensionException => {
+      case ex: ExtensionException =>
         errors.signalError(ex.getMessage)
         return
-      }
-      case ex: IncompatibleClassChangeError => {
+      case ex: IncompatibleClassChangeError =>
         // thrown if extension classes from different version are incompatible
         // catching this is necessary so it doesn't just choke
         errors.signalError("This extension doesn't work with this version of NetLogo")
         System.err.println(ex)
-      }
     }
 
   }
@@ -217,24 +214,20 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def resolvePath(path: String) : String = {
     try {
       val result = new java.io.File(workspace.attachModelDir(path))
-      if (AbstractWorkspace.isApplet) {
+      if (AbstractWorkspace.isApplet)
         result.getPath
-      }
       else {
-        try {
+        try
           result.getCanonicalPath
-        }
         catch {
-          case ex: IOException => {
+          case ex: IOException =>
             result.getPath
-          }
         }
       }
     }
     catch {
-      case ex: MalformedURLException => {
+      case ex: MalformedURLException =>
         throw new IllegalStateException(path + " is not a valid pathname: " + ex)
-      }
     }
   }
 
@@ -249,61 +242,52 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           throw new IllegalStateException("Can't find extension " + path + " using URL " + jarPath)
       }
       catch {
-        case ex: MalformedURLException => {
+        case ex: MalformedURLException =>
           throw new IllegalStateException(path + " is not a valid pathname: " + ex)
-        }
       }
     }
 
     // Is this a URL right off the bat?
-    try {
+    try
       return new URL(path).toString
-    }
     catch {
-      case ex: MalformedURLException => {
+      case ex: MalformedURLException =>
         org.nlogo.util.Exceptions.ignore(ex)
-      }
     }
 
     // If it's a path, look for it relative to the model location
     if (path.indexOf('/') > -1) {
       try {
         val jarFile = new java.io.File(workspace.attachModelDir(path))
-        if (jarFile.exists) {
+        if (jarFile.exists)
           return ExtensionManager.toURL(jarFile).toString
-        }
       }
       catch {
-        case ex: MalformedURLException => {
+        case ex: MalformedURLException =>
           org.nlogo.util.Exceptions.ignore(ex)
-        }
       }
     }
 
     // If it's not a path, try the model location
     try {
       val jarFile = new java.io.File(workspace.attachModelDir(path))
-      if (jarFile.exists) {
+      if (jarFile.exists)
         return ExtensionManager.toURL(jarFile).toString
-      }
     }
     catch {
-      case ex: MalformedURLException => {
+      case ex: MalformedURLException =>
         org.nlogo.util.Exceptions.ignore(ex)
-      }
     }
 
     // Then try the extensions folder
     try {
       val jarFile = new java.io.File("extensions" + java.io.File.separator + path)
-      if (jarFile.exists) {
+      if (jarFile.exists)
         return ExtensionManager.toURL(jarFile).toString
-      }
     }
     catch {
-      case ex: MalformedURLException => {
+      case ex: MalformedURLException =>
         org.nlogo.util.Exceptions.ignore(ex)
-      }
     }
 
     // Give up
@@ -321,7 +305,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           throw new ExtensionException("Can't find file " + path + " using " + fullPath)
       }
       catch {
-        case ex: MalformedURLException => throw new ExtensionException(path + " is not a valid pathname: " + ex)
+        case ex: MalformedURLException =>
+          throw new ExtensionException(path + " is not a valid pathname: " + ex)
       }
     }
     else {
@@ -334,17 +319,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           val f = new java.io.File("extensions" + java.io.File.separator + path)
           if (f.exists)
             Option(f.getPath)
-          else {
-            // Give up
+          else // Give up
             throw new ExtensionException("Can't find file " + path)
-          }
         }
       }
       catch {
-        case ex: MalformedURLException => {
+        case ex: MalformedURLException =>
           org.nlogo.util.Exceptions.ignore(ex)
           None
-        }
       }
     }
   }
@@ -372,10 +354,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
         }
         catch {
-          case ex: MalformedURLException => {
+          case ex: MalformedURLException =>
             errors.signalError("Invalid URL: " + jarPath)
             None
-          }
         }
 
     }
@@ -391,34 +372,27 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       // Class must be named in Manifest file
       val classMangName = getClassManagerName(jarPath, errors)
       if (classMangName != null) {
-        try {
+        try
           return Option(myClassLoader.loadClass(classMangName).newInstance.asInstanceOf[ClassManager])
-        }
         catch {
-          case ex: ClassCastException => {
+          case ex: ClassCastException =>
             errors.signalError("Bad extension: The ClassManager doesn't implement " + "org.nlogo.api.ClassManager")
-          }
         }
       }
       else
         errors.signalError("Bad extension: Couldn't locate Class-Manager tag in Manifest File")
     }
     catch {
-      case ex: FileNotFoundException => {
+      case ex: FileNotFoundException =>
         errors.signalError("Can't find extension " + jarPath)
-      }
-      case ex: IOException => {
+      case ex: IOException =>
         errors.signalError("Can't open extension " + jarPath)
-      }
-      case ex: InstantiationException => {
+      case ex: InstantiationException =>
         throw new IllegalStateException(ex)
-      }
-      case ex: IllegalAccessException => {
+      case ex: IllegalAccessException =>
         throw new IllegalStateException(ex)
-      }
-      case ex: ClassNotFoundException => {
+      case ex: ClassNotFoundException =>
         errors.signalError("Can't find class " + getClassManagerName(jarPath, errors) + " in extension")
-      }
     }
 
     None
@@ -432,16 +406,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     val jarConnection: JarURLConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
 
-    if (jarConnection.getManifest == null) {
+    if (jarConnection.getManifest == null)
       errors.signalError("Bad extension: Can't find a Manifest file in extension")
-    }
 
     val attr = jarConnection.getManifest.getMainAttributes
     val name = attr.getValue("Class-Manager")
 
-    if (!checkVersion(attr)) {
+    if (!checkVersion(attr))
       errors.signalError("User halted compilation")
-    }
 
     name
 
@@ -456,27 +428,23 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
       val jarConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
 
-      if (jarConnection.getManifest == null) {
+      if (jarConnection.getManifest == null)
         errors.signalError("Bad extension: Can't find Manifest file in extension")
-      }
 
       val attr = jarConnection.getManifest.getMainAttributes
       val name = attr.getValue("Extension-Name")
 
-      if (name == null) {
+      if (name == null)
         errors.signalError("Bad extension: Can't find extension name in Manifest.")
-      }
 
       return name
 
     }
     catch {
-      case ex: FileNotFoundException => {
+      case ex: FileNotFoundException =>
         errors.signalError("Can't find extension " + jarPath)
-      }
-      case ex: IOException => {
+      case ex: IOException =>
         errors.signalError("Can't open extension " + jarPath)
-      }
     }
 
     null
@@ -494,14 +462,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       jars.values.toList foreach {
         case container =>
           if (container.loaded && (container.primManager.name.compareToIgnoreCase(extName) == 0)) {
-            try {
+            try
               return Option(container.classManager.readExtensionObject(this, typeName, value))
-            }
             catch {
-              case ex: ExtensionException => {
+              case ex: ExtensionException =>
                 System.err.println(ex)
                 throw new IllegalStateException("Error reading extension object " + extName + ":" + typeName + " " + value + " ==> " + ex.getMessage)
-              }
             }
           }
       }
@@ -597,14 +563,13 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           container.classManager.unload(this)
         }
         catch {
-          case ex: ExtensionException => {
+          case ex: ExtensionException =>
             System.err.println(ex)
             // don't throw an illegal state exception,
             // just because one extension throws an error
             // doesn't mean we shouldn't unload the rest
             // and continue with the operation ev 7/3/08
             ex.printStackTrace()
-          }
         }
 
         container.loaded = false
@@ -626,9 +591,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
             ExtensionManager.toURL(file)
           }
           catch {
-            case ex: MalformedURLException => {
+            case ex: MalformedURLException =>
               throw new IllegalStateException(ex)
-            }
           }
 
       }
@@ -654,10 +618,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
             container.classManager.unload(this)
           }
           catch {
-            case ex: ExtensionException => {
+            case ex: ExtensionException =>
               // i'm not sure how to handle this yet
               System.err.println("Error unloading extension: " + ex)
-            }
           }
         }
     }
@@ -682,13 +645,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       new URL(jarPath).openConnection.getLastModified
     }
     catch {
-      case ex: IOException => {
+      case ex: IOException =>
         System.err.println(ex)
         errors.signalError("Can't open extension")
         // this is unreachable, since signalError never returns.
         // we have to have it, though, since jikes can't figure that out.
         throw new IllegalStateException("this code is unreachable")
-      }
     }
   }
 

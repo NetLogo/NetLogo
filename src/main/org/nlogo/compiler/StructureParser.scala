@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ CompilerException, ErrorSource, ExtensionManager, Let,
+import org.nlogo.api.{ ErrorSource, ExtensionManager, Let,
                        Program, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
@@ -99,8 +99,7 @@ private class StructureParser(
       var havePatchesOwn = subprogram
       var haveLinksOwn = subprogram
       var haveIncludes = subprogram
-      var done = false
-      while(!done && tokenBuffer.hasNext) {
+      while(tokenBuffer.hasNext) {
         val token = tokenBuffer.head
         // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
         if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
@@ -277,7 +276,6 @@ private class StructureParser(
     var haveName = false
     var haveArgList = false
     var haveLocals = false
-    var haveEnd = false
     var procedure: Procedure = null
     var start = 0
     while(!done) {
@@ -340,7 +338,7 @@ private class StructureParser(
           haveLocals = true
         }
       }
-      else if(!haveEnd) {
+      else {
         if(token.tyype == TokenType.COMMAND && token.value.isInstanceOf[_let])
           parseLet(procedure, start, new java.util.ArrayList[String])
         else if(token.tyype == TokenType.KEYWORD) {
