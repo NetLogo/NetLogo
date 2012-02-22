@@ -364,7 +364,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
           // and the others in the `extensions` folder
           val parentFolder = new java.io.File(new java.io.File(jarURL.getFile).getParent)
           val extensionsFolder = new java.io.File("extensions")
-          val urls = List(List(jarURL), getAdditionalJars(parentFolder), getAdditionalJars(extensionsFolder)).flatten
+          val urls = jarURL :: getAdditionalJars(parentFolder) ::: getAdditionalJars(extensionsFolder)
 
           // We use the URLClassLoader.newInstance method because that works with
           // the applet SecurityManager, even tho newLClassLoader(..) does not.
@@ -555,8 +555,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList flatMap {
       case jar =>
         val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ".jar"
-        val additionalJarPaths = jar.classManager.additionalJars map { case aJar => jar.extensionName + java.io.File.separator + aJar }
-        List(List(thisJarPath), additionalJarPaths).flatten
+        val additionalJarPaths = jar.classManager.additionalJars.toList map { case aJar => jar.extensionName + java.io.File.separator + aJar }
+        thisJarPath :: additionalJarPaths
     }
   }
 
