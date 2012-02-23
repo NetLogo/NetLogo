@@ -85,12 +85,12 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
         token
       // look up the replacement.
       else extensionManager.replaceIdentifier(token.value.asInstanceOf[String]) match {
-        case null => token
-        case prim =>
-          val newType =
-            if (prim.isInstanceOf[org.nlogo.api.Command])
-              TokenType.COMMAND
-            else TokenType.REPORTER
+        case None       => token
+        case Some(prim) =>
+          val newType = prim match {
+            case c: org.nlogo.api.Command => TokenType.COMMAND
+            case _                        => TokenType.REPORTER
+          }
           new Token(token.name, newType, token.value)(
             token.startPos, token.endPos, token.fileName)
       }

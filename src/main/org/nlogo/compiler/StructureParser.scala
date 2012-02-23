@@ -99,8 +99,7 @@ private class StructureParser(
       var havePatchesOwn = subprogram
       var haveLinksOwn = subprogram
       var haveIncludes = subprogram
-      var done = false
-      while(!done && tokenBuffer.hasNext) {
+      while(tokenBuffer.hasNext) {
         val token = tokenBuffer.head
         // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
         if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
@@ -252,13 +251,15 @@ private class StructureParser(
       token
     else {
       val name = token.value.asInstanceOf[String]
-      val replacement = extensionManager.replaceIdentifier(name) 
+      val replacement = extensionManager.replaceIdentifier(name)
       replacement match {
         // if there's no replacement, make no change.
-        case null => token
-        case prim =>
-          val newType = if(prim.isInstanceOf[org.nlogo.api.Command]) TokenType.COMMAND
-                        else TokenType.REPORTER
+        case None       => token
+        case Some(prim) =>
+          val newType = prim match {
+            case c: org.nlogo.api.Command => TokenType.COMMAND
+            case _                        => TokenType.REPORTER
+          }
           val instruction = wrap(prim,name)
           val newToken = new Token(token.name, newType, instruction)(token.startPos, token.endPos, token.fileName)
           instruction.token(newToken)
@@ -275,7 +276,6 @@ private class StructureParser(
     var haveName = false
     var haveArgList = false
     var haveLocals = false
-    var haveEnd = false
     var procedure: Procedure = null
     var start = 0
     while(!done) {
@@ -338,7 +338,7 @@ private class StructureParser(
           haveLocals = true
         }
       }
-      else if(!haveEnd) {
+      else {
         if(token.tyype == TokenType.COMMAND && token.value.isInstanceOf[_let])
           parseLet(procedure, start, new java.util.ArrayList[String])
         else if(token.tyype == TokenType.KEYWORD) {

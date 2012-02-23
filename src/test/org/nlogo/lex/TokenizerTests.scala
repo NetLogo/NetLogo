@@ -117,8 +117,8 @@ class TokenizerTests extends FunSuite {
         def perform(args: Array[org.nlogo.api.Argument], context: org.nlogo.api.Context) {}
       }
       override def anyExtensionsLoaded = true
-      override def replaceIdentifier(name: String): org.nlogo.api.Primitive =
-        if (name.equalsIgnoreCase("FOO")) new DummyCommand else null
+      override def replaceIdentifier(name: String): Option[org.nlogo.api.Primitive] =
+        if (name.equalsIgnoreCase("FOO")) Option(new DummyCommand) else None
     }
     expect("Token(foo,IDENT,FOO)")(
       tokenizer.tokenizeForColorization("foo").mkString)
