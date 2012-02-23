@@ -82,7 +82,7 @@ if [ $WINDOWS -eq 1 ]; then
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "fetching VM pack"
     pushd "$IJDIR/jres" > /dev/null
-    $CURL -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    $CURL -f -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
     popd > /dev/null
   fi
   # make sure VM pack is complete and not corrupt

@@ -28,7 +28,7 @@ tmp:
 	@echo "@@@ making tmp"
 	mkdir -p tmp
 bin/sbt-launch.jar:
-	curl -s 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
+	curl -S 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
 $(SCALA_JAR): | bin/sbt-launch.jar
 	bin/sbt error update
 
@@ -185,5 +185,5 @@ cloc: tmp/cloc.pl
           --progress-rate=0 \
           .
 tmp/cloc.pl: | tmp
-	curl -s 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
+	curl -S 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
 	chmod +x tmp/cloc.pl
