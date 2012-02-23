@@ -2,9 +2,9 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.fixture.FixtureFunSuite
+import org.scalatest.fixture
 
-class EvaluatorTests extends FixtureFunSuite {
+class EvaluatorTests extends fixture.FunSuite {
 
   type FixtureParam = Evaluator
 
