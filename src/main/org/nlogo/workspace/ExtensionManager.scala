@@ -1,4 +1,5 @@
 // (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.workspace
 
 import annotation.strictfp
@@ -49,7 +50,6 @@ import collection.mutable.HashMap
  * confusion.
  */
 
-@strictfp
 class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.ExtensionManager {
 
   /* cities and other extensions may want access to [workspace].  it
@@ -66,23 +66,23 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   private final val jars = new HashMap[String, JarContainer]
 
 
-  override def profilingEnabled : Boolean = {
+  override def profilingEnabled: Boolean = {
     workspace.profilingEnabled
   }
 
-  override def getSource(filename: String) : String = {
+  override def getSource(filename: String): String = {
     workspace.getSource(filename)
   }
 
-  override def getFile(path: String) : org.nlogo.api.File = {
+  override def getFile(path: String): org.nlogo.api.File = {
     workspace.fileManager.getFile(getFullPath(path).get)
   }
 
-  override def readFromString(source: String) : AnyRef = {
+  override def readFromString(source: String): AnyRef = {
     workspace.readFromString(source)
   }
 
-  override def anyExtensionsLoaded : Boolean = {
+  override def anyExtensionsLoaded: Boolean = {
     jarsLoaded > 0
   }
 
@@ -90,12 +90,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     this.obj = Option(obj)
   }
 
-  override def retrieveObject : AnyRef = {
+  override def retrieveObject: AnyRef = {
     obj.get
   }
   
   // called each time extensions is parsed
-  private def identifierToJar(id: String) : String = {
+  private def identifierToJar(id: String): String = {
     // If we are given a jar name, then we look for that otherwise
     // we assume that we have been given an extensions name.
     // Extensions are folders which have a jar with the same name
@@ -211,7 +211,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass, directory)
   }
 
-  override def resolvePath(path: String) : String = {
+  override def resolvePath(path: String): String = {
     try {
       val result = new java.io.File(workspace.attachModelDir(path))
       if (AbstractWorkspace.isApplet)
@@ -231,7 +231,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  override def resolvePathAsURL(path: String) : String = {
+  override def resolvePathAsURL(path: String): String = {
 
     if (AbstractWorkspace.isApplet) {
       try {
@@ -295,7 +295,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  def getFullPath(path: String) : Option[String] = {
+  def getFullPath(path: String): Option[String] = {
     if (AbstractWorkspace.isApplet) {
       try {
         val fullPath = workspace.fileManager.attachPrefix(path)
@@ -332,7 +332,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   // We only want one ClassLoader for every Jar per NetLogo instance
-  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader) : Option[URLClassLoader] = {
+  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader): Option[URLClassLoader] = {
 
     jars.get(jarPath) match {
       case Some(container) => Some(container.jarClassLoader)
@@ -364,7 +364,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   // We want a new ClassManager per Jar Load
-  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource) : Option[ClassManager] = {
+  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource): Option[ClassManager] = {
 
     jars.get(jarPath) foreach { case container => if (container.loaded) return Option(container.classManager) }
 
@@ -402,7 +402,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the name of an extension's ClassManager implementation from the manifest.
    */
-  private def getClassManagerName(jarPath: String, errors: ErrorSource) : String = {
+  private def getClassManagerName(jarPath: String, errors: ErrorSource): String = {
 
     val jarConnection: JarURLConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
 
@@ -422,7 +422,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the extension name from the manifest.
    */
-  private def getExtensionName(jarPath: String, errors: ErrorSource) : String = {
+  private def getExtensionName(jarPath: String, errors: ErrorSource): String = {
 
     try {
 
@@ -455,9 +455,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList foreach { _.classManager.clearAll() }
   }
 
-  override def readExtensionObject(extName: String, typeName: String, value: String) : ExtensionObject = {
+  override def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
 
-    def findExtensionObject(extName: String, typeName: String, value: String) : Option[ExtensionObject] = {
+    def findExtensionObject(extName: String, typeName: String, value: String): Option[ExtensionObject] = {
 
       jars.values.toList foreach {
         case container =>
@@ -480,7 +480,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def replaceIdentifier(name: String) : Option[Primitive] = {
+  override def replaceIdentifier(name: String): Option[Primitive] = {
 
     val sepIndex = name.indexOf(':')
     val (prefix, pname) = name.splitAt(sepIndex) match { case (x, y) => (x, y drop 1) } // Get rid of ':' at beginning of `y`
@@ -503,7 +503,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Returns a String describing all the loaded extensions.
    */
-  override def dumpExtensions : String = {
+  override def dumpExtensions: String = {
 
     val types = List("EXTENSION", "LOADED", "MODIFIED", "JARPATH")
     val str = types.mkString("", "\t", "\n") + types.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
@@ -516,7 +516,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def getJarPaths : List[String] = {
+  override def getJarPaths: List[String] = {
     import scala.collection.JavaConversions._
     jars.values.toList flatMap {
       case jar =>
@@ -526,14 +526,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  override def getExtensionNames : List[String] = {
+  override def getExtensionNames: List[String] = {
     jars.values.toList map (_.extensionName)
   }
 
   /**
    * Returns a String describing all the loaded extensions.
    */
-  override def dumpExtensionPrimitives : String = {
+  override def dumpExtensionPrimitives: String = {
 
     val ptypes = List("EXTENSION", "PRIMITIVE", "TYPE")
     val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
@@ -583,7 +583,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getAdditionalJars(folder: java.io.File) : List[URL] = {
+  private def getAdditionalJars(folder: java.io.File): List[URL] = {
     if (!AbstractWorkspace.isApplet && folder.exists && folder.isDirectory) {
       folder.listFiles().toList collect {
         case file if (file.isFile && file.getName.toUpperCase.endsWith(".JAR")) =>
@@ -626,7 +626,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  private def checkVersion(attr: java.util.jar.Attributes) : Boolean = {
+  private def checkVersion(attr: java.util.jar.Attributes): Boolean = {
 
     val jarVer = attr.getValue("NetLogo-Extension-API-Version")
     val currentVer = org.nlogo.api.APIVersion.version
@@ -640,7 +640,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getModified(jarPath: String, errors: ErrorSource) : Long = {
+  private def getModified(jarPath: String, errors: ErrorSource): Long = {
     try {
       new URL(jarPath).openConnection.getLastModified
     }
@@ -681,7 +681,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     !getJarContainerByIdentifier(name).isEmpty
   }
 
-  private def getJarContainerByIdentifier(identifier: String) : Option[JarContainer] = {
+  private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] = {
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
   }
 
@@ -690,17 +690,18 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     var prefix: String = null
     var primManager: ExtensionPrimitiveManager = null
     var classManager: ClassManager = null
-    var live = false                                     /* live means the extension is currently in the extensions [ ... ] block in the code.
-                                                          * if an extension is live, then its primitives are available to be called. JC - 12/3/10
-                                                          */
 
-    var loaded = false                                   /* loaded means that the load method has been called for this extension.
-                                                          * any further recompiles with extension still in it should not call the load method.
-                                                          * the extension can later be unloaded by removing it from the extensions [ ... ] block
-                                                          * at that time, its unload method will be called, and loaded will be set to false.
-                                                          * if it ever reappears in the extensions [ ... ] block, then load will be called again
-                                                          * etc, etc. JC - 12/3/10
-                                                          */
+    // live means the extension is currently in the extensions [ ... ] block in the code.
+    // if an extension is live, then its primitives are available to be called. JC - 12/3/10
+    var live = false
+
+    // loaded means that the load method has been called for this extension.
+    // any further recompiles with extension still in it should not call the load method.
+    // the extension can later be unloaded by removing it from the extensions [ ... ] block
+    // at that time, its unload method will be called, and loaded will be set to false.
+    // if it ever reappears in the extensions [ ... ] block, then load will be called again
+    // etc, etc. JC - 12/3/10
+    var loaded = false
   }
 
 }
@@ -711,7 +712,8 @@ object ExtensionManager {
   // uses of toURL() until 4.2, the risk of breakage is too high.
   // so for now, at least we make this a separate method so the
   // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
-  @SuppressWarnings(Array("deprecation")) private def toURL(file: java.io.File): java.net.URL = {
+  @SuppressWarnings(Array("deprecation"))
+  private def toURL(file: java.io.File): java.net.URL = {
     file.toURI.toURL
   }
 }
