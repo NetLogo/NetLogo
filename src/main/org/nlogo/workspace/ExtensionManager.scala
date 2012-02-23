@@ -115,7 +115,13 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def importExtension(extName: String, errors: ErrorSource) {
 
     // This spaghetti is a bit much for me to refactor properly... --JAB
-    var jarPath: String = identifierToJar(extName)
+    var jarPath = {
+      val temp = this.getClass.getClassLoader.getResource(extName + ".jar")
+      if (temp != null)
+        temp.toString
+      else
+        identifierToJar(extName)
+    }
 
     try {
       jarPath = resolvePathAsURL(jarPath)
@@ -135,14 +141,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
         e.printStackTrace()
       case e: IOException =>
         e.printStackTrace()
-    }
-
-    jarPath = {
-      val temp = this.getClass.getClassLoader.getResource("extensions/" + extName + ".jar")
-      if (temp != null)
-        temp.toString
-      else
-        jarPath
     }
     
     try {
