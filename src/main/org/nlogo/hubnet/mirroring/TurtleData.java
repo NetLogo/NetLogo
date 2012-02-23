@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
 import java.io.DataInputStream;
@@ -201,19 +202,15 @@ public strictfp class TurtleData
     this.hidden = hidden.booleanValue();
   }
 
-  public String labelString() {
-    return label;
-  }
-
-  public void labelString(String label) {
-    this.label = label;
-  }
-
   public void label(Object label) {
-    this.label = label.toString();
+    this.label = Dump.logoObject(label);
   }
 
   public String label() {
+    return label;
+  }
+
+  public String labelString() {
     return label;
   }
 

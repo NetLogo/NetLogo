@@ -52,7 +52,7 @@ object InfoTabDocGenerator {
         if (line.startsWith("## ")) {
           val header = line.substring(3)
           val name = header.replace(' ', '_').toLowerCase
-          "<a name=\"" + name + "\"" + " id=\"" + name + "\"><h2>" + header + "</h2></a>"
+          "<h2><a name=\"" + name + "\"" + " id=\"" + name + "\">" + header + "</a></h2>"
         } else line).mkString("\n")
     }
 

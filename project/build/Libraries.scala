@@ -65,12 +65,21 @@ trait Libraries extends DefaultProject {
       val pathString = path.asFile.toString
       val filename =
         pathString.reverse.takeWhile(_ != '/').mkString
-          .replaceFirst("\\.", (if(pathString.containsSlice("quaqua")) "-7.3.4."
-                                else "-1.1.1.").reverse)
+          .replaceFirst("\\.", (if(pathString.containsSlice("quaqua"))
+                                  "-7.3.4."
+                                else if(pathString.containsSlice("Linux-x86"))
+                                  "-x86-1.1.1."
+                                else if(pathString.containsSlice("Linux-amd64"))
+                                  "-amd64-1.1.1."
+                                else
+                                  "-1.1.1.").reverse)
           .reverse
       val url = "http://ccl.northwestern.edu/devel/" + filename
       import Process._
-      List("curl", "-s", "-o", pathString, url).!
+      // we ought to use sbt's internal fetcher rather than invoking curl. we can clean it up when
+      // we move to sbt 0.11 - ST 2/1/12
+      val exitCode = List("curl", "-f", "-s", "-o", pathString, url).!
+      require(exitCode == 0, "exitCode = " + exitCode)
     }
     None
   }
@@ -80,6 +89,6 @@ trait Libraries extends DefaultProject {
   val jmockLegacy = "org.jmock" % "jmock-legacy" % "2.5.1" % "test"
   val jmockJUnit = "org.jmock" % "jmock-junit4" % "2.5.1" % "test"
   val scalacheck = "org.scala-tools.testing" % "scalacheck_2.9.1" % "1.9" % "test"
-  val scalatest = "org.scalatest" % "scalatest_2.9.0" % "1.7.RC1" % "test"
+  val scalatest = "org.scalatest" % "scalatest_2.9.0" % "1.7.1" % "test"
 
 }

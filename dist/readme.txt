@@ -26,6 +26,8 @@ for contact information, or to report a bug, visit
   http://ccl.northwestern.edu/netlogo/contact.shtml
 the source code is hosted here:
   https://github.com/NetLogo/NetLogo
+development discussion here:
+  http://groups.google.com/group/netlogo-devel
 
 ===
 
