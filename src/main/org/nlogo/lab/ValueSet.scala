@@ -13,13 +13,13 @@ class EnumeratedValueSet(variableName: String,
 }
 
 class SteppedValueSet(variableName: String,
-                      val firstValue: Double,
-                      val step: Double,
-                      val lastValue: Double)
+                      val firstValue: BigDecimal,
+                      val step: BigDecimal,
+                      val lastValue: BigDecimal)
   extends ValueSet(variableName)
 {
   def self = Stream.from(0)
                    .map(firstValue + step * _)
                    .takeWhile(_ <= lastValue)
-                   .map(Double.box(_))
+                   .map(i => Double.box(i.toDouble))
 }
