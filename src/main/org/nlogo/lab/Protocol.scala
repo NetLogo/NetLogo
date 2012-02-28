@@ -18,10 +18,9 @@ case class Protocol(name: String,
   override def toString =
     name + " (" + countRuns + " run" + (if(countRuns != 1) "s" else "") + ")"
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
-  // Iterator here in the vague hope that each combination we generate can be garbage collected when
-  // we're done with it, instead of them all being held in memory until the end of the experiment.
-  // Does it really matter? Probably not.  Do I actually *know* that the following code lets us
-  // iterate through the combinations without holding them all in memory?  No. - ST 5/1/08)
+  // Iterator here so that each combination we generate can be garbage collected when we're done
+  // with it, instead of them all being held in memory until the end of the experiment.
+  // - ST 5/1/08, see bug #63 - ST 2/28/12
   type SettingsIterator = Iterator[List[Pair[String, Any]]]
   def elements: SettingsIterator = {
     def combinations(sets: List[ValueSet]): SettingsIterator =
@@ -33,6 +32,6 @@ case class Protocol(name: String,
               (set.variableName,v) :: m))
       }
     combinations(valueSets)
-      .flatMap(Stream.fill(repetitions)(_).iterator)
+      .flatMap(Iterator.fill(repetitions)(_))
   }
 }

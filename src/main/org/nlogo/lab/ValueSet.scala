@@ -3,13 +3,13 @@
 package org.nlogo.lab
 
 abstract class ValueSet(val variableName: String)
-  extends collection.IterableProxy[Any]
+  extends Iterable[Any]
 
 class EnumeratedValueSet(variableName: String,
                          values: List[Any])
   extends ValueSet(variableName)
 {
-  def self = values
+  def iterator = values.iterator
 }
 
 class SteppedValueSet(variableName: String,
@@ -18,8 +18,9 @@ class SteppedValueSet(variableName: String,
                       val lastValue: BigDecimal)
   extends ValueSet(variableName)
 {
-  def self = Stream.from(0)
-                   .map(firstValue + step * _)
-                   .takeWhile(_ <= lastValue)
-                   .map(i => Double.box(i.toDouble))
+  def iterator =
+    Iterator.from(0)
+      .map(firstValue + step * _)
+      .takeWhile(_ <= lastValue)
+      .map(i => Double.box(i.toDouble))
 }
