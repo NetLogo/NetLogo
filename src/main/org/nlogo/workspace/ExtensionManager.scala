@@ -127,12 +127,16 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // A better alternative to `isFirst` would be preferable
     if (isFirst && isWebStart) {
+
       isFirst = false
       disableSecurityManager()
+      createDirectory(WebStartTempDir)
+
       val policyFileName = "extensions.jarmarker"
       val policyPath = this.getClass.getClassLoader.getResource(policyFileName).toString
       val localFilePath = downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2))
       extractFilesFromJar(localFilePath)
+
     }
 
     // This spaghetti is a bit much for me to refactor properly... --JAB
@@ -723,8 +727,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     val zipFile = new ZipFile(jarpath)
     val entries = zipFile.entries
     val buffer = new ListBuffer[ZipEntry]()
-
-    createDirectory(WebStartTempDir)
 
     while (entries.hasMoreElements)
       buffer += entries.nextElement()
