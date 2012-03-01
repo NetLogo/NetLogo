@@ -4,9 +4,11 @@ package org.nlogo.workspace
 
 import annotation.strictfp
 import java.net.{JarURLConnection, URL, URLClassLoader, MalformedURLException}
-import java.io.{PrintWriter, FileNotFoundException, IOException}
 import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primitive, ExtensionException, ClassManager, ErrorSource}
-import collection.mutable.HashMap
+import collection.mutable.{HashMap, ListBuffer}
+import scala.util.control.Exception
+import java.util.zip.{ZipFile, ZipEntry}
+import java.io._
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -58,31 +60,41 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    * breaking the existing extensions API -- CLB
    */
 
+  val ArchiveFileEnding = ".jar"
+  val WebStartTempDir = {
+    val sep = System.getProperty("file.separator")
+    System.getProperty("java.io.tmpdir") + "netlogo_extensions" + sep
+  }
 
   // ugly stuff to ensure that we only load
   // the soundbank once. guess anyone else can use it too.
   private var obj: Option[AnyRef] = None
   private var jarsLoaded = 0
+  private var isFirst = true
   private final val jars = new HashMap[String, JarContainer]
 
 
-  override def profilingEnabled: Boolean = {
+  override def profilingEnabled : Boolean = {
     workspace.profilingEnabled
   }
 
-  override def getSource(filename: String): String = {
+  override def getSource(filename: String) : String = {
     workspace.getSource(filename)
   }
 
-  override def getFile(path: String): org.nlogo.api.File = {
+  override def getFile(path: String) : org.nlogo.api.File = {
     workspace.fileManager.getFile(getFullPath(path).get)
   }
 
-  override def readFromString(source: String): AnyRef = {
+  override def readFromString(source: String) : AnyRef = {
     workspace.readFromString(source)
   }
 
-  override def anyExtensionsLoaded: Boolean = {
+  def isWebStart: Boolean = {
+    workspace.isWebStart
+  }
+
+  override def anyExtensionsLoaded : Boolean = {
     jarsLoaded > 0
   }
 
@@ -90,22 +102,22 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     this.obj = Option(obj)
   }
 
-  override def retrieveObject: AnyRef = {
+  override def retrieveObject : AnyRef = {
     obj.get
   }
   
   // called each time extensions is parsed
-  private def identifierToJar(id: String): String = {
+  private def identifierToJar(id: String) : String = {
     // If we are given a jar name, then we look for that otherwise
     // we assume that we have been given an extensions name.
     // Extensions are folders which have a jar with the same name
     // in them (plus other things if needed) -- CLB
     val ending = {
-      if (!id.endsWith(".jar"))
+      if (!id.endsWith(ArchiveFileEnding))
         if (AbstractWorkspace.isApplet)
-          "/" + id + ".jar"
+          "/" + id + ArchiveFileEnding
         else
-          java.io.File.separator + id + ".jar"
+          java.io.File.separator + id + ArchiveFileEnding
       else
         ""
     }
@@ -114,8 +126,24 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   override def importExtension(extName: String, errors: ErrorSource) {
 
+    // A better alternative to `isFirst` would be preferable
+    if (isFirst && isWebStart) {
+      isFirst = false
+      disableSecurityManager()
+      val policyFileName = "extensions.jarmarker"
+      val policyPath = this.getClass.getClassLoader.getResource(policyFileName).toString
+      val localFilePath = downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2))
+      extractFilesFromJar(localFilePath)
+    }
+
     // This spaghetti is a bit much for me to refactor properly... --JAB
-    var jarPath: String = identifierToJar(extName)
+    var jarPath = {
+      val temp = this.getClass.getClassLoader. getResource(extName + ArchiveFileEnding)
+      if (temp != null)
+        temp.toString
+      else
+        identifierToJar(extName)
+    }
 
     try {
       jarPath = resolvePathAsURL(jarPath)
@@ -137,14 +165,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
         e.printStackTrace()
     }
 
-    jarPath = {
-      val temp = this.getClass.getClassLoader.getResource("extensions/" + extName + ".jar")
-      if (temp != null)
-        temp.toString
-      else
-        jarPath
-    }
-    
     try {
 
       val myClassLoader = getClassLoader(jarPath, errors, getClass.getClassLoader).getOrElse(return)
@@ -211,7 +231,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass, directory)
   }
 
-  override def resolvePath(path: String): String = {
+  override def resolvePath(path: String) : String = {
     try {
       val result = new java.io.File(workspace.attachModelDir(path))
       if (AbstractWorkspace.isApplet)
@@ -231,7 +251,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  override def resolvePathAsURL(path: String): String = {
+  override def resolvePathAsURL(path: String) : String = {
 
     if (AbstractWorkspace.isApplet) {
       try {
@@ -247,47 +267,40 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       }
     }
 
+    Exception.ignoring(classOf[MalformedURLException]) {
+      if (isWebStart) {
+        val jarFile = new java.io.File(WebStartTempDir + path)
+        if (jarFile.exists)
+          return ExtensionManager.toURL(jarFile).toString
+      }
+    }
+
     // Is this a URL right off the bat?
-    try
+    Exception.ignoring(classOf[MalformedURLException]) {
       return new URL(path).toString
-    catch {
-      case ex: MalformedURLException =>
-        org.nlogo.util.Exceptions.ignore(ex)
     }
 
     // If it's a path, look for it relative to the model location
+    Exception.ignoring(classOf[MalformedURLException]) {
     if (path.indexOf('/') > -1) {
-      try {
         val jarFile = new java.io.File(workspace.attachModelDir(path))
         if (jarFile.exists)
           return ExtensionManager.toURL(jarFile).toString
       }
-      catch {
-        case ex: MalformedURLException =>
-          org.nlogo.util.Exceptions.ignore(ex)
-      }
     }
 
     // If it's not a path, try the model location
-    try {
+    Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File(workspace.attachModelDir(path))
       if (jarFile.exists)
         return ExtensionManager.toURL(jarFile).toString
     }
-    catch {
-      case ex: MalformedURLException =>
-        org.nlogo.util.Exceptions.ignore(ex)
-    }
 
     // Then try the extensions folder
-    try {
+    Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File("extensions" + java.io.File.separator + path)
       if (jarFile.exists)
         return ExtensionManager.toURL(jarFile).toString
-    }
-    catch {
-      case ex: MalformedURLException =>
-        org.nlogo.util.Exceptions.ignore(ex)
     }
 
     // Give up
@@ -295,7 +308,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  def getFullPath(path: String): Option[String] = {
+  def getFullPath(path: String) : Option[String] = {
     if (AbstractWorkspace.isApplet) {
       try {
         val fullPath = workspace.fileManager.attachPrefix(path)
@@ -310,7 +323,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       }
     }
     else {
-      try {
+      Exception.handling(classOf[MalformedURLException]).by(_ => None) {
         val fullPath = workspace.attachModelDir(path)
         if (new java.io.File(fullPath).exists)
           Option(fullPath)
@@ -323,16 +336,11 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
             throw new ExtensionException("Can't find file " + path)
         }
       }
-      catch {
-        case ex: MalformedURLException =>
-          org.nlogo.util.Exceptions.ignore(ex)
-          None
-      }
     }
   }
 
   // We only want one ClassLoader for every Jar per NetLogo instance
-  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader): Option[URLClassLoader] = {
+  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader) : Option[URLClassLoader] = {
 
     jars.get(jarPath) match {
       case Some(container) => Some(container.jarClassLoader)
@@ -364,7 +372,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   // We want a new ClassManager per Jar Load
-  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource): Option[ClassManager] = {
+  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource) : Option[ClassManager] = {
 
     jars.get(jarPath) foreach { case container => if (container.loaded) return Option(container.classManager) }
 
@@ -402,9 +410,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the name of an extension's ClassManager implementation from the manifest.
    */
-  private def getClassManagerName(jarPath: String, errors: ErrorSource): String = {
+  private def getClassManagerName(jarPath: String, errors: ErrorSource) : String = {
 
-    val jarConnection: JarURLConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
+    val jarConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
 
     if (jarConnection.getManifest == null)
       errors.signalError("Bad extension: Can't find a Manifest file in extension")
@@ -422,7 +430,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the extension name from the manifest.
    */
-  private def getExtensionName(jarPath: String, errors: ErrorSource): String = {
+  private def getExtensionName(jarPath: String, errors: ErrorSource) : String = {
 
     try {
 
@@ -455,9 +463,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList foreach { _.classManager.clearAll() }
   }
 
-  override def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
+  override def readExtensionObject(extName: String, typeName: String, value: String) : ExtensionObject = {
 
-    def findExtensionObject(extName: String, typeName: String, value: String): Option[ExtensionObject] = {
+    def findExtensionObject(extName: String, typeName: String, value: String) : Option[ExtensionObject] = {
 
       jars.values.toList foreach {
         case container =>
@@ -480,7 +488,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def replaceIdentifier(name: String): Option[Primitive] = {
+  override def replaceIdentifier(name: String) : Option[Primitive] = {
 
     val sepIndex = name.indexOf(':')
     val (prefix, pname) = name.splitAt(sepIndex) match { case (x, y) => (x, y drop 1) } // Get rid of ':' at beginning of `y`
@@ -503,7 +511,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Returns a String describing all the loaded extensions.
    */
-  override def dumpExtensions: String = {
+  override def dumpExtensions : String = {
 
     val types = List("EXTENSION", "LOADED", "MODIFIED", "JARPATH")
     val str = types.mkString("", "\t", "\n") + types.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
@@ -516,24 +524,24 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def getJarPaths: List[String] = {
+  override def getJarPaths : List[String] = {
     import scala.collection.JavaConversions._
     jars.values.toList flatMap {
       case jar =>
-        val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ".jar"
+        val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ArchiveFileEnding
         val additionalJarPaths = jar.classManager.additionalJars.toList map { case aJar => jar.extensionName + java.io.File.separator + aJar }
         thisJarPath :: additionalJarPaths
     }
   }
 
-  override def getExtensionNames: List[String] = {
+  override def getExtensionNames : List[String] = {
     jars.values.toList map (_.extensionName)
   }
 
   /**
    * Returns a String describing all the loaded extensions.
    */
-  override def dumpExtensionPrimitives: String = {
+  override def dumpExtensionPrimitives : String = {
 
     val ptypes = List("EXTENSION", "PRIMITIVE", "TYPE")
     val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
@@ -583,10 +591,10 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getAdditionalJars(folder: java.io.File): List[URL] = {
+  private def getAdditionalJars(folder: java.io.File) : List[URL] = {
     if (!AbstractWorkspace.isApplet && folder.exists && folder.isDirectory) {
       folder.listFiles().toList collect {
-        case file if (file.isFile && file.getName.toUpperCase.endsWith(".JAR")) =>
+        case file if (file.isFile && file.getName.toUpperCase.endsWith(ArchiveFileEnding.toUpperCase)) =>
           try {
             ExtensionManager.toURL(file)
           }
@@ -626,7 +634,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  private def checkVersion(attr: java.util.jar.Attributes): Boolean = {
+  private def checkVersion(attr: java.util.jar.Attributes) : Boolean = {
 
     val jarVer = attr.getValue("NetLogo-Extension-API-Version")
     val currentVer = org.nlogo.api.APIVersion.version
@@ -640,7 +648,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getModified(jarPath: String, errors: ErrorSource): Long = {
+  private def getModified(jarPath: String, errors: ErrorSource) : Long = {
     try {
       new URL(jarPath).openConnection.getLastModified
     }
@@ -681,10 +689,133 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     !getJarContainerByIdentifier(name).isEmpty
   }
 
-  private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] = {
+  private def getJarContainerByIdentifier(identifier: String) : Option[JarContainer] = {
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
   }
 
+  private def downloadFile(webPath: String) : String = {
+
+    val ReadSize = 1024
+    val fileName = webPath.reverse takeWhile (_ != '/') reverse
+    val outPath = WebStartTempDir + System.getProperty("file.separator") + fileName
+
+    val inStream = new BufferedInputStream(new URL(webPath).openStream())
+    val outStream = new FileOutputStream(outPath)
+    val outBuffer = new BufferedOutputStream(outStream, ReadSize)
+    val data = new Array[Byte](ReadSize)
+    var x = inStream.read(data, 0, ReadSize)
+
+    while (x >= 0) {
+      outBuffer.write(data, 0, x)
+      x = inStream.read(data, 0, ReadSize)
+    }
+
+    outBuffer.close()
+    inStream.close()
+    outStream.close()
+
+    outPath
+
+  }
+
+  // Primarily for use with WebStart
+  private def extractFilesFromJar(jarpath: String) {
+
+    val zipFile = new ZipFile(jarpath)
+    val entries = zipFile.entries
+    val buffer = new ListBuffer[ZipEntry]()
+
+    createDirectory(WebStartTempDir)
+
+    while (entries.hasMoreElements)
+      buffer += entries.nextElement()
+
+    // Sort by name size so we always get directories created before trying to write their children
+    buffer.toList sortBy (_.getName.size) foreach (extractFileFromZip(WebStartTempDir, _, zipFile))
+
+  }
+
+  private def deleteDir(rootFile: java.io.File) {
+    Option(rootFile.listFiles) foreach ( _ foreach (deleteDir(_)) )
+    rootFile.delete()
+  }
+
+  private def createDirectory(path: String) {
+
+    val destFile = new java.io.File(path)
+
+    if (destFile.exists)
+      deleteDir(destFile)
+
+    destFile.mkdir
+
+  }
+
+  private def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
+
+    val target = new java.io.File(dest + entry.getName)
+
+    if (entry.isDirectory)
+      target.mkdir
+    else {
+
+      val inStream = zipFile.getInputStream(entry)
+      val outStream = new java.io.FileOutputStream(target)
+
+      while (inStream.available > 0)
+        outStream.write(inStream.read())
+
+      outStream.close()
+      inStream.close()
+
+    }
+
+  }
+
+  /* Disables security for the rest of the program's execution (specifically added for GoGo with WebStart)
+   * You might then think that I could put this in the GoGo extension code, but, at that point in the
+   * code, we don't have permissions to be changing the security manager, so... something needs to be done
+   * outside of the extension's code.
+   *
+   * I originally only included this around the calls to classManager.runOnce() in this.importExtension(),
+   * (since it was originally only for GoGoWindowsHandler), but it turns out that permissions are also necessary
+   * when GoGo goes to load the serial libraries.  I see no other obvious way to get permissions to that
+   * context than to simply turn the security manager off altogether.
+   *
+   * Possible Alternatives:
+   * a) .policy file -> System.setProperty("java.security.policy", policyFilePath) -> Policy.getPolicy.refresh
+   *    --Tried; fidgetty, hard to debug, didn't seem to be getting applied to the extension's context properly
+   * b) Manually setting security policies through ProtectionDomain
+   *    --Tried; settings did not persist into the extension's context.  Might work better if the constructor
+   *      that involves a ClassLoader were used, but... might actually be bad to persist those policy changes
+   *      beyond the call to runOnce()
+   *
+   * Things that _Won't_ Work:
+   * a) Any changes inside the _extension's_ code.  The WebStart JNLP's <all-permissions/> tag only affects the
+   *    main code that corresponds to the JNLP's `resources` -> `jar` (with `main="true"`).  Other code has to
+   *    get its own permissions set (somehow).  See bugs.sun.com/bugdatabase/view_bug.do?bug_id=4809366 (relevant
+   *    information is towards the bottom)
+   * b) Simply signing the individual extension .jar files
+   * c) Other rain dances/security dances
+   *
+   * If you so choose to do this without disabling the security manager, you'll want to run much of
+   * JavaLibraryPath through this function (and maybe make it available through ExtensionManager so
+   * extensions can use it, too):
+   *
+   * private def doWithPrivs[T](block: => T): T = {
+   *   AccessController.doPrivileged(new PrivilegedAction[T]() {
+   *     def run : T = {
+   *       block
+   *     }
+   *   })
+   * }
+   *
+   * --JAB
+   *
+   */
+  private def disableSecurityManager() {
+    System.setSecurityManager(null)
+  }
 
   private class JarContainer(val extensionName: String, val jarName: String, var jarClassLoader: URLClassLoader, val modified: Long) {
     var prefix: String = null

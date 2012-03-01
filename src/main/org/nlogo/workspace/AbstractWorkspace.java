@@ -197,6 +197,11 @@ public abstract strictfp class AbstractWorkspace
     return isApplet;
   }
 
+
+  public boolean isWebStart() {
+    return System.getProperty("javawebstart.version", null) != null;
+  }
+
   /// hubnet
 
   public HubNetInterface getHubNetManager() {
@@ -560,7 +565,7 @@ public abstract strictfp class AbstractWorkspace
             stringReader(), new java.io.BufferedReader(reader));
   }
 
-  private final Importer.StringReader stringReader() {
+  private Importer.StringReader stringReader() {
     return new Importer.StringReader() {
       public Object readFromString(String s)
           throws Importer.StringReaderException {
