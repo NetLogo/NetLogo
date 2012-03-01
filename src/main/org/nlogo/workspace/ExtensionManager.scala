@@ -377,7 +377,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   // We want a new ClassManager per Jar Load
   private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource): Option[ClassManager] = {
 
-    jars.get(jarPath) foreach { case container => if (container.loaded) return Option(container.classManager) }
+    jars.get(jarPath) foreach (container => if (container.loaded) return Option(container.classManager))
 
     try {
       // Class must be named in Manifest file
@@ -471,7 +471,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     def findExtensionObject(extName: String, typeName: String, value: String): Option[ExtensionObject] = {
 
       jars.values.toList foreach {
-        case container =>
+        container =>
           if (container.loaded && (container.primManager.name.compareToIgnoreCase(extName) == 0)) {
             try
               return Option(container.classManager.readExtensionObject(this, typeName, value))
@@ -498,7 +498,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     val isQualified = sepIndex != -1
 
     jars.values.toList foreach {
-      case container =>
+      container =>
         if (container.live) {
           if (isQualified && (prefix == container.primManager.name.toUpperCase))
             return Option(container.primManager.getPrimitive(pname))
@@ -517,10 +517,10 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def dumpExtensions : String = {
 
     val types = List("EXTENSION", "LOADED", "MODIFIED", "JARPATH")
-    val str = types.mkString("", "\t", "\n") + types.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
+    val str = types.mkString("", "\t", "\n") + types.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
 
     val extras = jars.values.toList map {
-      case container => import container._; List(prefix, loaded, modified, jarName).mkString("", "\t", "\n")
+      container => import container._; List(prefix, loaded, modified, jarName).mkString("", "\t", "\n")
     }
 
     (str :: extras).mkString
@@ -530,9 +530,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def getJarPaths : List[String] = {
     import scala.collection.JavaConversions._
     jars.values.toList flatMap {
-      case jar =>
+      jar =>
         val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ArchiveFileEnding
-        val additionalJarPaths = jar.classManager.additionalJars.toList map { case aJar => jar.extensionName + java.io.File.separator + aJar }
+        val additionalJarPaths = jar.classManager.additionalJars.toList map (aJar => jar.extensionName + java.io.File.separator + aJar)
         thisJarPath :: additionalJarPaths
     }
   }
@@ -547,13 +547,13 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def dumpExtensionPrimitives : String = {
 
     val ptypes = List("EXTENSION", "PRIMITIVE", "TYPE")
-    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map { case x => List.fill(x.size)('-') }.mkString("", "\t", "\n")
+    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
 
     import scala.collection.JavaConversions._   // Necessary so we can deal with the Java iterator returned by getPrimitiveNames()
     val extras = jars.values.toList flatMap {
-      case jarContainer =>
+      jarContainer =>
         jarContainer.primManager.getPrimitiveNames().toList map {
-          case name =>
+          name =>
             val p = jarContainer.primManager.getPrimitive(name)
             val ptype = (p match { case r: Reporter => "Reporter"; case c => "Command"})
             List(jarContainer.prefix, name, ptype).mkString("", "\t", "\n")
@@ -568,7 +568,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def reset {
 
     jars.values.toList foreach {
-      case container =>
+     container =>
 
         try {
           container.classManager.unload(this)
@@ -620,7 +620,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   // Used to see if any IMPORT keywords have been removed since last compilation
   override def finishFullCompilation {
     jars.values.toList foreach {
-      case container =>
+      container =>
         if (container.loaded && !container.live) {
           try {
             jarsLoaded -= 1
@@ -671,7 +671,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     writer.println()
 
     jars.values.toList foreach {
-      case container =>
+      container =>
         val data = container.classManager.exportWorld
         if (data.length > 0) {
           writer.println(Dump.csv.encode(container.extensionName))
