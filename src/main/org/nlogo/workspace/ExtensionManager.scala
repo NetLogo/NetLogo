@@ -2,7 +2,6 @@
 
 package org.nlogo.workspace
 
-import annotation.strictfp
 import java.net.{JarURLConnection, URL, URLClassLoader, MalformedURLException}
 import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primitive, ExtensionException, ClassManager, ErrorSource}
 import collection.mutable.{HashMap, ListBuffer}
@@ -78,15 +77,15 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     workspace.profilingEnabled
   }
 
-  override def getSource(filename: String) : String = {
+  override def getSource(filename: String): String = {
     workspace.getSource(filename)
   }
 
-  override def getFile(path: String) : org.nlogo.api.File = {
+  override def getFile(path: String): org.nlogo.api.File = {
     workspace.fileManager.getFile(getFullPath(path).get)
   }
 
-  override def readFromString(source: String) : AnyRef = {
+  override def readFromString(source: String): AnyRef = {
     workspace.readFromString(source)
   }
 
@@ -107,7 +106,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
   
   // called each time extensions is parsed
-  private def identifierToJar(id: String) : String = {
+  private def identifierToJar(id: String): String = {
     // If we are given a jar name, then we look for that otherwise
     // we assume that we have been given an extensions name.
     // Extensions are folders which have a jar with the same name
@@ -231,7 +230,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     org.nlogo.api.JavaLibraryPath.setLibraryPath(classManager.getClass, directory)
   }
 
-  override def resolvePath(path: String) : String = {
+  override def resolvePath(path: String): String = {
     try {
       val result = new java.io.File(workspace.attachModelDir(path))
       if (AbstractWorkspace.isApplet)
@@ -251,7 +250,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  override def resolvePathAsURL(path: String) : String = {
+  override def resolvePathAsURL(path: String): String = {
 
     if (AbstractWorkspace.isApplet) {
       try {
@@ -308,7 +307,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  def getFullPath(path: String) : Option[String] = {
+  def getFullPath(path: String): Option[String] = {
     if (AbstractWorkspace.isApplet) {
       try {
         val fullPath = workspace.fileManager.attachPrefix(path)
@@ -340,7 +339,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   // We only want one ClassLoader for every Jar per NetLogo instance
-  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader) : Option[URLClassLoader] = {
+  private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader): Option[URLClassLoader] = {
 
     jars.get(jarPath) match {
       case Some(container) => Some(container.jarClassLoader)
@@ -372,7 +371,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   // We want a new ClassManager per Jar Load
-  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource) : Option[ClassManager] = {
+  private def getClassManager(jarPath: String, myClassLoader: URLClassLoader, errors: ErrorSource): Option[ClassManager] = {
 
     jars.get(jarPath) foreach { case container => if (container.loaded) return Option(container.classManager) }
 
@@ -410,7 +409,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the name of an extension's ClassManager implementation from the manifest.
    */
-  private def getClassManagerName(jarPath: String, errors: ErrorSource) : String = {
+  private def getClassManagerName(jarPath: String, errors: ErrorSource): String = {
 
     val jarConnection = new URL("jar", "", jarPath + "!/").openConnection.asInstanceOf[JarURLConnection]
 
@@ -430,7 +429,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   /**
    * Gets the extension name from the manifest.
    */
-  private def getExtensionName(jarPath: String, errors: ErrorSource) : String = {
+  private def getExtensionName(jarPath: String, errors: ErrorSource): String = {
 
     try {
 
@@ -463,9 +462,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList foreach { _.classManager.clearAll() }
   }
 
-  override def readExtensionObject(extName: String, typeName: String, value: String) : ExtensionObject = {
+  override def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
 
-    def findExtensionObject(extName: String, typeName: String, value: String) : Option[ExtensionObject] = {
+    def findExtensionObject(extName: String, typeName: String, value: String): Option[ExtensionObject] = {
 
       jars.values.toList foreach {
         case container =>
@@ -488,7 +487,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  override def replaceIdentifier(name: String) : Option[Primitive] = {
+  override def replaceIdentifier(name: String): Option[Primitive] = {
 
     val sepIndex = name.indexOf(':')
     val (prefix, pname) = name.splitAt(sepIndex) match { case (x, y) => (x, y drop 1) } // Get rid of ':' at beginning of `y`
@@ -591,7 +590,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getAdditionalJars(folder: java.io.File) : List[URL] = {
+  private def getAdditionalJars(folder: java.io.File): List[URL] = {
     if (!AbstractWorkspace.isApplet && folder.exists && folder.isDirectory) {
       folder.listFiles().toList collect {
         case file if (file.isFile && file.getName.toUpperCase.endsWith(ArchiveFileEnding.toUpperCase)) =>
@@ -634,7 +633,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     }
   }
 
-  private def checkVersion(attr: java.util.jar.Attributes) : Boolean = {
+  private def checkVersion(attr: java.util.jar.Attributes): Boolean = {
 
     val jarVer = attr.getValue("NetLogo-Extension-API-Version")
     val currentVer = org.nlogo.api.APIVersion.version
@@ -648,7 +647,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   }
 
-  private def getModified(jarPath: String, errors: ErrorSource) : Long = {
+  private def getModified(jarPath: String, errors: ErrorSource): Long = {
     try {
       new URL(jarPath).openConnection.getLastModified
     }
@@ -689,11 +688,11 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     !getJarContainerByIdentifier(name).isEmpty
   }
 
-  private def getJarContainerByIdentifier(identifier: String) : Option[JarContainer] = {
+  private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] = {
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
   }
 
-  private def downloadFile(webPath: String) : String = {
+  private def downloadFile(webPath: String): String = {
 
     val ReadSize = 1024
     val fileName = webPath.reverse takeWhile (_ != '/') reverse
