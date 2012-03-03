@@ -267,7 +267,7 @@ public strictfp class TrailDrawer
           (tg, topology, (org.nlogo.api.Turtle) agent, world.patchSize());
     } else if (agent instanceof org.nlogo.api.Link) {
       linkDrawer.drawLink
-          (tg, topology, (org.nlogo.api.Link) agent, world.patchSize(), true);
+          (tg, topology, (org.nlogo.api.Link) agent, world.patchSize(), false);
     }
     tg.antiAliasing(false);
 
