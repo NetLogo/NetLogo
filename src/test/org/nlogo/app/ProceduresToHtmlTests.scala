@@ -14,12 +14,12 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
            |  </font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000">
            |</font><font color="#007f69">end</font>
            |</pre>
-           |""".stripMargin)(
+           |""".stripMargin.replaceAll("\r\n", "\n"))(
       convert("to foo\n  crt 10\nend"))
   }
   // very long Code tabs shouldn't blow the stack.  
   test("don't blow stack") {
     val path = "models/test/applet/Really Long Code.nls"
-    expect(1010929)(convert(FileIO.file2String(path)).size)
+    expect(1010929)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)
   }
 }

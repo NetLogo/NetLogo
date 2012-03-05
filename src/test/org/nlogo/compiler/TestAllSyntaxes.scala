@@ -262,7 +262,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_worldheight ,number,OTPL,null,10,0,0
                      |_worldwidth ,number,OTPL,null,10,0,0
                      |_wrapcolor number,number,OTPL,null,10,1,1
-                     |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1""".stripMargin
+                     |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,null,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
   val COMMANDS = """|_ask agent or agentset/command block,OTPL,?,0,2,2 *
                     |_askconcurrent agentset/command block,OTPL,?,0,2,2 *
                     |_autoplotoff ,OTPL,null,0,0,0
@@ -435,5 +435,5 @@ class TestAllSyntaxes extends FunSuite {
                     |_while TRUE/FALSE block/command block,OTPL,null,0,2,2
                     |_withlocalrandomness command block,OTPL,null,0,1,1
                     |_withoutinterruption command block,OTPL,null,0,1,1
-                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1""".stripMargin
+                    |_write number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1""".stripMargin.replaceAll("\r\n", "\n")
 }
