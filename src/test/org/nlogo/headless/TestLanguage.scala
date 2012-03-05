@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{FunSuite, Tag}
-import org.nlogo.api.{SimpleJobOwner, Version}
+import org.nlogo.api.{SimpleJobOwner}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
 import org.nlogo.agent.{Turtle, Patch, Link, Observer}
