@@ -34,12 +34,15 @@ BOOT=xsbt.boot.Boot
 # Windows/Cygwin users need these settings
 if [ `uname -o` = Cygwin ] ; then
 
-  XMX=-Xmx1024m
+  # While you might want the max heap size lower, you'll run out
+  # of heap space from running the tests if you don't crank it up
+  # (namely, from TestChecksums)
+  XMX=-Xmx1350m
   TOOLS=`cygpath -w $TOOLS`
   SBT_LAUNCH=`cygpath -w $SBT_LAUNCH`
   COLON=\;
   
-  # This gets SBT working properly in my heavily-modded version of Cygwin --Jason Bertsche (2/7/2012)
+  # This gets SBT working properly in my heavily-modded version of Cygwin --JAB (2/7/2012)
   if [ "$TERM" = "xterm" ] ; then
     TERMINAL=-Djline.terminal=jline.UnixTerminal
   fi
