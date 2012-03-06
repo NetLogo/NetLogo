@@ -45,6 +45,22 @@
     *;
 }
 
+-keep public class org.nlogo.agent.Workspace {
+    *;
+}
+
+-keep public class org.nlogo.agent.World {
+    *;
+}
+
+-keep public class org.nlogo.agent.LiteWorkspace {
+    *;
+}
+
+-keep public class org.nlogo.lite.AppletPanel {
+    *;
+}
+
 # pull in the extensions API
 -keep public class org.nlogo.api.* {
     *;
