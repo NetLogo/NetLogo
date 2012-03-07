@@ -8,7 +8,7 @@
 netlogo: extensions models/index.txt bin/Scripting.class | tmp
 
 ### misc variables
-ifeq (,$(findstring Cygwin,$(shell uname)))
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     COLON = \;
     JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_26"`
 else
@@ -28,7 +28,7 @@ SCALA_JAR := $(SCALA_JAR_BASE)
 CLASSES = target/scala_$(SCALA_VERSION)/classes
 
 # note that LIBS has a trailing $(COLON)
-ifeq (,$(findstring Cygwin,$(shell uname)))
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     SCALA_JAR := `cygpath -w $(SCALA_JAR)`
     CLASSES := `cygpath -w $(CLASSES)`
     LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | xargs cygpath -w | perl -pe 's/\n/;/'`

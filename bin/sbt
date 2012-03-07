@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ `uname -o` = Cygwin ] ; then
+if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
   export JAVA_HOME=`cygpath -up "\Java\jdk1.6.0_26"`
 else
@@ -32,7 +32,7 @@ COLON=:
 BOOT=xsbt.boot.Boot
 
 # Windows/Cygwin users need these settings
-if [ `uname -o` = Cygwin ] ; then
+if [[ `uname -s` == *CYGWIN* ]] ; then
 
   # While you might want the max heap size lower, you'll run out
   # of heap space from running the tests if you don't crank it up
@@ -41,12 +41,12 @@ if [ `uname -o` = Cygwin ] ; then
   TOOLS=`cygpath -w $TOOLS`
   SBT_LAUNCH=`cygpath -w $SBT_LAUNCH`
   COLON=\;
-  
+
   # This gets SBT working properly in my heavily-modded version of Cygwin --JAB (2/7/2012)
   if [ "$TERM" = "xterm" ] ; then
     TERMINAL=-Djline.terminal=jline.UnixTerminal
   fi
-  
+
 fi
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
