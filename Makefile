@@ -99,7 +99,7 @@ NetLogoLite.jar:
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=$(SCALA_JAR_BASE) make -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
 
 ### Scaladoc
 
