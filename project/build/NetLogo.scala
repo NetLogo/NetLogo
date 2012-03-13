@@ -43,8 +43,8 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
     "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
      .split(" ").map(CompileOption).toSeq ++ super.compileOptions
   override def javaCompileOptions =
-    "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
-     .split(" ").map(JavaCompileOption).toSeq ++ super.javaCompileOptions
+    ("-bootclasspath dist/java5/classes.jar" + System.getProperty("path.separator") + "dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
+     ).split(" ").map(JavaCompileOption).toSeq ++ super.javaCompileOptions
 
   override def cleanAction = super.cleanAction dependsOn(cleanAutogenFiles)
 

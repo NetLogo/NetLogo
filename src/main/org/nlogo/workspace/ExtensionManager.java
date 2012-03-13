@@ -261,7 +261,7 @@ public strictfp class ExtensionManager
     }
 
     // If it's a path, look for it relative to the model location
-    if (path.indexOf('/') > -1) {
+    if (path.contains(java.io.File.separator)) {
       try {
         java.io.File jarFile = new java.io.File(workspace.attachModelDir(path));
         if (jarFile.exists()) {
