@@ -58,7 +58,7 @@ profile-bench: netlogo
 	$(JAVA) -classpath $(CLASSPATH) -Xrunhprof:cpu=samples,depth=40,file=tmp/java.hprof.txt org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_2.7.7/perfanal-1.0.jar tmp/java.hprof.txt
 profile:
-	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_1.7.7/perfanal-1.0.jar tmp/profiles/$(ARGS).txt
+	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_2.7.7/perfanal-1.0.jar tmp/profiles/$(ARGS).txt
 profiles:
 	bin/profiles.scala $(ARGS)
 
