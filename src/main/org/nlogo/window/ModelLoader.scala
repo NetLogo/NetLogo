@@ -61,11 +61,7 @@ object ModelLoader {
       if (decideToContinueBasedOnVersion()) {
         val beforeEvents = List(
           new BeforeLoadEvent(modelPath, modelType),
-          // pretty kludgy to do this from here, but we need it to happen after
-          // PeriodicUpdater.handle() has turned off
-          // PeriodicUpdater, but before any LoadBegin stuff starts
-          // - ST 3/8/03
-          new RemoveAllJobsEvent(), new LoadBeginEvent())
+          new LoadBeginEvent())
 
         val sectionTypes = List(
           ModelSection.PreviewCommands,

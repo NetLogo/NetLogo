@@ -1074,6 +1074,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     setPeriodicUpdatesEnabled(false);
     setModelPath(e.modelPath);
     setModelType(e.modelType);
+    jobManager.haltSecondary();
+    jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager.handleModelChange();
     previewCommands_$eq(DefaultPreviewCommands());
