@@ -106,7 +106,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val dump = task { args => task {
     implicit val runner = new Run(buildScalaInstance) // don't fork
     Run.run("org.nlogo.headless.Dump", testClasspath.get, args, log)
-  } }
+  }.dependsOn(testCompile) }
 
   val infotabDocs = "docs" / "infotab.html"
   val infoTabModel = "models" / "Code Examples" / "Info Tab Example.nlogo"
