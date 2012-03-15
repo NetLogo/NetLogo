@@ -9,19 +9,35 @@
 netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.class docs/infotab.html | tmp
 
 ### misc variables
-ifneq (,$(findstring Darwin,$(shell uname)))
-JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
+    COLON = \;
+    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_26"`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun
+    COLON = :
+    ifneq (,$(findstring Darwin,$(shell uname)))
+        JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
+    else
+        JAVA_HOME = /usr/lib/jvm/java-6-sun
+    endif
 endif
+
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.1
-SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
-# note that LIBS has a trailing colon
-LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+SCALA_JAR_BASE = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
+SCALA_JAR := $(SCALA_JAR_BASE)
 CLASSES = target/scala_$(SCALA_VERSION)/classes
-CLASSPATH = $(LIBS)$(CLASSES):resources:$(SCALA_JAR)
+
+# note that LIBS has a trailing $(COLON)
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
+    SCALA_JAR := `cygpath -w $(SCALA_JAR)`
+    CLASSES := `cygpath -w $(CLASSES)`
+    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | xargs cygpath -w | perl -pe 's/\n/;/'`
+else
+    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+endif
+
+CLASSPATH = $(LIBS)$(CLASSES)$(COLON)resources$(COLON)$(SCALA_JAR)
 
 ### common prerequisites
 tmp:
@@ -116,7 +132,7 @@ clean-extensions:
 $(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
 	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
 
 ### Scaladoc
 

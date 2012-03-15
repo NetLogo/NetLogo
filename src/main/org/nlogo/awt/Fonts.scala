@@ -7,7 +7,7 @@ import java.awt.{ Component, Font, FontMetrics, GraphicsEnvironment }
 object Fonts {
 
   private def os(s: String) =
-    System.getProperty("os.name").startsWith("Mac")
+    System.getProperty("os.name").startsWith(s)
 
   lazy val platformFont =
     if (os("Mac"))
