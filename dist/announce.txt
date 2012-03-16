@@ -45,7 +45,7 @@ The following is a (partial) list of changes made since NetLogo 4.1.3:
       - aka first-class functions, closures, lambda
       - new primitives: task, is-command-task?, is-reporter-task?
       - these primitives accept tasks: run, runresult, foreach,
-	map, reduce, filter, n-values, sort-by
+        map, reduce, filter, n-values, sort-by
    + improved overall list performance (many operations take
      near-constant time instead of linear time)
    + you must use reset-ticks to start the tick counter before

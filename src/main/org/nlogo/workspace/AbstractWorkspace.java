@@ -144,8 +144,8 @@ public abstract strictfp class AbstractWorkspace
    */
   public void dispose()
       throws InterruptedException {
-    getExtensionManager().reset();
     jobManager.die();
+    getExtensionManager().reset();
     if (hubNetManager != null) {
       hubNetManager.disconnect();
     }

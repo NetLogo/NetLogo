@@ -16,8 +16,12 @@ class WorldLoader {
     val d = getWorldDimensions(strings, version)
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
-    if(strings.length > tickCounterLabelIndex)
-      worldInterface.tickCounterLabel(strings(tickCounterLabelIndex))
+    if(strings.length > tickCounterLabelIndex) {
+      val label = strings(tickCounterLabelIndex)
+      worldInterface.tickCounterLabel(
+        if(label == "NIL") ""
+        else label)
+    }
     else
       worldInterface.tickCounterLabel(I18N.gui.get("tabs.run.view.ticks"))
     if(strings.length > tickCounterIndex)
