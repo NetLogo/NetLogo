@@ -88,11 +88,11 @@ class TestStackTraces extends AbstractTestModels {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> prim}
-      assert(trace === """boom!
+      assert(trace === ("""boom!
 error while observer running __BOOM
   called by """ + codeType.procName + """
   called by """ + prim + """
-  called by procedure __EVALUATOR""")
+  called by procedure __EVALUATOR""").replaceAll("\r\n", "\n"))
     }
   }
 
@@ -105,12 +105,12 @@ error while observer running __BOOM
   to-report zero report 0 end
   to do-it if x = 1 [explode] end
   to explode print 1 / zero end
-"""
+""".replaceAll("\r\n", "\n")
     testModel("nesting " + prim + " in " + codeType, Model(code, codeType.plot("do-it"))) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> "go1"}
-      assert(trace === """Division by zero.
+      assert(trace === ("""Division by zero.
 error while observer running /
   called by procedure EXPLODE
   called by procedure DO-IT
@@ -119,7 +119,7 @@ error while observer running /
   called by procedure GO3
   called by procedure GO2
   called by procedure GO1
-  called by procedure __EVALUATOR""")
+  called by procedure __EVALUATOR""").replaceAll("\r\n", "\n"))
     }
   }
 
@@ -136,7 +136,7 @@ error while observer running __BOOM
   called by procedure BAR
   called by procedure FOO
   called by runresult
-  called by procedure __EVALUATOR""")
+  called by procedure __EVALUATOR""".replaceAll("\r\n", "\n"))
   }
 
   // ticket #1170
@@ -147,7 +147,7 @@ error while observer running __BOOM
   called by procedure BAR
   called by procedure FOO
   called by run
-  called by procedure __EVALUATOR""")
+  called by procedure __EVALUATOR""".replaceAll("\r\n", "\n"))
   }
 
 /*

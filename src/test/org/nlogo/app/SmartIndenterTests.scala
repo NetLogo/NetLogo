@@ -24,11 +24,11 @@ class SmartIndenterTests extends FunSuite {
     def spec2out(spec: String) = replaceLeading(replaceLeading(spec, '-', ""), '+', " ")
 
     file2String(path)
-            .split("\n")
+            .split("(\r)?\n")
             .filter(!_.startsWith("#"))
             .dropWhile(_.isEmpty)
             .mkString("\n")
-            .split("\n\n")
+            .split("(\r)?\n(\r)?\n")
             .filter(!_.trim.isEmpty)
             .map {
               _.split("\n") match {
