@@ -4,10 +4,9 @@ package org.nlogo.workspace
 
 import java.net.{JarURLConnection, URL, URLClassLoader, MalformedURLException}
 import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primitive, ExtensionException, ClassManager, ErrorSource}
-import collection.mutable.{HashMap, ListBuffer}
+import collection.mutable.HashMap
 import scala.util.control.Exception
-import java.util.zip.{ZipFile, ZipEntry}
-import java.io._
+import java.io.{IOException, FileNotFoundException, PrintWriter}
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -130,12 +129,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
       isFirst = false
       disableSecurityManager()
-      createDirectory(WebStartTempDir)
+      FileUtils.createDirectoryAnew(WebStartTempDir)
 
       val policyFileName = "extensions.jarmarker"
       val policyPath = this.getClass.getClassLoader.getResource(policyFileName).toString
-      val localFilePath = downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2))
-      extractFilesFromJar(localFilePath)
+      val localFilePath = NetUtils.downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2), WebStartTempDir)
+      ZipUtils.extractFilesFromJar(localFilePath, WebStartTempDir)
 
     }
 
@@ -666,83 +665,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] = {
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
-  }
-
-  private def downloadFile(webPath: String): String = {
-
-    val ReadSize = 1024
-    val fileName = webPath.reverse takeWhile (_ != '/') reverse
-    val outPath = WebStartTempDir + System.getProperty("file.separator") + fileName
-
-    val inStream = new BufferedInputStream(new URL(webPath).openStream())
-    val outStream = new FileOutputStream(outPath)
-    val outBuffer = new BufferedOutputStream(outStream, ReadSize)
-    val data = new Array[Byte](ReadSize)
-    var x = inStream.read(data, 0, ReadSize)
-
-    while (x >= 0) {
-      outBuffer.write(data, 0, x)
-      x = inStream.read(data, 0, ReadSize)
-    }
-
-    outBuffer.close()
-    inStream.close()
-    outStream.close()
-
-    outPath
-
-  }
-
-  // Primarily for use with WebStart
-  private def extractFilesFromJar(jarpath: String) {
-
-    val zipFile = new ZipFile(jarpath)
-    val entries = zipFile.entries
-    val buffer = new ListBuffer[ZipEntry]()
-
-    while (entries.hasMoreElements)
-      buffer += entries.nextElement()
-
-    // Sort by name size so we always get directories created before trying to write their children
-    buffer.toList sortBy (_.getName.size) foreach (extractFileFromZip(WebStartTempDir, _, zipFile))
-
-  }
-
-  private def deleteDir(rootFile: java.io.File) {
-    Option(rootFile.listFiles) foreach ( _ foreach (deleteDir(_)) )
-    rootFile.delete()
-  }
-
-  private def createDirectory(path: String) {
-
-    val destFile = new java.io.File(path)
-
-    if (destFile.exists)
-      deleteDir(destFile)
-
-    destFile.mkdir
-
-  }
-
-  private def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
-
-    val target = new java.io.File(dest + entry.getName)
-
-    if (entry.isDirectory)
-      target.mkdir
-    else {
-
-      val inStream = zipFile.getInputStream(entry)
-      val outStream = new java.io.FileOutputStream(target)
-
-      while (inStream.available > 0)
-        outStream.write(inStream.read())
-
-      outStream.close()
-      inStream.close()
-
-    }
-
   }
 
   /* Disables security for the rest of the program's execution (specifically added for GoGo with WebStart)
