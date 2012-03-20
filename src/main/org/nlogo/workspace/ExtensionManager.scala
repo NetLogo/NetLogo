@@ -59,10 +59,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    */
 
   val ArchiveFileEnding = ".jar"
-  val WebStartTempDir = {
-    val sep = System.getProperty("file.separator")
-    System.getProperty("java.io.tmpdir") + "netlogo_extensions" + sep
-  }
+  val WebStartTempDir = System.getProperty("java.io.tmpdir") + "netlogo_extensions" + System.getProperty("file.separator")
 
   // ugly stuff to ensure that we only load
   // the soundbank once. guess anyone else can use it too.
