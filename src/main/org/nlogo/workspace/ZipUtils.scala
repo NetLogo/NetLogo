@@ -1,7 +1,7 @@
 package org.nlogo.workspace
 
-import collection.mutable.ListBuffer
 import java.util.zip.{ZipEntry, ZipFile}
+import collection.mutable.{ArrayBuffer, ListBuffer}
 
 object ZipUtils {
 
@@ -29,9 +29,12 @@ object ZipUtils {
 
       val inStream = zipFile.getInputStream(entry)
       val outStream = new java.io.FileOutputStream(target)
+      val buffer = new ArrayBuffer[Byte]()
 
       while (inStream.available > 0)
-        outStream.write(inStream.read())
+        buffer.append(inStream.read().toByte)
+
+      outStream.write(buffer.toArray)
 
       outStream.close()
       inStream.close()
