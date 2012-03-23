@@ -45,6 +45,7 @@
     *;
 }
 
+# provide addition methods useful for JavaScript <=> Applet communication
 -keep public class org.nlogo.agent.Workspace {
     *;
 }
@@ -58,6 +59,10 @@
 }
 
 -keep public class org.nlogo.lite.AppletPanel {
+    *;
+}
+
+-keep public class org.nlogo.window.NetLogoListenerManager {
     *;
 }
 
