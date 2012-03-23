@@ -117,9 +117,9 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     if(!value.isDefined) return
     def v = value.get.asInstanceOf[Int]
     if(positionChoices.getSelectedObjects()(0).toString == I18N.gui("origin.location.center") && editors != Nil) {
-      if(field == "max-pxcor") editors(0).set(0 - v)
-      else if(field == "max-pycor") editors(2).set(0 - v)
-      else if(field == "max-pzcor") editors(4).set(0 - v)
+      if(field == "maxPxcor") editors(0).set(0 - v)
+      else if(field == "maxPycor") editors(2).set(0 - v)
+      else if(field == "maxPzcor") editors(4).set(0 - v)
     }
   }
 

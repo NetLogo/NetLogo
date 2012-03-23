@@ -85,30 +85,29 @@ class WorldPreview(width: Int, height: Int)
     def asBoolean = value.asInstanceOf[java.lang.Boolean].booleanValue
     def asInt = value.asInstanceOf[java.lang.Integer].intValue
 
-    // this is a bit ugly, the problem is that we rely on the names of the fields to make sure that
-    // the preview is correct and we have different names for the fields in 3D, for now just check
-    // for either name.  in the future we should generalize the preview ev 6/1/06
-    if(field == "World wraps horizontally" || field.startsWith("World wraps X")) {
+    // this is a bit ugly as there's no static checking that these field names
+    // match the real names in the code - ST 3/19/12
+    if(field == "wrappingX") {
       wrapX = asBoolean
       updateLabel()
     } 
-    else if(field == "World wraps vertically" || field.startsWith("World wraps Y")) {
+    else if(field == "wrappingY") {
       wrapY = asBoolean
       updateLabel()
     }
-    else if(field == "min-pxcor") {
+    else if(field == "minPxcor") {
       minx = asInt
       updateLabel()
     }
-    else if(field == "max-pxcor") {
+    else if(field == "maxPxcor") {
       maxx = asInt
       updateLabel()
     }
-    else if(field == "min-pycor") {
+    else if(field == "minPycor") {
       miny = asInt
       updateLabel()
     }
-    else if(field == "max-pycor") {
+    else if(field == "maxPycor") {
       maxy = asInt
       updateLabel()
     }
@@ -149,10 +148,10 @@ class WorldPreview(width: Int, height: Int)
     def update(field: String, value: Any) {
       def asInt = value.asInstanceOf[java.lang.Integer].intValue
       field match {
-        case "min-pxcor" => minPxcor = asInt
-        case "max-pxcor" => maxPxcor = asInt
-        case "min-pycor" => minPycor = asInt
-        case "max-pycor" => maxPycor = asInt
+        case "minPxcor" => minPxcor = asInt
+        case "maxPxcor" => maxPxcor = asInt
+        case "minPycor" => minPycor = asInt
+        case "maxPycor" => maxPycor = asInt
         case _ => return
       }
       repaint()
@@ -290,9 +289,9 @@ class WorldPreview(width: Int, height: Int)
     var wrapX, wrapY = false
     def update(field: String, value: Any) {
       if(field != null)
-        if(field == "World wraps horizontally" || field.startsWith("World wraps X"))
+        if(field == "wrappingX")
           wrapX = value.asInstanceOf[java.lang.Boolean].booleanValue
-        else if(field == "World wraps vertically" || field.startsWith("World wraps Y"))
+        else if(field == "wrappingY")
           wrapY = value.asInstanceOf[java.lang.Boolean].booleanValue
       this.repaint()
     }

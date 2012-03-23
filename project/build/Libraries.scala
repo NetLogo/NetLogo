@@ -66,7 +66,7 @@ trait Libraries extends DefaultProject {
     for(path <- libs_all) {
       val pathString = path.asFile.toString
       val filename =
-        pathString.reverse.takeWhile(_ != '/').mkString
+        pathString.reverse.takeWhile(x => (x != '/') && (x != '\\')).mkString
           .replaceFirst("\\.", (if(pathString.containsSlice("quaqua"))
                                   "-7.3.4."
                                 else if(pathString.containsSlice("Linux-x86"))

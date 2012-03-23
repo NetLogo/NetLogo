@@ -222,7 +222,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
           apply()
           EditPanel.this.changed()
         }
-        previewChanged(accessor.displayName, get)
+        previewChanged(accessor.accessString, get)
       }
     }
   }

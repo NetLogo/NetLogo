@@ -1,3 +1,4 @@
+import java.io.PrintWriter
 import sbt._
 
 trait PMD extends DefaultProject {
@@ -116,7 +117,7 @@ trait PMD extends DefaultProject {
     System.setOut(new java.io.PrintStream(stream))
     try { body }
     finally System.setOut(old)
-    stream.toString("UTF-8").split("\n").elements
+    stream.toString("UTF-8").replaceAll("\r\n", "\n").split("\n").elements
   }
   
   private def violations(src: String, ruleset: String): Iterator[String] = {
@@ -126,7 +127,7 @@ trait PMD extends DefaultProject {
       line <- captureOutput(PMD.main(args))
       if !line.matches("""\s*""") // skip empty lines
       if !ignored.getOrElse(ruleset, Set()).exists(rule => line.matches(".*" + rule + ".*"))
-      if !exempted.getOrElse(ruleset, Set()).exists(path => line.indexOf("src/main/org/nlogo/" + path + ".java") != -1)
+      if !exempted.getOrElse(ruleset, Set()).exists(path => line.replaceAll("""\\""", "/").contains("src/main/org/nlogo/" + path + ".java"))
       if line != "No problems found!"
       if line.indexOf("rule violation suppressed by //NOPMD") == -1
       if line.indexOf("rule violation suppressed by Annotation") == -1

@@ -61,7 +61,7 @@ class AssemblerTests extends FunSuite {
   }
   test("stuffEmpty") {
     expect("""|[0]_return
-              |""".stripMargin)(
+              |""".stripMargin.replaceAll("\r\n", "\n"))(
       test2(""))
   }
   test("stuffArithmetic") {
@@ -70,7 +70,7 @@ class AssemblerTests extends FunSuite {
            |        _constdouble:2.0
            |        _constdouble:2.0
            |[1]_return
-           |""".stripMargin)(
+           |""".stripMargin.replaceAll("\r\n", "\n"))(
       test2("print 2 + 2"))
   }
   test("stuffReporterBlock") {
@@ -79,7 +79,7 @@ class AssemblerTests extends FunSuite {
            |        _turtles
            |        _timer
            |[1]_return
-           |""".stripMargin)(
+           |""".stripMargin.replaceAll("\r\n", "\n"))(
       test2("print max-one-of turtles [timer]"))
   }
 }
