@@ -210,8 +210,6 @@ public final strictfp class Context {
     // directly by the button. - ST
     // It's also used to stop a BehaviorSpace run, using
     // __experimentstepend. - ST 3/8/06
-    // And I just found a third use for this -- _foreach checks
-    // this flag so it knows whether a non-local exit occurred. - ST 12/31/11
     stopping = true;
   }
 

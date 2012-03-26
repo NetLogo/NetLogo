@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ I18N, Syntax }
-import org.nlogo.nvm.{ Command, Context, EngineException }
+import org.nlogo.nvm.{ Command, Context, EngineException, NonLocalExit, Procedure }
 
 class _foreach extends Command {
   override def syntax =
@@ -26,22 +26,21 @@ class _foreach extends Command {
         context, this, task.missingInputs(n))
     var i = 0
     val actuals = new Array[AnyRef](n)
-    val oldStopping = context.stopping
-    context.stopping = false
-    while(i < size && !context.finished) {
-      var j = 0
-      while(j < n) {
-        actuals(j) = iters(j).next()
-        j += 1
+    try {
+      while(i < size && !context.finished) {
+        var j = 0
+        while(j < n) {
+          actuals(j) = iters(j).next()
+          j += 1
+        }
+        task.perform(context, actuals)
+        i += 1
       }
-      task.perform(context, actuals)
-      if(context.stopping) {
-        context.stopping = oldStopping
-        return
-      }
-      i += 1
+      context.ip = next
     }
-    context.stopping = oldStopping
-    context.ip = next
+    catch {
+      case NonLocalExit if context.activation.procedure.tyype == Procedure.Type.COMMAND =>
+        context.stop()
+    }
   }
 }
