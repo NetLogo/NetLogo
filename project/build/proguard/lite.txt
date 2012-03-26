@@ -45,6 +45,27 @@
     *;
 }
 
+# provide addition methods useful for JavaScript <=> Applet communication
+-keep public class org.nlogo.agent.Workspace {
+    *;
+}
+
+-keep public class org.nlogo.agent.World {
+    *;
+}
+
+-keep public class org.nlogo.agent.LiteWorkspace {
+    *;
+}
+
+-keep public class org.nlogo.lite.AppletPanel {
+    *;
+}
+
+-keep public class org.nlogo.window.NetLogoListenerManager {
+    *;
+}
+
 # pull in the extensions API
 -keep public class org.nlogo.api.* {
     *;
