@@ -26,6 +26,8 @@ class _foreach extends Command {
         context, this, task.missingInputs(n))
     var i = 0
     val actuals = new Array[AnyRef](n)
+    val oldStopping = context.stopping
+    context.stopping = false
     while(i < size && !context.finished) {
       var j = 0
       while(j < n) {
@@ -33,10 +35,13 @@ class _foreach extends Command {
         j += 1
       }
       task.perform(context, actuals)
-      if(context.stopping)
+      if(context.stopping) {
+        context.stopping = oldStopping
         return
+      }
       i += 1
     }
+    context.stopping = oldStopping
     context.ip = next
   }
 }
