@@ -76,3 +76,23 @@ FallOffEndOfReporterProcedure
   to-report foo2 end
   foo1 => 0
   foo2 => ERROR Reached end of reporter procedure without REPORT being called.
+
+Bug86-1
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ ifelse true [] [] ] end
+  O> setup
+
+Bug86-2
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ ifelse true [ set glob1 5 ] [] ] end
+  O> setup
+  glob1 => 5
+
+Bug86-3
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ set glob1 5 ] end
+  O> setup
+  glob1 => 5

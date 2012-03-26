@@ -56,7 +56,7 @@ $JAVA \
     $ENCODING \
     $JAVA_OPTS \
     $HEADLESS \
-	$TERMINAL \
+    $TERMINAL \
     $USE_QUARTZ \
     -classpath $TOOLS$COLON$SBT_LAUNCH \
     $BOOT "$@"

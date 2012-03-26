@@ -40,7 +40,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   // its possible that this is an sbt bug, but I don't have the time to look into it. - JC 3/8/11
   override def compileAction = super.compileAction dependsOn(autogen, copyResourcesAction, java5)
   override def compileOptions =
-    "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit"
+    "-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation"
      .split(" ").map(CompileOption).toSeq ++ super.compileOptions
   override def javaCompileOptions =
     ("-bootclasspath dist/java5/classes.jar" + System.getProperty("path.separator") + "dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
@@ -103,7 +103,7 @@ class NetLogo(info: ProjectInfo) extends DefaultProject(info)
   lazy val dump = task { args => task {
     implicit val runner = new Run(buildScalaInstance) // don't fork
     Run.run("org.nlogo.headless.Dump", testClasspath.get, args, log)
-  } }
+  }.dependsOn(testCompile) }
 
   // scalariform
   override def formatBeforeCompiling = false

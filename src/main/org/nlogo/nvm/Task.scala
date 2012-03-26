@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.nvm
 
@@ -58,8 +58,9 @@ extends Task with org.nlogo.api.ReporterTask {
 }
 
 // Command tasks are a little more complicated.  The body is a Procedure.  To run it, we have to
-// make a new Activation, then call runExclusive() on the context.  We also have to check if the
-// turtle died and see if a "non-local exit" occurred (namely _report or _stop).
+// make a new Activation, then call runExclusive() on the context, finally restoring some state on
+// the way out (including a dead-agent check).  We may throw NonLocalExit if _report or _stop is
+// called.
 
 case class CommandTask(procedure: Procedure, formals: Array[api.Let], lets: List[LetBinding], locals: Array[AnyRef])
 extends Task with org.nlogo.api.CommandTask {
@@ -77,25 +78,26 @@ extends Task with org.nlogo.api.CommandTask {
     context.activation = new Activation(procedure, context.activation, 0)
     context.activation.args = locals
     context.ip = 0
-    val exited =
-      try { context.runExclusive(); false }
-      catch {
-        case NonLocalExit if oldActivation.procedure.tyype == Procedure.Type.COMMAND =>
-          true
-        case ex: api.LogoException =>
-          // the stuff in the finally block is going to throw away some of
-          // the information we need to build an accurate stack trace, so we'd
-          // better do it now - ST 9/11/11
-          ex.fillInStackTrace()
-          throw ex
-      }
-      finally {
-        context.finished = context.agent.id == -1
-        context.activation = oldActivation
-        context.letBindings = oldLets
-      }
-    if(exited && context.activation.procedure.tyype == Procedure.Type.COMMAND)
-      context.stop()
-    // note that it's up to the caller to restore context.ip
+    try context.runExclusive()
+    catch {
+      case ex: api.LogoException =>
+        // the stuff in the finally block is going to throw away some of
+        // the information we need to build an accurate stack trace, so we'd
+        // better do it now - ST 9/11/11
+        ex.fillInStackTrace()
+        throw ex
+    }
+    finally {
+      context.finished = context.agent.id == -1
+      context.activation = oldActivation
+      context.letBindings = oldLets
+    }
+    // note that it's up to the caller to restore context.ip and catch NonLocalExit.  (it would be
+    // nice if that handling could be encapsulated here instead, but I couldn't figure out how to do
+    // it, especially not without changing the signature of this method which we can't do until 5.1
+    // without breaking extensions.  currently the only call site in the main source tree is in
+    // _foreach, so it might not seem so bad to put a little extra burden on the caller, but the
+    // call sites may multiply in the future, and any extensions that use command tasks are call
+    // sites too. Sigh. - ST 3/26/12)
   }
 }

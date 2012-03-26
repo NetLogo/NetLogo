@@ -8,6 +8,7 @@ trait Fork extends DefaultProject {
       si.libraryJar :: si.compilerJar :: Nil
     }
     override def runJVMOptions = Seq(
+      "-XX:-OmitStackTraceInFastThrow",  // https://github.com/NetLogo/NetLogo/issues/104
       "-XX:MaxPermSize=128m",
       "-Xmx1024m",
       "-Dfile.encoding=UTF-8",

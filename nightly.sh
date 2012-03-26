@@ -3,9 +3,12 @@
 # -e makes the whole thing die with an error if any command does
 # -v lets you see the commands as they happen
 
-git clean -fdX
-git submodule update --init
-git submodule foreach git clean -fdX
+if [ "$1" != --noclean ]; then
+  git clean -fdX
+  git submodule update --init
+  git submodule foreach git clean -fdX
+fi
+
 make
 
 rm -rf tmp/nightly
