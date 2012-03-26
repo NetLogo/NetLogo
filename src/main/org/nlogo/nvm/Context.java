@@ -189,7 +189,7 @@ public final strictfp class Context {
       // probably shouldn't be doing the latter, since they
       // could just use a stop condition, but you know somebody
       // will try...)  If stop is used in the go commands
-      // themselves, then the call to returnFromProcedure above
+      // themselves, then the call to returnFromProcedure below
       // means that __experimentstepend won't run.  Thus we need
       // to set job.stopping to true ourselves, if we just
       // returned from a top level procedure.  If I've analyzed
