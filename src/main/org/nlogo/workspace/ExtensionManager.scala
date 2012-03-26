@@ -485,7 +485,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList.collectFirst {
       case container if (container.live && isQualified && (prefix == container.primManager.name.toUpperCase)) => (container, pname)
       case container if (container.live && !isQualified && container.primManager.autoImportPrimitives)        => (container, name)
-    } map { case (container, id) => container.primManager.getPrimitive(id) }
+    } flatMap { case (container, id) => Option(container.primManager.getPrimitive(id)) }
 
   }
 
@@ -494,7 +494,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    */
   override def dumpExtensions : String = {
     val types = List("EXTENSION", "LOADED", "MODIFIED", "JARPATH")
-    val str = types.mkString("", "\t", "\n") + types.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
+    val str = types.mkString("", "\t", "\n") + types.map (x => List.fill(x.size)('-').mkString).mkString("", "\t", "\n")
     val extras = jars.values.toList map { container => import container._; List(prefix, loaded, modified, jarName).mkString("", "\t", "\n") }
     (str :: extras).mkString
   }
@@ -519,7 +519,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def dumpExtensionPrimitives : String = {
 
     val ptypes = List("EXTENSION", "PRIMITIVE", "TYPE")
-    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
+    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map (x => List.fill(x.size)('-').mkString).mkString("", "\t", "\n")
 
     import scala.collection.JavaConversions._   // Necessary so we can deal with the Java iterator returned by getPrimitiveNames()
     val extras = jars.values.toList flatMap {
