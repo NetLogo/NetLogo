@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.plot
 
@@ -104,7 +104,7 @@ Number
 0.0
 100.0
 true
-false"""
+false""".replaceAll("\r\n", "\n")
     val plot = load(plotLines)
     expect(0)(plot.pens.size) // no default pen anymore. 
   }
@@ -166,7 +166,7 @@ false
 "" "histogram [item 0 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs\nset max-number-of-hue plot-y-max"
 PENS
 "default" 16.0 1 -16777216 true "" ""
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 170
@@ -185,7 +185,7 @@ false
 "" ""
 PENS
 "default" 16.0 1 -16777216 true "" "histogram [item 2 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs\nset max-number-of-brightness plot-y-max"
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 347
@@ -204,7 +204,7 @@ false
 "" "histogram [item 1 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs\nset max-number-of-saturation plot-y-max"
 PENS
 "default" 16.0 1 -16777216 true "" ""
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 9
@@ -223,7 +223,7 @@ false
 "histogram [item 0 extract-hsb  approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-hue > 5 [set-plot-y-range 0 max-number-of-hue]"
 PENS
 "default" 16.0 1 -7500403 true "" ""
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 347
@@ -242,7 +242,7 @@ false
 "histogram [item 1 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-saturation > 5 [set-plot-y-range 0 max-number-of-saturation]"
 PENS
 "default" 16.0 1 -7500403 true "" ""
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 170
@@ -261,7 +261,7 @@ false
 "histogram [item 2 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-brightness > 5 [set-plot-y-range 0 max-number-of-brightness]"
 PENS
 "default" 16.0 1 -7500403 true "" ""
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 259
@@ -282,7 +282,7 @@ PENS
 "hue" 1.0 0 -16777216 true "" "plotxy ticks mean [item 0 extract-hsb  approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs"
 "brightness" 1.0 0 -955883 true "" "plotxy ticks mean [item 2 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs"
 "saturation" 1.0 0 -7500403 true "" "plotxy ticks mean [item 1 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs"
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 536
@@ -301,7 +301,7 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plotxy ticks vector-difference"
-""")
+""".replaceAll("\r\n", "\n"))
 
   val adiabaticPlots = List("""
 PLOT
@@ -321,7 +321,7 @@ false
 "" ""
 PENS
 "default" 1.0 0 -955883 true "" "plotxy ticks (mean pressure-history)"
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 653
@@ -342,7 +342,7 @@ PENS
 "Total" 1.0 0 -16777216 true "" "plotxy ticks total-energy"
 "Gas" 1.0 0 -2674135 true "" "plotxy ticks tot-particle-energy"
 "Piston" 1.0 0 -13345367 true "" "plotxy ticks piston-energy"
-""",
+""".replaceAll("\r\n", "\n"),
 """
 PLOT
 651
@@ -361,7 +361,7 @@ false
 "set-plot-y-range 0 (2 * raw-height)" ""
 PENS
 "height" 1.0 0 -13345367 true "" "plotxy ticks piston-height"
-"""
+""".replaceAll("\r\n", "\n")
     )
 
   testPlotsFromModels("Bug Hunt Camouflage", bugHuntCamoPlots)

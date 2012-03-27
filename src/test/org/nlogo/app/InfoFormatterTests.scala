@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
@@ -12,10 +12,10 @@ class InfoFormatterTests extends FunSuite {
   val helloWorldMarkdown = """|
                               |    # Hello
                               |    World
-                              |    """.stripMargin
+                              |    """.stripMargin.replaceAll("\r\n", "\n")
   val helloWorldInnerHtml = """|<pre><code># Hello
                                |World
-                               |</code></pre>""".stripMargin
+                               |</code></pre>""".stripMargin.replaceAll("\r\n", "\n")
 
   test("hello world (smoke test)") {
     expect(helloWorldInnerHtml) {
@@ -90,7 +90,7 @@ class InfoFormatterTests extends FunSuite {
               |<pre><code>   bar
               |  baz
               |qux
-              |</code></pre><p>oof</p>""".stripMargin) {
+              |</code></pre><p>oof</p>""".stripMargin.replaceAll("\r\n", "\n")) {
       toInnerHtml("""|foo
                      |
                      |```
@@ -98,7 +98,7 @@ class InfoFormatterTests extends FunSuite {
                      |  baz
                      |qux
                      |```
-                     |oof""".stripMargin)
+                     |oof""".stripMargin.replaceAll("\r\n", "\n"))
     }
   }
 

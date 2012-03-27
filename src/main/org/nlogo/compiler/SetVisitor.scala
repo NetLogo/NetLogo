@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
 
@@ -14,7 +14,7 @@ import org.nlogo.prim._
  * knows internally the variable it's setting.
  */
 private class SetVisitor extends DefaultAstVisitor {
-  private val INVALID_SET =
+  private lazy val INVALID_SET =
     I18N.errors.get("compiler.SetVisitor.notSettable")
   override def visitStatement(stmt:Statement) {
     super.visitStatement(stmt)

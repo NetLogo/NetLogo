@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
@@ -119,8 +119,8 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     buf.clear()    
     header(modelName)
     paragraph("In order for this to work, this file, your model file", 
-              "(" + fileName + "), and the file NetLogoLite.jar",
-              "must all be in the same directory.  (You can copy NetLogoLite.jar",
+              "(" + fileName + "), and the files NetLogoLite.jar and NetLogoLite.jar.pack.gz",
+              "must all be in the same directory.  (You can copy NetLogoLite.jar and NetLogoLite.jar.pack.gz",
               "from the directory where you installed NetLogo.)")
     if(extensions.nonEmpty) {
       val str = new StringBuilder()
@@ -146,12 +146,12 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
               "&lt;applet&gt; and ending with &lt;/applet&gt;, and paste it into any HTML",
               "file you want.  It's even OK to put multiple &lt;applet&gt; tags",
               "on a single page.")
-    paragraph("If NetLogoLite.jar and your model are in different",
+    paragraph("If the NetLogoLite files and your model are in different",
               "directories, you must modify the archive= and value= lines",
               "in the HTML code to point to their actual locations.",
               "(For example, if you have multiple applets in different",
               "directories on the same web server, you may want to put ",
-              "a single copy of NetLogoLite.jar in one central place and",
+              "a single copy of the NetLogoLite files in one central place and",
               "change the archive= lines of all the HTML files to point",
               "to that one central copy.  This will save disk space for",
               "you and download time for your users.)")

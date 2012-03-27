@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.util
 
@@ -11,7 +11,7 @@ class UtilsTests extends FunSuite {
   test("getStackTrace") {
     val expected = "java.lang.Throwable\n" +
       " at org.nlogo.util.UtilsTests$$anonfun$1.apply$mcV$sp(UtilsTests.scala:"
-    assert(Utils.getStackTrace(new Throwable).take(expected.size) === expected)
+    assert(Utils.getStackTrace(new Throwable).filter(_!='\r').take(expected.size) === expected)
   }
   test("getResourceLines") {
     val expected = "NetLogo author: Uri Wilensky\n"

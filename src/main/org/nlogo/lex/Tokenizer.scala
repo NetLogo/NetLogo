@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lex
 
@@ -60,7 +60,7 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     new TokenLexer(reader, tokenMapper, null, false).yylex()
 
   def getTokenAtPosition(source: String, position: Int): Token =
-    tokenizeIncludingComments(source).find(_.endPos >= position).orNull
+    tokenizeIncludingComments(source).find(_.endPos > position).orNull
 
   def isValidIdentifier(ident: String): Boolean =
     tokenizeRobustly(ident) match {

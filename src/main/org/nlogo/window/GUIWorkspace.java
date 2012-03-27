@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window;
 
@@ -1222,6 +1222,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (hubNetManager != null) {
       hubNetManager.disconnect();
     }
+    jobManager.haltSecondary();
+    jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager.handleModelChange();
     previewCommands_$eq(DefaultPreviewCommands());

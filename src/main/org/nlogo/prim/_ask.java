@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim;
 
@@ -75,7 +75,7 @@ public final strictfp class _ask
       }
       if (agentset == world.patches()) {
         throw new EngineException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.ask.onlyObserverCanAskAllPatches"));
+            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
       }
     }
     context.runExclusiveJob(agentset, next);

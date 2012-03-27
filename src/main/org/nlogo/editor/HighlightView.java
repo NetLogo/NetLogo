@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.editor;
 
@@ -41,7 +41,14 @@ strictfp class HighlightView<TokenType>
     javax.swing.text.Segment text = getLineBuffer();
     lineStart = element.getStartOffset();
     int lineEnd = element.getEndOffset();
-    doc.getText(lineStart, lineEnd - lineStart, text);
+    // we got one error report where lineEnd - lineStart wasn't
+    // positive.  don't know if it's our bug, but we might as well
+    // guard against it - ST 2/27/12
+    int length = lineEnd - lineStart;
+    if(length < 0) {
+      length = 0;
+    }
+    doc.getText(lineStart, length, text);
     charColors = colorizer.getCharacterColors(text.toString());
   }
 

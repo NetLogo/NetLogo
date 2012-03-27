@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lex
 
@@ -134,11 +134,18 @@ class TokenizerTests extends FunSuite {
     expect("Token(ask,COMMAND,_ask:+0)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 2).toString)
     expect("Token([,OPEN_BRACKET,null)")(
+      tokenizer.getTokenAtPosition("ask turtles [set color blue]", 12).toString)
+    expect("Token(set,COMMAND,_set)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 13).toString)
     expect("Token(set,COMMAND,_set)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 14).toString)
     expect("Token(blue,CONSTANT,105.0)")(
       tokenizer.getTokenAtPosition("ask turtles [set color blue]", 24).toString)
+  }
+  // bug #88
+  test("GetTokenAtPosition-bug88") {
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("[crt", 1).toString)
   }
   // what about removed prims?
   test("RemovedPrims") {

@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.sdm
 
@@ -17,7 +17,7 @@ class LoaderTests extends FunSuite {
        |    org.nlogo.sdm.gui.AggregateDrawing 1
        |        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 164 119 60 40
        |            org.nlogo.sdm.gui.WrappedStock "foo" "0" 0
-       |""".stripMargin
+       |""".stripMargin.replaceAll("\r\n", "\n")
   val expected =
     """|;; System dynamics model globals
        |globals [
@@ -57,7 +57,7 @@ class LoaderTests extends FunSuite {
        |  ]
        |end
        |
-       |""".stripMargin
+       |""".stripMargin.replaceAll("\r\n", "\n")
 
   test("issue #35") {
     expect(issue35Expected)(Loader.load(issue35Input, new DummyCompilerServices))
@@ -87,7 +87,7 @@ class LoaderTests extends FunSuite {
        |            org.jhotdraw.standard.ChopBoxConnector REF 7
        |            org.nlogo.sdm.gui.WrappedRate "type-2 * (type-2-fitness - ave-fitness)" "t2-replicator"
        |                org.nlogo.sdm.gui.WrappedReservoir  REF 8 0
-       |""".stripMargin
+       |""".stripMargin.replaceAll("\r\n", "\n")
   val issue35Expected =
     """|;; System dynamics model globals
        |globals [
@@ -169,6 +169,6 @@ class LoaderTests extends FunSuite {
        |  ]
        |end
        |
-       |""".stripMargin
+       |""".stripMargin.replaceAll("\r\n", "\n")
 
 }

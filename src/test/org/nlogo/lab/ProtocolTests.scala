@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 
@@ -44,6 +44,13 @@ class ProtocolTests extends FunSuite {
                                 List(new SteppedValueSet("foo", 1d, 1d, 5d)))
     expect(50)(protocol.countRuns)
     expect("stepped2 (50 runs)")(protocol.toString)
+  }
+  // bug #62. by doing the calculations in BigDecimal we avoid weird 00000 and 99999 type numbers
+  test("avoid floating point error") {
+    val protocol = new Protocol("stepped3", "", "", "", 1, true, 0, "", Nil,
+                                List(new SteppedValueSet("foo", 0.1d, 0.1d, 0.5d)))
+    expect("List((foo,0.1)) List((foo,0.2)) List((foo,0.3)) List((foo,0.4)) List((foo,0.5))")(
+      protocol.elements.mkString(" "))
   }
   test("both") {
     def make(repetitions:Int) =

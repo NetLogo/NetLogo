@@ -25,17 +25,11 @@ SqrtDoubleEvaluation
   O> set glob2 random-float 100
   sqrt glob2 = glob1 => true
 
-CatchNumbersOutsideDoubleRangeOfIntegers1
+CatchNumbersOutsideDoubleRangeOfIntegers
   O> __ignore random 9007199254740992
   O> __ignore random -9007199254740992
   O> __ignore random 1E16 => ERROR 1.0E16 is too large to be represented exactly as an integer in NetLogo
   O> __ignore random -1E16 => ERROR -1.0E16 is too large to be represented exactly as an integer in NetLogo
-
-CatchNumbersOutsideDoubleRangeOfIntegers2
-  O> random-seed 9007199254740992
-  O> random-seed -9007199254740992
-  O> random-seed 1E16 => ERROR 1.0E16 is too large to be represented exactly as an integer in NetLogo
-  O> random-seed -1E16 => ERROR -1.0E16 is too large to be represented exactly as an integer in NetLogo
 
 NotEqualBugsIFoundWhileTryingToPlayFrogger
   O> crt 1 [ set tvar true ]
