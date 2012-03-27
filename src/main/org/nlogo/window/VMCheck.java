@@ -33,8 +33,8 @@ public strictfp final class VMCheck {
     if (org.nlogo.util.SysInfo.isLibgcj()) {
       warn("You have started NetLogo under the GNU libgcj Java VM. " +
           "NetLogo may not run well, or at all, under libgcj. " +
-          "We recommend using either the Sun or IBM Java VM's to" +
-          "run NetLogo.");
+          "We recommend using the Oracle Java VM to" +
+          "run NetLogo. Recent OpenJDK versions may also work.");
     }
   }
 
