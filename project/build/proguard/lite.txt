@@ -45,6 +45,14 @@
     *;
 }
 
+# keep applet stuff
+-keep public class org.nlogo.lite.AppletPanel {
+    *;
+}
+-keep public class org.nlogo.window.NetLogoListenerManager {
+    *;
+}
+
 # pull in the extensions API
 -keep public class org.nlogo.api.* {
     *;
