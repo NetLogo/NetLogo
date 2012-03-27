@@ -20,9 +20,6 @@ public final strictfp class _randomseed
         (new int[]{Syntax.NumberType()});
   }
 
-  ////////////////
-  // for new compiler
-
   public void perform_1(final Context context, double arg0) throws LogoException {
     context.job.random.setSeed(validLong(arg0));
     context.ip = next;
