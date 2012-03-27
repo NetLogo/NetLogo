@@ -49,10 +49,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
     run("test/lab/" + name, 1, true, true, () => workspace,
       () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
   }
-  def runParallelExperiment(name: String) {
+  def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
       val w = newWorkspace()
-      w.initForTesting(0)
+      w.initForTesting(0, declarations)
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
@@ -203,6 +203,18 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("metricGoBoom") {
     runExperiment(0, "", "metricGoBoom")
+  }
+  // metricGoBoom2 is testing for bug #114, except this passed even before I did anything
+  // to fix, so I guess the problem was in the GUI code. nonetheless, keeping this test
+  // around to test the headless case. - ST 3/27/12
+  val goBoom2Declarations = 
+    "to setup clear-all create-turtles 1 reset-ticks end\n" +
+    "to go if not any? turtles [ stop ] if ticks = 10 [ ask turtles [ die ] ] tick end"
+  test("metricGoBoom2") {
+    runExperiment(0, goBoom2Declarations, "metricGoBoom2")
+  }
+  test("metricGoBoom2-parallel") {
+    runParallelExperiment("metricGoBoom2", goBoom2Declarations)
   }
   test("setupCommandsGoBoom") {
     runExperiment(0, "", "setupCommandsGoBoom")
