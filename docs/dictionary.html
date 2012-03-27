@@ -5434,8 +5434,8 @@ show netlogo-version
         Reports a number suitable for seeding the random number generator.
       <p>
         The numbers reported by new-seed are based on the current date and
-        time in milliseconds and lie in NetLogo's allowed range of
-        integers, -9007199254740992 to 9007199254740992.
+        time in milliseconds and lie in the generator's usable range of
+        seeds, -2147483648 to 2147483647.
       <p>
         new-seed never reports the same number twice in succession. (This
         is accomplished by waiting a millisecond if the seed for the
@@ -6506,8 +6506,10 @@ ask turtles [
       </h4>
       <p>
         Sets the seed of the pseudo-random number generator to the integer
-        part of <i>number</i>. The seed may be any integer in the range
-        supported by NetLogo (-9007199254740992 to 9007199254740992).
+        part of <i>number</i>. The seed must be in the range
+        -2147483648 to 2147483647; note that this is smaller than the
+        full range of integers supported by NetLogo (-9007199254740992 to
+        9007199254740992).
       <p>
         See the <a href="programming.html#random">Random Numbers</a>
         section of the Programming Guide for more details.

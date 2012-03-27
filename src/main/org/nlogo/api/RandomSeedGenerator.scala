@@ -11,9 +11,6 @@ import org.nlogo.util.Exceptions.ignoring
 
 object RandomSeedGenerator {
 
-  // for reducing result to NetLogo's permissible integer range - ST 5/31/06
-  private val MaxExactIntInDouble = 9007199254740992L
-
   // To ensure that this never reports the same value twice in a row, we keep track of the last
   // value reported, and wait until we generate a different value.  (If we knew the precision of the
   // system clock, we could just wait that amount. But precision varies across platforms, so we
@@ -26,14 +23,14 @@ object RandomSeedGenerator {
   // get suspicious if the seeds we give them don't appear random from invocation to invocation.  So
   // we'll fool them by running the seed itself through the Mersenne Twister. - ST 5/31/06
   private def next = 
-    (new MersenneTwisterFast).nextLong % MaxExactIntInDouble
+    (new MersenneTwisterFast).nextInt
 
   def generateSeed(): Double = synchronized {
     while(true) {
       val result = next
       if(result != lastResult) {
         lastResult = result
-        return result
+        return result.toDouble
       }
       ignoring(classOf[InterruptedException]) {
         Thread.sleep(1)
