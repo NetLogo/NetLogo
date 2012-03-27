@@ -267,6 +267,24 @@ NewSeedUnique
   T> set label new-seed
   [label] of turtle 0 = [label] of turtle 1 => false
 
+NewSeedInRange
+  to-report out-of-range? [n] report n < -2147483648 or n > 2147483647 end
+  filter out-of-range? n-values 1000 [new-seed] => []
+
+AllowGoodSeeds
+  O> random-seed 0
+  O> random-seed 1
+  O> random-seed -1
+  O> random-seed -2147483648
+  O> random-seed 2147483647
+
+# reject Nick Cave, too?
+RejectBadSeeds
+  O> random-seed 2147483648 => ERROR 2147483648 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed -2147483649 => ERROR -2147483649 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed 1.0E38 => ERROR 1.0E38 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+  O> random-seed -1.0E38 => ERROR -1.0E38 is not in the allowable range for random seeds (-2147483648 to 2147483647)
+
 random-normal-1
   precision (mean n-values 10000 [random-normal 10 1]) 1 => 10
 
