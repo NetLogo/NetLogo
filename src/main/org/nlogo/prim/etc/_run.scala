@@ -3,7 +3,8 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.{ CompilerException, Syntax }
-import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context, EngineException }
+import org.nlogo.nvm.{ Activation, ArgumentTypeException, Command, CommandTask, Context,
+                       EngineException, NonLocalExit, Procedure }
 
 class _run extends Command {
 
@@ -44,8 +45,14 @@ class _run extends Command {
           actuals(i) = args(i + 1).report(context)
           i += 1
         }
-        task.perform(context, actuals)
-        context.ip = next
+        try {
+          task.perform(context, actuals)
+          context.ip = next
+        }
+        catch {
+          case NonLocalExit if context.activation.procedure.tyype == Procedure.Type.COMMAND =>
+            context.stop()
+        }
       case obj =>
         throw new ArgumentTypeException(
           context, this, 0, Syntax.CommandTaskType | Syntax.StringType, obj)
