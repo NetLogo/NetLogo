@@ -97,14 +97,16 @@ EXTENSIONS=\
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
+EXTENSIONS_PACK200 =\
+	$(addsuffix .pack.gz,$(EXTENSIONS))
 
 .PHONY: extensions clean-extensions
-extensions: $(EXTENSIONS)
+extensions: $(EXTENSIONS) $(EXTENSIONS_PACK200)
 clean-extensions:
-	rm -f $(EXTENSIONS) extensions/*/*.jar.pack.gz
+	rm -f $(EXTENSIONS) $(EXTENSIONS_PACK200)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
-$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+$(EXTENSIONS) $(EXTENSIONS_PACK200): | NetLogo.jar NetLogoLite.jar
 	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
