@@ -1,4 +1,4 @@
-package org.nlogo.workspace
+package org.nlogo.util
 
 object FileUtils {
 

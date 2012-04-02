@@ -7,6 +7,7 @@ import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primi
 import collection.mutable.HashMap
 import scala.util.control.Exception
 import java.io.{IOException, FileNotFoundException, PrintWriter}
+import org.nlogo.util.{FileUtils, NetUtils, ZipUtils}
 
 /**
  * Some simple notes on loading and unloading extensions:

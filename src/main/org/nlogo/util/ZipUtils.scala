@@ -1,4 +1,4 @@
-package org.nlogo.workspace
+package org.nlogo.util
 
 import collection.mutable.{ArrayBuffer, ListBuffer}
 import java.io.ByteArrayInputStream

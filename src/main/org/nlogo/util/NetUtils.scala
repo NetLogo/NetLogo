@@ -1,4 +1,4 @@
-package org.nlogo.workspace
+package org.nlogo.util
 
 import java.io.{InputStreamReader, BufferedInputStream, FileOutputStream, BufferedOutputStream}
 import java.net.{HttpURLConnection, URLEncoder, URL}
