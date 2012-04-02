@@ -10,6 +10,7 @@ import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager 
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
+import collection.JavaConverters.enumerationAsScalaIteratorConverter
 
 object Logger {
 
@@ -102,42 +103,42 @@ class Logger(studentName: String) extends LoggingListener {
   }
 
   def changeLogDirectory(path: String) {
-    val directory = new java.io.File(path)
+    import java.io.File
+    val directory = new File(path)
     if (!directory.isAbsolute) {
-      val newPath = System.getProperty("user.home") + java.io.File.separatorChar + "dummy.txt"
+      val newPath = System.getProperty("user.home") + File.separatorChar + "dummy.txt"
       val urlForm = new java.net.URL(
-        org.nlogo.util.JUtils.toURL(new java.io.File(newPath)),
+        org.nlogo.util.JUtils.toURL(new File(newPath)),
         path)
-      logDirectory = new java.io.File(urlForm.getFile).getAbsolutePath
+      logDirectory = new File(urlForm.getFile).getAbsolutePath
     }
     else if (directory.isDirectory) {
       logDirectory = path
     }
   }
 
-  var filenames: java.util.List[String] = null // for TestLogger
+  var filenames: JList[String] = null // for TestLogger
 
   def modelOpened(name: String) {
     filenames = new java.util.ArrayList[String]
     filenames.addAll(newFiles(JLogger.getRootLogger.getAllAppenders, name))
-    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
-    while (loggers.hasMoreElements) {
-      val l = loggers.nextElement().asInstanceOf[JLogger]
-      filenames.addAll(newFiles(l.getAllAppenders, name))
-    }
+    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers.asScala
+    loggers foreach { case l: JLogger => filenames.addAll(newFiles(l.getAllAppenders, name)) }
   }
 
   def newFiles(e: JEnumeration[_], name: String): JList[String] = {
     val filenames = new ArrayList[String]
-    while (e.hasMoreElements)
-      for(appender @ (a: FileAppender) <- Some(e.nextElement())) {
+    e.asScala foreach {
+      case appender: FileAppender =>
         val filename = logFileName(appender.getName)
         filenames.add(filename)
         appender.setFile(filename)
-        for(xappender @ (x: XMLFileAppender) <- Some(appender))
-          setupXMLFileAppender(name, xappender)
+        appender match {
+          case xappender: XMLFileAppender => setupXMLFileAppender(name, xappender)
+          case _                          => // Otherwise, ignore
+        }
         appender.activateOptions()
-      }
+    }
     filenames
   }
 
@@ -151,19 +152,15 @@ class Logger(studentName: String) extends LoggingListener {
 
   def close() {
     closeFiles(JLogger.getRootLogger.getAllAppenders)
-    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
-    while (loggers.hasMoreElements) {
-      val l = loggers.nextElement().asInstanceOf[JLogger]
-      closeFiles(l.getAllAppenders)
-    }
+    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers.asScala
+    loggers foreach { case l: JLogger => closeFiles(l.getAllAppenders) }
   }
 
   private def closeFiles(e: JEnumeration[_]) {
-    while (e.hasMoreElements)
-      e.nextElement().asInstanceOf[Appender].close()
+    e.asScala foreach { case a: Appender => a.close() }
   }
 
-  def getIPAddress() =
+  def getIPAddress =
     try java.net.InetAddress.getLocalHost.getHostAddress
     catch {
       case _: java.net.UnknownHostException => "unknown"
