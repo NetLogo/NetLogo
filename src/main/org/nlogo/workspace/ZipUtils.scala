@@ -1,9 +1,46 @@
 package org.nlogo.workspace
 
-import java.util.zip.{ZipEntry, ZipFile}
 import collection.mutable.{ArrayBuffer, ListBuffer}
+import java.io.ByteArrayInputStream
+import java.util.zip.{GZIPInputStream, ZipEntry, ZipFile}
 
 object ZipUtils {
+
+  val DefaultByteEncoding = "ISO-8859-1"
+
+  def gzip(data: String, encoding: String = DefaultByteEncoding): Array[Byte] = {
+    val inner = new java.io.ByteArrayOutputStream()
+    val outer = new java.util.zip.GZIPOutputStream(inner)
+    outer.write(data.getBytes(encoding))
+    outer.close()
+    inner.toByteArray
+  }
+
+  def gzipAsString(data: String, encoding: String = DefaultByteEncoding): String = {
+    new String(gzip(data, encoding), encoding)
+  }
+
+  def unGzip(data: Array[Byte]): Option[String] = {
+    try {
+
+      val in = new GZIPInputStream(new ByteArrayInputStream(data))
+      val buffer = new ArrayBuffer[Byte]
+
+      while (in.available() > 0)
+        buffer.append(in.read().toByte)
+
+      in.close()
+      Some(buffer.map(_.toChar).mkString.reverse dropWhile (_.toByte < 0) reverse) // Make string and trim off any nonsense at end
+
+    }
+    catch {
+      case _ => None
+    }
+  }
+
+  def unGzipFromString(data: String, encoding: String = DefaultByteEncoding): Option[String] = {
+    unGzip(data.getBytes(encoding))
+  }
 
   def extractFilesFromJar(jarpath: String, dest: String) {
 
