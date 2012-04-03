@@ -1,9 +1,9 @@
 package org.nlogo.webstart.logging.message
 
 // Establishing a message-set through which the logging actors can communicate with one another
-private[logmanager] sealed trait LogManagementMessage
+private[logging] sealed trait LogManagementMessage
 
-private[logmanager] object LogManagementMessage {
+private[logging] object LogManagementMessage {
   case class  Write(data: String) extends LogManagementMessage
   case object Read extends LogManagementMessage
   case object Abandon extends LogManagementMessage
