@@ -24,7 +24,7 @@ class LoggerTests extends FunSuite {
     val expected = 
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
-      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
+      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.SPEED\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"speed\">\n    " +
@@ -42,7 +42,7 @@ class LoggerTests extends FunSuite {
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
-      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
+      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"ticks\">\n    " +
@@ -60,7 +60,7 @@ class LoggerTests extends FunSuite {
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
-      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
+      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
@@ -78,7 +78,7 @@ class LoggerTests extends FunSuite {
     val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
-      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress() +
+      "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress +
       "\" modelName=\"models/Sample Models/Biology/Ants.nlogo\" version=\"" +
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
