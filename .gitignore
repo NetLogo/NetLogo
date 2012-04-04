@@ -30,6 +30,7 @@ tmp/
 # other
 /build/
 /.idea/workspace.xml
+/.idea/highlighting.xml
 /devel/depend.ddf
 /docs/Perspective Example.png
 /docs/dict/
