@@ -18,6 +18,9 @@ with OneInstancePerTest with BeforeAndAfterEach {
     w
   }
 
+  def newWorker(name: String) =
+    HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml"))
+
   override def beforeEach() { AbstractWorkspace.isApplet(false) }
   override def afterEach() { workspaces.foreach(_.dispose()) }
 
@@ -32,25 +35,19 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def run2DExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
     workspace.initForTesting(minX, maxX, minY, maxY, declarations)
-    run("test/lab/" + name)(
-      () => workspace,
-      () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+    run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name)(
-        () => workspace,
-        () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+    run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
   def run3DExperiment(name: String) {
     val workspace = newWorkspace()
     workspace.initForTesting(0)
-    run("test/lab/" + name)(
-      () => workspace,
-      () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+    run("test/lab/" + name)(() => workspace, () => newWorker(name))
   }
   def runParallelExperiment(name: String, declarations: String = "") {
     def workspace = {
@@ -61,8 +58,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
     run("test/lab/" + name, wantTable = false,
         threads = Runtime.getRuntime.availableProcessors)(
-        workspace _,
-        () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+        workspace _, () => newWorker(name))
   }
   def runExperimentFromModel(modelPath: String, experimentName: String, filename: String) {
     val time = System.nanoTime
@@ -142,10 +138,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val workspace = newWorkspace()
     workspace.initForTesting(0, "globals [foo]")
     // no setup commands, so foo doesn't get reset
-    HeadlessWorkspace.newLab
-      .newWorker("testCarryover",
-        new java.io.File("test/lab/protocols.xml"))
-        .run(workspace, () => workspace, 1)
+    newWorker("testCarryover")
+      .run(workspace, () => workspace, 1)
     expect(Double.box(20))(
       workspace.report("foo"))
   }
@@ -170,8 +164,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     test("ExportGraphics") {
       val workspace = newWorkspace()
       workspace.open("models/test/lab/FireWithExperiments.nlogo")
-      HeadlessWorkspace.newLab.newWorker("testExportGraphics",
-        new java.io.File("test/lab/protocols.xml"))
+      newWorker("testExportGraphics")
         .run(workspace, () => workspace, 1)
     }
   if(!Version.is3D)
@@ -262,10 +255,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("dontRunMetricsIfNoListener") {
     val workspace = newWorkspace()
     workspace.initForTesting(0)
-    HeadlessWorkspace.newLab
-      .newWorker("metricGoBoom",
-        new java.io.File("test/lab/protocols.xml"))
-        .run(workspace, () => workspace, 1)
+    newWorker("metricGoBoom")
+      .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,
     // so no runtime error
     expect(Double.box(2))(
