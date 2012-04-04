@@ -32,21 +32,24 @@ with OneInstancePerTest with BeforeAndAfterEach {
   def run2DExperiment(minX: Int, maxX: Int, minY: Int, maxY: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
     workspace.initForTesting(minX, maxX, minY, maxY, declarations)
-    run("test/lab/" + name, 1, true, true, () => workspace,
+    run("test/lab/" + name)(
+      () => workspace,
       () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name, 1, true, true, () => workspace,
-      () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+    run("test/lab/" + name)(
+        () => workspace,
+        () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
     workspace
   }
   def run3DExperiment(name: String) {
     val workspace = newWorkspace()
     workspace.initForTesting(0)
-    run("test/lab/" + name, 1, true, true, () => workspace,
+    run("test/lab/" + name)(
+      () => workspace,
       () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
   }
   def runParallelExperiment(name: String, declarations: String = "") {
@@ -56,8 +59,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
       w
     }
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
-    run("test/lab/" + name, Runtime.getRuntime.availableProcessors, false, true, workspace _,
-      () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
+    run("test/lab/" + name, wantTable = false,
+        threads = Runtime.getRuntime.availableProcessors)(
+        workspace _,
+        () => HeadlessWorkspace.newLab.newWorker(name, new java.io.File("test/lab/protocols.xml")))
   }
   def runExperimentFromModel(modelPath: String, experimentName: String, filename: String) {
     val time = System.nanoTime
@@ -75,8 +80,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
-  def run(filename: String, threads: Int, wantTable: Boolean, wantSpreadsheet: Boolean,
-          fn: () => Workspace, fn2: () => LabInterface.Worker) {
+  def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true)
+         (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
     def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
       val worker = fn2.apply
