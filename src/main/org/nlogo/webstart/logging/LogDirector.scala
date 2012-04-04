@@ -41,17 +41,10 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     }
   }
 
-  private def replyClosing() {
-    reply(DirectorMessage.FromDirectorClosed)
-  }
+  private def replyClosing() { reply(DirectorMessage.FromDirectorClosed) }
 
-  private def abandonLog() {
-    transmit(LoggingServerMessage.ToServerAbandon.toString)
-  }
-
-  private def finalizeLog() {
-    transmit(LoggingServerMessage.ToServerFinalize.toString)
-  }
+  private def abandonLog()  { transmit(LoggingServerMessage.ToServerAbandon.toString) }
+  private def finalizeLog() { transmit(LoggingServerMessage.ToServerFinalize.toString) }
 
   private def transmitFormatted(message: Any) {
     import LoggingServerMessage._
