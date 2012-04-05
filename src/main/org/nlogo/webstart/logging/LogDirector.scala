@@ -32,7 +32,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
           exit("Abandon ye logs, mateys!")
 
         case ToDirectorFinalize =>
-          LogFlushReminder ! Finalize
+          actorConditionTuple map (_._1) filterNot (_ == LogBufferManager) foreach (_ ! Finalize)
           transmitFormatted(LogBufferManager !? Finalize)
           finalizeLog()
           replyClosing()

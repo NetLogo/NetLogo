@@ -11,7 +11,7 @@ class XMLFileAppender extends FileAppender with XMLAppender {
   @throws(classOf[java.io.IOException])
   override def setFile(fileName: String, append: Boolean, bufferedIO: Boolean, bufferSize: Int) {
     super.setFile(fileName, append, bufferedIO, bufferSize)
-    initializeTransformer(fileName)
+    initializeTransformer(fileName, qw)
   }
 
   override def closeFile() {
