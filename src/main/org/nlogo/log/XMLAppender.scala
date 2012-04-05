@@ -1,12 +1,13 @@
 package org.nlogo.log
 
-import org.apache.log4j.WriterAppender
 import javax.xml.transform.stream.StreamResult
 import javax.xml.transform.sax.{SAXTransformerFactory, TransformerHandler}
 import org.nlogo.util.Exceptions.ignoring
 import javax.xml.transform.{OutputKeys, TransformerFactory}
 import org.xml.sax.helpers.AttributesImpl
 import reflect.BeanProperty
+import org.apache.log4j.WriterAppender
+import java.io.Writer
 
 trait XMLAppender {
 
@@ -20,8 +21,30 @@ trait XMLAppender {
 
   private var hd: TransformerHandler = _
 
-  protected def initializeTransformer(systemId: String = null) {
-    val streamResult = new StreamResult(qw)
+  /*
+   When using this method, you should--99% of the time--pass in `qw` (inherited from `WriterAppender`)
+   for the `writer` parameter.  You might wonder why I don't just use that directly.  Yeah... me, too!
+   Except that I tried--I _tried_ to use it!  But it won't work.  When trying to access `qw` in this
+   trait through the above 'self' type, I got this message:
+
+     Implementation restriction: trait XMLAppender accesses protected variable qw inside a concrete trait method.
+     Add an accessor in a class extending class WriterAppender as a workaround.
+     val streamResult = new StreamResult(qw)
+
+   This error spawns from:
+
+     scala.tools.nsc.typechecker.SuperAccessors
+     -needsProtectedAccessor
+     --isJavaProtected
+
+   It seems to be a known bug in the compiler when accessing `protected` Java variables from within Scala traits.
+   And, well... I tried the "workaround" that was suggested.  However, that, too, fails to work.  I mean... it
+   _appears_ to work, but it results in weird, crash-prone behavior when used; I started getting "IOException:
+   Stream Closed" in really, really absurd places when using the workaround.  So I now force the `WriterAppender`
+   subclasses that mix this trait in to pass `writer` in, themselves.  _That_ works, fortunately. --JAB (4/4/12)
+   */
+  protected def initializeTransformer(systemId: String = null, writer: Writer) {
+    val streamResult = new StreamResult(writer)
     val tf = TransformerFactory.newInstance.asInstanceOf[SAXTransformerFactory]
     ignoring(classOf[IllegalArgumentException]) {
       tf.setAttribute("indent-number", 2: java.lang.Integer)
