@@ -60,7 +60,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
         threads = Runtime.getRuntime.availableProcessors)(
         workspace _, () => newWorker(name))
   }
-  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String) {
+  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true) {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
@@ -68,11 +68,13 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
-      "--table", tablePath, "--spreadsheet", spreadsheetPath))
-    expect(slurp(filename + "-table.csv"))(
-      withoutFirst6Lines(slurp(tablePath)))
-    expect(slurp(filename + "-spreadsheet.csv"))(
-      withoutFirst6Lines(slurp(spreadsheetPath)))
+      "--table", tablePath, "--spreadsheet", spreadsheetPath, "--threads", threads.toString))
+    if (wantTable)
+      expect(slurp(filename + "-table.csv"))(
+        withoutFirst6Lines(slurp(tablePath)))
+    if (wantSpreadsheet)
+      expect(slurp(filename + "-spreadsheet.csv"))(
+        withoutFirst6Lines(slurp(spreadsheetPath)))
   }
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
@@ -202,9 +204,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("metricGoBoom") {
     runExperiment(0, "", "metricGoBoom")
   }
-  // metricGoBoom2 is testing for bug #114, except this passed even before I did anything
-  // to fix, so I guess the problem was in the GUI code. nonetheless, keeping this test
-  // around to test the headless case. - ST 3/27/12
+
+  // metricGoBoom2 is for bug #114.  before any fix, it passed if run through runParallelExperiment
+  // but failed through runExperimentFromModel.  that's because the bug was in the workspace-reusing
+  // logic in lab.Lab, which run() here bypasses by using lab.Worker directly - ST 4/6/12
   val goBoom2Declarations = 
     "to setup clear-all create-turtles 1 reset-ticks end\n" +
     "to go if not any? turtles [ stop ] if ticks = 10 [ ask turtles [ die ] ] tick end"
@@ -214,6 +217,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("metricGoBoom2-parallel") {
     runParallelExperiment("metricGoBoom2", goBoom2Declarations)
   }
+  test("metricGoBoom2-parallel-from-model") {
+    runExperimentFromModel("test/lab/metricGoBoom2.nlogo", "experiment", "test/lab/metricGoBoom2", wantTable = false,
+                           threads = Runtime.getRuntime.availableProcessors)
+  }
+
   test("setupCommandsGoBoom") {
     runExperiment(0, "", "setupCommandsGoBoom")
   }

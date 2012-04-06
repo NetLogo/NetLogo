@@ -65,7 +65,6 @@ class Lab(loader: ProtocolLoader)
                 System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
                 t.printStackTrace(System.err)
             }
-            queue.synchronized { queue.enqueue(w) }
           } } )
       def nextWorkspace = queue.synchronized { queue.dequeue() }
       worker.run(workspaces.head, nextWorkspace _, threads)
