@@ -68,7 +68,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
-      "--table", tablePath, "--spreadsheet", spreadsheetPath, "--threads", threads.toString))
+                    "--table", tablePath, "--spreadsheet", spreadsheetPath,
+                    "--threads", threads.toString, "--suppress-errors"))
     if (wantTable)
       expect(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))

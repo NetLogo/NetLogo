@@ -53,18 +53,19 @@ class Lab(loader: ProtocolLoader)
             queue.synchronized { queue.enqueue(w) }
           }
           override def runtimeError(w: Workspace, runNumber: Int, t: Throwable) {
-            t match {
-              case ee: EngineException =>
-                val msg = ee.context.buildRuntimeErrorMessage(ee.instruction, ee)
-                System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
-                ee.printStackTrace(System.err)
-              case _: LogoException =>
-                System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + t.getMessage)
-                t.printStackTrace(System.err)
-              case _ =>
-                System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
-                t.printStackTrace(System.err)
-            }
+            if (!suppressErrors) 
+              t match {
+                case ee: EngineException =>
+                  val msg = ee.context.buildRuntimeErrorMessage(ee.instruction, ee)
+                  System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
+                  ee.printStackTrace(System.err)
+                case _: LogoException =>
+                  System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + t.getMessage)
+                  t.printStackTrace(System.err)
+                case _ =>
+                  System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
+                  t.printStackTrace(System.err)
+              }
           } } )
       def nextWorkspace = queue.synchronized { queue.dequeue() }
       worker.run(workspaces.head, nextWorkspace _, threads)
