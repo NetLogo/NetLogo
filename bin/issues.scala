@@ -12,6 +12,8 @@
 /***
 scalaVersion := "2.9.1"
 
+onLoadMessage := ""
+
 libraryDependencies ~= { seq =>
     val vers = "0.8.5"
     seq ++ Seq("net.databinder" %% "dispatch-core" % vers,
