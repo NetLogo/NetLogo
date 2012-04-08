@@ -516,9 +516,9 @@ public strictfp class ExtensionManager
   public java.util.List<String> getJarPaths() {
     java.util.ArrayList<String> names = new java.util.ArrayList<String>();
     for (JarContainer jar : jars.values()) {
-      names.add(jar.extensionName + java.io.File.separator + jar.extensionName + ".jar");
+      names.add(jar.extensionName + '/' + jar.extensionName + ".jar");
       for (String additionalJar : jar.classManager.additionalJars()) {
-        names.add(jar.extensionName + java.io.File.separator + additionalJar);
+        names.add(jar.extensionName + '/' + additionalJar);
       }
     }
     return names;

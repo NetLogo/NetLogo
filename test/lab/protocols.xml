@@ -184,6 +184,12 @@
     <timeLimit steps="2"/>
     <metric>__boom</metric>
   </experiment>
+  <experiment name="metricGoBoom2" repetitions="100" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="20"/>
+    <metric>mean [who] of turtles</metric>
+  </experiment>
   <experiment name="goCommandsGoBoom" repetitions="2" runMetricsEveryStep="true">
     <setup>ca reset-ticks</setup>
     <go>tick __ignore __boom</go>

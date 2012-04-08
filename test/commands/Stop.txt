@@ -71,6 +71,11 @@ StopInsideAsk2
   to-report foo crt 1 ask turtles [ stop hatch 10 ] report count turtles end
   foo => 1
 
+StopInsideRunOfCommandTask
+  to test let x task [ set glob1 1 stop ] run x set glob1 2 end
+  O> test set glob1 glob1 * 10
+  glob1 => 10
+
 FallOffEndOfReporterProcedure
   to-report foo1 report 0 end
   to-report foo2 end

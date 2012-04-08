@@ -82,11 +82,13 @@ EXTENSIONS=\
 	extensions/sample-scala/sample-scala.jar \
 	extensions/sound/sound.jar \
 	extensions/table/table.jar
+EXTENSIONS_PACK200 =\
+	$(addsuffix .pack.gz,$(EXTENSIONS))
 
 .PHONY: extensions clean-extensions
-extensions: $(EXTENSIONS)
+extensions: $(EXTENSIONS) $(EXTENSIONS_PACK200)
 clean-extensions:
-	rm -f $(EXTENSIONS)
+	rm -f $(EXTENSIONS) $(EXTENSIONS_PACK200)
 
 # The extensions want to build against the lite jar, but on the core
 # branch we don't have the capability to build a lite jar, so we just
@@ -94,9 +96,10 @@ clean-extensions:
 # extension builds against NetLogo.jar.) - ST 1/1/12
 
 NetLogoLite.jar:
-	curl -s 'http://ccl.northwestern.edu/netlogo/5.0RC6/NetLogoLite.jar' -o NetLogoLite.jar
+	curl -s 'http://ccl.northwestern.edu/netlogo/5.0/NetLogoLite.jar' -o NetLogoLite.jar
 
-$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+# most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
+$(EXTENSIONS) $(EXTENSIONS_PACK200): | NetLogo.jar NetLogoLite.jar
 	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
 	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
