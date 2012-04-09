@@ -4,16 +4,16 @@
 // This generates Markdown suitable for pasting into
 // https://github.com/NetLogo/NetLogo/wiki/Release-notes
 
-// Getting this script to work on your own machine might be difficult since it seems that sbt script
-// mode isn't currently being maintained.  If you get an error like "bad section: organization", try
-// hand-editing ~/.conscript/harrah/xsbt/scalas and just removing the whole organization section.
-// I'd like to find a way to get this working seamlessly for everyone without having to struggle
-// with installation issues, but I'm not sure if/when I'll get to it. - ST 4/9/12
-
-// I'd like to be using dispatch 0.8.8 which is the latest at present, but binary dispatch-lift-json
-// artifacts don't seem to be published past 0.8.5.  I think that's because the dispatch manual
-// recommends having dispatch-lift-json as a source dependency, not a binary dependency, but I
-// don't think we have that option since we're using sbt script mode. - ST 4/8/12
+// running this is tricky because the sbt script mode stuff isn't currently maintained in sync with
+// conscript so you have fiddle with it or it doesn't work. instructions:
+// - install conscript if you don't have it already:
+//   curl https://raw.github.com/n8han/conscript/master/setup.sh | sh
+// - install sbt (and the scalas script) through conscript:
+//   cs mharrah/xsbt --branch v0.11.2
+// - edit ~/.conscript/harrah/xsbt/scalas/launchconfig
+//    and ~/.conscript/harrah/xsbt/sbt/launchconfig
+//   and remove the entire [organization] section
+//   from both files
 
 /***
 scalaVersion := "2.9.1"
