@@ -9,7 +9,7 @@
 // - install conscript if you don't have it already:
 //   curl https://raw.github.com/n8han/conscript/master/setup.sh | sh
 // - install sbt (and the scalas script) through conscript:
-//   cs mharrah/xsbt --branch v0.11.2
+//   cs harrah/xsbt --branch v0.11.2
 // - edit ~/.conscript/harrah/xsbt/scalas/launchconfig
 //    and ~/.conscript/harrah/xsbt/sbt/launchconfig
 //   and remove the entire [organization] section
