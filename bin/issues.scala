@@ -21,16 +21,22 @@ scalaVersion := "2.9.1"
 onLoadMessage := ""
 
 libraryDependencies ~= { seq =>
-    val vers = "0.8.5"
+    val vers = "0.8.8"
     seq ++ Seq("net.databinder" %% "dispatch-core" % vers,
                "net.databinder" %% "dispatch-http" % vers,
-               "net.databinder" %% "dispatch-lift-json" % vers)
+               "net.liftweb" %% "lift-json" % "2.4")
 }
 */
 
 import dispatch._
-import dispatch.liftjson.Js._
 import net.liftweb.json.JsonAST._
+
+// we can't use dispatch-lift-json because it's a source dependency and sbt script mode doesn't
+// support source dependencies. so we just include the needed glue code here directly. - ST 4/9/12
+def parse[T](r: Request)(block: JValue => T) =
+  r >> { (stm, charset) =>
+    block(net.liftweb.json.JsonParser.parse(new java.io.InputStreamReader(stm, charset)))
+  }
 
 object Issue {
   def fromJson(j: JValue): Issue = {
@@ -47,7 +53,7 @@ val u = url(base) <<? Map("milestone" -> "10",
                           "per_page" -> "1000")
 val http = new Http with NoLogging
 val issues: List[Issue] =
-  http(u ># { json =>
+  http(parse(u){json =>
     for {
       JArray(objs) <- json
       obj <- objs
