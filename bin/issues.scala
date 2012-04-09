@@ -4,6 +4,12 @@
 // This generates Markdown suitable for pasting into
 // https://github.com/NetLogo/NetLogo/wiki/Release-notes
 
+// Getting this script to work on your own machine might be difficult since it seems that sbt script
+// mode isn't currently being maintained.  If you get an error like "bad section: organization", try
+// hand-editing ~/.conscript/harrah/xsbt/scalas and just removing the whole organization section.
+// I'd like to find a way to get this working seamlessly for everyone without having to struggle
+// with installation issues, but I'm not sure if/when I'll get to it. - ST 4/9/12
+
 // I'd like to be using dispatch 0.8.8 which is the latest at present, but binary dispatch-lift-json
 // artifacts don't seem to be published past 0.8.5.  I think that's because the dispatch manual
 // recommends having dispatch-lift-json as a source dependency, not a binary dependency, but I
