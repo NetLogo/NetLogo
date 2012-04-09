@@ -14,6 +14,10 @@
 //    and ~/.conscript/harrah/xsbt/sbt/launchconfig
 //   and remove the entire [organization] section
 //   from both files
+// - ensure that ~/bin is included in your `PATH` environment variable
+//   (this is where Conscript places the scripts that it manages)
+// - note: if you run the script for the first time and it appears non-responsive, do not fear;
+//         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
 scalaVersion := "2.9.1"
