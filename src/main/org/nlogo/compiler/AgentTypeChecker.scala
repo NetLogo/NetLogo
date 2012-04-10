@@ -66,8 +66,7 @@ package org.nlogo.compiler
 import org.nlogo.compiler.CompilerExceptionThrowers._
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
-import org.nlogo.prim.{ _call, _callreport }
-import org.nlogo.prim.etc._task
+import org.nlogo.prim.{ _call, _callreport, _task }
 
 private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
 
