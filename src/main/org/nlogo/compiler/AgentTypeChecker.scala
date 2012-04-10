@@ -49,8 +49,8 @@ package org.nlogo.compiler
 // behave this way; for example the command block in a WHILE behaves
 // normally; it does not behave like ASK.  Here's how we implement
 // the two cases.  When we hit something like WHILE, we keep using the
-// same TypeParserVisitor object.  But when we hit something like ASK,
-// we don't let the current TypeParserVisitor descend inside the ASK;
+// same AgentTypeCheckerVisitor object.  But when we hit something like ASK,
+// we don't let the current AgentTypeCheckerVisitor descend inside the ASK;
 // rather, we make a new one and then discard it when we're done
 // analzying the ASK.
 //
@@ -68,15 +68,15 @@ import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport }
 
-private class TypeParser(defs: Seq[ProcedureDefinition]) {
+private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
   def parse() {
     def usables = defs.map(_.procedure.usableBy).toList
     val oldUsables = usables
     for(procdef <- defs)
-      procdef.accept(new TypeParserVisitor(procdef.procedure,"OTPL"))
+      procdef.accept(new AgentTypeCheckerVisitor(procdef.procedure,"OTPL"))
     if(usables != oldUsables) parse()
   }
-  class TypeParserVisitor(currentProcedure:Procedure,var usableBy:String) extends DefaultAstVisitor {
+  class AgentTypeCheckerVisitor(currentProcedure:Procedure,var usableBy:String) extends DefaultAstVisitor {
     // usableBy is "var" because it's where we accumulate our result.
     // it starts out as OTPL and the more code we see the more restricted
     // it may grow.  The use of mutable state in this way is characteristic
@@ -117,7 +117,7 @@ private class TypeParser(defs: Seq[ProcedureDefinition]) {
                   case Seq(app:ReporterApp,_*) => getReportedAgentType(app)
                   case _ => "-TPL"
                 }
-              new TypeParserVisitor(currentProcedure,argsAgentClassString)
+              new AgentTypeCheckerVisitor(currentProcedure,argsAgentClassString)
             case _ => this } ) }
     }
     def getReportedAgentType(app:ReporterApp):String = {
