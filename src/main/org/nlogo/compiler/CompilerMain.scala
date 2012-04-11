@@ -46,7 +46,7 @@ private object CompilerMain {
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       procdef.accept(new Optimizer)   // do various code-improving rewrites
     }
-    new TypeParser(defs).parse()  // catch agent type inconsistencies
+    new AgentTypeChecker(defs).parse()  // catch agent type inconsistencies
     for(procdef <- defs) {
       procdef.accept(new ArgumentStuffer) // fill args arrays in Commands & Reporters
       new Assembler().assemble(procdef)     // flatten tree to command array
