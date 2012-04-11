@@ -10,6 +10,9 @@ import org.nlogo.window.EditorFactory;
 import org.nlogo.window.VMCheck;
 
 import java.awt.Frame;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import scala.Enumeration;
 
@@ -38,6 +41,51 @@ public strictfp class ClientApplet
         };
 
         clientPanel = new ClientPanel(editorFactory, ClientApplet.this, new DummyCompilerServices());
+
+
+         //corey add begins --- read in override file if it exists and is referenced.
+
+          URL specurl = null;
+          String spec = "";
+
+          System.err.println("About to get the model name...");
+
+          try {
+             String name = getParameter("DefaultModel");
+                 System.out.println("override url: " + name);
+              if ( name != null )
+              { specurl = new URL(name);       }
+          }
+          catch (MalformedURLException me)
+          {
+              me.printStackTrace();
+          }
+
+
+          if ( specurl != null )
+          {
+              System.out.println("loading interface from alternative source");
+              try{
+                    InputStream in = specurl.openStream();
+                    java.io.BufferedReader bf = new java.io.BufferedReader(new java.io.InputStreamReader(in));
+                    StringBuffer strBuff = new StringBuffer();
+                    String line;
+                    while((line = bf.readLine()) != null){
+                    strBuff.append(line + "\n");
+                    }
+                    spec = strBuff.toString();
+                    clientPanel.setInterfaceSpec(spec);
+                }
+            catch(java.io.IOException e){
+                e.printStackTrace();
+                }
+          }
+          else
+          {
+              System.out.println("loading interface from the network-delivered specification");
+          }
+
+          //corey add'n ends.
 
         clientPanel.setBackground(java.awt.Color.white);
 

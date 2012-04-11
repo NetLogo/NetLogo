@@ -17,8 +17,8 @@ import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.Implicits._
 import org.nlogo.widget.SwitchWidget
 import org.nlogo.window.{InputBoxWidget, ChooserWidget, SliderWidget, PlotWidgetExportType, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget}
-import org.nlogo.api.{WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
 import org.nlogo.hubnet.connection.{ClientRole, Streamable, ConnectionTypes, AbstractConnection}
+import org.nlogo.api.{ModelReader, WidgetIO, I18N, Version, ModelSection, Dump, PlotInterface, LogoList, DummyLogoThunkFactory, CompilerServices}
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -228,6 +228,17 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
   }
 
+  //corey add -- var to hold interface spec loaded from file
+  var interfaceSpec=""
+
+  def  setInterfaceSpec( spec: String) {
+    println("setInterfaceSpec")  //!
+
+    interfaceSpec = spec
+  }
+  //end corey add -- var to hold interface spec loaded from file
+
+
   /**
    * Completes the login process. Called when a handshake message is received
    * from the server.
@@ -242,7 +253,33 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.first.asInstanceOf[ClientInterface]
-    val widgets = WidgetIO.dumpWidgets(clientInterface.widgets)
+    var widgets = WidgetIO.dumpWidgets(clientInterface.widgets)
+
+
+
+    //corey
+    //here i want to load from the local file instead IF interfacespec != null
+
+    System.err.println(widgets.length + "elements in network version of interface...")
+
+
+    if ( ! interfaceSpec.isEmpty() )
+    {
+      val fileContents = interfaceSpec //new LocalFile("fake.nlogo").readFile()
+      // Parse the file
+      val parsedFile = ModelReader.parseModel(fileContents)
+      // Load the widget descriptions
+      widgets = parsedFile.get( ModelSection.HubNetClient )
+
+      System.err.println("loading from file")
+      System.err.println( widgets.length + " elements in file version of interface, now being used instead")
+    }
+
+    //corey - end change to override network client spec.
+
+
+
+
     new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
