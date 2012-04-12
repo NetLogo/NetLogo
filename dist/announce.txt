@@ -15,7 +15,9 @@ http://ccl.northwestern.edu/netlogo/transition.html .
 
 The following is a list of changes made since NetLogo 5.0:
 
- * MODELS?
+ * new social science model: Hotelling's Law
+ * new BEAGLE Evolution models: Bird Breeders, Bug Hunters Competition,
+   Critter Designers, Fish Tank Genetic Drift
  * added "wolf" shape to default shapes
  * NetLogo is now buildable on Windows, for open source developers
  * support better JavaScript <=> applet communication
