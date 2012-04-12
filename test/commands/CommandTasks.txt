@@ -211,3 +211,9 @@ empty-command-task-1
 
 empty-command-task-2
   O> foreach [1 2 3] [ ]
+
+command-task-body-may-have-different-agent-type
+  is-command-task? task die => true
+
+command-task-body-gets-agent-type-check
+  O> __ignore task [hatch 1 sprout 1] => COMPILER ERROR You can't use sprout in a turtle context, because sprout is patch-only.

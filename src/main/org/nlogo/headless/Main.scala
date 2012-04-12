@@ -41,6 +41,7 @@ object Main {
     var tableWriter:Option[java.io.PrintWriter] = None
     var spreadsheetWriter:Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
+    var suppressErrors = false
     val it = args.iterator
     def die(msg:String) { System.err.println(msg); System.exit(1) }
     def path2writer(path:String) =
@@ -84,6 +85,8 @@ object Main {
         { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
+      else if(arg == "--suppress-errors")
+        { suppressErrors = true }
       else
         die("unknown argument: " + arg)
     }
@@ -101,6 +104,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, setupFile, experiment, tableWriter,
-                      spreadsheetWriter, dims, threads))
+                      spreadsheetWriter, dims, threads, suppressErrors))
   }
 }

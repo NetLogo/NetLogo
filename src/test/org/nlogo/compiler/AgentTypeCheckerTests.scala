@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm.Procedure
 
-class TypeParserTests extends FunSuite {
+class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   private def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
@@ -25,7 +25,7 @@ class TypeParserTests extends FunSuite {
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }
-    new TypeParser(defs).parse()
+    new AgentTypeChecker(defs).parse()
     defs
   }
   def testBoth(source: String, expected: String) {

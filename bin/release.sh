@@ -129,6 +129,9 @@ done
 if [ ! -f Mathematica-Link/Makefile ]; then
   git submodule update --init Mathematica-Link
 fi
+if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
+  cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
+fi
 if [ ! -f Mathematica-Link/JLink.jar ]; then
   echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
   echo "(it's needed to compile the link, but we don't have a license to distribute it)"

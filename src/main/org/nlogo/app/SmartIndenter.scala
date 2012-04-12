@@ -85,8 +85,8 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     // of situations where the breed variable might be the first token in a line, however, they seem
     // quite unusual and maybe you should be formatting your code differently if you run into such a
     // situation :) ev 1/22/08
-    if(token != null && token.tyype == TokenType.KEYWORD ||
-       token.name.equalsIgnoreCase("breed"))
+    if(token != null && (token.tyype == TokenType.KEYWORD ||
+                         token.name.equalsIgnoreCase("breed")))
       return Some(0)
     // if it's not one of the previous two cases the position probably depends at least one line
     // previous unless it's the first line

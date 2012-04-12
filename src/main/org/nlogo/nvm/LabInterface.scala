@@ -26,7 +26,8 @@ object LabInterface {
                       tableWriter:Option[java.io.PrintWriter],
                       spreadsheetWriter:Option[java.io.PrintWriter],
                       dims:Option[WorldDimensions],
-                      threads:Int)
+                      threads:Int,
+                      suppressErrors:Boolean)
 }
 trait LabInterface {
   import LabInterface._
