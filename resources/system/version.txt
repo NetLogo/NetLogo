@@ -1,5 +1,5 @@
 NetLogo 5.0.1
-INTERIM DEVEL BUILD
+April 12, 2012
 NetLogo 5.0
 NetLogo 4.
 NetLogo 3.
