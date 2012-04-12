@@ -11,6 +11,7 @@ import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
 import collection.JavaConverters.enumerationAsScalaIteratorConverter
+import org.nlogo.webstart.logging.WebStartAppender
 
 object Logger {
 
@@ -96,6 +97,8 @@ object Logger {
 class Logger(studentName: String) extends LoggingListener {
 
   var logDirectory = System.getProperty("java.io.tmpdir")
+  
+  implicit def javaEnum2Iterator[T](e: JEnumeration[T]) = Option(e) map (_.asScala) getOrElse (Iterator())
 
   def configure(reader: java.io.Reader) {
     val configurator = new DOMConfigurator
@@ -117,18 +120,22 @@ class Logger(studentName: String) extends LoggingListener {
     }
   }
 
+  def addAppender(appender: Appender) {
+    JLogger.getRootLogger.addAppender(appender)
+  }
+
   var filenames: JList[String] = null // for TestLogger
 
   def modelOpened(name: String) {
     filenames = new java.util.ArrayList[String]
     filenames.addAll(newFiles(JLogger.getRootLogger.getAllAppenders, name))
-    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers.asScala
+    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
     loggers foreach { case l: JLogger => filenames.addAll(newFiles(l.getAllAppenders, name)) }
   }
 
   def newFiles(e: JEnumeration[_], name: String): JList[String] = {
     val filenames = new ArrayList[String]
-    e.asScala foreach {
+    e foreach {
       case appender: FileAppender =>
         val filename = logFileName(appender.getName)
         filenames.add(filename)
@@ -151,13 +158,13 @@ class Logger(studentName: String) extends LoggingListener {
   }
 
   def close() {
-    closeFiles(JLogger.getRootLogger.getAllAppenders)
-    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers.asScala
-    loggers foreach { case l: JLogger => closeFiles(l.getAllAppenders) }
+    closeAppenders(JLogger.getRootLogger.getAllAppenders)  // Is this code redundant...?  What's going on?
+    val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
+    loggers foreach { case l: JLogger => closeAppenders(l.getAllAppenders) }
   }
 
-  private def closeFiles(e: JEnumeration[_]) {
-    e.asScala foreach { case a: Appender => a.close() }
+  private def closeAppenders(appenders: TraversableOnce[_]) {
+    appenders foreach { case a: Appender => a.close() }
   }
 
   def getIPAddress =
@@ -174,6 +181,15 @@ class Logger(studentName: String) extends LoggingListener {
       System.getProperty("file.separator") + "logfile_" + appender + "_" +
       dateFormat.format(new java.util.Date) + ".xml"
 
+  def deleteLogs() {
+    var containsOthers = false
+    JLogger.getRootLogger.getAllAppenders foreach {
+      case a: WebStartAppender => a.deleteLog()
+      case _                   => containsOthers = true
+    }
+    if (containsOthers) deleteSessionFiles()   // I'm hoping here to avoid deleting all session files if we can possibly avoid it
+  }
+  
   def deleteSessionFiles() {
     Files.deleteSessionFiles(logDirectory)
   }

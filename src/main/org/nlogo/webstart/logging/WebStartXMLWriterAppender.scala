@@ -6,7 +6,6 @@ import org.apache.log4j.WriterAppender
 
 class WebStartXMLWriterAppender(mode: LogSendingMode, destinations: URL*)
                                (implicit writer: LogProxyWriter = new LogProxyWriter(mode, destinations: _*))
-                                extends WriterAppender(new XMLLayout, writer) with XMLAppender {
+                                extends WriterAppender(new XMLLayout, writer) with XMLAppender with WebStartAppender {
   def deleteLog() { writer.delete() }
-  def completeLogging() { writer.close() }
 }

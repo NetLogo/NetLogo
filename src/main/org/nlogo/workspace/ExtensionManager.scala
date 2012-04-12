@@ -138,7 +138,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // This spaghetti is a bit much for me to refactor properly... --JAB
     var jarPath = {
-      val temp = this.getClass.getClassLoader. getResource(extName + ArchiveFileEnding)
+      val temp = this.getClass.getClassLoader.getResource(extName + ArchiveFileEnding)
       if (temp != null)
         temp.toString
       else

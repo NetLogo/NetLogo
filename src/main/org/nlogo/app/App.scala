@@ -21,6 +21,9 @@ import org.picocontainer.Parameter
 
 import javax.swing._
 import java.awt.event.{WindowAdapter, WindowEvent}
+import org.apache.log4j.Appender
+import org.nlogo.swing.OptionDialog
+import org.nlogo.webstart.logging.{LogSendingMode, WebStartXMLWriterAppender}
 import java.awt.{Toolkit, Dimension, Frame}
 
 /**
@@ -44,6 +47,19 @@ object App{
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
   private var loggingName: String = null
+
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
+  private val ContinuousLogModeName = "Continuous"
+  private val AtEndLogModeName = "One-Off"
+  private val WebStartLogNoConfigFileErrorMsg = "No 'netlogo_logging.xml' file found;" +
+                    "if logging is enabled, you must include a 'netlogo_logging.xml' file in a '.jar' file, and list that '.jar' in the JNLP."
+  private val WebStartLogModeMsg =
+    "Your log files will be transfered over a network to an external server for storage.\n\n" +
+    "You can use the \"%s\" logging mode to send logging data to server as it becomes available.\n" +
+    "The downside of this option is that sending lots of data or having too slow of a connection may slow down your computer.\n\n" +
+    "Alternatively, you can use the \"%s\" logging mode, which will send all of your logging data at the end of the session.\n" +
+    "The downside of choosing this option is that you may then have to wait a while after execution for your logs to transfer.\n\n" +
+    "Which logging mode would you like to use?".format(ContinuousLogModeName, AtEndLogModeName)
 
   /**
    * Should be called once at startup to create the application and
@@ -191,9 +207,22 @@ object App{
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--logging") loggingName = nextToken()
+      else if (token == "--logging") {
+        if (isWebStart) {
+          logger.changeLogDirectory(Option(this.getClass.getClassLoader.getResource("netlogo_logging.xml")).
+                  map (_.toString) getOrElse (throw new Exception(WebStartLogNoConfigFileErrorMsg)))
+        }
+        loggingName = nextToken()
+      }
       else if (token == "--log-directory") {
-        if (logger != null) logger.changeLogDirectory(nextToken())
+        if (logger != null) {
+          if (!isWebStart)
+            logger.changeLogDirectory(nextToken())
+          else
+            JOptionPane.showConfirmDialog(null,
+                "The `--log-directory` property has no effect in WebStart clients.",
+                "NetLogo", JOptionPane.DEFAULT_OPTION)
+        }
         else JOptionPane.showConfirmDialog(null,
           "You need to initialize the logger using the --logging options before specifying a directory.",
           "NetLogo", JOptionPane.DEFAULT_OPTION)
@@ -263,7 +292,8 @@ class App extends
     AboutToQuitEvent.Handler with
     Controllable {
 
-  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
+  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch,
+              loggingName, isWebStart, WebStartLogModeMsg, ContinuousLogModeName, AtEndLogModeName}
 
   val frame = new AppFrame
 
@@ -439,15 +469,33 @@ class App extends
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
   }
-  
+
+  private def generateWebStartAppender: Appender = {
+
+    import LogSendingMode._
+    val nameModePairs = List((ContinuousLogModeName, Continuous),
+                             (AtEndLogModeName, AfterLoggingCompletes))
+
+    val result = OptionDialog.show(App.app.frame,
+                                   "Choose Your Logging Mode",
+                                   WebStartLogModeMsg,
+                                   nameModePairs map (_._1) toArray)
+
+    val loggingMode = nameModePairs(result)._2
+    val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
+    new WebStartXMLWriterAppender(loggingMode, url)
+    
+  }
+
   def startLogging(properties:String) {
     if(new java.io.File(properties).exists) {
       val username =
         JOptionPane.showInputDialog(null, "Enter your name:", "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
-      if(username != null){
+      if(username != null) {
         logger = new Logger(username)
         listenerManager.addListener(logger)
+        if (isWebStart) logger.addAppender(generateWebStartAppender)
         Logger.configure(properties)
         org.nlogo.api.Version.startLogging()
       }
@@ -529,7 +577,9 @@ class App extends
         if(logger!=null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
-        if (logger==null)
+        if (isWebStart)
+          JOptionPane.showConfirmDialog(null, "Log files cannot be zipped in the WebStart client.", "NetLogo", JOptionPane.DEFAULT_OPTION)
+        else if (logger==null)
           org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
         else
           logger.zipSessionFiles(e.args(0).toString)
@@ -537,7 +587,7 @@ class App extends
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
         else
-          logger.deleteSessionFiles()
+          logger.deleteLogs(isWebStart)
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -685,7 +735,64 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
+  def handle(e:AboutToQuitEvent) {
+    if(logger != null) {
+      if (isWebStart)
+        handleWebStartLoggingOnQuit()
+      else
+        logger.close()
+    }
+  }
+
+  private def handleWebStartLoggingOnQuit() {
+
+    val textFuncPairs = List(
+      ("Just Quit Now",                      () => {}),
+      ("Request That Log Deletion and Quit", () => requestLogDeletion()),
+      ("Send Full Log Before Quitting",      () => finalizeWebStartLoggingSession())
+    )
+
+    val result = OptionDialog.show(
+      App.app.frame,
+      "End Logging?",
+      "Closing NetLogo will end your logging session.  What would you like to happen with this session's logs?",
+      textFuncPairs map (_._1) toArray
+    )
+
+    textFuncPairs(result)._2() // Run the function associated with the selection
+
+  }
+
+  private def requestLogDeletion() {
+    Option(logger) foreach (_.deleteLogs(isWebStart))
+  }
+
+  private def finalizeWebStartLoggingSession() {
+
+    import scala.concurrent.ops.spawn
+
+    lazy val pbar = new JProgressBar()
+    pbar.setIndeterminate(true)
+    pbar.setString("Please wait while NetLogo transfers your log file...")
+    pbar.setStringPainted(true)
+
+    lazy val dialog = new JDialog()
+    dialog.setSize(new java.awt.Dimension(400, 200))
+    dialog.setUndecorated(true)
+    dialog.setModal(true)
+    dialog.add(pbar)
+    dialog.setLocationRelativeTo(frame)
+
+    spawn {
+      dialog.setVisible(true)  // This must be a background task, since the dialog in modal
+    }
+
+    spawn {
+      logger.close()  // This must be a background task, so as to avoid blocking the progress bar
+      dialog.dispose()
+    }
+
+  }
 
   /**
    * Generates OS standard frame title. 
