@@ -184,8 +184,8 @@ class Logger(studentName: String) extends LoggingListener {
   def deleteLogs() {
     var containsOthers = false
     JLogger.getRootLogger.getAllAppenders foreach {
-      case a: WebStartAppender => a.deleteLog()
-      case _                   => containsOthers = true
+      case wsa: WebStartAppender => wsa.deleteLog()
+      case _                     => containsOthers = true
     }
     if (containsOthers) deleteSessionFiles()   // I'm hoping here to avoid deleting all session files if we can possibly avoid it
   }

@@ -587,7 +587,7 @@ class App extends
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
         else
-          logger.deleteLogs(isWebStart)
+          logger.deleteLogs()
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -764,7 +764,7 @@ class App extends
   }
 
   private def requestLogDeletion() {
-    Option(logger) foreach (_.deleteLogs(isWebStart))
+    Option(logger) foreach (_.deleteLogs())
   }
 
   private def finalizeWebStartLoggingSession() {
