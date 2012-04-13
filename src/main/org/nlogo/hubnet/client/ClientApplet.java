@@ -52,9 +52,12 @@ public strictfp class ClientApplet
 
           try {
              String name = getParameter("DefaultModel");
-                 System.out.println("override url: " + name);
+             System.out.println("override url: " + name);
               if ( name != null )
-              { specurl = new URL(name);       }
+              {
+                  URL codebase = getCodeBase();
+                  specurl = new URL(codebase,name);
+              }
           }
           catch (MalformedURLException me)
           {
