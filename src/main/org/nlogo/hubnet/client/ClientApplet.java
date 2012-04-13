@@ -20,8 +20,10 @@ public strictfp class ClientApplet
     extends javax.swing.JApplet
     implements ErrorHandler {
   private ClientPanel clientPanel;
-    String cusername = "Fake";
-       int cport = Ports.DEFAULT_PORT_NUMBER();
+
+    //add these to override defaults with applet params
+    String cusername = "";
+    int cport = Ports.DEFAULT_PORT_NUMBER();
 
 
   @Override
