@@ -20,7 +20,7 @@
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
 /***
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 onLoadMessage := ""
 
