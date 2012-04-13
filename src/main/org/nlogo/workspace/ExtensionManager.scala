@@ -7,7 +7,7 @@ import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primi
 import collection.mutable.HashMap
 import scala.util.control.Exception
 import java.io.{IOException, FileNotFoundException, PrintWriter}
-import org.nlogo.util.{FileUtils, NetUtils, ZipUtils}
+import org.nlogo.util.WebStartUtils
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -59,8 +59,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    * breaking the existing extensions API -- CLB
    */
 
-  val ArchiveFileEnding = ".jar"
-  val WebStartTempDir = System.getProperty("java.io.tmpdir") + "netlogo_extensions" + System.getProperty("file.separator")
+  private val ArchiveFileEnding = ".jar"
+  private val WsExtensionsFolderName = "netlogo_extensions"
+  private val WsPolicyFileName = "extensions.jarmarker"
 
   // ugly stuff to ensure that we only load
   // the soundbank once. guess anyone else can use it too.
@@ -124,16 +125,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // A better alternative to `isFirst` would be preferable
     if (isFirst && isWebStart) {
-
       isFirst = false
-      disableSecurityManager()
-      FileUtils.createDirectoryAnew(WebStartTempDir)
-
-      val policyFileName = "extensions.jarmarker"
-      val policyPath = this.getClass.getClassLoader.getResource(policyFileName).toString
-      val localFilePath = NetUtils.downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2), WebStartTempDir)
-      ZipUtils.extractFilesFromJar(localFilePath, WebStartTempDir)
-
+      WebStartUtils.extractAllFilesFromJarByMarker(WsPolicyFileName, WsExtensionsFolderName)
     }
 
     // This spaghetti is a bit much for me to refactor properly... --JAB
@@ -269,7 +262,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     Exception.ignoring(classOf[MalformedURLException]) {
       if (isWebStart) {
-        val jarFile = new java.io.File(WebStartTempDir + path)
+        val jarFile = new java.io.File(WebStartUtils.getWebStartPath(WsExtensionsFolderName) + path)
         if (jarFile.exists)
           return ExtensionManager.toURL(jarFile).toString
       }
@@ -663,51 +656,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
   private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] = {
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
-  }
-
-  /* Disables security for the rest of the program's execution (specifically added for GoGo with WebStart)
-   * You might then think that I could put this in the GoGo extension code, but, at that point in the
-   * code, we don't have permissions to be changing the security manager, so... something needs to be done
-   * outside of the extension's code.
-   *
-   * I originally only included this around the calls to classManager.runOnce() in this.importExtension(),
-   * (since it was originally only for GoGoWindowsHandler), but it turns out that permissions are also necessary
-   * when GoGo goes to load the serial libraries.  I see no other obvious way to get permissions to that
-   * context than to simply turn the security manager off altogether.
-   *
-   * Possible Alternatives:
-   * a) .policy file -> System.setProperty("java.security.policy", policyFilePath) -> Policy.getPolicy.refresh
-   *    --Tried; fidgetty, hard to debug, didn't seem to be getting applied to the extension's context properly
-   * b) Manually setting security policies through ProtectionDomain
-   *    --Tried; settings did not persist into the extension's context.  Might work better if the constructor
-   *      that involves a ClassLoader were used, but... might actually be bad to persist those policy changes
-   *      beyond the call to runOnce()
-   *
-   * Things that _Won't_ Work:
-   * a) Any changes inside the _extension's_ code.  The WebStart JNLP's <all-permissions/> tag only affects the
-   *    main code that corresponds to the JNLP's `resources` -> `jar` (with `main="true"`).  Other code has to
-   *    get its own permissions set (somehow).  See bugs.sun.com/bugdatabase/view_bug.do?bug_id=4809366 (relevant
-   *    information is towards the bottom)
-   * b) Simply signing the individual extension .jar files
-   * c) Other rain dances/security dances
-   *
-   * If you so choose to do this without disabling the security manager, you'll want to run much of
-   * JavaLibraryPath through this function (and maybe make it available through ExtensionManager so
-   * extensions can use it, too):
-   *
-   * private def doWithPrivs[T](block: => T): T = {
-   *   AccessController.doPrivileged(new PrivilegedAction[T]() {
-   *     def run : T = {
-   *       block
-   *     }
-   *   })
-   * }
-   *
-   * --JAB
-   *
-   */
-  private def disableSecurityManager() {
-    System.setSecurityManager(null)
   }
 
   private class JarContainer(val extensionName: String, val jarName: String, var jarClassLoader: URLClassLoader, val modified: Long) {

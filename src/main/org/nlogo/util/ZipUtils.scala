@@ -1,8 +1,8 @@
 package org.nlogo.util
 
-import collection.mutable.{ArrayBuffer, ListBuffer}
-import java.io.ByteArrayInputStream
+import collection.mutable.ArrayBuffer
 import java.util.zip.{GZIPInputStream, ZipEntry, ZipFile}
+import java.io.ByteArrayInputStream
 
 object ZipUtils {
 
@@ -42,18 +42,17 @@ object ZipUtils {
     unGzip(data.getBytes(encoding))
   }
 
-  def extractFilesFromJar(jarpath: String, dest: String) {
-
+  def extractFilesFromJar(jarpath: String, dest: String, entryFilter: ZipEntry => Boolean = (_ => true)): List[java.io.File] = {
+    
+    import collection.JavaConverters.enumerationAsScalaIteratorConverter
+    
     val zipFile = new ZipFile(jarpath)
-    val entries = zipFile.entries
-    val buffer = new ListBuffer[ZipEntry]()
-
-    while (entries.hasMoreElements)
-      buffer += entries.nextElement()
-
+    val entries = Option(zipFile.entries) map (_.asScala filter (entryFilter)) getOrElse (Iterator[ZipEntry]())
+    
     // Sort by name size so we always get directories created before trying to write their children
-    buffer.toList sortBy (_.getName.size) foreach (extractFileFromZip(dest, _, zipFile))
-
+    entries.toList sortBy (_.getName.size) foreach (extractFileFromZip(dest, _, zipFile))
+    new java.io.File(dest).listFiles.toList
+    
   }
 
   def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
