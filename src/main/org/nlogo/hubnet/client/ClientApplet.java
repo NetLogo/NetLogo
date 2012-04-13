@@ -20,6 +20,9 @@ public strictfp class ClientApplet
     extends javax.swing.JApplet
     implements ErrorHandler {
   private ClientPanel clientPanel;
+    String cusername = "Fake";
+       int cport = Ports.DEFAULT_PORT_NUMBER();
+
 
   @Override
   public void init() {
@@ -48,7 +51,7 @@ public strictfp class ClientApplet
           URL specurl = null;
           String spec = "";
 
-          System.err.println("About to get the model name...");
+          System.err.println("About to get the model name and other info...");
 
           try {
              String name = getParameter("DefaultModel");
@@ -58,6 +61,21 @@ public strictfp class ClientApplet
                   URL codebase = getCodeBase();
                   specurl = new URL(codebase,name);
               }
+
+              cusername = getParameter("UserName");
+              if (cusername == null) { cusername = ""; }
+              System.err.println("Using user name of " + cusername);
+              String portstring = getParameter("PortNumber");
+              if ( portstring != null ) {
+                  try {
+                    cport =  Integer.valueOf(portstring);
+                  }
+                  catch (Exception e ) {
+                      cport = Ports.DEFAULT_PORT_NUMBER();
+                  }
+              }
+              System.err.println("Using port number of " + cport);
+
           }
           catch (MalformedURLException me)
           {
@@ -138,7 +156,7 @@ public strictfp class ClientApplet
     org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         loginDialog = new LoginDialog
-            (new Frame(), "", server, Ports.DEFAULT_PORT_NUMBER(), isApplet);
+            (new Frame(), cusername, server, cport, isApplet);
         loginDialog.addWindowListener
             (new java.awt.event.WindowAdapter() {
               @Override
