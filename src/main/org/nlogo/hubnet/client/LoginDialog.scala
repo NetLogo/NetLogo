@@ -33,8 +33,8 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def username = nameField.getText
   def server = serverField.getText
   def port = portField.getText.toInt
-  def role = if(participantRadioButton.isSelected) ClientRole.Participant else ClientRole.Controller
-  private val participantRadioButton = new JRadioButton("Enter as a regular participant") {setSelected(true)}
+  def role = ClientRole.Participant //if(participantRadioButton.isSelected) ClientRole.Participant else ClientRole.Controller
+//  private val participantRadioButton = new JRadioButton("Enter as a regular participant") {setSelected(true)}
 //  private val controllerRadioButton = new JRadioButton("Enter as the controller")
 //  private val clientRoleRadioGroup = new ButtonGroup() {
 //    add(participantRadioButton)
@@ -63,7 +63,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
         addField("Port:", portField)
       })
       add(Box.createVerticalStrut(12))
-      add(participantRadioButton)
+      //add(participantRadioButton)
 //      add(controllerRadioButton)
     }
     add(centerPanel, java.awt.BorderLayout.CENTER)
