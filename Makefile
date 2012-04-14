@@ -11,7 +11,7 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     COLON = \;
-    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_26"`
+    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_31"`
 else
     COLON = :
     ifneq (,$(findstring Darwin,$(shell uname)))
