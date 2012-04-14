@@ -91,6 +91,6 @@ trait Libraries extends DefaultProject {
   val jmockLegacy = "org.jmock" % "jmock-legacy" % "2.5.1" % "test"
   val jmockJUnit = "org.jmock" % "jmock-junit4" % "2.5.1" % "test"
   val scalacheck = "org.scalacheck" % "scalacheck_2.9.1" % "1.9" % "test"
-  val scalatest = "org.scalatest" % "scalatest_2.9.1" % "1.8.RC1" % "test"
+  val scalatest = "org.scalatest" %% "scalatest" % "1.8.RC1" % "test"
 
 }
