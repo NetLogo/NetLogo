@@ -7,5 +7,5 @@ object Ports {
   val DEFAULT_PORT_NUMBER = 9173
 
   /**The top of the range of port numbers for HubNet connections */
-  val MAX_PORT_NUMBER = 9183
+  val MAX_PORT_NUMBER = 9283
 }
