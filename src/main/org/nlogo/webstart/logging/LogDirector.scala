@@ -20,7 +20,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     loop {
       react {
         case Flush =>
-          transmitFormatted(LogBufferManager !? Read)
+          transmitFormatted((LogBufferManager !? Read).asInstanceOf[String])
 
         case ToDirectorWrite(x) =>
           LogBufferManager ! Write(x)
@@ -33,7 +33,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
         case ToDirectorFinalize =>
           actorConditionTuple map (_._1) filterNot (_ == LogBufferManager) foreach (_ ! Finalize)
-          transmitFormatted(LogBufferManager !? Finalize)
+          transmitFormatted((LogBufferManager !? Finalize).asInstanceOf[String])
           finalizeLog()
           replyClosing()
           exit("That's a cut!")
@@ -46,9 +46,9 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
   private def abandonLog()  { transmit(LoggingServerMessage.ToServerAbandon.toString) }
   private def finalizeLog() { transmit(LoggingServerMessage.ToServerFinalize.toString) }
 
-  private def transmitFormatted(message: Any) {
+  private def transmitFormatted(message: String) {
     import LoggingServerMessage._
-    val msgOpt = Option(message.asInstanceOf[String]) flatMap { case x => if (!x.isEmpty) Some(x) else None }
+    val msgOpt = Option(message) flatMap { case x => if (!x.isEmpty) Some(x) else None }
     transmit(msgOpt map (ToServerWrite(_).toString) getOrElse (ToServerPulse.toString))
   }
 
@@ -91,7 +91,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     }
 
     private def replyAndClear() {
-      reply(dataBuffer.mkString("\n"))
+      reply(dataBuffer.mkString)
       dataBuffer.clear()
     }
 

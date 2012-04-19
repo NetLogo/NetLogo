@@ -136,20 +136,23 @@ class Logger(studentName: String) extends LoggingListener {
   def newFiles(e: JEnumeration[_], name: String): JList[String] = {
     val filenames = new ArrayList[String]
     e foreach {
-      case appender: FileAppender =>
-        val filename = logFileName(appender.getName)
-        filenames.add(filename)
-        appender.setFile(filename)
-        appender match {
-          case xappender: XMLFileAppender => setupXMLFileAppender(name, xappender)
-          case _                          => // Otherwise, ignore
+      case xappender: XMLAppender =>
+        setupXMLAppender(name, xappender)
+        xappender match {
+          case appender: FileAppender =>
+            val filename = logFileName(appender.getName)
+            filenames.add(filename)
+            appender.setFile(filename)
+            appender.activateOptions()
+          case wsAppender: WebStartAppender =>
+            wsAppender.initialize()
+          case _                      => // Otherwise, ignore
         }
-        appender.activateOptions()
     }
     filenames
   }
 
-  private def setupXMLFileAppender(name: String, xappender: XMLFileAppender) {
+  private def setupXMLAppender(name: String, xappender: XMLAppender) {
     xappender.setStudentName(studentName)
     xappender.setUsername(System.getProperty("user.name"))
     xappender.setIPAddress(getIPAddress)
@@ -181,15 +184,13 @@ class Logger(studentName: String) extends LoggingListener {
       System.getProperty("file.separator") + "logfile_" + appender + "_" +
       dateFormat.format(new java.util.Date) + ".xml"
 
-  def deleteLogs() {
-    var containsOthers = false
+  def requestRemoteLogDeletion() {
     JLogger.getRootLogger.getAllAppenders foreach {
       case wsa: WebStartAppender => wsa.deleteLog()
-      case _                     => containsOthers = true
+      case _                     => // Ignore appenders that aren't remote
     }
-    if (containsOthers) deleteSessionFiles()   // I'm hoping here to avoid deleting all session files if we can possibly avoid it
   }
-  
+
   def deleteSessionFiles() {
     Files.deleteSessionFiles(logDirectory)
   }
