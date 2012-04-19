@@ -141,7 +141,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     try {
       jarPath = resolvePathAsURL(jarPath)
       if (AbstractWorkspace.isApplet) {
-        val url: URL = new URL(jarPath)
+        val url = new URL(jarPath)
         // added in r43348. motivation: https://trac.assembla.com/nlogo/ticket/647 .
         // we need to work around http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6785446
         url.openConnection.setUseCaches(false)
@@ -264,7 +264,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
       if (isWebStart) {
         val jarFile = new java.io.File(WebStartUtils.getWebStartPath(WsExtensionsFolderName) + path)
         if (jarFile.exists)
-          return ExtensionManager.toURL(jarFile).toString
+          return ExtensionManager.file2LocalURLStr(jarFile)
       }
     }
 
@@ -278,7 +278,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     if (path.indexOf('/') > -1) {
         val jarFile = new java.io.File(workspace.attachModelDir(path))
         if (jarFile.exists)
-          return ExtensionManager.toURL(jarFile).toString
+          return ExtensionManager.file2LocalURLStr(jarFile)
       }
     }
 
@@ -286,14 +286,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File(workspace.attachModelDir(path))
       if (jarFile.exists)
-        return ExtensionManager.toURL(jarFile).toString
+        return ExtensionManager.file2LocalURLStr(jarFile)
     }
 
     // Then try the extensions folder
     Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File("extensions" + java.io.File.separator + path)
       if (jarFile.exists)
-        return ExtensionManager.toURL(jarFile).toString
+        return ExtensionManager.file2LocalURLStr(jarFile)
     }
 
     // Give up
@@ -685,7 +685,12 @@ object ExtensionManager {
   // so for now, at least we make this a separate method so the
   // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
   @SuppressWarnings(Array("deprecation"))
-  private def toURL(file: java.io.File): java.net.URL = {
+  private def toURL(file: java.io.File): URL = {
     file.toURI.toURL
   }
+
+  private def file2LocalURLStr(file: java.io.File): String = {
+    toURL(file).toString.replaceAll("%20", " ")
+  }
+
 }
