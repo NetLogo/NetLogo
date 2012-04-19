@@ -16,17 +16,16 @@ object WebStartUtils {
   }
 
   // Find the '.jar' that contains the desired file, downloads it to (to the "temp" directory), and returns its filepath
-  def getPathToContainingJar(resourceName: String, desiredFolderName: String): String = {
+  def getPathToContainingJar(resourceName: String, destinationDir: String): String = {
 
-    val dir = getWebStartPath(desiredFolderName)
     disableSecurityManager()
-    FileUtils.createDirectoryAnew(dir)
+    FileUtils.createDirectoryAnew(destinationDir)
 
     val urlToJar = Option(this.getClass.getClassLoader.getResource(resourceName)).
                       getOrElse (throw new FileNotFoundException("File '%s' not found!".format(resourceName)))
     val JarLocMatcher = """jar:(.*)!/.*""".r
-    val JarLocMatcher(jarLoc) = urlToJar
-    NetUtils.downloadFile(jarLoc, dir)
+    val JarLocMatcher(jarLoc) = urlToJar.toString
+    NetUtils.downloadFile(jarLoc, destinationDir)
 
   }
 

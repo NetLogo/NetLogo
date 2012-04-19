@@ -8,7 +8,6 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.Pico
 import org.nlogo.window._
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
@@ -25,6 +24,10 @@ import org.apache.log4j.Appender
 import org.nlogo.swing.OptionDialog
 import org.nlogo.webstart.logging.{LogSendingMode, WebStartXMLWriterAppender}
 import java.awt.{Toolkit, Dimension, Frame}
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import org.nlogo.util.{WebStartUtils, Pico}
+import java.io.FileNotFoundException
 
 /**
  * The main class for the complete NetLogo application.
@@ -51,15 +54,17 @@ object App{
   private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
   private val ContinuousLogModeName = "Continuous"
   private val AtEndLogModeName = "One-Off"
-  private val WebStartLogNoConfigFileErrorMsg = "No 'netlogo_logging.xml' file found;" +
-                    "if logging is enabled, you must include a 'netlogo_logging.xml' file in a '.jar' file, and list that '.jar' in the JNLP."
+  private val ExpectedLogConfigFileName = "netlogo_logging.xml"
+  private val WebStartTempDirTemplate = "netlogo_logging__%s"
+  private val WebStartLogNoConfigFileErrorMsg = ("No '%s' file found; if logging is enabled, you must include a '%s' " +
+          "file in a '.jar' file, and list that '.jar' in the JNLP.").format(Stream.continually(ExpectedLogConfigFileName) take 2: _*)
   private val WebStartLogModeMsg =
-    "Your log files will be transfered over a network to an external server for storage.\n\n" +
+    ("Your log files will be transfered over a network to an external server for storage.\n\n" +
     "You can use the \"%s\" logging mode to send logging data to server as it becomes available.\n" +
     "The downside of this option is that sending lots of data or having too slow of a connection may slow down your computer.\n\n" +
     "Alternatively, you can use the \"%s\" logging mode, which will send all of your logging data at the end of the session.\n" +
     "The downside of choosing this option is that you may then have to wait a while after execution for your logs to transfer.\n\n" +
-    "Which logging mode would you like to use?".format(ContinuousLogModeName, AtEndLogModeName)
+    "Which logging mode would you like to use?").format(ContinuousLogModeName, AtEndLogModeName)
 
   /**
    * Should be called once at startup to create the application and
@@ -209,19 +214,26 @@ object App{
       else if (token == "--builddate") printAndExit(Version.buildDate)
       else if (token == "--logging") {
         if (isWebStart) {
-          logger.changeLogDirectory(Option(this.getClass.getClassLoader.getResource("netlogo_logging.xml")).
-                  map (_.toString) getOrElse (throw new Exception(WebStartLogNoConfigFileErrorMsg)))
+
+          val timestamp = new SimpleDateFormat("yyyy-MM-dd.HH_mm_ss_SSS").format(Calendar.getInstance().getTime)
+          val targetDirName = WebStartTempDirTemplate.format(timestamp)
+          val files = try {
+            WebStartUtils.extractAllFilesFromJarByMarker(ExpectedLogConfigFileName, targetDirName, (_.getName == ExpectedLogConfigFileName))
+          }
+          catch {
+            case ex: FileNotFoundException => throw new Exception(WebStartLogNoConfigFileErrorMsg, ex)
+          }
+
+          loggingName = files.collectFirst { case x if (x.getName == ExpectedLogConfigFileName) => x.toString }.
+                  getOrElse (throw new Exception("Unknown error in unpacking logging config file!"))
+          Option(logger) foreach (_.changeLogDirectory(loggingName))
+
         }
-        loggingName = nextToken()
+        else loggingName = nextToken()
       }
       else if (token == "--log-directory") {
         if (logger != null) {
-          if (!isWebStart)
-            logger.changeLogDirectory(nextToken())
-          else
-            JOptionPane.showConfirmDialog(null,
-                "The `--log-directory` property has no effect in WebStart clients.",
-                "NetLogo", JOptionPane.DEFAULT_OPTION)
+          logger.changeLogDirectory(nextToken())
         }
         else JOptionPane.showConfirmDialog(null,
           "You need to initialize the logger using the --logging options before specifying a directory.",
@@ -472,14 +484,32 @@ class App extends
 
   private def generateWebStartAppender: Appender = {
 
+    import annotation.tailrec
+    @tailrec
+    def untilValid[T](resultGiver: () => T, validationCondition: T => Boolean) : T = {
+      val result = resultGiver()
+      if (validationCondition(result))
+        result
+      else
+        untilValid(resultGiver, validationCondition)
+    }
+
     import LogSendingMode._
     val nameModePairs = List((ContinuousLogModeName, Continuous),
                              (AtEndLogModeName, AfterLoggingCompletes))
 
-    val result = OptionDialog.show(App.app.frame,
-                                   "Choose Your Logging Mode",
-                                   WebStartLogModeMsg,
-                                   nameModePairs map (_._1) toArray)
+    val names: Array[AnyRef] = nameModePairs map (_._1) toArray
+    val result = untilValid[Int](
+      () => JOptionPane.showOptionDialog(null,
+                                         WebStartLogModeMsg,
+                                         "Choose Your Logging Mode",
+                                         JOptionPane.DEFAULT_OPTION,
+                                         JOptionPane.QUESTION_MESSAGE,
+                                         null,
+                                         names,
+                                         names(0)),
+      (_ >= 0)
+    )
 
     val loggingMode = nameModePairs(result)._2
     val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
@@ -495,8 +525,8 @@ class App extends
       if(username != null) {
         logger = new Logger(username)
         listenerManager.addListener(logger)
-        if (isWebStart) logger.addAppender(generateWebStartAppender)
         Logger.configure(properties)
+        if (isWebStart) logger.addAppender(generateWebStartAppender)
         org.nlogo.api.Version.startLogging()
       }
     }
@@ -577,17 +607,29 @@ class App extends
         if(logger!=null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
-        if (isWebStart)
-          JOptionPane.showConfirmDialog(null, "Log files cannot be zipped in the WebStart client.", "NetLogo", JOptionPane.DEFAULT_OPTION)
-        else if (logger==null)
+
+        if (logger==null)
           org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
         else
           logger.zipSessionFiles(e.args(0).toString)
+
+        if (isWebStart)
+          JOptionPane.showConfirmDialog(null,
+                                        "Your local log files have been zipped, but this action has no affect on remotely-stored log files.",
+                                        "NetLogo",
+                                        JOptionPane.DEFAULT_OPTION)
+
       case DELETE_LOG_FILES =>
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
-          logger.deleteLogs()
+        else {
+          logger.deleteSessionFiles()
+          if (isWebStart)
+            JOptionPane.showConfirmDialog(null,
+                                          "Your local log files have been deleted, but this action has no affect on remotely-stored log files.",
+                                          "NetLogo",
+                                          JOptionPane.DEFAULT_OPTION)
+        }
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -747,24 +789,24 @@ class App extends
   private def handleWebStartLoggingOnQuit() {
 
     val textFuncPairs = List(
-      ("Just Quit Now",                      () => {}),
-      ("Request That Log Deletion and Quit", () => requestLogDeletion()),
-      ("Send Full Log Before Quitting",      () => finalizeWebStartLoggingSession())
+      ("Send Full Log Before Quitting", () => finalizeWebStartLoggingSession()),
+      ("Request Log Deletion and Quit", () => requestRemoteLogDeletion()),
+      ("Just Quit Now",                 () => {})
     )
 
     val result = OptionDialog.show(
-      App.app.frame,
+      frame,
       "End Logging?",
       "Closing NetLogo will end your logging session.  What would you like to happen with this session's logs?",
       textFuncPairs map (_._1) toArray
     )
 
-    textFuncPairs(result)._2() // Run the function associated with the selection
+    if (result >= 0) textFuncPairs(result)._2() // Run the function associated with the selection
 
   }
 
-  private def requestLogDeletion() {
-    Option(logger) foreach (_.deleteLogs())
+  private def requestRemoteLogDeletion() {
+    Option(logger) foreach (_.requestRemoteLogDeletion())
   }
 
   private def finalizeWebStartLoggingSession() {
