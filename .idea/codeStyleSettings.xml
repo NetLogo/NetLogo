@@ -9,7 +9,6 @@
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
           <value />
         </option>
-        <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
         <ScalaCodeStyleSettings>
           <option name="ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY" value="true" />
           <option name="IMPORTS_MEMBERS_USING_UNDERSCORE" value="false" />
