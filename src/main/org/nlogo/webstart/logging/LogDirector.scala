@@ -2,8 +2,9 @@ package org.nlogo.webstart.logging
 
 import java.net.URL
 import actors.{TIMEOUT, Actor}
-import message.LogManagementMessage._
-import message.{LoggingServerMessage, DirectorMessage}
+import message.{DirectorMessage, LogManagementMessage, LoggingServerMessage}
+import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
+import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 
 // An actor controller; receives logging data and figures out what to do with it
 class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
@@ -20,7 +21,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     loop {
       react {
         case Flush =>
-          transmitFormatted((LogBufferManager !? Read).asInstanceOf[String])
+          transmitFormatted((LogBufferManager !? Read).asInstanceOf[List[String]])
 
         case ToDirectorWrite(x) =>
           LogBufferManager ! Write(x)
@@ -33,7 +34,7 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
         case ToDirectorFinalize =>
           actorConditionTuple map (_._1) filterNot (_ == LogBufferManager) foreach (_ ! Finalize)
-          transmitFormatted((LogBufferManager !? Finalize).asInstanceOf[String])
+          transmitFormatted((LogBufferManager !? Finalize).asInstanceOf[List[String]])
           finalizeLog()
           replyClosing()
           exit("That's a cut!")
@@ -43,13 +44,12 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
   private def replyClosing() { reply(DirectorMessage.FromDirectorClosed) }
 
-  private def abandonLog()  { transmit(LoggingServerMessage.ToServerAbandon.toString) }
-  private def finalizeLog() { transmit(LoggingServerMessage.ToServerFinalize.toString) }
+  private def abandonLog()  { transmit(ToServerAbandon.toString) }
+  private def finalizeLog() { transmit(ToServerFinalize.toString) }
 
-  private def transmitFormatted(message: String) {
-    import LoggingServerMessage._
-    val msgOpt = Option(message) flatMap { case x => if (!x.isEmpty) Some(x) else None }
-    transmit(msgOpt map (ToServerWrite(_).toString) getOrElse (ToServerPulse.toString))
+  private def transmitFormatted(messages: List[String]) {
+    val msgListOpt = if (messages filterNot (_.isEmpty) isEmpty) None else Some(messages)
+    msgListOpt map (_ map (ToServerWrite(_).toString)) getOrElse (List(ToServerPulse.toString)) foreach transmit
   }
 
   private def transmit(message: String) {
@@ -73,14 +73,15 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
    */
   private object LogBufferManager extends Actor {
 
+    private val MessageCharLimit = 70000
     private val dataBuffer = new collection.mutable.ListBuffer[String]()
 
     def act() {
       loop {
         react {
           case Write(data) => write(data)
-          case Read        => replyAndClear()
-          case Finalize    => replyAndClear(); exit("Mission complete")
+          case Read        => reply(flushBuffer())
+          case Finalize    => reply(flushBuffer()); exit("Mission complete")
           case Abandon     => exit("Mission aborted")
         }
       }
@@ -90,9 +91,29 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
       dataBuffer += data
     }
 
-    private def replyAndClear() {
-      reply(dataBuffer.mkString)
+    private def flushBuffer() : List[String] = {
+
+      // Sequentially accumulates the passed-in strings into strings that are as large as possible
+      // while still adhering to the restriction that `accumulatedStr.size < MessageCharLimit`
+      // Note: Could be made more efficient by retaining length info across calls
+      def condenseToLimitedStrs(remainingContents: List[String]) : List[String] = {
+        remainingContents match {
+          case Nil => Nil
+          case _   =>
+            val totalChars = remainingContents map (_.size) sum
+            val accumSizeToElemList = remainingContents.foldLeft(List[(Int, String)]()){
+              case (Nil, x) => (totalChars, x) :: Nil
+              case (acc, x) => (acc.head._1 - acc.head._2.size, x) :: acc
+            }
+            val (mustWaitSizeStrPairs, canGoSizeStrPairs) = accumSizeToElemList partition (_._1 > MessageCharLimit)
+            canGoSizeStrPairs.map(_._2).mkString :: condenseToLimitedStrs(mustWaitSizeStrPairs map (_._2))
+        }
+      }
+
+      val bufferContents = dataBuffer.toList
       dataBuffer.clear()
+      condenseToLimitedStrs(bufferContents)
+
     }
 
   }
