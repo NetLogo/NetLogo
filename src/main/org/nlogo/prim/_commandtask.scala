@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter, Task }
+import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
 
 class _commandtask(proc: Procedure) extends Reporter {
 
