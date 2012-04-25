@@ -217,3 +217,7 @@ command-task-body-may-have-different-agent-type
 
 command-task-body-gets-agent-type-check
   O> __ignore task [hatch 1 sprout 1] => COMPILER ERROR You can't use sprout in a turtle context, because sprout is patch-only.
+
+command-task-closes-over-let-inside-task-of-different-agent
+  O> __let z 0 crt 1 [ set glob1 task [ __ignore z ] ]
+  O> run glob1
