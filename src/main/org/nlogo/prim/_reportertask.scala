@@ -16,7 +16,7 @@ class _reportertask extends Reporter {
   override def report(c: Context): AnyRef =
     ReporterTask(body = args(0),
                  formals = formals.reverse.dropWhile(_==null).reverse.toArray,
-                 lets = Task.allLets(c),
+                 lets = c.allLets,
                  locals = c.activation.args)
 
   def getFormal(n: Int): Let = {

@@ -16,7 +16,7 @@ class _commandtask(proc: Procedure) extends Reporter {
   override def report(c: Context): AnyRef =
     CommandTask(procedure = proc,
                 formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
-                lets = Task.allLets(c),
+                lets = c.allLets,
                 locals = c.activation.args)
 
 }
