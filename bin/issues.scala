@@ -28,7 +28,7 @@ libraryDependencies ~= { seq =>
     val vers = "0.8.8"
     seq ++ Seq("net.databinder" %% "dispatch-core" % vers,
                "net.databinder" %% "dispatch-http" % vers,
-               "net.liftweb" %% "lift-json" % "2.4")
+               "net.liftweb" % "lift-json_2.9.1" % "2.4")
 }
 */
 
@@ -52,7 +52,7 @@ object Issue {
 case class Issue(number: Int, title: String)
 
 val base = "https://api.github.com/repos/NetLogo/NetLogo/issues"
-val u = url(base) <<? Map("milestone" -> "10",
+val u = url(base) <<? Map("milestone" -> "11",
                           "state" -> "closed",
                           "per_page" -> "1000")
 val http = new Http with NoLogging
