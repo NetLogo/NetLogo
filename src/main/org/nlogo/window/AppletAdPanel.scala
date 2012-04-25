@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Dimension, Font, Graphics, Graphics2D }
-import javax.swing.{ BorderFactory, Icon }
+import java.awt.{ Color, Dimension, Font, Graphics, Graphics2D }
+import javax.swing.{ BorderFactory, Box, BoxLayout, Icon }
 
 class AppletAdPanel(iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel {
@@ -19,9 +19,10 @@ extends javax.swing.JPanel {
     label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     icon.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     setBackground(Color.WHITE)
-    setLayout(new BorderLayout)
-    add(label, BorderLayout.CENTER)
-    add(icon, BorderLayout.SOUTH)
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    add(Box.createGlue)
+    add(label)
+    add(icon)
   }
 
   private class JVertLabel(label: String) extends javax.swing.JLabel(label) {
