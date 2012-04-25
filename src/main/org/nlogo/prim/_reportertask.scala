@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.api.{ Let, Syntax }
-import org.nlogo.nvm.{ ReporterTask, Context, Reporter }
+import org.nlogo.nvm.{ ReporterTask, Context, Reporter, Task }
 
 class _reportertask extends Reporter {
 
@@ -16,7 +16,7 @@ class _reportertask extends Reporter {
   override def report(c: Context): AnyRef =
     ReporterTask(body = args(0),
                  formals = formals.reverse.dropWhile(_==null).reverse.toArray,
-                 lets = c.letBindings,
+                 lets = Task.allLets(c),
                  locals = c.activation.args)
 
   def getFormal(n: Int): Let = {

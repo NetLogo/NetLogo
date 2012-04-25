@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.api.Syntax
-import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter }
+import org.nlogo.nvm.{ CommandTask, Context, Procedure, Reporter, Task }
 
 class _commandtask(proc: Procedure) extends Reporter {
 
@@ -16,7 +16,7 @@ class _commandtask(proc: Procedure) extends Reporter {
   override def report(c: Context): AnyRef =
     CommandTask(procedure = proc,
                 formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
-                lets = c.letBindings,
+                lets = Task.allLets(c),
                 locals = c.activation.args)
 
 }

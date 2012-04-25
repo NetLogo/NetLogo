@@ -36,6 +36,16 @@ sealed trait Task {
   }
 }
 
+// it'd be nicer if this were a method on Context, but Context is in Java
+// and it's easier to write this in Scala - ST 4/25/12
+object Task {
+  def allLets(c: Context): List[LetBinding] =
+    Iterator.iterate(c)(_.job.parentContext)
+      .takeWhile(_ != null)
+      .flatMap(_.letBindings)
+      .toList
+}
+
 // Reporter tasks are pretty simple.  The body is simply a Reporter.  To run it, we swap closed-over
 // variables into the context, bind actuals to formals, call report(), then unswap.
 
