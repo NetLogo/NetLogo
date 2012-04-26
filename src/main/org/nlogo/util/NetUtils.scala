@@ -10,18 +10,28 @@ object NetUtils {
 
   def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
 
+    def postData(pData: String, destination: URL, attemptNum: Int = 1, maxAttempts: Int = 10): String = {
+      try {
+        val conn = new URL(dest.toString + "?" + pData).openConnection().asInstanceOf[HttpURLConnection]
+        conn.setRequestMethod("POST")
+        conn.setDoOutput(true)
+        val in = new InputStreamReader(conn.getInputStream)
+        val buff = new Array[Char](DefaultReadSize)
+        in.read(buff)
+        in.close()
+        buff.mkString.trim
+      }
+      catch {
+        case ex: java.net.SocketException =>
+          if (attemptNum < maxAttempts) postData(pData, destination, attemptNum + 1, maxAttempts)
+          else                          throw new Exception("Serially failed %d attempts to POST".format(maxAttempts), ex)
+      }
+    }
+
     val data = postKVs.toList map {
       case (key, value) => "%s=%s".format(List(key, value) map (URLEncoder.encode(_, encoding)): _*)
     } mkString ("&")
-    val conn = new URL(dest.toString + "?" + data).openConnection().asInstanceOf[HttpURLConnection]
-    conn.setRequestMethod("POST")
-    conn.setDoOutput(true)
-
-    val in = new InputStreamReader(conn.getInputStream)
-    val buff = new Array[Char](DefaultReadSize)
-    in.read(buff)
-    in.close()
-    buff.mkString.trim
+    postData(data, dest)
 
   }
 
@@ -37,13 +47,18 @@ object NetUtils {
 
   }
 
+  /**
+   * @param from  The path of the file to download
+   * @param to    The directory into which to download the file
+   * @return      The full path of the downloaded file
+   */
   def downloadFile(from: String, to: String): String = {
 
     val readSize = DefaultReadSize
     val fileName = from.reverse takeWhile (_ != '/') reverse
-    val outPath = to + System.getProperty("file.separator") + fileName
+    val outPath  = to + System.getProperty("file.separator") + fileName
 
-    val inStream = new BufferedInputStream(new URL(from).openStream())
+    val inStream  = new BufferedInputStream(new URL(from).openStream())
     val outStream = new FileOutputStream(outPath)
     val outBuffer = new BufferedOutputStream(outStream, readSize)
     val data = new Array[Byte](readSize)
