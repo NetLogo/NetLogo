@@ -1,4 +1,4 @@
-package org.nlogo.webstart.logging
+package org.nlogo.log.webstart
 
 import java.io.Writer
 import java.net.URL

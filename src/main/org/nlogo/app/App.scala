@@ -22,7 +22,7 @@ import javax.swing._
 import java.awt.event.{WindowAdapter, WindowEvent}
 import org.apache.log4j.Appender
 import org.nlogo.swing.OptionDialog
-import org.nlogo.webstart.logging.{LogSendingMode, WebStartXMLWriterAppender}
+import org.nlogo.log.webstart.{LogSendingMode, WebStartXMLWriterAppender}
 import java.awt.{Toolkit, Dimension, Frame}
 import java.text.SimpleDateFormat
 import java.util.Calendar

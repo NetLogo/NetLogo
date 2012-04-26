@@ -1,4 +1,4 @@
-package org.nlogo.webstart.logging.message
+package org.nlogo.log.webstart.message
 
 sealed trait DirectorMessage
 

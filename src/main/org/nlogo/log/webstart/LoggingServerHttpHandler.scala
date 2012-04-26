@@ -1,4 +1,4 @@
-package org.nlogo.webstart.logging
+package org.nlogo.log.webstart
 
 import java.net.URL
 import scala.collection.mutable.HashMap

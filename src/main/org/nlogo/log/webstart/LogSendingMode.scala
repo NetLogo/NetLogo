@@ -1,4 +1,4 @@
-package org.nlogo.webstart.logging
+package org.nlogo.log.webstart
 
 sealed trait LogSendingMode
 

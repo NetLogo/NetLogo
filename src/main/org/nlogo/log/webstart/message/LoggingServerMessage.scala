@@ -1,8 +1,8 @@
-package org.nlogo.webstart.logging.message
+package org.nlogo.log.webstart.message
 
-private[logging] sealed trait LoggingServerMessage
+private[webstart] sealed trait LoggingServerMessage
 
-private[logging] object LoggingServerMessage {
+private[webstart] object LoggingServerMessage {
 
   private val Sep = "|"
 

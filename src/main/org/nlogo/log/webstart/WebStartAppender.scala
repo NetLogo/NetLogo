@@ -1,4 +1,4 @@
-package org.nlogo.webstart.logging
+package org.nlogo.log.webstart
 
 import org.apache.log4j.Appender
 
