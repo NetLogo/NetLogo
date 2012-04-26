@@ -54,14 +54,8 @@ val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
 val req = base <<? Map("milestone" -> "11",
                        "state" -> "closed",
                        "per_page" -> "1000")
-
-// I don't know Dispatch Reboot well enough to pipe this through the JSON parser the "right" way --
-// with sparkly asynchronous future-y promise-y streaming goodness -- so for now just slurp the
-// whole thing into a String and go from there. Like this was goddamn Perl or something.
-// - ST 4/25/12
-
-val json = Http(req > As.string).apply
-val parsed = JsonParser.parse(new java.io.StringReader(json))
+val stream = Http(req > As(_.getResponseBodyAsStream)).apply
+val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
 val issues: List[Issue] =
   (for {
     JArray(objs) <- parsed
