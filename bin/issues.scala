@@ -19,28 +19,26 @@
 // - note: if you run the script for the first time and it appears non-responsive, do not fear;
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
+// We're using Dispatch Reboot here, even though it's still in alpha, instead of just using the old,
+// stable Dispatch.  It's not for any pragmatic reason -- just wanted to give the reboot version
+// a try. - ST 4/25/12
+
 /***
 scalaVersion := "2.9.2"
 
 onLoadMessage := ""
 
 libraryDependencies ~= { seq =>
-    val vers = "0.8.8"
-    seq ++ Seq("net.databinder" %% "dispatch-core" % vers,
-               "net.databinder" %% "dispatch-http" % vers,
-               "net.liftweb" % "lift-json_2.9.1" % "2.4")
+    val vers = "0.9.0-alpha5"
+    seq ++ Seq("net.databinder.dispatch" % "core_2.9.1" % vers,
+               "net.liftweb" % "lift-json_2.9.1" % "2.4",
+               "org.slf4j" % "slf4j-nop" % "1.6.0")
 }
 */
 
 import dispatch._
+import net.liftweb.json.JsonParser
 import net.liftweb.json.JsonAST._
-
-// we can't use dispatch-lift-json because it's a source dependency and sbt script mode doesn't
-// support source dependencies. so we just include the needed glue code here directly. - ST 4/9/12
-def parse[T](r: Request)(block: JValue => T) =
-  r >> { (stm, charset) =>
-    block(net.liftweb.json.JsonParser.parse(new java.io.InputStreamReader(stm, charset)))
-  }
 
 object Issue {
   def fromJson(j: JValue): Issue = {
@@ -51,19 +49,28 @@ object Issue {
 }
 case class Issue(number: Int, title: String)
 
-val base = "https://api.github.com/repos/NetLogo/NetLogo/issues"
-val u = url(base) <<? Map("milestone" -> "11",
-                          "state" -> "closed",
-                          "per_page" -> "1000")
-val http = new Http with NoLogging
+val host = :/("api.github.com").secure
+val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
+val req = base <<? Map("milestone" -> "11",
+                       "state" -> "closed",
+                       "per_page" -> "1000")
+
+// I don't know Dispatch Reboot well enough to pipe this through the JSON parser the "right" way --
+// with sparkly asynchronous future-y promise-y streaming goodness -- so for now just slurp the
+// whole thing into a String and go from there. Like this was goddamn Perl or something.
+// - ST 4/25/12
+
+val json = Http(req > As.string).apply
+val parsed = JsonParser.parse(new java.io.StringReader(json))
 val issues: List[Issue] =
-  http(parse(u){json =>
-    for {
-      JArray(objs) <- json
-      obj <- objs
-    } yield Issue.fromJson(obj)})
+  (for {
+    JArray(objs) <- parsed
+    obj <- objs
+  } yield Issue.fromJson(obj)).toList
 
 println(issues.size + " issues fixed!")
 for(Issue(n, title) <- issues.sortBy(_.number))
   println(" * " + title + " ([#" + n + "]" +
           "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+
+Http.shutdown()
