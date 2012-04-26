@@ -8,30 +8,23 @@ object NetUtils {
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 
+  // You are strongly encouraged to keep POST data under 30K characters, lest `SocketExceptions` start getting thrown --JAB (4/26/12)
   def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
-
-    def postData(pData: String, destination: URL, attemptNum: Int = 1, maxAttempts: Int = 10): String = {
-      try {
-        val conn = new URL(dest.toString + "?" + pData).openConnection().asInstanceOf[HttpURLConnection]
-        conn.setRequestMethod("POST")
-        conn.setDoOutput(true)
-        val in = new InputStreamReader(conn.getInputStream)
-        val buff = new Array[Char](DefaultReadSize)
-        in.read(buff)
-        in.close()
-        buff.mkString.trim
-      }
-      catch {
-        case ex: java.net.SocketException =>
-          if (attemptNum < maxAttempts) postData(pData, destination, attemptNum + 1, maxAttempts)
-          else                          throw new Exception("Serially failed %d attempts to POST".format(maxAttempts), ex)
-      }
-    }
 
     val data = postKVs.toList map {
       case (key, value) => "%s=%s".format(List(key, value) map (URLEncoder.encode(_, encoding)): _*)
     } mkString ("&")
-    postData(data, dest)
+
+    val conn = new URL(dest.toString + "?" + data).openConnection().asInstanceOf[HttpURLConnection]
+    conn.setRequestMethod("POST")
+    conn.setDoOutput(true)
+
+    val in = new InputStreamReader(conn.getInputStream)
+    val buff = new Array[Char](DefaultReadSize)
+    in.read(buff)
+    in.close()
+    conn.disconnect()  // Disconnect to avoid massive memory leaks on repeated connections
+    buff.mkString.trim
 
   }
 
