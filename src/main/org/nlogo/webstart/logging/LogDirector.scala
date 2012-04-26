@@ -92,30 +92,30 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     }
 
     private def flushBuffer() : List[String] = {
-
       // Sequentially accumulates the passed-in strings into strings that are as large as possible
       // while still adhering to the restriction that `accumulatedStr.size < MessageCharLimit`
       // Note: Could be made more efficient by retaining length info across calls
-      def condenseToLimitedStrs(remainingContents: List[String]) : List[String] = {
-        remainingContents match {
-          case Nil => Nil
-          case _   =>
-            val totalChars = remainingContents map (_.size) sum
-            val accumSizeToElemList = remainingContents.foldLeft(List[(Int, String)]()){
-              case (Nil, x) => (totalChars, x) :: Nil
-              case (acc, x) => (acc.head._1 - acc.head._2.size, x) :: acc
-            }
-            val (mustWaitSizeStrPairs, canGoSizeStrPairs) = accumSizeToElemList partition (_._1 > MessageCharLimit)
-            canGoSizeStrPairs.map(_._2).mkString :: condenseToLimitedStrs(mustWaitSizeStrPairs map (_._2))
+      // Note: Potential infinite recursion bug when passing in any string that has a size of > `MessageCharLimit`
+      def condenseToLimitedStrs(inContents: List[String]) : List[String] = {
+        def condensationHelper(remainingContents: List[String]) : List[String] = {
+          remainingContents match {
+            case Nil => Nil
+            case _   =>
+              val totalChars = remainingContents map (_.size) sum
+              val accumSizeToElemList = remainingContents.foldLeft(List[(Int, String)]()){
+                case (Nil, x) => (totalChars, x) :: Nil
+                case (acc, x) => (acc.head._1 - acc.head._2.size, x) :: acc
+              } // Resultant list is built backwards
+              val (canGoSizeStrPairs, mustWaitSizeStrPairs) = accumSizeToElemList.reverse partition (_._1 < MessageCharLimit)
+              canGoSizeStrPairs.map(_._2).mkString :: condensationHelper(mustWaitSizeStrPairs map (_._2))
+          }
         }
+        condensationHelper(inContents).reverse
       }
-
       val bufferContents = dataBuffer.toList
       dataBuffer.clear()
       condenseToLimitedStrs(bufferContents)
-
     }
-
   }
 
   // Essentially, a timer that reminds the Director to request buffer flushes from the LogBufferManager
