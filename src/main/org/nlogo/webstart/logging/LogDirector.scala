@@ -73,7 +73,9 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
    */
   private object LogBufferManager extends Actor {
 
-    private val MessageCharLimit = 70000
+    // Only change this constant if you have a veeeeery good reason; it has been specially tuned to this value on purpose --JAB (4/26/12)
+    private val MessageCharLimit = 30000
+
     private val dataBuffer = new collection.mutable.ListBuffer[String]()
 
     def act() {
