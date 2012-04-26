@@ -105,8 +105,8 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
               val accumSizeToElemList = remainingContents.foldLeft(List[(Int, String)]()){
                 case (Nil, x) => (totalChars, x) :: Nil
                 case (acc, x) => (acc.head._1 - acc.head._2.size, x) :: acc
-              } // Resultant list is built backwards
-              val (canGoSizeStrPairs, mustWaitSizeStrPairs) = accumSizeToElemList.reverse partition (_._1 < MessageCharLimit)
+              }.reverse
+              val (canGoSizeStrPairs, mustWaitSizeStrPairs) = accumSizeToElemList partition (_._1 < MessageCharLimit)
               canGoSizeStrPairs.map(_._2).mkString :: condensationHelper(mustWaitSizeStrPairs map (_._2))
           }
         }
