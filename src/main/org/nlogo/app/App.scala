@@ -149,7 +149,7 @@ object App{
       def newInstance: Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
         w
       }
@@ -194,7 +194,7 @@ object App{
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists) throw new IllegalStateException("File specified to open (" + token + ") was not found!")
-        commandLineModel = modelFile.getAbsolutePath()
+        commandLineModel = modelFile.getAbsolutePath
       }
       else if (token == "--magic") {
         require(commandLineModel == null &&
@@ -254,7 +254,7 @@ object App{
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists())
           throw new IllegalStateException("File specified to open (" + token + ") was not found!")
-        commandLineModel = modelFile.getAbsolutePath()
+        commandLineModel = modelFile.getAbsolutePath
       }
     }
   }
@@ -371,12 +371,12 @@ class App extends
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
         override def ticks = _workspace.world.tickCounter.ticks
-        override def updateMode = _workspace.updateMode
+        override def updateMode = _workspace.updateMode()
       }
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.getAgentClass(), a, radius)
+        monitorManager.inspect(a.getAgentClass, a, radius)
       }
       override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
         monitorManager.inspect(agentClass, agent, radius)
@@ -598,13 +598,13 @@ class App extends
     e.`type` match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
-      case OPEN_INDEX => openIndex
+      case OPEN_INDEX => openIndex()
       case OPEN_NEXT => openNext(1)
       case OPEN_PREVIOUS => openNext(-1)
       case START_LOGGING =>
         startLogging(e.args(0).toString)
         if(logger!=null)
-          logger.modelOpened(workspace.getModelPath())
+          logger.modelOpened(workspace.getModelPath)
       case ZIP_LOG_FILES =>
 
         if (logger==null)
@@ -767,7 +767,7 @@ class App extends
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight))
       }
-      preferredSizeAtLoadEndTime = frame.getPreferredSize()
+      preferredSizeAtLoadEndTime = frame.getPreferredSize
     }
     frame.toFront()
     tabs.interfaceTab.requestFocus()
@@ -839,7 +839,7 @@ class App extends
    * Generates OS standard frame title. 
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -849,7 +849,7 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
       title 
     }
   }
@@ -1009,7 +1009,7 @@ class App extends
    * @see #commandLater
    */
   def pressButton(name:String) {
-    if (java.awt.EventQueue.isDispatchThread()) throw new IllegalStateException("can't call on event thread")
+    if (java.awt.EventQueue.isDispatchThread) throw new IllegalStateException("can't call on event thread")
     val button = findButton(name)
     if (button.forever) {
       button.foreverOn = !button.foreverOn
@@ -1066,12 +1066,12 @@ class App extends
     var newHeight = StrictMath.min(targetSize.height, maxHeight)
     
     // move up/left to get more room if possible and necessary
-    val moveLeft = StrictMath.max(0, frame.getLocation().x + newWidth  - maxX)
-    val moveUp   = StrictMath.max(0, frame.getLocation().y + newHeight - maxY)
+    val moveLeft = StrictMath.max(0, frame.getLocation.x + newWidth  - maxX)
+    val moveUp   = StrictMath.max(0, frame.getLocation.y + newHeight - maxY)
     
     // now we can compute our new position
-    val newX = StrictMath.max(maxBoundsX, frame.getLocation().x - moveLeft)
-    val newY = StrictMath.max(maxBoundsY, frame.getLocation().y - moveUp  )
+    val newX = StrictMath.max(maxBoundsX, frame.getLocation.x - moveLeft)
+    val newY = StrictMath.max(maxBoundsY, frame.getLocation.y - moveUp  )
     
     // and now that we know our position, we can compute our new size
     newWidth  = StrictMath.min(newWidth, maxX - newX)
