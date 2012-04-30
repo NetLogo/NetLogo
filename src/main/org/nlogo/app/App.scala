@@ -3,31 +3,30 @@
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World3D, World}
-import org.nlogo.api._
+import org.nlogo.api.{LogoException, I18N, APIVersion, CompilerException, ModelType, RendererInterface, Shape, Version, Observer, SimpleJobOwner, HubNetInterface, AggregateManagerInterface, FileIO, ModelSection, ModelReader}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
+import org.nlogo.log.webstart.{LogSendingMode, WebStartXMLWriterAppender}
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.window._
-import org.nlogo.window.Events._
+import org.nlogo.swing.Implicits.thunk2runnable
+import org.nlogo.swing.OptionDialog
+import org.nlogo.util.{WebStartUtils, Pico}
+import org.nlogo.window.{ButtonWidget, RuntimeErrorDialog, AppEventType, GLViewManagerInterface, CompilerManager, EditorColorizer, UpdateManager, EditDialogFactoryInterface, WidgetInfo, AbstractWidgetPanel, InterfaceFactory, NetLogoListenerManager, LabManagerInterface, ColorDialog, GUIWorkspace}
+import org.nlogo.window.Events.{CompileAllEvent, LoadBeginEvent, LoadEndEvent, ZoomedEvent, AppEvent, IconifiedEvent, LoadSectionEvent, AboutToQuitEvent, BeforeLoadEvent, ModelSavedEvent}
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
 import org.nlogo.window.Event.LinkParent
-import org.nlogo.swing.Implicits.thunk2runnable
 
-import org.picocontainer.Characteristics._
 import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 import org.picocontainer.Parameter
-
-import javax.swing._
-import java.awt.event.{WindowAdapter, WindowEvent}
 import org.apache.log4j.Appender
-import org.nlogo.swing.OptionDialog
-import org.nlogo.log.webstart.{LogSendingMode, WebStartXMLWriterAppender}
+
 import java.awt.{Toolkit, Dimension, Frame}
+import java.awt.event.{WindowAdapter, WindowEvent}
+import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import org.nlogo.util.{WebStartUtils, Pico}
-import java.io.FileNotFoundException
+import javax.swing.{JButton, JMenuBar, JMenu, JOptionPane, JDialog, JProgressBar, JFrame}
 
 /**
  * The main class for the complete NetLogo application.
@@ -106,7 +105,7 @@ object App{
     pico.addComponent(classOf[AppletSaver])
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
-    pico.as(NO_CACHE).addComponent(classOf[FileMenu])
+    pico.as(org.picocontainer.Characteristics.NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
     pico.addComponent(classOf[ToolsMenu])
     pico.add("org.nlogo.gl.view.ViewManager")
