@@ -68,7 +68,7 @@ public strictfp class FileMenu
 
   ///
 
-  private String modelSuffix() {
+  public static String modelSuffix() {
     return "nlogo";
   }
 

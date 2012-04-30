@@ -37,7 +37,7 @@ class TokenMapper extends TokenMapperInterface {
     for {
       line <- Utils.getResourceLines("/system/tokens.txt")
       if !line.startsWith("#")
-      val Array(tyype, primName, className) = line.split(" ")
+      Array(tyype, primName, className) = line.split(" ")
       if tyype == entryType
     } yield primName.toUpperCase -> ("org.nlogo.prim." + className)
   private val commands = Map() ++ entries("C")

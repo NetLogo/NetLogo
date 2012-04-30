@@ -1,14 +1,14 @@
 #!/bin/sh
 
-LAUNCH=`dirname $0`/sbt-launch-0.12.0-M1.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0-M1/sbt-launch.jar'
+LAUNCH=`dirname $0`/sbt-launch-0.12.0-Beta2.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0-Beta2/sbt-launch.jar'
 
 if [ ! -f $LAUNCH ] ; then
   curl -f $URL -o $LAUNCH || exit
 fi
 
 if [ `uname -s` = Linux ] ; then
-  export JAVA_HOME=/usr/lib/jvm/java-1.6.0-sun-1.6.0.29
+  export JAVA_HOME=/usr/lib/jvm/java-1.6.0-sun-1.6.0.31
 else
   if [ `uname -s` = Darwin ] ; then
     export JAVA_HOME=`/usr/libexec/java_home -F -v1.5+`
