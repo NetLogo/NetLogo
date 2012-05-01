@@ -27,7 +27,7 @@ public class VariationSelector
     //JButton okay;
     JLabel label;
     boolean populate;
-    HashMap<String, String> numberVariation = new HashMap();
+    HashMap<String, String> numberVariation = new HashMap<String, String>();
 
 
     ArrayList<JTextField> varInputList = new ArrayList<JTextField>();
@@ -177,7 +177,7 @@ public class VariationSelector
         return populate;
     }
 
-    public HashMap data() {
+  public HashMap<String, String> data() {
         int i = 0;
         for ( JTextField textField : varInputList ) {
             if (! textField.getText().equals("")) {

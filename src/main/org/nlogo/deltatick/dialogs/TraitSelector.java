@@ -6,7 +6,6 @@ import javax.swing.GroupLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.hamcrest.text.X;
 import org.jdesktop.layout.*;
 import org.nlogo.api.JavaLibraryPath;
 import org.nlogo.deltatick.BreedBlock;
