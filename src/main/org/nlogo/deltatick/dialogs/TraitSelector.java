@@ -1,8 +1,17 @@
 package org.nlogo.deltatick.dialogs;
 
-import javax.swing.*;
 
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.hamcrest.text.X;
+import org.jdesktop.layout.*;
 import org.nlogo.api.JavaLibraryPath;
+import org.nlogo.deltatick.BreedBlock;
+import org.nlogo.deltatick.BuildPanel;
+import org.nlogo.deltatick.TraitBlock;
 import org.nlogo.deltatick.xml.Breed;
 
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
@@ -13,7 +22,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.PublicKey;
-import java.util.LinkedList;
+import java.util.*;
 import java.awt.Component;
 
 /**
@@ -23,133 +32,158 @@ import java.awt.Component;
  * Time: 2:26 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class TraitSelector
         extends JDialog
-       // implements ActionListener
-        {
-    private javax.swing.JButton add;
-    JPanel buttonsPanel;
+
+{
+    javax.swing.JButton add;
     JButton cancel;
     JLabel label;
     JTextField enterTrait;
     String Trait;
-    String printMe;
 
+
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList myBreedsList;
     JFrame frame;
-    VariationSelector variationSelector;
-
-
+    HashMap<String, TraitBlock>breedTraitHashMap = new HashMap<String, TraitBlock>();
 
     private JDialog thisDialog = this;
 
-    public TraitSelector (java.awt.Frame parent) {
+    ListSelectionModel listSelectionModel;
+
+    public TraitSelector(java.awt.Frame parent) {
         super(parent, true);
-        createDialogBox();
+        initDialogBox();
         activateButtons();
-        this.setVisible(false);
     }
 
     public void activateButtons() {
         add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //String userInput = enterTrait.getText();
-                //System.out.println(userInput);
                 traitName();
                 thisDialog.setVisible(false);
-                //clearTrait();
-                //enterTrait.setText("");
-                //VariationSelector variationSelector = new VariationSelector(java.awt.Frame );
-                
             }
-            //enterTrait.setText("");
         });
         cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //thisDialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
-                //enterTrait.clear();
                 enterTrait.setText("");
                 thisDialog.setVisible(false);
                 thisDialog.dispose();
             }
-
-        }
-        );
+        });
     }
 
-    public void createDialogBox() {
-        thisDialog.setSize(300, 150);
-
-        //Panel
-        buttonsPanel = new JPanel();
-        thisDialog.add(buttonsPanel);
-        buttonsPanel.setSize(300, 150);
-        buttonsPanel.setBackground(Color.white);
-        buttonsPanel.setOpaque(true);
+    public void initDialogBox() {
+        thisDialog.setSize(500, 450);
+        jScrollPane1 = new JScrollPane();
 
         label = new JLabel("What trait would you like to model in this species?");
-        buttonsPanel.add(label);
         label.setSize(10, 10);
-        label.setLocation(20, 0);
         label.setVisible(true);
 
         //buttons
         add = new JButton("Add");
-        buttonsPanel.add(add);
         add.setVisible(true);
         add.setSize(10, 10);
-        add.setLocation(100, 200);
-
+        add.setEnabled(false);
 
         cancel = new JButton("Cancel");
-        buttonsPanel.add(cancel);
         cancel.setVisible(true);
         cancel.setSize(10, 10);
-        cancel.setLocation(200, 200);
 
         //Text area
-        //enterText = new JTextArea(userInput);
         enterTrait = new JTextField(10);
-        buttonsPanel.add(enterTrait);
-        //System.out.println("Creating new button");
-        //enterTrait.setText("");
-        enterTrait.setLocation(250, 100);
         enterTrait.setSize(300, 20);
         enterTrait.setVisible(true);
+        enterTrait.setEnabled(false);
         enterTrait.requestFocus();
-        /*
-        enterTrait.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                traitName();
-                         
-            }
 
-        });
-        */
-        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(label)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(enterTrait)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(add)
+                                                .addComponent(cancel)))
+                                )
+
+        );
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                        .addComponent(label)
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(jScrollPane1)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(enterTrait)
+                                        .addGroup(layout.createParallelGroup()
+                                                .addComponent(add)
+                                                .addComponent(cancel))))
+
+        );
+        pack();
     }
 
     public String traitName() {
-
-        Trait = enterTrait.getText();
-        System.out.println(Trait);
         return Trait;
-        //return (String) enterTrait.getText();
     }
 
-    public void showMe() {
+    public void showMe( BuildPanel buildPanel ) {
         clearTrait();
+        myBreedsList = new JList();
+
+        final String[] strings = buildPanel.getbreedNames();
+        myBreedsList.setModel(new javax.swing.AbstractListModel() {
+            public int getSize() {
+                return strings.length;
+            }
+            public Object getElementAt(int i) {
+                return strings[i];
+            }
+        });
+        jScrollPane1.setViewportView(myBreedsList);
+
+        listSelectionModel = myBreedsList.getSelectionModel();
+        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listSelectionModel.addListSelectionListener(
+                new ListSelectionHandler());
+
         thisDialog.setVisible(true);
-        //System.out.println("showMe");
-        traitName();
+        Trait = enterTrait.getText();
     }
 
-    public String printMe() {
-        return Trait;
-
+    class ListSelectionHandler implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+            if (lsm.isSelectionEmpty()) {
+                enterTrait.setEnabled(false);
+            }
+            else {
+                enterTrait.setEnabled(true);
+                add.setEnabled(true);
+            }
+        }
     }
 
     public void clearTrait() {
         enterTrait.setText("");
+    }
+
+    public String selectedBreed() {
+        return myBreedsList.getSelectedValue().toString();
     }
 
 }

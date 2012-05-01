@@ -3,8 +3,8 @@ package org.nlogo.deltatick;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.Envt;
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
+import org.nlogo.deltatick.xml.ModelBackgroundInfo2;
 import org.nlogo.window.GUIWorkspace;
-import org.parboiled.support.Var;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,27 +33,31 @@ public class BuildPanel
     // uniformly named methods to get, remove and insert an element at the beginning and end of the list. -a.
 
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
+    List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
+    ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
+    //UserInput userInput = new UserInput();
+
 
 
     //DataFlavor"[]" is an array - A. (sept 8)
-    DataFlavor[] flavors = new DataFlavor[] {
-        DataFlavor.stringFlavor
+    DataFlavor[] flavors = new DataFlavor[]{
+            DataFlavor.stringFlavor
     };
 
-    public BuildPanel( GUIWorkspace workspace ) {
+    public BuildPanel(GUIWorkspace workspace) {
         super();
         this.workspace = workspace;
-        setBackground( java.awt.Color.white );
+        setBackground(java.awt.Color.white);
         setLayout(null);
         validate();
     }
 
-    public Object getTransferData( DataFlavor dataFlavor )
-        throws UnsupportedFlavorException {
-        if( isDataFlavorSupported( dataFlavor ) ) {
+    public Object getTransferData(DataFlavor dataFlavor)
+            throws UnsupportedFlavorException {
+        if (isDataFlavorSupported(dataFlavor)) {
             return unPackAsCode();
         }
         return null;
@@ -63,17 +67,46 @@ public class BuildPanel
         String passBack = "";
 
         // declare breeds method called from BreedBlock
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.declareBreed();
         }
 
         passBack += "\n";
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
+
+            if ( myTraits.size() > 0 ) {
+                for ( TraitBlock traitBlock : myTraits ) {
+                    if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
+                        passBack += traitBlock.breedVars();
+
+                    }
+                }
+            }
+            passBack += "\n";
+            passBack += "]\n";
         }
 
+
+
+
+        /*
+        if (myTraits.size()  > 0 ) {
+        for (TraitBlock traitBlock : myTraits) {
+            passBack += traitBlock.breedVars();
+        }
+        }
+        */
+
+       /*
+
+        for (EnvtBlock envtBlock : myEnvts) {
+            passBack += envtBlock.declareEnvtBreed();
+        }
+        */
+
         passBack += "\n";
-        for ( EnvtBlock envtBlock : myEnvts ) {
+        for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.OwnVars();
         }
 
@@ -83,21 +116,21 @@ public class BuildPanel
 
         passBack += "\n";
 
-        passBack += bgInfo.setupBlock(myBreeds, myEnvts, myPlots );
+        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
         passBack += "\n";
 
         passBack += "to go\n";
-        passBack += bgInfo.updateBlock( myBreeds );
+        passBack += bgInfo.updateBlock(myBreeds, myEnvts);
 
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.unPackAsCode();
         }
 
-        for( EnvtBlock envtBlock : myEnvts ) {
+        for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.unPackAsCode();
         }
         passBack += "tick\n";
-        if( myPlots.size() > 0 ) {
+        if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
         passBack += "end\n";
@@ -106,10 +139,10 @@ public class BuildPanel
         passBack += unPackProcedures();
         passBack += "\n";
 
-        if( myPlots.size() > 0 ) {
+        if (myPlots.size() > 0) {
             passBack += "\n\n";
             passBack += "to do-plotting\n";
-            for( PlotBlock plot : myPlots ) {
+            for (PlotBlock plot : myPlots) {
                 passBack += plot.unPackAsCode();
             }
             passBack += "end\n";
@@ -122,31 +155,36 @@ public class BuildPanel
         String passBack = "<";
 
         // declare breeds
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.declareBreed();
         }
 
         passBack += "\n";
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
         }
+
+        for (TraitBlock traitBlock : myTraits) {
+            passBack += traitBlock.getTraitName();
+        }
+
 
         passBack += "\n";
 
         passBack += bgInfo.declareGlobals();
         passBack += "\n";
 
-        passBack += bgInfo.setupBlock( myBreeds , myEnvts, myPlots );
+        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
         passBack += "\n";
 
         passBack += "to go\n";
-        passBack += bgInfo.updateBlock( myBreeds );
+        passBack += bgInfo.updateBlock(myBreeds, myEnvts);
 
-        for( BreedBlock breedBlock : myBreeds ) {
+        for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.unPackAsCode();
         }
         passBack += "tick\n";
-        if( myPlots.size() > 0 ) {
+        if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
         passBack += "end\n";
@@ -155,10 +193,10 @@ public class BuildPanel
         passBack += unPackProcedures();
         passBack += "\n";
 
-        if( myPlots.size() > 0 ) {
+        if (myPlots.size() > 0) {
             passBack += "\n\n";
             passBack += "to do-plotting\n";
-            for( PlotBlock plot : myPlots ) {
+            for (PlotBlock plot : myPlots) {
                 passBack += plot.unPackAsCode();
             }
             passBack += "end\n";
@@ -168,24 +206,23 @@ public class BuildPanel
     }
 
 
-
 //*
 //isDataFlavorSupported
 //public boolean isDataFlavorSupported(DataFlavor flavor)
-  //  Returns whether the requested flavor is supported by this Transferable.
+    //  Returns whether the requested flavor is supported by this Transferable.
     //Specified by:
-      //  isDataFlavorSupported in interface Transferable
+    //  isDataFlavorSupported in interface Transferable
     //Parameters:
-      //  flavor - the requested flavor for the data
+    //  flavor - the requested flavor for the data
     //Returns:
-     //   true if flavor is equal to DataFlavor.stringFlavor or DataFlavor.plainTextFlavor; false if flavor is not one of the above flavors
+    //   true if flavor is equal to DataFlavor.stringFlavor or DataFlavor.plainTextFlavor; false if flavor is not one of the above flavors
     //Throws:
-      //  NullPointerException - if flavor is null
+    //  NullPointerException - if flavor is null
 // -a.
 
-    public boolean isDataFlavorSupported( DataFlavor dataFlavor ) {
-        for( int i = 0; i < flavors.length; i++ ) {
-            if( dataFlavor.equals( flavors[i] ) ) {
+    public boolean isDataFlavorSupported(DataFlavor dataFlavor) {
+        for (int i = 0; i < flavors.length; i++) {
+            if (dataFlavor.equals(flavors[i])) {
                 return true;
             }
         }
@@ -201,82 +238,73 @@ public class BuildPanel
         return bgInfo;
     }
 
-    // find method in DeltaTicktab to add actors -a.
-    public void addBreed( BreedBlock block ) {
-        myBreeds.add( block );
-        block.setBounds( 0 ,
-                         0 ,
-                         block.getPreferredSize().width,
-                         block.getPreferredSize().height );
+    public ModelBackgroundInfo2 getBgInfo2() {
+        return bgInfo2;
+    }
 
-        add( block );
+    // find method in DeltaTicktab to add actors -a.
+    public void addBreed(BreedBlock block) {
+        myBreeds.add(block);
+        block.setBounds(0,
+                0,
+                block.getPreferredSize().width,
+                block.getPreferredSize().height);
+
+        add(block);
         block.doLayout();
         block.validate();
         block.repaint();
-
     }
+
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
-    public void addVariation ( VariationBlock block ) {
-        // make some kind of string that keeps variations attached to a breed
-        block.setBounds( 0 ,
-                0 ,
+    public void addTrait(TraitBlock block) {
+        myTraits.add(block);
+    }
+
+    public void addOperator(OperatorBlock oBlock) {
+        // do I need a list of OperatorBlocks myOperators.add(oBlock);
+    }
+
+
+    public void addPlot(PlotBlock block) {
+        myPlots.add(block);
+        block.setPlotName("New Plot " + myPlots.size());
+        block.setBounds(200,
+                0,
                 block.getPreferredSize().width,
-                block.getPreferredSize().height );
-        add( block );
-        block.doLayout();
-        block.validate();
-        block.repaint();
-    }
-/*
-    public void addBreed( String name , int number , String shape , int x , int y , String breedName ) throws Exception {
-        BreedBlock newBlock = new BreedBlock( bgInfo.getBreed( breedName ) , name , workspace.getFrame() );
-        newBlock.setBounds( 0 ,
-                            0 ,
-                            block.getPreferredSize().width,
-                            block.getPreferredSize().height );
-    }
-*/
-    public void addPlot( PlotBlock block ) {
-        myPlots.add( block );
-        block.setPlotName( "New Plot " + myPlots.size() );
-        block.setBounds( 200 ,
-                         0 ,
-                         block.getPreferredSize().width,
-                         block.getPreferredSize().height );
-        add( block );
+                block.getPreferredSize().height);
+        add(block);
         block.doLayout();
         block.validate();
         block.repaint();
     }
 
     //make linked list for envt? -A. (sept 8)
-    public void addEnvt ( EnvtBlock block ) {
-        //EnvtBlock block = new EnvtBlock();
-        //workspace.add( block );
-        myEnvts.add( block );
-        //usedEnvts.add( block );
-        block.setBounds( 400,
-                         0,
-                         block.getPreferredSize().width,
-                         block.getPreferredSize().height );
-        add ( block );
+    public void addEnvt(EnvtBlock block) {
+        myEnvts.add(block);
+         block.setBounds(400,
+                0,
+                block.getPreferredSize().width,
+                block.getPreferredSize().height);
+        add(block);
         block.doLayout();
         block.validate();
         block.repaint();
 
 
     }
-    public void addPlot( String name , int x , int y ) {
+
+    public void addPlot(String name, int x, int y) {
         PlotBlock newPlot = new PlotBlock();
         myPlots.add(newPlot);
         newPlot.setPlotName(name);
-        newPlot.setBounds( 400 ,
-                           0 ,
-                           newPlot.getPreferredSize().width,
-                           newPlot.getPreferredSize().height );
-        newPlot.setLocation( x , y );
-        add( newPlot );
+        newPlot.setBounds(400,
+                0,
+                newPlot.getPreferredSize().width,
+                newPlot.getPreferredSize().height);
+        newPlot.setLocation(x, y);
+        add(newPlot);
         newPlot.doLayout();
         newPlot.validate();
         newPlot.repaint();
@@ -292,34 +320,39 @@ public class BuildPanel
         return myPlots;
     }
 
+    public List<TraitBlock> getMyTraits() {
+        return myTraits;
+    }
+
+
     public Collection<EnvtBlock> getMyEnvts() {
         return myEnvts;
     }
 
-    //HashMap is a pair of values. eg. name1: SSN1 -A. (sept 8)
+    //HashMap is a pair of key mapped to values. eg. (key)name1: (value)SSN1 -A. (sept 8)
     public String unPackProcedures() {
-        HashMap<String,CodeBlock> procedureCollection = new HashMap<String,CodeBlock>();
+        HashMap<String, CodeBlock> procedureCollection = new HashMap<String, CodeBlock>();
         String passBack = "";
 
-        for( BreedBlock breedBlock : myBreeds ) {
-            if( breedBlock.children() != null ) {
-                procedureCollection.putAll( breedBlock.children() );
+        for (BreedBlock breedBlock : myBreeds) {
+            if (breedBlock.children() != null) {
+                procedureCollection.putAll(breedBlock.children());
             }
         }
 
-        for( PlotBlock plotBlock : myPlots ) {
-            if( plotBlock.children() != null ) {
-                procedureCollection.putAll( plotBlock.children() );
+        for (PlotBlock plotBlock : myPlots) {
+            if (plotBlock.children() != null) {
+                procedureCollection.putAll(plotBlock.children());
             }
         }
 
-        for ( EnvtBlock envtBlock : myEnvts ) {
-            if ( envtBlock.children() != null ) {
-                procedureCollection.putAll( envtBlock.children() );
+        for (EnvtBlock envtBlock : myEnvts) {
+            if (envtBlock.children() != null) {
+                procedureCollection.putAll(envtBlock.children());
             }
         }
 
-        for( String name : procedureCollection.keySet() ) {
+        for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
 
@@ -337,30 +370,50 @@ public class BuildPanel
     }
 
     @Override
-    public void paintComponent( java.awt.Graphics g )
-	{
-		g.setColor( getBackground() ) ;
-		g.fillRect(0,0,getWidth(),getHeight() ) ;
+    public void paintComponent(java.awt.Graphics g) {
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
-        for( Component c : getComponents() ) {
+        for (Component c : getComponents()) {
             c.setBounds(c.getBounds());
-            //System.out.println("xcor: " + c.getX() + " ycor: " + c.getY() );
+
         }
-	}
+    }
 
     public int breedCount() {
         return myBreeds.size();
     }
 
+    public String[] getbreedNames() {
+        String [] names = new String [myBreeds.size()];
+        int i = 0;
+        for ( BreedBlock breedBlock : myBreeds ) {
+            names[i] = breedBlock.plural();
+            i++;
+        }
+
+        return names;
+    }
+
+    public String[] getTraitNames() {
+        String[] names = new String [myTraits.size()];
+        int i = 0;
+        for ( TraitBlock traitBlock : myTraits ) {
+            names[i] = traitBlock.getTraitName();
+            i++;
+        }
+        return names;
+    }
+
     public int plotCount() {
-        if( myPlots != null ) {
+        if (myPlots != null) {
             return myPlots.size();
         }
         return 0;
     }
 
-    //number of breeds in buildPanel -A. (sept 8)
-    //No, it's breeds available in XML -A. (oct 5)
+
+    // breeds available in XML -A. (oct 5)
     public ArrayList<Breed> availBreeds() {
         return bgInfo.getBreeds();
     }
@@ -369,20 +422,35 @@ public class BuildPanel
         return bgInfo.getEnvts();
     }
 
-    public void removePlot( PlotBlock plotBlock ) {
+    public void removePlot(PlotBlock plotBlock) {
         myPlots.remove(plotBlock);
         remove(plotBlock);
     }
 
-    public void removeBreed( BreedBlock breedBlock ) {
+    public void removeBreed(BreedBlock breedBlock) {
         myBreeds.remove(breedBlock);
         remove(breedBlock);
     }
 
-    public void removeEnvt( EnvtBlock envtBlock ) {
+    public void removeEnvt(EnvtBlock envtBlock) {
         myEnvts.remove(envtBlock);
         remove(envtBlock);
     }
 
+    public void removeTrait(TraitBlock traitBlock) {
+        myTraits.remove(traitBlock);
+        //remove(traitBlock);
+    }
 
+    public String library() {
+        return bgInfo.getLibrary();
+    }
+
+    public ArrayList<String> getVariations () {
+        ArrayList<String> tmp = new ArrayList<String>();
+        for ( TraitBlock tBlock : myTraits ) {
+            tmp = tBlock.varList;
+        }
+        return tmp;
+    }
 }

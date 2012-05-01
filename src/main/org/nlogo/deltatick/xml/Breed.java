@@ -25,7 +25,7 @@ public class Breed {
     int id;
     LinkedList<OwnVar> ownVars = new LinkedList<OwnVar>();
 
-    public Breed( Node breedNode ) {
+    public Breed(Node breedNode) {
         // breed attributes
         // breed variables that take information from breednode which is the Node parameter passed with Breed in
         // when breeds are added in ModelBackgroundInfo -A. (Aug 25)
@@ -43,16 +43,16 @@ public class Breed {
 
         // in DTD/XML file, Elements Breed are childNodes of breedNode -A. (sept 13)
         NodeList setupNodes = breedNode.getChildNodes();
-        for( int i = 0 ; i < setupNodes.getLength() ; i++ ) {
-            if( setupNodes.item(i).getNodeName() == "ownVar" ) {
-                ownVars.add( new OwnVar( setupNodes.item(i) ) );
+        for (int i = 0; i < setupNodes.getLength(); i++) {
+            if (setupNodes.item(i).getNodeName() == "ownVar") {
+                ownVars.add(new OwnVar(setupNodes.item(i)));
             }
 
-            if( setupNodes.item(i).getNodeName() == "setupCode" ) {
+            if (setupNodes.item(i).getNodeName() == "setupCode") {
                 setupCommands = setupNodes.item(i).getTextContent();
             }
 
-            if( setupNodes.item(i).getNodeName() == "updateCode" ) {
+            if (setupNodes.item(i).getNodeName() == "updateCode") {
                 updateCommands = setupNodes.item(i).getTextContent();
             }
         }
@@ -129,12 +129,12 @@ public class Breed {
     //goes through OwnVar (linked list) to see if it needs an update block -A. (sept 13)
     public boolean needsUpdateBlock() {
         boolean needs = false;
-        for( OwnVar var : ownVars ) {
-            if( var.updateReporter != null ) {
+        for (OwnVar var : ownVars) {
+            if (var.updateReporter != null) {
                 needs = true;
             }
         }
-        if( updateCommands != null ) {
+        if (updateCommands != null) {
             needs = true;
         }
         return needs;
@@ -143,12 +143,12 @@ public class Breed {
     //goes through OwnVar (linked list) to see if it needs a setUp block -A. (sept 13)
     public boolean needsSetupBlock() {
         boolean needs = false;
-        for( OwnVar var : ownVars ) {
-            if( var.setupReporter != null ) {
+        for (OwnVar var : ownVars) {
+            if (var.setupReporter != null) {
                 needs = true;
             }
         }
-        if( setupCommands != null ) {
+        if (setupCommands != null) {
             needs = true;
         }
         return needs;

@@ -4,23 +4,24 @@ import java.awt.*;
 
 /**
  * Created by IntelliJ IDEA.
- * User: mwilkerson
- * Date: May 13, 2010
- * Time: 11:03:34 PM
+ * User: aditiwagh
+ * Date: 2/21/12
+ * Time: 5:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PrettyInput extends javax.swing.JTextField {
+public class EnergyInput extends javax.swing.JTextField {
 
-    public PrettyInput(Component parent) {
+    public EnergyInput(Component parent) {
         super();
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(
                 new javax.swing.border.LineBorder(parent.getBackground().darker()),
                 javax.swing.BorderFactory.createEmptyBorder(1, 2, 0, 0)
         ));
-        //setBackground( Color.white );
+        setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
+        this.setToolTipText("How much energy is lost or gained?");
     }
 
 }

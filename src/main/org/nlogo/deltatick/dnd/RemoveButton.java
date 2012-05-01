@@ -14,7 +14,7 @@ public class RemoveButton extends JButton {
     JPanel myParent;
     RemoveButton thisButton;
 
-    public RemoveButton( JPanel myParent ) {
+    public RemoveButton(JPanel myParent) {
         this.myParent = myParent;
         this.thisButton = this;
         setAction(deleteAction);
@@ -24,11 +24,11 @@ public class RemoveButton extends JButton {
     }
 
     private final javax.swing.Action deleteAction =
-		new javax.swing.AbstractAction( "X") {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                Container homePanel = myParent.getParent();
-            	homePanel.remove(myParent);
-                homePanel.repaint();
-            }
-        };
+            new javax.swing.AbstractAction("X") {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    Container homePanel = myParent.getParent();
+                    homePanel.remove(myParent);
+                    homePanel.repaint();
+                }
+            };
 }

@@ -4,6 +4,7 @@ import org.nlogo.deltatick.EnvtBlock;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.nlogo.deltatick.xml.Envt;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -27,33 +28,32 @@ public class Envt {
     //Collection<Envt> usedEnvts = new List<Envt>
 
 
-    public Envt (Node envtNode) {
+    public Envt(Node envtNode) {
         nameEnvt = envtNode.getAttributes().getNamedItem("envtName").getTextContent();
 
 
-    NodeList setupNodes = envtNode.getChildNodes();
-        for( int i = 0 ; i < setupNodes.getLength() ; i++ ) {
-            if( setupNodes.item(i).getNodeName() == "ownVar" ) {
-                ownVars.add( new OwnVar( setupNodes.item(i) ) );
+        NodeList setupNodes = envtNode.getChildNodes();
+        for (int i = 0; i < setupNodes.getLength(); i++) {
+            if (setupNodes.item(i).getNodeName() == "ownVar") {
+                ownVars.add(new OwnVar(setupNodes.item(i)));
             }
 
-            if( setupNodes.item(i).getNodeName() == "setupCode" ) {
+            if (setupNodes.item(i).getNodeName() == "setupCode") {
                 setupCommands = setupNodes.item(i).getTextContent();
             }
 
-            if( setupNodes.item(i).getNodeName() == "setupReporter" ) {
+            if (setupNodes.item(i).getNodeName() == "setupReporter") {
                 setupReporter = setupNodes.item(i).getTextContent();
             }
-           // if( setupNodes.item(i).getNodeName() == "updateCode" ) {
-             //   updateCommands = setupNodes.item(i).getTextContent();
-            //}
+            if (setupNodes.item(i).getNodeName() == "updateCode") {
+                updateCommands = setupNodes.item(i).getTextContent();
+            }
         }
     }
 
 
     public String nameEnvt() {
         //System.out.println(nameEnvt);
-        System.out.println("Envt.java" + nameEnvt);
         return nameEnvt;
     }
 
@@ -69,12 +69,29 @@ public class Envt {
 
     }
 
+    public boolean needsUpdateBlock() {
+        boolean needs = false;
+        for (OwnVar var : ownVars) {
+            if (var.updateReporter != null) {
+                needs = true;
+            }
+        }
+        if (updateCommands != null) {
+            needs = true;
+        }
+        return needs;
+    }
+
     public LinkedList<OwnVar> getOwnVars() {
         return ownVars;
     }
 
     public String getSetupCommands() {
         return setupCommands;
+    }
+
+    public String getUpdateCommands() {
+        return updateCommands;
     }
 
     public String getSetupReporter() {

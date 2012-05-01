@@ -25,7 +25,7 @@ public class EnvtTypeSelector
     private javax.swing.JDialog thisDialog = this;
 
 
-    public EnvtTypeSelector (Frame parent) {
+    public EnvtTypeSelector(Frame parent) {
         super(parent, true);
         initComponents();
         this.setVisible(false);
@@ -56,7 +56,7 @@ public class EnvtTypeSelector
                 getSelectedEnvt();
                 System.out.println("EnvtTypeSelector");
                 thisDialog.setVisible(false);
-    }
+            }
         });
 
         //cancel.addActionListener(new java);
@@ -74,6 +74,7 @@ public class EnvtTypeSelector
         return selectedEnvt;
 
     }
+
     public void initComponents() {
         infoText = new JLabel("What type of environment would you like to add?");
         add = new JButton("Add");
@@ -87,39 +88,39 @@ public class EnvtTypeSelector
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(layout.createSequentialGroup()
-                                    .add(24, 24, 24)
-                                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 199, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            )
-                            .add(infoText))
-                    // .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            )
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(115, Short.MAX_VALUE)
-                .add(add)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                //.add(cancel)
-                .addContainerGap())
+                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                        .add(layout.createSequentialGroup()
+                                                .add(24, 24, 24)
+                                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 199, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        )
+                                        .add(infoText))
+                                // .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        )
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(115, Short.MAX_VALUE)
+                                .add(add)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                        //.add(cancel)
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .add(infoText)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    //.add(cancel)
-                    .add(add))
-                .add(26, 26, 26))
+                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .add(infoText)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                        //.add(cancel)
+                                        .add(add))
+                                .add(26, 26, 26))
         );
 
         pack();
     }// </editor-fold>
-    }
+}
 

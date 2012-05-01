@@ -13,33 +13,39 @@ import java.awt.dnd.*;
  * To change this template use File | Settings | File Templates.
  */
 public class BuildPanelDragSource implements DragGestureListener,
-    DragSourceListener {
+        DragSourceListener {
 
     BuildPanel panel;
 
-    public BuildPanelDragSource( BuildPanel panel ) {
+    public BuildPanelDragSource(BuildPanel panel) {
         DragSource dragSource = DragSource.getDefaultDragSource();
         this.panel = panel;
 
         // Create a DragGestureRecognizer and
         // register as the listener
         // TODO: ACTION_COPY_OR_MOVE
-        dragSource.createDefaultDragGestureRecognizer( panel , DnDConstants.ACTION_MOVE, this);
+        dragSource.createDefaultDragGestureRecognizer(panel, DnDConstants.ACTION_MOVE, this);
     }
+
     // Implementation of DragGestureListener interface.
     public void dragGestureRecognized(DragGestureEvent dge) {
-        dge.startDrag( java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR) , panel );
+        dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), panel);
     }
 
     // Implementation of DragSourceListener interface
-    public void dragEnter(DragSourceDragEvent dsde) { }
+    public void dragEnter(DragSourceDragEvent dsde) {
+    }
 
-    public void dragOver(DragSourceDragEvent dsde) { }
+    public void dragOver(DragSourceDragEvent dsde) {
+    }
 
-    public void dragExit(DragSourceEvent dse) { }
+    public void dragExit(DragSourceEvent dse) {
+    }
 
-    public void dropActionChanged(DragSourceDragEvent dsde) { }
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+    }
 
-    public void dragDropEnd(DragSourceDropEvent dsde) { }
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+    }
 
 }

@@ -16,16 +16,16 @@ public class OwnVar {
     public String updateReporter;
 
 
-    OwnVar( Node ownVarNode ) {
+    OwnVar(Node ownVarNode) {
         name = ownVarNode.getAttributes().getNamedItem("name").getTextContent();
 
         NodeList info = ownVarNode.getChildNodes();
-        for( int i = 0 ; i < info.getLength() ; i++ ) {
-            if( info.item(i).getNodeName() == "setupReporter" ) {
+        for (int i = 0; i < info.getLength(); i++) {
+            if (info.item(i).getNodeName() == "setupReporter") {
                 setupReporter = info.item(i).getTextContent();
             }
 
-            if( info.item(i).getNodeName() == "updateReporter" ) {
+            if (info.item(i).getNodeName() == "updateReporter") {
                 updateReporter = info.item(i).getTextContent();
             }
         }

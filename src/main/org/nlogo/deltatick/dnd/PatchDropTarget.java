@@ -18,27 +18,27 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class PatchDropTarget
-    extends DropTarget {
+        extends DropTarget {
 
-    public PatchDropTarget( PatchBlock pBlock ) {
-        super( pBlock );
+    public PatchDropTarget(PatchBlock pBlock) {
+        super(pBlock);
     }
 
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
-        Object o = transferable.getTransferData( CodeBlock.codeBlockFlavor );
+        Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
-            if( o instanceof BehaviorBlock ) {
-                addCodeBlock( (BehaviorBlock) o );
+            if (o instanceof BehaviorBlock) {
+                addCodeBlock((BehaviorBlock) o);
                 return true;
             }
-            if( o instanceof ConditionBlock ) {
-                addCodeBlock( (ConditionBlock) o );
+            if (o instanceof ConditionBlock) {
+                addCodeBlock((ConditionBlock) o);
                 new ConditionDropTarget((ConditionBlock) o);
                 return true;
             }
-            if( o instanceof PatchBlock ) {
-                addCodeBlock( (PatchBlock) o );
+            if (o instanceof PatchBlock) {
+                addCodeBlock((PatchBlock) o);
                 //new ConditionDropTarget((PatchBlock) o);
                 return true;
             }

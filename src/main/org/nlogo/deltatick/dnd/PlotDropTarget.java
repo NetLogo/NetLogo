@@ -13,17 +13,17 @@ import java.io.IOException;
 public class PlotDropTarget
         extends DropTarget {
 
-    public PlotDropTarget( PlotBlock block ) {
-        super( block );
+    public PlotDropTarget(PlotBlock block) {
+        super(block);
     }
 
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
-        Object o = transferable.getTransferData( CodeBlock.quantityBlockFlavor );
+        Object o = transferable.getTransferData(CodeBlock.quantityBlockFlavor);
         if (o instanceof QuantityBlock) {
-                addCodeBlock( (QuantityBlock) o);
-                return true;
-            }
+            addCodeBlock((QuantityBlock) o);
+            return true;
+        }
         return false;
     }
 }

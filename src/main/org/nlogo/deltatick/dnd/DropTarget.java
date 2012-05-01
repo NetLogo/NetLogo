@@ -23,20 +23,24 @@ public class DropTarget
     CodeBlock block;
     java.awt.dnd.DropTarget dropTarget;
 
-    public DropTarget( CodeBlock block ) {
+    public DropTarget(CodeBlock block) {
         this.block = block;
-        dropTarget = new java.awt.dnd.DropTarget( block, DnDConstants.ACTION_COPY, this, true, null );
+        dropTarget = new java.awt.dnd.DropTarget(block, DnDConstants.ACTION_COPY, this, true, null);
     }
 
-    public void dragEnter( DropTargetDragEvent dtde ) {}
+    public void dragEnter(DropTargetDragEvent dtde) {
+    }
 
-    public void dragExit( DropTargetEvent dte ) { }
+    public void dragExit(DropTargetEvent dte) {
+    }
 
-    public void dragOver( DropTargetDragEvent dtde ) { }
+    public void dragOver(DropTargetDragEvent dtde) {
+    }
 
-    public void dropActionChanged( DropTargetDragEvent dtde ) { }
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+    }
 
-    public void drop( DropTargetDropEvent dtde ) {
+    public void drop(DropTargetDropEvent dtde) {
         // Check the drop action
         if ((dtde.getDropAction() & DnDConstants.ACTION_COPY) != 0) {
             // Accept the drop and get the transfer data
@@ -60,7 +64,7 @@ public class DropTarget
     }
 
 
-    void addCodeBlock( CodeBlock codeBlock ) {
+    void addCodeBlock(CodeBlock codeBlock) {
         block.addBlock(codeBlock);
         // mhw just added
         new PlantedCodeBlockDragSource(codeBlock);

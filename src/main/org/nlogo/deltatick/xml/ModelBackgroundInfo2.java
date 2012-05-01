@@ -3,22 +3,24 @@ package org.nlogo.deltatick.xml;
 import org.nlogo.deltatick.BreedBlock;
 import org.nlogo.deltatick.EnvtBlock;
 import org.nlogo.deltatick.PlotBlock;
-import org.nlogo.deltatick.TraitBlock;
-import org.nlogo.prim._patches;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User: mwilkerson
- * Date: Mar 8, 2010
- * Time: 4:55:31 PM
+ * User: aditiwagh
+ * Date: 2/16/12
+ * Time: 6:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ModelBackgroundInfo {
-    ArrayList<Breed> breeds = new ArrayList<Breed>(); //list of breeds available in XML
+
+// this one is for EnvtBlocks
+
+public class ModelBackgroundInfo2 {
+    //ArrayList<Breed> breeds = new ArrayList<Breed>(); //list of breeds available in XML
     ArrayList<Global> globals = new ArrayList<Global>();
     ArrayList<Envt> envts = new ArrayList<Envt>();
     String setup;
@@ -26,11 +28,11 @@ public class ModelBackgroundInfo {
     String library;
     String version;
 
-    public ModelBackgroundInfo() {
+    public ModelBackgroundInfo2() {
     }
 
     public void clear() {
-        breeds.clear();
+        //breeds.clear();
         globals.clear();
         envts.clear();
         setup = null;
@@ -39,7 +41,7 @@ public class ModelBackgroundInfo {
         version = null;
     }
 
-    public void populate(NodeList breedNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library) throws Exception {
+    public void populate(NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
@@ -49,10 +51,6 @@ public class ModelBackgroundInfo {
             }
 
             // populating class variable, breeds with the given breedNodes nodelist -A. (oct 17)
-            for (int i = 0; i < breedNodes.getLength(); i++) {
-                Node breedNode = breedNodes.item(i);
-                breeds.add(new Breed(breedNode));
-            }
 
             for (int i = 0; i < envtNodes.getLength(); i++) {
                 Node envtNode = envtNodes.item(i);
@@ -92,22 +90,13 @@ public class ModelBackgroundInfo {
     }
 
     //will have to insert setup code for patches here as well -A. (sept 13)
-    public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlock> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
+    public String setupBlock(List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
         String code = "to setup\n";
         code += "  clear-all\n";
         if (setup != null) {
             code += setup;
         }
-        //this shows up when BreedBlock is dragged into BuildPanel -A. (sept 13)
-        for (BreedBlock breedBlock : usedBreeds) {
-            //code += breedBlock.setBreedShape();
-            code += breedBlock.setup();
-        }
-        System.out.println("bgInfo " + usedTraits.size());
-        for (TraitBlock traitBlock : usedTraits) {
 
-            code += traitBlock.setup();
-        }
         for (Global global : globals) {
             code += global.setup();
         }
@@ -125,14 +114,12 @@ public class ModelBackgroundInfo {
         return code;
     }
 
-    public String updateBlock(List<BreedBlock> usedBreeds, List<EnvtBlock> usedEnvts) {
+    public String updateBlock(List<EnvtBlock> usedEnvts) {
         String code = "";
         if (go != null) {
             code += go;
         }
-        for (BreedBlock breedBlock : usedBreeds) {
-            code += breedBlock.update();
-        }
+
         for (Global global : globals) {
             code += global.update();
         }
@@ -143,34 +130,6 @@ public class ModelBackgroundInfo {
         return code;
     }
 
-    // return only names of breeds -A. (Oct 17)
-    public String[] getBreedTypes() {
-        // breedTypes is an array of size n of breeds -A. (oct 5)
-        String[] breedTypes = new String[breeds.size()];
-        int i = 0;
-        for (Breed breed : breeds) {
-            breedTypes[i] = breed.plural;
-            i++;
-        }
-        //System.out.println(breedTypes);
-        return breedTypes;
-    }
-
-    // If I give you a breed name, give me other information about that breed -A. (oct 17)
-    public Breed getBreed(String name) throws Exception {
-        for (Breed breed : breeds) {
-            if (breed.plural() == name) {
-                return breed;
-            }
-        }
-        throw new Exception();
-    }
-
-    //get entire ArrayList -A. (oct 17)
-    public ArrayList<Breed> getBreeds() {
-        //System.out.println(breeds);
-        return breeds;
-    }
 
     public String[] getEnvtTypes() {
         String[] envtTypes = new String[envts.size()];
@@ -218,11 +177,6 @@ public class ModelBackgroundInfo {
             code += "set " + name + " " + updateReporter + "\n";
             return code;
         }
-
-
     }
 
-    public String getLibrary() {
-        return library;
-        }
 }

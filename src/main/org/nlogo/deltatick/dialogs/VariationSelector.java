@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.nlogo.deltatick.dialogs.TraitSelector;
 
@@ -14,23 +15,24 @@ import org.nlogo.deltatick.dialogs.TraitSelector;
  * Time: 12:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VariationSelector
-    extends JDialog
-        {
-        JPanel text;
-        JButton addVariation;
-        JPanel buttonsPanel;
-        JButton okay;
-        JLabel label;
-        JTextField varInput1;
-        JTextField varInput2;
-        JTextField varInput3;
-        String Trait;
-        String Variation1;
-        int counter;
+// TODO    Be able to add as many variations as wanted (with a max of ~5)
+// TODO Pressing "Okay" sends values, not pressing the red cancel button
+    // TODO: Add EXIT_ON_CLOSE
 
-        ArrayList<JTextField> varInputList = new ArrayList<JTextField>();
-        ArrayList<String> variationList = new ArrayList<String>();
+public class VariationSelector
+        extends JDialog {
+    JPanel text;
+    JButton addVariation;
+    JPanel buttonsPanel;
+    //JButton okay;
+    JLabel label;
+    boolean populate;
+    HashMap<String, String> numberVariation = new HashMap();
+
+
+    ArrayList<JTextField> varInputList = new ArrayList<JTextField>();
+    ArrayList<String> variationList = new ArrayList<String>();
+    ArrayList<JTextField> numberList = new ArrayList<JTextField>();
 
     private JDialog thisDialog = this;
 
@@ -38,129 +40,151 @@ public class VariationSelector
         super(parent, true);
         initComponents();
         this.setVisible(false);
-        varInput2.setVisible(false);
-        counter = 0;
-
+        boolean populate = false;
     }
 
     public void showMe() {
-        //varInput1.setText("");
-        varInput2.setText("");
-        varInput3.setText("");
         thisDialog.setVisible(true);
-        }
+    }
 
     public void initComponents() {
-        thisDialog.setSize(500, 500);
+        thisDialog.setSize(1000, 1000);
         JPanel text = new JPanel();
         JLabel label = new JLabel("What are the variations of this trait?");
         text.add(label);
-        label.setSize(400,150);
+        JLabel label1 = new JLabel();
+        label1.setText("Variation");
+        JLabel label2 = new JLabel();
+        label2.setText("Number");
         label.setVisible(true);
 
-        for (int i = 0; i < 3; i ++) {
+        for (int i = 0; i < 6; i++) {
             varInputList.add(new JTextField(8));
         }
-        varInputList.get(0).setName("varInput1");
-        varInput2 = varInputList.get(1);
-        varInput3 = varInputList.get(2);
+
+        for (int i = 0; i < 6; i++) {
+            numberList.add(new JTextField(3));
+        }
 
         addVariation = new JButton("Add variation");
-        //TODO change color of font appearing in TextField to gray
-        okay = new JButton("Okay");
-        okay.setVisible(true);
-        okay.setEnabled(false);
         activateButtons();
-        //okay.setEnabled(true);
-        thisDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
-org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        thisDialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+        layout.setAutocreateContainerGaps(true);
+        layout.setAutocreateGaps(true);
+
         layout.setHorizontalGroup(
                 layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(text)
                         .add(layout.createSequentialGroup()
-
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                        .add(layout.createSequentialGroup()
-                                                .add(24, 24, 24)
-                                                //.add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 199, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        )
-                                        .add(label))
-                                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(115, Short.MAX_VALUE)
-                                .add(addVariation)
-                                .addContainerGap(115, Short.MAX_VALUE)
-                                .add(varInputList.get(1))
-                                .add(varInputList.get(0))
-
-                                        //.add(okay)
-                                        //.add(varInput1)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                        //.add(cancel)
-                                .addContainerGap()
-                                        //.add(varInputList.get(1))
-
-                                .add(okay)));
-
-        //);
-        layout.setVerticalGroup(
-                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .add(label)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        //.add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                                        // .add(cancel)
-                                        //.add(addVariation)
-                                        .add(addVariation)
+                                .add(layout.createParallelGroup()
+                                        .add(label1)
                                         .add(varInputList.get(0))
                                         .add(varInputList.get(1))
-                                        //.varInputList.get(2).setVisible(false)
+                                        .add(varInputList.get(2))
+                                        .add(varInputList.get(3))
+                                        .add(varInputList.get(4)))
+                                .add(layout.createParallelGroup()
+                                        .add(label2)
+                                        .add(numberList.get(0))
+                                        .add(numberList.get(1))
+                                        .add(numberList.get(2))
+                                        .add(numberList.get(3))
+                                        .add(numberList.get(4)))
+                                .add(layout.createSequentialGroup()
+                                        .add(addVariation)
                                         //.add(okay)
-                                        //.add(varInput1)
-                                )
+                                        )
+                        ));
 
-                                .add(26, 26, 26)
-
-                                .add(okay))
-        );
-        //System.out.println(varInputList.get(2).getName() + " " + varInputList.size());
-        //varInputList.get(0).setVisible(false);
-        varInputList.get(1).setVisible(false);
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                        .add(text)
+                        .add(layout.createParallelGroup()
+                                .add(label1)
+                                .add(label2))
+                                .add(layout.createParallelGroup()
+                                        .add(varInputList.get(0))
+                                        .add(numberList.get(0)))
+                                        .add(layout.createParallelGroup()
+                                            .add(varInputList.get(1))
+                                            .add(numberList.get(1)))
+                                        .add(layout.createParallelGroup()
+                .add(varInputList.get(2))
+                .add(numberList.get(2)))
+                .add(layout.createParallelGroup()
+                .add(varInputList.get(3))
+                .add(numberList.get(3)))
+                .add(layout.createParallelGroup()
+                .add(varInputList.get(4))
+                .add(numberList.get(4)))
+                .add(layout.createParallelGroup()
+                .add(addVariation)
+                //.add(okay)
+                )
+                );
         pack();
-    }// </editor-fold>
-
+    }
 
 
     public void activateButtons() {
-        //add1.: When clicked, show "Okay button and Variation2 textfield, also send value to breedblock
         addVariation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed (java.awt.event.ActionEvent evt) {
-                varName(counter);
-                counter++;
-                varInputList.get(counter).setVisible(true);
-                //okay.setEnabled(true);
-                thisDialog.validate();
-                //okay.setEnabled(true);
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int i = 0;
+                for ( JTextField textField : varInputList ) {
+                    if (varInputList.get(i).getText().isEmpty() == false) {
+                        variationList.add(varInputList.get(i).getText());
+                        System.out.println("not empty");
+                    }
+
+                    i++;
+                }
+                populate = true;
+                getVariationList();
+                data();
+
+                int j = 0;
+                for ( JTextField textField : varInputList ) {
+                    textField.setText("");
+                    j++;
+                }
+                int k = 0;
+                for ( JTextField textField : numberList ) {
+                    textField.setText("");
+                    k++;
+                }
+                varInputList.get(0).requestFocus();
+                thisDialog.setVisible(false);
             }
         }
         );
-        okay.addActionListener(new ActionListener() {
-            public void actionPerformed (java.awt.event.ActionEvent evt) {
-                thisDialog.setVisible(false);
-            }
-        });
     }
-    public void varName(int i) {
-            variationList.add(varInputList.get(i).getText());
 
-                }
+    public void varName(int i) {
+        variationList.add(varInputList.get(i).getText());
+    }
 
     public ArrayList<String> getVariationList() {
-            return variationList;
-            }
+        System.out.println(variationList);
+        return variationList;
+    }
+
+    public boolean check() {
+        return populate;
+    }
+
+    public HashMap data() {
+        int i = 0;
+        for ( JTextField textField : varInputList ) {
+            if (! textField.getText().equals("")) {
+            numberVariation.put( varInputList.get(i).getText(), numberList.get(i).getText() );
         }
+            i++;
+        }
+        return numberVariation;
+    }
+}

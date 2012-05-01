@@ -13,33 +13,39 @@ import java.awt.dnd.*;
  * To change this template use File | Settings | File Templates.
  */
 public class CodeBlockDragSource implements DragGestureListener,
-    DragSourceListener {
+        DragSourceListener {
 
     public CodeBlock block;
 
-    public CodeBlockDragSource( CodeBlock block ) {
+    public CodeBlockDragSource(CodeBlock block) {
         DragSource dragSource = DragSource.getDefaultDragSource();
         this.block = block;
-      // DragSource is entity responsible for the initiation of the Drag and Drop operation -A. (sept 8)
+        // DragSource is entity responsible for the initiation of the Drag and Drop operation -A. (sept 8)
         // Create a DragGestureRecognizer and
         // register as the listener
         // TODO: ACTION_COPY_OR_MOVE
-        dragSource.createDefaultDragGestureRecognizer( block , DnDConstants.ACTION_COPY, this);
+        dragSource.createDefaultDragGestureRecognizer(block, DnDConstants.ACTION_COPY, this);
     }
+
     // Implementation of DragGestureListener interface.
     public void dragGestureRecognized(DragGestureEvent dge) {
-        dge.startDrag( java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR) , block );
+        dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), block);
     }
 
     // Implementation of DragSourceListener interface
-    public void dragEnter(DragSourceDragEvent dsde) { }
+    public void dragEnter(DragSourceDragEvent dsde) {
+    }
 
-    public void dragOver(DragSourceDragEvent dsde) { }
+    public void dragOver(DragSourceDragEvent dsde) {
+    }
 
-    public void dragExit(DragSourceEvent dse) { }
+    public void dragExit(DragSourceEvent dse) {
+    }
 
-    public void dropActionChanged(DragSourceDragEvent dsde) { }
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+    }
 
-    public void dragDropEnd(DragSourceDropEvent dsde) { }
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+    }
 
 }

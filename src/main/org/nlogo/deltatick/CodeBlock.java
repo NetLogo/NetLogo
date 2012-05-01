@@ -1,6 +1,7 @@
 package org.nlogo.deltatick;
 
-import com.sun.servicetag.SystemEnvironment;
+import org.nlogo.deltatick.dnd.AgentInput;
+import org.nlogo.deltatick.dnd.EnergyInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
 
 //swing is for GUI components -A. (sept 10)
@@ -21,19 +22,22 @@ import java.util.List;
  */
 
 //abstract class cannot be instantiated, but can be subclassed (eg. polygon class to be subclassed with square, triangle
-    //etc) -A. (sept 10)
+//etc) -A. (sept 10)
 public abstract class CodeBlock
-    extends javax.swing.JPanel
-	implements Transferable {
+        extends javax.swing.JPanel
+        implements Transferable {
 
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
-    DataFlavor[] flavors = new DataFlavor[] {codeBlockFlavor};
+    DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
     JLabel nameLabel;
     String code;
     private JButton exitButton = new JButton();
+    String ifCode;
 
     // the following are linked so that they're always in order
-    Map<String,JTextField> inputs = new LinkedHashMap<String,JTextField>();
+    Map<String, JTextField> inputs = new LinkedHashMap<String, JTextField>();
+    Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
     //BoxLayout either stacks components on top of each other, or in a row -A. (sept 9)
@@ -50,14 +54,14 @@ public abstract class CodeBlock
     //constructor of RemoveButton takes a CodeBlock as parameter hence "this" -A. (Sept 10)
 
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
-    public CodeBlock( String name , Color color ) {
-        myLayout = new BoxLayout( this , BoxLayout.Y_AXIS );
-        this.setLayout( myLayout );
-        this.color=color;
-        setBackground( color );
+    public CodeBlock(String name, Color color) {
+        myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        this.setLayout(myLayout);
+        this.color = color;
+        setBackground(color);
         this.setForeground(color);
-        setBorder( org.nlogo.swing.Utils.createWidgetBorder() );
-        setName( name );
+        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        setName(name);
         makeLabel();
         add(label);
     }
@@ -66,18 +70,18 @@ public abstract class CodeBlock
     //this method overrides other default definition is out there to getMinimumSize -A. (sept 10)
     @Override
     public java.awt.Dimension getMinimumSize() {
-        return new java.awt.Dimension( getPreferredWidth() , 35 );
+        return new java.awt.Dimension(getPreferredWidth(), 35);
     }
 
     // same as above -A. (Sept 10)
     @Override
     public java.awt.Dimension getPreferredSize() {
-        if( myLayout != null ) {
-            int x = myLayout.preferredLayoutSize( this ).width;
-            int y = myLayout.preferredLayoutSize( this ).height;
+        if (myLayout != null) {
+            int x = myLayout.preferredLayoutSize(this).width;
+            int y = myLayout.preferredLayoutSize(this).height;
             return new java.awt.Dimension(
                     getPreferredWidth(),
-                    java.lang.Math.max( 35 , y )
+                    java.lang.Math.max(35, y)
             );
         }
         return super.getPreferredSize();
@@ -88,24 +92,23 @@ public abstract class CodeBlock
     public void makeLabel() {
         JLabel name = new JLabel(getName());
         java.awt.Font font = name.getFont();
-        name.setFont( new java.awt.Font( "Arial" , font.getStyle() , 11 ) );
-        // for PC
+        name.setFont(new java.awt.Font("Arial", font.getStyle(), 11));
+         // for PC
+
         label.add(removeButton);
         removeButton.setVisible(false);
-        
         label.setBackground(getBackground());
-        label.add( name );
+        label.add(name);
     }
 
     public class RemoveButton extends JButton {
-        // the two below are members/variables of this class -A. (sept 10)
         CodeBlock myParent;
         RemoveButton thisButton;
 
-        public RemoveButton( CodeBlock myParent ) {
+        public RemoveButton(CodeBlock myParent) {
             this.myParent = myParent;
             this.thisButton = this;
-            //deleteAction has been defined below -A. (sept 10)
+            setPreferredSize(new Dimension(10, 10));
             setAction(deleteAction);
             setBorder(null);
             setForeground(java.awt.Color.gray);
@@ -114,28 +117,27 @@ public abstract class CodeBlock
         }
 
         private final javax.swing.Action deleteAction =
-            new javax.swing.AbstractAction( "X") {
-                public void actionPerformed( java.awt.event.ActionEvent e ) {
-                    //CodeBlock homePanel = (CodeBlock) myParent.getParent();
-                    myParent.die();
-                }
-            };
+                new javax.swing.AbstractAction("Y") {
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        //CodeBlock homePanel = (CodeBlock) myParent.getParent();
+                        myParent.die();
+                    }
+                };
     }
 
     @Override
-    public void paintComponent( java.awt.Graphics g )
-	{
-		g.setColor( color ) ;
-		g.fillRect(0,0,getWidth(),getHeight() ) ;
-	}
+    public void paintComponent(java.awt.Graphics g) {
+        g.setColor(color);
+        g.fillRect(0, 0, getWidth(), getHeight());
+    }
 
     public DataFlavor[] getTransferDataFlavors() {
         return flavors;
     }
 
-    public boolean isDataFlavorSupported( DataFlavor dataFlavor ) {
-        for( int i = 0; i < flavors.length; i++ ) {
-            if( dataFlavor.equals( flavors[i] ) ) {
+    public boolean isDataFlavorSupported(DataFlavor dataFlavor) {
+        for (int i = 0; i < flavors.length; i++) {
+            if (dataFlavor.equals(flavors[i])) {
                 return true;
             }
         }
@@ -152,35 +154,45 @@ public abstract class CodeBlock
     }
 
     public String unPackAsProcedure() {
-        return "This should be overwritten (procedure):" + code;
+        if ( ifCode != null ) {
+        return "This should be overwritten (procedure):" + code + " " + ifCode;
+    }
+        else {
+            return "This should be overwritten (procedure):" + code;
+        }
     }
 
     public void highlight() {
-        this.setBackground( this.getBackground().brighter() );
+        this.setBackground(this.getBackground().brighter());
     }
 
     public void unHighlight() {
-        this.setBackground( this.getBackground().darker() );
+        this.setBackground(this.getBackground().darker());
     }
 
-    public void setCode( String code ) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public Object getTransferData( DataFlavor dataFlavor )
+    public void setIfCode(String code) {
+        this.ifCode = code;
+    }
+
+    public Object getTransferData(DataFlavor dataFlavor)
             throws UnsupportedFlavorException {
         unSelectInputs();
-        if( isDataFlavorSupported( dataFlavor ) ) {
-            if( dataFlavor.equals( behaviorBlockFlavor ) ||
-                dataFlavor.equals( plotBlockFlavor ) ||
-                dataFlavor.equals( breedBlockFlavor ) ||
-                dataFlavor.equals( quantityBlockFlavor ) ||
-                dataFlavor.equals( conditionBlockFlavor ) ||
-                dataFlavor.equals( patchBlockFlavor) ||
-                dataFlavor.equals( codeBlockFlavor ) ) {
+        if (isDataFlavorSupported(dataFlavor)) {
+            if (dataFlavor.equals(behaviorBlockFlavor) ||
+                    dataFlavor.equals(plotBlockFlavor) ||
+                    dataFlavor.equals(breedBlockFlavor) ||
+                    dataFlavor.equals(quantityBlockFlavor) ||
+                    dataFlavor.equals(conditionBlockFlavor) ||
+                    dataFlavor.equals(patchBlockFlavor) ||
+                    dataFlavor.equals(codeBlockFlavor) ||
+                    dataFlavor.equals(traitBlockFlavor)) {
                 return this;
             }
-            if( dataFlavor.equals( DataFlavor.stringFlavor ) ) {
+            if (dataFlavor.equals(DataFlavor.stringFlavor)) {
                 return unPackAsCode();
             }
         } else {
@@ -207,47 +219,90 @@ public abstract class CodeBlock
             new DataFlavor(PatchBlock.class, "Patch Block");
     public static final DataFlavor envtBlockFlavor =
             new DataFlavor(EnvtBlock.class, "Envt Block");
+    public static final DataFlavor traitBlockFlavor =
+            new DataFlavor(TraitBlock.class, "Trait Block");
 
-    public static final DataFlavor getDataFlavorForThisClass( Class myClass ) {
-        if( myClass == BreedBlock.class ) {return breedBlockFlavor;}
-        if( myClass == PlotBlock.class ) {return breedBlockFlavor;}
-        if( myClass == BehaviorBlock.class ) {return breedBlockFlavor;}
-        if( myClass == ConditionBlock.class ) {return breedBlockFlavor;}
-        if( myClass == QuantityBlock.class ) {return breedBlockFlavor;}
-        if( myClass == CodeBlock.class ) {return breedBlockFlavor;}
-        System.out.println(" oops... class is " + myClass );
+    public static final DataFlavor getDataFlavorForThisClass(Class myClass) {
+        if (myClass == BreedBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == PlotBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == BehaviorBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == ConditionBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == QuantityBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == CodeBlock.class) {
+            return breedBlockFlavor;
+        }
+        if (myClass == TraitBlock.class) {
+            return breedBlockFlavor;
+        }
+        System.out.println(" oops... class is " + myClass);
         return null;
     }
 
-    public void addInput( String inputName , String defaultValue ) {
-        PrettyInput input = new PrettyInput( this );
-        input.setName( inputName );
-        input.setText( defaultValue );
+    public void addInput(String inputName, String defaultValue) {
+        PrettyInput input = new PrettyInput(this);
+        input.setName(inputName);
+        input.setText(defaultValue);
 
-        inputs.put( inputName , input );
-        label.add( input );
+        //inputs is a linked hashmap <String, JTextField> (march 2)
+        inputs.put(inputName, input);
+        label.add(input);
     }
-  
-    public void setMyParent( CodeBlock block ) {
+
+
+    public void addInputEnergy(String inputName, String defaultValue) {
+        EnergyInput energyInput = new EnergyInput(this);
+        energyInput.setName(inputName);
+        energyInput.setText(defaultValue);
+
+        energyInputs.put(inputName, energyInput);
+        label.add(energyInput);
+    }
+
+
+    public void addAgentInput(String inputName, String defaultValue) {
+        AgentInput agentInput = new AgentInput(this);
+        agentInput.setName(inputName);
+        agentInput.setText(defaultValue);
+
+        agentInputs.put(inputName, agentInput);
+        label.add(agentInput);
+    }
+
+
+    public void setMyParent(CodeBlock block) {
         myParent = block;
+
     }
+
 
     public Component getMyParent() {
-        if( myParent != null ) {
+        if (myParent != null) {
             return myParent;
         }
         return null;
+
     }
+
 
     //perform all the methods defined later in this class to the CodeBlock block
     // List<CodeBlock> myBlocks = new LinkedList<CodeBlock>() [myBlocks is a linked list]
-   //any block that goes into Breed, Plot or Envt block becomes part of this myBlocks -A. (sept 9)
-    public void addBlock( CodeBlock block ) {
-        myBlocks.add( block );
+    //any block that goes into Breed, Plot or Envt block becomes part of this myBlocks -A. (sept 9)
+    public void addBlock(CodeBlock block) {
+        myBlocks.add(block);
         this.add(block);
         block.enableInputs();
         block.showRemoveButton();
-        this.add(Box.createRigidArea( new Dimension( this.getWidth() , 4 ) ));
+        this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
         block.setMyParent(this);
         block.doLayout();
         block.validate();
@@ -269,8 +324,9 @@ public abstract class CodeBlock
         this.getParent().repaint();
     }
 
-    public void removeBlock( CodeBlock block ) {
-        myBlocks.remove( block );
+
+    public void removeBlock(CodeBlock block) {
+        myBlocks.remove(block);
 
     }
 
@@ -289,14 +345,15 @@ public abstract class CodeBlock
     public ArrayList<BehaviorBlock> behaviorBlocks() {
         ArrayList<BehaviorBlock> behaviors = new ArrayList<BehaviorBlock>();
 
-        for( CodeBlock block : myBlocks ) {
-            if( block instanceof BehaviorBlock ) {
-                behaviors.add( (BehaviorBlock) block);
+        for (CodeBlock block : myBlocks) {
+            if (block instanceof BehaviorBlock) {
+                behaviors.add((BehaviorBlock) block);
             }
         }
 
         return behaviors;
     }
+
 
     //this method goes through all the blocks in the linked list,myBlocks to find condition blocks
     // and create the arrayedlist, ConditionBlock  -a.
@@ -305,22 +362,23 @@ public abstract class CodeBlock
     public ArrayList<ConditionBlock> conditionBlocks() {
         ArrayList<ConditionBlock> conditions = new ArrayList<ConditionBlock>();
 
-        for( CodeBlock block : myBlocks ) {
-            if( block instanceof ConditionBlock ) {
-                conditions.add( (ConditionBlock) block);
+        for (CodeBlock block : myBlocks) {
+            if (block instanceof ConditionBlock) {
+                conditions.add((ConditionBlock) block);
             }
         }
 
         return conditions;
     }
 
+
     //Hashmap is like an array, but the index is a key, not necessarily a number -A.
-    public HashMap<String,CodeBlock> children() {
-        HashMap<String,CodeBlock> children = new HashMap<String,CodeBlock>();
-        for( CodeBlock codeBlock : myBlocks ) {
-            children.put( codeBlock.getName() , codeBlock );
-            if( children != null ) {
-                children.putAll( codeBlock.children() );
+    public HashMap<String, CodeBlock> children() {
+        HashMap<String, CodeBlock> children = new HashMap<String, CodeBlock>();
+        for (CodeBlock codeBlock : myBlocks) {
+            children.put(codeBlock.getName(), codeBlock);
+            if (children != null) {
+                children.putAll(codeBlock.children());
             }
         }
         return children;
@@ -329,72 +387,93 @@ public abstract class CodeBlock
     // don't understand what this is doing -A. (sept 9)
     public int getPreferredWidth() {
         // find out how many levels down I am
-        if( getParent() instanceof BuildPanel ) {
+        if (getParent() instanceof BuildPanel) {
             return 250;
         }
-        if( getParent() instanceof CodeBlock ) {
-            return ( (CodeBlock) getParent() ).getPreferredWidth() - 10;
+        if (getParent() instanceof CodeBlock) {
+            return ((CodeBlock) getParent()).getPreferredWidth() - 10;
         }
 
         return 240;
     }
 
     public Insets getInsets() {
-        return new Insets(8,8,7,7);
+        return new Insets(8, 8, 7, 7);
     }
 
     public Rectangle getBounds() {
-        return new Rectangle( getLocation().x ,
-                   getLocation().y ,
-                   getPreferredSize().width,
-                   getPreferredSize().height );
+        return new Rectangle(getLocation().x,
+                getLocation().y,
+                getPreferredSize().width,
+                getPreferredSize().height);
     }
 
     public void unSelectInputs() {
-        for( JTextField input : inputs.values() ) {
+        for (JTextField input : inputs.values()) {
             input.setSelectionStart(0);
             input.setSelectionEnd(0);
         }
     }
 
     public void disableInputs() {
-        for( JTextField input : inputs.values() ) {
+        for (JTextField input : inputs.values()) {
             input.setEditable(false);
         }
     }
 
     public void enableInputs() {
-        for( JTextField input : inputs.values() ) {
+        for (JTextField input : inputs.values()) {
             input.setEditable(true);
         }
     }
 
     public void showRemoveButton() {
-        removeButton.setVisible(true);
+       removeButton.setVisible(true);
     }
 
-    // don't understand what this is doing -a.
+    // TODO: Remove trait from myTraits when it is deleted from LibraryHolder
     public void die() {
         Container parent = getParent();
-        if( parent instanceof CodeBlock ) {
-            ( (CodeBlock) parent ).removeBlock(this);
-        } else if( parent instanceof BuildPanel ) {
+        if (parent instanceof BreedBlock) {
+            System.out.println("parent instance of BB");
+            if (this instanceof TraitBlock) {
+                System.out.println("this instance of TB");
+                Container pParent = parent.getParent();
+                ((BuildPanel) pParent).removeTrait((TraitBlock) this);
+                ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);
+            }
+        }
+        if (parent instanceof CodeBlock) {
+            System.out.println("TB is CB");
+            ((CodeBlock) parent).removeBlock(this);
+
+        }
+
+        if (parent instanceof BuildPanel) {
             //System.out.println("parent " + getParent() + " this " + this);
-            if( this instanceof BreedBlock ) {
-                ( (BuildPanel) parent ).removeBreed((BreedBlock) this);
+            if (this instanceof BreedBlock) {
+                System.out.println("parent instance of buildPanel/this BB");
+                ((BuildPanel) parent).removeBreed((BreedBlock) this);
+                for (Component child : getComponents()) {
+                if (child instanceof TraitBlock) {
+                ((BreedBlock) this).removeTraitBlock((TraitBlock) child);
+                ((BuildPanel) parent).removeTrait((TraitBlock) child);
+                }
+
+                }
             }
-            if( this instanceof PlotBlock ) {
-                ( (BuildPanel) parent ).removePlot((PlotBlock) this);
+            if (this instanceof PlotBlock) {
+                ((BuildPanel) parent).removePlot((PlotBlock) this);
             }
-            if (this instanceof EnvtBlock ) {
-                ( (BuildPanel) parent ).removeEnvt((EnvtBlock) this);
+            if (this instanceof EnvtBlock) {
+                ((BuildPanel) parent).removeEnvt((EnvtBlock) this);
             }
         }
 
         // kill off any subblocks
-        for( Component child : getComponents() ) {
-            if( child.getClass() == CodeBlock.class ) {
-                ( (CodeBlock) child ).die();
+        for (Component child : getComponents()) {
+            if (child.getClass() == CodeBlock.class) {
+                ((CodeBlock) child).die();
             }
         }
         parent.remove(this);

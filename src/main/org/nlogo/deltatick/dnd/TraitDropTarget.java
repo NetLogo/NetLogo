@@ -1,26 +1,32 @@
 package org.nlogo.deltatick.dnd;
 
-import org.nlogo.api.Patch;
-import org.nlogo.deltatick.BehaviorBlock;
-import org.nlogo.deltatick.CodeBlock;
-import org.nlogo.deltatick.ConditionBlock;
-import org.nlogo.deltatick.PatchBlock;
+import org.nlogo.deltatick.*;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-public class ConditionDropTarget
+/**
+ * Created by IntelliJ IDEA.
+ * User: aditiwagh
+ * Date: 2/10/12
+ * Time: 7:58 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+
+public class TraitDropTarget
         extends DropTarget {
 
-    public ConditionDropTarget(ConditionBlock cBlock) {
-        super(cBlock);
+    public TraitDropTarget(TraitBlock tBlock) {
+        super(tBlock);
     }
 
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
+
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
@@ -31,13 +37,14 @@ public class ConditionDropTarget
                 new ConditionDropTarget((ConditionBlock) o);
                 return true;
             }
-            if (o instanceof PatchBlock) {
-                addCodeBlock((PatchBlock) o);
-                //new ConditionDropTarget((PatchBlock) o);
-                return true;
-            }
             //return false; - commented out by A. (nov 27)
+
+
         }
         return false;
+        //not sure about return line of code above -A. (Feb 14, 2012)
+        // TODO: Figure out if line of code above is correct
     }
 }
+
+

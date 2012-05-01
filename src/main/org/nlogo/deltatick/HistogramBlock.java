@@ -1,39 +1,40 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.deltatick.dnd.RemoveButton;
-import org.nlogo.window.Widget;
 import org.nlogo.deltatick.dnd.PrettyInput;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class PlotBlock
+/**
+ * Created by IntelliJ IDEA.
+ * User: aditiwagh
+ * Date: 4/24/12
+ * Time: 1:54 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class HistogramBlock
         extends CodeBlock
         implements MouseMotionListener,
         MouseListener {
 
-    PlotBlock plotBlock = this; // for deleteAction
+    HistogramBlock histogramBlock = this; // for deleteAction
     JTextField plotNameField;
     org.nlogo.plot.Plot netLogoPlot;
     boolean histo;
 
-    public PlotBlock() {
+    public HistogramBlock() {
         super("new plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        this.histo = true;
+        this.histo = false;
 
         addMouseMotionListener(this);
         addMouseListener(this);
-
 
         //BreedBlock uses these 2 data flavors to unpackAsCode and check validity of block.
         // I don't think PlotBlock uses these data flavors - A.
@@ -44,7 +45,7 @@ public strictfp class PlotBlock
     }
 
     //I think this constructor is for histograms- not sure -A. (sept 26)
-    public PlotBlock(boolean histo) {
+    public HistogramBlock(boolean histo) {
         super("new plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.histo = true;
@@ -68,14 +69,6 @@ public strictfp class PlotBlock
         return netLogoPlot;
     }
 
-    /*
-    public java.awt.Dimension getMinimumSize() {
-        return new java.awt.Dimension( 250 , 200 );
-    }
-
-    public Dimension getPreferredSize() {
-        return new java.awt.Dimension( 250 , 275 );
-    }                  */
 
     public List<QuantityBlock> getMyBlocks() {
         List<QuantityBlock> blocks = new ArrayList<QuantityBlock>();
@@ -92,7 +85,7 @@ public strictfp class PlotBlock
     public void makeLabel() {
         plotNameField = new PrettyInput(this);
         label.add(removeButton);
-        label.add(new JLabel("Graph of "));
+        label.add(new JLabel("Histogram of "));
         label.add(plotNameField);
         label.setBackground(getBackground());
     }
@@ -104,18 +97,8 @@ public strictfp class PlotBlock
     public String unPackAsCode() {
         String passBack = "";
         passBack += "  set-current-plot \"" + getName() + "\"\n";
-        if (histo = true) {
-            for (QuantityBlock quantBlock : getMyBlocks()) {
-            passBack += "  histogram [" + quantBlock.getName() + "] ";
-            for (JTextField input : quantBlock.inputs.values()) {
-                passBack += input.getText() + " ";
-            }
-            passBack += "\"\n";
-            passBack += "  " + quantBlock.unPackAsCommand();
-        }
-
         for (QuantityBlock quantBlock : getMyBlocks()) {
-            passBack += "  set-current-plot-pen \"" + quantBlock.getName() + " ";
+            passBack += "  histogram \"" + quantBlock.getName() + " ";
             for (JTextField input : quantBlock.inputs.values()) {
                 passBack += input.getText() + " ";
             }
@@ -123,8 +106,6 @@ public strictfp class PlotBlock
             passBack += "  " + quantBlock.unPackAsCommand();
         }
 
-
-    }
         return passBack;
     }
 
@@ -181,3 +162,4 @@ public strictfp class PlotBlock
     }
 
 }
+

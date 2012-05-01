@@ -21,28 +21,28 @@ public class EnvtDropTarget
     DeltaTickTab deltaTickTab;
 
     public EnvtDropTarget(EnvtBlock block, DeltaTickTab deltaTickTab) {
-        super ( block );
+        super(block);
         this.deltaTickTab = deltaTickTab;
     }
 
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
-        Object o = transferable.getTransferData( CodeBlock.codeBlockFlavor );
+        Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
-            if( o instanceof PatchBlock) {
-                addCodeBlock( (PatchBlock) o );
+            if (o instanceof PatchBlock) {
+                addCodeBlock((PatchBlock) o);
                 //deltaTickTab.addCondition( (ConditionBlock) o );
                 return true;
             }
-            if( o instanceof ConditionBlock) {
-                addCodeBlock( (ConditionBlock) o );
-                deltaTickTab.addCondition( (ConditionBlock) o );
+            if (o instanceof ConditionBlock) {
+                addCodeBlock((ConditionBlock) o);
+                deltaTickTab.addCondition((ConditionBlock) o);
                 return true;
+            }
+            //return false;
         }
-        //return false;
-    }
         return false;
-}
+    }
 }
 
 

@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 
 
-
 import org.nlogo.window.Widget;
 
 import javax.swing.*;
@@ -24,38 +23,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-
 public strictfp class PatchBlock
-	extends CodeBlock {
+        extends CodeBlock {
 
-	public PatchBlock(String name)
-	{
-        super( name , ColorSchemer.getColor(4) );
-        flavors = new DataFlavor[] {
-          DataFlavor.stringFlavor,
-          CodeBlock.codeBlockFlavor
+    public PatchBlock(String name) {
+        super(name, ColorSchemer.getColor(4));
+        flavors = new DataFlavor[]{
+                DataFlavor.stringFlavor,
+                CodeBlock.codeBlockFlavor
         };
-	}
+    }
 
-    public void setMyParent( CodeBlock block ) {
+    public void setMyParent(CodeBlock block) {
         myParent = block;
     }
 
     // dragged from the library, or used to write full procedures.
     public String unPackAsCode() {
-        if( myParent != null ) {
+        if (myParent != null) {
             return unPackAsCommand();
         }
         return unPackAsProcedure();
     }
 
-    // dragged from a breed block, or used to write the full procedures.
+
     // extracting name of behavior into "to go" -A. (sept 24)
     public String unPackAsCommand() {
         String passBack = "";
         passBack += " " + getName() + " ";
         //passBack += "ask patches [";
-        for( JTextField input : inputs.values() ) {
+        for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
             //System.out.println("I'm getting here");
         }
@@ -69,9 +66,9 @@ public strictfp class PatchBlock
         String passBack = "";
         passBack += "to " + getName() + " ";
 
-        if( inputs.size() > 0 ) {
+        if (inputs.size() > 0) {
             passBack += "[ ";
-            for( String input : inputs.keySet() ) {
+            for (String input : inputs.keySet()) {
                 passBack += input + " ";
             }
             passBack += "]";
@@ -84,18 +81,18 @@ public strictfp class PatchBlock
         return passBack;
     }
 
-    public void addBlock( CodeBlock block ) {
-        super.addBlock( block );
+    public void addBlock(CodeBlock block) {
+        super.addBlock(block);
         //this.validate();
     }
 
     public void makeLabel() {
-        JLabel name = new JLabel( getName() );
+        JLabel name = new JLabel(getName());
         java.awt.Font font = name.getFont();
-        name.setFont( new java.awt.Font( "Arial" , font.getStyle() , 12 ) );
+        name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
         label.add(removeButton);
         removeButton.setVisible(false);
         label.setBackground(getBackground());
-        label.add( name );
+        label.add(name);
     }
 }

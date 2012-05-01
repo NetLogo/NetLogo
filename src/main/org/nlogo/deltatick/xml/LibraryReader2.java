@@ -1,38 +1,42 @@
 package org.nlogo.deltatick.xml;
 
+import org.nlogo.app.DeltaTickTab;
+
+import org.nlogo.deltatick.*;
+
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import javax.xml.parsers.*;
 
-import org.nlogo.app.DeltaTickTab;
-import org.nlogo.deltatick.*;
 import org.nlogo.window.AbstractPlotWidget;
+import org.parboiled.support.Var;
 import org.w3c.dom.*;
 
 /**
  * Created by IntelliJ IDEA.
- * User: mwilkerson
- * Date: Mar 2, 2010
- * Time: 6:52:27 PM
+ * User: aditiwagh
+ * Date: 2/16/12
+ * Time: 6:07 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LibraryReader {
 
-    //FileDialog class displays a dialog window from which the user can select a file. -A. (sept 13)
+// this one is for envtBlocks
+
+public class LibraryReader2 {
+
     FileDialog fileLoader;
     DeltaTickTab deltaTickTab;
-    String fileName;
 
     CodeBlock block;
 
     ArrayList<Node> newVariationsList = new ArrayList<Node>();
 
-    public LibraryReader(Frame frame, DeltaTickTab deltaTickTab) {
+
+    public LibraryReader2(Frame frame, DeltaTickTab deltaTickTab) {
         this.deltaTickTab = deltaTickTab;
 
-        // clear out any existing blocks
-       // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
+        this.deltaTickTab.clearLibrary2();
 
         fileLoader = new FileDialog(frame);
         fileLoader.setVisible(true);
@@ -45,8 +49,8 @@ public class LibraryReader {
             Document library = builder.parse(file);
 
             //needs to be in order as provided as parameters in populate() -A. (sept 13)
-            deltaTickTab.getBuildPanel().getBgInfo().populate(
-                    library.getElementsByTagName("breed"),
+            deltaTickTab.getBuildPanel().getBgInfo2().populate(
+                    //library.getElementsByTagName("breed"),
                     library.getElementsByTagName("global"),
                     library.getElementsByTagName("envt"),
                     library.getElementsByTagName("setup"),
@@ -78,8 +82,7 @@ public class LibraryReader {
 
                 // block = new TraitBlock( trait.getAttributes().getNamedItem("name").getTextContent() );
             }
-            */
-
+                */
             NodeList variations = library.getElementsByTagName("variation");
             for (int i = 0 ; i < variations.getLength(); i ++) {
                 Node variation = variations.item(i);
@@ -124,7 +127,7 @@ public class LibraryReader {
                 seekAndAttachInfo(quantity);
             }
 
-            NodeList breeds = library.getElementsByTagName("breed");
+
             NodeList globals = library.getElementsByTagName("global");
 
             //deltaTickTab.backgroundInfo = new DeltaTickTab.ModelBackgroundInfo(  );
@@ -152,6 +155,8 @@ public class LibraryReader {
                 block.setCode(
                         reIntroduceLtGt(
                                 behaviorInfo.item(j).getTextContent()));
+
+
             } else if (behaviorInfo.item(j).getNodeName() == "test") {
                 block.setCode(
                         reIntroduceLtGt(
@@ -164,40 +169,24 @@ public class LibraryReader {
                 block.setCode(
                         reIntroduceLtGt(
                                 behaviorInfo.item(j).getTextContent()));
+
             } else if (behaviorInfo.item(j).getNodeName() == "input") {
-                //addInput takes 2 parameters: String inputName & default value
                 block.addInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
-            }
-            else if (behaviorInfo.item(j).getNodeName() == "if-condition") {
-                block.setIfCode(
-                        reIntroduceLtGt(
-                                behaviorInfo.item(j).getTextContent()));
 
-            }
-            //TODO: Figure out how setCode is fine for ENEGRYINPUT or should I switch to addInput
-            else if (behaviorInfo.item(j).getNodeName() == "energyInput") {
-                //block.setCode( behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
-                block.addInputEnergy( behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
-
-            }
-            else if (behaviorInfo.item(j).getNodeName() == "variation") {
+            } else if (behaviorInfo.item(j).getNodeName() == "variation") {
                 block.setCode(
                         reIntroduceLtGt(
                                 behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent()));
                 //System.out.println( "LR@" + behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent());
 
             }
-            else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
-                block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
-            }
+
         }
 
         block.disableInputs();
-        //deltaTickTab.getLibraryPanel().add(block);
-        deltaTickTab.getLibraryHolder().addBlock( block );
+        deltaTickTab.getLibraryPanel2().add(block);
+        //deltaTickTab.getLibraryPanel().add( block );
         deltaTickTab.addDragSource(block);
         // the line above is what makes the blocks drag-able (Feb 14, 2012)
     }

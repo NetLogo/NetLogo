@@ -16,32 +16,43 @@ public class PlantedCodeBlockDragSource implements DragGestureListener,
 
     CodeBlock block;
 
-    public PlantedCodeBlockDragSource( CodeBlock block ) {
+    public PlantedCodeBlockDragSource(CodeBlock block) {
         DragSource dragSource = DragSource.getDefaultDragSource();
         this.block = block;
 
         // Create a DragGestureRecognizer and
         // register as the listener
         // TODO: ACTION_COPY_OR_MOVE
-        dragSource.createDefaultDragGestureRecognizer( block , DnDConstants.ACTION_COPY, this);
+        dragSource.createDefaultDragGestureRecognizer(block, DnDConstants.ACTION_COPY, this);
     }
+
     // Implementation of DragGestureListener interface.
     public void dragGestureRecognized(DragGestureEvent dge) {
-        dge.startDrag( java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR) , block );
+        dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), block);
         // wherever it's dropped, it'll either get copied if needed or need to go away, so this
         // component always dies.
         //block.die();
     }
 
     // Implementation of DragSourceListener interface
-    public void dragEnter(DragSourceDragEvent dsde) { System.out.println("dragEnter"); }
+    public void dragEnter(DragSourceDragEvent dsde) {
+        System.out.println("dragEnter");
+    }
 
-    public void dragOver(DragSourceDragEvent dsde) { System.out.println("dragOver"); }
+    public void dragOver(DragSourceDragEvent dsde) {
+        System.out.println("dragOver");
+    }
 
-    public void dragExit(DragSourceEvent dse) { System.out.println("dragExit"); }
+    public void dragExit(DragSourceEvent dse) {
+        System.out.println("dragExit");
+    }
 
-    public void dropActionChanged(DragSourceDragEvent dsde) { System.out.println("dropActionChanged"); }
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+        System.out.println("dropActionChanged");
+    }
 
-    public void dragDropEnd(DragSourceDropEvent dsde) { System.out.println("dragDropEnd"); }
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+        System.out.println("dragDropEnd");
+    }
 
 }

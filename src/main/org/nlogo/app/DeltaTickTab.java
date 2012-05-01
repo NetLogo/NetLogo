@@ -4,14 +4,12 @@ import org.nlogo.agent.Observer;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
-import org.nlogo.deltatick.dialogs.BreedTypeSelector;
-import org.nlogo.deltatick.dialogs.EnvtTypeSelector;
-import org.nlogo.deltatick.dialogs.TraitSelector;
-import org.nlogo.deltatick.dialogs.VariationSelector;
+import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 
 import org.nlogo.deltatick.xml.Envt;
 import org.nlogo.deltatick.xml.LibraryReader;
+import org.nlogo.deltatick.xml.LibraryReader2;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPen;
@@ -20,6 +18,8 @@ import org.nlogo.window.GUIWorkspace;
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,19 +44,31 @@ public class DeltaTickTab
     TraitSelector traitSelector;
     VariationSelector variationSelector;
     EnvtTypeSelector envtTypeSelector;
+    OperatorBlockBuilder obBuilder;
+    UserInput userInput = new UserInput();
 
     JSeparator separator = new JSeparator();
+    JSeparator librarySeparator = new JSeparator();
     JPanel contentPanel = new JPanel();
     JPanel libraryPanel;
     BuildPanel buildPanel;
 
+    JPanel libraryPanel2;
+
+    LibraryHolder libraryHolder;
+
+
     JButton addBreed;
+    JButton addTraits;
     JButton addPlot;
     JButton addHisto;
     JButton chgEnvt;
+    JButton buildBlock;
     JButton Not;
 
     boolean plotsAlive = false;
+
+    int count;   // to make sure tabbedpane doesn't get created more than once (Feb 23, 2012)
 
     //ButtonWidget setup;
     //ButtonWidget go; // for emergency shutdown on tab switch
@@ -81,6 +93,8 @@ public class DeltaTickTab
         this.traitSelector = new TraitSelector( workspace.getFrame() );
         this.variationSelector = new VariationSelector(workspace.getFrame());
         this.envtTypeSelector = new EnvtTypeSelector(workspace.getFrame());
+        this.obBuilder = new OperatorBlockBuilder(workspace.getFrame());
+        obBuilder.setMyParent(this);
 
         defaultOwner =
           new SimpleJobOwner("DeltaTick Runner", workspace.world.mainRNG,
@@ -94,8 +108,13 @@ public class DeltaTickTab
 
         //actually instantiates the object, declaration above does not instantiate until the constructor is executed
         //-A. (sept 8)
+
         libraryPanel = new JPanel();
-        libraryPanel.setLayout(new GridLayout(16,1));
+        //libraryPanel.setLayout(new GridLayout(10,1));        // (int rows, int columns)
+        libraryPanel.setLayout( new BoxLayout (libraryPanel, BoxLayout.Y_AXIS));
+
+        libraryPanel2 = new JPanel();
+        libraryPanel2.setLayout(new GridLayout(3, 1));
 
         //second line is making the entire buildPanel ready for stuff to be dragged -A. (sept 8)
         buildPanel = new BuildPanel( workspace );
@@ -105,8 +124,9 @@ public class DeltaTickTab
 
         java.awt.GridBagConstraints gridBagConstraints;
 
-        contentPanel.setLayout(new java.awt.GridBagLayout());
+        contentPanel.setLayout(new java.awt.GridBagLayout());   // one row, columns expand
 
+        //librarySeparator.setOrientation(SwingConstants.HORIZONTAL);
         // Fill: used when the component's display area is larger than the
         // component's requested size. It determines whether to resize the component,
         // and if so, how.  -A. (sept 8)
@@ -135,10 +155,32 @@ public class DeltaTickTab
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         contentPanel.add(libraryPanel, gridBagConstraints);
 
+
+        // TODO: Figure out separator between two libraries
+        /*
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        //gridBagConstraints.weightx = 1.0;
+        //gridBagConstraints.weighty = 0;
+        contentPanel.add(librarySeparator, gridBagConstraints);
+        */
+
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.VERTICAL;
+        contentPanel.add(libraryPanel2);
+        libraryPanel2.setForeground(Color.green);
+        libraryPanel2.setVisible(true);
+
         //contentPanel.pack();
+
+        count = 0;
     }
 
-    // not sure what addCondition & addDragSource are doing -A. (sept 8)
+
     public void addCondition( ConditionBlock cBlock ) {
         new ConditionDropTarget(cBlock);
         //new PlantedCodeBlockDragSource(cBlock);
@@ -148,16 +190,53 @@ public class DeltaTickTab
         new CodeBlockDragSource( block );
     }
 
-    // Plot, histo and breed become active only once library is chosen
+
+    public void addTrait( TraitBlock tBlock ) {
+        new TraitDropTarget(tBlock);
+    }
+
+
+    public void addOperator ( OperatorBlock oBlock ) {
+        new OperatorDropTarget (oBlock);
+    }
+
+    /*
+    public void addOperator (OperatorBlock oBlock) {
+        new OperatorDropTarget(oBlock);
+        buildPanel.addOperatorBlock(oBlock);
+    }
+    */
+
+
+
     private final javax.swing.Action loadAction =
 		new javax.swing.AbstractAction( "Load Behavior Library" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
-            	new LibraryReader( workspace.getFrame() , deltaTickTab );
-                addPlot.setEnabled(true);
-                addHisto.setEnabled(true);
-                addBreed.setEnabled(true);
-                chgEnvt.setEnabled(true);
-                deltaTickTab.contentPanel.validate();
+                if ( count == 0 ) {
+                    libraryHolder = new LibraryHolder();
+                    libraryPanel.add(libraryHolder);
+                    libraryHolder.makeNewTab();
+
+                    new LibraryReader( workspace.getFrame() , deltaTickTab );
+                    libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+                    addPlot.setEnabled(true);
+                    addHisto.setEnabled(true);
+                    addBreed.setEnabled(true);
+                    addTraits.setEnabled(false);
+                    chgEnvt.setEnabled(true);
+
+                    deltaTickTab.contentPanel.validate();
+                    count ++;
+                }
+                 else if (count > 0 ){
+                   //TODO: Make sure additional libraries are going to right panels
+                {  libraryHolder.makeNewTab();
+                    new LibraryReader( workspace.getFrame(), deltaTickTab );
+                    libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+                    deltaTickTab.contentPanel.validate();
+                }
+                }
+
             }
         };
 
@@ -166,17 +245,7 @@ public class DeltaTickTab
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 BreedBlock newBreed;
-                VariationBlock variationBlock;
-                /*
-                // Two paths: either go ahead and select traits & variations, or just have a breed -A. (Feb 3)
-                if (buildPanel.availBreeds().size() > 1) {
-                    breedTypeSelector.showMe(buildPanel.getBgInfo());
-                    if (breedTypeSelector.selectedBreedType() != null )
-                    for ( Breed breed : buildPanel.getBgInfo().getBreeds()) {
-                             newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
-                        }
-                }
-                   */
+                addTraits.setEnabled(true);
 
                 // if more than 1 breed available in XML -A. (oct 5)
                 // can remove the next line of code because there will always be more than one type of available breeds
@@ -184,74 +253,67 @@ public class DeltaTickTab
                 if( buildPanel.availBreeds().size() > 1 ) {
                     breedTypeSelector.showMe(buildPanel.getBgInfo());
                     if (breedTypeSelector.typedBreedType() != null) {
-                        traitSelector.showMe();
-                        variationSelector.showMe();
                         Breed breed = buildPanel.getBgInfo().getBreeds().get(0);
-                        for (String variation : variationSelector.getVariationList()) {
-                        newBreed = new BreedBlock( breed , breedTypeSelector.typedBreedType(), traitSelector.printMe(), variation, workspace.getFrame() );
+                        newBreed = new BreedBlock( breed, breedTypeSelector.typedBreedType(), workspace.getFrame() );
                         buildPanel.addBreed(newBreed);
+                        userInput.addBreed(newBreed.plural());
                         newBreed.getParent().setComponentZOrder(newBreed, 0 );
                         new BreedDropTarget(newBreed, deltaTickTab);
                     }
                 }
                     else if( breedTypeSelector.selectedBreedType() != null ) {
-                        traitSelector.showMe();
-                        variationSelector.showMe();
+
                         for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
                             if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
                                 newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
-                                if (variationSelector.getVariationList() != null ) {
-                            for (String variation : variationSelector.getVariationList()) {
-                                    // {
-                                    //newBreed = new BreedBlock( breed , breed.plural(), traitSelector.printMe(), variation, workspace.getFrame() );
-                                System.out.println("I'm entering the variation 'for' loop");
-                                variationBlock = new VariationBlock( breed, variation );
 
-                           // }
                                 buildPanel.addBreed(newBreed);
-                                buildPanel.addVariation(variationBlock);
+                                userInput.addBreed(newBreed.plural());
                                 newBreed.getParent().setComponentZOrder(newBreed, 0 );
-                                variationBlock.getParent().setComponentZOrder(variationBlock, 0);
                                 new BreedDropTarget(newBreed, deltaTickTab);
-                            }
-                        }
 
                     } }
                 } else {
                     Breed breed = buildPanel.availBreeds().get(0);
-                   // for (String variation : variationSelector.getVariationList()) {
-                    System.out.println(buildPanel.availBreeds());
-                    for (String variation : variationSelector.getVariationList()) {
+
                     if( buildPanel.breedCount() == 0 ) {
-                        newBreed = new BreedBlock( breed , breed.plural(), traitSelector.printMe(), variation, workspace.getFrame() );
+                        newBreed = new BreedBlock( breed , breed.plural(), workspace.getFrame() );
                     } else {
-                        newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), traitSelector.printMe(), variation, workspace.getFrame() );
+                        newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
                     }
 
                     buildPanel.addBreed(newBreed);
+                    userInput.addBreed(newBreed.plural());
                     newBreed.getParent().setComponentZOrder(newBreed, 0 );
                     new BreedDropTarget(newBreed, deltaTickTab);
                 }
-                //BreedBlock newBreed = new BreedBlock("people" , "person", workspace.getFrame() );
-                contentPanel.validate();
-
+                    contentPanel.validate();
             }
-        }
-        }
-        };
+      };
 
-    private final javax.swing.Action addTraits =
+    private final javax.swing.Action addTraitsAction =
 		new javax.swing.AbstractAction( "Add Traits" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
-                 VariationBlock newVariation;
+                 TraitBlock newTraitBlock;
+                traitSelector.showMe( buildPanel );
+                variationSelector.showMe();
 
-                for (String variation : variationSelector.getVariationList() ) {
-                    newVariation = new VariationBlock( "breedName", variation );
+                //if (variationSelector.getVariationList() != null) {
+                if (variationSelector.check() == true) {
+                newTraitBlock = new TraitBlock( traitSelector.selectedBreed(), traitSelector.traitName(),
+                        variationSelector.getVariationList(), variationSelector.data() );
 
-                buildPanel.addVariation( newVariation );
-                newVariation.getParent().setComponentZOrder(newVariation, 0 );
-                contentPanel.validate();
-        }
+                    libraryPanel.add(newTraitBlock);
+                    userInput.addTraitAndVariations( traitSelector.selectedBreed(), traitSelector.traitName(),
+                            variationSelector.getVariationList());
+
+                libraryHolder.addLibrarytoTab(newTraitBlock);
+                 deltaTickTab.addDragSource(newTraitBlock);
+                    buildPanel.addTrait(newTraitBlock);
+                    new TraitDropTarget(newTraitBlock);
+                 contentPanel.validate();
+            }
+            }
         };
 
 
@@ -283,58 +345,69 @@ public class DeltaTickTab
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 envtTypeSelector.showMe(buildPanel.getBgInfo());
                 EnvtBlock newEnvt;
-                System.out.println("A");
                 for ( Envt envt: buildPanel.getBgInfo().getEnvts() ) {
                     if ( envtTypeSelector.selectedEnvt() != null ) {
                         if ( envtTypeSelector.selectedEnvt() == envt.nameEnvt()) {
                             System.out.println("B");
-                            //EnvtBlock newEnvt;
-                            //newEnvt = new EnvtBlock (envt, envt.nameEnvt());
                             newEnvt = new EnvtBlock (envt);
-                    //if (buildPanel.getBgInfo().getEnvts().size() > 1) {
+                            new EnvtDropTarget( newEnvt, deltaTickTab );
 
-                        //envtTypeSelector.showMe(buildPanel.getBgInfo());
-                        //for (Envt envt1 : buildPanel.getBgInfo().getEnvts()) {
-                        //newEnvt = new EnvtBlock(envt1);
-
-                    //}
-                   // EnvtBlock newEnvt = new EnvtBlock( envt );
-                   // buildPanel.chgEnvt(newEnvt);
-                    new EnvtDropTarget(newEnvt, deltaTickTab );
-                //}
                         buildPanel.addEnvt(newEnvt);
-
                 }
                         contentPanel.validate();
 
     };
         };
-                //contentPanel.validate();
             }
         };
 
     private final javax.swing.Action addHistoAction =
 		new javax.swing.AbstractAction( "Add Histogram" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
+
                 PlotBlock newPlot = new PlotBlock( true );
                 buildPanel.addPlot( newPlot );
                 newPlot.getParent().setComponentZOrder(newPlot, 0 );
                 new PlotDropTarget(newPlot);
                 contentPanel.validate();
+
         }
     };
-           // };
+
+    private final Action toBuildBlock =
+            new javax.swing.AbstractAction( "Build operator block" ) {
+                public void actionPerformed ( ActionEvent e ) {
+                    OperatorBlock newOBlock;
+                    // show OperatorBlock dialog
+                    //trial.initComponents();
+                    //trial.activateButtons();
+                    obBuilder.showMe(userInput);
+                    if ( obBuilder.check()  == true ) {
+                        System.out.println(obBuilder.selectedBreed());
+                        //newOBlock = new OperatorBlock( obBuilder, userInput );
+                        newOBlock = new OperatorBlock( obBuilder.selectedBreed(), obBuilder.selectedTrait(),
+                                obBuilder.selectedTrait2(),
+                                userInput.getVariations(obBuilder.selectedBreed(), obBuilder.selectedTrait()),
+                                userInput.getVariations(obBuilder.selectedBreed(), obBuilder.selectedTrait2()));
+
+                        //newOBlock = new OperatorBlock( obBuilder.selectedBreed(), obBuilder.selectedTrait(),
+                               // obBuilder.selectedTrait2(), userInput );
+                        libraryPanel.add(newOBlock);
+                        libraryHolder.addOperatortoTab(newOBlock);
+                        deltaTickTab.addDragSource(newOBlock);
+                    }
+                }
+            };
 
 
-   // pt is procedures tab of NetLogo -A. (sept 8)
     public void populateProcedures() {
         pt.innerSource( buildPanel.unPackAsCode() );
+        //pt.innerSource( libraryHolder.unPackAsCode() );
         //pt.select(0,pt.innerSource().length());
         pt.setIndenter(true);
     }
 
     public void populatePlots() {
-
         try {
             // for each plot block
             for( PlotBlock plotBlock : buildPanel.getMyPlots() ) {
@@ -393,18 +466,25 @@ public class DeltaTickTab
             public void addControls() {
                 this.add( new JButton( loadAction ) ) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
+                //this.add( new JButton( loadAction2 ) );
                 addBreed = new JButton( addBreedAction );
                 addBreed.setEnabled(false);
-                this.add( addBreed ) ;
+                this.add(addBreed) ;
+                addTraits = new JButton ( addTraitsAction );
+                addTraits.setEnabled(false);
+                this.add(addTraits);
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
-                this.add( addPlot ) ;
+                this.add(addPlot) ;
                 addHisto = new JButton( addHistoAction );
                 addHisto.setEnabled(false);
-                this.add( addHisto ) ;
+                this.add(addHisto) ;
                 chgEnvt = new JButton ( chgEnvtAction );
                 chgEnvt.setEnabled(false);
-                this.add( chgEnvt ) ;
+                this.add(chgEnvt) ;
+                this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
+                buildBlock = new JButton( toBuildBlock );
+                this.add( buildBlock );
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 this.add( new JButton( clearAction ) ) ;
                 //this.add( new JButton( procedureAction ) ) ;
@@ -413,12 +493,30 @@ public class DeltaTickTab
 	}
 
 
+    //this method populates the library panel with all the blocks from the XML (read in Library Reader) except traitBlock
+    //(Feb 16, 2012)
     public JPanel getLibraryPanel() {
         return libraryPanel;
     }
 
+    public JPanel getLibraryPanel2() {
+        return libraryPanel2;
+    }
+
     public BuildPanel getBuildPanel() {
         return buildPanel;
+    }
+
+    public LibraryHolder getLibraryHolder() {
+        return libraryHolder;
+    }
+
+    public TraitSelector getTraitSelector() {
+        return traitSelector;
+    }
+
+    public VariationSelector getVariationSelector() {
+        return variationSelector;
     }
 
     public void handle( Events.SwitchedTabsEvent event ) {
@@ -464,6 +562,15 @@ public class DeltaTickTab
         libraryPanel.repaint();
     }
 
+    public void clearLibrary2() {
+        libraryPanel2.removeAll();
+        buildPanel.clear();
+        clearPlots();
+        buildPanel.getBgInfo().clear();
+        //breedTypeSelector.clear();
+        libraryPanel2.repaint();
+    }
+
     public void clearPlots() {
         workspace.plotManager().forgetAll();
     }
@@ -478,6 +585,17 @@ public class DeltaTickTab
 
     public void load( String theXml ) {
         //TODO...
+
     }
 
+    public String libraryName() {
+        System.out.println("Deltatick tab " + buildPanel.getBgInfo().getLibrary());
+        return buildPanel.getBgInfo().getLibrary();
+
+    }
+
+
+
 }
+
+
