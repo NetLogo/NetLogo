@@ -147,6 +147,15 @@ class TokenizerTests extends FunSuite {
     expect("Token(crt,COMMAND,_createturtles:,+0)")(
       tokenizer.getTokenAtPosition("[crt", 1).toString)
   }
+  // bug #139
+  test("GetTokenAtPosition-bug139") {
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt]", 3).toString)
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt", 0).toString)
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt", 3).toString)
+  }
   // what about removed prims?
   test("RemovedPrims") {
     expect(TokenType.IDENT)(
