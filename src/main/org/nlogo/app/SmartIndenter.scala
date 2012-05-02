@@ -71,7 +71,7 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
   }
   // None return means "leave it where it is"
   private def computeNewSpaces(currentLine:String,lineNum:Int):Option[Int] = {
-    val token = compiler.getTokenAtPosition(currentLine, 0)
+    val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
     if(token != null && token.tyype == TokenType.CLOSE_BRACKET) {
       // first token is close bracket, so find matching opener and set it to the same indent level
       val opener = findMatchingOpenerBackward(
