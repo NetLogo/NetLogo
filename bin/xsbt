@@ -25,6 +25,7 @@ $JAVA \
   -Djava.library.path= \
   -Djava.ext.dirs= \
   -Dfile.encoding=UTF-8 \
+  -Dapple.awt.graphics.UseQuartz=false \
   $JAVA_OPTS \
   -classpath $LAUNCH \
   xsbt.boot.Boot "$@"
