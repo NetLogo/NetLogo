@@ -29,6 +29,7 @@ tmp/
 /src/main/org/nlogo/window/Events.java
 
 # other
+/.ensime
 /build/
 /.idea/workspace.xml
 /devel/depend.ddf
