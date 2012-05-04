@@ -26,7 +26,7 @@ import java.awt.event.{WindowAdapter, WindowEvent}
 import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import javax.swing.{JButton, JMenuBar, JMenu, JOptionPane, JDialog, JProgressBar, JFrame}
+import javax.swing.{SwingUtilities, JButton, JMenuBar, JMenu, JOptionPane, JDialog, JProgressBar, JFrame}
 
 /**
  * The main class for the complete NetLogo application.
@@ -39,7 +39,7 @@ import javax.swing.{JButton, JMenuBar, JMenu, JOptionPane, JDialog, JProgressBar
  * for example code.
  */
 object App{
-  
+
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -50,6 +50,7 @@ object App{
   private var commandLineURL: String = null
   private var loggingName: String = null
 
+  // But not these guys!  (Victory for Jason!!)
   private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
   private val ContinuousLogModeName = "Continuous"
   private val AtEndLogModeName = "One-Off"
@@ -288,7 +289,7 @@ object App{
     }
   }
 }
-  
+
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
@@ -366,7 +367,7 @@ class App extends
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])                                    
+      val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
@@ -430,9 +431,9 @@ class App extends
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
-    
+
     pico.addComponent(new EditorFactory(workspace))
-    
+
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
@@ -440,7 +441,7 @@ class App extends
 
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
     workspace.init(viewManager)
-    frame.addLinkComponent(viewManager)    
+    frame.addLinkComponent(viewManager)
 
     fileMenu = pico.getComponent(classOf[FileMenu])
     val menuBar = new JMenuBar(){
@@ -473,9 +474,9 @@ class App extends
     smartPack(frame.getPreferredSize)
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
-    
-    org.nlogo.app.FindDialog.init(frame) 
-    
+
+    org.nlogo.app.FindDialog.init(frame)
+
     Splash.endSplash()
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
@@ -513,7 +514,7 @@ class App extends
     val loggingMode = nameModePairs(result)._2
     val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
     new WebStartXMLWriterAppender(loggingMode, url)
-    
+
   }
 
   def startLogging(properties:String) {
@@ -711,7 +712,7 @@ class App extends
       }
     }
   }
-  
+
   /**
    * Internal use only.
    */
@@ -778,14 +779,41 @@ class App extends
    */
   def handle(e:AboutToQuitEvent) {
     if(logger != null) {
-      if (isWebStart)
-        handleWebStartLoggingOnQuit()
-      else
-        logger.close()
+      if (isWebStart) handleWebStartLoggingOnQuit()
+      else            logger.close()
     }
   }
 
+  // MUST BE CALLED FROM THE EVENT DISPATCH THREAD (for `finalizeWebStartLoggingSession`) --JAB (5/4/12)
   private def handleWebStartLoggingOnQuit() {
+
+    def finalizeWebStartLoggingSession() {
+
+      val pbar = new JProgressBar()
+      pbar.setIndeterminate(true)
+      pbar.setString("Please wait while NetLogo transfers your log file...")
+      pbar.setStringPainted(true)
+
+      val dialog = new JDialog(frame, "", true)
+      dialog.setPreferredSize(new java.awt.Dimension(400, 200))
+      dialog.setUndecorated(true)
+      dialog.setModal(true)
+      dialog.add(pbar)
+      dialog.pack()
+      dialog.setLocationRelativeTo(frame)
+
+      concurrent.ops.spawn {
+        logger.close()                                      // Background task: Avoids blocking the progress bar
+        SwingUtilities.invokeLater(() => dialog.dispose())  // Event thread:    Have to somehow tell `dialog` that we no longer need it!
+      }
+
+      dialog.setVisible(true) // Event thread!
+
+    }
+
+    def requestRemoteLogDeletion() {
+      Option(logger) foreach (_.requestRemoteLogDeletion())
+    }
 
     val textFuncPairs = List(
       ("Send Full Log Before Quitting", () => finalizeWebStartLoggingSession()),
@@ -804,39 +832,8 @@ class App extends
 
   }
 
-  private def requestRemoteLogDeletion() {
-    Option(logger) foreach (_.requestRemoteLogDeletion())
-  }
-
-  private def finalizeWebStartLoggingSession() {
-
-    import scala.concurrent.ops.spawn
-
-    lazy val pbar = new JProgressBar()
-    pbar.setIndeterminate(true)
-    pbar.setString("Please wait while NetLogo transfers your log file...")
-    pbar.setStringPainted(true)
-
-    lazy val dialog = new JDialog()
-    dialog.setSize(new java.awt.Dimension(400, 200))
-    dialog.setUndecorated(true)
-    dialog.setModal(true)
-    dialog.add(pbar)
-    dialog.setLocationRelativeTo(frame)
-
-    spawn {
-      dialog.setVisible(true)  // This must be a background task, since the dialog in modal
-    }
-
-    spawn {
-      logger.close()  // This must be a background task, so as to avoid blocking the progress bar
-      dialog.dispose()
-    }
-
-  }
-
   /**
-   * Generates OS standard frame title. 
+   * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
     if(workspace.getModelFileName == null) "NetLogo"
@@ -850,7 +847,7 @@ class App extends
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
-      title 
+      title
     }
   }
 
@@ -1047,7 +1044,7 @@ class App extends
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
-  
+
   def smartPack(targetSize:Dimension) {
     val gc = frame.getGraphicsConfiguration
     val maxBounds = gc.getBounds
@@ -1058,33 +1055,33 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-    
+
     tabs.interfaceTab.adjustTargetSize(targetSize)
-    
+
     // reduce our size ambitions if necessary
     var newWidth  = StrictMath.min(targetSize.width, maxWidth )
     var newHeight = StrictMath.min(targetSize.height, maxHeight)
-    
+
     // move up/left to get more room if possible and necessary
     val moveLeft = StrictMath.max(0, frame.getLocation.x + newWidth  - maxX)
     val moveUp   = StrictMath.max(0, frame.getLocation.y + newHeight - maxY)
-    
+
     // now we can compute our new position
     val newX = StrictMath.max(maxBoundsX, frame.getLocation.x - moveLeft)
     val newY = StrictMath.max(maxBoundsY, frame.getLocation.y - moveUp  )
-    
+
     // and now that we know our position, we can compute our new size
     newWidth  = StrictMath.min(newWidth, maxX - newX)
     newHeight = StrictMath.min(newHeight, maxY - newY)
-    
+
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)
     frame.validate()
-    
+
     // not sure why this is sometimes necessary - ST 11/24/03
     tabs.requestFocus()
   }
-  
+
   /**
    * Internal use only.
    */
@@ -1114,11 +1111,13 @@ class App extends
 }
 
 class AppFrame extends JFrame with LinkParent {
+
+  private val linkComponents = new collection.mutable.ListBuffer[Object]()
+
   setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
   org.nlogo.awt.FullScreenUtilities.setWindowCanFullScreen(this, true)
-  private val linkComponents = new collection.mutable.ListBuffer[Object]()
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       try App.app.fileMenu.quit()
@@ -1127,6 +1126,8 @@ class AppFrame extends JFrame with LinkParent {
     override def windowIconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, true).raise(App.app)}
     override def windowDeiconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, false).raise(App.app)}
   })
+
   def addLinkComponent(c:Object) { linkComponents += (c) }
   def getLinkChildren: Array[Object] = linkComponents.toArray
+
 }
