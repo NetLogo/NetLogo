@@ -8,7 +8,9 @@ object NetUtils {
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 
-  // You are strongly encouraged to keep POST data under 30K characters, lest `SocketExceptions` start getting thrown --JAB (4/26/12)
+  // You are strongly encouraged to keep POST data under 4K characters, lest `SocketExceptions` start getting thrown --JAB (4/26/12)
+  // This could go up if I could find a working, readable-by-Play way of POSTing in Java that doesn't just put the
+  // POST data in the URL --JAB (5/7/12)
   def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
 
     val data = postKVs.toList map {
