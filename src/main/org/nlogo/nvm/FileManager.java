@@ -21,6 +21,10 @@ public interface FileManager {
   boolean eof()
       throws java.io.IOException;
 
+  File currentFile();
+
+  File findOpenFile(String fileName);
+
   boolean hasCurrentFile();
 
   void closeCurrentFile()
