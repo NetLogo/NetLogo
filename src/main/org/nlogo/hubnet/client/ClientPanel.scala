@@ -138,7 +138,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   private def findWidget(name:String) = {
-    clientGUI.getInterfaceComponents.collect {case w: Widget => w}.find(_.displayName == name)
+    clientGUI.getInterfaceComponents.find { case w: Widget => w.displayName == name }
   }
 
   // this is the master method for handling plot messages. it should probably be redone.
