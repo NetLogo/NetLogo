@@ -127,13 +127,12 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         pw.repaintIfNeeded()
       }
     }
-    else findWidget(widgetName) match {
-      case Some(w) => w match {
-        case i: InterfaceGlobalWidget => i.valueObject(value)
-        case m: MonitorWidget => m.value(value)
-        case _ => throw new IllegalStateException(widgetName)
-      }
-      case _ =>
+    // `foreach` is the reasonable choice here; a Plot for a Monitor will share the same
+    // name as the Monitor and can intercept the search if we use `find`! -- JAB (5/9/12)
+    clientGUI.getInterfaceComponents filter { case w: Widget => w.displayName == widgetName } foreach {
+      case i: InterfaceGlobalWidget => i.valueObject(value)
+      case m: MonitorWidget         => m.value(value)
+      case _                        => // Ignore
     }
   }
 
