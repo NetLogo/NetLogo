@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -144,13 +144,13 @@ object ChecksumsAndPreviews {
       m.values.foreach(entry => fw.write(entry.toString + '\n'))
       fw.close()
     }
-    // This code gets fidgetty with Windows.  Alter with care! --JAB
     def getRevisionNumber(modelPath: String): String = {
       val modelFolderName = "models"
       val builder = new ProcessBuilder("git", "log", "--pretty=format:%h", modelPath drop ((modelFolderName + '/').size))
       builder.directory(new java.io.File(modelFolderName))
-      val stdInput = new java.io.BufferedReader(new java.io.InputStreamReader(builder.start().getInputStream))
-      stdInput.readLine().trim
+      val buff = new Array[Char](1000)
+      new java.io.InputStreamReader(builder.start().getInputStream).read(buff)
+      buff.mkString.trim
     }
   }
 }

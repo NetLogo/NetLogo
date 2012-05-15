@@ -2,7 +2,7 @@
 
 if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
-  export JAVA_HOME=`cygpath -up "\Java\jdk1.6.0_26"`
+  export JAVA_HOME=`cygpath -up "\Java\jdk1.6.0_31"`
 else
   CURR_DIR=`dirname $0`
   if [ `uname -s` = Linux ] ; then
@@ -56,7 +56,7 @@ $JAVA \
     $ENCODING \
     $JAVA_OPTS \
     $HEADLESS \
-	$TERMINAL \
+    $TERMINAL \
     $USE_QUARTZ \
     -classpath $TOOLS$COLON$SBT_LAUNCH \
     $BOOT "$@"

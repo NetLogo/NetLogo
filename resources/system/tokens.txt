@@ -495,7 +495,7 @@ R substring etc._substring
 R subtract-headings etc._subtractheadings
 R sum _sum
 R tan etc._tan
-R task etc._task
+R task _task
 R ticks etc._ticks
 R timer etc._timer
 R towards etc._towards

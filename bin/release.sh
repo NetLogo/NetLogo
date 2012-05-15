@@ -29,11 +29,11 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA=2.9.1
+SCALA=2.9.2
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_30_server
+VM=windows-x86-1.6.0_31_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -129,6 +129,9 @@ done
 if [ ! -f Mathematica-Link/Makefile ]; then
   git submodule update --init Mathematica-Link
 fi
+if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
+  cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
+fi
 if [ ! -f Mathematica-Link/JLink.jar ]; then
   echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
   echo "(it's needed to compile the link, but we don't have a license to distribute it)"
@@ -187,7 +190,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 

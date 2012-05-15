@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.gl.render
 
@@ -7,7 +7,7 @@ import org.nlogo.api.JavaLibraryPath
 object JOGLLoader {
 
   private val VersionMismatch =
-    "NetLogo found an old version of JOGL on your computer.\n"
+    "NetLogo found an old version of JOGL on your computer.\n" +
     "You will need to remove it. For instructions, see Library Conflicts\n" +
     "in the System Requirements section of the NetLogo User Manual."
 

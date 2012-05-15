@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lex
 
@@ -146,6 +146,15 @@ class TokenizerTests extends FunSuite {
   test("GetTokenAtPosition-bug88") {
     expect("Token(crt,COMMAND,_createturtles:,+0)")(
       tokenizer.getTokenAtPosition("[crt", 1).toString)
+  }
+  // bug #139
+  test("GetTokenAtPosition-bug139") {
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt]", 3).toString)
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt", 0).toString)
+    expect("Token(crt,COMMAND,_createturtles:,+0)")(
+      tokenizer.getTokenAtPosition("crt", 3).toString)
   }
   // what about removed prims?
   test("RemovedPrims") {

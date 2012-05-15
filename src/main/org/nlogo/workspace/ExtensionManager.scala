@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.workspace
 
@@ -275,7 +275,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // If it's a path, look for it relative to the model location
     Exception.ignoring(classOf[MalformedURLException]) {
-    if (path.indexOf('/') > -1) {
+    if (path.contains(java.io.File.separator)) {
         val jarFile = new java.io.File(workspace.attachModelDir(path))
         if (jarFile.exists)
           return ExtensionManager.file2LocalURLStr(jarFile)
@@ -497,8 +497,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     import scala.collection.JavaConversions._
     jars.values.toList flatMap {
       jar =>
-        val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ArchiveFileEnding
-        val additionalJarPaths = jar.classManager.additionalJars.toList map (aJar => jar.extensionName + java.io.File.separator + aJar)
+        val thisJarPath = jar.extensionName + '/' + jar.extensionName + ArchiveFileEnding
+        val additionalJarPaths = jar.classManager.additionalJars.toList map (aJar => jar.extensionName + '/' + aJar)
         thisJarPath :: additionalJarPaths
     }
   }
