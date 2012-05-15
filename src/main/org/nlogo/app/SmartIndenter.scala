@@ -1,10 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
-import org.nlogo.api.{CompilerServices,EditorAreaInterface,Token,TokenType}
+
+import org.nlogo.api.{ CompilerServices, EditorAreaInterface, Token, TokenType }
 import org.nlogo.editor.IndenterInterface
-class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends IndenterInterface {
+
+class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
+extends IndenterInterface {
+
   /// first, the four handle* methods in IndenterInterface
+
   def handleTab() {
     val line1 = code.offsetToLine(code.getSelectionStart)
     val line2 = code.offsetToLine(code.getSelectionEnd)
@@ -12,7 +17,7 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
   }
   def handleEnter() {
     val lineStart = code.lineToStartOffset(code.offsetToLine(code.getSelectionStart))
-    val prevLineText = code.getText(lineStart,code.getSelectionStart - lineStart)
+    val prevLineText = code.getText(lineStart, code.getSelectionStart - lineStart)
     val tabDiff = totalValue(prevLineText)
     if(tabDiff >= 0)
       code.replaceSelection(
@@ -22,11 +27,11 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
         "\n" + spaces(countLeadingSpaces(
           code.getLineOfText(
             code.offsetToLine(
-              findMatchingOpenerBackward(code.getText(0,code.getSelectionStart), 0)
+              findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
               .startPos)))))
   }
-  def handleInsertion(s:String) {
-    if(List("e","n","d").contains(s.toLowerCase)) {
+  def handleInsertion(s: String) {
+    if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
         handleCloseBracket()
@@ -37,11 +42,11 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     val lineStart = code.lineToStartOffset(currentLine)
     val lineEnd = code.lineToEndOffset(currentLine)
     val text = code.getText(lineStart, lineEnd - lineStart)
-    val textUpToCursor = text.substring(0,code.getSelectionStart - lineStart)
+    val textUpToCursor = text.substring(0, code.getSelectionStart - lineStart)
     val wordUpToCursor = textUpToCursor.trim.toLowerCase
-    if(List("]",")","end").contains(wordUpToCursor)) {
+    if(List("]", ")", "end").contains(wordUpToCursor)) {
       val lineSpaceCount = countLeadingSpaces(textUpToCursor)
-      val opener = findMatchingOpenerBackward(code.getText(0,code.getSelectionStart), 0)
+      val opener = findMatchingOpenerBackward(code.getText(0, code.getSelectionStart), 0)
       val openerLineNum = code.offsetToLine(opener.startPos)
       val openerLine = code.getLineOfText(openerLineNum)
       val spaceDiff = StrictMath.min(lineSpaceCount - countLeadingSpaces(openerLine),
@@ -54,9 +59,11 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
                           spaces(- spaceDiff))
     }
   }
+
   /// private helpers
+
   private val TAB_WIDTH = 2
-  private def indentLine(lineNum:Int) {
+  private def indentLine(lineNum: Int) {
     val currentLine = code.getLineOfText(lineNum)
     for(newSpaces <- computeNewSpaces(currentLine, lineNum)) {
       val oldSpaces = countLeadingSpaces(currentLine)
@@ -69,13 +76,14 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
       }
     }
   }
+
   // None return means "leave it where it is"
-  private def computeNewSpaces(currentLine:String,lineNum:Int):Option[Int] = {
-    val token = compiler.getTokenAtPosition(currentLine, 0)
+  private def computeNewSpaces(currentLine: String,lineNum: Int): Option[Int] = {
+    val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
     if(token != null && token.tyype == TokenType.CLOSE_BRACKET) {
       // first token is close bracket, so find matching opener and set it to the same indent level
       val opener = findMatchingOpenerBackward(
-        code.getText(0,code.lineToStartOffset(lineNum) + token.startPos + 1), 0)
+        code.getText(0, code.lineToStartOffset(lineNum) + token.startPos + 1), 0)
       return Some(countLeadingSpaces(
         code.getLineOfText(
           code.offsetToLine(opener.startPos))))
@@ -119,7 +127,7 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
       // finally, first look for the last closing bracket, then find the matching open bracket then
       // find the previous command that is outside the brackets.
       findCommandForLastCloser(
-          prevLine,code.lineToStartOffset(prevLineNum),
+          prevLine, code.lineToStartOffset(prevLineNum),
           token != null && isOpener(token)).foreach(opener =>
         result = countLeadingSpaces(
           code.getLineOfText(
@@ -134,16 +142,19 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     }
     Some(result)
   }
-  private def countLeadingSpaces(s:String) = s.takeWhile(_ == ' ').size
-  private def isOnlySpaces(s:String) = s.forall(_ == ' ')
-  private def spaces(n:Int) = List.fill(n)(' ').mkString
-  private def value(tok:Token) =
+
+  private def countLeadingSpaces(s: String) = s.takeWhile(_ == ' ').size
+  private def isOnlySpaces(s: String) = s.forall(_ == ' ')
+  private def spaces(n: Int) = List.fill(n)(' ').mkString
+  private def totalValue(s: String): Int = totalValue(tokenize(s))
+  private def totalValue(tokens: List[Token]): Int = tokens.map(value).sum
+
+  private def value(tok: Token) =
     if(isOpener(tok)) 1
     else if(isCloser(tok)) -1
     else 0
-  private def totalValue(s:String):Int = totalValue(tokenize(s))
-  private def totalValue(tokens:List[Token]):Int = tokens.map(value).sum
-  private def findMatchingOpenerBackward(s:String,startDiff:Int):Token = {
+
+  private def findMatchingOpenerBackward(s: String, startDiff: Int): Token = {
     val tokens = tokenize(s)
     var diff = startDiff
     var changedDiffYet = false
@@ -161,17 +172,19 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     }
     tokens(0)
   }
-  private def findCommandForLastCloser(line:String,offset:Int,findOpener:Boolean):Option[Token] = {
+
+  private def findCommandForLastCloser(line: String, offset: Int, findOpener: Boolean): Option[Token] = {
     for(tok <- tokenize(line).reverse)
       if(isCloser(tok)) {
         val opener = findMatchingOpenerBackward(
-          code.getText(0,tok.startPos + offset),1)
+          code.getText(0, tok.startPos + offset), 1)
         return Some(if(findOpener) opener
-                    else findCommand(code.getText(0,opener.startPos)).getOrElse(opener))
+                    else findCommand(code.getText(0, opener.startPos)).getOrElse(opener))
       }
     None
   }
-  private def findCommand(text:String):Option[Token] = {
+
+  private def findCommand(text: String): Option[Token] = {
     var diff = 0
     for(tok <- tokenize(text).reverse) {
       if(isOpener(tok))
@@ -183,18 +196,20 @@ class SmartIndenter(code:EditorAreaInterface,compiler:CompilerServices) extends 
     }
     None
   }
-  private def getComment(tokens:List[Token]):Option[Token] =
+
+  private def getComment(tokens: List[Token]): Option[Token] =
     tokens.reverse.find(_.tyype == TokenType.COMMENT)
-  private def tokenize(line:String) =
+  private def tokenize(line: String) =
     compiler.tokenizeForColorization(line).toList
-  private def isOpener(t:Token) =
+  private def isOpener(t: Token) =
     t.tyype == TokenType.OPEN_PAREN ||
     t.tyype == TokenType.OPEN_BRACKET ||
     t.tyype == TokenType.KEYWORD &&
       (t.name.equalsIgnoreCase("to") || t.name.equalsIgnoreCase("to-report"))
-  private def isCloser(t:Token) =
+  private def isCloser(t: Token) =
     t.tyype == TokenType.CLOSE_PAREN ||
     t.tyype == TokenType.CLOSE_BRACKET ||
     t.tyype == TokenType.KEYWORD &&
       t.name.equalsIgnoreCase("end")
+
 }

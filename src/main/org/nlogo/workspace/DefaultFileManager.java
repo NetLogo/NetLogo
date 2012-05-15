@@ -108,6 +108,10 @@ public final strictfp class DefaultFileManager
     }
   }
 
+  public org.nlogo.api.File currentFile() {
+    return hasCurrentFile() ? currentFile : null;
+  }
+
   public boolean hasCurrentFile() {
     return (currentFile != null && isFileOpen(currentFile.getAbsolutePath()));
   }
@@ -116,7 +120,7 @@ public final strictfp class DefaultFileManager
     return (findOpenFile(fileName) != null);
   }
 
-  private org.nlogo.api.File findOpenFile(String fileName) {
+  public org.nlogo.api.File findOpenFile(String fileName) {
     java.io.File newFile = new java.io.File(fileName);
 
     Iterator<org.nlogo.api.File> files = openFiles.iterator();
