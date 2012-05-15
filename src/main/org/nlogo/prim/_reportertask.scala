@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim
 
@@ -15,9 +15,9 @@ class _reportertask extends Reporter {
 
   override def report(c: Context): AnyRef =
     ReporterTask(body = args(0),
-                   formals = formals.reverse.dropWhile(_==null).reverse.toArray,
-                   lets = c.letBindings,
-                   locals = c.activation.args)
+                 formals = formals.reverse.dropWhile(_==null).reverse.toArray,
+                 lets = c.allLets,
+                 locals = c.activation.args)
 
   def getFormal(n: Int): Let = {
     while(formals.size < n)

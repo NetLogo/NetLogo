@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
 
@@ -48,7 +48,8 @@ private class IdentifierParser(program:Program,
         if(ident.length == 1) 1
         // if it's more than just "?", it needs to be an integer.
         else try { Integer.parseInt(ident.substring(1)) }
-             catch { case e:NumberFormatException => exception(INVALID_TASK_VARIABLE,tok ) }
+             catch { case e:NumberFormatException => exception(INVALID_TASK_VARIABLE, tok) }
+      cAssert(varNumber > 0, INVALID_TASK_VARIABLE, tok)
       newToken(new _taskvariable(varNumber),
                ident,TokenType.REPORTER,tok.startPos,tok.endPos,tok.fileName)
     }

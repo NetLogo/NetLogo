@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.nvm;
 
@@ -20,6 +20,10 @@ public interface FileManager {
 
   boolean eof()
       throws java.io.IOException;
+
+  File currentFile();
+
+  File findOpenFile(String fileName);
 
   boolean hasCurrentFile();
 

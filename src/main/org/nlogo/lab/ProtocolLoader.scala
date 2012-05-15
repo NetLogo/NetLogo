@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 
@@ -73,7 +73,7 @@ class ProtocolLoader(services: CompilerServices)
         !element.getElementsByTagName(name).isEmpty
       def valueSets = {
         def readSteppedValueSetElement(e: dom.Element) = {
-          def parse(name: String) = e.getAttribute(name).toDouble
+          def parse(name: String) = BigDecimal(e.getAttribute(name))
           new SteppedValueSet(e.getAttribute("variable"),parse("first"),
                               parse("step"),parse("last"))
         }

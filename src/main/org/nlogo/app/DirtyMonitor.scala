@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
@@ -10,7 +10,7 @@ object DirtyMonitor {
                                             java.util.Locale.US)
     System.getProperty("java.io.tmpdir") +
       System.getProperty("file.separator") + "autosave_" +
-      df.format(new java.util.Date()) + ".nlogo"
+      df.format(new java.util.Date()) + "." + FileMenu.modelSuffix
   }
 }
 

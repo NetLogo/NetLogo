@@ -1,7 +1,6 @@
-NetLogo 5.0RC10
+NetLogo 5.0.2
 INTERIM DEVEL BUILD
-NetLogo 5.0RC
-NetLogo 5.0beta
+NetLogo 5.0
 NetLogo 4.
 NetLogo 3.
 NetLogo 2.

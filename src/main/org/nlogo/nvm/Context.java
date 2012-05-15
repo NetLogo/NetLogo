@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.nvm;
 
@@ -189,7 +189,7 @@ public final strictfp class Context {
       // probably shouldn't be doing the latter, since they
       // could just use a stop condition, but you know somebody
       // will try...)  If stop is used in the go commands
-      // themselves, then the call to returnFromProcedure above
+      // themselves, then the call to returnFromProcedure below
       // means that __experimentstepend won't run.  Thus we need
       // to set job.stopping to true ourselves, if we just
       // returned from a top level procedure.  If I've analyzed
@@ -210,8 +210,6 @@ public final strictfp class Context {
     // directly by the button. - ST
     // It's also used to stop a BehaviorSpace run, using
     // __experimentstepend. - ST 3/8/06
-    // And I just found a third use for this -- _foreach checks
-    // this flag so it knows whether a non-local exit occurred. - ST 12/31/11
     stopping = true;
   }
 
@@ -293,6 +291,25 @@ public final strictfp class Context {
       rest = rest.tail();
     }
     job.parentContext.setLet(let, value);
+  }
+
+
+  public scala.collection.immutable.List<LetBinding> allLets() {
+    // fast path
+    if(job.parentContext == null) {
+      return letBindings;
+    }
+    // slow path
+    else {
+      scala.collection.mutable.ListBuffer<LetBinding> buf =
+        new scala.collection.mutable.ListBuffer<LetBinding>();
+      Context walk = this;
+      while(walk != null) {
+        buf.$plus$plus$eq(walk.letBindings);
+        walk = walk.job.parentContext;
+      }
+      return buf.toList();
+    }
   }
 
   ///

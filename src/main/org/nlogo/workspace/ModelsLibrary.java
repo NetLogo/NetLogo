@@ -1,7 +1,8 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.workspace;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,10 +25,10 @@ public strictfp class ModelsLibrary {
   public static String[] getModelPaths(boolean exclusive) {
     scanForModels(exclusive);
     List<String> result = new ArrayList<String>();
+    String fileSep = File.separator;
     for (Enumeration<?> models = rootNode.depthFirstEnumeration(); models.hasMoreElements();) {
-      Node node = (Node) models.nextElement();
-      if (!node.isFolder() &&
-          node.path.indexOf("/models/test/") == -1) {
+    Node node = (Node) models.nextElement();
+    if (!node.isFolder() && !node.path.contains(String.format("%smodels%stest%s", fileSep, fileSep, fileSep))) {
         result.add(node.path);
       }
     }

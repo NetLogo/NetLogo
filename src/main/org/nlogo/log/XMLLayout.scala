@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.log
 
@@ -33,7 +33,7 @@ class XMLLayout extends Layout {
     attributes.clear()
     obj match {
       case msg: LogMessage =>
-        Option(msg.elements).flatten.foreach(renderLogMessage)
+        Option(msg.elements).foreach(_.foreach(renderLogMessage))
       case _ =>
         hd.startElement("", "", "message", attributes)
         hd.characters(event.getRenderedMessage.toCharArray, 0,
@@ -46,12 +46,12 @@ class XMLLayout extends Layout {
 
   private def renderLogMessage(msg: LogMessage) {
     val attributes = new AttributesImpl
-    for(attr <- Option(msg.attributes).flatten)
+    for(a <- Option(msg.attributes); attr <- a)
       attributes.addAttribute("", "", attr(0), "CDATA", attr(1))
     hd.startElement("", "", msg.tag, attributes)
     if(msg.data != null)
       hd.characters(msg.data.toCharArray, 0, msg.data.length)
-    Option(msg.elements).flatten.foreach(renderLogMessage)
+    Option(msg.elements).foreach(_.foreach(renderLogMessage))
     hd.endElement("", "", msg.tag)
   }
 

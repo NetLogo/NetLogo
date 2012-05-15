@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.workspace;
 
@@ -137,8 +137,8 @@ public abstract strictfp class AbstractWorkspace
    */
   public void dispose()
       throws InterruptedException {
-    getExtensionManager().reset();
     jobManager.die();
+    getExtensionManager().reset();
     if (hubNetManager != null) {
       hubNetManager.disconnect();
     }

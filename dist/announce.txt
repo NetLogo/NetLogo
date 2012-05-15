@@ -1,62 +1,61 @@
 The Center for Connected Learning and Computer-Based Modeling at
 Northwestern University is pleased to announce the release of
-NetLogo 5.0RC5, available for free download from our site at
+NetLogo 5.0.1, available for free download from our site at
 http://ccl.northwestern.edu/netlogo/ .
 
-This is a release candidate for NetLogo 5.0. As such, there may be a
-few bugs.  Please try it out and send us bug reports at
-bugs@ccl.northwestern.edu and other suggestions and comments at
-feedback@ccl.northwestern.edu. We really value your feedback and look
-forward to hearing from you. Please let us know about bugs you find,
-features you want, etc.
+Please try it out and send us bug reports at bugs@ccl.northwestern.edu
+and other suggestions and comments at feedback@ccl.northwestern.edu.
+We really value your feedback and look forward to hearing from
+you. Please let us know about bugs you find, features you want, etc.
 
 Most models created in earlier versions of NetLogo will work in
-NetLogo 5.0RC5, perhaps with minor updates to the code. If you have
-any trouble, please consult:
-http://ccl.northwestern.edu/netlogo/5.0/docs/transition.html .
+NetLogo 5.0.1, perhaps with minor updates to the code. If you have any
+trouble, please consult:
+http://ccl.northwestern.edu/netlogo/transition.html .
 
-As befits the number 5.0, this release has major new features.  Among
-those major features are: open source, internationalization, smart
-plot widgets which eliminate the need for plotting code in the Code
-tab, rich formatting features for the Info tab, transparency in 3D,
-and support for functions as first-class values.  We invite and
-welcome your comments on the features as well as reports on bugs that
-you find.
+The following is a list of changes made since NetLogo 5.0:
 
-We are excited by the opportunities resulting from the open sourcing
-and internationalization of NetLogo.  We invite our users to help
-localize NetLogo in their language, write extensions and publicize
-them to the NetLogo community, contribute models to the NetLogo
-community models page, and make improvements to NetLogo itself and the
-NetLogo User Manual and send us the changes for integration.
+ * new social science model: Hotelling's Law
+ * new BEAGLE Evolution models: Bird Breeders, Bug Hunters Competition,
+   Critter Designers, Fish Tank Genetic Drift
+ * added "wolf" shape to default shapes
+ * NetLogo is now buildable on Windows, for open source developers
+ * support better JavaScript <=> applet communication
+ * bugfixes:
+   * `stop` sometimes interfered with later execution
+   * `run` of task with `stop` caused exception
+   * BehaviorSpace: some normal failures caused bug dialog
+   * wrong code font on Windows
+   * applets couldn't find extension jars
+   * applets didn't work without NetLogoLite.jar.pack.gz
+   * attempting to use `?0` crashed compiler
+   * model with empty tick counter label couldn't be loaded
+   * BehaviorSpace: floating point imprecision could cause last step to be skipped
+   * fix to Osmotic Pressure model
+   * F1 did wrong lookup on adjacent tokens
+   * BadLocationException when using undo and redo in code editor
+   * fragile argument parsing in headless.Main
+   * agent monitor: NullPointerException in WindowDragger.inCloseBox
+   * bad translation key onlyObserverCanAskAllPatches
+   * stamped links had incorrect appearance
+   * extensions didn't always unload cleanly when opening new model
+   * Windows installer didn't install NetLogoLite.jar.pack.gz
+   * topology diagram in world settings failed to live-update
+   * spurious internationalization-related warnings when running headless
+   * `random-seed` primitive discarded high 32 bits of seed
+   * applets linked to dead "Get Java" URL
+   * BehaviorSpace: runtime errors in metrics resulted in incorrect output
+   * Windows-generated applet HTML included backslashes in extension paths
+   * tasks: agent-type checker handled task bodies incorrectly
+   * NullPointerException in SmartIndenter
 
-The following is a (partial) list of changes made since NetLogo
-5.0RC4:
-  
-- new models: Sandpile, Bug Hunt Predators and Invasive Species
-- add Chinese localization contributed by Yu Yanfei
-- fixed broken Russian localization
-- fixed bug where some SDM models behaved incorrectly run headless
-- fixed 5.0-only regression: GoGo extension didn't work on 64 bit Macs
-- fixed 5.0-only regression: GIS extension wasn't working in applets
-- fixed 5.0-only regression: "stop" inside "foreach" didn't work
-  properly in some cases
-- fixed 5.0-only regression: 3D turtle trails were rendered incorrectly
-- bundle Java 6 Update 30 for Windows users
 
-
-Please send bug reports to bugs@ccl.northwestern.edu and other
-suggestions and comments to feedback@ccl.northwestern.edu.
-
-We also have four mailing lists for NetLogo:
+We have four mailing lists for NetLogo:
 - netlogo-announce: occasional release announcements only
 - netlogo-users: discussions about using NetLogo
 - netlogo-educators: discussions about teaching with NetLogo
 - netlogo-devel: discussions about the development of NetLogo
 http://ccl.northwestern.edu/netlogo/ has info on all four.
-
-The NetLogo source code is hosted here:
-https://github.com/NetLogo/NetLogo
 
 Credits:
 
@@ -77,10 +76,8 @@ Brady Fund, and the Northwestern Institute on Complex Systems.
 Enjoy,
 
 --Uri
- 
+
 
 Uri Wilensky
 Professor of Learning Sciences, Computer Science and Complex Systems
 Director, Center for Connected Learning and Computer-Based Modeling
-email: uri@northwestern.edu
-WWW: http://ccl.northwestern.edu/uri/

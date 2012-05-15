@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.agent;
 
@@ -72,8 +72,7 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
     } else if (sourceObject == Nobody$.MODULE$) {
       return NOBODY_CODE;
     } else if (sourceObject instanceof LogoList) {
-      // Hash algor for List (from which ArrayList and therefore LogoList extend)
-      // http://java.sun.com/j2se/1.4.1/docs/apiList.html#hashCode()
+      // Hash algor for List (from which ArrayList and therefore LogoList extend).
       // Instead of recursing on the original element types,
       // we use a LogoHashObject - JMD 10/28/03*/
 

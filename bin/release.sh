@@ -29,11 +29,11 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA=2.9.1
+SCALA=2.9.2
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_30_server
+VM=windows-x86-1.6.0_31_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -82,7 +82,7 @@ if [ $WINDOWS -eq 1 ]; then
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "fetching VM pack"
     pushd "$IJDIR/jres" > /dev/null
-    $CURL -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    $CURL -f -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
     popd > /dev/null
   fi
   # make sure VM pack is complete and not corrupt
@@ -125,9 +125,22 @@ do
   fi
 done
 
+# fail early if JLink.jar is missing
+if [ ! -f Mathematica-Link/Makefile ]; then
+  git submodule update --init Mathematica-Link
+fi
+if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
+  cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
+fi
+if [ ! -f Mathematica-Link/JLink.jar ]; then
+  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
+  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
+  exit 1
+fi
 
 # compile, build jars etc.
-rm *.jar
+make clean-extensions
+rm -f *.jar
 bin/sbt error update
 $MAKE -s
 
@@ -137,11 +150,6 @@ export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddat
 echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
-# make fresh staging area
-$RM -rf tmp/netlogo-$COMPRESSEDVERSION
-$MKDIR -p tmp/netlogo-$COMPRESSEDVERSION
-cd tmp/netlogo-$COMPRESSEDVERSION
-
 # Scaladoc
 if [ $INCLUDE_SCALADOC -eq 1 ]
 then
@@ -150,6 +158,11 @@ then
 else
   $RM -rf docs/scaladoc
 fi
+
+# make fresh staging area
+$RM -rf tmp/netlogo-$COMPRESSEDVERSION
+$MKDIR -p tmp/netlogo-$COMPRESSEDVERSION
+cd tmp/netlogo-$COMPRESSEDVERSION
 
 # put most of the files in
 $CP -rp ../../docs .
@@ -165,14 +178,6 @@ $CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/s
 $CP -p ../../$SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
-if [ ! -f ../../Mathematica-Link/Makefile ]; then
-  (cd ../..; git submodule update --init Mathematica-Link) || exit 1
-fi
-if [ ! -f "../../Mathematica-Link/JLink.jar" ]; then
-  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
-  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
-  exit 1
-fi
 $CP -rp ../../Mathematica-Link Mathematica\ Link
 (cd Mathematica\ Link; NETLOGO=.. make) || exit 1
 $RM Mathematica\ Link/JLink.jar
@@ -185,7 +190,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
@@ -462,9 +467,9 @@ else
 fi
 
 echo
-echo "to tag the release:"
-echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
-echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION
+echo "to tag the release (changing 'master' if necessary):"
+echo git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
+echo git submodule foreach git tag -a -m $COMPRESSEDVERSION $COMPRESSEDVERSION master
 echo
 echo "and to push the tags:"
 echo git push --tags

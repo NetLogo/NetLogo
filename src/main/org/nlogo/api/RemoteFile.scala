@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.api
 
@@ -36,7 +36,8 @@ class RemoteFile(filepath: String) extends File {
         reader = new java.io.BufferedReader(
             new java.io.InputStreamReader(
                 new java.io.BufferedInputStream(
-                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(filepath)).openStream())))
+                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(filepath)).openStream()),
+              "UTF-8"))
         this.mode = mode
       case FileMode.Write | FileMode.Append | FileMode.None =>
         unsupported

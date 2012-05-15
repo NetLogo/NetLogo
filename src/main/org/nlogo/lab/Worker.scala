@@ -1,10 +1,10 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.agent.Observer
-import org.nlogo.api.{Dump,
+import org.nlogo.api.{Dump,LogoException,
                       WorldDimensions, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.util.MersenneTwisterFast
@@ -74,7 +74,7 @@ class Worker(val protocol: Protocol)
   class Runner(runNumber: Int, settings: List[Pair[String, Any]], fn: ()=>Workspace)
     extends Callable[Unit]
   {
-    class FailedException(message: String) extends RuntimeException(message) 
+    class FailedException(message: String) extends LogoException(message)
     private def owner(rng: MersenneTwisterFast) =
       new SimpleJobOwner("BehaviorSpace", rng, classOf[Observer])
     @volatile var aborted = false

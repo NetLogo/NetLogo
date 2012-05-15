@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 import org.nlogo.api.WorldDimensions
@@ -41,6 +41,7 @@ object Main {
     var tableWriter:Option[java.io.PrintWriter] = None
     var spreadsheetWriter:Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
+    var suppressErrors = false
     val it = args.iterator
     def die(msg:String) { System.err.println(msg); System.exit(1) }
     def path2writer(path:String) =
@@ -52,6 +53,10 @@ object Main {
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
     while(it.hasNext) {
       val arg = it.next()
+      def requireHasNext() {
+        if (!it.hasNext)
+          die("missing argument after " + arg)
+      }
       if(arg == "--version")
         { println(Version.version); return None }
       else if(arg == "--extension-api-version")
@@ -61,25 +66,27 @@ object Main {
       else if(arg == "--fullversion")
         { println(Version.fullVersion); return None }
       else if(arg == "--model")
-        model = Some(it.next())
+        { requireHasNext(); model = Some(it.next()) }
       else if(arg == "--min-pxcor")
-        minPxcor = Some(it.next())
+        { requireHasNext(); minPxcor = Some(it.next()) }
       else if(arg == "--max-pxcor")
-        maxPxcor = Some(it.next())
+        { requireHasNext(); maxPxcor = Some(it.next()) }
       else if(arg == "--min-pycor")
-        minPycor = Some(it.next())
+        { requireHasNext(); minPycor = Some(it.next()) }
       else if(arg == "--max-pycor")
-        maxPycor = Some(it.next())
+        { requireHasNext(); maxPycor = Some(it.next()) }
       else if(arg == "--setup-file")
-        setupFile = Some(new java.io.File(it.next()))
+        { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
       else if(arg == "--experiment")
-        experiment = Some(it.next())
+        { requireHasNext(); experiment = Some(it.next()) }
       else if(arg == "--table")
-        tableWriter = Some(path2writer(it.next()))
+        { requireHasNext(); tableWriter = Some(path2writer(it.next())) }
       else if(arg == "--spreadsheet")
-        spreadsheetWriter = Some(path2writer(it.next()))
+        { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
       else if(arg == "--threads")
-        threads = it.next().toInt
+        { requireHasNext(); threads = it.next().toInt }
+      else if(arg == "--suppress-errors")
+        { suppressErrors = true }
       else
         die("unknown argument: " + arg)
     }
@@ -97,6 +104,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, setupFile, experiment, tableWriter,
-                      spreadsheetWriter, dims, threads))
+                      spreadsheetWriter, dims, threads, suppressErrors))
   }
 }
