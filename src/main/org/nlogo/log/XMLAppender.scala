@@ -42,6 +42,9 @@ trait XMLAppender {
    _appears_ to work, but it results in weird, crash-prone behavior when used; I started getting "IOException:
    Stream Closed" in really, really absurd places when using the workaround.  So I now force the `WriterAppender`
    subclasses that mix this trait in to pass `writer` in, themselves.  _That_ works, fortunately. --JAB (4/4/12)
+
+   The Scala compiler bug in question is SI-4119. The bug is closed in JIRA because (since Scala 2.9) you get the
+   above compiler error, instead of the runtime error you used to get in Scala 2.8. - ST 5/16/12
    */
   protected def initializeTransformer(systemId: String = null, writer: Writer) {
     val streamResult = new StreamResult(writer)
