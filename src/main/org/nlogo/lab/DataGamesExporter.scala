@@ -93,16 +93,6 @@ class DataGamesExporter(modelFileName: String,
 }
 
 /*
-     for(v <- protocol.valueSets.map(_.variableName)) {
-      out.print(Dump.csv.header(v) + ",")
-      foreachRun((run,metricNumber) =>
-        if(metricNumber == 0)
-          Some(run.settings.find(_._1 == v).get._2)
-        else None)
-    }
-*/
-
-/*
 {
  "collection_name" : "Fires",
  "cases" : [
