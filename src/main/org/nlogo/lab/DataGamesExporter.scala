@@ -76,166 +76,29 @@ class DataGamesExporter(modelFileName: String,
       ("cases" -> runs.keySet.toSeq.sorted.map(runInfo))
     )))
   }
-  private def runInfo(n: Int): net.liftweb.json.JValue = {
+  private def runInfo(runNumber: Int): net.liftweb.json.JValue = {
+    import net.liftweb.json._
+    import net.liftweb.json.JsonDSL._
     def assumeDouble(a: Any) =
       a.asInstanceOf[java.lang.Double].doubleValue
-    import net.liftweb.json.JsonDSL._
-    val run = runs(n)
+    val run = runs(runNumber)
     val variableNames = protocol.valueSets.map(_.variableName)
-    (("runNumber" -> n) ~
+    val cases: Seq[JObject] =
+      run.measurements.zipWithIndex.map{
+        case (values, step) =>
+          values.toList.zipWithIndex.map{
+            case (value, metricNumber) =>
+              protocol.metrics(metricNumber) -> assumeDouble(value)
+          }.foldLeft(("step" -> step): JObject)(_ ~ _)}
+    (("runNumber" -> runNumber) ~
      (variableNames.head -> assumeDouble(run.settings.find(_._1 == variableNames.head).get._2)) ~
      ("final" -> assumeDouble(run.lastMeasurement(0))) ~
      ("min" -> run.minMeasurement(0).get) ~
      ("max" -> run.maxMeasurement(0).get) ~
      ("mean" -> run.meanMeasurement(0).get) ~
-     ("steps" -> run.steps))
+     ("steps" -> run.steps) ~
+     ("contents" ->
+      ("collection_name" -> "Steps") ~
+      ("cases" -> cases)))
   }
 }
-
-/*
-{
- "collection_name" : "Fires",
- "cases" : [
-   {
-     "runNumber" : 1,
-     "density" : 5,
-     "final" : 0.289,
-     "min" : 0,
-     "max" : 0.289,
-     "mean" : 0.289,
-     "steps" : 13,
-     "contents" : {
-       "collection_name" : "Steps",
-       "cases" : [
-         {
-           "step" : 1,
-           "percentBurned" : 0
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         }
-       ]
-     }
-   },
-   {
-     "runNumber" : 2,
-     "density" : 7,
-     "final" : 0.41,
-     "min" : 0,
-     "max" : 0.41,
-     "mean" : 0.41,
-     "steps" : 14,
-     "contents" : {
-       "collection_name" : "Steps",
-       "cases" : [
-         {
-           "step" : 1,
-           "percentBurned" : 0
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         },
-         {
-           "step" : 1,
-           "percentBurned" : 0.289482148600836
-         }
-       ]
-     }
-   }
- ]
-}
-*/
