@@ -2,87 +2,171 @@
   "collection_name":"test/lab/fireWithDataGames.nlogo",
   "cases":[{
     "runNumber":1,
-    "steps":50,
-    "percent-burned":2.192796610169492
+    "density":45.0,
+    "final":2.192796610169492,
+    "min":0.0,
+    "max":2.192796610169492,
+    "mean":1.824387947269304,
+    "steps":50
   },{
     "runNumber":2,
-    "steps":57,
-    "percent-burned":2.436583261432269
+    "density":46.0,
+    "final":2.436583261432269,
+    "min":0.0,
+    "max":2.436583261432269,
+    "mean":1.9665585671357606,
+    "steps":57
   },{
     "runNumber":3,
-    "steps":57,
-    "percent-burned":2.4934959624286246
+    "density":47.0,
+    "final":2.4934959624286246,
+    "min":0.0,
+    "max":2.4934959624286246,
+    "mean":2.0190769567745104,
+    "steps":57
   },{
     "runNumber":4,
-    "steps":67,
-    "percent-burned":2.552150484313531
+    "density":48.0,
+    "final":2.552150484313531,
+    "min":0.0,
+    "max":2.552150484313531,
+    "mean":2.1231134524622104,
+    "steps":67
   },{
     "runNumber":5,
-    "steps":67,
-    "percent-burned":2.737196721842506
+    "density":49.0,
+    "final":2.737196721842506,
+    "min":0.0,
+    "max":2.737196721842506,
+    "mean":2.2762177333762703,
+    "steps":67
   },{
     "runNumber":6,
-    "steps":67,
-    "percent-burned":2.937720329024677
+    "density":50.0,
+    "final":2.937720329024677,
+    "min":0.0,
+    "max":2.937720329024677,
+    "mean":2.4401293531037074,
+    "steps":67
   },{
     "runNumber":7,
-    "steps":67,
-    "percent-burned":3.573429620867833
+    "density":51.0,
+    "final":3.573429620867833,
+    "min":0.0,
+    "max":3.573429620867833,
+    "mean":2.872879214563247,
+    "steps":67
   },{
     "runNumber":8,
-    "steps":63,
-    "percent-burned":3.786953334962131
+    "density":52.0,
+    "final":3.786953334962131,
+    "min":0.0,
+    "max":3.786953334962131,
+    "mean":2.9433350384803334,
+    "steps":63
   },{
     "runNumber":9,
-    "steps":63,
-    "percent-burned":3.8655009281992934
+    "density":53.0,
+    "final":3.8655009281992934,
+    "min":0.0,
+    "max":3.8655009281992934,
+    "mean":3.039759117312412,
+    "steps":63
   },{
     "runNumber":10,
-    "steps":77,
-    "percent-burned":5.186142861340463
+    "density":54.0,
+    "final":5.186142861340463,
+    "min":0.0,
+    "max":5.186142861340463,
+    "mean":4.023169065921684,
+    "steps":77
   },{
     "runNumber":11,
-    "steps":175,
-    "percent-burned":6.666282221325183
+    "density":55.0,
+    "final":6.666282221325183,
+    "min":0.0,
+    "max":6.666282221325183,
+    "mean":5.424480081362617,
+    "steps":175
   },{
     "runNumber":12,
-    "steps":157,
-    "percent-burned":7.510273487317557
+    "density":56.0,
+    "final":7.510273487317557,
+    "min":0.0,
+    "max":7.510273487317557,
+    "mean":5.93887387153074,
+    "steps":157
   },{
     "runNumber":13,
-    "steps":149,
-    "percent-burned":7.939466436698472
+    "density":57.0,
+    "final":7.939466436698472,
+    "min":0.0,
+    "max":7.939466436698472,
+    "mean":6.164519987759757,
+    "steps":149
   },{
     "runNumber":14,
-    "steps":284,
-    "percent-burned":14.480986358293011
+    "density":58.0,
+    "final":14.480986358293011,
+    "min":0.0,
+    "max":14.480986358293011,
+    "mean":10.286766973476782,
+    "steps":284
   },{
     "runNumber":15,
-    "steps":544,
-    "percent-burned":56.27703301722053
+    "density":59.0,
+    "final":56.27703301722053,
+    "min":0.0,
+    "max":56.27703301722053,
+    "mean":33.77717781770028,
+    "steps":544
   },{
     "runNumber":16,
-    "steps":519,
-    "percent-burned":74.07798516328309
+    "density":60.0,
+    "final":74.07798516328309,
+    "min":0.0,
+    "max":74.07798516328309,
+    "mean":42.44901782396175,
+    "steps":519
   },{
     "runNumber":17,
-    "steps":478,
-    "percent-burned":85.57737260402057
+    "density":61.0,
+    "final":85.57737260402057,
+    "min":0.0,
+    "max":85.57737260402057,
+    "mean":46.56023074581491,
+    "steps":478
   },{
     "runNumber":18,
-    "steps":458,
-    "percent-burned":89.12576687116565
+    "density":62.0,
+    "final":89.12576687116565,
+    "min":0.0,
+    "max":89.12576687116565,
+    "mean":48.76794935197437,
+    "steps":458
   },{
     "runNumber":19,
-    "steps":430,
-    "percent-burned":92.02577527184857
+    "density":63.0,
+    "final":92.02577527184857,
+    "min":0.0,
+    "max":92.02577527184857,
+    "mean":49.593862394211065,
+    "steps":430
   },{
     "runNumber":20,
-    "steps":412,
-    "percent-burned":94.03169886082219
+    "density":64.0,
+    "final":94.03169886082219,
+    "min":0.0,
+    "max":94.03169886082219,
+    "mean":50.77471646477108,
+    "steps":412
   },{
     "runNumber":21,
-    "steps":408,
-    "percent-burned":95.28437812889203
+    "density":65.0,
+    "final":95.28437812889203,
+    "min":0.0,
+    "max":95.28437812889203,
+    "mean":52.10100034385903,
+    "steps":408
   }]
 }

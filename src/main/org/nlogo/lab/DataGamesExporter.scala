@@ -77,14 +77,30 @@ class DataGamesExporter(modelFileName: String,
     )))
   }
   private def runInfo(n: Int): net.liftweb.json.JValue = {
+    def assumeDouble(a: Any) =
+      a.asInstanceOf[java.lang.Double].doubleValue
     import net.liftweb.json.JsonDSL._
     val run = runs(n)
-    val header = ("runNumber" -> n) ~ ("steps" -> run.steps)
-    val more = protocol.metrics.zipWithIndex.map{case (metric, nn) =>
-      metric -> run.lastMeasurement(nn).asInstanceOf[java.lang.Double].doubleValue}
-    more.foldLeft(header)(_ ~ _)
+    val variableNames = protocol.valueSets.map(_.variableName)
+    (("runNumber" -> n) ~
+     (variableNames.head -> assumeDouble(run.settings.find(_._1 == variableNames.head).get._2)) ~
+     ("final" -> assumeDouble(run.lastMeasurement(0))) ~
+     ("min" -> run.minMeasurement(0).get) ~
+     ("max" -> run.maxMeasurement(0).get) ~
+     ("mean" -> run.meanMeasurement(0).get) ~
+     ("steps" -> run.steps))
   }
 }
+
+/*
+     for(v <- protocol.valueSets.map(_.variableName)) {
+      out.print(Dump.csv.header(v) + ",")
+      foreachRun((run,metricNumber) =>
+        if(metricNumber == 0)
+          Some(run.settings.find(_._1 == v).get._2)
+        else None)
+    }
+*/
 
 /*
 {
