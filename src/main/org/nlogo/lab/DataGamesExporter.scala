@@ -76,8 +76,11 @@ class DataGamesExporter(modelFileName: String,
       ("cases" -> runs.keySet.toSeq.sorted.map(runInfo))
     )))
   }
-  private def runInfo(n: Int) =
-    ("runNumber" -> n)
+  private def runInfo(n: Int) = {
+    import net.liftweb.json.JsonDSL._
+    val run = runs(n)
+    ("runNumber" -> n) ~ ("steps" -> run.steps)
+  }
 }
 
 /*

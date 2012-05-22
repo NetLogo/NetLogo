@@ -1,46 +1,67 @@
 {
   "collection_name":"test/lab/fireWithDataGames.nlogo",
   "cases":[{
-    "runNumber":1
+    "runNumber":1,
+    "steps":50
   },{
-    "runNumber":2
+    "runNumber":2,
+    "steps":57
   },{
-    "runNumber":3
+    "runNumber":3,
+    "steps":57
   },{
-    "runNumber":4
+    "runNumber":4,
+    "steps":67
   },{
-    "runNumber":5
+    "runNumber":5,
+    "steps":67
   },{
-    "runNumber":6
+    "runNumber":6,
+    "steps":67
   },{
-    "runNumber":7
+    "runNumber":7,
+    "steps":67
   },{
-    "runNumber":8
+    "runNumber":8,
+    "steps":63
   },{
-    "runNumber":9
+    "runNumber":9,
+    "steps":63
   },{
-    "runNumber":10
+    "runNumber":10,
+    "steps":77
   },{
-    "runNumber":11
+    "runNumber":11,
+    "steps":175
   },{
-    "runNumber":12
+    "runNumber":12,
+    "steps":157
   },{
-    "runNumber":13
+    "runNumber":13,
+    "steps":149
   },{
-    "runNumber":14
+    "runNumber":14,
+    "steps":284
   },{
-    "runNumber":15
+    "runNumber":15,
+    "steps":544
   },{
-    "runNumber":16
+    "runNumber":16,
+    "steps":519
   },{
-    "runNumber":17
+    "runNumber":17,
+    "steps":478
   },{
-    "runNumber":18
+    "runNumber":18,
+    "steps":458
   },{
-    "runNumber":19
+    "runNumber":19,
+    "steps":430
   },{
-    "runNumber":20
+    "runNumber":20,
+    "steps":412
   },{
-    "runNumber":21
+    "runNumber":21,
+    "steps":408
   }]
 }
