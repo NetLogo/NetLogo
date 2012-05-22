@@ -76,10 +76,13 @@ class DataGamesExporter(modelFileName: String,
       ("cases" -> runs.keySet.toSeq.sorted.map(runInfo))
     )))
   }
-  private def runInfo(n: Int) = {
+  private def runInfo(n: Int): net.liftweb.json.JValue = {
     import net.liftweb.json.JsonDSL._
     val run = runs(n)
-    ("runNumber" -> n) ~ ("steps" -> run.steps)
+    val header = ("runNumber" -> n) ~ ("steps" -> run.steps)
+    val more = protocol.metrics.zipWithIndex.map{case (metric, nn) =>
+      metric -> run.lastMeasurement(nn).asInstanceOf[java.lang.Double].doubleValue}
+    more.foldLeft(header)(_ ~ _)
   }
 }
 

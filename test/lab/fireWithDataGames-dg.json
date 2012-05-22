@@ -2,66 +2,87 @@
   "collection_name":"test/lab/fireWithDataGames.nlogo",
   "cases":[{
     "runNumber":1,
-    "steps":50
+    "steps":50,
+    "percent-burned":2.192796610169492
   },{
     "runNumber":2,
-    "steps":57
+    "steps":57,
+    "percent-burned":2.436583261432269
   },{
     "runNumber":3,
-    "steps":57
+    "steps":57,
+    "percent-burned":2.4934959624286246
   },{
     "runNumber":4,
-    "steps":67
+    "steps":67,
+    "percent-burned":2.552150484313531
   },{
     "runNumber":5,
-    "steps":67
+    "steps":67,
+    "percent-burned":2.737196721842506
   },{
     "runNumber":6,
-    "steps":67
+    "steps":67,
+    "percent-burned":2.937720329024677
   },{
     "runNumber":7,
-    "steps":67
+    "steps":67,
+    "percent-burned":3.573429620867833
   },{
     "runNumber":8,
-    "steps":63
+    "steps":63,
+    "percent-burned":3.786953334962131
   },{
     "runNumber":9,
-    "steps":63
+    "steps":63,
+    "percent-burned":3.8655009281992934
   },{
     "runNumber":10,
-    "steps":77
+    "steps":77,
+    "percent-burned":5.186142861340463
   },{
     "runNumber":11,
-    "steps":175
+    "steps":175,
+    "percent-burned":6.666282221325183
   },{
     "runNumber":12,
-    "steps":157
+    "steps":157,
+    "percent-burned":7.510273487317557
   },{
     "runNumber":13,
-    "steps":149
+    "steps":149,
+    "percent-burned":7.939466436698472
   },{
     "runNumber":14,
-    "steps":284
+    "steps":284,
+    "percent-burned":14.480986358293011
   },{
     "runNumber":15,
-    "steps":544
+    "steps":544,
+    "percent-burned":56.27703301722053
   },{
     "runNumber":16,
-    "steps":519
+    "steps":519,
+    "percent-burned":74.07798516328309
   },{
     "runNumber":17,
-    "steps":478
+    "steps":478,
+    "percent-burned":85.57737260402057
   },{
     "runNumber":18,
-    "steps":458
+    "steps":458,
+    "percent-burned":89.12576687116565
   },{
     "runNumber":19,
-    "steps":430
+    "steps":430,
+    "percent-burned":92.02577527184857
   },{
     "runNumber":20,
-    "steps":412
+    "steps":412,
+    "percent-burned":94.03169886082219
   },{
     "runNumber":21,
-    "steps":408
+    "steps":408,
+    "percent-burned":95.28437812889203
   }]
 }
