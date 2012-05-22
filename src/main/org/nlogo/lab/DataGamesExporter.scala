@@ -36,14 +36,6 @@ class DataGamesExporter(modelFileName: String,
   }
   override def experimentCompleted() { finish() }
   override def experimentAborted() { finish() }
-  def writeRunData() {
-    import net.liftweb.json._
-    import net.liftweb.json.JsonDSL._
-    out.println(pretty(render(
-      ("collection_name" -> modelFileName) ~
-      ("cases" -> Seq[String]())
-    )))
-  }
   ///
   class Run(val settings: List[Pair[String,Any]]) {
     var done = false
@@ -76,6 +68,16 @@ class DataGamesExporter(modelFileName: String,
         .filter(_.size == measurements.size)
         .map(_.sum / measurements.size)
   }
+  def writeRunData() {
+    import net.liftweb.json._
+    import net.liftweb.json.JsonDSL._
+    out.println(pretty(render(
+      ("collection_name" -> modelFileName) ~
+      ("cases" -> runs.keySet.toSeq.sorted.map(runInfo))
+    )))
+  }
+  private def runInfo(n: Int) =
+    ("runNumber" -> n)
 }
 
 /*

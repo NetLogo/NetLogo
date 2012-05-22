@@ -1,4 +1,46 @@
 {
   "collection_name":"test/lab/fireWithDataGames.nlogo",
-  "cases":[]
+  "cases":[{
+    "runNumber":1
+  },{
+    "runNumber":2
+  },{
+    "runNumber":3
+  },{
+    "runNumber":4
+  },{
+    "runNumber":5
+  },{
+    "runNumber":6
+  },{
+    "runNumber":7
+  },{
+    "runNumber":8
+  },{
+    "runNumber":9
+  },{
+    "runNumber":10
+  },{
+    "runNumber":11
+  },{
+    "runNumber":12
+  },{
+    "runNumber":13
+  },{
+    "runNumber":14
+  },{
+    "runNumber":15
+  },{
+    "runNumber":16
+  },{
+    "runNumber":17
+  },{
+    "runNumber":18
+  },{
+    "runNumber":19
+  },{
+    "runNumber":20
+  },{
+    "runNumber":21
+  }]
 }
