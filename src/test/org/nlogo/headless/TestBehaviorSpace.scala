@@ -60,15 +60,16 @@ with OneInstancePerTest with BeforeAndAfterEach {
         threads = Runtime.getRuntime.availableProcessors)(
         workspace _, () => newWorker(name))
   }
-  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true) {
+  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantDataGames: Boolean = false) {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
     val tablePath = "tmp/TestBehaviorSpace/" + time + "-table.csv"
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
+    val dataGamesPath = "tmp/TestBehaviorSpace/" + time + "-dg.json"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
-                    "--table", tablePath, "--spreadsheet", spreadsheetPath,
+                    "--table", tablePath, "--spreadsheet", spreadsheetPath, "--datagames", dataGamesPath,
                     "--threads", threads.toString, "--suppress-errors"))
     if (wantTable)
       expect(slurp(filename + "-table.csv"))(
@@ -76,6 +77,9 @@ with OneInstancePerTest with BeforeAndAfterEach {
     if (wantSpreadsheet)
       expect(slurp(filename + "-spreadsheet.csv"))(
         withoutFirst6Lines(slurp(spreadsheetPath)))
+    if (wantDataGames)
+      expect(slurp(filename + "-dg.json"))(
+        slurp(dataGamesPath))
   }
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
@@ -273,4 +277,18 @@ with OneInstancePerTest with BeforeAndAfterEach {
     expect(Double.box(2))(
       workspace.report("ticks"))
   }
+
+  /// Data Games export
+
+  if(!Version.is3D)
+    test("fireWithDataGames") {
+      runExperimentFromModel(
+        modelPath = "test/lab/fireWithDataGames.nlogo",
+        experimentName = "experiment",
+        filename = "test/lab/fireWithDataGames",
+        wantTable = false,
+        wantSpreadsheet = false,
+        wantDataGames = true)
+    }
+
 }

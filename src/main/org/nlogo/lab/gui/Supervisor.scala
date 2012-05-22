@@ -3,14 +3,14 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.awt.UserCancelException
-import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,Worker}
+import org.nlogo.lab.{Exporter,Protocol,SpreadsheetExporter,TableExporter,DataGamesExporter,Worker}
 import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
 import org.nlogo.nvm.{EngineException, Workspace, WorkspaceFactory}
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.api.{I18N, CompilerException, LogoException}
 
 object Supervisor {
-  case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean)
+  case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean, dataGames: Boolean)
 }
 class Supervisor(dialog: java.awt.Dialog,
                  val workspace: GUIWorkspace,
@@ -81,6 +81,16 @@ class Supervisor(dialog: java.awt.Dialog,
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
       addExporter(new TableExporter(
+        workspace.getModelFileName,
+        workspace.world.getDimensions,
+        worker.protocol,
+        new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+    }
+    if(options.dataGames) {
+      val fileName = org.nlogo.swing.FileDialog.show(
+        workspace.getFrame, "Exporting JSON for Data Games", java.awt.FileDialog.SAVE,
+        workspace.guessExportName(worker.protocol.name + "-dg.json"))
+      addExporter(new DataGamesExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
         worker.protocol,

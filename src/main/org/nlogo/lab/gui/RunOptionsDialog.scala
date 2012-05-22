@@ -20,16 +20,18 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   class EditableRunOptions extends Editable {
     var spreadsheet = true
     var table = false
+    var dataGames = false
     var threadCount = Runtime.getRuntime.availableProcessors
     val classDisplayName = "Run options"
     val propertySet =
       List(
         Property("spreadsheet", Property.Boolean, "Spreadsheet output"),
         Property("table", Property.Boolean, "Table output"),
+        Property("dataGames", Property.Boolean, "Data Games output (JSON)"),
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
                  "<html>If more than one, some runs happen invisibly in the background." +
                  "<br>Defaults to one per processor core.</html>")).asJava
-    def get = RunOptions(threadCount, table, spreadsheet)
+    def get = RunOptions(threadCount, table, spreadsheet, dataGames)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

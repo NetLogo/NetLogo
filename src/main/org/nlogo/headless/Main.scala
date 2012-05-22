@@ -40,6 +40,7 @@ object Main {
     var experiment:Option[String] = None
     var tableWriter:Option[java.io.PrintWriter] = None
     var spreadsheetWriter:Option[java.io.PrintWriter] = None
+    var dataGamesWriter:Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -83,6 +84,8 @@ object Main {
         { requireHasNext(); tableWriter = Some(path2writer(it.next())) }
       else if(arg == "--spreadsheet")
         { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
+      else if(arg == "--datagames")
+        { requireHasNext(); dataGamesWriter = Some(path2writer(it.next())) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
@@ -104,6 +107,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, setupFile, experiment, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors))
+                      spreadsheetWriter, dataGamesWriter, dims, threads, suppressErrors))
   }
 }

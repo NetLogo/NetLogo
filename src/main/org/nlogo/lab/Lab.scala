@@ -47,6 +47,8 @@ class Lab(loader: ProtocolLoader)
         worker.addTableWriter(model, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(
         worker.addSpreadsheetWriter(model, dims.getOrElse(modelDims), _))
+      dataGamesWriter.foreach(
+        worker.addDataGamesWriter(model, dims.getOrElse(modelDims), _))
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

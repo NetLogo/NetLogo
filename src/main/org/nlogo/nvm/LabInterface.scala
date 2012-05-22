@@ -7,6 +7,7 @@ object LabInterface {
     def addListener(l:ProgressListener)
     def addTableWriter(modelFileName:String,initialDims:WorldDimensions,w:java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName:String,initialDims:WorldDimensions,w:java.io.PrintWriter)
+    def addDataGamesWriter(modelFileName:String,initialDims:WorldDimensions,w:java.io.PrintWriter)
     def run(testWorkspace:Workspace,fn:()=>Workspace,threads:Int)
     def compile(w:Workspace) // only for testing purposes
   }
@@ -25,6 +26,7 @@ object LabInterface {
                       experiment:Option[String],
                       tableWriter:Option[java.io.PrintWriter],
                       spreadsheetWriter:Option[java.io.PrintWriter],
+                      dataGamesWriter:Option[java.io.PrintWriter],
                       dims:Option[WorldDimensions],
                       threads:Int,
                       suppressErrors:Boolean)
