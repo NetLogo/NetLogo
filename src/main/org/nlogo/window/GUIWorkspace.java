@@ -380,28 +380,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   // called from the job thread
-  public void openIndex() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_INDEX, new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openNext() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_NEXT,
-            new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openPrevious() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_PREVIOUS, new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
   public void reload() {
     new org.nlogo.window.Events.AppEvent
         (AppEventType.RELOAD, new Object[]{})
