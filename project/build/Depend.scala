@@ -50,7 +50,7 @@ trait Depend extends DefaultProject {
       "gl/view" -> List("gl/render","window"),
       "headless" -> List("shape","workspace"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
-      "hubnet/client" -> List("mirror","render","widget", "hubnet/connection","hubnet/protocol",),
+      "hubnet/client" -> List("mirror","render","widget", "hubnet/connection","hubnet/protocol"),
       "hubnet/connection" -> List("api"),
       "hubnet/protocol" -> List("api"),
       "hubnet/server" -> List("mirror","workspace","hubnet/connection","hubnet/protocol"),
