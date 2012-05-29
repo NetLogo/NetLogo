@@ -58,6 +58,7 @@ object ClientApp {
 class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
   import ClientApp.localClientIndex
 
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
   private var clientPanel: ClientPanel = _
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
@@ -108,7 +109,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         addWindowListener(() => handleExit())
         Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
-        doLogin()
+        if (isWebStart) login(userid, hostip, port) else doLogin()
       }
     })
   }
