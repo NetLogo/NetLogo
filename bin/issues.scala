@@ -9,7 +9,7 @@
 // - install conscript if you don't have it already:
 //   curl https://raw.github.com/n8han/conscript/master/setup.sh | sh
 // - install sbt (and the scalas script) through conscript:
-//   cs harrah/xsbt --branch v0.11.2
+//   cs harrah/xsbt --branch v0.11.3
 // - edit ~/.conscript/harrah/xsbt/scalas/launchconfig
 //    and ~/.conscript/harrah/xsbt/sbt/launchconfig
 //   and remove the entire [organization] section
@@ -29,8 +29,8 @@ scalaVersion := "2.9.2"
 onLoadMessage := ""
 
 libraryDependencies ~= { seq =>
-    val vers = "0.9.0-alpha5"
-    seq ++ Seq("net.databinder.dispatch" % "core_2.9.1" % vers,
+    val vers = "0.9.0-beta1"
+    seq ++ Seq("net.databinder.dispatch" %% "core" % vers,
                "net.liftweb" % "lift-json_2.9.1" % "2.4",
                "org.slf4j" % "slf4j-nop" % "1.6.0")
 }
