@@ -96,7 +96,7 @@ class ConnectionManager(val connection: ConnectionInterface,
    * This is called when NetLogo executes the <code>hubnet-reset</code> primitive.
    * @return true if startup was succesful
    */
-  def startup(serverName:String): Boolean = {
+  def startup(serverName:String, desiredPortNumber: Option[Int] = None): Boolean = {
     workspace.hubNetRunning(true)
     running = true
     // we set this when hubnet-reset is called now, instead
@@ -105,14 +105,18 @@ class ConnectionManager(val connection: ConnectionInterface,
 
     // try every port from DEFAULT_PORT_NUMBER to MAX_PORT_NUMBER until
     // we find one that works
-    def createSocket(portToTry: Int): (Int, ServerSocket) = {
+    def findSocket(portToTry: Int): (Int, ServerSocket) = {
       if (portToTry > Ports.MAX_PORT_NUMBER) throw new BindException("port: " + portToTry)
       else
         try { (portToTry, new ServerSocket(portToTry) { setSoTimeout(250) }) }
-        catch {case bex: BindException => createSocket(portToTry + 1) }
+        catch {case bex: BindException => findSocket(portToTry + 1) }
     }
+
+    // Will throw an exception if the port is already occupied (is currently only being used by WebStart)
+    def createSocket(port: Int): (Int, ServerSocket) = (port, new ServerSocket(port) { setSoTimeout(250) })
+
     try {
-      val (port, socket) = createSocket(Ports.DEFAULT_PORT_NUMBER)
+      val (port, socket) = desiredPortNumber map createSocket getOrElse findSocket(Ports.DEFAULT_PORT_NUMBER)
       this.port = port
       this.socket = socket
       serverOn = true
