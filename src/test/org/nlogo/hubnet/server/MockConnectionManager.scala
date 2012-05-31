@@ -49,7 +49,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
 
   // have to override this so threads and things arent started up.
   // JC - 12/28/10
-  override def startup(serverName:String): Boolean = {
+  override def startup(serverName:String, desiredPortNumber: Option[Int] = None): Boolean = {
     running = true
     workspace.hubNetRunning(true)
     true

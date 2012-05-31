@@ -44,9 +44,11 @@ object ClientApp {
         }
         else if (args(i).equalsIgnoreCase("--id")) userid = args(i + 1)
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
-        else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
+        else if (args(i).equalsIgnoreCase("--port")) port = args(i + 1).toInt
       }
+
       app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
+
     } catch {
       case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)
     }
@@ -56,6 +58,7 @@ object ClientApp {
 class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
   import ClientApp.localClientIndex
 
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
   private var clientPanel: ClientPanel = _
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
@@ -100,12 +103,13 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         // ev 7/30/08
         localClientIndex += 1
         login("Local " + localClientIndex, hostip, port)
+
       }
       else {
         addWindowListener(() => handleExit())
         Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
-        doLogin()
+        if (isWebStart) login(userid, hostip, port) else doLogin()
       }
     })
   }
