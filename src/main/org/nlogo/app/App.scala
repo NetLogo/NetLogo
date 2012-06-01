@@ -97,6 +97,9 @@ object App{
     // when we call MacHandlers.ready() - ST 11/13/03
     if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
 
+    // Ugh... am I really doing this?  Seems necessary for HubNet, though... --JAB (6/1/12)
+    if (isWebStart) WebStartUtils.disableSecurityManager()
+
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()

@@ -72,7 +72,7 @@ object WebStartUtils {
      * --JAB (February, 2012)
      *
      */
-    private def disableSecurityManager() {
+    def disableSecurityManager() {
       System.setSecurityManager(null)
     }
 
