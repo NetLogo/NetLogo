@@ -44,6 +44,7 @@ object App{
   // all these guys are assigned in main. yuck
   var app: App = null
   var logger: Logger = null
+  var port: Option[Int] = None
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
@@ -138,7 +139,7 @@ object App{
           Array[Parameter] (
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter()))
+            new ComponentParameter(), new ConstantParameter(port)))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -238,6 +239,9 @@ object App{
         else JOptionPane.showConfirmDialog(null,
           "You need to initialize the logger using the --logging options before specifying a directory.",
           "NetLogo", JOptionPane.DEFAULT_OPTION)
+      }
+      else if (token == "--port") {
+        port = Option(nextToken().toInt)
       }
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
