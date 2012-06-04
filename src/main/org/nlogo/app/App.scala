@@ -579,7 +579,7 @@ class App extends
     else if (commandLineURL != null)
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
-        null, "Starting...", ModelType.Library)
+        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
     else fileMenu.newModel()
   }
 
