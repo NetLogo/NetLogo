@@ -4,7 +4,6 @@ package org.nlogo.window;
 
 public enum AppEventType {
   RELOAD, MAGIC_OPEN,
-  OPEN_INDEX, OPEN_NEXT, OPEN_PREVIOUS,
   CHANGE_LANGUAGE
 }
 

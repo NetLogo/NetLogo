@@ -211,12 +211,6 @@ public interface Workspace
 
   void changeLanguage();
 
-  void openIndex();
-
-  void openNext();
-
-  void openPrevious();
-
   CompilerInterface compiler();
 
   boolean isHeadless();

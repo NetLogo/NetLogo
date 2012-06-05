@@ -433,24 +433,8 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def openIndex() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openNext() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openPrevious() = unsupported
-
   // This lastLogoException stuff is gross.  We should write methods that are declared to throw
   // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
-
-  /**
-   * Internal use only.
-   */
   override var lastLogoException: LogoException = null
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
