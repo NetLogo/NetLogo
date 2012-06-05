@@ -18,8 +18,6 @@ fi
 
 export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
-TOOLS=$JAVA_HOME/lib/tools.jar
-SBT_LAUNCH=$CURR_DIR/sbt-launch.jar
 
 # Most of these settings are fine for everyone
 XSS=-Xss2m
@@ -28,7 +26,7 @@ XX=-XX:MaxPermSize=256m
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
-COLON=:
+DISABLE_EXT_DIRS=-Djava.ext.dirs=
 BOOT=xsbt.boot.Boot
 
 # Windows/Cygwin users need these settings
@@ -38,9 +36,7 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
   # of heap space from running the tests if you don't crank it up
   # (namely, from TestChecksums)
   XMX=-Xmx1350m
-  TOOLS=`cygpath -w $TOOLS`
   SBT_LAUNCH=`cygpath -w $SBT_LAUNCH`
-  COLON=\;
 
   # This gets SBT working properly in my heavily-modded version of Cygwin --JAB (2/7/2012)
   if [ "$TERM" = "xterm" ] ; then
@@ -49,8 +45,14 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
+SBT_LAUNCH=`dirname $0`/sbt-launch-0.11.3.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.11.3/sbt-launch.jar'
+
+if [ ! -f $SBT_LAUNCH ] ; then
+  curl -f $URL -o $SBT_LAUNCH || exit
+fi
+
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
-# add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
 $JAVA \
     $XSS $XMX $XX \
     $ENCODING \
@@ -58,5 +60,6 @@ $JAVA \
     $HEADLESS \
     $TERMINAL \
     $USE_QUARTZ \
-    -classpath $TOOLS$COLON$SBT_LAUNCH \
+    $DISABLE_EXT_DIRS \
+    -classpath $SBT_LAUNCH \
     $BOOT "$@"

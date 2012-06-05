@@ -35,8 +35,6 @@ tmp/
 /devel/depend.ddf
 /lib/
 /out/
-/project/boot/
-/project/plugins/project/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties
 /docs/

@@ -1,40 +1,36 @@
 import sbt._
+import Keys._
 
 // check whether the code is secretly engaging in forbidden dependencies!
 // and rat on it if it is!
 
-trait Depend extends DefaultProject {
+object Depend {
 
-  val ddfPath = "devel" / "depend.ddf"
+  val depend = TaskKey[Unit](
+    "depend", "use Classycle to ferret out forbidden dependencies")
 
-  lazy val ddf = fileTask(Seq(ddfPath)) {
-    FileUtilities.writeStream(ddfPath.asFile, log) {
-      stream: java.io.OutputStream =>
-        val writer = new java.io.PrintWriter(stream)
-        writeDdf(writer)
-        writer.flush()
-        None
-    }
-  }
+  lazy val dependTask =
+    depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
+      (cp, base, classes, testClasses, s) =>
+        IO.write(base / "devel" / "depend.ddf", ddfContents)
+        import classycle.dependency.DependencyChecker
+        def main() = TrapExit(
+          DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
+                                       classes.toString)),
+          s.log)
+        def test() = TrapExit(
+          DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
+                                       testClasses.toString)),
+          s.log)
+        main() match {
+          case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
+          case fail => sys.error(fail.toString)
+        }
+      }.dependsOn(compile in Test)
 
-  lazy val depend = task {
-    import classycle.dependency.DependencyChecker
-    def main() = TrapExit(
-      DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
-                                   mainCompileConfiguration.outputDirectory.toString)),
-      log)
-    def test() = TrapExit(
-      DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
-                                   testCompileConfiguration.outputDirectory.toString)),
-      log)
-    main() match {
-      case 0 => test() match { case 0 => None ; case fail => Some(fail.toString) }
-      case fail => Some(fail.toString)
-    }
-  }.dependsOn(testCompile, ddf)
-
-  private def writeDdf(w: java.io.PrintWriter) {
-    import w.println
+  private def ddfContents: String = {
+    val buf = new StringBuilder
+    def println(s: String) { buf ++= s + "\n" }
 
     // this needs to be manually kept in sync with devel/depend.graffle
     val packageDefs = Map(
@@ -79,7 +75,7 @@ trait Depend extends DefaultProject {
       println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
       println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
       println("check [" + name + "] independentOf [" + name + "-]")
-      println
+      println("")
     }
     def generateFooter() {
       println("""
@@ -128,11 +124,12 @@ check [PicoContainer-free-zone] independentOf org.picocontainer.*
       allPackages.filter(!_.dir.isEmpty).find(eligible) match {
         case None =>
           generateFooter()
-          return
+          return buf.toString
         case Some(p) =>
           generate(p)
           done = p :: done
       }
     }
+    throw new IllegalStateException  // unreachable
   }
 }

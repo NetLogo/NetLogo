@@ -4,8 +4,8 @@
 .DELETE_ON_ERROR:
 
 ### top level targets; "netlogo" is default target
-.PHONY: netlogo
-netlogo: extensions models/index.txt bin/Scripting.class | tmp
+.PHONY: netlogo sbt
+netlogo: bin/Scripting.class | tmp
 
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
@@ -42,10 +42,10 @@ CLASSPATH = $(LIBS)$(CLASSES)$(COLON)resources$(COLON)$(SCALA_JAR)
 tmp:
 	@echo "@@@ making tmp"
 	mkdir -p tmp
-bin/sbt-launch.jar:
-	curl -S 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
-$(SCALA_JAR): | bin/sbt-launch.jar
-	bin/sbt error update
+
+### sbt
+sbt $(SCALA_JAR) $(JARS) models/index.txt:
+	bin/sbt extensions model-index
 
 ### targets for running
 goshell:
@@ -60,49 +60,6 @@ profile:
 	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_1.7.7/perfanal-1.0.jar tmp/profiles/$(ARGS).txt
 profiles:
 	bin/profiles.scala $(ARGS)
-
-models/index.txt:
-	@echo "@@@ building models/index.txt"
-	bin/sbt warn model-index
-
-### JAR building
-
-JARS = NetLogo.jar
-.NOTPARALLEL: $(JARS)
-$(JARS): | $(SCALA_JAR)
-	bin/sbt warn alljars
-
-### extensions
-
-EXTENSIONS=\
-	extensions/array/array.jar \
-	extensions/matrix/matrix.jar \
-	extensions/profiler/profiler.jar \
-	extensions/sample/sample.jar \
-	extensions/sample-scala/sample-scala.jar \
-	extensions/sound/sound.jar \
-	extensions/table/table.jar
-EXTENSIONS_PACK200 =\
-	$(addsuffix .pack.gz,$(EXTENSIONS))
-
-.PHONY: extensions clean-extensions
-extensions: $(EXTENSIONS) $(EXTENSIONS_PACK200)
-clean-extensions:
-	rm -f $(EXTENSIONS) $(EXTENSIONS_PACK200)
-
-# The extensions want to build against the lite jar, but on the core
-# branch we don't have the capability to build a lite jar, so we just
-# build the extensions against one from a release. (Exception: profiler
-# extension builds against NetLogo.jar.) - ST 1/1/12
-
-NetLogoLite.jar:
-	curl -s 'http://ccl.northwestern.edu/netlogo/5.0/NetLogoLite.jar' -o NetLogoLite.jar
-
-# most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
-$(EXTENSIONS) $(EXTENSIONS_PACK200): | NetLogo.jar NetLogoLite.jar
-	git submodule update --init
-	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
 
 ### Scaladoc
 

@@ -2,6 +2,11 @@
 
 package org.nlogo.app;
 
+// uses an index of the models in the Models Library and the first
+// paragraph of the info tabs. we read this when we open the dialog
+// instead of sifting through all the files at that time cause that's
+// super slow. ev 3/26/09
+
 import org.nlogo.api.I18N;
 import org.nlogo.workspace.ModelsLibrary;
 
