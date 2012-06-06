@@ -24,9 +24,9 @@ unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
-mainClass in (Compile, run) := Some("org.nlogo.app.App")
+mainClass in (Compile, run) := Some("org.nlogo.headless.Main")
 
-mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
+mainClass in (Compile, packageBin) := Some("org.nlogo.headless.Main")
 
 sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
 
@@ -41,9 +41,6 @@ nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
-  "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",
-  "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
-  "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",

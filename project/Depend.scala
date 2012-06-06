@@ -37,31 +37,21 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("util"),
-      "app" -> List("window"),
-      "awt" -> Nil,
       "compiler" -> List("prim"),
-      "editor" -> Nil,
       "generator" -> List("prim"),
       "headless" -> List("shape","workspace"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
       "lex" -> List("api"),
-      "lite" -> List("window"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
-      "prim/gui" -> List("window"),
       "prim/plot" -> List("nvm","plot"),
-      "properties" -> List("window"),
       "render" -> List("shape"),
       "shape" -> List("api"),
-      "shape/editor" -> List("shape","swing"),
-      "swing" -> List("awt"),
       "util" -> Nil,
-      "widget" -> List("window"),
-      "window" -> List("editor","shape","swing","workspace"),
       "workspace" -> List("nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
@@ -95,7 +85,6 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 [bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Frame
 
 check [util+] independentOf [Sun-AWT]
-check [awt+] independentOf [Sun-Swing]
 check [headless+] independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
@@ -104,12 +93,6 @@ check [headless+] independentOf [Sun-Swing] [bad-AWT]
 check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*
-
-[MRJAdapter-free-zone] = org.nlogo.* excluding [app] [swing]
-check [MRJAdapter-free-zone] directlyIndependentOf net.roydesign.*
-
-[Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
-check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*
 
 [PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*

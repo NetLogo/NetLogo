@@ -3,7 +3,6 @@
 package org.nlogo.plot
 
 import collection.mutable.Buffer
-import org.nlogo.api.I18N
 
 object PlotPen {
   // modes (all static)
@@ -13,8 +12,7 @@ object PlotPen {
   val LINE_MODE = 0
   val BAR_MODE = 1
   val POINT_MODE = 2
-  private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
-  val PLOT_PEN_MODES = scala.List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point"))
+  val PLOT_PEN_MODES = scala.List("Line", "Bar", "Point")
 
   def getPlotPenModeNames = PLOT_PEN_MODES.toArray
   def isValidPlotPenMode(mode: Int) = mode >= 0 && mode < PLOT_PEN_MODES.length

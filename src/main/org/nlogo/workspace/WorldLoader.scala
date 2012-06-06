@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ I18N, WorldDimensions }
+import org.nlogo.api.WorldDimensions
 import org.nlogo.nvm.Workspace.UpdateMode
 
 class WorldLoader {
@@ -23,7 +23,7 @@ class WorldLoader {
         else label)
     }
     else
-      worldInterface.tickCounterLabel(I18N.gui.get("tabs.run.view.ticks"))
+      worldInterface.tickCounterLabel("Tick counter")
     if(strings.length > tickCounterIndex)
       worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
     else
