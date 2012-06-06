@@ -35,7 +35,8 @@ class TestReporters extends TestLanguage(TxtsInDir("test/reporters"))
 class TestModels extends TestLanguage(
   TxtsInDir("models/test")
     .filterNot(_.getName.startsWith("HubNet"))
-    .filterNot(_.getName.startsWith("SDM")))
+    .filterNot(_.getName.startsWith("SDM"))
+    .filterNot(_.getName.startsWith("Artificial-Neural-Net")))
 class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 
 // The output of the parser is lists of instances of these classes:

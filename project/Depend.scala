@@ -94,7 +94,7 @@ check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*
 
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
+[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 
 """
