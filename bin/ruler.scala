@@ -59,9 +59,8 @@ def sortAndPrint(root: String) = {
 }
 sortAndPrint("src/main")
 sortAndPrint("src/test")
-sortAndPrint("src/tools")
 sortAndPrint("extensions")
-sortAndPrint("project/build")
+sortAndPrint("project")
 sortAndPrint("bin")
 println(format.format("TOTAL",
                       tuj + tus, tj + ts,
