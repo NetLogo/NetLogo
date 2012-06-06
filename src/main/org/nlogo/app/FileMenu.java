@@ -33,7 +33,6 @@ public strictfp class FileMenu
     this.modelSaver = modelSaver;
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
-    addMenuItem('M', new ModelsLibraryAction());
     addSeparator();
     addMenuItem('S', new SaveAction());
     addMenuItem(new SaveAsAction());
@@ -147,24 +146,6 @@ public strictfp class FileMenu
       openFromPath
           (userChooseLoadPath(),
            ModelTypeJ.NORMAL());
-    }
-  }
-
-  private class ModelsLibraryAction extends FileMenuAction {
-    ModelsLibraryAction() {
-      super(I18N.guiJ().get("menu.file.modelsLibrary"));
-    }
-
-    @Override
-    void action()
-        throws UserCancelException {
-      offerSave();
-      String source =
-          ModelsLibraryDialog.open
-              (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this));
-      String modelPath = ModelsLibraryDialog.getModelPath();
-      openFromSource(source, modelPath, "Loading...",
-                     ModelTypeJ.LIBRARY());
     }
   }
 

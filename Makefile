@@ -44,8 +44,8 @@ tmp:
 	mkdir -p tmp
 
 ### sbt
-sbt $(SCALA_JAR) $(JARS) models/index.txt:
-	bin/sbt extensions model-index
+sbt $(SCALA_JAR) $(JARS):
+	bin/sbt extensions
 
 ### targets for running
 goshell:
