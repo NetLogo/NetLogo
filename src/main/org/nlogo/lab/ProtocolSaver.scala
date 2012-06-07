@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 
@@ -76,9 +76,9 @@ object ProtocolSaver
           elementWithAttributes(
             "steppedValueSet",
             attributes(("variable", valueSet.variableName),
-                       ("first", Dump.number(steppedValueSet.firstValue)),
-                       ("step", Dump.number(steppedValueSet.step)),
-                       ("last", Dump.number(steppedValueSet.lastValue))))
+                       ("first", Dump.number(steppedValueSet.firstValue.toDouble)),
+                       ("step", Dump.number(steppedValueSet.step.toDouble)),
+                       ("last", Dump.number(steppedValueSet.lastValue.toDouble))))
         case enumeratedValueSet: EnumeratedValueSet =>
           hd.startElement("", "", "enumeratedValueSet",
                           attributes(("variable", valueSet.variableName)))

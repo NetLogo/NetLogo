@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -447,21 +447,6 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override def changeLanguage() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openIndex() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openNext() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openPrevious() = unsupported
 
   /**
    * Internal use only.

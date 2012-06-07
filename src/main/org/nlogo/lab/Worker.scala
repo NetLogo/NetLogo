@@ -1,10 +1,10 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.lab
 
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.agent.Observer
-import org.nlogo.api.{Dump,
+import org.nlogo.api.{Dump,LogoException,
                       WorldDimensions, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.util.MersenneTwisterFast
@@ -74,7 +74,7 @@ class Worker(val protocol: Protocol)
   class Runner(runNumber: Int, settings: List[Pair[String, Any]], fn: ()=>Workspace)
     extends Callable[Unit]
   {
-    class FailedException(message: String) extends RuntimeException(message) 
+    class FailedException(message: String) extends LogoException(message)
     private def owner(rng: MersenneTwisterFast) =
       new SimpleJobOwner("BehaviorSpace", rng, classOf[Observer])
     @volatile var aborted = false
@@ -154,23 +154,35 @@ class Worker(val protocol: Protocol)
             throw new FailedException(
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
+      def checkForRuntimeError() {
+        if(ws.lastLogoException != null) {
+          val ex = ws.lastLogoException
+          ws.clearLastLogoException()
+          if(!aborted)
+            eachListener(_.runtimeError(ws, runNumber, ex))
+        }
+      }
       ws.behaviorSpaceRunNumber(runNumber)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
+      checkForRuntimeError()
       if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
+        checkForRuntimeError()
       }
       var steps = 0
       while((protocol.timeLimit == 0 || steps < protocol.timeLimit) &&
             !exitConditionTrue && !ws.runCompiledCommands(owner(ws.world.mainRNG), goProcedure))
       {
+        checkForRuntimeError()
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
         if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
+          checkForRuntimeError()
         }
         ws.updateDisplay(false)
         if(aborted) return
@@ -178,14 +190,11 @@ class Worker(val protocol: Protocol)
       if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
+        checkForRuntimeError()
       }
       ws.runCompiledCommands(owner(ws.world.mainRNG), finalProcedure)
+      checkForRuntimeError()
       eachListener(_.runCompleted(ws, runNumber, steps))
-      if(ws.lastLogoException != null) {
-        val ex = ws.lastLogoException
-        ws.clearLastLogoException()
-        throw ex
-      }
     }
   }
 }

@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.swing;
 
@@ -6,7 +6,7 @@ package org.nlogo.swing;
 // of items in your menu they don't scroll or split into multiple columns.
 // Here we force splitting into multiple columns.
 // This was inspired by cpol's 4/28/00 post to
-// http://developer.java.sun.com/developer/bugParade/bugs/4246124.html .
+// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4246124 .
 
 public strictfp class WrappingPopupMenu
     extends javax.swing.JPopupMenu {

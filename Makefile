@@ -9,28 +9,44 @@
 netlogo: resources/system/dict.txt extensions plugins models/index.txt bin/Scripting.class docs/infotab.html | tmp
 
 ### misc variables
-ifneq (,$(findstring Darwin,$(shell uname)))
-JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
+    COLON = \;
+    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_31"`
 else
-JAVA_HOME = /usr/lib/jvm/java-6-sun
+    COLON = :
+    ifneq (,$(findstring Darwin,$(shell uname)))
+        JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
+    else
+        JAVA_HOME = /usr/lib/jvm/java-6-sun
+    endif
 endif
+
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
-SCALA_VERSION = 2.9.1
-SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
-# note that LIBS has a trailing colon
-LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+SCALA_VERSION = 2.9.2
+SCALA_JAR_BASE = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
+SCALA_JAR := $(SCALA_JAR_BASE)
 CLASSES = target/scala_$(SCALA_VERSION)/classes
-CLASSPATH = $(LIBS)$(CLASSES):resources:$(SCALA_JAR)
+
+# note that LIBS has a trailing $(COLON)
+ifneq (,$(findstring CYGWIN,$(shell uname -s)))
+    SCALA_JAR := `cygpath -w $(SCALA_JAR)`
+    CLASSES := `cygpath -w $(CLASSES)`
+    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | xargs cygpath -w | perl -pe 's/\n/;/'`
+else
+    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+endif
+
+CLASSPATH = $(LIBS)$(CLASSES)$(COLON)resources$(COLON)$(SCALA_JAR)
 
 ### common prerequisites
 tmp:
 	@echo "@@@ making tmp"
 	mkdir -p tmp
 bin/sbt-launch.jar:
-	curl -s 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
+	curl -S 'http://simple-build-tool.googlecode.com/files/sbt-launch-0.7.7.jar' -o bin/sbt-launch.jar
 $(SCALA_JAR): | bin/sbt-launch.jar
-	bin/sbt update
+	bin/sbt error update
 
 ### targets for running
 goshell:
@@ -53,18 +69,18 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 	python bin/dictsplit.py
 
 docs/infotab.html: models/Code\ Examples/Info\ Tab\ Example.nlogo
-	bin/sbt gen-info-tab-docs
+	bin/sbt warn gen-info-tab-docs
 
 models/index.txt:
 	@echo "@@@ building models/index.txt"
-	bin/sbt model-index
+	bin/sbt warn model-index
 
 ### JAR building
 
 JARS = NetLogo.jar NetLogoLite.jar HubNet.jar
 .NOTPARALLEL: $(JARS)
 $(JARS): | $(SCALA_JAR)
-	bin/sbt alljars
+	bin/sbt warn alljars
 
 ### plugins
 
@@ -95,15 +111,19 @@ EXTENSIONS=\
 	extensions/sound/sound.jar \
 	extensions/table/table.jar \
 	extensions/qtj/qtj.jar
+EXTENSIONS_PACK200 =\
+	$(addsuffix .pack.gz,$(EXTENSIONS))
 
-.PHONY: extensions
-extensions: $(EXTENSIONS)
+.PHONY: extensions clean-extensions
+extensions: $(EXTENSIONS) $(EXTENSIONS_PACK200)
+clean-extensions:
+	rm -f $(EXTENSIONS) $(EXTENSIONS_PACK200)
 
 # most of them use NetLogoLite.jar, but the profiler extension uses NetLogo.jar - ST 5/11/11
-$(EXTENSIONS): | NetLogo.jar NetLogoLite.jar
+$(EXTENSIONS) $(EXTENSIONS_PACK200): | NetLogo.jar NetLogoLite.jar
 	git submodule update --init
 	@echo "@@@ building" $(notdir $@)
-	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR) make -s $(notdir $@)
+	cd $(dir $@); JAVA_HOME=$(JAVA_HOME) SCALA_JAR=../../$(SCALA_JAR_BASE) make -s $(notdir $@)
 
 ### Scaladoc
 
@@ -172,5 +192,5 @@ cloc: tmp/cloc.pl
           --progress-rate=0 \
           .
 tmp/cloc.pl: | tmp
-	curl -s 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
+	curl -S 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
 	chmod +x tmp/cloc.pl

@@ -1,7 +1,8 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
 import java.io.DataInputStream;
@@ -235,12 +236,16 @@ public strictfp class LinkData
     this.hidden = hidden.booleanValue();
   }
 
-  public String labelString() {
+  public String label() {
     return label;
   }
 
-  public void labelString(String label) {
-    this.label = label;
+  public void label(Object label) {
+    this.label = Dump.logoObject(label);
+  }
+
+  public String labelString() {
+    return label;
   }
 
   public Object labelColor() {
@@ -306,7 +311,7 @@ public strictfp class LinkData
   private static final String[] OVERRIDE_VARIABLES = new String[]
       {"COLOR", "LABEL", "LABEL-COLOR", "LINE-THICKNESS", "HIDDEN?", "SHAPE"};
   private static final String[] OVERRIDE_METHODS = new String[]
-      {"color", "labelString", "labelColor", "lineThickness", "hidden", "shape"};
+      {"color", "label", "labelColor", "lineThickness", "hidden", "shape"};
 
   @Override
   public String getMethodName(int index) {

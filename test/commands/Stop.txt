@@ -71,8 +71,33 @@ StopInsideAsk2
   to-report foo crt 1 ask turtles [ stop hatch 10 ] report count turtles end
   foo => 1
 
+StopInsideRunOfCommandTask
+  to test let x task [ set glob1 1 stop ] run x set glob1 2 end
+  O> test set glob1 glob1 * 10
+  glob1 => 10
+
 FallOffEndOfReporterProcedure
   to-report foo1 report 0 end
   to-report foo2 end
   foo1 => 0
   foo2 => ERROR Reached end of reporter procedure without REPORT being called.
+
+Bug86-1
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ ifelse true [] [] ] end
+  O> setup
+
+Bug86-2
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ ifelse true [ set glob1 5 ] [] ] end
+  O> setup
+  glob1 => 5
+
+Bug86-3
+  to setup ca go1 go2 end
+  to go1 stop end
+  to go2 foreach [0] [ set glob1 5 ] end
+  O> setup
+  glob1 => 5

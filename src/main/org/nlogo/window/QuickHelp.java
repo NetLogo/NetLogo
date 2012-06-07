@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window;
 
@@ -67,6 +67,7 @@ final strictfp class QuickHelp<TokenType> {
     if (token == null) {
       return;
     }
+    token = token.toLowerCase();
     // if there is an entry in the 3D dictionary then it overrides
     // the 2D entry ev 10/25/07
     if (quickHelpWords3d.containsKey(token)) {

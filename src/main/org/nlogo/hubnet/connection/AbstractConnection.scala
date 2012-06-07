@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.connection
 
@@ -10,20 +10,8 @@ import org.nlogo.util.Exceptions
 abstract class AbstractConnection(name: String, connectionStreams: Streamable) extends Thread(name) {
   private val writingThread = new WritingThread(name)
 
-  // this used to be ArrayBlockingQueue[Any](10000)
-  // but, i really don't think we expect more than a few messages at a time in here.
-  // the Array implementation takes up vastly more memory than the LinkedList.
-  // so with small message queues, we can support more clients using LinkedList.
-  // its also very suspicious that we have such a high capacity. i think it
-  // should probably be considerably lower, 500 or less. if 500 messages back up
-  // and haven't been sent, thats a pretty good indication that something is
-  // wrong with the connection. (Note, changing to to 1000 now)
-  // another note, SocketListener is also used in the swing clients. but its
-  // very unlikely and maybe even impossible for them to fill this queue up.
-  // (also, making this protected for testing. JC - 1/1/11)
-  // I see no reason to have any ceiling at all here.  (LinkedBlockingQueue
-  // doesn't make us set a ceiling.) - ST 1/12/11
-  protected val writeQueue = new java.util.concurrent.LinkedBlockingQueue[Any](1000)
+  // protected for testing. JC - 1/1/11
+  protected val writeQueue = new java.util.concurrent.LinkedBlockingQueue[Any]
 
   private var count = 0
   private val RESET_DELAY = 1000

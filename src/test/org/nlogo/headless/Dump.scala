@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -34,7 +34,7 @@ object Dump {
   def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
-      writeFile("models/test/bench/" + name + ".txt",
+      writeFile("models/test/bench/" + BranchName.branch + "/" + name + ".txt",
                 dump(benchPath(name)))
   }
   def dumpAll() {

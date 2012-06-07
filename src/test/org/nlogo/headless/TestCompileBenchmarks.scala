@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -20,12 +20,6 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
   }
 
   if(Version.useGenerator && !Version.is3D) {
-    // the benchmarks dumps may be different on some branches, but since the benchmark models aren't
-    // open source, they're in a separate repo.  so, in that separate repo, we have a "master"
-    // directory with the dumps for the master branch here in the main repo, and for any branch here
-    // which needs different dumps, there's a corresponding directory in the models repo.
-    // A bit kludgy I guess, but it's OK. - ST 11/17/11
-    val branch = "master"
     for(name <- names)
       test(name) {
         val dump = {
@@ -36,8 +30,17 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           result
         }
         val source =
-          io.Source.fromFile("models/test/bench/" + branch + "/" + name + ".txt")
+          io.Source.fromFile("models/test/bench/" + BranchName.branch + "/" + name + ".txt")
         assert(dump === source.getLines.mkString("","\n","\n"))
       }
   }
+}
+
+object BranchName {
+  // the benchmarks dumps may be different on some branches, but since the benchmark models aren't
+  // open source, they're in a separate repo.  so, in that separate repo, we have a "master"
+  // directory with the dumps for the master branch here in the main repo, and for any branch here
+  // which needs different dumps, there's a corresponding directory in the models repo.
+  // A bit kludgy I guess, but it's OK. - ST 11/17/11
+  val branch = "master"
 }

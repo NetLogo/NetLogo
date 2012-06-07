@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -26,7 +26,7 @@ class TestChecksums extends FunSuite with SlowTest {
       tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString
       if (failures.nonEmpty)
-        throw new TestFailedException(failures, 0)
+        fail(failures)
     }
   }
 }

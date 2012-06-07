@@ -598,6 +598,7 @@ Go figure! - ST 12/2/04
       "#directed-link-breed">directed-link-breed</a> <a href="#end">end</a>
       <a href="#extensions">extensions</a> <a href="#globals">globals</a>
       <a href="#includes">__includes</a> <a href=
+      "#links-own">links-own</a> <a href=
       "#patches-own">patches-own</a> <a href="#to">to</a> <a href=
       "#to-report">to-report</a> <a href="#turtles-own">turtles-own</a>
       <a href="#undirected-link-breed">undirected-link-breed</a> 
@@ -2156,7 +2157,7 @@ ask links
     </div>
     <div class="dict_entry">
       <h3>
-        <a name="message" id="error">error</a>
+        <a name="error" id="error">error</a>
       </h3>
       <h4>
         error <i>value</i>
@@ -5434,8 +5435,8 @@ show netlogo-version
         Reports a number suitable for seeding the random number generator.
       <p>
         The numbers reported by new-seed are based on the current date and
-        time in milliseconds and lie in NetLogo's allowed range of
-        integers, -9007199254740992 to 9007199254740992.
+        time in milliseconds and lie in the generator's usable range of
+        seeds, -2147483648 to 2147483647.
       <p>
         new-seed never reports the same number twice in succession. (This
         is accomplished by waiting a millisecond if the seed for the
@@ -6506,8 +6507,10 @@ ask turtles [
       </h4>
       <p>
         Sets the seed of the pseudo-random number generator to the integer
-        part of <i>number</i>. The seed may be any integer in the range
-        supported by NetLogo (-9007199254740992 to 9007199254740992).
+        part of <i>number</i>. The seed must be in the range
+        -2147483648 to 2147483647; note that this is smaller than the
+        full range of integers supported by NetLogo (-9007199254740992 to
+        9007199254740992).
       <p>
         See the <a href="programming.html#random">Random Numbers</a>
         section of the Programming Guide for more details.
@@ -7653,7 +7656,7 @@ show sort-by [length ?1 &lt; length ?2] [&quot;Grumpy&quot; &quot;Doc&quot; &quo
       <p>
         See also <a href="#sort">sort</a>, <a href="#sort-on">sort-on</a>.
     </div>
-    <div>
+    <div class="dict_entry">
       <h3>
         <a name="sort-on" id="sort-on">sort-on</a>
       </h3>
@@ -7821,6 +7824,9 @@ if not any? turtles [ stop ]
         the button stops. (In a turtle or patch forever button, the button
         won't stop until every turtle or patch stops -- a single turtle
         or patch doesn't have the power to stop the whole button.)
+      <p>It can also be used to stop a BehaviorSpace model run.  If the
+        go commands directly call a procedure, then when that procedure
+        stops, the run ends.
       </div>
     <div class="dict_entry">
       <h3>

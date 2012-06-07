@@ -1,7 +1,8 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
 import java.io.DataInputStream;
@@ -181,8 +182,8 @@ public final strictfp class PatchData
     return plabel;
   }
 
-  public void plabel(String plabel) {
-    this.plabel = plabel;
+  public void plabel(Object plabel) {
+    this.plabel = Dump.logoObject(plabel);
   }
 
   /**

@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window;
 
@@ -381,28 +381,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void openString(String modelContents) {
     throw new UnsupportedOperationException();
-  }
-
-  // called from the job thread
-  public void openIndex() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_INDEX, new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openNext() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_NEXT,
-            new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openPrevious() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_PREVIOUS, new Object[]{})
-        .raiseLater(this);
   }
 
   // called from the job thread
@@ -1226,6 +1204,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (hubNetManager != null) {
       hubNetManager.disconnect();
     }
+    jobManager.haltSecondary();
+    jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager.handleModelChange();
     previewCommands_$eq(DefaultPreviewCommands());

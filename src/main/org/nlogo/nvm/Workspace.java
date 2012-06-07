@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.nvm;
 
@@ -215,12 +215,6 @@ public interface Workspace
   void magicOpen(String name);
 
   void changeLanguage();
-
-  void openIndex();
-
-  void openNext();
-
-  void openPrevious();
 
   void startLogging(String properties);
 

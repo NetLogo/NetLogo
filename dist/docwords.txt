@@ -21,6 +21,7 @@ App's
 AppData
 Applet
 Applets
+Arduino
 Arnan
 ArrayBlockingQueue
 ArrayIndexOutOfBoundsException
@@ -28,6 +29,7 @@ Authors's
 Automata
 Autoplot
 Autoplotting
+Azimuthal
 BICUBIC
 BILINEAR
 BMP
@@ -36,6 +38,7 @@ Bakshy
 Balan
 BehaviorSpace
 BehaviorSpace's
+Bessel's
 Blikstein
 Bluetooth
 BufferedReader
@@ -59,12 +62,14 @@ Clojure
 Codec
 Coevolution
 CommandLineThread
+Conformal
 Contrabass
 Ctrl
 Cuica
 DE
 DLA
 DOCTYPE
+DRK
 DRL
 DTD
 Daisyworld
@@ -106,6 +111,7 @@ Fullscreen
 GEOGCS
 GIF
 GIS
+GPL
 GTK
 GasLab
 GeForce
@@ -182,6 +188,7 @@ Lambert
 Lausanne
 Lecuyer
 Lego
+ListType
 Liviu
 LogFactory
 LogoBitmap
@@ -197,6 +204,7 @@ MacFarlane
 MacOS
 MacStarLogo
 Macs
+Makefile
 Markup
 Martinusen
 MaterialSim
@@ -224,9 +232,11 @@ NetLogoLab
 NetLogoListener
 NetLogoLite
 Neumann
+NonCommercial
 Nonlocal
 Notepad
 Nowrap
+NumberType
 OLS
 OS's
 Ohm's
@@ -255,6 +265,7 @@ Polysynth
 Predation's
 PrimitiveManager
 PrintWriter
+ProGuard
 ProbLab
 QTCap
 QTJ
@@ -300,6 +311,7 @@ SethTisue
 Shakuhachi
 Shamisen
 Shanai
+ShareAlike
 Sierpinski
 Sipitakiat
 Sobel
@@ -313,6 +325,7 @@ StarLogoT
 Stereographic
 Stonedahl
 Str
+StringType
 Stroup
 Sugarscape
 Synth
@@ -320,6 +333,7 @@ THIRDPARTYLICENSEREADME
 TI
 TM
 TMPDIR
+TNG
 Taiko
 Telecom
 Tetris
@@ -379,6 +393,7 @@ agentsets
 aka
 al
 amd
+amongst
 api
 app
 appender
@@ -434,11 +449,14 @@ carnivore
 ccl
 cct
 cd
+centroid
+centroids
 cern
 ch
 checkbox
 checkboxes
 chmod
+classloader
 classpath
 clickable
 col
@@ -456,6 +474,8 @@ concnst
 cond
 congruential
 conrate
+convolve
+convolved
 copyleft
 cos
 coverages
@@ -477,6 +497,8 @@ dd
 ddoffscreen
 det
 dev
+digitizer
+dimensionally
 dir
 dirs
 displayChanged
@@ -502,6 +524,7 @@ else's
 em
 en
 enumeratedValueSet
+epiDEM
 eric
 errorMessage
 et
@@ -544,6 +567,7 @@ grd
 grey
 grumpy
 guppy
+handheld
 headlessly
 histogrammed
 histogramming
@@ -564,13 +588,17 @@ iPhone
 iSight
 ids
 ifelse
+imageio
 indenter
 indep
 indices
 init
 inquirelearning
+instantiation
 int
+interoperable
 ints
+invertible
 invokeAndWait
 io
 java
@@ -591,6 +619,7 @@ lang
 layer's
 lbl
 len
+lexically
 lib
 libQTJNative
 libgcj
@@ -603,6 +632,7 @@ linslpe
 listn
 lite
 ln
+localizations
 login
 logout
 lossless
@@ -618,8 +648,10 @@ markup
 mathematica
 maxint
 maxnum
+md
 menubar
 mercator
+merchantability
 microsoft
 mimicry
 min
@@ -646,11 +678,13 @@ netlogo
 newInstance
 nlogo
 nls
+noncommercial
 note's
 nowrap
 nsum
 num
 nz
+obfuscator
 online
 org
 oxcor
@@ -669,6 +703,7 @@ pendown
 penname
 perceptron
 phototonic
+piecewise
 plabel
 plist
 plotname
@@ -685,6 +720,8 @@ pp
 ppd
 ppu
 pre
+precedences
+predation
 preformatted
 preinstalled
 prepended
@@ -695,6 +732,7 @@ println
 prj
 profiler
 programmatically
+pseudorandom
 pt
 pu
 publically
@@ -710,6 +748,8 @@ randelshofer
 raster's
 rc
 readLine
+recode
+recoded
 recursed
 redistributable
 redistributions
@@ -724,6 +764,7 @@ resave
 resize
 resizeWorld
 resized
+resizing
 rgb
 rin
 ron
@@ -739,11 +780,15 @@ runExperimentFromModel
 runMetricsEveryStep
 runOnce
 runReporter
+runnable
 runresult
 runtime
 runtime
 runtimes
+sandpile
+sawtooth
 scala
+scalable
 scalac
 screenshot
 scrollable
@@ -763,6 +808,7 @@ shapefiles
 shp
 sim
 slideshare
+speciation
 speediest
 sqrt
 src
@@ -803,6 +849,7 @@ toLogoObject
 tonk
 toolbars
 toolkits
+topologies
 towardsxy
 transitioning
 tring
@@ -820,14 +867,19 @@ uncheck
 unchecking
 uncomment
 unconverted
+undirected
 unformatted
 unfreeze
 uninstall
+unordered
+unported
 unpressing
+unreferenced
 unselect
 untar
 unusably
 url
+usbmodem
 util
 uucp
 valuen
@@ -844,6 +896,7 @@ wiki
 wikipedia
 wildcard
 wms
+workspace
 www
 xcor
 xfs

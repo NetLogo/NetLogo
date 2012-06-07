@@ -1,34 +1,34 @@
 HubNet-SimpleConnection
   O> hubnet-reset
   O> __hubnet-create-client
-  O> __hubnet-wait-for-clients 1 2000
+  O> __hubnet-wait-for-clients 1 3000
   hubnet-clients-list => ["Local 0"]
 
 HubNet-ClientsList
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
-  O> __hubnet-wait-for-clients 5 10000
+  O> __hubnet-wait-for-clients 5 15000
   length hubnet-clients-list => 5
   sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3" "Local 4"]
 
 HubNet-KickClient
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
-  O> __hubnet-wait-for-clients 5 10000
+  O> __hubnet-wait-for-clients 5 15000
   O> hubnet-kick-client "Local 4"
   sort hubnet-clients-list => ["Local 0" "Local 1" "Local 2" "Local 3"]
 
 HubNet-KickClient2
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
-  O> __hubnet-wait-for-clients 5 10000
+  O> __hubnet-wait-for-clients 5 15000
   O> foreach hubnet-clients-list [ hubnet-kick-client ? ]
   hubnet-clients-list => []
 
 HubNet-KickAllClients
   O> hubnet-reset
   O> repeat 5 [ __hubnet-create-client ]
-  O> __hubnet-wait-for-clients 5 10000
+  O> __hubnet-wait-for-clients 5 15000
   O> hubnet-kick-all-clients
   hubnet-clients-list => []
 
@@ -36,7 +36,7 @@ HubNet-enter-message
   O> hubnet-reset
   O> __hubnet-create-client
   # the client will send an enter message automatically. fetch it.
-  O> __hubnet-wait-for-messages 1 2000
+  O> __hubnet-wait-for-messages 1 3000
   O> hubnet-fetch-message
   # make sure it is indeed an enter message
   hubnet-enter-message? => true
@@ -50,10 +50,10 @@ HubNet-enter-message
 #  O> hubnet-reset
 #  O> __hubnet-create-client
 #  # the client will send an enter message automatically. discard it.
-#  O> __hubnet-wait-for-messages 1 2000
+#  O> __hubnet-wait-for-messages 1 3000
 #  O> hubnet-fetch-message
 #  O> __hubnet-send-from-local-client "Local 0" "imaginaryWidget" 100
-#  O> __hubnet-wait-for-messages 1 2000
+#  O> __hubnet-wait-for-messages 1 3000
 #  O> hubnet-fetch-message
 #  hubnet-message-source => "Local 0"
 #  hubnet-message-tag => "imaginaryWidget"
@@ -64,12 +64,12 @@ HubNet-enter-message
 #HubNet-In-Q-Size
 #  O> hubnet-reset
 #  O> repeat 1 [ __hubnet-create-client ]
-#  O> __hubnet-wait-for-messages 1 2000
+#  O> __hubnet-wait-for-messages 1 3000
 #  __hubnet-in-q-size => 1
 #  O> repeat 1 [ hubnet-fetch-message ]
 #  __hubnet-in-q-size => 0
 #  O> repeat 5 [__hubnet-send-from-local-client "Local 0" "imaginaryWidget" 100]
-#  O> __hubnet-wait-for-messages 5 10000
+#  O> __hubnet-wait-for-messages 5 15000
 #  __hubnet-in-q-size => 5
 #  O> repeat 5 [ hubnet-fetch-message ]
 #  __hubnet-in-q-size => 0

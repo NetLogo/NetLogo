@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window;
 
@@ -144,7 +144,7 @@ public strictfp class WorldViewSettings2D
             workspace.updateMode().save() + "\n" + // 21
             workspace.updateMode().save() + "\n" + // 22
             (showTickCounter() ? "1" : "0") + "\n" + // 23
-            tickCounterLabel() + "\n" + // 24
+            (tickCounterLabel().trim().equals("") ? "NIL" : tickCounterLabel()) + "\n" + // 24
             frameRate() + "\n"; // 25
   }
 }

@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.api
 
@@ -33,11 +33,12 @@ object JavaLibraryPath {
     val osname = System.getProperty("os.name")
     if (osname == "Mac OS X")
       libdir ++= osname
-    else if (osname.startsWith("Windows")) {
+    else if (osname.startsWith("Windows"))
       libdir ++= "Windows"
-      val arch = System.getProperty("os.arch");
+    else {
+      val arch = System.getProperty("os.arch")
       if (arch.endsWith("86"))
-        libdir ++= "-x86"
+        libdir ++= osname + "-x86"
       else
         libdir ++= osname + "-" + arch
       // I lack any real understanding of what's going on here and I'm scared of breaking it since I
