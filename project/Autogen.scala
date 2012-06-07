@@ -6,7 +6,7 @@ object Autogen {
 
   val sourceGeneratorTask =
     (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
-      (cacheDir, dir, base, s) => {
+      (cacheDir, dir, base, s) =>
         val cache =
           FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
@@ -19,7 +19,7 @@ object Autogen {
                   base / "project" / "autogen" / "events.txt",
                   base / "project" / "autogen" / "ImportLexer.flex",
                   base / "project" / "autogen" / "TokenLexer.flex")).toSeq
-      }}
+    }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
     val file = dir / "org" / "nlogo" / ppackage / "Events.java"
