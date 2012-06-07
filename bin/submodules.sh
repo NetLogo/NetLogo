@@ -39,4 +39,4 @@ git config submodule.plugins/ReviewTab.url git@github.com:/NetLogo/ReviewTab.git
 ( cd extensions/sample-scala; git remote set-url origin git@github.com:/NetLogo/Sample-Scala-Extension.git )
 ( cd extensions/sound; git remote set-url origin git@github.com:/NetLogo/Sound-Extension.git )
 ( cd extensions/table; git remote set-url origin git@github.com:/NetLogo/Table-Extension.git )
-( cd plugins/ReviewTab; git remote set-url origin git@github.com:/NetLogo/ReviewTab.git
+( cd plugins/ReviewTab; git remote set-url origin git@github.com:/NetLogo/ReviewTab.git )
