@@ -20,7 +20,7 @@ class _sorton extends Reporter {
     val freshContext = new Context(context, agents)
     reporterBlock.checkAgentSetClass(agents, context)
     val pairs = new Array[(Agent, AnyRef)](agents.count)
-    val it = agents.shufflerator(world.mainRNG)
+    val it = agents.shufflerator(context.job.random)
     var i = 0
     while(i < pairs.length) {
       val a = it.next()
