@@ -17,7 +17,15 @@ import org.nlogo.api.{I18N, TokenType}
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer[TokenType])
         extends PropertyEditor(accessor, handlesOwnErrors = true) {
+
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
+
+  val PlotPenModes =
+    scala.List(I18N.gui("mode.line"),
+               I18N.gui("mode.bar"),
+               I18N.gui("mode.point"))
+  def getPlotPenModeNames = PlotPenModes.toArray
+
   val plot = accessor.target.asInstanceOf[PlotWidget].plot
   val plotManager = accessor.target.asInstanceOf[PlotWidget].plotManager
   val table = new PlotPensTable()
@@ -361,7 +369,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   class PlotPenEditorAdvanced(inputPen: Pen) extends JPanel {
     // pieces of the UI
     private val intervalField = new org.nlogo.swing.TextField("", 8)
-    private val penModes = new JComboBox(PlotPen.getPlotPenModeNames.asInstanceOf[Array[Object]])
+    private val penModes = new JComboBox(getPlotPenModeNames.asInstanceOf[Array[Object]])
     private val showPenInLegend = new JCheckBox(I18N.gui("showInLegend"), true)
     val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
     val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
