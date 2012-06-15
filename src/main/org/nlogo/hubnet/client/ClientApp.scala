@@ -58,10 +58,19 @@ object ClientApp {
 class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
   import ClientApp.localClientIndex
 
-  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
   private var clientPanel: ClientPanel = _
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
+
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
+
+  // This brings us a step closer to being able to be rid of the `LoginCallback` class;
+  // can't do away with it quite yet, because `ClientApplet` is still in Java (and, thus,
+  // cannot make good use of Scala's first-class functions) --JAB (6/15/2012)
+  private lazy val Callback = (user: String, host: String, port: Int) => login(user, host, port)
+  implicit def func3ToLoginCallback(func: (String, String, Int) => Unit) = new LoginCallback {
+    def apply(user: String, host: String, port: Int) { func(user, host, port) }
+  }
 
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -109,7 +118,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         addWindowListener(() => handleExit())
         Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
-        if (isWebStart) login(userid, hostip, port) else doLogin()
+        if (isWebStart) { loginDialog.initializeCallback(Callback); login(userid, hostip, port) }
+        else              doLogin()
       }
     })
   }
@@ -117,11 +127,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private def doLogin() {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
-    if (!isLocal){
-      loginDialog.go(new LoginCallback {
-        def apply(user: String, host: String, port: Int) { login(user, host, port) }
-      })
-    }
+    if (!isLocal) loginDialog.go(Callback)
   }
 
   def completeLogin() { setVisible(true) }
@@ -134,7 +140,6 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     exs match {
       case Some(ex) =>
         handleLoginFailure(ex)
-        clientPanel.disconnect(ex.toString)
       case None =>
         loginDialog.setVisible(false)
         clientPanel.requestFocus()
@@ -164,6 +169,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     EventQueue.mustBeEventDispatchThread()
     OptionDialog.show(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    clientPanel.disconnect(errorMessage.toString)
     loginDialog.setVisible(true)
   }
 

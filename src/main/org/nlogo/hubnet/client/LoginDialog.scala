@@ -171,6 +171,10 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     setVisible (true)
   }
 
+  def initializeCallback(callback: LoginCallback) {
+    this.loginCallback = callback
+  }
+
   /**
    * Overrides <code>component.setVisible(...)</code> to make sure
    * server table threads are off when this is not visible.
