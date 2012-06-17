@@ -7,7 +7,7 @@ trait Jars extends DefaultProject {
   lazy val java5 = fileTask(Seq(java5Path)) {
     // we ought to use sbt's internal fetcher rather than invoking curl. we can clean it up when
     // we move to sbt 0.11 - ST 2/1/12
-    val exitCode = List("curl", "-f", "-S", "-o", java5Path.asFile.toString,
+    val exitCode = List("curl", "-f", "-s", "-S", "-o", java5Path.asFile.toString,
                         "http://ccl.northwestern.edu/devel/java5-classes.jar").!
     require(exitCode == 0, "exitCode = " + exitCode)
     None
