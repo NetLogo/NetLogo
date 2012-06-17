@@ -28,7 +28,7 @@ def lines(dir: String, extension: String, flatten: Boolean) =
     .map(_.trim)
     .toList
 def dirs(root: String) =
-  shell("find " + root + """ -type d | grep -v \\.svn || grep -v \\.git""")
+  shell("find " + root + """ -type d | grep -v \\.git""")
     .filterNot(_.containsSlice("/build/"))
     .filterNot(_.matches("extensions/.*/src/.*/.*"))
 

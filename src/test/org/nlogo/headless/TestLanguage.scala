@@ -159,7 +159,7 @@ object TestParser {
         else if (err startsWith "STACKTRACE")
           CommandWithStackTrace(agentType, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
-          sys.error("error missing!")
+          sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
         if (result startsWith "ERROR")
           ReporterWithError(reporter, result.substring("ERROR".length + 1))

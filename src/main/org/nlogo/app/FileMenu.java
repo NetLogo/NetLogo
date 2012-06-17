@@ -35,7 +35,7 @@ public strictfp class FileMenu
     addMenuItem('O', new OpenAction());
     addSeparator();
     addMenuItem('S', new SaveAction());
-    addMenuItem(new SaveAsAction());
+    addMenuItem('S', true, new SaveAsAction());
     addSeparator();
     org.nlogo.swing.Menu exportMenu =
         new org.nlogo.swing.Menu(I18N.guiJ().get("menu.file.export"));

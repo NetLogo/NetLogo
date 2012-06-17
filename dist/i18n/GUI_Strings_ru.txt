@@ -96,7 +96,6 @@ tabs.run.addButton = Добавить
 tabs.run.addButton.tooltip = добавить новые объекты интерфейса
 tabs.run.settingsButton = Установки...
 tabs.run.settingsButton.tooltip = Редактировать установки модели
-tabs.run.view.ticks = тики
 tabs.run.viewUpdates.checkbox = посмотреть обновления
 tabs.run.viewUpdates.checkbox.tooltip = Заморозить или разморозить вид
 tabs.run.viewUpdates.dropdown.onticks = на тике

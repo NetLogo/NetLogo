@@ -96,7 +96,6 @@ tabs.run.addButton = Add
 tabs.run.addButton.tooltip = add new interface item
 tabs.run.settingsButton = Settings...
 tabs.run.settingsButton.tooltip = Edit model settings
-tabs.run.view.ticks = ticks
 tabs.run.viewUpdates.checkbox = view updates
 tabs.run.viewUpdates.checkbox.tooltip = Freeze or unfreeze view
 tabs.run.viewUpdates.dropdown.onticks = on ticks

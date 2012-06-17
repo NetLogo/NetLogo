@@ -96,7 +96,6 @@ tabs.run.addButton = 添加
 tabs.run.addButton.tooltip = 添加新的界面组件
 tabs.run.settingsButton = 设置...
 tabs.run.settingsButton.tooltip = 编辑模型参数
-tabs.run.view.ticks = 时间步
 tabs.run.viewUpdates.checkbox = 更新视图
 tabs.run.viewUpdates.checkbox.tooltip = 冻结或解冻视图
 tabs.run.viewUpdates.dropdown.onticks = 每时间步更新

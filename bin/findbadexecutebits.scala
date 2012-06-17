@@ -24,7 +24,7 @@ val executableExtensions =
 val executableFullNames =
   "bin/scala bin/scalac bin/sbt bin/scaladoc"
 val nonExecutableExtensions =
-  "java nlogo nlogo3d txt flex class classpath srcs css graph srcs-scala prefs launch scala xml png tgz " +
+  "java nlogo nlogo3d txt flex class classpath srcs css graph srcs-scala prefs launch scala xml png tgz gz " +
   "nim graffle html diff example xls ddf jar mk doc zip gif bz2 dtd ninfo project versioned log " +
   "ico install4j icns xsl plist jpg wrl dbf shp nb pdf prj shx sample gm m nls asc csv hs fbp " +
   "aif au ogg wav dat bsearch mf properties nbm java_NEW psd iml gitignore ensime sbt md " +
