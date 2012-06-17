@@ -93,8 +93,8 @@ class ViewManager(val workspace: GUIWorkspace,
       world.markPatchColorsDirty()
       if (fullscreen) {
         if (!gd.isFullScreenSupported)
-          throw new UnsupportedOperationException
-        ("This graphics environment does not support full screen mode")
+          throw new UnsupportedOperationException(
+            "This graphics environment does not support full screen mode")
         currentView.setVisible(true)
         appWindow.setVisible(false)
         fullscreenView = new FullscreenView(this, currentView.renderer)

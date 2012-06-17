@@ -302,3 +302,7 @@ reporter-task-body-may-have-different-agent-type
 
 reporter-task-body-gets-agent-type-check
   O> __ignore task [size + link-length] => COMPILER ERROR You can't use link-length in a turtle context, because link-length is link-only.
+
+reporter-task-closes-over-let-inside-task-of-different-agent
+  O> __let z 9 crt 1 [ set glob1 task [ z ] ]
+  runresult glob1 => 9

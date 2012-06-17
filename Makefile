@@ -11,7 +11,7 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     COLON = \;
-    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_26"`
+    JAVA_HOME = `cygpath -up "\Java\jdk1.6.0_31"`
 else
     COLON = :
     ifneq (,$(findstring Darwin,$(shell uname)))
@@ -23,7 +23,7 @@ endif
 
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
-SCALA_VERSION = 2.9.1
+SCALA_VERSION = 2.9.2
 SCALA_JAR_BASE = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 SCALA_JAR := $(SCALA_JAR_BASE)
 CLASSES = target/scala_$(SCALA_VERSION)/classes

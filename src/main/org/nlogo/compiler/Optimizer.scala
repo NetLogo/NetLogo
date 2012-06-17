@@ -28,10 +28,10 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       .find{munger => munger.munge(app); app.reporter != oldReporter}
   }
 
-  private val commandMungers: List[CommandMunger] =
-    List(Fd1, FdLessThan1, FastHatch, FastSprout, FastCrt, FastCro)
-  private val reporterMungers: List[ReporterMunger] =
-    List(PatchAt, With, OneOfWith, Nsum, Nsum4, 
+  private val commandMungers =
+    List[CommandMunger](Fd1, FdLessThan1, FastHatch, FastSprout, FastCrt, FastCro)
+  private val reporterMungers =
+    List[ReporterMunger](PatchAt, With, OneOfWith, Nsum, Nsum4, 
          CountWith, OtherWith, WithOther, AnyOther, AnyOtherWith, CountOther, CountOtherWith, 
          AnyWith1, AnyWith2, AnyWith3, AnyWith4, AnyWith5, 
          PatchVariableDouble, TurtleVariableDouble, RandomConst)

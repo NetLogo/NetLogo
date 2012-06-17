@@ -39,7 +39,7 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
     for {
       line <- Utils.getResourceLines("/system/tokens.txt")
       if !line.startsWith("#")
-      val Array(tyype, primName, className) = line.split(" ")
+      Array(tyype, primName, className) = line.split(" ")
       if tyype == entryType
       // if a 3d version of the prim exists and we got to this point it
       // should override the 2d version. ev 12/11/06  note the overriding

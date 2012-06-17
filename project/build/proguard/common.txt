@@ -6,8 +6,8 @@
 # avoid actually using these classes when running on 1.5 - ST 9/26/09
 -libraryjars ../../../dist/java5/java6.jar
 
-# pull in both managed and unmanaged libraries
--libraryjars ../../../lib_managed/scala_2.9.1/compile
+# all our libraries are managed now
+-libraryjars ../../../lib_managed/scala_2.9.2/compile
 
 # I tried this but got a weird error at runtime.  maybe try again sometime and report
 # the bug to the ProGuard author

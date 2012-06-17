@@ -127,6 +127,10 @@ public final strictfp class DefaultFileManager
     }
   }
 
+  public org.nlogo.api.File currentFile() {
+    return hasCurrentFile() ? currentFile : null;
+  }
+
   public boolean hasCurrentFile() {
     return (currentFile != null && isFileOpen(currentFile.getAbsolutePath()));
   }
@@ -135,7 +139,7 @@ public final strictfp class DefaultFileManager
     return (findOpenFile(fileName) != null);
   }
 
-  private org.nlogo.api.File findOpenFile(String fileName) {
+  public org.nlogo.api.File findOpenFile(String fileName) {
 
     if (AbstractWorkspace.isApplet()) {
       for (org.nlogo.api.File nextFile : openFiles) {

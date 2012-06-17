@@ -46,9 +46,6 @@ with Event.LinkParent {
        procedures: ProceduresLite,
        panel: AppletAdPanel,
        defaultOwner: SimpleJobOwner) = {
-    val gridbag = new java.awt.GridBagLayout()
-    val c = new java.awt.GridBagConstraints
-    setLayout(gridbag)
     val world = if(Version.is3D) new World3D() else new World
     val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
     addLinkComponent(workspace.aggregateManager)
@@ -72,15 +69,10 @@ with Event.LinkParent {
     workspace.setWidgetContainer(iP)
     val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, classOf[Observer])
     setBackground(java.awt.Color.WHITE)
-    c.gridwidth = 1
-    c.gridheight = 2
-    c.weighty = 1.0
-    gridbag.setConstraints(iP, c)
-    add(iP)
+    setLayout(new java.awt.BorderLayout)
+    add(iP, java.awt.BorderLayout.CENTER)
     val panel = new AppletAdPanel(iconListener)
-    c.anchor = java.awt.GridBagConstraints.SOUTH
-    gridbag.setConstraints(panel, c)
-    add(panel)
+    add(panel, java.awt.BorderLayout.EAST)
     (iP, workspace, procedures, panel, defaultOwner)
   }
 

@@ -26,7 +26,7 @@ class TestChecksums extends FunSuite with SlowTest {
       tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString
       if (failures.nonEmpty)
-        throw new TestFailedException(failures, 0)
+        fail(failures)
     }
   }
 }

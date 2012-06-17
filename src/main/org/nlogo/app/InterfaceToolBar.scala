@@ -122,7 +122,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   def handle(e: org.nlogo.window.Events.WidgetRemovedEvent) {
     val r = e.widget
     if(selectedObjects.contains(r)) {
-      if(r.isInstanceOf[Editable] && editTarget.exists(_ == r)) {
+      if(r.isInstanceOf[Editable] && editTarget.exists(_ == r.asInstanceOf[Editable])) {
         editTarget = None
         editAction.setEnabled(false)
       }

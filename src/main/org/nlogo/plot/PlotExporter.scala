@@ -25,7 +25,7 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
       double2Double(plot.yMin),
       double2Double(plot.yMax),
       boolean2Boolean(plot.autoPlotOn),
-      plot.currentPen.get.name,
+      plot.currentPen.map(_.name).getOrElse(""),
       boolean2Boolean(plot.legendIsOpen),
       int2Integer(plot.pens.size))))
     writer.println()

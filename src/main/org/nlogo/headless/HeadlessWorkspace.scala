@@ -454,21 +454,6 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def openIndex() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openNext() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openPrevious() = unsupported
-
-  /**
-   * Internal use only.
-   */
   def startLogging(properties: String) = unsupported
 
   /**

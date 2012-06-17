@@ -171,7 +171,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   /// NO SIDE EFFECTS BELOW HERE PLEASE!  not even calling System.nanoTime()!
   // (well, except for the nasty bit of stateful logic in checkTicks() which we call below)
 
-  private def updatePolicy = updateMode match {
+  private def updatePolicy: UpdatePolicy = updateMode match {
     case UpdateMode.CONTINUOUS => ContinuousPolicy
     case UpdateMode.TICK_BASED => TickBasedPolicy
   }

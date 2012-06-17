@@ -293,6 +293,25 @@ public final strictfp class Context {
     job.parentContext.setLet(let, value);
   }
 
+
+  public scala.collection.immutable.List<LetBinding> allLets() {
+    // fast path
+    if(job.parentContext == null) {
+      return letBindings;
+    }
+    // slow path
+    else {
+      scala.collection.mutable.ListBuffer<LetBinding> buf =
+        new scala.collection.mutable.ListBuffer<LetBinding>();
+      Context walk = this;
+      while(walk != null) {
+        buf.$plus$plus$eq(walk.letBindings);
+        walk = walk.job.parentContext;
+      }
+      return buf.toList();
+    }
+  }
+
   ///
 
   // this had to be made public so that workspace.Evaluator could call it when
