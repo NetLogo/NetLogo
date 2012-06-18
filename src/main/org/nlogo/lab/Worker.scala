@@ -154,23 +154,35 @@ class Worker(val protocol: Protocol)
             throw new FailedException(
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
+      def checkForRuntimeError() {
+        if(ws.lastLogoException != null) {
+          val ex = ws.lastLogoException
+          ws.clearLastLogoException()
+          if(!aborted)
+            eachListener(_.runtimeError(ws, runNumber, ex))
+        }
+      }
       ws.behaviorSpaceRunNumber(runNumber)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
+      checkForRuntimeError()
       if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
+        checkForRuntimeError()
       }
       var steps = 0
       while((protocol.timeLimit == 0 || steps < protocol.timeLimit) &&
             !exitConditionTrue && !ws.runCompiledCommands(owner(ws.world.mainRNG), goProcedure))
       {
+        checkForRuntimeError()
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
         if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
+          checkForRuntimeError()
         }
         ws.updateDisplay(false)
         if(aborted) return
@@ -178,14 +190,11 @@ class Worker(val protocol: Protocol)
       if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
+        checkForRuntimeError()
       }
       ws.runCompiledCommands(owner(ws.world.mainRNG), finalProcedure)
+      checkForRuntimeError()
       eachListener(_.runCompleted(ws, runNumber, steps))
-      if(ws.lastLogoException != null) {
-        val ex = ws.lastLogoException
-        ws.clearLastLogoException()
-        throw ex
-      }
     }
   }
 }

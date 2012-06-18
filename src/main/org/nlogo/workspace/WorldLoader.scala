@@ -22,7 +22,7 @@ class WorldLoader {
         else label)
     }
     else
-      worldInterface.tickCounterLabel(I18N.gui.get("tabs.run.view.ticks"))
+      worldInterface.tickCounterLabel("ticks")
     if(strings.length > tickCounterIndex)
       worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
     else

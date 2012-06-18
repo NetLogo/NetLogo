@@ -66,9 +66,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def magicOpen(name: String) = unsupported
   override def changeLanguage() = unsupported
-  override def openIndex() = unsupported
-  override def openNext() = unsupported
-  override def openPrevious() = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles() = unsupported

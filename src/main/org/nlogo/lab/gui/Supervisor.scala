@@ -41,7 +41,6 @@ class Supervisor(dialog: java.awt.Dialog,
             e.printStackTrace(System.err)
         }
         org.nlogo.util.Exceptions.handle(e)
-        queue.synchronized { queue.enqueue(w) }
       }}
   def nextWorkspace = queue.synchronized { queue.dequeue() }
   val runnable = new Runnable { override def run() {
@@ -57,7 +56,6 @@ class Supervisor(dialog: java.awt.Dialog,
       worker.addListener(exporter)
     }
   }
-  def hasSpreadsheetExporter = exporters.exists(_.isInstanceOf[SpreadsheetExporter])
   override def start() {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()

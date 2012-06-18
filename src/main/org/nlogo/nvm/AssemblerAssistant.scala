@@ -17,8 +17,8 @@ package org.nlogo.nvm
 // - Any command which includes a command block must be custom assembled.  Examples: _ask, _ifelse.
 //
 // - A command may wish to drop out of existence entirely when assembled.  Example: _observercode
-// and friends, which exist only to assist the TypeParser phase of compilation and are no longer
-// needed after TypeParser has run.
+// and friends, which exist only to assist the AgentTypeChecker phase of compilation and are no longer
+// needed after AgentTypeChecker has run.
 //
 // - A command may wish to cause other commands to be inserted, either instead of or in addition to
 // the original.  For example _hatch replaces itself with _fasthatch if the optional command block

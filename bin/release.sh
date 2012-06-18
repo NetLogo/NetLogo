@@ -29,11 +29,11 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA=2.9.1
+SCALA=2.9.2
 SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_30_server
+VM=windows-x86-1.6.0_31_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -82,7 +82,7 @@ if [ $WINDOWS -eq 1 ]; then
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "fetching VM pack"
     pushd "$IJDIR/jres" > /dev/null
-    $CURL -f -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    $CURL -f -s -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
     popd > /dev/null
   fi
   # make sure VM pack is complete and not corrupt
@@ -128,6 +128,9 @@ done
 # fail early if JLink.jar is missing
 if [ ! -f Mathematica-Link/Makefile ]; then
   git submodule update --init Mathematica-Link
+fi
+if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
+  cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
 fi
 if [ ! -f Mathematica-Link/JLink.jar ]; then
   echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
@@ -187,7 +190,8 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif}
+$RM -rf extensions/sample extensions/sample-scala
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
@@ -196,7 +200,7 @@ $CP -rp ../../models .
 $RM -rf models/README.md models/bin models/test
 
 # blow away version control and Mac junk
-$FIND models \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND models \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
 # verify all VERSION sections are gone, as a guard against malformed
@@ -286,9 +290,9 @@ $CP -p ../../dist/hubnet.sh .
 $CP -p ../../dist/icon.ico .
 
 # blow away version control and Mac junk
-$FIND . \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
-$FIND . -path \*/.svn -prune -o -empty -print
+$FIND . -empty -print
 
 # make sure no empty directories or files are
 # lying around. do twice, once to print them all,
@@ -344,7 +348,7 @@ $MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
 $MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
 
 # blow away version control and Mac junk again
-$FIND . \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
 # make the dmg
@@ -423,7 +427,7 @@ $CP -rp ../models/test/applet $COMPRESSEDVERSION
 $CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
-$FIND $COMPRESSEDVERSION/applet \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 $RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
@@ -450,9 +454,9 @@ $PERL -pi -e "s/\@\@\@SIZE4\@\@\@/$SIZE/" *.html
 # make world-readable
 $CHMOD -R go+rX .
 
-# blow away svn et al stuff again
+# blow away git stuff et al again
 cd ../..
-$FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store -or -name .gitignore \) -print0 | $XARGS -0 $RM -rf
+$FIND tmp/$COMPRESSEDVERSION \( -name .DS_Store -or -name .gitignore \) -print0 | $XARGS -0 $RM -rf
 
 # done
 if [ $DO_RSYNC -eq 1 ]; then

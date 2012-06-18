@@ -1,6 +1,5 @@
 # leading + and - are spaces the indenter should add or remove
-# how to run:
-#   make test1 TEST=app.TestSmartIndenter
+# from sbt, do: test-only *SmartIndenter*
 
 End
 to go

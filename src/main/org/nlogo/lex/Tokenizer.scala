@@ -59,8 +59,25 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
   def nextToken(reader: java.io.BufferedReader): Token =
     new TokenLexer(reader, tokenMapper, null, false).yylex()
 
-  def getTokenAtPosition(source: String, position: Int): Token =
-    tokenizeIncludingComments(source).find(_.endPos > position).orNull
+  def getTokenAtPosition(source: String, position: Int): Token = {
+    // if the cursor is between two adjacent tokens we'll need to pick the token
+    // the user probably wants for F1 purposes. see bug #139 - ST 5/2/12
+    val interestingTokenTypes =
+      List(TokenType.CONSTANT, TokenType.IDENT, TokenType.COMMAND, TokenType.REPORTER,
+           TokenType.KEYWORD, TokenType.VARIABLE)
+    val candidates =
+      tokenizeIncludingComments(source)
+        .dropWhile(_.endPos < position)
+        .takeWhile(_.startPos <= position)
+        .take(2) // be robust against EOF tokens, etc.
+    candidates match {
+      case Seq() => null
+      case Seq(t) => t
+      case Seq(t1, t2) =>
+        if (interestingTokenTypes.contains(t2.tyype))
+          t2 else t1
+    }
+  }
 
   def isValidIdentifier(ident: String): Boolean =
     tokenizeRobustly(ident) match {

@@ -521,9 +521,6 @@ class App extends
     e.`type` match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
-      case OPEN_INDEX => openIndex
-      case OPEN_NEXT => openNext(1)
-      case OPEN_PREVIOUS => openNext(-1)
       case START_LOGGING =>
         startLogging(e.args(0).toString)
         if(logger!=null)
@@ -582,18 +579,6 @@ class App extends
     }
     val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
     org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
-  }
-
-  private def openIndex() {
-    fileMenu.openFromPath(workspace.getModelPath.replaceFirst(" \\S+.nlogo$", " Index.nlogo"), workspace.getModelType)
-  }
-
-  private def openNext(increment: Int) {
-    val path = workspace.getModelPath.replaceFirst(".nlogo$", "")
-    val split = path.split(" ")
-    val modelNumber = increment + split(split.length - 1).toInt
-    fileMenu.openFromPath(
-      workspace.getModelPath.replaceFirst(" \\d+.nlogo$", " " + modelNumber + ".nlogo"), workspace.getModelType)
   }
 
   ///

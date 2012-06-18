@@ -156,7 +156,7 @@ class PlotPainter(plot: Plot) {
   }
 
   // in screenX and screenY, we need to watch out for
-  // developer.java.sun.com/developer/bugParade/bugs/4249708.html if x and y are way out of range --
+  // bugs.sun.com/bugdatabase/view_bug.do?bug_id=4249708 if x and y are way out of range --
   // e.g. if someone wants to draw the x axis and so does something like "plotxy 0 0 plotxy 10000000
   // 0".  java.awt.Point is documented as using 32 bit ints, but in practice, not all of that range
   // is usable on every VM and OS.  I've seen this problem on Java 1.1 VM's; I don't think I've seen

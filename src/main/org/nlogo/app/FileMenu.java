@@ -38,7 +38,7 @@ public strictfp class FileMenu
     addMenuItem('M', new ModelsLibraryAction());
     addSeparator();
     addMenuItem('S', new SaveAction());
-    addMenuItem(new SaveAsAction());
+    addMenuItem('S', true, new SaveAsAction());
     addMenuItem(new SaveAppletAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
@@ -76,7 +76,7 @@ public strictfp class FileMenu
 
   ///
 
-  private String modelSuffix() {
+  public static String modelSuffix() {
     return org.nlogo.api.Version.is3D() ? "nlogo3d" : "nlogo";
   }
 
