@@ -15,5 +15,5 @@
 -keepdirectories system
 
 -injars target/scala_2.9.2/classes
--injars resources(!**.svn**,**)
+-injars resources
 -outjar NetLogo.jar

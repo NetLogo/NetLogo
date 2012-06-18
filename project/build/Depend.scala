@@ -118,7 +118,7 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 [headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
 # as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory
 # mentions it in its constructor, and I don't want to have to make a whole new package
-# just to put ShapesManagaerFactory in - ST 2/27/09
+# just to put ShapesManagerFactory in - ST 2/27/09
 [bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Frame
 
 check [util+] independentOf [Sun-AWT]
