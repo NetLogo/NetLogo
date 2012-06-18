@@ -23,7 +23,7 @@ class WorldLoader {
         else label)
     }
     else
-      worldInterface.tickCounterLabel("Tick counter")
+      worldInterface.tickCounterLabel("ticks")
     if(strings.length > tickCounterIndex)
       worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
     else

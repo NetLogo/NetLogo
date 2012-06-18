@@ -68,3 +68,11 @@ sort-on-rejects-mixed-types
   O> crt 3 [ set label who ]
   O> ask turtle 2 [ set label "foo" ]
   sort-on [label] turtles => ERROR SORT-ON works on numbers, strings, or agents of the same type, but not on a string and a number
+
+sort-on-respects-with-local-randomness
+  O> random-seed 0
+  O> crt 10
+  O> with-local-randomness [ set glob1 map [[who] of ?] sort-on [xcor] turtles ]
+  O> with-local-randomness [ set glob2 map [[who] of ?] sort-on [xcor] turtles ]
+  glob1 = glob2 => true
+

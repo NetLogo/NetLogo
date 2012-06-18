@@ -12,10 +12,7 @@ object PlotPen {
   val LINE_MODE = 0
   val BAR_MODE = 1
   val POINT_MODE = 2
-  val PLOT_PEN_MODES = scala.List("Line", "Bar", "Point")
-
-  def getPlotPenModeNames = PLOT_PEN_MODES.toArray
-  def isValidPlotPenMode(mode: Int) = mode >= 0 && mode < PLOT_PEN_MODES.length
+  def isValidPlotPenMode(mode: Int) = mode >= 0 && mode <= 2
 }
 
 // ideally we'd have "val plot" and "val temporary", not vars, but we need to be able

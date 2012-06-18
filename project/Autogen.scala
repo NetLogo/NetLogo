@@ -6,7 +6,7 @@ object Autogen {
 
   val sourceGeneratorTask =
     (cacheDirectory, javaSource in Compile, baseDirectory, streams) map {
-      (cacheDir, dir, base, s) => {
+      (cacheDir, dir, base, s) =>
         val cache =
           FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
@@ -16,7 +16,7 @@ object Autogen {
         cache(Set(base / "project" / "autogen" / "warning.txt",
                   base / "project" / "autogen" / "ImportLexer.flex",
                   base / "project" / "autogen" / "TokenLexer.flex")).toSeq
-      }}
+    }
 
   // this used to be broken into two tasks, but jflex doesnt seem to be threadsafe
   // so we have to run them serially, which means we have to generate them both each time. -JC 6/8/10

@@ -103,5 +103,5 @@ cloc: tmp/cloc.pl
           --progress-rate=0 \
           .
 tmp/cloc.pl: | tmp
-	curl -S 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
+	curl -sS 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
 	chmod +x tmp/cloc.pl

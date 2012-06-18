@@ -45,11 +45,12 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
-SBT_LAUNCH=`dirname $0`/sbt-launch-0.11.3.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.11.3/sbt-launch.jar'
+SBT_LAUNCH=`dirname $0`/sbt-launch-0.12.0-RC2.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0-RC2/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
-  curl -f $URL -o $SBT_LAUNCH || exit
+  echo "downloading" $URL
+  curl -s -S -f $URL -o $SBT_LAUNCH || exit
 fi
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10

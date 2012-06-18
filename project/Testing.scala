@@ -15,10 +15,14 @@ object Testing {
   lazy val tm = InputKey[Unit]("tm", "run TestModels", test)
   lazy val testChecksums = InputKey[Unit]("test-checksums", "run TestChecksums", test)
 
-  val settings =
+  private val testKeys = Seq(tr, tc, te, tm, testChecksums)
+
+  val settings = inConfig(Test)(
     inConfig(FastTest)(Defaults.testTasks) ++
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
+    testKeys.flatMap(Defaults.defaultTestTasks) ++
+    testKeys.flatMap(Defaults.testTaskOptions) ++
     Seq(
       testOptions in FastTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(fastFilter(path, _))) },
@@ -26,13 +30,12 @@ object Testing {
         Seq(Tests.Filter(mediumFilter(path, _))) },
       testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(slowFilter(path, _))) },
-      tr <<= Testing.oneTest(tr, "org.nlogo.headless.TestReporters"),
-      tc <<= Testing.oneTest(tc, "org.nlogo.headless.TestCommands"),
-      tm <<= Testing.oneTest(tm, "org.nlogo.headless.TestModels"),
-      te <<= Testing.oneTest(te, "org.nlogo.headless.TestExtensions"),
-      testChecksums <<= Testing.oneTest(testChecksums, "org.nlogo.headless.TestChecksums")
-    ) ++
-    Seq(tr, tc, tm, te, testChecksums).flatMap(Defaults.testTaskOptions)
+      tr <<= oneTest(tr, "org.nlogo.headless.TestReporters"),
+      tc <<= oneTest(tc, "org.nlogo.headless.TestCommands"),
+      tm <<= oneTest(tm, "org.nlogo.headless.TestModels"),
+      te <<= oneTest(te, "org.nlogo.headless.TestExtensions"),
+      testChecksums <<= oneTest(testChecksums, "org.nlogo.headless.TestChecksums")
+    ))
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
   private def mediumFilter(path: Classpath, name: String): Boolean =
@@ -46,22 +49,24 @@ object Testing {
     clazz("org.nlogo.util.SlowTest").isAssignableFrom(clazz(name))
   }
 
-  // mostly copy-and-pasted from Defaults.testOnlyTask.  This is the best I can figure out for
-  // 0.11, but it appears to me that the test-only stuff has been refactored in 0.12 and 0.13 in
-  // a way that might make this easier.  see e.g.
-  // github.com/harrah/xsbt/commit/fe753768d93ebeaf59c9435059b583a7b2e744d3 - ST 5/31/12
-  private def oneTest(key: InputKey[_], name: String) =
+  // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
+  // way this could be done - ST 6/17/12
+  def oneTest(key: InputKey[Unit], name: String): Project.Initialize[InputTask[Unit]] =
     inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, streams in key, loadedTestFrameworks in Test, parallelExecution in key, testOptions in key, testLoader in Test, definedTests in Test) flatMap {
-        case (args, s, frameworks, par, opts, loader, discovered) =>
+      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, resolvedScoped, fullClasspath in key, javaHome in key, state) flatMap {
+        case (args, s, frameworks, groups, config, loader, scoped, cp, javaHome, st) =>
+          implicit val display = Project.showContextKey(st)
           val filter = Tests.Filter(Defaults.selectedFilter(Seq(name)))
           val mungedArgs =
             if(args.isEmpty) Nil
             else List("-n", args.mkString(" "))
-          val augmentedOpts =
-            filter +: Tests.Argument(TestFrameworks.ScalaTest, mungedArgs: _*) +: opts            
-          Tests(frameworks, loader, discovered, augmentedOpts, par, "not found", s.log) map { results =>
-            Tests.showResults(s.log, results)
-          } } }
+          val modifiedOpts =
+            filter +: Tests.Argument(TestFrameworks.ScalaTest, mungedArgs: _*) +: config.options
+          val newConfig = config.copy(options = modifiedOpts)
+          Defaults.allTestGroupsTask(
+            s, frameworks, loader, groups, newConfig, cp, javaHome) map
+              (Tests.showResults(s.log, _, "not found"))
+      }
+    }
 
 }
