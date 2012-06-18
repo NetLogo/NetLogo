@@ -108,9 +108,10 @@ public strictfp class WindowDragger
   }
 
   private boolean inCloseBox(java.awt.Point p) {
-    // these numbers depend on where the close box in the palette.gif file
-    return p.x >= 7 && p.x <= 13 &&
-        p.y >= 2 && p.y <= 8;
+    // these numbers depend on where the close box is in the palette.gif file;
+    // the null check is because of a bug report from a user that p was null,
+    // I guess because of a bug in Swing - ST 2/27/12
+    return p != null && p.x >= 7 && p.x <= 13 && p.y >= 2 && p.y <= 8;
   }
 
   public javax.swing.JButton getCloseBox() {

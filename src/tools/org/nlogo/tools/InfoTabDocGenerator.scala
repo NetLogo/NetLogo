@@ -14,7 +14,7 @@ import java.io.{FileInputStream, FileOutputStream}
 object InfoTabDocGenerator {
   def main(args:Array[String]) {
     val model = FileIO.file2String("./models/Code Examples/Info Tab Example.nlogo")
-    val info = model.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+    val info = model.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
     val pre = Preprocessor.convert(info)
     val html = InfoFormatter.toInnerHtml(pre)
     val post = Postprocessor.convert(html)

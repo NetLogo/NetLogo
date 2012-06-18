@@ -63,7 +63,7 @@ class ProtocolEditable(protocol: Protocol,
          case evs: EnumeratedValueSet =>
            evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
-           List(svs.firstValue, svs.step, svs.lastValue).map(Dump.number(_)).mkString("[", " ", "]")
+           List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
        }) + "]\n"
     protocol.valueSets.map(setString).mkString
   }
@@ -94,9 +94,9 @@ class ProtocolEditable(protocol: Protocol,
                           step: java.lang.Double,
                           last: java.lang.Double) =>
                   new SteppedValueSet(variableName,
-                                      first.doubleValue,
-                                      step.doubleValue,
-                                      last.doubleValue)
+                                      BigDecimal(Dump.number(first)),
+                                      BigDecimal(Dump.number(step)),
+                                      BigDecimal(Dump.number(last)))
                 case _ =>
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
