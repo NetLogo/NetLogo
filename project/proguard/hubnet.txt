@@ -5,19 +5,16 @@
 -dontobfuscate
 
 # since this file is in the project/build/proguard directory, we need to get back up to the root
--basedirectory ../../..
+-basedirectory ../..
 
 # pulling in ordinary Scala objects costs very little in size, but
 # when we starting pulling in stuff from the Scala standard library,
 # the costs escalate somewhat, so be careful - ST 2/21/09, 8/12/09
 # this is an injar, not a library jar, because we're going to stuff the Scala classes
 # we need directly into HubNet.jar, so HubNet.jar has no external dependencies
--injars project/boot/scala-2.9.2/lib/scala-library.jar
+-injars <org.nlogo.scala-library>
 
--injars target/scala_2.9.2/classes
-
--injars resources(!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
-
+-injars target/scala-2.9.2/classes(!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
 
 -outjar HubNet.jar
 
