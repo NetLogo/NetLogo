@@ -102,7 +102,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
    * sends a message to a specific node (by String ID).
    */
   @throws(classOf[HubNetException])
-  def send(node: String, tag: String, message: Any): Boolean = connectionManager.send(node, tag, message)
+  def send(node: String, tag: String, message: Any): Boolean = connectionManager.send(node, tag, message.asInstanceOf[AnyRef])
 
   def sendUserMessage(nodes: Seq[String], text: String) {
     for (node <- nodes) if (!connectionManager.sendUserMessage(node, text)) simulateFailedExitMessage(node)
@@ -122,7 +122,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   @throws(classOf[HubNetException])
   def broadcast(tag: String, message: Any) {
-    if(connectionManager.isRunning) connectionManager.broadcast(tag, message)
+    if(connectionManager.isRunning) connectionManager.broadcast(tag, message.asInstanceOf[AnyRef])
   }
 
   @throws(classOf[HubNetException])

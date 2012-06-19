@@ -27,7 +27,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
     if (broadcastEnabled && isBroadcast(plotName)) connectionManager.broadcastPlotControl(a,plotName)
   }
   private def broadcastWidgetToClients(a: Any, widgetName: String) {
-    if (broadcastEnabled && isBroadcast(widgetName)) connectionManager.broadcast(widgetName, a)
+    if (broadcastEnabled && isBroadcast(widgetName)) connectionManager.broadcast(widgetName, a.asInstanceOf[AnyRef])
   }
 
   private def sendToClient(clientId: String, a: Any) {
