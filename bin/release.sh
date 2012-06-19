@@ -149,6 +149,7 @@ do
 done
 cd ..
 rm -f *.jar
+bin/sbt clean
 $MAKE -s
 
 # remember version number
