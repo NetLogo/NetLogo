@@ -30,10 +30,10 @@ XARGS=xargs
 
 # other
 SCALA=2.9.2
-SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
+SCALA_JAR=$HOME/.sbt/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_31_server
+VM=windows-x86-1.6.0_30_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -82,7 +82,7 @@ if [ $WINDOWS -eq 1 ]; then
   if [ ! -f "$IJDIR/jres/$VM.tar.gz" ]; then
     echo "fetching VM pack"
     pushd "$IJDIR/jres" > /dev/null
-    $CURL -f -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
+    $CURL -f -s -S -O "http://ccl.northwestern.edu/devel/"$VM.tar.gz
     popd > /dev/null
   fi
   # make sure VM pack is complete and not corrupt
@@ -139,9 +139,17 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
-make clean-extensions
+cd extensions
+for FOO in *
+do
+  echo "cleaning extension" $FOO
+  cd $FOO
+  rm -f $FOO.jar $FOO.jar.pack.gz
+  cd ..
+done
+cd ..
 rm -f *.jar
-bin/sbt error update
+bin/sbt clean
 $MAKE -s
 
 # remember version number
@@ -174,8 +182,23 @@ $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-orde
 
 # fill lib directory
 $MKDIR lib
-$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.1.0.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/lift-json_2.9.1-2.4.jar lib
-$CP -p ../../$SCALA_JAR lib/scala-library.jar
+$CP -p \
+  ../../lib_managed/jars/javax.media/jmf/jmf-2.1.1e.jar \
+  ../../lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar \
+  ../../lib_managed/bundles/log4j/log4j/log4j-1.2.16.jar \
+  ../../lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar \
+  ../../lib_managed/jars/org.parboiled/parboiled-core/parboiled-core-1.0.2.jar \
+  ../../lib_managed/jars/org.parboiled/parboiled-java/parboiled-java-1.0.2.jar \
+  ../../lib_managed/jars/org.pegdown/pegdown/pegdown-1.1.0.jar \
+  ../../lib_managed/jars/steveroy/mrjadapter/mrjadapter-1.2.jar \
+  ../../lib_managed/jars/org.jhotdraw/jhotdraw/jhotdraw-6.0b1.jar \
+  ../../lib_managed/jars/ch.randelshofer/quaqua/quaqua-7.3.4.jar \
+  ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
+  ../../lib_managed/jars/org.jogl/jogl/jogl-1.1.1.jar \
+  ../../lib_managed/jars/org.gluegen-rt/gluegen-rt/gluegen-rt-1.1.1.jar \
+  ../../lib_managed/jars/net.liftweb/lift-json_2.9.1/lift-json_2.9.1-2.4.jar \
+  lib
+$CP -p $SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
 $CP -rp ../../Mathematica-Link Mathematica\ Link
@@ -190,6 +213,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 # include extensions
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
+$RM -rf extensions/sample extensions/sample-scala
 $RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
@@ -199,7 +223,7 @@ $CP -rp ../../models .
 $RM -rf models/README.md models/bin models/test
 
 # blow away version control and Mac junk
-$FIND models \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND models \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
 # verify all VERSION sections are gone, as a guard against malformed
@@ -275,7 +299,16 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
-( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" ) || exit 1
+# it'd be nice if there were an easier way to fool the model-index task
+# into processing our directory where it is instead of having to bamboozle
+# it like this with a temporary symbolic link - ST 6/18/12
+( cd ../..
+  mv models models.tmp
+  ln -s tmp/netlogo-$COMPRESSEDVERSION/models
+  bin/sbt model-index
+  rm models
+  mv models.tmp models
+) || exit 1
 
 # add JOGL native library for Linux
 $CP -r ../../lib/Linux-amd64 lib/Linux-amd64
@@ -289,9 +322,9 @@ $CP -p ../../dist/hubnet.sh .
 $CP -p ../../dist/icon.ico .
 
 # blow away version control and Mac junk
-$FIND . \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
-$FIND . -path \*/.svn -prune -o -empty -print
+$FIND . -empty -print
 
 # make sure no empty directories or files are
 # lying around. do twice, once to print them all,
@@ -347,7 +380,7 @@ $MV HubNet\ Client.app HubNet\ Client\ "$VERSION".app
 $MV NetLogo\ 3D.app NetLogo\ 3D\ "$VERSION"\.app
 
 # blow away version control and Mac junk again
-$FIND . \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND . \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 
 # make the dmg
@@ -426,7 +459,7 @@ $CP -rp ../models/test/applet $COMPRESSEDVERSION
 $CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
 $CP ../HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
-$FIND $COMPRESSEDVERSION/applet \( -path \*/.svn -or -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
+$FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf
 $RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
@@ -453,9 +486,9 @@ $PERL -pi -e "s/\@\@\@SIZE4\@\@\@/$SIZE/" *.html
 # make world-readable
 $CHMOD -R go+rX .
 
-# blow away svn et al stuff again
+# blow away git stuff et al again
 cd ../..
-$FIND tmp/$COMPRESSEDVERSION \( -path \*/.svn -or -name .DS_Store -or -name .gitignore \) -print0 | $XARGS -0 $RM -rf
+$FIND tmp/$COMPRESSEDVERSION \( -name .DS_Store -or -name .gitignore \) -print0 | $XARGS -0 $RM -rf
 
 # done
 if [ $DO_RSYNC -eq 1 ]; then
