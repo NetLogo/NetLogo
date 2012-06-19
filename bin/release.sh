@@ -30,7 +30,7 @@ XARGS=xargs
 
 # other
 SCALA=2.9.2
-SCALA_JAR=project/boot/scala-$SCALA/lib/scala-library.jar
+SCALA_JAR=$HOME/.sbt/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_31_server
@@ -139,9 +139,16 @@ if [ ! -f Mathematica-Link/JLink.jar ]; then
 fi
 
 # compile, build jars etc.
-make clean-extensions
+cd extensions
+for FOO in *
+do
+  echo "cleaning extension" $FOO
+  cd $FOO
+  rm -f $FOO.jar $FOO.jar.pack.gz
+  cd ..
+done
+cd ..
 rm -f *.jar
-bin/sbt error update
 $MAKE -s
 
 # remember version number
@@ -174,8 +181,22 @@ $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-orde
 
 # fill lib directory
 $MKDIR lib
-$CP -p ../../lib_managed/scala_$SCALA/compile/jmf-2.1.1e.jar ../../lib_managed/scala_$SCALA/compile/asm-all-3.3.1.jar ../../lib_managed/scala_$SCALA/compile/log4j-1.2.16.jar ../../lib_managed/scala_$SCALA/compile/picocontainer-2.13.6.jar ../../lib_managed/scala_$SCALA/compile/parboiled-core-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/parboiled-java-1.0.2.jar ../../lib_managed/scala_$SCALA/compile/pegdown-1.1.0.jar ../../lib_managed/scala_$SCALA/compile/mrjadapter-1.2.jar ../../lib_managed/scala_$SCALA/compile/jhotdraw-6.0b1.jar ../../lib_managed/scala_$SCALA/compile/quaqua-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/swing-layout-7.3.4.jar ../../lib_managed/scala_$SCALA/compile/jogl-1.1.1.jar ../../lib_managed/scala_$SCALA/compile/gluegen-rt-1.1.1.jar lib
-$CP -p ../../$SCALA_JAR lib/scala-library.jar
+$CP -p \
+  ../../lib_managed/jars/javax.media/jmf/jmf-2.1.1e.jar \
+  ../../lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar \
+  ../../lib_managed/bundles/log4j/log4j/log4j-1.2.16.jar \
+  ../../lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar \
+  ../../lib_managed/jars/org.parboiled/parboiled-core/parboiled-core-1.0.2.jar \
+  ../../lib_managed/jars/org.parboiled/parboiled-java/parboiled-java-1.0.2.jar \
+  ../../lib_managed/jars/org.pegdown/pegdown/pegdown-1.1.0.jar \
+  ../../lib_managed/jars/steveroy/mrjadapter/mrjadapter-1.2.jar \
+  ../../lib_managed/jars/org.jhotdraw/jhotdraw/jhotdraw-6.0b1.jar \
+  ../../lib_managed/jars/ch.randelshofer/quaqua/quaqua-7.3.4.jar \
+  ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
+  ../../lib_managed/jars/org.jogl/jogl/jogl-1.1.1.jar \
+  ../../lib_managed/jars/org.gluegen-rt/gluegen-rt/gluegen-rt-1.1.1.jar \
+  lib
+$CP -p $SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
 $CP -rp ../../Mathematica-Link Mathematica\ Link
@@ -276,7 +297,16 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Altruism* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 ( cd models                    ; $CP -rp Sample\ Models/Biology/Evolution/Cooperation* Curricular\ Models/BEAGLE\ Evolution ) || exit 1
 
-( cd ../.. ; bin/sbt warn "model-index tmp/netlogo-$COMPRESSEDVERSION/models/" ) || exit 1
+# it'd be nice if there were an easier way to fool the model-index task
+# into processing our directory where it is instead of having to bamboozle
+# it like this with a temporary symbolic link - ST 6/18/12
+( cd ../..
+  mv models models.tmp
+  ln -s tmp/netlogo-$COMPRESSEDVERSION/models
+  bin/sbt model-index
+  rm models
+  mv models.tmp models
+) || exit 1
 
 # add JOGL native library for Linux
 $CP -r ../../lib/Linux-amd64 lib/Linux-amd64

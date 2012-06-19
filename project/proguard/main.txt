@@ -3,7 +3,7 @@
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 
--libraryjars project/boot/scala-2.9.2/lib/scala-library.jar
+-libraryjars $HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
 
 # just keep everything. so we aren't even really using the functionality of ProGuard here
 # except just as a way to build the jar.
