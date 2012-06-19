@@ -23,7 +23,7 @@ endif
 
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
-SCALA_VERSION = 2.9.2
+SCALA_VERSION = 2.10.0-M4
 SCALA_JAR_BASE = $(HOME)/.sbt/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 SCALA_JAR := $(SCALA_JAR_BASE)
 CLASSES = target/scala-$(SCALA_VERSION)/classes

@@ -3,7 +3,7 @@
 # since this file is in the project/build/proguard directory, we need to get back up to the root
 -basedirectory ../../..
 
--libraryjars $HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
+-libraryjars $HOME/.sbt/boot/scala-2.10.0-M4/lib/scala-library.jar
 
 # just keep everything. so we aren't even really using the functionality of ProGuard here
 # except just as a way to build the jar.
@@ -14,6 +14,6 @@
 # to be there
 -keepdirectories system
 
--injars target/scala_2.9.2/classes
+-injars target/scala-2.10.0-M4/classes
 -injars resources
 -outjar NetLogo.jar
