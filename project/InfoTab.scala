@@ -8,7 +8,7 @@ object InfoTab {
     "info-tab", "builds info tab section of User Manual")
 
   val infoTabTask =
-    infoTab <<= ((fullClasspath in Test, baseDirectory, cacheDirectory, runner, streams) map {
+    infoTab <<= (fullClasspath in Test, baseDirectory, cacheDirectory, runner, streams) map {
       (cp, base, cacheDir, runner, s) =>
         val cache =
           FileFunction.cached(cacheDir / "infotab",
@@ -19,6 +19,6 @@ object InfoTab {
               Set(base / "docs" / "infotab.html")
           }
         cache(Set(base / "models" / "Code Examples" / "Info Tab Example.nlogo")).toSeq
-      }).dependsOn(compile in Test)
+      }
 
 }
