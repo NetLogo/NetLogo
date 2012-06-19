@@ -24,17 +24,17 @@ endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
 SCALA_VERSION = 2.9.2
-SCALA_JAR_BASE = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
+SCALA_JAR_BASE = $(HOME)/.sbt/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 SCALA_JAR := $(SCALA_JAR_BASE)
-CLASSES = target/scala_$(SCALA_VERSION)/classes
+CLASSES = target/scala-$(SCALA_VERSION)/classes
 
 # note that LIBS has a trailing $(COLON)
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     SCALA_JAR := `cygpath -w $(SCALA_JAR)`
     CLASSES := `cygpath -w $(CLASSES)`
-    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | xargs cygpath -w | perl -pe 's/\n/;/'`
+    LIBS = `find lib_managed -name \*.jar | xargs cygpath -w | perl -pe 's/\n/;/'`
 else
-    LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
+    LIBS = `find lib_managed -name \*.jar | perl -pe 's/\n/:/'`
 endif
 
 CLASSPATH = $(LIBS)$(CLASSES)$(COLON)resources$(COLON)$(SCALA_JAR)
@@ -78,7 +78,7 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 ### Scaladoc
 
 # for internal devel team use
-tmp/scaladoc: netlogo | tmp
+tmp/scaladoc: | tmp
 	-rm -rf tmp/scaladoc
 	-mkdir -p tmp/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
@@ -95,7 +95,8 @@ tmp/scaladoc: netlogo | tmp
 	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
 
 # these are the docs we include with the User Manual
-docs/scaladoc: netlogo
+docs/scaladoc: | tmp
+	echo "classpath =" $(CLASSPATH)
 	-rm -rf docs/scaladoc
 	-mkdir -p docs/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
