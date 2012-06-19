@@ -6,7 +6,7 @@
 ### top level targets; "netlogo" is default target.  the "dict.txt" is
 ### because we also need to generate the "split dictionary.html" files
 .PHONY: netlogo sbt
-netlogo: bin/Scripting.class resources/system/dict.txt | tmp
+netlogo: bin/Scripting.class resources/system/dict.txt sbt | tmp
 
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
