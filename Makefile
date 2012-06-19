@@ -45,8 +45,15 @@ tmp:
 	mkdir -p tmp
 
 ### sbt
+# the extra "clean" here is annoying but on the java5 branch,
+# for some reason sbt always thinks dist/java5/classes.jar
+# is dirty and attempts to recompile all Scala sources, which
+# then fails for some unknown reason having to do with some
+# of the build products already being present. so we need to clean
+# before generating infotab.html so that the (not actually
+# needed) recompile will succeed.  sigh - ST 6/19/12
 sbt $(SCALA_JAR) $(JARS) models/index.txt docs/infotab.html libs:
-	bin/sbt extensions model-index info-tab native-libs
+	bin/sbt info-tab clean extensions model-index native-libs
 
 ### targets for running
 goshell:
