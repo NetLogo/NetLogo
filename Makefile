@@ -19,7 +19,6 @@ SCALA_JAR = $(HOME)/.sbt/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
     SCALA_JAR := `cygpath -w $(SCALA_JAR)`
-else
 endif
 
 .PHONY: netlogo

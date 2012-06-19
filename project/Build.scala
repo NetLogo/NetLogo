@@ -11,8 +11,7 @@ object NetLogoBuild extends Build {
                 Packaging.settings ++
                 Running.settings: _*)
 
-  // surely there's some better way to do these - ST 5/30/12
-  lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
+  // surely there's some better way to do this - ST 5/30/12
   lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 
 }
