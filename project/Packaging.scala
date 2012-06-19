@@ -18,9 +18,6 @@ object Packaging {
         IO.delete(file(".") / "NetLogoLite.jar")
         IO.delete(file(".") / "HubNet.jar")
         IO.copyFile(jar, file(".") / "NetLogo.jar")
-        val java5 = file(".") / "dist" / "java5" / "classes.jar"
-        val url = new java.net.URL("http://ccl.northwestern.edu/devel/java5-classes.jar")
-        if(!java5.exists) IO.download(url, java5)
         val scalaLibrary = instance.libraryJar.getAbsolutePath
         runProGuard(scalaLibrary, "lite", s.log)
         runProGuard(scalaLibrary, "hubnet", s.log)
