@@ -126,15 +126,3 @@ benches: netlogo
 bin/Scripting.class: bin/Scripting.scala | $(SCALA_JAR)
 	@echo "@@@ building bin/Scripting.class"
 	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
-
-# count lines of code
-.PHONY: cloc
-cloc: tmp/cloc.pl
-	tmp/cloc.pl \
-          --exclude-ext=m,xml,html,css,dtd \
-          --exclude-dir=tmp,project/build/classycle,project/plugins/src_managed \
-          --progress-rate=0 \
-          .
-tmp/cloc.pl: | tmp
-	curl -sS 'http://ccl.northwestern.edu/devel/cloc-1.53.pl' -o tmp/cloc.pl
-	chmod +x tmp/cloc.pl
