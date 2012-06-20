@@ -122,7 +122,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 
   // some variables are special because editing them doesn't set the variable, rather, it points the
   // editor at a different agent
-  private sealed class SpecialCase
+  private abstract sealed class SpecialCase
   private case object NORMAL extends SpecialCase
   private case object TURTLE_WHO extends SpecialCase
   private case object PXCOR_OR_PYCOR extends SpecialCase
