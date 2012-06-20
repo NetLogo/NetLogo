@@ -153,7 +153,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   private def getEditor(property: Property, r: Editable) = {
     import property._
-    def accessor[T : ClassManifest] =
+    def accessor[T : reflect.ClassTag] =
       new PropertyAccessor[T](r, name, accessString)
     tyype match {
       case Property.AgentOptions =>

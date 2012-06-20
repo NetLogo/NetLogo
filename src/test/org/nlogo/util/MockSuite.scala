@@ -188,7 +188,7 @@ trait MockSuite extends FunSuite {
 
   //
   // Ordering
-  // allows (and enforces) - one(m).x then one(m).y
+  // allows (and enforces) - one(m).x andThen one(m).y
   // (stolen from specs source code
   //  http://code.google.com/p/specs/source/browse/trunk/src/main/scala/org/specs/mock/JMocker.scala)
   //
@@ -206,7 +206,7 @@ trait MockSuite extends FunSuite {
       firstExpectation; inSequence(s)
       s
     }
-    def then(otherExpectation: Any) = {
+    def andThen(otherExpectation: Any) = {
       otherExpectation
       inSequence(sequence)
       this

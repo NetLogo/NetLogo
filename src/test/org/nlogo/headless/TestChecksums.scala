@@ -63,7 +63,9 @@ object TestChecksums extends ChecksumTester(println _) {
             addFailure(entry.path + ": " + t.getMessage)
         }
       }
-      implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run() {fn()}}
+      import language.implicitConversions
+      implicit def thunk2runnable(fn: () => Unit): Runnable =
+        new Runnable {def run() {fn()}}
       executor.execute(doit _)
     }
     executor.shutdown()

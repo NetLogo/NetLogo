@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import java.{lang => jl}
+import language.implicitConversions
 
 object ScalaConversions {
 
