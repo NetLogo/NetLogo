@@ -39,7 +39,10 @@ trait Libraries extends DefaultProject {
   // with Quaqua 7.3.4" - ST 9/2/11
   val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
-    
+
+  // HTTP stuff for remote logging
+  val apache = "org.apache.httpcomponents" % "httpclient" % "4.2"
+
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
                              "lib" / "Mac OS X" / "libjogl_awt.jnilib",

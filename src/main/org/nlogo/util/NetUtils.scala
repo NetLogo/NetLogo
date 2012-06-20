@@ -1,46 +1,34 @@
 package org.nlogo.util
 
-import java.io.{InputStreamReader, BufferedInputStream, FileOutputStream, BufferedOutputStream}
-import java.net.{HttpURLConnection, URLEncoder, URL}
+import java.net.URL
+import java.io.{BufferedInputStream, FileOutputStream, BufferedOutputStream}
+import java.nio.charset.Charset
+
+import scala.io.Source
+
+import org.apache.http.HttpResponse
+import org.apache.http.client.methods.{HttpPost, HttpGet}
+import org.apache.http.message.BasicNameValuePair
+import org.apache.http.client.entity.UrlEncodedFormEntity
 
 object NetUtils {
 
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 
-  // You are strongly encouraged to keep POST data under 4K characters, lest `SocketExceptions` start getting thrown --JAB (4/26/12)
-  // This could go up if I could find a working, readable-by-Play way of POSTing in Java that doesn't just put the
-  // POST data in the URL --JAB (5/7/12)
+  // Sharing this has potential for statefulness problems....  Should we just make it anew for each request?
+  val client = new org.apache.http.impl.client.DefaultHttpClient
+
+  def httpGet(dest: URL): String = readResponse(client.execute(new HttpGet(dest.toURI)))
+
   def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
-
-    val data = postKVs.toList map {
-      case (key, value) => "%s=%s".format(List(key, value) map (URLEncoder.encode(_, encoding)): _*)
-    } mkString ("&")
-
-    val conn = new URL(dest.toString + "?" + data).openConnection().asInstanceOf[HttpURLConnection]
-    conn.setRequestMethod("POST")
-    conn.setDoOutput(true)
-
-    val in = new InputStreamReader(conn.getInputStream)
-    val buff = new Array[Char](DefaultReadSize)
-    in.read(buff)
-    in.close()
-    conn.disconnect()  // Disconnect to avoid massive memory leaks on repeated connections
-    buff.mkString.trim
-
+    import collection.JavaConverters.seqAsJavaListConverter
+    val post = new HttpPost(dest.toURI)
+    post.setEntity(new UrlEncodedFormEntity((postKVs map { case (key, value) => new BasicNameValuePair(key, value) } toSeq) asJava, Charset.forName("UTF-8")))
+    readResponse(client.execute(post))
   }
 
-  def httpGet(dest: URL): String = {
-
-    val conn = dest.openConnection().asInstanceOf[HttpURLConnection]
-    conn.setRequestMethod("GET")
-
-    val in = new InputStreamReader(conn.getInputStream)
-    val buff = new Array[Char](DefaultReadSize * 4)
-    in.read(buff)
-    buff.mkString.trim
-
-  }
+  private def readResponse(response: HttpResponse) = Source.fromInputStream(response.getEntity.getContent).mkString.trim
 
   /**
    * @param from  The path of the file to download

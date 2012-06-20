@@ -1,8 +1,8 @@
 package org.nlogo.log.webstart
 
-import java.net.URL
 import scala.collection.mutable.HashMap
 import org.nlogo.util.{ZipUtils, NetUtils}
+import java.net.{URLEncoder, URL}
 
 private object LoggingServerHttpHandler {
 
