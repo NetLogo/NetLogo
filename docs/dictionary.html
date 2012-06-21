@@ -8806,6 +8806,20 @@ crt 100
       <p>
         You can use the turtle reporter to retrieve a turtle with a given
         who number. See also <a href="#turtle">turtle</a>.
+      <p>
+        Note that who numbers aren't breed-specific.  No two turtles
+        can have the same who number, even if they are different breeds:
+<pre>
+clear-turtles
+create-frogs 1
+create-mice 1
+ask turtles [ print who ]
+;; prints (in some random order):
+;; (frog 0): 0
+;; (mouse 1): 1
+</pre>
+<p>Even though we only have one mouse, it is <tt>mouse 1</tt> not <tt>mouse 0</tt>,
+because the who number 0 was already taken by the frog.
       </div>
     <div class="dict_entry">
       <h3>
