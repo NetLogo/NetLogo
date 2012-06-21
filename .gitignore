@@ -32,7 +32,6 @@ tmp/
 /.ensime
 /build/
 /.idea/workspace.xml
-/devel/depend.ddf
 /docs/Perspective Example.png
 /docs/dict/
 /docs/infotab.html
