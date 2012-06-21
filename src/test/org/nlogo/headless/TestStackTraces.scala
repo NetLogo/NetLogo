@@ -84,7 +84,7 @@ class TestStackTraces extends AbstractTestModels {
 
   def callPrimDirectly_Test(prim: String, codeType: CodeType) {
     testModel("direct call to " + prim + " with failure in " + codeType,
-      Model("globals [x]", codeType.plot("if x = 1 [plot __boom]"))) {
+      Model("globals [x]", widgets = List(codeType.plot("if x = 1 [plot __boom]")))) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> prim}
@@ -106,7 +106,7 @@ error while observer running __BOOM
   to do-it if x = 1 [explode] end
   to explode print 1 / zero end
 """
-    testModel("nesting " + prim + " in " + codeType, Model(code, codeType.plot("do-it"))) {
+    testModel("nesting " + prim + " in " + codeType, Model(code, widgets = List(codeType.plot("do-it")))) {
       observer >> "reset-ticks"
       observer >> "set x 1"
       intercept[LogoException] {observer >> "go1"}
