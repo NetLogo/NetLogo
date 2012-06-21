@@ -664,7 +664,8 @@ end
 </pre>
     <p>
       Every turtle created has a who number. The first turtle created is
-      number 0, the second turtle number 1, and so forth. The <a href=
+      number 0, the second turtle number 1, and so forth.
+    <p>The <a href=
       "dictionary.html#turtle"><tt>turtle</tt></a> primitive reporter takes
       a who number as an input, and reports the turtle with that who
       number. The <a href="dictionary.html#patch"><tt>patch</tt></a>
@@ -968,6 +969,9 @@ ask one-of wolves [ set breed sheep ]
       primitive is useful for associating certain turtle shapes with
       certain breeds. See the section on shapes <a href=
       "#shapes">below</a>.
+    <p>Who numbers are assigned irrespective of breeds.  If you already
+       have a <tt>frog 0</tt>, then the first mouse will be <tt>mouse 1</tt>,
+       not <tt>mouse 0</tt>, since the who number 0 is already taken.
     <p>
       Here is a quick example of using breeds:
     <pre>
