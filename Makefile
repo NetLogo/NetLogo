@@ -26,7 +26,7 @@ JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx
 SCALA_VERSION = 2.10.0-M4
 SCALA_JAR_BASE = $(HOME)/.sbt/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 SCALA_JAR := $(SCALA_JAR_BASE)
-CLASSES = target/scala-$(SCALA_VERSION)/classes
+CLASSES = target/scala-2.10/classes
 
 # note that LIBS has a trailing $(COLON)
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
