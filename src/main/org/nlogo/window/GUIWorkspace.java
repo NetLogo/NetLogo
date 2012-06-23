@@ -973,11 +973,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return viewManager.getPrimary().exportView();
   }
 
-  @Override
-  public void writeGraphicsData(java.io.PrintWriter writer) {
-    writer.print(view.exportView().getData());
-  }
-
   public void exportView(String filename, String format)
       throws java.io.IOException {
     exportView(viewManager.getPrimary(), filename, format);
