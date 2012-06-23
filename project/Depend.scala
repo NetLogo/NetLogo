@@ -12,14 +12,14 @@ object Depend {
   lazy val dependTask =
     depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
       (cp, base, classes, testClasses, s) =>
-        IO.write(base / "devel" / "depend.ddf", ddfContents)
+        IO.write(base / "tmp" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
                                        classes.toString)),
           s.log)
         def test() = TrapExit(
-          DependencyChecker.main(Array("-dependencies=@devel/depend.ddf",
+          DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
                                        testClasses.toString)),
           s.log)
         main() match {
@@ -32,7 +32,7 @@ object Depend {
     val buf = new StringBuilder
     def println(s: String) { buf ++= s + "\n" }
 
-    // this needs to be manually kept in sync with devel/depend.graffle
+    // this needs to be manually kept in sync with dist/depend.graffle
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
