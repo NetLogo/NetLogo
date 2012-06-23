@@ -27,7 +27,6 @@ tmp/
 /.ensime
 /build/
 /.idea/workspace.xml
-/devel/depend.ddf
 /lib/
 /out/
 /resources/Errors_??.properties

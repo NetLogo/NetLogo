@@ -143,12 +143,15 @@ object ChecksumsAndPreviews {
       fw.close()
     }
     def getRevisionNumber(modelPath: String): String = {
-      val modelFolderName = "models"
-      val builder = new ProcessBuilder("git", "log", "--pretty=format:%h", modelPath drop ((modelFolderName + '/').size))
-      builder.directory(new java.io.File(modelFolderName))
-      val buff = new Array[Char](1000)
-      new java.io.InputStreamReader(builder.start().getInputStream).read(buff)
-      buff.mkString.trim
+      val cmds = Array("git", "log", "--pretty=format:%h",
+                       new java.io.File(modelPath).getAbsolutePath)
+      val stdInput = new java.io.BufferedReader(
+        new java.io.InputStreamReader(
+          Runtime.getRuntime().exec(cmds,
+                                    Array[String](),
+                                    new java.io.File("models"))
+          .getInputStream))
+      stdInput.readLine().trim
     }
   }
 }

@@ -379,10 +379,6 @@ with org.nlogo.api.ViewSettings {
    */
   override def exportInterface(filename: String) = unsupported
 
-  override def writeGraphicsData(writer: java.io.PrintWriter) {
-    writer.print(renderer.exportView(this).getData)
-  }
-
   /**
    * Internal use only. Called from job thread.
    */

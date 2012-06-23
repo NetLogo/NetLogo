@@ -19,7 +19,7 @@ def ignore(path: String) =
   path.endsWith("Lexer.java") ||
   path.startsWith("./.idea/") ||
   path.startsWith("./docs/scaladoc/") ||
-  path.startsWith("./devel/i18n/")
+  path.startsWith("./dist/i18n/")
 
 // probably there are a lot more that could be here
 val extensions =
