@@ -57,8 +57,7 @@ import org.nlogo.api.ViewSettings;
 
 public abstract strictfp class AbstractRenderer
     implements org.nlogo.api.RendererInterface {
-  // made these all public because ClientRenderer in hubnet was bombing.
-  // i think this is a bug in scala 2.8.1.
+
   public final org.nlogo.api.World world;
   public final LinkDrawer linkDrawer;
   public final TurtleDrawer turtleDrawer;
@@ -68,10 +67,6 @@ public abstract strictfp class AbstractRenderer
     return _trailDrawer;
   }
 
-  // These next two were originally declared protected, but we ran afoul
-  // of a Scala 2.8 bug; see http://trac.assembla.com/nlogo/ticket/1113
-  // for details.  Once we upgrade to Scala 2.9, these could be returned
-  // to protected. - ST 1/23/11
   public TopologyRenderer topology;
   public final SpotlightDrawer spotlightDrawer = new SpotlightDrawer();
 
