@@ -6992,11 +6992,8 @@ show round -4.5
       <p>The <tt>run</tt> form expects a command task or a string containing commands.
          This agent then runs them.
       <p>The <tt>runresult</tt> form expects a reporter task or a string containing a reporter.
-         This agent runs it and  reports the result.
+         This agent runs it and reports the result.
       <p>
-        If the input is a string, it runs in the agent's current context, which means it
-        has access to the values of local variables, &quot;myself&quot;,
-        and so on.        
         Note that you can't use <tt>run</tt> to define or redefine
         procedures.
         If you care about performance, note that the code must be compiled first which takes time.  However, compiled
@@ -7007,6 +7004,9 @@ show round -4.5
      <p>Tasks are recommended over strings whenever possible.
         (An example of when you must use strings is if you accept pieces of code
         from the user of your model.)
+     <p>Tasks may freely read and/or set local variables and procedure inputs.
+        Trying to do the same with strings may or may not work and should not
+        be relied on.
       </div><!-- ======================================== -->
     <h2>
       <a name="S" id="S">S</a>
