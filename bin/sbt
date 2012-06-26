@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ `uname -s` == *CYGWIN* ]] ; then
   CURR_DIR="$( cd "$( dirname "$0" )" && pwd )"
@@ -54,7 +54,7 @@ if [ ! -f $SBT_LAUNCH ] ; then
 fi
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
-$JAVA \
+"$JAVA" \
     $XSS $XMX $XX \
     $ENCODING \
     $JAVA_OPTS \
