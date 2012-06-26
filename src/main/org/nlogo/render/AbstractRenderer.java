@@ -70,6 +70,10 @@ public abstract strictfp class AbstractRenderer
   public TopologyRenderer topology;
   public final SpotlightDrawer spotlightDrawer = new SpotlightDrawer();
 
+  private boolean _renderLabelsAsRectangles = false;
+  public boolean renderLabelsAsRectangles() { return _renderLabelsAsRectangles; }
+  public void renderLabelsAsRectangles_$eq(boolean b) { _renderLabelsAsRectangles = b; }
+
   public AbstractRenderer(org.nlogo.api.World world, ShapeList turtleShapeList, ShapeList linkShapeList) {
     this.world = world;
     linkDrawer = new LinkDrawer(linkShapeList);
