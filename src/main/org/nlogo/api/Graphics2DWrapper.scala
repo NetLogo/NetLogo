@@ -6,7 +6,11 @@ import java.awt.Graphics2D
 
 // implements GraphicsInterface, wrapper around Graphics2D
 
-class Graphics2DWrapper(g: Graphics2D) extends GraphicsInterface {
+class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false) extends GraphicsInterface {
+
+  // since we're called from Java, provide an extra constructor since Java callers
+  // don't get the benefit of default arguments - ST 6/23/12
+  def this(g: Graphics2D) = this(g, false)
 
   val isMac =
     System.getProperty("os.name").startsWith("Mac")
@@ -24,15 +28,26 @@ class Graphics2DWrapper(g: Graphics2D) extends GraphicsInterface {
     g.draw(new java.awt.geom.Line2D.Double(x1, y1, x2, y2))
   }
   def drawLabel(label: String, x: Double, y: Double, patchSize: Double) {
-    val fm = g.getFontMetrics
-    g.translate(x - fm.stringWidth(label), 0)
-    if (patchSize >= (fm.getMaxAscent + fm.getMaxDescent))
-      g.translate(0, y - fm.getMaxDescent)
-    else { // maxAscent is centered on the patch
-      val centerAdjustment = 0.0 min ((patchSize / 4) - (fm.getMaxAscent / 4))
-      g.translate(0, y - centerAdjustment)
+    if (renderLabelsAsRectangles) {
+      // fonts aren't the same cross-platform so for graphics checksumming
+      // purposes we just draw a little rectangle (with the right position
+      // and color, at least) - ST 6/23/12
+      push()
+      translate(x, y)
+      fillRect(0, 0, 5, 5)
+      pop()
     }
-    g.drawString(label, 0, 0)
+    else {
+      val fm = g.getFontMetrics
+      g.translate(x - fm.stringWidth(label), 0)
+      if (patchSize >= (fm.getMaxAscent + fm.getMaxDescent))
+        g.translate(0, y - fm.getMaxDescent)
+      else { // maxAscent is centered on the patch
+        val centerAdjustment = 0.0 min ((patchSize / 4) - (fm.getMaxAscent / 4))
+        g.translate(0, y - centerAdjustment)
+      }
+      g.drawString(label, 0, 0)
+    }
   }
   def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) = {
     var sizeCorrection = 0.0

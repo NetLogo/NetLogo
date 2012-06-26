@@ -91,7 +91,7 @@ public abstract strictfp class Event {
   // so we get e.g. "org.nlogo.app.App$7 (org.nlogo.window.GUIWorkspace)"
   // instead of just "org.nlogo.app.App$7", for inner classes - ST 7/19/10
   private static String readableName(Object o) {
-    Class clazz = o.getClass();
+    Class<?> clazz = o.getClass();
     String longName = clazz.getName();
     while (clazz.getName().indexOf('$') != -1) {
       clazz = clazz.getSuperclass();
@@ -332,7 +332,7 @@ public abstract strictfp class Event {
         stack.push(interfaces[i]);
       }
     }
-    return result.toArray(new Class[result.size()]);
+    return result.toArray(new Class<?>[result.size()]);
   }
 
 }
