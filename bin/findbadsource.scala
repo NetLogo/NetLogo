@@ -10,7 +10,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // 2) Tab characters
 // 3) Carriage return characters
 
-import Scripting.{shell, read}
+import Scripting.shell
 import collection.mutable.Buffer
 
 def ignore(path: String) =

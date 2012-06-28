@@ -10,7 +10,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 
 // installing aspell: brew install aspell --lang=en
 
-import Scripting.{shell,read}
+import Scripting.shell
 
 for{path <- shell("find docs -name \\*.html")
     if !path.startsWith("docs/scaladoc/")
