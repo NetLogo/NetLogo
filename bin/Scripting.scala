@@ -9,13 +9,6 @@ object Scripting extends sys.process.ProcessImplicits {  // adds methods such as
 
   implicit val codec: io.Codec = io.Codec.UTF8
 
-  // run shell command (discarding output)
-  def shellDo(cmd: String, requireZeroExitStatus: Boolean = true) {
-    val status = exec(cmd).!
-    require(!requireZeroExitStatus || status == 0,
-            "exit status " + status + ": " + cmd)
-  }
-  
   // run shell command, get iterator over lines of output
   def shell(cmd: String, requireZeroExitStatus: Boolean = true): Iterator[String] =
     if(requireZeroExitStatus)
@@ -32,13 +25,5 @@ object Scripting extends sys.process.ProcessImplicits {  // adds methods such as
     builder.redirectErrorStream(true)
     builder
   }
-
-  // read a whole file into a string
-  def slurp(name: String): String =
-    io.Source.fromFile(name).mkString
-
-  // get iterator over lines in a text file
-  def read(name: String): Iterator[String] =
-    io.Source.fromFile(name).getLines
 
 }
