@@ -6,7 +6,7 @@
 ### top level targets; "netlogo" is default target.  the "dict.txt" is
 ### because we also need to generate the "split dictionary.html" files
 .PHONY: netlogo sbt
-netlogo: bin/Scripting.class resources/system/dict.txt sbt | tmp
+netlogo: resources/system/dict.txt sbt | tmp
 
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
@@ -121,8 +121,3 @@ bench: netlogo
 	$(JAVA) -classpath $(CLASSPATH) org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 benches: netlogo
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
-
-# Scala scripting library
-bin/Scripting.class: bin/Scripting.scala | $(SCALA_JAR)
-	@echo "@@@ building bin/Scripting.class"
-	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
