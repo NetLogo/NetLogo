@@ -12,7 +12,7 @@ import sys.process._
 
 print("tidy -version".!!)
 for{
-  file <- stringToProcess("""find docs -name *.html""").lines
+  file <- Process("""find docs -name *.html""").lines
   if !file.containsSlice("/scaladoc/")
   if !file.containsSlice("/dict")
 } {

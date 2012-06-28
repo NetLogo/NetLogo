@@ -32,7 +32,7 @@ val nonExecutableExtensions =
 val nonExecutableFullNames =
   "README PkgInfo Makefile COPYING .gitmodules"
 
-for{path <- stringToProcess("find . -type f -perm +0100").lines; if !skip(path)} {
+for{path <- Process("find . -type f -perm +0100").lines; if !skip(path)} {
   if(executableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
      (!path.endsWith(".scala") || !path.startsWith("./bin/")) &&
      (!path.endsWith(".scala") || !path.startsWith("./models/bin/")) &&
@@ -40,7 +40,7 @@ for{path <- stringToProcess("find . -type f -perm +0100").lines; if !skip(path)}
      executableFullNames.split(" ").forall(ext => !path.endsWith("/" + ext)))
     println(path)
 }
-for{path <- stringToProcess("find . -type f -perm +0100 -prune -o -type f -print").lines; if !skip(path)} {
+for{path <- Process("find . -type f -perm +0100 -prune -o -type f -print").lines; if !skip(path)} {
   if(nonExecutableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
      nonExecutableFullNames.split(" ").forall(ext => !path.endsWith("/" + ext)) &&
      !path.startsWith("./scala/var/"))

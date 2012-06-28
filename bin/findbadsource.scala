@@ -28,7 +28,7 @@ val extensions =
        "properties", "md", "csv", "asc", "prj", "xml")
 
 def paths =
-  stringToProcess("find . " + extensions.map("-name *." + _).mkString(" -or ")).lines
+  Process("find . " + extensions.map("-name *." + _).mkString(" -or ")).lines
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString

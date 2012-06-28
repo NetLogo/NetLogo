@@ -30,7 +30,7 @@ val okDeclarations =
        "class AbstractEditorArea",
        "class TokenLexer", "class ImportLexer") // let's not bother making JFlex emit "strictfp"
 for {
-  path <- stringToProcess("find src -name *.java").lines
+  path <- Process("find src -name *.java").lines
   if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
 } {
   val lines = for{line <- withoutComments(io.Source.fromFile(path).getLines.toSeq)
@@ -45,7 +45,7 @@ for {
 
 // now do the StrictMath check
 
-for{path <- stringToProcess("find src -name *.java").lines
+for{path <- Process("find src -name *.java").lines
     if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
     if path != "src/org/nlogo/headless/TestCommands.java"}
   // this isn't the absolutely correct check to be doing, but it seems like a good enough heuristic
