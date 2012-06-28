@@ -23,6 +23,10 @@ tmp/
 /src/main/org/nlogo/agent/ImportLexer.java
 /src/main/org/nlogo/lex/TokenLexer.java
 
+# Eclipse
+/.classpath
+/.project
+
 # other
 /.ensime
 /build/
