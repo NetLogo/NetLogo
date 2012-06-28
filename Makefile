@@ -22,8 +22,6 @@ ifneq (,$(findstring CYGWIN,$(shell uname -s)))
 endif
 
 .PHONY: netlogo
-netlogo bin/Scripting.class: bin/Scripting.scala
+netlogo:
 	mkdir -p tmp
 	bin/sbt extensions
-	@echo "@@@ building bin/Scripting.class"
-	cd bin ; JAVA_HOME=$(JAVA_HOME) ../bin/scalac -deprecation Scripting.scala
