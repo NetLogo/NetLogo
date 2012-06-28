@@ -19,12 +19,17 @@ public strictfp class Renderer
     extends AbstractRenderer {
 
   public Renderer(World world) {
+    this(world, false);
+  }
+
+  public Renderer(World world, boolean renderLabelsAsRectangles) {
     super(world, world.turtleShapeList(), world.linkShapeList());
+    renderLabelsAsRectangles_$eq(renderLabelsAsRectangles);
   }
 
   ///
   public void paint(java.awt.Graphics2D g, ViewSettings settings) {
-    paint(new Graphics2DWrapper(g), settings);
+    paint(new Graphics2DWrapper(g, renderLabelsAsRectangles()), settings);
   }
 
   @Override

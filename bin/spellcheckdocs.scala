@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@" 
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
 !# 
 // Local Variables:
 // mode: scala
@@ -10,13 +10,14 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 
 // installing aspell: brew install aspell --lang=en
 
-import Scripting.{shell,read}
+import sys.process._
+import java.io.File
 
-for{path <- shell("find docs -name \\*.html")
+for{path <- Process("find docs -name *.html").lines
     if !path.startsWith("docs/scaladoc/")
-    lines = shell("aspell -H -p ./dist/docwords.txt list < " + path)
-    if lines.hasNext}
+    lines = (new File(path) #> "aspell -H -p ./dist/docwords.txt list").lines
+    if lines.nonEmpty}
 {
   println(path)
-  lines.foreach(line => println("  " + line))
+  lines.map("  " + _).foreach(println)
 }

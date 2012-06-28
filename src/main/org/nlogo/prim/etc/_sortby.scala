@@ -8,6 +8,10 @@ import org.nlogo.nvm.{ ArgumentTypeException, Context, EngineException, Reporter
 
 class _sortby extends Reporter {
 
+  // see issue #172
+  private val Java7SoPicky =
+    "Comparison method violates its general contract!"
+
   override def syntax =
     Syntax.reporterSyntax(Array(Syntax.ReporterTaskType,
                                 Syntax.ListType | Syntax.AgentsetType),
@@ -38,6 +42,9 @@ class _sortby extends Reporter {
       LogoList.fromJava(input)
     }
     catch {
+      case e: IllegalArgumentException if e.getMessage == Java7SoPicky =>
+        throw new EngineException(
+          context, this, "predicate is not a strictly-less-than or strictly-greater than relation")
       case e: WrappedLogoException => throw e.ex
     }
   }

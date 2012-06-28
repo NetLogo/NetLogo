@@ -2,6 +2,8 @@ scalaVersion := "2.10.0-M4"
 
 name := "NetLogo"
 
+onLoadMessage := ""
+
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 // doing without -Xfatal-warnings for now while Scala 2.10 is still baking - ST 6/19/12
