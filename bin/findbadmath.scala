@@ -8,16 +8,17 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
 // that we never ever use Math, only StrictMath.
 
-import Scripting.{shell,read}
+import Scripting.shell
 
-def withoutComments(lines:Iterator[String]):List[String] = {
-  def helper(lines:List[String]):List[String] =
-    if(lines.isEmpty) lines
+def withoutComments(lines: Seq[String]): Seq[String] = {
+  def helper(lines: Seq[String]): Seq[String] =
+    if(lines.isEmpty)
+      lines
     else {
-      val (nonComment,rest) = lines.span(!_.containsSlice("/*"))
-      nonComment ::: helper(rest.dropWhile(!_.containsSlice("*/")).drop(1))
+      val (nonComment, rest) = lines.span(!_.containsSlice("/*"))
+      nonComment ++ helper(rest.dropWhile(!_.containsSlice("*/")).drop(1))
     }
-  helper(lines.filter(!_.matches("""^//.*""")).toList)
+  helper(lines.filter(!_.matches("""^//.*""")))
 }
 
 // first do the strictfp check
@@ -31,7 +32,7 @@ for {
   path <- shell("""find src -name \*.java""")
   if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
 } {
-  val lines = for{line <- withoutComments(read(path))
+  val lines = for{line <- withoutComments(io.Source.fromFile(path).getLines.toSeq)
                   if !line.matches("""\s*""")
                   if !line.matches("""package.*""")
                   if !line.matches("""import.*""")}
@@ -47,7 +48,7 @@ for{path <- shell("""find src -name \*.java""")
     if path != "src/org/nlogo/headless/TestCommands.java"}
   // this isn't the absolutely correct check to be doing, but it seems like a good enough heuristic
   // for now - ST 5/8/03
-  if(read(path)
+  if(io.Source.fromFile(path).getLines
      .filter(!_.containsSlice("Mathematica"))
      .filter(!_.containsSlice("DummyMath"))
      .exists(_.matches(""".*[^t]Math.*""")))
