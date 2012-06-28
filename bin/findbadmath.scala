@@ -8,7 +8,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
 // that we never ever use Math, only StrictMath.
 
-import Scripting.shell
+import sys.process._
 
 def withoutComments(lines: Seq[String]): Seq[String] = {
   def helper(lines: Seq[String]): Seq[String] =
@@ -27,9 +27,10 @@ val okDeclarations =
   List("strictfp class","public strictfp class","public abstract strictfp","public final strictfp",
        "public strictfp class", "final strictfp class", "strictfp class", "strictfp final class",
        "abstract strictfp class", "public strictfp final class", "public enum","interface", "public interface",
-       "class TokenLexer") // let's not bother making JFlex emit "strictfp"
+       "class AbstractEditorArea",
+       "class TokenLexer", "class ImportLexer") // let's not bother making JFlex emit "strictfp"
 for {
-  path <- shell("""find src -name \*.java""")
+  path <- stringToProcess("find src -name *.java").lines
   if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
 } {
   val lines = for{line <- withoutComments(io.Source.fromFile(path).getLines.toSeq)
@@ -37,13 +38,14 @@ for {
                   if !line.matches("""package.*""")
                   if !line.matches("""import.*""")}
               yield line
-  if(!lines.exists(line => okDeclarations.exists(ok => line.startsWith(ok + " "))))
+  if(!lines.exists(line => okDeclarations.exists(ok => line.startsWith(ok + " ") ||
+                                                       line.endsWith(ok))))
     println("needs strictfp: " + path)
 }
 
 // now do the StrictMath check
 
-for{path <- shell("""find src -name \*.java""")
+for{path <- stringToProcess("find src -name *.java").lines
     if !path.containsSlice("/gl/render/")  // we don't care if OpenGL stuff is strictfp
     if path != "src/org/nlogo/headless/TestCommands.java"}
   // this isn't the absolutely correct check to be doing, but it seems like a good enough heuristic
