@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@" 
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
 !# 
 // Local Variables:
 // mode: scala
@@ -10,7 +10,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 // 2) Tab characters
 // 3) Carriage return characters
 
-import Scripting.{shell, read}
+import sys.process._
 import collection.mutable.Buffer
 
 def ignore(path: String) =
@@ -27,7 +27,7 @@ val extensions =
        "properties", "md", "csv", "asc", "prj", "xml")
 
 def paths =
-  shell("find . " + extensions.map("-name \\*." + _).mkString(" -or "))
+  Process("find . " + extensions.map("-name *." + _).mkString(" -or ")).lines
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString

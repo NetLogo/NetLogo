@@ -2,6 +2,8 @@ scalaVersion := "2.9.2"
 
 name := "NetLogo"
 
+onLoadMessage := ""
+
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalacOptions ++=

@@ -1,5 +1,5 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@" 
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
 !# 
 // Local Variables:
 // mode: scala
@@ -7,9 +7,9 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@"
 
 /// Makes sure no files have their execute bit wrongly set or unset
 
-import Scripting.shell
+import sys.process._
 
-def skip(path:String):Boolean =
+def skip(path: String): Boolean =
   path.containsSlice("/.git/") ||
   path.containsSlice("/tmp/") ||
   path.endsWith("~") ||
@@ -32,7 +32,7 @@ val nonExecutableExtensions =
 val nonExecutableFullNames =
   "README PkgInfo Makefile COPYING .gitmodules"
 
-for{path <- shell("find . -type f -perm +0100"); if !skip(path)} {
+for{path <- Process("find . -type f -perm +0100").lines; if !skip(path)} {
   if(executableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
      (!path.endsWith(".scala") || !path.startsWith("./bin/")) &&
      (!path.endsWith(".scala") || !path.startsWith("./models/bin/")) &&
@@ -40,7 +40,7 @@ for{path <- shell("find . -type f -perm +0100"); if !skip(path)} {
      executableFullNames.split(" ").forall(ext => !path.endsWith("/" + ext)))
     println(path)
 }
-for{path <- shell("find . -type f -perm +0100 -prune -o -type f -print"); if !skip(path)} {
+for{path <- Process("find . -type f -perm +0100 -prune -o -type f -print").lines; if !skip(path)} {
   if(nonExecutableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
      nonExecutableFullNames.split(" ").forall(ext => !path.endsWith("/" + ext)) &&
      !path.startsWith("./scala/var/"))
