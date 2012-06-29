@@ -25,7 +25,9 @@ object ChecksumsAndPreviews {
       else
         library
     }
-    // The option names correspond to target names in the Makefile - ST 2/12/09
+    // The option names correspond to task names in sbt - ST 2/12/09
+    // except "checksums" is "all-checksums" since in sbt the former
+    // is already taken - ST 6/28/12
     argv match {
       case Array("--checksum", path) =>
         Checksums.update(List(path))

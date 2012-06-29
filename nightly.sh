@@ -9,7 +9,7 @@ if [ "$1" != --noclean ]; then
   git submodule foreach git clean -fdX
 fi
 
-make
+bin/sbt test:compile extensions
 
 rm -rf tmp/nightly
 mkdir -p tmp/nightly
