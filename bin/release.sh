@@ -213,7 +213,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
 $RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
