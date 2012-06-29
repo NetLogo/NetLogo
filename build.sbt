@@ -52,3 +52,9 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.9" % "test",
   "org.scalatest" %% "scalatest" % "1.8" % "test"
 )
+
+all := { () }
+
+all <<= all.dependsOn(
+  compile in Test,
+  Extensions.extensions)
