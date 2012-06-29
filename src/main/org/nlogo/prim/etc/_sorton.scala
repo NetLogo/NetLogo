@@ -28,6 +28,8 @@ class _sorton extends Reporter {
       i += 1
     }
     implicit val o = ordering(context)
+    // It's vital here that we use a stable sort, because we need it to preserve the order of tied
+    // pairs, since that order is known to be random.  That's how we get randomly broken ties.
     scala.util.Sorting.stableSort(pairs)
     val result = new LogoListBuilder
     result.addAll(pairs.view.map(_._1))
