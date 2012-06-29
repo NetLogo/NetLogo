@@ -14,6 +14,9 @@ javacOptions ++=
   "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
   .split(" ").toSeq
 
+// this makes script-writing easier
+retrieveManaged := true
+
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
