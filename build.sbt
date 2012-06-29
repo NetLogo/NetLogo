@@ -14,11 +14,6 @@ javacOptions ++=
   "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
   .split(" ").toSeq
 
-doc <<= streams map { s =>
-  s.log.error("use 'make docs/scaladoc' (user doc) or 'make tmp/scaladoc' (full doc) instead")
-  error("failed")
-}
-
 // this will make jar-building easier
 retrieveManaged := true
 
@@ -57,6 +52,33 @@ threed := { System.setProperty("org.nlogo.is3d", "true") }
 nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
+
+// sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
+doc <<= (baseDirectory, cacheDirectory, compileInputs in Compile, testLoader in Test, streams) map {
+  (base, cache, in, loader, s) =>
+    IO.createDirectory(base / "tmp")
+    val out = base / "tmp" / "scaladoc"
+    IO.delete(out)
+    val version =
+      loader.loadClass("org.nlogo.api.Version")
+        .getMethod("version")
+        .invoke(null)
+        .asInstanceOf[String]
+        .replaceAll("NetLogo ", "")
+    val options = Seq("-doc-title", "NetLogo",
+                      "-doc-version", version,
+                      "-encoding", "us-ascii",
+                      "-sourcepath", (base / "src/main").toString,
+                      "-doc-source-url", "https://github.com/NetLogo/NetLogo/blob/" + version + "/src/main€{FILE_PATH}.scala")
+    val cp = in.config.classpath.toList.filterNot(_ == in.config.classesDirectory)
+    sbt.Doc(in.config.maxErrors, in.compilers.scalac)
+      .cached(cache / "doc", "NetLogo",
+              in.config.sources, cp, out, options, s.log)
+    // compensate for issues.scala-lang.org/browse/SI-5388
+    for(file <- Process("find tmp/scaladoc -name *.html").lines)
+      IO.write(new File(file), IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+    out
+}
 
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",

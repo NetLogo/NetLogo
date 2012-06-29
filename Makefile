@@ -68,23 +68,6 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 # it divided them up and calls both Scaladoc and Javadoc.  Overriding
 # that behavior looks hairy, so for now, stick with make. - ST 6/29/12
 
-# for internal devel team use
-tmp/scaladoc:
-	-rm -rf tmp/scaladoc
-	-mkdir -p tmp/scaladoc
-	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
-	bin/scaladoc \
-	  -d tmp/scaladoc \
-	  -doc-title 'NetLogo' \
-	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(LIBS)$(CLASSES) \
-	  -sourcepath src/main \
-          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
-	  -encoding us-ascii \
-          `find src/main -name \*.scala -o -name \*.java`
-# compensate for issues.scala-lang.org/browse/SI-5388
-	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
-
 # these are the docs we include with the User Manual
 docs/scaladoc:
 	-mkdir -p tmp
