@@ -7,7 +7,7 @@
 .PHONY: netlogo
 netlogo:
 	echo "the Makefile is being phased out. do this instead:"
-	echo "bin/sbt package"
+	echo "bin/sbt all"
 
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
