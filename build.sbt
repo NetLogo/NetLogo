@@ -123,9 +123,10 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "1.8" % "test"
 )
 
-all <<= (streams) map { s =>
-  s.log.info("making resources/system/dict.txt")
-  Process("make resources/system/dict.txt").!!
+all <<= (baseDirectory, streams) map { (base, s) =>
+  s.log.info("making resources/system/dict.txt and docs/dict folder")
+  IO.delete(base / "docs" / "dict")
+  Process("python bin/dictsplit.py").!!
 }
 
 all <<= all.dependsOn(

@@ -55,12 +55,6 @@ profile:
 profiles:
 	bin/profiles.scala $(ARGS)
 
-# This also generates the docs/dict folder
-resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
-	@echo "@@@ building dict.txt"
-	@rm -rf docs/dict
-	python bin/dictsplit.py
-
 ### misc targets
 
 # benchmarking
