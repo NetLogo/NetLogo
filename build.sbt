@@ -14,7 +14,7 @@ javacOptions ++=
   "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
   .split(" ").toSeq
 
-// this will make jar-building easier
+// this makes jar-building and script-writing easier
 retrieveManaged := true
 
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
