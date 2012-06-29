@@ -50,11 +50,6 @@ ModelIndex.modelIndexTask
 
 NativeLibs.nativeLibsTask
 
-run in Compile <<= (run in Compile).dependsOn(
-  NativeLibs.nativeLibs,
-  ModelIndex.modelIndex,
-  InfoTab.infoTab)
-
 Depend.dependTask
 
 threed := { System.setProperty("org.nlogo.is3d", "true") }
@@ -82,3 +77,14 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.9" % "test",
   "org.scalatest" %% "scalatest" % "1.8" % "test"
 )
+
+all <<= (streams) map { s =>
+  s.log.info("making resources/system/dict.txt")
+  Process("make resources/system/dict.txt").!!
+}
+
+all <<= all.dependsOn(
+  Extensions.extensions,
+  NativeLibs.nativeLibs,
+  ModelIndex.modelIndex,
+  InfoTab.infoTab)

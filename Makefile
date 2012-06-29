@@ -3,10 +3,11 @@
 # sadly this only works on plain files not directories.
 .DELETE_ON_ERROR:
 
-### top level targets; "netlogo" is default target.  the "dict.txt" is
-### because we also need to generate the "split dictionary.html" files
-.PHONY: netlogo sbt
-netlogo: resources/system/dict.txt sbt | tmp
+### default target
+.PHONY: netlogo
+netlogo:
+	echo "the Makefile is being phased out. do this instead:"
+	echo "bin/sbt package"
 
 ### misc variables
 ifneq (,$(findstring CYGWIN,$(shell uname -s)))
@@ -39,15 +40,6 @@ endif
 
 CLASSPATH = $(LIBS)$(CLASSES)$(COLON)resources$(COLON)$(SCALA_JAR)
 
-### common prerequisites
-tmp:
-	@echo "@@@ making tmp"
-	mkdir -p tmp
-
-### sbt
-sbt $(SCALA_JAR) $(JARS) models/index.txt docs/infotab.html libs:
-	bin/sbt extensions model-index info-tab native-libs
-
 ### targets for running
 goshell:
 	rlwrap $(JAVA) -classpath $(CLASSPATH) org.nlogo.headless.Shell $(ARGS)
@@ -55,6 +47,7 @@ goshell:
 # profiling (Java)
 .PHONY: profile-bench profile profiles
 profile-bench: netlogo
+	-mkdir -p tmp
 	$(JAVA) -classpath $(CLASSPATH) -Xrunhprof:cpu=samples,depth=40,file=tmp/java.hprof.txt org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 	$(JAVA) -Djava.awt.headless=false -jar project/plugins/lib_managed/scala_2.7.7/perfanal-1.0.jar tmp/java.hprof.txt
 profile:
@@ -76,7 +69,7 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 # that behavior looks hairy, so for now, stick with make. - ST 6/29/12
 
 # for internal devel team use
-tmp/scaladoc: | tmp
+tmp/scaladoc:
 	-rm -rf tmp/scaladoc
 	-mkdir -p tmp/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
@@ -93,8 +86,8 @@ tmp/scaladoc: | tmp
 	perl -pi -e 's/\.java.scala/.java/g' `find tmp/scaladoc -name \*.html`
 
 # these are the docs we include with the User Manual
-docs/scaladoc: | tmp
-	echo "classpath =" $(CLASSPATH)
+docs/scaladoc:
+	-mkdir -p tmp
 	-rm -rf docs/scaladoc
 	-mkdir -p docs/scaladoc
 	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
@@ -125,4 +118,5 @@ docs/scaladoc: | tmp
 bench: netlogo
 	$(JAVA) -classpath $(CLASSPATH) org.nlogo.headless.HeadlessBenchmarker $(ARGS)
 benches: netlogo
+	-mkdir -p tmp
 	bin/benches.scala $(ARGS) | tee tmp/bench.txt
