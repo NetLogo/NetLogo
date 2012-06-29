@@ -13,6 +13,7 @@ object NetLogoBuild extends Build {
                 Testing.settings ++
                 Packaging.settings ++
                 Running.settings ++
+                Dump.settings ++
                 ChecksumsAndPreviews.settings: _*)
 
   // surely there's some better way to do these - ST 5/30/12
