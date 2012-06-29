@@ -159,12 +159,11 @@ echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # Scaladoc
+$RM -rf docs/scaladoc
 if [ $INCLUDE_SCALADOC -eq 1 ]
 then
   echo "generating Scaladoc"
-  $MAKE -s docs/scaladoc
-else
-  $RM -rf docs/scaladoc
+  bin/sbt doc
 fi
 
 # make fresh staging area

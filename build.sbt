@@ -53,32 +53,55 @@ nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
+// The standard doc task doesn't handle mixed Scala/Java projects the way we would like.  Instead of
+// passing all the sources to Scaladoc, it divided them up and called both Scaladoc and Javadoc.
+// So I copy and pasted the code for the task and tweaked it. - ST 6/29/12
 // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
 doc <<= (baseDirectory, cacheDirectory, compileInputs in Compile, testLoader in Test, streams) map {
   (base, cache, in, loader, s) =>
-    IO.createDirectory(base / "tmp")
-    val out = base / "tmp" / "scaladoc"
-    IO.delete(out)
     val version =
       loader.loadClass("org.nlogo.api.Version")
         .getMethod("version")
         .invoke(null)
         .asInstanceOf[String]
         .replaceAll("NetLogo ", "")
-    val options = Seq("-doc-title", "NetLogo",
-                      "-doc-version", version,
-                      "-encoding", "us-ascii",
-                      "-sourcepath", (base / "src/main").toString,
-                      "-doc-source-url", "https://github.com/NetLogo/NetLogo/blob/" + version + "/src/main€{FILE_PATH}.scala")
-    val cp = in.config.classpath.toList.filterNot(_ == in.config.classesDirectory)
-    sbt.Doc(in.config.maxErrors, in.compilers.scalac)
-      .cached(cache / "doc", "NetLogo",
-              in.config.sources, cp, out, options, s.log)
-    // compensate for issues.scala-lang.org/browse/SI-5388
-    for(file <- Process("find tmp/scaladoc -name *.html").lines)
-      IO.write(new File(file), IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+    def generate(out: File, sourceFilter: File => Boolean, includeClassesOnClassPath: Boolean = false) {
+      IO.delete(out)
+      val options = Seq(
+        "-doc-title", "NetLogo",
+        "-doc-version", version,
+        "-encoding", "us-ascii",
+        "-sourcepath", (base / "src/main").toString,
+        "-doc-source-url", "https://github.com/NetLogo/NetLogo/blob/" + version + "/src/main€{FILE_PATH}.scala")
+      val cp = in.config.classpath.toList.filterNot(x => !includeClassesOnClassPath &&
+                                                         x == in.config.classesDirectory)
+      Doc(in.config.maxErrors, in.compilers.scalac)
+        .cached(cache / "doc", "NetLogo",
+                in.config.sources.filter(sourceFilter), cp, out, options, s.log)
+      // compensate for issues.scala-lang.org/browse/SI-5388
+      for(file <- Process("find " + out + " -name *.html").lines)
+        IO.write(new File(file), IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
+    }
+    IO.createDirectory(base / "tmp")
+    val out = base / "tmp" / "scaladoc"
+    // these are the docs with everything
+    generate(out, _ => true)
+    // these are the docs we include with the User Manual
+    val apiSources = Seq(
+      "src/main/org/nlogo/app/App.scala",
+      "src/main/org/nlogo/lite/InterfaceComponent.scala",
+      "src/main/org/nlogo/lite/Applet.scala", 
+      "src/main/org/nlogo/lite/AppletPanel.scala",
+      "src/main/org/nlogo/headless/HeadlessWorkspace.scala",
+      "src/main/org/nlogo/api/",
+      "src/main/org/nlogo/agent/",
+      "src/main/org/nlogo/workspace/",
+      "src/main/org/nlogo/nvm/")
+    generate(base / "docs" / "scaladoc",
+             path => apiSources.exists(ok => path.toString.containsSlice(ok)),
+             includeClassesOnClassPath = true) // since the set of sources isn't complete
     out
-}
+  }
 
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",

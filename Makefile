@@ -61,39 +61,6 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 	@rm -rf docs/dict
 	python bin/dictsplit.py
 
-### Scaladoc
-
-# The "doc" task in sbt doesn't handle mixed Scala/Java projects the
-# way we would like.  Instead of passing all the sources to Scaladoc,
-# it divided them up and calls both Scaladoc and Javadoc.  Overriding
-# that behavior looks hairy, so for now, stick with make. - ST 6/29/12
-
-# these are the docs we include with the User Manual
-docs/scaladoc:
-	-mkdir -p tmp
-	-rm -rf docs/scaladoc
-	-mkdir -p docs/scaladoc
-	-$(JAVA) -cp $(CLASSPATH) org.nlogo.headless.Main --version | sed -e "s/^NetLogo //" > tmp/version.txt
-	bin/scaladoc \
-	  -d docs/scaladoc \
-	  -doc-title 'NetLogo API' \
-	  -doc-version `cat tmp/version.txt` \
-	  -classpath $(LIBS)$(CLASSES) \
-	  -sourcepath src/main \
-          -doc-source-url https://github.com/NetLogo/NetLogo/blob/`cat tmp/version.txt`/src/main€{FILE_PATH}.scala \
-	  -encoding us-ascii \
-	  src/main/org/nlogo/app/App.scala \
-	  src/main/org/nlogo/lite/InterfaceComponent.scala \
-	  src/main/org/nlogo/lite/Applet.scala \
-	  src/main/org/nlogo/lite/AppletPanel.scala \
-	  src/main/org/nlogo/headless/HeadlessWorkspace.scala \
-          src/main/org/nlogo/api/*.*a \
-          src/main/org/nlogo/agent/*.*a \
-          src/main/org/nlogo/workspace/*.*a \
-          src/main/org/nlogo/nvm/*.*a
-# compensate for issues.scala-lang.org/browse/SI-5388
-	perl -pi -e 's/\.java.scala/.java/g' `find docs/scaladoc -name \*.html`
-
 ### misc targets
 
 # benchmarking
