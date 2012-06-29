@@ -45,11 +45,12 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
-SBT_LAUNCH=`dirname $0`/sbt-launch-0.12.0-RC3.jar
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.0-RC3.jar
 URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0-RC3/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL
+  mkdir -p $HOME/.sbt
   curl -s -S -f $URL -o $SBT_LAUNCH || exit
 fi
 
