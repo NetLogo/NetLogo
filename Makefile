@@ -70,6 +70,11 @@ resources/system/dict.txt: bin/dictsplit.py docs/dictionary.html
 
 ### Scaladoc
 
+# The "doc" task in sbt doesn't handle mixed Scala/Java projects the
+# way we would like.  Instead of passing all the sources to Scaladoc,
+# it divided them up and calls both Scaladoc and Javadoc.  Overriding
+# that behavior looks hairy, so for now, stick with make. - ST 6/29/12
+
 # for internal devel team use
 tmp/scaladoc: | tmp
 	-rm -rf tmp/scaladoc

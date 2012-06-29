@@ -14,6 +14,11 @@ javacOptions ++=
   "-bootclasspath dist/java5/classes.jar:dist/java5/ui.jar -g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.5 -target 1.5"
   .split(" ").toSeq
 
+doc <<= streams map { s =>
+  s.log.error("use 'make docs/scaladoc' (user doc) or 'make tmp/scaladoc' (full doc) instead")
+  error("failed")
+}
+
 // this will make jar-building easier
 retrieveManaged := true
 
