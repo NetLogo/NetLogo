@@ -7397,7 +7397,11 @@ ask cats [ set breed dogs ]
         one time step instead of two.
       <p>
         If <i>x</i> or <i>y</i> is outside the world, NetLogo will throw a
-        runtime error.
+        runtime error, unless wrapping is turned on in the relevant dimensions.
+        For example, with wrapping turned on in both dimensions and the default
+        world size where <tt>min-pxcor = -16</tt>, <tt>max-pxcor = 16</tt>,
+        <tt>min-pycor = -16</tt> and <tt>max-pycor = 16</tt>, asking a turtle to
+        <tt>setxy 17 17</tt> will move it to the center of patch (-16, -16).
       <pre>
 setxy 0 0
 ;; turtle moves to the middle of the center patch
