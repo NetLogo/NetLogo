@@ -46,7 +46,7 @@ then
 fi
 
 # ask user whether to build Windows installers
-# (ordinarily you want to, but sometimes you want to 
+# (ordinarily you want to, but sometimes you want to
 # skip it, such as when testing changes to this script)
 until [ -n "$WINDOWS" ]
 do
@@ -72,7 +72,7 @@ if [ $WINDOWS -eq 1 ]; then
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
-  if test "$FOUND_VERSION" != "$DESIRED_VERSION" ; 
+  if test "$FOUND_VERSION" != "$DESIRED_VERSION" ;
   then
     echo "desired version: " $DESIRED_VERSION
     echo "found version: " $FOUND_VERSION
@@ -344,7 +344,7 @@ $RM -rf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 # the ._ thing here is to avoid including Mac metadata/resource fork junk - ST 10/6/05
 # the qtj extension doesn't work on linux
 $TAR czf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz --exclude ._\* --exclude qtj --exclude Mac\ OS\ X --exclude Windows netlogo-$COMPRESSEDVERSION
-$DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz 
+$DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 cd netlogo-$COMPRESSEDVERSION
 
 # done with Unix release; now do Mac release
