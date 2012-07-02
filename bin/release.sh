@@ -150,7 +150,6 @@ done
 cd ..
 rm -f *.jar
 bin/sbt clean all
-$MAKE -s
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
