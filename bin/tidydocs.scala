@@ -14,7 +14,7 @@ print("tidy -version".!!)
 for{
   file <- Process("""find docs -name *.html""").lines
   if !file.containsSlice("/scaladoc/")
-  if !file.containsSlice("/dict")
+  if !file.containsSlice("/dict/")
 } {
   println(file + ":")
   val doctype =
