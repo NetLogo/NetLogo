@@ -1,6 +1,6 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 // Local Variables:
 // mode: scala
 // End:
@@ -31,4 +31,6 @@ for{
   // we want double quotes as &quot; so as not to confuse the HTML syntax highlighter in Emacs, but
   // we don't want single quotes as &#39; because that's annoying
   ("""perl -pi -e s/&#39;/\'/g """ + file).!.ensuring(_ == 0)
+  // remove trailing whitespace at ends of lines
+  ("""perl -pi -e s/\s*$/\n/ """ + file).!.ensuring(_ == 0)
 }
