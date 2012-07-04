@@ -1,9 +1,6 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 // finds spelling mistakes in the User Manual (because yea, verily,
 // spelling mistakes are an abomination unto the Lord)
@@ -21,3 +18,7 @@ for{path <- Process("find docs -name *.html").lines
   println(path)
   lines.map("  " + _).foreach(println)
 }
+
+// Local Variables:
+// mode: scala
+// End:

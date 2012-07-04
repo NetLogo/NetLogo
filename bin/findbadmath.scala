@@ -1,9 +1,6 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
 // that we never ever use Math, only StrictMath.
@@ -55,3 +52,7 @@ for{path <- Process("find src -name *.java").lines
      .filter(!_.containsSlice("DummyMath"))
      .exists(_.matches(""".*[^t]Math.*""")))
     println("needs StrictMath: " + path)
+
+// Local Variables:
+// mode: scala
+// End:

@@ -1,9 +1,6 @@
 #!/bin/sh
 exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
 !#
-// Local Variables:
-// mode: scala
-// End:
 
 // use 'tidy' to tidy up docs/*.html
 // (see tidy man page at: http://tidy.sourceforge.net/docs/tidy_man.html)
@@ -34,3 +31,7 @@ for{
   // remove trailing whitespace at ends of lines
   ("""perl -pi -e s/\s*$/\n/ """ + file).!.ensuring(_ == 0)
 }
+
+// Local Variables:
+// mode: scala
+// End:
