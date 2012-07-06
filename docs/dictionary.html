@@ -6862,7 +6862,12 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
       <p>
         Changes the size of the patch grid.
       <p>
-        As a side effect, all turtles and links die.
+        As a side effect, all turtles and links die, and the existing patch
+        grid is discarded and new patches created.
+      <p>
+        Retaining references to old patches or patch sets is inadvisable
+        and may subsequently cause runtime errors or other unexpected
+        behavior.
       <p>
         See also <a href="#set-patch-size">set-patch-size</a>.
       </div>
