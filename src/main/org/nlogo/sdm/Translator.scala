@@ -35,7 +35,7 @@ class Translator(model: Model, compiler: CompilerServices) {
     var plots = ""
     globals += ";; System dynamics model globals\nglobals [\n"
     procedures += ";; Initializes the system dynamics model.\n;; Call this in your model's SETUP procedure.\n"
-    procedures += "to system-dynamics-setup \n  reset-ticks\n  set " + "dt " + dt + "\n"
+    procedures += "to system-dynamics-setup\n  reset-ticks\n  set " + "dt " + dt + "\n"
     if(!constantConverters.isEmpty) {
       globals += "  ;; constants\n"
       procedures += "  ;; initialize constant values\n"
