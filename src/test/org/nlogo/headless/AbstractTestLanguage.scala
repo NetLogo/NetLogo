@@ -42,8 +42,8 @@ abstract class AbstractTestLanguage extends Assertions {
     }
     workspace.setProcedures(results.proceduresMap)
     workspace.world.program(results.program)
-    workspace.init() 
-    workspace.world.realloc() 
+    workspace.init()
+    workspace.world.realloc()
   }
 
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
@@ -53,7 +53,7 @@ abstract class AbstractTestLanguage extends Assertions {
       else ("runresult \"" + org.nlogo.api.StringUtils.escapeString(reporter) + "\""),
       workspace.world.observer())
     if(workspace.lastLogoException != null)
-      throw workspace.lastLogoException 
+      throw workspace.lastLogoException
     // To be as safe as we can, let's do two separate checks here...  we'll compare the results both
     // as Logo values, and as printed representations.  Most of the time these checks will come out
     // the same, but it's good to have a both, partially as a way of giving both
@@ -100,16 +100,16 @@ abstract class AbstractTestLanguage extends Assertions {
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
-      workspace.world.agentClassToAgentSet(agentClass), true) 
+      workspace.world.agentClassToAgentSet(agentClass), true)
     if(workspace.lastLogoException != null)
-      throw workspace.lastLogoException 
+      throw workspace.lastLogoException
   }
   def testCommandError(command: String, error: String,
                        agentClass: Class[_ <: Agent] = classOf[Observer],
                        mode: TestMode = NormalMode) {
     try {
-      testCommand(command, agentClass, mode) 
-      fail("failed to cause runtime error: \"" + command + "\"") 
+      testCommand(command, agentClass, mode)
+      fail("failed to cause runtime error: \"" + command + "\"")
     }
     catch {
       case ex: LogoException =>
@@ -136,7 +136,7 @@ abstract class AbstractTestLanguage extends Assertions {
                                       agentClass: Class[_ <: Agent] = classOf[Observer])
   {
     try {
-      workspace.compileCommands(command, agentClass) 
+      workspace.compileCommands(command, agentClass)
       fail("no CompilerException occurred")
     }
     catch {

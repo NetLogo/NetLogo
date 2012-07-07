@@ -18,7 +18,7 @@ ReportFromDynamicallyNestedForeach
 
 StopFromForeach1
   O> foreach [1 2 3 4] [ set glob1 glob1 + ?  if ? = 3 [ stop ] ] error "oops"
-  glob1 => 6 
+  glob1 => 6
 
 StopFromForeach2
   to test foreach [1 2 3] [ if ? = 2 [ stop ] set glob1 glob1 + ? ] end

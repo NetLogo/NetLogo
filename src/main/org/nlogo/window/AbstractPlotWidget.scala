@@ -153,7 +153,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def zoomSubcomponents = true
   def makeDirty(){
     // yuck! plot calls makeDirty when its being constructed.
-    // but canvas isnt created yet. 
+    // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
   }
   override def helpLink = Some("docs/programming.html#plotting")
@@ -271,13 +271,13 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   private def recolor() {
     nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
-  }    
+  }
 
   def handle(e: AfterLoadEvent){
     plotManager.compilePlot(plot)
     recolor()
   }
-  
+
   def handle(e: WidgetRemovedEvent){ if(e.widget == this){ plotManager.forgetPlot(plot) } }
 
   def handle(e:org.nlogo.window.Events.CompiledEvent){
@@ -305,7 +305,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     recolor()
     legend.refresh
     true
-  }  
+  }
 
   fullyConstructed = true
 }

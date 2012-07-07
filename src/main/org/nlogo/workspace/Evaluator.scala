@@ -18,15 +18,15 @@ class Evaluator(workspace: AbstractWorkspace) {
     val procedure = invokeCompiler(source, None, true, agentSet.`type`)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
-      waitForCompletion) 
+      waitForCompletion)
   }
 
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
     val procedure = invokeCompiler(source, None, false, agents.`type`)
-    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure) 
+    workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
-    
+
   @throws(classOf[CompilerException])
   def compileCommands(source: String, agentClass: Class[_ <: Agent]): Procedure =
     invokeCompiler(source, None, true, agentClass)
@@ -40,8 +40,8 @@ class Evaluator(workspace: AbstractWorkspace) {
    */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure) = {
     val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.observers, procedure)
-    workspace.jobManager.addJob(job, true) 
-    job.stopping 
+    workspace.jobManager.addJob(job, true)
+    job.stopping
   }
 
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
@@ -51,7 +51,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   def compileForRun(source: String, context: Context,reporter: Boolean) =
-    invokeCompilerForRun(source, context.agent.getAgentClass, context.activation.procedure, reporter) 
+    invokeCompilerForRun(source, context.agent.getAgentClass, context.activation.procedure, reporter)
 
   ///
 
@@ -113,7 +113,7 @@ class Evaluator(workspace: AbstractWorkspace) {
               context.runtimeError(ex.asInstanceOf[Exception])
             throw ex
         }
-        // this code was: 
+        // this code was:
         // workspace.jobManager.callReporterProcedure(owner, agentset, procedure)
         // but i changed it so that we could have a context. this is all subject to change
         // possibly in the near future. - JC 9/22/10

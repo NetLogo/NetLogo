@@ -23,11 +23,11 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
                                 null, true)
   def readFromString(source: String) =
     compiler.readFromString(source)
-  def isConstant(s: String) = 
+  def isConstant(s: String) =
     compiler.isValidIdentifier(s)
-  def isValidIdentifier(s: String) = 
+  def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s)
-  def isReporter(s: String) = 
+  def isReporter(s: String) =
     compiler.isReporter(s, new Program, new java.util.HashMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager)
   def tokenizeForColorization(source: String) =

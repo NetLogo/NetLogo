@@ -97,7 +97,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
     xcors.zip(ycors).map(t => loc(t._1, t._2)).toList
   }
   private def size(width: Double, height: Double) = Size(transform.getScaleX * width, transform.getScaleY * height)
-    
+
   def pop{ transform = transforms.pop }
   def dispose{}
   def setStroke(width: Float, dashes: Array[Float]){ stroke = width }

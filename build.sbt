@@ -36,7 +36,7 @@ mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
- 
+
 Extensions.extensionsTask
 
 Depend.dependTask

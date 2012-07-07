@@ -137,7 +137,7 @@ class Worker(val protocol: Protocol)
                 throw t
               case b: java.lang.Boolean =>
                 b.booleanValue
-              case null => 
+              case null =>
                 throw new FailedException(
                   "Stopping condition failed to report a result:\n" +
                   protocol.exitCondition)

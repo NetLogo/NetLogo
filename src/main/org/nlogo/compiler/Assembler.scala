@@ -32,7 +32,7 @@ private class Assembler {
     }
     // optimize: to foo ... foo end. like in Termites - ST 3/31/09
     def isTailRecursive(call: _call) =
-      call.procedure.name == proc.name && proc.args.isEmpty 
+      call.procedure.name == proc.name && proc.args.isEmpty
     def tailRecurse(cmd: Command) = cmd match {
       case call: _call if isTailRecursive(call) =>
         new _fastrecurse(call)

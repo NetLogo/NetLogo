@@ -2,16 +2,16 @@
 
 package org.nlogo.agent;
 
-// the next few methods (dealing with the breedShapes Map) need to be 
+// the next few methods (dealing with the breedShapes Map) need to be
 // synchronized so since they can run on both the JobManager thread and the
-// event thread.  this could leave the breedShapes map in an undetermined 
+// event thread.  this could leave the breedShapes map in an undetermined
 // state.  we are safe from deadlock here since these methods are self
 // contained and don't call methods that require one of the two threads
 // waiting on the other.
 //
 // we can't lock on the breedShapes object itself since we change the object
-// it is pointing to in the setUpBreedShapes method.  we don't want to 
-// synchronize on the world since other classes do that and this really 
+// it is pointing to in the setUpBreedShapes method.  we don't want to
+// synchronize on the world since other classes do that and this really
 // shouldn't affect their performance.  so we use a lock object.
 // --mag 10/03/03
 

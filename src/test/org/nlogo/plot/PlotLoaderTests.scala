@@ -105,7 +105,7 @@ Number
 true
 false""".replaceAll("\r\n", "\n")
     val plot = load(plotLines)
-    expect(0)(plot.pens.size) // no default pen anymore. 
+    expect(0)(plot.pens.size) // no default pen anymore.
   }
 
 }

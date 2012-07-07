@@ -31,9 +31,9 @@ private class Optimizer extends DefaultAstVisitor {
   private val commandMungers =
     List[CommandMunger](Fd1, FdLessThan1, FastHatch, FastSprout, FastCrt, FastCro)
   private val reporterMungers =
-    List[ReporterMunger](PatchAt, With, OneOfWith, Nsum, Nsum4, 
-         CountWith, OtherWith, WithOther, AnyOther, AnyOtherWith, CountOther, CountOtherWith, 
-         AnyWith1, AnyWith2, AnyWith3, AnyWith4, AnyWith5, 
+    List[ReporterMunger](PatchAt, With, OneOfWith, Nsum, Nsum4,
+         CountWith, OtherWith, WithOther, AnyOther, AnyOtherWith, CountOther, CountOtherWith,
+         AnyWith1, AnyWith2, AnyWith3, AnyWith4, AnyWith5,
          PatchVariableDouble, TurtleVariableDouble, RandomConst)
 
   private class MatchFailedException extends Exception
@@ -149,7 +149,7 @@ private class Optimizer extends DefaultAstVisitor {
     def replace(theClass: Class[_ <: Instruction], constructorArgs: AnyRef*) {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
-        case app: ReporterApp => 
+        case app: ReporterApp =>
           newGuy.token(app.reporter.token)
           app.reporter = newGuy.asInstanceOf[Reporter]
         case stmt: Statement =>
@@ -190,7 +190,7 @@ private class Optimizer extends DefaultAstVisitor {
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fasthatch], 
+      root.replace(classOf[_fasthatch],
                    (root.command.asInstanceOf[_hatch]).breedName)
     }
   }
@@ -199,7 +199,7 @@ private class Optimizer extends DefaultAstVisitor {
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastsprout], 
+      root.replace(classOf[_fastsprout],
                    (root.command.asInstanceOf[_sprout]).breedName)
     }
   }
@@ -208,16 +208,16 @@ private class Optimizer extends DefaultAstVisitor {
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastcreateturtles], 
+      root.replace(classOf[_fastcreateturtles],
                    (root.command.asInstanceOf[_createturtles]).breedName)
-    }    
+    }
   }
   private object FastCro extends RewritingCommandMunger {
     val clazz = classOf[_createorderedturtles]
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastcreateorderedturtles], 
+      root.replace(classOf[_fastcreateorderedturtles],
                    (root.command.asInstanceOf[_createorderedturtles]).breedName)
     }
   }
@@ -228,12 +228,12 @@ private class Optimizer extends DefaultAstVisitor {
       val y = root.matchArg(1, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       val newClass = (x, y) match {
         case ( 0,  0) => classOf[_patchhereinternal]
-        case ( 0, -1) => classOf[_patchsouth] 
-        case ( 0,  1) => classOf[_patchnorth] 
-        case (-1,  0) => classOf[_patchwest] 
-        case (-1, -1) => classOf[_patchsw] 
-        case (-1,  1) => classOf[_patchnw] 
-        case ( 1,  0) => classOf[_patcheast] 
+        case ( 0, -1) => classOf[_patchsouth]
+        case ( 0,  1) => classOf[_patchnorth]
+        case (-1,  0) => classOf[_patchwest]
+        case (-1, -1) => classOf[_patchsw]
+        case (-1,  1) => classOf[_patchnw]
+        case ( 1,  0) => classOf[_patcheast]
         case ( 1, -1) => classOf[_patchse]
         case ( 1,  1) => classOf[_patchne]
         case _ => return
@@ -249,7 +249,7 @@ private class Optimizer extends DefaultAstVisitor {
       root.matchArg(0, classOf[_patches])
       val arg1 = root.matchArg(1).matchReporterBlock().matchit(classOf[_equal])
       val pcor = arg1.matchOneArg(classOf[_patchvariabledouble])
-      val value = arg1.matchOtherArg(pcor, classOf[_constdouble], classOf[_procedurevariable], 
+      val value = arg1.matchOtherArg(pcor, classOf[_constdouble], classOf[_procedurevariable],
                                      classOf[_observervariable])
       val vn = pcor.reporter.asInstanceOf[_patchvariabledouble].vn
       val newClass = vn match {

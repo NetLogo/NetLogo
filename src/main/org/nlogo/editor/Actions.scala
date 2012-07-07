@@ -10,10 +10,10 @@ import javax.swing.text.DefaultEditorKit.{CutAction, CopyAction, PasteAction, In
 object Actions {
 
   val commentAction = new CommentAction()
-  val uncommentAction = new UncommentAction() 
-  val shiftLeftAction = new ShiftLeftAction() 
-  val shiftRightAction = new ShiftRightAction() 
-  val tabKeyAction = new TabKeyAction() 
+  val uncommentAction = new UncommentAction()
+  val shiftLeftAction = new ShiftLeftAction()
+  val shiftRightAction = new ShiftRightAction()
+  val tabKeyAction = new TabKeyAction()
   val shiftTabKeyAction = new ShiftTabKeyAction()
   val CUT_ACTION = new CutAction()
   val COPY_ACTION = new CopyAction()
@@ -24,7 +24,7 @@ object Actions {
   private val actionMap = new DefaultEditorKit().getActions.map{ a => (a.getValue(Action.NAME), a) }.toMap
   def getDefaultEditorKitAction(name:String) = actionMap(name)
   val SELECT_ALL_ACTION = getDefaultEditorKitAction(DefaultEditorKit.selectAllAction)
-  
+
   def setEnabled(enabled:Boolean){
     List(commentAction,uncommentAction,shiftLeftAction,shiftRightAction).foreach(_.setEnabled(enabled))
   }

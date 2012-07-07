@@ -9,7 +9,7 @@ import org.nlogo.prim._
 /**
  * The constant parser.
  * This class contains methods which are used to parse constant NetLogo values
- * from a Iterator[Token]. It implements all the complicated stuff surrounding 
+ * from a Iterator[Token]. It implements all the complicated stuff surrounding
  * constant agents and constant agentsets, when necessary.
  */
 private object ConstantParser {
@@ -81,7 +81,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
     token.value.asInstanceOf[java.lang.Double]
   }
   /**
-  * reads a constant value from the beginning of a token vector. This 
+  * reads a constant value from the beginning of a token vector. This
   * method leaves the rest of the token vector intact (i.e., extra garbage
   * after the constant is OK).
   *
@@ -141,7 +141,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
     // if we can't deconstruct it, then return the whole LITERAL
     else token.value
   }
-  
+
   /**
   * parses a constant agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
   */
@@ -244,7 +244,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
         val closeBrace = tokens.next()
         cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE,EXPECTED_CLOSE_BRACE,closeBrace)
         world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
-      } 
+      }
       else if(world.program.linkBreedsSingular.containsKey(agentsetTypeString.toUpperCase)) {
         val end1 = parseEnd(tokens)
         val end2 = parseEnd(tokens)
@@ -313,7 +313,7 @@ private class ConstantParser(world:World,extensionManager:ExtensionManager) {
             .contains(token.value.getClass)) {
       // we have a single agent, turtle patch or link
       val result = parseConstantAgent(token,tokens)
-      val closeBrace = tokens.next()              
+      val closeBrace = tokens.next()
       cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE,EXPECTED_CLOSE_BRACE,closeBrace)
       result
     }

@@ -6,7 +6,7 @@ package org.nlogo.api
 object Version {
 
   val noVersion = "NetLogo (no version)";
-  
+
   val (version, buildDate, knownVersions) = {
     val lines = org.nlogo.util.Utils.getResourceAsStringArray("/system/version.txt")
     val version = lines(0)
@@ -35,7 +35,7 @@ object Version {
   // don't use the generator in the applet because it requires CustomClass loading which is not
   // allowed in the applet.
   def useGenerator =
-    try 
+    try
       !java.lang.Boolean.getBoolean("org.nlogo.noGenerator") && {
         Class.forName("org.nlogo.generator.Generator");
         true

@@ -11,7 +11,7 @@ import org.nlogo.api.{I18N, CompilerException, CompilerServices, Editable, LogoL
 
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer[TokenType])
   extends JPanel {
-  
+
   val liveUpdate =
     // OK, it's a big hack that we're hardcoding these next checks, but it doesn't seem worth the
     // effort for now to do it the right way - ST 12/16/01, 11/29/07
@@ -182,7 +182,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new KeyEditor(accessor) with Changed
       case Property.LogoListString =>
         new CodeEditor(accessor, colorizer, false, false) with Changed
-        { override def get = super.get.filter{x => 
+        { override def get = super.get.filter{x =>
             try compiler.readFromString("[ " + x + " ]") match {
               case list: LogoList => !list.isEmpty
               case _ => false

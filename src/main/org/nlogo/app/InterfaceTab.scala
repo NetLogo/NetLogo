@@ -140,7 +140,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  private def maxDividerLocation = 
+  private def maxDividerLocation =
     if(splitPane.getOrientation == JSplitPane.VERTICAL_SPLIT)
       splitPane.getHeight - splitPane.getDividerSize - splitPane.getInsets.top
     else splitPane.getWidth - splitPane.getDividerSize - splitPane.getInsets.left

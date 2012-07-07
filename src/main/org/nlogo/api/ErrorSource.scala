@@ -5,7 +5,7 @@ package org.nlogo.api
 class ErrorSource(token:Token) {
   /**
    * Throws a CompilerException with the given message.
-   * This procedure will never return. 
+   * This procedure will never return.
    */
   @throws(classOf[CompilerException])
   def signalError(message:String): Nothing = {

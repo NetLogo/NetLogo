@@ -24,7 +24,7 @@ private object BreedIdentifierHandler {
     new Helper(patternString,tokenType,singular,primClass,
                _.linkBreeds, _.linkBreedsSingular,
                { case a:AgentSet => a.isUndirected
-                case s:String => s == "UNDIRECTED-LINK-BREED" } ) 
+                case s:String => s == "UNDIRECTED-LINK-BREED" } )
   private val handlers = List(
     // prims for turtle breeds
     turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
@@ -61,7 +61,7 @@ private object BreedIdentifierHandler {
     undirectedLink("*-NEIGHBORS", REPORTER, true,classOf[_linkneighbors]),
     undirectedLink("MY-*", REPORTER, false,classOf[_mylinks]),
     undirectedLink("*-WITH", REPORTER, true,classOf[_linkwith]),
-    undirectedLink("*-NEIGHBOR?", REPORTER, true,classOf[_linkneighbor]) 
+    undirectedLink("*-NEIGHBOR?", REPORTER, true,classOf[_linkneighbor])
   )
   class Helper
     (patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction],

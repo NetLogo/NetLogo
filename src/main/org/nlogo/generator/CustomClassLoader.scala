@@ -3,12 +3,12 @@
 package org.nlogo.generator
 
 // Loads a class directly from bytecode created at runtime.
-// 
+//
 // After compilation, don't keep any old references to the CustomClassLoader objects around, so the
 // dynamically created classes can be garbage collected.
-// 
+//
 // ( Class objects are only free for garbage collection after there are
-//   no longer any of their instances in memory, and their ClassLoader 
+//   no longer any of their instances in memory, and their ClassLoader
 //   has been garbage collected as well.  e.g. See:
 //   http://forum.java.sun.com/thread.jspa?threadID=445034&messageID=2014125
 //   for a little discussion about this. ) ~Forrest(7/17/2006)

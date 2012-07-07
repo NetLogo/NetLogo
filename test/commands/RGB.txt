@@ -26,7 +26,7 @@ PatchesRGBColor_2D
   [pcolor] of glob1 => 0
   O> ask glob1 [ set plabel-color [255 0 0] ]
   [plabel-color] of glob1 => [255 0 0]
-  O> ask glob1 [ set plabel-color [0 0 0 0] ] 
+  O> ask glob1 [ set plabel-color [0 0 0 0] ]
   [plabel-color] of glob1 => [0 0 0 0]
   O> ask glob1 [ set plabel-color [0 0 0 0 0] ] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   O> ask glob1 [ set plabel-color [0 0 [0]] ] => ERROR An rgb list must contain 3 or 4 numbers 0-255
@@ -39,7 +39,7 @@ TurtlesRGBColor
   [color] of turtle 0 => 5
   T> set color [0 0 0]
   [color] of turtle 0 => [0 0 0]
-  T> set color [0 0 0 0] 
+  T> set color [0 0 0 0]
   [color] of turtle 0 => [0 0 0 0]
   T> set color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   T> set color [0 0 [0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
@@ -50,7 +50,7 @@ TurtlesRGBColor
   [color] of turtle 0 => 15
   T> set label-color [255 0 0]
   [label-color] of turtle 0 => [255 0 0]
-  T> set label-color [0 0 0 0] 
+  T> set label-color [0 0 0 0]
   [label-color] of turtle 0 => [0 0 0 0]
   T> set label-color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   T> set label-color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
@@ -63,7 +63,7 @@ LinksRGBColor
   [color] of link 0 1 => 5
   L> set color [0 0 0]
   [color] of link 0 1 => [0 0 0]
-  L> set color [0 0 0 0] 
+  L> set color [0 0 0 0]
   [color] of link 0 1 => [0 0 0 0]
   L> set color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   L> set color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255
@@ -74,7 +74,7 @@ LinksRGBColor
   [color] of link 0 1 => 15
   L> set label-color [255 0 0]
   [label-color] of link 0 1 => [255 0 0]
-  L> set label-color [0 0 0 0] 
+  L> set label-color [0 0 0 0]
   [label-color] of link 0 1 => [0 0 0 0]
   L> set label-color [0 0 0 0 0] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   L> set label-color [0 0[0]] => ERROR An rgb list must contain 3 or 4 numbers 0-255

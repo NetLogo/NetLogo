@@ -113,7 +113,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
         AbstractSliderWidget with InterfaceGlobalWidget with Editable with
         org.nlogo.window.Events.PeriodicUpdateEvent.Handler with org.nlogo.window.Events.AfterLoadEvent.Handler {
   def this(random: MersenneTwisterFast) = this (false, random)
-  
+
   var minimumCode: String = "0"
   var maximumCode: String = "100"
   var incrementCode: String = "1"
@@ -196,7 +196,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   override def updateConstraints() {
     new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
   }
-  
+
   def setConstraintError(constraintField: String, ex: SliderConstraintException) {
     super.error(constraintField, ex)
     setForeground(java.awt.Color.RED)

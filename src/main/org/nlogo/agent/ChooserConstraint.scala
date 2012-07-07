@@ -24,7 +24,7 @@ extends ValueConstraint
 
   def indexForValue(value: AnyRef): Int =
     acceptedValues.indexWhere(Equality.equals(_, value))
-  
+
   @throws(classOf[ValueConstraint.Violation])
   def assertConstraint(value: AnyRef) {
     if(!acceptedValues.contains(value))

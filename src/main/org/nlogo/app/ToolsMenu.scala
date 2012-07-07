@@ -11,7 +11,7 @@ import org.nlogo.api.I18N
 class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
 
   implicit val i18nName = I18N.Prefix("menu.tools")
-  
+
   addMenuItem(I18N.gui("halt"), app.workspace.halt _)
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)

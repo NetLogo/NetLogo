@@ -11,7 +11,7 @@ class CompilerException(message: String, val startPos: Int, val endPos: Int, val
 extends Exception(message) {
   def this(token: Token) = this({assert(token.tyype == TokenType.BAD); token.value.asInstanceOf[String]},
                                  token.startPos, token.endPos, token.fileName)
-  
+
   override def toString =
     getMessage + " at position " + startPos + " in " + fileName
 }

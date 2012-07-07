@@ -63,7 +63,7 @@ class ModelSaver(app: App) {
     section {
     }
 
-    // reserved for HubNet client 
+    // reserved for HubNet client
     section {
     }
 

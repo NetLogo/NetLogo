@@ -250,7 +250,7 @@ private class StructureParser(
       token
     else {
       val name = token.value.asInstanceOf[String]
-      val replacement = extensionManager.replaceIdentifier(name) 
+      val replacement = extensionManager.replaceIdentifier(name)
       replacement match {
         // if there's no replacement, make no change.
         case null => token

@@ -119,7 +119,7 @@ private class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
         exp.accept(
           exp match {
             case _: CommandBlock | _: ReporterBlock =>
-              val argsAgentClassString = 
+              val argsAgentClassString =
                 if(blockAgentClassString != "?") blockAgentClassString
                 else exps match {
                   case Seq(app: ReporterApp, _*) => getReportedAgentType(app)

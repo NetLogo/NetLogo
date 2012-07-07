@@ -268,5 +268,5 @@ RemoveDuplicates
   O> crt 2
   O> set glob1 (list (turtle-set turtle 0 turtle 1) (turtle-set turtle 0))
   length remove-duplicates glob1 => 2
-  O> ask turtle 1 [ die ] 
+  O> ask turtle 1 [ die ]
   length remove-duplicates glob1 => 1

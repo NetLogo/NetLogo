@@ -45,7 +45,7 @@ class Tabs(val workspace: GUIWorkspace,
     if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget] &&
        e.sourceOwner == proceduresTab)
       highlightRuntimeError(proceduresTab, e)
-  } 
+  }
 
   def highlightRuntimeError(tab: ProceduresTab, e: RuntimeErrorEvent) {
     setSelectedComponent(tab)
@@ -53,9 +53,9 @@ class Tabs(val workspace: GUIWorkspace,
     // the selection happens and sometime it doesn't - ST 8/28/04
     org.nlogo.awt.EventQueue.invokeLater( () => tab.select(e.pos, e.pos + e.length) )
   }
-  
+
   val errorColor = java.awt.Color.RED
-  
+
   def handle(e: CompiledEvent) {
     def clearErrors() {
       for(i <- 0 until getTabCount)
@@ -71,7 +71,7 @@ class Tabs(val workspace: GUIWorkspace,
       val tab = e.sourceOwner.asInstanceOf[ProceduresTab]
       if(e.error != null) setSelectedComponent(tab)
       // on null error, clear all errors, as we only get one event for all the files
-      if(e.error == null) clearErrors() else recolorTab(tab, e.error != null) 
+      if(e.error == null) clearErrors() else recolorTab(tab, e.error != null)
       // I don't really know why this is necessary when you delete a slider (by using the menu
       // item *not* the button) which causes an error in the Code tab the focus gets lost,
       // so request the focus by a known component 7/18/07
@@ -79,11 +79,11 @@ class Tabs(val workspace: GUIWorkspace,
     }
     if((e.sourceOwner.isInstanceOf[org.nlogo.window.JobWidget] &&
         !e.sourceOwner.asInstanceOf[org.nlogo.window.JobWidget].isCommandCenter
-        || e.sourceOwner == null // i'm assuming this is only true when 
+        || e.sourceOwner == null // i'm assuming this is only true when
         // we've deleted that last widget. not a great sol'n - AZS 5/16/05
       )) {
       if(e.error != null) setSelectedIndex(0)
-      recolorTab(interfaceTab, e.error != null) 
+      recolorTab(interfaceTab, e.error != null)
     }
   }
 

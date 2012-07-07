@@ -32,7 +32,7 @@ import java.awt.{Toolkit, Dimension, Frame}
  * for example code.
  */
 object App{
-  
+
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -202,7 +202,7 @@ object App{
     }
   }
 }
-  
+
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
@@ -304,7 +304,7 @@ class App extends
   private def finishStartup() {
     pico.addComponent(new MenuBarFactory())
     pico.addComponent(new EditorFactory(workspace))
-    
+
     tabs.init(Plugins.load(pico): _*)
 
     fileMenu = pico.getComponent(classOf[FileMenu])
@@ -336,14 +336,14 @@ class App extends
     smartPack(frame.getPreferredSize)
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
-    
-    org.nlogo.app.FindDialog.init(frame) 
-    
+
+    org.nlogo.app.FindDialog.init(frame)
+
     Splash.endSplash()
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
   }
-  
+
   // This is for other windows to get their own copy of the menu
   // bar.  It's needed especially for OS X since the screen menu bar
   // doesn't get shared across windows.  -- AZS 6/17/2005
@@ -459,7 +459,7 @@ class App extends
     if (AbstractWorkspace.isApp)
       frame.setTitle(makeFrameTitle)
   }
-  
+
   /**
    * Internal use only.
    */
@@ -509,7 +509,7 @@ class App extends
   }
 
   /**
-   * Generates OS standard frame title. 
+   * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
     if(workspace.getModelFileName() == null) "NetLogo"
@@ -523,7 +523,7 @@ class App extends
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
-      title 
+      title
     }
   }
 
@@ -720,7 +720,7 @@ class App extends
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
-  
+
   def smartPack(targetSize:Dimension) {
     val gc = frame.getGraphicsConfiguration
     val maxBounds = gc.getBounds
@@ -731,33 +731,33 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-    
+
     tabs.interfaceTab.adjustTargetSize(targetSize)
-    
+
     // reduce our size ambitions if necessary
     var newWidth  = StrictMath.min(targetSize.width, maxWidth )
     var newHeight = StrictMath.min(targetSize.height, maxHeight)
-    
+
     // move up/left to get more room if possible and necessary
     val moveLeft = StrictMath.max(0, frame.getLocation().x + newWidth  - maxX)
     val moveUp   = StrictMath.max(0, frame.getLocation().y + newHeight - maxY)
-    
+
     // now we can compute our new position
     val newX = StrictMath.max(maxBoundsX, frame.getLocation().x - moveLeft)
     val newY = StrictMath.max(maxBoundsY, frame.getLocation().y - moveUp  )
-    
+
     // and now that we know our position, we can compute our new size
     newWidth  = StrictMath.min(newWidth, maxX - newX)
     newHeight = StrictMath.min(newHeight, maxY - newY)
-    
+
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)
     frame.validate()
-    
+
     // not sure why this is sometimes necessary - ST 11/24/03
     tabs.requestFocus()
   }
-  
+
   /**
    * Internal use only.
    */

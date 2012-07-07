@@ -24,7 +24,7 @@ object Compiler extends CompilerInterface {
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager), 
+    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager),
                         program)
 
   // used to compile a single procedures only, from outside the Code tab
@@ -35,12 +35,12 @@ object Compiler extends CompilerInterface {
   // these two used by input boxes
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    checkSyntax("to __bogus-name " + source + "\nend", 
+    checkSyntax("to __bogus-name " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
   }
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    checkSyntax("to-report __bogus-name report " + source + "\nend", 
+    checkSyntax("to-report __bogus-name report " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
   }
 
@@ -94,7 +94,7 @@ object Compiler extends CompilerInterface {
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val tokens: Iterator[Token] =
-      Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader", 
+      Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer))
     val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getConstantFromFile(tokens)

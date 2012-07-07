@@ -28,7 +28,7 @@ abstract class AbstractWorkspaceScala(private val _world: World)
   // it is only ever used if we need to generate an EngineException
   // the version of EngineException that takes an instruction is to be *very strongly* preferred.
   // otherwise we don't get accurate runtime error locations
-  // we pass in the Instruction so that we dont have to duplicate the exception logic in both locations. 
+  // we pass in the Instruction so that we dont have to duplicate the exception logic in both locations.
   // JC 5/19/10
   def tick(context: Context, originalInstruction: Instruction) {
     if(world.tickCounter.ticks == -1)
@@ -96,20 +96,20 @@ object AbstractWorkspaceTraits {
     def exportWorld(filename: String) {
       new AbstractExporter(filename) {
         def export(writer:PrintWriter){
-          world.exportWorld(writer,true) 
-          exportDrawingToCSV(writer) 
-          exportOutputAreaToCSV(writer) 
-          exportPlotsToCSV(writer) 
-          extensionManager.exportWorld(writer) 
-        } }.export("world",modelFileName,"") 
+          world.exportWorld(writer,true)
+          exportDrawingToCSV(writer)
+          exportOutputAreaToCSV(writer)
+          exportPlotsToCSV(writer)
+          extensionManager.exportWorld(writer)
+        } }.export("world",modelFileName,"")
     }
 
     def exportWorld(writer:PrintWriter){
-      world.exportWorld(writer,true) 
-      exportDrawingToCSV(writer) 
-      exportOutputAreaToCSV(writer) 
-      exportPlotsToCSV(writer) 
-      extensionManager.exportWorld(writer) 
+      world.exportWorld(writer,true)
+      exportDrawingToCSV(writer)
+      exportOutputAreaToCSV(writer)
+      exportPlotsToCSV(writer)
+      extensionManager.exportWorld(writer)
     }
 
     def exportPlotsToCSV(writer: PrintWriter) {

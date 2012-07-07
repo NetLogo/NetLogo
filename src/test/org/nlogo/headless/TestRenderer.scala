@@ -371,7 +371,7 @@ abstract class AbstractTestRenderer(worldType: WorldType = Torus) extends TestUs
   type Point = (Double,Double)
   case class TurtleDrawnAt(ps:Point*){
     def expectedResults(turtleSize:Int) = (for (p <- ps) yield {
-      // this 13 here is really patch size....should probably be fixed. 
+      // this 13 here is really patch size....should probably be fixed.
       Circle(Location(p._1.toDouble,p._2.toDouble), Size(13.0 * turtleSize,13.0 * turtleSize), filled=true)
     }).toList
   }
