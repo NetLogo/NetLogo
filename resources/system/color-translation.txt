@@ -1,4 +1,4 @@
-# this file shows how to translate ARGB color values found 
+# this file shows how to translate ARGB color values found
 # in old NetLogo model files to the current colors
 
 # the first column is the color index number -- multiply

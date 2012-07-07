@@ -31,8 +31,8 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     // this is pretty crappy. The applet and the application have different minimum widths for the
     // view widget. (because there is a speed slider in the applet control strip) we want to make sure
     // the width the applet saves is wide enough for the applet with the slightly wider view.  The minimum
-    // width is 230.  However, because the applet view isn't in an interface panel we don't strictly know that 
-    // the extra space is necessary since the view might not be at the edge of the interface but setting it 
+    // width is 230.  However, because the applet view isn't in an interface panel we don't strictly know that
+    // the extra space is necessary since the view might not be at the edge of the interface but setting it
     // up so we can actually measure that is hairy and seems like overkill. ev 11/21/08
     val view = iP.viewWidget.asWidget
     val viewWidth = view.getWidth
@@ -68,7 +68,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
             Array(I18N.gui.get("common.buttons.ok")))
         }
         catch {
-          case ex: java.io.IOException => 
+          case ex: java.io.IOException =>
             javax.swing.JOptionPane.showMessageDialog(
               frame, ex.getMessage, I18N.gui.get("common.messages.error"),
               javax.swing.JOptionPane.ERROR_MESSAGE)
@@ -93,9 +93,9 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     paragraph("If HubNet.jar is in a different directory you must",
               "modify the archive= line in the HTML code to point",
               "to its actual location. (For example, if you have ",
-              "multiple applets in different directories on the same", 
+              "multiple applets in different directories on the same",
               "web server, you may want to put a single copy of",
-              "HubNet.jar in one central place and change the", 
+              "HubNet.jar in one central place and change the",
               "archive= lines of all the HTML files to point to that",
               "one central copy.  This will save disk space for you and",
               "download time for your users.)")
@@ -116,9 +116,9 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
   def build(modelName: String, fileName: String, width: Int, height: Int,
             infoText: String, procedures: String, additionalJars: JList[String], extensions: JList[String])
   {
-    buf.clear()    
+    buf.clear()
     header(modelName)
-    paragraph("In order for this to work, this file, your model file", 
+    paragraph("In order for this to work, this file, your model file",
               "(" + fileName + "), and the files NetLogoLite.jar and NetLogoLite.jar.pack.gz",
               "must all be in the same directory.  (You can copy NetLogoLite.jar and NetLogoLite.jar.pack.gz",
               "from the directory where you installed NetLogo.)")
@@ -150,12 +150,12 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
               "directories, you must modify the archive= and value= lines",
               "in the HTML code to point to their actual locations.",
               "(For example, if you have multiple applets in different",
-              "directories on the same web server, you may want to put ",
+              "directories on the same web server, you may want to put",
               "a single copy of the NetLogoLite files in one central place and",
               "change the archive= lines of all the HTML files to point",
               "to that one central copy.  This will save disk space for",
               "you and download time for your users.)")
-    applet("org.nlogo.lite.Applet", "NetLogoLite.jar", width, height, 
+    applet("org.nlogo.lite.Applet", "NetLogoLite.jar", width, height,
            List(("DefaultModel", org.nlogo.util.Utils.escapeSpacesInURL(fileName)),
                 ("java_arguments", "-Djnlp.packEnabled=true")),
            additionalJars)
@@ -194,7 +194,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     line()
   }
 
-  private def applet(code: String, archive: String, 
+  private def applet(code: String, archive: String,
                      width: Int, height: Int,
                      params: List[(String,String)] = Nil,
                      additionalJars: JList[String] = Nil)

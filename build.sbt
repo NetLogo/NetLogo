@@ -36,7 +36,7 @@ mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
- 
+
 Extensions.extensionsTask
 
 InfoTab.infoTabTask
@@ -90,7 +90,7 @@ doc <<= (baseDirectory, cacheDirectory, compileInputs in Compile, testLoader in 
     val apiSources = Seq(
       "src/main/org/nlogo/app/App.scala",
       "src/main/org/nlogo/lite/InterfaceComponent.scala",
-      "src/main/org/nlogo/lite/Applet.scala", 
+      "src/main/org/nlogo/lite/Applet.scala",
       "src/main/org/nlogo/lite/AppletPanel.scala",
       "src/main/org/nlogo/headless/HeadlessWorkspace.scala",
       "src/main/org/nlogo/api/",
