@@ -29,7 +29,7 @@ class ModelTests extends FunSuite {
       "]\n\n" +
       ";; Initializes the system dynamics model.\n" +
       ";; Call this in your model's SETUP procedure.\n" +
-      "to system-dynamics-setup \n" +
+      "to system-dynamics-setup\n" +
       "  reset-ticks\n" +
       "  set dt 1.0\n" +
       "  ;; initialize stock values\n" +
