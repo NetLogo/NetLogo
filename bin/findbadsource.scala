@@ -7,7 +7,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 // 2) Tab characters
 // 3) Carriage return characters
 
-import sys.process._
+import sys.process.Process
 import collection.mutable.Buffer
 
 def ignore(path: String) =

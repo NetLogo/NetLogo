@@ -4,7 +4,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 
 /// Makes sure no files have their execute bit wrongly set or unset
 
-import sys.process._
+import sys.process.Process
 
 def skip(path: String): Boolean =
   path.containsSlice("/.git/") ||

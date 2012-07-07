@@ -5,7 +5,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 // The purpose of all this is to make sure that every class and interface is declared strictfp, and
 // that we never ever use Math, only StrictMath.
 
-import sys.process._
+import sys.process.Process
 
 def withoutComments(lines: Seq[String]): Seq[String] = {
   def helper(lines: Seq[String]): Seq[String] =
