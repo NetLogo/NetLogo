@@ -6,16 +6,16 @@ import java.util.Properties
 
 /**
  * This code came from http://forum.java.sun.com/thread.jspa?threadID=627890&start=15
- * 
+ *
  * The Terms of Use for the website, in the "Content Submitted to Sun" section states: You (the
  * author) grant Sun and all other users of the Website an irrevocable, worldwide, royalty-free,
  * nonexclusive license to use, reproduce, modify, distribute, transmit, display, perform, adapt,
  * resell and publish such Content (including in digital form).
- * 
+ *
  * http://www.sun.com/termsofuse.jsp
- * 
+ *
  * The username of the original post has no name or email associated with it.
- * 
+ *
  * Adds a path to the java.library.path System property and updates the ClassLoader. Uses reflection
  * to allow update to private system members. Will not work if JVM security policy gets in the way
  * (like in an applet).  Will not work if Sun changes the private members.  This really shouldn't be

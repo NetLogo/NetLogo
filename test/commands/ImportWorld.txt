@@ -90,7 +90,7 @@ ImportExportBreedOrder
   O> cro 10
   O> ask turtles [ set breed frogs ]
   O> ask turtle 0 [ die ]
-  O> set glob1 (word "tmp/ImportWorld/test-file-" __nano-time ".csv" ) 
+  O> set glob1 (word "tmp/ImportWorld/test-file-" __nano-time ".csv" )
   O> export-world glob1
   [who] of one-of frogs => 7
   O> import-world glob1

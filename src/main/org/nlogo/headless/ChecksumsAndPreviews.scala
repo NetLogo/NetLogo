@@ -7,8 +7,8 @@ import org.nlogo.workspace.ModelsLibrary
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc", 
-         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach", 
+    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
+         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
@@ -65,7 +65,7 @@ object ChecksumsAndPreviews {
       finally { workspace.dispose() }
     }
   }
-  
+
   /// checksums
 
   object Checksums {
@@ -113,19 +113,19 @@ object ChecksumsAndPreviews {
     def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace) 
+      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
       val oldEntry = m.get(model)
       val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
       // figure out if the entry is new, changed, or the same
       val action =
-        if(!m.contains(model)) "* Added" 
-        else if(oldEntry.get == newEntry) "Didn't change" 
-        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only" 
+        if(!m.contains(model)) "* Added"
+        else if(oldEntry.get == newEntry) "Didn't change"
+        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
         else "* Changed"
       m.put(model, newEntry)
       if(action != "Didn't change")
-        println(action + ": \"" + model + " - " + newCheckSum 
+        println(action + ": \"" + model + " - " + newCheckSum
                 + " - " + newGraphicsChecksum + " - " + revision + "\"")
     }
     def load(path: String): ChecksumMap = {

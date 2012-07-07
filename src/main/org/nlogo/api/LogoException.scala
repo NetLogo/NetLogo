@@ -4,7 +4,7 @@ package org.nlogo.api
 
 /**
  * A runtime error that has occurred in NetLogo code.
- * 
+ *
  * As with any Exception, use the getMessage() method to get the error message.
  * A LogoExceptions is expected to have a nice end-user-understandable message.
  *

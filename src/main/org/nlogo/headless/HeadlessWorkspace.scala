@@ -72,16 +72,16 @@ object HeadlessWorkspace {
 
 /**
  * The primary class for headless (no GUI) operation of NetLogo.
- * 
+ *
  * You may create more than one HeadlessWorkspace object.  Multiple
  * instances can operate separately and independently.  (Behind the
  * scenes, this is supported by creating a separate thread for each
  * instance.)
- * 
+ *
  * When you are done using a HeadlessWorkspace, you should call its
  * dispose() method.  This will shut down the thread associated with
  * the workspace and allow resources to be freed.
- * 
+ *
  * See the "Controlling" section of the NetLogo User Manual
  * for example code.
  *

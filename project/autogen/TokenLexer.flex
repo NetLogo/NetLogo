@@ -144,7 +144,7 @@ DIGIT=[:digit:]
 IDENTIFIER_CHAR_NOT_UNDERSCORE={LETTER} | {DIGIT} | [\.?=\*!<>:#\+/%\$\^\'&-]
 IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
 
-%% 
+%%
 
 <YYINITIAL> \{\{ {
   yybegin( LITERAL ) ;
@@ -221,7 +221,7 @@ IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
   Token token = new Token( "__magic-open" , TokenType_COMMAND , cmd , yychar , yychar + 3 , fileName ) ;
   cmd.token( token ) ;
   return token ;
-} 
+}
 
 <MAGIC_OPEN> \n {
   yybegin( YYINITIAL ) ;
@@ -257,16 +257,16 @@ IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
   }
   catch( IllegalArgumentException ex )
   {
-    return new Token( text , TokenType_BAD , "Illegal character after backslash" , 
+    return new Token( text , TokenType_BAD , "Illegal character after backslash" ,
               yychar , yychar + text.length() , fileName ) ;
   }
 }
 
 <YYINITIAL> \"{STRING_TEXT} {
   String text = yytext() ;
-  return new Token( text , TokenType_BAD , "Closing double quote is missing" , 
+  return new Token( text , TokenType_BAD , "Closing double quote is missing" ,
             yychar , yychar + yytext().length() , fileName ) ;
-} 
+}
 
 . {
   String text = yytext() ;

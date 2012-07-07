@@ -40,7 +40,7 @@ object Dump {
   def dumpAll() {
     Runtime.getRuntime().exec("rm -r tmp/dumps").waitFor()
     Runtime.getRuntime().exec("mkdir -p tmp/dumps").waitFor()
-    // 
+    //
     for(path <- ModelsLibrary.getModelPaths)
     {
       val name = path.split("/").last.toList.dropRight(".nlogo".size).mkString

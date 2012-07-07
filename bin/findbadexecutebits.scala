@@ -1,13 +1,10 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 /// Makes sure no files have their execute bit wrongly set or unset
 
-import sys.process._
+import sys.process.Process
 
 def skip(path: String): Boolean =
   path.containsSlice("/.git/") ||
@@ -46,3 +43,7 @@ for{path <- Process("find . -type f -perm +0100 -prune -o -type f -print").lines
      !path.startsWith("./scala/var/"))
     println(path)
 }
+
+// Local Variables:
+// mode: scala
+// End:

@@ -67,7 +67,7 @@ extends java.util.AbstractSequentialList[AnyRef] with Serializable {
   private def unsupported = throw new UnsupportedOperationException
 
 }
-  
+
 // for use from Java, or when efficiency is paramount - ST 2/25/11
 class LogoListBuilder {
   private val b = new VectorBuilder[AnyRef]

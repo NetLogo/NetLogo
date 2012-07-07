@@ -49,11 +49,11 @@ public strictfp class Importer
 
   private boolean olderThan40beta2 = false;
 
-  //these variables, varsToImport, builtInVars, and tooManyValuesForSection, 
-  //are initialized each time importAgents() is called. the variables are 
-  //reused for each of the three types of agents.  they should be global since 
-  //they are passed around a lot and it makes the code more general by not 
-  //forcing us to have different variables for each agent type when the 
+  //these variables, varsToImport, builtInVars, and tooManyValuesForSection,
+  //are initialized each time importAgents() is called. the variables are
+  //reused for each of the three types of agents.  they should be global since
+  //they are passed around a lot and it makes the code more general by not
+  //forcing us to have different variables for each agent type when the
   //reusing them will suffice.
   //--mag 12/13/01, 5/2/03
   java.util.BitSet varsToImport;
@@ -452,8 +452,8 @@ public strictfp class Importer
       return world.observer();
     }
     if (agentClass == Turtle.class) {
-      // don't use agent.setVariable() for the turtles' id and breed since 
-      // these are needed in order to create the right number and types of 
+      // don't use agent.setVariable() for the turtles' id and breed since
+      // these are needed in order to create the right number and types of
       // variables for the turtle.  --mag 3/25/03
       AgentSet breed =
           getTurtleBreed(varVals,
@@ -464,7 +464,7 @@ public strictfp class Importer
       return turtle;
     }
     if (agentClass == Patch.class) {
-      // don't use agent.setVariable() for the patches' pxcor and pycor since 
+      // don't use agent.setVariable() for the patches' pxcor and pycor since
       // these are needed in order to create the right patch.  --mag 3/25/03
       return getPatch(varVals);
     }
@@ -571,7 +571,7 @@ public strictfp class Importer
 
   //getting and setting variables
 
-  //given the set of lines of the file, the delimiter for the values in a line, and the type of agent 
+  //given the set of lines of the file, the delimiter for the values in a line, and the type of agent
   //(or Globals for the observer) for these headers,
   //this will return an array of uppercase strings containing the headers to be imported for this agent
   String[] getHeaders(Class<? extends Agent> agentClass)
@@ -619,10 +619,10 @@ public strictfp class Importer
   }
 
 
-  //given an array of headers, a comma-delimited string of the agent's values 
-  //for each header, and the agent's class, this will return a map of 
-  //the parsed values keyed by the variable header.  if an essential variable 
-  //for this agent type does not have a valid value, this will throw an 
+  //given an array of headers, a comma-delimited string of the agent's values
+  //for each header, and the agent's class, this will return a map of
+  //the parsed values keyed by the variable header.  if an essential variable
+  //for this agent type does not have a valid value, this will throw an
   //abortingexception
   Map<String, Object> getVarVals(String[] headersArr, String[] values, Class<? extends Agent> agentClass) {
     Map<String, Object> varVals = new HashMap<String, Object>();
@@ -649,7 +649,7 @@ public strictfp class Importer
     }
 
     for (int i = 0; i < headersArr.length; i++) {
-      // handle turtle breeds specially so that we can give a different 
+      // handle turtle breeds specially so that we can give a different
       // error message if something there is an error
       boolean turtleBreedVar =
           (agentClass == Turtle.class) && (headersArr[i].equals(builtInVars[TURTLE_BREED]));
@@ -669,7 +669,7 @@ public strictfp class Importer
       Object value = values[i].equals("") ? (Object) new Junk() :
           getTokenValue(values[i], turtleBreedVar, linkBreedVar);
 
-      // check to see if this variable is an essential variable and if it is, 
+      // check to see if this variable is an essential variable and if it is,
       // that we were actually able to get a valid value for it.
       if (essentialVarHeadersToImport.get(agentClass).contains(headersArr[i])
           && (value instanceof Junk)) {
@@ -692,8 +692,8 @@ public strictfp class Importer
         || breed.equalsIgnoreCase("LINKS");
   }
 
-  // if we have troubles parsing the value and the user doesn't care, return 
-  // an instance of Junk.  we will replace it later in the import with an 
+  // if we have troubles parsing the value and the user doesn't care, return
+  // an instance of Junk.  we will replace it later in the import with an
   // appropriate value.
   // default access for unit testing
   Object getTokenValue(String valueString, boolean turtleBreedVar, boolean linkBreedVar) {
@@ -793,7 +793,7 @@ public strictfp class Importer
   //this will return the index to the location in the variables array for this breed variable
   //or it will return -1 if it is not this turtle's breeds variable
   int getBreedVarIndex(Turtle turtle, String header) {
-    //check to see if this turtle is a breed or not and check to see if this turtle's breed 
+    //check to see if this turtle is a breed or not and check to see if this turtle's breed
     //has this variable in it
     if (turtle.getBreed() != world.turtles() && world.breedOwns(turtle.getBreed(), header)) {
       //if it does, get the index for it and return it
@@ -999,7 +999,7 @@ public strictfp class Importer
 
   Map<Class<? extends Agent>, List<String>> specialVariables;
 
-  //fill the specialVariables map with the strings of the headers that need special handling to have a 
+  //fill the specialVariables map with the strings of the headers that need special handling to have a
   //successful import
   Map<Class<? extends Agent>, List<String>> fillSpecialVariables() {
     Map<Class<? extends Agent>, List<String>> result =
@@ -1069,7 +1069,7 @@ public strictfp class Importer
 
   Map<Class<? extends Agent>, List<String>> essentialVarHeadersToImport;
 
-  //fill the essentialVarHeadersToImport map with the strings of the headers that are essential to a 
+  //fill the essentialVarHeadersToImport map with the strings of the headers that are essential to a
   //successful import
   Map<Class<? extends Agent>, List<String>> fillEssentialVarsToImport() {
     Map<Class<? extends Agent>, List<String>> result =
@@ -1128,7 +1128,7 @@ public strictfp class Importer
   }
 
   //if essentialHeaders is true,
-  //if this returns successfully, then all the essential headers for the variables for agentClass have been 
+  //if this returns successfully, then all the essential headers for the variables for agentClass have been
   //imported
   //if essentialHeaders is false,
   //if this returns successfully, either all headers for the variables for agentClass are there or the user

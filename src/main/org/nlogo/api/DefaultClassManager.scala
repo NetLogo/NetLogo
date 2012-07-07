@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 /**
- * An abstract, partial implementation of ClassManager that implements 
+ * An abstract, partial implementation of ClassManager that implements
  * <code>runOnce()</code> and <code>unload()</code> with empty methods.
  * @see ClassManager
  */

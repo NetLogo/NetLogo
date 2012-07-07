@@ -8,10 +8,10 @@
 
 ConstantInteger
   5 => 5
-  
+
 ConstantDouble
   5.0 => 5
-  
+
 AddTwoIntegers
   1 + 2 => 3
 
@@ -61,7 +61,7 @@ NumericTypeConversion
   O> set glob1 2.5
   glob1 - glob1 => 0
   glob1 + glob1 => 5
-    
+
 BooleanTypeConversion
   O> set glob1 true
   glob1 and glob1 => true
@@ -69,14 +69,14 @@ BooleanTypeConversion
   false and glob1 => false
   glob1 or false => true
   false or glob1 => true
-  O> set glob1 false    
+  O> set glob1 false
   false or glob1 => false
   glob1 or true => true
   not glob1 => true
-  
+
 PatchColorSetting
   O> ask patches [ set pcolor (pcolor - 1 + 2)  set pcolor (pcolor - 1 - 2)  set pcolor (pcolor + 1 + 2)  set pcolor (pcolor + 1 - 2) ]
-  
+
 LessThan
   5 < 3 => false
   3 < 5 => true

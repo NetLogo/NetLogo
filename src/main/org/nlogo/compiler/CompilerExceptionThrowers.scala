@@ -18,7 +18,7 @@ object CompilerExceptionThrowers {
     throw new CompilerException(message, startPos, endPos, fileName)
   def exception(message: String, token: Token) =
     throw new CompilerException(message, token.startPos, token.endPos, token.fileName)
-  def exception(message: String, node: AstNode) = 
+  def exception(message: String, node: AstNode) =
     throw new CompilerException(message, node.start, node.end, node.file)
 
 }

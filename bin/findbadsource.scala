@@ -1,16 +1,13 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 // Check for problems with plain text files including:
 // 1) No newline at end of file
 // 2) Tab characters
 // 3) Carriage return characters
 
-import sys.process._
+import sys.process.Process
 import collection.mutable.Buffer
 
 def ignore(path: String) =
@@ -43,3 +40,7 @@ for(path <- paths.filterNot(ignore)) {
     problems.foreach(p => println("  " + p))
   }
 }
+
+// Local Variables:
+// mode: scala
+// End:

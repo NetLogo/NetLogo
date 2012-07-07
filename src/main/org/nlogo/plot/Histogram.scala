@@ -12,7 +12,7 @@ class Histogram(xMin: Double, interval: Double, val bars: Array[Int]) {
   def ceiling = _ceiling
   def nextValue(value: Double) {
     val bar = StrictMath.floor(((value - xMin) / interval)
-                               // the division might produce a result like 5.99999999999997, 
+                               // the division might produce a result like 5.99999999999997,
                                // putting something in bar 5 that should be in bar 6,  so... - ST
                                // 7/28/05 instead of just adding we have to multiply as the error
                                // in floating point math becomes more severe as the numbers get

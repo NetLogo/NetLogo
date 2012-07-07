@@ -15,7 +15,7 @@ class ColorTests extends FunSuite {
     expect(139.9999999999999)(Color.modulateDouble(-0.000000000000001))
   }
   test("rgba") {
-    val list = LogoList(0: java.lang.Double, 
+    val list = LogoList(0: java.lang.Double,
                         0: java.lang.Double,
                         0: java.lang.Double)
     expect((255 << 24))(Color.getARGBIntByRGBAList(list))

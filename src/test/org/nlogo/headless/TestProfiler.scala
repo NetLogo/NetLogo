@@ -16,7 +16,7 @@ import org.nlogo.util.SlowTest
 class TestProfiler extends AbstractTestLanguage with FunSuite
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
-  // change to true temporarily to enable timing sensitive tests.  disabled by default 
+  // change to true temporarily to enable timing sensitive tests.  disabled by default
   // since they tend to fail intermittently if CPU load is high. - ST 6/10/10
   private val timingSensitiveOK = false
 

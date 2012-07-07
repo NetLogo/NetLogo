@@ -26,7 +26,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   var plotListener: Option[PlotListener] = None
   def setPlotListener(plotListener:PlotListener){
     if(plotListener == null) sys.error("null plotListener")
-    this.plotListener = Some(plotListener) 
+    this.plotListener = Some(plotListener)
   }
   def removePlotListener(){ this.plotListener = None }
 
@@ -64,7 +64,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   // headless - ST 3/9/06
   var legendIsOpen = false
 
-  /// default properties  
+  /// default properties
   private var _defaultXMin = 0.0
   def defaultXMin = _defaultXMin
   def defaultXMin_=(defaultXMin: Double){
@@ -78,7 +78,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     _defaultXMax = defaultXMax
     plotListener.foreach(_.defaultXMax(defaultXMax))
   }
-  
+
   private var _defaultYMin = 0.0
   def defaultYMin = _defaultYMin
   def defaultYMin_=(defaultYMin: Double) {
@@ -92,7 +92,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     _defaultYMax = defaultYMax
     plotListener.foreach(_.defaultYMax(defaultYMax))
   }
-  
+
   private var _defaultAutoPlotOn = true
   def defaultAutoPlotOn = _defaultAutoPlotOn
   def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
@@ -123,7 +123,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     _xMax = xMax
     plotListener.foreach(_.xMax(xMax))
   }
-  
+
   private var _yMin = 0.0
   def yMin = _yMin
   def yMin_=(yMin: Double){
@@ -144,7 +144,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     import org.nlogo.api.StringUtils.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
-  
+
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
 
@@ -159,7 +159,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     autoPlotOn=defaultAutoPlotOn
     makeDirty()
     plotListener.foreach(_.clear)
-    pensDirty = true 
+    pensDirty = true
   }
 
   def createPlotPen(name: String, temporary: Boolean): PlotPen = {
@@ -204,7 +204,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
       yMin=newBound(yMax - newRange, newRange)
     }
   }
-  
+
   /// histograms
   def setHistogramNumBars(pen: PlotPen, numBars: Int) {
     pen.interval = (xMax - xMin) / numBars

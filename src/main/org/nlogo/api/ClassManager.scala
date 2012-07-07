@@ -7,7 +7,7 @@ package org.nlogo.api;
  * class that implements this interface.  Registers primitives with NetLogo and handles extension
  * initialization and deconstruction.
  *
- * For example: 
+ * For example:
  * <pre>
  * public class FibonacciExtension extends org.nlogo.api.DefaultClassManager
  * {

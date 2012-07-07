@@ -6,7 +6,7 @@ import org.nlogo.api.{ I18N, Syntax }
 import org.nlogo.nvm.{ Command, Context, EngineException }
 
 class _tickadvance extends Command {
-  override def syntax = 
+  override def syntax =
     Syntax.commandSyntax(Array(Syntax.NumberType), "O---", true)
   override def perform(context: Context) {
     val amount = argEvalDoubleValue(context, 0)

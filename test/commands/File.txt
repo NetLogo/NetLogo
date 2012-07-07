@@ -2,7 +2,7 @@ FileIO
   O> __mkdir "tmp/File"
   O> file-close
   O> file-close
-  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if ( file-exists? glob1 ) [ file-delete glob1 ]
   file-at-end? => ERROR No file has been opened.
   file-read => ERROR No file has been opened.
@@ -11,7 +11,7 @@ FileIO
   O> file-print 0 => ERROR No file has been opened.
   O> file-type 0 => ERROR No file has been opened.
   O> file-show 0 => ERROR No file has been opened.
-  O> file-write 0 => ERROR No file has been opened.  
+  O> file-write 0 => ERROR No file has been opened.
   O> file-open glob1
   O> file-print "first line"
   file-read => ERROR You can only use WRITING primitives with this file
@@ -39,7 +39,7 @@ FileIO
 
 FileReadWrite_2D
   O> __mkdir "tmp/File"
-  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob1 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if ( file-exists? glob1 ) [ file-delete glob1 ]
   O> file-open glob1
   O> crt 30
@@ -74,7 +74,7 @@ FileReadWrite_2D
 
 FileReadWhitespaceAtEndOfFile
   O> __mkdir "tmp/File"
-  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if ( file-exists? glob2 ) [ file-delete glob2 ]
   O> file-open glob2
   O> file-print "1 2\t3 "
@@ -89,7 +89,7 @@ FileReadWhitespaceAtEndOfFile
 
 FileReadSmallFileOfNumbers
   O> __mkdir "tmp/File"
-  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> set glob1 []
   O> set glob1 lput [9 9 9 9 9 9 9 9 10 6 9 9 9 9 9 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 6 6 5 5 5 9 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 6] glob1
   O> set glob1 lput [9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 3 3 3 3 3 3 9 9 9 9 9 9 9 9 9 5 5 5 6 5 5 5 9 9 9 9 9 9 9 9 7 7 7 9 9 9 5 5 6 5 9 9 9 9 9 9 9 9 9 9 7 9 9 9 9 5 6] glob1
@@ -106,7 +106,7 @@ FileReadSmallFileOfNumbers
 
 FileReadLargeFileOfNumbers1
   O> __mkdir "tmp/File"
-  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> set glob1 n-values 100 [n-values 50 [?]]
   O> if ( file-exists? glob3 ) [ file-delete glob3 ]
   O> file-open glob3
@@ -207,7 +207,7 @@ FileReadLargeFileOfNumbers2
   O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 9 9 7 7 7 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 6 4 9 4 9 10 9 9 9 9 9 9 9 9 9 9 9 9 10 9 9 9 9 9 9 7 7 7] glob1
   O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 7 7 7 7 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7] glob1
   O> set glob1 lput [9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7 7 7 7 7 7 7 7 7 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 6 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 7 7 7 7] glob1
-  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob3 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if ( file-exists? glob3 ) [ file-delete glob3 ]
   O> file-open glob3
   O> set glob2 []
@@ -220,7 +220,7 @@ FileReadLargeFileOfNumbers2
 
 FileReadNumberThenLetter
   O> __mkdir "tmp/File"
-  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if file-exists? glob2 [ file-delete glob2 ]
   O> file-open glob2
   O> file-print "1 A 2"
@@ -231,7 +231,7 @@ FileReadNumberThenLetter
 
 FileReadBadToken
   O> __mkdir "tmp/File"
-  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" ) 
+  O> set glob2 (word "tmp/File/test-file-" __nano-time ".csv" )
   O> if file-exists? glob2 [ file-delete glob2 ]
   O> file-open glob2
   O> file-print "598745879457894578945789457894578945789"

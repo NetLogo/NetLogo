@@ -5,7 +5,7 @@ package org.nlogo.headless
 import org.nlogo.plot.{PlotPoint, PlotPen}
 
 class TestPlotModels extends AbstractTestModels {
-  
+
   implicit def pen2ContainsPoint(pen:PlotPen) = new {
     // couldnt call contains here because it seemed to call the java method instead.
     def containsPoint(x:Double, y:Double) = {

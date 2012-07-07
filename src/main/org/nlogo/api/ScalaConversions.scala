@@ -57,7 +57,7 @@ object ScalaConversions {
     case a: Array[_] => toLogoList(a)
     case s: Seq[_] => toLogoList(s)
     case ll: LogoList => toLogoList(ll)
-    
+
     // unconvertible type
     case _ => sys.error("don't know how to convert: " + a)
   }
