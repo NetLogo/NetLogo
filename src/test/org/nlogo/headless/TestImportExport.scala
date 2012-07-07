@@ -12,7 +12,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   override def beforeEach() {
     init()
     // the default error handler just spits something to stdout or stderr or somewhere.
-    // we want to fail hard. - ST 7/21/10 
+    // we want to fail hard. - ST 7/21/10
     workspace.importerErrorHandler =
       new org.nlogo.agent.Importer.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =

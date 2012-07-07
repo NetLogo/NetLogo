@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window 
+package org.nlogo.window
 
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.{I18N, Editable}
@@ -49,20 +49,20 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   // CLB 7/15/05
   def handle(e:org.nlogo.window.Events.ExportWorldEvent){
     import org.nlogo.api.Dump
-    e.writer.println(Dump.csv.encode("OUTPUT")) 
-    Dump.csv.stringToCSV(e.writer, outputArea.text.getText()) 
+    e.writer.println(Dump.csv.encode("OUTPUT"))
+    Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
   }
 
   override def save = {
     val s = new StringBuilder()
-    s.append("OUTPUT\n") 
-    s.append(getBoundsString) 
+    s.append("OUTPUT\n")
+    s.append(getBoundsString)
     s.append(fontSize + "\n")
     s.toString
   }
   override def load(strings:Array[String], helper:Widget.LoadHelper): Object = {
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
-    setSize(x2 - x1, y2 - y1) 
+    setSize(x2 - x1, y2 - y1)
     if(strings.length > 5){ outputArea.fontSize(strings(5).toInt) }
     this
   }

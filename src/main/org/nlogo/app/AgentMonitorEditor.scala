@@ -76,7 +76,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
     add(fillerPanel)
     revalidate()
   }
-  
+
   def vars = parent.vars
   def agent = parent.agent
   def agentClass = parent.agentClass
@@ -180,7 +180,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     if(e.owner eq this)
       refresh(true)
   }
-  
+
   override def handle(e: org.nlogo.window.Events.CompiledEvent) {
     super.handle(e)
     if(e.sourceOwner == this) {
@@ -224,7 +224,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
   }
-  
+
   ///
 
   def keyReleased(e: java.awt.event.KeyEvent) { }
@@ -258,7 +258,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     if(editor.getText() != lastTextBeforeUserChangedAnything)
       action()
   }
-  
+
   override def requestFocus() {
     editor.requestFocus()
   }
@@ -306,7 +306,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     }
   }
 
-  private def get = 
+  private def get =
     if(agent == null || agent.id == -1)
       ""
     else workspace.world.synchronized{
@@ -339,7 +339,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
             val (pxcor, pycor) =
               index match {
                 case Patch.VAR_PXCOR =>
-                  (editor.getText().toInt, 
+                  (editor.getText().toInt,
                    if (agent == null) 0 else agent.asInstanceOf[Patch].pycor)
                 case Patch.VAR_PYCOR =>
                   (if (agent == null) 0 else agent.asInstanceOf[Patch].pxcor,
@@ -372,7 +372,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
       }
     }
     catch {
-      case ex: NumberFormatException => 
+      case ex: NumberFormatException =>
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()
         editor.selectAll()
@@ -394,7 +394,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     lastTextBeforeUserChangedAnything = editor.getText()
     editor.selectAll()
   }
-  
+
   @throws(classOf[org.nlogo.api.CompilerException])
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseTurtleOrDouble(text: String): Turtle = {
@@ -406,7 +406,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
         t
       case d: java.lang.Double =>
         workspace.world.getTurtle(d.longValue)
-      case _ => 
+      case _ =>
         throw new org.nlogo.api.AgentException("expected a turtle or a who number")
     }
   }
@@ -426,7 +426,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 
   override def save: String =
     throw new UnsupportedOperationException
-  
+
   override def load(strings: Array[String], helper: Widget.LoadHelper): AnyRef =
     throw new UnsupportedOperationException
 

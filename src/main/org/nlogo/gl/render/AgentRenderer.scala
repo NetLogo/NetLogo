@@ -19,7 +19,7 @@ private object AgentRenderer {
     val rgb: Array[Float] =
       org.nlogo.api.Color.getColor(color).getRGBColorComponents(null)
     val scale: Float = (fontSize * 12 / patchSize.toFloat) / FontScale
-    gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb))          
+    gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb))
     gl.glDisable(GL.GL_LIGHTING)
     gl.glScalef(scale, scale, 3.0f)
     val strwidth: Float = glut.glutStrokeLength(GLUT.STROKE_ROMAN, str)

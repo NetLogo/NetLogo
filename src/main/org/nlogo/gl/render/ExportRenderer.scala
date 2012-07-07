@@ -18,7 +18,7 @@ trait ExportRenderer extends Renderer with GLEventListener {
     gl.glFinish()
     exportGraphics(gLDrawable)
   }
-  
+
   private def exportGraphics(drawable: GLAutoDrawable) {
     width = drawable.getWidth
     height = drawable.getHeight
@@ -35,12 +35,12 @@ trait ExportRenderer extends Renderer with GLEventListener {
       GL.GL_UNSIGNED_BYTE,   // GLenum type
       pixelsRGB
     ) // GLvoid *pixels
-    
+
     pixelInts = Array.fill(width * height)(0)
-    
+
     // Convert RGB bytes to ARGB ints with no transparency. Flip image vertically by reading the
     // rows of pixels in the byte buffer in reverse - (0,0) is at bottom left in OpenGL.
-    
+
     var p = width * height * 3 // Points to first byte (red) in each row.
     var i = 0   // Index into target int[]
     var w3 = width * 3    // Number of bytes in each row

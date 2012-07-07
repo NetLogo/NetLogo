@@ -35,7 +35,7 @@ class ModelSaver(app: App) {
     section {
       buf ++= app.tabs.infoTab.info
     }
-    
+
     // turtle shapes
     section {
       for(shape <- app.tabs.workspace.world.turtleShapeList.getShapes.asScala) {
@@ -70,7 +70,7 @@ class ModelSaver(app: App) {
       buf ++= app.labManager.save
     }
 
-    // reserved for HubNet client 
+    // reserved for HubNet client
     section {
       for(manager <- Option(app.tabs.workspace.hubnetManager))
         manager.save(buf)

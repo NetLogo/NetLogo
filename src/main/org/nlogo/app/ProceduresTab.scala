@@ -29,7 +29,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   val text = new EditorFactory(workspace).newEditor(100, 100, true, listener, true)
   text.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
 
-  val errorLabel = new EditorAreaErrorLabel(text) 
+  val errorLabel = new EditorAreaErrorLabel(text)
   val toolBar = getToolBar
   def compiler = workspace
   def program = workspace.world.program
@@ -50,7 +50,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   }
 
   val compileAction: Action = new CompileAction
-  
+
   private class CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON,
       new ImageIcon(classOf[ProceduresTab].getResource(
@@ -110,18 +110,18 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
       zoomFactor = e.zoomFactor
       if(originalFontSize == -1) originalFontSize = text.getFont.getSize
       text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-      errorLabel.zoom(zoomFactor) 
+      errorLabel.zoom(zoomFactor)
     }
   }
-  
-  // Error code 
+
+  // Error code
 
   def handle(e: org.nlogo.window.Events.CompiledEvent) {
     _needsCompile = false
     compileAction.setEnabled(e.error != null)
     if(e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
   }
-  
+
   def recompile() { new org.nlogo.window.Events.CompileAllEvent().raise(this) }
 
   override def requestFocus() { text.requestFocus() }
@@ -130,7 +130,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   def getText = text.getText  // for ProceduresMenuTarget
   def headerSource = ""
   def source = headerSource + innerSource
-  
+
   def innerSource(s: String) {
     text.setText(s)
     text.setCaretPosition(0)

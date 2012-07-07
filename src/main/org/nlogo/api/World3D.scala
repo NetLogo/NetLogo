@@ -4,7 +4,7 @@ package org.nlogo.api
 
 trait World3D extends World {
   def worldDepth: Int
-  def protractor3D: Protractor3D 
+  def protractor3D: Protractor3D
   def minPzcor: Int
   def maxPzcor: Int
   def wrappedObserverZ(z: Double): Double

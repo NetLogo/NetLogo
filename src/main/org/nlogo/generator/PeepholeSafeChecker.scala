@@ -8,13 +8,13 @@ import org.objectweb.asm.commons.EmptyVisitor
 import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }
 
 /**
- * A report_* or perform_* method of a _prim is Peephole-Safe 
- * if it references each argument at most once.  
- * A method with no arguments is trivially PeepholeSafe. 
+ * A report_* or perform_* method of a _prim is Peephole-Safe
+ * if it references each argument at most once.
+ * A method with no arguments is trivially PeepholeSafe.
  * This class maintains a table of the Peephole-Safe status
  * of each report_* and perform_* method, by checking them
  * the first time a prim's class is used for inlining.
- *  
+ *
  *  Examples:
  *  A _prim with this report method is PeepholeSafe:
  *  double report_1(Context context, double arg0, double arg1)
@@ -31,7 +31,7 @@ import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }
  *  }
  *  PeepholeSafety actually refers to safety with regard to just one
  *  type of peephole optimization, the redundant STORE/LOAD pattern,
- *  which is found in {@link PeepholeOptimizer3}.  
+ *  which is found in {@link PeepholeOptimizer3}.
  *  The other PeepholeOptimizers will be run regardless.
  */
 

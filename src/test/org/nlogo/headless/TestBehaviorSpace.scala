@@ -210,7 +210,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   // but failed through runExperimentFromModel.  that's because the bug was in the workspace-reusing
   // logic in lab.Lab, which run() here bypasses by using lab.Worker directly - ST 4/6/12
   if(!Version.is3D) {
-    val goBoom2Declarations = 
+    val goBoom2Declarations =
       "to setup clear-all create-turtles 1 reset-ticks end\n" +
       "to go if not any? turtles [ stop ] if ticks = 10 [ ask turtles [ die ] ] tick end"
     test("metricGoBoom2") {

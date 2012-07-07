@@ -67,7 +67,7 @@ class Translator(model: Model, compiler: CompilerServices) {
       for(c <- converters)
         procedures += "  let local-" + c.name + " " + c.name + "\n"
       for(r <- rates)
-        procedures += "  let local-" + r.name + " " + r.name + "\n" 
+        procedures += "  let local-" + r.name + " " + r.name + "\n"
     }
     if(!stocks.isEmpty) {
       procedures += "\n  ;; update stock values\n" +

@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ WorldDimensions, WorldDimensions3D }
 
 class World3DTests extends AbstractTestWorld with FunSuite
-{ 
+{
 
   val worldSquare = new WorldDimensions3D(-2, 2, -2, 2, -2, 2)
   val worldRectangle = new WorldDimensions3D(-3, 3, -2, 2, -2, 2)
@@ -20,7 +20,7 @@ class World3DTests extends AbstractTestWorld with FunSuite
     w.realloc()
     w
   }
-  override def makeTurtle(world: World, cors: Array[Int]) = 
+  override def makeTurtle(world: World, cors: Array[Int]) =
     new Turtle3D(world.asInstanceOf[World3D],
                  world.turtles(),
                  cors(0).toDouble,

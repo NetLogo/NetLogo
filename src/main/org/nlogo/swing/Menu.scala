@@ -26,7 +26,7 @@ class Menu(text: String) extends javax.swing.JMenu(text) {
   def addMenuItem(text: String, shortcut: Char, shift: Boolean): javax.swing.JMenuItem =
     addMenuItem(text, shortcut, shift, null: javax.swing.Action)
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action): javax.swing.JMenuItem = {
-    val item = 
+    val item =
       if(action == null)
         new javax.swing.JMenuItem(text)
       else {

@@ -48,7 +48,7 @@ class _sorton extends Reporter {
             a1.compareTo(a2)
           case (o1: AnyRef, o2: AnyRef) =>
             throw new EngineException(
-              context, _sorton.this , 
+              context, _sorton.this ,
               "SORT-ON works on numbers, strings, or agents of the same type, " +
               "but not on " + TypeNames.aName(o1) + " and " + TypeNames.aName(o2))
         }

@@ -911,9 +911,9 @@ public final strictfp class Turtle3D
     try {
       newHeading = world.protractor().towards(this, x, y, wrap);
     } catch (AgentException ex) {
-      // AgentException here means we tried to calculate the heading from 
-      // an agent to itself, or to an agent at the exact same position. 
-      // Since face is nice, it just ignores the exception and doesn't change 
+      // AgentException here means we tried to calculate the heading from
+      // an agent to itself, or to an agent at the exact same position.
+      // Since face is nice, it just ignores the exception and doesn't change
       // the callers heading. - AZS 6/22/05
       org.nlogo.util.Exceptions.ignore(ex);
     }

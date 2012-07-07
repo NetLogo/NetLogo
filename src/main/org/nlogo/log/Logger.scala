@@ -185,7 +185,7 @@ class Logger(studentName: String) extends LoggingListener {
     Files.zipSessionFiles(logDirectory, filename)
   }
 
-  def getFileList: Array[String] = 
+  def getFileList: Array[String] =
     new java.io.File(logDirectory).list(
       new java.io.FilenameFilter {
         override def accept(dir: java.io.File, name: String) =

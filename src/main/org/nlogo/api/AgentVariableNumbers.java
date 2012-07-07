@@ -3,7 +3,7 @@
 package org.nlogo.api;
 
 public final strictfp class AgentVariableNumbers {
-  
+
   // this class is not instantiable
   private AgentVariableNumbers() { throw new IllegalStateException(); }
 

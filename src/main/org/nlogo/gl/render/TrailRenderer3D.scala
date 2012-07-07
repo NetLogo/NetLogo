@@ -16,7 +16,7 @@ extends DrawingRendererInterface {
   def init(gl: GL) {
     lineIndex = gl.glGenLists(1)
     gl.glNewList(lineIndex, GL.GL_COMPILE)
-    gl.glBegin(GL.GL_LINES) 
+    gl.glBegin(GL.GL_LINES)
     gl.glNormal3f(0f, 0f, -1f)
     gl.glVertex3f(0, 0 , 0)
     gl.glVertex3f(0 , Renderer.WORLD_SCALE, 0)
@@ -33,7 +33,7 @@ extends DrawingRendererInterface {
       val distance =
         if (world.observer.perspective == Perspective.Follow || world.observer.perspective == Perspective.Ride)
           world.observer.followDistance
-        else world.observer.dist 
+        else world.observer.dist
       var lineScale: Double = 0
       if(distance != 0)
         lineScale = (math.max(world.worldWidth, world.worldHeight)) * 1.5 / distance
@@ -62,7 +62,7 @@ extends DrawingRendererInterface {
     var wrapXRight = false
     var wrapXLeft = false
     var wrapYTop = false
-    var wrapYBottom = false               
+    var wrapYBottom = false
     renderLine(gl, l, x, y, z)
     // note that we pre-wrap the lines when they are drawn in a standard world.  so we only need to
     // do this wrapping if the view is off-center ev 5/24/06
@@ -92,7 +92,7 @@ extends DrawingRendererInterface {
         wrapYTop = true
       }
       if(endY  < miny) {
-        renderLine(gl, l, x, y + worldHeight, z)  
+        renderLine(gl, l, x, y + worldHeight, z)
         if(wrapXRight)
           renderLine(gl, l, x - worldWidth, y + worldHeight, z)
         if(wrapXLeft)
@@ -161,8 +161,8 @@ extends DrawingRendererInterface {
 
   private def alignLine(gl: GL, line: DrawingLine3D, x: Double, y: Double, z: Double) {
     val length = line.length
-    gl.glTranslated(x * Renderer.WORLD_SCALE, 
-                    y * Renderer.WORLD_SCALE, 
+    gl.glTranslated(x * Renderer.WORLD_SCALE,
+                    y * Renderer.WORLD_SCALE,
                     z * Renderer.WORLD_SCALE)
     gl.glRotated(-line.heading, 0.0d, 0.0d, 1.0d)
     gl.glRotated(line.pitch, 1.0d, 0.0d, 0.0d)

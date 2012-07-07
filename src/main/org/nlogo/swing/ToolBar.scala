@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.swing 
+package org.nlogo.swing
 
 import org.nlogo.awt.RowLayout
 import java.awt.{Graphics,Dimension,Component, Color}
@@ -27,7 +27,7 @@ object ToolBar {
 abstract class ToolBar extends JToolBar {
   setFloatable(false)
   setLayout(new RowLayout(5,Component.LEFT_ALIGNMENT,Component.CENTER_ALIGNMENT))
-  
+
   def addControls(): Unit
 
   // we add the controls at addNotify time so that subclasses have the chance to fully construct
@@ -37,7 +37,7 @@ abstract class ToolBar extends JToolBar {
     addControls()
     for(comp<-getComponents) {
       comp.setFocusable(false)
-      org.nlogo.awt.Fonts.adjustDefaultFont(comp) 
+      org.nlogo.awt.Fonts.adjustDefaultFont(comp)
     }
     // kinda kludgy but we don't want to have the text below
     // the checker in the checkbox in the Code tab ev 8/24/06

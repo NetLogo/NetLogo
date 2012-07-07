@@ -31,7 +31,7 @@ class _hubnetsendoverride extends Command {
     if(!workspace.getHubNetManager.isOverridable(set.`type`, varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
-    
+
     val freshContext = new Context(context, set)
     args(3).checkAgentSetClass(set, context)
 

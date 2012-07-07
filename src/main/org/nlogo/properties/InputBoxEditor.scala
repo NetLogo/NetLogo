@@ -12,7 +12,7 @@ import javax.swing.{JComboBox, JLabel, JCheckBox}
 abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
   extends PropertyEditor(accessor)
 {
-  
+
   private val typeCombo: JComboBox = new JComboBox
   private val multiline: JCheckBox = new JCheckBox("Multi-Line")
   private val options: Options[InputBox#InputType] = accessor.get

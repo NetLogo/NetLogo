@@ -46,7 +46,7 @@ package org.nlogo.nvm
 // block.  a command like _if doesn't use _done because there is no new context to kill off.
 //
 // Reporter arguments can be accessed and manipulated via argCount(), arg(), and removeArg().
-// 
+//
 // Calling goTo() adds a _goto command.  The target of the command is the location where comeFrom()
 // is called.  (Intercal fans will enjoy the name of the latter method.)  At present only one goto
 // is permitted; if we ever write a prim needing multiple gotos, these methods would have to take

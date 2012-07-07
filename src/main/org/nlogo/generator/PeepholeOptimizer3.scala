@@ -17,19 +17,19 @@ import org.objectweb.asm.{ Label, MethodAdapter, MethodVisitor }
  * The only way we can safely use this peep-hole optimizer is if we could guarantee that every
  * argument to a report_* method was only referenced once in the bytecode of the method body.
  * PeepholeSafeChecker checks for this.  If a report_* or perform_* method is "PeepholeSafe", then a
- * special label (PEEPHOLE_SAFE_FLAG) is inserted into the bytecode by the InstructionGenerator, 
+ * special label (PEEPHOLE_SAFE_FLAG) is inserted into the bytecode by the InstructionGenerator,
  * which this class looks for, to make sure it is safe to perform the transformation.
  *
  *   ~Forrest (6/19/2006)
- * 
- * It's looking for patterns like this: 
+ *
+ * It's looking for patterns like this:
  *    DSTORE 4
  *  (L-special) // PEEPHOLE_SAFE_FLAG label
  *   L2
  *    LINENUMBER 2 L2
  *  (L3)  // extra junk label
  *    DLOAD 4
- * And replacing them with just: 
+ * And replacing them with just:
  *   L2
  *    LINENUMBER 2 L2
  *  (L3)
@@ -136,18 +136,18 @@ private class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOpti
 }
 
 /**
- * This class serves as a peep-hole optimizer.  
+ * This class serves as a peep-hole optimizer.
  * Its purpose is just to clean up the PEEPHOLE_FLAG_LABELs
  * that PeepholeOptimizer3 leaves behind.
  * PeepholeOptimizer3 must ALWAYS be used in conjunction with this
  * class, because otherwise we'll end up placing the PEEPHOLE_FLAG_LABEL
  * in multiple places in the method body, which causes a verifier error.
- * 
- * It's looking for patterns like this: 
+ *
+ * It's looking for patterns like this:
  *    Label PEEPHOLE_FLAG_LABEL
- * And replacing them with: 
+ * And replacing them with:
  *   (nothing)
- *  
+ *
  *  ~Forrest (6/19/2006)
  */
 

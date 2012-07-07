@@ -11,7 +11,7 @@ import java.awt.{Dimension, Font}
 abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
                                   colorizer: Colorizer[_])
          extends CodeEditor(accessor, colorizer, false, false){
-  
+
   override lazy val editor = new EditorField(
     30, new Font(platformMonospacedFont, Font.PLAIN, 12), false, colorizer,
     org.nlogo.api.I18N.gui.get _)

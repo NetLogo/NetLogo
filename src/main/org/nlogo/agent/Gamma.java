@@ -16,7 +16,7 @@ without expressed or implied warranty.
 /**
  * Gamma distribution; <A HREF="http://wwwinfo.cern.ch/asdoc/shortwrupsdir/g106/top.html"> math definition</A>,
  * <A HREF="http://www.cern.ch/RD11/rkb/AN16pp/node96.html#SECTION000960000000000000000"> definition of gamma function</A>
- * and <A HREF="http://www.statsoft.com/textbook/glosf.html#Gamma Distribution"> animated definition</A>. 
+ * and <A HREF="http://www.statsoft.com/textbook/glosf.html#Gamma Distribution"> animated definition</A>.
  * <p>
  * <tt>p(x) = k * x^(alpha-1) * e^(-x/beta)</tt> with <tt>k = 1/(g(alpha) * b^a))</tt> and <tt>g(a)</tt> being the gamma function.
  * <p>
@@ -24,10 +24,10 @@ without expressed or implied warranty.
  * <p>
  * Note: For a Gamma distribution to have the mean <tt>mean</tt> and variance <tt>variance</tt>, set the parameters as follows:
  * <pre>
- * alpha = mean*mean / variance; lambda = 1 / (variance / mean); 
+ * alpha = mean*mean / variance; lambda = 1 / (variance / mean);
  * </pre>
  * <p>
- * <b>Implementation:</b> 
+ * <b>Implementation:</b>
  * <dt>
  * Method: Acceptance Rejection combined with Acceptance Complement.
  * <dt>
@@ -35,7 +35,7 @@ without expressed or implied warranty.
  * CLHEP's implementation, in turn, is based on <tt>gds.c</tt> from the <A HREF="http://www.cis.tu-graz.ac.at/stat/stadl/random.html">C-RAND / WIN-RAND</A> library.
  * C-RAND's implementation, in turn, is based upon
  * <p>
- * J.H. Ahrens, U. Dieter (1974): Computer methods for sampling from gamma, beta, Poisson and binomial distributions, 
+ * J.H. Ahrens, U. Dieter (1974): Computer methods for sampling from gamma, beta, Poisson and binomial distributions,
  * Computing 12, 223-246.
  * <p>
  * and

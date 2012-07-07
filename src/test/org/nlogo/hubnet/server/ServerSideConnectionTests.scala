@@ -101,7 +101,7 @@ class ServerSideConnectionTests extends MockSuite {
       for(i<-1 to 10) {
         one(server).putClientData(ActivityMessageEnvelope(clientId, "test-content", "test-tag"))
       }
-      
+
       one(server).removeClient(clientId, notifyClient = false, "no-reason")
 
     }

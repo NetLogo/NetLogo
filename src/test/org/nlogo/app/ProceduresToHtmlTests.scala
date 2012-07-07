@@ -19,7 +19,7 @@ class ProceduresToHtmlTests extends FunSuite with SlowTest {
   }
   // can be very slow, so restrict to 2D to keep overall nightly.sh runtime down - ST 6/24/11
   if(!Version.is3D)
-    // very long Code tabs shouldn't blow the stack.  
+    // very long Code tabs shouldn't blow the stack.
     test("don't blow stack") {
       val path = "models/test/applet/Really Long Code.nls"
       expect(1010929)(convert(FileIO.file2String(path).replaceAll("\r\n", "\n")).size)

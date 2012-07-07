@@ -118,5 +118,5 @@ class InfoFormatterTests extends FunSuite {
                      |oof""".stripMargin)
     }
   }
-  
+
 }

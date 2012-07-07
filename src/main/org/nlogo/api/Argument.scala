@@ -5,7 +5,7 @@ package org.nlogo.api
 /**
  * Interface provides access to arguments passed to the <code>perform</code> or <code>report</code>
  * methods of a primitive at run-time.
- * 
+ *
  * <code>Arguments</code> are created by NetLogo and passed to the <code>perform</code> or
  * <code>report</code> methods of your primitive.
  *

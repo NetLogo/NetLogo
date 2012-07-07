@@ -17,12 +17,12 @@ object RandomSeedGenerator {
   // don't).  The initial value of lastResult is arbitrary. It could cause a value to be skipped for
   // no good reason, but that won't ever happen, and it wouldn't matter if it did. - AZS 6/20/05
   private var lastResult = 0.0
-  
+
   // For the purposes of feeding them to the Mersenne Twister, two seeds are still completely
   // different even if they differ little numerically.  But psychologically, I think people might
   // get suspicious if the seeds we give them don't appear random from invocation to invocation.  So
   // we'll fool them by running the seed itself through the Mersenne Twister. - ST 5/31/06
-  private def next = 
+  private def next =
     (new MersenneTwisterFast).nextInt
 
   def generateSeed(): Double = synchronized {
@@ -38,5 +38,5 @@ object RandomSeedGenerator {
     }
     throw new IllegalStateException
   }
-  
+
 }

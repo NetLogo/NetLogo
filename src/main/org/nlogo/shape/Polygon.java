@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-// Polygons are closed curves (i.e. the first point equals the last) 
+// Polygons are closed curves (i.e. the first point equals the last)
 public strictfp class Polygon
     extends Curve
     implements Cloneable {

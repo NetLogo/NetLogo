@@ -53,7 +53,7 @@ class Lab(loader: ProtocolLoader)
             queue.synchronized { queue.enqueue(w) }
           }
           override def runtimeError(w: Workspace, runNumber: Int, t: Throwable) {
-            if (!suppressErrors) 
+            if (!suppressErrors)
               t match {
                 case ee: EngineException =>
                   val msg = ee.context.buildRuntimeErrorMessage(ee.instruction, ee)

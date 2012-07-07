@@ -356,4 +356,4 @@ public strictfp class MonitorWidget
   public void mouseExited(MouseEvent e) {
   }
 
-}  
+}

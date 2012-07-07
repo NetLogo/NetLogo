@@ -80,8 +80,8 @@ private class CustomGenerator(profilingEnabled: Boolean) {
      newActivation.args[ 0 ] = o0
      newActivation.args[ 1 ] = o1
      ...
-     context.activation = newActivation 
-     context.ip = 0 
+     context.activation = newActivation
+     context.ip = 0
      // included only if profiling data collection:
      workspace.profilingTracer().openCallRecord(context, newActivation)
    }
@@ -103,28 +103,28 @@ private class CustomGenerator(profilingEnabled: Boolean) {
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/nvm/Activation", "<init>", "(Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V")
     // operand stack: Activation
     for (i <- 0 until (instr.procedure.args.size - instr.procedure.localsCount)) {
-      // newActivation.args[ i ] = args[ i ].report(context) 
+      // newActivation.args[ i ] = args[ i ].report(context)
       mv.visitInsn(DUP)
       mv.visitFieldInsn(GETFIELD, "org/nlogo/nvm/Activation", "args", "[Ljava/lang/Object;")
       mv.push(i)
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
       mv.visitInsn(AASTORE)
-      // operand stack: Activation 
+      // operand stack: Activation
     }
     // if profiling,we'll need an extra Activation on the stack.
     if (profilingEnabled) mv.visitInsn(DUP)
     mv.visitVarInsn(ALOAD, 1)
-    // operand stack: [Activation] Activation Context 
+    // operand stack: [Activation] Activation Context
     mv.visitInsn(SWAP)
-    // operand stack: [Activation] Context Activation  
+    // operand stack: [Activation] Context Activation
     mv.visitFieldInsn(PUTFIELD, "org/nlogo/nvm/Context", "activation", "Lorg/nlogo/nvm/Activation;")
-    // operand stack: [Activation]  
+    // operand stack: [Activation]
     mv.visitVarInsn(ALOAD, 1)
     mv.visitInsn(ICONST_0)
     // operand stack: [Activation] Context 0
     mv.visitFieldInsn(PUTFIELD, "org/nlogo/nvm/Context", "ip", "I")
-    // operand stack: [Activation]  
+    // operand stack: [Activation]
     if (profilingEnabled) {
       // operand stack: Activation
       mv.visitVarInsn(ALOAD, 0)
@@ -134,10 +134,10 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
       // operand stack: Activation Tracer
       mv.visitInsn(SWAP)
-      // operand stack: Tracer Activation  
+      // operand stack: Tracer Activation
       mv.visitVarInsn(ALOAD, 1)
       mv.visitInsn(SWAP)
-      // operand stack: Tracer Context Activation  
+      // operand stack: Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
         "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
     }
@@ -150,9 +150,9 @@ private class CustomGenerator(profilingEnabled: Boolean) {
      new Activation(procedure, context.activation, n)
      newActivation.args[ 0 ] = o0
      newActivation.args[ 1 ] = o1
-     ... 
-     context.activation = newActivation 
-     context.ip = 0 
+     ...
+     context.activation = newActivation
+     context.ip = 0
      // included only if profiling data collection:
      workspace.profilingTracer().openCallRecord(context, newActivation)
    }
@@ -181,7 +181,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       // operand stack: Activation Args[] i
       mv.generateArgument(instr, i, classOf[Object], thisInstrUID)
       mv.visitInsn(AASTORE)
-      // operand stack: Activation 
+      // operand stack: Activation
     }
     // if profiling,we'll need an extra Activation on the stack.
     if (profilingEnabled) mv.visitInsn(DUP)
@@ -196,14 +196,14 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;");
       // operand stack: Activation Activation Activation Tracer
       mv.visitInsn(SWAP)
-      // operand stack: Activation Activation Tracer Activation  
+      // operand stack: Activation Activation Tracer Activation
       mv.visitVarInsn(ALOAD, 1)
       mv.visitInsn(SWAP)
-      // operand stack: Activation Activation Tracer Context Activation  
+      // operand stack: Activation Activation Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "openCallRecord",
         "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
     }
-    // operand stack: [Activation] Activation  
+    // operand stack: [Activation] Activation
     mv.visitVarInsn(ALOAD, 1)
     mv.visitInsn(SWAP)
     mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Context", "callReporterProcedure",
@@ -218,14 +218,14 @@ private class CustomGenerator(profilingEnabled: Boolean) {
       mv.visitMethodInsn(INVOKEINTERFACE, "org/nlogo/nvm/Workspace", "profilingTracer", "()Lorg/nlogo/nvm/Tracer;")
       // operand stack: resultObj Activation Tracer
       mv.visitInsn(SWAP)
-      // operand stack: resultObj Tracer Activation  
+      // operand stack: resultObj Tracer Activation
       mv.visitVarInsn(ALOAD, 1)
       mv.visitInsn(SWAP)
-      // operand stack: resultObj Tracer Context Activation  
+      // operand stack: resultObj Tracer Context Activation
       mv.visitMethodInsn(INVOKEVIRTUAL, "org/nlogo/nvm/Tracer", "closeCallRecord",
         "(Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Activation;)V")
     }
-    // operand stack: resultObj  
+    // operand stack: resultObj
     mv.visitInsn(DUP)
     val lSkip = new Label
     mv.visitJumpInsn(IFNONNULL, lSkip)
@@ -317,7 +317,7 @@ private class CustomGenerator(profilingEnabled: Boolean) {
 
   /* Example code,just to show what bytecode is being generated
    *
-   public String report_N(Object o0,Object o1) 
+   public String report_N(Object o0,Object o1)
    {
    StringBuilder result = new StringBuilder()
    result.append(Dump.logoObject(o0))

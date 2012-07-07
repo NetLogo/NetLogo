@@ -33,7 +33,7 @@ class TurtleShapeManagerDialog(parentFrame: java.awt.Frame,
     // You can only duplicate one shape at a time
     if ( shape != null )   {
       val newShape = shape.clone.asInstanceOf[VectorShape]
-      newShape.setName("") 
+      newShape.setName("")
       new EditorDialog(shapesList, newShape, getLocation.x, getLocation.y, true )
     }
   }
