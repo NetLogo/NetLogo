@@ -64,7 +64,7 @@ trait TestMultiThreadedModels extends AbstractTestModels {
 
 /**
  * An example of using TestMultiThreadedModels
- * This runs gas lab gas in a box in parallel using 10 threads 
+ * This runs gas lab gas in a box in parallel using 10 threads
  */
 class GasLabInParallelTests extends TestMultiThreadedModels with SlowTest {
 

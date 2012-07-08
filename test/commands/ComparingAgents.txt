@@ -11,7 +11,7 @@ ComparingLinks
  undirected-link 0 1 < undirected-link 0 1 => false
  directed-link 0 1 >= directed-link 0 1 => true
  undirected-link 0 1 <= undirected-link 0 1 => true
- O> set glob1 [patch-here] of turtle 0 
+ O> set glob1 [patch-here] of turtle 0
  glob1 < turtle 0 => ERROR The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on a patch and a turtle.
  glob1 <= turtle 0 => ERROR The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on a patch and a turtle.
  turtle 0 < glob1 => ERROR The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on a turtle and a patch.

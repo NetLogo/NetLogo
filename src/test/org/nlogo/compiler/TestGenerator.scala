@@ -25,7 +25,7 @@ class TestGenerator extends FunSuite {
     condense(compile(source, "__ignore ").args.head.disassembly.value)
   def stripLineNumbers(disassembly: String) =
     disassembly.split("\n").filter(!_.matches("L\\d?")).toList
-  
+
   if(Version.useGenerator)
     test("no arg reporter") {
       // the result is being passed to __ignore which expects an Object so we should

@@ -30,7 +30,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   import SliderHorizontalPainter._
 
   // sub-elements of slider visuals
-  val handle = new Handle() 
+  val handle = new Handle()
   val channel = new Channel()
 
   locally {
@@ -40,11 +40,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   }
 
   override def dettach() {
-    slider.remove(handle) 
-    slider.remove(channel) 
+    slider.remove(handle)
+    slider.remove(channel)
     slider.removeMouseWheelListener(this)
   }
-  
+
   /// size calculations
   override def getMaximumSize = new Dimension(10000, MIN_HEIGHT)
   override def getMinimumSize = {
@@ -54,8 +54,8 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   override def getPreferredSize(font:Font) = {
     val metrics = slider.getFontMetrics(font)
     val width = maxValueWidth(metrics) + metrics.stringWidth(slider.name) +
-      RIGHT_MARGIN + LEFT_MARGIN + PADDING 
-    new Dimension(StrictMath.max(width, MIN_PREFERRED_WIDTH), MIN_HEIGHT) 
+      RIGHT_MARGIN + LEFT_MARGIN + PADDING
+    new Dimension(StrictMath.max(width, MIN_PREFERRED_WIDTH), MIN_HEIGHT)
   }
 
   private def maxValueWidth(metrics: FontMetrics) = {
@@ -70,8 +70,8 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   }
 
   override  def setToolTipText(text:String ) {
-    handle.setToolTipText(text) 
-    channel.setToolTipText(text) 
+    handle.setToolTipText(text)
+    channel.setToolTipText(text)
   }
 
   override def doLayout() {
@@ -94,11 +94,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   def handlePositionChanged(x:Int, buttonRelease:Boolean){
     if(!slider.anyErrors) try{
       val newValue = slider.minimum + x * scaleFactor
-      slider.value_=(slider.coerceValue(newValue), buttonRelease) 
+      slider.value_=(slider.coerceValue(newValue), buttonRelease)
     }
     catch{ case e:LogoException => org.nlogo.util.Exceptions.ignore(e) }
   }
-  
+
   def incrementClick(x:Int){
     if(!slider.anyErrors) try {
       val thisRect = channel.getBounds()
@@ -109,7 +109,7 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     }
     catch{ case ex:LogoException=> org.nlogo.util.Exceptions.ignore(ex)  }
   }
-  
+
   private def scaleFactor = {
     (slider.maximum - slider.minimum) /
             (slider.getBounds().width - LEFT_MARGIN - RIGHT_MARGIN - CHANNEL_LEFT_MARGIN - CHANNEL_RIGHT_MARGIN)

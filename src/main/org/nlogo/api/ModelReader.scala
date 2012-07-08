@@ -40,7 +40,7 @@ object ModelReader {
     sectionDone()
     map.asJava
   }
-  
+
   def parseVersion(map: ModelMap): String =
     map.get(ModelSection.Version)(0)
 

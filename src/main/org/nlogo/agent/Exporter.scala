@@ -81,7 +81,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     }
     println()
   }
-  
+
   private def exportRandomState() {
     println(csv.encode("RANDOM STATE"))
     println(csv.encode(world.mainRNG.save()))
@@ -95,8 +95,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.encode("min-pycor") + ","
           + csv.encode("max-pycor") + ","
           + csv.encode("perspective") + ","
-          + csv.encode("subject") + "," 
-          + csv.encode("nextIndex") + "," 
+          + csv.encode("subject") + ","
+          + csv.encode("nextIndex") + ","
           + csv.encode("directed-links") + ","
           + csv.encode("ticks"))
     val globals = world.program.globals
@@ -113,12 +113,12 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       Option(world.observer.targetAgent).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
-    print(csv.encode(JInteger.toString(world.minPxcor)) + "," 
+    print(csv.encode(JInteger.toString(world.minPxcor)) + ","
           + csv.encode(JInteger.toString(world.maxPxcor)) + ","
           + csv.encode(JInteger.toString(world.minPycor)) + ","
           + csv.encode(JInteger.toString(world.maxPycor)) + ","
           + csv.encode(JInteger.toString(world.observer.perspective.export)) + ","
-          + csv.data(subject) + "," 
+          + csv.data(subject) + ","
           + csv.encode(JLong.toString(world.nextTurtleIndex)) + ","
           + csv.data(if (world.links.isDirected) "DIRECTED" else
                      if (world.links.isUndirected) "UNDIRECTED" else "NEITHER") + ","
@@ -186,7 +186,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     }
     println()
   }
-  
+
   private def exportPatches() {
     println(csv.encode("PATCHES"))
     val vars = world.program.patchesOwn
@@ -203,7 +203,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     }
     println()
   }
-  
+
   protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]) {
     val (sortedVars, sortedIndices) = (vars zip indices).sortBy(_._2).unzip
     sortedVars.copyToArray(vars)

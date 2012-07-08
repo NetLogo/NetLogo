@@ -10,7 +10,7 @@ RunResult3
 RunResult4
   runresult "" => ERROR Expected reporter.
 
-# The error message we get here is a lousy one. The reason it talks about parentheses 
+# The error message we get here is a lousy one. The reason it talks about parentheses
 # is that Evaluator wraps the code like "to-report foo report (3 die) end".  Without
 # parens it would pass the compiler which we definitely don't want, but including
 # the parens results it this confusing error message. - ST 11/12/09

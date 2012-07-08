@@ -28,6 +28,10 @@ tmp/
 /src/main/org/nlogo/lex/TokenLexer.java
 /src/main/org/nlogo/window/Events.java
 
+# Eclipse
+/.classpath
+/.project
+
 # other
 /.ensime
 /build/

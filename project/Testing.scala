@@ -6,7 +6,7 @@ object Testing {
   val FastTest = config("fast") extend(Test)
   val MediumTest = config("medium") extend(Test)
   val SlowTest = config("slow") extend(Test)
-  
+
   val configs = Seq(FastTest, MediumTest, SlowTest)
 
   lazy val tr = InputKey[Unit]("tr", "run TestReporters", test)

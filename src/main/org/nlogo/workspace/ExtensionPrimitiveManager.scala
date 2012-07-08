@@ -11,7 +11,7 @@ class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.Primitiv
     importedPrimitives.put(name.toUpperCase, prim)
   }
   /**
-   * Returns the names of all imported primitives. 
+   * Returns the names of all imported primitives.
    */
   def getPrimitiveNames(): java.util.Iterator[String] = {
     import collection.JavaConverters._
@@ -20,7 +20,7 @@ class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.Primitiv
   /**
    * Returns the primitive associated with a name.
    * @param name  the name of the primitive
-   * @return the primitive associated with <code>name</code>, or <code>null</code> if 
+   * @return the primitive associated with <code>name</code>, or <code>null</code> if
    * there isn't one
    */
   def getPrimitive(name: String): Primitive =

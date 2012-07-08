@@ -16,7 +16,7 @@ private object TypeConverter {
    * @param mv - ASM MethodVisitor to write bytes to
    * @param firstFreeJVMLocal - this tells us what local variable slots are
    *   free/available to use, to store temporary information.
-   * @param instr - we a reference to the instruction so we can throw a proper 
+   * @param instr - we a reference to the instruction so we can throw a proper
    *   exception when something goes wrong.
    * @param argIndex - this is the index of the argument that is being converted
    *   we need this, so we can create ArgumentTypeExceptions pointing to the
@@ -51,7 +51,7 @@ private object TypeConverter {
   }
   // Conversion methods:
   // method fromXtoY assumes that the top jvm stack value is of type X
-  // the method generates code to convert the top stack value to type Y 
+  // the method generates code to convert the top stack value to type Y
   //   ~Forrest (5/16/2006)
   private def from_Double_to_double(mv: MethodVisitor) {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D")

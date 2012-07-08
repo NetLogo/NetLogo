@@ -10,7 +10,7 @@ else
   export LANGUAGE_CODE=$1
 fi
 
-# test to make sure we know where NetLogo lives. 
+# test to make sure we know where NetLogo lives.
 # if we don't know, try using /Applications/NetLogo 5.0beta1, and say so.
 if ! (test "$NETLOGO_DIR")
 then

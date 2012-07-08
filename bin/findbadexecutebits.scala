@@ -1,13 +1,10 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 /// Makes sure no files have their execute bit wrongly set or unset
 
-import sys.process._
+import sys.process.Process
 
 def skip(path: String): Boolean =
   path.containsSlice("/.git/") ||
@@ -22,7 +19,7 @@ def skip(path: String): Boolean =
 val executableExtensions =
   "sh py exe"
 val executableFullNames =
-  "MacOS/HubNet MacOS/NetLogo bin/scala bin/scalac bin/sbt bin/scaladoc"
+  "MacOS/HubNet MacOS/NetLogo bin/sbt bin/scala"
 val nonExecutableExtensions =
   "java nlogo nlogo3d txt flex class classpath srcs css graph srcs-scala prefs launch scala xml png tgz gz " +
   "nim graffle html diff example xls ddf jar mk doc zip gif bz2 dtd ninfo project versioned log " +
@@ -46,3 +43,7 @@ for{path <- Process("find . -type f -perm +0100 -prune -o -type f -print").lines
      !path.startsWith("./scala/var/"))
     println(path)
 }
+
+// Local Variables:
+// mode: scala
+// End:

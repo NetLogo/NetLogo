@@ -12,7 +12,7 @@ private class Euclidean(observer: Observer) extends Comparator[Agent] {
 
   override def compare(a1: Agent, a2: Agent): Int =
     distance(a2) compareTo distance(a1)
-  
+
  /** Computes the Euclidean Squared distance between the given renderable object
   * and the observer. This is like ordinary distance, but without the square root.
   * We're using it for two reasons:

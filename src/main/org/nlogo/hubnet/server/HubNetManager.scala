@@ -144,7 +144,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
     resetPlotManager()
   }
-  
+
   /// Individualized client views
 
   def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =

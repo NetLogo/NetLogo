@@ -36,7 +36,7 @@ private class DrawingRenderer(world: World, drawing: DrawingInterface)
       gl.glPushMatrix()
       TextureUtils.setParameters(gl)
       gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
-      renderTextureTiles(gl, width, height, textureSize, 
+      renderTextureTiles(gl, width, height, textureSize,
                          drawing.colors, drawing.isDirty)
       drawing.markClean()
       gl.glPopMatrix()

@@ -19,9 +19,15 @@ object Extensions {
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
     log.info("building extension: " + dir.getName)
-    val jar = new File(dir, dir.getName + ".jar")
-    Process(List("make", "-s", jar.getName), dir,
-            "SCALA_JAR" -> scalaLibrary.getPath) ! log
+    val jar = dir / (dir.getName + ".jar")
+    val exitCode =
+      if((dir / "build.sbt").exists)
+        Process(Seq("bin/sbt", "package"), dir,
+                "SCALA_JAR" -> scalaLibrary.getPath) ! log
+      else
+        Process(Seq("make", "-s", jar.getName), dir,
+                "SCALA_JAR" -> scalaLibrary.getPath) ! log
+    assert(exitCode == 0, "extension build failed, exitCode = " + exitCode)
     jar
   }
 

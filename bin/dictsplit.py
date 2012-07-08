@@ -52,7 +52,7 @@ def makeValidFileName(s):
     s = newS
     ### s = ''.join(c in validChars and c or '' for c in s)
     s = s.strip('-')
-    #s = s.replace('-','_') 
+    #s = s.replace('-','_')
     return s
 
 def isOkayPrimName(s):
@@ -61,7 +61,7 @@ def isOkayPrimName(s):
     if (len(s) <= 2):
         if s in "+|-|*|/|^|<|>|=|!=|<=|>=" and (not '|' in s):
             return True
-    
+
     validChars = '_?-0123456789abcdefghijklmnopqrstuvwxyz'
     newS = ""
     for i in range(len(s)):
@@ -69,7 +69,7 @@ def isOkayPrimName(s):
             newS = newS + s[i]
     #scrubbedS = ''.join(c in validChars and c or '' for c in s)
     return s == newS
-    
+
 def makeHTMLFile(anchorName, snippet):
     # Grab the title out of the <h3> block, if there is one.
     try:
@@ -77,7 +77,7 @@ def makeHTMLFile(anchorName, snippet):
         title = "NetLogo Help: " + stripHTMLTags(myregex.findall(snippet)[0])
     except:
         title = "NetLogo Help"
-    
+
     #fix links to anchors
     snippet = re.sub(r'href[\s]*=[\s]*"#', 'href="dictionary.html#', snippet)
     #fix all links to use directory above
@@ -119,7 +119,7 @@ def findEntrySnippets(primEntryChecks, suffix):
                 myregex = re.compile(r'<a.*?name[\w]*=.*?>(.*?)</a>', re.DOTALL | re.IGNORECASE)
                 l = myregex.findall(primEntryChunks[i])
                 # trim whitespace from each item
-                l = [ unescapeHTML(x.strip()) for x in l ]  
+                l = [ unescapeHTML(x.strip()) for x in l ]
                 if (len(l) > 0):
                     validFileName = makeValidFileName(l[0])
                     if (len(validFileName) > 0):

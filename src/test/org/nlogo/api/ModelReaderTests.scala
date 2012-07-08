@@ -64,7 +64,7 @@ class ModelReaderTests extends FunSuite {
     assert(widgets.size === 1)
     assert(widgets.get(0).get(0) === "GRAPHICS-WINDOW")
   }
-  
+
   // strip/restoreLines
   test("StripSimple") {
     expect("foo")(ModelReader.stripLines("foo"))

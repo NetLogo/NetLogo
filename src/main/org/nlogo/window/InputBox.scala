@@ -375,7 +375,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
         }
         catch {
           case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
-            showError(ex.asInstanceOf[Exception]) 
+            showError(ex.asInstanceOf[Exception])
         }
       }
     }
@@ -458,7 +458,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     def addTypeOptions(options:Options[InputType]){
       baseNames.map{ name =>
         val t = create(name)
-        typeOptions.addOption(t.displayName, t) 
+        typeOptions.addOption(t.displayName, t)
       }
     }
   }
@@ -497,7 +497,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     textArea.getEditorKitForContentType("String"),
     javax.swing.UIManager.getFont("Label.font").deriveFont(12.0f)){
   }
-  
+
   def plainFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
   private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, plainFont) {
     override def defaultValue = "0"

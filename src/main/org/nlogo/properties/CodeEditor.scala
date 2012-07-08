@@ -72,7 +72,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     }, BorderLayout.NORTH)
     add(collapso, BorderLayout.CENTER)
   }
-  
+
   private def setVisibility(newVisibility: Boolean) {
     if (collapsible && collapseWhenEmpty) {
       collapso setVisible newVisibility

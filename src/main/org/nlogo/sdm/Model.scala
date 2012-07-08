@@ -10,7 +10,7 @@ class Model(name: String, var dt: Double) extends ModelElement(name) {
   def getDt = dt
   @throws(classOf[Model.ModelException])
   def setDt(dt: Double) {
-    // it doesn't make sense for dt to be <= 0 
+    // it doesn't make sense for dt to be <= 0
     if(dt <= 0.0)
       throw new Model.ModelException("dt cannot be less than or equal to 0.")
     this.dt = dt

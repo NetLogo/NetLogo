@@ -182,7 +182,7 @@ concise-syntax-5
   to foo [x] set glob1 glob1 + x end
   O> foreach [1 2 3] foo
   glob1 => 6
-  
+
 concise-syntax-6
   O> set glob1 task crt
   O> foreach [1 2 3] glob1

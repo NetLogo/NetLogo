@@ -77,7 +77,7 @@ class AppletSaverTests extends FunSuite {
 ## Local Image
 
 ![weathermap](file:./weathermap.jpg)"""
-    
+
     val buf = new StringBuilder
     new AppletSaver(mockConverter, buf).build(
       "LocalLinksAndImages","LocalLinksAndImages.nlogo",675,480,infoText,"",

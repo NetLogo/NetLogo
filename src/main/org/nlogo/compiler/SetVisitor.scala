@@ -10,7 +10,7 @@ import org.nlogo.prim._
 /**
  * an AstVisitor that handles the set command. We convert constructs like
  * "_set(var, value)" into more specific things like
- * "_setprocedurevariable(value)" or whatever, where the new set* command 
+ * "_setprocedurevariable(value)" or whatever, where the new set* command
  * knows internally the variable it's setting.
  */
 private class SetVisitor extends DefaultAstVisitor {

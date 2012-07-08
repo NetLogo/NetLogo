@@ -74,7 +74,7 @@ private class ExpressionParser(procedure: Procedure,
         stmt.start = openParen.startPos
         stmt.end = token.endPos
         stmt
-      case TokenType.COMMAND => 
+      case TokenType.COMMAND =>
         val stmt = new Statement(token.value.asInstanceOf[Command],token.startPos,token.endPos,token.fileName)
         if(variadic && isVariadic(stmt.instruction)) parseVarArgs(stmt,tokens,MIN_PRECEDENCE)
         else parseArguments(stmt,tokens,MIN_PRECEDENCE)
@@ -180,7 +180,7 @@ private class ExpressionParser(procedure: Procedure,
     else if(rightArgs.size == 1)
       result + ", " + rightArgs.mkString + "."
     else
-      result + ", " + rightArgs.toList.dropRight(1).mkString(", ") + " and " + rightArgs.last + "." 
+      result + ", " + rightArgs.toList.dropRight(1).mkString(", ") + " and " + rightArgs.last + "."
   }
   /**
    * resolves the types of all arguments in a given application.  See comments for resolveType() for
@@ -305,7 +305,7 @@ private class ExpressionParser(procedure: Procedure,
    *
    * @param tokens     the input token stream
    * @param variadic   whether to treat this expression as possibly variadic
-   * @param precedence the precedence of the operator currently on top of 
+   * @param precedence the precedence of the operator currently on top of
    *                   the "stack"
    *
    * @throws MissingPrefixException if an infix operator is seen with no left argument.

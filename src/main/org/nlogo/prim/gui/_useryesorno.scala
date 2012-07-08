@@ -8,7 +8,7 @@ import org.nlogo.swing.OptionDialog
 import org.nlogo.window.GUIWorkspace
 
 class _useryesorno extends Reporter {
-  override def syntax = 
+  override def syntax =
     Syntax.reporterSyntax(Array(Syntax.WildcardType),
                           Syntax.BooleanType)
   override def report(context: Context) =
@@ -23,7 +23,7 @@ class _useryesorno extends Reporter {
               val response = OptionDialog.showIgnoringCloseBox(
                 gw.getFrame, "User Yes or No",
                 Dump.logoObject(yesNoMessage),
-                Array(I18N.gui.get("common.buttons.yes"), 
+                Array(I18N.gui.get("common.buttons.yes"),
                       I18N.gui.get("common.buttons.no"),
                       I18N.gui.get("common.buttons.halt")),
                 false)

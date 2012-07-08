@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.client 
+package org.nlogo.hubnet.client
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.hubnet.protocol.{HandshakeFromServer, ActivityCommand}
@@ -11,7 +11,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private lazy val roboClient:RoboWidgetControl = new RoboWidgetControl()
 
   override def completeLogin(handshake:HandshakeFromServer){
-    super.completeLogin(handshake) 
+    super.completeLogin(handshake)
     roboClient.start()
   }
 
@@ -21,7 +21,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   override def logout(){
-    roboClient.running = false 
+    roboClient.running = false
     super.logout()
   }
 
@@ -57,17 +57,17 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         sendMouseMessage(randomCor(viewWidget.world.minPxcor, viewWidget.world.maxPxcor),
                           randomCor(viewWidget.world.minPycor, viewWidget.world.maxPycor), true))
     }
-    
+
     /**
-     * NOTE: you CANNOT call this from the eventqueue thread since it 
+     * NOTE: you CANNOT call this from the eventqueue thread since it
      * calls invokeAndWait() it's called from the roboclient thread
      * --mag 08/04/03, 08/07/03
      */
     @throws(classOf[InterruptedException])
     private def getAndSendRoboWidgetMessage(widget:Widget) {
-      // use invokeAndWait() here instead of invokeLater() since 
-      // then if the event thread gets backed up, we don't send 
-      // over a whole slew of widget events all at once.  they 
+      // use invokeAndWait() here instead of invokeLater() since
+      // then if the event thread gets backed up, we don't send
+      // over a whole slew of widget events all at once.  they
       // will always be at least waitTime apart.
       invokeAndWait(() => {
         val (name, value) = widget match {

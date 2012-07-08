@@ -130,7 +130,7 @@ object Dump {
       if (classOf[Turtle].isAssignableFrom(as.`type`)) {
         val printName = as.printName
         if (printName != null) {
-          buf ++= 
+          buf ++=
             (if (as eq as.world.turtles)
                "all-"
              else
@@ -145,7 +145,7 @@ object Dump {
       else if (classOf[Link].isAssignableFrom(as.`type`)) {
         val printName = as.printName
         if (printName != null) {
-          buf ++= 
+          buf ++=
             (if (as eq as.world.links)
                "all-"
              else

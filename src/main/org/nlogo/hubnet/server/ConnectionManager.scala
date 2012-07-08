@@ -16,7 +16,7 @@ import collection.JavaConverters._
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
-// GUIHNM uses it to update the gui. 
+// GUIHNM uses it to update the gui.
 trait ClientEventListener {
   def addClient(clientId: String, remoteAddress: String)
   def clientDisconnect(clientId: String)
@@ -48,7 +48,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   private def worldProps =
     if(workspace.getPropertiesInterface != null) workspace.getPropertiesInterface
     else new WorldPropertiesInterface { def fontSize = 10 } // TODO BAD HACK! JC 12/28/10
-  
+
   // instantiated in startup
   var nodeThread: Thread = null
   private var announcer: DiscoveryAnnouncer = null
@@ -230,7 +230,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     // however, if they still want to call it, we should just update it here anyway.
     // its usually assumed that a call to hubnet-reset will happen right after this call
     // but, it doesn't hurt to keep this here. JC 12/28/10
-    clientInterfaceMap(interfaceType) = 
+    clientInterfaceMap(interfaceType) =
       if(interfaceType == ConnectionTypes.COMP_CONNECTION)
         List(createClientInterfaceSpec)
       else

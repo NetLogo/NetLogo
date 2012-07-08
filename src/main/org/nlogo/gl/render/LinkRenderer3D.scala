@@ -10,7 +10,7 @@ extends LinkRenderer(world, shapeRenderer) {
   override def getOrientation(agent: Agent): Array[Double] = {
     val link = agent.asInstanceOf[Link3D]
     Array(link.heading, link.pitch, 0d)
-  }     
+  }
 
   override def getLinkCoords(agent: Link): Array[Float] = {
     val link = agent.asInstanceOf[Link3D]

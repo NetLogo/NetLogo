@@ -34,7 +34,7 @@ import org.jmock.lib.legacy.ClassImposteriser
     expecting {
        one(m).someCall(arg(a), ..., arg(n))
        // maybe some more calls potentially on more mock objects here.
-       // but if there are too many, its a sign that your code needs refactoring. 
+       // but if there are too many, its a sign that your code needs refactoring.
     }
 
     // the expected should happen When you call a function using the object under test ...
@@ -82,7 +82,7 @@ trait MockSuite extends FunSuite {
   }
 
   // use this method to call into the objects under test
-  // at the end, it makes sure that all the expectations were met. 
+  // at the end, it makes sure that all the expectations were met.
   def when(f: => Unit) {f; context.assertIsSatisfied()}
 
   //

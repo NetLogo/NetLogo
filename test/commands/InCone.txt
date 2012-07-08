@@ -226,7 +226,7 @@ InConeCornerOrigin1_3D
   O> resize-world 0 32 0 32 0 32
   O> cro 1 [ setxy 17 15 ]
   O> cro 10 [ setxy 17 15 fd 3 ]
-  [count turtles in-cone 3 180] of turtle 0 => 6   
+  [count turtles in-cone 3 180] of turtle 0 => 6
 
 InConeCornerOrigin2_2D
   O> resize-world 0 32 0 32
@@ -306,7 +306,7 @@ InConeCornerOrigin2_3D
   [count turtles in-cone 33 0] of turtle 0 => 33
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
-  T> setxy ycor xcor  
+  T> setxy ycor xcor
   T> set heading 270
   [count turtles in-cone 15 0] of turtle 0 => 16
   [count turtles in-cone 16 0] of turtle 0 => 17
@@ -435,7 +435,7 @@ InConeCornerOrigin3_3D
   [count turtles in-cone 33 0] of turtle 0 => 33
   [count turtles in-cone 100 0] of turtle 0 => 33
   [count turtles in-cone 500 0] of turtle 0 => 33
-  T> setxy ycor xcor  
+  T> setxy ycor xcor
   T> set heading 270
   [count turtles in-cone 15 0] of turtle 0 => 16
   [count turtles in-cone 16 0] of turtle 0 => 17
@@ -506,7 +506,7 @@ InConeCornerOrigin4_3D
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> set heading 180
   [count turtles in-cone 100 0] of turtle 0 => 6
-  T> setxy ycor xcor  
+  T> setxy ycor xcor
   T> set heading 270
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> set heading 90
@@ -537,7 +537,7 @@ InConeCornerOrigin5_3D
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> set heading 180
   [count turtles in-cone 100 0] of turtle 0 => 6
-  T> setxy ycor xcor  
+  T> setxy ycor xcor
   T> set heading 270
   [count turtles in-cone 100 0] of turtle 0 => 6
   T> set heading 90

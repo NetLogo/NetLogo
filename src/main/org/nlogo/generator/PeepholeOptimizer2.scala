@@ -4,15 +4,15 @@ package org.nlogo.generator
 
 /**
  * This class catches one specific inefficient pattern of bytecode that the
- * inliner generates -- the ALOAD 0 / POP pair.  This bad pair gets 
+ * inliner generates -- the ALOAD 0 / POP pair.  This bad pair gets
  * generated when we replace GETFIELDs with LDCs when Java primitive
  * types are involved.  e.g., the int "vn" field in _procedurevariable.
- * 
+ *
  * It's looking for this pattern:
  *    ALOAD 0
  *    POP
  * And replaces it with nothing.
- *   
+ *
  *  ~Forrest (6/19/2006)
  */
 

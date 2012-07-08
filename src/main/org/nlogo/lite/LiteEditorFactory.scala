@@ -11,7 +11,7 @@ class LiteEditorFactory(compiler: CompilerServices) extends EditorFactory {
     val font = new java.awt.Font(
       platformMonospacedFont, java.awt.Font.PLAIN, 12)
     new CodeEditor(
-      cols, rows, font, disableFocusTraversal, null, 
+      cols, rows, font, disableFocusTraversal, null,
       new EditorColorizer(compiler), I18N.gui.fn)
   }
 }

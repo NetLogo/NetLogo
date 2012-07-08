@@ -11,7 +11,7 @@ import org.nlogo.api.I18N
 class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools")) {
 
   implicit val i18nName = I18N.Prefix("menu.tools")
-  
+
   addMenuItem(I18N.gui("halt"), app.workspace.halt _)
   addSeparator()
   addMenuItem(I18N.gui("globalsMonitor"), () => app.workspace.inspectAgent(classOf[Observer]))
@@ -21,7 +21,7 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("closeAllAgentMonitors"), app.workspace.closeAgentMonitors _)
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
-  addSeparator() 
+  addSeparator()
   addMenuItem(I18N.gui("3DView"), 'T', true, open3DView _)
   addMenuItem(I18N.gui("colorSwatches"), openColorDialog _)
   addMenuItem(I18N.gui("turtleShapesEditor"),
@@ -35,9 +35,9 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem('H', true, app.workspace.hubNetControlCenterAction)
 
   def openColorDialog() {
-    if(app.colorDialog == null) {     
+    if(app.colorDialog == null) {
       app.colorDialog =
-        new org.nlogo.window.ColorDialog(app.frame, false) 
+        new org.nlogo.window.ColorDialog(app.frame, false)
       org.nlogo.awt.Positioning.center(app.colorDialog, app.frame)
       app.colorDialog.showDialog()
     }
@@ -47,14 +47,14 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
     }
   }
   def open3DView() {
-    try {        
+    try {
       app.workspace.glView.open()
       app.workspace.set2DViewEnabled(false)
-    }        
+    }
     catch {
       case ex: org.nlogo.window.JOGLLoadingException =>
         org.nlogo.swing.Utils.alert("3D", ex.getMessage, "" + ex.getCause, I18N.gui("common.buttons.continue") )
-    }        
+    }
   }
   def openHubNetClientEditor() {
     app.workspace.getHubNetManager.openClientEditor()

@@ -8,8 +8,8 @@ import HubNetUtils._
 import org.nlogo.hubnet.protocol.DiscoveryMessage
 
 /**
- * Repeatedly broadcasts a message to a multicast group announcing 
- * the existence of this server. Messages are received by 
+ * Repeatedly broadcasts a message to a multicast group announcing
+ * the existence of this server. Messages are received by
  * a org.nlogo.hubnet.client.DiscoveryListener on the client.
  * @see org.nlogo.hubnet.protocol.DiscoveryMessage
  **/

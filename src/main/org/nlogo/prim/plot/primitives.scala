@@ -16,7 +16,7 @@ trait Helpers extends Instruction {
   def currentPlot(context: Context) =
     plotManager.currentPlot.getOrElse(
       throw new EngineException(
-        context, this, 
+        context, this,
         I18N.errors.get("org.nlogo.plot.noPlotSelected")))
   def currentPen(context: Context) = {
     val plot = currentPlot(context)
@@ -28,13 +28,13 @@ trait Helpers extends Instruction {
 
 abstract class PlotCommand(args: Int*)
 extends Command with Helpers {
-  override def syntax = 
+  override def syntax =
     Syntax.commandSyntax(args.toArray)
 }
 
 abstract class PlotReporter(returnType: Int, args: Int*)
 extends Reporter with Helpers {
-  override def syntax = 
+  override def syntax =
     Syntax.reporterSyntax(args.toArray, returnType)
 }
 
@@ -121,7 +121,7 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
     if (min >= max)
-      throw new EngineException(context, this, 
+      throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
     plot.xMin = min
@@ -136,7 +136,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
     if (min >= max)
-      throw new EngineException(context, this, 
+      throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
     plot.yMin = min
@@ -162,7 +162,7 @@ class _histogram extends PlotCommand(Syntax.ListType) {
     val pen = currentPen(context)
     pen.plotListenerReset(false)
     if(pen.interval <= 0)
-      throw new EngineException(context, this, 
+      throw new EngineException(context, this,
         "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
     val plot = currentPlot(context)
     plot.beginHistogram(pen)
@@ -232,31 +232,31 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 //
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Boolean.box(currentPlot(context).autoPlotOn)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     currentPlot(context).name
 }
 class _plotxmin extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Double.box(currentPlot(context).xMin)
 }
 class _plotxmax extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Double.box(currentPlot(context).xMax)
 }
 class _plotymin extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Double.box(currentPlot(context).yMin)
 }
 class _plotymax extends PlotReporter(Syntax.NumberType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Double.box(currentPlot(context).yMax)
 }
 class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
-  override def report(context: Context) = 
+  override def report(context: Context) =
     Boolean.box(currentPlot(context).getPen(argEvalString(context, 0)).isDefined)
 }
 

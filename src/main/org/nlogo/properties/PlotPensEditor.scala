@@ -54,7 +54,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     // i'm deciding that we can have many pens with no names, if we choose.
     // maybe we don't need this duplicate pen name restriction at all,
     // but for now I'll leave it. It would seem weird to have two pens named "turtles"
-    // but also weird to allow for one pen to have no name, but only one. 
+    // but also weird to allow for one pen to have no name, but only one.
     if((names.toSet - "").size  < (names.toList.filterNot(_ == "")).size){
       org.nlogo.swing.OptionDialog.show(frame, "Invalid Entry", "Pens list contains duplicate names.",
         Array(I18N.gui.get("common.buttons.ok")))
@@ -168,7 +168,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       // finally add all the actual plot pens to the table
       for(p <- plot.pens; if(!p.temporary)){ model.addPen(Pen(p)) }
     }
-    
+
     // final method call to get al the pens in the table.
     // converts them to real plot pens, though maybe that should be done after.
     def getPlotPens: List[PlotPen] = model.pens.map(_.convertToPlotPen(plot)).toList
@@ -291,7 +291,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }
       def getCellEditorValue = editor.getText()
     }
-    
+
     class PenTableModel extends AbstractTableModel {
       val columnNames = scala.List(ColorColumnName, NameColumnName, UpdateCommandsColumnName, ButtonsColumnName)
       val pens = scala.collection.mutable.ListBuffer[Pen]()
@@ -373,7 +373,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     private val showPenInLegend = new JCheckBox(I18N.gui("showInLegend"), true)
     val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
     val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
-    
+
     // layout all the pieces of the ui
     addWidgets()
 
@@ -409,7 +409,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           updateCode = updateCode.get.getOrElse("")))
       else None
     }
-    
+
     private def addWidgets() {
       setLayout(new BorderLayout())
       val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("advanced"))

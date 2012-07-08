@@ -19,7 +19,7 @@ import java.util.Map;
  * - The load method is called when an extension appears in the extensions block when it wasn't
  * there in the last compilation
  * - The unload method is called when an extension is removed from the extensions block
- * 
+ *
  * Before a compilation, N extensions might be loaded.
  * For example, if the extensions block previously said: extensions [ array table ]
  * Then the array and table extensions will have their loaded and live flags set to true.
@@ -40,9 +40,9 @@ import java.util.Map;
  * will have live=false, and if they call table:make, then error.
  * At the end of main compilation, the compiler calls the finishFullCompilation,
  * and the ExtensionManager calls unload on any extensions that have loaded=true and live=false.
- * 
+ *
  * Subprogram compilations just check the live flag in the same way, and everyone is happy.
- * 
+ *
  * That is how it works now, but here is some info on the bug was that led to the addition
  * of the live flag. (You shouldn't really have to read this, but maybe it might someday
  * be useful).  After a main compile, the ExtensionManager would set reloaded to false on

@@ -5,7 +5,7 @@ import org.nlogo.prim._
 import org.nlogo.nvm.Reporter
 /**
  * Converts _of(_turtlevariable,...) to _turtlevariableof(...)
- * and _of(_patchvariable,...) to _patchvariableof(...) 
+ * and _of(_patchvariable,...) to _patchvariableof(...)
  * for better efficiency.
  */
 // This could be done in Optimizer instead, but this code is nice and simple and we already have it,
