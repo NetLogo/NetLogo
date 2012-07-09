@@ -8,7 +8,7 @@ class ColumnLayout(vGap: Int, hAlign: Float, vAlign: Float) extends LayoutManage
 
   def this(vGap: Int) =
     this(vGap, Component.LEFT_ALIGNMENT, Component.TOP_ALIGNMENT)
-  
+
   // not implemented. it's not clear to me why we're getting away with that.
   // if we "throw new UnsupportedOperationException" it definitely blows up. - ST 4/21/11
   override def addLayoutComponent(name: String, comp: Component) { }

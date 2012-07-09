@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.Editable 
+import org.nlogo.api.Editable
 import org.nlogo.api.{CompilerServices, TokenType}
 import org.nlogo.editor.Colorizer
 

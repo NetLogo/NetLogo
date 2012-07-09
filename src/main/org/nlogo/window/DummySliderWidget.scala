@@ -39,7 +39,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     val inc = strings(10).toDouble
     if( strings.length > 12 ) units = if( strings(12) == "NIL" ) "" else strings(12)
     if( strings.length > 13 && strings(13).equals( "VERTICAL" ) ) vertical = true
-    name =  org.nlogo.api.ModelReader.restoreLines( strings(6) ) 
+    name =  org.nlogo.api.ModelReader.restoreLines( strings(6) )
     val con = ConstantSliderConstraint(min, max, inc)
     con.defaultValue = value
     setSliderConstraint( con )  // ensure cached values are updated

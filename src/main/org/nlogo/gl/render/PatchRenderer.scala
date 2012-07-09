@@ -45,7 +45,7 @@ extends TextureRenderer(world) {
     }
   }
 
-  def renderLabel(gl: GL, col: Float, row: Float, dep: Float, 
+  def renderLabel(gl: GL, col: Float, row: Float, dep: Float,
                   patch: Patch, fontSize: Int, patchSize: Double) {
     val observer = world.observer
     gl.glTranslated(col, row, dep)
@@ -68,7 +68,7 @@ extends TextureRenderer(world) {
     val scale = Renderer.WORLD_SCALE
     val rgb = org.nlogo.api.Color.getColor(patch.pcolor).getRGBColorComponents(null)
     gl.glColor3f((rgb(0) + 0.5f) % 1f,
-                 (rgb(1) + 0.5f) % 1f, 
+                 (rgb(1) + 0.5f) % 1f,
                  (rgb(2) + 0.5f) % 1f)
     gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
     gl.glEnable(GL.GL_POLYGON_OFFSET_LINE)
@@ -83,7 +83,7 @@ extends TextureRenderer(world) {
     gl.glVertex3f(0.5f, 0.5f, -0.5f)
     gl.glEnd()
     gl.glDisable(GL.GL_POLYGON_OFFSET_LINE)
-    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)     
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
     gl.glPopMatrix()
   }
 

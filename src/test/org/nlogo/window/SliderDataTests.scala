@@ -23,7 +23,7 @@ class SliderDataTests extends PropSpec with PropertyChecks {
       whenever(d > 0) {
         s.value = s.maximum + d
         // some value on the constraint must change, or the value isnt updated.
-        // im not actually sure if this is a good rule or not. 
+        // im not actually sure if this is a good rule or not.
         s.setSliderConstraint(new ConstantSliderConstraint(s.minimum - 1, s.maximum, s.increment))
         assert(s.value <= math.max(s.minimum, s.maximum))})}
 

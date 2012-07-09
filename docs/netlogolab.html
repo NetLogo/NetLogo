@@ -193,13 +193,18 @@
       <li>
         <b>Windows 7 and Vista:</b>
         <ul>
-          <li>When you start a NetLogo model that uses the GoGo
-          extension, it will check to see if you have the proper drivers
-          installed. If it detects that you do not, NetLogo will offer to
-          launch a small program that will install the drivers for you (but
-          note that you will need to have "administrator" access to the computer in
-          order to do so (basically, Windows will ask you to click a button to confirm that you really want to run the program). You will also need to accept an
-          &quot;unsigned&quot; driver (this does not mean you are installing anything harmful, it just means that the driver file was not officially recognized by Microsoft as an "official" driver, but the file comes from the GoGo board creators and is 100% safe.)
+          <li>When you start a NetLogo model that uses the GoGo extension,
+          it will check to see if you have the proper drivers installed. If
+          it detects that you do not, NetLogo will offer to launch a small
+          program that will install the drivers for you (but note that you
+          will need to have &quot;administrator&quot; access to the
+          computer in order to do so (basically, Windows will ask you to
+          click a button to confirm that you really want to run the
+          program). You will also need to accept an &quot;unsigned&quot;
+          driver (this does not mean you are installing anything harmful,
+          it just means that the driver file was not officially recognized
+          by Microsoft as an &quot;official&quot; driver, but the file
+          comes from the GoGo board creators and is 100% safe.)
           <li>If you already have the drivers installed and <i>still</i>
           receive the popup, please select &quot;Halt and Don't Remind
           Me Again&quot; to prevent any further notices.
@@ -208,12 +213,13 @@
           XP installation and see <a href="contact.html">Contacting Us</a>.
           </ul>
       <li>
-        <b>Windows XP:</b> Unfortunately, the driver installer does not work properly on Windows XP, so GoGo installation on Windows XP
-        is substantially less elegant than it is on Windows 7 and Vista.
+        <b>Windows XP:</b> Unfortunately, the driver installer does not
+        work properly on Windows XP, so GoGo installation on Windows XP is
+        substantially less elegant than it is on Windows 7 and Vista.
         <ol>
-          <li>One possible solution is to download and install the <a href=
-          "http://www.gogoboard.org/downloads-hardware" target=
-          "_blank">GoGo Monitor for Windows</a>.
+          <li>One possible solution is to download and install the
+            <a href="http://www.gogoboard.org/downloads-hardware" target=
+            "_blank">GoGo Monitor for Windows</a>.
           <li>If you don't want to download the GoGo Monitor, you can
           also install the driver more manually. To do so, please follow
           these steps:
@@ -229,7 +235,13 @@
               &quot;gogo_cdc_NTXPVista.inf&quot;
               <li>Proceed through the driver installation wizard to
               complete the installation
-              <li><u><b>Note</b></u>: Depending on your computer, this process may install the driver for <i>only</i> the current USB port that the GoGo board is plugged into.  That is, if the GoGo board is later connected to a different USB port, you may have to repeat this process in order for it to be recognized from that port.
+              <li>
+                <u><b>Note</b></u>: Depending on your computer, this
+                process may install the driver for <i>only</i> the current
+                USB port that the GoGo board is plugged into. That is, if
+                the GoGo board is later connected to a different USB port,
+                you may have to repeat this process in order for it to be
+                recognized from that port.
               </ul>
           </ol>
       </ul>
@@ -237,7 +249,15 @@
       Mac OS X
     </h3>
     <p>
-      The GoGo extension requires no special installation on Mac OS X. The only issue for now, due to a bug in the open source software we use for controlling the serial port, is that you CANNOT use the "gogo:close" command, or execute the "gogo:open" twice. This will be fixed as soon as we get the updated software from the RXTX team. If you are using any of the example models (GoGo Monitor and GoGo Monitor Simple), DO NOT click on "setup" twice -- click once and wait some seconds for the connection to be made.
+      The GoGo extension requires no special installation on Mac OS X. The
+      only issue for now, due to a bug in the open source software we use
+      for controlling the serial port, is that you CANNOT use the
+      &quot;gogo:close&quot; command, or execute the &quot;gogo:open&quot;
+      twice. This will be fixed as soon as we get the updated software from
+      the RXTX team. If you are using any of the example models (GoGo
+      Monitor and GoGo Monitor Simple), DO NOT click on &quot;setup&quot;
+      twice -- click once and wait some seconds for the connection to be
+      made.
     <h3>
       Linux
     </h3>
@@ -430,7 +450,7 @@ to create-one-turtle
   clear-all
   create-turtle
 end
-    
+
 to move-with-heat
   if gogo:sensor 1 &lt; 500
     [ forward 1 ]
@@ -748,10 +768,10 @@ loop [if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ] ] ]<br>;; will continuou
     <p>
       Examples:
     <pre>
- 
+
   gogo:set-burst-mode [ 1 2 3 ] true
   ;; turns on high speed burst mode for sensors 1, 2 and 3
-         
+
   gogo:set-burst-mode [ 4 ] false
   ;; turns on low speed burst mode for sensor 4
   ;; this will also override any previous set-burst-mode calls

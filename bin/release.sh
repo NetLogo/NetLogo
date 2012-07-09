@@ -33,7 +33,7 @@ SCALA=2.9.2
 SCALA_JAR=$HOME/.sbt/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_30_server
+VM=windows-x86-1.6.0_33_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
@@ -46,7 +46,7 @@ then
 fi
 
 # ask user whether to build Windows installers
-# (ordinarily you want to, but sometimes you want to 
+# (ordinarily you want to, but sometimes you want to
 # skip it, such as when testing changes to this script)
 until [ -n "$WINDOWS" ]
 do
@@ -72,7 +72,7 @@ if [ $WINDOWS -eq 1 ]; then
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
-  if test "$FOUND_VERSION" != "$DESIRED_VERSION" ; 
+  if test "$FOUND_VERSION" != "$DESIRED_VERSION" ;
   then
     echo "desired version: " $DESIRED_VERSION
     echo "found version: " $FOUND_VERSION
@@ -149,8 +149,7 @@ do
 done
 cd ..
 rm -f *.jar
-bin/sbt clean
-$MAKE -s
+bin/sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -159,12 +158,11 @@ echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # Scaladoc
+$RM -rf docs/scaladoc
 if [ $INCLUDE_SCALADOC -eq 1 ]
 then
   echo "generating Scaladoc"
-  $MAKE -s docs/scaladoc
-else
-  $RM -rf docs/scaladoc
+  bin/sbt doc
 fi
 
 # make fresh staging area
@@ -213,7 +211,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
 $RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
@@ -346,7 +344,7 @@ $RM -rf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 # the ._ thing here is to avoid including Mac metadata/resource fork junk - ST 10/6/05
 # the qtj extension doesn't work on linux
 $TAR czf $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz --exclude ._\* --exclude qtj --exclude Mac\ OS\ X --exclude Windows netlogo-$COMPRESSEDVERSION
-$DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz 
+$DU -h $COMPRESSEDVERSION/netlogo-$COMPRESSEDVERSION.tar.gz
 cd netlogo-$COMPRESSEDVERSION
 
 # done with Unix release; now do Mac release

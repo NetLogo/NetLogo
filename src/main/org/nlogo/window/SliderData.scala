@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window 
+package org.nlogo.window
 
 import org.nlogo.agent.ConstantSliderConstraint
 import org.nlogo.agent.SliderConstraint
@@ -28,7 +28,7 @@ class SliderData(var minimum:Double = 0, var maximum:Double=100, var increment: 
   setSliderConstraint(constraint)
 
   // constraint runtime errors intentionally not handled here.
-  // slider widgets can handle them, because we don't know what to do here. 
+  // slider widgets can handle them, because we don't know what to do here.
   def setSliderConstraint(con: SliderConstraint): Boolean = {
     this.constraint = con
     // If the values change, coerce the value to the new range

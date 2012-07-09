@@ -296,7 +296,7 @@ object LocalizationReport {
         arg.bundle.keys(otherLanguageLocale).collect{case s: String => s}.toSet.filterNot(arg.bundle.keys(english).toList.contains)
 
       Report(
-        title, 
+        title,
         keysGood, keysExploded, keysWrong, keysInTestMissingFromEnglishOrOtherLanguage,
         keysMissingFromOtherLanguageFile, extraKeysInOtherLanguageFile)
     }

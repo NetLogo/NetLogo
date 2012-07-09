@@ -16,7 +16,7 @@ import StrictMath.pow
 
 // Reminder:
 //   1 second (s) =
-//   1,000 milliseconds (ms) = 
+//   1,000 milliseconds (ms) =
 //   1,000,000 microseconds (us) =
 //   1,000,000,000 nanoseconds (ns)
 
@@ -28,14 +28,14 @@ import StrictMath.pow
 // A strange word appearing below is "pseudo-tick".  Sorry, I can't think of a better name for this.
 // It basically means something happening that isn't actually a tick, but that we treat like one for
 // the purpose of scheduling updates.
-// 
+//
 // The DISPLAY command always causes a pseudo-tick, regardless of update mode.
 //
 // With continuous updates only, GUIWorkspace generates a pseudo-tick every time the engine comes up
 // for air, which basically means every time one agent runs one command.
 
 abstract class UpdateManager extends UpdateManagerInterface {
-  
+
   // abstract methods
   def defaultFrameRate: Double
   def ticks: Double
@@ -70,12 +70,12 @@ abstract class UpdateManager extends UpdateManagerInterface {
     if(updatePolicy.frameDoneWhenPaintingBegins)
       frameDone()
   }
-  
+
   def donePainting() {
     if(!updatePolicy.frameDoneWhenPaintingBegins)
       frameDone()
   }
-  
+
   private var timeSmoothingWillBeDone = 0L
 
   def isDoneSmoothing() = {
@@ -153,7 +153,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
       }
     }
   }
-  
+
   // used for unit testing and debugging
   def debugInfo =
     "speed = %.0f, frameRateGap = %.2f fps, nanoGap = %.2f fps, slowdown = %.1f ms, every %.3f ticks".format(
@@ -253,7 +253,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   }
 
   // And here's how continuous updates work.
-  // 
+  //
   // First, there isn't anything special about the middle position on the slider (speed = 0).
   // It's just a place where the target frame rate has a nice reasonable value that gives
   // results similar to what previous versions of NetLogo did, before the slider existed.
@@ -274,7 +274,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   // The problem is that even 1 millisecond is a very long time on a modern computer.  Even when our
   // target frame rate is once per millisecond, that still leaves enough for a lot of computation to
   // happen between two frames.
-  // 
+  //
   // So here's what we do.  In addition to the timing stuff described above, we also take ticks and
   // pseudo-ticks into account.  Remember that in continuous update mode, there's a pseudo-tick
   // every time the engine comes up for air.  In the left 1/4, we're going to be updating every
@@ -319,7 +319,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
   }
 
   // Whew!  So now you understand both update modes.  Um, right?
-  // 
+  //
   // To fully understand, it may help to look at the test cases in UpdateManagerTests.
   //
   // The other thing that's really useful for grasping this is to add a println(debugInfo) in

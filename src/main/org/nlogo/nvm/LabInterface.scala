@@ -22,13 +22,13 @@ object LabInterface {
     def runCompleted(w: Workspace, runNumber: Int, steps: Int) { }
     def runtimeError(w: Workspace, runNumber: Int, t: Throwable) { }
   }
-  case class Settings(model: String, 
-                      setupFile: Option[java.io.File], 
-                      experiment: Option[String], 
-                      tableWriter: Option[java.io.PrintWriter], 
-                      spreadsheetWriter: Option[java.io.PrintWriter], 
-                      dims: Option[WorldDimensions], 
-                      threads: Int, 
+  case class Settings(model: String,
+                      setupFile: Option[java.io.File],
+                      experiment: Option[String],
+                      tableWriter: Option[java.io.PrintWriter],
+                      spreadsheetWriter: Option[java.io.PrintWriter],
+                      dims: Option[WorldDimensions],
+                      threads: Int,
                       suppressErrors: Boolean)
 }
 trait LabInterface {

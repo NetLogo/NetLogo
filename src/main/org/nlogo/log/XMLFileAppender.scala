@@ -7,7 +7,7 @@ import javax.xml.transform.{ OutputKeys,
 import javax.xml.transform.sax.{ SAXTransformerFactory, TransformerHandler }
 import javax.xml.transform.stream.StreamResult
 import org.xml.sax.helpers.AttributesImpl
-import org.apache.log4j.FileAppender 
+import org.apache.log4j.FileAppender
 import scala.reflect.BeanProperty
 import org.nlogo.util.Exceptions.ignoring
 
@@ -39,15 +39,15 @@ class XMLFileAppender extends FileAppender {
     hd.startDTD("eventSet", "netlogo_logging.dtd", fileName)
     hd.endDTD()
     val attributes = new AttributesImpl
-    attributes.addAttribute("", "", "username", "CDATA", username) 
-    attributes.addAttribute("", "", "name", "CDATA", studentName) 
-    attributes.addAttribute("", "", "ipaddress", "CDATA", iPAddress) 
-    attributes.addAttribute("", "", "modelName", "CDATA", modelName) 
-    attributes.addAttribute("", "", "version", "CDATA", version) 
+    attributes.addAttribute("", "", "username", "CDATA", username)
+    attributes.addAttribute("", "", "name", "CDATA", studentName)
+    attributes.addAttribute("", "", "ipaddress", "CDATA", iPAddress)
+    attributes.addAttribute("", "", "modelName", "CDATA", modelName)
+    attributes.addAttribute("", "", "version", "CDATA", version)
     hd.startElement("", "", "eventSet", attributes)
     getLayout match {
       case x: XMLLayout => x.setTransformerHandler(hd)
-      case _ => 
+      case _ =>
     }
   }
 

@@ -8,8 +8,8 @@ import org.nlogo.workspace.ModelsLibrary
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc", 
-         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach", 
+    List("Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
+         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
          "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]) {
@@ -64,7 +64,7 @@ object ChecksumsAndPreviews {
       finally { workspace.dispose() }
     }
   }
-  
+
   /// checksums
 
   object Checksums {
@@ -113,19 +113,19 @@ object ChecksumsAndPreviews {
     def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace) 
+      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
       val oldEntry = m.get(model)
       val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
       // figure out if the entry is new, changed, or the same
       val action =
-        if(!m.contains(model)) "* Added" 
-        else if(oldEntry.get == newEntry) "Didn't change" 
-        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only" 
+        if(!m.contains(model)) "* Added"
+        else if(oldEntry.get == newEntry) "Didn't change"
+        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
         else "* Changed"
       m.put(model, newEntry)
       if(action != "Didn't change")
-        println(action + ": \"" + model + " - " + newCheckSum 
+        println(action + ": \"" + model + " - " + newCheckSum
                 + " - " + newGraphicsChecksum + " - " + revision + "\"")
     }
     def load(path: String): ChecksumMap = {
@@ -145,12 +145,15 @@ object ChecksumsAndPreviews {
       fw.close()
     }
     def getRevisionNumber(modelPath: String): String = {
-      val modelFolderName = "models"
-      val builder = new ProcessBuilder("git", "log", "--pretty=format:%h", modelPath drop ((modelFolderName + '/').size))
-      builder.directory(new java.io.File(modelFolderName))
-      val buff = new Array[Char](1000)
-      new java.io.InputStreamReader(builder.start().getInputStream).read(buff)
-      buff.mkString.trim
+      val cmds = Array("git", "log", "--pretty=format:%h",
+                       new java.io.File(modelPath).getAbsolutePath)
+      val stdInput = new java.io.BufferedReader(
+        new java.io.InputStreamReader(
+          Runtime.getRuntime().exec(cmds,
+                                    Array[String](),
+                                    new java.io.File("models"))
+          .getInputStream))
+      stdInput.readLine().trim
     }
   }
 }

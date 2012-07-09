@@ -8,16 +8,16 @@ import org.nlogo.agent.Agent
 /**
  * A stack trace is displayed to the user when an error occurs in running code.
  * Example:
- * 
+ *
  * division by zero
  * error while observer running /
  *   called by plot 'plot 1' setup code
  *   called by RESET-TICKS
  *   called by procedure SETUP
  *   called by Command Center
- * 
+ *
  * Entries in stack traces can come from different places.
- * 
+ *
  * In the example,
  * - "/" is the individual primitive in which the error occurred
  * - "plot 'plot 1' setup code" is an anonymous procedure in a plot

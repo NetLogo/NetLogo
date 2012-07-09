@@ -25,20 +25,20 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
   }
 
   def render(gl: GL,
-             x1: Float, y1: Float, z1: Float, 
+             x1: Float, y1: Float, z1: Float,
              x2: Float, y2: Float, z2: Float,
-             stroke: Float, isDirected: Boolean, link: Link, 
+             stroke: Float, isDirected: Boolean, link: Link,
              shapeRenderer: ShapeRenderer, outline: Boolean,
              color: java.awt.Color, world: World) {
     for(line <- lines) {
       gl.glColor4fv(java.nio.FloatBuffer.wrap(color.getRGBComponents(null)))
       line.render(gl,
-                  x1 * Renderer.WORLD_SCALE, 
-                  y1 * Renderer.WORLD_SCALE, 
-                  z1 * Renderer.WORLD_SCALE, 
-                  x2 * Renderer.WORLD_SCALE, 
-                  y2 * Renderer.WORLD_SCALE, 
-                  z2 * Renderer.WORLD_SCALE, 
+                  x1 * Renderer.WORLD_SCALE,
+                  y1 * Renderer.WORLD_SCALE,
+                  z1 * Renderer.WORLD_SCALE,
+                  x2 * Renderer.WORLD_SCALE,
+                  y2 * Renderer.WORLD_SCALE,
+                  z2 * Renderer.WORLD_SCALE,
                   // I pulled 100 out of the air. ok to tweak - ev 12/6/07
                   curviness, stroke, (100 / world.observer.dist).toInt)
     }
@@ -50,7 +50,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
     }
   }
 
-  def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer, 
+  def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer,
                                x1: Double, y1: Double, z1: Double,
                                x2: Double, y2: Double, z2: Double,
                                link: Link, color: java.awt.Color, outline: Boolean,

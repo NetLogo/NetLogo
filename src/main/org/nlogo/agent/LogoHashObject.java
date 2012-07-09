@@ -3,9 +3,9 @@
 package org.nlogo.agent;
 
 /* The "general contract" between Object.hashCode() and Object.equals(..) is
-   for any Objects a & b, a.hashCode() == b.hashCode() must be true when 
-   a.equals(b)/b.equals(a) and vice versa. 
-   
+   for any Objects a & b, a.hashCode() == b.hashCode() must be true when
+   a.equals(b)/b.equals(a) and vice versa.
+
    Having said that. Object wrapped with this type will pass their equality
    tests off to World.recursivelyEqual( Object, Object ), any changes
    to recursivelyEqual will need to be made to this class's hashCode()

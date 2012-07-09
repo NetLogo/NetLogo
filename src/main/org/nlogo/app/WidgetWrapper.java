@@ -489,7 +489,7 @@ public strictfp class WidgetWrapper
     java.awt.Dimension d = getSize();
     int x = e.getX();
     int y = e.getY();
-    java.awt.Point p = 
+    java.awt.Point p =
       org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
     startPressX = p.x;
     startPressY = p.y;
@@ -541,7 +541,7 @@ public strictfp class WidgetWrapper
   private boolean constrainToVertical = false;
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
-    java.awt.Point p = 
+    java.awt.Point p =
       org.nlogo.awt.Coordinates.convertPointToScreen(e.getPoint(), this);
     int x = p.x;
     int y = p.y;

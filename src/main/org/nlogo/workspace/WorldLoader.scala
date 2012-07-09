@@ -67,7 +67,7 @@ class WorldLoader {
   def getWorldDimensions(strings: Array[String], version: String): WorldDimensions = {
     var maxx = strings(5).toInt
     var maxy = strings(6).toInt
-    var minx = -1 
+    var minx = -1
     var miny = -1
     if(maxx != -1 && maxy != -1) {
       minx = -maxx
@@ -90,7 +90,7 @@ class WorldLoader {
 
   def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]): Int =
     world.calculateHeight(d.height,  patchSize)
-  
+
   def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]): Double = {
     val widgetWidth = world.calculateWidth(d.width, patchSize)
     val minWidth = world.getMinimumWidth
@@ -115,7 +115,7 @@ class WorldLoader3D extends WorldLoader {
   override def getWorldDimensions(strings: Array[String], version: String) = {
     var maxX = strings(5).toInt
     var maxY = strings(6).toInt
-    var minX = -1 
+    var minX = -1
     var minY = -1
     var minZ = 0
     var maxZ = 0

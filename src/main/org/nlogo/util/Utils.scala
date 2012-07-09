@@ -56,14 +56,14 @@ object Utils {
 
       // UTF-8 is needed directly here because it seems that applets can't be
       // passed -D params. So, we can't use -Dfile.encoding=UTF-8 like we normally do.
-      // This shouldn't hurt anything. 
+      // This shouldn't hurt anything.
       reader2String(
         new java.io.InputStreamReader(
           new java.net.URL(massagedURL)
           .openStream(), "UTF-8"))
     }
   }
-  
+
   @throws(classOf[java.io.IOException])
   def reader2String(reader: java.io.Reader): String =
     reader2String(reader, 8192) // arbitrary default

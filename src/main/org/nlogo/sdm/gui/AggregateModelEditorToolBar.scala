@@ -22,7 +22,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor) extends org.nlog
     add(new Separator())
     add(new JButton(compileAction))
     add(new Separator())
-    
+
     def makeButton(name:String, image:String, tool:Tool) = {
       new JToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
     }

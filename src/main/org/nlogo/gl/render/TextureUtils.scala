@@ -33,7 +33,7 @@ object TextureUtils {
       // actually supported in fullscreen mode. We couldn't find any
       // documentation on this, but it looks like in fullscreen mode the
       // card only supports 512.
-      // 
+      //
       // This isn't the optimal solution since the smaller limit only
       // applies to fullscreen mode. Ideally, we'd only do this special
       // case in fullscreen mode, and use the full (reported) texture size

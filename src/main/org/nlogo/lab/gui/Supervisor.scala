@@ -90,7 +90,7 @@ class Supervisor(dialog: java.awt.Dialog,
       val w = factory.newInstance
       headlessWorkspaces += w
       queue.enqueue(w)
-    }                                       
+    }
     // add this listener last, so it runs last, so the workspace doesn't get re-enqueued
     // too soon - ST 8/18/09
     worker.addListener(listener)

@@ -26,7 +26,7 @@ object EngineException {
         throw newEx
     }
   }
-}  
+}
 
 // We need Scala's rather obscure "early initializer" syntax here because fillInStackTrace gets called
 // during construction, so we need to make sure the cached message var has been initialized to
@@ -49,7 +49,7 @@ extends {
   // GeneratedInstructions have multiple Instructions stored inside them and we need to resolve
   // which instruction was actually executing when the error occurred.  ~Forrest (10/24/2006)
   private def resolveErrorInstruction() {
-    require(!hasBeenResolved, 
+    require(!hasBeenResolved,
             "An EngineException must only be 'resolved' once")
     hasBeenResolved = true
     instruction = instruction.extractErrorInstruction(this)

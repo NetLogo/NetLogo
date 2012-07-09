@@ -61,7 +61,7 @@
  **/
 
 
-/// Some of this code was snarfed from 
+/// Some of this code was snarfed from
 /// http://java.sun.com/products/java-media/jmf/2.1.1/solutions/JpegImagesToMovie.java
 /// Here's the license to that code. -- SL
 

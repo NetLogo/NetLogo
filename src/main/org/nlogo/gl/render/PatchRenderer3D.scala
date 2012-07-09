@@ -59,7 +59,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       }
     }
   }
-  
+
   override def renderPatches(gl: GL, fontSize: Int, patchSize: Double) {
     if(!world.patchesAllBlack || world.patchesWithLabels != 0) {
       gl.glPushMatrix()
@@ -94,7 +94,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
       1.0, Color.getColor(patch.pcolor),
       patch.labelString, patch.labelColor,
       world.wrappedObserverX(patch.pxcor),
-      world.wrappedObserverY(patch.pycor), 
+      world.wrappedObserverY(patch.pycor),
       world.wrappedObserverZ(patch.pzcor), 1,
       patchSize, fontSize, false, 0, Array[Double](0, 0, 0))
   }
@@ -102,7 +102,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
   def getDimensions(world: World) = {
     val w = world.asInstanceOf[World3D]
     Array[Float](w.worldWidth, w.worldHeight, w.worldDepth)
-  }     
+  }
 
   override def getPatchCoords(patch: Patch) = {
     val p = patch.asInstanceOf[Patch3D]
@@ -127,7 +127,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     gl.glColor3f(rgb(0), rgb(1), rgb(2))
     gl.glLineWidth(4)
     gl.glCallList(shape.displayListIndex)
-    gl.glColor3f((rgb(0) + 0.5f) % 1.0f, (rgb(1) + 0.5f) % 1.0f, 
+    gl.glColor3f((rgb(0) + 0.5f) % 1.0f, (rgb(1) + 0.5f) % 1.0f,
                  (rgb(2) + 0.5f) % 1.0f)
     gl.glLineWidth(2)
     gl.glCallList(shape.displayListIndex)

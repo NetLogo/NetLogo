@@ -6,7 +6,7 @@ import org.nlogo.api.Version
 import org.scalatest.FunSuite
 import org.nlogo.util.SlowTest
 
-class TestCompileBenchmarks extends FunSuite with SlowTest{ 
+class TestCompileBenchmarks extends FunSuite with SlowTest{
 
   private val names = Seq(
     "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",

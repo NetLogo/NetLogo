@@ -11,7 +11,7 @@ extends TurtleRenderer(world, shapeRenderer) {
     val turtle = agent.asInstanceOf[Turtle3D]
     Array(turtle.heading, turtle.pitch, turtle.roll)
   }
-  
+
   override def getXYandZComponents(agent: Agent, dist: Double): Array[Double] = {
     val t = agent.asInstanceOf[Turtle3D]
     val headingRadians = math.toRadians(t.heading)
@@ -32,7 +32,7 @@ extends TurtleRenderer(world, shapeRenderer) {
           dist * cosHeading * cosPitch * Renderer.WORLD_SCALE,
           dist * sinPitch * Renderer.WORLD_SCALE)
   }
-  
+
   override def getAgentCoords(agent: Agent, height: Double): Array[Double] = {
     val t = agent.asInstanceOf[Turtle3D]
     Array(world.wrappedObserverX(t.xcor),

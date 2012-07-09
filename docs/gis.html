@@ -166,7 +166,7 @@
       "#gis:find-range">find-range</a> <a href=
       "#gis:property-minimum">property-minimum</a> <a href=
       "#gis:property-maximum">property-maximum</a> <a href=
-      "#gis:apply-coverage">apply-coverage</a> 
+      "#gis:apply-coverage">apply-coverage</a>
       <!-- <a href="#gis:apply-coverages">apply-coverages</a> -->
        <a href=
       "#gis:coverage-minimum-threshold">coverage-minimum-threshold</a>
@@ -180,8 +180,7 @@
       "#gis:contains">contains?</a> <a href=
       "#gis:contained-by">contained-by?</a> <a href=
       "#gis:have-relationship">have-relationship?</a> <a href=
-      "#gis:relationship-of">relationship-of</a>
-      <a href=
+      "#gis:relationship-of">relationship-of</a> <a href=
       "#gis:intersecting">intersecting</a>
     <h3>
       <a name="rastergroup" id="rastergroup">RasterDataset Primitives</a>
@@ -225,7 +224,7 @@
         each be four-element lists consisting of:
       <pre>
         [minimum-x maximum-x minimum-y maximum-y]
-      
+
 </pre>
       <p>
         The scale of the transformation will be equal to the minimum of the
@@ -239,7 +238,7 @@
       <pre>
         (list -180 180 -90 90)
         (list min-pxcor max-pxcor min-pycor max-pycor)
-      
+
 </pre>
       <p>
         However, if you're setting the envelope of the NetLogo world,
@@ -304,7 +303,7 @@
         equivalent to:
       <pre>
         set-transformation <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor max-pycor)
-      
+
 </pre>
       <p>
         This primitive is supplied because most of the time you'll want
@@ -326,7 +325,7 @@
         equivalent to:
       <pre>
         set-transformation-ds <i>gis-envelope</i> (list min-pxcor max-pxcor min-pycor max-pycor)
-      
+
 </pre>
       <p>
         See the <a href="#transformation-example">pictures</a> above for
@@ -347,7 +346,7 @@
         list of the form:
       <pre>
         [minimum-x maximum-x minimum-y maximum-y]
-      
+
 </pre>
     </div>
     <div class="dict_entry">
@@ -364,7 +363,7 @@
         consists of a four-element list of the form:
       <pre>
         [minimum-x maximum-x minimum-y maximum-y]
-      
+
 </pre>
     </div>
     <div class="dict_entry">
@@ -383,7 +382,7 @@
         form
       <pre>
         [minimum-x maximum-x minimum-y maximum-y]
-      
+
 </pre>
       <p>
         No assumption is made about the coordinate system of the arguments,
@@ -1135,7 +1134,7 @@
         So to use the example matrix above, you would write:
       <pre>
         gis:have-relationship? x y &quot;T*****FF*&quot;
-      
+
 </pre>
       <p>
         A much more detailed and formal description of the DE-9IM matrix
@@ -1477,7 +1476,7 @@
  ifelse (value &lt;= 0) or (value &gt;= 0)
  [ set color blue ]
  [ set color red ]
- 
+
 </pre>
       <p>
         If the requested location is a point, the sample is always computed
@@ -1622,7 +1621,7 @@
           </table>would be specified as follows:
       <pre>
  let horizontal-gradient gis:convolve dataset 3 3 [1 0 -1 2 0 -2 1 0 -1] 1 1
- 
+
 </pre>
     </div>
     <div class="dict_entry">
@@ -1756,27 +1755,27 @@
         The <i>transparency</i> input determines how transparent the new
         image in the drawing will be. Valid inputs range from 0 (completely
         opaque) to 255 (completely transparent).
-      </div><!-- 
-    
+      </div><!--
+
        These primitives are not supported by the release version of My World GIS.
        Uncomment this section once My World GIS 5.0 is officially released.
-    
-    
+
+
     <div class="dict_entry">
       <h3>
         <a name="gis:myworld-layers" id="gis:myworld-layers">gis:myworld-layers</a>
       </h3>
       <h4>
-        gis:myworld-layers 
+        gis:myworld-layers
       </h4>
       <p>
-        My World GIS must be running for this primitive to work. Reports a 
-        list of layers currently loaded in the GIS. For each layer, reports a 
-        list consisting of the layer name, the data type (i.e., "VECTOR" or 
-        "RASTER"), the layer's native projection, (in WKT format), and a list 
+        My World GIS must be running for this primitive to work. Reports a
+        list of layers currently loaded in the GIS. For each layer, reports a
+        list consisting of the layer name, the data type (i.e., "VECTOR" or
+        "RASTER"), the layer's native projection, (in WKT format), and a list
         of properties associated with the layer's features or cells.
     </div>
-    
+
     <div class="dict_entry">
       <h3>
         <a name="gis:myworld-get-dataset" id="gis:myworld-get-dataset">gis:myworld-get-dataset</a>
@@ -1786,10 +1785,10 @@
         (gis:myworld-get-dataset <i>layer-index</i> <i>field-index</i>)
       </h4>
       <p>
-        Reports a dataset built from the layer with the given index from 
-        My World GIS (which must be running on the same computer as NetLogo 
-        for this primitive to work). Re-projects the data as necessary if 
-        a global projection is defined and the layer's native projection 
+        Reports a dataset built from the layer with the given index from
+        My World GIS (which must be running on the same computer as NetLogo
+        for this primitive to work). Re-projects the data as necessary if
+        a global projection is defined and the layer's native projection
         does not match it.
       <p>
         The first form, with a single index, is used to load vector layers. The
@@ -1797,7 +1796,7 @@
         World GIS contain multiple properties per cell, and raster datasets in
         NetLogo may contain only one property (or <i>band</i>) per cell.
     </div>
-    
+
     <div class="dict_entry">
       <h3>
         <a name="gis:myworld-send-dataset" id="gis:myworld-send-dataset">gis:myworld-send-dataset</a>
@@ -1807,11 +1806,11 @@
         (gis:myworld-send-dataset <i>raster-dataset</i> <i>layer-index</i> <i>field-index</i>)
       </h4>
       <p>
-        Stores the given dataset as a layer in My World GIS (which must be 
+        Stores the given dataset as a layer in My World GIS (which must be
         running on the same computer as NetLogo for this primitive to work).
         The first form creates a new layer in My World GIS. The second form
         stores a raster dataset into the given field in the given grid layer,
-        resampling as necessary to match the dimensions of the grid in My 
+        resampling as necessary to match the dimensions of the grid in My
         World GIS.
     </div>
     -->

@@ -1,16 +1,13 @@
 #!/bin/sh
-exec bin/scala -classpath bin -deprecation -nocompdaemon "$0" "$@" 
-!# 
-// Local Variables:
-// mode: scala
-// End:
+exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "$0" "$@"
+!#
 
 // Check for problems with plain text files including:
 // 1) No newline at end of file
 // 2) Tab characters
 // 3) Carriage return characters
 
-import Scripting.{shell, read}
+import sys.process.Process
 import collection.mutable.Buffer
 
 def ignore(path: String) =
@@ -20,7 +17,7 @@ def ignore(path: String) =
   path.endsWith("Lexer.java") ||
   path.startsWith("./.idea/") ||
   path.startsWith("./docs/scaladoc/") ||
-  path.startsWith("./devel/i18n/")
+  path.startsWith("./dist/i18n/")
 
 // probably there are a lot more that could be here
 val extensions =
@@ -28,7 +25,7 @@ val extensions =
        "properties", "md", "csv", "asc", "prj", "xml")
 
 def paths =
-  shell("find . " + extensions.map("-name \\*." + _).mkString(" -or "))
+  Process("find . " + extensions.map("-name *." + _).mkString(" -or ")).lines
 
 for(path <- paths.filterNot(ignore)) {
   val contents = io.Source.fromFile(path).mkString
@@ -44,3 +41,7 @@ for(path <- paths.filterNot(ignore)) {
     problems.foreach(p => println("  " + p))
   }
 }
+
+// Local Variables:
+// mode: scala
+// End:

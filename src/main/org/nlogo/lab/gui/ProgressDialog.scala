@@ -50,7 +50,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       plotWidget.xLabel("Time")
       plotWidget.yLabel("Behavior")
       plotWidget.clear()
-      plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default. 
+      plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default.
       plotWidget.togglePenList()
       Some(plotWidget)
     }
@@ -116,7 +116,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     pack()
     org.nlogo.awt.Positioning.center(this, dialog)
   }
-        
+
   override def getMinimumSize = getPreferredSize
   override def getPreferredSize = new Dimension(super.getPreferredSize.width max 450, super.getPreferredSize.height)
 

@@ -9,7 +9,7 @@ import java.io.IOException
 
 trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerServices with api.RandomServices {
   def world: World
-  def aggregateManager: api.AggregateManagerInterface 
+  def aggregateManager: api.AggregateManagerInterface
   def breathe() // called when engine comes up for air
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
@@ -47,7 +47,7 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def exportAllPlots(path: String)
   def inspectAgent(agent: api.Agent, radius: Double)
   def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double)
-  def getAndCreateDrawing(): java.awt.image.BufferedImage 
+  def getAndCreateDrawing(): java.awt.image.BufferedImage
   def getHubNetManager: api.HubNetInterface
   @throws(classOf[api.LogoException])
   def waitForQueuedEvents()

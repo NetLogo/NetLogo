@@ -38,7 +38,7 @@ with ModelSavedEvent.Handler
   }
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
-  }             
+  }
   private var lastTimeAutoSaved = 0L
   private def doAutoSave() {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
@@ -53,7 +53,7 @@ with ModelSavedEvent.Handler
     catch {
       case ex: java.io.IOException =>
         // not sure what the right thing to do here is we probably
-        // don't want to be telling the user all the time that they 
+        // don't want to be telling the user all the time that they
         // the auto save failed. ev 8/22/06
         org.nlogo.util.Exceptions.ignore(ex)
     }
@@ -71,7 +71,7 @@ with ModelSavedEvent.Handler
     dirty(false)
     loading = false
   }
-  
+
   /// how we get dirty
   def handle(e: DirtyEvent) {
     dirty(true)

@@ -49,7 +49,7 @@ object ButtonWidget {
       buttonTypes.find(_.name == name).map(_.agentClass).getOrElse(ObserverButton.agentClass)
     }
 
-    // used for the dropdown in the button editor in the UI. 
+    // used for the dropdown in the button editor in the UI.
     def defaultAgentOptions = new Options[String](){
       implicit val i18nPrefix = I18N.Prefix("common")
       addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
@@ -292,7 +292,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         if (forever && buttonUp) {
           new Events.RemoveJobEvent(this).raise(this)
         }
-        // a forever button that was stopped with the stop command. 
+        // a forever button that was stopped with the stop command.
         else if (forever && !buttonUp && stopping) {
           new Events.JobStoppingEvent(this).raise(this)
         }
@@ -429,13 +429,13 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     else s.append("NIL\n")
 
     if(forever) s.append("T\n") else s.append("NIL\n")
-    
+
     s.append(1 + "\n") // for compatability
     s.append("T\n")  // show display name
 
     // agent type
     s.append(buttonType.name.toUpperCase + "\n")
-  
+
     // former autoUpdate flag
     s.append("NIL\n")
 
@@ -445,7 +445,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     s.append("NIL\n") // intermediateupdates were optional for a short time
     s.append("NIL\n") // being affected by the speed slider was optional for a short time
 
-    // go time only button. 
+    // go time only button.
     s.append((if(goTime) 0 else 1) + "\n")
 
     s.toString

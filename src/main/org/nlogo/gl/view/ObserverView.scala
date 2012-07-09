@@ -12,9 +12,9 @@ extends View("3D View", viewManager, renderer) {
 
   setBounds(bounds)
   val navBar = new ViewControlToolBar(this, inputHandler)
-  add(navBar, java.awt.BorderLayout.SOUTH) 
+  add(navBar, java.awt.BorderLayout.SOUTH)
   val controlStrip = new ViewControlStrip3D(viewManager.workspace)
-  add(controlStrip, java.awt.BorderLayout.NORTH)         
+  add(controlStrip, java.awt.BorderLayout.NORTH)
 
   addWindowListener(new java.awt.event.WindowAdapter {
     override def windowClosing(e: java.awt.event.WindowEvent) {
@@ -27,13 +27,13 @@ extends View("3D View", viewManager, renderer) {
 
   override def updatePerspectiveLabel() {
     navBar.setStatus(
-      viewManager.world.observer.perspective, 
+      viewManager.world.observer.perspective,
       viewManager.world.observer.targetAgent)
   }
-  
+
   override def editFinished() = {
-    super.editFinished() 
-    true 
+    super.editFinished()
+    true
   }
 
 }

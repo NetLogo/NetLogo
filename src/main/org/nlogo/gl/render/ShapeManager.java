@@ -116,7 +116,7 @@ class ShapeManager {
       queue.add(new AddShapeRequest(AddShapeRequestType.IMPORT, shape));
     }
   }
-      
+
   // Need to do it this way because we need the GL
   void checkQueue(GL gl, GLU glu) {
     for (AddShapeRequest req : queue) {

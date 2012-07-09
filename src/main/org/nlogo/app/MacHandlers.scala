@@ -45,6 +45,6 @@ object MacHandlers {
         javax.swing.JOptionPane.showMessageDialog(
           app.frame, ex.getMessage,
           I18N.gui.get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE)
-    }    
+    }
   }
 }

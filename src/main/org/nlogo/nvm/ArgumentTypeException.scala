@@ -32,6 +32,6 @@ extends EngineException(context, problemInstr, "") { // message will be built la
         None
       case _ =>
         Some("the " + TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
-    } 
+    }
 
 }

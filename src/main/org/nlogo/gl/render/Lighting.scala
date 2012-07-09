@@ -76,13 +76,13 @@ class LightManager {
 }
 
 abstract class Light {
-  
+
   var ambient = RGBA(1, 1, 1, 1)
   var diffuse = RGBA(1, 1, 1, 1)
   var specular = RGBA(1, 1, 1, 1)
 
   var glLightNumber = -1
-  
+
   var glInstance: Option[GL] = None
   implicit def getGL: GL = glInstance.getOrElse(sys.error(
     "Handle to OpenGL interface must be set before attempting to use the light. "
@@ -131,7 +131,7 @@ abstract class Light {
   def renderPositionHintLines(x: JFloat, y: JFloat, z: JFloat,
                               minX: JFloat, minY: JFloat, minZ: JFloat,
                               maxX: JFloat, maxY: JFloat, maxZ: JFloat) {
-    
+
     val gl = getGL
 
     // Render a line extending from the light position to the world bottom (helps visualize light's Z position)
@@ -164,7 +164,7 @@ abstract class Light {
       gl.glVertex3f(x, y, minZ)
       gl.glVertex3f(x, maxY, minZ)
     }
-    
+
     // If the light's (X,Y) position is outside of the world's boundaries, it may also be helpful to draw
     // a few lines extending from the world boundaries.
 
@@ -202,7 +202,7 @@ abstract class Light {
    */
   def render3DArrow(glu: GLU, xdir: Double, ydir: Double, zdir: Double) {
     val gl = getGL
-    
+
     val RADDEG = 57.29578
 
     val azimuth = math.atan2(ydir, xdir) * RADDEG
@@ -261,7 +261,7 @@ class DirectionalLight(val direction: Direction) extends Light {
   def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
-    
+
     gl.glDisable(GL.GL_LIGHTING)
 
     gl.glPushMatrix()
@@ -315,7 +315,7 @@ class PositionalLight(val position: Position) extends Light {
   def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
                   shapeRenderer: ShapeRenderer) {
     val gl = getGL
-    
+
     gl.glDisable(GL.GL_LIGHTING)
 
     // Render a sphere at the light's position

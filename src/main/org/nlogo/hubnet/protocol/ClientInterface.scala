@@ -1,11 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.protocol 
+package org.nlogo.hubnet.protocol
 
 import org.nlogo.api.{LogoList, CompilerServices, Shape}
 
 /**
- * Holds the specification for the client-side interface. 
+ * Holds the specification for the client-side interface.
  */
 @SerialVersionUID(0)
 case class ClientInterface(

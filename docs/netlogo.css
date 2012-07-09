@@ -2,7 +2,7 @@
   color: rgb(110, 0, 110)
 }
 :visited {
-  color: rgb(110, 0, 110) 
+  color: rgb(110, 0, 110)
 }
 
 hr {
@@ -79,7 +79,7 @@ blockquote {
 }
 
 pre {
-  margin-left: 2em;  
+  margin-left: 2em;
   background: rgb(225,225,225);
   font-family: monospace;
   padding: 1em;
@@ -102,9 +102,9 @@ p.question {
   font-size: 80%;
 }
 
-.license { background-color: #ffc; padding: 2em; 
-  border-style: solid; border-width: 1pt; 
-  font-family: courier; font-size: 80%; 
+.license { background-color: #ffc; padding: 2em;
+  border-style: solid; border-width: 1pt;
+  font-family: courier; font-size: 80%;
 }
 
 td.rightalign {vertical-align: top; text-align: right;}

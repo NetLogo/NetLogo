@@ -26,7 +26,7 @@ extends javax.swing.JPanel {
   }
 
   private class JVertLabel(label: String) extends javax.swing.JLabel(label) {
-    
+
     setFont(
       new Font(
         org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))

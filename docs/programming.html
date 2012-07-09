@@ -656,7 +656,7 @@ to setup
     [ ask patch-at 1 0            ;; ...to ask patch to the east
       [ set pcolor red ] ]        ;; ...to become red
   ask turtle 0                    ;; tell the first turtle...
-    [ create-link-with turtle 1 ] ;; ...make a link with the second 
+    [ create-link-with turtle 1 ] ;; ...make a link with the second
   ask link 0 1                    ;; tell the link between turtle 0 and 1
     [ set color blue ]            ;; ...to become blue
   reset-ticks
@@ -664,14 +664,16 @@ end
 </pre>
     <p>
       Every turtle created has a who number. The first turtle created is
-      number 0, the second turtle number 1, and so forth. The <a href=
-      "dictionary.html#turtle"><tt>turtle</tt></a> primitive reporter takes
-      a who number as an input, and reports the turtle with that who
-      number. The <a href="dictionary.html#patch"><tt>patch</tt></a>
-      primitive reporter takes values for pxcor and pycor and reports the
-      patch with those coordinates. The <a href=
-      "dictionary.html#link"><tt>link</tt></a> primitive takes two inputs,
-      the who numbers of the two turtles it connects. And the <a href=
+      number 0, the second turtle number 1, and so forth.
+    <p>
+      The <a href="dictionary.html#turtle"><tt>turtle</tt></a> primitive
+      reporter takes a who number as an input, and reports the turtle with
+      that who number. The <a href=
+      "dictionary.html#patch"><tt>patch</tt></a> primitive reporter takes
+      values for pxcor and pycor and reports the patch with those
+      coordinates. The <a href="dictionary.html#link"><tt>link</tt></a>
+      primitive takes two inputs, the who numbers of the two turtles it
+      connects. And the <a href=
       "dictionary.html#patch-at"><tt>patch-at</tt></a> primitive reporter
       takes <i>offsets</i>: distances, in the x and y directions,
       <i>from</i> the first agent. In the example above, the turtle with
@@ -968,6 +970,10 @@ ask one-of wolves [ set breed sheep ]
       primitive is useful for associating certain turtle shapes with
       certain breeds. See the section on shapes <a href=
       "#shapes">below</a>.
+    <p>
+      Who numbers are assigned irrespective of breeds. If you already have
+      a <tt>frog 0</tt>, then the first mouse will be <tt>mouse 1</tt>, not
+      <tt>mouse 0</tt>, since the who number 0 is already taken.
     <p>
       Here is a quick example of using breeds:
     <pre>
@@ -1683,9 +1689,9 @@ show cos 90
       it can be reproduced by others.
     <p>
       Here's how it works. NetLogo's random number generator can be
-      started with a certain seed value, which must be an integer in the range
-      -2147483648 to 2147483647. Once the
-      generator has been &quot;seeded&quot; with the <tt><a href=
+      started with a certain seed value, which must be an integer in the
+      range -2147483648 to 2147483647. Once the generator has been
+      &quot;seeded&quot; with the <tt><a href=
       "dictionary.html#random-seed">random-seed</a></tt> command, it always
       generates the same sequence of random numbers from then on. For
       example, if you run these commands:
@@ -1937,8 +1943,8 @@ ask turtles [ set shape one-of shapes ]
       them see model states they aren't supposed to see, which may be
       misleading.
       <li>Increased speed. Updating the view takes time, so if one update
-      per tick is enough, then enforcing there is only one update per
-      tick will make your model faster.
+      per tick is enough, then enforcing there is only one update per tick
+      will make your model faster.
       <li>Since <tt>setup</tt> buttons don't advance the tick counter,
       they are unaffected by the speed slider; this is normally the desired
       behavior.
@@ -1976,11 +1982,11 @@ ask turtles [ set shape one-of shapes ]
       frequency of updates.
     <p>
       With tick-based updates, the setting is a <i>ceiling</i> on how many
-      updates per second you get. If the frame rate is 30, then
-      NetLogo will ensure that the model never runs faster than that when
-      the speed slider is in the default position. If any frame takes less
-      than 1/30 of a second to compute and display, NetLogo will pause and
-      wait until the full 1/30 of a second has passed before continuing.
+      updates per second you get. If the frame rate is 30, then NetLogo
+      will ensure that the model never runs faster than that when the speed
+      slider is in the default position. If any frame takes less than 1/30
+      of a second to compute and display, NetLogo will pause and wait until
+      the full 1/30 of a second has passed before continuing.
     <p>
       The frame rate settings lets you set what you consider to be a normal
       speed for your model. Then you, or the user of your model, can use
@@ -2568,8 +2574,8 @@ file-close
 setup
 movie-start &quot;out.mov&quot;
 movie-grab-view ;; show the initial state
-repeat 30 
-[ go 
+repeat 30
+[ go
   movie-grab-view ]
 movie-close
 </pre>

@@ -25,7 +25,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   load(fileMustExist)
   setIndenter(smartIndent)
 
-  override def getToolBar = 
+  override def getToolBar =
     new org.nlogo.swing.ToolBar() {
       override def addControls() {
         add(new javax.swing.JButton(org.nlogo.app.FindDialog.FIND_ACTION))

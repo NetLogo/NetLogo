@@ -478,8 +478,9 @@ print (word &quot;There are &quot; count turtles &quot; turtles.&quot;)
       First you will need to remove any breeds called &quot;links&quot; if
       you are only using one type of links then you will not have to use
       breeds at all. If you are using multiple types of links see <a href=
-      "dictionary.html#undirected-link-breed"><tt>undirected-link-breed</tt></a> and
-      <a href="dictionary.html#directed-link-breed"><tt>directed-link-breed</tt></a>.
+      "dictionary.html#undirected-link-breed"><tt>undirected-link-breed</tt></a>
+      and <a href=
+      "dictionary.html#directed-link-breed"><tt>directed-link-breed</tt></a>.
       Commands and reporters that contain the word &quot;links&quot; (like
       <tt>__create-links-with</tt>, etc.) will automatically be converted
       to the new form without underscores (<a href=
@@ -536,10 +537,10 @@ straightforward.
 to-report link-xcor
   let other-guy end2
   let x 0
-  ask end1 
+  ask end1
   [
     hatch 1
-    [ 
+    [
       face other-guy
       fd [distance other-guy] of myself / 2
       set x xcor

@@ -55,7 +55,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     menu.add(resetItem)
     if (view.viewManager.world.observer.atHome3D) {
       resetItem.setEnabled (false)
-      resetItem.setText("reset-perspective") 
+      resetItem.setText("reset-perspective")
     }
 
     var last: Class[_] = null
@@ -84,7 +84,7 @@ class Picker(view: View) extends PickListener with ActionListener {
                 mousePt.getX.toInt + 15,
                 mousePt.getY.toInt + 15)
   }
-  
+
   /// context menu
 
   private class AgentMenu(agent: Agent) extends javax.swing.JMenu(agent.toString) {
@@ -118,7 +118,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       view.signalViewUpdate()
     }
   }
-  
+
   def actionPerformed(e: ActionEvent) {
     val item = e.getSource.asInstanceOf[AgentMenuItem]
     val observer = view.viewManager.world.observer
@@ -142,5 +142,5 @@ class Picker(view: View) extends PickListener with ActionListener {
         observer.setPerspective(Perspective.Watch, item.agent)
     }
   }
-  
+
 }
