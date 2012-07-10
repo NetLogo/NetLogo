@@ -14,14 +14,14 @@ object Extensions {
         val isDirectory = new java.io.FileFilter {
           override def accept(f: File) = f.isDirectory
         }
-        val dirs = IO.listFiles(isDirectory)(base / "extensions").toSet
-        val cache =
-          FileFunction.cached(cacheDir / "extensions", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+        val dirs = IO.listFiles(isDirectory)(base / "extensions").toSeq
+        val caches = dirs.map{dir =>
+          FileFunction.cached(cacheDir / "extensions" / dir.getName,
+                              inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in =>
-              dirs.map(buildExtension(_, scala.libraryJar, s.log))
-          }
-        cache(Set(base / "NetLogo.jar",
-                  base / "NetLogoLite.jar")).toSeq
+              Set(buildExtension(dir, scala.libraryJar, s.log))
+          }}
+        caches.flatMap{cache => cache(Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))}
     } dependsOn(packageBin in Compile)
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
