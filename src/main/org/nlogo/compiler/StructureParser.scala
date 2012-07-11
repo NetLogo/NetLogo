@@ -146,7 +146,7 @@ private class StructureParser(
             cAssert(!haveTurtlesOwn,"Redeclaration of TURTLES-OWN",token)
             tokenBuffer.next()
             haveTurtlesOwn = true
-            program.turtlesOwn.addAll(parseVarList(null, null).asJava)
+            program.turtlesOwn ++= parseVarList(null, null)
           }
           else if(keyword == "LINKS-OWN") {
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)

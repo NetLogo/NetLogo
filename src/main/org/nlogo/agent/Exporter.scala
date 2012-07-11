@@ -134,7 +134,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
 
   protected def exportTurtles() {
     println(csv.encode("TURTLES"))
-    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn)
+    val allTurtleVars = new ArrayList[String](world.program.turtlesOwn.asJava)
     val turtlesVarSize = world.program.turtlesOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]

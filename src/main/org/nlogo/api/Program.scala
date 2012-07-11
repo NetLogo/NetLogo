@@ -13,9 +13,8 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
     (AgentVariables.getImplicitObserverVariables ++
      interfaceGlobals.asScala.map(_.toUpperCase))(collection.breakOut)
 
-  val turtlesOwn: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitTurtleVariables(is3D))
-    turtlesOwn.add(s)
+  val turtlesOwn: collection.mutable.Buffer[String] =
+    AgentVariables.getImplicitTurtleVariables(is3D).toBuffer
 
   val patchesOwn: JList[String] = new ArrayList[String]
   for(s <- AgentVariables.getImplicitPatchVariables(is3D))
@@ -48,7 +47,7 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
         .mkString("", "\n", "\n").trim
     "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + list(interfaceGlobals) + "\n" +
-      "turtles-own " + list(turtlesOwn) + "\n" +
+      "turtles-own " + seq(turtlesOwn) + "\n" +
       "patches-own " + list(patchesOwn) + "\n" +
       "links-own " + list(linksOwn) + "\n" +
       "breeds " + map(breeds) + "\n" +

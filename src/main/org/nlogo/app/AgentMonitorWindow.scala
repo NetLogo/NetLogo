@@ -152,8 +152,10 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def agentClass = classOf[Turtle]
     override def repaintPrompt() { }
     override def vars = {
-      val turtleVars = new java.util.ArrayList[String](
-        workspace.world.program.turtlesOwn)
+      val turtleVars = new java.util.ArrayList[String]{
+        import collection.JavaConverters._
+        workspace.world.program.turtlesOwn.asJava
+      }
       if(agent != null) {
         val breed = agent.asInstanceOf[Turtle].getBreed
         if(breed != workspace.world.turtles()) {
