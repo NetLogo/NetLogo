@@ -40,21 +40,21 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
   val linkBreedsOwn: JMap[String, JList[String]] = new LinkedHashMap[String, JList[String]]
 
   def dump = {
-    val buf = new StringBuilder
     def list(xs: JList[_]) =
       xs.asScala.mkString("[", " ", "]")
     def map(xs: JMap[_, _]) =
-      xs.asScala.map{case (k, v) => k.toString + " = " + v.toString}.mkString("", "\n", "\n").trim
-    buf ++= "globals " + list(globals) + "\n"
-    buf ++= "interfaceGlobals " + list(interfaceGlobals) + "\n"
-    buf ++= "turtles-own " + list(turtlesOwn) + "\n"
-    buf ++= "patches-own " + list(patchesOwn) + "\n"
-    buf ++= "links-own " + list(linksOwn) + "\n"
-    buf ++= "breeds " + map(breeds) + "\n"
-    buf ++= "breeds-own " + map(breedsOwn) + "\n"
-    buf ++= "link-breeds " + map(linkBreeds) + "\n"
-    buf ++= "link-breeds-own " + map(linkBreedsOwn) + "\n"
-    buf.toString
+      xs.asScala
+        .map{case (k, v) => k.toString + " = " + v.toString}
+        .mkString("", "\n", "\n").trim
+    "globals " + list(globals) + "\n" +
+      "interfaceGlobals " + list(interfaceGlobals) + "\n" +
+      "turtles-own " + list(turtlesOwn) + "\n" +
+      "patches-own " + list(patchesOwn) + "\n" +
+      "links-own " + list(linksOwn) + "\n" +
+      "breeds " + map(breeds) + "\n" +
+      "breeds-own " + map(breedsOwn) + "\n" +
+      "link-breeds " + map(linkBreeds) + "\n" +
+      "link-breeds-own " + map(linkBreedsOwn) + "\n"
   }
 
 }
