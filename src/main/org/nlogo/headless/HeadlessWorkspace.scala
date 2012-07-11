@@ -356,7 +356,7 @@ with org.nlogo.api.ViewSettings {
   /// world importing error handling
 
   var importerErrorHandler =
-    new org.nlogo.agent.Importer.ErrorHandler {
+    new org.nlogo.agent.ImporterJ.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(
           "got a " + (if (fatalError) "" else "non") +

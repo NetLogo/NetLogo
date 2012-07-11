@@ -217,18 +217,18 @@ public strictfp class Importer3D
 
   @Override
   String[] getSpecialTurtleVariables() {
-    String[] vars = AgentVariables.getImplicitTurtleVariables(true);
-    return new String[]
-        {vars[Turtle.VAR_WHO], vars[Turtle3D.VAR_BREED3D],
-            vars[Turtle3D.VAR_LABEL3D], vars[Turtle3D.VAR_SHAPE3D]};
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitTurtleVariables(true);
+    return new String[]{
+      vars.apply(Turtle.VAR_WHO), vars.apply(Turtle3D.VAR_BREED3D),
+      vars.apply(Turtle3D.VAR_LABEL3D), vars.apply(Turtle3D.VAR_SHAPE3D)};
   }
 
   @Override
   String[] getSpecialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(true);
-    return new String[]
-        {vars[Patch3D.VAR_PXCOR3D], vars[Patch3D.VAR_PYCOR3D],
-            vars[Patch3D.VAR_PZCOR3D], vars[Patch3D.VAR_PLABEL3D]};
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(true);
+    return new String[]{
+      vars.apply(Patch3D.VAR_PXCOR3D), vars.apply(Patch3D.VAR_PYCOR3D),
+      vars.apply(Patch3D.VAR_PZCOR3D), vars.apply(Patch3D.VAR_PLABEL3D)};
   }
 
   @Override
@@ -244,9 +244,9 @@ public strictfp class Importer3D
 
   @Override
   String[] getEssentialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(true);
-    return new String[]
-        {vars[Patch3D.VAR_PXCOR3D], vars[Patch3D.VAR_PYCOR3D],
-            vars[Patch3D.VAR_PZCOR3D]};
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(true);
+    return new String[]{
+      vars.apply(Patch3D.VAR_PXCOR3D), vars.apply(Patch3D.VAR_PYCOR3D),
+      vars.apply(Patch3D.VAR_PZCOR3D)};
   }
 }

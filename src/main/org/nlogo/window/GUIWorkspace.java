@@ -950,8 +950,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// importing
 
   @Override
-  protected org.nlogo.agent.Importer.ErrorHandler importerErrorHandler() {
-    return new org.nlogo.agent.Importer.ErrorHandler() {
+  protected org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler() {
+    return new org.nlogo.agent.ImporterJ.ErrorHandler() {
       public boolean showError(String title, String errorDetails,
                                boolean fatalError) {
         org.nlogo.awt.EventQueue.mustBeEventDispatchThread();

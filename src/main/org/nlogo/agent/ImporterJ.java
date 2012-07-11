@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public strictfp class Importer
+public abstract strictfp class ImporterJ
     implements org.nlogo.api.ImportErrorHandler {
   final ImporterUser importerUser;
   final ErrorHandler errorHandler;
@@ -73,8 +73,8 @@ public strictfp class Importer
     }
   }
 
-  public Importer(Importer.ErrorHandler errorHandler, World world, ImporterUser importerUser,
-                  Importer.StringReader stringReader) {
+  public ImporterJ(ImporterJ.ErrorHandler errorHandler, World world, ImporterUser importerUser,
+                   ImporterJ.StringReader stringReader) {
     this.errorHandler = errorHandler;
     this.world = world;
     this.importerUser = importerUser;
@@ -1170,21 +1170,7 @@ public strictfp class Importer
     }
   }
 
-  String[] getImplicitVariables(Class<? extends Agent> agentClass) {
-    if (agentClass == Observer.class) {
-      return AgentVariables.getImplicitObserverVariables();
-    }
-    if (agentClass == Turtle.class) {
-      return AgentVariables.getImplicitTurtleVariables(world.program().is3D());
-    }
-    if (agentClass == Patch.class) {
-      return AgentVariables.getImplicitPatchVariables(world.program().is3D());
-    }
-    if (agentClass == Link.class) {
-      return AgentVariables.getImplicitLinkVariables();
-    }
-    throw new IllegalStateException();
-  }
+  abstract String[] getImplicitVariables(Class<? extends Agent> agentClass);
 
   //code to handle peek for the StringTokenizer
 
