@@ -9,11 +9,9 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
 
   def this(is3D: Boolean) = this(new ArrayList[String], is3D)
 
-  val globals: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitObserverVariables)
-    globals.add(s)
-  for(s <- interfaceGlobals.asScala)
-    globals.add(s.toUpperCase)
+  val globals: collection.mutable.Buffer[String] =
+    (AgentVariables.getImplicitObserverVariables ++
+     interfaceGlobals.asScala.map(_.toUpperCase))(collection.breakOut)
 
   val turtlesOwn: JList[String] = new ArrayList[String]
   for(s <- AgentVariables.getImplicitTurtleVariables(is3D))
@@ -40,13 +38,15 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
   val linkBreedsOwn: JMap[String, JList[String]] = new LinkedHashMap[String, JList[String]]
 
   def dump = {
+    def seq(xs: Seq[_]) =
+      xs.mkString("[", " ", "]")
     def list(xs: JList[_]) =
       xs.asScala.mkString("[", " ", "]")
     def map(xs: JMap[_, _]) =
       xs.asScala
         .map{case (k, v) => k.toString + " = " + v.toString}
         .mkString("", "\n", "\n").trim
-    "globals " + list(globals) + "\n" +
+    "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + list(interfaceGlobals) + "\n" +
       "turtles-own " + list(turtlesOwn) + "\n" +
       "patches-own " + list(patchesOwn) + "\n" +

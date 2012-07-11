@@ -1103,7 +1103,7 @@ public strictfp class World
   }
 
   public String observerOwnsNameAt(int index) {
-    return _program.globals().get(index);
+    return _program.globals().apply(index);
   }
 
   public int observerOwnsIndexOf(String name) {
@@ -1291,7 +1291,11 @@ public strictfp class World
   List<String> oldTurtlesOwn = new ArrayList<String>();
   List<String> oldPatchesOwn = new ArrayList<String>();
   List<String> oldLinksOwn = new ArrayList<String>();
-  List<String> oldGlobals = new ArrayList<String>();
+
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
+  scala.collection.Seq<String> oldGlobals =
+      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+
   Map<String, Object> oldBreeds = new LinkedHashMap<String, Object>();
   Map<String, Object> oldLinkBreeds = new LinkedHashMap<String, Object>();
   Map<String, List<String>> oldBreedsOwn = new HashMap<String, List<String>>();

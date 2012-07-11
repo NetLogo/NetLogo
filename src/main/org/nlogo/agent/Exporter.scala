@@ -102,7 +102,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.asScala.zipWithIndex) {
+    for((g, i) <- globals.zipWithIndex) {
       globalVarIndices.put(g, Int.box(i))
       sortedGlobals.add(g)
     }

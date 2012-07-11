@@ -242,7 +242,7 @@ public strictfp class Link
           } else if (value instanceof LogoList) {
             color((LogoList) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 Double.class, value);
           }
           break;
@@ -255,7 +255,7 @@ public strictfp class Link
           } else if (value instanceof LogoList) {
             labelColor((LogoList) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 Double.class, value);
           }
           break;
@@ -263,7 +263,7 @@ public strictfp class Link
           if (value instanceof Boolean) {
             hidden(((Boolean) value).booleanValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 Boolean.class, value);
           }
           break;
@@ -285,7 +285,7 @@ public strictfp class Link
             }
             setBreed(breed);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 AgentSet.class, value);
           }
           break;
@@ -293,7 +293,7 @@ public strictfp class Link
           if (value instanceof Double) {
             lineThickness((Double) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 Double.class, value);
           }
           break;
@@ -305,7 +305,7 @@ public strictfp class Link
             }
             shape(newShape);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 String.class, value);
           }
           break;
@@ -313,7 +313,7 @@ public strictfp class Link
           if (value instanceof String) {
             mode((String) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitLinkVariables().apply(vn),
                 String.class, value);
           }
           break;

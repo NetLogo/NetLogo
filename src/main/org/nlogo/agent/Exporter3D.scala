@@ -119,9 +119,9 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     val globals = world.program.globals
     val sortedGlobals = new ArrayList[String](globals.size)
     val globalVarIndices = new JHashMap[String, JInteger]
-    for((g, i) <- globals.asScala.zipWithIndex) {
-      globalVarIndices.put(globals.get(i), Int.box(i))
-      sortedGlobals.add(globals.get(i))
+    for((g, i) <- globals.zipWithIndex) {
+      globalVarIndices.put(g, Int.box(i))
+      sortedGlobals.add(g)
     }
     // we want to make sure to export the globals in alphabetical order so that the world files are
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
@@ -141,7 +141,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.data(if(world.links().isDirected()) "DIRECTED" else
                                    if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
                   + csv.encode(Dump.number(world.tickCounter.ticks)))
-    for((g, i) <- globals.asScala.zipWithIndex) {
+    for((g, i) <- globals.zipWithIndex) {
       print(",")
       print(csv.data
                    (world.observer().getObserverVariable

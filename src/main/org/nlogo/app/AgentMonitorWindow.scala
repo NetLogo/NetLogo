@@ -141,7 +141,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def vars = {
       val allGlobals = workspace.world.program.globals
       import collection.JavaConverters._
-      allGlobals.asScala
+      allGlobals
         .drop(workspace.world.program.interfaceGlobals.size)
         .toList.asJava
     }

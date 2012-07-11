@@ -1028,40 +1028,10 @@ public abstract strictfp class ImporterJ
     return list;
   }
 
-  String[] getSpecialObserverVariables() {
-    return new String[]{MIN_PXCOR_HEADER,
-        MAX_PXCOR_HEADER,
-        MIN_PYCOR_HEADER,
-        MAX_PYCOR_HEADER,
-        SCREEN_EDGE_X_HEADER,
-        SCREEN_EDGE_Y_HEADER,
-        PERSPECTIVE_HEADER,
-        SUBJECT_HEADER,
-        NEXT_INDEX_HEADER,
-        DIRECTED_LINKS_HEADER,
-        TICKS_HEADER};
-  }
-
-  String[] getSpecialTurtleVariables() {
-    String[] vars = AgentVariables.getImplicitTurtleVariables(false);
-    return new String[]
-        {vars[Turtle.VAR_WHO], vars[Turtle.VAR_BREED],
-            vars[Turtle.VAR_LABEL], vars[Turtle.VAR_SHAPE]};
-  }
-
-  String[] getSpecialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(false);
-    return new String[]
-        {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR],
-            vars[Patch.VAR_PLABEL]};
-  }
-
-  String[] getSpecialLinkVariables() {
-    String[] vars = AgentVariables.getImplicitLinkVariables();
-    return new String[]
-        {vars[Link.VAR_BREED], vars[Link.VAR_LABEL],
-            vars[Link.VAR_END1], vars[Link.VAR_END2]};
-  }
+  abstract String[] getSpecialObserverVariables();
+  abstract String[] getSpecialTurtleVariables();
+  abstract String[] getSpecialPatchVariables();
+  abstract String[] getSpecialLinkVariables();
 
   boolean isSpecialVariable(Class<? extends Agent> agentClass, String header) {
     return specialVariables.get(agentClass).contains(header);
@@ -1112,19 +1082,19 @@ public abstract strictfp class ImporterJ
 
   String[] getEssentialTurtleVariables() {
     return new String[]
-        {AgentVariables.getImplicitTurtleVariables(false)[Turtle.VAR_WHO]};
+    {AgentVariables.getImplicitTurtleVariables(false).apply(Turtle.VAR_WHO)};
   }
 
   String[] getEssentialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(false);
-    return new String[]
-        {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR]};
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(false);
+    return new String[]{
+      vars.apply(Patch.VAR_PXCOR), vars.apply(Patch.VAR_PYCOR)};
   }
 
   String[] getEssentialLinkVariables() {
-    String[] vars = AgentVariables.getImplicitLinkVariables();
-    return new String[]
-        {vars[Link.VAR_END1], vars[Link.VAR_END2]};
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitLinkVariables();
+    return new String[]{
+      vars.apply(Link.VAR_END1), vars.apply(Link.VAR_END2)};
   }
 
   //if essentialHeaders is true,

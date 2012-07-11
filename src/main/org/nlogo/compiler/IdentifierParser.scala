@@ -95,7 +95,7 @@ private class IdentifierParser(program:Program,
       new _patchvariable(program.patchesOwn.indexOf(varName))
     else if(program.linksOwn.asScala.contains(varName))
       new _linkvariable(program.linksOwn.indexOf(varName))
-    else if(program.globals.asScala.contains(varName))
+    else if(program.globals.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
     else if(program.breedsOwn.asScala.values.exists(_.asScala.contains(varName)))
       new _breedvariable(varName)
