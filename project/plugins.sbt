@@ -10,3 +10,8 @@ libraryDependencies +=
 libraryDependencies +=
   "net.sf.proguard" % "proguard" % "4.6" from
     "http://ccl.northwestern.edu/devel/proguard-4.6.jar"
+
+// for sbt-git-plugin
+resolvers += "jgit-repo" at "http://download.eclipse.org/jgit/maven"
+
+addSbtPlugin("com.jsuereth" % "sbt-git-plugin" % "0.4")
