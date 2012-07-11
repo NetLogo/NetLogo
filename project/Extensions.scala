@@ -8,13 +8,20 @@ object Extensions {
     "extensions", "builds extensions")
 
   val extensionsTask =
-    extensions <<= (baseDirectory, scalaInstance, streams) map { (base, scala, s) =>
-      "git submodule --quiet update --init" ! s.log
-      val isDirectory = new java.io.FileFilter {
-        override def accept(f: File) = f.isDirectory
-      }
-      val dirs = IO.listFiles(isDirectory)(base / "extensions").toSeq
-      dirs.map(buildExtension(_, scala.libraryJar, s.log))
+    extensions <<= (baseDirectory, cacheDirectory, scalaInstance, streams) map {
+      (base, cacheDir, scala, s) =>
+        "git submodule --quiet update --init" ! s.log
+        val isDirectory = new java.io.FileFilter {
+          override def accept(f: File) = f.isDirectory
+        }
+        val dirs = IO.listFiles(isDirectory)(base / "extensions").toSeq
+        val caches = dirs.map{dir =>
+          FileFunction.cached(cacheDir / "extensions" / dir.getName,
+                              inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+            in =>
+              Set(buildExtension(dir, scala.libraryJar, s.log))
+          }}
+        caches.flatMap{cache => cache(Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))}
     } dependsOn(packageBin in Compile)
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {

@@ -8,6 +8,8 @@ import org.nlogo.api.ModelSection;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.ModelType;
 import org.nlogo.api.ModelTypeJ;
+import static org.nlogo.api.ModelReader.modelSuffix;
+import static org.nlogo.api.ModelReader.emptyModelPath;
 import org.nlogo.awt.UserCancelException;
 
 import java.util.Map;
@@ -72,16 +74,6 @@ public strictfp class FileMenu
     // initial load process it'll get initialize properly below
     // maybe this fixes Nigel Gilbert's bug. maybe. ev 1/30/07
     savedVersion = org.nlogo.api.Version.version();
-  }
-
-  ///
-
-  public static String modelSuffix() {
-    return org.nlogo.api.Version.is3D() ? "nlogo3d" : "nlogo";
-  }
-
-  private String emptyModelPath() {
-    return "/system/empty." + modelSuffix();
   }
 
   ///
