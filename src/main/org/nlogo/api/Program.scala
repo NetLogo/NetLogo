@@ -5,7 +5,7 @@ package org.nlogo.api
 import java.util.{ ArrayList, LinkedHashMap, List => JList, Map => JMap }
 import collection.JavaConverters._
 
-final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
+class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
 
   def this(is3D: Boolean) = this(new ArrayList[String], is3D)
 
