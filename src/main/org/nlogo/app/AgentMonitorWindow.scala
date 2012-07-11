@@ -2,8 +2,8 @@
 
 package org.nlogo.app
 
-
 import org.nlogo.agent.{Agent, Link, Observer, Patch, Turtle}
+import collection.JavaConverters._
 
 class AgentMonitorWindow(agentClass: Class[_ <: Agent], _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: java.awt.Frame)
@@ -138,13 +138,9 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
   extends AgentMonitor(manager.workspace, window) {
     override def agentClass = classOf[Observer]
     override def repaintPrompt() { }
-    override def vars = {
-      val allGlobals = workspace.world.program.globals
-      import collection.JavaConverters._
-      allGlobals
-        .drop(workspace.world.program.interfaceGlobals.size)
-        .toList.asJava
-    }
+    override def vars =
+      workspace.world.program.globals.drop(
+        workspace.world.program.interfaceGlobals.size)
   }
 
   class TurtleMonitor(window: javax.swing.JWindow)
@@ -152,19 +148,14 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def agentClass = classOf[Turtle]
     override def repaintPrompt() { }
     override def vars = {
-      val turtleVars = new java.util.ArrayList[String]{
-        import collection.JavaConverters._
-        workspace.world.program.turtlesOwn.asJava
-      }
+      var breedVars = Seq[String]()
       if(agent != null) {
         val breed = agent.asInstanceOf[Turtle].getBreed
-        if(breed != workspace.world.turtles()) {
-          val breedVars = workspace.world.program.breedsOwn.get(breed.printName)
-          if(breedVars != null) // there might be a compiler error
-            turtleVars.addAll(breedVars)
-        }
+        if(breed != workspace.world.turtles())
+          // careful, there might be a compiler error
+          breedVars = Option(workspace.world.program.breedsOwn.get(breed.printName).asScala).getOrElse(Seq())
       }
-      turtleVars
+      workspace.world.program.turtlesOwn ++ breedVars
     }
   }
 
@@ -180,17 +171,14 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
     override def agentClass = classOf[Link]
     override def repaintPrompt() { }
     override def vars = {
-      val linkVars = new java.util.ArrayList[String](
-        workspace.world.program.linksOwn)
+      var breedVars = Seq[String]()
       if(agent != null) {
         val breed = agent.asInstanceOf[Link].getBreed
-        if(breed != workspace.world.links()) {
-          val breedVars = workspace.world.program.linkBreedsOwn.get(breed.printName)
-          if(breedVars != null) // there might be a compiler error
-            linkVars.addAll(breedVars)
-        }
+        if(breed != workspace.world.links())
+          // careful, there might be a compiler error
+          breedVars = Option(workspace.world.program.linkBreedsOwn.get(breed.printName).asScala).getOrElse(Seq())
       }
-      linkVars
+      workspace.world.program.linksOwn ++ breedVars
     }
   }
 

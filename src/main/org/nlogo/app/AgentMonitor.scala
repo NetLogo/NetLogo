@@ -28,7 +28,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
     }
   }
 
-  def vars: java.util.List[String] // abstract
+  def vars: Seq[String] // abstract
   def agentClass: Class[_ <: Agent] // abstract
   private var oldVars = vars
   val commandLine = new CommandLine(this, false, 11, workspace) { // false = don't echo commands to output
@@ -115,7 +115,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
       commandLine.setEnabled(false)
       historyPrompt.setEnabled(false)
     }
-    if((oldVars ne vars) && (vars == null || oldVars == null || !sameVars(oldVars, vars))) {
+    if((oldVars ne vars) && (vars == null || oldVars == null || !oldVars.sameElements(vars))) {
       agentEditor.reset()
       oldVars = vars
     }
@@ -124,10 +124,6 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
   }
 
   /// helpers
-
-  private def sameVars(vars1: java.util.List[String], vars2: java.util.List[String]) =
-    vars1.size == vars2.size &&
-    (0 until vars1.size).forall(i => vars1.get(i) == vars2.get(i))
 
   def close() {
     if(hasView)

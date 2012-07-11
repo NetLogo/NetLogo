@@ -114,7 +114,7 @@ public strictfp class Patch
     // Keep Variables Across Recompile
     if (forRecompile) {
       for (int i = NUMBER_PREDEFINED_VARS; i < oldvars.length && i < world.oldPatchesOwn.size(); i++) {
-        String name = world.oldPatchesOwn.get(i);
+        String name = world.oldPatchesOwn.apply(i);
         int newpos = world.patchesOwnIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];

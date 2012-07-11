@@ -1017,7 +1017,7 @@ public strictfp class World
   }
 
   public String linksOwnNameAt(int index) {
-    return _program.linksOwn().get(index);
+    return _program.linksOwn().apply(index);
   }
 
   int oldTurtlesOwnIndexOf(String name) {
@@ -1095,7 +1095,7 @@ public strictfp class World
   }
 
   public String patchesOwnNameAt(int index) {
-    return _program.patchesOwn().get(index);
+    return _program.patchesOwn().apply(index);
   }
 
   public int patchesOwnIndexOf(String name) {
@@ -1294,8 +1294,12 @@ public strictfp class World
   @SuppressWarnings("unchecked") // Java doesn't know about variance
   scala.collection.Seq<String> oldTurtlesOwn =
       (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-  List<String> oldPatchesOwn = new ArrayList<String>();
-  List<String> oldLinksOwn = new ArrayList<String>();
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
+  scala.collection.Seq<String> oldPatchesOwn =
+      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
+  scala.collection.Seq<String> oldLinksOwn =
+      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
 
   Map<String, Object> oldBreeds = new LinkedHashMap<String, Object>();
   Map<String, Object> oldLinkBreeds = new LinkedHashMap<String, Object>();

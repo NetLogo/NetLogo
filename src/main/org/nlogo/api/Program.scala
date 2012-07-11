@@ -11,18 +11,16 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
 
   val globals: collection.mutable.Buffer[String] =
     (AgentVariables.getImplicitObserverVariables ++
-     interfaceGlobals.asScala.map(_.toUpperCase))(collection.breakOut)
+     interfaceGlobals.asScala.map(_.toUpperCase)).toBuffer
 
   val turtlesOwn: collection.mutable.Buffer[String] =
     AgentVariables.getImplicitTurtleVariables(is3D).toBuffer
 
-  val patchesOwn: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitPatchVariables(is3D))
-    patchesOwn.add(s)
+  val patchesOwn: collection.mutable.Buffer[String] =
+    AgentVariables.getImplicitPatchVariables(is3D).toBuffer
 
-  val linksOwn: JList[String] = new ArrayList[String]
-  for(s <- AgentVariables.getImplicitLinkVariables)
-    linksOwn.add(s)
+  val linksOwn: collection.mutable.Buffer[String] =
+    AgentVariables.getImplicitLinkVariables.toBuffer
 
   // use a LinkedHashMap to store the breeds so that the Renderer can retrieve them in order of
   // definition, for proper z-ordering - ST 6/9/04
@@ -48,8 +46,8 @@ final class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
     "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + list(interfaceGlobals) + "\n" +
       "turtles-own " + seq(turtlesOwn) + "\n" +
-      "patches-own " + list(patchesOwn) + "\n" +
-      "links-own " + list(linksOwn) + "\n" +
+      "patches-own " + seq(patchesOwn) + "\n" +
+      "links-own " + seq(linksOwn) + "\n" +
       "breeds " + map(breeds) + "\n" +
       "breeds-own " + map(breedsOwn) + "\n" +
       "link-breeds " + map(linkBreeds) + "\n" +

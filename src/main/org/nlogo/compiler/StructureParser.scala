@@ -152,13 +152,13 @@ private class StructureParser(
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)
             tokenBuffer.next()
             haveLinksOwn = true
-            program.linksOwn.addAll(parseVarList(null, null).asJava)
+            program.linksOwn ++= parseVarList(null, null)
           }
           else if(keyword == "PATCHES-OWN") {
             cAssert( !havePatchesOwn,"Redeclaration of PATCHES-OWN",token)
             tokenBuffer.next()
             havePatchesOwn = true
-            program.patchesOwn.addAll(parseVarList( null, null).asJava)
+            program.patchesOwn ++= parseVarList(null, null)
           }
           else if(keyword == "GLOBALS") {
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)

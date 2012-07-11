@@ -29,7 +29,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
   private def exportLinks() {
     println(csv.encode("LINKS"))
     val allLinkVars = new ArrayList[String]
-    for(v <- world.program.linksOwn.asScala)
+    for(v <- world.program.linksOwn)
       allLinkVars.add(v)
     val linkVarSize = world.program.linksOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that

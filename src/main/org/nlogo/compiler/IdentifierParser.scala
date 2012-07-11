@@ -87,13 +87,13 @@ private class IdentifierParser(program:Program,
   }
 
   private def getAgentVariableReporter(varName:String,tok:Token):Reporter = {
-    if(program.turtlesOwn.contains(varName) && program.linksOwn.asScala.contains(varName))
+    if(program.turtlesOwn.contains(varName) && program.linksOwn.contains(varName))
       new _turtleorlinkvariable(varName)
     else if(program.turtlesOwn.contains(varName))
       new _turtlevariable(program.turtlesOwn.indexOf(varName))
-    else if(program.patchesOwn.asScala.contains(varName))
+    else if(program.patchesOwn.contains(varName))
       new _patchvariable(program.patchesOwn.indexOf(varName))
-    else if(program.linksOwn.asScala.contains(varName))
+    else if(program.linksOwn.contains(varName))
       new _linkvariable(program.linksOwn.indexOf(varName))
     else if(program.globals.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
