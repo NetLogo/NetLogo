@@ -16,8 +16,7 @@ class StructureParserTests extends FunSuite {
       .parse(false)
   }
   test("empty") {
-    val program = Program.applyS()
-    val results = compile("", program)
+    val results = compile("", Program.applyS())
     assert(results.procedures.isEmpty)
     assert(results.tokens.isEmpty)
     expect("globals []\n" +
@@ -28,7 +27,7 @@ class StructureParserTests extends FunSuite {
       "breeds \n" +
       "breeds-own \n" +
       "link-breeds \n" +
-      "link-breeds-own \n")(program.dump)
+      "link-breeds-own \n")(results.program.dump)
   }
   test("missing procedure name") {  // ticket #1183
     intercept[CompilerException] {
@@ -44,8 +43,7 @@ class StructureParserTests extends FunSuite {
     expect("procedure GO:[]{OTPL}:\n")(results.procedures.get("GO").dump)
   }
   test("declarations1") {
-    val program = Program.applyS()
-    val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", program)
+    val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.applyS())
     assert(results.procedures.isEmpty)
     expect("globals [G1 G2]\n" +
       "interfaceGlobals []\n" +
@@ -55,11 +53,10 @@ class StructureParserTests extends FunSuite {
       "breeds \n" +
       "breeds-own \n" +
       "link-breeds \n" +
-      "link-breeds-own \n")(program.dump)
+      "link-breeds-own \n")(results.program.dump)
   }
   test("declarations2") {
-    val program = Program.applyS()
-    val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", program)
+    val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", Program.applyS())
     assert(results.procedures.isEmpty)
     expect("globals []\n" +
       "interfaceGlobals []\n" +
@@ -71,6 +68,6 @@ class StructureParserTests extends FunSuite {
       "breeds-own B1S = [B11, B12]\n" +
       "B2S = [B21, B22]\n" +
       "link-breeds \n" +
-      "link-breeds-own \n")(program.dump)
+      "link-breeds-own \n")(results.program.dump)
   }
 }

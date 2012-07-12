@@ -12,8 +12,9 @@ import collection.JavaConverters._
 
 private object StructureParser {
 
-  class Results(val procedures: java.util.Map[String, Procedure],
-                val tokens: Map[Procedure, Iterable[Token]])
+  case class Results(program: Program,
+                     procedures: java.util.Map[String, Procedure],
+                     tokens: Map[Procedure, Iterable[Token]])
 
   def resolvePath(fileName: String, path: String): String = {
     val pathFile = new java.io.File(path)
@@ -146,25 +147,25 @@ private class StructureParser(
             cAssert(!haveTurtlesOwn,"Redeclaration of TURTLES-OWN",token)
             tokenBuffer.next()
             haveTurtlesOwn = true
-            program.turtlesOwn ++= parseVarList(null, null)
+            program = program.copy(turtlesOwn = program.turtlesOwn ++ parseVarList(null, null))
           }
           else if(keyword == "LINKS-OWN") {
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)
             tokenBuffer.next()
             haveLinksOwn = true
-            program.linksOwn ++= parseVarList(null, null)
+            program = program.copy(linksOwn = program.linksOwn ++ parseVarList(null, null))
           }
           else if(keyword == "PATCHES-OWN") {
             cAssert( !havePatchesOwn,"Redeclaration of PATCHES-OWN",token)
             tokenBuffer.next()
             havePatchesOwn = true
-            program.patchesOwn ++= parseVarList(null, null)
+            program = program.copy(patchesOwn = program.patchesOwn ++ parseVarList(null, null))
           }
           else if(keyword == "GLOBALS") {
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)
             tokenBuffer.next()
             haveGlobals = true
-            program.userGlobals ++= parseVarList(null, null)
+            program = program.copy(userGlobals = program.userGlobals ++ parseVarList(null, null))
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)
@@ -232,7 +233,7 @@ private class StructureParser(
     }
     if(!subprogram)
       extensionManager.finishFullCompilation()
-    new StructureParser.Results(newProcedures, tokensMap.toMap)
+    new StructureParser.Results(program, newProcedures, tokensMap.toMap)
   }
   // replaces an identifier token with its imported implementation, if necessary
   private def processTokenWithExtensionManager(token: Token): Token = {

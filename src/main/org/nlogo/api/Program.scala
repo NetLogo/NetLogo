@@ -23,10 +23,10 @@ object Program {
 case class Program private(
   is3D: Boolean = false,
   interfaceGlobals: Seq[String] = Nil,
-  var userGlobals: Seq[String] = Seq(),
-  var turtlesOwn: Seq[String] = Seq(),
-  var patchesOwn: Seq[String] = Seq(),
-  var linksOwn: Seq[String] = Seq(),
+  userGlobals: Seq[String] = Seq(),
+  turtlesOwn: Seq[String] = Seq(),
+  patchesOwn: Seq[String] = Seq(),
+  linksOwn: Seq[String] = Seq(),
   // use a LinkedHashMap to store the breeds so that the Renderer can retrieve them in order of
   // definition, for proper z-ordering - ST 6/9/04
   // Using LinkedHashMap on the other maps isn't really necessary for proper functioning, but makes
