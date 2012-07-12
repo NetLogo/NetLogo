@@ -2,13 +2,14 @@
 
 package org.nlogo.api
 
-import java.util.{ LinkedHashMap, List => JList, Map => JMap }
+import java.util.{ LinkedHashMap, Map => JMap }
 import collection.JavaConverters._
 
 class Program(val interfaceGlobals: collection.immutable.Seq[String] = Nil,
               val is3D: Boolean = false) {
 
-  def this(interfaceGlobals: JList[String], is3D: Boolean) =
+  // for convenience of Java callers
+  def this(interfaceGlobals: java.util.List[String], is3D: Boolean) =
     this(interfaceGlobals.asScala.toList, is3D)
 
   val globals: collection.mutable.Buffer[String] =
