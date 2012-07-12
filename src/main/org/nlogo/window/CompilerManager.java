@@ -103,8 +103,9 @@ public strictfp class CompilerManager
     try {
       CompilerResults results =
           workspace.compiler().compileProgram
-              (proceduresInterface.innerSource(), Program.applyJ(Version.is3D(), getGlobalVariableNames()),
-                  workspace.getExtensionManager());
+              (proceduresInterface.innerSource(),
+               workspace.world.program().withInterfaceGlobals(getGlobalVariableNames()),
+               workspace.getExtensionManager());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {
         if (procedure.fileName.equals("")) {

@@ -18,9 +18,6 @@ object Program {
       linksOwn = AgentVariables.getImplicitLinkVariables)
   def empty(is3D: Boolean = false) =
     if (is3D) empty3D else empty2D
-  // for convenience from Java - ST 7/12/12
-  def applyJ(is3D: Boolean, interfaceGlobals: java.util.List[String]) =
-    empty(is3D).copy(interfaceGlobals = interfaceGlobals.asScala.toSeq)
 }
 
 case class Program private(
@@ -52,6 +49,8 @@ case class Program private(
   def linkBreedsSingularJ: java.util.Map[String, String] = linkBreedsSingular.asJava
   def breedsOwnJ: java.util.Map[String, Seq[String]] = breedsOwn.asJava
   def linkBreedsOwnJ: java.util.Map[String, Seq[String]] = linkBreedsOwn.asJava
+  def withInterfaceGlobals(interfaceGlobals: java.util.List[String]) =
+    copy(interfaceGlobals = interfaceGlobals.asScala.toSeq)
 
   // for testing/debugging
   def dump = {
