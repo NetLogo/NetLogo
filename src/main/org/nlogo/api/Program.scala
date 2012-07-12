@@ -27,7 +27,7 @@ object Program {
 
 case class Program private(
   is3D: Boolean = false,
-  interfaceGlobals: Seq[String] = Nil,
+  interfaceGlobals: Seq[String] = Seq(),
   userGlobals: Seq[String] = Seq(),
   turtlesOwn: Seq[String] = Seq(),
   patchesOwn: Seq[String] = Seq(),
