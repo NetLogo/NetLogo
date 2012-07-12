@@ -7,26 +7,24 @@ import collection.mutable.LinkedHashMap
 import collection.JavaConverters._
 
 object Program {
-  def applyJ(interfaceGlobals: java.util.List[String],
-             is3D: Boolean) =
-    new Program(interfaceGlobals.asScala.toSeq,
-                is3D = is3D,
+  def applyJ(is3D: Boolean, interfaceGlobals: java.util.List[String]) =
+    new Program(is3D = is3D,
+                interfaceGlobals = interfaceGlobals.asScala.toSeq,
                 turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
                 patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
                 linksOwn = AgentVariables.getImplicitLinkVariables.toBuffer)
-  def applyS(interfaceGlobals: Seq[String] = Nil,
-             is3D: Boolean = false) =
-    new Program(interfaceGlobals = interfaceGlobals,
-                is3D = is3D,
+  def applyS(is3D: Boolean = false, interfaceGlobals: Seq[String] = Nil) =
+    new Program(is3D = is3D,
+                interfaceGlobals = interfaceGlobals,
                 turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
                 patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
                 linksOwn = AgentVariables.getImplicitLinkVariables.toBuffer)
 }
 
 case class Program private(
+  is3D: Boolean = false,
   interfaceGlobals: Seq[String] = Nil,
   userGlobals: Buffer[String] = Buffer(),
-  is3D: Boolean = false,
   turtlesOwn: Buffer[String] = Buffer(),
   patchesOwn: Buffer[String] = Buffer(),
   linksOwn: Buffer[String] = Buffer(),

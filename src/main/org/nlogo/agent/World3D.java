@@ -197,17 +197,17 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return Program.applyJ(java.util.Collections.<String>emptyList(), true);
+    return Program.applyJ(true, java.util.Collections.<String>emptyList());
   }
 
   @Override
   public Program newProgram(List<String> interfaceGlobals) {
-    return Program.applyJ(interfaceGlobals, true);
+    return Program.applyJ(true, interfaceGlobals);
   }
 
   @Override
   public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
-    return Program.applyS(interfaceGlobals, true);
+    return Program.applyS(true, interfaceGlobals);
   }
 
   public void createPatches(int minPxcor, int maxPxcor,
