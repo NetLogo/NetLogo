@@ -887,7 +887,7 @@ public strictfp class World
     for (Iterator<String> breedNames = _program.linkBreedsJ().keySet().iterator();
          breedNames.hasNext();) {
       String breedName = breedNames.next();
-      boolean directed = _program.linkBreeds().get(breedName).equals("DIRECTED-LINK-BREED");
+      boolean directed = _program.linkBreedsJ().get(breedName).equals("DIRECTED-LINK-BREED");
       AgentSet breed = (AgentSet) oldLinkBreeds.get(breedName);
       if (breed == null) {
         breed = new TreeAgentSet(Link.class, breedName.toUpperCase(), this);
@@ -1036,7 +1036,7 @@ public strictfp class World
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.breedsOwn().apply(breed.printName());
+    Seq<String> breedOwns = _program.breedsOwnJ().get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1055,7 +1055,7 @@ public strictfp class World
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.linkBreedsOwn().apply(breed.printName());
+    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName()).getOrElse(null);
     if (breedOwns == null) {
       return -1;
     }
@@ -1123,11 +1123,11 @@ public strictfp class World
   }
 
   public AgentSet getBreed(String breedName) {
-    return (AgentSet) _program.breeds().apply(breedName);
+    return (AgentSet) _program.breedsJ().get(breedName);
   }
 
   public AgentSet getLinkBreed(String breedName) {
-    return (AgentSet) _program.linkBreeds().apply(breedName);
+    return (AgentSet) _program.linkBreedsJ().get(breedName);
   }
 
   public String getBreedSingular(AgentSet breed) {

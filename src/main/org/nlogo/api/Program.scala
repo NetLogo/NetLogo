@@ -9,14 +9,14 @@ import collection.JavaConverters._
 object Program {
   def applyJ(interfaceGlobals: java.util.List[String],
              is3D: Boolean) =
-    new Program(interfaceGlobals.asScala.toSeq.map(_.toUpperCase),
+    new Program(interfaceGlobals.asScala.toSeq,
                 is3D = is3D,
                 turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
                 patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
                 linksOwn = AgentVariables.getImplicitLinkVariables.toBuffer)
   def applyS(interfaceGlobals: Seq[String] = Nil,
              is3D: Boolean = false) =
-    new Program(interfaceGlobals = interfaceGlobals.map(_.toUpperCase),
+    new Program(interfaceGlobals = interfaceGlobals,
                 is3D = is3D,
                 turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
                 patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
@@ -44,7 +44,7 @@ case class Program private(
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++
-      interfaceGlobals ++ userGlobals
+      interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
   // for convenience of Java callers
   def breedsJ: java.util.Map[String, AnyRef] = breeds.asJava
@@ -59,9 +59,15 @@ case class Program private(
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
     def map(xs: collection.Map[_, _]) =
-      xs.map{case (k, v) => k.toString + " = " + v.toString}
+      xs.map(mapEntry)
         .mkString("", "\n", "\n")
         .trim
+    def mapEntry[K, V](pair: (K, V)): String =
+      pair._1.toString + " = " +
+        (pair._2 match {
+          case xs: Seq[_] => xs.mkString("[", ", ", "]")
+          case x => x.toString
+        })
     "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + seq(interfaceGlobals) + "\n" +
       "turtles-own " + seq(turtlesOwn) + "\n" +
