@@ -27,11 +27,10 @@ case class Program private(
   turtlesOwn: Seq[String] = Seq(),
   patchesOwn: Seq[String] = Seq(),
   linksOwn: Seq[String] = Seq(),
-  // use a LinkedHashMap to store the breeds so that the Renderer can retrieve them in order of
-  // definition, for proper z-ordering - ST 6/9/04
-  // Using LinkedHashMap on the other maps isn't really necessary for proper functioning, but makes
-  // writing unit tests easier - ST 1/19/09
-  // Yuck on this AnyRef stuff -- should be cleaned up - ST 3/7/08, 6/17/11
+  // use ListMaps here so Renderer can retrieve breeds in order of definition, for proper
+  // z-ordering.  keeping ordering in the other maps isn't really necessary for proper functioning,
+  // but makes writing unit tests easier - ST 6/9/04, 1/19/09, 7/12/12
+  // Yuck on this AnyRef stuff -- should be cleaned up - ST 3/7/08, 6/17/11, 7/12/12
   var breeds: ListMap[String, AnyRef] = ListMap(),
   var breedsSingular: ListMap[String, String] = ListMap(),
   var linkBreeds: ListMap[String, AnyRef] = ListMap(),
