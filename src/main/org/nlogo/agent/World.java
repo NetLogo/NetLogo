@@ -1266,6 +1266,10 @@ public strictfp class World
 
   /// program
 
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
+  scala.collection.immutable.Seq<String> noStrings =
+      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+
   private Program _program = newProgram();
 
   public Program program() {
@@ -1281,25 +1285,21 @@ public strictfp class World
   }
 
   public Program newProgram() {
-    return new Program(false);
+    return new Program(noStrings, false);
+  }
+
+  public Program newProgram(scala.collection.immutable.Seq<String> interfaceGlobals) {
+    return new Program(interfaceGlobals, false);
   }
 
   public Program newProgram(List<String> interfaceGlobals) {
     return new Program(interfaceGlobals, false);
   }
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  scala.collection.Seq<String> oldGlobals =
-      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  scala.collection.Seq<String> oldTurtlesOwn =
-      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  scala.collection.Seq<String> oldPatchesOwn =
-      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
-  scala.collection.Seq<String> oldLinksOwn =
-      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+  scala.collection.Seq<String> oldGlobals = noStrings;
+  scala.collection.Seq<String> oldTurtlesOwn = noStrings;
+  scala.collection.Seq<String> oldPatchesOwn = noStrings;
+  scala.collection.Seq<String> oldLinksOwn = noStrings;
 
   Map<String, Object> oldBreeds = new LinkedHashMap<String, Object>();
   Map<String, Object> oldLinkBreeds = new LinkedHashMap<String, Object>();

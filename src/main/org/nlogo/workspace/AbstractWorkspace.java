@@ -508,11 +508,11 @@ public abstract strictfp class AbstractWorkspace
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
     writer.println(Dump.csv().header("MODEL SETTINGS"));
-    List<String> globals = world.program().interfaceGlobals();
+    scala.collection.Seq<String> globals = world.program().interfaceGlobals();
     writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
-    for (Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
+    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
           world.getObserverVariableByName(iter.next());
     }

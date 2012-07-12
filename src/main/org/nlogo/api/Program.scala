@@ -2,16 +2,18 @@
 
 package org.nlogo.api
 
-import java.util.{ ArrayList, LinkedHashMap, List => JList, Map => JMap }
+import java.util.{ LinkedHashMap, List => JList, Map => JMap }
 import collection.JavaConverters._
 
-class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
+class Program(val interfaceGlobals: collection.immutable.Seq[String] = Nil,
+              val is3D: Boolean = false) {
 
-  def this(is3D: Boolean) = this(new ArrayList[String], is3D)
+  def this(interfaceGlobals: JList[String], is3D: Boolean) =
+    this(interfaceGlobals.asScala.toList, is3D)
 
   val globals: collection.mutable.Buffer[String] =
     (AgentVariables.getImplicitObserverVariables ++
-     interfaceGlobals.asScala.map(_.toUpperCase)).toBuffer
+     interfaceGlobals.map(_.toUpperCase)).toBuffer
 
   val turtlesOwn: collection.mutable.Buffer[String] =
     AgentVariables.getImplicitTurtleVariables(is3D).toBuffer
@@ -37,21 +39,19 @@ class Program(val interfaceGlobals: JList[String], val is3D: Boolean) {
   def dump = {
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
-    def list(xs: JList[_]) =
-      xs.asScala.mkString("[", " ", "]")
-    def map(xs: JMap[_, _]) =
+    def jmap(xs: JMap[_, _]) =
       xs.asScala
         .map{case (k, v) => k.toString + " = " + v.toString}
         .mkString("", "\n", "\n").trim
     "globals " + seq(globals) + "\n" +
-      "interfaceGlobals " + list(interfaceGlobals) + "\n" +
+      "interfaceGlobals " + seq(interfaceGlobals) + "\n" +
       "turtles-own " + seq(turtlesOwn) + "\n" +
       "patches-own " + seq(patchesOwn) + "\n" +
       "links-own " + seq(linksOwn) + "\n" +
-      "breeds " + map(breeds) + "\n" +
-      "breeds-own " + map(breedsOwn) + "\n" +
-      "link-breeds " + map(linkBreeds) + "\n" +
-      "link-breeds-own " + map(linkBreedsOwn) + "\n"
+      "breeds " + jmap(breeds) + "\n" +
+      "breeds-own " + jmap(breedsOwn) + "\n" +
+      "link-breeds " + jmap(linkBreeds) + "\n" +
+      "link-breeds-own " + jmap(linkBreedsOwn) + "\n"
   }
 
 }

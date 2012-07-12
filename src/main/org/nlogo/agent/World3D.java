@@ -196,7 +196,7 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return new Program(true);
+    return new Program(noStrings, true);
   }
 
   @Override
