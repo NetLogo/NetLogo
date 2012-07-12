@@ -1,9 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
-import org.nlogo.agent.AgentSet
-import org.nlogo.api.{Program,Token,TokenType}
+
+import org.nlogo.api.{AgentSet,Program,Token,TokenType}
 import org.nlogo.nvm.Instruction
+
 // The Helper class and some of the methods aren't private because we want to get at them from
 // TestBreedIdentifierHandler. - ST 12/22/08
 private object BreedIdentifierHandler {
@@ -16,17 +17,17 @@ private object BreedIdentifierHandler {
   }
   def turtle(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.breeds, _.breedsSingular, (obj:AnyRef) => true)
+               _.breeds, _.breedsSingular, (obj: Either[String, AgentSet]) => true)
   def directedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
                _.linkBreeds, _.linkBreedsSingular,
-               { case a:AgentSet => a.isDirected
-                case s:String => s == "DIRECTED-LINK-BREED" } )
+               { case Right(a) => a.isDirected
+                 case Left(s) => s == "DIRECTED-LINK-BREED" } )
   def undirectedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
                _.linkBreeds, _.linkBreedsSingular,
-               { case a:AgentSet => a.isUndirected
-                case s:String => s == "UNDIRECTED-LINK-BREED" } )
+               { case Right(a) => a.isUndirected
+                 case Left(s) => s == "UNDIRECTED-LINK-BREED" } )
   private val handlers2D = handlers(false)
   private val handlers3D = handlers(true)
   private def handlers(is3D:Boolean) = List(
@@ -73,8 +74,8 @@ private object BreedIdentifierHandler {
   )
   class Helper
     (patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction],
-     breeds:(Program)=>collection.Map[String,Object],singularMap:(Program)=>collection.Map[String,String],
-     isValidBreed:(AnyRef)=>Boolean)
+     breeds:(Program)=>collection.Map[String,Either[String, AgentSet]],singularMap:(Program)=>collection.Map[String,String],
+     isValidBreed:(Either[String, AgentSet])=>Boolean)
   {
     import java.util.regex.Pattern
     val pattern = Pattern.compile("\\A"+patternString.replaceAll("\\?","\\\\?").replaceAll("\\*","(.+)")+"\\Z")

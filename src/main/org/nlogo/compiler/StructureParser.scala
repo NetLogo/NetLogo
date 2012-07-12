@@ -123,7 +123,8 @@ private class StructureParser(
                             "breed only takes 1 or 2 inputs",token) }
           val breedName = breedList(0)
           program = program.copy(
-            breeds = program.breeds.updated(breedName, breedName), // will replace with agentset at realloc time
+            // will replace with Right(agentset) at realloc time
+            breeds = program.breeds.updated(breedName, Left(breedName)),
             breedsOwn = program.breedsOwn.updated(breedName, Seq()))
           if(breedList.size == 2)
             program = program.copy(
@@ -141,7 +142,7 @@ private class StructureParser(
             val breedName = breedList(0)
             // will replace with agentset at realloc time
             program = program.copy(
-              linkBreeds = program.linkBreeds.updated(breedName, keyword),
+              linkBreeds = program.linkBreeds.updated(breedName, Left(keyword)),
               linkBreedsOwn = program.linkBreedsOwn.updated(breedName, Seq()))
             if(breedList.size == 2)
               program = program.copy(

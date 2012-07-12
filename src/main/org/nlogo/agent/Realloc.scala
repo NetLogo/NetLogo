@@ -23,7 +23,7 @@ object Realloc {
         else
           breed
       program(program.copy(
-        breeds = program.breeds.updated(breedName, newBreed)))
+        breeds = program.breeds.updated(breedName, Right(newBreed))))
     }
     for(breedName <- program.linkBreeds.keys) {
       val directed = program.linkBreeds(breedName) == "DIRECTED-LINK-BREED"
@@ -33,7 +33,7 @@ object Realloc {
       else // clear the lists first
         breed.clearDirected()
       program(program.copy(
-        linkBreeds = program.linkBreeds.updated(breedName, breed)))
+        linkBreeds = program.linkBreeds.updated(breedName, Right(breed))))
       breed.setDirected(directed)
     }
     // call Agent.realloc() on all the turtles

@@ -11,10 +11,10 @@ class BreedIdentifierHandlerTests extends FunSuite {
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
     val program =
       Program.empty().copy(
-        breeds = ListMap("FROGS" -> "FROGS"),
+        breeds = ListMap("FROGS" -> Right(null)),
         breedsSingular = ListMap("FROG" -> "FROGS"),
-        linkBreeds = ListMap("AS" -> "DIRECTED-LINK-BREED",
-                             "BS" -> "UNDIRECTED-LINK-BREED"),
+        linkBreeds = ListMap("AS" -> Left("DIRECTED-LINK-BREED"),
+                             "BS" -> Left("UNDIRECTED-LINK-BREED")),
         linkBreedsSingular = ListMap("A" -> "AS",
                                      "B" -> "BS"))
     handler.process(

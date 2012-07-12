@@ -63,8 +63,8 @@ class StructureParserTests extends FunSuite {
       "turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]\n" +
       "patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]\n" +
       "links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]\n" +
-      "breeds B1S = B1S\n" +
-      "B2S = B2S\n" +
+      "breeds B1S = Left(B1S)\n" +
+      "B2S = Left(B2S)\n" +
       "breeds-own B1S = [B11, B12]\n" +
       "B2S = [B21, B22]\n" +
       "link-breeds \n" +

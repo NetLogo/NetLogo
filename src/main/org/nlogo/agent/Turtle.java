@@ -1126,8 +1126,8 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<Object> iter = world.program().breedsJ().values().iterator(); iter.hasNext(); j++) {
-      if (mybreed == ((AgentSet) iter.next())) {
+    for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = world.program().breedsJ().values().iterator(); iter.hasNext(); j++) {
+      if (mybreed == ((AgentSet) iter.next().right().get())) {
         return j;
       }
     }

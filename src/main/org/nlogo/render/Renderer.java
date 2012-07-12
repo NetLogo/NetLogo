@@ -57,14 +57,14 @@ public strictfp class Renderer
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().linkBreedsJ().values();
-    for (Iterator<Object> iter = breeds.iterator();
+    Collection<scala.Either<String, AgentSet>> breeds = world.program().linkBreedsJ().values();
+    for (Iterator<scala.Either<String, AgentSet>> iter = breeds.iterator();
          iter.hasNext();) {
-      Object next = iter.next();
+      scala.Either<String, AgentSet> next = iter.next();
       // I'm unable to reproduce bug #1400, but a user did see it, and
       // this instanceof check should prevent it - ST 9/21/11
-      if(next instanceof AgentSet) {
-        AgentSet breed = (AgentSet) next;
+      if(next.isRight()) {
+        AgentSet breed = next.right().get();
         for (Agent a : breed.agents()) {
           linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
           linksDrawn++;
@@ -89,14 +89,14 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().breedsJ().values();
-    for (Iterator<Object> iter = breeds.iterator();
+    Collection<scala.Either<String, AgentSet>> breeds = world.program().breedsJ().values();
+    for (Iterator<scala.Either<String, AgentSet>> iter = breeds.iterator();
          iter.hasNext();) {
-      Object next = iter.next();
+      scala.Either<String, AgentSet> next = iter.next();
       // I'm unable to reproduce bug #1400, but a user did see it, and
-      // this instanceof check should prevent it - ST 9/21/11
-      if(next instanceof AgentSet) {
-        AgentSet breed = (AgentSet) next;
+      // this check should prevent it - ST 9/21/11
+      if(next.isRight()) {
+        AgentSet breed = next.right().get();
         if (Turtle.class.isAssignableFrom(breed.type())) {
           for (Agent a : breed.agents()) {
             turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
