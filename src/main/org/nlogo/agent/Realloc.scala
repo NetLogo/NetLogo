@@ -9,8 +9,8 @@ import org.nlogo.api.Program
 
 object Realloc {
 
-  def realloc(world: World): Program = {
-    var program = world.program
+  def realloc(world: World) {
+    import world.program
     // copy the breed agentsets from the old Program object from the previous compile to the new
     // Program object that was created when we recompiled.  any new breeds that were created, we
     // create new agentsets for.  (if this is a first compile, all the breeds will be created.)  any
@@ -22,8 +22,8 @@ object Realloc {
           new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)
         else
           breed
-      program = program.copy(
-        breeds = program.breeds.updated(breedName, newBreed))
+      program(program.copy(
+        breeds = program.breeds.updated(breedName, newBreed)))
     }
     for(breedName <- program.linkBreeds.keys) {
       val directed = program.linkBreeds(breedName) == "DIRECTED-LINK-BREED"
@@ -32,8 +32,8 @@ object Realloc {
         breed = new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)
       else // clear the lists first
         breed.clearDirected()
-      program = program.copy(
-        linkBreeds = program.linkBreeds.updated(breedName, breed))
+      program(program.copy(
+        linkBreeds = program.linkBreeds.updated(breedName, breed)))
       breed.setDirected(directed)
     }
     // call Agent.realloc() on all the turtles
@@ -72,7 +72,6 @@ object Realloc {
     // and finally...
     world.turtleBreedShapes.setUpBreedShapes(false, program.breeds)
     world.linkBreedShapes.setUpBreedShapes(false, program.linkBreeds)
-    program
   }
 
 }

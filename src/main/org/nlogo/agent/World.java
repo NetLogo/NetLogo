@@ -868,7 +868,7 @@ public strictfp class World
   // agent state information to be lost.  it is called after a
   // successful recompilation.
   public void realloc() {
-    program(Realloc.realloc(this));
+    Realloc.realloc(this);
   }
 
   /// patch scratch
