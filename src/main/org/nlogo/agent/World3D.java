@@ -197,12 +197,7 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return Program.applyJ(true, java.util.Collections.<String>emptyList());
-  }
-
-  @Override
-  public Program newProgram(List<String> interfaceGlobals) {
-    return Program.applyJ(true, interfaceGlobals);
+    return Program.empty(true);
   }
 
   public void createPatches(int minPxcor, int maxPxcor,

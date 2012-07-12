@@ -1205,12 +1205,8 @@ public strictfp class World
     _program = program;
   }
 
-  public Program newProgram() {
-    return Program.applyJ(false, java.util.Collections.<String>emptyList());
-  }
-
-  public Program newProgram(List<String> interfaceGlobals) {
-    return Program.applyJ(false, interfaceGlobals);
+  protected Program newProgram() {
+    return Program.empty(false);
   }
 
   Seq<String> oldGlobals = noStrings;

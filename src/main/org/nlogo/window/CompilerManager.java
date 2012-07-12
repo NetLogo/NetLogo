@@ -5,6 +5,7 @@ package org.nlogo.window;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.Program;
+import org.nlogo.api.Version;
 import org.nlogo.nvm.CompilerResults;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.workspace.AbstractWorkspace;
@@ -54,16 +55,12 @@ public strictfp class CompilerManager
     // however, we're about to change the program in world, which can be needed to
     // clear the turtles. ev 1/17/07
     workspace.world.clearLinks();
-    // not really clear on why the rigmarole here with two different
-    // Program objects is necessary, but when I tried using the same
-    // one, I got ClassCastExceptions when I tried to open the
-    // Capacitance model - ST 12/5/07
-    workspace.world.program(workspace.world.newProgram());
+    workspace.world.program(Program.empty(Version.is3D()));
     workspace.world.rememberOldProgram();
-    Program program = workspace.world.newProgram();
-    workspace.world.program(program);
-    workspace.world.turtleBreedShapes.setUpBreedShapes(true, program.breeds()); // true = clear old
-    workspace.world.linkBreedShapes.setUpBreedShapes(true, program.linkBreeds()); // true = clear old
+    workspace.world.turtleBreedShapes.setUpBreedShapes(
+      true, workspace.world.program().breeds()); // true = clear old
+    workspace.world.linkBreedShapes.setUpBreedShapes(
+      true, workspace.world.program().linkBreeds()); // true = clear old
   }
 
   public void handle(org.nlogo.window.Events.LoadEndEvent e) {
@@ -102,11 +99,11 @@ public strictfp class CompilerManager
   }
 
   private boolean compileProcedures() {
-    workspace.world.program(workspace.world.newProgram());
+    workspace.world.program(Program.empty(Version.is3D()));
     try {
       CompilerResults results =
           workspace.compiler().compileProgram
-              (proceduresInterface.innerSource(), workspace.world.newProgram(getGlobalVariableNames()),
+              (proceduresInterface.innerSource(), Program.applyJ(Version.is3D(), getGlobalVariableNames()),
                   workspace.getExtensionManager());
       workspace.setProcedures(results.proceduresMap());
       for (Procedure procedure : workspace.getProcedures().values()) {
