@@ -16,7 +16,7 @@ class StructureParserTests extends FunSuite {
       .parse(false)
   }
   test("empty") {
-    val results = compile("", Program.applyS())
+    val results = compile("", Program.empty())
     assert(results.procedures.isEmpty)
     assert(results.tokens.isEmpty)
     expect("globals []\n" +
@@ -31,19 +31,19 @@ class StructureParserTests extends FunSuite {
   }
   test("missing procedure name") {  // ticket #1183
     intercept[CompilerException] {
-      compile("to", Program.applyS())
+      compile("to", Program.empty())
     }
     intercept[CompilerException] {
-      compile("to-report", Program.applyS())
+      compile("to-report", Program.empty())
     }
   }
   test("commandProcedure") {
-    val results = compile("to go fd 1 end", Program.applyS())
+    val results = compile("to go fd 1 end", Program.empty())
     expect(1)(results.procedures.size)
     expect("procedure GO:[]{OTPL}:\n")(results.procedures.get("GO").dump)
   }
   test("declarations1") {
-    val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.applyS())
+    val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.empty())
     assert(results.procedures.isEmpty)
     expect("globals [G1 G2]\n" +
       "interfaceGlobals []\n" +
@@ -56,7 +56,7 @@ class StructureParserTests extends FunSuite {
       "link-breeds-own \n")(results.program.dump)
   }
   test("declarations2") {
-    val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", Program.applyS())
+    val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", Program.empty())
     assert(results.procedures.isEmpty)
     expect("globals []\n" +
       "interfaceGlobals []\n" +

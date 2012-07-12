@@ -8,7 +8,7 @@ import org.nlogo.nvm.Procedure
 
 class TestGenerator extends FunSuite {
 
-  val program = Program.applyS(interfaceGlobals = List("glob1"))
+  val program = Program.empty().copy(interfaceGlobals = List("glob1"))
   println(program.dump)
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")

@@ -6,18 +6,23 @@ import collection.immutable.ListMap
 import collection.JavaConverters._
 
 object Program {
+  private def empty2D =
+    Program(
+      turtlesOwn = AgentVariables.getImplicitTurtleVariables(false),
+      patchesOwn = AgentVariables.getImplicitPatchVariables(false),
+      linksOwn = AgentVariables.getImplicitLinkVariables)
+  private def empty3D =
+    Program(
+      turtlesOwn = AgentVariables.getImplicitTurtleVariables(true),
+      patchesOwn = AgentVariables.getImplicitPatchVariables(true),
+      linksOwn = AgentVariables.getImplicitLinkVariables)
+  def empty(is3D: Boolean = false) =
+    if (is3D) empty3D else empty2D
+  // both of these are just for convenience from Java - ST 7/12/12
   def applyJ(is3D: Boolean, interfaceGlobals: java.util.List[String]) =
-    new Program(is3D = is3D,
-                interfaceGlobals = interfaceGlobals.asScala.toSeq,
-                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D),
-                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D),
-                linksOwn = AgentVariables.getImplicitLinkVariables)
-  def applyS(is3D: Boolean = false, interfaceGlobals: Seq[String] = Nil) =
-    new Program(is3D = is3D,
-                interfaceGlobals = interfaceGlobals,
-                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D),
-                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D),
-                linksOwn = AgentVariables.getImplicitLinkVariables)
+    empty(is3D).copy(interfaceGlobals = interfaceGlobals.asScala.toSeq)
+  def applyS(is3D: Boolean, interfaceGlobals: Seq[String]) =
+    empty(is3D).copy(interfaceGlobals = interfaceGlobals)
 }
 
 case class Program private(
@@ -50,7 +55,7 @@ case class Program private(
   def breedsOwnJ: java.util.Map[String, Seq[String]] = breedsOwn.asJava
   def linkBreedsOwnJ: java.util.Map[String, Seq[String]] = linkBreedsOwn.asJava
 
-  // for debugging
+  // for testing/debugging
   def dump = {
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
