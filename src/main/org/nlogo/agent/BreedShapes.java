@@ -28,7 +28,7 @@ public strictfp class BreedShapes {
     this.genericBreedName = genericBreedName;
   }
 
-  public void setUpBreedShapes(boolean clear, Map<String, Object> breeds) {
+  public void setUpBreedShapes(boolean clear, scala.collection.Map<String, Object> breeds) {
     synchronized (lock) {
       if (clear || shapes == null) {
         shapes = new HashMap<String, String>();
@@ -36,7 +36,7 @@ public strictfp class BreedShapes {
       Map<String, String> newBreedShapes =
           new HashMap<String, String>();
       if (breeds != null) {
-        for (Iterator<Object> iter =
+        for (scala.collection.Iterator<Object> iter =
                  breeds.values().iterator();
              iter.hasNext();) {
           String breedName =

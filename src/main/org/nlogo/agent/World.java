@@ -705,13 +705,13 @@ public strictfp class World
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
     if (_program.breeds() != null) {
-      for (Iterator<Object> iter = _program.breeds().values().iterator();
+      for (scala.collection.Iterator<Object> iter = _program.breeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
     }
     if (_program.linkBreeds() != null) {
-      for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
+      for (scala.collection.Iterator<Object> iter = _program.linkBreeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
@@ -809,7 +809,7 @@ public strictfp class World
 
   public void clearTurtles() {
     if (_program.breeds() != null) {
-      for (Iterator<Object> iter = _program.breeds().values().iterator();
+      for (scala.collection.Iterator<Object> iter = _program.breeds().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }
@@ -830,7 +830,7 @@ public strictfp class World
 
   public void clearLinks() {
     if (_program.linkBreeds() != null) {
-      for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
+      for (scala.collection.Iterator<Object> iter = _program.linkBreeds().values().iterator();
            iter.hasNext();) {
         AgentSet set = ((AgentSet) iter.next());
         set.clear();
@@ -874,7 +874,7 @@ public strictfp class World
     // we create new agentsets for.  (if this is a first compile, all
     // the breeds will be created.)  any breeds that no longer exist
     // are dropped.
-    for (String breedName : _program.breeds().keySet()) {
+    for (String breedName : _program.breedsJ().keySet()) {
       AgentSet breed = (AgentSet) oldBreeds.get(breedName);
       if (breed == null) {
         _program.breeds().put
@@ -884,7 +884,7 @@ public strictfp class World
         _program.breeds().put(breedName, breed);
       }
     }
-    for (Iterator<String> breedNames = _program.linkBreeds().keySet().iterator();
+    for (Iterator<String> breedNames = _program.linkBreedsJ().keySet().iterator();
          breedNames.hasNext();) {
       String breedName = breedNames.next();
       boolean directed = _program.linkBreeds().get(breedName).equals("DIRECTED-LINK-BREED");
@@ -1031,12 +1031,12 @@ public strictfp class World
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
-    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.breedsOwn().apply(breed.printName());
     return breedOwns.apply(index - _program.turtlesOwn().size());
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.breedsOwn().apply(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1050,12 +1050,12 @@ public strictfp class World
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
-    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.linkBreedsOwn().apply(breed.printName());
     return breedOwns.apply(index - _program.linksOwn().size());
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.linkBreedsOwn().apply(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1115,19 +1115,19 @@ public strictfp class World
   /// breeds & shapes
 
   public boolean isBreed(AgentSet breed) {
-    return _program.breeds().containsValue(breed);
+    return _program.breedsJ().containsValue(breed);
   }
 
   public boolean isLinkBreed(AgentSet breed) {
-    return _program.linkBreeds().containsValue(breed);
+    return _program.linkBreedsJ().containsValue(breed);
   }
 
   public AgentSet getBreed(String breedName) {
-    return (AgentSet) _program.breeds().get(breedName);
+    return (AgentSet) _program.breeds().apply(breedName);
   }
 
   public AgentSet getLinkBreed(String breedName) {
-    return (AgentSet) _program.linkBreeds().get(breedName);
+    return (AgentSet) _program.linkBreeds().apply(breedName);
   }
 
   public String getBreedSingular(AgentSet breed) {
@@ -1136,7 +1136,7 @@ public strictfp class World
     }
 
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.breedsSingular().entrySet()) {
+    for (Map.Entry<String, String> entry : _program.breedsSingularJ().entrySet()) {
       if (entry.getValue().equals(breedName)) {
         return entry.getKey();
       }
@@ -1151,7 +1151,7 @@ public strictfp class World
     }
 
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.linkBreedsSingular().entrySet()) {
+    for (Map.Entry<String, String> entry : _program.linkBreedsSingularJ().entrySet()) {
       if (entry.getValue().equals(breedName)) {
         return entry.getKey();
       }
@@ -1162,7 +1162,7 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (Iterator<Object> iter = _program.linkBreeds().values().iterator();
+    for (Iterator<Object> iter = _program.linkBreedsJ().values().iterator();
          iter.hasNext();) {
       AgentSet next = (AgentSet) iter.next();
       if (next == breed1) {
@@ -1188,7 +1188,7 @@ public strictfp class World
       return _program.turtlesOwn().size();
     } else {
       Seq<String> breedOwns =
-          _program.breedsOwn().get(breed.printName());
+          _program.breedsOwn().apply(breed.printName());
       return _program.turtlesOwn().size() + breedOwns.size();
     }
   }
@@ -1198,7 +1198,7 @@ public strictfp class World
       return _program.linksOwn().size();
     } else {
       Seq<String> breedOwns =
-          _program.linkBreedsOwn().get(breed.printName());
+          _program.linkBreedsOwn().apply(breed.printName());
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1208,7 +1208,7 @@ public strictfp class World
       return _program.linksOwn().size();
     } else {
       Seq<String> breedOwns =
-          _program.linkBreedsOwn().get(breed.printName());
+          _program.linkBreedsOwn().apply(breed.printName());
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1238,7 +1238,7 @@ public strictfp class World
   // use of this method by other classes is discouraged
   // since that's poor information-hiding
   public Map<String, Object> getBreeds() {
-    return _program.breeds();
+    return _program.breedsJ();
   }
 
   public boolean breedOwns(AgentSet breed, String name) {
@@ -1246,12 +1246,12 @@ public strictfp class World
       return false;
     }
     Seq<String> breedOwns =
-        _program.breedsOwn().get(breed.printName());
+        _program.breedsOwn().apply(breed.printName());
     return breedOwns.contains(name);
   }
 
   public Map<String, Object> getLinkBreeds() {
-    return _program.linkBreeds();
+    return _program.linkBreedsJ();
   }
 
   public boolean linkBreedOwns(AgentSet breed, String name) {
@@ -1259,7 +1259,7 @@ public strictfp class World
       return false;
     }
     Seq<String> breedOwns =
-        _program.linkBreedsOwn().get(breed.printName());
+        _program.linkBreedsOwn().apply(breed.printName());
     return breedOwns.contains(name);
   }
 
@@ -1319,10 +1319,10 @@ public strictfp class World
     oldPatchesOwn = _program.patchesOwn();
     oldLinksOwn = _program.linksOwn();
     oldGlobals = _program.globals();
-    oldBreeds = _program.breeds();
-    oldLinkBreeds = _program.linkBreeds();
-    oldBreedsOwn = _program.breedsOwn();
-    oldLinkBreedsOwn = _program.linkBreedsOwn();
+    oldBreeds = _program.breedsJ();
+    oldLinkBreeds = _program.linkBreedsJ();
+    oldBreedsOwn = _program.breedsOwnJ();
+    oldLinkBreedsOwn = _program.linkBreedsOwnJ();
   }
 
   /// display on/off

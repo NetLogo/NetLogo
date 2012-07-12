@@ -635,7 +635,7 @@ public strictfp class Link
       return 0;
     }
     int j = 1;
-    for (Iterator<Object> iter = world.program().linkBreeds().values().iterator(); iter.hasNext();) {
+    for (Iterator<Object> iter = world.program().linkBreedsJ().values().iterator(); iter.hasNext();) {
       if (mybreed == ((AgentSet) iter.next())) {
         return j;
       }

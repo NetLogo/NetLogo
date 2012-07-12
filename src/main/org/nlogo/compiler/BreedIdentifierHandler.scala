@@ -73,7 +73,7 @@ private object BreedIdentifierHandler {
   )
   class Helper
     (patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction],
-     breeds:(Program)=>java.util.Map[String,Object],singularMap:(Program)=>java.util.Map[String,String],
+     breeds:(Program)=>collection.Map[String,Object],singularMap:(Program)=>collection.Map[String,String],
      isValidBreed:(AnyRef)=>Boolean)
   {
     import java.util.regex.Pattern
@@ -83,9 +83,9 @@ private object BreedIdentifierHandler {
       if(!matcher.matches()) return None
       val name = matcher.group(1)
       val map = if(singular) singularMap(program) else breeds(program)
-      if(!map.containsKey(name)) return None
-      val breedName = if(singular) map.get(name) else name
-      if(!isValidBreed(breeds(program).get(breedName))) return None
+      if(!map.contains(name)) return None
+      val breedName = if(singular) map(name).asInstanceOf[String] else name
+      if(!isValidBreed(breeds(program)(breedName))) return None
       val instr = Instantiator.newInstance[Instruction](primClass,breedName)
       val tok2 = new Token(tok.value.asInstanceOf[String],tokenType,instr)(tok.startPos,tok.endPos,tok.fileName)
       instr.token(tok2)

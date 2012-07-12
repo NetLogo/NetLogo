@@ -35,8 +35,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // this next hashtable is keyed by the breed variable names and holds the index of where that
     // var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
-    for{current <- world.program.linkBreedsOwn.keySet.asScala
-        breedVarName <- world.program.linkBreedsOwn.get(current)}
+    for{current <- world.program.linkBreedsOwn.keys
+        breedVarName <- world.program.linkBreedsOwn(current)}
       if(breedVarIndices.get(breedVarName) == null) {
         allLinkVars.add(breedVarName)
         breedVarIndices.put(breedVarName, Int.box(allLinkVars.size - 1))
@@ -54,7 +54,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if(key != "LINKS") {
-        breedOwns = world.program.linkBreedsOwn.get(key)
+        breedOwns = world.program.linkBreedsOwn(key)
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
@@ -138,8 +138,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val turtlesVarSize = world.program.turtlesOwn.size
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
-    for(current <- world.program.breedsOwn.keySet.asScala) {
-      val breedOwns = world.program.breedsOwn.get(current)
+    for(current <- world.program.breedsOwn.keys) {
+      val breedOwns = world.program.breedsOwn(current)
       for(breedVarName <- breedOwns)
         if(breedVarIndices.get(breedVarName) == null) {
           allTurtleVars.add(breedVarName)
@@ -160,7 +160,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (key != "TURTLES") {
-        breedOwns = world.program.breedsOwn.get(key)
+        breedOwns = world.program.breedsOwn(key)
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {

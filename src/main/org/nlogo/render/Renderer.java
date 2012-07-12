@@ -57,7 +57,7 @@ public strictfp class Renderer
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().linkBreeds().values();
+    Collection<Object> breeds = world.program().linkBreedsJ().values();
     for (Iterator<Object> iter = breeds.iterator();
          iter.hasNext();) {
       Object next = iter.next();
@@ -89,7 +89,7 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<Object> breeds = world.program().breeds().values();
+    Collection<Object> breeds = world.program().breedsJ().values();
     for (Iterator<Object> iter = breeds.iterator();
          iter.hasNext();) {
       Object next = iter.next();

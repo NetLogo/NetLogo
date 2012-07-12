@@ -168,16 +168,16 @@ private class StructureParser(
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)
-            cAssert(program.breeds.containsKey(breedName) || program.linkBreeds.containsKey(breedName),
+            cAssert(program.breeds.contains(breedName) || program.linkBreeds.contains(breedName),
                     "There is no breed named " + breedName,token)
             tokenBuffer.next()
             var linkbreed = false
-            if(program.breedsOwn.containsKey(breedName)) {
-              cAssert(program.breedsOwn.get(breedName).isEmpty,
+            if(program.breedsOwn.contains(breedName)) {
+              cAssert(program.breedsOwn(breedName).isEmpty,
                       "Redeclaration of " + keyword, token)
             }
-            else if(program.linkBreedsOwn.containsKey(breedName)) {
-              cAssert(program.linkBreedsOwn.get(breedName).isEmpty,
+            else if(program.linkBreedsOwn.contains(breedName)) {
+              cAssert(program.linkBreedsOwn(breedName).isEmpty,
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
@@ -383,19 +383,19 @@ private class StructureParser(
   }
   private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
     if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
-      val keys = program.breedsOwn.keySet.iterator()
+      val keys = program.breedsOwn.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program.breedsOwn.get(breedName)
+        val breedOwns = program.breedsOwn(breedName)
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }
     }
     if(owningAgentClass == null || owningAgentClass == classOf[Turtle]) {
-      val keys = program.linkBreedsOwn.keySet.iterator()
+      val keys = program.linkBreedsOwn.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program.linkBreedsOwn.get(breedName)
+        val breedOwns = program.linkBreedsOwn(breedName)
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }
@@ -406,9 +406,9 @@ private class StructureParser(
             "There is already a patch variable called " + varName, token)
     cAssert(!program.globals.contains(varName),
             "There is already a global variable called " + varName, token)
-    cAssert(!program.breeds.containsKey(varName),
+    cAssert(!program.breeds.contains(varName),
             "There is already a breed called " + varName, token)
-    cAssert(!program.linkBreeds.containsKey(varName),
+    cAssert(!program.linkBreeds.contains(varName),
             "There is already a link breed called " + varName, token)
     if(procedure != null)
       {

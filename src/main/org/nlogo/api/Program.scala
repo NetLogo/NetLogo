@@ -2,15 +2,11 @@
 
 package org.nlogo.api
 
-import java.util.{ LinkedHashMap, Map => JMap }
+import collection.mutable.LinkedHashMap
 import collection.JavaConverters._
 
 class Program(val interfaceGlobals: collection.immutable.Seq[String] = Nil,
               val is3D: Boolean = false) {
-
-  // for convenience of Java callers
-  def this(interfaceGlobals: java.util.List[String], is3D: Boolean) =
-    this(interfaceGlobals.asScala.toList, is3D)
 
   val globals: collection.mutable.Buffer[String] =
     (AgentVariables.getImplicitObserverVariables ++
@@ -30,29 +26,40 @@ class Program(val interfaceGlobals: collection.immutable.Seq[String] = Nil,
   // Using LinkedHashMap on the other maps isn't really necessary for proper functioning, but makes
   // writing unit tests easier - ST 1/19/09
   // Yuck on this AnyRef stuff -- should be cleaned up - ST 3/7/08, 6/17/11
-  val breeds: JMap[String, AnyRef] = new LinkedHashMap[String, AnyRef]
-  val breedsSingular: JMap[String, String] = new LinkedHashMap[String, String]
-  val linkBreeds: JMap[String, AnyRef] = new LinkedHashMap[String, AnyRef]
-  val linkBreedsSingular: JMap[String, String] = new LinkedHashMap[String, String]
-  val breedsOwn: JMap[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
-  val linkBreedsOwn: JMap[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
+  val breeds: collection.mutable.Map[String, AnyRef] = new LinkedHashMap[String, AnyRef]
+  val breedsSingular: collection.mutable.Map[String, String] = new LinkedHashMap[String, String]
+  val linkBreeds: collection.mutable.Map[String, AnyRef] = new LinkedHashMap[String, AnyRef]
+  val linkBreedsSingular: collection.mutable.Map[String, String] = new LinkedHashMap[String, String]
+  val breedsOwn: collection.mutable.Map[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
+  val linkBreedsOwn: collection.mutable.Map[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
 
+  // for convenience of Java callers
+  def this(interfaceGlobals: java.util.List[String], is3D: Boolean) =
+    this(interfaceGlobals.asScala.toList, is3D)
+  def breedsJ: java.util.Map[String, AnyRef] = breeds.asJava
+  def breedsSingularJ: java.util.Map[String, String] = breedsSingular.asJava
+  def linkBreedsJ: java.util.Map[String, AnyRef] = linkBreeds.asJava
+  def linkBreedsSingularJ: java.util.Map[String, String] = linkBreedsSingular.asJava
+  def breedsOwnJ: java.util.Map[String, Seq[String]] = breedsOwn.asJava
+  def linkBreedsOwnJ: java.util.Map[String, Seq[String]] = linkBreedsOwn.asJava
+
+  // for debugging
   def dump = {
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
-    def jmap(xs: JMap[_, _]) =
-      xs.asScala
-        .map{case (k, v) => k.toString + " = " + v.toString}
-        .mkString("", "\n", "\n").trim
+    def map(xs: collection.Map[_, _]) =
+      xs.map{case (k, v) => k.toString + " = " + v.toString}
+        .mkString("", "\n", "\n")
+        .trim
     "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + seq(interfaceGlobals) + "\n" +
       "turtles-own " + seq(turtlesOwn) + "\n" +
       "patches-own " + seq(patchesOwn) + "\n" +
       "links-own " + seq(linksOwn) + "\n" +
-      "breeds " + jmap(breeds) + "\n" +
-      "breeds-own " + jmap(breedsOwn) + "\n" +
-      "link-breeds " + jmap(linkBreeds) + "\n" +
-      "link-breeds-own " + jmap(linkBreedsOwn) + "\n"
+      "breeds " + map(breeds) + "\n" +
+      "breeds-own " + map(breedsOwn) + "\n" +
+      "link-breeds " + map(linkBreeds) + "\n" +
+      "link-breeds-own " + map(linkBreedsOwn) + "\n"
   }
 
 }

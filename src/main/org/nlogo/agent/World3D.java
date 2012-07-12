@@ -232,7 +232,7 @@ public final strictfp class World3D
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
     if (program().breeds() != null) {
-      for (Iterator<Object> iter = program().breeds().values().iterator();
+      for (Iterator<Object> iter = program().breedsJ().values().iterator();
            iter.hasNext();) {
         ((AgentSet) iter.next()).clear();
       }

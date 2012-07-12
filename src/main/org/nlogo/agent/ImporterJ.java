@@ -969,7 +969,7 @@ public abstract strictfp class ImporterJ
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
         Seq<String> breedOwns =
-          world.program().breedsOwn().get(breed.printName());
+          world.program().breedsOwnJ().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
             allBreedOwns.add(breedOwns.apply(i));
@@ -988,7 +988,7 @@ public abstract strictfp class ImporterJ
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
         Seq<String> breedOwns =
-          world.program().linkBreedsOwn().get(breed.printName());
+          world.program().linkBreedsOwnJ().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
             allBreedOwns.add(breedOwns.apply(i));
