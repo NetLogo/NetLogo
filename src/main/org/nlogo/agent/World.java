@@ -1213,10 +1213,6 @@ public strictfp class World
     return Program.applyJ(false, interfaceGlobals);
   }
 
-  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
-    return Program.applyS(false, interfaceGlobals);
-  }
-
   Seq<String> oldGlobals = noStrings;
   Seq<String> oldTurtlesOwn = noStrings;
   Seq<String> oldPatchesOwn = noStrings;

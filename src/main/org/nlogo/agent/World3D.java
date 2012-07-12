@@ -205,11 +205,6 @@ public final strictfp class World3D
     return Program.applyJ(true, interfaceGlobals);
   }
 
-  @Override
-  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
-    return Program.applyS(true, interfaceGlobals);
-  }
-
   public void createPatches(int minPxcor, int maxPxcor,
                             int minPycor, int maxPycor,
                             int minPzcor, int maxPzcor) {

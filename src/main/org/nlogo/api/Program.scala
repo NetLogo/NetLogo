@@ -18,11 +18,9 @@ object Program {
       linksOwn = AgentVariables.getImplicitLinkVariables)
   def empty(is3D: Boolean = false) =
     if (is3D) empty3D else empty2D
-  // both of these are just for convenience from Java - ST 7/12/12
+  // for convenience from Java - ST 7/12/12
   def applyJ(is3D: Boolean, interfaceGlobals: java.util.List[String]) =
     empty(is3D).copy(interfaceGlobals = interfaceGlobals.asScala.toSeq)
-  def applyS(is3D: Boolean, interfaceGlobals: Seq[String]) =
-    empty(is3D).copy(interfaceGlobals = interfaceGlobals)
 }
 
 case class Program private(
