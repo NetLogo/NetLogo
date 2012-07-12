@@ -122,10 +122,12 @@ private class StructureParser(
           finally { cAssert(breedList.size == 1 || breedList.size == 2,
                             "breed only takes 1 or 2 inputs",token) }
           val breedName = breedList(0)
-          program.breeds += breedName -> breedName // will replace with agentset at realloc time
-          program.breedsOwn += breedName -> Seq()
+          program = program.copy(
+            breeds = program.breeds.updated(breedName, breedName), // will replace with agentset at realloc time
+            breedsOwn = program.breedsOwn.updated(breedName, Seq()))
           if(breedList.size == 2)
-            program.breedsSingular += breedList(1) -> breedName
+            program = program.copy(
+              breedsSingular = program.breedsSingular.updated(breedList(1), breedName))
         }
         else {
           cAssert(token.tyype == TokenType.KEYWORD,"Expected keyword",token)
@@ -138,34 +140,40 @@ private class StructureParser(
             cAssert(breedList.size == 2, keyword + " only takes 2 inputs", token)
             val breedName = breedList(0)
             // will replace with agentset at realloc time
-            program.linkBreeds += breedName -> keyword
-            program.linkBreedsOwn += breedName -> Seq()
+            program = program.copy(
+              linkBreeds = program.linkBreeds.updated(breedName, keyword),
+              linkBreedsOwn = program.linkBreedsOwn.updated(breedName, Seq()))
             if(breedList.size == 2)
-              program.linkBreedsSingular += breedList(1) -> breedName
+              program = program.copy(
+                linkBreedsSingular = program.linkBreedsSingular.updated(breedList(1), breedName))
           }
           else if(keyword == "TURTLES-OWN") {
             cAssert(!haveTurtlesOwn,"Redeclaration of TURTLES-OWN",token)
             tokenBuffer.next()
             haveTurtlesOwn = true
-            program = program.copy(turtlesOwn = program.turtlesOwn ++ parseVarList(null, null))
+            program = program.copy(
+              turtlesOwn = program.turtlesOwn ++ parseVarList(null, null))
           }
           else if(keyword == "LINKS-OWN") {
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)
             tokenBuffer.next()
             haveLinksOwn = true
-            program = program.copy(linksOwn = program.linksOwn ++ parseVarList(null, null))
+            program = program.copy(
+              linksOwn = program.linksOwn ++ parseVarList(null, null))
           }
           else if(keyword == "PATCHES-OWN") {
             cAssert( !havePatchesOwn,"Redeclaration of PATCHES-OWN",token)
             tokenBuffer.next()
             havePatchesOwn = true
-            program = program.copy(patchesOwn = program.patchesOwn ++ parseVarList(null, null))
+            program = program.copy(
+              patchesOwn = program.patchesOwn ++ parseVarList(null, null))
           }
           else if(keyword == "GLOBALS") {
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)
             tokenBuffer.next()
             haveGlobals = true
-            program = program.copy(userGlobals = program.userGlobals ++ parseVarList(null, null))
+            program = program.copy(
+              userGlobals = program.userGlobals ++ parseVarList(null, null))
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)
@@ -183,9 +191,11 @@ private class StructureParser(
               linkbreed = true
             }
             if(linkbreed)
-              program.linkBreedsOwn += breedName -> parseVarList(classOf[Link], null)
+              program = program.copy(
+                linkBreedsOwn = program.linkBreedsOwn.updated(breedName, parseVarList(classOf[Link], null)))
             else
-              program.breedsOwn += breedName -> parseVarList(classOf[Turtle], null)
+              program = program.copy(
+                breedsOwn = program.breedsOwn.updated(breedName, parseVarList(classOf[Turtle], null)))
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)

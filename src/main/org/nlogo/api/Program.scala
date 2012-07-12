@@ -6,12 +6,12 @@ import collection.immutable.ListMap
 import collection.JavaConverters._
 
 object Program {
-  private def empty2D =
+  private val empty2D =
     Program(
       turtlesOwn = AgentVariables.getImplicitTurtleVariables(false),
       patchesOwn = AgentVariables.getImplicitPatchVariables(false),
       linksOwn = AgentVariables.getImplicitLinkVariables)
-  private def empty3D =
+  private val empty3D =
     Program(
       turtlesOwn = AgentVariables.getImplicitTurtleVariables(true),
       patchesOwn = AgentVariables.getImplicitPatchVariables(true),
@@ -36,12 +36,12 @@ case class Program private(
   // z-ordering.  keeping ordering in the other maps isn't really necessary for proper functioning,
   // but makes writing unit tests easier - ST 6/9/04, 1/19/09, 7/12/12
   // Yuck on this AnyRef stuff -- should be cleaned up - ST 3/7/08, 6/17/11, 7/12/12
-  var breeds: ListMap[String, AnyRef] = ListMap(),
-  var breedsSingular: ListMap[String, String] = ListMap(),
-  var linkBreeds: ListMap[String, AnyRef] = ListMap(),
-  var linkBreedsSingular: ListMap[String, String] = ListMap(),
-  var breedsOwn: ListMap[String, Seq[String]] = ListMap(),
-  var linkBreedsOwn: ListMap[String, Seq[String]] = ListMap()) {
+  breeds: ListMap[String, AnyRef] = ListMap(),
+  breedsSingular: ListMap[String, String] = ListMap(),
+  linkBreeds: ListMap[String, AnyRef] = ListMap(),
+  linkBreedsSingular: ListMap[String, String] = ListMap(),
+  breedsOwn: ListMap[String, Seq[String]] = ListMap(),
+  linkBreedsOwn: ListMap[String, Seq[String]] = ListMap()) {
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++

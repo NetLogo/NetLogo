@@ -8,8 +8,10 @@ import org.nlogo.api.Program
 
 class AutoConverter2Tests extends FunSuite {
   val workspace = new DummyWorkspace
-  workspace.world.program(Program.empty().copy(interfaceGlobals = List("GLOB1")))
-  workspace.world.program.breeds += "FROGS" -> "FROGS"
+  workspace.world.program(
+    Program.empty().copy(
+      interfaceGlobals = List("GLOB1"),
+      breeds = collection.immutable.ListMap("FROGS" -> "FROGS")))
   def tester(version: String, before: String, after: String, subprogram: Boolean = true) {
     val converter = new AutoConverter2(workspace, false)(Compiler.Tokenizer2D)
     expect(after)(converter.convert(before, subprogram, false, "NetLogo " + version))

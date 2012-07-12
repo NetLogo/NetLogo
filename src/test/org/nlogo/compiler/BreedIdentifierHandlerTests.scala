@@ -3,18 +3,20 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
+import collection.immutable.ListMap
 import org.nlogo.api.{ Program, Token, TokenType }
 import org.nlogo.prim._
 
 class BreedIdentifierHandlerTests extends FunSuite {
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
-    val program = Program.empty()
-    program.breeds += "FROGS" -> "FROGS"
-    program.breedsSingular += "FROG" -> "FROGS"
-    program.linkBreeds += "AS" -> "DIRECTED-LINK-BREED"
-    program.linkBreedsSingular += "A" -> "AS"
-    program.linkBreeds += "BS" -> "UNDIRECTED-LINK-BREED"
-    program.linkBreedsSingular += "B" -> "BS"
+    val program =
+      Program.empty().copy(
+        breeds = ListMap("FROGS" -> "FROGS"),
+        breedsSingular = ListMap("FROG" -> "FROGS"),
+        linkBreeds = ListMap("AS" -> "DIRECTED-LINK-BREED",
+                             "BS" -> "UNDIRECTED-LINK-BREED"),
+        linkBreedsSingular = ListMap("A" -> "AS",
+                                     "B" -> "BS"))
     handler.process(
       Compiler.Tokenizer2D.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
       program)
