@@ -8,7 +8,7 @@ import org.nlogo.prim._
 
 class BreedIdentifierHandlerTests extends FunSuite {
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
-    val program = new Program
+    val program = Program.applyS()
     program.breeds.put("FROGS", "FROGS")
     program.breedsSingular.put("FROG", "FROGS")
     program.linkBreeds.put("AS", "DIRECTED-LINK-BREED")

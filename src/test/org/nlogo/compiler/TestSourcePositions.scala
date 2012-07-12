@@ -8,7 +8,7 @@ import org.nlogo.nvm.Procedure
 import org.nlogo.api.Version.useGenerator
 
 class TestSourcePositions extends FunSuite {
-  val program = new Program
+  val program = Program.applyS()
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
       java.util.Collections.emptyMap[String, Procedure],

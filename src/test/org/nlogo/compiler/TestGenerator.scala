@@ -8,10 +8,8 @@ import org.nlogo.nvm.Procedure
 
 class TestGenerator extends FunSuite {
 
-  val program = {
-    import collection.JavaConverters._
-    new Program(List("glob1").asJava, false)
-  }
+  val program = Program.applyS(interfaceGlobals = List("glob1"))
+  println(program.dump)
   def condense(disassembly: String) =
     disassembly.split("\n").map(_.trim).mkString("\n")
   def compile(source: String, preamble: String) =

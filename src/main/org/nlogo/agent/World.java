@@ -1287,15 +1287,15 @@ public strictfp class World
   }
 
   public Program newProgram() {
-    return new Program(noStrings, false);
-  }
-
-  public Program newProgram(scala.collection.immutable.Seq<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, false);
+    return Program.applyJ(java.util.Collections.<String>emptyList(), false);
   }
 
   public Program newProgram(List<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, false);
+    return Program.applyJ(interfaceGlobals, false);
+  }
+
+  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
+    return Program.applyS(interfaceGlobals, false);
   }
 
   Seq<String> oldGlobals = noStrings;

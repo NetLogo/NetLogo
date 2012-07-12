@@ -61,7 +61,7 @@ private object StructureParser {
 private class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
-  program: Program,
+  var program: Program,
   oldProcedures: java.util.Map[String, Procedure],
   extensionManager: ExtensionManager)
 (implicit tokenizer: TokenizerInterface) {
@@ -164,7 +164,7 @@ private class StructureParser(
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)
             tokenBuffer.next()
             haveGlobals = true
-            program.globals ++= parseVarList(null, null)
+            program.userGlobals ++= parseVarList(null, null)
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)

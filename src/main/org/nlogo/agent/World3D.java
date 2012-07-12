@@ -12,6 +12,7 @@ import org.nlogo.api.WorldDimensions3D;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public final strictfp class World3D
     extends World
@@ -196,12 +197,17 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return new Program(noStrings, true);
+    return Program.applyJ(java.util.Collections.<String>emptyList(), true);
   }
 
   @Override
-  public Program newProgram(java.util.List<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, true);
+  public Program newProgram(List<String> interfaceGlobals) {
+    return Program.applyJ(interfaceGlobals, true);
+  }
+
+  @Override
+  public Program newProgram(scala.collection.Seq<String> interfaceGlobals) {
+    return Program.applyS(interfaceGlobals, true);
   }
 
   public void createPatches(int minPxcor, int maxPxcor,
