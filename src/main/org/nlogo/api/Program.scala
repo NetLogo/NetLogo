@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import collection.mutable.LinkedHashMap
+import collection.immutable.ListMap
 import collection.JavaConverters._
 
 object Program {
@@ -32,12 +32,12 @@ case class Program private(
   // Using LinkedHashMap on the other maps isn't really necessary for proper functioning, but makes
   // writing unit tests easier - ST 1/19/09
   // Yuck on this AnyRef stuff -- should be cleaned up - ST 3/7/08, 6/17/11
-  breeds: collection.mutable.Map[String, AnyRef] = new LinkedHashMap[String, AnyRef],
-  breedsSingular: collection.mutable.Map[String, String] = new LinkedHashMap[String, String],
-  linkBreeds: collection.mutable.Map[String, AnyRef] = new LinkedHashMap[String, AnyRef],
-  linkBreedsSingular: collection.mutable.Map[String, String] = new LinkedHashMap[String, String],
-  breedsOwn: collection.mutable.Map[String, Seq[String]] = new LinkedHashMap[String, Seq[String]],
-  linkBreedsOwn: collection.mutable.Map[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]) {
+  var breeds: ListMap[String, AnyRef] = ListMap(),
+  var breedsSingular: ListMap[String, String] = ListMap(),
+  var linkBreeds: ListMap[String, AnyRef] = ListMap(),
+  var linkBreedsSingular: ListMap[String, String] = ListMap(),
+  var breedsOwn: ListMap[String, Seq[String]] = ListMap(),
+  var linkBreedsOwn: ListMap[String, Seq[String]] = ListMap()) {
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++
