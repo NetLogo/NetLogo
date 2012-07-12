@@ -36,7 +36,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
     for{current <- world.program.linkBreedsOwn.keySet.asScala
-        breedVarName <- world.program.linkBreedsOwn.get(current).asScala}
+        breedVarName <- world.program.linkBreedsOwn.get(current)}
       if(breedVarIndices.get(breedVarName) == null) {
         allLinkVars.add(breedVarName)
         breedVarIndices.put(breedVarName, Int.box(allLinkVars.size - 1))
@@ -50,7 +50,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       val link = it.next.asInstanceOf[Link]
       val breed = link.getLinkVariable(Link.VAR_BREED).asInstanceOf[AgentSet]
       val key = breed.printName
-      var breedOwns: JList[String] = null
+      var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if(key != "LINKS") {
@@ -58,8 +58,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
-          sortedBreedOwns(j) = breedOwns.get(j)
-          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.get(j)).intValue()
+          sortedBreedOwns(j) = breedOwns(j)
+          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.apply(j)).intValue()
         }
         sortIndicesAndVars(sortedBreedOwns, thisBreedVarIndices)
       }
@@ -140,7 +140,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     val breedVarIndices = new JHashMap[String, JInteger]
     for(current <- world.program.breedsOwn.keySet.asScala) {
       val breedOwns = world.program.breedsOwn.get(current)
-      for(breedVarName <- breedOwns.asScala)
+      for(breedVarName <- breedOwns)
         if(breedVarIndices.get(breedVarName) == null) {
           allTurtleVars.add(breedVarName)
           breedVarIndices.put(breedVarName, Int.box(allTurtleVars.size - 1))
@@ -156,7 +156,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       print(csv.data(turtle.getTurtleVariable(Turtle.VAR_WHO)))
       val breed = turtle.getTurtleVariable(Turtle.VAR_BREED).asInstanceOf[AgentSet]
       val key = breed.printName
-      var breedOwns: JList[String] = null
+      var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (key != "TURTLES") {
@@ -164,8 +164,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
-          sortedBreedOwns(j) = breedOwns.get(j)
-          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns.get(j)).intValue
+          sortedBreedOwns(j) = breedOwns(j)
+          thisBreedVarIndices(j) = breedVarIndices.get(breedOwns(j)).intValue
         }
         sortIndicesAndVars(sortedBreedOwns, thisBreedVarIndices)
       }

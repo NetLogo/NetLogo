@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import scala.collection.Seq;
+
 // A note on wrapping: normally whether x and y coordinates wrap is a
 // product of the topology.  But we also have the old "-nowrap" primitives
 // that don't wrap regardless of what the topology is.  So that's why many
@@ -1029,12 +1031,12 @@ public strictfp class World
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
-    List<String> breedOwns = _program.breedsOwn().get(breed.printName());
-    return breedOwns.get(index - _program.turtlesOwn().size());
+    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName());
+    return breedOwns.apply(index - _program.turtlesOwn().size());
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = _program.breedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1048,12 +1050,12 @@ public strictfp class World
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
-    List<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
-    return breedOwns.get(index - _program.linksOwn().size());
+    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
+    return breedOwns.apply(index - _program.linksOwn().size());
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
+    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1068,7 +1070,7 @@ public strictfp class World
    * used by Turtle.realloc()
    */
   int oldBreedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = oldBreedsOwn.get(breed.printName());
+    Seq<String> breedOwns = oldBreedsOwn.get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1083,7 +1085,7 @@ public strictfp class World
    * used by Link.realloc()
    */
   int oldLinkBreedsOwnIndexOf(AgentSet breed, String name) {
-    List<String> breedOwns = oldLinkBreedsOwn.get(breed.printName());
+    Seq<String> breedOwns = oldLinkBreedsOwn.get(breed.printName());
     if (breedOwns == null) {
       return -1;
     }
@@ -1185,7 +1187,7 @@ public strictfp class World
     if (breed == _turtles) {
       return _program.turtlesOwn().size();
     } else {
-      List<String> breedOwns =
+      Seq<String> breedOwns =
           _program.breedsOwn().get(breed.printName());
       return _program.turtlesOwn().size() + breedOwns.size();
     }
@@ -1195,7 +1197,7 @@ public strictfp class World
     if (breed == _links) {
       return _program.linksOwn().size();
     } else {
-      List<String> breedOwns =
+      Seq<String> breedOwns =
           _program.linkBreedsOwn().get(breed.printName());
       return _program.linksOwn().size() + breedOwns.size();
     }
@@ -1205,7 +1207,7 @@ public strictfp class World
     if (breed == _links) {
       return _program.linksOwn().size();
     } else {
-      List<String> breedOwns =
+      Seq<String> breedOwns =
           _program.linkBreedsOwn().get(breed.printName());
       return _program.linksOwn().size() + breedOwns.size();
     }
@@ -1243,7 +1245,7 @@ public strictfp class World
     if (breed == _turtles) {
       return false;
     }
-    List<String> breedOwns =
+    Seq<String> breedOwns =
         _program.breedsOwn().get(breed.printName());
     return breedOwns.contains(name);
   }
@@ -1256,7 +1258,7 @@ public strictfp class World
     if (breed == _links) {
       return false;
     }
-    List<String> breedOwns =
+    Seq<String> breedOwns =
         _program.linkBreedsOwn().get(breed.printName());
     return breedOwns.contains(name);
   }
@@ -1296,15 +1298,15 @@ public strictfp class World
     return new Program(interfaceGlobals, false);
   }
 
-  scala.collection.Seq<String> oldGlobals = noStrings;
-  scala.collection.Seq<String> oldTurtlesOwn = noStrings;
-  scala.collection.Seq<String> oldPatchesOwn = noStrings;
-  scala.collection.Seq<String> oldLinksOwn = noStrings;
+  Seq<String> oldGlobals = noStrings;
+  Seq<String> oldTurtlesOwn = noStrings;
+  Seq<String> oldPatchesOwn = noStrings;
+  Seq<String> oldLinksOwn = noStrings;
 
   Map<String, Object> oldBreeds = new LinkedHashMap<String, Object>();
   Map<String, Object> oldLinkBreeds = new LinkedHashMap<String, Object>();
-  Map<String, List<String>> oldBreedsOwn = new HashMap<String, List<String>>();
-  Map<String, List<String>> oldLinkBreedsOwn = new HashMap<String, List<String>>();
+  Map<String, Seq<String>> oldBreedsOwn = new HashMap<String, Seq<String>>();
+  Map<String, Seq<String>> oldLinkBreedsOwn = new HashMap<String, Seq<String>>();
 
   public void rememberOldProgram() {
     // we could just keep the whole Program object around, but

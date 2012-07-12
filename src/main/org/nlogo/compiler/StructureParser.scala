@@ -122,7 +122,7 @@ private class StructureParser(
                             "breed only takes 1 or 2 inputs",token) }
           val breedName = breedList(0)
           program.breeds.put(breedName, breedName) // will replace with agentset at realloc time
-          program.breedsOwn.put(breedName, new java.util.ArrayList[String])
+          program.breedsOwn.put(breedName, Seq())
           if(breedList.size == 2)
             program.breedsSingular.put(breedList(1), breedName)
         }
@@ -138,7 +138,7 @@ private class StructureParser(
             val breedName = breedList(0)
             // will replace with agentset at realloc time
             program.linkBreeds.put(breedName, keyword)
-            program.linkBreedsOwn.put(breedName, new java.util.ArrayList[String])
+            program.linkBreedsOwn.put(breedName, Seq())
             if(breedList.size == 2)
               program.linkBreedsSingular.put(breedList(1), breedName)
           }
@@ -181,15 +181,10 @@ private class StructureParser(
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
-            val vars = new java.util.ArrayList[String]
-            if(linkbreed) {
-              vars.addAll(parseVarList(classOf[Link], null).asJava)
-              program.linkBreedsOwn.put(breedName, vars)
-            }
-            else {
-              vars.addAll(parseVarList(classOf[Turtle], null).asJava)
-              program.breedsOwn.put(breedName, vars)
-            }
+            if(linkbreed)
+              program.linkBreedsOwn.put(breedName, parseVarList(classOf[Link], null))
+            else
+              program.breedsOwn.put(breedName, parseVarList(classOf[Turtle], null))
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)

@@ -10,6 +10,8 @@ import org.nlogo.api.PlotInterface;
 import org.nlogo.api.PlotPenInterface;
 import org.nlogo.api.WorldDimensions;
 
+import scala.collection.Seq;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -966,11 +968,11 @@ public abstract strictfp class ImporterJ
       for (Iterator<Object> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
+        Seq<String> breedOwns =
           world.program().breedsOwn().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
+            allBreedOwns.add(breedOwns.apply(i));
           }
         }
       }
@@ -985,11 +987,11 @@ public abstract strictfp class ImporterJ
       for (Iterator<Object> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
         AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
+        Seq<String> breedOwns =
           world.program().linkBreedsOwn().get(breed.printName());
         if (breedOwns != null) {
           for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
+            allBreedOwns.add(breedOwns.apply(i));
           }
         }
       }

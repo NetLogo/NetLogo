@@ -33,8 +33,8 @@ class Program(val interfaceGlobals: collection.immutable.Seq[String] = Nil,
   val breedsSingular: JMap[String, String] = new LinkedHashMap[String, String]
   val linkBreeds: JMap[String, AnyRef] = new LinkedHashMap[String, AnyRef]
   val linkBreedsSingular: JMap[String, String] = new LinkedHashMap[String, String]
-  val breedsOwn: JMap[String, JList[String]] = new LinkedHashMap[String, JList[String]]
-  val linkBreedsOwn: JMap[String, JList[String]] = new LinkedHashMap[String, JList[String]]
+  val breedsOwn: JMap[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
+  val linkBreedsOwn: JMap[String, Seq[String]] = new LinkedHashMap[String, Seq[String]]
 
   def dump = {
     def seq(xs: Seq[_]) =
