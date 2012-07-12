@@ -2,7 +2,6 @@
 
 package org.nlogo.api
 
-import collection.mutable.Buffer
 import collection.mutable.LinkedHashMap
 import collection.JavaConverters._
 
@@ -10,24 +9,24 @@ object Program {
   def applyJ(is3D: Boolean, interfaceGlobals: java.util.List[String]) =
     new Program(is3D = is3D,
                 interfaceGlobals = interfaceGlobals.asScala.toSeq,
-                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
-                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
-                linksOwn = AgentVariables.getImplicitLinkVariables.toBuffer)
+                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D),
+                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D),
+                linksOwn = AgentVariables.getImplicitLinkVariables)
   def applyS(is3D: Boolean = false, interfaceGlobals: Seq[String] = Nil) =
     new Program(is3D = is3D,
                 interfaceGlobals = interfaceGlobals,
-                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D).toBuffer,
-                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D).toBuffer,
-                linksOwn = AgentVariables.getImplicitLinkVariables.toBuffer)
+                turtlesOwn = AgentVariables.getImplicitTurtleVariables(is3D),
+                patchesOwn = AgentVariables.getImplicitPatchVariables(is3D),
+                linksOwn = AgentVariables.getImplicitLinkVariables)
 }
 
 case class Program private(
   is3D: Boolean = false,
   interfaceGlobals: Seq[String] = Nil,
-  userGlobals: Buffer[String] = Buffer(),
-  turtlesOwn: Buffer[String] = Buffer(),
-  patchesOwn: Buffer[String] = Buffer(),
-  linksOwn: Buffer[String] = Buffer(),
+  var userGlobals: Seq[String] = Seq(),
+  var turtlesOwn: Seq[String] = Seq(),
+  var patchesOwn: Seq[String] = Seq(),
+  var linksOwn: Seq[String] = Seq(),
   // use a LinkedHashMap to store the breeds so that the Renderer can retrieve them in order of
   // definition, for proper z-ordering - ST 6/9/04
   // Using LinkedHashMap on the other maps isn't really necessary for proper functioning, but makes
