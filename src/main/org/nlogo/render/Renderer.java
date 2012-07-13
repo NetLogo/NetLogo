@@ -12,9 +12,6 @@ import org.nlogo.api.Turtle;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 public strictfp class Renderer
     extends AbstractRenderer {
 
@@ -56,10 +53,9 @@ public strictfp class Renderer
   @Override
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
-    // traverse breeds in reverse order of declaration
-    Collection<AgentSet> breeds = world.program().linkBreedsJ().values();
-    for (Iterator<AgentSet> iter = breeds.iterator(); iter.hasNext();) {
-      AgentSet breed = iter.next();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = world.program().linkBreeds().values().iterator();
+         iter.hasNext();) {
+      AgentSet breed = iter.next().agents();
       for (Agent a : breed.agents()) {
         linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
         linksDrawn++;
@@ -83,9 +79,9 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<AgentSet> breeds = world.program().breedsJ().values();
-    for (Iterator<AgentSet> iter = breeds.iterator(); iter.hasNext();) {
-      AgentSet breed = iter.next();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = world.program().breeds().values().iterator();
+         iter.hasNext();) {
+      AgentSet breed = iter.next().agents();
       if (Turtle.class.isAssignableFrom(breed.type())) {
         for (Agent a : breed.agents()) {
           turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
