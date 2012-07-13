@@ -48,8 +48,6 @@ case class Program private(
     breeds.collect{case (name, Right(agents)) => name -> agents}.asJava
   def linkBreedsJ: java.util.Map[String, AgentSet] =
     linkBreeds.collect{case (name, Right(agents)) => name -> agents}.asJava
-  def breedsOwnJ: java.util.Map[String, Seq[String]] = breedsOwn.asJava
-  def linkBreedsOwnJ: java.util.Map[String, Seq[String]] = linkBreedsOwn.asJava
   def withInterfaceGlobals(interfaceGlobals: java.util.List[String]) =
     copy(interfaceGlobals = interfaceGlobals.asScala.toSeq)
 

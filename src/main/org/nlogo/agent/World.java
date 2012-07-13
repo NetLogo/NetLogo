@@ -943,7 +943,7 @@ public strictfp class World
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.breedsOwnJ().get(breed.printName());
+    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName()).getOrElse(null);
     if (breedOwns == null) {
       return -1;
     }
@@ -977,7 +977,7 @@ public strictfp class World
    * used by Turtle.realloc()
    */
   int oldBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = oldBreedsOwn.get(breed.printName());
+    Seq<String> breedOwns = oldBreedsOwn.get(breed.printName()).getOrElse(null);
     if (breedOwns == null) {
       return -1;
     }
@@ -992,7 +992,7 @@ public strictfp class World
    * used by Link.realloc()
    */
   int oldLinkBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = oldLinkBreedsOwn.get(breed.printName());
+    Seq<String> breedOwns = oldLinkBreedsOwn.get(breed.printName()).getOrElse(null);
     if (breedOwns == null) {
       return -1;
     }
@@ -1192,8 +1192,10 @@ public strictfp class World
     new LinkedHashMap<String, org.nlogo.api.AgentSet>();
   Map<String, org.nlogo.api.AgentSet> oldLinkBreeds =
     new LinkedHashMap<String, org.nlogo.api.AgentSet>();
-  Map<String, Seq<String>> oldBreedsOwn = new HashMap<String, Seq<String>>();
-  Map<String, Seq<String>> oldLinkBreedsOwn = new HashMap<String, Seq<String>>();
+  scala.collection.Map<String, Seq<String>> oldBreedsOwn =
+    newProgram().breedsOwn();
+  scala.collection.Map<String, Seq<String>> oldLinkBreedsOwn =
+    newProgram().linkBreedsOwn();
 
   public void rememberOldProgram() {
     // we could just keep the whole Program object around, but
@@ -1208,8 +1210,8 @@ public strictfp class World
     oldGlobals = _program.globals();
     oldBreeds = _program.breedsJ();
     oldLinkBreeds = _program.linkBreedsJ();
-    oldBreedsOwn = _program.breedsOwnJ();
-    oldLinkBreedsOwn = _program.linkBreedsOwnJ();
+    oldBreedsOwn = _program.breedsOwn();
+    oldLinkBreedsOwn = _program.linkBreedsOwn();
   }
 
   /// display on/off
