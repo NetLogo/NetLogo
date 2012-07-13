@@ -1155,12 +1155,6 @@ public strictfp class World
     return _linkShapeList.shape(name);
   }
 
-  // use of this method by other classes is discouraged
-  // since that's poor information-hiding
-  public Map<String, scala.Either<String, org.nlogo.api.AgentSet>> getBreeds() {
-    return _program.breedsJ();
-  }
-
   public boolean breedOwns(AgentSet breed, String name) {
     if (breed == _turtles) {
       return false;
@@ -1168,10 +1162,6 @@ public strictfp class World
     Seq<String> breedOwns =
         _program.breedsOwn().apply(breed.printName());
     return breedOwns.contains(name);
-  }
-
-  public Map<String, scala.Either<String, org.nlogo.api.AgentSet>> getLinkBreeds() {
-    return _program.linkBreedsJ();
   }
 
   public boolean linkBreedOwns(AgentSet breed, String name) {

@@ -963,7 +963,7 @@ public abstract strictfp class ImporterJ
   //returns a List containing all the breed variables for this model
   List<String> getAllBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.getBreeds();
+    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.program().breedsJ();
     if (breeds != null) {
       for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
@@ -982,7 +982,7 @@ public abstract strictfp class ImporterJ
 
   List<String> getAllLinkBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.getLinkBreeds();
+    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.program().linkBreedsJ();
     if (breeds != null) {
       for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> breedElt = breeds.values().iterator();
            breedElt.hasNext();) {
