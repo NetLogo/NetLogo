@@ -35,29 +35,20 @@ case class Program private(
   turtlesOwn: Seq[String] = Seq(),
   patchesOwn: Seq[String] = Seq(),
   linksOwn: Seq[String] = Seq(),
-  _breeds: ListMap[String, Breed] = ListMap(),
-  _linkBreeds: ListMap[String, Breed] = ListMap()) {
+  breeds: ListMap[String, Breed] = ListMap(),
+  linkBreeds: ListMap[String, Breed] = ListMap()) {
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++
       interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
-  // these six methods are for backwards compatibility with code that
-  // doesn't know about the new api.Breed class yet - ST 7/13/12
-  def breeds: ListMap[String, Either[String, AgentSet]] =
-    _breeds.map{case (name, breed) =>
-      name -> Option(breed.agents).toRight(name)}
-  def linkBreeds: ListMap[String, Either[String, AgentSet]] =
-    _linkBreeds.map{case (name, breed) =>
-      name -> Option(breed.agents).toRight(name)}
-
   // for convenience of Java callers
   def breedsJ: java.util.Map[String, AgentSet] =
-    _breeds.collect{
+    breeds.collect{
       case (name, breed) if breed.agents != null =>
         name -> breed.agents}.asJava
   def linkBreedsJ: java.util.Map[String, AgentSet] =
-    _linkBreeds.collect{
+    linkBreeds.collect{
       case (name, breed) if breed.agents != null =>
         name -> breed.agents}.asJava
 
@@ -80,8 +71,8 @@ case class Program private(
       "turtles-own " + seq(turtlesOwn) + "\n" +
       "patches-own " + seq(patchesOwn) + "\n" +
       "links-own " + seq(linksOwn) + "\n" +
-      "breeds " + map(_breeds) + "\n" +
-      "link-breeds " + map(_linkBreeds) + "\n"
+      "breeds " + map(breeds) + "\n" +
+      "link-breeds " + map(linkBreeds) + "\n"
   }
 
 }

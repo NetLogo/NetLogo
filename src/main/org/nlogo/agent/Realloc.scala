@@ -22,16 +22,16 @@ object Realloc {
           new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)
         else
           breed
-      program._breeds(breedName).agents = newBreed
+      program.breeds(breedName).agents = newBreed
     }
     for(breedName <- program.linkBreeds.keys) {
-      val directed = program._linkBreeds(breedName).isDirected
+      val directed = program.linkBreeds(breedName).isDirected
       var breed = world.oldLinkBreeds.get(breedName).map(_.agents.asInstanceOf[AgentSet]).orNull
       if (breed == null)
         breed = new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)
       else // clear the lists first
         breed.clearDirected()
-      program._linkBreeds(breedName).agents = breed
+      program.linkBreeds(breedName).agents = breed
       breed.setDirected(directed)
     }
     // call Agent.realloc() on all the turtles

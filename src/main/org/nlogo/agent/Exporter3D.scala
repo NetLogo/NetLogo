@@ -159,7 +159,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]()
     for {
-      current <- world.program._breeds.values
+      current <- world.program.breeds.values
       breedVarName <- current.owns
     } if (breedVarIndices.get(breedVarName) == null) {
       allTurtleVars.add(breedVarName)
@@ -176,7 +176,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (!key.equals("TURTLES")) {
-        breedOwns = world.program._breeds(key).owns
+        breedOwns = world.program.breeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {

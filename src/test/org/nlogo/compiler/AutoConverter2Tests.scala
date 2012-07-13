@@ -11,7 +11,7 @@ class AutoConverter2Tests extends FunSuite {
   workspace.world.program(
     Program.empty().copy(
       interfaceGlobals = List("GLOB1"),
-      _breeds = collection.immutable.ListMap("FROGS" -> Breed("FROGS", "FROG"))))
+      breeds = collection.immutable.ListMap("FROGS" -> Breed("FROGS", "FROG"))))
   def tester(version: String, before: String, after: String, subprogram: Boolean = true) {
     val converter = new AutoConverter2(workspace, false)(Compiler.Tokenizer2D)
     expect(after)(converter.convert(before, subprogram, false, "NetLogo " + version))

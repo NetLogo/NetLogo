@@ -35,7 +35,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // this next hashtable is keyed by the breed variable names and holds the index of where that
     // var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
-    for{current <- world.program._linkBreeds.values
+    for{current <- world.program.linkBreeds.values
         breedVarName <- current.owns}
       if(breedVarIndices.get(breedVarName) == null) {
         allLinkVars.add(breedVarName)
@@ -54,7 +54,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if(key != "LINKS") {
-        breedOwns = world.program._linkBreeds(key).owns
+        breedOwns = world.program.linkBreeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {
@@ -139,7 +139,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // this next hashtable is keyed by the breed variable names and holds the index of where that var is positioned
     val breedVarIndices = new JHashMap[String, JInteger]
     for {
-      current <- world.program._breeds.values
+      current <- world.program.breeds.values
       breedVarName <- current.owns
     } if (breedVarIndices.get(breedVarName) == null) {
       allTurtleVars.add(breedVarName)
@@ -159,7 +159,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null
       if (key != "TURTLES") {
-        breedOwns = world.program._breeds(key).owns
+        breedOwns = world.program.breeds(key).owns
         thisBreedVarIndices = Array.fill(breedOwns.size)(0)
         sortedBreedOwns = Array.fill(breedOwns.size)(null: String)
         for(j <- 0 until breedOwns.size) {

@@ -938,12 +938,12 @@ public strictfp class World
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
-    Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
+    Seq<String> breedOwns = _program.breeds().apply(breed.printName()).owns();
     return breedOwns.apply(index - _program.turtlesOwn().size());
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = _program._breeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = _program.breeds().get(breed.printName()).getOrElse(null);
     if (found == null) {
       return -1;
     }
@@ -957,12 +957,12 @@ public strictfp class World
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
-    Seq<String> breedOwns = _program._linkBreeds().apply(breed.printName()).owns();
+    Seq<String> breedOwns = _program.linkBreeds().apply(breed.printName()).owns();
     return breedOwns.apply(index - _program.linksOwn().size());
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = _program._linkBreeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = _program.linkBreeds().get(breed.printName()).getOrElse(null);
     if (found == null) {
       return -1;
     }
@@ -1040,13 +1040,13 @@ public strictfp class World
   public String getBreedSingular(AgentSet breed) {
     return breed == _turtles
       ? "TURTLE"
-      : _program._breeds().apply(breed.printName()).singular();
+      : _program.breeds().apply(breed.printName()).singular();
   }
 
   public String getLinkBreedSingular(AgentSet breed) {
     return breed == _links
       ? "LINK"
-      : _program._linkBreeds().apply(breed.printName()).singular();
+      : _program.linkBreeds().apply(breed.printName()).singular();
   }
 
   // assumes caller has already checked to see if the breeds are equal
@@ -1074,7 +1074,7 @@ public strictfp class World
     if (breed == _turtles) {
       return _program.turtlesOwn().size();
     } else {
-      Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
+      Seq<String> breedOwns = _program.breeds().apply(breed.printName()).owns();
       return _program.turtlesOwn().size() + breedOwns.size();
     }
   }
@@ -1083,7 +1083,7 @@ public strictfp class World
     if (breed == _links) {
       return _program.linksOwn().size();
     } else {
-      Seq<String> breedOwns = _program._linkBreeds().apply(breed.printName()).owns();
+      Seq<String> breedOwns = _program.linkBreeds().apply(breed.printName()).owns();
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1093,7 +1093,7 @@ public strictfp class World
       return _program.linksOwn().size();
     } else {
       Seq<String> breedOwns =
-        _program._linkBreeds().apply(breed.printName()).owns();
+        _program.linkBreeds().apply(breed.printName()).owns();
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1124,7 +1124,7 @@ public strictfp class World
     if (breed == _turtles) {
       return false;
     }
-    Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
+    Seq<String> breedOwns = _program.breeds().apply(breed.printName()).owns();
     return breedOwns.contains(name);
   }
 
@@ -1133,7 +1133,7 @@ public strictfp class World
       return false;
     }
     Seq<String> breedOwns =
-      _program._linkBreeds().apply(breed.printName()).owns();
+      _program.linkBreeds().apply(breed.printName()).owns();
     return breedOwns.contains(name);
   }
 
@@ -1170,9 +1170,9 @@ public strictfp class World
   Seq<String> oldLinksOwn = noStrings;
 
   scala.collection.Map<String, org.nlogo.api.Breed> oldBreeds =
-    newProgram()._breeds();
+    newProgram().breeds();
   scala.collection.Map<String, org.nlogo.api.Breed> oldLinkBreeds =
-    newProgram()._linkBreeds();
+    newProgram().linkBreeds();
 
   public void rememberOldProgram() {
     // we could just keep the whole Program object around, but
@@ -1185,8 +1185,8 @@ public strictfp class World
     oldPatchesOwn = _program.patchesOwn();
     oldLinksOwn = _program.linksOwn();
     oldGlobals = _program.globals();
-    oldBreeds = _program._breeds();
-    oldLinkBreeds = _program._linkBreeds();
+    oldBreeds = _program.breeds();
+    oldLinkBreeds = _program.linkBreeds();
   }
 
   /// display on/off

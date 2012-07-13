@@ -126,7 +126,7 @@ private class StructureParser(
             if(breedList.size == 2) breedList(1)
             else "TURTLE"
           program = program.copy(
-            _breeds = program._breeds.updated(breedName, Breed(breedName, singular)))
+            breeds = program.breeds.updated(breedName, Breed(breedName, singular)))
         }
         else {
           cAssert(token.tyype == TokenType.KEYWORD,"Expected keyword",token)
@@ -142,7 +142,7 @@ private class StructureParser(
               if(breedList.size == 2) breedList(1)
               else "LINK"
             program = program.copy(
-              _linkBreeds = program._linkBreeds.updated(
+              linkBreeds = program.linkBreeds.updated(
                 breedName, Breed(breedName, singular, isDirected = keyword == "DIRECTED-LINK-BREED")))
           }
           else if(keyword == "TURTLES-OWN") {
@@ -179,23 +179,23 @@ private class StructureParser(
                     "There is no breed named " + breedName,token)
             tokenBuffer.next()
             var linkbreed = false
-            if(program._breeds.contains(breedName)) {
-              cAssert(program._breeds(breedName).owns.isEmpty,
+            if(program.breeds.contains(breedName)) {
+              cAssert(program.breeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
             }
-            else if(program._linkBreeds.contains(breedName)) {
-              cAssert(program._linkBreeds(breedName).owns.isEmpty,
+            else if(program.linkBreeds.contains(breedName)) {
+              cAssert(program.linkBreeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
             if(linkbreed)
               program = program.copy(
-                _linkBreeds = program._linkBreeds.updated(
-                  breedName, program._linkBreeds(breedName).copy(owns = parseVarList(classOf[Link], null))))
+                linkBreeds = program.linkBreeds.updated(
+                  breedName, program.linkBreeds(breedName).copy(owns = parseVarList(classOf[Link], null))))
             else
               program = program.copy(
-                _breeds = program._breeds.updated(
-                  breedName, program._breeds(breedName).copy(owns = parseVarList(classOf[Turtle], null))))
+                breeds = program.breeds.updated(
+                  breedName, program.breeds(breedName).copy(owns = parseVarList(classOf[Turtle], null))))
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)
@@ -394,19 +394,19 @@ private class StructureParser(
   }
   private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
     if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
-      val keys = program._breeds.keys.iterator
+      val keys = program.breeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program._breeds(breedName).owns
+        val breedOwns = program.breeds(breedName).owns
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }
     }
     if(owningAgentClass == null || owningAgentClass == classOf[Turtle]) {
-      val keys = program._linkBreeds.keys.iterator
+      val keys = program.linkBreeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program._linkBreeds(breedName).owns
+        val breedOwns = program.linkBreeds(breedName).owns
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }

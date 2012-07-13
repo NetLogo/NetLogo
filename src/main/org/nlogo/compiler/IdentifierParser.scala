@@ -97,9 +97,9 @@ private class IdentifierParser(program:Program,
       new _linkvariable(program.linksOwn.indexOf(varName))
     else if(program.globals.contains(varName))
       new _observervariable(program.globals.indexOf(varName))
-    else if(program._breeds.values.exists(_.owns.contains(varName)))
+    else if(program.breeds.values.exists(_.owns.contains(varName)))
       new _breedvariable(varName)
-    else if(program._linkBreeds.values.exists(_.owns.contains(varName)))
+    else if(program.linkBreeds.values.exists(_.owns.contains(varName)))
       new _linkbreedvariable(varName)
     else if(forgiving)
       new _unknownidentifier

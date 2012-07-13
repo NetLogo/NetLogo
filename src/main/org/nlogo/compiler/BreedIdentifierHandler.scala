@@ -17,13 +17,13 @@ private object BreedIdentifierHandler {
   }
   def turtle(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _._breeds, _ => true)
+               _.breeds, _ => true)
   def directedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _._linkBreeds, _.isDirected)
+               _.linkBreeds, _.isDirected)
   def undirectedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _._linkBreeds, !_.isDirected)
+               _.linkBreeds, !_.isDirected)
   private val handlers2D = handlers(false)
   private val handlers3D = handlers(true)
   private def handlers(is3D:Boolean) = List(
