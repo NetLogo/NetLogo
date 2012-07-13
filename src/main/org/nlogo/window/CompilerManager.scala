@@ -33,9 +33,9 @@ with Events.CompileAllEvent.Handler {
     workspace.world.program(Program.empty(Version.is3D))
     workspace.world.rememberOldProgram()
     workspace.world.turtleBreedShapes.setUpBreedShapes(
-      true, workspace.world.program.breedsJ) // true = clear old
+      true, workspace.world.program.breeds) // true = clear old
     workspace.world.linkBreedShapes.setUpBreedShapes(
-      true, workspace.world.program.linkBreedsJ) // true = clear old
+      true, workspace.world.program.linkBreeds) // true = clear old
   }
 
   override def handle(e: Events.LoadEndEvent) {
