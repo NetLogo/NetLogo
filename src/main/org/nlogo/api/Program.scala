@@ -39,16 +39,6 @@ case class Program private(
     AgentVariables.getImplicitObserverVariables ++
       interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
-  // for convenience of Java callers. could/should be eliminated
-  def breedsJ: java.util.Map[String, AgentSet] =
-    breeds.collect{
-      case (name, breed) if breed.agents != null =>
-        name -> breed.agents}.asJava
-  def linkBreedsJ: java.util.Map[String, AgentSet] =
-    linkBreeds.collect{
-      case (name, breed) if breed.agents != null =>
-        name -> breed.agents}.asJava
-
   // for testing/debugging
   def dump = {
     def seq(xs: Seq[_]) =
