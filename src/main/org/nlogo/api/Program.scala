@@ -6,6 +6,9 @@ import collection.immutable.ListMap
 import collection.JavaConverters._
 
 object Program {
+  def empty(is3D: Boolean = false) =
+    if (is3D) empty3D
+    else empty2D
   private val empty2D =
     Program(
       turtlesOwn = AgentVariables.getImplicitTurtleVariables(false),
@@ -17,9 +20,13 @@ object Program {
       turtlesOwn = AgentVariables.getImplicitTurtleVariables(true),
       patchesOwn = AgentVariables.getImplicitPatchVariables(true),
       linksOwn = AgentVariables.getImplicitLinkVariables)
-  def empty(is3D: Boolean = false) =
-    if (is3D) empty3D else empty2D
 }
+
+// use ListMaps here so Renderer can retrieve breeds in order of definition, for proper
+// z-ordering.  keeping ordering in the other maps isn't really necessary for proper functioning,
+// but makes writing unit tests easier - ST 6/9/04, 1/19/09, 7/12/12
+
+// Yuck on the Either stuff -- should be cleaned up - ST 7/12/12
 
 case class Program private(
   is3D: Boolean = false,
@@ -28,10 +35,6 @@ case class Program private(
   turtlesOwn: Seq[String] = Seq(),
   patchesOwn: Seq[String] = Seq(),
   linksOwn: Seq[String] = Seq(),
-  // use ListMaps here so Renderer can retrieve breeds in order of definition, for proper
-  // z-ordering.  keeping ordering in the other maps isn't really necessary for proper functioning,
-  // but makes writing unit tests easier - ST 6/9/04, 1/19/09, 7/12/12
-  // Yuck on this Either stuff -- should be cleaned up - ST 7/12/12
   breeds: ListMap[String, Either[String, AgentSet]] = ListMap(),
   breedsSingular: ListMap[String, String] = ListMap(),
   linkBreeds: ListMap[String, Either[String, AgentSet]] = ListMap(),
