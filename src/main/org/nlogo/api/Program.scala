@@ -22,11 +22,8 @@ object Program {
       linksOwn = AgentVariables.getImplicitLinkVariables)
 }
 
-// use ListMaps here so Renderer can retrieve breeds in order of definition, for proper
-// z-ordering.  keeping ordering in the other maps isn't really necessary for proper functioning,
-// but makes writing unit tests easier - ST 6/9/04, 1/19/09, 7/12/12
-
-// Yuck on the Either stuff -- should be cleaned up - ST 7/12/12
+// breeds are ListMaps so the z-order in Renderer can match the definition order
+// - ST 6/9/04, 7/12/12
 
 case class Program private(
   is3D: Boolean = false,
