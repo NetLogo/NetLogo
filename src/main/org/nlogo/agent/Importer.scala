@@ -6,7 +6,9 @@ package org.nlogo.agent
 // we'll convert it at method at a time, as needed, by relocating
 // methods from ImporterJ to here. - ST 7/11/12
 
-import org.nlogo.api.{ AgentVariables, ImporterUser }
+import org.nlogo.api.{ AgentVariables, Breed, ImporterUser }
+import collection.immutable.ListMap
+import collection.JavaConverters._
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
                _world: World,
@@ -52,5 +54,8 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
     Array(vars(Link.VAR_BREED), vars(Link.VAR_LABEL),
           vars(Link.VAR_END1), vars(Link.VAR_END2))
   }
+
+  def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] =
+    breeds.values.filter(_.agents != null).flatMap(_.owns).toSeq.asJava
 
 }

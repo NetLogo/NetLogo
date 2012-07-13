@@ -4,6 +4,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.Breed;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PlotInterface;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -958,35 +958,14 @@ public abstract strictfp class ImporterJ
     }
   }
 
-  //functions for getting and filling helper lists and maps
-  //maybe move this to World.java???
-  //returns a List containing all the breed variables for this model
+  abstract List<String> getAllVars(scala.collection.immutable.ListMap<String, Breed> breeds);
+
   List<String> getAllBreedVars() {
-    List<String> allBreedOwns = new ArrayList<String>();
-    for(org.nlogo.api.AgentSet breed : world.program().breedsJ().values()) {
-      org.nlogo.api.Breed found = world.program().breeds().get(breed.printName()).getOrElse(null);
-      if (found != null) {
-        Seq<String> breedOwns = found.owns();
-        for (int i = 0; i < breedOwns.size(); i++) {
-          allBreedOwns.add(breedOwns.apply(i));
-        }
-      }
-    }
-    return allBreedOwns;
+    return getAllVars(world.program().breeds());
   }
 
   List<String> getAllLinkBreedVars() {
-    List<String> allBreedOwns = new ArrayList<String>();
-    for (org.nlogo.api.AgentSet breed : world.program().linkBreedsJ().values()) {
-      org.nlogo.api.Breed found = world.program().linkBreeds().get(breed.printName()).getOrElse(null);
-      if (found != null) {
-        Seq<String> breedOwns = found.owns();
-        for (int i = 0; i < breedOwns.size(); i++) {
-          allBreedOwns.add(breedOwns.apply(i));
-        }
-      }
-    }
-    return allBreedOwns;
+    return getAllVars(world.program().linkBreeds());
   }
 
   Map<Class<? extends Agent>, List<String>> specialVariables;
@@ -1078,13 +1057,13 @@ public abstract strictfp class ImporterJ
   }
 
   String[] getEssentialPatchVariables() {
-    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(false);
+    Seq<String> vars = AgentVariables.getImplicitPatchVariables(false);
     return new String[]{
       vars.apply(Patch.VAR_PXCOR), vars.apply(Patch.VAR_PYCOR)};
   }
 
   String[] getEssentialLinkVariables() {
-    scala.collection.Seq<String> vars = AgentVariables.getImplicitLinkVariables();
+    Seq<String> vars = AgentVariables.getImplicitLinkVariables();
     return new String[]{
       vars.apply(Link.VAR_END1), vars.apply(Link.VAR_END2)};
   }
