@@ -704,16 +704,16 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    if (_program.breeds() != null) {
-      for (scala.collection.Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = _program.breeds().values().iterator();
+    if (_program.breedsJ() != null) {
+      for (Iterator<org.nlogo.api.AgentSet> iter = _program.breedsJ().values().iterator();
            iter.hasNext();) {
-        ((AgentSet) iter.next().right().get()).clear();
+        ((AgentSet) iter.next()).clear();
       }
     }
     if (_program.linkBreeds() != null) {
-      for (scala.collection.Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = _program.linkBreeds().values().iterator();
+      for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
            iter.hasNext();) {
-        ((AgentSet) iter.next().right().get()).clear();
+        ((AgentSet) iter.next()).clear();
       }
     }
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
@@ -808,10 +808,10 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    if (_program.breeds() != null) {
-      for (scala.collection.Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = _program.breeds().values().iterator();
+    if (_program.breedsJ() != null) {
+      for (Iterator<org.nlogo.api.AgentSet> iter = _program.breedsJ().values().iterator();
            iter.hasNext();) {
-        ((AgentSet) iter.next().right().get()).clear();
+        ((AgentSet) iter.next()).clear();
       }
     }
     for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
@@ -829,10 +829,10 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    if (_program.linkBreeds() != null) {
-      for (scala.collection.Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = _program.linkBreeds().values().iterator();
+    if (_program.linkBreedsJ() != null) {
+      for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
            iter.hasNext();) {
-        ((AgentSet) iter.next().right().get()).clear();
+        ((AgentSet) iter.next()).clear();
       }
     }
     for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
@@ -1041,13 +1041,11 @@ public strictfp class World
   }
 
   public AgentSet getBreed(String breedName) {
-    scala.Either<String, org.nlogo.api.AgentSet> either = _program.breedsJ().get(breedName);
-    return either == null ? null : (AgentSet) either.right().get();
+    return (AgentSet) _program.breedsJ().get(breedName);
   }
 
   public AgentSet getLinkBreed(String breedName) {
-    scala.Either<String, org.nlogo.api.AgentSet> either = _program.linkBreedsJ().get(breedName);
-    return either == null ? null : (AgentSet) either.right().get();
+    return (AgentSet) _program.linkBreedsJ().get(breedName);
   }
 
   public String getBreedSingular(AgentSet breed) {
@@ -1082,9 +1080,9 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter = _program.linkBreedsJ().values().iterator();
+    for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
          iter.hasNext();) {
-      AgentSet next = (AgentSet) iter.next().right().get();
+      org.nlogo.api.AgentSet next = iter.next();
       if (next == breed1) {
         return -1;
       } else if (next == breed2) {
@@ -1205,10 +1203,10 @@ public strictfp class World
   Seq<String> oldPatchesOwn = noStrings;
   Seq<String> oldLinksOwn = noStrings;
 
-  Map<String, scala.Either<String, org.nlogo.api.AgentSet>> oldBreeds =
-    new LinkedHashMap<String, scala.Either<String, org.nlogo.api.AgentSet>>();
-  Map<String, scala.Either<String, org.nlogo.api.AgentSet>> oldLinkBreeds =
-    new LinkedHashMap<String, scala.Either<String, org.nlogo.api.AgentSet>>();
+  Map<String, org.nlogo.api.AgentSet> oldBreeds =
+    new LinkedHashMap<String, org.nlogo.api.AgentSet>();
+  Map<String, org.nlogo.api.AgentSet> oldLinkBreeds =
+    new LinkedHashMap<String, org.nlogo.api.AgentSet>();
   Map<String, Seq<String>> oldBreedsOwn = new HashMap<String, Seq<String>>();
   Map<String, Seq<String>> oldLinkBreedsOwn = new HashMap<String, Seq<String>>();
 

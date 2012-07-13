@@ -57,18 +57,12 @@ public strictfp class Renderer
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<scala.Either<String, AgentSet>> breeds = world.program().linkBreedsJ().values();
-    for (Iterator<scala.Either<String, AgentSet>> iter = breeds.iterator();
-         iter.hasNext();) {
-      scala.Either<String, AgentSet> next = iter.next();
-      // I'm unable to reproduce bug #1400, but a user did see it, and
-      // this instanceof check should prevent it - ST 9/21/11
-      if(next.isRight()) {
-        AgentSet breed = next.right().get();
-        for (Agent a : breed.agents()) {
-          linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
-          linksDrawn++;
-        }
+    Collection<AgentSet> breeds = world.program().linkBreedsJ().values();
+    for (Iterator<AgentSet> iter = breeds.iterator(); iter.hasNext();) {
+      AgentSet breed = iter.next();
+      for (Agent a : breed.agents()) {
+        linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
+        linksDrawn++;
       }
     }
     if (linksDrawn < world.links().count()) {
@@ -89,19 +83,13 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    Collection<scala.Either<String, AgentSet>> breeds = world.program().breedsJ().values();
-    for (Iterator<scala.Either<String, AgentSet>> iter = breeds.iterator();
-         iter.hasNext();) {
-      scala.Either<String, AgentSet> next = iter.next();
-      // I'm unable to reproduce bug #1400, but a user did see it, and
-      // this check should prevent it - ST 9/21/11
-      if(next.isRight()) {
-        AgentSet breed = next.right().get();
-        if (Turtle.class.isAssignableFrom(breed.type())) {
-          for (Agent a : breed.agents()) {
-            turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
-            turtlesDrawn++;
-          }
+    Collection<AgentSet> breeds = world.program().breedsJ().values();
+    for (Iterator<AgentSet> iter = breeds.iterator(); iter.hasNext();) {
+      AgentSet breed = iter.next();
+      if (Turtle.class.isAssignableFrom(breed.type())) {
+        for (Agent a : breed.agents()) {
+          turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
+          turtlesDrawn++;
         }
       }
     }

@@ -70,8 +70,8 @@ object Realloc {
     // call Agent.realloc() on the observer
     world.observer.realloc(true)
     // and finally...
-    world.turtleBreedShapes.setUpBreedShapes(false, program.breeds)
-    world.linkBreedShapes.setUpBreedShapes(false, program.linkBreeds)
+    world.turtleBreedShapes.setUpBreedShapes(false, program.breedsJ)
+    world.linkBreedShapes.setUpBreedShapes(false, program.linkBreedsJ)
   }
 
 }

@@ -28,7 +28,7 @@ public strictfp class BreedShapes {
     this.genericBreedName = genericBreedName;
   }
 
-  public void setUpBreedShapes(boolean clear, scala.collection.Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds) {
+  public void setUpBreedShapes(boolean clear, java.util.Map<String, org.nlogo.api.AgentSet> breeds) {
     synchronized (lock) {
       if (clear || shapes == null) {
         shapes = new HashMap<String, String>();
@@ -36,11 +36,9 @@ public strictfp class BreedShapes {
       Map<String, String> newBreedShapes =
           new HashMap<String, String>();
       if (breeds != null) {
-        for (scala.collection.Iterator<scala.Either<String, org.nlogo.api.AgentSet>> iter =
-                 breeds.values().iterator();
+        for (Iterator<org.nlogo.api.AgentSet> iter = breeds.values().iterator();
              iter.hasNext();) {
-          String breedName =
-            ((AgentSet) iter.next().right().get()).printName();
+          String breedName = iter.next().printName();
           String oldShape = shapes.get(breedName);
           newBreedShapes.put(breedName,
               oldShape == null

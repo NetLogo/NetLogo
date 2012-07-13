@@ -963,11 +963,11 @@ public abstract strictfp class ImporterJ
   //returns a List containing all the breed variables for this model
   List<String> getAllBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.program().breedsJ();
+    Map<String, org.nlogo.api.AgentSet> breeds = world.program().breedsJ();
     if (breeds != null) {
-      for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> breedElt = breeds.values().iterator();
-           breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next().right().get();
+      for (Iterator<org.nlogo.api.AgentSet> iter = breeds.values().iterator();
+           iter.hasNext();) {
+        org.nlogo.api.AgentSet breed = iter.next();
         Seq<String> breedOwns =
           world.program().breedsOwnJ().get(breed.printName());
         if (breedOwns != null) {
@@ -982,11 +982,10 @@ public abstract strictfp class ImporterJ
 
   List<String> getAllLinkBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, scala.Either<String, org.nlogo.api.AgentSet>> breeds = world.program().linkBreedsJ();
+    Map<String, org.nlogo.api.AgentSet> breeds = world.program().linkBreedsJ();
     if (breeds != null) {
-      for (Iterator<scala.Either<String, org.nlogo.api.AgentSet>> breedElt = breeds.values().iterator();
-           breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next().right().get();
+      for (Iterator<org.nlogo.api.AgentSet> iter = breeds.values().iterator(); iter.hasNext();) {
+        org.nlogo.api.AgentSet breed = iter.next();
         Seq<String> breedOwns =
           world.program().linkBreedsOwnJ().get(breed.printName());
         if (breedOwns != null) {
