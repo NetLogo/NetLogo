@@ -1126,10 +1126,13 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (org.nlogo.api.AgentSet breed : world.program().breedsJ().values()) {
-      if (breed == mybreed) {
+    scala.collection.Iterator<org.nlogo.api.Breed> iter =
+      world.program().breeds().values().iterator();
+    while(iter.hasNext()) {
+      if (iter.next().agents() == mybreed) {
         return j;
       }
+      j++;
     }
     // we might get here if the program fails to compile ev 9/2/08
     return 0;

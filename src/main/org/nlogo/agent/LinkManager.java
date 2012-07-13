@@ -106,8 +106,10 @@ public strictfp class LinkManager {
     Link link = (Link) world.links().getAgent(new DummyLink
         (world, src, dest, breed));
     if (link == null && includeAllLinks && breed == world.links()) {
-      for (org.nlogo.api.AgentSet next : world.program().linkBreedsJ().values()) {
-        link = (Link) world.links().getAgent(new DummyLink(world, src, dest, (AgentSet) next));
+      scala.collection.Iterator<org.nlogo.api.Breed> iter =
+        world.program().linkBreeds().values().iterator();
+      while(iter.hasNext()) {
+        link = (Link) world.links().getAgent(new DummyLink(world, src, dest, (AgentSet) iter.next().agents()));
         if (link != null) {
           return link;
         }

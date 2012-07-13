@@ -635,8 +635,10 @@ public strictfp class Link
       return 0;
     }
     int j = 1;
-    for (org.nlogo.api.AgentSet breed : world.program().linkBreedsJ().values()) {
-      if (breed == mybreed) {
+    scala.collection.Iterator<org.nlogo.api.Breed> iter =
+      world.program().linkBreeds().values().iterator();
+    while(iter.hasNext()) {
+      if (iter.next().agents() == mybreed) {
         return j;
       }
       j++;
