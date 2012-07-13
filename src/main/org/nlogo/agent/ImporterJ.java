@@ -964,9 +964,9 @@ public abstract strictfp class ImporterJ
   List<String> getAllBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
     for(org.nlogo.api.AgentSet breed : world.program().breedsJ().values()) {
-      Seq<String> breedOwns =
-        world.program().breedsOwn().get(breed.printName()).getOrElse(null);
-      if (breedOwns != null) {
+      org.nlogo.api.Breed found = world.program()._breeds().get(breed.printName()).getOrElse(null);
+      if (found != null) {
+        Seq<String> breedOwns = found.owns();
         for (int i = 0; i < breedOwns.size(); i++) {
           allBreedOwns.add(breedOwns.apply(i));
         }
@@ -978,9 +978,9 @@ public abstract strictfp class ImporterJ
   List<String> getAllLinkBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
     for (org.nlogo.api.AgentSet breed : world.program().linkBreedsJ().values()) {
-      Seq<String> breedOwns =
-        world.program().linkBreedsOwn().get(breed.printName()).getOrElse(null);
-      if (breedOwns != null) {
+      org.nlogo.api.Breed found = world.program()._linkBreeds().get(breed.printName()).getOrElse(null);
+      if (found != null) {
+        Seq<String> breedOwns = found.owns();
         for (int i = 0; i < breedOwns.size(); i++) {
           allBreedOwns.add(breedOwns.apply(i));
         }

@@ -938,16 +938,16 @@ public strictfp class World
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
-    Seq<String> breedOwns = _program.breedsOwn().apply(breed.printName());
+    Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
     return breedOwns.apply(index - _program.turtlesOwn().size());
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.breedsOwn().get(breed.printName()).getOrElse(null);
-    if (breedOwns == null) {
+    org.nlogo.api.Breed found = _program._breeds().get(breed.printName()).getOrElse(null);
+    if (found == null) {
       return -1;
     }
-    int result = breedOwns.indexOf(name);
+    int result = found.owns().indexOf(name);
     if (result == -1) {
       return -1;
     }
@@ -957,16 +957,16 @@ public strictfp class World
   }
 
   public String linkBreedsOwnNameAt(AgentSet breed, int index) {
-    Seq<String> breedOwns = _program.linkBreedsOwn().apply(breed.printName());
+    Seq<String> breedOwns = _program._linkBreeds().apply(breed.printName()).owns();
     return breedOwns.apply(index - _program.linksOwn().size());
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = _program.linkBreedsOwn().get(breed.printName()).getOrElse(null);
-    if (breedOwns == null) {
+    org.nlogo.api.Breed found = _program._linkBreeds().get(breed.printName()).getOrElse(null);
+    if (found == null) {
       return -1;
     }
-    int result = breedOwns.indexOf(name);
+    int result = found.owns().indexOf(name);
     if (result == -1) {
       return -1;
     }
@@ -977,11 +977,11 @@ public strictfp class World
    * used by Turtle.realloc()
    */
   int oldBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = oldBreedsOwn.get(breed.printName()).getOrElse(null);
-    if (breedOwns == null) {
+    org.nlogo.api.Breed found = oldBreeds.get(breed.printName()).getOrElse(null);
+    if (found == null) {
       return -1;
     }
-    int result = breedOwns.indexOf(name);
+    int result = found.owns().indexOf(name);
     if (result == -1) {
       return -1;
     }
@@ -992,11 +992,11 @@ public strictfp class World
    * used by Link.realloc()
    */
   int oldLinkBreedsOwnIndexOf(AgentSet breed, String name) {
-    Seq<String> breedOwns = oldLinkBreedsOwn.get(breed.printName()).getOrElse(null);
-    if (breedOwns == null) {
+    org.nlogo.api.Breed found = oldLinkBreeds.get(breed.printName()).getOrElse(null);
+    if (found == null) {
       return -1;
     }
-    int result = breedOwns.indexOf(name);
+    int result = found.owns().indexOf(name);
     if (result == -1) {
       return -1;
     }
@@ -1074,8 +1074,7 @@ public strictfp class World
     if (breed == _turtles) {
       return _program.turtlesOwn().size();
     } else {
-      Seq<String> breedOwns =
-          _program.breedsOwn().apply(breed.printName());
+      Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
       return _program.turtlesOwn().size() + breedOwns.size();
     }
   }
@@ -1084,8 +1083,7 @@ public strictfp class World
     if (breed == _links) {
       return _program.linksOwn().size();
     } else {
-      Seq<String> breedOwns =
-          _program.linkBreedsOwn().apply(breed.printName());
+      Seq<String> breedOwns = _program._linkBreeds().apply(breed.printName()).owns();
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1095,7 +1093,7 @@ public strictfp class World
       return _program.linksOwn().size();
     } else {
       Seq<String> breedOwns =
-          _program.linkBreedsOwn().apply(breed.printName());
+        _program._linkBreeds().apply(breed.printName()).owns();
       return _program.linksOwn().size() + breedOwns.size();
     }
   }
@@ -1126,8 +1124,7 @@ public strictfp class World
     if (breed == _turtles) {
       return false;
     }
-    Seq<String> breedOwns =
-        _program.breedsOwn().apply(breed.printName());
+    Seq<String> breedOwns = _program._breeds().apply(breed.printName()).owns();
     return breedOwns.contains(name);
   }
 
@@ -1136,7 +1133,7 @@ public strictfp class World
       return false;
     }
     Seq<String> breedOwns =
-        _program.linkBreedsOwn().apply(breed.printName());
+      _program._linkBreeds().apply(breed.printName()).owns();
     return breedOwns.contains(name);
   }
 
@@ -1172,14 +1169,10 @@ public strictfp class World
   Seq<String> oldPatchesOwn = noStrings;
   Seq<String> oldLinksOwn = noStrings;
 
-  Map<String, org.nlogo.api.AgentSet> oldBreeds =
-    new LinkedHashMap<String, org.nlogo.api.AgentSet>();
-  Map<String, org.nlogo.api.AgentSet> oldLinkBreeds =
-    new LinkedHashMap<String, org.nlogo.api.AgentSet>();
-  scala.collection.Map<String, Seq<String>> oldBreedsOwn =
-    newProgram().breedsOwn();
-  scala.collection.Map<String, Seq<String>> oldLinkBreedsOwn =
-    newProgram().linkBreedsOwn();
+  scala.collection.Map<String, org.nlogo.api.Breed> oldBreeds =
+    newProgram()._breeds();
+  scala.collection.Map<String, org.nlogo.api.Breed> oldLinkBreeds =
+    newProgram()._linkBreeds();
 
   public void rememberOldProgram() {
     // we could just keep the whole Program object around, but
@@ -1192,10 +1185,8 @@ public strictfp class World
     oldPatchesOwn = _program.patchesOwn();
     oldLinksOwn = _program.linksOwn();
     oldGlobals = _program.globals();
-    oldBreeds = _program.breedsJ();
-    oldLinkBreeds = _program.linkBreedsJ();
-    oldBreedsOwn = _program.breedsOwn();
-    oldLinkBreedsOwn = _program.linkBreedsOwn();
+    oldBreeds = _program._breeds();
+    oldLinkBreeds = _program._linkBreeds();
   }
 
   /// display on/off

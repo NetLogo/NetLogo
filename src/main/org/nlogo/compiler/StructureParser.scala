@@ -179,12 +179,12 @@ private class StructureParser(
                     "There is no breed named " + breedName,token)
             tokenBuffer.next()
             var linkbreed = false
-            if(program.breedsOwn.contains(breedName)) {
-              cAssert(program.breedsOwn(breedName).isEmpty,
+            if(program._breeds.contains(breedName)) {
+              cAssert(program._breeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
             }
-            else if(program.linkBreedsOwn.contains(breedName)) {
-              cAssert(program.linkBreedsOwn(breedName).isEmpty,
+            else if(program._linkBreeds.contains(breedName)) {
+              cAssert(program._linkBreeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
@@ -394,19 +394,19 @@ private class StructureParser(
   }
   private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
     if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
-      val keys = program.breedsOwn.keys.iterator
+      val keys = program._breeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program.breedsOwn(breedName)
+        val breedOwns = program._breeds(breedName).owns
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }
     }
     if(owningAgentClass == null || owningAgentClass == classOf[Turtle]) {
-      val keys = program.linkBreedsOwn.keys.iterator
+      val keys = program._linkBreeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
-        val breedOwns = program.linkBreedsOwn(breedName)
+        val breedOwns = program._linkBreeds(breedName).owns
         cAssert(!breedOwns.contains(varName),
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }

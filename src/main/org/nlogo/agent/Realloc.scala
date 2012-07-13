@@ -16,7 +16,7 @@ object Realloc {
     // create new agentsets for.  (if this is a first compile, all the breeds will be created.)  any
     // breeds that no longer exist are dropped.
     for(breedName <- program.breeds.keys) {
-      val breed = world.oldBreeds.get(breedName).asInstanceOf[AgentSet]
+      val breed = world.oldBreeds.get(breedName).map(_.agents).orNull
       val newBreed =
         if (breed == null)
           new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)
@@ -26,7 +26,7 @@ object Realloc {
     }
     for(breedName <- program.linkBreeds.keys) {
       val directed = program._linkBreeds(breedName).isDirected
-      var breed = Option(world.oldLinkBreeds.get(breedName)).map(_.asInstanceOf[AgentSet]).orNull
+      var breed = world.oldLinkBreeds.get(breedName).map(_.agents.asInstanceOf[AgentSet]).orNull
       if (breed == null)
         breed = new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)
       else // clear the lists first

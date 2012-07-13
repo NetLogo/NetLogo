@@ -47,15 +47,9 @@ case class Program private(
   def breeds: ListMap[String, Either[String, AgentSet]] =
     _breeds.map{case (name, breed) =>
       name -> Option(breed.agents).toRight(name)}
-  def breedsOwn: ListMap[String, Seq[String]] =
-    _breeds.map{case (name, breed) =>
-      name -> breed.owns}
   def linkBreeds: ListMap[String, Either[String, AgentSet]] =
     _linkBreeds.map{case (name, breed) =>
       name -> Option(breed.agents).toRight(name)}
-  def linkBreedsOwn: ListMap[String, Seq[String]] =
-    _linkBreeds.map{case (name, breed) =>
-      name -> breed.owns}
 
   // for convenience of Java callers
   def breedsJ: java.util.Map[String, AgentSet] =

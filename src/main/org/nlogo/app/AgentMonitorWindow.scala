@@ -153,7 +153,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
         val breed = agent.asInstanceOf[Turtle].getBreed
         if(breed != workspace.world.turtles())
           // careful, there might be a compiler error
-          breedVars = workspace.world.program.breedsOwn.get(breed.printName).getOrElse(Seq())
+          breedVars = workspace.world.program._breeds.get(breed.printName).map(_.owns).getOrElse(Seq())
       }
       workspace.world.program.turtlesOwn ++ breedVars
     }
@@ -176,7 +176,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
         val breed = agent.asInstanceOf[Link].getBreed
         if(breed != workspace.world.links())
           // careful, there might be a compiler error
-          breedVars = workspace.world.program.linkBreedsOwn.get(breed.printName).getOrElse(Seq())
+          breedVars = workspace.world.program._linkBreeds.get(breed.printName).map(_.owns).getOrElse(Seq())
       }
       workspace.world.program.linksOwn ++ breedVars
     }
