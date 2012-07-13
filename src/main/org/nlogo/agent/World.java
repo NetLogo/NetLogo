@@ -1041,14 +1041,13 @@ public strictfp class World
     if (breed == _turtles) {
       return "TURTLE";
     }
-
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.breedsSingularJ().entrySet()) {
-      if (entry.getValue().equals(breedName)) {
-        return entry.getKey();
-      }
+    for (scala.collection.Iterator<scala.Tuple2<String, String>> iter = _program.breedsSingular().iterator();
+         iter.hasNext(); ) {
+      scala.Tuple2<String, String> entry = iter.next();
+      if (entry._2().equals(breedName))
+        return entry._1();
     }
-
     return "TURTLE";
   }
 
@@ -1056,14 +1055,13 @@ public strictfp class World
     if (breed == _links) {
       return "LINK";
     }
-
     String breedName = breed.printName();
-    for (Map.Entry<String, String> entry : _program.linkBreedsSingularJ().entrySet()) {
-      if (entry.getValue().equals(breedName)) {
-        return entry.getKey();
-      }
+    for (scala.collection.Iterator<scala.Tuple2<String, String>> iter = _program.linkBreedsSingular().iterator();
+         iter.hasNext(); ) {
+      scala.Tuple2<String, String> entry = iter.next();
+      if (entry._2().equals(breedName))
+        return entry._1();
     }
-
     return "LINK";
   }
 

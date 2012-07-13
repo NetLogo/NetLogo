@@ -46,10 +46,8 @@ case class Program private(
   // for convenience of Java callers
   def breedsJ: java.util.Map[String, AgentSet] =
     breeds.collect{case (name, Right(agents)) => name -> agents}.asJava
-  def breedsSingularJ: java.util.Map[String, String] = breedsSingular.asJava
   def linkBreedsJ: java.util.Map[String, AgentSet] =
     linkBreeds.collect{case (name, Right(agents)) => name -> agents}.asJava
-  def linkBreedsSingularJ: java.util.Map[String, String] = linkBreedsSingular.asJava
   def breedsOwnJ: java.util.Map[String, Seq[String]] = breedsOwn.asJava
   def linkBreedsOwnJ: java.util.Map[String, Seq[String]] = linkBreedsOwn.asJava
   def withInterfaceGlobals(interfaceGlobals: java.util.List[String]) =
