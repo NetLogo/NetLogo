@@ -13,6 +13,7 @@ object Program {
       linksOwn = AgentVariables.getImplicitLinkVariables)
   private val empty3D =
     Program(
+      is3D = true,
       turtlesOwn = AgentVariables.getImplicitTurtleVariables(true),
       patchesOwn = AgentVariables.getImplicitPatchVariables(true),
       linksOwn = AgentVariables.getImplicitLinkVariables)
