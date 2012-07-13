@@ -1038,31 +1038,15 @@ public strictfp class World
   }
 
   public String getBreedSingular(AgentSet breed) {
-    if (breed == _turtles) {
-      return "TURTLE";
-    }
-    String breedName = breed.printName();
-    for (scala.collection.Iterator<scala.Tuple2<String, String>> iter = _program.breedsSingular().iterator();
-         iter.hasNext(); ) {
-      scala.Tuple2<String, String> entry = iter.next();
-      if (entry._2().equals(breedName))
-        return entry._1();
-    }
-    return "TURTLE";
+    return breed == _turtles
+      ? "TURTLE"
+      : _program._breeds().apply(breed.printName()).singular();
   }
 
   public String getLinkBreedSingular(AgentSet breed) {
-    if (breed == _links) {
-      return "LINK";
-    }
-    String breedName = breed.printName();
-    for (scala.collection.Iterator<scala.Tuple2<String, String>> iter = _program.linkBreedsSingular().iterator();
-         iter.hasNext(); ) {
-      scala.Tuple2<String, String> entry = iter.next();
-      if (entry._2().equals(breedName))
-        return entry._1();
-    }
-    return "LINK";
+    return breed == _links
+      ? "LINK"
+      : _program._linkBreeds().apply(breed.printName()).singular();
   }
 
   // assumes caller has already checked to see if the breeds are equal

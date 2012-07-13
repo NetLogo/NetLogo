@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ ErrorSource, ExtensionManager, Let,
+import org.nlogo.api.{ Breed, ErrorSource, ExtensionManager, Let,
                        Program, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
@@ -122,13 +122,11 @@ private class StructureParser(
           finally { cAssert(breedList.size == 1 || breedList.size == 2,
                             "breed only takes 1 or 2 inputs",token) }
           val breedName = breedList(0)
+          val singular =
+            if(breedList.size == 2) breedList(1)
+            else "TURTLE"
           program = program.copy(
-            // will replace with Right(agentset) at realloc time
-            breeds = program.breeds.updated(breedName, Left(breedName)),
-            breedsOwn = program.breedsOwn.updated(breedName, Seq()))
-          if(breedList.size == 2)
-            program = program.copy(
-              breedsSingular = program.breedsSingular.updated(breedList(1), breedName))
+            _breeds = program._breeds.updated(breedName, Breed(breedName, singular)))
         }
         else {
           cAssert(token.tyype == TokenType.KEYWORD,"Expected keyword",token)
@@ -140,13 +138,12 @@ private class StructureParser(
             val breedList = parseVarList(null, null)
             cAssert(breedList.size == 2, keyword + " only takes 2 inputs", token)
             val breedName = breedList(0)
-            // will replace with agentset at realloc time
+            val singular =
+              if(breedList.size == 2) breedList(1)
+              else "LINK"
             program = program.copy(
-              linkBreeds = program.linkBreeds.updated(breedName, Left(keyword)),
-              linkBreedsOwn = program.linkBreedsOwn.updated(breedName, Seq()))
-            if(breedList.size == 2)
-              program = program.copy(
-                linkBreedsSingular = program.linkBreedsSingular.updated(breedList(1), breedName))
+              _linkBreeds = program._linkBreeds.updated(
+                breedName, Breed(breedName, singular, isDirected = keyword == "DIRECTED-LINK-BREED")))
           }
           else if(keyword == "TURTLES-OWN") {
             cAssert(!haveTurtlesOwn,"Redeclaration of TURTLES-OWN",token)
@@ -193,10 +190,12 @@ private class StructureParser(
             }
             if(linkbreed)
               program = program.copy(
-                linkBreedsOwn = program.linkBreedsOwn.updated(breedName, parseVarList(classOf[Link], null)))
+                _linkBreeds = program._linkBreeds.updated(
+                  breedName, program._linkBreeds(breedName).copy(owns = parseVarList(classOf[Link], null))))
             else
               program = program.copy(
-                breedsOwn = program.breedsOwn.updated(breedName, parseVarList(classOf[Turtle], null)))
+                _breeds = program._breeds.updated(
+                  breedName, program._breeds(breedName).copy(owns = parseVarList(classOf[Turtle], null))))
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)

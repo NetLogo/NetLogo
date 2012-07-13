@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{AgentSet,Program,Token,TokenType}
+import org.nlogo.api.{AgentSet,Breed,Program,Token,TokenType}
 import org.nlogo.nvm.Instruction
 
 // The Helper class and some of the methods aren't private because we want to get at them from
@@ -17,17 +17,13 @@ private object BreedIdentifierHandler {
   }
   def turtle(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.breeds, _.breedsSingular, (obj: Either[String, AgentSet]) => true)
+               _._breeds, _ => true)
   def directedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.linkBreeds, _.linkBreedsSingular,
-               { case Right(a) => a.isDirected
-                 case Left(s) => s == "DIRECTED-LINK-BREED" } )
+               _._linkBreeds, _.isDirected)
   def undirectedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.linkBreeds, _.linkBreedsSingular,
-               { case Right(a) => a.isUndirected
-                 case Left(s) => s == "UNDIRECTED-LINK-BREED" } )
+               _._linkBreeds, !_.isDirected)
   private val handlers2D = handlers(false)
   private val handlers3D = handlers(true)
   private def handlers(is3D:Boolean) = List(
@@ -74,8 +70,7 @@ private object BreedIdentifierHandler {
   )
   class Helper
     (patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction],
-     breeds:(Program)=>collection.Map[String,Either[String, AgentSet]],singularMap:(Program)=>collection.Map[String,String],
-     isValidBreed:(Either[String, AgentSet])=>Boolean)
+     breeds:(Program)=>collection.Map[String,Breed],isValidBreed:(Breed)=>Boolean)
   {
     import java.util.regex.Pattern
     val pattern = Pattern.compile("\\A"+patternString.replaceAll("\\?","\\\\?").replaceAll("\\*","(.+)")+"\\Z")
@@ -83,11 +78,12 @@ private object BreedIdentifierHandler {
       val matcher = pattern.matcher(tok.value.asInstanceOf[String])
       if(!matcher.matches()) return None
       val name = matcher.group(1)
-      val map = if(singular) singularMap(program) else breeds(program)
-      if(!map.contains(name)) return None
-      val breedName = if(singular) map(name).asInstanceOf[String] else name
-      if(!isValidBreed(breeds(program)(breedName))) return None
-      val instr = Instantiator.newInstance[Instruction](primClass,breedName)
+      val breed =
+        breeds(program).values
+          .find{breed => name == (if (singular) breed.singular else breed.name)}
+          .getOrElse(return None)
+      if (!isValidBreed(breed)) return None
+      val instr = Instantiator.newInstance[Instruction](primClass,breed.name)
       val tok2 = new Token(tok.value.asInstanceOf[String],tokenType,instr)(tok.startPos,tok.endPos,tok.fileName)
       instr.token(tok2)
       Some(tok2)

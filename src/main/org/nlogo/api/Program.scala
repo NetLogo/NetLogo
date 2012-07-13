@@ -35,22 +35,37 @@ case class Program private(
   turtlesOwn: Seq[String] = Seq(),
   patchesOwn: Seq[String] = Seq(),
   linksOwn: Seq[String] = Seq(),
-  breeds: ListMap[String, Either[String, AgentSet]] = ListMap(),
-  breedsSingular: ListMap[String, String] = ListMap(),
-  linkBreeds: ListMap[String, Either[String, AgentSet]] = ListMap(),
-  linkBreedsSingular: ListMap[String, String] = ListMap(),
-  breedsOwn: ListMap[String, Seq[String]] = ListMap(),
-  linkBreedsOwn: ListMap[String, Seq[String]] = ListMap()) {
+  _breeds: ListMap[String, Breed] = ListMap(),
+  _linkBreeds: ListMap[String, Breed] = ListMap()) {
 
   def globals: Seq[String] =
     AgentVariables.getImplicitObserverVariables ++
       interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
+  // these six methods are for backwards compatibility with code that
+  // doesn't know about the new api.Breed class yet - ST 7/13/12
+  def breeds: ListMap[String, Either[String, AgentSet]] =
+    _breeds.map{case (name, breed) =>
+      name -> Option(breed.agents).toRight(name)}
+  def breedsOwn: ListMap[String, Seq[String]] =
+    _breeds.map{case (name, breed) =>
+      name -> breed.owns}
+  def linkBreeds: ListMap[String, Either[String, AgentSet]] =
+    _linkBreeds.map{case (name, breed) =>
+      name -> Option(breed.agents).toRight(name)}
+  def linkBreedsOwn: ListMap[String, Seq[String]] =
+    _linkBreeds.map{case (name, breed) =>
+      name -> breed.owns}
+
   // for convenience of Java callers
   def breedsJ: java.util.Map[String, AgentSet] =
-    breeds.collect{case (name, Right(agents)) => name -> agents}.asJava
+    _breeds.collect{
+      case (name, breed) if breed.agents != null =>
+        name -> breed.agents}.asJava
   def linkBreedsJ: java.util.Map[String, AgentSet] =
-    linkBreeds.collect{case (name, Right(agents)) => name -> agents}.asJava
+    _linkBreeds.collect{
+      case (name, breed) if breed.agents != null =>
+        name -> breed.agents}.asJava
 
   // for testing/debugging
   def dump = {
@@ -71,10 +86,8 @@ case class Program private(
       "turtles-own " + seq(turtlesOwn) + "\n" +
       "patches-own " + seq(patchesOwn) + "\n" +
       "links-own " + seq(linksOwn) + "\n" +
-      "breeds " + map(breeds) + "\n" +
-      "breeds-own " + map(breedsOwn) + "\n" +
-      "link-breeds " + map(linkBreeds) + "\n" +
-      "link-breeds-own " + map(linkBreedsOwn) + "\n"
+      "breeds " + map(_breeds) + "\n" +
+      "link-breeds " + map(_linkBreeds) + "\n"
   }
 
 }
