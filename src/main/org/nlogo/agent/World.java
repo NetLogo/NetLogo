@@ -17,12 +17,8 @@ import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
 import org.nlogo.util.MersenneTwisterFast;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import scala.collection.Seq;
@@ -704,11 +700,13 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    for (org.nlogo.api.AgentSet breed : _program.breedsJ().values()) {
-      ((AgentSet) breed).clear();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.breeds().values().iterator();
+         iter.hasNext();) {
+      ((AgentSet) iter.next().agents()).clear();
     }
-    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
-      ((AgentSet) breed).clear();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.linkBreeds().values().iterator();
+         iter.hasNext();) {
+      ((AgentSet) iter.next().agents()).clear();
     }
 
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
@@ -803,8 +801,9 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    for (org.nlogo.api.AgentSet breed : _program.breedsJ().values()) {
-      ((AgentSet) breed).clear();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.breeds().values().iterator();
+         iter.hasNext();) {
+      ((AgentSet) iter.next().agents()).clear();
     }
     for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
@@ -821,8 +820,9 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
-      ((AgentSet) breed).clear();
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.linkBreeds().values().iterator();
+         iter.hasNext();) {
+      ((AgentSet) iter.next().agents()).clear();
     }
     for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
       Link link = (Link) iter.next();
@@ -1022,19 +1022,31 @@ public strictfp class World
   /// breeds & shapes
 
   public boolean isBreed(AgentSet breed) {
-    return _program.breedsJ().containsValue(breed);
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.breeds().values().iterator();
+         iter.hasNext();) {
+      if (iter.next().agents() == breed) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public boolean isLinkBreed(AgentSet breed) {
-    return _program.linkBreedsJ().containsValue(breed);
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.linkBreeds().values().iterator();
+         iter.hasNext();) {
+      if (iter.next().agents() == breed) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public AgentSet getBreed(String breedName) {
-    return (AgentSet) _program.breedsJ().get(breedName);
+    return (AgentSet) _program.breeds().apply(breedName).agents();
   }
 
   public AgentSet getLinkBreed(String breedName) {
-    return (AgentSet) _program.linkBreedsJ().get(breedName);
+    return (AgentSet) _program.linkBreeds().apply(breedName).agents();
   }
 
   public String getBreedSingular(AgentSet breed) {
@@ -1051,7 +1063,9 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = _program.linkBreeds().values().iterator();
+         iter.hasNext();) {
+      org.nlogo.api.AgentSet breed = iter.next().agents();
       if (breed == breed1) {
         return -1;
       } else if (breed == breed2) {
