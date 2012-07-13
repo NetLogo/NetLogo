@@ -1126,8 +1126,8 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<org.nlogo.api.AgentSet> iter = world.program().breedsJ().values().iterator(); iter.hasNext(); j++) {
-      if (mybreed == iter.next()) {
+    for (org.nlogo.api.AgentSet breed : world.program().breedsJ().values()) {
+      if (breed == mybreed) {
         return j;
       }
     }

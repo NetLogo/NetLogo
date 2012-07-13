@@ -963,17 +963,12 @@ public abstract strictfp class ImporterJ
   //returns a List containing all the breed variables for this model
   List<String> getAllBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, org.nlogo.api.AgentSet> breeds = world.program().breedsJ();
-    if (breeds != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = breeds.values().iterator();
-           iter.hasNext();) {
-        org.nlogo.api.AgentSet breed = iter.next();
-        Seq<String> breedOwns =
-          world.program().breedsOwnJ().get(breed.printName());
-        if (breedOwns != null) {
-          for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.apply(i));
-          }
+    for(org.nlogo.api.AgentSet breed : world.program().breedsJ().values()) {
+      Seq<String> breedOwns =
+        world.program().breedsOwnJ().get(breed.printName());
+      if (breedOwns != null) {
+        for (int i = 0; i < breedOwns.size(); i++) {
+          allBreedOwns.add(breedOwns.apply(i));
         }
       }
     }
@@ -982,16 +977,12 @@ public abstract strictfp class ImporterJ
 
   List<String> getAllLinkBreedVars() {
     List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, org.nlogo.api.AgentSet> breeds = world.program().linkBreedsJ();
-    if (breeds != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = breeds.values().iterator(); iter.hasNext();) {
-        org.nlogo.api.AgentSet breed = iter.next();
-        Seq<String> breedOwns =
-          world.program().linkBreedsOwnJ().get(breed.printName());
-        if (breedOwns != null) {
-          for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.apply(i));
-          }
+    for (org.nlogo.api.AgentSet breed : world.program().linkBreedsJ().values()) {
+      Seq<String> breedOwns =
+        world.program().linkBreedsOwnJ().get(breed.printName());
+      if (breedOwns != null) {
+        for (int i = 0; i < breedOwns.size(); i++) {
+          allBreedOwns.add(breedOwns.apply(i));
         }
       }
     }

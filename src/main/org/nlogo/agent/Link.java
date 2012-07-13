@@ -635,8 +635,8 @@ public strictfp class Link
       return 0;
     }
     int j = 1;
-    for (Iterator<org.nlogo.api.AgentSet> iter = world.program().linkBreedsJ().values().iterator(); iter.hasNext();) {
-      if (mybreed == iter.next()) {
+    for (org.nlogo.api.AgentSet breed : world.program().linkBreedsJ().values()) {
+      if (breed == mybreed) {
         return j;
       }
       j++;

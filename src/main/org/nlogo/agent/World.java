@@ -704,18 +704,13 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    if (_program.breedsJ() != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = _program.breedsJ().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
-      }
+    for (org.nlogo.api.AgentSet breed : _program.breedsJ().values()) {
+      ((AgentSet) breed).clear();
     }
-    if (_program.linkBreeds() != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
-      }
+    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
+      ((AgentSet) breed).clear();
     }
+
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
     _links = new TreeAgentSet(Link.class, "LINKS", this);
 
@@ -808,11 +803,8 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    if (_program.breedsJ() != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = _program.breedsJ().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
-      }
+    for (org.nlogo.api.AgentSet breed : _program.breedsJ().values()) {
+      ((AgentSet) breed).clear();
     }
     for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
@@ -829,11 +821,8 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    if (_program.linkBreedsJ() != null) {
-      for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
-      }
+    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
+      ((AgentSet) breed).clear();
     }
     for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
       Link link = (Link) iter.next();
@@ -1080,12 +1069,10 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (Iterator<org.nlogo.api.AgentSet> iter = _program.linkBreedsJ().values().iterator();
-         iter.hasNext();) {
-      org.nlogo.api.AgentSet next = iter.next();
-      if (next == breed1) {
+    for (org.nlogo.api.AgentSet breed : _program.linkBreedsJ().values()) {
+      if (breed == breed1) {
         return -1;
-      } else if (next == breed2) {
+      } else if (breed == breed2) {
         return 1;
       }
     }
