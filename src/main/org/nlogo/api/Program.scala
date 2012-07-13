@@ -42,7 +42,7 @@ case class Program private(
     AgentVariables.getImplicitObserverVariables ++
       interfaceGlobals.map(_.toUpperCase) ++ userGlobals
 
-  // for convenience of Java callers
+  // for convenience of Java callers. could/should be eliminated
   def breedsJ: java.util.Map[String, AgentSet] =
     breeds.collect{
       case (name, breed) if breed.agents != null =>
@@ -57,15 +57,9 @@ case class Program private(
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
     def map(xs: collection.Map[_, _]) =
-      xs.map(mapEntry)
+      xs.map{case (k, v) => k + " = " + v}
         .mkString("", "\n", "\n")
         .trim
-    def mapEntry[K, V](pair: (K, V)): String =
-      pair._1.toString + " = " +
-        (pair._2 match {
-          case xs: Seq[_] => xs.mkString("[", ", ", "]")
-          case x => x.toString
-        })
     "globals " + seq(globals) + "\n" +
       "interfaceGlobals " + seq(interfaceGlobals) + "\n" +
       "turtles-own " + seq(turtlesOwn) + "\n" +
