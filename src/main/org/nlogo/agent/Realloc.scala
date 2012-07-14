@@ -3,6 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.api.Program
+import collection.JavaConverters._
 
 // this exists to support recompiling a model without causing agent state information to be lost.
 // it is called after a successful recompilation.
@@ -11,29 +12,25 @@ object Realloc {
 
   def realloc(world: World) {
     import world.program
-    // copy the breed agentsets from the old Program object from the previous compile to the new
-    // Program object that was created when we recompiled.  any new breeds that were created, we
-    // create new agentsets for.  (if this is a first compile, all the breeds will be created.)  any
-    // breeds that no longer exist are dropped.
-    for(breedName <- program.breeds.keys) {
-      val breed = world.oldProgram.breeds.get(breedName).map(_.agents).orNull
-      val newBreed =
-        if (breed == null)
-          new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)
-        else
-          breed
-      program.breeds(breedName).agents = newBreed
-    }
-    for(breedName <- program.linkBreeds.keys) {
-      val directed = program.linkBreeds(breedName).isDirected
-      var breed = world.oldProgram.linkBreeds.get(breedName).map(_.agents.asInstanceOf[AgentSet]).orNull
-      if (breed == null)
-        breed = new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)
-      else // clear the lists first
-        breed.clearDirected()
-      program.linkBreeds(breedName).agents = breed
-      breed.setDirected(directed)
-    }
+    // remove agentsets for breeds that no longer exist, if any
+    for(name <- world.breedAgents.asScala.keys)
+      if(!program.breeds.contains(name))
+        world.breedAgents.remove(name)
+    for(name <- world.linkBreedAgents.asScala.keys)
+      if(!program.linkBreeds.contains(name))
+        world.linkBreedAgents.remove(name)
+    // make agentsets for new breeds
+    for(breedName <- program.breeds.keys)
+      world.breedAgents.put(breedName,
+        Option(world.breedAgents.get(breedName)).getOrElse(
+          new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)))
+    for(breedName <- program.linkBreeds.keys)
+      world.linkBreedAgents.put(breedName,
+        Option(world.linkBreedAgents.get(breedName)).getOrElse(
+          new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)))
+    // make sure directednesses are up-to-date
+    for((name, breed) <- program.linkBreeds)
+      world.linkBreedAgents.get(name).setDirected(breed.isDirected)
     // call Agent.realloc() on all the turtles
     val doomedAgents = collection.mutable.Buffer[Agent]()
     if (world.turtles != null) {

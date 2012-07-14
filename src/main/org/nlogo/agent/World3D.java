@@ -227,10 +227,13 @@ public final strictfp class World3D
     _maxPycorBoxed = Double.valueOf(_maxPycor);
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
-    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = program().breeds().values().iterator();
-         iter.hasNext();) {
-      ((AgentSet) iter.next().agents()).clear();
+    for(AgentSet agents : breedAgents.values()) {
+        agents.clear();
     }
+    for(AgentSet agents : linkBreedAgents.values()) {
+        agents.clear();
+    }
+
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
     _links = new TreeAgentSet(Link.class, "LINKS", this);
 

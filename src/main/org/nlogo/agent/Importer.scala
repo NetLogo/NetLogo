@@ -56,6 +56,6 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
   }
 
   def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] =
-    breeds.values.filter(_.agents != null).flatMap(_.owns).toSeq.asJava
+    breeds.values.flatMap(_.owns).toSeq.asJava
 
 }

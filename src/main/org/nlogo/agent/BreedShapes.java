@@ -34,9 +34,9 @@ public strictfp class BreedShapes {
       }
       Map<String, String> newBreedShapes =
           new HashMap<String, String>();
-      for (scala.collection.Iterator<org.nlogo.api.Breed> iter = breeds.values().iterator();
+      for (scala.collection.Iterator<String> iter = breeds.keys().iterator();
            iter.hasNext();) {
-        String breedName = iter.next().agents().printName();
+        String breedName = iter.next();
         String oldShape = shapes.get(breedName);
         newBreedShapes.put(breedName,
             oldShape == null

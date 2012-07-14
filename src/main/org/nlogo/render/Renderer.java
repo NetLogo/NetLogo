@@ -53,9 +53,9 @@ public strictfp class Renderer
   @Override
   protected void paintLinks(GraphicsInterface g, double patchSize) {
     int linksDrawn = 0;
-    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = world.program().linkBreeds().values().iterator();
+    for (scala.collection.Iterator<String> iter = world.program().linkBreeds().keys().iterator();
          iter.hasNext();) {
-      AgentSet breed = iter.next().agents();
+      AgentSet breed = world.getLinkBreed(iter.next());
       for (Agent a : breed.agents()) {
         linkDrawer.drawLink(g, topology, (Link) a, patchSize, false);
         linksDrawn++;
@@ -79,9 +79,9 @@ public strictfp class Renderer
   protected void paintTurtles(GraphicsInterface g, double patchSize) {
     int turtlesDrawn = 0;
     // traverse breeds in reverse order of declaration
-    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = world.program().breeds().values().iterator();
+    for (scala.collection.Iterator<String> iter = world.program().breeds().keys().iterator();
          iter.hasNext();) {
-      AgentSet breed = iter.next().agents();
+      AgentSet breed = world.getBreed(iter.next());
       if (Turtle.class.isAssignableFrom(breed.type())) {
         for (Agent a : breed.agents()) {
           turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);

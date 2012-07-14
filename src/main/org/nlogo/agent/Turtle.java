@@ -1126,10 +1126,10 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    scala.collection.Iterator<org.nlogo.api.Breed> iter =
-      world.program().breeds().values().iterator();
+    scala.collection.Iterator<String> iter =
+      world.program().breeds().keys().iterator();
     while(iter.hasNext()) {
-      if (iter.next().agents() == mybreed) {
+      if (world.breedAgents.get(iter.next()) == mybreed) {
         return j;
       }
       j++;
