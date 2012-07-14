@@ -128,6 +128,8 @@ public strictfp class World
 
   /// breeds
 
+  // careful, these are HashMap not LinkedHashMap, order is arbitrary.
+  // if order matters just look up, don't traverse. - ST 7/13/12
   public java.util.Map<String, AgentSet> breedAgents =
     new java.util.HashMap<String, AgentSet>();
   public java.util.Map<String, AgentSet> linkBreedAgents =
@@ -1064,7 +1066,9 @@ public strictfp class World
 
   // assumes caller has already checked to see if the breeds are equal
   public int compareLinkBreeds(AgentSet breed1, AgentSet breed2) {
-    for (AgentSet breed : linkBreedAgents.values()) {
+    for(scala.collection.Iterator<String> iter = _program.linkBreeds().keys().iterator();
+        iter.hasNext();) {
+      AgentSet breed = linkBreedAgents.get(iter.next());
       if (breed == breed1) {
         return -1;
       } else if (breed == breed2) {
