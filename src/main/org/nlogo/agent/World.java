@@ -946,7 +946,7 @@ public strictfp class World
   }
 
   public int breedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = _program.breeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = orNull(_program.breeds().get(breed.printName()));
     if (found == null) {
       return -1;
     }
@@ -965,7 +965,7 @@ public strictfp class World
   }
 
   public int linkBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = _program.linkBreeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = orNull(_program.linkBreeds().get(breed.printName()));
     if (found == null) {
       return -1;
     }
@@ -980,7 +980,7 @@ public strictfp class World
    * used by Turtle.realloc()
    */
   int oldBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = oldProgram.breeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = orNull(oldProgram.breeds().get(breed.printName()));
     if (found == null) {
       return -1;
     }
@@ -995,7 +995,7 @@ public strictfp class World
    * used by Link.realloc()
    */
   int oldLinkBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = oldProgram.linkBreeds().get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = orNull(oldProgram.linkBreeds().get(breed.printName()));
     if (found == null) {
       return -1;
     }
@@ -1232,6 +1232,11 @@ public strictfp class World
 
   public scala.collection.Iterator<Object> allStoredValues() {
     return AllStoredValues.apply(this);
+  }
+
+  // I don't seem to be able to call Option.orNull or Option.getOrElse from Java - ST 7/13/12
+  private <T> T orNull(scala.Option<T> opt) {
+    return opt.isDefined() ? opt.get() : null;
   }
 
 }
