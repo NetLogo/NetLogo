@@ -930,11 +930,11 @@ public strictfp class World
   }
 
   int oldTurtlesOwnIndexOf(String name) {
-    return oldTurtlesOwn.indexOf(name);
+    return oldProgram.turtlesOwn().indexOf(name);
   }
 
   int oldLinksOwnIndexOf(String name) {
-    return oldLinksOwn.indexOf(name);
+    return oldProgram.linksOwn().indexOf(name);
   }
 
   public String breedsOwnNameAt(org.nlogo.api.AgentSet breed, int index) {
@@ -977,7 +977,7 @@ public strictfp class World
    * used by Turtle.realloc()
    */
   int oldBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = oldBreeds.get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = oldProgram.breeds().get(breed.printName()).getOrElse(null);
     if (found == null) {
       return -1;
     }
@@ -985,14 +985,14 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return oldTurtlesOwn.size() + result;
+    return oldProgram.turtlesOwn().size() + result;
   }
 
   /**
    * used by Link.realloc()
    */
   int oldLinkBreedsOwnIndexOf(AgentSet breed, String name) {
-    org.nlogo.api.Breed found = oldLinkBreeds.get(breed.printName()).getOrElse(null);
+    org.nlogo.api.Breed found = oldProgram.linkBreeds().get(breed.printName()).getOrElse(null);
     if (found == null) {
       return -1;
     }
@@ -1000,7 +1000,7 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return oldLinksOwn.size() + result;
+    return oldProgram.linksOwn().size() + result;
   }
 
   public String patchesOwnNameAt(int index) {
@@ -1172,35 +1172,21 @@ public strictfp class World
           ("World.program cannot be set to null");
     }
     _program = program;
+    // not really sure if this is necessary - ST 7/13/12
+    for (scala.collection.Iterator<org.nlogo.api.Breed> iter = oldProgram.breeds().values().iterator();
+         iter.hasNext();) {
+      iter.next().agents_$eq(null);
+    }
   }
 
   protected Program newProgram() {
     return Program.empty(false);
   }
 
-  Seq<String> oldGlobals = noStrings;
-  Seq<String> oldTurtlesOwn = noStrings;
-  Seq<String> oldPatchesOwn = noStrings;
-  Seq<String> oldLinksOwn = noStrings;
-
-  scala.collection.Map<String, org.nlogo.api.Breed> oldBreeds =
-    newProgram().breeds();
-  scala.collection.Map<String, org.nlogo.api.Breed> oldLinkBreeds =
-    newProgram().linkBreeds();
+  Program oldProgram = newProgram();
 
   public void rememberOldProgram() {
-    // we could just keep the whole Program object around, but
-    // that would mean all the Procedure objects couldn't be
-    // GC'ed, which could possibly lead to a PermGen shortage.
-    // that's just a hypothesis, about the PermGen, but in any
-    // case only keeping the info we need will certainly reduce
-    // overall RAM usage - ST 12/4/07
-    oldTurtlesOwn = _program.turtlesOwn();
-    oldPatchesOwn = _program.patchesOwn();
-    oldLinksOwn = _program.linksOwn();
-    oldGlobals = _program.globals();
-    oldBreeds = _program.breeds();
-    oldLinkBreeds = _program.linkBreeds();
+    oldProgram = program();
   }
 
   /// display on/off

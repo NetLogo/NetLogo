@@ -16,7 +16,7 @@ object Realloc {
     // create new agentsets for.  (if this is a first compile, all the breeds will be created.)  any
     // breeds that no longer exist are dropped.
     for(breedName <- program.breeds.keys) {
-      val breed = world.oldBreeds.get(breedName).map(_.agents).orNull
+      val breed = world.oldProgram.breeds.get(breedName).map(_.agents).orNull
       val newBreed =
         if (breed == null)
           new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)
@@ -26,7 +26,7 @@ object Realloc {
     }
     for(breedName <- program.linkBreeds.keys) {
       val directed = program.linkBreeds(breedName).isDirected
-      var breed = world.oldLinkBreeds.get(breedName).map(_.agents.asInstanceOf[AgentSet]).orNull
+      var breed = world.oldProgram.linkBreeds.get(breedName).map(_.agents.asInstanceOf[AgentSet]).orNull
       if (breed == null)
         breed = new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)
       else // clear the lists first
@@ -60,7 +60,7 @@ object Realloc {
     // call Agent.realloc() on all the patches
     // Note: we only need to realloc() if the patch variables have changed.
     //  ~Forrest ( 5/2/2007)
-    if (world.patches != null && program.patchesOwn != world.oldPatchesOwn) {
+    if (world.patches != null && program.patchesOwn != world.oldProgram.patchesOwn) {
       val iter = world.patches.iterator
       while(iter.hasNext)
         iter.next().realloc(true)
