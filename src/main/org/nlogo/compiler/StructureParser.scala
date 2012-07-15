@@ -182,7 +182,7 @@ private class StructureParser(
             cAssert(program.breeds.contains(breedName) || program.linkBreeds.contains(breedName),
                     "There is no breed named " + breedName,token)
             tokenBuffer.next()
-            var linkbreed = false
+            var isLinkBreed = false
             if(program.breeds.contains(breedName)) {
               cAssert(program.breeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
@@ -190,36 +190,9 @@ private class StructureParser(
             else if(program.linkBreeds.contains(breedName)) {
               cAssert(program.linkBreeds(breedName).owns.isEmpty,
                       "Redeclaration of " + keyword, token)
-              linkbreed = true
+              isLinkBreed = true
             }
-            // a bit of unpleasantness here is that (as I only belatedly discovered) ListMap.updated
-            // doesn't preserve the ordering of existing keys, which is bad for us because we need
-            // to preserve the declaration order of breeds because later in Renderer it's going to
-            // determine the z-ordering of turtles in the view.  so we resort to a bit of ugliness
-            // here: remember the order the keys were in, then after we've updated the map, restore
-            // the original order. - ST 7/14/12
-            if(linkbreed) {
-              val keys = program.linkBreeds.keys.toSeq
-              program = program.copy(
-                linkBreeds = program.linkBreeds.updated(
-                  breedName, program.linkBreeds(breedName).copy(
-                    owns = parseVarList(classOf[Link], null))))
-              program = program.copy(
-                linkBreeds = collection.immutable.ListMap(keys.map{k =>
-                  (k, program.linkBreeds(k))}.toSeq: _*))
-              assert(keys sameElements program.linkBreeds.keys)
-            }
-            else {
-              val keys = program.breeds.keys.toSeq
-              program = program.copy(
-                breeds = program.breeds.updated(
-                  breedName, program.breeds(breedName).copy(
-                    owns = parseVarList(classOf[Turtle], null))))
-              program = program.copy(
-                breeds = collection.immutable.ListMap(keys.map{k =>
-                  (k, program.breeds(k))}.toSeq: _*))
-              assert(keys sameElements program.breeds.keys)
-            }
+            program = updateBreedOwns(breedName, isLinkBreed)
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)
@@ -268,6 +241,36 @@ private class StructureParser(
     if(!subprogram)
       extensionManager.finishFullCompilation()
     new StructureParser.Results(program, newProcedures, tokensMap.toMap)
+  }
+  private def updateBreedOwns(breedName: String, isLinkBreed: Boolean): Program = {
+    import collection.immutable.ListMap
+    type BreedMap = ListMap[String, Breed]
+    // a bit of unpleasantness here is that (as I only belatedly discovered) ListMap.updated
+    // doesn't preserve the ordering of existing keys, which is bad for us because we need
+    // to preserve the declaration order of breeds because later in Renderer it's going to
+    // determine the z-ordering of turtles in the view.  so we resort to a bit of ugliness
+    // here: remember the order the keys were in, then after we've updated the map, restore
+    // the original order. - ST 7/14/12
+    def orderPreservingUpdate(breedMap: BreedMap, breed: Breed): BreedMap = {
+      val keys = breedMap.keys.toSeq
+      val newMapInWrongOrder = breedMap.updated(breed.name, breed)
+      val result = ListMap(keys.map{k => (k, newMapInWrongOrder(k))}.toSeq: _*)
+      assert(keys sameElements result.keys.toSeq)
+      result
+    }
+    val newOwns = parseVarList(if (isLinkBreed) classOf[Link]
+                               else classOf[Turtle], null)
+    // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
+    if(isLinkBreed)
+      program.copy(linkBreeds =
+        orderPreservingUpdate(
+          program.linkBreeds,
+          program.linkBreeds(breedName).copy(owns = newOwns)))
+    else
+      program.copy(breeds =
+        orderPreservingUpdate(
+          program.breeds,
+          program.breeds(breedName).copy(owns = newOwns)))
   }
   // replaces an identifier token with its imported implementation, if necessary
   private def processTokenWithExtensionManager(token: Token): Token = {
