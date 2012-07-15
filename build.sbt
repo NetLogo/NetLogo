@@ -1,4 +1,4 @@
-scalaVersion := "2.10.0-M4"
+scalaVersion := "2.10.0-M5"
 
 name := "NetLogo"
 
@@ -123,8 +123,8 @@ libraryDependencies ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" % "scalacheck_2.10.0-M4" % "1.10.0" % "test",
-  "org.scalatest" % "scalatest_2.10.0-M4" % "1.9-2.10.0-M4-B2" % "test"
+  "org.scalacheck" % "scalacheck_2.10.0-M5" % "1.10.0" % "test",
+  "org.scalatest" % "scalatest_2.10.0-M5" % "1.9-2.10.0-M5-B2" % "test"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>

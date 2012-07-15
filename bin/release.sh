@@ -29,7 +29,7 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA=2.10.0-M4
+SCALA=2.10.0-M5
 SCALA_JAR=$HOME/.sbt/boot/scala-$SCALA/lib/scala-library.jar
 IJVERSION=5.0.9
 IJDIR="/Applications/install4j 5"
