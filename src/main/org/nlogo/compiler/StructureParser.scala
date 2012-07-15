@@ -111,7 +111,7 @@ private class StructureParser(
         // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05
         if(token.tyype == TokenType.VARIABLE && token.value == "BREED") {
           tokenBuffer.next()
-          val breedList = parseVarList(null, null)
+          val breedList = parseVarList()
           try {
             if(java.lang.Boolean.getBoolean("org.nlogo.lang.requireSingularBreedArgument"))
               cAssert(breedList.size == 2,
@@ -139,7 +139,7 @@ private class StructureParser(
             parseProcedure(token)
           else if(keyword == "DIRECTED-LINK-BREED" || keyword == "UNDIRECTED-LINK-BREED") {
             tokenBuffer.next()
-            val breedList = parseVarList(null, null)
+            val breedList = parseVarList()
             cAssert(breedList.size == 2, keyword + " only takes 2 inputs", token)
             val breedName = breedList(0)
             val singular =
@@ -154,28 +154,28 @@ private class StructureParser(
             tokenBuffer.next()
             haveTurtlesOwn = true
             program = program.copy(
-              turtlesOwn = program.turtlesOwn ++ parseVarList(null, null))
+              turtlesOwn = program.turtlesOwn ++ parseVarList())
           }
           else if(keyword == "LINKS-OWN") {
             cAssert(!haveLinksOwn,"Redeclaration of LINKS-OWN",token)
             tokenBuffer.next()
             haveLinksOwn = true
             program = program.copy(
-              linksOwn = program.linksOwn ++ parseVarList(null, null))
+              linksOwn = program.linksOwn ++ parseVarList())
           }
           else if(keyword == "PATCHES-OWN") {
             cAssert( !havePatchesOwn,"Redeclaration of PATCHES-OWN",token)
             tokenBuffer.next()
             havePatchesOwn = true
             program = program.copy(
-              patchesOwn = program.patchesOwn ++ parseVarList(null, null))
+              patchesOwn = program.patchesOwn ++ parseVarList())
           }
           else if(keyword == "GLOBALS") {
             cAssert(!haveGlobals,"Redeclaration of GLOBALS",token)
             tokenBuffer.next()
             haveGlobals = true
             program = program.copy(
-              userGlobals = program.userGlobals ++ parseVarList(null, null))
+              userGlobals = program.userGlobals ++ parseVarList())
           }
           else if(keyword.endsWith("-OWN")) {
             val breedName = keyword.substring(0, keyword.length - 4)
@@ -258,8 +258,9 @@ private class StructureParser(
       assert(keys sameElements result.keys.toSeq)
       result
     }
-    val newOwns = parseVarList(if (isLinkBreed) classOf[Link]
-                               else classOf[Turtle], null)
+    val newOwns = parseVarList(
+      if (isLinkBreed) classOf[Link]
+      else classOf[Turtle])
     // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
     if(isLinkBreed)
       program.copy(linkBreeds =
@@ -348,7 +349,7 @@ private class StructureParser(
       }
       else if(!haveArgList) {
         if(token.tyype == TokenType.OPEN_BRACKET) {
-          procedure.args.addAll(parseVarList(null, procedure).asJava)
+          procedure.args.addAll(parseVarList(procedure = procedure).asJava)
           start = tokenBuffer.index
         }
         haveArgList = true
@@ -391,7 +392,7 @@ private class StructureParser(
     newProcedures.put(procedure.name, procedure)
     procedure
   }
-  private def parseVarList(owningAgentClass: Class[_ <: Agent], procedure: Procedure): collection.immutable.Seq[String] = {
+  private def parseVarList(owningAgentClass: Class[_ <: Agent] = null, procedure: Procedure = null): collection.immutable.Seq[String] = {
     val result = collection.mutable.Buffer[String]()
     var token = tokenBuffer.next()
     cAssert(token.tyype == TokenType.OPEN_BRACKET, "Expected [", token)
