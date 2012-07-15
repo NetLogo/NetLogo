@@ -10,6 +10,10 @@ import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
 import collection.JavaConverters._
 
+// This whole thing is pretty ugly.  It's ripe to be discarded and redone from scratch.
+// Properly the actual parsing logic ought to be separated from the parts that build
+// the actual data structures in the results. - ST 7/15/12
+
 private object StructureParser {
 
   case class Results(program: Program,
