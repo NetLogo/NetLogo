@@ -188,14 +188,34 @@ private class StructureParser(
                       "Redeclaration of " + keyword, token)
               linkbreed = true
             }
-            if(linkbreed)
+            // a bit of unpleasantness here is that (as I only belatedly discovered) ListMap.updated
+            // doesn't preserve the ordering of existing keys, which is bad for us because we need
+            // to preserve the declaration order of breeds because later in Renderer it's going to
+            // determine the z-ordering of turtles in the view.  so we resort to a bit of ugliness
+            // here: remember the order the keys were in, then after we've updated the map, restore
+            // the original order. - ST 7/14/12
+            if(linkbreed) {
+              val keys = program.linkBreeds.keys.toSeq
               program = program.copy(
                 linkBreeds = program.linkBreeds.updated(
-                  breedName, program.linkBreeds(breedName).copy(owns = parseVarList(classOf[Link], null))))
-            else
+                  breedName, program.linkBreeds(breedName).copy(
+                    owns = parseVarList(classOf[Link], null))))
+              program = program.copy(
+                linkBreeds = collection.immutable.ListMap(keys.map{k =>
+                  (k, program.linkBreeds(k))}.toSeq: _*))
+              assert(keys sameElements program.linkBreeds.keys)
+            }
+            else {
+              val keys = program.breeds.keys.toSeq
               program = program.copy(
                 breeds = program.breeds.updated(
-                  breedName, program.breeds(breedName).copy(owns = parseVarList(classOf[Turtle], null))))
+                  breedName, program.breeds(breedName).copy(
+                    owns = parseVarList(classOf[Turtle], null))))
+              program = program.copy(
+                breeds = collection.immutable.ListMap(keys.map{k =>
+                  (k, program.breeds(k))}.toSeq: _*))
+              assert(keys sameElements program.breeds.keys)
+            }
           }
           else if(keyword == "EXTENSIONS")
             parseImport(tokenBuffer)
