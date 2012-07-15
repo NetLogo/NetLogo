@@ -312,7 +312,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case e: NoRouteToHostException => Some("Login failed:\n" + hostip + " could not be reached.")
       case e: UnknownHostException => Some("Login failed:\n" + hostip + " does not resolve to a valid IP address.")
       case e: ConnectException => Some("Login failed:\n" + "There was no server running at " + hostip + " on port " + port)
-      case e => Some("Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e))
+      case e: Throwable => Some("Login failed:\nUnknown cause:\n" + org.nlogo.util.Utils.getStackTrace(e))
     }
   }
 
