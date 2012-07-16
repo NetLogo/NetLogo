@@ -107,19 +107,12 @@ private class StructureParser(
           tokenBuffer.next()
           val breedList = new java.util.ArrayList[String]
           parseVarList(breedList, null, null)
-          try {
-            if(java.lang.Boolean.getBoolean("org.nlogo.lang.requireSingularBreedArgument"))
-              cAssert(breedList.size == 2,
-                      "breed requires a singular form since org.nlogo.lang.requireSingularBreedArgument is true",
-                      token)
-          }
-          catch {
-            // can't check arbitrary properties from applets
-            case ex:java.security.AccessControlException =>
-              org.nlogo.util.Exceptions.ignore(ex)
-          }
-          finally { cAssert(breedList.size == 1 || breedList.size == 2,
-                            "breed only takes 1 or 2 inputs",token) }
+          if(requireSingularBreedArgument)
+            cAssert(breedList.size == 2,
+                    "breed requires a singular form since org.nlogo.lang.requireSingularBreedArgument is true",
+                    token)
+          cAssert(breedList.size == 1 || breedList.size == 2,
+                  "breed only takes 1 or 2 inputs",token)
           val breedName = breedList.get(0)
           program.breeds.put(breedName, breedName) // will replace with agentset at realloc time
           program.breedsOwn.put(breedName, new java.util.ArrayList[String])
@@ -240,6 +233,14 @@ private class StructureParser(
       extensionManager.finishFullCompilation()
     new StructureParser.Results(newProcedures, tokensMap.toMap)
   }
+  private lazy val requireSingularBreedArgument =
+    try java.lang.Boolean.getBoolean("org.nlogo.lang.requireSingularBreedArgument")
+    catch {
+      // can't check arbitrary properties from applets
+      case ex:java.security.AccessControlException =>
+        org.nlogo.util.Exceptions.ignore(ex)
+        false
+    }
   // replaces an identifier token with its imported implementation, if necessary
   private def processTokenWithExtensionManager(token: Token): Token = {
     def wrap(prim: org.nlogo.api.Primitive, name: String): Instruction =
