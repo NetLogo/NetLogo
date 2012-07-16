@@ -209,7 +209,7 @@ IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
 
 <YYINITIAL> -?\.?[0-9]{IDENTIFIER_CHAR}* {
   String text = yytext() ;
-  scala.Either<String, Double> result = org.nlogo.api.NumberParser.parse( text ) ;
+  scala.util.Either<String, Double> result = org.nlogo.api.NumberParser.parse( text ) ;
   TokenType resultType =
     result.isLeft() ? TokenType_BAD : TokenType_CONSTANT ;
   Object resultValue =
