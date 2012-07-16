@@ -152,7 +152,7 @@ class PlotPainter(plot: Plot) {
           (x1 > width && x2 > width) ||
           (y1 < 0 && y2 < 0) ||
           (y1 > height && y2 > height)))
-      g.drawLine(x1, y1, x2, y2)      
+      g.drawLine(x1, y1, x2, y2)
   }
 
   // in screenX and screenY, we need to watch out for

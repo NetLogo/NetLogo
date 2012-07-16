@@ -34,7 +34,7 @@ class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new Sha
                              getWidth(settings.patchSize), getHeight(settings.patchSize),
                              settings.patchSize,
                              world.targetAgent.spotlightSize,
-                             darkenPeripheral(settings), 
+                             darkenPeripheral(settings),
                              world.targetAgent.wrapSpotlight)
   def drawLine(line: HubNetLine) {
     trailDrawer.drawLine(line.x1, line.y1, line.x2, line.y2,

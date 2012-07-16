@@ -9,7 +9,7 @@ import javax.swing.JMenuItem
 
 class ProceduresMenu(target: ProceduresMenuTarget)
         extends org.nlogo.swing.ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
-  override def populate(menu: javax.swing.JPopupMenu) { 
+  override def populate(menu: javax.swing.JPopupMenu) {
     val procsTable = {
       import collection.JavaConverters._
       target.compiler.findProcedurePositions(target.getText).asScala.mapValues(_.asScala.toList).toMap

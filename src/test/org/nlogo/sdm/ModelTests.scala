@@ -26,10 +26,10 @@ class ModelTests extends FunSuite {
       "  stock\n" +
       "  ;; size of each step, see SYSTEM-DYNAMICS-GO\n" +
       "  dt\n" +
-      "]\n\n" + 
+      "]\n\n" +
       ";; Initializes the system dynamics model.\n" +
       ";; Call this in your model's SETUP procedure.\n" +
-      "to system-dynamics-setup \n" +
+      "to system-dynamics-setup\n" +
       "  reset-ticks\n" +
       "  set dt 1.0\n" +
       "  ;; initialize stock values\n" +
@@ -41,7 +41,7 @@ class ModelTests extends FunSuite {
       "  ;; compute variable and flow values once per step\n" +
       "  let local-inflow inflow\n\n" +
       "  ;; update stock values\n" +
-      "  ;; use temporary variables so order of computation doesn't affect result.\n" + 
+      "  ;; use temporary variables so order of computation doesn't affect result.\n" +
       "  let new-stock ( stock + local-inflow )\n" +
       "  set stock new-stock\n\n" +
       "  tick-advance dt\n" +

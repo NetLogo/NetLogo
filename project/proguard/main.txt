@@ -14,6 +14,6 @@
 # to be there
 -keepdirectories system
 
--injars target/scala_2.9.2/classes
+-injars target/classes
 -injars resources
 -outjar NetLogo.jar

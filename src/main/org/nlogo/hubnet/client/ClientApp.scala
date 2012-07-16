@@ -12,7 +12,7 @@ import org.nlogo.api.{I18N, CompilerServices}
 import javax.swing.{WindowConstants, JFrame}
 
 /**
- * The HubNet client. 
+ * The HubNet client.
  */
 object ClientApp {
   private var localClientIndex = 0

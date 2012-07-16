@@ -16,7 +16,7 @@ class _turtlesat extends Reporter {
     val dx = argEvalDoubleValue(context, 0)
     val dy = argEvalDoubleValue(context, 1)
     val dz = argEvalDoubleValue(context, 2)
-    val patch = 
+    val patch =
       try context.agent.asInstanceOf[Agent3D].getPatchAtOffsets(dx, dy, dz)
       catch {
         case _: AgentException =>

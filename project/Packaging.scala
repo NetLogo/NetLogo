@@ -13,15 +13,23 @@ object Packaging {
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
             .mkString(" ")))},
-    packageBin in Compile <<= (packageBin in Compile, scalaInstance, streams) map {
-      (jar, instance, s) =>
-        IO.delete(file(".") / "NetLogoLite.jar")
-        IO.delete(file(".") / "HubNet.jar")
-        IO.copyFile(jar, file(".") / "NetLogo.jar")
-        val scalaLibrary = instance.libraryJar.getAbsolutePath
-        runProGuard(scalaLibrary, "lite", s.log)
-        runProGuard(scalaLibrary, "hubnet", s.log)
-        addManifest("HubNet", "manifesthubnet")
+    packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {
+      (jar, instance, base, cacheDir, s) =>
+        val cache =
+          FileFunction.cached(cacheDir / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+            in: Set[File] =>
+              IO.delete(base / "NetLogoLite.jar")
+              IO.delete(base / "HubNet.jar")
+              IO.copyFile(jar, base / "NetLogo.jar")
+              val scalaLibrary = instance.libraryJar.getAbsolutePath
+              runProGuard(scalaLibrary, "lite", s.log)
+              runProGuard(scalaLibrary, "hubnet", s.log)
+              addManifest("HubNet", "manifesthubnet")
+              Set(base / "NetLogo.jar",
+                  base / "NetLogoLite.jar",
+                  base / "HubNet.jar")
+          }
+        cache(Set(jar))
         jar
       }
   )

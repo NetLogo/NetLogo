@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.protocol
 
 import org.nlogo.api.{Version, PlotInterface}
-import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream, 
+import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
                 ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException, Serializable}
 // Message between hubnet clients and hubnet servers
 @SerialVersionUID(0)
@@ -22,7 +22,7 @@ case class LoginFailure(content: String) extends Message
 @SerialVersionUID(0)
 case class OverrideMessage(data: Any, clear: Boolean) extends Message
 
-// Message from server tells client the server has disconnected it, 
+// Message from server tells client the server has disconnected it,
 // or from client tells server it has disconnected itself
 @SerialVersionUID(0)
 case class ExitMessage(reason:String) extends Message

@@ -14,4 +14,5 @@ trait RendererInterface {
   def exportView(g: java.awt.Graphics2D, settings: ViewSettings)
   def exportView(settings: ViewSettings): java.awt.image.BufferedImage
   def prepareToPaint(settings: ViewSettings, width: Int, height: Int)
+  def renderLabelsAsRectangles_=(b: Boolean)
 }

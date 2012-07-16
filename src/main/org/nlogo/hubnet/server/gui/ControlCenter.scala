@@ -15,10 +15,10 @@ import org.nlogo.api.I18N
 import org.nlogo.hubnet.server.{HubNetUtils, ConnectionManager}
 
 /**
- * The Control Center window allows the user to interact with 
+ * The Control Center window allows the user to interact with
  * the HubNet Server.<p>
- * <i>Thread policy: every method (except the constructor and 
- * methods only called by the constructor), must be 
+ * <i>Thread policy: every method (except the constructor and
+ * methods only called by the constructor), must be
  * executed on the event thread.</i>
  */
 class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, activityName: String)
@@ -81,7 +81,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
 
   def logMessage(message: String) {messagePanel.logMessage(message)}
   def launchNewClient() {server.connection.newClient(false, 0)}
- 
+
   /**
    * Panel in HubNet Control Center displays client list
    */

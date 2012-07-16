@@ -23,7 +23,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
       }
       def patchSize(patchSize: Double) {
         world.patchSize(patchSize)
-      } 
+      }
       def setOutputAreaContents(text: String) { }
       def resizeView() { }
       def currentPlot(plot: String) { }

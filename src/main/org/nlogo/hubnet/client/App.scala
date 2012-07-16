@@ -8,7 +8,7 @@ import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.VMCheck
 
 /**
- * Creates and runs a hubnet client from the command line. 
+ * Creates and runs a hubnet client from the command line.
  */
 object App {
   def main(args: Array[String]) {

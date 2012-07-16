@@ -6,7 +6,7 @@ import org.nlogo.api.Editable
 import org.nlogo.api.I18N
 import org.nlogo.window.{Events, Widget, InterfaceGlobalWidget}
 
-class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget 
+class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
 
   override def classDisplayName= I18N.gui.get("tabs.run.widgets.switch")

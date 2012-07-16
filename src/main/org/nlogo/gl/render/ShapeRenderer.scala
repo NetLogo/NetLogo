@@ -132,7 +132,7 @@ private class ShapeRenderer(world: World) {
 
   def doOutline(gl: GL, shape3D: GLShape, rgb: Array[Float]) {
     if (stencilSupport) {
-      // This highlighting code was borrowed from 
+      // This highlighting code was borrowed from
       // http://www.flipcode.com/articles/article_objectoutline.shtml
       gl.glClearStencil(0)
       gl.glClear(GL.GL_STENCIL_BUFFER_BIT)

@@ -520,8 +520,6 @@ public abstract strictfp class AbstractWorkspace
   }
 
 
-  public abstract void writeGraphicsData(java.io.PrintWriter writer);
-
   public abstract void clearAll();
 
   protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();

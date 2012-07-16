@@ -7,6 +7,12 @@ import collection.JavaConverters._
 
 object ModelReader {
 
+  val modelSuffix =
+    if(Version.is3D) "nlogo3d" else "nlogo"
+
+  val emptyModelPath =
+    "/system/empty." + modelSuffix
+
   type ModelMap = java.util.Map[ModelSection, Array[String]]
 
   val SEPARATOR = "@#$#@#$#@"
@@ -40,7 +46,7 @@ object ModelReader {
     sectionDone()
     map.asJava
   }
-  
+
   def parseVersion(map: ModelMap): String =
     map.get(ModelSection.Version)(0)
 

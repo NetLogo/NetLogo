@@ -8,10 +8,10 @@ package org.nlogo.api
  *
  * You cannot instantiate this class directly. Instead, use the static construction
  * methods <code>Syntax.commandSyntax(...)</code> or <code>Syntax.reporterSyntax(...)</code>.
- * 
+ *
  * For example, in a <code>Reporter</code> that takes two number arguments
  * and returns a boolean, implement <code>Primitive.getSyntax()</code> as follows:
- * 
+ *
  * <pre>
  * public Syntax getSyntax() {
  *   return Syntax.reporterSyntax(
@@ -19,12 +19,12 @@ package org.nlogo.api
  *     Syntax.BooleanType());
  * }
  * </pre>
- * 
+ *
  * An input can be made variadic, meaning that it can be repeated any number of
  * times when enclosed in parentheses, if you add the <code>RepeatableType</code> flag.
  * When using variadic inputs you should also define the default number of inputs, that
  * is, the number of inputs expect if the user does not use parentheses. For example:
- * 
+ *
  * <pre>
  *  public Syntax getSyntax() {
  *    return Syntax.reporterSyntax(
@@ -122,7 +122,7 @@ case class Syntax(precedence: Int,
   }
 
 }
-  
+
 
 object Syntax {
 
@@ -291,12 +291,12 @@ object Syntax {
   def commandSyntax(agentClassString: String, switches: Boolean) =
     Syntax(precedence = CommandPrecedence,
            agentClassString = agentClassString, switches = switches)
-  
+
   // for use by commands
   def commandSyntax(right: Array[Int], switches: Boolean) =
     Syntax(precedence = CommandPrecedence,
            right = right, switches = switches)
-  
+
   // for use by commands
   def commandSyntax(right: Array[Int], agentClassString: String) =
     Syntax(precedence = CommandPrecedence,
@@ -324,26 +324,26 @@ object Syntax {
   def reporterSyntax(ret: Int, agentClassString: String) =
     Syntax(precedence = NormalPrecedence,
            ret = ret, agentClassString = agentClassString)
-  
+
   // for use by infix reporters
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean) =
     Syntax(left = left, right = right, ret = ret, precedence = precedence, isRightAssociative = isRightAssociative)
-  
+
   // for use by prefix reporters
   def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String, blockAgentClassString: String) =
     Syntax(precedence = NormalPrecedence,
            right = right, ret = ret, agentClassString = agentClassString, blockAgentClassString = blockAgentClassString)
-  
+
   // for use by prefix reporters
   def reporterSyntax(right: Array[Int], ret: Int, agentClassString: String) =
     Syntax(precedence = NormalPrecedence,
            right = right, ret = ret, agentClassString = agentClassString)
-  
+
   // for use by variadic reporters when min is different than default
   def reporterSyntax(right: Array[Int], ret: Int, dfault: Int, minimum: Int) =
     Syntax(precedence = NormalPrecedence,
            right = right, ret = ret, defaultOption = Some(dfault), minimumOption = Some(minimum))
-  
+
   // for use by reporters that take a reporter block
   def reporterSyntax(left: Int, right: Array[Int], ret: Int, precedence: Int, isRightAssociative: Boolean,
                      agentClassString: String, blockAgentClassString: String) =
@@ -356,7 +356,7 @@ object Syntax {
     Syntax(left = left, right = right, ret = ret, precedence = precedence, defaultOption = Some(dfault),
            isRightAssociative = isRightAssociative, agentClassString = agentClassString,
            blockAgentClassString = blockAgentClassString)
-  
+
   /**
    * Returns a <code>Syntax</code> for reporters with no arguments
    *

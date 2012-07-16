@@ -10,7 +10,7 @@ private object LinkLine {
     Array[Short](0x0000.toShort, 0xffff.toShort,
                  0xf0f0.toShort, 0xcccc.toShort,
                  0xcaca.toShort)
-}  
+}
 
 private class LinkLine(xcor: Double, dashIndex: Int) {
 
@@ -34,7 +34,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
     val xd = x1 - x2
     val yd = y2 - y1
     val zd = z1 - z2
-    val size = math.sqrt(xd * xd + yd * yd + zd * zd) 
+    val size = math.sqrt(xd * xd + yd * yd + zd * zd)
     val ycomp = xd / size
     val xcomp = yd / size
     val zcomp = zd / size
@@ -69,10 +69,10 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
       val xd = x1 - x2
       val yd = y2 - y1
       val zd = z1 - z2
-      val size = math.sqrt(xd * xd + yd * yd + zd * zd) 
-      val ycomp = (xd / size) * xcor * stroke * Renderer.WORLD_SCALE 
-      val xcomp = (yd / size) * xcor * stroke * Renderer.WORLD_SCALE 
-      val zcomp = (zd / size) * xcor * stroke * Renderer.WORLD_SCALE 
+      val size = math.sqrt(xd * xd + yd * yd + zd * zd)
+      val ycomp = (xd / size) * xcor * stroke * Renderer.WORLD_SCALE
+      val xcomp = (yd / size) * xcor * stroke * Renderer.WORLD_SCALE
+      val zcomp = (zd / size) * xcor * stroke * Renderer.WORLD_SCALE
       x1 += xcomp.toFloat
       x2 += xcomp.toFloat
       y1 += ycomp.toFloat
@@ -80,7 +80,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
       z1 += zcomp.toFloat
       z2 += zcomp.toFloat
     }
-    gl.glBegin(GL.GL_LINES) 
+    gl.glBegin(GL.GL_LINES)
     gl.glNormal3f(0.0f, 0.0f, -1.0f)
     gl.glVertex3f(x1, y1, z1)
     gl.glVertex3f(x2, y2, z2)

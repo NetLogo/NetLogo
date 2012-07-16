@@ -44,7 +44,7 @@ class RemoteFile(filepath: String) extends File {
     }
   }
 
-  private def unsupported = 
+  private def unsupported =
     throw new java.io.IOException("Cannot write to remote files.")
 
   @throws(classOf[java.io.IOException])

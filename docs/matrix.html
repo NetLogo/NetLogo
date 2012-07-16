@@ -61,7 +61,7 @@ let m matrix:from-row-list [[1 2 3] [4 5 6]]
 print m
 =&gt; {{matrix:  [ [ 1 2 3 ][ 4 5 6 ] ]}}
 print matrix:pretty-print-text m
-=&gt; 
+=&gt;
 [[ 1  2  3 ]
  [ 4  5  6 ]]
 
@@ -441,7 +441,7 @@ print m3
       <pre>
 let m matrix:from-row-list [[1 2 3][4 5 6][7 8 9]]
 print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-end
-                                 ; rows from 0 (inclusive) to 2 (exclusive), 
+                                 ; rows from 0 (inclusive) to 2 (exclusive),
                                  ; columns from 1 (inclusive) to 3 (exclusive)
 =&gt; {{matrix:  [ [ 2 3 ][ 5 6 ] ]}}
 </pre>
@@ -631,7 +631,7 @@ print matrix:submatrix m 0 1 2 3 ; matrix, row-start, col-start, row-end, col-en
       <pre>
 ;; To solve the set of equations x + 3y = 10 and 7x - 4y = 20
 ;; We make our A matrix [[1 3][7 -4]], and our C matrix [[10][20]]
-let A matrix:from-row-list [[1 3][7 -4]] 
+let A matrix:from-row-list [[1 3][7 -4]]
 let C matrix:from-row-list [[10][20]]
 print matrix:solve A C
 =&gt; {{matrix:  [ [ 4 ][ 2.0000000000000004 ] ]}}
@@ -667,7 +667,7 @@ print matrix:solve A C
         absolute amount each period.
       <pre>
 ;; a linear extrapolation of the next item in the list.
-print matrix:forecast-linear-growth [20 25 28 32 35 39] 
+print matrix:forecast-linear-growth [20 25 28 32 35 39]
 =&gt; [42.733333333333334 20.619047619047638 3.6857142857142824 0.9953743395474031]
 ;; These results tell us:
 ;; * the next predicted value is roughly 42.7333
@@ -769,7 +769,7 @@ print matrix:forecast-continuous-growth [20 25 28 32 35 39]
 =&gt; [45.60964465307146 21.15254147944863 0.12805985615332668 0.9760867518334806]
 ;; These results tell us:
 ;; * the next predicted value is approximately 45.610
-;; * the compound growth trend line is given by Y = 21.1525 * e ^ (0.1281 * t) 
+;; * the compound growth trend line is given by Y = 21.1525 * e ^ (0.1281 * t)
 ;; * Y grows by approximately 12.81% each period if compounding takes place continuously
 ;; * the R^2 value is roughly 0.9761 (a good fit)
 </pre>
@@ -815,7 +815,7 @@ let linslpe item 1 (item 0 lin-output)
 let linR2   item 0 (item 1 lin-output)
 ;;Note the &quot;6&quot; here is because we want to forecast the value at time t=6.
 print (list (lincnst + linslpe * 6) (lincnst) (linslpe) (linR2))
-  
+
 ;; this is equivalent to what the matrix:forecast-compound-growth does
 let com-log-data-list  (map [ln ?] [20 25 28 32 35 39])
 let com-indep-var2 (n-values length com-log-data-list [?]) ; 0,1,2...,5
@@ -825,7 +825,7 @@ let comprop exp item 1 (item 0 com-output)
 let comR2       item 0 (item 1 com-output)
 ;;Note the &quot;6&quot; here is because we want to forecast the value at time t=6.
 print (list (comcnst * comprop ^ 6) (comcnst) (comprop) (comR2))
-  
+
 ;; this is equivalent to what the matrix:forecast-continuous-growth does
 let con-log-data-list  (map [ln ?] [20 25 28 32 35 39])
 let con-indep-var2 (n-values length con-log-data-list [?]) ; 0,1,2...,5
@@ -834,18 +834,18 @@ let concnst exp item 0 (item 0 con-output)
 let conrate     item 1 (item 0 con-output)
 let conR2       item 0 (item 1 con-output)
 print (list (concnst * exp (conrate * 6)) (concnst) (conrate) (conR2))
-  
+
 ;; example of a regression with two independent variables:
 ;; Pretend we have a dataset, and we want to know how well happiness
 ;; is correlated to snack-food consumption and accomplishing goals.
-let happiness [2 4 5 8 10] 
-let snack-food-consumed [3 4 3 7 8] 
+let happiness [2 4 5 8 10]
+let snack-food-consumed [3 4 3 7 8]
 let goals-accomplished [2 3 5 8 9]
 print matrix:regress matrix:from-column-list (list happiness snack-food-consumed goals-accomplished)
 =&gt; [[-0.14606741573033788 0.3033707865168543 0.8202247191011234] [0.9801718440185063 40.8 0.8089887640449439]]
 ;; linear regression: happiness = -0.146 + 0.303*snack-food-consumed + 0.820*goals-accomplished
-;; (Since the 0.820 coefficient is higher than the 0.303 coefficient, it appears that each goal 
-;; accomplished yields more happiness than does each snack consumed, although both are positively 
+;; (Since the 0.820 coefficient is higher than the 0.303 coefficient, it appears that each goal
+;; accomplished yields more happiness than does each snack consumed, although both are positively
 ;; correlated with happiness.)
 ;; Also, we see that R^2 = 0.98, so the two factors together provide a good fit.
 </pre>

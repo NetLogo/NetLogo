@@ -113,7 +113,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.encode("max-pzcor") + ","
                   + csv.encode("perspective") + ","
                   + csv.encode("subject") + ","
-                  + csv.encode("nextIndex") + "," 
+                  + csv.encode("nextIndex") + ","
                   + csv.encode("directed-links") + ","
                   + csv.encode("ticks"))
     val globals = world.program.globals
@@ -129,7 +129,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     val subject = Option(world.observer().targetAgent()).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
-    print(csv.encode(Integer.toString(world.minPxcor())) + "," 
+    print(csv.encode(Integer.toString(world.minPxcor())) + ","
                   + csv.encode(Integer.toString(world.maxPxcor())) + ","
                   + csv.encode(Integer.toString(world.minPycor())) + ","
                   + csv.encode(Integer.toString(world.maxPycor())) + ","

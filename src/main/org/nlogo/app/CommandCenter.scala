@@ -148,7 +148,7 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
   private var zoomFactor = 1.0
   def zoomSubcomponents = true
   def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    zoomer.scaleComponentFont(this, e.zoomFactor, zoomFactor, true) 
+    zoomer.scaleComponentFont(this, e.zoomFactor, zoomFactor, true)
     zoomFactor = e.zoomFactor
     revalidate()
   }

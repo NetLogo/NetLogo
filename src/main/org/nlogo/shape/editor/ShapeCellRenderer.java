@@ -98,4 +98,4 @@ public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
     return this;
   }
 
-}       
+}

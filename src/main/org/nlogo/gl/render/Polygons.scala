@@ -64,7 +64,7 @@ object Polygons {
   }
 
   private def renderPolygon2D(gl: GL, glu: GLU, tess: GLUtessellator,
-                              data: Tessellator.TessDataObject, 
+                              data: Tessellator.TessDataObject,
                               xcoords: JList[java.lang.Integer],
                               ycoords: JList[java.lang.Integer],
                               zDepth: Float, rotatable: Boolean) {
@@ -97,7 +97,7 @@ object Polygons {
       glu.gluTessVertex(tess, coords, 0, coords)
     }
     glu.gluTessEndContour(tess)
-    glu.gluTessEndPolygon(tess)     
+    glu.gluTessEndPolygon(tess)
     if(rotatable) {
       gl.glBegin(data.tyype)
       gl.glNormal3f(0f, 0f, -1f)
@@ -111,7 +111,7 @@ object Polygons {
       gl.glEnd()
     }
   }
-  
+
   private def findNormal(x1: Float, y1: Float, z1: Float,
                          x2: Float, y2: Float, z2: Float,
                          x3: Float, y3: Float, z3: Float): (Double, Double, Double) = {

@@ -8,7 +8,7 @@ import java.awt.BorderLayout
 import javax.swing.JPanel
 
 class ViewControlStrip3D(workspace: GUIWorkspace) extends JPanel {
-  
+
   val tickCounter = new TickCounterLabel
   val displaySwitch = new org.nlogo.window.DisplaySwitch(workspace)
   updateTicks()
@@ -21,7 +21,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace) extends JPanel {
 
   def updateTicks() {
     tickCounter.setVisible(workspace.viewWidget.showTickCounter)
-    val width = tickCounter.getMinimumSize.width 
+    val width = tickCounter.getMinimumSize.width
     val ticks = workspace.world.tickCounter.ticks
     val tickText =
       if(ticks == -1) ""
@@ -33,7 +33,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace) extends JPanel {
       doLayout()
   }
 
-  class TickCounterLabel extends javax.swing.JLabel {           
+  class TickCounterLabel extends javax.swing.JLabel {
     override def getPreferredSize = getMinimumSize
     override def getMinimumSize = {
       val d = super.getMinimumSize

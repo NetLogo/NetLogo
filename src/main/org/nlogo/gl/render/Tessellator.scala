@@ -13,13 +13,13 @@ object Tessellator {
   }
 }
 
-private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackAdapter {       
+private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackAdapter {
 
   import Tessellator.TessDataObject
 
   def createTessDataObject(gl: GL) =
     new TessDataObject(gl)
-  
+
   override def beginData(tyype: Int, polygonData: AnyRef) {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glBegin(tyype)
@@ -27,26 +27,26 @@ private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackA
     // for now assume we are talking about the "top" polygon
     data.gl.glNormal3f(0f, 0f, 1f)
   }
-  
+
   override def combineData(coords: Array[Double], data: Array[AnyRef], weight: Array[Float],
                            outData: Array[AnyRef], polygonData: Object) {
     // not sure if this is right...
     outData(0) = Array[Double](coords(0), coords(1), coords(2) )
   }
-  
+
   override def edgeFlagData(boundaryEdge: Boolean, polygonData: AnyRef) {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glEdgeFlag(boundaryEdge)
     data.shapeData.add(boundaryEdge: java.lang.Boolean)
   }
-  
+
   override def endData(polygonData: Object) {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glEnd()
   }
-  
+
   override def errorData(errnum: Int, polygonData: AnyRef) { }
-  
+
   override def vertexData(vertexData: AnyRef, polygonData: AnyRef) {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glVertex3dv(

@@ -44,7 +44,7 @@ Interaction2_3D
   O> ask turtle 0 [ ask patch-at 1 0 0 [ set pcolor red ] ]
   map [[xcor] of ?] sort turtles => [0 0 0]
   map [[ycor] of ?] sort turtles => [1 0 0]
-  map [[zcor] of ?] sort turtles => [0 0 0] 
+  map [[zcor] of ?] sort turtles => [0 0 0]
   map [precision [heading] of ? 12 ] sort turtles => [0 120 330]
   map [[color] of ?] sort turtles => [5 55 25]
   map [[pcolor] of ?] sort patches with [pzcor = 0] => [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
@@ -175,7 +175,7 @@ Interaction14_2D
   T> repeat 2 [ hatch 1 rt 1 ]
   sort [heading] of turtles => [0 0 1 1 2 2]
 
-# in 3D sometimes rt 1 doesn't result in exactly heading = 1 
+# in 3D sometimes rt 1 doesn't result in exactly heading = 1
 # floating point math. so be looser on the 3D test
 Interaction14_3D
   O> crt 2 [ set heading 0 ]

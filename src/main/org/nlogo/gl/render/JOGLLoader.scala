@@ -38,7 +38,7 @@ object JOGLLoader {
           // something else might have loaded JAWT itself
           if(!e.getMessage.containsSlice("already loaded")) {
             val msg =
-              "NetLogo could not find the required JOGL libraries.\n" + 
+              "NetLogo could not find the required JOGL libraries.\n" +
               "Please contact bugs@ccl.northwestern.edu for assistance."
             throw new JOGLException(msg, e)
           }
@@ -50,7 +50,7 @@ object JOGLLoader {
       withErrorReporting { System.loadLibrary("jawt") }
     withErrorReporting { System.load(joglPath) }
     withErrorReporting { System.load(joglAwtPath) }
-    _isLoaded = true 
+    _isLoaded = true
   }
 
   private lazy val libraryPath: String =
@@ -76,7 +76,7 @@ object JOGLLoader {
     catch {
       case e: java.io.IOException =>
         throw new JOGLException(
-          "NetLogo could not find the required JOGL libraries.\n"+ 
+          "NetLogo could not find the required JOGL libraries.\n"+
           "Please contact bugs@ccl.northwestern.edu for assistance.", e)
     }
 
@@ -117,7 +117,7 @@ object JOGLLoader {
     try {
       classLoader.loadClass(pkgName + "." + className)
       val p = Package.getPackage(pkgName)
-      if(p == null) 
+      if(p == null)
         throw new JOGLException(VersionMismatch, null)
       val implVersion = p.getImplementationVersion
       if(implVersion == null)
@@ -125,9 +125,9 @@ object JOGLLoader {
       if(!implVersion.startsWith(RecommendedVersion)) {
         throw new JOGLException(
           "NetLogo found JOGL Version: " + implVersion + ".\n" +
-          "Version: " + RecommendedVersion + " is recommended.\n" + 
+          "Version: " + RecommendedVersion + " is recommended.\n" +
           "You may need to remove your existing\n" +
-          "JOGL installation.\n" + 
+          "JOGL installation.\n" +
           "For instructions, see the Library Conflicts section \n" +
           "in the NetLogo User Manual.")
       }
@@ -135,7 +135,7 @@ object JOGLLoader {
     catch {
       case e: ClassNotFoundException =>
         throw new JOGLException(
-          "NetLogo could not find the required JOGL libraries.\n\n"+ 
+          "NetLogo could not find the required JOGL libraries.\n\n"+
           "Please contact bugs@ccl.northwestern.edu for assistance.", e)
       // it's annoying to have to use reflection here but Sun in their wisdom issue an unsuppressable
       // warning if we try to catch InvalidJarIndexException directly.  On the unsuppressability of

@@ -4,6 +4,7 @@ package org.nlogo.sdm.gui;
 
 import org.jhotdraw.figures.EllipseFigure;
 import org.jhotdraw.framework.FigureAttributeConstant;
+import org.jhotdraw.framework.Handle;
 import org.jhotdraw.framework.HandleEnumeration;
 import org.jhotdraw.standard.HandleEnumerator;
 
@@ -32,12 +33,10 @@ public strictfp class ReservoirFigure
             java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
   }
 
-  // Return no resize handles
-  // Not sure what type to use here and don't feel like looking it up - ST 2/9/08
+  // no resize handles
   @Override
-  @SuppressWarnings("unchecked")
   public HandleEnumeration handles() {
-    return new HandleEnumerator(new ArrayList());
+    return new HandleEnumerator(new ArrayList<Handle>());
   }
 
   @Override
