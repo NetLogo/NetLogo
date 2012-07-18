@@ -20,7 +20,11 @@ abstract class TestLanguage(files: Iterable[File]) extends FunSuite with SlowTes
 
 trait TestFinder extends Iterable[File]
 case class TxtsInDir(dir:String) extends TestFinder {
-  override def iterator = new File(dir).listFiles.filter(_.getName.endsWith(".txt")).iterator
+  override def iterator =
+    new File(dir).listFiles
+      .filter(_.getName.endsWith(".txt"))
+      .filterNot(_.getName == "HubNet.txt")  // disabled until issues.scala-lang.org/browse/SI-5974 fix released
+      .iterator
 }
 case object ExtensionTestsDotTxt extends TestFinder {
   def iterator = {
