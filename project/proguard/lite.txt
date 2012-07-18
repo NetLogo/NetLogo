@@ -6,7 +6,7 @@
 # forcibly exclude the generator. at runtime, the code will notice it is missing
 # and do without it (it doesn't work in applets anyway because of the security
 # restrictions on class loading). also exclude unneeded resources
--injars target/scala-2.10/classes(!org/nlogo/generator/**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
+-injars target/classes(!org/nlogo/generator/**,!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
 
 # this is an injar, not a library jar, because we're going to stuff the Scala classes
 # we need directly into NetLogoLite.jar, so NetLogoLite.jar has no external dependencies

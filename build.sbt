@@ -21,6 +21,9 @@ ivyLoggingLevel := UpdateLogging.Quiet
 // this makes jar-building and script-writing easier
 retrieveManaged := true
 
+// we're not cross-building for different Scala versions
+crossPaths := false
+
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")

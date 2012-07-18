@@ -14,7 +14,7 @@
 # we need directly into HubNet.jar, so HubNet.jar has no external dependencies
 -injars <org.nlogo.scala-library>
 
--injars target/scala-2.10/classes(!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
+-injars target/classes(!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
 
 -outjar HubNet.jar
 
