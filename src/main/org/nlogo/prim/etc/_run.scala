@@ -50,7 +50,7 @@ class _run extends Command {
           context.ip = next
         }
         catch {
-          case NonLocalExit if context.activation.procedure.tyype == Procedure.Type.COMMAND =>
+          case _: NonLocalExit if context.activation.procedure.tyype == Procedure.Type.COMMAND =>
             context.stop()
         }
       case obj =>

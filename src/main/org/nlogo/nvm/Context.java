@@ -180,7 +180,7 @@ public final strictfp class Context {
 
   public void stop() {
     if (activation.procedure.isTask()) {
-      throw NonLocalExit$.MODULE$;
+      throw NonLocalExit.singleton;
     }
     if (activation.procedure.topLevel) {
       // In the BehaviorSpace case, there are two cases: stop
@@ -245,7 +245,7 @@ public final strictfp class Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) // NOPMD empty catch block
+    } catch (NonLocalExit e) // NOPMD empty catch block
     {
       // do nothing
     } catch (LogoException ex) {
