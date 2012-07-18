@@ -7,6 +7,11 @@ import collection.JavaConverters._
 
 object ModelReader {
 
+  val modelSuffix = "nlogo"
+
+  val emptyModelPath =
+    "/system/empty." + modelSuffix
+
   type ModelMap = java.util.Map[ModelSection, Array[String]]
 
   val SEPARATOR = "@#$#@#$#@"

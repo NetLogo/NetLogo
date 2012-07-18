@@ -2,9 +2,6 @@
 
 package org.nlogo.api
 
-// This is for use in tests. (For now, not bothering to exclude it
-// from NetLogo.jar.) - ST 9/14/10
-
 object ModelCreator extends ModelCreator
 
 trait ModelCreator {
@@ -38,7 +35,7 @@ trait ModelCreator {
                             |@#$#@#$#@
                             |@#$#@#$#@
                             |@#$#@#$#@
-                            |NetLogo 4.2pre1
+                            |NetLogo 5.0
                             |@#$#@#$#@
                             |<<PREVIEW SECTION>>
                             |@#$#@#$#@

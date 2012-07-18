@@ -2,8 +2,9 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ CompilerException, Version }
+import org.nlogo.api.{ CompilerException, ModelReader, Version }
 import java.io.{ BufferedReader, InputStreamReader }
+import org.nlogo.util.Utils.url2String
 
 object Shell {
 
@@ -15,12 +16,14 @@ object Shell {
 
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
-    val workspace = HeadlessWorkspace.newInstance
-    if (argv.isEmpty)
-      workspace.initForTesting(-5, 5, -5, 5, HeadlessWorkspace.TestDeclarations)
-    else
-      workspace.open(argv(0))
     System.err.println(Version.fullVersion)
+    val workspace = HeadlessWorkspace.newInstance
+    argv.headOption match {
+      case None =>
+        workspace.openFromSource(url2String(ModelReader.emptyModelPath))
+      case Some(path) =>
+        workspace.open(path)
+    }
     input.foreach(run(workspace, _))
     workspace.dispose()
   }
