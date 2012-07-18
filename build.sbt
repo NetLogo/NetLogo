@@ -59,54 +59,43 @@ nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
-// The standard doc task doesn't handle mixed Scala/Java projects the way we would like.  Instead of
-// passing all the sources to Scaladoc, it divided them up and called both Scaladoc and Javadoc.
-// So I copy and pasted the code for the task and tweaked it. - ST 6/29/12
+netlogoVersion <<= (testLoader in Test) map {
+  _.loadClass("org.nlogo.api.Version")
+   .getMethod("version")
+   .invoke(null).asInstanceOf[String]
+   .replaceFirst("NetLogo ", "")
+}
+
+scalacOptions in (Compile, doc) <++= (baseDirectory, netlogoVersion) map {
+  (base, version) =>
+    Seq("-encoding", "us-ascii") ++
+    Opts.doc.title("NetLogo") ++
+    Opts.doc.version(version) ++
+    Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
+                       version + "/src/main€{FILE_PATH}.scala")
+}
+
+// compensate for issues.scala-lang.org/browse/SI-5388
+doc in Compile ~= NetLogoBuild.mungeScaladocSourceUrls
+
+// The regular doc task includes doc for the entire main source tree.  But for bundling with the
+// User Manual, in docs/scaladoc/, we want to document only select classes.  So I copy and pasted
+// the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
 // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
-doc <<= (baseDirectory, cacheDirectory, compileInputs in Compile, testLoader in Test, streams) map {
-  (base, cache, in, loader, s) =>
-    val version =
-      loader.loadClass("org.nlogo.api.Version")
-        .getMethod("version")
-        .invoke(null)
-        .asInstanceOf[String]
-        .replaceAll("NetLogo ", "")
-    def generate(out: File, sourceFilter: File => Boolean, includeClassesOnClassPath: Boolean = false) {
-      IO.delete(out)
-      val options = Seq(
-        "-doc-title", "NetLogo",
-        "-doc-version", version,
-        "-encoding", "us-ascii",
-        "-sourcepath", (base / "src/main").toString,
-        "-doc-source-url", "https://github.com/NetLogo/NetLogo/blob/" + version + "/src/main€{FILE_PATH}.scala")
-      val cp = in.config.classpath.toList.filterNot(x => !includeClassesOnClassPath &&
-                                                         x == in.config.classesDirectory)
-      Doc(in.config.maxErrors, in.compilers.scalac)
-        .cached(cache / "doc", "NetLogo",
-                in.config.sources.filter(sourceFilter), cp, out, options, s.log)
-      // compensate for issues.scala-lang.org/browse/SI-5388
-      for(file <- Process("find " + out + " -name *.html").lines)
-        IO.write(new File(file), IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
-    }
-    IO.createDirectory(base / "tmp")
-    val out = base / "tmp" / "scaladoc"
-    // these are the docs with everything
-    generate(out, _ => true)
-    // these are the docs we include with the User Manual
+docSmaller <<= (baseDirectory, cacheDirectory, scalacOptions in (Compile, doc), compileInputs in Compile, netlogoVersion, streams) map {
+  (base, cache, options, inputs, version, s) =>
     val apiSources = Seq(
-      "src/main/org/nlogo/app/App.scala",
-      "src/main/org/nlogo/lite/InterfaceComponent.scala",
-      "src/main/org/nlogo/lite/Applet.scala",
-      "src/main/org/nlogo/lite/AppletPanel.scala",
-      "src/main/org/nlogo/headless/HeadlessWorkspace.scala",
-      "src/main/org/nlogo/api/",
-      "src/main/org/nlogo/agent/",
-      "src/main/org/nlogo/workspace/",
-      "src/main/org/nlogo/nvm/")
-    generate(base / "docs" / "scaladoc",
-             path => apiSources.exists(ok => path.toString.containsSlice(ok)),
-             includeClassesOnClassPath = true) // since the set of sources isn't complete
-    out
+      "app/App.scala", "headless/HeadlessWorkspace.scala",
+      "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
+      "api/", "agent/", "workspace/", "nvm/")
+    val sourceFilter: File => Boolean = path =>
+      apiSources.exists(ok => path.toString.containsSlice("src/main/org/nlogo/" + ok))
+    val out = base / "docs" / "scaladoc"
+    Doc(inputs.config.maxErrors, inputs.compilers.scalac)
+      .cached(cache / "docSmaller", "NetLogo",
+              inputs.config.sources.filter(sourceFilter),
+              inputs.config.classpath, out, options, s.log)
+    NetLogoBuild.mungeScaladocSourceUrls(out)
   }
 
 libraryDependencies ++= Seq(
