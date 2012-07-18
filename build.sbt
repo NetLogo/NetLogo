@@ -59,45 +59,6 @@ nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
-netlogoVersion <<= (testLoader in Test) map {
-  _.loadClass("org.nlogo.api.Version")
-   .getMethod("version")
-   .invoke(null).asInstanceOf[String]
-   .replaceFirst("NetLogo ", "")
-}
-
-scalacOptions in (Compile, doc) <++= (baseDirectory, netlogoVersion) map {
-  (base, version) =>
-    Seq("-encoding", "us-ascii") ++
-    Opts.doc.title("NetLogo") ++
-    Opts.doc.version(version) ++
-    Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
-                       version + "/src/main€{FILE_PATH}.scala")
-}
-
-// compensate for issues.scala-lang.org/browse/SI-5388
-doc in Compile ~= NetLogoBuild.mungeScaladocSourceUrls
-
-// The regular doc task includes doc for the entire main source tree.  But for bundling with the
-// User Manual, in docs/scaladoc/, we want to document only select classes.  So I copy and pasted
-// the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
-// sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
-docSmaller <<= (baseDirectory, cacheDirectory, scalacOptions in (Compile, doc), compileInputs in Compile, netlogoVersion, streams) map {
-  (base, cache, options, inputs, version, s) =>
-    val apiSources = Seq(
-      "app/App.scala", "headless/HeadlessWorkspace.scala",
-      "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
-      "api/", "agent/", "workspace/", "nvm/")
-    val sourceFilter: File => Boolean = path =>
-      apiSources.exists(ok => path.toString.containsSlice("src/main/org/nlogo/" + ok))
-    val out = base / "docs" / "scaladoc"
-    Doc(inputs.config.maxErrors, inputs.compilers.scalac)
-      .cached(cache / "docSmaller", "NetLogo",
-              inputs.config.sources.filter(sourceFilter),
-              inputs.config.classpath, out, options, s.log)
-    NetLogoBuild.mungeScaladocSourceUrls(out)
-  }
-
 libraryDependencies ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
@@ -128,4 +89,5 @@ all <<= all.dependsOn(
   Extensions.extensions,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,
-  InfoTab.infoTab)
+  InfoTab.infoTab,
+  Scaladoc.docSmaller)

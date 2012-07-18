@@ -100,18 +100,6 @@ do
   fi
 done
 
-until [ -n "$INCLUDE_SCALADOC" ]
-do
-  read -p "Generate Scaladoc? " -n 1 ANSWER
-  echo
-  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-    INCLUDE_SCALADOC=1
-  fi
-  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-    INCLUDE_SCALADOC=0
-  fi
-done
-
 until [ -n "$DO_RSYNC" ]
 do
   read -p "Rsync to CCL server when done? " -n 1 ANSWER
@@ -155,14 +143,6 @@ export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --versi
 export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
 export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
-
-# Scaladoc
-$RM -rf docs/scaladoc
-if [ $INCLUDE_SCALADOC -eq 1 ]
-then
-  echo "generating Scaladoc"
-  bin/sbt doc
-fi
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
