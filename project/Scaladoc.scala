@@ -46,7 +46,7 @@ object Scaladoc {
 
   // compensate for issues.scala-lang.org/browse/SI-5388
   private def mungeScaladocSourceUrls(path: File): File = {
-    for(file <- Process("find " + path + " -name *.html").lines)
+    for(file <- Process(Seq("find", path.toString, "-name", "*.html")).lines)
       IO.write(
         new File(file),
         IO.read(new File(file)).replaceAll("\\.java\\.scala", ".java"))
