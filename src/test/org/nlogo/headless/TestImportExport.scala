@@ -14,7 +14,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     // the default error handler just spits something to stdout or stderr or somewhere.
     // we want to fail hard. - ST 7/21/10
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           sys.error(title + " / " + errorDetails + " / " + fatalError)
       }
@@ -208,7 +208,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   test("testImportInvalidSize") {
     workspace.initForTesting(10)
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
           {
             assert(!fatalError)
@@ -224,7 +224,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   test("testImportDrawingIncompleteData") {
     workspace.initForTesting(10)
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
           assert(!fatalError)
           expect("Error Importing Drawing")(title)
@@ -268,7 +268,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   test("testNonExistentPlot") {
     workspace.initForTesting(10)
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean) = {
           assert(!fatalError)
           expect("Error Importing Plots")(title)
@@ -283,7 +283,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   test("testNonExistentPen") {
     workspace.open("test/import/plot-simple.nlogo")
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String,
                       fatalError: Boolean) =
           {
@@ -421,7 +421,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   test("ImportWrongOrder") {
     workspace.initForTesting(10)
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(fatalError)
             expect("Fatal Error- Incorrect Structure For Import File")(title)
@@ -444,7 +444,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       "test/import/trailing-commas.nlogo").readFile())
     val errorNumber = Array(0)
     workspace.importerErrorHandler =
-      new org.nlogo.agent.Importer.ErrorHandler() {
+      new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String, fatalError: Boolean) = {
           assert(!fatalError)
           expect("Warning: Too Many Values For Agent")(title)

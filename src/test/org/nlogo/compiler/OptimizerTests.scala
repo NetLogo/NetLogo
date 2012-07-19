@@ -15,15 +15,14 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
   private def compile(source:String):ProcedureDefinition = {
-    val program = new Program
-    val results = new StructureParser(tokenizer.tokenize(source), None, program,
+    val results = new StructureParser(tokenizer.tokenize(source), None, Program.empty(),
                                       java.util.Collections.emptyMap[String,Procedure],
                                       new DummyExtensionManager)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program,java.util.Collections.emptyMap[String,Procedure],
+      new IdentifierParser(results.program,java.util.Collections.emptyMap[String,Procedure],
                            results.procedures,false)
       .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head

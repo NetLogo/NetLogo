@@ -16,7 +16,7 @@ class ExpressionParserTests extends FunSuite {
   /// helpers
   private def compile(source: String): Seq[Statements] = { // must be private
     val wrappedSource = PREAMBLE + source + POSTAMBLE
-    val program = new Program
+    val program = Program.empty
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(wrappedSource), None,

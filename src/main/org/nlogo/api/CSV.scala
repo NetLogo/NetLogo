@@ -61,7 +61,10 @@ class CSV(dump: Any => String) {
 
   def variableNameRow(v: JList[String]): String = {
     import collection.JavaConverters._
-    v.asScala.map(encode(_).toLowerCase).mkString(",")
+    variableNameRow(v.asScala)
   }
+
+  def variableNameRow(names: Seq[String]): String =
+    names.map(encode(_).toLowerCase).mkString(",")
 
 }

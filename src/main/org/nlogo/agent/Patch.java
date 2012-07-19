@@ -113,8 +113,8 @@ public strictfp class Patch
     }
     // Keep Variables Across Recompile
     if (forRecompile) {
-      for (int i = NUMBER_PREDEFINED_VARS; i < oldvars.length && i < world.oldPatchesOwn.size(); i++) {
-        String name = world.oldPatchesOwn.get(i);
+      for (int i = NUMBER_PREDEFINED_VARS; i < oldvars.length && i < world.oldProgram.patchesOwn().size(); i++) {
+        String name = world.oldProgram.patchesOwn().apply(i);
         int newpos = world.patchesOwnIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];
@@ -242,7 +242,7 @@ public strictfp class Patch
           } else if (value instanceof LogoList) {
             pcolor((LogoList) value, VAR_PCOLOR, false);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables().apply(vn),
                 Double.class, value);
           }
           break;
@@ -257,7 +257,7 @@ public strictfp class Patch
           } else if (value instanceof LogoList) {
             labelColor((LogoList) value, VAR_PLABELCOLOR);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables().apply(vn),
                 Double.class, value);
           }
           break;
