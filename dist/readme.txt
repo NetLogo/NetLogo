@@ -44,7 +44,7 @@ HOW TO RUN NETLOGO
   commands would be:
   $ cd @@@UNIXNAME@@@
   $ ./netlogo.sh
-  You must have Java 5 or higher installed.
+  You must have Java 6 or higher installed.
 
 ===
 
