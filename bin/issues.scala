@@ -19,19 +19,21 @@
 // - note: if you run the script for the first time and it appears non-responsive, do not fear;
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
 
-// We're using Dispatch Reboot here, even though it's still in alpha, instead of just using the old,
+// We're using Dispatch Reboot here, even though it's still in beta, instead of just using the old,
 // stable Dispatch.  It's not for any pragmatic reason -- just wanted to give the reboot version
 // a try. - ST 4/25/12
 
+// scalaVersion is 2.9.1 because n8han forgot to crossbuild beta2 for 2.9.2 :-) - ST 7/19/12
+
 /***
-scalaVersion := "2.9.2"
+scalaVersion := "2.9.1"
 
 onLoadMessage := ""
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ~= { seq =>
-    val vers = "0.9.0-beta1"
+    val vers = "0.9.0-beta2"
     seq ++ Seq("net.databinder.dispatch" %% "core" % vers,
                "net.liftweb" % "lift-json_2.9.1" % "2.4",
                "org.slf4j" % "slf4j-nop" % "1.6.0")
@@ -41,6 +43,7 @@ libraryDependencies ~= { seq =>
 import dispatch._
 import net.liftweb.json.JsonParser
 import net.liftweb.json.JsonAST._
+import com.ning.http.client.Response
 
 object Issue {
   def fromJson(j: JValue): Issue = {
@@ -56,7 +59,7 @@ val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
 val req = base <<? Map("milestone" -> "11",
                        "state" -> "closed",
                        "per_page" -> "1000")
-val stream = Http(req > As(_.getResponseBodyAsStream)).apply
+val stream = Http(req OK ((_: Response).getResponseBodyAsStream)).apply
 val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
 val issues: List[Issue] =
   (for {
