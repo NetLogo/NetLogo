@@ -43,6 +43,8 @@ trait World {
   def patchColorsDirty: Boolean
   def markPatchColorsDirty()
   def markPatchColorsClean()
+  def getBreed(name: String): AgentSet
+  def getLinkBreed(name: String): AgentSet
   def getVariablesArraySize(link: Link, breed: AgentSet): Int
   def getVariablesArraySize(turtle: Turtle, breed: AgentSet): Int
   def linksOwnNameAt(i: Int): String

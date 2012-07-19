@@ -12,6 +12,7 @@ import org.nlogo.api.WorldDimensions3D;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public final strictfp class World3D
     extends World
@@ -196,12 +197,7 @@ public final strictfp class World3D
 
   @Override
   public Program newProgram() {
-    return new Program(true);
-  }
-
-  @Override
-  public Program newProgram(java.util.List<String> interfaceGlobals) {
-    return new Program(interfaceGlobals, true);
+    return Program.empty(true);
   }
 
   public void createPatches(int minPxcor, int maxPxcor,
@@ -231,12 +227,13 @@ public final strictfp class World3D
     _maxPycorBoxed = Double.valueOf(_maxPycor);
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
-    if (program().breeds() != null) {
-      for (Iterator<Object> iter = program().breeds().values().iterator();
-           iter.hasNext();) {
-        ((AgentSet) iter.next()).clear();
-      }
+    for(AgentSet agents : breedAgents.values()) {
+        agents.clear();
     }
+    for(AgentSet agents : linkBreedAgents.values()) {
+        agents.clear();
+    }
+
     _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
     _links = new TreeAgentSet(Link.class, "LINKS", this);
 

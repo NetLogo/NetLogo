@@ -97,7 +97,7 @@ private class ManagerDialog(manager: LabManager,
       new Protocol(
         "experiment", "setup", "go", "", 1, true, 0, "", List("count turtles"),
         manager.workspace.world.synchronized {
-          manager.workspace.world.program.interfaceGlobals.asScala.toList
+          manager.workspace.world.program.interfaceGlobals.toList
           .map{case variableName: String =>
             new EnumeratedValueSet(
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),

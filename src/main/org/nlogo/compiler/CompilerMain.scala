@@ -8,7 +8,7 @@ package org.nlogo.compiler
 // StructureParser. - ST 2/21/08, 1/21/09
 
 import org.nlogo.api.{ExtensionManager, Program, Version}
-import org.nlogo.nvm.{GeneratorInterface, Procedure}
+import org.nlogo.nvm.{CompilerResults, GeneratorInterface, Procedure}
 import org.nlogo.util.Femto
 
 private object CompilerMain {
@@ -17,7 +17,7 @@ private object CompilerMain {
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
               oldProcedures: java.util.Map[String, Procedure],
-              extensionManager: ExtensionManager): Seq[Procedure] = {
+              extensionManager: ExtensionManager): CompilerResults = {
 
     implicit val tokenizer = if(program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val structureResults = new StructureParser(tokenizer.tokenize(source), // tokenize
@@ -29,7 +29,7 @@ private object CompilerMain {
     for(procedure <- structureResults.procedures.values.asScala) {
       procedure.topLevel = subprogram
       val tokens =
-        new IdentifierParser(program, oldProcedures, structureResults.procedures, false)
+        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, false)
         .process(structureResults.tokens(procedure).iterator, procedure)  // resolve references
       defs ++= new ExpressionParser(procedure, taskNumbers).parse(tokens) // parse
     }
@@ -60,6 +60,8 @@ private object CompilerMain {
     }
     // only return top level procedures.
     // task procedures can be reached via the children field on Procedure.
-    defs.map(_.procedure).filterNot(_.isTask)
+    CompilerResults(
+      defs.map(_.procedure).filterNot(_.isTask),
+      structureResults.program)
   }
 }

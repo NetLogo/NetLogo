@@ -83,7 +83,7 @@ public final strictfp class Patch3D
           } else if (value instanceof LogoList) {
             pcolor((LogoList) value, VAR_PCOLOR3D, true);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -98,7 +98,7 @@ public final strictfp class Patch3D
           } else if (value instanceof LogoList) {
             labelColor((LogoList) value, VAR_PLABELCOLOR3D);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
