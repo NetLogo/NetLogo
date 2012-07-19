@@ -24,13 +24,12 @@ object Compiler extends CompilerInterface {
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    new CompilerResults(CompilerMain.compile(source, None, program, false, noProcedures, extensionManager),
-                        program)
+    CompilerMain.compile(source, None, program, false, noProcedures, extensionManager)
 
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
   def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager):CompilerResults =
-    new CompilerResults(CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager), program)
+    CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager)
 
   // these two used by input boxes
   @throws(classOf[CompilerException])

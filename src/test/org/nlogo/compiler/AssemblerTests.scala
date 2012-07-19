@@ -9,7 +9,7 @@ import org.nlogo.api.{ DummyExtensionManager, Program }
 class AssemblerTests extends FunSuite {
   def compile(keyword: String, source: String): Procedure = {
     implicit val tokenizer = Compiler.Tokenizer2D
-    val program = new Program
+    val program = Program.empty
     val results = new StructureParser(
       tokenizer.tokenize(keyword + " foo " + source + "\nend"), None,
       program, java.util.Collections.emptyMap[String, Procedure],

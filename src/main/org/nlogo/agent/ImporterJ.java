@@ -4,22 +4,24 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentVariables;
+import org.nlogo.api.Breed;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PlotInterface;
 import org.nlogo.api.PlotPenInterface;
 import org.nlogo.api.WorldDimensions;
 
+import scala.collection.Seq;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public strictfp class Importer
+public abstract strictfp class ImporterJ
     implements org.nlogo.api.ImportErrorHandler {
   final ImporterUser importerUser;
   final ErrorHandler errorHandler;
@@ -73,8 +75,8 @@ public strictfp class Importer
     }
   }
 
-  public Importer(Importer.ErrorHandler errorHandler, World world, ImporterUser importerUser,
-                  Importer.StringReader stringReader) {
+  public ImporterJ(ImporterJ.ErrorHandler errorHandler, World world, ImporterUser importerUser,
+                   ImporterJ.StringReader stringReader) {
     this.errorHandler = errorHandler;
     this.world = world;
     this.importerUser = importerUser;
@@ -956,45 +958,14 @@ public strictfp class Importer
     }
   }
 
-  //functions for getting and filling helper lists and maps
-  //maybe move this to World.java???
-  //returns a List containing all the breed variables for this model
+  abstract List<String> getAllVars(scala.collection.immutable.ListMap<String, Breed> breeds);
+
   List<String> getAllBreedVars() {
-    List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, Object> breeds = world.getBreeds();
-    if (breeds != null) {
-      for (Iterator<Object> breedElt = breeds.values().iterator();
-           breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
-          world.program().breedsOwn().get(breed.printName());
-        if (breedOwns != null) {
-          for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
-          }
-        }
-      }
-    }
-    return allBreedOwns;
+    return getAllVars(world.program().breeds());
   }
 
   List<String> getAllLinkBreedVars() {
-    List<String> allBreedOwns = new ArrayList<String>();
-    Map<String, Object> breeds = world.getLinkBreeds();
-    if (breeds != null) {
-      for (Iterator<Object> breedElt = breeds.values().iterator();
-           breedElt.hasNext();) {
-        AgentSet breed = (AgentSet) breedElt.next();
-        List<String> breedOwns =
-          world.program().linkBreedsOwn().get(breed.printName());
-        if (breedOwns != null) {
-          for (int i = 0; i < breedOwns.size(); i++) {
-            allBreedOwns.add(breedOwns.get(i));
-          }
-        }
-      }
-    }
-    return allBreedOwns;
+    return getAllVars(world.program().linkBreeds());
   }
 
   Map<Class<? extends Agent>, List<String>> specialVariables;
@@ -1028,40 +999,10 @@ public strictfp class Importer
     return list;
   }
 
-  String[] getSpecialObserverVariables() {
-    return new String[]{MIN_PXCOR_HEADER,
-        MAX_PXCOR_HEADER,
-        MIN_PYCOR_HEADER,
-        MAX_PYCOR_HEADER,
-        SCREEN_EDGE_X_HEADER,
-        SCREEN_EDGE_Y_HEADER,
-        PERSPECTIVE_HEADER,
-        SUBJECT_HEADER,
-        NEXT_INDEX_HEADER,
-        DIRECTED_LINKS_HEADER,
-        TICKS_HEADER};
-  }
-
-  String[] getSpecialTurtleVariables() {
-    String[] vars = AgentVariables.getImplicitTurtleVariables();
-    return new String[]
-        {vars[Turtle.VAR_WHO], vars[Turtle.VAR_BREED],
-            vars[Turtle.VAR_LABEL], vars[Turtle.VAR_SHAPE]};
-  }
-
-  String[] getSpecialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables();
-    return new String[]
-        {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR],
-            vars[Patch.VAR_PLABEL]};
-  }
-
-  String[] getSpecialLinkVariables() {
-    String[] vars = AgentVariables.getImplicitLinkVariables();
-    return new String[]
-        {vars[Link.VAR_BREED], vars[Link.VAR_LABEL],
-            vars[Link.VAR_END1], vars[Link.VAR_END2]};
-  }
+  abstract String[] getSpecialObserverVariables();
+  abstract String[] getSpecialTurtleVariables();
+  abstract String[] getSpecialPatchVariables();
+  abstract String[] getSpecialLinkVariables();
 
   boolean isSpecialVariable(Class<? extends Agent> agentClass, String header) {
     return specialVariables.get(agentClass).contains(header);
@@ -1112,19 +1053,19 @@ public strictfp class Importer
 
   String[] getEssentialTurtleVariables() {
     return new String[]
-        {AgentVariables.getImplicitTurtleVariables()[Turtle.VAR_WHO]};
+    {AgentVariables.getImplicitTurtleVariables().apply(Turtle.VAR_WHO)};
   }
 
   String[] getEssentialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables();
-    return new String[]
-        {vars[Patch.VAR_PXCOR], vars[Patch.VAR_PYCOR]};
+    Seq<String> vars = AgentVariables.getImplicitPatchVariables();
+    return new String[]{
+      vars.apply(Patch.VAR_PXCOR), vars.apply(Patch.VAR_PYCOR)};
   }
 
   String[] getEssentialLinkVariables() {
-    String[] vars = AgentVariables.getImplicitLinkVariables();
-    return new String[]
-        {vars[Link.VAR_END1], vars[Link.VAR_END2]};
+    Seq<String> vars = AgentVariables.getImplicitLinkVariables();
+    return new String[]{
+      vars.apply(Link.VAR_END1), vars.apply(Link.VAR_END2)};
   }
 
   //if essentialHeaders is true,
@@ -1170,21 +1111,7 @@ public strictfp class Importer
     }
   }
 
-  String[] getImplicitVariables(Class<? extends Agent> agentClass) {
-    if (agentClass == Observer.class) {
-      return AgentVariables.getImplicitObserverVariables();
-    }
-    if (agentClass == Turtle.class) {
-      return AgentVariables.getImplicitTurtleVariables();
-    }
-    if (agentClass == Patch.class) {
-      return AgentVariables.getImplicitPatchVariables();
-    }
-    if (agentClass == Link.class) {
-      return AgentVariables.getImplicitLinkVariables();
-    }
-    throw new IllegalStateException();
-  }
+  abstract String[] getImplicitVariables(Class<? extends Agent> agentClass);
 
   //code to handle peek for the StringTokenizer
 

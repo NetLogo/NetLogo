@@ -26,8 +26,8 @@ public strictfp class Observer
       newcons[i] = null;
     }
     if (oldvars != null && forRecompile) {
-      for (int i = 0; i < oldvars.length && i < world.oldGlobals.size(); i++) {
-        String name = world.oldGlobals.get(i);
+      for (int i = 0; i < oldvars.length && i < world.oldProgram.globals().size(); i++) {
+        String name = world.oldProgram.globals().apply(i);
         int newpos = world.observerOwnsIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];

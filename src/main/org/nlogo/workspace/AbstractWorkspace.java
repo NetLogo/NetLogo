@@ -10,6 +10,7 @@ import java.util.WeakHashMap;
 import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
+import org.nlogo.agent.ImporterJ;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.FileManager;
@@ -452,11 +453,11 @@ public abstract strictfp class AbstractWorkspace
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
     writer.println(Dump.csv().header("MODEL SETTINGS"));
-    List<String> globals = world.program().interfaceGlobals();
+    scala.collection.Seq<String> globals = world.program().interfaceGlobals();
     writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
-    for (Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
+    for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
           world.getObserverVariableByName(iter.next());
     }
@@ -467,7 +468,7 @@ public abstract strictfp class AbstractWorkspace
 
   public abstract void clearAll();
 
-  protected abstract org.nlogo.agent.Importer.ErrorHandler importerErrorHandler();
+  protected abstract org.nlogo.agent.ImporterJ.ErrorHandler importerErrorHandler();
 
   public void importWorld(String filename)
       throws java.io.IOException {
@@ -496,8 +497,8 @@ public abstract strictfp class AbstractWorkspace
             stringReader(), new java.io.BufferedReader(reader));
   }
 
-  private final Importer.StringReader stringReader() {
-    return new Importer.StringReader() {
+  private final ImporterJ.StringReader stringReader() {
+    return new ImporterJ.StringReader() {
       public Object readFromString(String s)
           throws Importer.StringReaderException {
         try {

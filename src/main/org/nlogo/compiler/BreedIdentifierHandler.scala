@@ -1,9 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
-import org.nlogo.agent.AgentSet
-import org.nlogo.api.{Program,Token,TokenType}
+
+import org.nlogo.api.{AgentSet,Breed,Program,Token,TokenType}
 import org.nlogo.nvm.Instruction
+
 // The Helper class and some of the methods aren't private because we want to get at them from
 // TestBreedIdentifierHandler. - ST 12/22/08
 private object BreedIdentifierHandler {
@@ -14,17 +15,13 @@ private object BreedIdentifierHandler {
     handlers.toStream.flatMap(_.process(token,program)).headOption
   def turtle(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.breeds, _.breedsSingular, (obj:AnyRef) => true)
+               _.breeds, _ => true)
   def directedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.linkBreeds, _.linkBreedsSingular,
-               { case a:AgentSet => a.isDirected
-                case s:String => s == "DIRECTED-LINK-BREED" } )
+               _.linkBreeds, _.isDirected)
   def undirectedLink(patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction]) =
     new Helper(patternString,tokenType,singular,primClass,
-               _.linkBreeds, _.linkBreedsSingular,
-               { case a:AgentSet => a.isUndirected
-                case s:String => s == "UNDIRECTED-LINK-BREED" } )
+               _.linkBreeds, !_.isDirected)
   private val handlers = List(
     // prims for turtle breeds
     turtle("CREATE-*", COMMAND, false, classOf[_createturtles]),
@@ -65,8 +62,7 @@ private object BreedIdentifierHandler {
   )
   class Helper
     (patternString:String,tokenType:TokenType,singular:Boolean,primClass:Class[_ <: Instruction],
-     breeds:(Program)=>java.util.Map[String,Object],singularMap:(Program)=>java.util.Map[String,String],
-     isValidBreed:(AnyRef)=>Boolean)
+     breeds:(Program)=>collection.Map[String,Breed],isValidBreed:(Breed)=>Boolean)
   {
     import java.util.regex.Pattern
     val pattern = Pattern.compile("\\A"+patternString.replaceAll("\\?","\\\\?").replaceAll("\\*","(.+)")+"\\Z")
@@ -74,11 +70,12 @@ private object BreedIdentifierHandler {
       val matcher = pattern.matcher(tok.value.asInstanceOf[String])
       if(!matcher.matches()) return None
       val name = matcher.group(1)
-      val map = if(singular) singularMap(program) else breeds(program)
-      if(!map.containsKey(name)) return None
-      val breedName = if(singular) map.get(name) else name
-      if(!isValidBreed(breeds(program).get(breedName))) return None
-      val instr = Instantiator.newInstance[Instruction](primClass,breedName)
+      val breed =
+        breeds(program).values
+          .find{breed => name == (if (singular) breed.singular else breed.name)}
+          .getOrElse(return None)
+      if (!isValidBreed(breed)) return None
+      val instr = Instantiator.newInstance[Instruction](primClass,breed.name)
       val tok2 = new Token(tok.value.asInstanceOf[String],tokenType,instr)(tok.startPos,tok.endPos,tok.fileName)
       instr.token(tok2)
       Some(tok2)

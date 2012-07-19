@@ -10,11 +10,7 @@ class IdentifierParserTests extends FunSuite {
 
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"
-    val interfaceGlobals = {
-      import collection.JavaConverters._
-      List("X").asJava
-    }
-    val program = new Program(interfaceGlobals)
+    val program = Program.empty().copy(interfaceGlobals = Seq("X"))
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(wrappedSource), None,

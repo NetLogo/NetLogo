@@ -42,7 +42,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val results = {
       val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
       import collection.JavaConverters._
-      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager)
+      ws.compiler.compileProgram(
+        code, Program.empty.copy(
+          interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)

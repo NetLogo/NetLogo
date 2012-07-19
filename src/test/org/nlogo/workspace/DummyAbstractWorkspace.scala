@@ -29,7 +29,7 @@ extends AbstractWorkspaceScala(new World)
   override def changeLanguage() = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
-  override def importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler = unsupported
+  override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported
   override def importDrawing(file: org.nlogo.api.File) = unsupported
   override def exportOutput(filename: String) = unsupported
   override def exportDrawing(filename: String, format: String) = unsupported

@@ -16,7 +16,6 @@ package org.nlogo.agent;
 // --mag 10/03/03
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public strictfp class BreedShapes {
@@ -28,31 +27,27 @@ public strictfp class BreedShapes {
     this.genericBreedName = genericBreedName;
   }
 
-  public void setUpBreedShapes(boolean clear, Map<String, Object> breeds) {
+  public void setUpBreedShapes(boolean clear, scala.collection.immutable.ListMap<String, org.nlogo.api.Breed> breeds) {
     synchronized (lock) {
       if (clear || shapes == null) {
         shapes = new HashMap<String, String>();
       }
       Map<String, String> newBreedShapes =
           new HashMap<String, String>();
-      if (breeds != null) {
-        for (Iterator<Object> iter =
-                 breeds.values().iterator();
-             iter.hasNext();) {
-          String breedName =
-              ((AgentSet) iter.next()).printName();
-          String oldShape = shapes.get(breedName);
-          newBreedShapes.put(breedName,
-              oldShape == null
-                  ? "__default"
-                  : oldShape);
-        }
-        String oldShape = shapes.get(genericBreedName);
-        newBreedShapes.put(genericBreedName,
+      for (scala.collection.Iterator<String> iter = breeds.keys().iterator();
+           iter.hasNext();) {
+        String breedName = iter.next();
+        String oldShape = shapes.get(breedName);
+        newBreedShapes.put(breedName,
             oldShape == null
-                ? "default"
+                ? "__default"
                 : oldShape);
       }
+      String oldShape = shapes.get(genericBreedName);
+      newBreedShapes.put(genericBreedName,
+          oldShape == null
+              ? "default"
+              : oldShape);
       shapes = newBreedShapes;
     }
   }

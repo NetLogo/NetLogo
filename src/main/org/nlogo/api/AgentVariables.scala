@@ -6,19 +6,18 @@ import AgentVariableNumbers._
 
 object AgentVariables {
 
-  def getImplicitObserverVariables =
-    Array[String]()
+  val getImplicitObserverVariables = Seq[String]()
 
-  def getImplicitTurtleVariables =
-    Array("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
-          "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
+  val getImplicitTurtleVariables =
+    Seq("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
+        "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
 
-  def getImplicitPatchVariables =
-    Array("PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
+  val getImplicitPatchVariables =
+    Seq("PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
 
-  def getImplicitLinkVariables =
-    Array("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
-          "THICKNESS", "SHAPE", "TIE-MODE")
+  val getImplicitLinkVariables =
+    Seq("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
+        "THICKNESS", "SHAPE", "TIE-MODE")
 
   private val doubleTurtleVariables = Set(
     VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)

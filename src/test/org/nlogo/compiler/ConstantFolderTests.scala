@@ -10,15 +10,14 @@ class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
     implicit val tokenizer = Compiler.Tokenizer2D
-    val program = new Program
     val results = new StructureParser(
       tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
-      program, java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
+      Program.empty(), java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
+      new IdentifierParser(results.program, java.util.Collections.emptyMap[String, Procedure],
         results.procedures, false)
         .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head

@@ -423,7 +423,7 @@ public strictfp class Turtle
             color((LogoList) value, VAR_COLOR);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
           }
           break;
         case VAR_HEADING:
@@ -431,7 +431,7 @@ public strictfp class Turtle
             heading((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
           }
           break;
         case VAR_XCOR:
@@ -439,7 +439,7 @@ public strictfp class Turtle
             xcor((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
           }
           break;
         case VAR_YCOR:
@@ -447,7 +447,7 @@ public strictfp class Turtle
             ycor((Double) value);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
           }
           break;
         case VAR_SHAPE:
@@ -460,7 +460,7 @@ public strictfp class Turtle
             shape(newShape);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], String.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), String.class, value);
           }
           break;
         case VAR_LABEL:
@@ -473,7 +473,7 @@ public strictfp class Turtle
             labelColor((LogoList) value, VAR_LABELCOLOR);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Double.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Double.class, value);
           }
           break;
         case VAR_BREED:
@@ -485,7 +485,7 @@ public strictfp class Turtle
             setBreed(breed);
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], AgentSet.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), AgentSet.class, value);
           }
           break;
         case VAR_HIDDEN:
@@ -493,7 +493,7 @@ public strictfp class Turtle
             hidden(((Boolean) value).booleanValue());
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn], Boolean.class, value);
+                (AgentVariables.getImplicitTurtleVariables().apply(vn), Boolean.class, value);
           }
           break;
         case VAR_SIZE:
@@ -501,7 +501,7 @@ public strictfp class Turtle
             size(((Double) value).doubleValue());
           } else {
             wrongTypeForVariable
-                (AgentVariables.getImplicitTurtleVariables()[vn],
+                (AgentVariables.getImplicitTurtleVariables().apply(vn),
                     Double.class, value);
           }
           break;
@@ -509,7 +509,7 @@ public strictfp class Turtle
           if (value instanceof String) {
             penMode((String) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables().apply(vn),
                 String.class, value);
           }
           break;
@@ -518,7 +518,7 @@ public strictfp class Turtle
           if (value instanceof Double) {
             penSize(((Double) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables()[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables().apply(vn),
                 Double.class, value);
           }
           break;
@@ -1086,10 +1086,13 @@ public strictfp class Turtle
       return 0;
     }
     int j = 0;
-    for (Iterator<Object> iter = world.program().breeds().values().iterator(); iter.hasNext(); j++) {
-      if (mybreed == ((AgentSet) iter.next())) {
+    scala.collection.Iterator<String> iter =
+      world.program().breeds().keys().iterator();
+    while(iter.hasNext()) {
+      if (world.breedAgents.get(iter.next()) == mybreed) {
         return j;
       }
+      j++;
     }
     // we might get here if the program fails to compile ev 9/2/08
     return 0;

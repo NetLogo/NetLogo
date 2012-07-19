@@ -3,23 +3,25 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ Program, Token, TokenType }
+import collection.immutable.ListMap
+import org.nlogo.api.{ Breed, Program, Token, TokenType }
 import org.nlogo.prim._
 
 class BreedIdentifierHandlerTests extends FunSuite {
+
   def tester(handler: BreedIdentifierHandler.Helper, code: String, tokenString: String): Token = {
-    val program = new Program
-    program.breeds.put("FROGS", "FROGS")
-    program.breedsSingular.put("FROG", "FROGS")
-    program.linkBreeds.put("AS", "DIRECTED-LINK-BREED")
-    program.linkBreedsSingular.put("A", "AS")
-    program.linkBreeds.put("BS", "UNDIRECTED-LINK-BREED")
-    program.linkBreedsSingular.put("B", "BS")
+    val program =
+      Program.empty.copy(
+        breeds = ListMap("FROGS" -> Breed("FROGS", "FROG")),
+        linkBreeds = ListMap(
+          "AS" -> Breed("AS", "A", isDirected = true),
+          "BS" -> Breed("BS", "B", isDirected = false)))
     handler.process(
       Compiler.Tokenizer2D.tokenize(code).find(_.name.equalsIgnoreCase(tokenString)).orNull,
       program)
       .get
   }
+
   test("turtleBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.turtle("CREATE-*", TokenType.COMMAND, false,
       classOf[_createturtles]),
@@ -27,6 +29,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
     assert(token.value.isInstanceOf[_createturtles])
     expect("_createturtles:FROGS,+0")(token.value.toString)
   }
+
   test("directedLinkBreedIdentifier1") {
     val token = tester(BreedIdentifierHandler.directedLink
       ("CREATE-*-TO", TokenType.COMMAND, true,
@@ -36,6 +39,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
     assert(token.value.isInstanceOf[_createlinkto])
     expect("_createlinkto:AS,+0")(token.value.toString)
   }
+
   test("directedLinkBreedIdentifier2") {
     val token = tester(BreedIdentifierHandler.directedLink
       ("OUT-*-NEIGHBOR?", TokenType.REPORTER, true,
@@ -45,6 +49,7 @@ class BreedIdentifierHandlerTests extends FunSuite {
     assert(token.value.isInstanceOf[_outlinkneighbor])
     expect("_outlinkneighbor:AS")(token.value.toString)
   }
+
   test("undirectedLinkBreedIdentifier") {
     val token = tester(BreedIdentifierHandler.undirectedLink
       ("CREATE-*-WITH", TokenType.COMMAND, true,
@@ -54,4 +59,5 @@ class BreedIdentifierHandlerTests extends FunSuite {
     assert(token.value.isInstanceOf[_createlinkwith])
     expect("_createlinkwith:BS,+0")(token.value.toString)
   }
+
 }

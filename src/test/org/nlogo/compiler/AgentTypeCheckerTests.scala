@@ -11,7 +11,7 @@ class AgentTypeCheckerTests extends FunSuite {
   /// first some helpers
   private def compile(source: String): Seq[ProcedureDefinition] = {
     implicit val tokenizer = Compiler.Tokenizer2D
-    val program = new Program
+    val program = Program.empty
     val results = new StructureParser(tokenizer.tokenize(source), None, program,
       java.util.Collections.emptyMap[String, Procedure],
       new DummyExtensionManager)
