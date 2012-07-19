@@ -28,6 +28,8 @@ scalaVersion := "2.9.2"
 
 onLoadMessage := ""
 
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
+
 libraryDependencies ~= { seq =>
     val vers = "0.9.0-beta1"
     seq ++ Seq("net.databinder.dispatch" %% "core" % vers,
