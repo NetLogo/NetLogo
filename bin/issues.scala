@@ -43,7 +43,6 @@ libraryDependencies ~= { seq =>
 import dispatch._
 import net.liftweb.json.JsonParser
 import net.liftweb.json.JsonAST._
-import com.ning.http.client.Response
 
 object Issue {
   def fromJson(j: JValue): Issue = {
@@ -59,7 +58,7 @@ val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
 val req = base <<? Map("milestone" -> "11",
                        "state" -> "closed",
                        "per_page" -> "1000")
-val stream = Http(req OK ((_: Response).getResponseBodyAsStream)).apply
+val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
 val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
 val issues: List[Issue] =
   (for {
