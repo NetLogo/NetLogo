@@ -13,10 +13,10 @@ object Realloc {
   def realloc(world: World) {
     import world.program
     // remove agentsets for breeds that no longer exist, if any
-    for(name <- world.breedAgents.asScala.keys)
+    for(name <- world.breedAgents.keySet.asScala.toList)
       if(!program.breeds.contains(name))
         world.breedAgents.remove(name)
-    for(name <- world.linkBreedAgents.asScala.keys)
+    for(name <- world.linkBreedAgents.keySet.asScala.toList)
       if(!program.linkBreeds.contains(name))
         world.linkBreedAgents.remove(name)
     // make agentsets for new breeds
