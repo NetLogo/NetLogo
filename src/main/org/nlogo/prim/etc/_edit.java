@@ -3,11 +3,11 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.OutputDestinationJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.Workspace;
 
 /**
  * makes current model be TYPE_NORMAL. useful for CCL users wanting
@@ -31,7 +31,7 @@ public final strictfp class _edit
     workspace.outputObject
         ("Now editing: " + path,
             context.agent, true, false,
-            Workspace.OutputDestination.NORMAL);
+            OutputDestinationJ.NORMAL());
     context.ip = next;
   }
 }

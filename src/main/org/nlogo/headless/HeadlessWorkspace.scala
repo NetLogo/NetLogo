@@ -9,7 +9,7 @@ package org.nlogo.headless
 import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ Program, Version, RendererInterface, WorldDimensions,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
-                       CommandRunnable, ReporterRunnable }
+                       CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
@@ -264,7 +264,7 @@ with org.nlogo.api.ViewSettings {
   override def renderPerspective = true
   override def viewOffsetX = world.observer.followOffsetX
   override def viewOffsetY = world.observer.followOffsetY
-  override def updateMode(updateMode: Workspace.UpdateMode) { }
+  override def updateMode(updateMode: UpdateMode) { }
   override def setSize(x: Int, y: Int) { }
   override def clearTurtles() {
     if (!compilerTestingMode)

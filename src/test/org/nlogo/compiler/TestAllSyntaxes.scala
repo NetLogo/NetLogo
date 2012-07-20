@@ -299,7 +299,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_exportview string,OTPL,null,0,1,1
                     |_exportworld string,OTPL,null,0,1,1
                     |_face turtle or patch,-T--,null,0,1,1 *
-                    |_facenowrap agent,-T--,null,0,1,1 *
+                    |_facenowrap turtle or patch,-T--,null,0,1,1 *
                     |_facexy number/number,-T--,null,0,2,2 *
                     |_facexynowrap number/number,-T--,null,0,2,2 *
                     |_fd number,-T--,null,0,1,1

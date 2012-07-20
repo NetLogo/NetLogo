@@ -2,8 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.WorldDimensions
-import org.nlogo.nvm.Workspace.UpdateMode
+import org.nlogo.api.{ I18N, UpdateMode, WorldDimensions }
 
 class WorldLoader {
 
@@ -53,7 +52,7 @@ class WorldLoader {
       if(strings.length > updateModeIndex)
         UpdateMode.load(strings(updateModeIndex).toInt)
       else
-        UpdateMode.CONTINUOUS)
+        UpdateMode.Continuous)
     worldInterface.frameRate(
       if(strings.length > frameRateIndex)
         strings(frameRateIndex).toDouble

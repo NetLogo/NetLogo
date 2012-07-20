@@ -350,7 +350,7 @@ public abstract strictfp class AbstractWorkspace
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
                                  boolean reporter)
       throws CompilerException {
-    String key = source + "@" + context.activation.procedure.args.size() +
+    String key = source + "@" + context.activation.procedure().args.size() +
         "@" + context.agentBit;
     Procedure proc = codeBits.get(key);
     if (proc == null) {
@@ -362,14 +362,13 @@ public abstract strictfp class AbstractWorkspace
 
   /// misc
 
-  // we shouldn't need "Workspace." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 4/6/09
-  private Workspace.UpdateMode updateMode = Workspace.UpdateMode.CONTINUOUS;
+  private UpdateMode updateMode = UpdateModeJ.CONTINUOUS();
 
-  public Workspace.UpdateMode updateMode() {
+  public UpdateMode updateMode() {
     return updateMode;
   }
 
-  public void updateMode(Workspace.UpdateMode updateMode) {
+  public void updateMode(UpdateMode updateMode) {
     this.updateMode = updateMode;
   }
 
@@ -393,10 +392,9 @@ public abstract strictfp class AbstractWorkspace
 
   /// output
 
-  // we shouldn't need "Workspace." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 4/6/09
   public void outputObject(Object object, Object owner,
                            boolean addNewline, boolean readable,
-                           Workspace.OutputDestination destination)
+                           OutputDestination destination)
       throws LogoException {
     org.nlogo.agent.OutputObject oo =
         new org.nlogo.agent.OutputObject
@@ -412,10 +410,10 @@ public abstract strictfp class AbstractWorkspace
                     + Dump.logoObject(object, readable, false),
                 // other
                 addNewline, false);
-    if (destination == OutputDestination.FILE) {
+    if (destination == OutputDestinationJ.FILE()) {
       fileManager.writeOutputObject(oo);
     } else {
-      sendOutput(oo, destination == OutputDestination.OUTPUT_AREA);
+      sendOutput(oo, destination == OutputDestinationJ.OUTPUT_AREA());
     }
   }
 

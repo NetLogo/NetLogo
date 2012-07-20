@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.I18N
 import org.nlogo.compiler.CompilerExceptionThrowers.exception
-import org.nlogo.nvm.{Command,Reporter}
+import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
 
 /**
@@ -16,15 +16,15 @@ import org.nlogo.prim._
 private class SetVisitor extends DefaultAstVisitor {
   private lazy val INVALID_SET =
     I18N.errors.get("compiler.SetVisitor.notSettable")
-  override def visitStatement(stmt:Statement) {
+  override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
       val rApp = stmt(0).asInstanceOf[ReporterApp]
       // it's annoying Scala can't figure out that reporter.getClass is a ReporterClass.
       // lampsvn.epfl.ch/trac/scala/ticket/490 - ST 4/3/08, 8/19/08, 11/1/08
       val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass.asInstanceOf[SetVisitor.ReporterClass])
-        .getOrElse(exception(INVALID_SET,stmt))
-      val newCommand = Instantiator.newInstance[Command](newCommandClass,rApp.reporter)
+        .getOrElse(exception(INVALID_SET, stmt))
+      val newCommand = Instantiator.newInstance[Command](newCommandClass, rApp.reporter)
       newCommand.token(stmt.command.token)
       newCommand.tokenLimitingType(rApp.instruction.token)
       stmt.command_$eq(newCommand)
@@ -35,7 +35,7 @@ private class SetVisitor extends DefaultAstVisitor {
 private object SetVisitor {
   type ReporterClass = Class[_ <: Reporter]
   type CommandClass = Class[_ <: Command]
-  val classes = Map[ReporterClass,CommandClass](
+  val classes = Map[ReporterClass, CommandClass](
          classOf[_letvariable]           -> classOf[_setletvariable],
          classOf[_turtleorlinkvariable]  -> classOf[_setturtleorlinkvariable],
          classOf[_patchvariable]         -> classOf[_setpatchvariable],
