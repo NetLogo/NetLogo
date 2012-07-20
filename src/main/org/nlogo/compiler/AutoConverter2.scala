@@ -11,8 +11,8 @@ import org.nlogo.prim._constdouble
 // This class was automatically converted from Scala to Java using a program called jatran.  I did
 // some hand cleaning up of the code, but not that much, so beware. - ST 12/10/08
 
-class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenizer:TokenizerInterface) {
-  def convert(originalSource:String, subprogram:Boolean, reporter:Boolean, version:String):String = {
+class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit tokenizer: TokenizerInterface) {
+  def convert(originalSource: String, subprogram: Boolean, reporter: Boolean, version: String): String = {
     var source = originalSource
     if(source.trim.length == 0) return source
     if(VersionHistory.olderThan32pre4(version) || VersionHistory.olderThan3DPreview4(version)) {
@@ -23,7 +23,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
         // code that would notify the user when conversion failed, but threading that information
         // everywhere got complicated, so I'm throwing all that code away for 4.1 since most users
         // already converted to 4.0 - ST 12/18/08
-        case ex:CompilerException => if(!ignoreErrors) throw new IllegalStateException(ex)
+        case ex: CompilerException => if(!ignoreErrors) throw new IllegalStateException(ex)
       }
       // Now that a temporary Program object is in place, we need to make sure that some bookkeeping
       // takes place in the World object since some stuff that happens later during loading, but
@@ -80,21 +80,21 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
   // the + operator no longer work on strings and lists, only
   // numbers. So it's pretty essential that auto-conversion be able
   // to recover even when a parsing failure occurs.
-  private def runVisitor(source:String, subprogram:Boolean, reporter:Boolean):String = {
-    var preamble:String = ""
-    val postamble:String = "\nend"
-    var wrappedSource:String = null
+  private def runVisitor(source: String, subprogram: Boolean, reporter: Boolean): String = {
+    var preamble: String = ""
+    val postamble: String = "\nend"
+    var wrappedSource: String = null
     if(subprogram) {
       preamble = if(reporter) "to-report __convertValueAndValuesFrom report " else "to __convertValueAndValuesFrom "
       wrappedSource = preamble + source + postamble
     }
     else wrappedSource = source
     // This code is adapted from the first half or so of the compile() method. - ST 6/29/06
-    val results:StructureParser.Results =
+    val results: StructureParser.Results =
       new StructureParser(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
                           workspace.world.program, workspace.getProcedures,
                           workspace.getExtensionManager).parse(subprogram)
-    val identifierParser:IdentifierParser =
+    val identifierParser: IdentifierParser =
       new IdentifierParser(workspace.world.program, workspace.getProcedures,
                            results.procedures, true )
                           // true = parse in "forgiving" mode, in which any
@@ -113,11 +113,11 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
         stmts.accept(new AutoConverterVisitor(replacements, wrappedSource))
     }
     // Now that we know all the replacements that need to be made, we actually perform them.
-    val buf:java.lang.StringBuilder = new java.lang.StringBuilder(source)
-    var offset:Int = -preamble.length
+    val buf: java.lang.StringBuilder = new java.lang.StringBuilder(source)
+    var offset: Int = -preamble.length
     replacements.foreach{replacement =>
       try { offset = replacement.replace(buf, offset) }
-      catch { case ex:Replacement.FailedException => org.nlogo.util.Exceptions.ignore(ex) }
+      catch { case ex: Replacement.FailedException => org.nlogo.util.Exceptions.ignore(ex) }
     }
     if(!subprogram) {
       // so we can later convert widget code referring to these procedure names - ST 12/9/08
@@ -147,22 +147,22 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
    * random or random-float if we can deduce which is correct.
    *
    */
-  private class AutoConverterVisitor(replacements:collection.mutable.ArrayBuffer[Replacement],source:String) extends DefaultAstVisitor {
-    override def visitReporterApp(app:ReporterApp) {
+  private class AutoConverterVisitor(replacements: collection.mutable.ArrayBuffer[Replacement], source: String) extends DefaultAstVisitor {
+    override def visitReporterApp(app: ReporterApp) {
       val oldReporter = app.reporter
       oldReporter match {
-        case _:org.nlogo.prim.dead._valuefrom | _:org.nlogo.prim.dead._valuesfrom =>
+        case _: org.nlogo.prim.dead._valuefrom | _: org.nlogo.prim.dead._valuesfrom =>
           val arg1 = app(1).asInstanceOf[ReporterBlock]
           replacements += new Replacement(app.reporter.token.startPos,
                                           app.reporter.token.endPos,
                                           app.reporter.token.name,
-                                          source.substring(arg1.start,arg1.end) + " of")
+                                          source.substring(arg1.start, arg1.end) + " of")
           var start = arg1.start
           if(start > 0 && source.charAt(start - 1) == ' ') start -= 1
-          replacements += new Replacement(start,arg1.end,
-                                          source.substring(start,arg1.end),"")
-        case _:org.nlogo.prim.dead._randomorrandomfloat =>
-          var choice:String = null
+          replacements += new Replacement(start, arg1.end,
+                                          source.substring(start, arg1.end), "")
+        case _: org.nlogo.prim.dead._randomorrandomfloat =>
+          var choice: String = null
           val arg = app(0).asInstanceOf[ReporterApp].reporter
           if(arg.isInstanceOf[_constdouble] && arg.asInstanceOf[_constdouble].report(null).isInstanceOf[java.lang.Double])
             choice = if(arg.token.name.indexOf('.') == -1) "random" else "random-float"
@@ -183,7 +183,7 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
     // histogram-from turtles [xcor] => histogram [xcor] of turtles
     // replacement #1: "histogram-from" -> "histogram [xcor] of"
     // replacement #2: " [xcor]" -> ""
-    override def visitStatement(stmt:Statement) {
+    override def visitStatement(stmt: Statement) {
       val oldCommand = stmt.command
       if(oldCommand.isInstanceOf[org.nlogo.prim.dead._histogramfrom]) {
         val arg1 = stmt(1).asInstanceOf[ReporterBlock]
@@ -191,10 +191,10 @@ class AutoConverter2(workspace:Workspace,ignoreErrors:Boolean)(implicit tokenize
         replacements += new Replacement(oldCommand.token.startPos,
                                         oldCommand.token.endPos,
                                         oldCommand.token.name,
-                                        "histogram " + source.substring(start,arg1.end) + " of")
+                                        "histogram " + source.substring(start, arg1.end) + " of")
         if(start > 0 && source.charAt(start - 1) == ' ') start -= 1
-        replacements += new Replacement(start,arg1.end,
-                                        source.substring(start,arg1.end),"")
+        replacements += new Replacement(start, arg1.end,
+                                        source.substring(start, arg1.end), "")
       }
       super.visitStatement(stmt)
     }

@@ -6,26 +6,25 @@ import AgentVariableNumbers._
 
 object AgentVariables {
 
-  def getImplicitObserverVariables =
-    Array[String]()
+  def getImplicitObserverVariables = Seq[String]()
 
   def getImplicitTurtleVariables(is3D: Boolean) =
     if (is3D)
-      Array("WHO", "COLOR", "HEADING", "PITCH", "ROLL", "XCOR", "YCOR", "ZCOR", "SHAPE",
-            "LABEL", "LABEL-COLOR", "BREED", "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
+      Seq("WHO", "COLOR", "HEADING", "PITCH", "ROLL", "XCOR", "YCOR", "ZCOR", "SHAPE",
+          "LABEL", "LABEL-COLOR", "BREED", "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
     else
-      Array("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
-            "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
+      Seq("WHO", "COLOR", "HEADING", "XCOR", "YCOR", "SHAPE", "LABEL", "LABEL-COLOR", "BREED",
+          "HIDDEN?", "SIZE", "PEN-SIZE", "PEN-MODE")
 
   def getImplicitPatchVariables(is3D: Boolean) =
     if (is3D)
-      Array("PXCOR", "PYCOR", "PZCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
+      Seq("PXCOR", "PYCOR", "PZCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
     else
-      Array("PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
+      Seq("PXCOR", "PYCOR", "PCOLOR", "PLABEL", "PLABEL-COLOR")
 
   def getImplicitLinkVariables =
-    Array("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
-          "THICKNESS", "SHAPE", "TIE-MODE")
+    Seq("END1", "END2", "COLOR", "LABEL", "LABEL-COLOR", "HIDDEN?", "BREED",
+        "THICKNESS", "SHAPE", "TIE-MODE")
 
   private val doubleTurtleVariables2D = Set(
     VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)

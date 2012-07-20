@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{Token,TokenizerInterface,TokenType,VersionHistory}
+import org.nlogo.api.{ Token, TokenizerInterface, TokenType, VersionHistory }
 import VersionHistory._  // olderThan* methods
 
 // AutoConverter1 handles easy conversions that don't require parsing.
@@ -17,8 +17,8 @@ object AutoConverter1 {
     "  ;; of the procedure.)\n" +
     "  __clear-all-and-reset-ticks"
 }
-class AutoConverter1(implicit tokenizer:TokenizerInterface) {
-  def convert(originalSource:String, subprogram:Boolean, reporter:Boolean, version:String):String = {
+class AutoConverter1(implicit tokenizer: TokenizerInterface) {
+  def convert(originalSource: String, subprogram: Boolean, reporter: Boolean, version: String): String = {
     var source = originalSource
     if(source.trim.length == 0) return source
     if(olderThan20alpha1(version))
@@ -96,7 +96,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
 
     source
   }
-  private def convert(source:String,conversions:Map[String,String]) = {
+  private def convert(source: String, conversions: Map[String, String]) = {
     val tokens = tokenizer.tokenizeRobustly(source)
     val buf = new StringBuilder(source)
     var offset = 0
@@ -107,22 +107,22 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     }
     buf.toString
   }
-  private def convertLocals(source:String):String = {
+  private def convertLocals(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator
-    val buf:StringBuilder = new StringBuilder(source)
-    var offset:Int = 0
+    val buf: StringBuilder = new StringBuilder(source)
+    var offset: Int = 0
     while(tokens.hasNext) {
-      var token:Token = tokens.next()
+      var token: Token = tokens.next()
       if(token.name.equalsIgnoreCase("locals")) {
-        val start:Int = token.startPos
-        var replacement:String = ""
+        val start: Int = token.startPos
+        var replacement: String = ""
         token = tokens.next()
         while(!token.name.equals("]")) {
           if(!token.name.equals("["))
             replacement += "let " + token.name + " 0\n  "
           token = tokens.next()
         }
-        val end:Int = token.endPos
+        val end: Int = token.endPos
         buf.delete(start + offset, end + offset)
         buf.insert(start + offset, replacement)
         offset += replacement.length - (end - start)
@@ -130,7 +130,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     }
     buf.toString
   }
-  private def convertCreateCustomBreed(source:String):String = {
+  private def convertCreateCustomBreed(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator
     val buf = new StringBuilder(source)
     var offset = 0
@@ -149,7 +149,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     }
     buf.toString
   }
-  private def convertOtherBreedHere(source:String):String = {
+  private def convertOtherBreedHere(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator
     val buf = new StringBuilder(source)
     while(tokens.hasNext) {
@@ -161,7 +161,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     }
     buf.toString
   }
-  private def convertScreenEdge(source:String):String = {
+  private def convertScreenEdge(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     val buf = new StringBuilder(source)
     var offset = 0
@@ -170,7 +170,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
     while(tokens.hasNext) {
       val token = tokens.next()
       if(token.name.startsWith("screen-edge-")) {
-        var replacement:String = null
+        var replacement: String = null
         var start = 0
         var end = 0
         // negative screen-edge
@@ -208,8 +208,8 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
           start = token.startPos + offset
           end = token.endPos + offset
         }
-        buf.delete(start,end)
-        buf.insert(start,replacement)
+        buf.delete(start, end)
+        buf.insert(start, replacement)
         offset += replacement.length - (end - start)
       }
       lastToken2 = lastToken
@@ -219,15 +219,15 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   }
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - jrn 8/8/05
-  private def convertBreeds(source:String):String = {
+  private def convertBreeds(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
-    val buf:StringBuilder = new StringBuilder(source)
-    var offset:Int = 0
+    val buf: StringBuilder = new StringBuilder(source)
+    var offset: Int = 0
     while(tokens.hasNext) {
-      var token:Token = tokens.next()
+      var token: Token = tokens.next()
       if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("BREEDS")) {
         val breeds = new collection.mutable.ArrayBuffer[String]
-        val start:Int = token.startPos
+        val start: Int = token.startPos
         token = tokens.head
         if(token.tyype == TokenType.OPEN_BRACKET) {
           tokens.next()
@@ -240,7 +240,7 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
           buf.delete(start, token.endPos)
           var i = 0
           while(i < breeds.size) {
-            var replacement:String = "breed [ " + breeds(i) + " ]\n"
+            var replacement: String = "breed [ " + breeds(i) + " ]\n"
             buf.insert(start + offset, replacement)
             offset += replacement.length
             i += 1
@@ -252,15 +252,15 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   }
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - jrn 8/8/05
-  private def convertExtensionNames(source:String):String = {
+  private def convertExtensionNames(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
-    val buf:StringBuilder = new StringBuilder(source)
-    var offset:Int = 0
+    val buf: StringBuilder = new StringBuilder(source)
+    var offset: Int = 0
     while(tokens.hasNext) {
-      var token:Token = tokens.next()
+      var token: Token = tokens.next()
       if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
         val extensions = new collection.mutable.ArrayBuffer[String]
-        val start:Int = token.startPos
+        val start: Int = token.startPos
         token = tokens.head
         if(token.tyype == TokenType.OPEN_BRACKET) {
           tokens.next()
@@ -271,10 +271,10 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
           }
           // we do it this way to remove all the spaces too
           buf.delete(start, token.endPos)
-          var replacement:String = "extensions [ "
-          var i:Int = 0
+          var replacement: String = "extensions [ "
+          var i: Int = 0
           while(i < extensions.size) {
-            var name:String = extensions(i)
+            var name: String = extensions(i)
             // trim off trailing .jar and double quote
             if(name.endsWith(".jar\"")) name = name.substring(0, name.length - 5)
             // trim off leading double quote
@@ -292,17 +292,17 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   }
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - ST 6/22/06
-  private def convertNsum(source:String):String = {
+  private def convertNsum(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator
-    val buf:StringBuilder = new StringBuilder(source)
-    var offset:Int = 0
+    val buf: StringBuilder = new StringBuilder(source)
+    var offset: Int = 0
     while(tokens.hasNext) {
-      var token:Token = tokens.next()
+      var token: Token = tokens.next()
       if(token.tyype == TokenType.IDENT && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
-        val neighbors:String = if(token.value.asInstanceOf[String] .equals("NSUM")) "neighbors" else "neighbors4"
-        var start:Int = token.startPos + offset
-        var end:Int = token.endPos + offset
-        val replacement:String = "sum values-from " + neighbors
+        val neighbors: String = if(token.value.asInstanceOf[String] .equals("NSUM")) "neighbors" else "neighbors4"
+        var start: Int = token.startPos + offset
+        var end: Int = token.endPos + offset
+        val replacement: String = "sum values-from " + neighbors
         buf.delete(start, end)
         buf.insert(start, replacement)
         offset += replacement.length - (end - start)
@@ -320,18 +320,18 @@ class AutoConverter1(implicit tokenizer:TokenizerInterface) {
   }
   // We need to handle this a special case because it is more complicated than a simple string
   // replacement - ST 6/28/06
-  private def convertDashOf(source:String):String = {
+  private def convertDashOf(source: String): String = {
     val tokens = tokenizer.tokenizeRobustly(source).iterator
-    val buf:StringBuilder = new StringBuilder(source)
-    var offset:Int = 0
+    val buf: StringBuilder = new StringBuilder(source)
+    var offset: Int = 0
     while(tokens.hasNext) {
-      var token:Token = tokens.next()
+      var token: Token = tokens.next()
       if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .endsWith("-OF")) {
-        var name:String = token.name
+        var name: String = token.name
         name = name.substring(0, name.length - 3)
-        val start:Int = token.startPos + offset
-        val end:Int = token.endPos + offset
-        val replacement:String = "[" + name + "] of"
+        val start: Int = token.startPos + offset
+        val end: Int = token.endPos + offset
+        val replacement: String = "[" + name + "] of"
         buf.delete(start, end)
         buf.insert(start, replacement)
         offset += replacement.length - (end - start)

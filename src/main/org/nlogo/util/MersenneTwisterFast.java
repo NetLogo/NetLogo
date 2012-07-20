@@ -138,8 +138,6 @@ public final strictfp class MersenneTwisterFast
     extends java.util.Random
     implements Serializable, Cloneable {
 
-  private static final boolean DEBUG = false;
-
   // Period parameters
   private static final int N = 624;
   private static final int M = 397;
@@ -327,10 +325,6 @@ public final strictfp class MersenneTwisterFast
 
   @Override
   public int nextInt() {
-    if (DEBUG) {
-      System.out.println("nextInt()");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -364,10 +358,6 @@ public final strictfp class MersenneTwisterFast
 
 
   public short nextShort() {
-    if (DEBUG) {
-      System.out.println("nextShort()");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -401,10 +391,6 @@ public final strictfp class MersenneTwisterFast
 
 
   public char nextChar() {
-    if (DEBUG) {
-      System.out.println("nextChar()");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -439,10 +425,6 @@ public final strictfp class MersenneTwisterFast
 
   @Override
   public boolean nextBoolean() {
-    if (DEBUG) {
-      System.out.println("nextBoolean()");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -484,10 +466,6 @@ public final strictfp class MersenneTwisterFast
    */
 
   public boolean nextBoolean(final float probability) {
-    if (DEBUG) {
-      System.out.println("nextBoolean(" + probability + ")");
-      Thread.dumpStack();
-    }
     int y;
 
     if (probability < 0.0f || probability > 1.0f)
@@ -531,10 +509,6 @@ public final strictfp class MersenneTwisterFast
    */
 
   public boolean nextBoolean(final double probability) {
-    if (DEBUG) {
-      System.out.println("nextBoolean(" + probability + ")");
-      Thread.dumpStack();
-    }
     int y;
     int z;
 
@@ -600,10 +574,6 @@ public final strictfp class MersenneTwisterFast
 
 
   public byte nextByte() {
-    if (DEBUG) {
-      System.out.println("nextByte()");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -638,10 +608,6 @@ public final strictfp class MersenneTwisterFast
 
   @Override
   public void nextBytes(byte[] bytes) {
-    if (DEBUG) {
-      System.out.println("nextBytes(" + bytes + ")");
-      Thread.dumpStack();
-    }
     int y;
 
     for (int x = 0; x < bytes.length; x++) {
@@ -678,10 +644,6 @@ public final strictfp class MersenneTwisterFast
 
   @Override
   public long nextLong() {
-    if (DEBUG) {
-      System.out.println("nextLong()");
-      Thread.dumpStack();
-    }
     int y;
     int z;
 
@@ -746,10 +708,6 @@ public final strictfp class MersenneTwisterFast
    * n must be > 0, or an IllegalArgumentException is raised.
    */
   public long nextLong(final long n) {
-    if (DEBUG) {
-      System.out.println("nextLong(" + n + ")");
-      Thread.dumpStack();
-    }
     if (n <= 0)
       throw new IllegalArgumentException("n must be positive");
 
@@ -822,10 +780,6 @@ public final strictfp class MersenneTwisterFast
    */
   @Override
   public double nextDouble() {
-    if (DEBUG) {
-      System.out.println("nextDouble()");
-      Thread.dumpStack();
-    }
     int y;
     int z;
 
@@ -888,10 +842,6 @@ public final strictfp class MersenneTwisterFast
 
   @Override
   public double nextGaussian() {
-    if (DEBUG) {
-      System.out.println("nextGaussian()");
-      Thread.dumpStack();
-    }
     if (__haveNextNextGaussian) {
       __haveNextNextGaussian = false;
       return __nextNextGaussian;
@@ -1029,10 +979,6 @@ public final strictfp class MersenneTwisterFast
    */
   @Override
   public float nextFloat() {
-    if (DEBUG) {
-      System.out.println("nextFloat");
-      Thread.dumpStack();
-    }
     int y;
 
     if (mti >= N)   // generate N words at one time
@@ -1071,10 +1017,6 @@ public final strictfp class MersenneTwisterFast
    */
   @Override
   public int nextInt(final int n) {
-    if (DEBUG) {
-      System.out.println("nextInt(" + n + ")");
-      Thread.dumpStack();
-    }
     if (n <= 0)
       throw new IllegalArgumentException("n must be positive");
 

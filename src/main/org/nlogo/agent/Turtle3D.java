@@ -293,7 +293,7 @@ public final strictfp class Turtle3D
           } else if (value instanceof LogoList) {
             color((LogoList) value, VAR_COLOR3D);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -301,7 +301,7 @@ public final strictfp class Turtle3D
           if (value instanceof Double) {
             heading((Double) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -309,7 +309,7 @@ public final strictfp class Turtle3D
           if (value instanceof Double) {
             xcor((Double) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -317,7 +317,7 @@ public final strictfp class Turtle3D
           if (value instanceof Double) {
             ycor((Double) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -330,7 +330,7 @@ public final strictfp class Turtle3D
             }
             shape(newShape);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 String.class, value);
           }
           break;
@@ -343,7 +343,7 @@ public final strictfp class Turtle3D
           } else if (value instanceof LogoList) {
             labelColor((LogoList) value, VAR_LABELCOLOR3D);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -355,7 +355,7 @@ public final strictfp class Turtle3D
             }
             setBreed(breed);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 AgentSet.class, value);
           }
           break;
@@ -363,7 +363,7 @@ public final strictfp class Turtle3D
           if (value instanceof Boolean) {
             hidden(((Boolean) value).booleanValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Boolean.class, value);
           }
           break;
@@ -371,7 +371,7 @@ public final strictfp class Turtle3D
           if (value instanceof Number) {
             size(((Number) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -379,7 +379,7 @@ public final strictfp class Turtle3D
           if (value instanceof String) {
             penMode((String) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 String.class, value);
           }
           break;
@@ -388,7 +388,7 @@ public final strictfp class Turtle3D
           if (value instanceof Number) {
             penSize(((Number) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -400,7 +400,7 @@ public final strictfp class Turtle3D
           if (value instanceof Number) {
             pitch(((Number) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -408,7 +408,7 @@ public final strictfp class Turtle3D
           if (value instanceof Number) {
             roll(((Number) value).doubleValue());
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;
@@ -416,7 +416,7 @@ public final strictfp class Turtle3D
           if (value instanceof Double) {
             zcor((Double) value);
           } else {
-            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true)[vn],
+            wrongTypeForVariable(AgentVariables.getImplicitTurtleVariables(true).apply(vn),
                 Double.class, value);
           }
           break;

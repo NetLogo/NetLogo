@@ -8,14 +8,14 @@ package org.nlogo.agent
 // really shouldn't affect their performance.  so we use a lock object.  --mag 10/03/03
 
 import collection.JavaConverters._
-import java.util.{ Map => JMap }
+import org.nlogo.api.Breed
 
 class BreedShapes(genericBreedName: String) {
 
   private[this] val lock = new AnyRef
   private val shapes = collection.mutable.Map[String, String]()
 
-  def setUpBreedShapes(clear: Boolean, breeds: JMap[String, AnyRef]) {
+  def setUpBreedShapes(clear: Boolean, breeds: collection.immutable.ListMap[String, Breed]) {
     lock.synchronized {
       if (clear)
         shapes.clear()

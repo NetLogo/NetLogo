@@ -7,7 +7,7 @@ import org.nlogo.api.{ ImporterUser, WorldDimensions }
 
 class ImporterTests extends FunSuite with OneInstancePerTest {
   val IGNORE_ERROR_HANDLER =
-    new Importer.ErrorHandler() {
+    new ImporterJ.ErrorHandler() {
       def showError(title: String, errorDetails: String, fatalError: Boolean) =
         // don't do anything and we always want to continue, so return true.
         true
@@ -31,11 +31,11 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
       def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) { }
       def isExtensionName(name: String) = false
     }
-  class StringReaderTest extends Importer.StringReader {
+  class StringReaderTest extends ImporterJ.StringReader {
     def readFromString(s: String): AnyRef = {
       try Int.box(s.toInt)
       catch { case ex: NumberFormatException =>
-        throw new Importer.StringReaderException("invalid integer")
+        throw new ImporterJ.StringReaderException("invalid integer")
       }
     }
   }

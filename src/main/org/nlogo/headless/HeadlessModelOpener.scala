@@ -50,7 +50,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // JC - 9/14/10
       // val convertedCode = ws.autoConvert(code, false, false, netLogoVersion)
       import collection.JavaConverters._
-      ws.compiler.compileProgram(code, ws.world.newProgram(interfaceGlobals.asJava), ws.getExtensionManager)
+      ws.compiler.compileProgram(
+        code, Program.empty(Version.is3D).copy(
+          interfaceGlobals = interfaceGlobals), ws.getExtensionManager)
     }
     ws.setProcedures(results.proceduresMap)
     ws.codeBits.clear() //(WTH IS THIS? - JC 10/27/09)
