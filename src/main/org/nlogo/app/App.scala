@@ -54,7 +54,7 @@ object App{
    *             is not currently documented.)
    */
   def main(args:Array[String]){
-    // on Mac OS X 10.5, we have to explicitly ask for the Quartz
+    // since Mac OS X 10.5, we have to explicitly ask for the Quartz
     // renderer. perhaps we should eventually switch to the Sun
     // renderer since that's the new default, but for now, the
     // Quartz renderer is what we've long used and tested, so

@@ -5,7 +5,7 @@ package org.nlogo.generator
 import org.objectweb.asm.Opcodes._
 import java.lang.reflect.{ Field, Method }
 import org.objectweb.asm
-import asm.{ Label, MethodAdapter, MethodVisitor, Type }
+import asm.{ ClassReader, Label, MethodAdapter, MethodVisitor, Type }
 import org.nlogo.nvm.Instruction
 
 private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
@@ -13,7 +13,12 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
   def writeTransformedBytecode() {
     val reader = PrimitiveCache.getClassReader(instr.getClass)
     val extractor = new MethodExtractorClassAdapter
-    reader.accept(extractor, 0)
+    // When we switched to Java 6, the following line started throwing
+    // exceptions until we added SKIP_FRAMES.  It wasn't clear to me
+    // which was better, adding EXPAND_FRAMES or SKIP_FRAMES.  But
+    // the former is flagged in the ASM doc as being slow, so I guess
+    // if we can get away with SKIP_FRAMES, we should. - ST 7/19/12
+    reader.accept(extractor, ClassReader.SKIP_FRAMES)
     if (errorLog.length > 0) throw new IllegalStateException(errorLog.toString)
   }
   private class MethodExtractorClassAdapter extends asm.commons.EmptyVisitor {

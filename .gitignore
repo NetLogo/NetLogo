@@ -15,8 +15,6 @@ tmp/
 *~
 .#*
 \#*
-
-# no jars, except these small ones
 *.jar
 *.jar.pack.gz
 

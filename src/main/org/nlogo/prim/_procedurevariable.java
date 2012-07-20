@@ -32,7 +32,7 @@ public final strictfp class _procedurevariable
   }
 
   public Object report_1(Context context) {
-    return context.activation.args[vn];
+    return context.activation.args()[vn];
   }
 }
 

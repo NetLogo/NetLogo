@@ -28,8 +28,8 @@ object Compiler extends CompilerInterface {
 
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
-  def compileMoreCode(source:String,displayName: Option[String], program:Program,oldProcedures:ProceduresMap,extensionManager:ExtensionManager):CompilerResults =
-    CompilerMain.compile(source,displayName,program,true,oldProcedures,extensionManager)
+  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager): CompilerResults =
+    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager)
 
   // these two used by input boxes
   @throws(classOf[CompilerException])

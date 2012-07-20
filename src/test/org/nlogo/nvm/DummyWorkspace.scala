@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
 import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, JobOwner,
-                      CommandRunnable, ReporterRunnable, ImportErrorHandler}
+                      CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 
 class DummyWorkspace extends DummyCompilerServices with Workspace {
   private def unsupported = throw new UnsupportedOperationException
@@ -36,7 +36,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def getAndCreateDrawing() = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
-                   destination: Workspace.OutputDestination) = unsupported
+                   destination: OutputDestination) = unsupported
   override def clearOutput() = unsupported
   override def clearAll() = unsupported
   override def compileForRun(source: String, context: Context, reporter: Boolean) = unsupported

@@ -84,7 +84,7 @@ public final strictfp class Context {
     Command command = null;
     try {
       do {
-        command = activation.procedure.code[ip];
+        command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.getAgentClass());
         }
@@ -112,7 +112,7 @@ public final strictfp class Context {
     Command command = null;
     try {
       do {
-        command = activation.procedure.code[ip];
+        command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.getAgentClass());
         }
@@ -159,7 +159,7 @@ public final strictfp class Context {
   public void runExclusiveJob(AgentSet agentset, int address)
       throws LogoException {
     new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, job.random)
+        (job.owner, agentset, activation.procedure(), address, this, job.random)
         .run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
@@ -174,15 +174,15 @@ public final strictfp class Context {
   }
 
   public void returnFromProcedure() {
-    ip = activation.returnAddress;
-    activation = activation.parent;
+    ip = activation.returnAddress();
+    activation = activation.parent();
   }
 
   public void stop() {
-    if (activation.procedure.isTask()) {
+    if (activation.procedure().isTask()) {
       throw NonLocalExit$.MODULE$;
     }
-    if (activation.procedure.topLevel) {
+    if (activation.procedure().topLevel) {
       // In the BehaviorSpace case, there are two cases: stop
       // used inside a procedure called from the go commands,
       // and stop used in the go commands themselves.  (People
@@ -235,7 +235,7 @@ public final strictfp class Context {
     ip = 0;
     try {
       do {
-        command = activation.procedure.code[ip];
+        command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.getAgentClass());
         }
@@ -253,8 +253,8 @@ public final strictfp class Context {
     } finally {
       inReporterProcedure = oldInReporterProcedure;
     }
-    ip = activation.returnAddress;
-    activation = activation.parent;
+    ip = activation.returnAddress();
+    activation = activation.parent();
     Object result = job.result;
     job.result = null;
     return result;
@@ -271,8 +271,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let) {
-        return binding.value;
+      if (let == binding.let()) {
+        return binding.value();
       }
       rest = rest.tail();
     }
@@ -284,8 +284,8 @@ public final strictfp class Context {
     while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
     {
       LetBinding binding = rest.head();
-      if (let == binding.let) {
-        binding.value = value;
+      if (let == binding.let()) {
+        binding.value_$eq(value);
         return;
       }
       rest = rest.tail();
@@ -321,16 +321,16 @@ public final strictfp class Context {
       Instruction instruction = null;
       Context context = null;
       if (ex instanceof EngineException) {
-        instruction = ((EngineException) ex).instruction;
-        context = ((EngineException) ex).context;
+        instruction = ((EngineException) ex).instruction();
+        context = ((EngineException) ex).context();
       }
       if (instruction == null) {
-        instruction = activation.procedure.code[ip];
+        instruction = activation.procedure().code[ip];
       }
       if (context == null) {
         context = this;
       }
-      activation.procedure.code[ip].workspace
+      activation.procedure().code[ip].workspace
           .runtimeError(job.owner, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,
@@ -341,12 +341,16 @@ public final strictfp class Context {
   }
 
   public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable) {
+    return buildRuntimeErrorMessage(instruction, throwable, null);
+  }
+
+  public String buildRuntimeErrorMessage(Instruction instruction, Throwable throwable, String message) {
     if(throwable instanceof EngineException &&
-       ((EngineException) throwable).cachedRuntimeErrorMessage.isDefined()) {
-      return ((EngineException) throwable).cachedRuntimeErrorMessage.get();
+       ((EngineException) throwable).cachedRuntimeErrorMessage().isDefined()) {
+      return ((EngineException) throwable).cachedRuntimeErrorMessage().get();
     }
     return StackTraceBuilder.build(
-      activation, agent, instruction, scala.Option.apply(throwable));
+      activation, agent, instruction, scala.Option.apply(throwable), message);
   }
 
   /// coming up for air

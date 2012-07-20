@@ -17,6 +17,8 @@ import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.api.UpdateMode;
+import org.nlogo.api.UpdateModeJ;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
@@ -427,11 +429,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return viewManager.mouseYCor();
   }
 
-  // shouldn't have to fully qualify UpdateMode here, but we were having
-  // intermittent compile failures on this line since upgrading to
-  // Scala 2.8.0.RC1 - ST 4/16/10
   @Override
-  public void updateMode(Workspace.UpdateMode updateMode) {
+  public void updateMode(UpdateMode updateMode) {
     super.updateMode(updateMode);
     updateManager().recompute();
   }
@@ -518,7 +517,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void breathe() {
     jobManager.maybeRunSecondaryJobs();
-    if (updateMode() == UpdateMode.CONTINUOUS) {
+    if (updateMode() == UpdateModeJ.CONTINUOUS()) {
       updateManager().pseudoTick();
       updateDisplay(true);
     }
@@ -1003,7 +1002,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
       // check to see if the error occurred inside a "run" or "runresult" instruction;
       // if so, report the error as having occurred there - ST 5/7/03
-      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure.getOwner();
+      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure().getOwner();
       if (instruction.token() == null) {
         posAndLength = new int[]{-1, 0};
       } else {
