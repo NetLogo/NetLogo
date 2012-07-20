@@ -13,8 +13,8 @@ public strictfp class Importer3D
   static final String MIN_PZCOR_HEADER = "MIN-PZCOR";
   static final String MAX_PZCOR_HEADER = "MAX-PZCOR";
 
-  public Importer3D(Importer.ErrorHandler errorHandler, World world, ImporterUser importerUser,
-                    Importer.StringReader stringReader) {
+  public Importer3D(ImporterJ.ErrorHandler errorHandler, World world, ImporterUser importerUser,
+                    ImporterJ.StringReader stringReader) {
     super(errorHandler, world, importerUser, stringReader);
     TURTLE_BREED = Turtle3D.VAR_BREED3D;
   }
@@ -201,7 +201,7 @@ public strictfp class Importer3D
   }
 
   @Override
-  String[] getSpecialObserverVariables() {
+  public String[] getSpecialObserverVariables() {
     return new String[]{MIN_PXCOR_HEADER,
         MAX_PXCOR_HEADER,
         MIN_PYCOR_HEADER,
@@ -216,23 +216,23 @@ public strictfp class Importer3D
   }
 
   @Override
-  String[] getSpecialTurtleVariables() {
-    String[] vars = AgentVariables.getImplicitTurtleVariables(true);
-    return new String[]
-        {vars[Turtle.VAR_WHO], vars[Turtle3D.VAR_BREED3D],
-            vars[Turtle3D.VAR_LABEL3D], vars[Turtle3D.VAR_SHAPE3D]};
+  public String[] getSpecialTurtleVariables() {
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitTurtleVariables(true);
+    return new String[]{
+      vars.apply(Turtle.VAR_WHO), vars.apply(Turtle3D.VAR_BREED3D),
+      vars.apply(Turtle3D.VAR_LABEL3D), vars.apply(Turtle3D.VAR_SHAPE3D)};
   }
 
   @Override
-  String[] getSpecialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(true);
-    return new String[]
-        {vars[Patch3D.VAR_PXCOR3D], vars[Patch3D.VAR_PYCOR3D],
-            vars[Patch3D.VAR_PZCOR3D], vars[Patch3D.VAR_PLABEL3D]};
+  public String[] getSpecialPatchVariables() {
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(true);
+    return new String[]{
+      vars.apply(Patch3D.VAR_PXCOR3D), vars.apply(Patch3D.VAR_PYCOR3D),
+      vars.apply(Patch3D.VAR_PZCOR3D), vars.apply(Patch3D.VAR_PLABEL3D)};
   }
 
   @Override
-  String[] getEssentialObserverVars() {
+  public String[] getEssentialObserverVars() {
     return new String[]
         {MIN_PXCOR_HEADER,
             MAX_PXCOR_HEADER,
@@ -243,10 +243,10 @@ public strictfp class Importer3D
   }
 
   @Override
-  String[] getEssentialPatchVariables() {
-    String[] vars = AgentVariables.getImplicitPatchVariables(true);
-    return new String[]
-        {vars[Patch3D.VAR_PXCOR3D], vars[Patch3D.VAR_PYCOR3D],
-            vars[Patch3D.VAR_PZCOR3D]};
+  public String[] getEssentialPatchVariables() {
+    scala.collection.Seq<String> vars = AgentVariables.getImplicitPatchVariables(true);
+    return new String[]{
+      vars.apply(Patch3D.VAR_PXCOR3D), vars.apply(Patch3D.VAR_PYCOR3D),
+      vars.apply(Patch3D.VAR_PZCOR3D)};
   }
 }

@@ -13,6 +13,7 @@ object NetLogoBuild extends Build {
                 Packaging.settings ++
                 Running.settings ++
                 Dump.settings ++
+                Scaladoc.settings ++
                 ChecksumsAndPreviews.settings: _*)
 
   // surely there's some better way to do these - ST 5/30/12

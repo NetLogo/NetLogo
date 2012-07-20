@@ -39,7 +39,7 @@ public final strictfp class _call
   public void perform(Context context) throws LogoException {
     Activation newActivation = new Activation(procedure, context.activation, next);
     for (int i = 0; i < (procedure.args.size() - procedure.localsCount); i++) {
-      newActivation.args[i] = args[i].report(context);
+      newActivation.args()[i] = args[i].report(context);
     }
     context.activation = newActivation;
     context.ip = 0;

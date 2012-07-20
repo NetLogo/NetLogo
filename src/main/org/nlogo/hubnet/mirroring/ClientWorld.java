@@ -735,6 +735,14 @@ public strictfp class ClientWorld
     throw new UnsupportedOperationException();
   }
 
+  public org.nlogo.api.AgentSet getBreed(String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.api.AgentSet getLinkBreed(String name) {
+    throw new UnsupportedOperationException();
+  }
+
   public org.nlogo.api.Program program() {
     throw new UnsupportedOperationException();
   }

@@ -4,11 +4,14 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.nvm.DummyWorkspace
+import org.nlogo.api.{ Breed, Program }
 
 class AutoConverter2Tests extends FunSuite {
   val workspace = new DummyWorkspace
-  workspace.world.program.interfaceGlobals.add("GLOB1")
-  workspace.world.program.breeds.put("FROGS", "FROGS")
+  workspace.world.program(
+    Program.empty().copy(
+      interfaceGlobals = List("GLOB1"),
+      breeds = collection.immutable.ListMap("FROGS" -> Breed("FROGS", "FROG"))))
   def tester(version: String, before: String, after: String, subprogram: Boolean = true) {
     val converter = new AutoConverter2(workspace, false)(Compiler.Tokenizer2D)
     expect(after)(converter.convert(before, subprogram, false, "NetLogo " + version))
