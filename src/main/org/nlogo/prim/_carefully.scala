@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 class _carefully extends Command with CustomAssembled {
 
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
-  private[this] val _let = new Let
+  private[this] val _let = Let()
   def let = _let
 
   override def syntax =

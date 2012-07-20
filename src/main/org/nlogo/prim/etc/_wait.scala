@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context, CustomAssembled, MutableLong, Assembler
 
 class _wait extends Command with CustomAssembled {
 
-  private[this] val let = new Let
+  private[this] val let = Let()
 
   override def syntax =
     Syntax.commandSyntax(Array(Syntax.NumberType))
