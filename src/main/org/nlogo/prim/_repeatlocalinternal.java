@@ -28,7 +28,7 @@ public final strictfp class _repeatlocalinternal
   @Override
   public void perform(final org.nlogo.nvm.Context context) {
     MutableLong counter =
-        (MutableLong) context.activation.args[vn];
+      (MutableLong) context.activation.args()[vn];
     if (counter.value() <= 0) {
       context.ip = next;
     } else {
@@ -39,7 +39,7 @@ public final strictfp class _repeatlocalinternal
 
   public void perform_1(final org.nlogo.nvm.Context context) {
     MutableLong counter =
-        (MutableLong) context.activation.args[vn];
+      (MutableLong) context.activation.args()[vn];
     if (counter.value() <= 0) {
       context.ip = next;
     } else {
