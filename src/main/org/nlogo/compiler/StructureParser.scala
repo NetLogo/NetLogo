@@ -513,7 +513,7 @@ private class StructureParser(
     val children = new collection.mutable.ListBuffer[Let]
     def newLet(endPos: Int) = {
       import collection.JavaConverters._
-      val result = new Let(name, startPos, endPos, children.asJava)
+      val result = Let(name, startPos, endPos, children.toList)
       letToken.value.asInstanceOf[_let].let = result
       procedure.lets.add(result)
       result

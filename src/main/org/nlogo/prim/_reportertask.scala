@@ -21,7 +21,7 @@ class _reportertask extends Reporter {
 
   def getFormal(n: Int): Let = {
     while(formals.size < n)
-      formals += new Let
+      formals += Let()
     formals(n - 1)
   }
 
