@@ -36,7 +36,13 @@ object Packaging {
 
   private def runProGuard(scalaLibraryPath: String, config: String, log: Logger) {
     log.info("building " + config + " jar")
+    val javaLibraryPath = System.getProperty("java.home") +
+      (if (System.getProperty("os.name").startsWith("Mac"))
+         "/../Classes/classes.jar"
+       else
+         "/lib/rt.jar")
     def doIt() {
+      System.setProperty("org.nlogo.java-library", javaLibraryPath)
       System.setProperty("org.nlogo.scala-library", scalaLibraryPath)
       proguard.ProGuard.main(Array("@project/proguard/" + config + ".txt"))
     }

@@ -24,7 +24,7 @@
     <key>ClassPath</key>
     <string>$APP_PACKAGE/../NetLogo.jar:/System/Library/Java</string>
     <key>JVMVersion</key>
-    <string>1.5+</string>
+    <string>1.6+</string>
     <key>MainClass</key>
     <string>org.nlogo.hubnet.client.App</string>
     <key>Properties</key>

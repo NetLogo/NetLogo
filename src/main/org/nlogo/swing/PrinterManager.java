@@ -42,13 +42,6 @@ public final strictfp class PrinterManager {
       public int print(java.awt.Graphics g,
                        java.awt.print.PageFormat pageFormat, int pageIndex)
           throws java.awt.print.PrinterException {
-        // for now set the font in the graphics object manually
-        // there's apparently some Apple bug where it doesn't get
-        // set ev 5/14/08
-        if (System.getProperty("os.name").startsWith("Mac")
-            && System.getProperty("os.version").startsWith("10.5")) {
-          g.setFont(printer.printFont);
-        }
         return p.print(g, pageFormat, pageIndex, printer);
       }
     }, printerJob.pageDialog(printerJob.defaultPage()));
