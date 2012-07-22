@@ -279,8 +279,8 @@ public final strictfp class World3D
   }
 
   @Override
-  public void importWorld(Importer.ErrorHandler errorHandler, ImporterUser importerUser,
-                          Importer.StringReader stringReader, java.io.BufferedReader reader)
+  public void importWorld(org.nlogo.agent.Importer.ErrorHandler errorHandler, ImporterUser importerUser,
+                          org.nlogo.agent.Importer.StringReader stringReader, java.io.BufferedReader reader)
       throws java.io.IOException {
     new Importer3D(errorHandler, this,
         importerUser, stringReader).importWorld(reader);

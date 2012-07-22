@@ -13,8 +13,8 @@ public strictfp class Importer3D
   static final String MIN_PZCOR_HEADER = "MIN-PZCOR";
   static final String MAX_PZCOR_HEADER = "MAX-PZCOR";
 
-  public Importer3D(Importer.ErrorHandler errorHandler, World world, ImporterUser importerUser,
-                    Importer.StringReader stringReader) {
+  public Importer3D(org.nlogo.agent.Importer.ErrorHandler errorHandler, World world, ImporterUser importerUser,
+                    org.nlogo.agent.Importer.StringReader stringReader) {
     super(errorHandler, world, importerUser, stringReader);
     TURTLE_BREED = Turtle3D.VAR_BREED3D;
   }
