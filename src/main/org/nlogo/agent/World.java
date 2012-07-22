@@ -13,6 +13,7 @@ import org.nlogo.api.Nobody$;
 import org.nlogo.api.Program;
 import org.nlogo.api.Shape;
 import org.nlogo.api.ShapeList;
+import org.nlogo.api.Timer;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
