@@ -67,7 +67,7 @@ public final strictfp class _breedon
       }
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
-      if (sourceSet.type() == Turtle.class) {
+      if (sourceSet.kind() == Turtle.class) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
             if (turtle.getBreed() == breed) {
@@ -75,7 +75,7 @@ public final strictfp class _breedon
             }
           }
         }
-      } else if (sourceSet.type() == Patch.class) {
+      } else if (sourceSet.kind() == Patch.class) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
             if (turtle.getBreed() == breed) {
@@ -99,7 +99,7 @@ public final strictfp class _breedon
       throws LogoException {
     List<Turtle> resultList = new ArrayList<Turtle>();
     AgentSet breed = world.getBreed(breedName);
-    if (sourceSet.type() == Turtle.class) {
+    if (sourceSet.kind() == Turtle.class) {
       for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
           if (turtle.getBreed() == breed) {
@@ -107,7 +107,7 @@ public final strictfp class _breedon
           }
         }
       }
-    } else if (sourceSet.type() == Patch.class) {
+    } else if (sourceSet.kind() == Patch.class) {
       for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
           if (turtle.getBreed() == breed) {

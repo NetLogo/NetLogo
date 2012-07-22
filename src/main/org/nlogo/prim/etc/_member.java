@@ -42,7 +42,7 @@ public final strictfp class _member
         if (agent.id == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Turtle.class) {
+        if (agentset.kind() != Turtle.class) {
           return Boolean.FALSE;
         }
         if (agentset == world.turtles()) {
@@ -58,7 +58,7 @@ public final strictfp class _member
         if (agent.id == -1) {
           return Boolean.FALSE;
         }
-        if (agentset.type() != Link.class) {
+        if (agentset.kind() != Link.class) {
           return Boolean.FALSE;
         }
         if (agentset == world.links()) {
@@ -70,7 +70,7 @@ public final strictfp class _member
               Boolean.FALSE;
         }
       } else if (agent instanceof Patch) {
-        if (agentset.type() != Patch.class) {
+        if (agentset.kind() != Patch.class) {
           return Boolean.FALSE;
         }
         if (agentset == world.patches()) {

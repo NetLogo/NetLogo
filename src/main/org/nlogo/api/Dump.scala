@@ -103,22 +103,22 @@ object Dump {
       Option(as.printName).map(_.toLowerCase).getOrElse{
         val buf = new StringBuilder
         buf ++= "(agentset, " + as.count + " "
-        if (classOf[Turtle].isAssignableFrom(as.`type`)) {
+        if (classOf[Turtle].isAssignableFrom(as.kind)) {
           buf ++= "turtle"
           if (as.count != 1)
             buf += 's'
         }
-        else if (classOf[Link].isAssignableFrom(as.`type`)) {
+        else if (classOf[Link].isAssignableFrom(as.kind)) {
           buf ++= "link"
           if (as.count != 1)
             buf += 's'
         }
-        else if (classOf[Patch].isAssignableFrom(as.`type`)) {
+        else if (classOf[Patch].isAssignableFrom(as.kind)) {
           buf ++= "patch"
           if (as.count != 1)
             buf ++= "es"
         }
-        else if (classOf[Observer].isAssignableFrom(as.`type`))
+        else if (classOf[Observer].isAssignableFrom(as.kind))
           buf ++= "observer"
         else throw new IllegalStateException
         buf += ')'
@@ -127,7 +127,7 @@ object Dump {
     else {
       val buf = new StringBuilder
       buf += '{'
-      if (classOf[Turtle].isAssignableFrom(as.`type`)) {
+      if (classOf[Turtle].isAssignableFrom(as.kind)) {
         val printName = as.printName
         if (printName != null) {
           buf ++=
@@ -142,7 +142,7 @@ object Dump {
           buf ++= ("turtles" +: ids).mkString(" ")
         }
       }
-      else if (classOf[Link].isAssignableFrom(as.`type`)) {
+      else if (classOf[Link].isAssignableFrom(as.kind)) {
         val printName = as.printName
         if (printName != null) {
           buf ++=
@@ -159,7 +159,7 @@ object Dump {
           buf ++= ("links" +: ids).mkString(" ")
         }
       }
-      else if (classOf[Patch].isAssignableFrom(as.`type`)) {
+      else if (classOf[Patch].isAssignableFrom(as.kind)) {
         val printName = as.printName
         if (printName != null) {
           buf ++= "all-"
@@ -172,10 +172,10 @@ object Dump {
           buf ++= ("patches" +: ids).mkString(" ")
         }
       }
-      else if (classOf[Observer].isAssignableFrom(as.`type`))
+      else if (classOf[Observer].isAssignableFrom(as.kind))
         buf ++= "observer"
       else
-        sys.error("unknown agentset type: " + as.`type`)
+        sys.error("unknown agentset type: " + as.kind)
       buf.append("}")
       buf.toString
     }

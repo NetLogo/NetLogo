@@ -82,7 +82,7 @@ public strictfp class Renderer
     for (scala.collection.Iterator<String> iter = world.program().breeds().keys().iterator();
          iter.hasNext();) {
       AgentSet breed = world.getBreed(iter.next());
-      if (Turtle.class.isAssignableFrom(breed.type())) {
+      if (Turtle.class.isAssignableFrom(breed.kind())) {
         for (Agent a : breed.agents()) {
           turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
           turtlesDrawn++;

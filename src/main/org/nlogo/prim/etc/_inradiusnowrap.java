@@ -33,7 +33,7 @@ public final strictfp class _inradiusnowrap
 
   public AgentSet report_1(final Context context, AgentSet sourceSet, double radius)
       throws LogoException {
-    if (sourceSet.type() == org.nlogo.agent.Link.class) {
+    if (sourceSet.kind() == org.nlogo.agent.Link.class) {
       throw new EngineException(context, this,
           I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
@@ -44,7 +44,7 @@ public final strictfp class _inradiusnowrap
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, false);
     return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(),
+        (sourceSet.kind(),
             result.toArray(new Agent[result.size()]),
             world);
   }

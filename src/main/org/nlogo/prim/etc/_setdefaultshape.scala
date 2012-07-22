@@ -17,10 +17,10 @@ class _setdefaultshape extends Command {
     val breed = argEvalAgentSet(context, 0)
     val shape = argEvalString(context, 1)
 
-    if (breed.`type` == classOf[Patch])
+    if (breed.kind == classOf[Patch])
       throw new EngineException(context, this, I18N.errors.get(
         "org.nlogo.prim.etc._setdefaultshape.cantSetDefaultShapeOfPatch"))
-    if (breed.`type` == classOf[Observer])
+    if (breed.kind == classOf[Observer])
       throw new EngineException(context, this,
         "cannot set the default shape of the observer, because the observer does not have a shape")
     if ((breed ne world.turtles) && !world.isBreed(breed) &&
@@ -28,7 +28,7 @@ class _setdefaultshape extends Command {
       throw new EngineException(context, this,
           I18N.errors.get("org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed"))
 
-    if (breed.`type` == classOf[Turtle]) {
+    if (breed.kind == classOf[Turtle]) {
       val checkedShape = world.checkTurtleShapeName(shape)
       if (checkedShape == null)
         throw new EngineException(context, this,

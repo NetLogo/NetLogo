@@ -21,7 +21,7 @@ trait AgentSet {
   def count: Int
 
   /** Returns the type of agents in the AgentSet. */
-  def `type`: Class[_ <: Agent]
+  def kind: Class[_ <: Agent]
 
   /** Returns the world object that this AgentSet is associated with. */
   def world: World

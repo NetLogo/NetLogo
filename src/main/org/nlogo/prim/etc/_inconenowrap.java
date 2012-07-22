@@ -34,7 +34,7 @@ public final strictfp class _inconenowrap
   public AgentSet report_1(final org.nlogo.nvm.Context context, AgentSet sourceSet,
                            double radius, double angle)
       throws LogoException {
-    if (sourceSet.type() == org.nlogo.agent.Link.class) {
+    if (sourceSet.kind() == org.nlogo.agent.Link.class) {
       throw new EngineException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
@@ -54,7 +54,7 @@ public final strictfp class _inconenowrap
     List<Agent> result =
         world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, false);
     return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(),
+        (sourceSet.kind(),
             result.toArray(new org.nlogo.agent.Agent[result.size()]),
             world);
   }

@@ -15,7 +15,7 @@ public abstract strictfp class AgentSet
 
   final Class<? extends Agent> type;
 
-  public Class<? extends Agent> type() {
+  public Class<? extends Agent> kind() {
     return type;
   }
 
@@ -73,7 +73,7 @@ public abstract strictfp class AgentSet
 
   public boolean equalAgentSets(org.nlogo.api.AgentSet otherSet) {
     return this == otherSet ||
-        (type == otherSet.type() &&
+        (type == otherSet.kind() &&
             count() == otherSet.count() &&
             equalAgentSetsHelper(otherSet));
   }

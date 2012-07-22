@@ -956,7 +956,7 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return breed.type() == Turtle.class
+    return breed.kind() == Turtle.class
         ? _program.turtlesOwn().size() + result
         : _program.linksOwn().size() + result;
   }

@@ -380,14 +380,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, Class<? extends Agent> type)
+  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, Class<? extends Agent> kind)
       throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
-      if (set.type() != type) {
+      if (set.kind() != kind) {
         throw new ArgumentTypeException(context, this, argIndex,
-            getAgentSetMask(type), obj);
+            getAgentSetMask(kind), obj);
       }
       return set;
     } catch (ClassCastException ex) {

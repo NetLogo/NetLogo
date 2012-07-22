@@ -39,7 +39,7 @@ public final strictfp class _turtleson
       addAll(resultList, ((Patch) agentOrSet).turtlesHere());
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
-      if (sourceSet.type() == Turtle.class) {
+      if (sourceSet.kind() == Turtle.class) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           addAll(resultList, ((Turtle) iter.next()).getPatchHere().turtlesHere());
         }

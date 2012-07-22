@@ -14,7 +14,7 @@ class _ispatchset extends Reporter with Pure {
     Boolean.box(
       args(0).report(context) match {
         case set: AgentSet =>
-          set.`type` eq classOf[Patch]
+          set.kind eq classOf[Patch]
         case _ =>
           false
       })

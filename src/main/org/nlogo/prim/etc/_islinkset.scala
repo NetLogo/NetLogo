@@ -14,7 +14,7 @@ class _islinkset extends Reporter with Pure {
     Boolean.box(
       args(0).report(context) match {
         case set: AgentSet =>
-          set.`type` eq classOf[Link]
+          set.kind eq classOf[Link]
         case _ =>
           false
       })

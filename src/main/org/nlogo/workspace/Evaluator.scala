@@ -15,7 +15,7 @@ class Evaluator(workspace: AbstractWorkspace) {
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
                        waitForCompletion: Boolean = true) = {
-    val procedure = invokeCompiler(source, None, true, agentSet.`type`)
+    val procedure = invokeCompiler(source, None, true, agentSet.kind)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, procedure),
       waitForCompletion)
@@ -23,7 +23,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
-    val procedure = invokeCompiler(source, None, false, agents.`type`)
+    val procedure = invokeCompiler(source, None, false, agents.kind)
     workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
@@ -133,7 +133,7 @@ class Evaluator(workspace: AbstractWorkspace) {
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
     val agentset = new ArrayAgentSet(agent.getAgentClass, 1, false, workspace.world)
     agentset.add(agent)
-    val procedure = invokeCompiler(source, Some(owner.displayName), command, agentset.`type`)
+    val procedure = invokeCompiler(source, Some(owner.displayName), command, agentset.kind)
     procedure.topLevel = false
   }
 
@@ -146,7 +146,7 @@ class Evaluator(workspace: AbstractWorkspace) {
     val vars =
       if (callingProcedure == null) new ArrayList[String]()
       else callingProcedure.args
-    val agentTypeHint = Evaluator.agentTypeHint(agentClass)
+    val agentKindHint = Evaluator.agentKindHint(agentClass)
 
     val wrappedSource = if(reporter)
       // we put parens around what comes after "report", because we want to make
@@ -155,9 +155,9 @@ class Evaluator(workspace: AbstractWorkspace) {
       // "to-report foo report (3 die) end" isn't. - ST 11/12/09
       "to-report __runresult " +
         vars.toString.replace(',', ' ') + " " +
-        agentTypeHint + " report ( " + source + " \n) __done end"
+        agentKindHint + " report ( " + source + " \n) __done end"
     else
-      "to __run " + vars.toString.replace(',', ' ') + " " + agentTypeHint + " " + source + "\nend"
+      "to __run " + vars.toString.replace(',', ' ') + " " + agentKindHint + " " + source + "\nend"
     val results = workspace.compiler.compileMoreCode(
       wrappedSource,
       Some(if(reporter) "runresult" else "run"),
@@ -188,14 +188,14 @@ class Evaluator(workspace: AbstractWorkspace) {
 
 object Evaluator {
 
-  val agentTypeHint = Map[Class[_], String](
+  val agentKindHint = Map[Class[_], String](
     classOf[Observer] -> "__observercode",
     classOf[Turtle] -> "__turtlecode",
     classOf[Patch] -> "__patchcode",
     classOf[Link] -> "__linkcode")
 
   def getHeader(agentClass: Class[_], commands: Boolean) = {
-    val hint = agentTypeHint(agentClass)
+    val hint = agentKindHint(agentClass)
     if(commands) "to __evaluator [] " + hint + " "
     else
       // we put parens around what comes after "report", because we want to make

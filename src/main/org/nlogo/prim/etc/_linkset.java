@@ -36,7 +36,7 @@ public final strictfp class _linkset
       Object elt = args[i].report(context);
       if (elt instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) elt;
-        if (tempSet.type() != org.nlogo.agent.Link.class) {
+        if (tempSet.kind() != org.nlogo.agent.Link.class) {
           throw new ArgumentTypeException
               (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
         }
@@ -65,7 +65,7 @@ public final strictfp class _linkset
         result.add((Link) obj);
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
-        if (tempSet.type() != org.nlogo.agent.Link.class) {
+        if (tempSet.kind() != org.nlogo.agent.Link.class) {
           throw new EngineException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));

@@ -27,7 +27,7 @@ public final strictfp class _other
 
   public AgentSet report_1(final Context context, AgentSet sourceSet) {
     AgentSet result =
-        new org.nlogo.agent.ArrayAgentSet(sourceSet.type(), sourceSet.count(),
+        new org.nlogo.agent.ArrayAgentSet(sourceSet.kind(), sourceSet.count(),
             false, world);
     for (AgentSet.Iterator it = sourceSet.iterator(); it.hasNext();) {
       Agent otherAgent = it.next();

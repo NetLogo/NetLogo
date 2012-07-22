@@ -103,7 +103,7 @@ public strictfp class InRadiusOrCone3D
             // never happen - ST 7/18/06
             throw new IllegalStateException(ex);
           }
-          if (sourceSet.type() == Patch.class) {
+          if (sourceSet.kind() == Patch.class) {
             if (protractor.distance(patch.pxcor, patch.pycor, patch.pzcor,
                 startX, startY, startZ,
                 wrap)
@@ -225,7 +225,7 @@ public strictfp class InRadiusOrCone3D
               (startPatch.pxcor + dx, startPatch.pycor + dy, startPatch.pzcor + dz);
 
           if (patch != null) {
-            if (sourceSet.type() == Patch.class) {
+            if (sourceSet.kind() == Patch.class) {
               // loop through our world copies
               outer:
               for (int worldOffsetX = -m; worldOffsetX <= m; worldOffsetX++) {

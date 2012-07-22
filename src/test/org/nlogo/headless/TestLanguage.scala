@@ -39,10 +39,10 @@ class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 
 case class OpenModel(modelPath:String)
 case class Proc(content: String)
-case class Command(agentType: String, command: String)
-case class CommandWithError(agentType: String, command: String, message: String)
-case class CommandWithStackTrace(agentType: String, command: String, stackTrace: String)
-case class CommandWithCompilerError(agentType: String, command: String, message: String)
+case class Command(agentKind: String, command: String)
+case class CommandWithError(agentKind: String, command: String, message: String)
+case class CommandWithStackTrace(agentKind: String, command: String, stackTrace: String)
+case class CommandWithCompilerError(agentKind: String, command: String, message: String)
 case class ReporterWithResult(reporter: String, result: String)
 case class ReporterWithError(reporter: String, error: String)
 case class ReporterWithStackTrace(reporter: String, stackTrace: String)
@@ -151,13 +151,13 @@ object TestParser {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
       Proc(line)
     else line.trim match {
-      case CommandAndErrorRegex(agentType, command, err) =>
+      case CommandAndErrorRegex(agentKind, command, err) =>
         if (err startsWith "ERROR")
-          CommandWithError(agentType, command, err.substring("ERROR".length + 1))
+          CommandWithError(agentKind, command, err.substring("ERROR".length + 1))
         else if (err startsWith "COMPILER ERROR")
-          CommandWithCompilerError(agentType, command, err.substring("COMPILER ERROR".length + 1))
+          CommandWithCompilerError(agentKind, command, err.substring("COMPILER ERROR".length + 1))
         else if (err startsWith "STACKTRACE")
-          CommandWithStackTrace(agentType, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
+          CommandWithStackTrace(agentKind, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
           sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
@@ -167,8 +167,8 @@ object TestParser {
           ReporterWithStackTrace(reporter, result.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
           ReporterWithResult(reporter, result)
-      case CommandRegex(agentType, command) =>
-        Command(agentType, command)
+      case CommandRegex(agentKind, command) =>
+        Command(agentKind, command)
       case OpenModelRegex(path) => OpenModel(path)
       case _ => sys.error("unrecognized line" + line)
     }

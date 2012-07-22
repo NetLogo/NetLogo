@@ -156,27 +156,27 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   private def parseConstantAgent(token: Token, tokens: Iterator[Token]) = {
     // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ILLEGAL_AGENT_CONSTANT, token)
-    val agentType = token.value
-    if(agentType.isInstanceOf[org.nlogo.prim._patch]) {
+    val agentKind = token.value
+    if(agentKind.isInstanceOf[org.nlogo.prim._patch]) {
       val pxcor = parsePcor(tokens)
       val pycor = parsePcor(tokens)
       try { world.getPatchAt(pxcor, pycor) }
       catch { case _: org.nlogo.api.AgentException =>
                 exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim._turtle]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim._turtle]) {
       val token = tokens.next()
       if(token.tyype != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
         exception(BAD_TURTLE_ARG, token)
       world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim._link]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim._link]) {
       world.getOrCreateLink(
         parseEnd(tokens),
         parseEnd(tokens),
         world.links)
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim.threed._patch]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim.threed._patch]) {
       val (pxcor, pycor, pzcor) = (parsePcor(tokens), parsePcor(tokens), parsePcor(tokens))
       try world.asInstanceOf[World3D].getPatchAt(pxcor, pycor, pzcor)
       catch { case _: org.nlogo.api.AgentException =>

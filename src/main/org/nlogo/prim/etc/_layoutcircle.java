@@ -32,7 +32,7 @@ public final strictfp class _layoutcircle
             (world, (LogoList) nodes, radius);
       } else {
         AgentSet set = (AgentSet) nodes;
-        if (set.type() != Turtle.class) {
+        if (set.kind() != Turtle.class) {
           throw new EngineException
               (context, this,
                   I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
