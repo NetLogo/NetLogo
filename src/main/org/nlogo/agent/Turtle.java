@@ -1208,11 +1208,6 @@ public strictfp class Turtle
     return world.getBreedSingular(getBreed()).toLowerCase();
   }
 
-  @Override
-  public Class<Turtle> getAgentClass() {
-    return Turtle.class;
-  }
-
   public static final int BIT = 2;
 
   @Override

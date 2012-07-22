@@ -2,6 +2,6 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.agent.Agent
+import org.nlogo.api
 
-case class Reference(agentClass: Class[_ <: Agent], vn: Int, original: Instruction)
+case class Reference(kind: api.AgentKind, vn: Int, original: Instruction)

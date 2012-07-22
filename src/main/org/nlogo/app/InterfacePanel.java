@@ -2,6 +2,7 @@
 
 package org.nlogo.app;
 
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;
@@ -139,7 +140,7 @@ strictfp class InterfacePanel
       return new org.nlogo.window.SliderWidget(workspace.world.auxRNG) {
         @Override
         public int sourceOffset() {
-          return org.nlogo.workspace.Evaluator.sourceOffset(org.nlogo.agent.Observer.class, false);
+          return org.nlogo.workspace.Evaluator.sourceOffset(AgentKindJ.Observer(), false);
         }
       };
     } else if (type.equals("CHOOSER") || // current name

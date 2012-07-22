@@ -3,7 +3,7 @@
 package org.nlogo.prim.threed
 
 import org.nlogo.agent.{ Agent3D, ArrayAgentSet, Turtle }
-import org.nlogo.api.{ AgentException, Syntax }
+import org.nlogo.api.{ AgentException, AgentKind, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _breedat(breedName: String) extends Reporter {
@@ -23,13 +23,13 @@ class _breedat(breedName: String) extends Reporter {
       try context.agent.asInstanceOf[Agent3D].getPatchAtOffsets(dx, dy, dz)
       catch {
         case e: AgentException =>
-          return new ArrayAgentSet(classOf[Turtle], 0, false, world)
+          return new ArrayAgentSet(AgentKind.Turtle, 0, false, world)
       }
     if (patch == null)
-      new ArrayAgentSet(classOf[Turtle], 0, false, world)
+      new ArrayAgentSet(AgentKind.Turtle, 0, false, world)
     else {
       val agentset = new ArrayAgentSet(
-        classOf[Turtle], patch.turtleCount, false, world)
+        AgentKind.Turtle, patch.turtleCount, false, world)
       val breed = world.getBreed(breedName)
       val it = patch.turtlesHere.iterator
       while(it.hasNext) {

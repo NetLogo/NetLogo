@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.util.ArrayList
 import org.nlogo.agent.ArrayAgentSet
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
-import org.nlogo.api.{CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
+import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
 
 class Evaluator(workspace: AbstractWorkspace) {
@@ -28,12 +28,12 @@ class Evaluator(workspace: AbstractWorkspace) {
   }
 
   @throws(classOf[CompilerException])
-  def compileCommands(source: String, agentClass: Class[_ <: Agent]): Procedure =
-    invokeCompiler(source, None, true, agentClass)
+  def compileCommands(source: String, kind: AgentKind): Procedure =
+    invokeCompiler(source, None, true, kind)
 
   @throws(classOf[CompilerException])
   def compileReporter(source: String) =
-    invokeCompiler(source, None, false, classOf[Observer])
+    invokeCompiler(source, None, false, AgentKind.Observer)
 
   /**
    * @return whether the code did a "stop" at the top level
@@ -51,7 +51,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   def compileForRun(source: String, context: Context,reporter: Boolean) =
-    invokeCompilerForRun(source, context.agent.getAgentClass, context.activation.procedure, reporter)
+    invokeCompilerForRun(source, context.agent.kind, context.activation.procedure, reporter)
 
   ///
 
@@ -131,7 +131,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
-    val agentset = new ArrayAgentSet(agent.getAgentClass, 1, false, workspace.world)
+    val agentset = new ArrayAgentSet(agent.kind, 1, false, workspace.world)
     agentset.add(agent)
     val procedure = invokeCompiler(source, Some(owner.displayName), command, agentset.kind)
     procedure.topLevel = false
@@ -140,13 +140,13 @@ class Evaluator(workspace: AbstractWorkspace) {
   ///
 
   @throws(classOf[CompilerException])
-  def invokeCompilerForRun(source: String, agentClass: Class[_ <: Agent],
+  def invokeCompilerForRun(source: String, kind: AgentKind,
     callingProcedure: Procedure, reporter: Boolean): Procedure = {
 
     val vars =
       if (callingProcedure == null) new ArrayList[String]()
       else callingProcedure.args
-    val agentKindHint = Evaluator.agentKindHint(agentClass)
+    val agentKindHint = Evaluator.agentKindHint(kind)
 
     val wrappedSource = if(reporter)
       // we put parens around what comes after "report", because we want to make
@@ -169,8 +169,8 @@ class Evaluator(workspace: AbstractWorkspace) {
 
 
   @throws(classOf[CompilerException])
-  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, agentClass: Class[_ <: Agent]) = {
-    val wrappedSource = Evaluator.getHeader(agentClass, commands) + source + Evaluator.getFooter(commands)
+  private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind) = {
+    val wrappedSource = Evaluator.getHeader(kind, commands) + source + Evaluator.getFooter(commands)
     val results =
       workspace.compiler.compileMoreCode(wrappedSource, displayName, workspace.world.program,
         workspace.getProcedures, workspace.getExtensionManager)
@@ -188,14 +188,14 @@ class Evaluator(workspace: AbstractWorkspace) {
 
 object Evaluator {
 
-  val agentKindHint = Map[Class[_], String](
-    classOf[Observer] -> "__observercode",
-    classOf[Turtle] -> "__turtlecode",
-    classOf[Patch] -> "__patchcode",
-    classOf[Link] -> "__linkcode")
+  val agentKindHint = Map[AgentKind, String](
+    AgentKind.Observer -> "__observercode",
+    AgentKind.Turtle -> "__turtlecode",
+    AgentKind.Patch -> "__patchcode",
+    AgentKind.Link -> "__linkcode")
 
-  def getHeader(agentClass: Class[_], commands: Boolean) = {
-    val hint = agentKindHint(agentClass)
+  def getHeader(kind: AgentKind, commands: Boolean) = {
+    val hint = agentKindHint(kind)
     if(commands) "to __evaluator [] " + hint + " "
     else
       // we put parens around what comes after "report", because we want to make
@@ -208,6 +208,6 @@ object Evaluator {
   def getFooter(commands: Boolean) =
     if(commands) "\n__done end" else "\n) __done end"
 
-  def sourceOffset(agentClass: Class[_ <: Agent], commands: Boolean): Int =
-    getHeader(agentClass, commands).length
+  def sourceOffset(kind: AgentKind, commands: Boolean): Int =
+    getHeader(kind, commands).length
 }

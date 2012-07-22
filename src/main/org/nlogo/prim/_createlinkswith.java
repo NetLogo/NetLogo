@@ -5,6 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -47,7 +48,7 @@ public final strictfp class _createlinkswith
     if (breed == world.links()) {
       breed.setDirected(false);
     }
-    AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(Link.class, agentset.count(),
+    AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Link(), agentset.count(),
         false, world);
     Turtle src = (Turtle) context.agent;
     // We have to shuffle here in order for who number assignment

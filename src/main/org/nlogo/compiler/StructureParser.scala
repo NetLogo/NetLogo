@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ Breed, ErrorSource, ExtensionManager, Let,
+import org.nlogo.api.{ AgentKind, Breed, ErrorSource, ExtensionManager, Let,
                        Program, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
@@ -259,8 +259,8 @@ private class StructureParser(
       result
     }
     val newOwns = parseVarList(
-      if (isLinkBreed) classOf[Link]
-      else classOf[Turtle])
+      if (isLinkBreed) AgentKind.Link
+      else AgentKind.Turtle)
     // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
     if(isLinkBreed)
       program.copy(linkBreeds =
@@ -392,7 +392,7 @@ private class StructureParser(
     newProcedures.put(procedure.name, procedure)
     procedure
   }
-  private def parseVarList(owningAgentClass: Class[_ <: Agent] = null, procedure: Procedure = null): collection.immutable.Seq[String] = {
+  private def parseVarList(owningKind: AgentKind = null, procedure: Procedure = null): collection.immutable.Seq[String] = {
     val result = collection.mutable.Buffer[String]()
     var token = tokenBuffer.next()
     cAssert(token.tyype == TokenType.OPEN_BRACKET, "Expected [", token)
@@ -414,14 +414,14 @@ private class StructureParser(
                 "There is already a procedure with that name", token)
         cAssert(!result.contains(token.value),
                 "The name " + token.value + " is already defined", token)
-        checkName(token.value.asInstanceOf[String], token, owningAgentClass, procedure)
+        checkName(token.value.asInstanceOf[String], token, owningKind, procedure)
         result += token.value.asInstanceOf[String]
       }
     }
     result.toList
   }
-  private def checkName(varName: String, token: Token, owningAgentClass: Class[_ <: Agent], procedure: Procedure) {
-    if(owningAgentClass == null || owningAgentClass == classOf[Link]) {
+  private def checkName(varName: String, token: Token, owningKind: AgentKind, procedure: Procedure) {
+    if(owningKind == null || owningKind == AgentKind.Link) {
       val keys = program.breeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()
@@ -430,7 +430,7 @@ private class StructureParser(
                 "You already defined " + varName + " as a " + breedName + " variable", token)
       }
     }
-    if(owningAgentClass == null || owningAgentClass == classOf[Turtle]) {
+    if(owningKind == null || owningKind == AgentKind.Turtle) {
       val keys = program.linkBreeds.keys.iterator
       while(keys.hasNext) {
         val breedName = keys.next()

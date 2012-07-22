@@ -8,5 +8,5 @@ trait SourceOwner {
   def innerSource: String
   def innerSource(s: String)
   def source: String
-  def agentClass: Class[_]
+  def kind: AgentKind
 }

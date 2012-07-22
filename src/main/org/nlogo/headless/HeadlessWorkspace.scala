@@ -7,7 +7,7 @@ package org.nlogo.headless
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ Agent, Observer }
-import org.nlogo.api.{ Program, Version, RendererInterface,
+import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface,
                        WorldDimensions, WorldDimensions3D, AggregateManagerInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable, UpdateMode }
@@ -112,7 +112,7 @@ with org.nlogo.api.ViewSettings {
   AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
   val defaultOwner =
-    new SimpleJobOwner("HeadlessWorkspace", world.mainRNG, classOf[Observer])
+    new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
 
   /**
    * Has a model been opened in this workspace?
@@ -292,7 +292,7 @@ with org.nlogo.api.ViewSettings {
     if (!silent)
       println(agent)
   }
-  def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double) {
+  def inspectAgent(kind: AgentKind, agent: org.nlogo.agent.Agent, radius: Double) {
     if (!silent) {
       println(agent)
     }

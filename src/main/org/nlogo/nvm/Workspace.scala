@@ -46,7 +46,7 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   @throws(classOf[IOException])
   def exportAllPlots(path: String)
   def inspectAgent(agent: api.Agent, radius: Double)
-  def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double)
+  def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
   def getAndCreateDrawing(): java.awt.image.BufferedImage
   def getHubNetManager: api.HubNetInterface
   @throws(classOf[api.LogoException])
@@ -93,7 +93,7 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   @throws(classOf[api.CompilerException])
   def compileCommands(source: String): Procedure
   @throws(classOf[api.CompilerException])
-  def compileCommands(source: String, agentClass: Class[_ <: Agent]): Procedure
+  def compileCommands(source: String, kind: api.AgentKind): Procedure
   @throws(classOf[api.CompilerException])
   def compileReporter(source: String): Procedure
   def runCompiledCommands(owner: api.JobOwner, procedure: Procedure): Boolean

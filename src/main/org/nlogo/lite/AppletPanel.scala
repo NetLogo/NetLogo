@@ -67,7 +67,7 @@ with Event.LinkParent {
       new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
                              new LiteEditorFactory(workspace))
     workspace.setWidgetContainer(iP)
-    val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, classOf[Observer])
+    val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG)
     setBackground(java.awt.Color.WHITE)
     setLayout(new java.awt.BorderLayout)
     add(iP, java.awt.BorderLayout.CENTER)

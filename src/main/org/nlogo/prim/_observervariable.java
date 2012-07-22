@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Observer;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reference;
 import org.nlogo.nvm.Reporter;
@@ -16,7 +17,7 @@ public final strictfp class _observervariable
   }
 
   public Reference makeReference() {
-    return new Reference(Observer.class, vn, this);
+    return new Reference(AgentKindJ.Observer(), vn, this);
   }
 
   @Override

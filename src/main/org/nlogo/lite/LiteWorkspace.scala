@@ -3,7 +3,7 @@
 package org.nlogo.lite
 
 import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, RendererInterface }
+import org.nlogo.api.{ AgentKind, AggregateManagerInterface, RendererInterface }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 import org.nlogo.window.{ GUIWorkspace, NetLogoListenerManager, UpdateManager }
@@ -35,7 +35,7 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
       super.doImport(importer)
   }
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) { }
+  override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) { }
   override def closeAgentMonitors() { }
   override def newRenderer = Femto.get(
     classOf[RendererInterface], "org.nlogo.render.Renderer", Array(world))

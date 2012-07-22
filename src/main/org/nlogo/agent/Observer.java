@@ -502,11 +502,6 @@ public strictfp class Observer
     return "observer";
   }
 
-  @Override
-  public Class<Observer> getAgentClass() {
-    return Observer.class;
-  }
-
   public static final int BIT = 1;
 
   @Override

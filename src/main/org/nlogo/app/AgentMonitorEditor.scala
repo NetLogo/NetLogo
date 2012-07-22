@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.window.{EditorColorizer, Widget}
-import org.nlogo.api.{I18N, AgentVariables, Dump, Nobody, TokenType}
+import org.nlogo.api.{I18N, AgentVariables, AgentKind, Dump, Nobody, TokenType}
 import collection.JavaConverters._
 
 class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
@@ -56,11 +56,11 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
         javax.swing.BorderFactory.createEmptyBorder(0, 1, 0, 1))
       val index =
         if(agent == null)
-          workspace.world.indexOfVariable(agentClass, variableName)
+          workspace.world.indexOfVariable(kind, variableName)
         else
           workspace.world.indexOfVariable(agent, variableName)
       editor = new AgentVarEditor(this, index, variableName, label)
-      editor.agentClass(agentClass)
+      editor.kind(kind)
       editors += editor
       layout.setConstraints(label, labelConstraints)
       add(label)
@@ -79,7 +79,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends javax.swing.JPanel
 
   def vars = parent.vars
   def agent = parent.agent
-  def agentClass = parent.agentClass
+  def kind = parent.kind
   def setAgent(agent: Agent) { parent.setAgent(agent, 3) }
   def workspace = parent.workspace
 }
@@ -98,8 +98,8 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
 {
 
   private def specialCase = {
-    val T = classOf[Turtle]; val P = classOf[Patch]; val L = classOf[Link]
-    parent.agentClass match {
+    val T = AgentKind.Turtle; val P = AgentKind.Patch; val L = AgentKind.Link
+    parent.kind match {
       case T if AgentVariables.isSpecialTurtleVariable(index) =>
         TURTLE_WHO
       case P if AgentVariables.isSpecialPatchVariable(index, workspace.world.program.is3D) =>
@@ -151,16 +151,14 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
   /// JobWidget stuff
 
   // we'll make an AgentSet ourselves, don't use the standard O/T/P sets - ST 11/5/03
-  override def useAgentClass = false
+  override def useKind = false
 
   displayName = {
-    val O = classOf[Observer]; val T = classOf[Turtle]
-    val P = classOf[Patch];    val L = classOf[Link]
-    parent.agentClass match {
-      case O => "Globals Monitor"
-      case T => "Turtle Monitor"
-      case P => "Patch Monitor"
-      case L => "Link Monitor"
+    parent.kind match {
+      case AgentKind.Observer => "Globals Monitor"
+      case AgentKind.Turtle => "Turtle Monitor"
+      case AgentKind.Patch => "Patch Monitor"
+      case AgentKind.Link => "Link Monitor"
     }
   }
 
@@ -202,11 +200,11 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
     setEnabled(false)
     this.innerSource(innerSource)
     var header = "to __agentvareditor [] "
-    if(parent.agentClass eq classOf[Turtle])
+    if(parent.kind eq AgentKind.Turtle)
       header += " __turtlecode "
-    else if(parent.agentClass eq classOf[Patch])
+    else if(parent.kind eq AgentKind.Patch)
       header += " __patchcode "
-    else if(parent.agentClass eq classOf[Link])
+    else if(parent.kind eq AgentKind.Link)
       header += "__linkcode "
     header += "set " + variableName + " "
     val footer = "__done end"
@@ -217,7 +215,7 @@ with org.nlogo.window.Events.JobRemovedEvent.Handler
         workspace.world.observers()
       else {
         val agentset = new org.nlogo.agent.ArrayAgentSet(
-          agent.getAgentClass, 1, false, workspace.world)
+          agent.kind, 1, false, workspace.world)
         agentset.add(agent)
         agentset
       }

@@ -76,7 +76,7 @@ class Worker(val protocol: Protocol)
   {
     class FailedException(message: String) extends LogoException(message)
     private def owner(rng: MersenneTwisterFast) =
-      new SimpleJobOwner("BehaviorSpace", rng, classOf[Observer])
+      new SimpleJobOwner("BehaviorSpace", rng)
     @volatile var aborted = false
     // each Runner is on its own thread, but all the Runners share a ProgressListener,
     // so we need to synchronize

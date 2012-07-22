@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.hubnet
 
-import org.nlogo.agent.Observer
+import org.nlogo.agent.{ Agent, Observer }
 import org.nlogo.api.{ CommandRunnable, Dump, LogoList, Syntax }
 import org.nlogo.nvm.{ EngineException, Command, Context, Reporter }
 import Syntax._
@@ -281,13 +281,13 @@ class _hubnetclearoverride extends Command {
     val varName = argEvalString(context, 2)
     val set = target match {
       case agent: Agent =>
-        val set = new ArrayAgentSet(agent.getAgentClass, 1, false, world)
+        val set = new ArrayAgentSet(agent.kind, 1, false, world)
         set.add(agent)
         set
       case set: AgentSet =>
         set
     }
-    if(!workspace.getHubNetManager.isOverridable(set.kind, varName))
+    if(!workspace.getHubNetManager.isOverridable(Agent.kindToClass(set.kind), varName))
       throw new EngineException(context, this,
         "you cannot override " + varName)
     val overrides = new collection.mutable.ArrayBuffer[java.lang.Long](set.count)
@@ -298,7 +298,7 @@ class _hubnetclearoverride extends Command {
       new CommandRunnable() {
         override def run() {
           workspace.getHubNetManager.clearOverride(
-            client, set.kind, varName, overrides)}})
+            client, Agent.kindToClass(set.kind), varName, overrides)}})
     context.ip = next
   }
 }

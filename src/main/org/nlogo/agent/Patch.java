@@ -56,7 +56,7 @@ public strictfp class Patch
 
   public AgentSet turtlesHereAgentSet() {
     return new ArrayAgentSet
-        (Turtle.class,
+      (AgentKindJ.Turtle(),
             _turtlesHere.toArray(new Agent[_turtlesHere.size()]),
             world);
   }
@@ -510,11 +510,6 @@ public strictfp class Patch
   @Override
   public String classDisplayName() {
     return "patch";
-  }
-
-  @Override
-  public Class<Patch> getAgentClass() {
-    return Patch.class;
   }
 
   public static final int BIT = 4;

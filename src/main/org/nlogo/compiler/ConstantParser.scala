@@ -4,9 +4,10 @@ package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Link, Observer, Patch, Turtle, World, World3D }
-import org.nlogo.api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._
+import org.nlogo.api
+import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 
 /**
  * The constant parser.
@@ -250,7 +251,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
         // we have the observer agentset. make sure that's all we have...
         val closeBrace = tokens.next()
         cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
-        val agentset = new ArrayAgentSet(classOf[Observer], 1, false, world)
+        val agentset = new ArrayAgentSet(api.AgentKind.Observer, 1, false, world)
         agentset.add(world.observer)
         agentset
       }
@@ -277,7 +278,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_turtles]) {
       // we have an agentset of turtles. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Turtle], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         val value = readConstantPrefix(token, tokens)
@@ -289,7 +290,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_links]) {
       // we have an agentset of links. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Link], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Link, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
@@ -309,7 +310,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_patches]) {
       // we have an agentset of patches. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Patch], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Patch, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)

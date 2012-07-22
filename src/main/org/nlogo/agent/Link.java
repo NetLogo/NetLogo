@@ -533,7 +533,7 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds = new ArrayAgentSet(Turtle.class, 2, false, world);
+    AgentSet bothEnds = new ArrayAgentSet(AgentKindJ.Turtle(), 2, false, world);
     bothEnds.add(end1);
     bothEnds.add(end2);
     return bothEnds;
@@ -598,11 +598,6 @@ public strictfp class Link
   @Override
   public String classDisplayName() {
     return world.getLinkBreedSingular(getBreed()).toLowerCase();
-  }
-
-  @Override
-  public Class<Link> getAgentClass() {
-    return Link.class;
   }
 
   public static final int BIT = 8;

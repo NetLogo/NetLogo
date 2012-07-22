@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{FunSuite, Tag}
-import org.nlogo.api.{SimpleJobOwner, Version}
+import org.nlogo.api.{AgentKind, SimpleJobOwner, Version}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
 import org.nlogo.agent.{Turtle, Patch, Link, Observer}
@@ -73,18 +73,18 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   // run the test in both modes, Normal and Run
   def run() {
     import AbstractTestLanguage._
-    def getAgentClass(a: String) = a match {
-      case "O" => classOf[Observer]
-      case "T" => classOf[Turtle]
-      case "P" => classOf[Patch]
-      case "L" => classOf[Link]
+    def agentKind(a: String) = a match {
+      case "O" => AgentKind.Observer
+      case "T" => AgentKind.Turtle
+      case "P" => AgentKind.Patch
+      case "L" => AgentKind.Link
       case x => sys.error("unrecognized agent type: " + x)
     }
     class Tester(mode: TestMode) extends AbstractTestLanguage {
       // use a custom owner so we get fullName into the stack traces
       // we get on the JobThread - ST 1/26/11
       override def owner =
-        new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
+        new SimpleJobOwner(fullName, workspace.world.mainRNG)
       try {
         init()
         defineProcedures(proc.content)
@@ -93,13 +93,13 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
           case Proc(content) =>
             defineProcedures(content)
           case Command(agent, command) =>
-            testCommand(command, getAgentClass(agent), mode)
+            testCommand(command, agentKind(agent), mode)
           case CommandWithError(agent, command, message) =>
-            testCommandError(command, message, getAgentClass(agent), mode)
+            testCommandError(command, message, agentKind(agent), mode)
           case CommandWithCompilerError(agent, command, message) =>
-            testCommandCompilerErrorMessage(command, message, getAgentClass(agent))
+            testCommandCompilerErrorMessage(command, message, agentKind(agent))
           case CommandWithStackTrace(agent, command, stackTrace) =>
-            testCommandErrorStackTrace(command, stackTrace, getAgentClass(agent), mode)
+            testCommandErrorStackTrace(command, stackTrace, agentKind(agent), mode)
           case ReporterWithResult(reporter, result) =>
             testReporter(reporter, result, mode)
           case ReporterWithError(reporter, error) =>

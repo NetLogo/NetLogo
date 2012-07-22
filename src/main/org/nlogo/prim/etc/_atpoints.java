@@ -8,6 +8,7 @@ import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -43,7 +44,7 @@ public final strictfp class _atpoints
         getPatchesAtPoints(context, context.agent, points);
 
     // part 3: construct a new agentset and return it
-    if (sourceSet.kind() == Patch.class) {
+    if (sourceSet.kind() == AgentKindJ.Patch()) {
       if (sourceSet != world.patches()) {   //sourceSet is not the entire set of patches
         for (Iterator<Patch> iter = patches.iterator(); iter.hasNext();) {
           Patch patch = iter.next();
@@ -54,7 +55,7 @@ public final strictfp class _atpoints
       } else {  //sourceSet is the entire set of patches
         result.addAll(patches);
       }
-    } else if (sourceSet.kind() == Turtle.class) {
+    } else if (sourceSet.kind() == AgentKindJ.Turtle()) {
       if (sourceSet != world.turtles()) {  //sourceSet is not the entire set of turtles
         if (world.isBreed(sourceSet)) {  //source set is a breed
           for (Iterator<Patch> iter = patches.iterator(); iter.hasNext();) {
