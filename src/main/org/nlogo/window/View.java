@@ -654,7 +654,7 @@ public strictfp class View
         double minWidthOrHeight =
             StrictMath.min(workspace.world().worldWidth() / 2, workspace.world().worldHeight() / 2);
         double radius = StrictMath.min(3, minWidthOrHeight / 2);
-        workspace.inspectAgent(item.agent.getAgentClass(), item.agent, radius);
+        workspace.inspectAgent(item.agent.kind(), item.agent, radius);
         return;
       case FOLLOW:
         workspace.world.observer().setPerspective(PerspectiveJ.FOLLOW(), item.agent);

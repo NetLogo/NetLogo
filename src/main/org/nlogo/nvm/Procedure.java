@@ -46,11 +46,12 @@ public strictfp class Procedure {
   public final scala.collection.mutable.ArrayBuffer<Let> taskFormals =
       new scala.collection.mutable.ArrayBuffer<Let>();
 
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public Let getTaskFormal(int n, Token token) {
     while (taskFormals.size() < n) {
       taskFormals.$plus$eq(
           new Let("?" + n, token.startPos(), token.endPos(),
-              java.util.Collections.<Let>emptyList()));
+                  (scala.collection.immutable.List<Let>) ((Object) scala.collection.immutable.Nil$.MODULE$))); // NOPMD
     }
     return taskFormals.apply(n - 1);
   }

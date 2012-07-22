@@ -5,6 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -43,7 +44,7 @@ public final strictfp class _createorderedturtles
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
       AgentSet agentset =
-          new ArrayAgentSet(Turtle.class, numberOfTurtles, false, world);
+        new ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles, false, world);
       AgentSet breed =
           breedName == NO_BREED
               ? world.turtles()

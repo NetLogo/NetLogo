@@ -32,7 +32,7 @@ public final strictfp class _withlocalrandomness
       throws LogoException {
     AgentSet agentset =
         new org.nlogo.agent.ArrayAgentSet
-            (context.agent.getAgentClass(), 1, false, world);
+            (context.agent.kind(), 1, false, world);
     agentset.add(context.agent);
     org.nlogo.util.MersenneTwisterFast random = context.job.random;
     context.job.random = world.mainRNG.clone();

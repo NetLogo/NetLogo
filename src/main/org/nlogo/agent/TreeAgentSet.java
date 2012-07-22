@@ -2,6 +2,8 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoList;
 
 import java.util.Map;
@@ -40,14 +42,14 @@ public strictfp class TreeAgentSet
     return true;
   }
 
-  public TreeAgentSet(Class<? extends Agent> type, String printName, World world) {
-    super(type, world, printName, true);
+  public TreeAgentSet(AgentKind kind, String printName, World world) {
+    super(kind, world, printName, true);
   }
 
   @Override
   public Agent agent(long i) {
     Double index = Double.valueOf(i);
-    if (type == Turtle.class || type == Link.class) {
+    if (kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) {
       Agent agent = agents.get(index);
       if (agent == null) {
         return null;
@@ -76,7 +78,7 @@ public strictfp class TreeAgentSet
    */
   @Override
   public void add(Agent agent) {
-    if (agent.getAgentClass() != type) {
+    if (agent.kind() != kind()) {
       throw new IllegalStateException();
     }
     agents.put(agent.agentKey(), agent);
@@ -179,8 +181,8 @@ public strictfp class TreeAgentSet
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder("TreeAgentSet");
-    s = s.append("\n...... type: ");
-    s = s.append(type == null ? "null" : type.toString());
+    s = s.append("\n...... kind: ");
+    s = s.append(kind() == null ? "null" : kind().toString());
     s = s.append("\n...... count(): " + count());
     s = s.append("\n...... agents: ");
     for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
@@ -265,4 +267,3 @@ public strictfp class TreeAgentSet
     }
   }
 }
-

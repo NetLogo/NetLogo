@@ -2,6 +2,7 @@
 
 package org.nlogo.window;
 
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.NetLogoListener;
 import org.nlogo.window.Events.AddJobEvent;
 import org.nlogo.window.Events.BeforeLoadEvent;
@@ -82,15 +83,15 @@ public strictfp class NetLogoListenerManager
   public void handle(CompiledEvent e) {
     if (e.sourceOwner instanceof org.nlogo.api.JobOwner ) {
       char agentType = 'O';
-      if (e.sourceOwner.agentClass() == org.nlogo.agent.Turtle.class) {
+      if (e.sourceOwner.kind() == AgentKindJ.Turtle()) {
         agentType = 'T';
-      } else if (e.sourceOwner.agentClass() == org.nlogo.agent.Patch.class) {
+      } else if (e.sourceOwner.kind() == AgentKindJ.Patch()) {
         agentType = 'P';
-      } else if (e.sourceOwner.agentClass() == org.nlogo.agent.Link.class) {
+      } else if (e.sourceOwner.kind() == AgentKindJ.Link()) {
         agentType = 'L';
-      } else if (e.sourceOwner.agentClass() != org.nlogo.agent.Observer.class) {
+      } else if (e.sourceOwner.kind() != AgentKindJ.Observer()) {
         throw new IllegalStateException
-            ("unexpected agent class: " + e.sourceOwner.agentClass());
+            ("unexpected agent class: " + e.sourceOwner.kind());
       }
       for (NetLogoListener listener : listeners) {
         if(((org.nlogo.api.JobOwner) e.sourceOwner).isCommandCenter()) {

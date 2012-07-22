@@ -17,11 +17,11 @@ public final strictfp class _fdinternal
   private final Let let;
 
   public _fdinternal(_fd original) {
-    let = original.let;
+    let = original.let();
   }
 
   public _fdinternal(_bk original) {
-    let = original.let;
+    let = original.let();
   }
 
   @Override

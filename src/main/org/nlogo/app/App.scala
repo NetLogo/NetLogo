@@ -221,7 +221,7 @@ class App extends
   // all these guys get set in the locally block
   private var _workspace: GUIWorkspace = null
   def workspace = _workspace
-  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, classOf[Observer])
+  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG)
   private var _tabs: Tabs = null
   def tabs = _tabs
   var dirtyMonitor:DirtyMonitor = null // accessed from FileMenu - ST 2/26/04
@@ -272,7 +272,7 @@ class App extends
       }
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
       }
-      override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
+      override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {
       }
       override def newRenderer: RendererInterface = {
         // yikes, it's really ugly that we do this stuff

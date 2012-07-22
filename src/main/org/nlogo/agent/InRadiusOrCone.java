@@ -3,6 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKindJ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +80,12 @@ public strictfp class InRadiusOrCone {
         try {
           Patch patch = startPatch.getPatchAtOffsets(dx, dy);
 
-          if (sourceSet.type() == Patch.class) {
+          if (sourceSet.kind() == AgentKindJ.Patch()) {
             if (world.protractor().distance(patch.pxcor, patch.pycor, startX, startY, wrap) <= radius &&
                 (sourceSet == world.patches() || sourceSet.contains(patch))) {
               result.add(patch);
             }
-          } else if (sourceSet.type() == Turtle.class) {
+          } else if (sourceSet.kind() == AgentKindJ.Turtle()) {
             // Only check patches that might have turtles within the radius on them.
             // The 1.415 (square root of 2) adjustment is necessary because it is
             // possible for portions of a patch to be within the circle even though
@@ -205,7 +206,7 @@ public strictfp class InRadiusOrCone {
         // for each topology.  ev 9/5/05
         Patch patch = world.getPatchAtWrap(startPatch.pxcor + dx, startPatch.pycor + dy);
         if (patch != null) {
-          if (sourceSet.type() == Patch.class) {
+          if (sourceSet.kind() == AgentKindJ.Patch()) {
             // loop through our world copies
             outer:
             for (int worldOffsetX = -m; worldOffsetX <= m; worldOffsetX++) {

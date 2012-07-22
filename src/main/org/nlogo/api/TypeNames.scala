@@ -67,8 +67,8 @@ object TypeNames {
       } else if ((remainingMask & WildcardType) == WildcardType) {
         subtract(WildcardType)
         "anything"
-      } else if ((remainingMask & AgentType) == AgentType) {
-        subtract(AgentType | NobodyType)
+      } else if ((remainingMask & Syntax.AgentType) == Syntax.AgentType) {
+        subtract(Syntax.AgentType | NobodyType)
         "agent"
       } else if (compatible(NumberType)) {
         subtract(NumberType)

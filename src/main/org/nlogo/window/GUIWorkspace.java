@@ -7,6 +7,8 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.BooleanConstraint;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.SliderConstraint;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.CommandRunnable;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.I18N;
@@ -585,7 +587,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     updateManager().reset();
     updateManager().speed_$eq(0);
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, Observer.class),
+      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);
@@ -658,8 +660,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     if (owner instanceof JobWidget &&
         agents == null) {
       JobWidget widget = (JobWidget) owner;
-      if (widget.useAgentClass()) {
-        agents = world.agentClassToAgentSet(widget.agentClass());
+      if (widget.useKind()) {
+        agents = world.kindToAgentSet(widget.kind());
       }
     }
     if (owner.ownsPrimaryJobs()) {
@@ -754,10 +756,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// agents
 
-  public abstract void inspectAgent(Class<? extends Agent> agentClass, org.nlogo.agent.Agent agent, double radius);
+  public abstract void inspectAgent(AgentKind kind, org.nlogo.agent.Agent agent, double radius);
 
-  public void inspectAgent(Class<? extends Agent> agentClass) {
-    inspectAgent(agentClass, null, (world.worldWidth() - 1) / 2);
+  public void inspectAgent(AgentKind kind) {
+    inspectAgent(kind, null, (world.worldWidth() - 1) / 2);
   }
 
   /// output

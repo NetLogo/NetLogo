@@ -3,6 +3,7 @@
 package org.nlogo.window;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.api.AgentKind;
 
 public abstract strictfp class JobWidget
     extends SingleErrorWidget
@@ -14,14 +15,14 @@ public abstract strictfp class JobWidget
     this.random = random;
   }
 
-  protected Class<? extends Agent> agentClass = null;
+  private AgentKind _kind = null;
 
-  public Class<? extends Agent> agentClass() {
-    return agentClass;
+  public AgentKind kind() {
+    return _kind;
   }
 
-  public void agentClass(Class<? extends Agent> agentClass) {
-    this.agentClass = agentClass;
+  public void kind(AgentKind kind) {
+    _kind = kind;
   }
 
   public final org.nlogo.util.MersenneTwisterFast random;
@@ -30,7 +31,7 @@ public abstract strictfp class JobWidget
     return random;
   }
 
-  public boolean useAgentClass() {
+  public boolean useKind() {
     // agent monitors will override to return false - ST 11/5/03
     return true;
   }

@@ -9,7 +9,7 @@ import org.nlogo.workspace.AbstractWorkspace
 import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
-import org.nlogo.api.I18N
+import org.nlogo.api.{ AgentKind, I18N }
 
 class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
@@ -77,7 +77,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   // since the editor tends to want to be huge - ST
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
-  def agentClass = classOf[Observer]
+  def kind = AgentKind.Observer
 
   protected var _needsCompile = false
 

@@ -22,7 +22,7 @@ class _inspect extends Command {
               (workspace.world.worldWidth  / 2) min
               (workspace.world.worldHeight / 2)
             val radius = 3 min (minWidthOrHeight / 2)
-            workspace.inspectAgent(agent.getAgentClass, agent, radius)
+            workspace.inspectAgent(agent.kind, agent, radius)
         }})
     context.ip = next
   }

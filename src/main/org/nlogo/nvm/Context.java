@@ -86,7 +86,7 @@ public final strictfp class Context {
       do {
         command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.getAgentClass());
+          command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
         if (command.world.comeUpForAir) {
@@ -114,7 +114,7 @@ public final strictfp class Context {
       do {
         command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.getAgentClass());
+          command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
         if (command.world.comeUpForAir) {
@@ -237,7 +237,7 @@ public final strictfp class Context {
       do {
         command = activation.procedure().code[ip];
         if ((agentBit & command.agentBits) == 0) {
-          command.throwAgentClassException(this, agent.getAgentClass());
+          command.throwAgentClassException(this, agent.kind());
         }
         command.perform(this);
         if (command.world.comeUpForAir) {

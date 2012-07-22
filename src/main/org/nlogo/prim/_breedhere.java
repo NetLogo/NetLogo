@@ -6,6 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -41,7 +42,7 @@ public final strictfp class _breedhere
       patch = (Patch) context.agent;
     }
     AgentSet agentset =
-        new ArrayAgentSet(Turtle.class, patch.turtleCount(),
+      new ArrayAgentSet(AgentKindJ.Turtle(), patch.turtleCount(),
             false, world);
     AgentSet breed = world.getBreed(breedName);
     for (Turtle turtle : patch.turtlesHere()) {

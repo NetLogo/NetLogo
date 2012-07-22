@@ -21,7 +21,7 @@ class _inspectwithradius extends Command {
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {
         override def run() {
-            workspace.inspectAgent(agent.getAgentClass, agent, radius)
+            workspace.inspectAgent(agent.kind, agent, radius)
         }})
     context.ip = next
   }

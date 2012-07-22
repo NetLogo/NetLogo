@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.Program
+import org.nlogo.api
 import collection.JavaConverters._
 
 // this exists to support recompiling a model without causing agent state information to be lost.
@@ -13,21 +13,21 @@ object Realloc {
   def realloc(world: World) {
     import world.program
     // remove agentsets for breeds that no longer exist, if any
-    for(name <- world.breedAgents.asScala.keys)
+    for(name <- world.breedAgents.keySet.asScala.toList)
       if(!program.breeds.contains(name))
         world.breedAgents.remove(name)
-    for(name <- world.linkBreedAgents.asScala.keys)
+    for(name <- world.linkBreedAgents.keySet.asScala.toList)
       if(!program.linkBreeds.contains(name))
         world.linkBreedAgents.remove(name)
     // make agentsets for new breeds
     for(breedName <- program.breeds.keys)
       world.breedAgents.put(breedName,
         Option(world.breedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(classOf[Turtle], breedName.toUpperCase, world)))
+          new TreeAgentSet(api.AgentKind.Turtle, breedName.toUpperCase, world)))
     for(breedName <- program.linkBreeds.keys)
       world.linkBreedAgents.put(breedName,
         Option(world.linkBreedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(classOf[Link], breedName.toUpperCase, world)))
+          new TreeAgentSet(api.AgentKind.Link, breedName.toUpperCase, world)))
     // make sure directednesses are up-to-date
     for((name, breed) <- program.linkBreeds)
       world.linkBreedAgents.get(name).setDirected(breed.isDirected)

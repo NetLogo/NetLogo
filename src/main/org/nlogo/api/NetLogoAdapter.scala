@@ -14,7 +14,7 @@ trait NetLogoAdapter extends NetLogoListener {
   override def sliderChanged(name: String, value: Double, min: Double, increment: Double, max: Double, valueChanged: Boolean, buttonReleased: Boolean) { }
   override def modelOpened(name: String) { }
   override def inputBoxChanged(name: String, value: AnyRef, valueChanged: Boolean) { }
-  override def commandEntered(owner: String, text: String, agentType: Char, errorMsg: CompilerException) { }
+  override def commandEntered(owner: String, text: String, agentKind: Char, errorMsg: CompilerException) { }
   override def codeTabCompiled(text: String, errorMsg: CompilerException) { }
   override def chooserChanged(name: String, value: AnyRef, valueChanged: Boolean) { }
   override def buttonStopped(buttonName: String) { }
