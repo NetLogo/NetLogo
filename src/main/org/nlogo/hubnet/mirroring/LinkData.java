@@ -2,6 +2,8 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
@@ -61,6 +63,8 @@ public strictfp class LinkData
   private double heading;
   private double size;
   private int breedIndex;
+
+  public AgentKind kind() { return AgentKindJ.Turtle(); }
 
   public ClientWorld.LinkKey getKey() {
     return new ClientWorld.LinkKey(id, end1, end2, breedIndex);

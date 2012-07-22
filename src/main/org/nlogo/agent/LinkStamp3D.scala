@@ -9,6 +9,7 @@ case class LinkStamp3D(
   color: AnyRef, lineThickness: Double, isDirectedLink: Boolean, linkDestinationSize: Double,
   heading: Double, pitch: Double)
 extends api.LinkStamp3D {
+  override def kind = api.AgentKind.Link
   def this(l: Link3D) =
     this(l.shape, l.x1, l.y1, l.z1, l.x2, l.y2, l.z2, l.color, l.lineThickness,
          l.isDirectedLink, l.linkDestinationSize, l.heading, l.pitch)

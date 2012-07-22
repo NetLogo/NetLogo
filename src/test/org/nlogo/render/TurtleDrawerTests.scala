@@ -2,7 +2,7 @@
 
 package org.nlogo.render
 
-import org.nlogo.api.{AgentSet, Color, GraphicsInterface, ShapeList, Turtle, World}
+import org.nlogo.api.{AgentKind, AgentSet, Color, GraphicsInterface, ShapeList, Turtle, World}
 import org.nlogo.util.MockSuite
 
 class TurtleTestsDrawer extends MockSuite {
@@ -133,6 +133,7 @@ class TurtleTestsDrawer extends MockSuite {
                         label: String = "",
                         labelColor: Object = white)
   extends Turtle {
+    override def kind = AgentKind.Turtle
     override def classDisplayName = "TestTurtle"
     override def id = 0
     override def xcor = 0

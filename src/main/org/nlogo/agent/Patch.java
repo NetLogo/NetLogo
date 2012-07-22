@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
@@ -16,6 +18,9 @@ import java.util.ArrayList;
 public strictfp class Patch
     extends Agent
     implements org.nlogo.api.Patch {
+
+  public AgentKind kind() { return AgentKindJ.Patch(); }
+
   public static final int VAR_PXCOR = AgentVariableNumbers.VAR_PXCOR;
   public static final int VAR_PYCOR = AgentVariableNumbers.VAR_PYCOR;
   public static final int VAR_PCOLOR = AgentVariableNumbers.VAR_PCOLOR;

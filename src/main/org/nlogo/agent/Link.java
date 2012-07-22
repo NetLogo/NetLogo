@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
@@ -16,6 +18,8 @@ import java.util.Iterator;
 public strictfp class Link
     extends Agent
     implements org.nlogo.api.Link {
+
+  public AgentKind kind() { return AgentKindJ.Link(); }
 
   /// ends
 

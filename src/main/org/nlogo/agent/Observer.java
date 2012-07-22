@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
@@ -16,6 +18,8 @@ public strictfp class Observer
     super(world);
     resetPerspective();
   }
+
+  public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
   Agent realloc(boolean forRecompile) {
