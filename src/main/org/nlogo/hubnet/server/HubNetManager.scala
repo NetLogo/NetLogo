@@ -2,18 +2,18 @@
 
 package org.nlogo.hubnet.server
 
-import org.nlogo.hubnet.connection.{HubNetException, ConnectionInterface}
-import org.nlogo.api.HubNetInterface
-import org.nlogo.hubnet.mirroring
-import org.nlogo.hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
-import org.nlogo.hubnet.connection.MessageEnvelope._
-import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
+import org.nlogo.{ api, hubnet }
+import hubnet.connection.{HubNetException, ConnectionInterface}
+import hubnet.mirroring
+import hubnet.mirroring.{HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine}
+import hubnet.connection.MessageEnvelope._
+import hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.agent.{Link, Turtle}
 
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetInterface with ConnectionInterface {
+abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends api.HubNetInterface with ConnectionInterface {
 
   val connectionManager: ConnectionManager
 
@@ -147,23 +147,23 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
 
   /// Individualized client views
 
-  def isOverridable(agentType: Class[_ <: org.nlogo.api.Agent], varName: String): Boolean =
+  def isOverridable(agentType: Class[_ <: api.Agent], varName: String): Boolean =
     mirroring.OverrideList.getOverrideIndex(
       mirroring.Agent.AgentType.fromAgentClass(agentType),
       varName) != -1
 
-  def sendOverrideList(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
+  def sendOverrideList(client: String, agentType: Class[_ <: api.Agent],
                        varName: String, overrides: Map[java.lang.Long, AnyRef]) {
     connectionManager.sendOverrideList(client, agentType, varName, overrides)
   }
-  def clearOverride(client: String, agentType: Class[_ <: org.nlogo.api.Agent],
+  def clearOverride(client: String, agentType: Class[_ <: api.Agent],
                     varName: String, overrides: Seq[java.lang.Long]) {
     connectionManager.clearOverride(client, agentType, varName, overrides)
   }
   def clearOverrideLists(client: String) {
     connectionManager.clearOverrideLists(client)
   }
-  def sendAgentPerspective(client: String, perspective: Int, agentType: Class[_ <: org.nlogo.api.Agent],
+  def sendAgentPerspective(client: String, perspective: Int, agentType: Class[_ <: api.Agent],
                            id: Long, radius: Double, serverMode: Boolean) {
     connectionManager.sendAgentPerspective(client, perspective, agentType, id, radius, serverMode)
   }
@@ -191,7 +191,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
     broadcastViewMessage(new HubNetLine(x0, y0, x1, y1, color, size, mode))
   }
 
-  def sendStamp(agent: org.nlogo.api.Agent, erase: Boolean) {
+  def sendStamp(agent: api.Agent, erase: Boolean) {
     agent match {
       case t: Turtle => broadcastViewMessage(new HubNetTurtleStamp(t, erase))
       case l: Link => broadcastViewMessage(new HubNetLinkStamp(l, erase))
@@ -307,6 +307,6 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends HubNetIn
   def mouseDown = false
   def resetMouseCors{}
   // we could implement these to send messages on these events.
-  def shapeChanged(shape:org.nlogo.api.Shape){}
+  def shapeChanged(shape:api.Shape){}
   def applyNewFontSize(fontSize:Int, zoom:Int) {}
 }
