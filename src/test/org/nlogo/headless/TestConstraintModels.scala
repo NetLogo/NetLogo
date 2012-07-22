@@ -16,7 +16,7 @@ class TestConstraintModels extends AbstractTestModels {
     reporter("on?") -> true
     reporter("off?") -> false
 
-    val con = new BooleanConstraint(){
+    object con extends BooleanConstraint {
       def default = defaultValue.asInstanceOf[java.lang.Boolean].booleanValue
       def apply(s:String): Boolean = coerceValue(s).asInstanceOf[java.lang.Boolean].booleanValue
     }
