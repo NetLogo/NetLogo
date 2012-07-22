@@ -23,10 +23,8 @@
 // stable Dispatch.  It's not for any pragmatic reason -- just wanted to give the reboot version
 // a try. - ST 4/25/12
 
-// scalaVersion is 2.9.1 because n8han forgot to crossbuild beta2 for 2.9.2 :-) - ST 7/19/12
-
 /***
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 onLoadMessage := ""
 
