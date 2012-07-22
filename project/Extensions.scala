@@ -24,12 +24,17 @@ object Extensions {
         caches.flatMap{cache => cache(Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))}
     } dependsOn(packageBin in Compile)
 
+  // The "update" is needed ony as long as the extension build.sbt files are
+  // using SNAPSHOT versions of NetLogo.jar. - ST 7/22/12
+  private val sbtBuildCommand =
+    Seq("bin/sbt", "update", "package")
+
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
     log.info("building extension: " + dir.getName)
     val jar = dir / (dir.getName + ".jar")
     val exitCode =
       if((dir / "build.sbt").exists)
-        Process(Seq("bin/sbt", "package"), dir,
+        Process(sbtBuildCommand, dir,
                 "SCALA_JAR" -> scalaLibrary.getPath) ! log
       else
         Process(Seq("make", "-s", jar.getName), dir,
