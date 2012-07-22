@@ -4,6 +4,8 @@ import java.io.File
 
 object Packaging {
 
+  lazy val moreJars = TaskKey[Set[File]]("more-jars", "build NetLogoLite.jar and HubNet.jar")
+
   val settings = Seq(
     artifactName := { (_, _, _) => "NetLogo.jar" },
     packageOptions <+= dependencyClasspath in Runtime map {
@@ -13,24 +15,32 @@ object Packaging {
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
             .mkString(" ")))},
-    packageBin in Compile <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {
+    packageBin in Compile <<= (packageBin in Compile, baseDirectory, cacheDirectory) map {
+      (jar, base, cacheDir) =>
+        val cache =
+          FileFunction.cached(cacheDir / "NetLogo-jar", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+            in: Set[File] =>
+              IO.copyFile(jar, base / "NetLogo.jar")
+              Set(base / "NetLogo.jar")
+          }
+        cache(Set(jar))
+        jar
+      },
+    moreJars <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {
       (jar, instance, base, cacheDir, s) =>
         val cache =
           FileFunction.cached(cacheDir / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
               IO.delete(base / "NetLogoLite.jar")
               IO.delete(base / "HubNet.jar")
-              IO.copyFile(jar, base / "NetLogo.jar")
               val scalaLibrary = instance.libraryJar.getAbsolutePath
               runProGuard(scalaLibrary, "lite", s.log)
               runProGuard(scalaLibrary, "hubnet", s.log)
               addManifest("HubNet", "manifesthubnet")
-              Set(base / "NetLogo.jar",
-                  base / "NetLogoLite.jar",
+              Set(base / "NetLogoLite.jar",
                   base / "HubNet.jar")
           }
         cache(Set(jar))
-        jar
       }
   )
 
