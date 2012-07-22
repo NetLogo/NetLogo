@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Color;
 import org.nlogo.api.CompilerServices;
 import org.nlogo.api.ImporterUser;
@@ -85,7 +87,7 @@ public strictfp class World
     _linkShapeList = new ShapeList();
 
     _observer = createObserver();
-    _observers = new ArrayAgentSet(Observer.class, 1, "observers", false, this);
+    _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false, this);
 
     linkManager = new LinkManager(this);
     tieManager = new TieManager(this, linkManager);
@@ -110,9 +112,12 @@ public strictfp class World
 
   /// empty agentsets
 
-  private final AgentSet _noTurtles = new ArrayAgentSet(Turtle.class, 0, false, this);
-  private final AgentSet _noPatches = new ArrayAgentSet(Patch.class, 0, false, this);
-  private final AgentSet _noLinks = new ArrayAgentSet(Link.class, 0, false, this);
+  private final AgentSet _noTurtles =
+    new ArrayAgentSet(AgentKindJ.Turtle(), 0, false, this);
+  private final AgentSet _noPatches =
+    new ArrayAgentSet(AgentKindJ.Patch(), 0, false, this);
+  private final AgentSet _noLinks =
+    new ArrayAgentSet(AgentKindJ.Link(), 0, false, this);
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -425,18 +430,18 @@ public strictfp class World
     return _links;
   }
 
-  public AgentSet agentClassToAgentSet(Class<? extends Agent> agentClass) {
-    if (agentClass == Turtle.class) {
+  public AgentSet kindToAgentSet(AgentKind kind) {
+    if (kind == AgentKindJ.Turtle()) {
       return _turtles;
-    } else if (agentClass == Patch.class) {
+    } else if (kind == AgentKindJ.Patch()) {
       return _patches;
-    } else if (agentClass == Observer.class) {
+    } else if (kind == AgentKindJ.Observer()) {
       return _observers;
-    } else if (agentClass == Link.class) {
+    } else if (kind == AgentKindJ.Link()) {
       return _links;
     }
-    throw new IllegalArgumentException
-        ("agentClass = " + agentClass);
+    throw new IllegalArgumentException(
+      "kind = " + kind);
   }
 
   public WorldDimensions getDimensions() {
@@ -716,8 +721,8 @@ public strictfp class World
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
-    _links = new TreeAgentSet(Link.class, "LINKS", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES", this);
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS", this);
 
     int x = minPxcor;
     int y = maxPycor;
@@ -739,7 +744,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches", this);
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -877,16 +882,17 @@ public strictfp class World
 
   /// agent-owns
 
-  public int indexOfVariable(Class<? extends Agent> agentClass, String name) {
-    if (agentClass == Observer.class) {
+  public int indexOfVariable(AgentKind kind, String name) {
+    if (kind == AgentKindJ.Observer()) {
       return observerOwnsIndexOf(name);
-    } else if (agentClass == Turtle.class) {
+    } else if (kind == AgentKindJ.Turtle()) {
       return turtlesOwnIndexOf(name);
-    } else if (agentClass == Link.class) {
+    } else if (kind == AgentKindJ.Link()) {
       return linksOwnIndexOf(name);
-    } else // patch
-    {
+    } else if (kind == AgentKindJ.Patch()) {
       return patchesOwnIndexOf(name);
+    } else {
+      throw new IllegalArgumentException(kind.toString());
     }
   }
 
@@ -955,7 +961,7 @@ public strictfp class World
     if (result == -1) {
       return -1;
     }
-    return breed.type() == Turtle.class
+    return breed.kind() == AgentKindJ.Turtle()
         ? _program.turtlesOwn().size() + result
         : _program.linksOwn().size() + result;
   }

@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
@@ -27,6 +29,8 @@ public strictfp class Turtle
     this.id = id;
     variables[VAR_WHO] = Double.valueOf(id);
   }
+
+  public AgentKind kind() { return AgentKindJ.Turtle(); }
 
   public static final int VAR_WHO = AgentVariableNumbers.VAR_WHO;
   public static final int VAR_COLOR = AgentVariableNumbers.VAR_COLOR;
@@ -1162,11 +1166,6 @@ public strictfp class Turtle
   @Override
   public String classDisplayName() {
     return world.getBreedSingular(getBreed()).toLowerCase();
-  }
-
-  @Override
-  public Class<Turtle> getAgentClass() {
-    return Turtle.class;
   }
 
   public static final int BIT = 2;

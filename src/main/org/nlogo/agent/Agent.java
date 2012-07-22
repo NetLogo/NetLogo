@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -14,6 +16,22 @@ import java.util.Observable;
 public abstract strictfp class Agent
     extends Observable
     implements org.nlogo.api.Agent, Comparable<Agent> {
+
+  // for old code that isn't up to speed with the new AgentKind stuff
+  // yet - ST 7/22/12
+  public static Class<? extends Agent> kindToClass(AgentKind kind) {
+    if(kind == AgentKindJ.Observer()) {
+      return Observer.class;
+    } else if(kind == AgentKindJ.Turtle()) {
+      return Turtle.class;
+    } else if(kind == AgentKindJ.Patch()) {
+      return Patch.class;
+    } else if(kind == AgentKindJ.Link()) {
+      return Link.class;
+    } else {
+      throw new IllegalArgumentException("unknown kind: " + kind);
+    }
+  }
 
   final World world;
 
@@ -154,8 +172,6 @@ public abstract strictfp class Agent
 
   public abstract String classDisplayName();
 
-  public abstract Class<? extends Agent> getAgentClass();
-
   public abstract int getAgentBit();
 
   public boolean isPartiallyTransparent() {
@@ -164,4 +180,3 @@ public abstract strictfp class Agent
   }
 
 }
-

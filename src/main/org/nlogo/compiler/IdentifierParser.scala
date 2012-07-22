@@ -30,7 +30,7 @@ private class IdentifierParser(program: Program,
   private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
       if(tokPos < let.startPos || tokPos > let.endPos) None
-      else let.children.asScala.map(checkLet).find(_.isDefined)
+      else let.children.map(checkLet).find(_.isDefined)
              .getOrElse(if(let.varName == ident) Some(let) else None)
     p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
   }

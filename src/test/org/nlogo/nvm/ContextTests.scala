@@ -8,7 +8,7 @@ import org.nlogo.api.Let
 class ContextTests extends FunSuite {
   test("let 1") {
     val c = new Context(null, null, 0, null)
-    val let = new Let
+    val let = Let()
     c.let(let, "foo")
     assert(c.getLet(let) === "foo")
     c.setLet(let, "bar")
@@ -16,7 +16,7 @@ class ContextTests extends FunSuite {
   }
   test("let 2") {
     val c = new Context(null, null, 0, null)
-    val (let1, let2) = (new Let, new Let)
+    val (let1, let2) = (Let(), Let())
     c.let(let1, "foo")
     assert(c.getLet(let1) === "foo")
     c.let(let2, "bar")

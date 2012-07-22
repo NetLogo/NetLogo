@@ -3,6 +3,8 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Breed;
 import org.nlogo.api.ImporterUser;
@@ -146,12 +148,12 @@ public abstract strictfp class ImporterJ
 
       world.clearAll();
 
-      importAgents(Observer.class);
-      importAgents(Turtle.class);
-      importAgents(Patch.class);
+      importAgents(AgentKindJ.Observer());
+      importAgents(AgentKindJ.Turtle());
+      importAgents(AgentKindJ.Patch());
       checkForBlankTurtles();
       if (importLinks) {
-        importAgents(Link.class);
+        importAgents(AgentKindJ.Link());
       }
       if (nextLine != null && nextLine.indexOf("DRAWING") != -1) {
         importDrawing();
@@ -407,33 +409,33 @@ public abstract strictfp class ImporterJ
     }
   }
 
-  void importAgents(Class<? extends Agent> agentClass)
+  void importAgents(AgentKind kind)
       throws java.io.IOException {
     tooManyValuesForSection = false;
-    builtInVars = getImplicitVariables(agentClass);
-    String[] headers = getHeaders(agentClass);
+    builtInVars = getImplicitVariables(kind);
+    String[] headers = getHeaders(kind);
 
     setupVarsToImport(headers.length);
     while (hasMoreLines(false)) {
       String[] line = nextLine();
-      importOneAgent(agentClass, line, headers);
+      importOneAgent(kind, line, headers);
     }
   }
 
-  void importOneAgent(Class<? extends Agent> agentClass, String[] line, String[] headers) {
-    Map<String, Object> varVals = getVarVals(headers, line, agentClass);
+  void importOneAgent(AgentKind kind, String[] line, String[] headers) {
+    Map<String, Object> varVals = getVarVals(headers, line, kind);
 
-    if (agentClass == Observer.class) {
+    if (kind == AgentKindJ.Observer()) {
       setScreenDimensions(varVals);
     }
     // if there were any agentsets in the values that getVarVals() fetched,
     // then those values may have become invalid as a result of resizing
     // the world, so we'd better call getVarVals over again - ST 12/21/04
-    varVals = getVarVals(headers, line, agentClass);
-    Agent agent = nextAgent(agentClass, varVals);
+    varVals = getVarVals(headers, line, kind);
+    Agent agent = nextAgent(kind, varVals);
     for (int i = 0; i < headers.length; i++) {
       String header = headers[i];
-      if (isSpecialVariable(agentClass, header)) // breed, sex/sey, pxcor/pycor, label/plabel, who, others?
+      if (isSpecialVariable(kind, header)) // breed, sex/sey, pxcor/pycor, label/plabel, who, others?
       {
         handleSpecialVariable(agent, header, varVals, i);
       } else {
@@ -449,11 +451,11 @@ public abstract strictfp class ImporterJ
     }
   }
 
-  Agent nextAgent(Class<? extends Agent> agentClass, Map<String, Object> varVals) {
-    if (agentClass == Observer.class) {
+  Agent nextAgent(AgentKind kind, Map<String, Object> varVals) {
+    if (kind == AgentKindJ.Observer()) {
       return world.observer();
     }
-    if (agentClass == Turtle.class) {
+    if (kind == AgentKindJ.Turtle()) {
       // don't use agent.setVariable() for the turtles' id and breed since
       // these are needed in order to create the right number and types of
       // variables for the turtle.  --mag 3/25/03
@@ -465,12 +467,12 @@ public abstract strictfp class ImporterJ
       turtle.setBreed(breed);
       return turtle;
     }
-    if (agentClass == Patch.class) {
+    if (kind == AgentKindJ.Patch()) {
       // don't use agent.setVariable() for the patches' pxcor and pycor since
       // these are needed in order to create the right patch.  --mag 3/25/03
       return getPatch(varVals);
     }
-    if (agentClass == Link.class) {
+    if (kind == AgentKindJ.Link()) {
       AgentSet breed =
           getLinkBreed(varVals,
               builtInVars[Link.VAR_BREED]);
@@ -576,10 +578,10 @@ public abstract strictfp class ImporterJ
   //given the set of lines of the file, the delimiter for the values in a line, and the type of agent
   //(or Globals for the observer) for these headers,
   //this will return an array of uppercase strings containing the headers to be imported for this agent
-  String[] getHeaders(Class<? extends Agent> agentClass)
+  String[] getHeaders(AgentKind kind)
       throws java.io.IOException {
     if (!hasMoreLines(false)) {
-      String abortingError = "No " + printName(agentClass) + " headers have been imported. " +
+      String abortingError = "No " + printName(kind) + " headers have been imported. " +
           "Globals, Turtles, and Patches must be in the same import file.";
       throw new AbortingImportException
           (ImportError.UNEXPECTED_EOF_ERROR, abortingError);
@@ -597,23 +599,23 @@ public abstract strictfp class ImporterJ
       }
     }
     String[] headersArr = headers.toArray(new String[headers.size()]);
-    varHeadersImported(agentClass, headersArr, true);
-    varHeadersImported(agentClass, headersArr, false);
+    varHeadersImported(kind, headersArr, true);
+    varHeadersImported(kind, headersArr, false);
     return headersArr;
   }
 
   // don't ask the user about these headers when we're
   // importing from an old export file
   // we know they are not there and should be set to a default
-  List<String> getOptionalHeaders(Class<? extends Agent> agentClass) {
-    if (convertPenDown && agentClass == Turtle.class) {
+  List<String> getOptionalHeaders(AgentKind kind) {
+    if (convertPenDown && kind == AgentKindJ.Turtle()) {
       return Arrays.asList(new String[]
           {"PEN-SIZE", "PEN-COLOR"});
     }
-    if (olderThan40beta2 && agentClass == Link.class) {
+    if (olderThan40beta2 && kind == AgentKindJ.Link()) {
       return Arrays.asList(new String[]
           {"SHAPE", "TIE-MODE"});
-    } else if (agentClass == Link.class) {
+    } else if (kind == AgentKindJ.Link()) {
       return Arrays.asList(new String[]
           {"TIE-MODE"});
     }
@@ -626,7 +628,7 @@ public abstract strictfp class ImporterJ
   //the parsed values keyed by the variable header.  if an essential variable
   //for this agent type does not have a valid value, this will throw an
   //abortingexception
-  Map<String, Object> getVarVals(String[] headersArr, String[] values, Class<? extends Agent> agentClass) {
+  Map<String, Object> getVarVals(String[] headersArr, String[] values, AgentKind kind) {
     Map<String, Object> varVals = new HashMap<String, Object>();
 
     if (!tooManyValuesForSection && values.length > headersArr.length) {
@@ -638,9 +640,9 @@ public abstract strictfp class ImporterJ
               ImportError.TOO_MANY_VALUES_ERROR,
               "Too Many Values For Agent",
               "There are a total of " + headersArr.length + " "
-                  + printName(agentClass) + " variables declared in this "
+                  + printName(kind) + " variables declared in this "
                   + "model (including built-in " +
-                  ((agentClass == Turtle.class || agentClass == Link.class)
+              ((kind == AgentKindJ.Turtle() || kind == AgentKindJ.Link())
                       ? "and breed " : "")
                   + "variables).  The import-world file has at least one agent "
                   + "in the " + printSectionName()
@@ -654,10 +656,10 @@ public abstract strictfp class ImporterJ
       // handle turtle breeds specially so that we can give a different
       // error message if something there is an error
       boolean turtleBreedVar =
-          (agentClass == Turtle.class) && (headersArr[i].equals(builtInVars[TURTLE_BREED]));
+        (kind == AgentKindJ.Turtle()) && (headersArr[i].equals(builtInVars[TURTLE_BREED]));
 
       boolean linkBreedVar =
-          (agentClass == Link.class) && (headersArr[i].equals
+        (kind == AgentKindJ.Link()) && (headersArr[i].equals
               (builtInVars[Link.VAR_BREED]));
 
       if (convertPenDown && headersArr[i].equals("PEN-MODE")) {
@@ -673,9 +675,9 @@ public abstract strictfp class ImporterJ
 
       // check to see if this variable is an essential variable and if it is,
       // that we were actually able to get a valid value for it.
-      if (essentialVarHeadersToImport.get(agentClass).contains(headersArr[i])
+      if (essentialVarHeadersToImport.get(kind).contains(headersArr[i])
           && (value instanceof Junk)) {
-        String abortingError = "A " + printName(agentClass) +
+        String abortingError = "A " + printName(kind) +
             " with the essential variable " + headersArr[i] +
             " cannot be imported since the agent's value in the import" +
             " file for " + headersArr[i] + " could not be imported.";
@@ -746,16 +748,16 @@ public abstract strictfp class ImporterJ
   //this will return the index to the variables array of the variable at headerIndex in the import file
   //or it will return -1 if the variable at headerIndex is not in this agent's set of variables
   int getVarIndex(Agent agent, String header, int headerIndex) {
-    Class<? extends Agent> agentClass = agent.getAgentClass();
+    AgentKind kind = agent.kind();
     int varIndex = Arrays.asList(builtInVars).indexOf(header);
-    String agentType = printName(agentClass);
+    String agentType = printName(kind);
     //check to see if the variable is a built-in variable agent variable
     if (varIndex == -1) {
-      if (agentClass == Observer.class) {
+      if (kind == AgentKindJ.Observer()) {
         varIndex = world.observerOwnsIndexOf(header);
-      } else if (agentClass == Patch.class) {
+      } else if (kind == AgentKindJ.Patch()) {
         varIndex = world.patchesOwnIndexOf(header);
-      } else if (agentClass == Turtle.class) {
+      } else if (kind == AgentKindJ.Turtle()) {
         varIndex = world.turtlesOwnIndexOf(header);
         //check to see if the variable is a turtlesOwn variable
         if (varIndex == -1) {
@@ -765,7 +767,7 @@ public abstract strictfp class ImporterJ
             return -1;
           }
         }
-      } else if (agentClass == Link.class) {
+      } else if (kind == AgentKindJ.Link()) {
         varIndex = world.linksOwnIndexOf(header);
         if (varIndex == -1) {
           varIndex = getLinkBreedVarIndex((Link) agent, header);
@@ -968,13 +970,13 @@ public abstract strictfp class ImporterJ
     return getAllVars(world.program().linkBreeds());
   }
 
-  Map<Class<? extends Agent>, List<String>> specialVariables;
+  Map<AgentKind, List<String>> specialVariables;
 
   //fill the specialVariables map with the strings of the headers that need special handling to have a
   //successful import
-  Map<Class<? extends Agent>, List<String>> fillSpecialVariables() {
-    Map<Class<? extends Agent>, List<String>> result =
-        new HashMap<Class<? extends Agent>, List<String>>();
+  Map<AgentKind, List<String>> fillSpecialVariables() {
+    Map<AgentKind, List<String>> result =
+        new HashMap<AgentKind, List<String>>();
     List<String> specialObserverVars = stringArrayToList(getSpecialObserverVariables());
 
     List<String> specialTurtleVars = stringArrayToList(getSpecialTurtleVariables());
@@ -983,10 +985,10 @@ public abstract strictfp class ImporterJ
 
     List<String> specialLinkVars = stringArrayToList(getSpecialLinkVariables());
 
-    result.put(Observer.class, specialObserverVars);
-    result.put(Turtle.class, specialTurtleVars);
-    result.put(Patch.class, specialPatchVars);
-    result.put(Link.class, specialLinkVars);
+    result.put(AgentKindJ.Observer(), specialObserverVars);
+    result.put(AgentKindJ.Turtle(), specialTurtleVars);
+    result.put(AgentKindJ.Patch(), specialPatchVars);
+    result.put(AgentKindJ.Link(), specialLinkVars);
 
     return result;
   }
@@ -1004,17 +1006,17 @@ public abstract strictfp class ImporterJ
   abstract String[] getSpecialPatchVariables();
   abstract String[] getSpecialLinkVariables();
 
-  boolean isSpecialVariable(Class<? extends Agent> agentClass, String header) {
-    return specialVariables.get(agentClass).contains(header);
+  boolean isSpecialVariable(AgentKind kind, String header) {
+    return specialVariables.get(kind).contains(header);
   }
 
-  Map<Class<? extends Agent>, List<String>> essentialVarHeadersToImport;
+  Map<AgentKind, List<String>> essentialVarHeadersToImport;
 
   //fill the essentialVarHeadersToImport map with the strings of the headers that are essential to a
   //successful import
-  Map<Class<? extends Agent>, List<String>> fillEssentialVarsToImport() {
-    Map<Class<? extends Agent>, List<String>> result =
-        new HashMap<Class<? extends Agent>, List<String>>();
+  Map<AgentKind, List<String>> fillEssentialVarsToImport() {
+    Map<AgentKind, List<String>> result =
+        new HashMap<AgentKind, List<String>>();
     List<String> essentialObserverVarHeaders;
 
     if (!convertTopology) {
@@ -1029,10 +1031,10 @@ public abstract strictfp class ImporterJ
 
     List<String> essentialLinkVarHeaders = stringArrayToList(getEssentialLinkVariables());
 
-    result.put(Observer.class, essentialObserverVarHeaders);
-    result.put(Turtle.class, essentialTurtleVarHeaders);
-    result.put(Patch.class, essentialPatchVarHeaders);
-    result.put(Link.class, essentialLinkVarHeaders);
+    result.put(AgentKindJ.Observer(), essentialObserverVarHeaders);
+    result.put(AgentKindJ.Turtle(), essentialTurtleVarHeaders);
+    result.put(AgentKindJ.Patch(), essentialPatchVarHeaders);
+    result.put(AgentKindJ.Link(), essentialLinkVarHeaders);
 
     return result;
   }
@@ -1068,18 +1070,18 @@ public abstract strictfp class ImporterJ
       vars.apply(Link.VAR_END1), vars.apply(Link.VAR_END2)};
   }
 
-  //if essentialHeaders is true,
-  //if this returns successfully, then all the essential headers for the variables for agentClass have been
-  //imported
-  //if essentialHeaders is false,
-  //if this returns successfully, either all headers for the variables for agentClass are there or the user
-  //doesn't care if the variables for the missing headers are set to an appropriate default
-  void varHeadersImported(Class<? extends Agent> agentClass, String[] headers, boolean essentialHeaders) {
+  //if essentialHeaders is true, if this returns successfully, then
+  //all the essential headers for the variables for the agent kind
+  //have been imported.  if essentialHeaders is false, if this returns
+  //successfully, either all headers for the variables for the agent
+  //kind are there or the user doesn't care if the variables for the
+  //missing headers are set to an appropriate default
+  void varHeadersImported(AgentKind kind, String[] headers, boolean essentialHeaders) {
     List<String> headersToCheckFor =
         essentialHeaders
-            ? essentialVarHeadersToImport.get(agentClass)
+            ? essentialVarHeadersToImport.get(kind)
             : Arrays.asList(builtInVars);
-    List<String> optionalHeaders = getOptionalHeaders(agentClass);
+    List<String> optionalHeaders = getOptionalHeaders(kind);
 
     for (int i = 0; i < headersToCheckFor.size(); i++) {
       String header = headersToCheckFor.get(i);
@@ -1102,7 +1104,7 @@ public abstract strictfp class ImporterJ
               new ImportException(
                   ImportError.UNDECLARED_AGENT_VAR_ERROR,
                   "Implicit Variable Not Declared",
-                  "the " + printName(agentClass) + " variable " +
+                  "the " + printName(kind) + " variable " +
                       header + " was not declared.",
                   "the import will continue but all agents with this " +
                       "variable will have it set to an appropriate default."));
@@ -1111,7 +1113,7 @@ public abstract strictfp class ImporterJ
     }
   }
 
-  abstract String[] getImplicitVariables(Class<? extends Agent> agentClass);
+  abstract String[] getImplicitVariables(AgentKind kind);
 
   //code to handle peek for the StringTokenizer
 
@@ -1230,17 +1232,17 @@ public abstract strictfp class ImporterJ
     return ((currentSentinel > 0) ? sentinels[currentSentinel - 1] : "UNKNOWN");
   }
 
-  String printName(Class<? extends Agent> agentClass) {
-    if (agentClass == Observer.class) {
+  String printName(AgentKind kind) {
+    if (kind == AgentKindJ.Observer()) {
       return "Global";
     }
-    if (agentClass == Turtle.class) {
+    if (kind == AgentKindJ.Turtle()) {
       return "Turtle";
     }
-    if (agentClass == Patch.class) {
+    if (kind == AgentKindJ.Patch()) {
       return "Patch";
     }
-    if (agentClass == Link.class) {
+    if (kind == AgentKindJ.Link()) {
       return "Link";
     }
     // there are no other agents

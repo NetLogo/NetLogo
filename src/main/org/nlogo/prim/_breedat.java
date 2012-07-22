@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
@@ -35,15 +36,15 @@ public final strictfp class _breedat
     try {
       patch = context.agent.getPatchAtOffsets(dx, dy);
     } catch (org.nlogo.api.AgentException e) {
-      return new org.nlogo.agent.ArrayAgentSet(org.nlogo.agent.Turtle.class, 0,
+      return new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), 0,
           false, world);
     }
     if (patch == null) {
-      return new org.nlogo.agent.ArrayAgentSet(org.nlogo.agent.Turtle.class, 0,
+      return new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), 0,
           false, world);
     }
     org.nlogo.agent.AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet(org.nlogo.agent.Turtle.class, patch.turtleCount(),
+      new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), patch.turtleCount(),
             false, world);
     org.nlogo.agent.AgentSet breed = world.getBreed(breedName);
     for (org.nlogo.agent.Turtle turtle : patch.turtlesHere()) {

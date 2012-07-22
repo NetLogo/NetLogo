@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{Agent, World}
 import org.nlogo.nvm.CompilerInterface
-import org.nlogo.api.Version
+import org.nlogo.api
 
 /**
  * handy for use in unit tests
@@ -16,11 +16,11 @@ extends AbstractWorkspaceScala(new World)
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true
   override def compilerTestingMode = false
-  override def waitFor(runnable: org.nlogo.api.CommandRunnable): Unit = unsupported
-  override def waitForResult[T](runnable: org.nlogo.api.ReporterRunnable[T]): T = unsupported
+  override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
+  override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported
   override def waitForQueuedEvents(): Unit = unsupported
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = unsupported
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: org.nlogo.agent.Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(agent: api.Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(kind: api.AgentKind, agent: org.nlogo.agent.Agent, radius: Double): Unit = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
   override def open(path: String) = unsupported
@@ -30,7 +30,7 @@ extends AbstractWorkspaceScala(new World)
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported
-  override def importDrawing(file: org.nlogo.api.File) = unsupported
+  override def importDrawing(file: api.File) = unsupported
   override def exportOutput(filename: String) = unsupported
   override def exportDrawing(filename: String, format: String) = unsupported
   override def exportDrawingToCSV(writer: java.io.PrintWriter) = unsupported
@@ -42,14 +42,14 @@ extends AbstractWorkspaceScala(new World)
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def setOutputAreaContents(text: String) = unsupported
-  override def setDimensions(d: org.nlogo.api.WorldDimensions) = unsupported
-  override def setDimensions(d: org.nlogo.api.WorldDimensions, patchSize: Double) = unsupported
+  override def setDimensions(d: api.WorldDimensions) = unsupported
+  override def setDimensions(d: api.WorldDimensions, patchSize: Double) = unsupported
   override def resizeView(): Unit = unsupported
-  override def runtimeError(owner: org.nlogo.api.JobOwner,
+  override def runtimeError(owner: api.JobOwner,
                             context: org.nlogo.nvm.Context,
                             instruction: org.nlogo.nvm.Instruction,
                             ex: Exception) = unsupported
-  override def ownerFinished(owner: org.nlogo.api.JobOwner) = unsupported
+  override def ownerFinished(owner: api.JobOwner) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe(): Unit = unsupported

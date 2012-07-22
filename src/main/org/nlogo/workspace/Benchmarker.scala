@@ -15,7 +15,7 @@ object Benchmarker {
     val times = new collection.mutable.ListBuffer[Double]
     val goProcedure = workspace.compileCommands("ca benchmark")
     val resultProcedure = workspace.compileReporter("result")
-    val owner = new SimpleJobOwner("Benchmarker", workspace.world.mainRNG, classOf[Observer])
+    val owner = new SimpleJobOwner("Benchmarker", workspace.world.mainRNG)
     def goOnce():Double = {
       workspace.runCompiledCommands(owner, goProcedure)
       val result = workspace.runCompiledReporter(owner, resultProcedure).asInstanceOf[Double]

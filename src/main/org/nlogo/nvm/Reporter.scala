@@ -13,13 +13,13 @@ abstract class Reporter extends Instruction {
   @throws(classOf[LogoException])
   final def checkAgentClass(agent: Agent, context: Context) {
     if ((agent.getAgentBit & agentBits) == 0)
-      throwAgentClassException(context, agent.getAgentClass)
+      throwAgentClassException(context, agent.kind)
   }
 
   @throws(classOf[LogoException])
   final def checkAgentSetClass(agents: AgentSet, context: Context) {
     if ((agents.getAgentBit & agentBits) == 0)
-      throwAgentClassException(context, agents.`type`)
+      throwAgentClassException(context, agents.kind)
   }
 
 }

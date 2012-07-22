@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.{ AgentSet, Turtle }
-import org.nlogo.api.Syntax
+import org.nlogo.api.{ AgentKind, Syntax }
 import org.nlogo.nvm.{ Context, Pure, Reporter }
 
 class _isturtleset extends Reporter with Pure {
@@ -14,7 +14,7 @@ class _isturtleset extends Reporter with Pure {
     Boolean.box(
       args(0).report(context) match {
         case set: AgentSet =>
-          set.`type` eq classOf[Turtle]
+          set.kind == AgentKind.Turtle
         case _ =>
           false
       })

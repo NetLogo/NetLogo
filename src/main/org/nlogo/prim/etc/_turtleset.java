@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -38,7 +39,7 @@ public final strictfp class _turtleset
       Object elt = args[i].report(context);
       if (elt instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) elt;
-        if (tempSet.type() != org.nlogo.agent.Turtle.class) {
+        if (tempSet.kind() != AgentKindJ.Turtle()) {
           throw new ArgumentTypeException
               (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
         }
@@ -56,7 +57,7 @@ public final strictfp class _turtleset
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
-        org.nlogo.agent.Turtle.class,
+      AgentKindJ.Turtle(),
         resultSet.toArray(new org.nlogo.agent.Turtle[resultSet.size()]),
         world);
   }
@@ -70,7 +71,7 @@ public final strictfp class _turtleset
         result.add((Turtle) obj);
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
-        if (tempSet.type() != org.nlogo.agent.Turtle.class) {
+        if (tempSet.kind() != AgentKindJ.Turtle()) {
           throw new EngineException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));

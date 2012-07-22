@@ -8,6 +8,8 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Observer;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
@@ -310,42 +312,42 @@ public abstract strictfp class Instruction
                 : "a non-number"));
   }
 
-  public void throwAgentClassException(Context context, Class<? extends Agent> agentClass)
+  public void throwAgentClassException(Context context, AgentKind kind)
       throws EngineException {
-    List<Class<? extends Agent>> allowedAgentClasses =
-        new ArrayList<Class<? extends Agent>>();
+    List<AgentKind> allowedKinds =
+        new ArrayList<AgentKind>();
     if (syntax().agentClassString().indexOf("O") != -1) {
-      allowedAgentClasses.add(Observer.class);
+      allowedKinds.add(AgentKindJ.Observer());
     }
     if (syntax().agentClassString().indexOf("T") != -1) {
-      allowedAgentClasses.add(Turtle.class);
+      allowedKinds.add(AgentKindJ.Turtle());
     }
     if (syntax().agentClassString().indexOf("P") != -1) {
-      allowedAgentClasses.add(Patch.class);
+      allowedKinds.add(AgentKindJ.Patch());
     }
     if (syntax().agentClassString().indexOf("L") != -1) {
-      allowedAgentClasses.add(Link.class);
+      allowedKinds.add(AgentKindJ.Link());
     }
-    if (allowedAgentClasses.size() == 1) {
+    if (allowedKinds.size() == 1) {
       throw new EngineException
           (context, this, "this code can't be run by "
-              + agentClassDescription(agentClass) +
-              ", only " + agentClassDescription(allowedAgentClasses.get(0)));
+              + agentKindDescription(kind) +
+              ", only " + agentKindDescription(allowedKinds.get(0)));
     } else {
       throw new EngineException
           (context, this, "this code can't be run by "
-              + agentClassDescription(agentClass));
+              + agentKindDescription(kind));
     }
   }
 
-  protected static String agentClassDescription(Class<? extends Agent> agentClass) {
-    if (agentClass == Observer.class) {
+  protected static String agentKindDescription(AgentKind kind) {
+    if (kind == AgentKindJ.Observer()) {
       return "the observer";
-    } else if (agentClass == Turtle.class) {
+    } else if (kind == AgentKindJ.Turtle()) {
       return "a turtle";
-    } else if (agentClass == Patch.class) {
+    } else if (kind == AgentKindJ.Patch()) {
       return "a patch";
-    } else if (agentClass == Link.class) {
+    } else if (kind == AgentKindJ.Link()) {
       return "a link";
     }
     return null;
@@ -380,14 +382,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, Class<? extends Agent> type)
+  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind)
       throws LogoException {
     Object obj = args[argIndex].report(context);
     try {
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
-      if (set.type() != type) {
+      if (set.kind() != kind) {
         throw new ArgumentTypeException(context, this, argIndex,
-            getAgentSetMask(type), obj);
+            getAgentSetMask(kind), obj);
       }
       return set;
     } catch (ClassCastException ex) {
@@ -494,14 +496,14 @@ public abstract strictfp class Instruction
     }
   }
 
-  private static int getAgentSetMask(Class<? extends Agent> type) {
-    if (org.nlogo.api.Turtle.class.isAssignableFrom(type)) {
+  private static int getAgentSetMask(AgentKind kind) {
+    if (kind == AgentKindJ.Turtle()) {
       return Syntax.TurtlesetType();
     }
-    if (org.nlogo.api.Patch.class.isAssignableFrom(type)) {
+    if (kind == AgentKindJ.Patch()) {
       return Syntax.PatchsetType();
     }
-    if (org.nlogo.api.Link.class.isAssignableFrom(type)) {
+    if (kind == AgentKindJ.Link()) {
       return Syntax.LinksetType();
     }
     return Syntax.AgentsetType();

@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -39,7 +40,7 @@ public final strictfp class _turtleson
       addAll(resultList, ((Patch) agentOrSet).turtlesHere());
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
-      if (sourceSet.type() == Turtle.class) {
+      if (sourceSet.kind() == AgentKindJ.Turtle()) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           addAll(resultList, ((Turtle) iter.next()).getPatchHere().turtlesHere());
         }
@@ -53,7 +54,7 @@ public final strictfp class _turtleson
           (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
     return new org.nlogo.agent.ArrayAgentSet
-        (Turtle.class,
+      (AgentKindJ.Turtle(),
             resultList.toArray
                 (new Turtle[resultList.size()]),
             world);

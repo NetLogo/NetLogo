@@ -53,7 +53,7 @@ public final strictfp class _otherwith
       }
     }
     return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(),
+        (sourceSet.kind(),
             result.toArray(new Agent[result.size()]),
             world);
   }

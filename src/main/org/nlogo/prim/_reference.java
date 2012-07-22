@@ -22,7 +22,7 @@ public final strictfp class _reference
 
   @Override
   public String toString() {
-    return super.toString() + ":" + reference.agentClass().getSimpleName() + "," + reference.vn();
+    return super.toString() + ":" + reference.kind().toString() + "," + reference.vn();
   }
 
   @Override

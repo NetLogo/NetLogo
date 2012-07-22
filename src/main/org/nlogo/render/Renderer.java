@@ -3,6 +3,7 @@
 package org.nlogo.render;
 
 import org.nlogo.api.Agent;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.AgentSet;
 import org.nlogo.api.Graphics2DWrapper;
 import org.nlogo.api.GraphicsInterface;
@@ -82,7 +83,7 @@ public strictfp class Renderer
     for (scala.collection.Iterator<String> iter = world.program().breeds().keys().iterator();
          iter.hasNext();) {
       AgentSet breed = world.getBreed(iter.next());
-      if (Turtle.class.isAssignableFrom(breed.type())) {
+      if (breed.kind() == AgentKindJ.Turtle()) {
         for (Agent a : breed.agents()) {
           turtleDrawer.drawTurtle(g, topology, (Turtle) a, patchSize);
           turtlesDrawn++;

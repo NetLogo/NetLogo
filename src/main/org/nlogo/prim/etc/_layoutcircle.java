@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
@@ -32,7 +33,7 @@ public final strictfp class _layoutcircle
             (world, (LogoList) nodes, radius);
       } else {
         AgentSet set = (AgentSet) nodes;
-        if (set.type() != Turtle.class) {
+        if (set.kind() != AgentKindJ.Turtle()) {
           throw new EngineException
               (context, this,
                   I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));

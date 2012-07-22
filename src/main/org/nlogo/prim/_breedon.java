@@ -7,6 +7,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -67,7 +68,7 @@ public final strictfp class _breedon
       }
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
-      if (sourceSet.type() == Turtle.class) {
+      if (sourceSet.kind() == AgentKindJ.Turtle()) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
             if (turtle.getBreed() == breed) {
@@ -75,7 +76,7 @@ public final strictfp class _breedon
             }
           }
         }
-      } else if (sourceSet.type() == Patch.class) {
+      } else if (sourceSet.kind() == AgentKindJ.Patch()) {
         for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
             if (turtle.getBreed() == breed) {
@@ -92,14 +93,14 @@ public final strictfp class _breedon
               agentOrSet);
     }
     return new ArrayAgentSet
-        (Turtle.class, resultList.toArray(new Turtle[resultList.size()]), world);
+      (AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]), world);
   }
 
   public AgentSet report_2(Context context, AgentSet sourceSet)
       throws LogoException {
     List<Turtle> resultList = new ArrayList<Turtle>();
     AgentSet breed = world.getBreed(breedName);
-    if (sourceSet.type() == Turtle.class) {
+    if (sourceSet.kind() == AgentKindJ.Turtle()) {
       for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
           if (turtle.getBreed() == breed) {
@@ -107,7 +108,7 @@ public final strictfp class _breedon
           }
         }
       }
-    } else if (sourceSet.type() == Patch.class) {
+    } else if (sourceSet.kind() == AgentKindJ.Patch()) {
       for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
           if (turtle.getBreed() == breed) {
@@ -123,7 +124,7 @@ public final strictfp class _breedon
               sourceSet);
     }
     return new ArrayAgentSet
-        (Turtle.class, resultList.toArray(new Turtle[resultList.size()]), world);
+      (AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]), world);
   }
 
   public AgentSet report_3(Context context, Agent agent)
@@ -155,7 +156,7 @@ public final strictfp class _breedon
               agent);
     }
     return new ArrayAgentSet
-        (Turtle.class, resultList.toArray(new Turtle[resultList.size()]), world);
+      (AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]), world);
   }
 
   public AgentSet report_4(Context context, Turtle turtle)
@@ -172,7 +173,7 @@ public final strictfp class _breedon
       }
     }
     return new ArrayAgentSet
-        (Turtle.class, resultList.toArray(new Turtle[resultList.size()]), world);
+      (AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]), world);
   }
 
   public AgentSet report_5(Context context, Patch patch) {
@@ -184,6 +185,6 @@ public final strictfp class _breedon
       }
     }
     return new ArrayAgentSet
-        (Turtle.class, resultList.toArray(new Turtle[resultList.size()]), world);
+      (AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]), world);
   }
 }

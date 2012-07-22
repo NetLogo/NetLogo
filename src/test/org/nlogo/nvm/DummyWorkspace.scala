@@ -3,6 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet, World}
+import org.nlogo.api
 import org.nlogo.api.{WorldDimensions, DummyCompilerServices, DummyExtensionManager, JobOwner,
                       CommandRunnable, ReporterRunnable, ImportErrorHandler, OutputDestination}
 
@@ -31,8 +32,8 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def exportOutput(path: String) = unsupported
   override def exportPlot(plotName: String, path: String) = unsupported
   override def exportAllPlots(path: String) = unsupported
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) = unsupported
-  override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) = unsupported
+  override def inspectAgent(agent: api.Agent, radius: Double) = unsupported
+  override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double) = unsupported
   override def getAndCreateDrawing() = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
@@ -56,7 +57,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = unsupported
   override def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) = unsupported
   override def compileCommands(source: String) = unsupported
-  override def compileCommands(source: String,  agentClass: Class[_ <: Agent]) = unsupported
+  override def compileCommands(source: String, kind: api.AgentKind) = unsupported
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
