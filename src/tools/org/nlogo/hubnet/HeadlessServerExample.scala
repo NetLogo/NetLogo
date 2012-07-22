@@ -33,7 +33,7 @@ object HeadlessServerExample {
       queuedCommands.asScala.foreach { c =>
         println("executing command: " + c)
         try workspace.command(c)
-        catch { case e => e.printStackTrace() }
+        catch { case e: Exception => e.printStackTrace() }
         print("enter command> ")
       }
       queuedCommands.clear()
