@@ -16,7 +16,7 @@ mkdir -p tmp/nightly
 # maybe there's an easier way, than I've done it below, I don't know.
 # I suck at shell scripting - ST 2/15/11
 
-bin/sbt test:compile extensions 2>&1 | tee tmp/nightly/compile.txt
+bin/sbt test:compile 2>&1 | tee tmp/nightly/compile.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: test:compile"; exit 1; fi
 echo "*** done: test:compile"
 
@@ -31,6 +31,10 @@ echo "*** done: nogen fast:test"
 bin/sbt threed fast:test 2>&1 | tee tmp/nightly/2-threed-fast-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: threed fast:test"; exit 1; fi
 echo "*** done: threed fast:test"
+
+bin/sbt extensions 2>&1 | tee tmp/nightly/extensions.txt
+if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: extensions"; exit 1; fi
+echo "*** done: extensions"
 
 bin/sbt slow:test 2>&1 | tee tmp/nightly/3-slow-test.txt
 if [ ${PIPESTATUS[0]} -ne 0 ] ; then echo "*** FAILED: slow:test"; exit 1; fi
