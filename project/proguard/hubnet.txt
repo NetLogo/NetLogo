@@ -16,7 +16,7 @@
 
 -injars target/classes(!images/shapes-editor/**,!system/libraryShapes.txt,!system/about.txt,!system/library.html,!system/empty.nlogo3d,!system/behaviorspace.dtd,!system/dict3d.txt,!system/dict.txt,!system/info.css,!i18n/**,!images/title.jpg,**)
 
--outjar HubNet.jar
+-outjar target/HubNet.jar
 
 -keep public class scala.ScalaObject {
   *;

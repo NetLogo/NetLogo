@@ -15,30 +15,19 @@ object Packaging {
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
             .mkString(" ")))},
-    packageBin in Compile <<= (packageBin in Compile, baseDirectory, cacheDirectory) map {
-      (jar, base, cacheDir) =>
-        val cache =
-          FileFunction.cached(cacheDir / "NetLogo-jar", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-            in: Set[File] =>
-              IO.copyFile(jar, base / "NetLogo.jar")
-              Set(base / "NetLogo.jar")
-          }
-        cache(Set(jar))
-        jar
-      },
-    moreJars <<= (packageBin in Compile, scalaInstance, baseDirectory, cacheDirectory, streams) map {
-      (jar, instance, base, cacheDir, s) =>
+    moreJars <<= (packageBin in Compile, scalaInstance, target, cacheDirectory, streams) map {
+      (jar, instance, target, cacheDir, s) =>
         val cache =
           FileFunction.cached(cacheDir / "jars", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
-              IO.delete(base / "NetLogoLite.jar")
-              IO.delete(base / "HubNet.jar")
+              IO.delete(target / "NetLogoLite.jar")
+              IO.delete(target / "HubNet.jar")
               val scalaLibrary = instance.libraryJar.getAbsolutePath
               runProGuard(scalaLibrary, "lite", s.log)
               runProGuard(scalaLibrary, "hubnet", s.log)
               addManifest("HubNet", "manifesthubnet")
-              Set(base / "NetLogoLite.jar",
-                  base / "HubNet.jar")
+              Set(target / "NetLogoLite.jar",
+                  target / "HubNet.jar")
           }
         cache(Set(jar))
       }
@@ -60,7 +49,7 @@ object Packaging {
   }
 
   private def addManifest(name: String, manifest: String) {
-    ("jar umf project/proguard/" + manifest + ".txt " + name + ".jar").!
+    ("jar umf project/proguard/" + manifest + ".txt target/" + name + ".jar").!
   }
 
 
