@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.agent
+package org.nlogo.api
 
 /* The "general contract" between Object.hashCode() and Object.equals(..) is for any Objects a & b,
    a.hashCode() == b.hashCode() must be true when a.equals(b)/b.equals(a) and vice versa.
@@ -15,12 +15,10 @@ package org.nlogo.agent
 
    - JMD 10/28/03 */
 
-import org.nlogo.api
-
 class LogoHashObject(val sourceObject: AnyRef) {
 
   override def equals(obj: Any): Boolean =
-    api.Equality.equals(
+    Equality.equals(
       sourceObject,
       obj match {
         case lho: LogoHashObject =>
@@ -42,17 +40,17 @@ class LogoHashObject(val sourceObject: AnyRef) {
       // these next two cases are sneaky -- NetLogo considers dead turtles to be
       // equal to each other, and to nobody.  Dead turtles have an id of minus one,
       // so that's what makes the next two cases work.  - ST 10/28/03*/
-      case t: api.Turtle =>
+      case t: Turtle =>
         t.id.hashCode
 
-      case api.Nobody =>
+      case Nobody =>
         LogoHashObject.NobodyCode
 
-      case ll: api.LogoList =>
+      case ll: LogoList =>
         ll.foldLeft(1){(result, next) =>
           31 * result + (if (next == null) 0 else new LogoHashObject(next).hashCode)}
 
-      case set: api.AgentSet =>
+      case set: AgentSet =>
         import collection.JavaConverters._
         set.agents.asScala.foldLeft(1){(result, next) =>
           31 * result + new LogoHashObject(next).hashCode}
@@ -66,5 +64,5 @@ class LogoHashObject(val sourceObject: AnyRef) {
 
 object LogoHashObject {
   private val NobodyCode = -1L.hashCode
-  private val ZeroCode = World.ZERO.hashCode
+  private val ZeroCode = Double.box(0.0).hashCode
 }
