@@ -5,6 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -58,7 +59,7 @@ public final strictfp class _createlinkfrom
         Link link = world.linkManager.createLink(src, dest, breed);
         workspace.joinForeverButtons(link);
         if (offset - context.ip > 2) {
-          AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(Link.class, 1,
+          AgentSet edgeset = new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Link(), 1,
               false, world);
           edgeset.add(link);
           context.runExclusiveJob(edgeset, next);

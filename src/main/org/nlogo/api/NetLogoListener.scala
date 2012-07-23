@@ -71,11 +71,11 @@ trait NetLogoListener extends java.util.EventListener {
    *
    * @param owner     name of the widget that owns the code
    * @param text      the text the user entered
-   * @param agentType O, T, or P depending whether the user was
+   * @param agentKind O, T, or P depending whether the user was
    *                  addressing the observer, turtles, or patches
    * @param errorMsg  message the user receives if there is a compiler error, or null
    */
-  def commandEntered(owner: String, text: String, agentType: Char, errorMsg: CompilerException)
+  def commandEntered(owner: String, text: String, agentKind: Char, errorMsg: CompilerException)
 
   /**
    * Called when the Code tab is recompiled.

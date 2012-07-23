@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.Color
+import org.nlogo.api
 
 @annotation.strictfp
 case class TurtleStamp3D(shape: String, xcor: Double, ycor: Double, zcor: Double, size: Double,
@@ -12,6 +12,7 @@ extends org.nlogo.api.TurtleStamp3D {
     this(t.shape, t.xcor, t.ycor, t.zcor, t.size, t.heading, t.pitch, t.roll, t.color, t.lineThickness)
 
   // stuff we're ignoring for now
+  override def kind = api.AgentKind.Turtle
   override def hasLabel = false
   override def labelString = ""
   override def labelColor = null
@@ -27,7 +28,7 @@ extends org.nlogo.api.TurtleStamp3D {
   override def dx = 0
   override def dy = 0
   override def dz = 0
-  override def alpha = Color.getColor(color).getAlpha
+  override def alpha = api.Color.getColor(color).getAlpha
   override def isPartiallyTransparent = { val a = alpha; a > 0 && a < 255 }
   override def getVariable(vn: Int) = unsupported
   override def setVariable(vn: Int, value: AnyRef) = unsupported

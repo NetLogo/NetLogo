@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.{FunSuite, Tag}
-import org.nlogo.api.{SimpleJobOwner, Version}
+import org.nlogo.api.{AgentKind, SimpleJobOwner, Version}
 import org.nlogo.api.FileIO.file2String
 import java.io.File
 import org.nlogo.agent.{Turtle, Patch, Link, Observer}
@@ -43,10 +43,10 @@ class TestExtensions extends TestLanguage(ExtensionTestsDotTxt)
 
 case class OpenModel(modelPath:String)
 case class Proc(content: String)
-case class Command(agentType: String, command: String)
-case class CommandWithError(agentType: String, command: String, message: String)
-case class CommandWithStackTrace(agentType: String, command: String, stackTrace: String)
-case class CommandWithCompilerError(agentType: String, command: String, message: String)
+case class Command(agentKind: String, command: String)
+case class CommandWithError(agentKind: String, command: String, message: String)
+case class CommandWithStackTrace(agentKind: String, command: String, stackTrace: String)
+case class CommandWithCompilerError(agentKind: String, command: String, message: String)
 case class ReporterWithResult(reporter: String, result: String)
 case class ReporterWithError(reporter: String, error: String)
 case class ReporterWithStackTrace(reporter: String, stackTrace: String)
@@ -77,18 +77,18 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
   // run the test in both modes, Normal and Run
   def run() {
     import AbstractTestLanguage._
-    def getAgentClass(a: String) = a match {
-      case "O" => classOf[Observer]
-      case "T" => classOf[Turtle]
-      case "P" => classOf[Patch]
-      case "L" => classOf[Link]
+    def agentKind(a: String) = a match {
+      case "O" => AgentKind.Observer
+      case "T" => AgentKind.Turtle
+      case "P" => AgentKind.Patch
+      case "L" => AgentKind.Link
       case x => sys.error("unrecognized agent type: " + x)
     }
     class Tester(mode: TestMode) extends AbstractTestLanguage {
       // use a custom owner so we get fullName into the stack traces
       // we get on the JobThread - ST 1/26/11
       override def owner =
-        new SimpleJobOwner(fullName, workspace.world.mainRNG, classOf[Observer])
+        new SimpleJobOwner(fullName, workspace.world.mainRNG)
       try {
         init()
         defineProcedures(proc.content)
@@ -97,13 +97,13 @@ case class LanguageTest(suiteName: String, testName: String, commands: List[Stri
           case Proc(content) =>
             defineProcedures(content)
           case Command(agent, command) =>
-            testCommand(command, getAgentClass(agent), mode)
+            testCommand(command, agentKind(agent), mode)
           case CommandWithError(agent, command, message) =>
-            testCommandError(command, message, getAgentClass(agent), mode)
+            testCommandError(command, message, agentKind(agent), mode)
           case CommandWithCompilerError(agent, command, message) =>
-            testCommandCompilerErrorMessage(command, message, getAgentClass(agent))
+            testCommandCompilerErrorMessage(command, message, agentKind(agent))
           case CommandWithStackTrace(agent, command, stackTrace) =>
-            testCommandErrorStackTrace(command, stackTrace, getAgentClass(agent), mode)
+            testCommandErrorStackTrace(command, stackTrace, agentKind(agent), mode)
           case ReporterWithResult(reporter, result) =>
             testReporter(reporter, result, mode)
           case ReporterWithError(reporter, error) =>
@@ -155,13 +155,13 @@ object TestParser {
     if (line.startsWith("to ") || line.startsWith("to-report ") || line.startsWith("extensions"))
       Proc(line)
     else line.trim match {
-      case CommandAndErrorRegex(agentType, command, err) =>
+      case CommandAndErrorRegex(agentKind, command, err) =>
         if (err startsWith "ERROR")
-          CommandWithError(agentType, command, err.substring("ERROR".length + 1))
+          CommandWithError(agentKind, command, err.substring("ERROR".length + 1))
         else if (err startsWith "COMPILER ERROR")
-          CommandWithCompilerError(agentType, command, err.substring("COMPILER ERROR".length + 1))
+          CommandWithCompilerError(agentKind, command, err.substring("COMPILER ERROR".length + 1))
         else if (err startsWith "STACKTRACE")
-          CommandWithStackTrace(agentType, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
+          CommandWithStackTrace(agentKind, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
           sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
@@ -171,8 +171,8 @@ object TestParser {
           ReporterWithStackTrace(reporter, result.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
           ReporterWithResult(reporter, result)
-      case CommandRegex(agentType, command) =>
-        Command(agentType, command)
+      case CommandRegex(agentKind, command) =>
+        Command(agentKind, command)
       case OpenModelRegex(path) => OpenModel(path)
       case _ => sys.error("unrecognized line" + line)
     }

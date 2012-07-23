@@ -3,6 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKindJ;
 
 strictfp class Torus
     extends Topology {
@@ -65,18 +66,18 @@ strictfp class Torus
   AgentSet getNeighbors(Patch source) {
     if (source.pxcor == world.maxPxcor() && source.pxcor == world.minPxcor()) {
       if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-        return new ArrayAgentSet(Patch.class, new Agent[]{}, world);
+        return new ArrayAgentSet(AgentKindJ.Patch(), new Agent[]{}, world);
       } else {
         return new ArrayAgentSet
-            (Patch.class,
+            (AgentKindJ.Patch(),
                 new Agent[]{getPatchNorth(source), getPatchSouth(source)}, world);
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
       return new ArrayAgentSet
-          (Patch.class,
+          (AgentKindJ.Patch(),
               new Agent[]{getPatchEast(source), getPatchWest(source)}, world);
     } else {
-      return new ArrayAgentSet(Patch.class,
+      return new ArrayAgentSet(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
               getPatchSouth(source), getPatchWest(source),
               getPatchNorthEast(source), getPatchSouthEast(source),
@@ -89,18 +90,18 @@ strictfp class Torus
   AgentSet getNeighbors4(Patch source) {
     if (source.pxcor == world.maxPxcor() && source.pxcor == world.minPxcor()) {
       if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-        return new ArrayAgentSet(Patch.class, new Agent[]{}, world);
+        return new ArrayAgentSet(AgentKindJ.Patch(), new Agent[]{}, world);
       } else {
         return new ArrayAgentSet
-            (Patch.class,
+            (AgentKindJ.Patch(),
                 new Agent[]{getPatchNorth(source), getPatchSouth(source)}, world);
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
       return new ArrayAgentSet
-          (Patch.class,
+          (AgentKindJ.Patch(),
               new Agent[]{getPatchEast(source), getPatchWest(source)}, world);
     } else {
-      return new ArrayAgentSet(Patch.class,
+      return new ArrayAgentSet(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
               getPatchSouth(source), getPatchWest(source)},
           world);

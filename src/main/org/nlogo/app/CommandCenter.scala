@@ -7,7 +7,7 @@ import org.nlogo.swing.RichAction
 import java.awt._
 import event.{MouseAdapter, MouseEvent}
 import javax.swing._
-import org.nlogo.api.I18N
+import org.nlogo.api.{ AgentKind, I18N }
 
 class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
                     locationToggleAction: Action) extends JPanel
@@ -132,13 +132,13 @@ class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
 
   def cycleAgentType(forward: Boolean) {
     import org.nlogo.agent._
-    val O = classOf[Observer]; val T = classOf[Turtle]
-    val P = classOf[Patch];    val L = classOf[Link]
-    commandLine.agentClass match {
-      case O => commandLine.agentClass(if (forward) T else L)
-      case T => commandLine.agentClass(if (forward) P else O)
-      case P => commandLine.agentClass(if (forward) L else T)
-      case L => commandLine.agentClass(if (forward) O else P)
+    val O = AgentKind.Observer; val T = AgentKind.Turtle
+    val P = AgentKind.Patch;    val L = AgentKind.Link
+    commandLine.kind match {
+      case O => commandLine.kind(if (forward) T else L)
+      case T => commandLine.kind(if (forward) P else O)
+      case P => commandLine.kind(if (forward) L else T)
+      case L => commandLine.kind(if (forward) O else P)
     }
     repaintPrompt()
     commandLine.requestFocus()

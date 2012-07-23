@@ -2,6 +2,8 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoList;
 
 public abstract strictfp class AgentSet
@@ -13,10 +15,9 @@ public abstract strictfp class AgentSet
     return agentBit;
   }
 
-  final Class<? extends Agent> type;
-
-  public Class<? extends Agent> type() {
-    return type;
+  private final AgentKind _kind;
+  public AgentKind kind() {
+    return _kind;
   }
 
   final World world;
@@ -53,27 +54,27 @@ public abstract strictfp class AgentSet
 
   public abstract int count();
 
-  AgentSet(Class<? extends Agent> type, World world, String printName, boolean removableAgents) {
-    this.type = type;
+  AgentSet(AgentKind kind, World world, String printName, boolean removableAgents) {
+    _kind = kind;
     this.world = world;
     this.printName = printName;
     this.removableAgents = removableAgents;
-    if (type == Patch.class) {
+    if (kind == AgentKindJ.Patch()) {
       agentBit = Patch.BIT;
-    } else if (type == Turtle.class) {
+    } else if (kind == AgentKindJ.Turtle()) {
       agentBit = Turtle.BIT;
-    } else if (type == Link.class) {
+    } else if (kind == AgentKindJ.Link()) {
       agentBit = Link.BIT;
-    } else if (type == Observer.class) {
+    } else if (kind == AgentKindJ.Observer()) {
       agentBit = Observer.BIT;
     } else {
-      throw new IllegalStateException("unknown type: " + type);
+      throw new IllegalStateException("unknown kind: " + kind);
     }
   }
 
   public boolean equalAgentSets(org.nlogo.api.AgentSet otherSet) {
     return this == otherSet ||
-        (type == otherSet.type() &&
+        (kind() == otherSet.kind() &&
             count() == otherSet.count() &&
             equalAgentSetsHelper(otherSet));
   }
@@ -121,7 +122,7 @@ public abstract strictfp class AgentSet
     } else {
       result = randomSubsetGeneral(resultSize, precomputedCount, randomerizer);
     }
-    return new ArrayAgentSet(type, result, world);
+    return new ArrayAgentSet(kind(), result, world);
   }
 
 
@@ -138,9 +139,7 @@ public abstract strictfp class AgentSet
 
   public interface Iterator {
     boolean hasNext();
-
     Agent next();
-
     void remove();
   }
 

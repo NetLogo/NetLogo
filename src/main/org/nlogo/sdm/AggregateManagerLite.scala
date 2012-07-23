@@ -17,7 +17,7 @@ class AggregateManagerLite extends AggregateManagerInterface {
   def innerSource = source
   def innerSource(s: String) = unsupported
   def classDisplayName = "System Dynamics"
-  def agentClass = unsupported
+  def kind = unsupported
   def headerSource = ""
 
   /// these AggregateManagerInterface methods aren't relevant when running headless

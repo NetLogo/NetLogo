@@ -57,7 +57,7 @@ public final strictfp class _ask
         throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
       }
-      agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
+      agentset = new ArrayAgentSet(agent.kind(), 1, false, world);
       agentset.add(agent);
     } else {
       throw new ArgumentTypeException(context, this, 0, Syntax.AgentsetType() | Syntax.AgentType(), target);
@@ -88,7 +88,7 @@ public final strictfp class _ask
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
     }
-    AgentSet agentset = new ArrayAgentSet(agent.getAgentClass(), 1, false, world);
+    AgentSet agentset = new ArrayAgentSet(agent.kind(), 1, false, world);
     agentset.add(agent);
     context.runExclusiveJob(agentset, next);
     context.ip = offset;

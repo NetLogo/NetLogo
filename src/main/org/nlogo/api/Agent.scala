@@ -16,6 +16,9 @@ trait Agent {
   /** Returns the id number of this agent.  The who number in the case of a turtle, index into the array in the case of patches */
   def id: Long
 
+  /** Returns the kind of this agent (observer, turtle, patch, or link. */
+  def kind: AgentKind
+
   /** Returns the name of the current shape, empty string in the case of patches. */
   def shape: String
 

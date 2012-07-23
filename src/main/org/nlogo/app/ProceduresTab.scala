@@ -10,7 +10,7 @@ import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import javax.swing.{JButton, ImageIcon, AbstractAction, Action, ScrollPaneConstants, JScrollPane, BorderFactory, JPanel}
-import org.nlogo.api.I18N
+import org.nlogo.api.{ AgentKind, I18N }
 
 class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
@@ -94,7 +94,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
     workspace.compiler.findIncludes(path, getText, workspace.world.program.is3D)
   }
 
-  def agentClass = classOf[Observer]
+  override def kind = AgentKind.Observer
 
   protected var _needsCompile = false
 

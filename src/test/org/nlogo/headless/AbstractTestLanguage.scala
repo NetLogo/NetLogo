@@ -3,8 +3,8 @@
 package org.nlogo.headless
 
 import org.scalatest.Assertions
-import org.nlogo.agent.{Agent, Observer}
-import org.nlogo.api.{Equality, CompilerException, JobOwner, LogoException, Program, Version, WorldDimensions, WorldDimensions3D}
+import org.nlogo.agent.{ Agent, Observer }
+import org.nlogo.api.{ AgentKind, Equality, CompilerException, JobOwner, LogoException, Program, Version, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.util.Femto
 
@@ -97,21 +97,21 @@ abstract class AbstractTestLanguage extends Assertions {
     privateTestReporterError(reporter, stackTrace, workspace.lastErrorReport.stackTrace.get, mode)
   }
   def testCommand(command: String,
-                  agentClass: Class[_ <: Agent] = classOf[Observer],
+                  kind: AgentKind = AgentKind.Observer,
                   mode: TestMode = NormalMode) {
     workspace.lastLogoException = null
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
-      workspace.world.agentClassToAgentSet(agentClass), true)
+      workspace.world.kindToAgentSet(kind), true)
     if(workspace.lastLogoException != null)
       throw workspace.lastLogoException
   }
   def testCommandError(command: String, error: String,
-                       agentClass: Class[_ <: Agent] = classOf[Observer],
+                       kind: AgentKind = AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
-      testCommand(command, agentClass, mode)
+      testCommand(command, kind, mode)
       fail("failed to cause runtime error: \"" + command + "\"")
     }
     catch {
@@ -122,10 +122,10 @@ abstract class AbstractTestLanguage extends Assertions {
     }
   }
   def testCommandErrorStackTrace(command: String, stackTrace: String,
-                       agentClass: Class[_ <: Agent] = classOf[Observer],
+                       kind: AgentKind = AgentKind.Observer,
                        mode: TestMode = NormalMode) {
     try {
-      testCommand(command, agentClass, mode)
+      testCommand(command, kind, mode)
       fail("failed to cause runtime error: \"" + command + "\"")
     }
     catch {
@@ -136,10 +136,10 @@ abstract class AbstractTestLanguage extends Assertions {
     }
   }
   def testCommandCompilerErrorMessage(command: String, errorMessage: String,
-                                      agentClass: Class[_ <: Agent] = classOf[Observer])
+                                      kind: AgentKind = AgentKind.Observer)
   {
     try {
-      workspace.compileCommands(command, agentClass)
+      workspace.compileCommands(command, kind)
       fail("no CompilerException occurred")
     }
     catch {

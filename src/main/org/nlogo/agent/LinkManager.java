@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.nlogo.api.AgentKindJ;
 
 public strictfp class LinkManager {
 
@@ -131,7 +132,7 @@ public strictfp class LinkManager {
     List<Link> fromList = srcMap.get(src);
     if (fromList != null) {
       AgentSet nodeset =
-          new ArrayAgentSet(Turtle.class, fromList.size(), false, world);
+        new ArrayAgentSet(AgentKindJ.Turtle(), fromList.size(), false, world);
       addLinkNeighborsFrom(nodeset, fromList, sourceSet, true);
       return nodeset;
     } else {
@@ -143,7 +144,7 @@ public strictfp class LinkManager {
     List<Link> fromList = destMap.get(target);
     if (fromList != null) {
       AgentSet nodeset =
-          new ArrayAgentSet(Turtle.class, fromList.size(), false, world);
+        new ArrayAgentSet(AgentKindJ.Turtle(), fromList.size(), false, world);
       addLinkNeighborsTo(nodeset, fromList, sourceSet, true);
       return nodeset;
     } else {
@@ -159,7 +160,7 @@ public strictfp class LinkManager {
       return world.noTurtles();
     }
     AgentSet nodeset =
-        new ArrayAgentSet(Turtle.class, size, false, world);
+      new ArrayAgentSet(AgentKindJ.Turtle(), size, false, world);
     if (toList != null) {
       addLinkNeighborsTo(nodeset, toList, sourceSet, false);
     }
@@ -227,7 +228,7 @@ public strictfp class LinkManager {
   public AgentSet findLinksFrom(Turtle src, AgentSet breed) {
     List<Link> fromList = srcMap.get(src);
     AgentSet linkset =
-        new ArrayAgentSet(Link.class, 1, false, world);
+      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
@@ -242,7 +243,7 @@ public strictfp class LinkManager {
   public AgentSet findLinksTo(Turtle target, AgentSet breed) {
     List<Link> fromList = destMap.get(target);
     AgentSet linkset =
-        new ArrayAgentSet(Link.class, 1, false, world);
+      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
@@ -266,7 +267,7 @@ public strictfp class LinkManager {
     }
     boolean isAllLinks = breed == world.links();
     AgentSet linkset =
-        new ArrayAgentSet(Link.class, 1, false, world);
+      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
     for (Link link : totalList) {
       if (isAllLinks || link.getBreed() == breed) {
         linkset.add(link);

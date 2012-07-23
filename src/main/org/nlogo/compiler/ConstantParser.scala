@@ -4,9 +4,10 @@ package org.nlogo.compiler
 
 import org.nlogo.compiler.CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Link, Observer, Patch, Turtle, World, World3D }
-import org.nlogo.api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._
+import org.nlogo.api
+import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 
 /**
  * The constant parser.
@@ -156,27 +157,27 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   private def parseConstantAgent(token: Token, tokens: Iterator[Token]) = {
     // we shouldn't get here if we aren't importing, but check just in case
     cAssert(world != null, ILLEGAL_AGENT_CONSTANT, token)
-    val agentType = token.value
-    if(agentType.isInstanceOf[org.nlogo.prim._patch]) {
+    val agentKind = token.value
+    if(agentKind.isInstanceOf[org.nlogo.prim._patch]) {
       val pxcor = parsePcor(tokens)
       val pycor = parsePcor(tokens)
       try { world.getPatchAt(pxcor, pycor) }
       catch { case _: org.nlogo.api.AgentException =>
                 exception("Invalid patch coordinates ( " + pxcor + " , " + pycor + " ) ", token) }
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim._turtle]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim._turtle]) {
       val token = tokens.next()
       if(token.tyype != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
         exception(BAD_TURTLE_ARG, token)
       world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim._link]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim._link]) {
       world.getOrCreateLink(
         parseEnd(tokens),
         parseEnd(tokens),
         world.links)
     }
-    else if(agentType.isInstanceOf[org.nlogo.prim.threed._patch]) {
+    else if(agentKind.isInstanceOf[org.nlogo.prim.threed._patch]) {
       val (pxcor, pycor, pzcor) = (parsePcor(tokens), parsePcor(tokens), parsePcor(tokens))
       try world.asInstanceOf[World3D].getPatchAt(pxcor, pycor, pzcor)
       catch { case _: org.nlogo.api.AgentException =>
@@ -250,7 +251,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
         // we have the observer agentset. make sure that's all we have...
         val closeBrace = tokens.next()
         cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
-        val agentset = new ArrayAgentSet(classOf[Observer], 1, false, world)
+        val agentset = new ArrayAgentSet(api.AgentKind.Observer, 1, false, world)
         agentset.add(world.observer)
         agentset
       }
@@ -277,7 +278,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_turtles]) {
       // we have an agentset of turtles. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Turtle], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         val value = readConstantPrefix(token, tokens)
@@ -289,7 +290,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_links]) {
       // we have an agentset of links. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Link], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Link, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
@@ -309,7 +310,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(token.value.isInstanceOf[_patches]) {
       // we have an agentset of patches. parse arguments...
-      val agentset = new ArrayAgentSet(classOf[Patch], 1, false, world)
+      val agentset = new ArrayAgentSet(api.AgentKind.Patch, 1, false, world)
       var token = tokens.next()
       while(token.tyype != TokenType.CLOSE_BRACE) {
         cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)

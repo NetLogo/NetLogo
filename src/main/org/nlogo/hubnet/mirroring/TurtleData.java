@@ -2,6 +2,8 @@
 
 package org.nlogo.hubnet.mirroring;
 
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoList;
 
@@ -123,6 +125,8 @@ public strictfp class TurtleData
       lineThickness = is.readDouble();
     }
   }
+
+  public AgentKind kind() { return AgentKindJ.Turtle(); }
 
   public long id() {
     return who;

@@ -2,6 +2,8 @@
 
 package org.nlogo.agent;
 
+import org.nlogo.api.AgentKind;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoList;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public int count() {
-    if ((type == Turtle.class || type == Link.class) && !removableAgents) {
+    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents) {
       // some of the turtles might be dead, so we need
       // to actually count them - ST 2/27/03
       int result = 0;
@@ -57,7 +59,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public boolean isEmpty() {
-    if ((type == Turtle.class || type == Link.class) && !removableAgents) {
+    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents) {
       // all of the turtles might be dead, so we need
       // to actually scan them - ST 2/27/03
       return !iterator().hasNext();
@@ -74,15 +76,15 @@ public final strictfp class ArrayAgentSet
     return capacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, int initialCapacity, boolean removableAgents, World world) {
-    super(type, world, null, removableAgents);
+  public ArrayAgentSet(AgentKind kind, int initialCapacity, boolean removableAgents, World world) {
+    super(kind, world, null, removableAgents);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, Agent[] agents, World world) {
-    super(type, world, null, false);
+  public ArrayAgentSet(AgentKind kind, Agent[] agents, World world) {
+    super(kind, world, null, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -90,8 +92,8 @@ public final strictfp class ArrayAgentSet
     size = initialCapacity;
   }
 
-  public ArrayAgentSet(Class<? extends Agent> type, Agent[] agents, String printName, World world) {
-    super(type, world, printName, false);
+  public ArrayAgentSet(AgentKind kind, Agent[] agents, String printName, World world) {
+    super(kind, world, printName, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -99,8 +101,8 @@ public final strictfp class ArrayAgentSet
     size = initialCapacity;
   }
 
-  ArrayAgentSet(Class<? extends Agent> type, int initialCapacity, String printName, boolean removableAgents, World world) {
-    super(type, world, printName, removableAgents);
+  ArrayAgentSet(AgentKind kind, int initialCapacity, String printName, boolean removableAgents, World world) {
+    super(kind, world, printName, removableAgents);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
@@ -108,7 +110,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public Agent agent(long i) {
-    if (type == Turtle.class || type == Link.class) {
+    if (kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) {
       Agent agent = agents[(int) i];
       if (agent.id == -1) {
         agents[(int) i] = null;
@@ -177,7 +179,7 @@ public final strictfp class ArrayAgentSet
   public Agent randomOne(int precomputedCount, int random) {
     // note: we can assume agentset is nonempty , since _randomoneof.java checks for that
     if ((size == capacity) &&
-        !((type == Turtle.class || type == Link.class) && !removableAgents)) {
+        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents)) {
       return agents[random];
     } else {
       AgentSet.Iterator iter = iterator();
@@ -208,7 +210,7 @@ public final strictfp class ArrayAgentSet
       random2 = tmp;
     }
     if ((size == capacity) &&
-        !((type == Turtle.class || type == Link.class) && !removableAgents))
+        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents))
 
     {
       result[0] = agents[random1];
@@ -273,8 +275,8 @@ public final strictfp class ArrayAgentSet
   @Override
   public String toString() {
     StringBuilder s = new StringBuilder("AgentSet");
-    s = s.append("\n...... type: ");
-    s = s.append(type == null ? "null" : type.toString());
+    s = s.append("\n...... kind: ");
+    s = s.append(kind() == null ? "null" : kind().toString());
     s = s.append("\n...... size: " + size);
     s = s.append("\n...... count(): " + count());
     s = s.append("\n...... capacity: " + capacity);
@@ -328,7 +330,7 @@ public final strictfp class ArrayAgentSet
   // returns an Iterator object of the appropriate class
   @Override
   public AgentSet.Iterator iterator() {
-    if (type == Patch.class) {
+    if (kind() == AgentKindJ.Patch()) {
       return new Iterator();
     } else {
       return new IteratorWithDead();
@@ -398,4 +400,3 @@ public final strictfp class ArrayAgentSet
     }
   }
 }
-

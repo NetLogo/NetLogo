@@ -88,6 +88,7 @@ all <<= (baseDirectory, streams) map { (base, s) =>
 
 all <<= all.dependsOn(
   Extensions.extensions,
+  Packaging.moreJars,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,
   InfoTab.infoTab,

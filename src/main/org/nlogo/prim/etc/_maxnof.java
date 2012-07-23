@@ -74,7 +74,7 @@ public final strictfp class _maxnof
     }
 
     AgentSet resultSet = new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.type(), n, false, world);
+        (sourceSet.kind(), n, false, world);
 
     for (Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator();
          n > 0 && iter.hasNext();) {

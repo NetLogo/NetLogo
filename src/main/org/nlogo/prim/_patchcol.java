@@ -5,6 +5,7 @@ package org.nlogo.prim;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -15,7 +16,7 @@ public final strictfp class _patchcol
   @Override
   public Object report(Context context) throws LogoException {
     AgentSet result =
-        new ArrayAgentSet(Patch.class, world.worldHeight(),
+      new ArrayAgentSet(AgentKindJ.Patch(), world.worldHeight(),
             false, world);
     double xDouble = argEvalDoubleValue(context, 0);
     int x = (int) xDouble;

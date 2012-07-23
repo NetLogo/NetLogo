@@ -3,7 +3,7 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.api.{LogoException, JobOwner}
+import org.nlogo.api.{AgentKind, LogoException, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
 import org.nlogo.util.Exceptions.ignoring
@@ -104,7 +104,7 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   // this is for the resize-world primitive - ST 4/6/09
   def haltNonObserverJobs() {
     val goners = thread.primaryJobs.synchronized {
-      thread.primaryJobs.asScala.filter {j => j != null && j.agentset.`type` != classOf[Observer]}
+      thread.primaryJobs.asScala.filter {j => j != null && j.agentset.kind != AgentKind.Observer}
     }.asJava
     finishJobs(goners, null)
     waitForFinishedJobs(goners)

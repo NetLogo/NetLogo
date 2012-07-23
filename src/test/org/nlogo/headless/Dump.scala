@@ -26,7 +26,7 @@ object Dump {
       // I realized after writing this it would be more efficient to do what TestCompileAll does,
       // and not actually open the model. - ST 2/11/09
       workspace.open(path)
-      val owner = new SimpleJobOwner("Dump", workspace.world.mainRNG, classOf[Observer])
+      val owner = new SimpleJobOwner("Dump", workspace.world.mainRNG)
       workspace.evaluateReporter(owner, "__dump").asInstanceOf[String]
     }
     finally { workspace.dispose() }

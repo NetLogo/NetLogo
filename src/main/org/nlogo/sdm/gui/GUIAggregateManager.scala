@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.{ CompilerServices, TokenType, ModelSection }
+import org.nlogo.api.{ AgentKind, CompilerServices, TokenType, ModelSection }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
@@ -89,7 +89,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler {
   /// from org.nlogo.nvm.SourceOwner
 
   override def classDisplayName = "Aggregate"
-  override def agentClass = classOf[Observer]
+  override def kind = AgentKind.Observer
   override def source = innerSource
   override def innerSource =
     Option(editor).map(_.toNetLogoCode).getOrElse("")

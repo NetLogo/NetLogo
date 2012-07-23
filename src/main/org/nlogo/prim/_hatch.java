@@ -4,6 +4,7 @@ package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -41,7 +42,7 @@ public final strictfp class _hatch
     if (numberOfTurtles > 0) {
       Turtle parent = (Turtle) context.agent;
       AgentSet agentset =
-          new org.nlogo.agent.ArrayAgentSet(Turtle.class, numberOfTurtles, false, world);
+        new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), numberOfTurtles, false, world);
       if (breedName == NO_BREED) {
         for (int i = 0; i < numberOfTurtles; i++) {
           Turtle child = parent.hatch();

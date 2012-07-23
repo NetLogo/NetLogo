@@ -2,6 +2,7 @@
 
 package org.nlogo.app
 
+import org.nlogo.api.AgentKind
 import org.nlogo.agent.{Agent, Observer}
 
 abstract class AgentMonitor(val workspace: org.nlogo.window.GUIWorkspace, window: javax.swing.JWindow)
@@ -29,12 +30,12 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
   }
 
   def vars: Seq[String] // abstract
-  def agentClass: Class[_ <: Agent] // abstract
+  def kind: AgentKind // abstract
   private var oldVars = vars
   val commandLine = new CommandLine(this, false, 11, workspace) { // false = don't echo commands to output
     override def classDisplayName = "Agent Monitor"
     // we'll make an AgentSet ourselves, we don't want to use the standard O/T/P sets - ST 11/5/03
-    override def useAgentClass = false
+    override def useKind = false
   }
 
   private val prompt = new LinePrompt(commandLine)
@@ -53,7 +54,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
       }
     }
   val viewPanel =
-    if(agentClass eq classOf[Observer]) {
+    if(kind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, java.awt.BorderLayout.CENTER)
       null
@@ -66,7 +67,7 @@ with org.nlogo.window.CommandCenterInterface // lets us embed CommandLine
           java.awt.BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
-      commandLine.agentClass(agentClass)
+      commandLine.kind(kind)
       prompt.setEnabled(false)
       val commandPanel = new javax.swing.JPanel
       val gridBag = new java.awt.GridBagLayout

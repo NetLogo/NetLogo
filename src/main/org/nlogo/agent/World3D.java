@@ -3,6 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Color;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Program;
@@ -234,8 +235,8 @@ public final strictfp class World3D
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(Turtle.class, "TURTLES", this);
-    _links = new TreeAgentSet(Link.class, "LINKS", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES", this);
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS", this);
 
     int x = _minPxcor;
     int y = _maxPycor;
@@ -262,7 +263,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(Patch.class, patchArray, "patches", this);
+    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches", this);
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

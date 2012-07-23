@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -38,7 +39,7 @@ public final strictfp class _patchset
       Object elt = args[i].report(context);
       if (elt instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) elt;
-        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+        if (tempSet.kind() != AgentKindJ.Patch()) {
           throw new ArgumentTypeException
               (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
         }
@@ -55,7 +56,7 @@ public final strictfp class _patchset
       }
     }
     return new org.nlogo.agent.ArrayAgentSet(
-        org.nlogo.agent.Patch.class,
+      AgentKindJ.Patch(),
         resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]),
         world);
   }
@@ -69,7 +70,7 @@ public final strictfp class _patchset
         result.add((Patch) obj);
       } else if (obj instanceof AgentSet) {
         AgentSet tempSet = (AgentSet) obj;
-        if (tempSet.type() != org.nlogo.agent.Patch.class) {
+        if (tempSet.kind() != AgentKindJ.Patch()) {
           throw new EngineException(context, this,
               I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
