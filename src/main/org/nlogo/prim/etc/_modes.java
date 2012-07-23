@@ -49,7 +49,7 @@ public final strictfp class _modes
       LogoHashObject currKey = keys.next();
       int currVal = counts.get(currKey).value();
       if (currVal == currMaxCount) {
-        modes.add(currKey.getSourceObject());
+        modes.add(currKey.sourceObject());
       }
     }
     return modes.toLogoList();
