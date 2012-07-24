@@ -6,9 +6,8 @@ onLoadMessage := ""
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
-// doing without -Xfatal-warnings for now while Scala 2.10 is still baking - ST 6/19/12
 scalacOptions ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings"
   .split(" ").toSeq
 
 javacOptions ++=
