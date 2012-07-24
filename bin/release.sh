@@ -139,10 +139,10 @@ rm -f *.jar
 bin/sbt clean all
 
 # remember version number
-export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
-export DATE=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+export VERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+export DATE=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
-export COMPRESSEDVERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -153,8 +153,8 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 $CP -rp ../../docs .
 $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
-$CP -p ../../NetLogo.jar ../../HubNet.jar .
-$CP ../../NetLogoLite.jar .
+$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar .
+$CP ../../target/NetLogoLite.jar .
 $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
 # fill lib directory
@@ -433,7 +433,7 @@ $CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
 $CP -rp ../models/test/applet $COMPRESSEDVERSION
 $CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
-$CP ../HubNet.jar $COMPRESSEDVERSION/applet
+$CP ../target/HubNet.jar $COMPRESSEDVERSION/applet
 $CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
 $FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
   | $XARGS -0 $RM -rf

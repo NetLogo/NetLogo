@@ -24,7 +24,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
     // - ST 12/5/05, 3/15/06
     val it = agentset.shufflerator(random)
     val context = new Context(this, null, 0, null)
-    context.agentBit = agentset.getAgentBit
+    context.agentBit = agentset.agentBit
     while (it.hasNext) {
       context.agent = it.next()
       context.activation =

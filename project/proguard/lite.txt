@@ -12,7 +12,7 @@
 # we need directly into NetLogoLite.jar, so NetLogoLite.jar has no external dependencies
 -injars <org.nlogo.scala-library>
 
--outjar NetLogoLite.jar
+-outjar target/NetLogoLite.jar
 
 # ProGuard doc recommends keeping Exceptions,InnerClasses,Signature
 # for libraries.  we keep SourceFile and LineNumberTable so we get

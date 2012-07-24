@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -25,7 +26,7 @@ public final strictfp class _anyother extends Reporter {
   }
 
   public boolean report_1(Context context, AgentSet sourceSet) {
-    for (AgentSet.Iterator it = sourceSet.iterator(); it.hasNext();) {
+    for (AgentIterator it = sourceSet.iterator(); it.hasNext();) {
       Agent otherAgent = it.next();
       if (context.agent != otherAgent) {
         return true;

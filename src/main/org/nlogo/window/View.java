@@ -2,6 +2,7 @@
 
 package org.nlogo.window;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Perspective;
@@ -500,7 +501,7 @@ public strictfp class View
         }
 
         boolean linksAdded = false;
-        for (AgentSet.Iterator links = workspace.world.links().iterator();
+        for (AgentIterator links = workspace.world.links().iterator();
              links.hasNext();) {
           org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
@@ -517,7 +518,7 @@ public strictfp class View
 
       // detect any turtles in the pick-ray
       boolean turtlesAdded = false;
-      for (AgentSet.Iterator turtles = workspace.world.turtles().iterator();
+      for (AgentIterator turtles = workspace.world.turtles().iterator();
            turtles.hasNext();) {
         org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) turtles.next();
         if (!turtle.hidden()) {

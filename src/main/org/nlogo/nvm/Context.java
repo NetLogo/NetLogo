@@ -44,7 +44,7 @@ public final strictfp class Context {
     this.job = job;
     this.agent = agent;
     if (agent != null) {
-      agentBit = agent.getAgentBit();
+      agentBit = agent.agentBit();
     }
     this.ip = ip;
     this.activation = activation;
@@ -58,7 +58,7 @@ public final strictfp class Context {
     activation = context.activation;
     letBindings = context.letBindings;
     myself = context.agent;
-    agentBit = agents.getAgentBit();
+    agentBit = agents.agentBit();
   }
 
   public Context(Context context, Agent agent) {
@@ -66,7 +66,7 @@ public final strictfp class Context {
     activation = context.activation;
     letBindings = context.letBindings;
     myself = context.agent;
-    agentBit = agent.getAgentBit();
+    agentBit = agent.agentBit();
   }
 
   public boolean makeChildrenExclusive() {

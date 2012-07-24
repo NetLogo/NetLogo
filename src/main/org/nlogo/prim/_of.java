@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -43,7 +44,7 @@ public final strictfp class _of
       LogoListBuilder result = new LogoListBuilder();
       Context freshContext = new Context(context, sourceSet);
       args[0].checkAgentSetClass(sourceSet, context);
-      for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+      for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
            iter.hasNext();) {
         result.add(freshContext.evaluateReporter(iter.next(), args[0]));
       }

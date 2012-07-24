@@ -45,7 +45,7 @@ public final strictfp class _greaterorequal
     if (o1 instanceof Agent && o2 instanceof Agent) {
       Agent a1 = (Agent) o1;
       Agent a2 = (Agent) o2;
-      if (a1.getAgentBit() == a2.getAgentBit()) {
+      if (a1.agentBit() == a2.agentBit()) {
         return a1.compareTo(a2) >= 0;
       }
     }

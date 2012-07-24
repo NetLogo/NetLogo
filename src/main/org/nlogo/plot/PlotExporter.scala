@@ -20,14 +20,14 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
       "legend open?",
       "number of pens")))
     writer.println(csv.dataRow(Array(
-      double2Double(plot.xMin),
-      double2Double(plot.xMax),
-      double2Double(plot.yMin),
-      double2Double(plot.yMax),
-      boolean2Boolean(plot.autoPlotOn),
+      Double.box(plot.xMin),
+      Double.box(plot.xMax),
+      Double.box(plot.yMin),
+      Double.box(plot.yMax),
+      Boolean.box(plot.autoPlotOn),
       plot.currentPen.map(_.name).getOrElse(""),
-      boolean2Boolean(plot.legendIsOpen),
-      int2Integer(plot.pens.size))))
+      Boolean.box(plot.legendIsOpen),
+      Int.box(plot.pens.size))))
     writer.println()
   }
 
@@ -39,11 +39,11 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     for (pen <- plot.pens) {
       writer.println(csv.dataRow(Array(
         pen.name,
-        boolean2Boolean(pen.isDown),
-        int2Integer(pen.mode),
-        double2Double(pen.interval),
+        Boolean.box(pen.isDown),
+        Int.box(pen.mode),
+        Double.box(pen.interval),
         org.nlogo.api.Color.argbToColor(pen.color),
-        double2Double(pen.x))))
+        Double.box(pen.x))))
     }
     writer.println()
   }

@@ -600,10 +600,10 @@ public strictfp class Link
     return world.getLinkBreedSingular(getBreed()).toLowerCase();
   }
 
-  public static final int BIT = 8;
+  public static final int BIT = AgentBit.apply(AgentKindJ.Link());
 
   @Override
-  public int getAgentBit() {
+  public int agentBit() {
     return BIT;
   }
 
