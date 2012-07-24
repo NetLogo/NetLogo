@@ -138,8 +138,9 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.encode(Integer.toString(world.observer().perspective().export)) + ","
                   + csv.data(subject) + ","
                   + csv.encode(JLong.toString(world.nextTurtleIndex())) + ","
-                  + csv.data(if(world.links().isDirected()) "DIRECTED" else
-                                   if(world.links().isUndirected()) "UNDIRECTED" else "NEITHER") + ","
+                  + csv.data(if(world.links.isDirected) "DIRECTED"
+                             else if(world.links.isUndirected) "UNDIRECTED"
+                             else "NEITHER") + ","
                   + csv.encode(Dump.number(world.tickCounter.ticks)))
     for((g, i) <- globals.zipWithIndex) {
       print(",")
@@ -171,7 +172,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
       val turtle = it.next.asInstanceOf[Turtle]
       print(csv.data(turtle.getTurtleVariable(Turtle.VAR_WHO)))
       val breed = turtle.getTurtleVariable(Turtle3D.VAR_BREED3D).asInstanceOf[AgentSet]
-      val key = breed.printName()
+      val key = breed.printName
       var breedOwns: Seq[String] = null
       var thisBreedVarIndices: Array[Int] = null
       var sortedBreedOwns: Array[String] = null

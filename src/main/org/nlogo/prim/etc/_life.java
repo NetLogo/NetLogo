@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.Syntax;
@@ -44,7 +45,7 @@ public final strictfp class _life
     for (int i = 0; i < patchCount; i++) {
       Patch patch = world.getPatch(i);
       int liveNeighbors = 0;
-      for (AgentSet.Iterator iter = patch.getNeighbors().iterator(); iter.hasNext();) {
+      for (AgentIterator iter = patch.getNeighbors().iterator(); iter.hasNext();) {
         if (((Boolean) (((Patch) iter.next()).variables[LIVING_VAR]))
             .booleanValue()) {
           liveNeighbors++;

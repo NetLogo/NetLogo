@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.AgentKindJ;
@@ -41,7 +42,7 @@ public final strictfp class _linkset
           throw new ArgumentTypeException
               (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
         }
-        for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Link) iter.next());
         }
       } else if (elt instanceof LogoList) {
@@ -71,7 +72,7 @@ public final strictfp class _linkset
               I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
-        for (AgentSet.Iterator iter2 = tempSet.iterator();
+        for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
           result.add((Link) iter2.next());
         }

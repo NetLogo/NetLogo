@@ -27,11 +27,11 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public int count() {
-    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents) {
+    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents()) {
       // some of the turtles might be dead, so we need
       // to actually count them - ST 2/27/03
       int result = 0;
-      for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+      for (AgentIterator iter = iterator(); iter.hasNext();) {
         iter.next();
         result++;
       }
@@ -44,9 +44,9 @@ public final strictfp class ArrayAgentSet
   // This assumes we've already checked that the counts
   // are equal. - ST 7/6/06
   @Override
-  boolean equalAgentSetsHelper(org.nlogo.api.AgentSet otherSet) {
+  public boolean equalAgentSetsHelper(org.nlogo.api.AgentSet otherSet) {
     HashSet<Agent> set = new HashSet<Agent>();
-    for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+    for (AgentIterator iter = iterator(); iter.hasNext();) {
       set.add(iter.next());
     }
     for (org.nlogo.api.Agent a : otherSet.agents()) {
@@ -59,7 +59,7 @@ public final strictfp class ArrayAgentSet
 
   @Override
   public boolean isEmpty() {
-    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents) {
+    if ((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents()) {
       // all of the turtles might be dead, so we need
       // to actually scan them - ST 2/27/03
       return !iterator().hasNext();
@@ -77,14 +77,14 @@ public final strictfp class ArrayAgentSet
   }
 
   public ArrayAgentSet(AgentKind kind, int initialCapacity, boolean removableAgents, World world) {
-    super(kind, world, null, removableAgents);
+    super(kind, world, null, removableAgents, false, false);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
   }
 
   public ArrayAgentSet(AgentKind kind, Agent[] agents, World world) {
-    super(kind, world, null, false);
+    super(kind, world, null, false, false, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -93,7 +93,7 @@ public final strictfp class ArrayAgentSet
   }
 
   public ArrayAgentSet(AgentKind kind, Agent[] agents, String printName, World world) {
-    super(kind, world, printName, false);
+    super(kind, world, printName, false, false, false);
     initialCapacity = agents.length;
     this.agents = agents;
     capacity = initialCapacity;
@@ -102,7 +102,7 @@ public final strictfp class ArrayAgentSet
   }
 
   ArrayAgentSet(AgentKind kind, int initialCapacity, String printName, boolean removableAgents, World world) {
-    super(kind, world, printName, removableAgents);
+    super(kind, world, printName, removableAgents, false, false);
     this.initialCapacity = initialCapacity;
     agents = new Agent[initialCapacity];
     capacity = initialCapacity;
@@ -124,7 +124,7 @@ public final strictfp class ArrayAgentSet
   }
 
   @Override
-  Agent getAgent(Object id) {
+  public Agent getAgent(Object id) {
     return agents[((Double) id).intValue()];
   }
 
@@ -143,14 +143,14 @@ public final strictfp class ArrayAgentSet
   }
 
   @Override
-  void remove(Object id) {
+  public void remove(Object id) {
     throw new IllegalStateException
         ("Cannot call remove() from an  ArrayAgentSet");
   }
 
   @Override
-  void clear() {
-    if (!removableAgents) // this case would confuse iterator()
+  public void clear() {
+    if (!removableAgents()) // this case would confuse iterator()
     {
       throw new IllegalStateException
           ("Cannot call remove() on an AgentSet with removableAgents set to false");
@@ -161,8 +161,8 @@ public final strictfp class ArrayAgentSet
   }
 
   @Override
-  public boolean contains(Agent agent) {
-    for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+  public boolean contains(org.nlogo.api.Agent agent) {
+    for (AgentIterator iter = iterator(); iter.hasNext();) {
       if (iter.next() == agent) {
         return true;
       }
@@ -179,10 +179,10 @@ public final strictfp class ArrayAgentSet
   public Agent randomOne(int precomputedCount, int random) {
     // note: we can assume agentset is nonempty , since _randomoneof.java checks for that
     if ((size == capacity) &&
-        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents)) {
+        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents())) {
       return agents[random];
     } else {
-      AgentSet.Iterator iter = iterator();
+      AgentIterator iter = iterator();
       for (int i = 0; i < random; i++) {
         iter.next(); // skip to the right place
       }
@@ -194,7 +194,7 @@ public final strictfp class ArrayAgentSet
   // This is used to optimize the special case of randomSubset where
   // size == 2
   @Override
-  Agent[] randomTwo(int precomputedCount, int random1, int random2) {
+  public Agent[] randomTwo(int precomputedCount, int random1, int random2) {
     Agent[] result = new Agent[2];
 
     // we know precomputedCount, or this method would not have been called.
@@ -210,13 +210,13 @@ public final strictfp class ArrayAgentSet
       random2 = tmp;
     }
     if ((size == capacity) &&
-        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents))
+        !((kind() == AgentKindJ.Turtle() || kind() == AgentKindJ.Link()) && !removableAgents()))
 
     {
       result[0] = agents[random1];
       result[1] = agents[random2];
     } else {
-      AgentSet.Iterator iter = iterator();
+      AgentIterator iter = iterator();
       int i = 0;
       while (i++ < random1) {
         iter.next(); // skip to the first place
@@ -231,8 +231,8 @@ public final strictfp class ArrayAgentSet
   }
 
   @Override
-  Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
-                              org.nlogo.util.MersenneTwisterFast random) {
+  public Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
+                                     org.nlogo.util.MersenneTwisterFast random) {
     Agent result[] = new Agent[resultSize];
     if (precomputedCount == capacity) {
       for (int i = 0, j = 0; j < resultSize; i++) {
@@ -243,7 +243,7 @@ public final strictfp class ArrayAgentSet
         }
       }
     } else {
-      AgentSet.Iterator iter = iterator();
+      AgentIterator iter = iterator();
       for (int i = 0, j = 0; j < resultSize; i++) {
         Agent next = iter.next();
         if (random.nextInt(precomputedCount - i)
@@ -259,7 +259,7 @@ public final strictfp class ArrayAgentSet
   @Override
   public LogoList toLogoList() {
     ArrayList<Agent> result = new ArrayList<Agent>();
-    for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+    for (AgentIterator iter = iterator(); iter.hasNext();) {
       Agent agent = iter.next();
       result.add(agent);
     }
@@ -281,7 +281,7 @@ public final strictfp class ArrayAgentSet
     s = s.append("\n...... count(): " + count());
     s = s.append("\n...... capacity: " + capacity);
     s = s.append("\n...... agents: ");
-    for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+    for (AgentIterator iter = iterator(); iter.hasNext();) {
       s = s.append("\n" + iter.next().toString());
     }
     return s.toString();
@@ -289,7 +289,7 @@ public final strictfp class ArrayAgentSet
 
   // parent enumeration class
   public class Iterator
-      implements AgentSet.Iterator {
+      implements AgentIterator {
     int index;
 
     public boolean hasNext() {
@@ -329,7 +329,7 @@ public final strictfp class ArrayAgentSet
 
   // returns an Iterator object of the appropriate class
   @Override
-  public AgentSet.Iterator iterator() {
+  public AgentIterator iterator() {
     if (kind() == AgentKindJ.Patch()) {
       return new Iterator();
     } else {
@@ -343,7 +343,7 @@ public final strictfp class ArrayAgentSet
   /// was close enough!  ;-)  ~Forrest (10/3/2008)
 
   @Override
-  public AgentSet.Iterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+  public AgentIterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
     // contents of the agentset - ST 12/15/05

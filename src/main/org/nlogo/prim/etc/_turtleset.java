@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
@@ -43,7 +44,7 @@ public final strictfp class _turtleset
           throw new ArgumentTypeException
               (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
         }
-        for (AgentSet.Iterator iter = tempSet.iterator();
+        for (AgentIterator iter = tempSet.iterator();
              iter.hasNext();) {
           resultSet.add((Turtle) iter.next());
         }
@@ -76,7 +77,7 @@ public final strictfp class _turtleset
               I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
-        for (AgentSet.Iterator iter2 = tempSet.iterator();
+        for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
           result.add((Turtle) iter2.next());
         }

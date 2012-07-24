@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
@@ -53,7 +54,7 @@ public final strictfp class _createlinksto
     Turtle src = (Turtle) context.agent;
     // We have to shuffle here in order for who number assignment
     // to be random! - ST 3/15/06
-    for (AgentSet.Iterator iter = agentset.shufflerator(context.job.random); iter.hasNext();) {
+    for (AgentIterator iter = agentset.shufflerator(context.job.random); iter.hasNext();) {
       Turtle dest = (Turtle) iter.next();
       if (world.linkManager.findLinkFrom(src, dest, breed, false) == null) {
         if (src == dest) {

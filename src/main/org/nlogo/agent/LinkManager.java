@@ -218,7 +218,7 @@ public strictfp class LinkManager {
   }
 
   public boolean checkBreededCompatibility(boolean unbreeded) {
-    AgentSet.Iterator it = world.links().iterator();
+    AgentIterator it = world.links().iterator();
     if (!it.hasNext()) {
       return true;
     }

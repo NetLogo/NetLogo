@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
@@ -41,11 +42,11 @@ public final strictfp class _turtleson
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
       if (sourceSet.kind() == AgentKindJ.Turtle()) {
-        for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
           addAll(resultList, ((Turtle) iter.next()).getPatchHere().turtlesHere());
         }
       } else {
-        for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
           addAll(resultList, ((Patch) iter.next()).turtlesHere());
         }
       }

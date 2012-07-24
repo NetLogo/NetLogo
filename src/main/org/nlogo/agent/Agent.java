@@ -172,7 +172,7 @@ public abstract strictfp class Agent
 
   public abstract String classDisplayName();
 
-  public abstract int getAgentBit();
+  public abstract int agentBit();
 
   public boolean isPartiallyTransparent() {
     int alpha = alpha();
