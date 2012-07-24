@@ -204,7 +204,6 @@ trait MockSuite extends FunSuite {
       s
     }
     def andThen(otherExpectation: Any) = {
-      otherExpectation
       inSequence(sequence)
       this
     }
