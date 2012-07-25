@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.AgentKindJ;
@@ -43,7 +44,7 @@ public final strictfp class _patchset
           throw new ArgumentTypeException
               (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
         }
-        for (AgentSet.Iterator iter = tempSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = tempSet.iterator(); iter.hasNext();) {
           resultSet.add((Patch) iter.next());
         }
       } else if (elt instanceof LogoList) {
@@ -75,7 +76,7 @@ public final strictfp class _patchset
               I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
                   this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
         }
-        for (AgentSet.Iterator iter2 = tempSet.iterator();
+        for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
           result.add((Patch) iter2.next());
         }

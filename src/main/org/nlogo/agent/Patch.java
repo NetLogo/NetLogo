@@ -512,10 +512,10 @@ public strictfp class Patch
     return "patch";
   }
 
-  public static final int BIT = 4;
+  public static final int BIT = AgentBit.apply(AgentKindJ.Patch());
 
   @Override
-  public int getAgentBit() {
+  public int agentBit() {
     return BIT;
   }
 

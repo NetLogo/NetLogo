@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
@@ -32,7 +33,7 @@ public final strictfp class _countotherwith
     Context freshContext = new Context(context, sourceSet);
     int result = 0;
     reporterBlock.checkAgentSetClass(sourceSet, context);
-    for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
       Agent tester = iter.next();
       if (tester == context.agent) {
         continue;

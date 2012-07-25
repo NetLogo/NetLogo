@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
@@ -24,7 +25,7 @@ public final strictfp class _countother extends Reporter {
 
   public double report_1(Context context, AgentSet arg0) {
     int result = 0;
-    for (AgentSet.Iterator iter = arg0.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = arg0.iterator(); iter.hasNext();) {
       if (iter.next() != context.agent) {
         result++;
       }

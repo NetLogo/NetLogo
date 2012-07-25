@@ -3,6 +3,7 @@
 package org.nlogo.nvm;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentBit;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Observer;
@@ -82,11 +83,7 @@ public abstract strictfp class Instruction
     for (int i = 0; i < args.length; i++) {
       args[i].init(workspace);
     }
-    agentBits =
-        ((agentClassString.indexOf('O') != -1) ? Observer.BIT : 0) |
-            ((agentClassString.indexOf('T') != -1) ? Turtle.BIT : 0) |
-            ((agentClassString.indexOf('P') != -1) ? Patch.BIT : 0) |
-            ((agentClassString.indexOf('L') != -1) ? Link.BIT : 0);
+    agentBits = AgentBit.fromAgentClassString(agentClassString);
   }
 
   /// display methods

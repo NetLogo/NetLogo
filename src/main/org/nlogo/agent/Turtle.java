@@ -1168,10 +1168,10 @@ public strictfp class Turtle
     return world.getBreedSingular(getBreed()).toLowerCase();
   }
 
-  public static final int BIT = 2;
+  public static final int BIT = AgentBit.apply(AgentKindJ.Turtle());
 
   @Override
-  public int getAgentBit() {
+  public int agentBit() {
     return BIT;
   }
 

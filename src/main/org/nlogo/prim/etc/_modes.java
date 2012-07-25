@@ -2,8 +2,8 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.agent.LogoHashObject;
 import org.nlogo.api.LogoException;
+import org.nlogo.api.LogoHashObject;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
@@ -49,7 +49,7 @@ public final strictfp class _modes
       LogoHashObject currKey = keys.next();
       int currVal = counts.get(currKey).value();
       if (currVal == currMaxCount) {
-        modes.add(currKey.getSourceObject());
+        modes.add(currKey.sourceObject());
       }
     }
     return modes.toLogoList();
