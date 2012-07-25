@@ -206,8 +206,8 @@ public strictfp class World
     new Exporter(this, writer).exportWorld(full);
   }
 
-  public void importWorld(org.nlogo.agent.Importer.ErrorHandler errorHandler, ImporterUser importerUser,
-                          org.nlogo.agent.Importer.StringReader stringReader, java.io.BufferedReader reader)
+  public void importWorld(ImporterJ.ErrorHandler errorHandler, ImporterUser importerUser,
+                          ImporterJ.StringReader stringReader, java.io.BufferedReader reader)
       throws java.io.IOException {
     new Importer(errorHandler, this,
         importerUser, stringReader).importWorld(reader);
