@@ -7,7 +7,7 @@ onLoadMessage := ""
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalacOptions ++=
-  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings"
+  "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args"
   .split(" ").toSeq
 
 javacOptions ++=
