@@ -743,7 +743,7 @@ class App extends
   }
   @throws(classOf[java.io.IOException])
   def libraryOpen(path: String) {
-    dispatchThreadOrBust(path, ModelType.Library)
+    dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Library))
   }
 
   /**
