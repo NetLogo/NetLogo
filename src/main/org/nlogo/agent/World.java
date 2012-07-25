@@ -156,7 +156,7 @@ public strictfp class World
     topology = Topology.getTopology(this, xWrapping, yWrapping);
     if (_patches != null) // is null during initialization
     {
-      for (AgentSet.Iterator it = _patches.iterator(); it.hasNext();) {
+      for (AgentIterator it = _patches.iterator(); it.hasNext();) {
         ((Patch) it.next()).topologyChanged();
       }
     }
@@ -795,7 +795,7 @@ public strictfp class World
   }
 
   public void clearPatches() {
-    for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
       Patch patch = (Patch) iter.next();
       patch.pcolorDoubleUnchecked(Color.BoxedBlack());
       patch.label("");
@@ -817,14 +817,14 @@ public strictfp class World
     for(AgentSet agents : breedAgents.values()) {
         agents.clear();
     }
-    for (AgentSet.Iterator iter = _turtles.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
       linkManager.cleanup(turtle);
       turtle.id(-1);
     }
     _turtles.clear();
-    for (AgentSet.Iterator iter = _patches.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
       ((Patch) iter.next()).clearTurtles();
     }
     nextTurtleIndex = 0;
@@ -834,7 +834,7 @@ public strictfp class World
     for(AgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
-    for (AgentSet.Iterator iter = _links.iterator(); iter.hasNext();) {
+    for (AgentIterator iter = _links.iterator(); iter.hasNext();) {
       Link link = (Link) iter.next();
       link.id = -1;
     }

@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
@@ -69,7 +70,7 @@ public final strictfp class _breedon
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
       if (sourceSet.kind() == AgentKindJ.Turtle()) {
-        for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
             if (turtle.getBreed() == breed) {
               resultList.add(turtle);
@@ -77,7 +78,7 @@ public final strictfp class _breedon
           }
         }
       } else if (sourceSet.kind() == AgentKindJ.Patch()) {
-        for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+        for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
           for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
             if (turtle.getBreed() == breed) {
               resultList.add(turtle);
@@ -101,7 +102,7 @@ public final strictfp class _breedon
     List<Turtle> resultList = new ArrayList<Turtle>();
     AgentSet breed = world.getBreed(breedName);
     if (sourceSet.kind() == AgentKindJ.Turtle()) {
-      for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+      for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Turtle) iter.next()).getPatchHere().turtlesHere()) {
           if (turtle.getBreed() == breed) {
             resultList.add(turtle);
@@ -109,7 +110,7 @@ public final strictfp class _breedon
         }
       }
     } else if (sourceSet.kind() == AgentKindJ.Patch()) {
-      for (AgentSet.Iterator iter = sourceSet.iterator(); iter.hasNext();) {
+      for (AgentIterator iter = sourceSet.iterator(); iter.hasNext();) {
         for (Turtle turtle : ((Patch) iter.next()).turtlesHere()) {
           if (turtle.getBreed() == breed) {
             resultList.add(turtle);

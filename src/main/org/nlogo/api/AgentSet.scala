@@ -19,6 +19,7 @@ trait AgentSet {
 
   /** Returns the number of agents in the set. */
   def count: Int
+  def isEmpty: Boolean
 
   /** Returns the type of agents in the AgentSet. */
   def kind: AgentKind
@@ -49,5 +50,11 @@ trait AgentSet {
    * @param other the AgentSet to compare to
    */
   def isUndirected: Boolean
+
+  // true only for the the TURTLES, PATCHES, and BREED AgentSets;
+  // used by iterator() to discern which special cases to be aware of
+  def removableAgents: Boolean
+
+  def contains(a: Agent): Boolean
 
 }

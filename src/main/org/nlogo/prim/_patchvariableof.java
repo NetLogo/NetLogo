@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoException;
@@ -38,7 +39,7 @@ public final strictfp class _patchvariableof
       AgentSet sourceSet = (AgentSet) agentOrSet;
       LogoListBuilder result = new LogoListBuilder();
       try {
-        for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+        for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
              iter.hasNext();) {
           result.add(iter.next().getPatchVariable(vn));
         }
@@ -88,7 +89,7 @@ public final strictfp class _patchvariableof
       AgentSet sourceSet = (AgentSet) agentOrSet;
       LogoListBuilder result = new LogoListBuilder();
       try {
-        for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+        for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
              iter.hasNext();) {
           result.add(iter.next().getPatchVariable(vn));
         }
@@ -109,7 +110,7 @@ public final strictfp class _patchvariableof
       throws LogoException {
     LogoListBuilder result = new LogoListBuilder();
     try {
-      for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random);
+      for (AgentIterator iter = sourceSet.shufflerator(context.job.random);
            iter.hasNext();) {
         result.add(iter.next().getPatchVariable(vn));
       }

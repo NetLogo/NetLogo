@@ -2,6 +2,7 @@
 
 package org.nlogo.prim;
 
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
@@ -45,7 +46,7 @@ public final strictfp class _nsum4 extends Reporter {
       patch = (Patch) context.agent;
     }
     double sum = 0;
-    for (AgentSet.Iterator it = patch.getNeighbors4().iterator(); it.hasNext();) {
+    for (AgentIterator it = patch.getNeighbors4().iterator(); it.hasNext();) {
       Object value = ((Patch) it.next()).getPatchVariable(vn);
       if (!(value instanceof Double)) {
         throw new EngineException(context, this,

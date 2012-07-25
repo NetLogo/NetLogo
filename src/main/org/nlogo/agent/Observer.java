@@ -367,10 +367,10 @@ public strictfp class Observer
     return "observer";
   }
 
-  public static final int BIT = 1;
+  public static final int BIT = AgentBit.apply(AgentKindJ.Observer());
 
   @Override
-  public int getAgentBit() {
+  public int agentBit() {
     return BIT;
   }
 

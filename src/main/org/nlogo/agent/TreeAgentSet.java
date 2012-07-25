@@ -33,7 +33,7 @@ public strictfp class TreeAgentSet
   // This assumes we've already checked that the counts
   // are equal. - ST 7/6/06
   @Override
-  boolean equalAgentSetsHelper(org.nlogo.api.AgentSet otherSet) {
+  public boolean equalAgentSetsHelper(org.nlogo.api.AgentSet otherSet) {
     for (org.nlogo.api.Agent a : otherSet.agents()) {
       if (!contains((Agent) a)) {
         return false;
@@ -43,7 +43,7 @@ public strictfp class TreeAgentSet
   }
 
   public TreeAgentSet(AgentKind kind, String printName, World world) {
-    super(kind, world, printName, true);
+    super(kind, world, printName, true, false, false);
   }
 
   @Override
@@ -66,7 +66,7 @@ public strictfp class TreeAgentSet
   }
 
   @Override
-  Agent getAgent(Object id) {
+  public Agent getAgent(Object id) {
     return agents.get(id);
   }
 
@@ -92,12 +92,12 @@ public strictfp class TreeAgentSet
   }
 
   @Override
-  void clear() {
+  public void clear() {
     agents.clear();
   }
 
   @Override
-  public boolean contains(Agent agent) {
+  public boolean contains(org.nlogo.api.Agent agent) {
     return agents.containsValue(agent);
   }
 
@@ -109,7 +109,7 @@ public strictfp class TreeAgentSet
   @Override
   public Agent randomOne(int precomputedCount, int random) {
     // note: we can assume agentset is nonempty , since _randomoneof.java checks for that
-    AgentSet.Iterator iter = iterator();
+    AgentIterator iter = iterator();
     for (int i = 0; i < random; i++) {
       iter.next(); // skip to the right place
     }
@@ -119,7 +119,7 @@ public strictfp class TreeAgentSet
   // This is used to optimize the special case of randomSubset where
   // size == 2
   @Override
-  Agent[] randomTwo(int precomputedCount, int random1, int random2) {
+  public Agent[] randomTwo(int precomputedCount, int random1, int random2) {
     Agent[] result = new Agent[2];
 
     // we know precomputedCount, or this method would not have been called.
@@ -138,7 +138,7 @@ public strictfp class TreeAgentSet
       result[0] = agents.get(Double.valueOf(random1));
       result[1] = agents.get(Double.valueOf(random2));
     } else {
-      AgentSet.Iterator iter = iterator();
+      AgentIterator iter = iterator();
       int i = 0;
       while (i++ < random1) {
         iter.next(); // skip to the first place
@@ -153,10 +153,10 @@ public strictfp class TreeAgentSet
   }
 
   @Override
-  Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
-                              org.nlogo.util.MersenneTwisterFast randomerator) {
+  public Agent[] randomSubsetGeneral(int resultSize, int precomputedCount,
+                                     org.nlogo.util.MersenneTwisterFast randomerator) {
     Agent result[] = new Agent[resultSize];
-    AgentSet.Iterator iter = iterator();
+    AgentIterator iter = iterator();
     for (int i = 0, j = 0; j < resultSize; i++) {
       Agent next = iter.next();
       if (randomerator.nextInt(precomputedCount - i)
@@ -185,7 +185,7 @@ public strictfp class TreeAgentSet
     s = s.append(kind() == null ? "null" : kind().toString());
     s = s.append("\n...... count(): " + count());
     s = s.append("\n...... agents: ");
-    for (AgentSet.Iterator iter = iterator(); iter.hasNext();) {
+    for (AgentIterator iter = iterator(); iter.hasNext();) {
       s = s.append("\n" + iter.next().toString());
     }
     return s.toString();
@@ -193,7 +193,7 @@ public strictfp class TreeAgentSet
 
   // parent enumeration class
   public class Iterator
-      implements AgentSet.Iterator {
+      implements AgentIterator {
     java.util.Iterator<Agent> iter = agents.values().iterator();
 
     public boolean hasNext() {
@@ -212,14 +212,14 @@ public strictfp class TreeAgentSet
 
   // returns an Iterator object of the appropriate class
   @Override
-  public AgentSet.Iterator iterator() {
+  public AgentIterator iterator() {
     return new Iterator();
   }
 
   /// shuffling iterator = shufflerator! (Google hits: 0)
 
   @Override
-  public AgentSet.Iterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
+  public AgentIterator shufflerator(org.nlogo.util.MersenneTwisterFast random) {
     // note it at the moment (and this should probably be fixed)
     // Job.runExclusive() counts on this making a copy of the
     // contents of the agentset - ST 12/15/05

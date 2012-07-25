@@ -3,6 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
@@ -32,7 +33,7 @@ public final strictfp class _oneofwith
       throws LogoException {
     Context freshContext = new Context(context, sourceSet);
     arg1.checkAgentSetClass(sourceSet, context);
-    for (AgentSet.Iterator iter = sourceSet.shufflerator(context.job.random); iter.hasNext();) {
+    for (AgentIterator iter = sourceSet.shufflerator(context.job.random); iter.hasNext();) {
       Agent tester = iter.next();
       Object value = freshContext.evaluateReporter(tester, arg1);
       if (!(value instanceof Boolean)) {
