@@ -738,10 +738,13 @@ class App extends
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
   @throws(classOf[java.io.IOException])
-  def open(path:String)  { dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Normal)) }
-
+  def open(path: String) {
+    dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Normal))
+  }
   @throws(classOf[java.io.IOException])
-  def libraryOpen(path:String){ dispatchThreadOrBust(path, ModelType.Library) }
+  def libraryOpen(path: String) {
+    dispatchThreadOrBust(fileMenu.openFromPath(path, ModelType.Library))
+  }
 
   /**
    * Opens a model stored in a string.
