@@ -136,7 +136,7 @@ do
 done
 cd ..
 rm -f *.jar
-bin/sbt clean all
+./sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -281,7 +281,7 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd ../..
   mv models models.tmp
   ln -s tmp/netlogo-$COMPRESSEDVERSION/models
-  bin/sbt model-index
+  ./sbt model-index
   rm models
   mv models.tmp models
 ) || exit 1
