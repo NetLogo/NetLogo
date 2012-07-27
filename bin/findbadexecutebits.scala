@@ -19,7 +19,7 @@ def skip(path: String): Boolean =
 val executableExtensions =
   "sh py exe"
 val executableFullNames =
-  "bin/scala bin/sbt"
+  "bin/scala sbt"
 val nonExecutableExtensions =
   "java nlogo nlogo3d txt flex class classpath srcs css graph srcs-scala prefs launch scala xml png tgz gz " +
   "nim graffle html diff example xls ddf jar mk doc zip gif bz2 dtd ninfo project versioned log " +

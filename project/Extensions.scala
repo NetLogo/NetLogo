@@ -27,7 +27,7 @@ object Extensions {
   // The "update" is needed ony as long as the extension build.sbt files are
   // using SNAPSHOT versions of NetLogo.jar. - ST 7/22/12
   private val sbtBuildCommand =
-    Seq("bin/sbt", "update", "package")
+    Seq("./sbt", "update", "package")
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
     log.info("building extension: " + dir.getName)
