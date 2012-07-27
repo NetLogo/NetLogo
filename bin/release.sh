@@ -468,11 +468,11 @@ $FIND tmp/$COMPRESSEDVERSION \( -name .DS_Store -or -name .gitignore \) -print0 
 
 # done
 if [ $DO_RSYNC -eq 1 ]; then
-  $RSYNC -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
+  $RSYNC -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
 else
   echo
   echo "to upload to CCL server, do:"
-  echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+  echo "rsync -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
 
 echo
