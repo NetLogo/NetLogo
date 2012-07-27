@@ -38,7 +38,7 @@ class ModelSaver(app: App) {
     // turtle shapes
     section {
       for(shape <- app.tabs.workspace.world.turtleShapeList.getShapes.asScala) {
-        buf ++= shape.asInstanceOf[Shape].toString
+        buf ++= shape.toString
         buf ++= "\n\n"
       }
     }
