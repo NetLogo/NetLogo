@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,9 +25,11 @@ public class HistogramBlock
         MouseListener {
 
     HistogramBlock histogramBlock = this; // for deleteAction
-    JTextField plotNameField;
+    JTextField histoNameField;
     org.nlogo.plot.Plot netLogoPlot;
     boolean histo;
+    String population;
+    String variable;
 
     public HistogramBlock() {
         super("new plot", ColorSchemer.getColor(3));
@@ -42,6 +45,18 @@ public class HistogramBlock
                 DataFlavor.stringFlavor,
                 plotBlockFlavor
         };
+        for (QuantityBlock quantBlock : getMyBlocks()) {
+            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                    population = entry.getValue().toString();
+                    System.out.println("values " + inputs.values());
+                    System.out.println("keys " + inputs.keySet());
+                }
+                if (entry.getKey().equalsIgnoreCase("trait")) {
+                    variable = entry.getValue().toString();
+                }
+            }
+        }
     }
 
     //I think this constructor is for histograms- not sure -A. (sept 26)
@@ -83,28 +98,33 @@ public class HistogramBlock
     }
 
     public void makeLabel() {
-        plotNameField = new PrettyInput(this);
+        histoNameField = new PrettyInput(this);
         label.add(removeButton);
         label.add(new JLabel("Histogram of "));
-        label.add(plotNameField);
+        label.add(histoNameField);
         label.setBackground(getBackground());
     }
 
     public String getName() {
-        return plotNameField.getText();
+        return histoNameField.getText();
     }
 
     public String unPackAsCode() {
         String passBack = "";
-        passBack += "  set-current-plot \"" + getName() + "\"\n";
+
+        //passBack += "  set-current-plot \"" + getName() + "\"\n";
+        //passBack += "  histogram [ \"" + variable + " ] of " + population + "\n";
+
         for (QuantityBlock quantBlock : getMyBlocks()) {
-            passBack += "  histogram \"" + quantBlock.getName() + " ";
-            for (JTextField input : quantBlock.inputs.values()) {
-                passBack += input.getText() + " ";
-            }
-            passBack += "\"\n";
-            passBack += "  " + quantBlock.unPackAsCommand();
+            quantBlock.unPackAsCommand();
+
+            //for (JTextField input : quantBlock.inputs.values()) {
+              //  passBack += input.getText() + " ";
+            //}
+           // passBack += " ]\"\n";
+            //passBack += "  " + quantBlock.unPackAsCommand();
         }
+
 
         return passBack;
     }
@@ -153,8 +173,8 @@ public class HistogramBlock
                 point.y - beforeDragY + beforeDragYLoc);
     }
 
-    public void setPlotName(String name) {
-        plotNameField.setText(name);
+    public void setHistoName(String name) {
+        histoNameField.setText(name);
     }
 
     public boolean histogram() {

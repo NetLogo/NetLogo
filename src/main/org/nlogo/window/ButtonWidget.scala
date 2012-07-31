@@ -332,7 +332,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   private def chooseDisplayName = if (name == "") displayName(getSourceName) else displayName(name)
 
   // behold the mighty regular expression
-  private def getSourceName = innerSource().trim.replaceAll("\\s+", " ")
+  // getSourceName was private - A. (May 4, 2012)
+  def getSourceName = innerSource().trim.replaceAll("\\s+", " ")
   override def innerSource(newInnerSource:String){
     super.innerSource(newInnerSource)
     chooseDisplayName
@@ -473,5 +474,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     setSize(x2 - x1, y2 - y1)
     chooseDisplayName
     this
+  }
+
+  // Added by Aditi so the go button automatically added to the interface through DeltaTick runs forever (May 4, 2012)
+  def setForeverOn() {
+    _forever = true;
+    //foreverOn = true;
   }
 }

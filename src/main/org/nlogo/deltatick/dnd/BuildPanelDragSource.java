@@ -3,6 +3,7 @@ package org.nlogo.deltatick.dnd;
 import org.nlogo.deltatick.BuildPanel;
 import org.nlogo.deltatick.CodeBlock;
 
+import javax.swing.*;
 import java.awt.dnd.*;
 
 /**
@@ -20,6 +21,8 @@ public class BuildPanelDragSource implements DragGestureListener,
     public BuildPanelDragSource(BuildPanel panel) {
         DragSource dragSource = DragSource.getDefaultDragSource();
         this.panel = panel;
+
+
 
         // Create a DragGestureRecognizer and
         // register as the listener

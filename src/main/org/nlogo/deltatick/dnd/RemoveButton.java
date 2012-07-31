@@ -18,9 +18,9 @@ public class RemoveButton extends JButton {
         this.myParent = myParent;
         this.thisButton = this;
         setAction(deleteAction);
-        setBorder(null);
-        setBorderPainted(false);
-        setMargin(new java.awt.Insets(5, 5, 5, 5));
+        //setBorder(null);
+        setBorderPainted(true);
+        setMargin(new java.awt.Insets(2, 2, 2, 2));
     }
 
     private final javax.swing.Action deleteAction =

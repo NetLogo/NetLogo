@@ -21,6 +21,7 @@ public class ModelBackgroundInfo {
     ArrayList<Breed> breeds = new ArrayList<Breed>(); //list of breeds available in XML
     ArrayList<Global> globals = new ArrayList<Global>();
     ArrayList<Envt> envts = new ArrayList<Envt>();
+    ArrayList<Trait> traits = new ArrayList<Trait>();
     String setup;
     String go;
     String library;
@@ -37,9 +38,10 @@ public class ModelBackgroundInfo {
         go = null;
         library = null;
         version = null;
+        traits.clear();
     }
 
-    public void populate(NodeList breedNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library) throws Exception {
+    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
@@ -53,6 +55,12 @@ public class ModelBackgroundInfo {
                 Node breedNode = breedNodes.item(i);
                 breeds.add(new Breed(breedNode));
             }
+
+            for (int i = 0; i < traitNodes.getLength(); i++) {
+                Node traitNode = traitNodes.item(i);
+                traits.add(new Trait(traitNode));
+            }
+
 
             for (int i = 0; i < envtNodes.getLength(); i++) {
                 Node envtNode = envtNodes.item(i);
@@ -103,7 +111,7 @@ public class ModelBackgroundInfo {
             //code += breedBlock.setBreedShape();
             code += breedBlock.setup();
         }
-        System.out.println("bgInfo " + usedTraits.size());
+
         for (TraitBlock traitBlock : usedTraits) {
 
             code += traitBlock.setup();

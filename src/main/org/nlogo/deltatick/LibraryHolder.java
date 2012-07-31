@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,17 +43,10 @@ public class LibraryHolder extends JPanel {
     ArrayList<String> variations;
 
 
+
     public LibraryHolder() {
         tabbedPane = new JTabbedPane();
-        //policy = tabbedPane.getTabLayoutPolicy();
-        //System.out.println("Before " + policy);
-        //tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        //newPolicy = tabbedPane.getTabLayoutPolicy();
-        //System.out.println("After " + newPolicy);
         add(tabbedPane);
-        //exit = new JButton();
-        //policy = tabbedPane.getTabLayoutPolicy();
-        //System.out.println(policy);
 
 
         tabbedPane.addChangeListener(new ChangeListener() {
@@ -69,10 +63,22 @@ public class LibraryHolder extends JPanel {
       //TODo This changes the name of the tab to "panel" (March 9)
     public void addLibrarytoTab( TraitBlock block ) {
        tabbedPane.addTab( "panel", panel );
+
+
        traits.add(block);
        //getVariation(block);
-
     }
+
+
+
+
+    public void removeTraitBlock ( TraitBlock tBlock ) {
+        traits.remove(tBlock);
+    }
+
+
+
+
 
     public void addOperatortoTab( OperatorBlock oBlock ) {
        tabbedPane.addTab( "panel", panel );
@@ -89,12 +95,25 @@ public class LibraryHolder extends JPanel {
 
         panel = (JComponent) new JPanel();
         panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
+        JScrollPane sp = new JScrollPane(panel);
+        sp.setPreferredSize(new Dimension (200, 100));
+        sp.setVisible(true);
+        tabbedPane.addTab( "name", panel );
+        panel.revalidate();
+
+        //sp.setPreferredSize(new Dimension(100, 100));
+        //panel.add(sp);
+
+        //sp.getViewport().add();
+
         //tabbedPane.add( new JLabel ("name" + countTabs));
         /*
         tabbedPane.addTab( "name" + countTabs, panel);
         tabbedPane.setTabComponentAt( countTabs, new Tab(tabbedPane));
         */ //Commented out on March 1, 2012 (Aditi)
-        tabbedPane.addTab( "name", panel );
+
+        //panel.add(sp);
+
         JButton close = new JButton();
 
         //arrayPanels.add(countTabs, panel);
@@ -104,6 +123,8 @@ public class LibraryHolder extends JPanel {
 
     public void addBlock ( CodeBlock block ) {
         panel.add ( block );
+        //sp.add (block);
+        //sp.revalidate();
     }
 
     public void setTabName( String name ) {

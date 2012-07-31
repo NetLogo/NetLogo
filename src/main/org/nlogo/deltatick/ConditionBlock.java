@@ -42,7 +42,7 @@ public strictfp class ConditionBlock
     public String unPackAsCommand() {
         String passBack = "";
 
-        passBack += "if any? " + getName() + " ";
+        passBack += "if " + getName() + " ";
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }
@@ -72,7 +72,7 @@ public strictfp class ConditionBlock
         }
         passBack += "\n";
 
-        passBack += "  if " + code + "\n";
+        passBack += code + "\n";
         //passBack += "    [ report true ]\n";
         //passBack += "  report false\n";
 

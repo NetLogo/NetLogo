@@ -35,6 +35,7 @@ public class BuildPanel
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
     List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
+    List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
     ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
@@ -87,24 +88,6 @@ public class BuildPanel
             passBack += "]\n";
         }
 
-
-
-
-        /*
-        if (myTraits.size()  > 0 ) {
-        for (TraitBlock traitBlock : myTraits) {
-            passBack += traitBlock.breedVars();
-        }
-        }
-        */
-
-       /*
-
-        for (EnvtBlock envtBlock : myEnvts) {
-            passBack += envtBlock.declareEnvtBreed();
-        }
-        */
-
         passBack += "\n";
         for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.OwnVars();
@@ -130,8 +113,13 @@ public class BuildPanel
             passBack += envtBlock.unPackAsCode();
         }
         passBack += "tick\n";
+
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
+        }
+
+        if (myHisto.size() > 0) {
+            passBack += "make-histo\n";
         }
         passBack += "end\n";
         passBack += "\n";
@@ -144,6 +132,20 @@ public class BuildPanel
             passBack += "to do-plotting\n";
             for (PlotBlock plot : myPlots) {
                 passBack += plot.unPackAsCode();
+            }
+            passBack += "end\n";
+        }
+
+        if (myHisto.size() > 0) {
+            passBack += "\n\n";
+
+            for (HistogramBlock hblock : myHisto) {
+                passBack += "to make-histo\n";
+                //passBack += hblock.unPackAsCode();
+                for (QuantityBlock qBlock : hblock.getMyBlocks()) {
+                    passBack += qBlock.unPackAsCommand();
+                }
+                //passBack += hblock.getMyBlocks().
             }
             passBack += "end\n";
         }
@@ -259,6 +261,10 @@ public class BuildPanel
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
     public void addTrait(TraitBlock block) {
+        block.doLayout();
+        block.validate();
+        block.repaint();
+
         myTraits.add(block);
     }
 
@@ -270,6 +276,20 @@ public class BuildPanel
     public void addPlot(PlotBlock block) {
         myPlots.add(block);
         block.setPlotName("New Plot " + myPlots.size());
+        block.setBounds(200,
+                0,
+                block.getPreferredSize().width,
+                block.getPreferredSize().height);
+        //block.getPlotPen();
+        add(block);
+        block.doLayout();
+        block.validate();
+        block.repaint();
+    }
+
+    public void addHisto(HistogramBlock block) {
+        myHisto.add(block);
+        block.setHistoName("New Histogram " + myHisto.size());
         block.setBounds(200,
                 0,
                 block.getPreferredSize().width,
@@ -320,6 +340,10 @@ public class BuildPanel
         return myPlots;
     }
 
+    public List<HistogramBlock> getMyHisto() {
+        return myHisto;
+    }
+
     public List<TraitBlock> getMyTraits() {
         return myTraits;
     }
@@ -346,6 +370,12 @@ public class BuildPanel
             }
         }
 
+        for (HistogramBlock histoBlock : myHisto) {
+            if (histoBlock.children() != null) {
+                procedureCollection.putAll(histoBlock.children());
+            }
+        }
+
         for (EnvtBlock envtBlock : myEnvts) {
             if (envtBlock.children() != null) {
                 procedureCollection.putAll(envtBlock.children());
@@ -363,6 +393,8 @@ public class BuildPanel
     public void clear() {
         myBreeds.clear();
         myPlots.clear();
+        myHisto.clear();
+        myTraits.clear();
         myEnvts.clear();
         removeAll();
         doLayout();
@@ -412,6 +444,13 @@ public class BuildPanel
         return 0;
     }
 
+    public int histoCount() {
+        if (myHisto != null) {
+            return myHisto.size();
+        }
+        return 0;
+    }
+
 
     // breeds available in XML -A. (oct 5)
     public ArrayList<Breed> availBreeds() {
@@ -427,6 +466,11 @@ public class BuildPanel
         remove(plotBlock);
     }
 
+    public void removeHisto(HistogramBlock histoBlock) {
+        myHisto.remove(histoBlock);
+        remove(histoBlock);
+    }
+
     public void removeBreed(BreedBlock breedBlock) {
         myBreeds.remove(breedBlock);
         remove(breedBlock);
@@ -439,8 +483,10 @@ public class BuildPanel
 
     public void removeTrait(TraitBlock traitBlock) {
         myTraits.remove(traitBlock);
-        //remove(traitBlock);
+        remove(traitBlock);
     }
+
+
 
     public String library() {
         return bgInfo.getLibrary();

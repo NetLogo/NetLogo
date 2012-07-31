@@ -47,6 +47,7 @@ public class LibraryReader {
             //needs to be in order as provided as parameters in populate() -A. (sept 13)
             deltaTickTab.getBuildPanel().getBgInfo().populate(
                     library.getElementsByTagName("breed"),
+                    library.getElementsByTagName("trait"),
                     library.getElementsByTagName("global"),
                     library.getElementsByTagName("envt"),
                     library.getElementsByTagName("setup"),
@@ -63,7 +64,7 @@ public class LibraryReader {
                 seekAndAttachInfo(behavior);
             }
 
-            /*
+
             NodeList traits = library.getElementsByTagName("trait");
             //NodeList variations = library.getElementsByTagName("variations");
             for (int i = 0; i < traits.getLength(); i++) {
@@ -73,19 +74,21 @@ public class LibraryReader {
                 //}
                 //block = new TraitBlock( trait.getAttributes().getNamedItem("name").getTextContent() );
                 //block = new TraitBlock();
-                block = new TraitBlock( trait );
+               // block = new TraitBlock( trait );
                 seekAndAttachInfo( trait );
 
                 // block = new TraitBlock( trait.getAttributes().getNamedItem("name").getTextContent() );
             }
-            */
 
+
+            /*
             NodeList variations = library.getElementsByTagName("variation");
             for (int i = 0 ; i < variations.getLength(); i ++) {
                 Node variation = variations.item(i);
                 newVariationsList = new ArrayList<Node>();
                 newVariationsList.add(variation);
             }
+            */
 
             //makes patch blocks appear in library panel -A. (sept 13)
             NodeList patches = library.getElementsByTagName("patch");
@@ -191,6 +194,10 @@ public class LibraryReader {
             }
             else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
                 block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
+                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
+            }
+            else if (behaviorInfo.item(j).getNodeName() == "distanceInput") {
+                block.addDistanceInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
         }

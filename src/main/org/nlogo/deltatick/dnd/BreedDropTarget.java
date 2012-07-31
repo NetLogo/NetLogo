@@ -1,8 +1,10 @@
 package org.nlogo.deltatick.dnd;
 
+import ch.randelshofer.quaqua.QuaquaComboPopup;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -31,8 +33,15 @@ public class BreedDropTarget
                 addCodeBlock((BehaviorBlock) o);
                 return true;
             } else if (o instanceof TraitBlock) {
+                //JComboBox comboBox = ((TraitBlock) block).getDropDownList();
+            //QuaquaComboPopup popup = (QuaquaComboPopup) comboBox.getAccessibleContext().getAccessibleChild(0);
+            //popup.requestFocus(false);
+            //popup.setBorder(null);
+            //System.out.println("BDD dropping");
                 addCodeBlock((TraitBlock) o);
+                ((TraitBlock) o).setMyParent((BreedBlock) block);
                 deltaTickTab.addTrait((TraitBlock) o);
+
                 return true;
             } else if (o instanceof OperatorBlock) {
                 addCodeBlock((OperatorBlock) o);

@@ -1,8 +1,11 @@
 package org.nlogo.deltatick.dnd;
 
+import ch.randelshofer.quaqua.QuaquaComboPopup;
 import org.nlogo.deltatick.BehaviorBlock;
 import org.nlogo.deltatick.CodeBlock;
+import org.nlogo.deltatick.TraitBlock;
 
+import javax.swing.*;
 import java.awt.dnd.*;
 
 /**
@@ -29,11 +32,15 @@ public class CodeBlockDragSource implements DragGestureListener,
 
     // Implementation of DragGestureListener interface.
     public void dragGestureRecognized(DragGestureEvent dge) {
+
         dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), block);
+
+
     }
 
     // Implementation of DragSourceListener interface
     public void dragEnter(DragSourceDragEvent dsde) {
+
     }
 
     public void dragOver(DragSourceDragEvent dsde) {

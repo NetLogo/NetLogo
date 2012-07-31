@@ -3,6 +3,7 @@ package org.nlogo.deltatick.dialogs;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,8 +16,8 @@ import org.nlogo.deltatick.dialogs.TraitSelector;
  * Time: 12:24 AM
  * To change this template use File | Settings | File Templates.
  */
-// TODO    Be able to add as many variations as wanted (with a max of ~5)
-// TODO Pressing "Okay" sends values, not pressing the red cancel button
+
+
     // TODO: Add EXIT_ON_CLOSE
 
 public class VariationSelector
@@ -24,15 +25,16 @@ public class VariationSelector
     JPanel text;
     JButton addVariation;
     JPanel buttonsPanel;
-    //JButton okay;
+
     JLabel label;
     boolean populate;
-    HashMap<String, String> numberVariation = new HashMap();
+    HashMap<String, String> numberVariation = new HashMap<String,String>();
 
 
     ArrayList<JTextField> varInputList = new ArrayList<JTextField>();
     ArrayList<String> variationList = new ArrayList<String>();
-    ArrayList<JTextField> numberList = new ArrayList<JTextField>();
+    ArrayList<JTextField> numberInputList = new ArrayList<JTextField>();
+    ArrayList<String> numberList = new ArrayList<String>();
 
     private JDialog thisDialog = this;
 
@@ -44,6 +46,9 @@ public class VariationSelector
     }
 
     public void showMe() {
+        variationList.clear();
+        numberList.clear();
+        //numberInputList.clear();
         thisDialog.setVisible(true);
     }
 
@@ -55,7 +60,7 @@ public class VariationSelector
         JLabel label1 = new JLabel();
         label1.setText("Variation");
         JLabel label2 = new JLabel();
-        label2.setText("Number");
+        label2.setText("What percentage of the population has this variation?");
         label.setVisible(true);
 
         for (int i = 0; i < 6; i++) {
@@ -63,7 +68,7 @@ public class VariationSelector
         }
 
         for (int i = 0; i < 6; i++) {
-            numberList.add(new JTextField(3));
+            numberInputList.add(new JTextField(3));
         }
 
         addVariation = new JButton("Add variation");
@@ -90,14 +95,14 @@ public class VariationSelector
                                         .add(varInputList.get(4)))
                                 .add(layout.createParallelGroup()
                                         .add(label2)
-                                        .add(numberList.get(0))
-                                        .add(numberList.get(1))
-                                        .add(numberList.get(2))
-                                        .add(numberList.get(3))
-                                        .add(numberList.get(4)))
+                                        .add(numberInputList.get(0))
+                                        .add(numberInputList.get(1))
+                                        .add(numberInputList.get(2))
+                                        .add(numberInputList.get(3))
+                                        .add(numberInputList.get(4)))
                                 .add(layout.createSequentialGroup()
                                         .add(addVariation)
-                                        //.add(okay)
+
                                         )
                         ));
 
@@ -109,22 +114,21 @@ public class VariationSelector
                                 .add(label2))
                                 .add(layout.createParallelGroup()
                                         .add(varInputList.get(0))
-                                        .add(numberList.get(0)))
+                                        .add(numberInputList.get(0)))
                                         .add(layout.createParallelGroup()
                                             .add(varInputList.get(1))
-                                            .add(numberList.get(1)))
+                                            .add(numberInputList.get(1)))
                                         .add(layout.createParallelGroup()
                 .add(varInputList.get(2))
-                .add(numberList.get(2)))
+                .add(numberInputList.get(2)))
                 .add(layout.createParallelGroup()
                 .add(varInputList.get(3))
-                .add(numberList.get(3)))
+                .add(numberInputList.get(3)))
                 .add(layout.createParallelGroup()
                 .add(varInputList.get(4))
-                .add(numberList.get(4)))
+                .add(numberInputList.get(4)))
                 .add(layout.createParallelGroup()
                 .add(addVariation)
-                //.add(okay)
                 )
                 );
         pack();
@@ -138,13 +142,21 @@ public class VariationSelector
                 for ( JTextField textField : varInputList ) {
                     if (varInputList.get(i).getText().isEmpty() == false) {
                         variationList.add(varInputList.get(i).getText());
-                        System.out.println("not empty");
                     }
-
                     i++;
                 }
                 populate = true;
                 getVariationList();
+
+                int n = 0;
+                for ( JTextField textfield : numberInputList ) {
+
+                    numberList.add(numberInputList.get(n).getText());
+                    n++;
+                }
+                getNumberList();
+
+
                 data();
 
                 int j = 0;
@@ -152,8 +164,9 @@ public class VariationSelector
                     textField.setText("");
                     j++;
                 }
+
                 int k = 0;
-                for ( JTextField textField : numberList ) {
+                for ( JTextField textField : numberInputList ) {
                     textField.setText("");
                     k++;
                 }
@@ -169,22 +182,47 @@ public class VariationSelector
     }
 
     public ArrayList<String> getVariationList() {
-        System.out.println(variationList);
         return variationList;
+    }
+
+    public void number (int i) {
+        numberList.add(numberInputList.get(i).getText());
+    }
+
+    public ArrayList<String> getNumberList() {
+        return numberList;
     }
 
     public boolean check() {
         return populate;
     }
 
-    public HashMap data() {
+    public HashMap<String, String> data() {
+        //int i = 0;
+        System.out.println(variationList.get(0));
+        System.out.println(numberList.get(0));
+
+        System.out.println(variationList.get(1));
+        System.out.println(numberList.get(1));
+        //for (int i = 0; i <= variationList.size(); i++ ) {
+         //   numberVariation.put( variationList.get(i), numberList.get(i));
+        //}
+
         int i = 0;
-        for ( JTextField textField : varInputList ) {
-            if (! textField.getText().equals("")) {
-            numberVariation.put( varInputList.get(i).getText(), numberList.get(i).getText() );
-        }
+        for ( String string : variationList ) {
+
+            numberVariation.put( string, numberList.get(i) );
+
             i++;
+
         }
+
+        System.out.println(numberVariation);
         return numberVariation;
+
+
+
     }
+
 }
+

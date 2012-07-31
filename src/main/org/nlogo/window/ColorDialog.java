@@ -63,7 +63,8 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
   private Color selectedColor;
   private double selectedColorNumber;
-  private String selectedColorName;
+  //private String selectedColorName;
+  public String selectedColorName;
 
   private static final int SIZE_X = 600;
   private static final int SIZE_Y = 400;
@@ -83,6 +84,9 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   private JCheckBox checkboxHideNumbers;
   private JLabel selectedColorLabel;
   private JLabel[] turtleLabel = new JLabel[16];
+
+  //private JButton selectColor = new JButton(); // (may 13, 2012)- Aditi
+  private JButton selectColor = new JButton(); // (may 13, 2012)- Aditi
 
   public ColorDialog(Frame frame, boolean modalFlag) {
     super(frame, I18N.guiJ().get("tools.colorswatch"), modalFlag);
@@ -197,6 +201,8 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     blackButtonContainer.add(blackName);
     blackButtonContainer.add(new JLabel(""));
     topNameContainer.add(blackButtonContainer);
+      topNameContainer.add(selectColor);
+      selectColor.setAction(getSelectedColorName);
 
     // Create the white button
     Container whiteButtonContainer = new Container();
@@ -385,6 +391,9 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
       //JLabel selectedColorLabel = new JLabel("selected color");
       //controlsContainer.add(selectedColorLabel);
+        selectColor.setAction(getSelectedColorName);  // Aditi (May 13)
+        controlsContainer.add(selectColor);                        //Aditi (May 13)
+
     }
     // selected Color Label
     selectedColorLabel = new JLabel(org.nlogo.api.Color.getColorNameByIndex(14));
@@ -632,5 +641,23 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
               }
             });
   }
+    // Both these methods added by Aditi (May 13, 2012)
+    private final javax.swing.Action getSelectedColorName =
+            new javax.swing.AbstractAction("Color") {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    selectedColorName = org.nlogo.api.Color.getClosestColorNameByARGB(selectedColor.getRGB());
+                    getSelectedColorString();
+                    setVisible(false);
+
+                }
+            };
+
+    public String getSelectedColorString() {
+        return selectedColorName;
+    }
+
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
 
 }

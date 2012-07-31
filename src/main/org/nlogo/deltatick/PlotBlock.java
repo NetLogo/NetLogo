@@ -1,5 +1,6 @@
 package org.nlogo.deltatick;
 
+// need to have some kind of pens
 import org.nlogo.deltatick.dnd.RemoveButton;
 import org.nlogo.window.Widget;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -104,16 +105,8 @@ public strictfp class PlotBlock
     public String unPackAsCode() {
         String passBack = "";
         passBack += "  set-current-plot \"" + getName() + "\"\n";
-        if (histo = true) {
-            for (QuantityBlock quantBlock : getMyBlocks()) {
-            passBack += "  histogram [" + quantBlock.getName() + "] ";
-            for (JTextField input : quantBlock.inputs.values()) {
-                passBack += input.getText() + " ";
-            }
-            passBack += "\"\n";
-            passBack += "  " + quantBlock.unPackAsCommand();
-        }
 
+            //?
         for (QuantityBlock quantBlock : getMyBlocks()) {
             passBack += "  set-current-plot-pen \"" + quantBlock.getName() + " ";
             for (JTextField input : quantBlock.inputs.values()) {
@@ -123,8 +116,6 @@ public strictfp class PlotBlock
             passBack += "  " + quantBlock.unPackAsCommand();
         }
 
-
-    }
         return passBack;
     }
 
@@ -178,6 +169,10 @@ public strictfp class PlotBlock
 
     public boolean histogram() {
         return histo;
+    }
+
+    public void getPlotPen () {
+        netLogoPlot.createPlotPen(plotNameField.getText(), false);
     }
 
 }

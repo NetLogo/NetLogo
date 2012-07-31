@@ -27,24 +27,22 @@ public class Trait {
 
         NodeList traitNodes = traitNode.getChildNodes();
         for (int i = 0; i < traitNodes.getLength(); i++) {
-            if (traitNodes.item(i).getNodeName() == "variations") {
+            if (traitNodes.item(i).getNodeName() == "variation") {
                 NodeList variationNodes = traitNodes.item(i).getChildNodes();
                 for (int j = 0; j < variationNodes.getLength(); j++) {
                     variationsList.add(new Variation(variationNodes.item(j)));
                     System.out.println(variationsList);
 
                 }
-                if( traitNodes.item(i).getNodeName() == "variations" ) {
-                    System.out.println( "from trait.java " + traitNodes.item(i).getNodeName() == "variations" );
+                if( traitNodes.item(i).getNodeName() == "variation" ) {
+                    System.out.println( "from trait.java " + traitNodes.item(i).getNodeName() == "variation" );
                     variationsList.add(new Variation(traitNodes.item(i)));
                 }
                 }
                 }
     }
 
-    public Trait() {
 
-    }
 
 
 

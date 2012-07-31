@@ -21,6 +21,8 @@ public strictfp class QuantityBlock
     boolean histo = false;
     String bars = "0";
     String trait = " ";
+    String population;
+    String variable;
 
     public QuantityBlock(String name, boolean histo, String bars, String trait) {
         super(name, ColorSchemer.getColor(2));
@@ -33,6 +35,8 @@ public strictfp class QuantityBlock
         };
         label.add(makeBreedShapeButton());
         // - quantity block need not have shape change -A. (sept 30)
+
+
     }
 
     public String unPackAsCode() {
@@ -44,8 +48,10 @@ public strictfp class QuantityBlock
 
 
     public String unPackAsProcedure() {
-        System.out.println("unPackAsProcedure");
+
         String passBack = "";
+        Container parent = getParent();
+        if (parent instanceof PlotBlock) {
         passBack += "to-report " + getName();
         if (inputs.size() > 0) {
             passBack += " [ ";
@@ -60,6 +66,11 @@ public strictfp class QuantityBlock
         passBack += "end";
         passBack += "\n";
         passBack += "\n";
+        }
+
+        if (parent instanceof HistogramBlock) {
+            passBack = "" ;
+        }
 
         return passBack;
     }
@@ -67,27 +78,39 @@ public strictfp class QuantityBlock
 
     public String unPackAsCommand() {
         String passBack = "";
+        Container parent = getParent();
+        if (parent instanceof HistogramBlock) {
+            passBack += "set-plot-pen-mode 1 \n";
 
-        if (histo) {
-            passBack += "set-histogram-num-bars " + bars + "\n";
+            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                    population = entry.getValue().getText().toString();
+                }
+                if (entry.getKey().equalsIgnoreCase("trait")) {
+                    variable = entry.getValue().getText().toString();
+                }
+            }
+
+            //passBack += "set-histogram-num-bars " + bars + "\n";
             //passBack += "set-plot-x-range 0 max " + getName() + " ";
             //passBack += "plotxy" + x + y + "\n";
-            for (JTextField input : inputs.values()) {
-                passBack += input.getText() + " ";
-            }
+
+            passBack += "histogram [ " + variable + " ] of " + population ;
             passBack += "\n";
-            //passBack += "histogram " + getName() + " \n";
-            passBack += "histogram [ " + trait + " ] of turtles";
-        } else {
-            passBack += "plot " + getName() + " ";
         }
+
+        if (parent instanceof PlotBlock) {
+
+            passBack += "plot " + getName() + " ";
+
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }
         passBack += "\n";
-
+    }
         return passBack;
     }
+
 
     public Map<String, JTextField> getInputs() {
         return inputs;

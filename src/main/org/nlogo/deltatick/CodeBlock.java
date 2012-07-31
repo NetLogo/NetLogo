@@ -1,5 +1,6 @@
 package org.nlogo.deltatick;
 
+
 import org.nlogo.deltatick.dnd.AgentInput;
 import org.nlogo.deltatick.dnd.EnergyInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -117,10 +118,18 @@ public abstract class CodeBlock
         }
 
         private final javax.swing.Action deleteAction =
-                new javax.swing.AbstractAction("Y") {
+                new javax.swing.AbstractAction("X") {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         //CodeBlock homePanel = (CodeBlock) myParent.getParent();
                         myParent.die();
+
+                        /*
+                        for (CodeBlock block : myBlocks) {
+                            if ( block instanceof TraitBlock ) {
+                                block.die();
+                            }
+                        }
+                        */
                     }
                 };
     }
@@ -278,6 +287,15 @@ public abstract class CodeBlock
         label.add(agentInput);
     }
 
+    public void addDistanceInput(String inputName, String defaultValue) {
+        DistanceInput distanceInput = new DistanceInput(this);
+        distanceInput.setName(inputName);
+        distanceInput.setText(defaultValue);
+
+        agentInputs.put(inputName, distanceInput);
+        label.add(distanceInput);
+    }
+
 
     public void setMyParent(CodeBlock block) {
         myParent = block;
@@ -307,6 +325,13 @@ public abstract class CodeBlock
         block.doLayout();
         block.validate();
         block.repaint();
+
+        /*
+        if (block instanceof TraitBlock) {
+            ((TraitBlock) block).numberAgents();
+        }
+        */
+
         //block.validate();
         // pc
         //block.revalidate();
@@ -434,25 +459,46 @@ public abstract class CodeBlock
     // TODO: Remove trait from myTraits when it is deleted from LibraryHolder
     public void die() {
         Container parent = getParent();
+        boolean checkParent;
+        Container pParent = parent.getParent();
+        //checkParent = false;
+
+
         if (parent instanceof BreedBlock) {
-            System.out.println("parent instance of BB");
+            checkParent = true;
+            System.out.println(getParent());
             if (this instanceof TraitBlock) {
-                System.out.println("this instance of TB");
-                Container pParent = parent.getParent();
+
                 ((BuildPanel) pParent).removeTrait((TraitBlock) this);
                 ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);
+
             }
         }
-        if (parent instanceof CodeBlock) {
-            System.out.println("TB is CB");
-            ((CodeBlock) parent).removeBlock(this);
+        if (parent instanceof JPanel) {
+            if (this instanceof TraitBlock) {
+                for (Component child : pParent.getComponents()) {
+                    if (child.getClass() == BuildPanel.class) {
+                        ((BuildPanel) child).removeTrait((TraitBlock) this);
+                    }
+                }
+                for (Component child : parent.getComponents()) {
+                    if (child.getClass() == LibraryHolder.class) {
+                        ((LibraryHolder) child).removeTraitBlock((TraitBlock) this);
+                    }
+                }
+            }
+        }
 
+
+        if (parent instanceof CodeBlock) {
+
+            ((CodeBlock) parent).removeBlock(this);
         }
 
         if (parent instanceof BuildPanel) {
             //System.out.println("parent " + getParent() + " this " + this);
             if (this instanceof BreedBlock) {
-                System.out.println("parent instance of buildPanel/this BB");
+
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
                 for (Component child : getComponents()) {
                 if (child instanceof TraitBlock) {
@@ -470,6 +516,7 @@ public abstract class CodeBlock
             }
         }
 
+
         // kill off any subblocks
         for (Component child : getComponents()) {
             if (child.getClass() == CodeBlock.class) {
@@ -480,16 +527,6 @@ public abstract class CodeBlock
         parent.repaint();
     }
 
-    /*
-    public void repaint() {
 
-        if( this.getParent() != null ) {
-            if( this.getParent().getClass() == BuildPanel.class ) {
-                this.getParent().doLayout();
-                this.getParent().repaint();
-            }
-        }
-        super.repaint();
+
     }
-    */
-}

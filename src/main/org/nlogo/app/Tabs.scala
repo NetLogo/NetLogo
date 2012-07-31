@@ -25,7 +25,8 @@ class Tabs(val workspace: GUIWorkspace,
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val proceduresTab = new MainProceduresTab(workspace)
-  val deltaTickTab = new DeltaTickTab(workspace, proceduresTab)
+  val deltaTickTab = new DeltaTickTab(workspace, proceduresTab, interfaceTab.iP)
+
   val plotTab = new PlotTab(workspace, deltaTickTab)
 
   var previousTab: java.awt.Component = interfaceTab
@@ -33,7 +34,7 @@ class Tabs(val workspace: GUIWorkspace,
 
   def init(moreTabs: (String, java.awt.Component) *) {
     addTab("Build", deltaTickTab)
-    addTab("Record", plotTab)
+    //addTab("Record", plotTab)
     // addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
     addTab(I18N.gui.get("tabs.run"), interfaceTab)

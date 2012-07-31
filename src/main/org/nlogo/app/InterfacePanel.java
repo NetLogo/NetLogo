@@ -474,4 +474,8 @@ strictfp class InterfacePanel
   public boolean canAddWidget(String widget) {
     return (!widget.equals("Output")) || (getOutputWidget() == null);
   }
+
+    public void getWidgets() {
+
+    }
 }

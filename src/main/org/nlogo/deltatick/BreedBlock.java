@@ -312,29 +312,33 @@ public strictfp class BreedBlock
         return org.nlogo.shape.VectorShape.parseShapes(shapes, version);
     }
 
-    /*
-    Michelle's code for shapes for breeds thta have shape. I removed them because I've added variation to name of breed
-    -A. (Nov 23)
+
+    //Michelle's code for shapes for breeds thta have shape. I removed them because I've added variation to name of breed
+    //-A. (Nov 23)
     public String setBreedShape() {
         if( breedShape != null ) {
             return "set-default-shape " + plural() + " \"" + breedShape + "\"\n";
         }
         return "";
     }
-    */
+
 
     public Breed myBreed() {
         return breed;
     }
 
     public void addTraittoBreed ( TraitBlock traitBlock ) {
+        traitBlock.showColorButton();
+        traitBlock.doLayout();
+        traitBlock.validate();
+        traitBlock.repaint();
+
         myTraits.add(traitBlock);
 
     }
 
-    //TODO: Will have to add some kind of ActionListener to BreedBlock such that when TraitBlock is added, stuff happens
 
-    // events and mouse action but not sure what it's doing -a.
+
     public void mouseEnter(MouseEvent evt) {
     }
 
