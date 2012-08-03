@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm
 
 class ConstantFolderTests extends FunSuite {
 
@@ -12,12 +12,12 @@ class ConstantFolderTests extends FunSuite {
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
-      Program.empty(), java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
+      Program.empty(), nvm.CompilerInterface.NoProcedures, new DummyExtensionManager)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(results.program, java.util.Collections.emptyMap[String, Procedure],
+      new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
         results.procedures, false)
         .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head

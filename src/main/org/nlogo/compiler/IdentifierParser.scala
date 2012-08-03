@@ -13,8 +13,8 @@ import collection.JavaConverters._
  * AutoConverter, unknown identifiers are assumed to be references to global variables that the
  * compiler doesn't know about yet. - ST 7/7/06 */
 private class IdentifierParser(program: Program,
-                               oldProcedures: java.util.Map[String, Procedure],
-                               newProcedures: java.util.Map[String, Procedure],
+                               oldProcedures: Compiler.ProceduresMap,
+                               newProcedures: Compiler.ProceduresMap,
                                forgiving: Boolean) {
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
@@ -69,13 +69,10 @@ private class IdentifierParser(program: Program,
       // go thru our identifierHandlers, if one triggers, return the result
       BreedIdentifierHandler.process(tok, program).getOrElse{
         val callproc =
-          if(oldProcedures.get(ident) != null)
-            oldProcedures.get(ident)
-          else if(newProcedures.get(ident) != null)
-            newProcedures.get(ident)
-          else
-            return newToken(getAgentVariableReporter(ident, tok),
-                            ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
+          oldProcedures.getOrElse(ident,
+            newProcedures.getOrElse(ident,
+              return newToken(getAgentVariableReporter(ident, tok),
+                              ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
         callproc.tyype match {
           case Procedure.Type.COMMAND =>
             newToken(new _call(callproc),

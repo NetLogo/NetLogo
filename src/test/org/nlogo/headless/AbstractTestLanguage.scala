@@ -43,7 +43,7 @@ abstract class AbstractTestLanguage extends Assertions {
         Program.empty(Version.is3D),
         workspace.getExtensionManager())
     }
-    workspace.setProcedures(results.proceduresMap)
+    workspace.procedures = results.proceduresMap
     workspace.world.program(results.program)
     workspace.init()
     workspace.world.realloc()

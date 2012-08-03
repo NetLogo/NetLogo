@@ -75,8 +75,8 @@ with Events.CompileAllEvent.Handler {
             proceduresInterface.innerSource,
             workspace.world.program.copy(interfaceGlobals = globalWidgets.map(_.name).toSeq),
             workspace.getExtensionManager)
-      workspace.setProcedures(results.proceduresMap)
-      for(procedure <- workspace.getProcedures.values.asScala)
+      workspace.procedures = results.proceduresMap
+      for(procedure <- workspace.procedures.values)
         procedure.setOwner(
           if (procedure.fileName.isEmpty)
             proceduresInterface
@@ -125,7 +125,7 @@ with Events.CompileAllEvent.Handler {
       val results =
         workspace.compiler.compileMoreCode(
           owner.source, Some(owner.classDisplayName + " '" + owner.displayName + "'"),
-          workspace.world.program, workspace.getProcedures, workspace.getExtensionManager)
+          workspace.world.program, workspace.procedures, workspace.getExtensionManager)
       if (!results.procedures.isEmpty) {
         results.head.init(workspace)
         results.head.setOwner(owner)
@@ -170,7 +170,7 @@ with Events.CompileAllEvent.Handler {
         val results =
           workspace.compiler.compileMoreCode(
             e.owner.source, Some(e.owner.classDisplayName), workspace.world.program,
-            workspace.getProcedures, workspace.getExtensionManager)
+            workspace.procedures, workspace.getExtensionManager)
         results.head.init(workspace)
         results.head.setOwner(e.owner)
         new org.nlogo.window.Events.CompiledEvent(

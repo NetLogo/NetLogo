@@ -191,7 +191,7 @@ with org.nlogo.api.ViewSettings {
     val results = compiler.compileProgram(
       source, Program.empty(Version.is3D),
       getExtensionManager)
-    setProcedures(results.proceduresMap)
+    procedures = results.proceduresMap
     codeBits.clear()
     init()
     world.program(results.program)

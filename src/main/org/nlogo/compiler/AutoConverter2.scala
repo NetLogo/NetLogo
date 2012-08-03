@@ -92,10 +92,10 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit token
     // This code is adapted from the first half or so of the compile() method. - ST 6/29/06
     val results: StructureParser.Results =
       new StructureParser(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
-                          workspace.world.program, workspace.getProcedures,
+                          workspace.world.program, workspace.procedures,
                           workspace.getExtensionManager).parse(subprogram)
     val identifierParser: IdentifierParser =
-      new IdentifierParser(workspace.world.program, workspace.getProcedures,
+      new IdentifierParser(workspace.world.program, workspace.procedures,
                            results.procedures, true )
                           // true = parse in "forgiving" mode, in which any
                           // unknown identifiers are assumed to be global
@@ -103,7 +103,7 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit token
                           // don't know about in this context)
     val replacements = new collection.mutable.ArrayBuffer[Replacement]
     import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values.asScala) {
+    for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       // So far this has been the same as compile().  What's different is that we proceed no farther
       // than the ExpressionParser phase.  Once the code is parsed, a visitor traverses the parsed
@@ -121,7 +121,7 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit token
     }
     if(!subprogram) {
       // so we can later convert widget code referring to these procedure names - ST 12/9/08
-      workspace.setProcedures(results.procedures)
+      workspace.procedures = results.procedures
     }
     buf.toString
   }

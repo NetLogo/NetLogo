@@ -3,10 +3,11 @@
 package org.nlogo.compiler
 
 import CompilerExceptionThrowers.{ cAssert, exception }
+import org.nlogo.{ api, nvm }
 import org.nlogo.agent.{ Agent, Link, Turtle }
-import org.nlogo.api.{ AgentKind, Breed, ErrorSource, ExtensionManager, Let,
-                       Program, Token, TokenizerInterface, TokenType }
-import org.nlogo.nvm.{ Instruction, Procedure }
+import api.{ AgentKind, Breed, ErrorSource, ExtensionManager, Let,
+             Program, Token, TokenizerInterface, TokenType }
+import nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
 import collection.JavaConverters._
 
@@ -16,9 +17,10 @@ import collection.JavaConverters._
 
 private object StructureParser {
 
-  case class Results(program: Program,
-                     procedures: java.util.Map[String, Procedure],
-                     tokens: Map[Procedure, Iterable[Token]])
+  case class Results(
+    program: Program,
+    procedures: Compiler.ProceduresMap,
+    tokens: Map[Procedure, Iterable[Token]])
 
   def resolvePath(fileName: String, path: String): String = {
     val pathFile = new java.io.File(path)
@@ -67,7 +69,7 @@ private class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
   var program: Program,
-  oldProcedures: java.util.Map[String, Procedure],
+  oldProcedures: Compiler.ProceduresMap,
   extensionManager: ExtensionManager)
 (implicit tokenizer: TokenizerInterface) {
 
@@ -76,9 +78,7 @@ private class StructureParser(
   private val tokenBuffer = new TokenBuffer { appendAll(originalTokens) }
   private val tokensMap = new collection.mutable.HashMap[Procedure, Iterable[Token]]
 
-  // use LinkedHashMap so procedures come out in the order they were defined (users expect errors in
-  // earlier procedures to be reported first) - ST 6/10/04
-  private val newProcedures = new java.util.LinkedHashMap[String, Procedure]
+  private var newProcedures: Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures
 
   def parse(subprogram: Boolean): StructureParser.Results = {
     // Warning, incredibly confusing kludginess ahead...  In the usingFiles variable, it would be
@@ -240,7 +240,7 @@ private class StructureParser(
     }
     if(!subprogram)
       extensionManager.finishFullCompilation()
-    new StructureParser.Results(program, newProcedures, tokensMap.toMap)
+    StructureParser.Results(program, newProcedures, tokensMap.toMap)
   }
   private def updateBreedOwns(breedName: String, isLinkBreed: Boolean): Program = {
     import collection.immutable.ListMap
@@ -343,7 +343,8 @@ private class StructureParser(
           else Procedure.Type.COMMAND,
           token, token.name.toUpperCase, displayName, null)
         checkName(procedure.name, token, null, null)
-        cAssert(newProcedures.get(procedure.name) == null, "Cannot redefine " + procedure.name, token)
+        cAssert(!newProcedures.isDefinedAt(procedure.name),
+                "Cannot redefine " + procedure.name, token)
         // we set this here, so that if an error occurs, the highlighting is nice.
         procedure.endPos = token.endPos
       }
@@ -389,7 +390,7 @@ private class StructureParser(
         else tokenBuffer.next()
       }
     }
-    newProcedures.put(procedure.name, procedure)
+    newProcedures += procedure.name -> procedure
     procedure
   }
   private def parseVarList(owningKind: AgentKind = null, procedure: Procedure = null): collection.immutable.Seq[String] = {
@@ -410,7 +411,7 @@ private class StructureParser(
                 "There is already a keyword with that name", token)
         cAssert(token.tyype == TokenType.IDENT,
                 "Expected name or ]", token)
-        cAssert(newProcedures.get(token.name.toUpperCase) == null,
+        cAssert(!newProcedures.isDefinedAt(token.name.toUpperCase),
                 "There is already a procedure with that name", token)
         cAssert(!result.contains(token.value),
                 "The name " + token.value + " is already defined", token)
@@ -460,12 +461,11 @@ private class StructureParser(
     checkNameAgainstProceduresMap(varName, token, newProcedures, procedure != null)
   }
 
-  private def checkNameAgainstProceduresMap(varName: String, token: Token, procedures: java.util.Map[String, Procedure], isLocal: Boolean) {
-    cAssert(!procedures.containsKey(varName), "There is already a procedure with that name", token)
-    if(!isLocal) {
-      val iter = procedures.keySet.iterator()
-      while(iter.hasNext) {
-        val proc = procedures.get(iter.next())
+  private def checkNameAgainstProceduresMap(varName: String, token: Token, procedures: Compiler.ProceduresMap, isLocal: Boolean) {
+    cAssert(!procedures.isDefinedAt(varName),
+            "There is already a procedure with that name", token)
+    if(!isLocal)
+      for(proc <- procedures.values) {
         cAssert(!proc.args.contains(varName),
                 "There is already a local variable called " + varName +
                 " in the " + proc.name + " procedure", token)
@@ -475,7 +475,6 @@ private class StructureParser(
                   "There is already a local variable called " + varName + " in the " +
                   proc.name + " procedure", token)
       }
-    }
   }
   /**
    * parses the "import" special form

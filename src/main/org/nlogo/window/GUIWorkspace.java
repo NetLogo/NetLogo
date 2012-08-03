@@ -1204,7 +1204,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     clearDrawing();
     viewManager.resetMouseCors();
     displaySwitchOn(true);
-    setProcedures(new HashMap<String, Procedure>());
+    procedures_$eq(new scala.collection.immutable.ListMap<String, Procedure>());
     lastTicksListenersHeard = -1.0;
     plotManager().forgetAll();
   }
