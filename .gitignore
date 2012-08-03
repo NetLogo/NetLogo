@@ -26,6 +26,7 @@ tmp/
 
 # other
 /.ensime
+/.ensime_lucene/
 /build/
 /.idea/workspace.xml
 /docs/Perspective Example.png
