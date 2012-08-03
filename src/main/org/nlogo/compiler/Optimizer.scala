@@ -146,7 +146,7 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
         case stmt: Statement => stmt.removeArgument(stmt.args.size - 1)
       }
     }
-    def replace(theClass: Class[_ <: Instruction], constructorArgs: AnyRef*) {
+    def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*) {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
         case app: ReporterApp =>
@@ -475,9 +475,8 @@ private class Optimizer(is3D: Boolean) extends DefaultAstVisitor {
       val d = root.matchArg(0, classOf[_constdouble])
                   .reporter.asInstanceOf[_constdouble].primitiveValue
       if(d > 0 && d == d.toLong && Instruction.isValidLong(d)) {
-        root.replace(classOf[_randomconst])
+        root.replace(classOf[_randomconst], d.toLong)
         root.strip()
-        root.reporter.asInstanceOf[_randomconst].n = d.toLong
       }
     }
   }
