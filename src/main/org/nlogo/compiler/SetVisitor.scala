@@ -20,9 +20,7 @@ private class SetVisitor extends DefaultAstVisitor {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
       val rApp = stmt(0).asInstanceOf[ReporterApp]
-      // it's annoying Scala can't figure out that reporter.getClass is a ReporterClass.
-      // lampsvn.epfl.ch/trac/scala/ticket/490 - ST 4/3/08, 8/19/08, 11/1/08
-      val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass.asInstanceOf[SetVisitor.ReporterClass])
+      val newCommandClass = SetVisitor.classes.get(rApp.reporter.getClass)
         .getOrElse(exception(INVALID_SET, stmt))
       val newCommand = Instantiator.newInstance[Command](newCommandClass, rApp.reporter)
       newCommand.token(stmt.command.token)
