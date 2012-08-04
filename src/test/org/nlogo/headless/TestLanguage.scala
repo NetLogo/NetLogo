@@ -23,7 +23,6 @@ case class TxtsInDir(dir:String) extends TestFinder {
   override def iterator =
     new File(dir).listFiles
       .filter(_.getName.endsWith(".txt"))
-      .filterNot(_.getName.containsSlice("HubNet"))  // disabled until issues.scala-lang.org/browse/SI-5974 fix released
       .iterator
 }
 case object ExtensionTestsDotTxt extends TestFinder {
