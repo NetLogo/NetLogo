@@ -44,7 +44,7 @@ with Events.CompileAllEvent.Handler {
   }
 
   private def compileAll() {
-    (new org.nlogo.window.Events.RemoveAllJobsEvent).raise(this)
+    (new Events.RemoveAllJobsEvent).raise(this)
     workspace.world.displayOn(true)
     // We can't compile the Code tab until the contents of InterfaceGlobals is known, which won't
     // happen until the widgets are loaded, which happens later.  So the isLoading flag is used to
@@ -87,7 +87,7 @@ with Events.CompileAllEvent.Handler {
         )
       workspace.init()
       workspace.world.program(results.program)
-      new org.nlogo.window.Events.CompiledEvent(
+      new Events.CompiledEvent(
         proceduresInterface, results.program, null, null)
         .raise(this)
       true
@@ -95,7 +95,7 @@ with Events.CompileAllEvent.Handler {
       if (AbstractWorkspace.isApplet) {
         System.err.println("CompilerException: " + error)
         error.printStackTrace()
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           proceduresInterface, null, null, error)
           .raise(this)
       }
@@ -104,7 +104,7 @@ with Events.CompileAllEvent.Handler {
         case "aggregate" => workspace.aggregateManager
         case x => new ExternalFileInterface(x)
       }
-      new org.nlogo.window.Events.CompiledEvent(owner, null, null, error)
+      new Events.CompiledEvent(owner, null, null, error)
         .raise(this)
       false
     }
@@ -129,12 +129,12 @@ with Events.CompileAllEvent.Handler {
       if (!results.procedures.isEmpty) {
         results.head.init(workspace)
         results.head.setOwner(owner)
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           owner, workspace.world.program, results.head, null).raise(this)
       }
     } catch { case error: CompilerException =>
       errorEvents +=
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           owner, workspace.world.program, null, error)
     }
   }
@@ -144,7 +144,7 @@ with Events.CompileAllEvent.Handler {
     val iter = widgets.iterator
     // handle special case where there are no more widgets.
     if (!iter.hasNext)
-      new org.nlogo.window.Events.CompiledEvent(
+      new Events.CompiledEvent(
         null, workspace.world.program, null, null)
         .raise(this)
     while (iter.hasNext) {
@@ -173,12 +173,12 @@ with Events.CompileAllEvent.Handler {
             workspace.procedures, workspace.getExtensionManager)
         results.head.init(workspace)
         results.head.setOwner(e.owner)
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           e.owner, workspace.world.program, results.head, null)
           .raise(this)
       }
       catch { case error: CompilerException =>
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           e.owner, workspace.world.program, null, error)
           .raise(this)
       }

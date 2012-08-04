@@ -4,32 +4,27 @@ package org.nlogo.window;
 
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.NetLogoListener;
-import org.nlogo.window.Events.AddJobEvent;
-import org.nlogo.window.Events.BeforeLoadEvent;
-import org.nlogo.window.Events.CompiledEvent;
-import org.nlogo.window.Events.InterfaceGlobalEvent;
-import org.nlogo.window.Events.JobRemovedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public strictfp class NetLogoListenerManager
     implements
-    AddJobEvent.Handler,
-    InterfaceGlobalEvent.Handler,
-    BeforeLoadEvent.Handler,
-    JobRemovedEvent.Handler,
-    CompiledEvent.Handler {
+    Events.AddJobEvent.Handler,
+    Events.InterfaceGlobalEvent.Handler,
+    Events.BeforeLoadEvent.Handler,
+    Events.JobRemovedEvent.Handler,
+    Events.CompiledEvent.Handler {
   private final List<NetLogoListener> listeners =
       new ArrayList<NetLogoListener>();
 
-  public void handle(BeforeLoadEvent e) {
+  public void handle(Events.BeforeLoadEvent e) {
     for (NetLogoListener listener : listeners) {
       listener.modelOpened(e.modelPath);
     }
   }
 
-  public void handle(AddJobEvent e) {
+  public void handle(Events.AddJobEvent e) {
     if (e.owner instanceof ButtonWidget) {
       for (NetLogoListener listener : listeners) {
         listener.buttonPressed
@@ -38,7 +33,7 @@ public strictfp class NetLogoListenerManager
     }
   }
 
-  public void handle(InterfaceGlobalEvent e) {
+  public void handle(Events.InterfaceGlobalEvent e) {
     if (!e.updating) {
       for (NetLogoListener listener : listeners) {
         if (e.widget instanceof SliderWidget) {
@@ -71,7 +66,7 @@ public strictfp class NetLogoListenerManager
     }
   }
 
-  public void handle(JobRemovedEvent e) {
+  public void handle(Events.JobRemovedEvent e) {
     if (e.owner instanceof ButtonWidget) {
       for (NetLogoListener listener : listeners) {
         listener.buttonStopped
@@ -80,7 +75,7 @@ public strictfp class NetLogoListenerManager
     }
   }
 
-  public void handle(CompiledEvent e) {
+  public void handle(Events.CompiledEvent e) {
     if (e.sourceOwner instanceof org.nlogo.api.JobOwner ) {
       char agentType = 'O';
       if (e.sourceOwner.kind() == AgentKindJ.Turtle()) {

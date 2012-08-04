@@ -19,8 +19,8 @@ public strictfp class InterfacePanelLite
     implements
     WidgetContainer,
     java.awt.event.FocusListener,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
-    org.nlogo.window.Events.OutputEvent.Handler {
+    Events.LoadSectionEvent.Handler,
+    Events.OutputEvent.Handler {
 
   private final Map<String, Widget> widgets; // widget name -> Widget
   private final ViewWidgetInterface viewWidget;
@@ -205,7 +205,7 @@ public strictfp class InterfacePanelLite
 
   /// output
 
-  public void handle(org.nlogo.window.Events.OutputEvent e) {
+  public void handle(Events.OutputEvent e) {
     if (getOutputWidget() != null && !e.toCommandCenter) {
       if (e.clear) {
         getOutputWidget().outputArea().clear();
@@ -375,7 +375,7 @@ public strictfp class InterfacePanelLite
     }
   }
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
+  public void handle(Events.LoadSectionEvent e) {
     if (e.section == ModelSectionJ.WIDGETS()) {
       try {
         List<List<String>> v =

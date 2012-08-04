@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import javax.swing.{JMenuItem, JPopupMenu}
 import org.nlogo.awt.ImageSelection
-import org.nlogo.window.Events.{ExportPlotEvent, PeriodicUpdateEvent}
+import Events.{ExportPlotEvent, PeriodicUpdateEvent}
 import java.awt.{Component, Point}
 import java.awt.image.BufferedImage
 import org.nlogo.swing.RichJMenuItem

@@ -29,22 +29,22 @@ import java.util.HashMap;
 public abstract strictfp class GUIWorkspace // can't be both abstract and strictfp
     extends org.nlogo.workspace.AbstractWorkspaceScala
     implements
-    org.nlogo.window.Event.LinkChild,
-    org.nlogo.window.Events.AboutToQuitEvent.Handler,
-    org.nlogo.window.Events.AddJobEvent.Handler,
-    org.nlogo.window.Events.AfterLoadEvent.Handler,
-    org.nlogo.window.Events.BeforeLoadEvent.Handler,
-    org.nlogo.window.Events.ExportPlotEvent.Handler,
-    org.nlogo.window.Events.JobStoppingEvent.Handler,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
-    org.nlogo.window.Events.RemoveAllJobsEvent.Handler,
-    org.nlogo.window.Events.RemoveJobEvent.Handler,
-    org.nlogo.window.Events.AddSliderConstraintEvent.Handler,
-    org.nlogo.window.Events.RemoveConstraintEvent.Handler,
-    org.nlogo.window.Events.AddBooleanConstraintEvent.Handler,
-    org.nlogo.window.Events.AddChooserConstraintEvent.Handler,
-    org.nlogo.window.Events.AddInputBoxConstraintEvent.Handler,
-    org.nlogo.window.Events.CompiledEvent.Handler,
+    Event.LinkChild,
+    Events.AboutToQuitEvent.Handler,
+    Events.AddJobEvent.Handler,
+    Events.AfterLoadEvent.Handler,
+    Events.BeforeLoadEvent.Handler,
+    Events.ExportPlotEvent.Handler,
+    Events.JobStoppingEvent.Handler,
+    Events.LoadSectionEvent.Handler,
+    Events.RemoveAllJobsEvent.Handler,
+    Events.RemoveJobEvent.Handler,
+    Events.AddSliderConstraintEvent.Handler,
+    Events.RemoveConstraintEvent.Handler,
+    Events.AddBooleanConstraintEvent.Handler,
+    Events.AddChooserConstraintEvent.Handler,
+    Events.AddInputBoxConstraintEvent.Handler,
+    Events.CompiledEvent.Handler,
     org.nlogo.api.TrailDrawerInterface,
     org.nlogo.api.DrawingInterface {
 
@@ -337,7 +337,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void patchesCreatedNotify() {
-    new org.nlogo.window.Events.PatchesCreatedEvent().raise(this);
+    new Events.PatchesCreatedEvent().raise(this);
   }
 
   public java.awt.Frame getFrame() {
@@ -368,7 +368,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       org.nlogo.awt.EventQueue.invokeAndWait
           (new Runnable() {
             public void run() {
-              new org.nlogo.window.Events.OpenModelEvent(path)
+              new Events.OpenModelEvent(path)
                   .raise(GUIWorkspace.this);
             }
           });
@@ -385,7 +385,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   // called from the job thread
   public void reload() {
-    new org.nlogo.window.Events.AppEvent
+    new Events.AppEvent
         (AppEventType.RELOAD, new Object[]{})
         .raiseLater(this);
   }
@@ -393,7 +393,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // called from the job thread
   @Override
   public void magicOpen(String name) {
-    new org.nlogo.window.Events.AppEvent
+    new Events.AppEvent
         (AppEventType.MAGIC_OPEN, new Object[]{name})
         .raiseLater(this);
   }
@@ -401,14 +401,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // called from the job thread
   @Override
   public void changeLanguage() {
-    new org.nlogo.window.Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
+    new Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
   }
 
 
   // called from the job thread
   public void startLogging(String properties) {
     try {
-      new org.nlogo.window.Events.AppEvent
+      new Events.AppEvent
           (AppEventType.START_LOGGING,
               new Object[]{fileManager.attachPrefix(properties)})
           .raiseLater(this);
@@ -420,7 +420,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // called from the job thread
   public void zipLogFiles(String filename) {
     try {
-      new org.nlogo.window.Events.AppEvent
+      new Events.AppEvent
           (AppEventType.ZIP_LOG_FILES,
               new Object[]{fileManager.attachPrefix(filename)})
           .raiseLater(this);
@@ -430,7 +430,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void deleteLogFiles() {
-    new org.nlogo.window.Events.AppEvent
+    new Events.AppEvent
         (AppEventType.DELETE_LOG_FILES, new Object[]{})
         .raiseLater(this);
   }
@@ -478,7 +478,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
     view.renderPerspective = enabled;
     viewWidget.settings().refreshViewProperties(!enabled);
-    new org.nlogo.window.Events.Enable2DEvent(enabled).raise(this);
+    new Events.Enable2DEvent(enabled).raise(this);
   }
 
   private boolean dualView;
@@ -603,7 +603,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   private final Runnable updateRunner =
       new Runnable() {
         public void run() {
-          new org.nlogo.window.Events.PeriodicUpdateEvent()
+          new Events.PeriodicUpdateEvent()
               .raise(GUIWorkspace.this);
         }
       };
@@ -687,7 +687,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     viewManager.shapeChanged(shape);
   }
 
-  public void handle(org.nlogo.window.Events.AfterLoadEvent e) {
+  public void handle(Events.AfterLoadEvent e) {
     setPeriodicUpdatesEnabled(true);
     world.observer().resetPerspective();
     updateManager().reset();
@@ -788,14 +788,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   // called on job thread, but without world lock - ST 9/12/07
   public void ownerFinished(org.nlogo.api.JobOwner owner) {
-    new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
+    new Events.JobRemovedEvent(owner).raiseLater(this);
     if (owner.ownsPrimaryJobs()) {
       updateManager().reset();
       updateDisplay(false);
     }
   }
 
-  public void handle(org.nlogo.window.Events.AddJobEvent e) {
+  public void handle(Events.AddJobEvent e) {
     org.nlogo.api.JobOwner owner = e.owner;
     AgentSet agents = e.agents;
     if (owner instanceof JobWidget &&
@@ -809,14 +809,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       if (e.procedure != null) {
         jobManager.addJob(owner, agents, e.procedure);
       } else {
-        new org.nlogo.window.Events.JobRemovedEvent(owner).raiseLater(this);
+        new Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
       jobManager.addSecondaryJob(owner, agents, e.procedure);
     }
   }
 
-  public void handle(org.nlogo.window.Events.RemoveJobEvent e) {
+  public void handle(Events.RemoveJobEvent e) {
     org.nlogo.api.JobOwner owner = e.owner;
     if (owner.ownsPrimaryJobs()) {
       jobManager.finishJobs(owner);
@@ -825,16 +825,16 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void handle(org.nlogo.window.Events.JobStoppingEvent e) {
+  public void handle(Events.JobStoppingEvent e) {
     jobManager.stoppingJobs(e.owner);
   }
 
-  public void handle(org.nlogo.window.Events.RemoveAllJobsEvent e) {
+  public void handle(Events.RemoveAllJobsEvent e) {
     jobManager.haltSecondary();
     jobManager.haltPrimary();
   }
 
-  public void handle(org.nlogo.window.Events.AddBooleanConstraintEvent e) {
+  public void handle(Events.AddBooleanConstraintEvent e) {
     BooleanConstraint con =
         new BooleanConstraint(e.defaultValue);
 
@@ -846,7 +846,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void handle(org.nlogo.window.Events.AddInputBoxConstraintEvent e) {
+  public void handle(Events.AddInputBoxConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
     int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
 
@@ -855,7 +855,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void handle(org.nlogo.window.Events.AddChooserConstraintEvent e) {
+  public void handle(Events.AddChooserConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
     int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
 
@@ -865,7 +865,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
 
-  public void handle(org.nlogo.window.Events.AddSliderConstraintEvent e) {
+  public void handle(Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
           (world.observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this);
@@ -884,14 +884,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     }
   }
 
-  public void handle(org.nlogo.window.Events.RemoveConstraintEvent e) {
+  public void handle(Events.RemoveConstraintEvent e) {
     int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
     if (index != -1) {
       world.observer().variableConstraint(index, null);
     }
   }
 
-  public void handle(org.nlogo.window.Events.CompiledEvent e) {
+  public void handle(Events.CompiledEvent e) {
     codeBits.clear();
   }
 
@@ -908,8 +908,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// output
 
   public void clearOutput() {
-    final org.nlogo.window.Events.OutputEvent event =
-        new org.nlogo.window.Events.OutputEvent
+    final Events.OutputEvent event =
+        new Events.OutputEvent
             (true, null, false, false);
 
     // This method can be called when we are ALREADY in the AWT
@@ -929,8 +929,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   protected void sendOutput(final org.nlogo.agent.OutputObject oo,
                             final boolean toOutputArea) {
-    final org.nlogo.window.Events.OutputEvent event =
-        new org.nlogo.window.Events.OutputEvent
+    final Events.OutputEvent event =
+        new Events.OutputEvent
             (false, oo, false, !toOutputArea);
 
     // This method can be called when we are ALREADY in the AWT
@@ -1028,7 +1028,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     java.io.FileOutputStream stream =
         new java.io.FileOutputStream(new java.io.File(filename));
     java.io.IOException[] exceptionBox = new java.io.IOException[1];
-    new org.nlogo.window.Events.ExportInterfaceEvent(stream, exceptionBox)
+    new Events.ExportInterfaceEvent(stream, exceptionBox)
         .raise(this);
     stream.close();
     if (exceptionBox[0] != null) {
@@ -1038,7 +1038,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
 
   public void exportOutput(String filename) {
-    new org.nlogo.window.Events.ExportOutputEvent(filename)
+    new Events.ExportOutputEvent(filename)
         .raise(this);
   }
 
@@ -1049,19 +1049,19 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   @Override
   public void exportOutputAreaToCSV(java.io.PrintWriter writer) {
-    new org.nlogo.window.Events.ExportWorldEvent(writer)
+    new Events.ExportWorldEvent(writer)
         .raise(GUIWorkspace.this);
   }
 
   public void exportPlot(PlotWidgetExportType whichPlots, org.nlogo.plot.Plot plot,
                          String filename) {
-    new org.nlogo.window.Events.ExportPlotEvent
+    new Events.ExportPlotEvent
         (whichPlots, plot, filename)
         .raise(this);
   }
 
 
-  public void handle(org.nlogo.window.Events.ExportPlotEvent e) {
+  public void handle(Events.ExportPlotEvent e) {
     if (e.whichPlots == PlotWidgetExportType.ALL) {
       if (plotManager().getPlotNames().length == 0) {
         org.nlogo.swing.OptionDialog.show
@@ -1153,7 +1153,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       } else {
         posAndLength = instruction.getPositionAndLength();
       }
-      new org.nlogo.window.Events.RuntimeErrorEvent
+      new Events.RuntimeErrorEvent
           (owner, sourceOwner, posAndLength[0], posAndLength[1])
           .raiseLater(this);
     }
@@ -1187,7 +1187,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
    * model name needs to be available for setting titles and so on by the
    * time we handle LoadBeginEvent.
    */
-  public void handle(org.nlogo.window.Events.BeforeLoadEvent e) {
+  public void handle(Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
     if (!isApplet()) {
       setModelPath(e.modelPath);
@@ -1220,7 +1220,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     setModelType(ModelTypeJ.NORMAL());
   }
 
-  public void handle(org.nlogo.window.Events.AboutToQuitEvent e) {
+  public void handle(Events.AboutToQuitEvent e) {
     if (hubNetManager != null) {
       hubNetManager.disconnect();
     }
@@ -1256,7 +1256,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   /// preview commands & aggregate
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
+  public void handle(Events.LoadSectionEvent e) {
     if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
         e.text.trim().length() > 0) {
       previewCommands_$eq(e.text);

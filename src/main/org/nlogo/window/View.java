@@ -13,10 +13,10 @@ import org.nlogo.workspace.AbstractWorkspace;
 public strictfp class View
     extends javax.swing.JComponent
     implements
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.LoadEndEvent.Handler,
-    org.nlogo.window.Events.CompiledEvent.Handler,
-    org.nlogo.window.Events.IconifiedEvent.Handler,
+    Events.LoadBeginEvent.Handler,
+    Events.LoadEndEvent.Handler,
+    Events.CompiledEvent.Handler,
+    Events.IconifiedEvent.Handler,
     org.nlogo.api.ViewSettings,
     java.awt.event.ActionListener,
     LocalViewInterface {
@@ -130,7 +130,7 @@ public strictfp class View
 
   boolean iconified = false;
 
-  public void handle(org.nlogo.window.Events.IconifiedEvent e) {
+  public void handle(Events.IconifiedEvent e) {
     if (e.frame == org.nlogo.awt.Hierarchy.getFrame(this)) {
       iconified = e.iconified;
     }
@@ -311,27 +311,27 @@ public strictfp class View
   // for notification from ShapesManager
   public void shapeChanged(org.nlogo.api.Shape shape) {
     dirty = true;
-    new org.nlogo.window.Events.DirtyEvent().raise(this);
+    new Events.DirtyEvent().raise(this);
     renderer.resetCache(patchSize());
     repaint();
   }
 
   /// event handlers
 
-  public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
+  public void handle(Events.LoadBeginEvent e) {
     setVisible(false);
     patchSize = 13;
     zoom = 0;
     renderer = workspace.newRenderer();
   }
 
-  public void handle(org.nlogo.window.Events.LoadEndEvent e) {
+  public void handle(Events.LoadEndEvent e) {
     renderer.changeTopology(workspace.world.wrappingAllowedInX(),
         workspace.world.wrappingAllowedInY());
     setVisible(true);
   }
 
-  public void handle(org.nlogo.window.Events.CompiledEvent e) {
+  public void handle(Events.CompiledEvent e) {
     if (e.sourceOwner instanceof ProceduresInterface) {
       renderer.resetCache(patchSize());
     }

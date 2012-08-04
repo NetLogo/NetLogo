@@ -11,13 +11,13 @@ import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
 import java.awt.GridBagConstraints.REMAINDER
 import java.awt.{List=>AWTList, _}
 import image.BufferedImage
-import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
+import Events.{WidgetRemovedEvent, AfterLoadEvent}
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
         extends Widget with Editable with Plot.DirtyListener with
-                org.nlogo.window.Events.AfterLoadEvent.Handler with
-                org.nlogo.window.Events.WidgetRemovedEvent.Handler with
-                org.nlogo.window.Events.CompiledEvent.Handler {
+                Events.AfterLoadEvent.Handler with
+                Events.WidgetRemovedEvent.Handler with
+                Events.CompiledEvent.Handler {
 
   import AbstractPlotWidget._
 
@@ -280,7 +280,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   def handle(e: WidgetRemovedEvent){ if(e.widget == this){ plotManager.forgetPlot(plot) } }
 
-  def handle(e:org.nlogo.window.Events.CompiledEvent){
+  def handle(e: Events.CompiledEvent){
     if(e.sourceOwner.isInstanceOf[ProceduresInterface]){
       plotManager.compilePlot(plot)
       recolor()

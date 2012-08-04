@@ -12,9 +12,9 @@ public strictfp class ViewWidget
     extends Widget
     implements
     ViewWidgetInterface,
-    org.nlogo.window.Events.PeriodicUpdateEvent.Handler,
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.LoadEndEvent.Handler {
+    Events.PeriodicUpdateEvent.Handler,
+    Events.LoadBeginEvent.Handler,
+    Events.LoadEndEvent.Handler {
 
   @Override
   public String classDisplayName() {
@@ -175,7 +175,7 @@ public strictfp class ViewWidget
   @Override
   public void setSize(int width, int height) {
     super.setSize(width, height);
-    new org.nlogo.window.Events.ResizeViewEvent
+    new Events.ResizeViewEvent
         (workspace.world.worldWidth(), workspace.world.worldHeight())
         .raise(this);
   }
@@ -352,17 +352,17 @@ public strictfp class ViewWidget
 
   private String tickCounterLabel;
 
-  public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
+  public void handle(Events.LoadBeginEvent e) {
     tickCounter.setText("");
     tickCounterLabel = "ticks";
     tickCounter.setVisible(true);
   }
 
-  public void handle(org.nlogo.window.Events.LoadEndEvent e) {
+  public void handle(Events.LoadEndEvent e) {
     controlStrip.reset();
   }
 
-  public void handle(org.nlogo.window.Events.PeriodicUpdateEvent e) {
+  public void handle(Events.PeriodicUpdateEvent e) {
     double ticks = workspace.world.tickCounter.ticks();
     String tickText =
         ticks == -1
@@ -383,7 +383,7 @@ public strictfp class ViewWidget
 
   public void tickCounterLabel(String label) {
     tickCounterLabel = label;
-    handle((org.nlogo.window.Events.PeriodicUpdateEvent) null);
+    handle((Events.PeriodicUpdateEvent) null);
   }
 
   public String tickCounterLabel() {

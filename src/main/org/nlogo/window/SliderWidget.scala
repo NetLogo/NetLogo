@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.util.MersenneTwisterFast
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
+import Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
 import org.nlogo.api.{ Dump, Editable, I18N, LogoException, ModelReader }
 import org.nlogo.agent.SliderConstraint.SliderConstraintException
 import org.nlogo.agent.SliderConstraint
@@ -111,7 +111,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
 class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) extends MultiErrorWidget with
         AbstractSliderWidget with InterfaceGlobalWidget with Editable with
-        org.nlogo.window.Events.PeriodicUpdateEvent.Handler with org.nlogo.window.Events.AfterLoadEvent.Handler {
+        Events.PeriodicUpdateEvent.Handler with Events.AfterLoadEvent.Handler {
   def this(random: MersenneTwisterFast) = this (false, random)
 
   var minimumCode: String = "0"

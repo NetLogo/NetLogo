@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.swing.BrowserLauncher
 import java.awt.Container
-import org.nlogo.window.Events._
+import Events._
 import org.nlogo.api.{I18N, ModelType, ModelReader, ModelSection, Version}
 
 object ModelLoader {
@@ -20,7 +20,7 @@ object ModelLoader {
     Loader(linkParent).loadHelper(modelPath, modelType, ModelReader.parseModel(source))
   }
 
-  private case class Loader(linkParent: Container) extends org.nlogo.window.Event.LinkChild {
+  private case class Loader(linkParent: Container) extends Event.LinkChild {
     def getLinkParent = linkParent
 
     @throws(classOf[InvalidVersionException])

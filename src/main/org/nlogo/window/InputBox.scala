@@ -232,7 +232,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   override def updateConstraints() {
-    if (name.length > 0) new org.nlogo.window.Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
+    if (name.length > 0)
+      new Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
   }
 
   override def editFinished() = {

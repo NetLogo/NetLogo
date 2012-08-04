@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.api.Options
 import org.nlogo.plot.{Plot, PlotManager}
-import org.nlogo.window.Events.AfterLoadEvent
+import Events.AfterLoadEvent
 
 // the DummyPlotWidgetJava is only used when building a HubNet client interface
 // all client plots are subordinate to a server plot thus, a plot on the client
