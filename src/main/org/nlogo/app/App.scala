@@ -433,7 +433,7 @@ class App extends
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
-    org.nlogo.app.FindDialog.init(frame)
+    FindDialog.init(frame)
 
     Splash.endSplash()
     frame.setVisible(true)

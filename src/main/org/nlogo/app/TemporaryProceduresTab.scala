@@ -16,7 +16,7 @@ class TemporaryProceduresTab(workspace: AbstractWorkspace,
                              fileMustExist: Boolean,
                              smartIndent: Boolean)
 extends ProceduresTab(workspace)
-with org.nlogo.app.Events.IndenterChangedEvent.Handler
+with Events.IndenterChangedEvent.Handler
 with org.nlogo.window.Events.LoadBeginEvent.Handler
 with org.nlogo.window.Events.AboutToQuitEvent.Handler
 {
@@ -28,7 +28,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
   override def getToolBar =
     new org.nlogo.swing.ToolBar() {
       override def addControls() {
-        add(new javax.swing.JButton(org.nlogo.app.FindDialog.FIND_ACTION))
+        add(new javax.swing.JButton(FindDialog.FIND_ACTION))
         add(new javax.swing.JButton(compileAction))
         add(new org.nlogo.swing.ToolBar.Separator)
         add(new javax.swing.JButton(new FileCloseAction))
@@ -78,7 +78,7 @@ with org.nlogo.window.Events.AboutToQuitEvent.Handler
     close()
   }
 
-  def handle(e: org.nlogo.app.Events.IndenterChangedEvent) {
+  def handle(e: Events.IndenterChangedEvent) {
     setIndenter(e.isSmart)
   }
 

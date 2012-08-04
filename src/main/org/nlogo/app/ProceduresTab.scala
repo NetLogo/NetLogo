@@ -62,7 +62,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
 
   def getToolBar = new org.nlogo.swing.ToolBar() {
     override def addControls() {
-      add(new JButton(org.nlogo.app.FindDialog.FIND_ACTION))
+      add(new JButton(FindDialog.FIND_ACTION))
       add(new JButton(compileAction))
       add(new org.nlogo.swing.ToolBar.Separator())
       add(new ProceduresMenu(ProceduresTab.this))
