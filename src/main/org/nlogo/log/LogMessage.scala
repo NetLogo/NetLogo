@@ -3,9 +3,9 @@
 package org.nlogo.log
 
 object LogMessage {
-  def createGlobalMessage(tyype: String): LogMessage = {
+  def createGlobalMessage(tpe: String): LogMessage = {
     val msg = new LogMessage("event")
-    msg.attributes = Array(Array("type", tyype))
+    msg.attributes = Array(Array("type", tpe))
     msg.elements = Array(new LogMessage("name"),
                          new LogMessage("value"))
     msg
@@ -103,19 +103,19 @@ class LogMessage private (val tag: String) {
     elements(1).data = action
     elements(2).data = who
   }
-  def updateWidgetMessage(tyype: String, name: String, action: String) {
-    attributes(0)(1) = tyype
+  def updateWidgetMessage(tpe: String, name: String, action: String) {
+    attributes(0)(1) = tpe
     elements(0).data = name
     elements(1).data = action
   }
-  def updateAgentMessage(tyype: String, name: String, action: String, breed: String) {
-    attributes(0)(1) = tyype
+  def updateAgentMessage(tpe: String, name: String, action: String, breed: String) {
+    attributes(0)(1) = tpe
     elements(0).data = name
     elements(1).data = action
     elements(2).data = breed
   }
-  def updateCommandMessage(tyype: String, action: String, code: String, agentType: String, errorMessage: String, startPos: Int, endPos: Int) {
-    attributes(0)(1) = tyype
+  def updateCommandMessage(tpe: String, action: String, code: String, agentType: String, errorMessage: String, startPos: Int, endPos: Int) {
+    attributes(0)(1) = tpe
     elements(0).data = action
     elements(1).data = code
     elements(2).data = agentType
@@ -123,8 +123,8 @@ class LogMessage private (val tag: String) {
     elements(3).attributes(0)(1) = startPos.toString
     elements(3).attributes(1)(1) = endPos.toString
   }
-  def updateCodeTabMessage(tyype: String, code: String, errorMessage: String, startPos: Int, endPos: Int) {
-    attributes(0)(1) = tyype
+  def updateCodeTabMessage(tpe: String, code: String, errorMessage: String, startPos: Int, endPos: Int) {
+    attributes(0)(1) = tpe
     elements(0).data = code
     elements(1).data = errorMessage
     elements(1).attributes(0)(1) = startPos.toString

@@ -8,7 +8,7 @@ import javax.media.opengl.GL
 object Tessellator {
   // see javax.media.opengl.glu.GLUtessellatorCallback
   class TessDataObject(val gl: GL) {
-    var tyype: Int = _
+    var tpe: Int = _
     val shapeData: JList[AnyRef] = new ArrayList[AnyRef]
   }
 }
@@ -20,10 +20,10 @@ private class Tessellator extends javax.media.opengl.glu.GLUtessellatorCallbackA
   def createTessDataObject(gl: GL) =
     new TessDataObject(gl)
 
-  override def beginData(tyype: Int, polygonData: AnyRef) {
+  override def beginData(tpe: Int, polygonData: AnyRef) {
     val data = polygonData.asInstanceOf[TessDataObject]
-    data.gl.glBegin(tyype)
-    data.tyype = tyype
+    data.gl.glBegin(tpe)
+    data.tpe = tpe
     // for now assume we are talking about the "top" polygon
     data.gl.glNormal3f(0f, 0f, 1f)
   }

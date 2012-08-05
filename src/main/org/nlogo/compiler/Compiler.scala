@@ -151,7 +151,7 @@ object Compiler extends CompilerInterface {
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens
         .tail  // skip _report
-        .map(_.tyype)
+        .map(_.tpe)
         .dropWhile(_ == TokenType.OPEN_PAREN)
         .headOption
         .exists(reporterTokenTypes)

@@ -298,9 +298,9 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
     def keepAndLoadInstruction(obj: Instruction, instrUID: Int) {
       loadKept(keepInstruction(obj, instrUID))
     }
-    def keep(fieldName: String, obj: Object, tyype: Type, accessCode: Int) {
+    def keep(fieldName: String, obj: Object, tpe: Type, accessCode: Int) {
       keptThings.put(fieldName, obj)
-      keptThingsTypes.put(fieldName, tyype)
+      keptThingsTypes.put(fieldName, tpe)
       keptThingsAccessCodes.put(fieldName, Int.box(accessCode))
     }
     def loadKept(fieldName: String) {
@@ -310,25 +310,25 @@ class Generator(source: String, procedure: Procedure, profilingEnabled: Boolean)
     }
     def remapFieldName(originalName: String, instrUID: Int) =
       "kept" + instrUID + "_" + originalName
-    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) {
+    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int) {
       // Note: The POPs are generated to cancel out the ALOAD 0 which preceded the GETFIELD
       // instruction.  These ALOAD/POP pairs will then be swept away by a peep-hole optimizer that
       // streamlines the bytecode.
       if (obj.isInstanceOf[String] ||
         List(Type.BOOLEAN_TYPE, Type.CHAR_TYPE, Type.SHORT_TYPE, Type.BYTE_TYPE, Type.DOUBLE_TYPE,
-          Type.INT_TYPE, Type.FLOAT_TYPE, Type.LONG_TYPE).contains(tyype)) {
+          Type.INT_TYPE, Type.FLOAT_TYPE, Type.LONG_TYPE).contains(tpe)) {
         nlgen.visitInsn(POP)
         nlgen.push(obj)
       } else {
         val fieldName = remapFieldName(origFieldName, instrUID)
-        keep(fieldName, obj, tyype, accessCode)
-        nlgen.visitFieldInsn(GETFIELD, fullClassName, fieldName, tyype.getDescriptor)
+        keep(fieldName, obj, tpe, accessCode)
+        nlgen.visitFieldInsn(GETFIELD, fullClassName, fieldName, tpe.getDescriptor)
       }
     }
-    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tyype: Type, accessCode: Int) {
+    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int) {
       val fieldName = remapFieldName(origFieldName, instrUID)
-      keep(fieldName, obj, tyype, accessCode)
-      nlgen.visitFieldInsn(GETSTATIC, fullClassName, fieldName, tyype.getDescriptor)
+      keep(fieldName, obj, tpe, accessCode)
+      nlgen.visitFieldInsn(GETSTATIC, fullClassName, fieldName, tpe.getDescriptor)
     }
     def translatePutStatic(origFieldName: String, instrUID: Int, descriptor: String) {
       nlgen.visitFieldInsn(PUTSTATIC, fullClassName, remapFieldName(origFieldName, instrUID),

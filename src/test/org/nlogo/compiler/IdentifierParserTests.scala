@@ -22,7 +22,7 @@ class IdentifierParserTests extends FunSuite {
     new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
       results.procedures, false)
       .process(results.tokens(procedure).iterator, procedure)
-      .iterator.takeWhile(_.tyype != TokenType.EOF)
+      .iterator.takeWhile(_.tpe != TokenType.EOF)
   }
 
   test("empty") {

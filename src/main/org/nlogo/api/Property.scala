@@ -29,7 +29,7 @@ object Property {
   case object String extends Type
 }
 
-case class Property(accessString: String, tyype: Property.Type, name: String,
+case class Property(accessString: String, tpe: Property.Type, name: String,
                     notes: String = "",
                     gridWidth: Int = GridBagConstraints.REMAINDER,
                     focus: Boolean = false,

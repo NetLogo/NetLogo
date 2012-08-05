@@ -9,15 +9,15 @@ class TokenizerTests extends FunSuite {
   val tokenizer = Tokenizer2D
   def tokenize(s: String) = {
     val result = tokenizer.tokenize(s, "")
-    expect(TokenType.EOF)(result.last.tyype)
+    expect(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
   def tokenizeRobustly(s: String) = {
     val result = tokenizer.tokenizeRobustly(s)
-    expect(TokenType.EOF)(result.last.tyype)
+    expect(TokenType.EOF)(result.last.tpe)
     result.toList.dropRight(1)
   }
-  def firstBadToken(tokens: Seq[Token]) = tokens.find(_.tyype == TokenType.BAD)
+  def firstBadToken(tokens: Seq[Token]) = tokens.find(_.tpe == TokenType.BAD)
   ///
   test("TokenizeSimpleExpr") {
     val expected = "Token(__ignore,COMMAND,_ignore)" +
@@ -159,13 +159,13 @@ class TokenizerTests extends FunSuite {
   // what about removed prims?
   test("RemovedPrims") {
     expect(TokenType.IDENT)(
-      tokenize("random-or-random-float").head.tyype)
+      tokenize("random-or-random-float").head.tpe)
     expect(TokenType.IDENT)(
-      tokenize("histogram-from").head.tyype)
+      tokenize("histogram-from").head.tpe)
     expect(TokenType.REPORTER)(
-      tokenizer.tokenizeAllowingRemovedPrims("random-or-random-float").head.tyype)
+      tokenizer.tokenizeAllowingRemovedPrims("random-or-random-float").head.tpe)
     expect(TokenType.COMMAND)(
-      tokenizer.tokenizeAllowingRemovedPrims("histogram-from").head.tyype)
+      tokenizer.tokenizeAllowingRemovedPrims("histogram-from").head.tpe)
   }
   // underscore stuff
   test("Empty1") {

@@ -121,8 +121,8 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
     override def visitMaxs(maxStack: Int, maxLocals: Int) {}
     override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {}
     override def visitLineNumber(line: Int, start: Label) {}
-    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) {
-      mv.visitTryCatchBlock(start, end, handler, tyype)
+    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) {
+      mv.visitTryCatchBlock(start, end, handler, tpe)
     }
   }
   private def checkClassHasMethod(c: Class[_], name: String, descriptor: String): Boolean =

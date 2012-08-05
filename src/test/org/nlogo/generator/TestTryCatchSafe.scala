@@ -58,7 +58,7 @@ class TestTryCatchSafe extends FunSuite {
       //         true = found handler label, now looking for an ATHROW
       //                to occur before any branching instructions.
       var found = false
-      override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) { handlerLabels += handler }
+      override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) { handlerLabels += handler }
       override def visitLabel(label: Label) { if(handlerLabels(label)) found = true }
       override def visitJumpInsn(opcode: Int, label: Label) { assert(!found, method.toString) }
       override def visitInsn(opcode: Int) { if(opcode == ATHROW) found = false }

@@ -225,14 +225,14 @@ class AutoConverter1(implicit tokenizer: TokenizerInterface) {
     var offset: Int = 0
     while(tokens.hasNext) {
       var token: Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("BREEDS")) {
+      if(token.tpe == TokenType.IDENT && token.value.asInstanceOf[String] .equals("BREEDS")) {
         val breeds = new collection.mutable.ArrayBuffer[String]
         val start: Int = token.startPos
         token = tokens.head
-        if(token.tyype == TokenType.OPEN_BRACKET) {
+        if(token.tpe == TokenType.OPEN_BRACKET) {
           tokens.next()
           token = tokens.next()
-          while(token.tyype != TokenType.CLOSE_BRACKET) {
+          while(token.tpe != TokenType.CLOSE_BRACKET) {
             breeds += token.name
             token = tokens.next()
           }
@@ -258,14 +258,14 @@ class AutoConverter1(implicit tokenizer: TokenizerInterface) {
     var offset: Int = 0
     while(tokens.hasNext) {
       var token: Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
+      if(token.tpe == TokenType.IDENT && token.value.asInstanceOf[String] .equals("__EXTENSIONS")) {
         val extensions = new collection.mutable.ArrayBuffer[String]
         val start: Int = token.startPos
         token = tokens.head
-        if(token.tyype == TokenType.OPEN_BRACKET) {
+        if(token.tpe == TokenType.OPEN_BRACKET) {
           tokens.next()
           token = tokens.next()
-          while(token.tyype != TokenType.CLOSE_BRACKET) {
+          while(token.tpe != TokenType.CLOSE_BRACKET) {
             extensions += token.name
             token = tokens.next()
           }
@@ -298,7 +298,7 @@ class AutoConverter1(implicit tokenizer: TokenizerInterface) {
     var offset: Int = 0
     while(tokens.hasNext) {
       var token: Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
+      if(token.tpe == TokenType.IDENT && (token.value.asInstanceOf[String] .equals("NSUM") || token.value.asInstanceOf[String] .equals("NSUM4"))) {
         val neighbors: String = if(token.value.asInstanceOf[String] .equals("NSUM")) "neighbors" else "neighbors4"
         var start: Int = token.startPos + offset
         var end: Int = token.endPos + offset
@@ -326,7 +326,7 @@ class AutoConverter1(implicit tokenizer: TokenizerInterface) {
     var offset: Int = 0
     while(tokens.hasNext) {
       var token: Token = tokens.next()
-      if(token.tyype == TokenType.IDENT && token.value.asInstanceOf[String] .endsWith("-OF")) {
+      if(token.tpe == TokenType.IDENT && token.value.asInstanceOf[String] .endsWith("-OF")) {
         var name: String = token.name
         name = name.substring(0, name.length - 3)
         val start: Int = token.startPos + offset

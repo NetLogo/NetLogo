@@ -155,7 +155,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     import property._
     def accessor[T : ClassManifest] =
       new PropertyAccessor[T](r, name, accessString)
-    tyype match {
+    tpe match {
       case Property.AgentOptions =>
         new OptionsEditor[String](accessor) with Changed
       case Property.BigString =>

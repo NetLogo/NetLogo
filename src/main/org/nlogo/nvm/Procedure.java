@@ -19,7 +19,7 @@ public strictfp class Procedure {
     COMMAND, REPORTER
   }
 
-  public final Type tyype;
+  public final Type tpe;
   public final Token nameToken;
   public final String fileName; // used by cities include-file stuff
   public final String name;
@@ -63,8 +63,8 @@ public strictfp class Procedure {
 
   public Command[] code = new Command[0];
 
-  public Procedure(Type tyype, Token nameToken, String name, scala.Option<String> displayName, Procedure parent) {
-    this.tyype = tyype;
+  public Procedure(Type tpe, Token nameToken, String name, scala.Option<String> displayName, Procedure parent) {
+    this.tpe = tpe;
     this.nameToken = nameToken;
     this.name = name;
     this.fileName = nameToken.fileName();
@@ -90,7 +90,7 @@ public strictfp class Procedure {
     for (int i = 0; i < right.length; i++) {
       right[i] = Syntax.WildcardType();
     }
-    switch (tyype) {
+    switch (tpe) {
       case COMMAND:
         return Syntax.commandSyntax(right);
       case REPORTER:
