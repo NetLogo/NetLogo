@@ -18,10 +18,10 @@ object ModelReader {
 
   val sections = ModelSection.allSections
 
-  lazy val defaultShapes =
-    Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-  lazy val defaultLinkShapes =
-    Utils.getResourceAsStringArray("/system/defaultLinkShapes.txt")
+  lazy val defaultShapes: Seq[String] =
+    Vector() ++ Utils.getResourceLines("/system/defaultShapes.txt")
+  lazy val defaultLinkShapes: Seq[String] =
+    Vector() ++ Utils.getResourceLines("/system/defaultLinkShapes.txt")
 
   def parseModel(model: String): ModelMap = {
     val map: collection.mutable.HashMap[ModelSection, Array[String]] =

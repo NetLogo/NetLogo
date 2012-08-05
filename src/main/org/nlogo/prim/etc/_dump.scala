@@ -11,7 +11,7 @@ class _dump extends Reporter {
     Syntax.reporterSyntax(Syntax.StringType, "O---")
   override def report(context: Context) =
     world.program.dump + "\n" +
-    workspace.getProcedures.values.asScala
+    workspace.procedures.values
       .map(_.dump)
       .mkString("", "\n", "\n")
 }

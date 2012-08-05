@@ -24,6 +24,7 @@ tmp/
 
 # other
 /.ensime
+/.ensime_lucene/
 /build/
 /.idea/workspace.xml
 /lib/

@@ -17,14 +17,13 @@ object Compiler extends CompilerInterface {
   val TokenMapper2D = Femto.scalaSingleton(classOf[TokenMapperInterface], "org.nlogo.lex.TokenMapper2D")
 
   // some private helpers
-  private type ProceduresMap = java.util.Map[String, Procedure]
-  private val noProcedures: ProceduresMap = java.util.Collections.emptyMap[String, Procedure]
+  type ProceduresMap = CompilerInterface.ProceduresMap
   private def tokenizer = Tokenizer2D
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
   def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, None, program, false, noProcedures, extensionManager)
+    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager)
 
   // used to compile a single procedures only, from outside the Code tab
   @throws(classOf[CompilerException])
@@ -52,9 +51,8 @@ object Compiler extends CompilerInterface {
     val results = new StructureParser(t.tokenizeRobustly(source), None,
                                       program, oldProcedures, extensionManager)
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, noProcedures, results.procedures, !parse)
-    import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
-    for(procedure <- results.procedures.values.asScala) {
+    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, !parse)
+    for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
         new ExpressionParser(procedure).parse(tokens)
@@ -136,11 +134,11 @@ object Compiler extends CompilerInterface {
       val identifierParser =
         new IdentifierParser(program, procedures, results.procedures, forgiving = false)
       import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
-      val proc = results.procedures.values.asScala.head
+      val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens
         .tail  // skip _report
-        .map(_.tyype)
+        .map(_.tpe)
         .dropWhile(_ == TokenType.OPEN_PAREN)
         .headOption
         .exists(reporterTokenTypes)

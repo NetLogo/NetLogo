@@ -32,7 +32,7 @@ class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReader
     // it, at least until the day when the whole LocalFile mess gets straightened out. - ST 1/21/09
     reader.mark(65536)
     val t = tokenizer.nextToken(reader)
-    if (t.tyype == TokenType.BAD)
+    if (t.tpe == TokenType.BAD)
       throw new CompilerException(t)
     // after Tokenizer has done its thing, we no longer know what relationship holds between
     // the BufferedReader's position and file.pos, so the following code makes sure they are

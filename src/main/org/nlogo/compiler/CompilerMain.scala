@@ -16,7 +16,7 @@ private object CompilerMain {
   // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-              oldProcedures: java.util.Map[String, Procedure],
+              oldProcedures: Compiler.ProceduresMap,
               extensionManager: ExtensionManager): CompilerResults = {
 
     implicit val tokenizer = Compiler.Tokenizer2D
@@ -26,7 +26,7 @@ private object CompilerMain {
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     import collection.JavaConverters._  // structureResults.procedures.values is a java.util.Collection
     val taskNumbers = Iterator.from(1)
-    for(procedure <- structureResults.procedures.values.asScala) {
+    for(procedure <- structureResults.procedures.values) {
       procedure.topLevel = subprogram
       val tokens =
         new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, false)

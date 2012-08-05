@@ -72,7 +72,7 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
     mv.visitLocalVariable(name, desc, signature, start, end, index)
   }
   // see note above about LocalVariableSorter incompatibility
-  override def newLocal(tyype: Type): Int = { throw new IllegalStateException }
+  override def newLocal(tpe: Type): Int = { throw new IllegalStateException }
   override def loadArg(arg: Int) { throw new IllegalStateException }
   override def loadArgs(arg: Int, count: Int) { throw new IllegalStateException }
   override def loadArgs() { throw new IllegalStateException }
@@ -86,13 +86,13 @@ private class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, des
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def loadLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ILOAD), index) }
+  override def loadLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ILOAD), index) }
   /**
    * Generates the instruction to store the top stack value in the given local variable.
    * @param local a local variable index.
    * @param type the type of this local variable.
    */
-  override def storeLocal(index: Int, tyype: Type) { mv.visitVarInsn(tyype.getOpcode(ISTORE), index) }
+  override def storeLocal(index: Int, tpe: Type) { mv.visitVarInsn(tpe.getOpcode(ISTORE), index) }
   override def loadThis() { mv.visitVarInsn(ALOAD, 0) }
   def loadContext() { mv.visitVarInsn(ALOAD, 1) }
 }
