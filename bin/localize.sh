@@ -14,8 +14,8 @@ fi
 # if we don't know, try using /Applications/NetLogo 5.0beta1, and say so.
 if ! (test "$NETLOGO_DIR")
 then
-  echo "NETLOGO_DIR variable not set. Trying /Applications/NetLogo 5.0beta1"
-  export NETLOGO_DIR=/Applications/NetLogo\ 5.0beta1/
+  echo "NETLOGO_DIR variable not set. Trying /Applications/NetLogo 5.0.2"
+  export NETLOGO_DIR=/Applications/NetLogo\ 5.0.2/
 fi
 
 # make sure the NetLogo directory that we are using exists.
