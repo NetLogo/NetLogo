@@ -93,8 +93,6 @@ public abstract strictfp class AbstractWorkspace
    */
   private ModelType modelType;
 
-  //public final WorldLoader worldLoader ;
-
   /// startup
 
   protected AbstractWorkspace(org.nlogo.agent.World world) {
@@ -587,7 +585,7 @@ public abstract strictfp class AbstractWorkspace
     return new org.nlogo.api.LocalFile(filename).readFile().replaceAll("\r\n", "\n");
   }
 
-  public void loadWorld(String[] strings, WorldLoaderInterface worldInterface) {
+  public void loadWorld(scala.collection.Seq<String> strings, WorldLoaderInterface worldInterface) {
     WorldLoader loader = new WorldLoader();
     loader.load(strings, worldInterface);
   }

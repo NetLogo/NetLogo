@@ -14,8 +14,10 @@ object ShapeList {
       .sortBy(_.getName)
       .asJava
 }
-class ShapeList(_shapes: Shape*) {
-  def this() = this(Nil: _*)
+
+class ShapeList(val kind: AgentKind, _shapes: Shape*) {
+
+  def this(kind: AgentKind) = this(kind, Nil: _*)
 
   private val shapes = new collection.mutable.HashMap[String, Shape]
 

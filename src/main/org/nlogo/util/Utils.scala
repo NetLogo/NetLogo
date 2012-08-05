@@ -33,10 +33,6 @@ object Utils {
     Iterator.continually(in.readLine()).takeWhile(_ != null)
   }
 
-  // for convenience when calling from Java
-  def getResourceAsStringArray(path: String): Array[String] =
-    getResourceLines(path).toArray
-
   def getResourceAsString(path: String): String =
     getResourceLines(path).mkString("", "\n", "\n")
 

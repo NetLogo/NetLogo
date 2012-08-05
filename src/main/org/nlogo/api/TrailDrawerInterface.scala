@@ -17,4 +17,5 @@ trait TrailDrawerInterface extends DrawingInterface {
   def clearDrawing()
   def exportDrawingToCSV(writer: java.io.PrintWriter)
   def rescaleDrawing()
+  def isDirty: Boolean
 }

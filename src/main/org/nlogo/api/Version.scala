@@ -8,9 +8,9 @@ object Version {
   val noVersion = "NetLogo (no version)";
 
   val (version, buildDate, knownVersions) = {
-    val lines = org.nlogo.util.Utils.getResourceAsStringArray("/system/version.txt")
-    val version = lines(0)
-    val buildDate = lines(1)
+    val lines = org.nlogo.util.Utils.getResourceLines("/system/version.txt").toStream
+    val version = lines.head
+    val buildDate = lines.tail.head
     val knownVersions = collection.mutable.ArrayBuffer[String]()
     knownVersions += version
     knownVersions ++= lines.drop(2)
@@ -61,11 +61,15 @@ object Version {
     version.drop("NetLogo ".size)
 
   def compatibleVersion(modelVersion: String) =
-    compareVersions(version, modelVersion)
+    compareVersions(versionForSaving, modelVersion)
 
   def compareVersions(appVersion: String, modelVersion: String) =
     modelVersion == noVersion ||
       versionNumber(modelVersion).startsWith(versionNumber(appVersion))
+
+  // 5.1 hasn't incompatibly diverged from 5.0 yet
+  def versionForSaving =
+    "NetLogo 5.0"
 
   private def versionNumber(v: String) =
     v.substring("NetLogo ".length, "NetLogo 4.0".length)

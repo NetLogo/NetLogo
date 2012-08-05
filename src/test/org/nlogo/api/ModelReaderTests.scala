@@ -26,43 +26,43 @@ class ModelReaderTests extends FunSuite {
   /// parseWidgets
 
   test("parseWidgets: one widget, with trailing blank line") {
-    val widgets = ModelReader.parseWidgets(Array("FOO",""))
+    val widgets = ModelReader.parseWidgets(Seq("FOO",""))
     assert(widgets.size === 1)
-    assert(widgets.get(0).size === 1)
-    assert(widgets.get(0).get(0) === "FOO")
+    assert(widgets(0).size === 1)
+    assert(widgets(0)(0) === "FOO")
   }
   test("parseWidgets: one widget, multiple trailing blank lines") {
-    val widgets = ModelReader.parseWidgets(Array("FOO","","","","",""))
+    val widgets = ModelReader.parseWidgets(Seq("FOO","","","","",""))
     assert(widgets.size === 1)
-    assert(widgets.get(0).size === 1)
-    assert(widgets.get(0).get(0) === "FOO")
+    assert(widgets(0).size === 1)
+    assert(widgets(0)(0) === "FOO")
   }
   test("parseWidgets: one widget, no blank line after") {
-    val widgets = ModelReader.parseWidgets(Array("FOO"))
+    val widgets = ModelReader.parseWidgets(Seq("FOO"))
     assert(widgets.size === 1)
-    assert(widgets.get(0).size === 1)
-    assert(widgets.get(0).get(0) === "FOO")
+    assert(widgets(0).size === 1)
+    assert(widgets(0)(0) === "FOO")
   }
   test("parseWidgets: one widget, leading blank lines") {
-    val widgets = ModelReader.parseWidgets(Array("","","","FOO"))
+    val widgets = ModelReader.parseWidgets(Seq("","","","FOO"))
     assert(widgets.size === 1)
-    assert(widgets.get(0).size === 1)
-    assert(widgets.get(0).get(0) === "FOO")
+    assert(widgets(0).size === 1)
+    assert(widgets(0)(0) === "FOO")
   }
   test("parseWidgets: multiple blank lines between widgets ignored") {
-    val widgets = ModelReader.parseWidgets(Array("FOO","","","","","","BAR"))
+    val widgets = ModelReader.parseWidgets(Seq("FOO","","","","","","BAR"))
     assert(widgets.size === 2)
-    assert(widgets.get(0).size === 1)
-    assert(widgets.get(0).get(0) === "FOO")
-    assert(widgets.get(1).size === 1)
-    assert(widgets.get(1).get(0) === "BAR")
+    assert(widgets(0).size === 1)
+    assert(widgets(0)(0) === "FOO")
+    assert(widgets(1).size === 1)
+    assert(widgets(1)(0) === "BAR")
   }
   test("parseWidgets: empty model contains only view") {
     val emptyModel = FileIO.file2String("resources/system/empty.nlogo")
     val map = ModelReader.parseModel(emptyModel)
     val widgets = ModelReader.parseWidgets(map.get(ModelSection.Interface))
     assert(widgets.size === 1)
-    assert(widgets.get(0).get(0) === "GRAPHICS-WINDOW")
+    assert(widgets(0)(0) === "GRAPHICS-WINDOW")
   }
 
   // strip/restoreLines

@@ -113,7 +113,7 @@ object ChecksumsAndPreviews {
     def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
+      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace.renderer, workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
       val oldEntry = m.get(model)
       val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
