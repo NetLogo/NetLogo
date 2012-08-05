@@ -66,7 +66,7 @@ public strictfp class WorldViewSettings2D
            * This is because most hubnet clients will exhibit undefined
            * behavior because their turtle has died.
            */
-          new org.nlogo.window.Events.RemoveAllJobsEvent().raise(gWidget);
+          new Events.RemoveAllJobsEvent().raise(gWidget);
           if (hubnetDecision() == KICK /* kick clients first, then resize world */) {
             workspace.hubnetManager().reset();
           }

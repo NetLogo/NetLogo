@@ -365,24 +365,6 @@ public abstract strictfp class AbstractWorkspace
     return str;
   }
 
-  /// procedures
-
-  private Map<String, Procedure> procedures = new HashMap<String, Procedure>();
-
-  public Map<String, Procedure> getProcedures() {
-    return procedures;
-  }
-
-  public void setProcedures(Map<String, Procedure> procedures) {
-    this.procedures = procedures;
-  }
-
-  public void init() {
-    for (Procedure procedure : procedures.values()) {
-      procedure.init(this);
-    }
-  }
-
   /// methods that may be called from the job thread by prims
 
   public void joinForeverButtons(org.nlogo.agent.Agent agent) {
@@ -712,13 +694,13 @@ public abstract strictfp class AbstractWorkspace
   public void checkReporterSyntax(String source)
       throws CompilerException {
     compiler().checkReporterSyntax
-        (source, world.program(), getProcedures(), getExtensionManager(), false);
+        (source, world.program(), procedures(), getExtensionManager(), false);
   }
 
   public void checkCommandSyntax(String source)
       throws CompilerException {
     compiler().checkCommandSyntax
-        (source, world.program(), getProcedures(), getExtensionManager(), false);
+        (source, world.program(), procedures(), getExtensionManager(), false);
   }
 
   public boolean isConstant(String s) {
@@ -736,7 +718,7 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isReporter(String s) {
-    return compiler().isReporter(s, world.program(), getProcedures(), getExtensionManager());
+    return compiler().isReporter(s, world.program(), procedures(), getExtensionManager());
   }
 
   public Token[] tokenizeForColorization(String s) {

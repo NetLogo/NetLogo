@@ -277,7 +277,7 @@ public strictfp class WorldViewSettings3D
         new Runnable() {
           public void run() {
             if (edgesChanged) {
-              new org.nlogo.window.Events.RemoveAllJobsEvent().raise(gWidget);
+              new Events.RemoveAllJobsEvent().raise(gWidget);
               world.clearTurtles();
               world.clearLinks();
               world.createPatches(newMinX, newMaxX,

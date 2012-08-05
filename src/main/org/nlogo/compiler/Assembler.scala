@@ -18,7 +18,7 @@ private class Assembler {
   def assemble(procdef: ProcedureDefinition) {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
-    val ret = proc.tyype match {
+    val ret = proc.tpe match {
       case Procedure.Type.COMMAND =>
         if (proc.isTask) new _done
         else new _return

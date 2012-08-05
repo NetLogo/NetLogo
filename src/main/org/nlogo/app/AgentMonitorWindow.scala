@@ -11,9 +11,9 @@ class AgentMonitorWindow(kind: AgentKind, _agent: Agent, radius: Double,
 // JWindow not JFrame so we can float on top of the App window - ev 1/7/09
 extends javax.swing.JWindow(parent)
 with org.nlogo.window.Event.LinkChild
-with org.nlogo.window.Events.PeriodicUpdateEvent.Handler
-with org.nlogo.window.Events.PatchesCreatedEvent.Handler
-with org.nlogo.window.Events.LoadBeginEvent.Handler
+with org.nlogo.window.Events.PeriodicUpdateEventHandler
+with org.nlogo.window.Events.PatchesCreatedEventHandler
+with org.nlogo.window.Events.LoadBeginEventHandler
 {
 
   private val monitor = {

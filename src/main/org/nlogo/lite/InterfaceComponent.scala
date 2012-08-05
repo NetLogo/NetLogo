@@ -156,10 +156,10 @@ with Event.LinkChild {
     button.keyTriggered()
   }
 
-  def findWidget(name: String, tyype: Class[_]): Widget = {
+  def findWidget(name: String, tpe: Class[_]): Widget = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
-      comp.getClass() == tyype && comp.asInstanceOf[Widget].displayName == name
+      comp.getClass() == tpe && comp.asInstanceOf[Widget].displayName == name
     iP.getComponents.find(matches)
       .getOrElse(throw new IllegalArgumentException("widget \"" + name + "\" not found"))
       .asInstanceOf[Widget]

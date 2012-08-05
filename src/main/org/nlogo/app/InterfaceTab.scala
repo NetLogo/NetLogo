@@ -11,11 +11,11 @@ import java.awt.{Graphics2D, Graphics, Component, Container, ContainerOrderFocus
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
-  with org.nlogo.window.Events.LoadBeginEvent.Handler
-  with org.nlogo.window.Events.OutputEvent.Handler
-  with org.nlogo.window.Events.ExportOutputEvent.Handler
-  with org.nlogo.window.Events.Enable2DEvent.Handler
-  with Events.SwitchedTabsEvent.Handler
+  with org.nlogo.window.Events.LoadBeginEventHandler
+  with org.nlogo.window.Events.OutputEventHandler
+  with org.nlogo.window.Events.ExportOutputEventHandler
+  with org.nlogo.window.Events.Enable2DEventHandler
+  with Events.SwitchedTabsEventHandler
   with org.nlogo.swing.Printable {
 
   setFocusCycleRoot(true)

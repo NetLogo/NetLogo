@@ -9,8 +9,8 @@ import org.nlogo.editor.Actions
 import org.nlogo.api.I18N
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
-with Events.SwitchedTabsEvent.Handler
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with Events.SwitchedTabsEventHandler
+with org.nlogo.window.Events.LoadSectionEventHandler
 {
 
   implicit val i18nName = I18N.Prefix("menu.edit")
@@ -33,8 +33,8 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   addSeparator()
   addMenuItem(I18N.gui("selectAll"), 'A', Actions.SELECT_ALL_ACTION)
   addSeparator()
-  addMenuItem(I18N.gui("find"), 'F', org.nlogo.app.FindDialog.FIND_ACTION)
-  addMenuItem(I18N.gui("findNext"), 'G', org.nlogo.app.FindDialog.FIND_NEXT_ACTION)
+  addMenuItem(I18N.gui("find"), 'F', FindDialog.FIND_ACTION)
+  addMenuItem(I18N.gui("findNext"), 'G', FindDialog.FIND_NEXT_ACTION)
   addSeparator()
   addMenuItem(I18N.gui("shiftLeft"), '[', org.nlogo.editor.Actions.shiftLeftAction)
   addMenuItem(I18N.gui("shiftRight"), ']', org.nlogo.editor.Actions.shiftRightAction)

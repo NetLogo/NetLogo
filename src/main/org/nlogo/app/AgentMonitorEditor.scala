@@ -94,7 +94,7 @@ class AgentVarEditor(parent: AgentMonitorEditor,
 extends org.nlogo.window.JobWidget(parent.workspace.world.auxRNG)
 with java.awt.event.KeyListener
 with java.awt.event.FocusListener
-with org.nlogo.window.Events.JobRemovedEvent.Handler
+with org.nlogo.window.Events.JobRemovedEventHandler
 {
 
   private def specialCase = {

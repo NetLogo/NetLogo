@@ -10,7 +10,7 @@ import org.nlogo.api.{I18N, ModelSection}
 
 class MainProceduresTab(workspace: AbstractWorkspace)
 extends ProceduresTab(workspace)
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with org.nlogo.window.Events.LoadSectionEventHandler
 {
 
   var tabbing: javax.swing.JCheckBox = null
@@ -19,7 +19,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
   private class SmartTabAction extends javax.swing.AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       setIndenter(tabbing.isSelected)
-      new org.nlogo.app.Events.IndenterChangedEvent(tabbing.isSelected)
+      new Events.IndenterChangedEvent(tabbing.isSelected)
         .raise(MainProceduresTab.this)
     }
   }
@@ -30,7 +30,7 @@ with org.nlogo.window.Events.LoadSectionEvent.Handler
     new org.nlogo.swing.ToolBar() {
       override def addControls() {
         add(new javax.swing.JButton(
-          org.nlogo.app.FindDialog.FIND_ACTION))
+          FindDialog.FIND_ACTION))
         add(new javax.swing.JButton(compileAction))
         add(new org.nlogo.swing.ToolBar.Separator)
         add(new ProceduresMenu(MainProceduresTab.this))

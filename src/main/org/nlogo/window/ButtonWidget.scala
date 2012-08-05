@@ -73,7 +73,7 @@ object ButtonWidget {
 }
 class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         with Editable with MouseListener with MouseMotionListener
-        with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
+        with Events.JobRemovedEventHandler with Events.TickStateChangeEventHandler {
 
   import ButtonWidget._
 

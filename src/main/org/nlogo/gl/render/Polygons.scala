@@ -99,7 +99,7 @@ object Polygons {
     glu.gluTessEndContour(tess)
     glu.gluTessEndPolygon(tess)
     if(rotatable) {
-      gl.glBegin(data.tyype)
+      gl.glBegin(data.tpe)
       gl.glNormal3f(0f, 0f, -1f)
       for(element <- data.shapeData.asScala)
         element match {

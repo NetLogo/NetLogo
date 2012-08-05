@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.{List=>AWTList, _}
 import event.{MouseAdapter, MouseEvent, MouseListener}
 import javax.swing.border.Border
-import org.nlogo.window.Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
+import Events.{WidgetRemovedEvent, WidgetEditedEvent, WidgetAddedEvent}
 import org.nlogo.api.{MultiErrorHandler, SingleErrorHandler}
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
@@ -146,7 +146,7 @@ abstract class Widget extends JPanel {
 
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
-      org.nlogo.window.Event.rehash()
+      Event.rehash()
       new WidgetRemovedEvent(this).raise(this)
     }
     super.removeNotify()
@@ -155,7 +155,7 @@ abstract class Widget extends JPanel {
   override def addNotify: Unit = {
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
-    org.nlogo.window.Event.rehash()
+    Event.rehash()
     new WidgetAddedEvent(this).raise(this)
   }
 }

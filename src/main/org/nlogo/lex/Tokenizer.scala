@@ -26,7 +26,7 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     tokenize(source, "")
   def tokenize(source: String, fileName: String): Seq[Token] = {
     val result = doTokenize(source, false, false, fileName, true)
-    result.find(_.tyype == TokenType.BAD) match {
+    result.find(_.tpe == TokenType.BAD) match {
       case Some(badToken) => throw new CompilerException(badToken)
       case None => result
     }
@@ -48,12 +48,12 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
       val t = yy.yylex()
       if (t == null)
         Stream(eof)
-      else if (stopAtFirstBadToken && t.tyype == TokenType.BAD)
+      else if (stopAtFirstBadToken && t.tpe == TokenType.BAD)
         Stream(t, eof)
       else
         Stream.cons(t, yystream)
     }
-    yystream.filter(includeCommentTokens || _.tyype != TokenType.COMMENT).toList
+    yystream.filter(includeCommentTokens || _.tpe != TokenType.COMMENT).toList
   }
 
   def nextToken(reader: java.io.BufferedReader): Token =
@@ -74,19 +74,19 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
       case Seq() => null
       case Seq(t) => t
       case Seq(t1, t2) =>
-        if (interestingTokenTypes.contains(t2.tyype))
+        if (interestingTokenTypes.contains(t2.tpe))
           t2 else t1
     }
   }
 
   def isValidIdentifier(ident: String): Boolean =
-    tokenizeRobustly(ident).take(2).map(_.tyype) ==
+    tokenizeRobustly(ident).take(2).map(_.tpe) ==
       Seq(TokenType.IDENT, TokenType.EOF)
 
   // this is for the syntax-highlighting editor in the HubNet client, where we don't have
   // an extension manager.
   def tokenizeForColorization(source: String): Array[Token] =
-    tokenizeIncludingComments(source).takeWhile(_.tyype != TokenType.EOF).toArray
+    tokenizeIncludingComments(source).takeWhile(_.tpe != TokenType.EOF).toArray
 
   // this is for the syntax-highlighting editor
   def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token] = {
@@ -94,7 +94,7 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
     // the type of the token from TokenType.IDENT to TokenType.COMMAND or TokenType.REPORTER
     // if the identifier is recognized by the extension.
     def replaceImports(token: Token): Token =
-      if (!extensionManager.anyExtensionsLoaded || token.tyype != TokenType.IDENT)
+      if (!extensionManager.anyExtensionsLoaded || token.tpe != TokenType.IDENT)
         token
       // look up the replacement.
       else extensionManager.replaceIdentifier(token.value.asInstanceOf[String]) match {

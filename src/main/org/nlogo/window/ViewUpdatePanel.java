@@ -8,7 +8,7 @@ import org.nlogo.api.UpdateModeJ;
 public strictfp class ViewUpdatePanel
     extends javax.swing.JPanel
     implements
-    org.nlogo.window.Events.LoadEndEvent.Handler {
+    Events.LoadEndEventHandler {
   private final GUIWorkspace workspace;
 
   private final SpeedSliderPanel speedSlider;
@@ -111,7 +111,7 @@ public strictfp class ViewUpdatePanel
       addActionListener
           (new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-              new org.nlogo.window.Events.EditWidgetEvent(settings)
+              new Events.EditWidgetEvent(settings)
                   .raise(SettingsButton.this);
             }
           });
@@ -144,7 +144,7 @@ public strictfp class ViewUpdatePanel
 
   ///
 
-  public void handle(org.nlogo.window.Events.LoadEndEvent e) {
+  public void handle(Events.LoadEndEvent e) {
     refreshSelection();
     speedSlider.setValue((int) workspace.speedSliderPosition());
   }

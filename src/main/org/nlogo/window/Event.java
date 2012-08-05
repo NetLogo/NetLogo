@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 // I had an itch to try and generify this so e.g. instead of
-// FooEvent.Handler we'd have Event.Handler<Foo>, but when I tried it
+// FooEventHandler we'd have EventHandler<Foo>, but when I tried it
 // pretty soon I got lost.  It seemed like maybe Event should be
 // declared as Event<T extends Event<T>> ? I dunno... I wound up
 // concluding there was no real benefit to generifying, since client
@@ -19,15 +19,6 @@ import java.util.Set;
 // of time. - ST 3/14/08
 
 public abstract strictfp class Event {
-
-  // individual Event subclasses will also subclass this
-  // interface - ST 9/8/04
-  public interface Handler {
-  }
-
-  public abstract void beHandledBy(Handler handler);
-
-  ///
 
   // normally the event thread, but if raiseLater() is used,
   // this will record what thread raiseLater() was called
@@ -41,8 +32,8 @@ public abstract strictfp class Event {
   // map from event classes to a List of handler objects.  So basically
   // it's table where you get a list of handler objects by doing lookup
   // with two keys, the raiser object and the event class - ST 9/8/04
-  private static Map<Object, Map<Class<?>, List<Handler>>> handlers =
-      new HashMap<Object, Map<Class<?>, List<Handler>>>();
+  private static Map<Object, Map<Class<?>, List<Object>>> handlers =
+      new HashMap<Object, Map<Class<?>, List<Object>>>();
 
   // sometimes it's nice to have this for troubleshooting purposes - ST 9/8/04
   private static List<Object[]> recentEvents = new ArrayList<Object[]>();
@@ -164,15 +155,15 @@ public abstract strictfp class Event {
       // step 1: using raiser as key, get map back which maps
       // from event class to handlers.  if no such map in cache,
       // create one.
-      Map<Class<?>, List<Handler>> events = handlers.get(raiser);
+      Map<Class<?>, List<Object>> events = handlers.get(raiser);
       if (null == events) {
-        events = new HashMap<Class<?>, List<Handler>>();
+        events = new HashMap<Class<?>, List<Object>>();
         handlers.put(raiser, events);
       }
 
       // step 2: using event class as key, get list of handlers.
       // if no such list in cache, create one.
-      List<Handler> handlersV = events.get(eventClass);
+      List<Object> handlersV = events.get(eventClass);
       if (null == handlersV) {
         // findHandlers does the grunt work of actually
         // walking the component hierarchy looking for
@@ -181,8 +172,8 @@ public abstract strictfp class Event {
         events.put(eventClass, handlersV);
       }
 
-      // step 3: call the beHandledBy() method on every handler we find
-      for (Handler handler : handlersV) {
+      // step 3: call the handle() method on every handler we find
+      for (Object handler : handlersV) {
         if (logEvents
             // if we logged these event types, the log would
             // be choked with them, so let's ignore them
@@ -202,6 +193,8 @@ public abstract strictfp class Event {
       nestingDepth = oldNestingDepth;
     }
   }
+
+  public abstract void beHandledBy(Object handler);
 
   /// now for private helper methods
 
@@ -242,8 +235,8 @@ public abstract strictfp class Event {
     return (java.awt.Component) top;
   }
 
-  private List<Handler> findHandlers(Object top, Class<? extends Event> eventClass) {
-    List<Handler> result = new ArrayList<Handler>();
+  private List<Object> findHandlers(Object top, Class<? extends Event> eventClass) {
+    List<Object> result = new ArrayList<Object>();
     if (top instanceof java.awt.Container) {
       java.awt.Component[] comps = ((java.awt.Container) top).getComponents();
       for (int i = 0; i < comps.length; i++) {
@@ -257,38 +250,33 @@ public abstract strictfp class Event {
       }
     }
     if (isHandler(top, eventClass)) {
-      result.add((Handler) top);
+      result.add(top);
     }
     return result;
   }
 
   /// more private helper methods.
 
-  // we use reflection to map from each event class to its Handler
-  // interface.
+  // we use reflection to map from each event class to its handler trait
 
   private static Map<Class<?>, Set<Class<? extends Event>>> eventsHandledMap =
       new HashMap<Class<?>, Set<Class<? extends Event>>>();
 
-  private boolean isHandler(Object comp, Class<? extends Event> eventClass) {
-    if (!(comp instanceof Handler)) {
-      return false;
-    }
-    Handler handler = (Handler) comp;
-    Set<Class<? extends Event>> eventsHandled = eventsHandledMap.get(comp.getClass());
+  private boolean isHandler(Object handler, Class<? extends Event> eventClass) {
+    Set<Class<? extends Event>> eventsHandled = eventsHandledMap.get(handler.getClass());
     if (eventsHandled == null) {
       eventsHandled = new HashSet<Class<? extends Event>>();
-      eventsHandledMap.put(comp.getClass(), eventsHandled);
+      eventsHandledMap.put(handler.getClass(), eventsHandled);
       Class<?> handlerClass = handler.getClass();
       while (handlerClass != null) {
         Class<?>[] interfaces = getAllInterfaces(handlerClass);
         for (int i = 0; i < interfaces.length; i++) {
           String interfaceName = interfaces[i].getName();
-          if (interfaceName.endsWith("$Handler")) {
+          if (interfaceName.endsWith("EventHandler")) {
             eventsHandled.add
                 (eventClassForHandlerClassName
                     (interfaceName.substring
-                        (0, interfaceName.length() - 8)));
+                        (0, interfaceName.length() - 7)));
           }
         }
         handlerClass = handlerClass.getSuperclass();

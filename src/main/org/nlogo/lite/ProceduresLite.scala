@@ -11,7 +11,7 @@ import org.nlogo.window.{ Event, Events, ProceduresInterface }
 // ProceduresTab depends on the new editor, which we don't want in the lite jar
 
 class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends ProceduresInterface
-with Event.LinkChild with Events.LoadSectionEvent.Handler
+with Event.LinkChild with Events.LoadSectionEventHandler
 {
   override def classDisplayName = "Code"
   override def kind = AgentKind.Observer

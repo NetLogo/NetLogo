@@ -17,9 +17,9 @@ import java.util.List;
 public strictfp class MonitorWidget
     extends JobWidget
     implements Editable,
-    org.nlogo.window.Events.RuntimeErrorEvent.Handler,
-    org.nlogo.window.Events.PeriodicUpdateEvent.Handler,
-    org.nlogo.window.Events.JobRemovedEvent.Handler,
+    Events.RuntimeErrorEventHandler,
+    Events.PeriodicUpdateEventHandler,
+    Events.JobRemovedEventHandler,
     java.awt.event.MouseListener {
 
   private static final int LEFT_MARGIN = 5;
@@ -110,7 +110,7 @@ public strictfp class MonitorWidget
     halt();
     if (procedure != null) {
       hasError = false;
-      new org.nlogo.window.Events.AddJobEvent(this, agents(), procedure())
+      new Events.AddJobEvent(this, agents(), procedure())
           .raise(this);
       jobRunning = true;
     }
@@ -252,31 +252,31 @@ public strictfp class MonitorWidget
     return innerSource();
   }
 
-  public void handle(org.nlogo.window.Events.RuntimeErrorEvent e) {
-    if (this == e.jobOwner) {
+  public void handle(Events.RuntimeErrorEvent e) {
+    if (this == e.jobOwner()) {
       hasError = true;
       halt();
     }
   }
 
-  public void handle(org.nlogo.window.Events.PeriodicUpdateEvent e) {
+  public void handle(Events.PeriodicUpdateEvent e) {
     if (!jobRunning && procedure() != null) {
       hasError = false;
       jobRunning = true;
-      new org.nlogo.window.Events.AddJobEvent(this, agents(), procedure())
+      new Events.AddJobEvent(this, agents(), procedure())
           .raise(this);
     }
   }
 
-  public void handle(org.nlogo.window.Events.JobRemovedEvent e) {
-    if (e.owner == this) {
+  public void handle(Events.JobRemovedEvent e) {
+    if (e.owner() == this) {
       jobRunning = false;
       value(hasError ? "N/A" : "");
     }
   }
 
   private void halt() {
-    new org.nlogo.window.Events.RemoveJobEvent(this).raise(this);
+    new Events.RemoveJobEvent(this).raise(this);
   }
 
   @Override
@@ -340,7 +340,7 @@ public strictfp class MonitorWidget
 
   public void mouseClicked(MouseEvent e) {
     if (!e.isPopupTrigger() && error() != null && !lastMousePressedWasPopupTrigger) {
-      new org.nlogo.window.Events.EditWidgetEvent(this).raise(this);
+      new Events.EditWidgetEvent(this).raise(this);
       return;
     }
   }

@@ -9,7 +9,7 @@ import org.nlogo.util.Exceptions
 import javax.swing.{ JApplet, JFrame, JPanel, JOptionPane, JLabel }
 
 class Applet extends JApplet
-with org.nlogo.window.Events.CompiledEvent.Handler {
+with org.nlogo.window.Events.CompiledEventHandler {
 
   override def init() {
     VMCheck.detectBadJVMs()

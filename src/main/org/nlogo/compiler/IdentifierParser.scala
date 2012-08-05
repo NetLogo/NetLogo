@@ -13,8 +13,8 @@ import collection.JavaConverters._
  * AutoConverter, unknown identifiers are assumed to be references to global variables that the
  * compiler doesn't know about yet. - ST 7/7/06 */
 private class IdentifierParser(program: Program,
-                               oldProcedures: java.util.Map[String, Procedure],
-                               newProcedures: java.util.Map[String, Procedure],
+                               oldProcedures: Compiler.ProceduresMap,
+                               newProcedures: Compiler.ProceduresMap,
                                forgiving: Boolean) {
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
@@ -27,7 +27,7 @@ private class IdentifierParser(program: Program,
       if(forgiving && token.value.isInstanceOf[_plus])
         newToken(new dead._pluswildcard,
                  token.name, TokenType.REPORTER, token.startPos, token.endPos, token.fileName)
-      else if(token.tyype == TokenType.IDENT || token.tyype == TokenType.VARIABLE)
+      else if(token.tpe == TokenType.IDENT || token.tpe == TokenType.VARIABLE)
         processToken2(token, procedure, it.count)
       else token
     }
@@ -69,14 +69,11 @@ private class IdentifierParser(program: Program,
       // go thru our identifierHandlers, if one triggers, return the result
       BreedIdentifierHandler.process(tok, program).getOrElse{
         val callproc =
-          if(oldProcedures.get(ident) != null)
-            oldProcedures.get(ident)
-          else if(newProcedures.get(ident) != null)
-            newProcedures.get(ident)
-          else
-            return newToken(getAgentVariableReporter(ident, tok),
-                            ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
-        callproc.tyype match {
+          oldProcedures.getOrElse(ident,
+            newProcedures.getOrElse(ident,
+              return newToken(getAgentVariableReporter(ident, tok),
+                              ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
+        callproc.tpe match {
           case Procedure.Type.COMMAND =>
             newToken(new _call(callproc),
                      ident, TokenType.COMMAND, tok.startPos, tok.endPos, tok.fileName)
@@ -107,7 +104,7 @@ private class IdentifierParser(program: Program,
       new _unknownidentifier
     else
       exception("Nothing named " + varName + " has been defined",
-                new Token(varName, tok.tyype, tok.value)
+                new Token(varName, tok.tpe, tok.value)
                          (tok.startPos, tok.startPos + varName.length, tok.fileName))
   }
   private def checkProcedureName(procedure: Procedure) {
@@ -122,8 +119,8 @@ private class IdentifierParser(program: Program,
             "Cannot use " + procedure.name + " as a procedure name.  Conflicts with: " + newVal,
             procedure.nameToken)
   }
-  private def newToken(instr: Instruction, name: String, tyype: TokenType, startPos: Int, endPos: Int, fileName: String) = {
-    val tok = new Token(name, tyype, instr)(startPos, endPos, fileName)
+  private def newToken(instr: Instruction, name: String, tpe: TokenType, startPos: Int, endPos: Int, fileName: String) = {
+    val tok = new Token(name, tpe, instr)(startPos, endPos, fileName)
     instr.token(tok)
     tok
   }

@@ -26,10 +26,10 @@ import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnect
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
                   compiler:CompilerServices) extends JPanel with
-        org.nlogo.window.Events.AddJobEvent.Handler with
-        org.nlogo.window.Events.ExportPlotEvent.Handler with
-        org.nlogo.window.Events.InterfaceGlobalEvent.Handler with
-        org.nlogo.window.Events.AddSliderConstraintEvent.Handler {
+        org.nlogo.window.Events.AddJobEventHandler with
+        org.nlogo.window.Events.ExportPlotEventHandler with
+        org.nlogo.window.Events.InterfaceGlobalEventHandler with
+        org.nlogo.window.Events.AddSliderConstraintEventHandler {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
@@ -78,7 +78,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
   }
 
-  /// Interface Event Handlers
+  /// Interface EventHandlers
   def handle(e: org.nlogo.window.Events.AddJobEvent) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = e.owner.asInstanceOf[ButtonWidget]
@@ -88,12 +88,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handle(e: org.nlogo.window.Events.ExportPlotEvent) {
     e.whichPlots match {
-      case PlotWidgetExportType.ALL => throw new UnsupportedOperationException("can't export all plots yet.")
+      case PlotWidgetExportType.ALL =>
+        throw new UnsupportedOperationException("can't export all plots yet.")
       case _ =>
-        if (e.plot != null) {
+        if (e.target != null) {
           try new AbstractExporter(e.filename) {
             override def export(writer: PrintWriter) {
-              new PlotExporter(e.plot, Dump.csv).export(writer)
+              new PlotExporter(e.target, Dump.csv).export(writer)
             }
           }.export("plot", "HubNet Client", "")
           catch {case ex: IOException => org.nlogo.util.Exceptions.handle(ex)}
