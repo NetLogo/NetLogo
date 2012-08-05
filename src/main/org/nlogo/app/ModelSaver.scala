@@ -46,7 +46,7 @@ class ModelSaver(app: App) {
 
     // version
     section {
-      buf ++= Version.version + "\n"
+      buf ++= Version.versionForSaving + "\n"
     }
 
     // preview commands

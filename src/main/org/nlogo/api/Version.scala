@@ -97,11 +97,15 @@ object Version {
     version.drop("NetLogo ".size)
 
   def compatibleVersion(modelVersion: String) =
-    compareVersions(version, modelVersion)
+    compareVersions(versionForSaving, modelVersion)
 
   def compareVersions(appVersion: String, modelVersion: String) =
     modelVersion == noVersion ||
       versionNumber(modelVersion).startsWith(versionNumber(appVersion))
+
+  // 5.1 hasn't incompatibly diverged from 5.0 yet
+  def versionForSaving =
+    "NetLogo 5.0"
 
   private def versionNumber(v: String) =
     if (v.startsWith("NetLogo 3D Preview"))
