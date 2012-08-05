@@ -94,7 +94,10 @@ class TurtleTestsDrawer extends MockSuite {
     val patchSize = 13
     def makeTurtleDrawer = {
       import org.nlogo.shape.TestHelpers._
-      new TurtleDrawer(new ShapeList(makeSquarePolygon(recolorable = testShapeIsRecolorable))) {
+      new TurtleDrawer(
+        new ShapeList(
+          AgentKind.Turtle,
+          makeSquarePolygon(recolorable = testShapeIsRecolorable))) {
         shapes.resetCache(patchSize)
       }
     }

@@ -176,16 +176,16 @@ object App{
   // TODO: lots of duplication here...
   private class ShapeSectionReader(section: ModelSection) extends org.nlogo.shape.ModelSectionReader {
     @throws(classOf[java.io.IOException])
-    def read(path: String) = {
+    def read(path: String): Array[String] = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
               map.get(ModelSection.Version) == null ||
               map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
-        Array.empty[String]
+        Array()
       }
-      else map.get(section)
+      else map.get(section).toArray
     }
 
     @throws(classOf[java.io.IOException])
@@ -261,7 +261,7 @@ class App extends
 
     val world = new World()
     pico.addComponent(world)
-    _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
+    _workspace = new GUIWorkspace(world, GUIWorkspaceJ.KioskLevel.NONE,
                                   frame, frame, listenerManager) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
@@ -389,11 +389,11 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AppEvent){
+  def handle(e: AppEvent) {
     import AppEventType._
     e.eventType match {
       case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args(0).toString)
+      case MAGIC_OPEN => magicOpen(e.args.head.toString)
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -711,8 +711,10 @@ class App extends
    * in the same (undocumented) format found in a saved model.
    * @param text the widget specification
    */
-  def makeWidget(text:String){
-    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, Version.version) )
+  def makeWidget(text: String){
+    dispatchThreadOrBust(
+      tabs.interfaceTab.getInterfacePanel.loadWidget(
+        text.split("\n").toSeq, Version.version) )
   }
 
   /// helpers for controlling methods

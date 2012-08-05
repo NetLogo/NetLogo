@@ -35,6 +35,7 @@ trait World {
   def turtleShapeList: ShapeList
   def linkShapeList: ShapeList
   def getDrawing: AnyRef
+  def trailDrawer: TrailDrawerInterface
   def sendPixels: Boolean
   def markDrawingClean()
   def protractor: Protractor

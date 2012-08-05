@@ -306,11 +306,11 @@ public strictfp class InterfacePanelLite
 
   /// loading and saving
 
-  public Widget loadWidget(String[] strings, final String modelVersion) {
+  public Widget loadWidget(scala.collection.Seq<String> strings, final String modelVersion) {
     try {
-      String type = strings[0];
-      int x = Integer.parseInt(strings[1]);
-      int y = Integer.parseInt(strings[2]);
+      String type = strings.apply(0);
+      int x = Integer.parseInt(strings.apply(1));
+      int y = Integer.parseInt(strings.apply(2));
       if (type.equals("GRAPHICS-WINDOW") || type.equals("VIEW")) {
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
@@ -363,13 +363,13 @@ public strictfp class InterfacePanelLite
   public void handle(Events.LoadSectionEvent e) {
     if (e.section() == ModelSectionJ.WIDGETS()) {
       try {
-        List<List<String>> v =
+        scala.collection.Seq<scala.collection.Seq<String>> v =
           ModelReader.parseWidgets(e.lines());
         if (null != v) {
           setVisible(false);
-          for (List<String> v2 : v) {
-            String[] strings = v2.toArray(new String[v2.size()]);
-            loadWidget(strings, e.version());
+          for (scala.collection.Iterator<scala.collection.Seq<String>> iter = v.iterator();
+               iter.hasNext();) {
+            loadWidget(iter.next(), e.version());
           }
         }
       } finally {

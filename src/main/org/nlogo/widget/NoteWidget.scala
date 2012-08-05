@@ -94,13 +94,13 @@ class NoteWidget extends SingleErrorWidget with Editable {
     s.toString
   }
 
-  def load(strings: Array[String]) = {
+  def load(strings: Seq[String]) = {
     text = if (strings(5) == "NIL") "" else ModelReader.restoreLines(strings(5))
     if (strings.length >= 7) fontSize = strings(6).toInt
     if (strings.length >= 8) color = org.nlogo.api.Color.getColor(strings(7).toDouble: java.lang.Double)
     if (strings.length >= 9) transparency(strings(8).toInt != 0)
     else transparency(false)
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
+    val Seq(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
     setSize(x2 - x1, y2 - y1)
     this
   }

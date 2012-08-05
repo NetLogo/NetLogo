@@ -111,7 +111,7 @@ class ChecksumTester(info: String => Unit) {
       }
     }
     // test view contents checksum
-    val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
+    val actual2 = Checksummer.calculateGraphicsChecksum(workspace.renderer, workspace)
     if (expectedGraphicsSum != actual2) {
       val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
       if (revisionMatches) {

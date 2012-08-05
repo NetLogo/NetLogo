@@ -22,7 +22,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromMap(map: java.util.Map[ModelSection, Array[String]]) {
+  def openFromMap(map: java.util.Map[ModelSection, Seq[String]]) {
 
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
@@ -55,7 +55,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
+    parseShapes(map.get(ModelSection.TurtleShapes).toArray,
+                map.get(ModelSection.LinkShapes).toArray,
+                netLogoVersion)
 
     ws.init()
     ws.world.program(results.program)
@@ -121,7 +123,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   private object WidgetParser {
 
-    def parseWidgets(widgetsSection: Array[String], netLogoVersion: String) = {
+    def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String) = {
 
       // parsing widgets dumps information into these four mutable vals.
       // as well as a few places in the workspace.
@@ -135,26 +137,26 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       // each widget type has its own parsing method
       //===
 
-      def parseSlider(widget: Array[String]) {
+      def parseSlider(widget: Seq[String]) {
         interfaceGlobals += widget(6)
         interfaceGlobalCommands.append("set " + widget(6) + " " + widget(9) + "\n")
         constraints(widget(6)) = List("SLIDER", widget(7), widget(8), widget(10), widget(9))
       }
 
-      def parseSwitch(widget: Array[String]) {
+      def parseSwitch(widget: Seq[String]) {
         interfaceGlobals += widget(6)
         val defaultAsString = (widget(7).toDouble == 0).toString
         interfaceGlobalCommands.append("set " + widget(6) + " " + defaultAsString + "\n")
         constraints(widget(6)) = List("SWITCH", defaultAsString)
       }
 
-      def parseChoiceOrChooser(widget: Array[String]) {
+      def parseChoiceOrChooser(widget: Seq[String]) {
         interfaceGlobals += widget(6)
         val valSpec = "[" + widget(7) + "]"
         constraints(widget(6)) = List("CHOOSER", valSpec, widget(8))
       }
 
-      def parseInputBox(widget: Array[String]) {
+      def parseInputBox(widget: Seq[String]) {
         interfaceGlobals += widget(5)
         val defaultVal = escapeString(ModelReader.restoreLines(widget(6)))
         if (widget(9) == "Number" || widget(9) == "Color")
@@ -164,14 +166,14 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         constraints(widget(5)) = List("INPUTBOX", defaultVal, widget(9))
       }
 
-      def parsePlot(widget: Array[String]) {
+      def parsePlot(widget: Seq[String]) {
         // ick, side effects.
         // might replace identity soon as we might actually convert old models for headless.
         // JC - 9/14/10
-        PlotLoader.parsePlot(widget, ws.plotManager.newPlot(""))
+        PlotLoader.parsePlot(widget.toArray, ws.plotManager.newPlot(""))
       }
 
-      def parseButton(widget: Array[String]) {
+      def parseButton(widget: Seq[String]) {
         val buttonSource = ModelReader.restoreLines(widget(6)) match {
           case "NIL" => ""
           case s => s
@@ -184,7 +186,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           })
       }
 
-      def parseMonitor(widget: Array[String]) {
+      def parseMonitor(widget: Seq[String]) {
         val monitorSource = widget(6)
         if (monitorSource != "NIL")
         // add "__ignore" to turn the reporter into a command, so we can handle buttons and
@@ -192,7 +194,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
           monitors += "__ignore (" + ModelReader.restoreLines(monitorSource) + "\n)"
       }
 
-      def parseGraphicsWindow(widget: Array[String]) {
+      def parseGraphicsWindow(widget: Seq[String]) {
         ws.loadWorld(widget, ws)
       }
 
@@ -200,8 +202,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       val widgets = ModelReader.parseWidgets(widgetsSection)
 
       import collection.JavaConverters._
-      for (widget <- widgets.asScala.map(_.asScala.toArray))
-        widget(0) match {
+      for (widget <- widgets)
+        widget.head match {
           case "SLIDER" => parseSlider(widget)
           case "SWITCH" => parseSwitch(widget)
           case "CHOICE" | "CHOOSER" => parseChoiceOrChooser(widget)

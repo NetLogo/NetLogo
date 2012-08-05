@@ -23,6 +23,8 @@ tmp/
 # Eclipse
 /.classpath
 /.project
+/.cache
+/.settings
 
 # other
 /.ensime

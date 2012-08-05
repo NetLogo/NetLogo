@@ -429,7 +429,7 @@ public strictfp class ViewWidget
   }
 
   @Override
-  public Object load(String[] strings) {
+  public Object load(scala.collection.Seq<String> strings) {
     return settings.load(strings);
   }
 

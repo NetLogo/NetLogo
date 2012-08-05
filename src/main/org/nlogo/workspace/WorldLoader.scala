@@ -11,11 +11,11 @@ class WorldLoader {
   val tickCounterLabelIndex = 24
   val frameRateIndex = 25
 
-  def load(strings: Array[String], worldInterface: WorldLoaderInterface) {
+  def load(strings: Seq[String], worldInterface: WorldLoaderInterface) {
     val d = getWorldDimensions(strings)
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
-    if(strings.length > tickCounterLabelIndex) {
+    if(strings.size > tickCounterLabelIndex) {
       val label = strings(tickCounterLabelIndex)
       worldInterface.tickCounterLabel(
         if(label == "NIL") ""
@@ -23,7 +23,7 @@ class WorldLoader {
     }
     else
       worldInterface.tickCounterLabel("ticks")
-    if(strings.length > tickCounterIndex)
+    if(strings.size > tickCounterIndex)
       worldInterface.showTickCounter(1 == strings(tickCounterIndex).toInt)
     else
       worldInterface.showTickCounter(true)
@@ -36,25 +36,25 @@ class WorldLoader {
     // lying around in the world that go kerplooey when we try to reposition them and after we set
     // the dimensions because that's where every thing gets allocated initially. ev 7/19/06
     worldInterface.clearTurtles()
-    if(strings.length > 9)
+    if(strings.size > 9)
       worldInterface.fontSize(strings(9).toInt)
     // note we ignore items 10, 11, 12 which had the old exactDraw
     // settings which are now always on - ST 5/27/05
     // ignore item 13, which was for old, now-removed hex support - ST 1/4/07
     var wrapX = true
     var wrapY = true
-    if(strings.length > 15) {
+    if(strings.size > 15) {
       wrapX = 0 != strings(14).toInt
       wrapY = 0 != strings(15).toInt
     }
     worldInterface.changeTopology(wrapX, wrapY)
     worldInterface.updateMode(
-      if(strings.length > updateModeIndex)
+      if(strings.size > updateModeIndex)
         UpdateMode.load(strings(updateModeIndex).toInt)
       else
         UpdateMode.Continuous)
     worldInterface.frameRate(
-      if(strings.length > frameRateIndex)
+      if(strings.size > frameRateIndex)
         strings(frameRateIndex).toDouble
       else
         30)
@@ -62,7 +62,7 @@ class WorldLoader {
     worldInterface.setSize(width, height)
   }
 
-  def getWorldDimensions(strings: Array[String]): WorldDimensions = {
+  def getWorldDimensions(strings: Seq[String]): WorldDimensions = {
     var maxx = strings(5).toInt
     var maxy = strings(6).toInt
     var minx = -1
@@ -71,7 +71,7 @@ class WorldLoader {
       minx = -maxx
       miny = -maxy
     }
-    else if(strings.length > 20) {
+    else if(strings.size > 20) {
       minx = strings(17).toInt
       maxx = strings(18).toInt
       miny = strings(19).toInt
@@ -80,16 +80,16 @@ class WorldLoader {
     new WorldDimensions(minx, maxx, miny, maxy)
   }
 
-  def getWidth(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]): Int = {
+  def getWidth(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Int = {
     val widgetWidth = world.calculateWidth(d.width, patchSize)
     val minWidth = world.getMinimumWidth
     widgetWidth max minWidth
   }
 
-  def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]): Int =
+  def getHeight(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Int =
     world.calculateHeight(d.height,  patchSize)
 
-  def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Array[String]): Double = {
+  def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions, patchSize: Double, strings: Seq[String]): Double = {
     val widgetWidth = world.calculateWidth(d.width, patchSize)
     val minWidth = world.getMinimumWidth
     if(widgetWidth < minWidth)

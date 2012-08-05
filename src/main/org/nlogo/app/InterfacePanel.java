@@ -220,7 +220,7 @@ strictfp class InterfacePanel
   /// loading and saving
 
   @Override
-  public Widget loadWidget(String[] strings, final String modelVersion) {
+  public Widget loadWidget(scala.collection.Seq<String> strings, final String modelVersion) {
     return loadWidget(strings, 0, 0);
   }
 
@@ -229,13 +229,13 @@ strictfp class InterfacePanel
   // the regular loadWidget just uses the x and y from the string array
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
-  private Widget loadWidget(String[] strings, int x, int y) {
-    String type = strings[0];
+  private Widget loadWidget(scala.collection.Seq<String> strings, int x, int y) {
+    String type = strings.apply(0);
     if (x == 0) {
-      x = Integer.parseInt(strings[1]);
+      x = Integer.parseInt(strings.apply(1));
     }
     if (y == 0) {
-      y = Integer.parseInt(strings[2]);
+      y = Integer.parseInt(strings.apply(2));
     }
     if (type.equals("GRAPHICS-WINDOW")) {
       // the graphics widget (and the command center) are special cases because
@@ -304,7 +304,7 @@ strictfp class InterfacePanel
           (org.nlogo.awt.Images.paintToImage(this),
            "png", e.stream());
     } catch (java.io.IOException ex) {
-      e.exceptionBox()[0] = ex;
+      e.callback().apply(ex);
     }
   }
 

@@ -302,7 +302,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     s.toString
   }
 
-  override def load(strings:Array[String]) = {
+  override def load(strings: Seq[String]) = {
     val displayName = strings(5)
     if(displayName ==  "NIL") name("") else name(displayName)
     var contents = org.nlogo.api.ModelReader.restoreLines(strings(6))

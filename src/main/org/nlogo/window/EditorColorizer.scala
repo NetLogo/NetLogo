@@ -3,8 +3,9 @@
 package org.nlogo.window
 
 import java.awt.Color
-import org.nlogo.api.{ CompilerServices, Token, TokenType }
+import org.nlogo.api.{ CompilerServices, Token, TokenType, Version }
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.BrowserLauncher.openURL
 import collection.JavaConverters._
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {

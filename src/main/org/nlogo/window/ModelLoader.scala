@@ -12,7 +12,7 @@ object ModelLoader {
 
   @throws(classOf[InvalidVersionException])
   def load(linkParent: Container, modelPath: String,
-           modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) {
+           modelType: ModelType, map: java.util.Map[ModelSection, Seq[String]]) {
     Loader(linkParent).loadHelper(modelPath, modelType, map)
   }
   @throws(classOf[InvalidVersionException])
@@ -24,7 +24,7 @@ object ModelLoader {
     def getLinkParent = linkParent
 
     @throws(classOf[InvalidVersionException])
-    def loadHelper(modelPath: String, modelType: ModelType, map: java.util.Map[ModelSection, Array[String]]) {
+    def loadHelper(modelPath: String, modelType: ModelType, map: java.util.Map[ModelSection, Seq[String]]) {
       if (map == null) throw new InvalidVersionException()
       val version = ModelReader.parseVersion(map)
       if (version == null || !version.startsWith("NetLogo")) throw new InvalidVersionException()
@@ -82,9 +82,9 @@ object ModelLoader {
             // default model) that was hand-edited to have no shapes in it, so it always gets
             // the default shapes when opened. - ST 9/2/03
             case (ModelSection.TurtleShapes, 0) =>
-              ModelReader.defaultShapes.toArray
+              ModelReader.defaultShapes
             case (ModelSection.LinkShapes, 0) =>
-              ModelReader.defaultLinkShapes.toArray
+              ModelReader.defaultLinkShapes
             case _ => map.get(section)
           }
           new LoadSectionEvent(version, section, lines, lines.mkString("\n"))

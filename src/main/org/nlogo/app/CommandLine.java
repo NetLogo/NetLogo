@@ -313,7 +313,7 @@ strictfp class CommandLine
   }
 
   @Override
-  public Object load(String[] strings) {
+  public Object load(scala.collection.Seq<String> strings) {
     throw new UnsupportedOperationException();
   }
 
