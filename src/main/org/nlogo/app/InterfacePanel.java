@@ -339,7 +339,7 @@ strictfp class InterfacePanel
           (org.nlogo.awt.Images.paintToImage(this),
            "png", e.stream());
     } catch (java.io.IOException ex) {
-      e.exceptionBox()[0] = ex;
+      e.callback().apply(ex);
     }
   }
 

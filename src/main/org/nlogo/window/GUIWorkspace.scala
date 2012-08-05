@@ -35,6 +35,8 @@ with Events.LoadSectionEventHandler {
     }
   }
 
+  ///
+
   def reload() {
     new Events.AppEvent(AppEventType.RELOAD, Seq())
       .raiseLater(this)
@@ -64,6 +66,20 @@ with Events.LoadSectionEventHandler {
   def deleteLogFiles() {
     new Events.AppEvent(AppEventType.DELETE_LOG_FILES, Seq())
       .raiseLater(this)
+  }
+
+  ///
+
+  @throws(classOf[java.io.IOException])
+  def exportInterface(filename: String) {
+    // there's a form of ImageIO.write that just takes a filename, but if we use that when the
+    // filename is invalid (e.g. refers to a directory that doesn't exist), we get an
+    // IllegalArgumentException instead of an IOException, so we make our own OutputStream so we get
+    // the proper exceptions. - ST 8/19/03, 11/26/03
+    val stream = new java.io.FileOutputStream(new java.io.File(filename))
+    try new Events.ExportInterfaceEvent(stream, throw _)
+          .raise(this)
+    finally stream.close()
   }
 
 }

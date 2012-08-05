@@ -21,7 +21,7 @@ window.Compiled - sourceOwner: api.SourceOwner - program: api.Program - procedur
 window.Dirty
 window.EditWidget - widget: api.Editable
 window.Enable2D - enabled: Boolean
-window.ExportInterface - stream: java.io.OutputStream - exceptionBox: Array[java.io.IOException]
+window.ExportInterface - stream: java.io.OutputStream - callback: java.io.IOException => Unit
 window.ExportOutput - filename: String
 window.ExportPlot - whichPlots: PlotWidgetExportType - target: plot.Plot - filename: String
 window.ExportWorld - writer: java.io.PrintWriter

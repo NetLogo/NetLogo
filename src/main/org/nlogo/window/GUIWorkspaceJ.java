@@ -965,25 +965,6 @@ public abstract strictfp class GUIWorkspaceJ
     }
   }
 
-  public void exportInterface(String filename)
-      throws java.io.IOException {
-    // there's a form of ImageIO.write that just takes a filename, but
-    // if we use that when the filename is invalid (e.g. refers to
-    // a directory that doesn't exist), we get an IllegalArgumentException
-    // instead of an IOException, so we make our own OutputStream
-    // so we get the proper exceptions. - ST 8/19/03, 11/26/03
-    java.io.FileOutputStream stream =
-        new java.io.FileOutputStream(new java.io.File(filename));
-    java.io.IOException[] exceptionBox = new java.io.IOException[1];
-    new Events.ExportInterfaceEvent(stream, exceptionBox)
-        .raise(this);
-    stream.close();
-    if (exceptionBox[0] != null) {
-      throw exceptionBox[0];
-    }
-  }
-
-
   public void exportOutput(String filename) {
     new Events.ExportOutputEvent(filename)
         .raise(this);
