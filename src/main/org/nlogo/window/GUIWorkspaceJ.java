@@ -36,7 +36,6 @@ public abstract strictfp class GUIWorkspaceJ
     Events.BeforeLoadEventHandler,
     Events.ExportPlotEventHandler,
     Events.JobStoppingEventHandler,
-    Events.LoadSectionEventHandler,
     Events.RemoveAllJobsEventHandler,
     Events.RemoveJobEventHandler,
     Events.AddSliderConstraintEventHandler,
@@ -1253,28 +1252,6 @@ public abstract strictfp class GUIWorkspaceJ
           open3DView();
         }
       };
-
-  /// preview commands & aggregate
-
-  public void handle(Events.LoadSectionEvent e) {
-    if (e.section() == ModelSectionJ.PREVIEW_COMMANDS() &&
-        e.text().trim().length() > 0) {
-      previewCommands_$eq(e.text());
-    }
-    if (e.section() == ModelSectionJ.CLIENT() &&
-        e.lines().length > 0 &&
-        !isApplet()) {
-      getHubNetManager().load(e.lines(), e.version());
-    }
-    if (e.section() == ModelSectionJ.SHAPES()) {
-      world.turtleShapeList().replaceShapes
-          (org.nlogo.shape.VectorShape.parseShapes(e.lines(), e.version()));
-    }
-    if (e.section() == ModelSectionJ.LINK_SHAPES()) {
-      world.linkShapeList().replaceShapes
-          (org.nlogo.shape.LinkShape.parseShapes(e.lines(), e.version()));
-    }
-  }
 
   public void snapOn(boolean snapOn) {
     this.snapOn = snapOn;
