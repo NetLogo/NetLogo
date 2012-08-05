@@ -99,10 +99,14 @@ public strictfp class ClientWorld
     }
   }
 
-  private org.nlogo.api.TrailDrawerInterface trailDrawer;
+  private org.nlogo.api.TrailDrawerInterface _trailDrawer;
+
+  public org.nlogo.api.TrailDrawerInterface trailDrawer() {
+    return _trailDrawer;
+  }
 
   public void setTrailDrawer(org.nlogo.api.TrailDrawerInterface trailDrawer) {
-    this.trailDrawer = trailDrawer;
+    _trailDrawer = trailDrawer;
   }
 
   /**
@@ -429,7 +433,7 @@ public strictfp class ClientWorld
       }
     }
     if ((mask & DiffBuffer.DRAWING) == DiffBuffer.DRAWING) {
-      trailDrawer.readImage(is);
+      trailDrawer().readImage(is);
     }
   }
 

@@ -84,8 +84,8 @@ public strictfp class World
   public volatile boolean comeUpForAir = false;  // NOPMD pmd doesn't like 'volatile'
 
   public World() {
-    _turtleShapeList = new ShapeList();
-    _linkShapeList = new ShapeList();
+    _turtleShapeList = new ShapeList(AgentKindJ.Turtle());
+    _linkShapeList = new ShapeList(AgentKindJ.Link());
 
     _observer = createObserver();
     _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false, this);
@@ -145,6 +145,10 @@ public strictfp class World
 
   public void trailDrawer(TrailDrawerInterface trailDrawer) {
     this.trailDrawer = trailDrawer;
+  }
+
+  public TrailDrawerInterface trailDrawer() {
+    return trailDrawer;
   }
 
   /// get/set methods for World Topology

@@ -63,7 +63,7 @@ public strictfp class Renderer
       }
     }
     if (linksDrawn < world.links().count()) {
-      // uh oh, we have some unbreeded turtles we need to go back and draw
+      // uh oh, we have some unbreeded links we need to go back and draw
       for (Agent a : world.links().agents()) {
         Link link = (Link) a;
         if (link.getBreed() == world.links()) {

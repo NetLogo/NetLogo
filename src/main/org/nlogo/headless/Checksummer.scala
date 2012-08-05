@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.{ RendererInterface, ViewSettings }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
@@ -16,9 +17,9 @@ object Checksummer {
   }
   def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
     calculateChecksum(workspace.exportWorld _)
-  def calculateGraphicsChecksum(workspace: HeadlessWorkspace): String =
+  def calculateGraphicsChecksum(renderer: RendererInterface, viewSettings: ViewSettings): String =
     calculateChecksum{writer =>
-      val raster = workspace.renderer.exportView(workspace)
+      val raster = renderer.exportView(viewSettings)
       raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int])
         .foreach(writer.println)
     }

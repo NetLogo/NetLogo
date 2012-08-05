@@ -40,7 +40,7 @@ public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
       dispose();          // Importing failed, so quit
       return;
     } else {
-      ShapeList shapeList = new ShapeList();
+      ShapeList shapeList = new ShapeList(org.nlogo.api.AgentKindJ.Turtle());
       shapeList.replaceShapes(foreignShapes);
       list = new DrawableList(shapeList, null, 10, 34);
       list.setParent(this);
