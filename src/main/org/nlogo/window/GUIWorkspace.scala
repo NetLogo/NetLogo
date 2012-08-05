@@ -24,13 +24,13 @@ with Events.LoadSectionEventHandler {
           previewCommands = e.text
       case api.ModelSection.HubNetClient =>
         if (e.lines.nonEmpty && !workspace.AbstractWorkspace.isApplet)
-          getHubNetManager.load(e.lines, e.version)
+          getHubNetManager.load(e.lines.toArray, e.version)
       case api.ModelSection.TurtleShapes =>
         world.turtleShapeList.replaceShapes(
-          shape.VectorShape.parseShapes(e.lines, e.version))
+          shape.VectorShape.parseShapes(e.lines.toArray, e.version))
       case api.ModelSection.LinkShapes =>
         world.linkShapeList.replaceShapes(
-          shape.LinkShape.parseShapes(e.lines, e.version))
+          shape.LinkShape.parseShapes(e.lines.toArray, e.version))
       case _ =>
     }
   }

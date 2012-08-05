@@ -33,7 +33,7 @@ window.JobStopping - owner: api.JobOwner
 window.Load3DShapes - filename: String
 window.LoadBegin
 window.LoadEnd
-window.LoadSection - version: String - section: AnyRef - lines: Array[String] - text: String
+window.LoadSection - version: String - section: AnyRef - lines: Seq[String] - text: String
 window.ModelSaved - modelPath: String
 window.OpenModel - path: String
 window.Output - clear: Boolean - outputObject: agent.OutputObject - wrapLines: Boolean - toCommandCenter: Boolean

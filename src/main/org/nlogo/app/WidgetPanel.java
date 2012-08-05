@@ -705,7 +705,7 @@ public strictfp class WidgetPanel
   }
 
   @Override
-  public void loadWidgets(String[] lines, String version) {
+  public void loadWidgets(scala.collection.Seq<String> lines, String version) {
     try {
       List<List<String>> v =
           org.nlogo.api.ModelReader.parseWidgets(lines);

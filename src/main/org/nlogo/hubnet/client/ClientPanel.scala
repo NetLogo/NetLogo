@@ -231,7 +231,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.interfaceSpecList.head.asInstanceOf[ClientInterface]
     val widgets = clientInterface.widgetDescriptions
-    new LoadSectionEvent("HubNet", ModelSection.Interface, widgets.toArray, widgets.mkString("\n")).raise(this)
+    new LoadSectionEvent("HubNet", ModelSection.Interface, widgets, widgets.mkString("\n")).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)
