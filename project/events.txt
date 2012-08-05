@@ -13,7 +13,7 @@ window.AddInputBoxConstraint - varname: String - constraint: agent.InputBoxConst
 window.AddJob - owner: api.JobOwner - agents: agent.AgentSet - procedure: nvm.Procedure
 window.AddSliderConstraint - slider: SliderWidget - varname: String - minSpec: String - maxSpec: String - incSpec: String - value: java.lang.Double
 window.AfterLoad
-window.App - eventType: AppEventType - args: Array[AnyRef]
+window.App - eventType: AppEventType - args: Seq[AnyRef]
 window.BeforeLoad - modelPath: String - modelType: api.ModelType
 window.CompileAll
 window.CompileMoreSource - owner: api.JobOwner

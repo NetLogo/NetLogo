@@ -516,20 +516,20 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AppEvent){
+  def handle(e: AppEvent) {
     import AppEventType._
     e.eventType match {
       case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args(0).toString)
+      case MAGIC_OPEN => magicOpen(e.args.head.toString)
       case START_LOGGING =>
-        startLogging(e.args(0).toString)
-        if(logger!=null)
+        startLogging(e.args.head.toString)
+        if(logger != null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
         if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
+          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args.head.toString)
         else
-          logger.zipSessionFiles(e.args(0).toString)
+          logger.zipSessionFiles(e.args.head.toString)
       case DELETE_LOG_FILES =>
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))

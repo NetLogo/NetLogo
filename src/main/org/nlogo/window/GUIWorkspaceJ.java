@@ -382,58 +382,6 @@ public abstract strictfp class GUIWorkspaceJ
     throw new UnsupportedOperationException();
   }
 
-  // called from the job thread
-  public void reload() {
-    new Events.AppEvent
-        (AppEventType.RELOAD, new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  @Override
-  public void magicOpen(String name) {
-    new Events.AppEvent
-        (AppEventType.MAGIC_OPEN, new Object[]{name})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  @Override
-  public void changeLanguage() {
-    new Events.AppEvent(AppEventType.CHANGE_LANGUAGE, new Object[]{}).raiseLater(this);
-  }
-
-
-  // called from the job thread
-  public void startLogging(String properties) {
-    try {
-      new Events.AppEvent
-          (AppEventType.START_LOGGING,
-              new Object[]{fileManager.attachPrefix(properties)})
-          .raiseLater(this);
-    } catch (java.net.MalformedURLException ex) {
-      throw new IllegalStateException(ex);
-    }
-  }
-
-  // called from the job thread
-  public void zipLogFiles(String filename) {
-    try {
-      new Events.AppEvent
-          (AppEventType.ZIP_LOG_FILES,
-              new Object[]{fileManager.attachPrefix(filename)})
-          .raiseLater(this);
-    } catch (java.net.MalformedURLException ex) {
-      throw new IllegalStateException(ex);
-    }
-  }
-
-  public void deleteLogFiles() {
-    new Events.AppEvent
-        (AppEventType.DELETE_LOG_FILES, new Object[]{})
-        .raiseLater(this);
-  }
-
   /// painting
 
   public boolean displaySwitchOn() {
