@@ -22,7 +22,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromMap(map: java.util.Map[ModelSection, Array[String]]) {
+  def openFromMap(map: java.util.Map[ModelSection, Seq[String]]) {
 
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
@@ -63,9 +63,12 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.TurtleShapes), map.get(ModelSection.LinkShapes), netLogoVersion)
+    parseShapes(map.get(ModelSection.TurtleShapes).toArray,
+                map.get(ModelSection.LinkShapes).toArray,
+                netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient), netLogoVersion)
+    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient).toArray,
+                             netLogoVersion)
 
     ws.init()
     ws.world.program(results.program)
@@ -137,7 +140,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   private object WidgetParser {
 
-    def parseWidgets(widgetsSection: Array[String], netLogoVersion: String) = {
+    def parseWidgets(widgetsSection: Seq[String], netLogoVersion: String) = {
 
       // parsing widgets dumps information into these four mutable vals.
       // as well as a few places in the workspace.

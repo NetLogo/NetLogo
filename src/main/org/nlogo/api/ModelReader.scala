@@ -13,7 +13,7 @@ object ModelReader {
   val emptyModelPath =
     "/system/empty." + modelSuffix
 
-  type ModelMap = java.util.Map[ModelSection, Array[String]]
+  type ModelMap = java.util.Map[ModelSection, Seq[String]]
 
   val SEPARATOR = "@#$#@#$#@"
 
@@ -25,17 +25,17 @@ object ModelReader {
     Vector() ++ Utils.getResourceLines("/system/defaultLinkShapes.txt")
 
   def parseModel(model: String): ModelMap = {
-    val map: collection.mutable.HashMap[ModelSection, Array[String]] =
-      sections.map(_ -> Array[String]())(collection.breakOut)
+    val map: collection.mutable.HashMap[ModelSection, Seq[String]] =
+      sections.map(_ -> Seq[String]())(collection.breakOut)
     val lines = {
       val br = new java.io.BufferedReader(new java.io.StringReader(model))
       Iterator.continually(br.readLine()).takeWhile(_ != null)
     }
     val sectionsIter = sections.iterator
-    val sectionContents = new collection.mutable.ArrayBuffer[String]
+    val sectionContents = collection.mutable.Buffer[String]()
     def sectionDone() {
       if(sectionsIter.hasNext)
-        map(sectionsIter.next()) = sectionContents.toArray
+        map(sectionsIter.next()) = Vector() ++ sectionContents
       sectionContents.clear()
     }
     for(line <- lines)

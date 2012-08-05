@@ -222,16 +222,16 @@ object App{
   // TODO: lots of duplication here...
   private class ShapeSectionReader(section: ModelSection) extends org.nlogo.shape.ModelSectionReader {
     @throws(classOf[java.io.IOException])
-    def read(path: String) = {
+    def read(path: String): Array[String] = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
               map.get(ModelSection.Version) == null ||
               map.get(ModelSection.Version).length == 0 ||
               !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
-        Array.empty[String]
+        Array()
       }
-      else map.get(section)
+      else map.get(section).toArray
     }
 
     @throws(classOf[java.io.IOException])

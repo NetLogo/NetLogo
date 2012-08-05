@@ -724,9 +724,9 @@ public strictfp class FileMenu
                       String message, ModelType modelType)
       throws UserCancelException {
     // map elements are { source, info, resources, version }
-    Map<ModelSection, String[]> map =
+    Map<ModelSection, scala.collection.Seq<String>> map =
         ModelReader.parseModel(source);
-    if (map == null || map.get(ModelSectionJ.VERSION()).length == 0) {
+    if (map == null || map.get(ModelSectionJ.VERSION()).isEmpty()) {
       notifyUserNotValidFile();
     }
     String version = org.nlogo.api.ModelReader.parseVersion(map);
@@ -751,7 +751,7 @@ public strictfp class FileMenu
 
   private boolean firstLoad = true;
 
-  private void openFromMap(final Map<ModelSection, String[]> map,
+  private void openFromMap(final Map<ModelSection, scala.collection.Seq<String>> map,
                            final String path, String message,
                            final ModelType modelType) {
     try {
