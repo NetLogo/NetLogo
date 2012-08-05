@@ -1,52 +1,52 @@
 # app package
 
-app.WidgetSelected - window.Widget widget - Boolean selected
-app.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
-app.IndenterChanged - Boolean isSmart
+app.WidgetSelected - widget: window.Widget - selected: Boolean
+app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
+app.IndenterChanged - isSmart: Boolean
 
 # window package
 
 window.AboutToQuit
-window.AddBooleanConstraint - String varname - Boolean defaultValue
-window.AddChooserConstraint - String varname - agent.ChooserConstraint constraint
-window.AddInputBoxConstraint - String varname - agent.InputBoxConstraint constraint
-window.AddJob - api.JobOwner owner - agent.AgentSet agents - nvm.Procedure procedure
-window.AddSliderConstraint - SliderWidget slider - String varname - String minSpec - String maxSpec - String incSpec - java.lang.Double value
+window.AddBooleanConstraint - varname: String - defaultValue: Boolean
+window.AddChooserConstraint - varname: String - constraint: agent.ChooserConstraint
+window.AddInputBoxConstraint - varname: String - constraint: agent.InputBoxConstraint
+window.AddJob - owner: api.JobOwner - agents: agent.AgentSet - procedure: nvm.Procedure
+window.AddSliderConstraint - slider: SliderWidget - varname: String - minSpec: String - maxSpec: String - incSpec: String - value: java.lang.Double
 window.AfterLoad
-window.App - AppEventType eventType - Array[AnyRef] args
-window.BeforeLoad - String modelPath - api.ModelType modelType
+window.App - eventType: AppEventType - args: Array[AnyRef]
+window.BeforeLoad - modelPath: String - modelType: api.ModelType
 window.CompileAll
-window.CompileMoreSource - api.JobOwner owner
-window.Compiled - api.SourceOwner sourceOwner - api.Program program - nvm.Procedure procedure - api.CompilerException error
+window.CompileMoreSource - owner: api.JobOwner
+window.Compiled - sourceOwner: api.SourceOwner - program: api.Program - procedure: nvm.Procedure - error: api.CompilerException
 window.Dirty
-window.EditWidget - api.Editable widget
-window.Enable2D - Boolean enabled
-window.ExportInterface - java.io.OutputStream stream - Array[java.io.IOException] exceptionBox
-window.ExportOutput - String filename
-window.ExportPlot - PlotWidgetExportType whichPlots - plot.Plot target - String filename
-window.ExportWorld - java.io.PrintWriter writer
-window.Iconified - java.awt.Frame frame - Boolean iconified
+window.EditWidget - widget: api.Editable
+window.Enable2D - enabled: Boolean
+window.ExportInterface - stream: java.io.OutputStream - exceptionBox: Array[java.io.IOException]
+window.ExportOutput - filename: String
+window.ExportPlot - whichPlots: PlotWidgetExportType - target: plot.Plot - filename: String
+window.ExportWorld - writer: java.io.PrintWriter
+window.Iconified - frame: java.awt.Frame - iconified: Boolean
 window.InputBoxLoseFocus
-window.InterfaceGlobal - InterfaceGlobalWidget widget - Boolean nameChanged - Boolean updating - Boolean valueChanged - Boolean buttonReleased
-window.JobRemoved - api.JobOwner owner
-window.JobStopping - api.JobOwner owner
-window.Load3DShapes - String filename
+window.InterfaceGlobal - widget: InterfaceGlobalWidget - nameChanged: Boolean - updating: Boolean - valueChanged: Boolean - buttonReleased: Boolean
+window.JobRemoved - owner: api.JobOwner
+window.JobStopping - owner: api.JobOwner
+window.Load3DShapes - filename: String
 window.LoadBegin
 window.LoadEnd
-window.LoadSection - String version - AnyRef section - Array[String] lines - String text
-window.ModelSaved - String modelPath
-window.OpenModel - String path
-window.Output - Boolean clear - agent.OutputObject outputObject - Boolean wrapLines - Boolean toCommandCenter
+window.LoadSection - version: String - section: AnyRef - lines: Array[String] - text: String
+window.ModelSaved - modelPath: String
+window.OpenModel - path: String
+window.Output - clear: Boolean - outputObject: agent.OutputObject - wrapLines: Boolean - toCommandCenter: Boolean
 window.PatchesCreated
 window.PeriodicUpdate
 window.RemoveAllJobs
-window.RemoveConstraint - String varname
-window.RemoveJob - api.JobOwner owner
-window.ResizeView - Int width - Int height
-window.RuntimeError - api.JobOwner jobOwner - api.SourceOwner sourceOwner - Int pos - Int length
-window.TickStateChange - Boolean tickCounterInitialized
-window.WidgetAdded - Widget widget
-window.WidgetEdited - Widget widget
-window.WidgetForegrounded - Widget widget
-window.WidgetRemoved - Widget widget
-window.Zoomed - Double zoomFactor
+window.RemoveConstraint - varname: String
+window.RemoveJob - owner: api.JobOwner
+window.ResizeView - width: Int - height: Int
+window.RuntimeError - jobOwner: api.JobOwner - sourceOwner: api.SourceOwner - pos: Int - length: Int
+window.TickStateChange - tickCounterInitialized: Boolean
+window.WidgetAdded - widget: Widget
+window.WidgetEdited - widget: Widget
+window.WidgetForegrounded - widget: Widget
+window.WidgetRemoved - widget: Widget
+window.Zoomed - zoomFactor: Double

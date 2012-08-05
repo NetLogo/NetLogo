@@ -45,13 +45,7 @@ object Autogen {
         val name = splitt(0).split('.')(1).trim + "Event"
         val fieldString = splitt.drop(1).mkString("-")
         val fields = fieldString.split(""" \s*-\s* """).filter(!_.isEmpty).map(_.trim)
-        append("  case class " + name + "(" +
-          fields
-            .map{_.split("""\s+""")}
-            .collect{
-              case Array(tpe, variable, _*) =>
-                variable + ": " + tpe
-            }.mkString(", ") + ") extends Event {")
+        append("  case class " + name + "(" + fields.mkString(", ") + ") extends Event {")
         append("    override def beHandledBy(handler: AnyRef) {")
         append("      handler.asInstanceOf[" + name + "Handler].handle(this)")
         append("    }")
