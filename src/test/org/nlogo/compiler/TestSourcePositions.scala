@@ -4,18 +4,18 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
 import org.nlogo.api.Version.useGenerator
+import org.nlogo.nvm
 
 class TestSourcePositions extends FunSuite {
   val program = Program.empty()
   def compileReporter(source: String) =
     Compiler.compileMoreCode("to foo __ignore " + source + "\nend", None, program,
-      java.util.Collections.emptyMap[String, Procedure],
+      nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager).head.code.head.args.head.source
   def compileCommand(source: String) =
     Compiler.compileMoreCode("to foo " + source + "\nend", None, program,
-      java.util.Collections.emptyMap[String, Procedure],
+      nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager).head.code.head.source
   def reporter(s: String) { expect(s)(compileReporter(s)) }
   def command(s: String) { expect(s)(compileCommand(s)) }

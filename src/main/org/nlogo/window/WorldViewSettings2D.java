@@ -60,7 +60,7 @@ public strictfp class WorldViewSettings2D
           /**
            * All turtles die when the world changes sizes.
            */
-          new org.nlogo.window.Events.RemoveAllJobsEvent().raise(gWidget);
+          new Events.RemoveAllJobsEvent().raise(gWidget);
           world.clearTurtles();
           world.clearLinks();
           world.createPatches(newMinX, newMaxX,

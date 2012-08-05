@@ -12,7 +12,7 @@ import org.nlogo.api.{ AgentKind, I18N }
 class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
                     locationToggleAction: Action) extends JPanel
   with org.nlogo.window.CommandCenterInterface
-  with org.nlogo.window.Events.LoadBeginEvent.Handler {
+  with org.nlogo.window.Events.LoadBeginEventHandler {
 
   // true = echo commands to output
   private val commandLine = new CommandLine(this, true, 12, workspace)

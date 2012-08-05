@@ -10,11 +10,10 @@ import java.awt.{Graphics2D, Graphics, Component, Container, ContainerOrderFocus
 
 class InterfaceTab(workspace: GUIWorkspace,
                    dialogFactory: EditDialogFactoryInterface) extends JPanel
-  with org.nlogo.window.Events.LoadBeginEvent.Handler
-  with org.nlogo.window.Events.OutputEvent.Handler
-  with org.nlogo.window.Events.ExportOutputEvent.Handler
-  with org.nlogo.window.Events.Enable2DEvent.Handler
-  with Events.SwitchedTabsEvent.Handler {
+  with org.nlogo.window.Events.LoadBeginEventHandler
+  with org.nlogo.window.Events.OutputEventHandler
+  with org.nlogo.window.Events.ExportOutputEventHandler
+  with Events.SwitchedTabsEventHandler {
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
@@ -89,11 +88,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
     if(e.clear && iP.getOutputWidget != null) outputArea.clear()
     if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
-  }
-
-  def handle(e: org.nlogo.window.Events.Enable2DEvent) {
-    viewUpdatePanel.setVisible(e.enabled)
-    viewUpdatePanel.handle(null)
   }
 
   /// command center stuff

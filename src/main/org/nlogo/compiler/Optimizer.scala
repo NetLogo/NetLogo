@@ -146,7 +146,7 @@ private class Optimizer extends DefaultAstVisitor {
         case stmt: Statement => stmt.removeArgument(stmt.args.size - 1)
       }
     }
-    def replace(theClass: Class[_ <: Instruction], constructorArgs: AnyRef*) {
+    def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*) {
       val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
       node match {
         case app: ReporterApp =>
@@ -279,9 +279,8 @@ private class Optimizer extends DefaultAstVisitor {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors])
       root.strip()
-      root.replace(classOf[_nsum])
-      root.reporter.asInstanceOf[_nsum].vn =
-        arg0.reporter.asInstanceOf[_patchvariableof].vn
+      root.replace(classOf[_nsum],
+                   arg0.reporter.asInstanceOf[_patchvariableof].vn)
     }
   }
   private object Nsum4 extends RewritingReporterMunger {
@@ -290,9 +289,8 @@ private class Optimizer extends DefaultAstVisitor {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors4])
       root.strip()
-      root.replace(classOf[_nsum4])
-      root.reporter.asInstanceOf[_nsum4].vn =
-        arg0.reporter.asInstanceOf[_patchvariableof].vn
+      root.replace(classOf[_nsum4],
+                   arg0.reporter.asInstanceOf[_patchvariableof].vn)
     }
   }
   // _count(_with) => _countwith
@@ -473,9 +471,8 @@ private class Optimizer extends DefaultAstVisitor {
       val d = root.matchArg(0, classOf[_constdouble])
                   .reporter.asInstanceOf[_constdouble].primitiveValue
       if(d > 0 && d == d.toLong && Instruction.isValidLong(d)) {
-        root.replace(classOf[_randomconst])
+        root.replace(classOf[_randomconst], d.toLong)
         root.strip()
-        root.reporter.asInstanceOf[_randomconst].n = d.toLong
       }
     }
   }

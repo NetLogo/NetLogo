@@ -40,7 +40,7 @@ abstract class AbstractTestLanguage extends Assertions {
         Program.empty,
         workspace.getExtensionManager())
     }
-    workspace.setProcedures(results.proceduresMap)
+    workspace.procedures = results.proceduresMap
     workspace.world.program(results.program)
     workspace.init()
     workspace.world.realloc()

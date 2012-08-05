@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
 import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
-import org.nlogo.nvm.{Instruction, EngineException, Context, Procedure}
+import org.nlogo.nvm.{ CompilerInterface, Instruction, EngineException, Context, Procedure }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import java.io.{IOException,PrintWriter}
@@ -17,7 +17,7 @@ object AbstractWorkspaceScala {
 
 abstract class AbstractWorkspaceScala(private val _world: World)
   extends AbstractWorkspace(_world)
-  with Plotting with Exporting with Evaluating {
+  with Procedures with Plotting with Exporting with Evaluating {
 
   /**
    * previewCommands used by make-preview and model test
@@ -60,6 +60,15 @@ abstract class AbstractWorkspaceScala(private val _world: World)
 }
 
 object AbstractWorkspaceTraits {
+
+  trait Procedures { this: AbstractWorkspace =>
+    var procedures: CompilerInterface.ProceduresMap =
+      CompilerInterface.NoProcedures
+    def init() {
+      procedures.values.foreach(_.init(this))
+    }
+  }
+
 
   trait Plotting { this: AbstractWorkspace =>
 

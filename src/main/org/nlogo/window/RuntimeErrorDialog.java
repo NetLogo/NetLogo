@@ -79,7 +79,7 @@ public strictfp class RuntimeErrorDialog
     // running Logo code (and not, for example, in the GUI)
     SUPPRESS_BUTTON.setVisible(!ordinaryError && context == null);
     javaStackTrace = org.nlogo.util.Utils.getStackTrace(throwable);
-    eventTrace = org.nlogo.window.Event.recentEventTrace();
+    eventTrace = Event.recentEventTrace();
     if (context != null) {
       errorMessage = context.buildRuntimeErrorMessage(instruction, throwable);
     } else if (ordinaryError) {

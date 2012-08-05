@@ -206,12 +206,12 @@ object App{
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
-    AppEvent.Handler with
-    BeforeLoadEvent.Handler with
-    LoadBeginEvent.Handler with
-    LoadEndEvent.Handler with
-    ModelSavedEvent.Handler with
-    Events.SwitchedTabsEvent.Handler with
+    AppEventHandler with
+    BeforeLoadEventHandler with
+    LoadBeginEventHandler with
+    LoadEndEventHandler with
+    ModelSavedEventHandler with
+    Events.SwitchedTabsEventHandler with
     Controllable {
 
   import App.{pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch}
@@ -337,7 +337,7 @@ class App extends
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
 
-    org.nlogo.app.FindDialog.init(frame)
+    FindDialog.init(frame)
 
     Splash.endSplash()
     frame.setVisible(true)
@@ -391,7 +391,7 @@ class App extends
    */
   def handle(e:AppEvent){
     import AppEventType._
-    e.`type` match {
+    e.eventType match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
       case CHANGE_LANGUAGE => changeLanguage()

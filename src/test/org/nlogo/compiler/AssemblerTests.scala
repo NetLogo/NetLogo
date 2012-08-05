@@ -3,23 +3,23 @@
 package org.nlogo.compiler
 
 import org.scalatest.FunSuite
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm
 import org.nlogo.api.{ DummyExtensionManager, Program }
 
 class AssemblerTests extends FunSuite {
-  def compile(keyword: String, source: String): Procedure = {
+  def compile(keyword: String, source: String): nvm.Procedure = {
     implicit val tokenizer = Compiler.Tokenizer2D
     val program = Program.empty
     val results = new StructureParser(
       tokenizer.tokenize(keyword + " foo " + source + "\nend"), None,
-      program, java.util.Collections.emptyMap[String, Procedure],
+      program, nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
-        results.procedures, false)
+      new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
+                           results.procedures, false)
         .process(results.tokens(procedure).iterator, procedure)
     for (procdef <- new ExpressionParser(procedure).parse(tokens)) {
       procdef.accept(new ArgumentStuffer)

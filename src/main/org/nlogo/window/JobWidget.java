@@ -9,7 +9,7 @@ public abstract strictfp class JobWidget
     extends SingleErrorWidget
     implements
     org.nlogo.api.JobOwner,
-    org.nlogo.window.Events.CompiledEvent.Handler {
+    Events.CompiledEventHandler {
 
   public JobWidget(org.nlogo.util.MersenneTwisterFast random) {
     this.random = random;
@@ -68,10 +68,10 @@ public abstract strictfp class JobWidget
 
   ///
 
-  public void handle(org.nlogo.window.Events.CompiledEvent e) {
-    if (e.sourceOwner == this) {
-      procedure(e.procedure);  // use setter method, so subclasses can catch
-      error(e.error);
+  public void handle(Events.CompiledEvent e) {
+    if (e.sourceOwner() == this) {
+      procedure(e.procedure());  // use setter method, so subclasses can catch
+      error(e.error());
     }
 
     if (error() == null) {
@@ -93,7 +93,7 @@ public abstract strictfp class JobWidget
     // actually this stuff doesn't need to happen in the applet,
     // so we can just skip it in that context. - ST 10/12/03, 10/16/03
     if (java.awt.EventQueue.isDispatchThread()) {
-      new org.nlogo.window.Events.RemoveJobEvent(this).raise(this);
+      new Events.RemoveJobEvent(this).raise(this);
     }
     super.removeNotify();
   }
@@ -143,7 +143,7 @@ public abstract strictfp class JobWidget
     this.suppressRecompiles = suppressRecompiles;
     if (!suppressRecompiles && recompilePending) {
       recompilePending = false;
-      new org.nlogo.window.Events.CompileMoreSourceEvent(this)
+      new Events.CompileMoreSourceEvent(this)
           .raise(this);
     }
   }
@@ -155,8 +155,7 @@ public abstract strictfp class JobWidget
     if (suppressRecompiles) {
       recompilePending = true;
     } else {
-      new org.nlogo.window.Events.CompileMoreSourceEvent(this)
-          .raise(this);
+      new Events.CompileMoreSourceEvent(this).raise(this);
     }
   }
 

@@ -11,7 +11,7 @@ import org.nlogo.api.I18N
 class Tabs(val workspace: GUIWorkspace,
            dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
-  with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler with CompiledEvent.Handler{
+  with LoadBeginEventHandler with RuntimeErrorEventHandler with CompiledEventHandler{
 
   locally{
     setOpaque(false)

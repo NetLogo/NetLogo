@@ -80,7 +80,7 @@ extends IndenterInterface {
   // None return means "leave it where it is"
   private def computeNewSpaces(currentLine: String,lineNum: Int): Option[Int] = {
     val token = compiler.tokenizeForColorization(currentLine).headOption.orNull
-    if(token != null && token.tyype == TokenType.CLOSE_BRACKET) {
+    if(token != null && token.tpe == TokenType.CLOSE_BRACKET) {
       // first token is close bracket, so find matching opener and set it to the same indent level
       val opener = findMatchingOpenerBackward(
         code.getText(0, code.lineToStartOffset(lineNum) + token.startPos + 1), 0)
@@ -93,7 +93,7 @@ extends IndenterInterface {
     // of situations where the breed variable might be the first token in a line, however, they seem
     // quite unusual and maybe you should be formatting your code differently if you run into such a
     // situation :) ev 1/22/08
-    if(token != null && (token.tyype == TokenType.KEYWORD ||
+    if(token != null && (token.tpe == TokenType.KEYWORD ||
                          token.name.equalsIgnoreCase("breed")))
       return Some(0)
     // if it's not one of the previous two cases the position probably depends at least one line
@@ -107,8 +107,8 @@ extends IndenterInterface {
     var i = prevLineNum - 1
     while(i >= 0 &&
           (tokens.isEmpty ||
-           ((token == null || token.tyype != TokenType.COMMENT) &&
-            tokens(0).tyype == TokenType.COMMENT)))
+           ((token == null || token.tpe != TokenType.COMMENT) &&
+            tokens(0).tpe == TokenType.COMMENT)))
     {
       prevLineNum = i
       prevLine = code.getLineOfText(prevLineNum)
@@ -117,7 +117,7 @@ extends IndenterInterface {
     }
     if(tokens.isEmpty) return None
     // if our line starts with a comment, try to find a comment in prev line to align with
-    if(token != null && token.tyype == TokenType.COMMENT)
+    if(token != null && token.tpe == TokenType.COMMENT)
       getComment(tokens).foreach(tok => return Some(tok.startPos))
     var result = countLeadingSpaces(prevLine)
     // if there is such a previous line if it's got an "opener" that has no closer bump this line in
@@ -191,25 +191,25 @@ extends IndenterInterface {
         diff -= 1
       else if(isCloser(tok))
         diff += 1
-      else if(diff == 0 && tok.tyype == TokenType.COMMAND)
+      else if(diff == 0 && tok.tpe == TokenType.COMMAND)
         return Some(tok)
     }
     None
   }
 
   private def getComment(tokens: List[Token]): Option[Token] =
-    tokens.reverse.find(_.tyype == TokenType.COMMENT)
+    tokens.reverse.find(_.tpe == TokenType.COMMENT)
   private def tokenize(line: String) =
     compiler.tokenizeForColorization(line).toList
   private def isOpener(t: Token) =
-    t.tyype == TokenType.OPEN_PAREN ||
-    t.tyype == TokenType.OPEN_BRACKET ||
-    t.tyype == TokenType.KEYWORD &&
+    t.tpe == TokenType.OPEN_PAREN ||
+    t.tpe == TokenType.OPEN_BRACKET ||
+    t.tpe == TokenType.KEYWORD &&
       (t.name.equalsIgnoreCase("to") || t.name.equalsIgnoreCase("to-report"))
   private def isCloser(t: Token) =
-    t.tyype == TokenType.CLOSE_PAREN ||
-    t.tyype == TokenType.CLOSE_BRACKET ||
-    t.tyype == TokenType.KEYWORD &&
+    t.tpe == TokenType.CLOSE_PAREN ||
+    t.tpe == TokenType.CLOSE_BRACKET ||
+    t.tpe == TokenType.KEYWORD &&
       t.name.equalsIgnoreCase("end")
 
 }

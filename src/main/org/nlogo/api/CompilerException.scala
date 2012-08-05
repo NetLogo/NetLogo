@@ -9,7 +9,7 @@ package org.nlogo.api
  */
 class CompilerException(message: String, val startPos: Int, val endPos: Int, val fileName: String)
 extends Exception(message) {
-  def this(token: Token) = this({assert(token.tyype == TokenType.BAD); token.value.asInstanceOf[String]},
+  def this(token: Token) = this({assert(token.tpe == TokenType.BAD); token.value.asInstanceOf[String]},
                                  token.startPos, token.endPos, token.fileName)
 
   override def toString =

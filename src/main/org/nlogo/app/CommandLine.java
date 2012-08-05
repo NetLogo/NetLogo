@@ -19,7 +19,7 @@ strictfp class CommandLine
     implements
     java.awt.event.ActionListener,
     java.awt.event.KeyListener,
-    org.nlogo.window.Events.CompiledEvent.Handler {
+    org.nlogo.window.Events.CompiledEventHandler {
   static final String PROMPT = ">";
   static final String OBSERVER_PROMPT = I18N.guiJ().get("common.observer") + PROMPT;
   static final String TURTLE_PROMPT = I18N.guiJ().get("common.turtles") + PROMPT;
@@ -180,8 +180,8 @@ strictfp class CommandLine
   @Override
   public void handle(org.nlogo.window.Events.CompiledEvent e) {
     super.handle(e);
-    if (e.sourceOwner == this) {
-      error(e.error);
+    if (e.sourceOwner() == this) {
+      error(e.error());
       if (error() == null) {
         setText("");
         String outStr = innerSource();

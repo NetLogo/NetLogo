@@ -79,7 +79,7 @@ public abstract strictfp class Chooser
   @Override
   public void updateConstraints() {
     if (name().length() > 0) {
-      new org.nlogo.window.Events.AddChooserConstraintEvent(name, constraint)
+      new Events.AddChooserConstraintEvent(name, constraint)
           .raise(this);
     }
   }

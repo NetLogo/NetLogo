@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm
 
 // Normally we don't bother declaring stuff in test classes private, but sometimes (as a few times
 // below) it's necessary in order to avoid "escapes its defining scope" errors. - ST 11/25/08
@@ -20,13 +20,13 @@ class ExpressionParserTests extends FunSuite {
     implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenize(wrappedSource), None,
-      program, java.util.Collections.emptyMap[String, Procedure],
+      program, nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
+      new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
         results.procedures, false)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)

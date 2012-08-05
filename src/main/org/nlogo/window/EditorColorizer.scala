@@ -30,12 +30,12 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
         // beginning of the line (position 0) - ST 7/11/06
         val color = getTokenColor(
-          if (tok.tyype == TokenType.VARIABLE &&
+          if (tok.tpe == TokenType.VARIABLE &&
               tok.startPos == 0 &&
               tok.name.equalsIgnoreCase("BREED"))
             TokenType.KEYWORD
           else
-            tok.tyype
+            tok.tpe
         )
         for (j <- tok.startPos until tok.endPos)
           // guard against any bugs in tokenization causing out-of-bounds positions
@@ -56,7 +56,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
     for {tok <- tokens; j <- tok.startPos until tok.endPos}
       // guard against any bugs in tokenization causing out-of-bounds positions
       if (result.isDefinedAt(j))
-        result(j) = tok.tyype
+        result(j) = tok.tpe
     result.toIndexedSeq.asJava
   }
 
@@ -75,8 +75,8 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
 
   ///
 
-  private def getTokenColor(tyype: TokenType) =
-    tyype match {
+  private def getTokenColor(tpe: TokenType) =
+    tpe match {
       case TokenType.CONSTANT =>
         SyntaxColors.CONSTANT_COLOR
       case TokenType.COMMAND =>

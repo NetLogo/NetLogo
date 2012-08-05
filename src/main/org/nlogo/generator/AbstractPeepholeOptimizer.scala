@@ -62,9 +62,9 @@ private abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends Meth
     restartMatch()
     mv.visitMultiANewArrayInsn(desc, dims)
   }
-  override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tyype: String) {
+  override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) {
     restartMatch()
-    mv.visitTryCatchBlock(start, end, handler, tyype)
+    mv.visitTryCatchBlock(start, end, handler, tpe)
   }
   override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {
     restartMatch()

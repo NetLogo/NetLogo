@@ -17,7 +17,7 @@ object Switch {
 }
 
 abstract class Switch extends MultiErrorWidget with MouseWheelListener
-  with org.nlogo.window.Events.AfterLoadEvent.Handler {
+  with org.nlogo.window.Events.AfterLoadEventHandler {
 
   import Switch._
 

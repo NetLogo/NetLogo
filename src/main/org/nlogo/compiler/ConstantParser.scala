@@ -70,7 +70,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     val result = readConstantPrefix(tokens.next(), tokens)
     // make sure there's no extra stuff at the end...
     val extra = tokens.next()
-    cAssert(extra.tyype == TokenType.EOF, EXTRA_STUFF_AFTER_CONSTANT, extra)
+    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_CONSTANT, extra)
     result
   }
 
@@ -80,10 +80,10 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
 
   def getNumberValue(tokens: Iterator[Token]) = {
     val token = tokens.next()
-    if(token.tyype != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
+    if(token.tpe != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
       exception(EXPECTED_NUMBER, token)
     val extra = tokens.next()
-    cAssert(extra.tyype == TokenType.EOF, EXTRA_STUFF_AFTER_NUMBER, extra)
+    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_NUMBER, extra)
     token.value.asInstanceOf[java.lang.Double]
   }
 
@@ -97,7 +97,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   *               is, constant agents and agentsets will cause an error.
   */
   private def readConstantPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
-    token.tyype match {
+    token.tpe match {
       case TokenType.LITERAL =>
         parseConstantLiteral(token)
       case TokenType.CONSTANT =>
@@ -112,7 +112,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
         // itself. since we don't do syntax highlighting, it doesn't matter so much what the token
         // is, and we use a message which doesn't rely on that context.
         val closeParen = tokens.next()
-        cAssert(closeParen.tyype == TokenType.CLOSE_PAREN, EXPECTED_CLOSE_PAREN, closeParen)
+        cAssert(closeParen.tpe == TokenType.CLOSE_PAREN, EXPECTED_CLOSE_PAREN, closeParen)
         result
       case TokenType.COMMENT =>
         // just skip comments when reading a constant - ev 7/10/07
@@ -131,7 +131,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     var done = false
     while(!done) {
       val token = tokens.next()
-      token.tyype match {
+      token.tpe match {
         case TokenType.CLOSE_BRACKET => done = true
         case TokenType.EOF => exception(MISSING_CLOSE_BRACKET, openBracket)
         case _ => list = list.lput(readConstantPrefix(token, tokens))
@@ -166,7 +166,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     }
     else if(agentKind.isInstanceOf[org.nlogo.prim._turtle]) {
       val token = tokens.next()
-      if(token.tyype != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
+      if(token.tpe != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
         exception(BAD_TURTLE_ARG, token)
       world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].longValue)
     }
@@ -184,14 +184,14 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
    */
   private def parsePcor(tokens: Iterator[Token]): Double = {
     val token = tokens.next()
-    cAssert(token.tyype == TokenType.CONSTANT && token.value.isInstanceOf[java.lang.Double],
+    cAssert(token.tpe == TokenType.CONSTANT && token.value.isInstanceOf[java.lang.Double],
             BAD_PATCH_ARGS, token)
     token.value.asInstanceOf[Double].doubleValue
   }
 
   private def parseEnd(tokens: Iterator[Token]): java.lang.Double = {
     val token = tokens.next()
-    cAssert(token.tyype == TokenType.CONSTANT && token.value.isInstanceOf[java.lang.Double],
+    cAssert(token.tpe == TokenType.CONSTANT && token.value.isInstanceOf[java.lang.Double],
             BAD_LINK_ARGS, token)
     token.value.asInstanceOf[java.lang.Double]
   }
@@ -208,16 +208,16 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     val token = tokens.next()
     // next token should be an identifier or reporter. reporter is a special case because "turtles"
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
-    cAssert(List(TokenType.VARIABLE, TokenType.IDENT, TokenType.REPORTER).contains(token.tyype),
+    cAssert(List(TokenType.VARIABLE, TokenType.IDENT, TokenType.REPORTER).contains(token.tpe),
             EXPECTED_BREED, token)
-    if(token.tyype == TokenType.VARIABLE || token.tyype == TokenType.IDENT) {
+    if(token.tpe == TokenType.VARIABLE || token.tpe == TokenType.IDENT) {
       val agentsetTypeString = token.value.asInstanceOf[String]
       if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_BREED)) {
         // we have a breed agentset
         val breedToken = tokens.next()
-        cAssert(breedToken.tyype == TokenType.IDENT, EXPECTED_BREED, breedToken)
+        cAssert(breedToken.tpe == TokenType.IDENT, EXPECTED_BREED, breedToken)
         val closeBrace = tokens.next()
-        cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+        cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
         // this is safe since it must be an IDENT.
         val breedString = breedToken.value.asInstanceOf[String]
         val breed = {
@@ -233,7 +233,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
         // we have the turtles or patches agentset. make sure that's
         // all we have...
         val closeBrace = tokens.next()
-        cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+        cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
         agentsetTypeString.toUpperCase match {
           case SET_TYPE_ALLTURTLES => world.turtles
           case SET_TYPE_ALLLINKS => world.links
@@ -243,24 +243,24 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
         // we have the observer agentset. make sure that's all we have...
         val closeBrace = tokens.next()
-        cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+        cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
         val agentset = new ArrayAgentSet(api.AgentKind.Observer, 1, false, world)
         agentset.add(world.observer)
         agentset
       }
       else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
         val token = tokens.next()
-        if(token.tyype != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
+        if(token.tpe != TokenType.CONSTANT || !token.value.isInstanceOf[java.lang.Double])
           exception(BAD_TURTLE_ARG, token)
         val closeBrace = tokens.next()
-        cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+        cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
         world.getOrCreateTurtle(token.value.asInstanceOf[java.lang.Double].intValue)
       }
       else if(world.program.linkBreeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
         val end1 = parseEnd(tokens)
         val end2 = parseEnd(tokens)
         val closeBrace = tokens.next()
-        cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+        cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
         world.getOrCreateLink(
           end1, end2,
           world.getLinkBreed(
@@ -273,7 +273,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       // we have an agentset of turtles. parse arguments...
       val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
       var token = tokens.next()
-      while(token.tyype != TokenType.CLOSE_BRACE) {
+      while(token.tpe != TokenType.CLOSE_BRACE) {
         val value = readConstantPrefix(token, tokens)
         cAssert(value.isInstanceOf[java.lang.Double], BAD_TURTLE_SET_ARGS, token)
         agentset.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
@@ -285,8 +285,8 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       // we have an agentset of links. parse arguments...
       val agentset = new ArrayAgentSet(api.AgentKind.Link, 1, false, world)
       var token = tokens.next()
-      while(token.tyype != TokenType.CLOSE_BRACE) {
-        cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
+      while(token.tpe != TokenType.CLOSE_BRACE) {
+        cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
         val listVal = readConstantPrefix(token, tokens).asInstanceOf[LogoList]
         cAssert(listVal.size == 3 &&
                 listVal.get(0).isInstanceOf[java.lang.Double] &&
@@ -305,8 +305,8 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       // we have an agentset of patches. parse arguments...
       val agentset = new ArrayAgentSet(api.AgentKind.Patch, 1, false, world)
       var token = tokens.next()
-      while(token.tyype != TokenType.CLOSE_BRACE) {
-        cAssert(token.tyype == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)
+      while(token.tpe != TokenType.CLOSE_BRACE) {
+        cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)
         val listVal = readConstantPrefix(token, tokens).asInstanceOf[LogoList]
         cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
                 BAD_PATCH_SET_ARGS, token)
@@ -327,7 +327,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       // we have a single agent, turtle patch or link
       val result = parseConstantAgent(token, tokens)
       val closeBrace = tokens.next()
-      cAssert(closeBrace.tyype == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
+      cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
       result
     }
     else exception(token.name + NOT_AN_AGENTSET, token)

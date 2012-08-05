@@ -2,11 +2,10 @@
 
 package org.nlogo.window
 
-import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
 import org.nlogo.api.{I18N, CompilerServices, Dump, Editable, LogoList}
 
 class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with Editable with
-        InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
+        InterfaceGlobalWidget with Events.PeriodicUpdateEventHandler {
   setBorder(widgetBorder)
 
   override def propertySet = Properties.chooser
@@ -30,7 +29,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
     displayName(newName)
-    if (sendEvent) {new InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
+    if (sendEvent) {new Events.InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
   }
   def nameWrapper = name()
   // name needs a wrapper because we don't want to recompile until editFinished()
@@ -57,9 +56,9 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     if (newIndex == -1) index(0) else index(newIndex)
   }
 
-  def handle(e: AfterLoadEvent) {updateConstraints()}
-  def handle(e: PeriodicUpdateEvent) {
-    new InterfaceGlobalEvent(this, false, true, false, false).raise(this)
+  def handle(e: Events.AfterLoadEvent) {updateConstraints()}
+  def handle(e: Events.PeriodicUpdateEvent) {
+    new Events.InterfaceGlobalEvent(this, false, true, false, false).raise(this)
   }
 
   override def editFinished(): Boolean = {
@@ -76,7 +75,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     // down on the number of events generated.
     if (this.index() != index) {
       super.index(index)
-      new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
+      new Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
 

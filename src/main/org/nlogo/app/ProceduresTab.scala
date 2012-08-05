@@ -14,8 +14,8 @@ import org.nlogo.api.{ AgentKind, I18N }
 class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
   with org.nlogo.window.ProceduresInterface
   with ProceduresMenuTarget
-  with Events.SwitchedTabsEvent.Handler
-  with org.nlogo.window.Events.CompiledEvent.Handler {
+  with Events.SwitchedTabsEventHandler
+  with org.nlogo.window.Events.CompiledEventHandler {
 
   private val listener = new TextListener() {
     override def textValueChanged(e: TextEvent) {
@@ -59,7 +59,7 @@ class ProceduresTab(val workspace: AbstractWorkspace) extends JPanel
 
   def getToolBar = new org.nlogo.swing.ToolBar() {
     override def addControls() {
-      add(new JButton(org.nlogo.app.FindDialog.FIND_ACTION))
+      add(new JButton(FindDialog.FIND_ACTION))
       add(new JButton(compileAction))
       add(new org.nlogo.swing.ToolBar.Separator())
       add(new ProceduresMenu(ProceduresTab.this))

@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm
 
 class AgentTypeCheckerTests extends FunSuite {
 
@@ -12,16 +12,16 @@ class AgentTypeCheckerTests extends FunSuite {
   private def compile(source: String): Seq[ProcedureDefinition] = {
     implicit val tokenizer = Compiler.Tokenizer2D
     val program = Program.empty
-    val results = new StructureParser(tokenizer.tokenize(source), None, program,
-      java.util.Collections.emptyMap[String, Procedure],
+    val results = new StructureParser(
+      tokenizer.tokenize(source), None, program,
+      nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager)
       .parse(false)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
-    import collection.JavaConverters._ // results.procedures.values is a java.util.Collection
-    for (procedure <- results.procedures.asScala.values) {
+    for (procedure <- results.procedures.values) {
       val tokens =
-        new IdentifierParser(program, java.util.Collections.emptyMap[String, Procedure],
-          results.procedures, false)
+        new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
+                             results.procedures, false)
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }

@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.api
 import org.nlogo.agent.{ Agent, AgentSet, World }
-import java.util.{ Map => JMap, WeakHashMap => JWeakHashMap }
+import java.util.{ WeakHashMap => JWeakHashMap }
 import java.io.IOException
 
 trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerServices with api.RandomServices {
@@ -14,8 +14,8 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def addJobFromJobThread(job: Job)
   def getExtensionManager: api.ExtensionManager
   def requestDisplayUpdate(force: Boolean)
-  def getProcedures: JMap[String, Procedure]
-  def setProcedures(procedures: JMap[String, Procedure])
+  def procedures: CompilerInterface.ProceduresMap
+  def procedures_=(procedures: CompilerInterface.ProceduresMap)
   @throws(classOf[api.LogoException])
   def waitFor(runnable: api.CommandRunnable)
   @throws(classOf[api.LogoException])

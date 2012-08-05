@@ -12,7 +12,7 @@ public strictfp class SpeedSliderPanel
     implements
     java.awt.event.MouseListener,
     javax.swing.event.ChangeListener,
-    org.nlogo.window.Events.LoadBeginEvent.Handler {
+    Events.LoadBeginEventHandler {
   private final GUIWorkspace workspace;
 
   final SpeedSlider speedSlider;
@@ -124,7 +124,7 @@ public strictfp class SpeedSliderPanel
     }
   }
 
-  public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
+  public void handle(Events.LoadBeginEvent e) {
     speedSlider.reset();
   }
 

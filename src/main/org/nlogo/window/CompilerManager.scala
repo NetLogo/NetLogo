@@ -8,13 +8,13 @@ import org.nlogo.workspace.AbstractWorkspace
 import collection.JavaConverters._
 class CompilerManager(workspace: GUIWorkspace, proceduresInterface: ProceduresInterface)
 extends Event.LinkChild
-with Events.CompileMoreSourceEvent.Handler
-with Events.InterfaceGlobalEvent.Handler
-with Events.LoadBeginEvent.Handler
-with Events.LoadEndEvent.Handler
-with Events.WidgetAddedEvent.Handler
-with Events.WidgetRemovedEvent.Handler
-with Events.CompileAllEvent.Handler {
+with Events.CompileMoreSourceEventHandler
+with Events.InterfaceGlobalEventHandler
+with Events.LoadBeginEventHandler
+with Events.LoadEndEventHandler
+with Events.WidgetAddedEventHandler
+with Events.WidgetRemovedEventHandler
+with Events.CompileAllEventHandler {
 
   val widgets = collection.mutable.Set[JobOwner]()
   val globalWidgets = collection.mutable.Set[InterfaceGlobalWidget]()
@@ -44,7 +44,7 @@ with Events.CompileAllEvent.Handler {
   }
 
   private def compileAll() {
-    (new org.nlogo.window.Events.RemoveAllJobsEvent).raise(this)
+    (new Events.RemoveAllJobsEvent).raise(this)
     workspace.world.displayOn(true)
     // We can't compile the Code tab until the contents of InterfaceGlobals is known, which won't
     // happen until the widgets are loaded, which happens later.  So the isLoading flag is used to
@@ -75,19 +75,19 @@ with Events.CompileAllEvent.Handler {
             proceduresInterface.innerSource,
             workspace.world.program.copy(interfaceGlobals = globalWidgets.map(_.name).toSeq),
             workspace.getExtensionManager)
-      workspace.setProcedures(results.proceduresMap)
-      for(procedure <- workspace.getProcedures.values.asScala)
+      workspace.procedures = results.proceduresMap
+      for(procedure <- workspace.procedures.values)
         if (procedure.fileName.isEmpty)
           procedure.setOwner(proceduresInterface)
       workspace.init()
       workspace.world.program(results.program)
-      new org.nlogo.window.Events.CompiledEvent(
+      new Events.CompiledEvent(
         proceduresInterface, results.program, null, null)
         .raise(this)
       true
     } catch { case error: CompilerException =>
       if (error.fileName.isEmpty)
-        new org.nlogo.window.Events.CompiledEvent(proceduresInterface, null, null, error)
+        new Events.CompiledEvent(proceduresInterface, null, null, error)
           .raise(this)
       false
     }
@@ -108,16 +108,16 @@ with Events.CompileAllEvent.Handler {
       val results =
         workspace.compiler.compileMoreCode(
           owner.source, Some(owner.classDisplayName + " '" + owner.displayName + "'"),
-          workspace.world.program, workspace.getProcedures, workspace.getExtensionManager)
+          workspace.world.program, workspace.procedures, workspace.getExtensionManager)
       if (!results.procedures.isEmpty) {
         results.head.init(workspace)
         results.head.setOwner(owner)
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           owner, workspace.world.program, results.head, null).raise(this)
       }
     } catch { case error: CompilerException =>
       errorEvents +=
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           owner, workspace.world.program, null, error)
     }
   }
@@ -127,7 +127,7 @@ with Events.CompileAllEvent.Handler {
     val iter = widgets.iterator
     // handle special case where there are no more widgets.
     if (!iter.hasNext)
-      new org.nlogo.window.Events.CompiledEvent(
+      new Events.CompiledEvent(
         null, workspace.world.program, null, null)
         .raise(this)
     while (iter.hasNext) {
@@ -153,15 +153,15 @@ with Events.CompileAllEvent.Handler {
         val results =
           workspace.compiler.compileMoreCode(
             e.owner.source, Some(e.owner.classDisplayName), workspace.world.program,
-            workspace.getProcedures, workspace.getExtensionManager)
+            workspace.procedures, workspace.getExtensionManager)
         results.head.init(workspace)
         results.head.setOwner(e.owner)
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           e.owner, workspace.world.program, results.head, null)
           .raise(this)
       }
       catch { case error: CompilerException =>
-        new org.nlogo.window.Events.CompiledEvent(
+        new Events.CompiledEvent(
           e.owner, workspace.world.program, null, error)
           .raise(this)
       }

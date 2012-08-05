@@ -5,14 +5,14 @@ package org.nlogo.compiler
 import org.scalatest.FunSuite
 
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm
 
 class StructureParserTests extends FunSuite {
   // private so StructureParser.Results doesn't escape compiler package
   private def compile(source: String, program: Program): StructureParser.Results = {
     implicit val tokenizer = Compiler.Tokenizer2D
     new StructureParser(tokenizer.tokenize(source), None, program,
-      java.util.Collections.emptyMap[String, Procedure], new DummyExtensionManager)
+      nvm.CompilerInterface.NoProcedures, new DummyExtensionManager)
       .parse(false)
   }
   test("empty") {
@@ -38,7 +38,7 @@ class StructureParserTests extends FunSuite {
   test("commandProcedure") {
     val results = compile("to go fd 1 end", Program.empty())
     expect(1)(results.procedures.size)
-    expect("procedure GO:[]{OTPL}:\n")(results.procedures.get("GO").dump)
+    expect("procedure GO:[]{OTPL}:\n")(results.procedures("GO").dump)
   }
   test("declarations1") {
     val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.empty())

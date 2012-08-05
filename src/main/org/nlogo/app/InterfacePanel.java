@@ -18,8 +18,8 @@ import java.util.List;
 strictfp class InterfacePanel
     extends WidgetPanel
     implements java.awt.event.KeyListener,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
-    org.nlogo.window.Events.ExportInterfaceEvent.Handler {
+    org.nlogo.window.Events.LoadSectionEventHandler,
+    org.nlogo.window.Events.ExportInterfaceEventHandler {
 
   private final org.nlogo.window.ViewWidgetInterface viewWidget;
 
@@ -302,9 +302,9 @@ strictfp class InterfacePanel
     try {
       javax.imageio.ImageIO.write
           (org.nlogo.awt.Images.paintToImage(this),
-              "png", e.stream);
+           "png", e.stream());
     } catch (java.io.IOException ex) {
-      e.exceptionBox[0] = ex;
+      e.exceptionBox()[0] = ex;
     }
   }
 
@@ -337,8 +337,8 @@ strictfp class InterfacePanel
   }
 
   public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.WIDGETS()) {
-      loadWidgets(e.lines, e.version);
+    if (e.section() == ModelSectionJ.WIDGETS()) {
+      loadWidgets(e.lines(), e.version());
     }
   }
 

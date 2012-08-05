@@ -18,8 +18,8 @@ public strictfp class InterfacePanelLite
     implements
     WidgetContainer,
     java.awt.event.FocusListener,
-    org.nlogo.window.Events.LoadSectionEvent.Handler,
-    org.nlogo.window.Events.OutputEvent.Handler {
+    Events.LoadSectionEventHandler,
+    Events.OutputEventHandler {
 
   private final Map<String, Widget> widgets; // widget name -> Widget
   private final ViewWidgetInterface viewWidget;
@@ -204,14 +204,14 @@ public strictfp class InterfacePanelLite
 
   /// output
 
-  public void handle(org.nlogo.window.Events.OutputEvent e) {
-    if (getOutputWidget() != null && !e.toCommandCenter) {
-      if (e.clear) {
+  public void handle(Events.OutputEvent e) {
+    if (getOutputWidget() != null && !e.toCommandCenter()) {
+      if (e.clear()) {
         getOutputWidget().outputArea().clear();
       }
-      if (e.outputObject != null) {
+      if (e.outputObject() != null) {
         getOutputWidget().outputArea().append
-            (e.outputObject, e.wrapLines);
+          (e.outputObject(), e.wrapLines());
       }
     }
   }
@@ -360,16 +360,16 @@ public strictfp class InterfacePanelLite
     }
   }
 
-  public void handle(org.nlogo.window.Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.WIDGETS()) {
+  public void handle(Events.LoadSectionEvent e) {
+    if (e.section() == ModelSectionJ.WIDGETS()) {
       try {
         List<List<String>> v =
-            ModelReader.parseWidgets(e.lines);
+          ModelReader.parseWidgets(e.lines());
         if (null != v) {
           setVisible(false);
           for (List<String> v2 : v) {
             String[] strings = v2.toArray(new String[v2.size()]);
-            loadWidget(strings, e.version);
+            loadWidget(strings, e.version());
           }
         }
       } finally {
