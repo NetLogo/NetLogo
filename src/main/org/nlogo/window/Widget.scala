@@ -40,7 +40,7 @@ abstract class Widget extends JPanel {
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
-  def load(strings: Array[String], helper: LoadHelper): Object
+  def load(strings: Seq[String], helper: LoadHelper): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)

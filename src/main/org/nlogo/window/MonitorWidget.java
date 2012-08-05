@@ -306,28 +306,28 @@ public strictfp class MonitorWidget
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    String displayName = strings[5];
-    String source = ModelReader.restoreLines(strings[6]);
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
+    String displayName = strings.apply(5);
+    String source = ModelReader.restoreLines(strings.apply(6));
 
     if (displayName.equals("NIL")) {
       name("");
     } else {
       name(displayName);
     }
-    if (strings.length > 7) {
-      decimalPlaces = Integer.parseInt(strings[7]);
+    if (strings.size() > 7) {
+      decimalPlaces = Integer.parseInt(strings.apply(7));
     }
-    if (strings.length > 9) {
-      fontSize(Integer.parseInt(strings[9]));
+    if (strings.size() > 9) {
+      fontSize(Integer.parseInt(strings.apply(9)));
     }
     if (!source.equals("NIL")) {
       wrapSource(helper.convert(source, true));
     }
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
+    int x1 = Integer.parseInt(strings.apply(1));
+    int y1 = Integer.parseInt(strings.apply(2));
+    int x2 = Integer.parseInt(strings.apply(3));
+    int y2 = Integer.parseInt(strings.apply(4));
     setSize(x2 - x1, y2 - y1);
     chooseDisplayName();
     return this;

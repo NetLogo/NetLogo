@@ -649,7 +649,7 @@ public strictfp class WidgetPanel
 
   /// loading and saving
 
-  public Widget loadWidget(String[] strings, final String modelVersion) {
+  public Widget loadWidget(scala.collection.Seq<String> strings, final String modelVersion) {
     Widget.LoadHelper helper =
         new Widget.LoadHelper() {
           public String version() {
@@ -660,9 +660,9 @@ public strictfp class WidgetPanel
             return workspace.autoConvert(source, true, reporter, modelVersion);
           }
         };
-    String type = strings[0];
-    int x = Integer.parseInt(strings[1]);
-    int y = Integer.parseInt(strings[2]);
+    String type = strings.apply(0);
+    int x = Integer.parseInt(strings.apply(1));
+    int y = Integer.parseInt(strings.apply(2));
     Widget newGuy = makeWidget(type, true);
     if (newGuy != null) {
       newGuy.load(strings, helper);
@@ -707,14 +707,12 @@ public strictfp class WidgetPanel
   @Override
   public void loadWidgets(scala.collection.Seq<String> lines, String version) {
     try {
-      List<List<String>> v =
+      scala.collection.Seq<scala.collection.Seq<String>> v =
           org.nlogo.api.ModelReader.parseWidgets(lines);
       if (null != v) {
         setVisible(false);
-        for (Iterator<List<String>> iter = v.iterator(); iter.hasNext();) {
-          List<String> v2 = iter.next();
-          String[] strings = v2.toArray(new String[v2.size()]);
-          loadWidget(strings, version);
+        for (scala.collection.Iterator<scala.collection.Seq<String>> iter = v.iterator(); iter.hasNext();) {
+          loadWidget(iter.next(), version);
         }
       }
     } finally {

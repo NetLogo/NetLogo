@@ -875,8 +875,10 @@ class App extends
    * in the same (undocumented) format found in a saved model.
    * @param text the widget specification
    */
-  def makeWidget(text:String){
-    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, Version.version) )
+  def makeWidget(text: String){
+    dispatchThreadOrBust(
+      tabs.interfaceTab.getInterfacePanel.loadWidget(
+        text.split("\n").toSeq, Version.version) )
   }
 
   /// helpers for controlling methods

@@ -122,21 +122,21 @@ public strictfp class DummyMonitorWidget
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    String displayName = strings[5];
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
+    String displayName = strings.apply(5);
 
     if (displayName.equals("NIL")) {
       name("");
     } else {
       name(displayName);
     }
-    if (strings.length > 7) {
-      decimalPlaces = Integer.parseInt(strings[7]);
+    if (strings.size() > 7) {
+      decimalPlaces = Integer.parseInt(strings.apply(7));
     }
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
+    int x1 = Integer.parseInt(strings.apply(1));
+    int y1 = Integer.parseInt(strings.apply(2));
+    int x2 = Integer.parseInt(strings.apply(3));
+    int y2 = Integer.parseInt(strings.apply(4));
     setSize(x2 - x1, y2 - y1);
     return this;
   }

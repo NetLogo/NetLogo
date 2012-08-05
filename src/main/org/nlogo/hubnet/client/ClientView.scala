@@ -90,8 +90,8 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   /// satisfy ViewWidgetInterface
 
   //Loads a view specification from file data.
-  override def load(strings: Array[String], helper: Widget.LoadHelper) = {
-    val Array(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
+  override def load(strings: Seq[String], helper: Widget.LoadHelper) = {
+    val Seq(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
     setSize(x2 - x1, y2 - y1)
     world.viewWidth(getWidth)
     world.viewHeight(getHeight)

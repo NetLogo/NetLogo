@@ -207,7 +207,7 @@ public abstract strictfp class WorldViewSettings
     }
   }
 
-  public Object load(String[] strings, String version) {
+  public Object load(scala.collection.Seq<String> strings, String version) {
     workspace.loadWorld(strings, version, this);
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06

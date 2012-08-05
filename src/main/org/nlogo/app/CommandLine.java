@@ -313,7 +313,7 @@ strictfp class CommandLine
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
     throw new UnsupportedOperationException();
   }
 

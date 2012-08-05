@@ -32,7 +32,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   private def con = constraint.asInstanceOf[ConstantSliderConstraint]
 
-  override def load(strings: Array[String], helper: Widget.LoadHelper) = {
+  override def load(strings: Seq[String], helper: Widget.LoadHelper) = {
     val min = strings(7).toDouble
     val max = strings(8).toDouble
     val value = strings(9).toDouble
@@ -44,7 +44,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     con.defaultValue = value
     setSliderConstraint( con )  // ensure cached values are updated
     super.value = value
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
+    val Seq(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
     setSize(x2 - x1, y2 - y1)
     this
   }

@@ -50,7 +50,7 @@ object ModelReader {
   def parseVersion(map: ModelMap): String =
     map.get(ModelSection.Version)(0)
 
-  def parseWidgets(lines: Seq[String]): java.util.List[java.util.List[String]] = {
+  def parseWidgets(lines: Seq[String]): Seq[Seq[String]] = {
     val widgets = new collection.mutable.ListBuffer[List[String]]
     val widget = new collection.mutable.ListBuffer[String]
     for(line <- lines)
@@ -63,7 +63,7 @@ object ModelReader {
       }
     if(!widget.isEmpty)
       widgets += widget.toList
-    widgets.map(_.asJava).asJava
+    widgets.toList
   }
 
   def stripLines(st: String): String =

@@ -248,7 +248,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  def load(strings: Seq[String], helper: Widget.LoadHelper): Object = {
     val List(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt).toList
     setSize(x2 - x1, y2 - y1)
     if (7 < strings.length) {
@@ -256,7 +256,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       yLabel(if (strings(7) == "NIL") "" else strings(7))
     }
     if (13 < strings.length) { legend.open=strings(13).toBoolean }
-    PlotLoader.parsePlot(strings, plot, helper.convert(_, false))
+    PlotLoader.parsePlot(strings.toArray, plot, helper.convert(_, false))
     plotName(plot.name)
     clear()
     this

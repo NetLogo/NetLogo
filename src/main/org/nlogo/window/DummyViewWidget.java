@@ -113,13 +113,13 @@ public strictfp class DummyViewWidget
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
+    int x1 = Integer.parseInt(strings.apply(1));
+    int y1 = Integer.parseInt(strings.apply(2));
+    int x2 = Integer.parseInt(strings.apply(3));
+    int y2 = Integer.parseInt(strings.apply(4));
 
-    double patchSize = Double.parseDouble(strings[7]);
+    double patchSize = Double.parseDouble(strings.apply(7));
     // in older models don't trust the saved width and height because
     // some are wrong but the patchSize should always be correct.
     // I don't know what the problem was or how long it was a problem

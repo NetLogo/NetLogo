@@ -433,7 +433,7 @@ public strictfp class ViewWidget
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
     return settings.load(strings, helper.version());
   }
 

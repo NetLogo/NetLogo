@@ -97,8 +97,6 @@ public abstract strictfp class AbstractWorkspace
    */
   private ModelType modelType;
 
-  //public final WorldLoader worldLoader ;
-
   /// startup
 
   protected AbstractWorkspace(org.nlogo.agent.World world,
@@ -669,7 +667,7 @@ public abstract strictfp class AbstractWorkspace
          this, true, world().program().is3D());
   }
 
-  public void loadWorld(String[] strings, String version, WorldLoaderInterface worldInterface) {
+  public void loadWorld(scala.collection.Seq<String> strings, String version, WorldLoaderInterface worldInterface) {
     WorldLoader loader =
         org.nlogo.api.Version.is3D(version)
             ? new WorldLoader3D()

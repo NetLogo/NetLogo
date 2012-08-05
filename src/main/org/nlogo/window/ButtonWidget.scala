@@ -451,7 +451,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     s.toString
   }
 
-  override def load(strings:Array[String], helper: Widget.LoadHelper) = {
+  override def load(strings: Seq[String], helper: Widget.LoadHelper) = {
     forever = strings(7) == "T"
     // ButtonType handles converting the saved button type name into a ButtonType object.
     if (10 < strings.length) buttonType = ButtonType(strings(10).toLowerCase)

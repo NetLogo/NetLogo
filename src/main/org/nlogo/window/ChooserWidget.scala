@@ -79,7 +79,7 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     }
   }
 
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  def load(strings: Seq[String], helper: Widget.LoadHelper): Object = {
     val x1 = strings(1).toInt
     val y1 = strings(2).toInt
     val x2 = strings(3).toInt
