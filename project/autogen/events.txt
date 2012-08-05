@@ -1,49 +1,49 @@
-# org.nlogo.app package
+# app package
 
-app.WidgetSelected - org.nlogo.window.Widget widget - Boolean selected
+app.WidgetSelected - window.Widget widget - Boolean selected
 app.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
 app.IndenterChanged - Boolean isSmart
 
-# org.nlogo.window package
+# window package
 
 window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
-window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint
-window.AddInputBoxConstraint - String varname - org.nlogo.agent.InputBoxConstraint constraint
-window.AddJob - org.nlogo.api.JobOwner owner - org.nlogo.agent.AgentSet agents - org.nlogo.nvm.Procedure procedure
+window.AddChooserConstraint - String varname - agent.ChooserConstraint constraint
+window.AddInputBoxConstraint - String varname - agent.InputBoxConstraint constraint
+window.AddJob - api.JobOwner owner - agent.AgentSet agents - nvm.Procedure procedure
 window.AddSliderConstraint - SliderWidget slider - String varname - String minSpec - String maxSpec - String incSpec - java.lang.Double value
 window.AfterLoad
 window.App - AppEventType eventType - Array[AnyRef] args
-window.BeforeLoad - String modelPath - org.nlogo.api.ModelType modelType
+window.BeforeLoad - String modelPath - api.ModelType modelType
 window.CompileAll
-window.CompileMoreSource - org.nlogo.api.JobOwner owner
-window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.api.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.api.CompilerException error
+window.CompileMoreSource - api.JobOwner owner
+window.Compiled - api.SourceOwner sourceOwner - api.Program program - nvm.Procedure procedure - api.CompilerException error
 window.Dirty
-window.EditWidget - org.nlogo.api.Editable widget
+window.EditWidget - api.Editable widget
 window.Enable2D - Boolean enabled
 window.ExportInterface - java.io.OutputStream stream - Array[java.io.IOException] exceptionBox
 window.ExportOutput - String filename
-window.ExportPlot - PlotWidgetExportType whichPlots - org.nlogo.plot.Plot plot - String filename
+window.ExportPlot - PlotWidgetExportType whichPlots - plot.Plot target - String filename
 window.ExportWorld - java.io.PrintWriter writer
 window.Iconified - java.awt.Frame frame - Boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - Boolean nameChanged - Boolean updating - Boolean valueChanged - Boolean buttonReleased
-window.JobRemoved - org.nlogo.api.JobOwner owner
-window.JobStopping - org.nlogo.api.JobOwner owner
+window.JobRemoved - api.JobOwner owner
+window.JobStopping - api.JobOwner owner
 window.Load3DShapes - String filename
 window.LoadBegin
 window.LoadEnd
 window.LoadSection - String version - AnyRef section - Array[String] lines - String text
 window.ModelSaved - String modelPath
 window.OpenModel - String path
-window.Output - Boolean clear - org.nlogo.agent.OutputObject outputObject - Boolean wrapLines - Boolean toCommandCenter
+window.Output - Boolean clear - agent.OutputObject outputObject - Boolean wrapLines - Boolean toCommandCenter
 window.PatchesCreated
 window.PeriodicUpdate
 window.RemoveAllJobs
 window.RemoveConstraint - String varname
-window.RemoveJob - org.nlogo.api.JobOwner owner
+window.RemoveJob - api.JobOwner owner
 window.ResizeView - Int width - Int height
-window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - Int pos - Int length
+window.RuntimeError - api.JobOwner jobOwner - api.SourceOwner sourceOwner - Int pos - Int length
 window.TickStateChange - Boolean tickCounterInitialized
 window.WidgetAdded - Widget widget
 window.WidgetEdited - Widget widget

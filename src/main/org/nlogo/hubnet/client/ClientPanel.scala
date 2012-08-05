@@ -88,12 +88,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   def handle(e: org.nlogo.window.Events.ExportPlotEvent) {
     e.whichPlots match {
-      case PlotWidgetExportType.ALL => throw new UnsupportedOperationException("can't export all plots yet.")
+      case PlotWidgetExportType.ALL =>
+        throw new UnsupportedOperationException("can't export all plots yet.")
       case _ =>
-        if (e.plot != null) {
+        if (e.target != null) {
           try new AbstractExporter(e.filename) {
             override def export(writer: PrintWriter) {
-              new PlotExporter(e.plot, Dump.csv).export(writer)
+              new PlotExporter(e.target, Dump.csv).export(writer)
             }
           }.export("plot", "HubNet Client", "")
           catch {case ex: IOException => org.nlogo.util.Exceptions.handle(ex)}

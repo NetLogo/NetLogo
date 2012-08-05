@@ -31,9 +31,10 @@ object Autogen {
     append(IO.read(base / "project" / "autogen" / "warning.txt"))
 
     append("package org.nlogo." + ppackage + "\n")
+    append("import org.nlogo._")
     if(ppackage == "app")
-      append("import org.nlogo.window.Event\n")
-    append("object Events {")
+      append("import window.Event")
+    append("\nobject Events {")
 
     for{line <- IO.read(base /"project" / "autogen" / "events.txt").split("\n")
         if !line.trim.isEmpty // skip blank lines

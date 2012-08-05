@@ -1077,7 +1077,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
       }
     } else {
-      org.nlogo.plot.Plot plot = e.plot();
+      org.nlogo.plot.Plot plot = e.target();
       if (plot == null) {
         plot = choosePlot(getFrame());
       }
