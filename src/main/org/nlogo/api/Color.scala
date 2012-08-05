@@ -360,7 +360,7 @@ object Color {
   private val ColorTranslations = "/system/color-translation.txt";
   private val colorTranslations = {
     val map = collection.mutable.HashMap[Double, Int]()
-    val lines = org.nlogo.util.Utils.getResourceAsStringArray(ColorTranslations)
+    val lines = org.nlogo.util.Utils.getResourceLines(ColorTranslations)
     for(line <- lines.map(_.trim).filter(_.nonEmpty).filter(_.head != '#')) {
       val strs = line.split("\\s+")
       val index = strs.head.toInt

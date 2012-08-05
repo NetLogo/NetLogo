@@ -12,7 +12,7 @@ object Version {
       "NetLogo (no version)";
 
   val (version, buildDate, knownVersions) = {
-    val lines = org.nlogo.util.Utils.getResourceAsStringArray("/system/version.txt")
+    val lines = org.nlogo.util.Utils.getResourceLines("/system/version.txt").toStream
     val lines2 = Array("NetLogo 3D Preview 5",
                        "NetLogo 3D Preview 4",
                        "NetLogo 3D Preview 3",
@@ -20,10 +20,10 @@ object Version {
                        "NetLogo 3-D Preview 1")
     val version =
       if(is3D)
-        lines(0).replaceFirst("NetLogo", "NetLogo 3D")
+        lines.head.replaceFirst("NetLogo", "NetLogo 3D")
       else
-        lines(0)
-    val buildDate = lines(1)
+        lines.head
+    val buildDate = lines.tail.head
     val knownVersions = collection.mutable.ArrayBuffer[String]()
     knownVersions += version
     knownVersions ++= lines.drop(2)

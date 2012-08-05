@@ -120,8 +120,8 @@ abstract class ManagerDialog(parentFrame: java.awt.Frame,
 
   // Import shapes from shapes library
   private def importFromLibrary() {
-    val defaultShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/defaultShapes.txt")
-    val libraryShapes = org.nlogo.util.Utils.getResourceAsStringArray("/system/libraryShapes.txt")
+    val defaultShapes = org.nlogo.util.Utils.getResourceLines("/system/defaultShapes.txt")
+    val libraryShapes = org.nlogo.util.Utils.getResourceLines("/system/libraryShapes.txt")
     val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
     importDialog = new ImportDialog(parentFrame, this, mergedShapes.toArray, null, this)
     shapesList.requestFocus()
