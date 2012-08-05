@@ -33,7 +33,7 @@ final strictfp class QuickHelp<TokenType> {
   private static Map<String, String> quickHelpWords3d;
 
   private static Map<String, String> loadHelp(String path) {
-    String[] lines = getResourceAsStringArray(path);
+    String[] lines = org.nlogo.util.Utils.getResourceAsStringArray(path);
     HashMap<String, String> words =
         new HashMap<String, String>();
     for (int i = 0; i < lines.length; i++) {
@@ -83,27 +83,6 @@ final strictfp class QuickHelp<TokenType> {
         org.nlogo.swing.BrowserLauncher.openURL
             (comp, "docs/index2.html", true);
       }
-    }
-  }
-
-  /// copy-n-pasted from org.nlogo.util.Utils
-
-  public static String[] getResourceAsStringArray(String path) {
-    try {
-      List<String> result = new ArrayList<String>();
-      java.io.InputStream stream = QuickHelp.class.getResourceAsStream(path);
-      java.io.BufferedReader in =
-          new java.io.BufferedReader(new java.io.InputStreamReader(stream));
-      while (true) {
-        String line = in.readLine();
-        if (line == null) {
-          break;
-        }
-        result.add(line);
-      }
-      return result.toArray(new String[]{});
-    } catch (java.io.IOException ex) {
-      throw new IllegalStateException(ex);
     }
   }
 
