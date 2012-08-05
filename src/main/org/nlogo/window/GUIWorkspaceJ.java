@@ -26,7 +26,7 @@ import org.nlogo.nvm.Workspace;
 
 import java.util.HashMap;
 
-public abstract strictfp class GUIWorkspace // can't be both abstract and strictfp
+public abstract strictfp class GUIWorkspaceJ
     extends org.nlogo.workspace.AbstractWorkspaceScala
     implements
     Event.LinkChild,
@@ -67,12 +67,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // for grid snap
   private boolean snapOn = false;
 
-  public GUIWorkspace(final org.nlogo.agent.World world,
-                      KioskLevel kioskLevel, java.awt.Frame frame,
-                      java.awt.Component linkParent,
-                      org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
-                      ExternalFileManager externalFileManager,
-                      NetLogoListenerManager listenerManager) {
+  public GUIWorkspaceJ(final org.nlogo.agent.World world,
+                       KioskLevel kioskLevel, java.awt.Frame frame,
+                       java.awt.Component linkParent,
+                       org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory,
+                       ExternalFileManager externalFileManager,
+                       NetLogoListenerManager listenerManager) {
     super(world, hubNetManagerFactory);
     this.kioskLevel = kioskLevel;
     this.frame = frame;
@@ -81,7 +81,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     this.listenerManager = listenerManager;
     hubNetControlCenterAction.setEnabled(false);
 
-    viewWidget = new ViewWidget(this);
+    viewWidget = new ViewWidget((GUIWorkspace) this);
     view = viewWidget.view;
     viewManager.setPrimary(view);
 
@@ -246,22 +246,22 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void waitFor(Runnable runnable) {
-    ThreadUtils.waitFor(this, runnable);
+    ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
   public void waitFor(CommandRunnable runnable)
       throws LogoException {
-    ThreadUtils.waitFor(this, runnable);
+    ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
   public <T> T waitForResult(ReporterRunnable<T> runnable)
       throws LogoException {
-    return ThreadUtils.waitForResult(this, runnable);
+    return ThreadUtils.waitForResult((GUIWorkspace) this, runnable);
   }
 
   public void waitForQueuedEvents()
       throws LogoException {
-    ThreadUtils.waitForQueuedEvents(this);
+    ThreadUtils.waitForQueuedEvents((GUIWorkspace) this);
   }
 
   /// Event.LinkChild stuff
@@ -369,7 +369,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
           (new Runnable() {
             public void run() {
               new Events.OpenModelEvent(path)
-                  .raise(GUIWorkspace.this);
+                  .raise(GUIWorkspaceJ.this);
             }
           });
     } catch (InterruptedException ex) {
@@ -585,7 +585,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         // don't block the event thread during a smoothing pause
         // or the UI will go sluggish (issue #1263) - ST 9/21/11
         while(!updateManager().isDoneSmoothing()) {
-          ThreadUtils.waitForQueuedEvents(this);
+          ThreadUtils.waitForQueuedEvents((GUIWorkspace) this);
         }
       } catch (org.nlogo.nvm.HaltException ex) {
         org.nlogo.util.Exceptions.ignore(ex);
@@ -604,7 +604,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       new Runnable() {
         public void run() {
           new Events.PeriodicUpdateEvent()
-              .raise(GUIWorkspace.this);
+              .raise(GUIWorkspaceJ.this);
         }
       };
 
@@ -617,7 +617,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // this is called on the job thread - ST 9/30/03
   public void periodicUpdate() {
     if (periodicUpdatesEnabled) {
-      ThreadUtils.waitFor(this, updateRunner);
+      ThreadUtils.waitFor((GUIWorkspace) this, updateRunner);
     }
   }
 
@@ -638,7 +638,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   // whole UI is up-to-date before proceeding - ST 8/30/07, 3/3/11
   public void updateUI() {
     // this makes the tick counter et al update
-    ThreadUtils.waitFor(this, updateRunner);
+    ThreadUtils.waitFor((GUIWorkspace) this, updateRunner);
     // resetting first ensures that if we are allowed to update the view, we will
     updateManager().reset();
     requestDisplayUpdate(true);
@@ -676,7 +676,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       getFrame(), "Halting...",
       new Runnable() {
         public void run() {
-          GUIWorkspace.super.halt();
+          GUIWorkspaceJ.super.halt();
           view.dirty();
           view.repaint();
         }});
@@ -916,9 +916,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // event thread, so check before we block on it. -- CLB 07/18/05
     if (!java.awt.EventQueue.isDispatchThread()) {
       ThreadUtils.waitFor
-          (this, new Runnable() {
+          ((GUIWorkspace) this, new Runnable() {
             public void run() {
-              event.raise(GUIWorkspace.this);
+              event.raise((GUIWorkspace) GUIWorkspaceJ.this);
             }
           });
     } else {
@@ -937,9 +937,9 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     // event thread, so check before we block on it. -- CLB 07/18/05
     if (!java.awt.EventQueue.isDispatchThread()) {
       ThreadUtils.waitFor
-          (this, new Runnable() {
+          ((GUIWorkspace) this, new Runnable() {
             public void run() {
-              event.raise(GUIWorkspace.this);
+              event.raise((GUIWorkspace) GUIWorkspaceJ.this);
             }
           });
     } else {
@@ -1050,7 +1050,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void exportOutputAreaToCSV(java.io.PrintWriter writer) {
     new Events.ExportWorldEvent(writer)
-        .raise(GUIWorkspace.this);
+        .raise((GUIWorkspace) GUIWorkspaceJ.this);
   }
 
   public void exportPlot(PlotWidgetExportType whichPlots, org.nlogo.plot.Plot plot,

@@ -323,7 +323,7 @@ class App extends
 
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
-    _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
+    _workspace = new GUIWorkspace(world, GUIWorkspaceJ.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
