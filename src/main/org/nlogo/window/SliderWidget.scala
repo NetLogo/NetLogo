@@ -111,7 +111,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
 class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) extends MultiErrorWidget with
         AbstractSliderWidget with InterfaceGlobalWidget with Editable with
-        Events.PeriodicUpdateEvent.Handler with Events.AfterLoadEvent.Handler {
+        Events.PeriodicUpdateEventHandler with Events.AfterLoadEventHandler {
   def this(random: MersenneTwisterFast) = this (false, random)
 
   var minimumCode: String = "0"

@@ -21,7 +21,7 @@ import javax.swing.plaf.basic.BasicButtonUI
 
 abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:AbstractEditorArea,
             compiler:CompilerServices, nextComponent:Component)
-  extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
+  extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEventHandler {
 
    val MIN_WIDTH = 50
    val MIN_HEIGHT = 60

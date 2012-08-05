@@ -14,7 +14,7 @@ public strictfp class WidgetWrapper
     org.nlogo.window.WidgetWrapperInterface,
     java.awt.event.MouseListener,
     java.awt.event.MouseMotionListener,
-    org.nlogo.window.Events.WidgetForegroundedEvent.Handler {
+    org.nlogo.window.Events.WidgetForegroundedEventHandler {
 
   // fudge factor to account for different platforms having different font sizes;
   // eventually we should deal with this in a more sophisticated way
@@ -824,7 +824,7 @@ public strictfp class WidgetWrapper
 
 
   public void handle(org.nlogo.window.Events.WidgetForegroundedEvent e) {
-    if (!e.widget.equals(widget)) {
+    if (!e.widget().equals(widget)) {
       isForeground(false);
     }
   }

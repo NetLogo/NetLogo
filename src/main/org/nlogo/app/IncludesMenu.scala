@@ -4,7 +4,7 @@ package org.nlogo.app
 
 class IncludesMenu(target: ProceduresTab)
 extends org.nlogo.swing.ToolBarMenu("Includes")
-with org.nlogo.window.Events.CompiledEvent.Handler
+with org.nlogo.window.Events.CompiledEventHandler
 {
 
   // If we're empty, we have no size, are invisible and don't affect our parent's layout

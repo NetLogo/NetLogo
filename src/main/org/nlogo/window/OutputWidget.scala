@@ -6,7 +6,7 @@ import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.{I18N, Editable}
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
-  Events.ExportWorldEvent.Handler with Editable {
+  Events.ExportWorldEventHandler with Editable {
 
   setLayout(new java.awt.BorderLayout())
   setBorder(widgetBorder)

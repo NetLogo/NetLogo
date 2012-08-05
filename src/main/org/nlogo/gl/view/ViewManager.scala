@@ -15,7 +15,7 @@ class ViewManager(val workspace: GUIWorkspace,
     extends org.nlogo.window.GLViewManagerInterface
     with org.nlogo.window.Event.LinkChild
     with org.nlogo.window.Event.LinkParent
-    with org.nlogo.window.Events.PeriodicUpdateEvent.Handler
+    with org.nlogo.window.Events.PeriodicUpdateEventHandler
     with GLViewSettings {
 
   val world = workspace.world

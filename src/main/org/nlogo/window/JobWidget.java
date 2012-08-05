@@ -9,7 +9,7 @@ public abstract strictfp class JobWidget
     extends SingleErrorWidget
     implements
     org.nlogo.api.JobOwner,
-    Events.CompiledEvent.Handler {
+    Events.CompiledEventHandler {
 
   public JobWidget(org.nlogo.util.MersenneTwisterFast random) {
     this.random = random;
@@ -69,9 +69,9 @@ public abstract strictfp class JobWidget
   ///
 
   public void handle(Events.CompiledEvent e) {
-    if (e.sourceOwner == this) {
-      procedure(e.procedure);  // use setter method, so subclasses can catch
-      error(e.error);
+    if (e.sourceOwner() == this) {
+      procedure(e.procedure());  // use setter method, so subclasses can catch
+      error(e.error());
     }
 
     if (error() == null) {

@@ -10,7 +10,7 @@ import org.nlogo.api.{I18N, ModelSection}
 
 class MainProceduresTab(workspace: AbstractWorkspace)
 extends ProceduresTab(workspace)
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with org.nlogo.window.Events.LoadSectionEventHandler
 {
 
   var tabbing: javax.swing.JCheckBox = null

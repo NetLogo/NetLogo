@@ -13,9 +13,9 @@ class LabManager(val workspace: GUIWorkspace,
                  dialogFactory: EditDialogFactoryInterface,
                  val workspaceFactory: WorkspaceFactory)
   extends LabManagerInterface
-  with CompiledEvent.Handler
-  with LoadBeginEvent.Handler
-  with LoadSectionEvent.Handler
+  with CompiledEventHandler
+  with LoadBeginEventHandler
+  with LoadSectionEventHandler
 {
   val protocols = new ListBuffer[Protocol]
   private lazy val dialog = new ManagerDialog(this, dialogFactory)

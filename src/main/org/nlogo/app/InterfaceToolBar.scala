@@ -14,12 +14,12 @@ class InterfaceToolBar(wPanel: WidgetPanel,
                        frame: java.awt.Frame,
                        dialogFactory: EditDialogFactoryInterface) extends org.nlogo.swing.ToolBar
   with WidgetCreator
-  with org.nlogo.window.Events.WidgetForegroundedEvent.Handler
-  with org.nlogo.window.Events.WidgetRemovedEvent.Handler
-  with org.nlogo.window.Events.WidgetAddedEvent.Handler
-  with Events.WidgetSelectedEvent.Handler
-  with org.nlogo.window.Events.LoadBeginEvent.Handler
-  with org.nlogo.window.Events.EditWidgetEvent.Handler
+  with org.nlogo.window.Events.WidgetForegroundedEventHandler
+  with org.nlogo.window.Events.WidgetRemovedEventHandler
+  with org.nlogo.window.Events.WidgetAddedEventHandler
+  with Events.WidgetSelectedEventHandler
+  with org.nlogo.window.Events.LoadBeginEventHandler
+  with org.nlogo.window.Events.EditWidgetEventHandler
   with java.awt.event.ActionListener {
 
   private val selectedObjects = new collection.mutable.HashSet[Widget]

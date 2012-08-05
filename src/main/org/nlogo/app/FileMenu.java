@@ -22,7 +22,7 @@ import java.util.Map;
 
 public strictfp class FileMenu
     extends org.nlogo.swing.Menu
-    implements org.nlogo.window.Events.OpenModelEvent.Handler {
+    implements org.nlogo.window.Events.OpenModelEventHandler {
 
   private final App app;
   private final ModelSaver modelSaver;
@@ -682,7 +682,7 @@ public strictfp class FileMenu
 
   public void handle(org.nlogo.window.Events.OpenModelEvent e) {
     try {
-      openFromPath(e.path, ModelTypeJ.LIBRARY());
+      openFromPath(e.path(), ModelTypeJ.LIBRARY());
     } catch (java.io.IOException ex) {
       throw new IllegalStateException(ex);
     }

@@ -9,8 +9,8 @@ import org.nlogo.editor.Actions
 import org.nlogo.api.I18N
 
 class EditMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.edit"))
-with Events.SwitchedTabsEvent.Handler
-with org.nlogo.window.Events.LoadSectionEvent.Handler
+with Events.SwitchedTabsEventHandler
+with org.nlogo.window.Events.LoadSectionEventHandler
 {
 
   implicit val i18nName = I18N.Prefix("menu.edit")

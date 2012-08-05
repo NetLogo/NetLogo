@@ -8,13 +8,13 @@ import org.nlogo.workspace.AbstractWorkspace
 import collection.JavaConverters._
 class CompilerManager(workspace: GUIWorkspace, proceduresInterface: ProceduresInterface)
 extends Event.LinkChild
-with Events.CompileMoreSourceEvent.Handler
-with Events.InterfaceGlobalEvent.Handler
-with Events.LoadBeginEvent.Handler
-with Events.LoadEndEvent.Handler
-with Events.WidgetAddedEvent.Handler
-with Events.WidgetRemovedEvent.Handler
-with Events.CompileAllEvent.Handler {
+with Events.CompileMoreSourceEventHandler
+with Events.InterfaceGlobalEventHandler
+with Events.LoadBeginEventHandler
+with Events.LoadEndEventHandler
+with Events.WidgetAddedEventHandler
+with Events.WidgetRemovedEventHandler
+with Events.CompileAllEventHandler {
 
   val widgets = collection.mutable.Set[JobOwner]()
   val globalWidgets = collection.mutable.Set[InterfaceGlobalWidget]()

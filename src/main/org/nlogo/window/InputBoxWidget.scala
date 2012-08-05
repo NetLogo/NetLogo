@@ -9,7 +9,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
                      compiler: org.nlogo.api.CompilerServices, nextComponent: java.awt.Component)
         extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
                 with InterfaceGlobalWidget
-                with Events.PeriodicUpdateEvent.Handler {
+                with Events.PeriodicUpdateEventHandler {
   def propertySet = Properties.input
 
   override def name(name: String, sendEvent: Boolean) {

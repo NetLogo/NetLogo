@@ -13,10 +13,10 @@ import org.nlogo.workspace.AbstractWorkspace;
 public strictfp class View
     extends javax.swing.JComponent
     implements
-    Events.LoadBeginEvent.Handler,
-    Events.LoadEndEvent.Handler,
-    Events.CompiledEvent.Handler,
-    Events.IconifiedEvent.Handler,
+    Events.LoadBeginEventHandler,
+    Events.LoadEndEventHandler,
+    Events.CompiledEventHandler,
+    Events.IconifiedEventHandler,
     org.nlogo.api.ViewSettings,
     java.awt.event.ActionListener,
     LocalViewInterface {
@@ -131,8 +131,8 @@ public strictfp class View
   boolean iconified = false;
 
   public void handle(Events.IconifiedEvent e) {
-    if (e.frame == org.nlogo.awt.Hierarchy.getFrame(this)) {
-      iconified = e.iconified;
+    if (e.frame() == org.nlogo.awt.Hierarchy.getFrame(this)) {
+      iconified = e.iconified();
     }
   }
 
@@ -332,7 +332,7 @@ public strictfp class View
   }
 
   public void handle(Events.CompiledEvent e) {
-    if (e.sourceOwner instanceof ProceduresInterface) {
+    if (e.sourceOwner() instanceof ProceduresInterface) {
       renderer.resetCache(patchSize());
     }
   }

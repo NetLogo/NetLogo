@@ -5,9 +5,8 @@ package org.nlogo.lite
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ Observer, World, World3D }
 import org.nlogo.api.{ CompilerException, LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
-import org.nlogo.window.{ Event, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
+import org.nlogo.window.{ Event, Events, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
-import org.nlogo.window.Events.{ CompiledEvent, LoadSectionEvent }
 
 /**
  * The superclass of org.nlogo.lite.InterfaceComponent.  Also used by org.nlogo.lite.Applet.
@@ -53,13 +52,13 @@ with Event.LinkParent {
     val procedures = new ProceduresLite(workspace, workspace)
     addLinkComponent(procedures)
     addLinkComponent(new CompilerManager(workspace, procedures))
-    addLinkComponent(new CompiledEvent.Handler {
-      override def handle(e: CompiledEvent) {
+    addLinkComponent(new Events.CompiledEventHandler {
+      override def handle(e: Events.CompiledEvent) {
         if (e.error != null)
           e.error.printStackTrace()
       }})
-    addLinkComponent(new LoadSectionEvent.Handler {
-      override def handle(e: LoadSectionEvent) {
+    addLinkComponent(new Events.LoadSectionEventHandler {
+      override def handle(e: Events.LoadSectionEvent) {
         if (e.section == ModelSection.SystemDynamics)
           workspace.aggregateManager.load(e.text, workspace)
       }})

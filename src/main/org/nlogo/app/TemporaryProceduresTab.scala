@@ -16,9 +16,9 @@ class TemporaryProceduresTab(workspace: AbstractWorkspace,
                              fileMustExist: Boolean,
                              smartIndent: Boolean)
 extends ProceduresTab(workspace)
-with Events.IndenterChangedEvent.Handler
-with org.nlogo.window.Events.LoadBeginEvent.Handler
-with org.nlogo.window.Events.AboutToQuitEvent.Handler
+with Events.IndenterChangedEventHandler
+with org.nlogo.window.Events.LoadBeginEventHandler
+with org.nlogo.window.Events.AboutToQuitEventHandler
 {
 
   val includesMenu = new IncludesMenu(this)

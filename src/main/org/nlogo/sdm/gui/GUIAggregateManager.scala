@@ -14,9 +14,9 @@ class GUIAggregateManager(linkParent: java.awt.Component,
                           dialogFactory: EditDialogFactoryInterface)
 extends org.nlogo.api.AggregateManagerInterface
 with org.nlogo.window.Event.LinkChild
-with org.nlogo.window.Events.CompiledEvent.Handler
-with org.nlogo.window.Events.BeforeLoadEvent.Handler
-with org.nlogo.window.Events.LoadSectionEvent.Handler {
+with org.nlogo.window.Events.CompiledEventHandler
+with org.nlogo.window.Events.BeforeLoadEventHandler
+with org.nlogo.window.Events.LoadSectionEventHandler {
 
   private var editor: AggregateModelEditor = null
 

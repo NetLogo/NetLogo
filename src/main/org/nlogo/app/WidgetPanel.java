@@ -25,10 +25,10 @@ public strictfp class WidgetPanel
     java.awt.event.MouseListener,
     java.awt.event.MouseMotionListener,
     java.awt.event.FocusListener,
-    org.nlogo.window.Events.WidgetEditedEvent.Handler,
-    org.nlogo.window.Events.WidgetRemovedEvent.Handler,
-    org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.ZoomedEvent.Handler {
+    org.nlogo.window.Events.WidgetEditedEventHandler,
+    org.nlogo.window.Events.WidgetRemovedEventHandler,
+    org.nlogo.window.Events.LoadBeginEventHandler,
+    org.nlogo.window.Events.ZoomedEventHandler {
   static final int GRID_SNAP = 5;  // set the size of the grid, in pixels
 
   protected java.awt.Rectangle selectionRect;
@@ -643,7 +643,7 @@ public strictfp class WidgetPanel
 
   public void handle(org.nlogo.window.Events.ZoomedEvent e) {
     unselectWidgets();
-    zoomer.zoomWidgets(e.zoomFactor);
+    zoomer.zoomWidgets(e.zoomFactor());
     revalidate();
   }
 
@@ -674,7 +674,7 @@ public strictfp class WidgetPanel
 
   public void handle(org.nlogo.window.Events.WidgetEditedEvent e) {
     new org.nlogo.window.Events.DirtyEvent().raise(this);
-    zoomer.updateZoomInfo(e.widget);
+    zoomer.updateZoomInfo(e.widget());
   }
 
   public void handle(org.nlogo.window.Events.WidgetRemovedEvent e) {
@@ -682,14 +682,14 @@ public strictfp class WidgetPanel
     // plot widgets on the server remove the plot widget
     // on the client when the plot in the server is removed
     // ev 1/18/07
-    if (e.widget instanceof org.nlogo.window.PlotWidget) {
+    if (e.widget() instanceof org.nlogo.window.PlotWidget) {
       java.awt.Component[] comps = getComponents();
       for (int i = 0; i < comps.length; i++) {
         if (comps[i] instanceof WidgetWrapper) {
           WidgetWrapper wrapper = (WidgetWrapper) comps[i];
           Widget widget = wrapper.widget();
           if (widget instanceof DummyPlotWidget &&
-              e.widget.displayName().equals(widget.displayName())) {
+              e.widget().displayName().equals(widget.displayName())) {
             removeWidget(wrapper);
           }
         }

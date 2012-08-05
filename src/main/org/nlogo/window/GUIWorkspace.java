@@ -30,21 +30,21 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     extends org.nlogo.workspace.AbstractWorkspaceScala
     implements
     Event.LinkChild,
-    Events.AboutToQuitEvent.Handler,
-    Events.AddJobEvent.Handler,
-    Events.AfterLoadEvent.Handler,
-    Events.BeforeLoadEvent.Handler,
-    Events.ExportPlotEvent.Handler,
-    Events.JobStoppingEvent.Handler,
-    Events.LoadSectionEvent.Handler,
-    Events.RemoveAllJobsEvent.Handler,
-    Events.RemoveJobEvent.Handler,
-    Events.AddSliderConstraintEvent.Handler,
-    Events.RemoveConstraintEvent.Handler,
-    Events.AddBooleanConstraintEvent.Handler,
-    Events.AddChooserConstraintEvent.Handler,
-    Events.AddInputBoxConstraintEvent.Handler,
-    Events.CompiledEvent.Handler,
+    Events.AboutToQuitEventHandler,
+    Events.AddJobEventHandler,
+    Events.AfterLoadEventHandler,
+    Events.BeforeLoadEventHandler,
+    Events.ExportPlotEventHandler,
+    Events.JobStoppingEventHandler,
+    Events.LoadSectionEventHandler,
+    Events.RemoveAllJobsEventHandler,
+    Events.RemoveJobEventHandler,
+    Events.AddSliderConstraintEventHandler,
+    Events.RemoveConstraintEventHandler,
+    Events.AddBooleanConstraintEventHandler,
+    Events.AddChooserConstraintEventHandler,
+    Events.AddInputBoxConstraintEventHandler,
+    Events.CompiledEventHandler,
     org.nlogo.api.TrailDrawerInterface,
     org.nlogo.api.DrawingInterface {
 
@@ -796,8 +796,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(Events.AddJobEvent e) {
-    org.nlogo.api.JobOwner owner = e.owner;
-    AgentSet agents = e.agents;
+    org.nlogo.api.JobOwner owner = e.owner();
+    AgentSet agents = e.agents();
     if (owner instanceof JobWidget &&
         agents == null) {
       JobWidget widget = (JobWidget) owner;
@@ -806,18 +806,18 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
       }
     }
     if (owner.ownsPrimaryJobs()) {
-      if (e.procedure != null) {
-        jobManager.addJob(owner, agents, e.procedure);
+      if (e.procedure() != null) {
+        jobManager.addJob(owner, agents, e.procedure());
       } else {
         new Events.JobRemovedEvent(owner).raiseLater(this);
       }
     } else {
-      jobManager.addSecondaryJob(owner, agents, e.procedure);
+      jobManager.addSecondaryJob(owner, agents, e.procedure());
     }
   }
 
   public void handle(Events.RemoveJobEvent e) {
-    org.nlogo.api.JobOwner owner = e.owner;
+    org.nlogo.api.JobOwner owner = e.owner();
     if (owner.ownsPrimaryJobs()) {
       jobManager.finishJobs(owner);
     } else {
@@ -826,7 +826,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   public void handle(Events.JobStoppingEvent e) {
-    jobManager.stoppingJobs(e.owner);
+    jobManager.stoppingJobs(e.owner());
   }
 
   public void handle(Events.RemoveAllJobsEvent e) {
@@ -836,10 +836,10 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void handle(Events.AddBooleanConstraintEvent e) {
     BooleanConstraint con =
-        new BooleanConstraint(e.defaultValue);
+      new BooleanConstraint(e.defaultValue());
 
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
       world.observer().variableConstraint(index, con);
@@ -848,19 +848,19 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public void handle(Events.AddInputBoxConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint);
+      world.observer().variableConstraint(index, e.constraint());
     }
   }
 
   public void handle(Events.AddChooserConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint);
+      world.observer().variableConstraint(index, e.constraint());
     }
   }
 
@@ -868,24 +868,24 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
-          (world.observer(), e.minSpec, e.maxSpec, e.incSpec, e.value, e.slider.name(), this);
-      e.slider.removeAllErrors();
-      e.slider.setSliderConstraint(con);
+          (world.observer(), e.minSpec(), e.maxSpec(), e.incSpec(), e.value(), e.slider().name(), this);
+      e.slider().removeAllErrors();
+      e.slider().setSliderConstraint(con);
       // now we set the constraint in the observer, so that it is enforced.
-      int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+      int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
       if (index != -1) {
         world.observer().variableConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
              scala.collection.JavaConversions.asJavaIterable(ex.getErrors())) {
-        e.slider.setConstraintError(cce.spec().fieldName(), cce);
+        e.slider().setConstraintError(cce.spec().fieldName(), cce);
       }
     }
   }
 
   public void handle(Events.RemoveConstraintEvent e) {
-    int index = world.observerOwnsIndexOf(e.varname.toUpperCase());
+    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
     if (index != -1) {
       world.observer().variableConstraint(index, null);
     }
@@ -1062,7 +1062,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
 
   public void handle(Events.ExportPlotEvent e) {
-    if (e.whichPlots == PlotWidgetExportType.ALL) {
+    if (e.whichPlots() == PlotWidgetExportType.ALL) {
       if (plotManager().getPlotNames().length == 0) {
         org.nlogo.swing.OptionDialog.show
             (getFrame(), "Export Plot", "There are no plots to export.",
@@ -1070,22 +1070,22 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
         return;
       }
       try {
-        super.exportAllPlots(e.filename);
+        super.exportAllPlots(e.filename());
       } catch (java.io.IOException ex) {
-        String message = "Export of all plots to" + e.filename + " failed: " + ex.getMessage();
+        String message = "Export of all plots to" + e.filename() + " failed: " + ex.getMessage();
         String[] options = {I18N.guiJ().get("common.buttons.ok")};
         org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
       }
     } else {
-      org.nlogo.plot.Plot plot = e.plot;
+      org.nlogo.plot.Plot plot = e.plot();
       if (plot == null) {
         plot = choosePlot(getFrame());
       }
       if (plot != null) {
         try {
-          super.exportPlot(plot.name(), e.filename);
+          super.exportPlot(plot.name(), e.filename());
         } catch (java.io.IOException ex) {
-          String message = "Export of " + plot.name() + " plot to " + e.filename + " failed: " + ex.getMessage();
+          String message = "Export of " + plot.name() + " plot to " + e.filename() + " failed: " + ex.getMessage();
           String[] options = {I18N.guiJ().get("common.buttons.ok")};
           org.nlogo.swing.OptionDialog.show(getFrame(), "Export Plot Failed", message, options);
         }
@@ -1190,8 +1190,8 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void handle(Events.BeforeLoadEvent e) {
     setPeriodicUpdatesEnabled(false);
     if (!isApplet()) {
-      setModelPath(e.modelPath);
-      setModelType(e.modelType);
+      setModelPath(e.modelPath());
+      setModelType(e.modelType());
     }
     if (hubNetManager != null) {
       hubNetManager.disconnect();
@@ -1257,22 +1257,22 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   /// preview commands & aggregate
 
   public void handle(Events.LoadSectionEvent e) {
-    if (e.section == ModelSectionJ.PREVIEW_COMMANDS() &&
-        e.text.trim().length() > 0) {
-      previewCommands_$eq(e.text);
+    if (e.section() == ModelSectionJ.PREVIEW_COMMANDS() &&
+        e.text().trim().length() > 0) {
+      previewCommands_$eq(e.text());
     }
-    if (e.section == ModelSectionJ.CLIENT() &&
-        e.lines.length > 0 &&
+    if (e.section() == ModelSectionJ.CLIENT() &&
+        e.lines().length > 0 &&
         !isApplet()) {
-      getHubNetManager().load(e.lines, e.version);
+      getHubNetManager().load(e.lines(), e.version());
     }
-    if (e.section == ModelSectionJ.SHAPES()) {
+    if (e.section() == ModelSectionJ.SHAPES()) {
       world.turtleShapeList().replaceShapes
-          (org.nlogo.shape.VectorShape.parseShapes(e.lines, e.version));
+          (org.nlogo.shape.VectorShape.parseShapes(e.lines(), e.version()));
     }
-    if (e.section == ModelSectionJ.LINK_SHAPES()) {
+    if (e.section() == ModelSectionJ.LINK_SHAPES()) {
       world.linkShapeList().replaceShapes
-          (org.nlogo.shape.LinkShape.parseShapes(e.lines, e.version));
+          (org.nlogo.shape.LinkShape.parseShapes(e.lines(), e.version()));
     }
   }
 

@@ -20,8 +20,8 @@ import java.io.File
 
 class InfoTab(attachModelDir: String => String) extends JPanel with
         DocumentListener with Printable with HyperlinkListener with
-        org.nlogo.window.Events.LoadSectionEvent.Handler with
-        org.nlogo.window.Events.ZoomedEvent.Handler {
+        org.nlogo.window.Events.LoadSectionEventHandler with
+        org.nlogo.window.Events.ZoomedEventHandler {
 
   val baseDocUrl = "docs/infotab.html"
 

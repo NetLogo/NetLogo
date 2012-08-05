@@ -16,13 +16,13 @@ object DirtyMonitor {
 }
 
 class DirtyMonitor(frame: javax.swing.JFrame)
-extends BeforeLoadEvent.Handler
-with AfterLoadEvent.Handler
-with WidgetAddedEvent.Handler
-with WidgetRemovedEvent.Handler
-with DirtyEvent.Handler
-with AboutToQuitEvent.Handler
-with ModelSavedEvent.Handler
+extends BeforeLoadEventHandler
+with AfterLoadEventHandler
+with WidgetAddedEventHandler
+with WidgetRemovedEventHandler
+with DirtyEventHandler
+with AboutToQuitEventHandler
+with ModelSavedEventHandler
 {
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true

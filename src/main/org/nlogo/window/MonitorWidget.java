@@ -17,9 +17,9 @@ import java.util.List;
 public strictfp class MonitorWidget
     extends JobWidget
     implements Editable,
-    Events.RuntimeErrorEvent.Handler,
-    Events.PeriodicUpdateEvent.Handler,
-    Events.JobRemovedEvent.Handler,
+    Events.RuntimeErrorEventHandler,
+    Events.PeriodicUpdateEventHandler,
+    Events.JobRemovedEventHandler,
     java.awt.event.MouseListener {
 
   private static final int LEFT_MARGIN = 5;
@@ -253,7 +253,7 @@ public strictfp class MonitorWidget
   }
 
   public void handle(Events.RuntimeErrorEvent e) {
-    if (this == e.jobOwner) {
+    if (this == e.jobOwner()) {
       hasError = true;
       halt();
     }
@@ -269,7 +269,7 @@ public strictfp class MonitorWidget
   }
 
   public void handle(Events.JobRemovedEvent e) {
-    if (e.owner == this) {
+    if (e.owner() == this) {
       jobRunning = false;
       value(hasError ? "N/A" : "");
     }

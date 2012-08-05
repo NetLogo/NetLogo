@@ -8,7 +8,7 @@ import org.nlogo.api.UpdateModeJ;
 public strictfp class ViewUpdatePanel
     extends javax.swing.JPanel
     implements
-    Events.LoadEndEvent.Handler {
+    Events.LoadEndEventHandler {
   private final GUIWorkspace workspace;
 
   private final SpeedSliderPanel speedSlider;

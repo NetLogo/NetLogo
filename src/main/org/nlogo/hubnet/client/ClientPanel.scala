@@ -26,10 +26,10 @@ import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, AbstractConnect
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
                   compiler:CompilerServices) extends JPanel with
-        org.nlogo.window.Events.AddJobEvent.Handler with
-        org.nlogo.window.Events.ExportPlotEvent.Handler with
-        org.nlogo.window.Events.InterfaceGlobalEvent.Handler with
-        org.nlogo.window.Events.AddSliderConstraintEvent.Handler {
+        org.nlogo.window.Events.AddJobEventHandler with
+        org.nlogo.window.Events.ExportPlotEventHandler with
+        org.nlogo.window.Events.InterfaceGlobalEventHandler with
+        org.nlogo.window.Events.AddSliderConstraintEventHandler {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
@@ -78,7 +78,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
   }
 
-  /// Interface Event Handlers
+  /// Interface EventHandlers
   def handle(e: org.nlogo.window.Events.AddJobEvent) {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     val button = e.owner.asInstanceOf[ButtonWidget]

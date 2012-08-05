@@ -15,9 +15,9 @@ import Events.{WidgetRemovedEvent, AfterLoadEvent}
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
         extends Widget with Editable with Plot.DirtyListener with
-                Events.AfterLoadEvent.Handler with
-                Events.WidgetRemovedEvent.Handler with
-                Events.CompiledEvent.Handler {
+                Events.AfterLoadEventHandler with
+                Events.WidgetRemovedEventHandler with
+                Events.CompiledEventHandler {
 
   import AbstractPlotWidget._
 

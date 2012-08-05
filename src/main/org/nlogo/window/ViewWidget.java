@@ -12,9 +12,9 @@ public strictfp class ViewWidget
     extends Widget
     implements
     ViewWidgetInterface,
-    Events.PeriodicUpdateEvent.Handler,
-    Events.LoadBeginEvent.Handler,
-    Events.LoadEndEvent.Handler {
+    Events.PeriodicUpdateEventHandler,
+    Events.LoadBeginEventHandler,
+    Events.LoadEndEventHandler {
 
   @Override
   public String classDisplayName() {
