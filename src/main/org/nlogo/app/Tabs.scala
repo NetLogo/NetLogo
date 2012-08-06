@@ -25,6 +25,7 @@ class Tabs(val workspace: GUIWorkspace,
   val interfaceTab = new InterfaceTab(workspace, monitorManager, dialogFactory)
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val proceduresTab = new MainProceduresTab(workspace)
+  val reviewTab = new ReviewTab(workspace)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
@@ -33,6 +34,7 @@ class Tabs(val workspace: GUIWorkspace,
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
+    addTab("Review", reviewTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
