@@ -11,7 +11,8 @@ import org.nlogo.api.StringUtils.escapeString
 
 object HeadlessModelOpener {
   def protocolSection(path: String) =
-    ModelReader.parseModel(FileIO.file2String(path)).get(ModelSection.BehaviorSpace).mkString("", "\n", "\n")
+    ModelReader.parseModel(FileIO.file2String(path))(
+      ModelSection.BehaviorSpace).mkString("", "\n", "\n")
 }
 
 // this class is an abomination
@@ -22,29 +23,29 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromMap(map: java.util.Map[ModelSection, Seq[String]]) {
+  def openFromMap(map: ModelReader.ModelMap) {
 
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.modelOpened = true
 
     // get out if unknown version
-    val netLogoVersion = map.get(ModelSection.Version).head
+    val netLogoVersion = map(ModelSection.Version).head
     if (!Version.knownVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     // parse all the widgets in the WIDGETS section
     val (interfaceGlobals, constraints, buttonCode, monitorCode, interfaceGlobalCommands) = {
-      WidgetParser.parseWidgets(map.get(ModelSection.Interface), netLogoVersion)
+      WidgetParser.parseWidgets(map(ModelSection.Interface), netLogoVersion)
     }
 
     // read system dynamics modeler diagram
-    val sdmLines = map.get(ModelSection.SystemDynamics)
+    val sdmLines = map(ModelSection.SystemDynamics)
     if (!sdmLines.isEmpty) ws.aggregateManager.load(sdmLines.mkString("", "\n", "\n"), ws)
 
     // read procedures, compile them.
     val results = {
-      val code = map.get(ModelSection.Code).mkString("", "\n", "\n")
+      val code = map(ModelSection.Code).mkString("", "\n", "\n")
       // we could convert right here.
       // we'd still need to convert slider constraints, plots, monitors and buttons.
       // JC - 9/14/10
@@ -59,15 +60,15 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // read preview commands. (if the model doesn't specify preview commands, allow the default ones
     // from our superclass to stand)
-    val previewCommands = map.get(ModelSection.PreviewCommands).mkString("", "\n", "\n")
+    val previewCommands = map(ModelSection.PreviewCommands).mkString("", "\n", "\n")
     if (!previewCommands.trim.isEmpty) ws.previewCommands = previewCommands
 
     // parse turtle and link shapes, updating the workspace.
-    parseShapes(map.get(ModelSection.TurtleShapes).toArray,
-                map.get(ModelSection.LinkShapes).toArray,
+    parseShapes(map(ModelSection.TurtleShapes).toArray,
+                map(ModelSection.LinkShapes).toArray,
                 netLogoVersion)
 
-    ws.getHubNetManager.load(map.get(ModelSection.HubNetClient).toArray,
+    ws.getHubNetManager.load(map(ModelSection.HubNetClient).toArray,
                              netLogoVersion)
 
     ws.init()

@@ -13,7 +13,7 @@ object ModelReader {
   val emptyModelPath =
     "/system/empty." + modelSuffix
 
-  type ModelMap = java.util.Map[ModelSection, Seq[String]]
+  type ModelMap = Map[ModelSection, Seq[String]]
 
   val SEPARATOR = "@#$#@#$#@"
 
@@ -44,11 +44,11 @@ object ModelReader {
       else
         sectionContents += line
     sectionDone()
-    map.asJava
+    map.toMap
   }
 
   def parseVersion(map: ModelMap): String =
-    map.get(ModelSection.Version)(0)
+    map(ModelSection.Version).head
 
   def parseWidgets(lines: Seq[String]): Seq[Seq[String]] = {
     val widgets = new collection.mutable.ListBuffer[List[String]]

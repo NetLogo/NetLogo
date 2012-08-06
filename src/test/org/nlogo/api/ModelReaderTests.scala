@@ -15,12 +15,12 @@ class ModelReaderTests extends FunSuite {
   }
   test("parseModel: trailing section with no separator isn't ignored") {
     val map = ModelReader.parseModel("foo\n" + ModelReader.SEPARATOR + "\nbar\n")
-    assert(map.get(ModelSection.Code).toList === List("foo"))
-    assert(map.get(ModelSection.Interface).toList === List("bar"))
+    assert(map(ModelSection.Code).toList === List("foo"))
+    assert(map(ModelSection.Interface).toList === List("bar"))
   }
   test("parseModel: missing sections result in empty arrays") {
     val map = ModelReader.parseModel("")
-    assert(map.get(ModelSection.Interface).toList === Nil)
+    assert(map(ModelSection.Interface).toList === Nil)
   }
 
   /// parseWidgets
@@ -60,7 +60,7 @@ class ModelReaderTests extends FunSuite {
   test("parseWidgets: empty model contains only view") {
     val emptyModel = FileIO.file2String("resources/system/empty.nlogo")
     val map = ModelReader.parseModel(emptyModel)
-    val widgets = ModelReader.parseWidgets(map.get(ModelSection.Interface))
+    val widgets = ModelReader.parseWidgets(map(ModelSection.Interface))
     assert(widgets.size === 1)
     assert(widgets(0)(0) === "GRAPHICS-WINDOW")
   }
