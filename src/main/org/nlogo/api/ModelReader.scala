@@ -25,13 +25,12 @@ object ModelReader {
     Vector() ++ Utils.getResourceLines("/system/defaultLinkShapes.txt")
 
   def parseModel(model: String): ModelMap = {
-    val map: collection.mutable.HashMap[ModelSection, Seq[String]] =
-      sections.map(_ -> Seq[String]())(collection.breakOut)
+    var result: ModelMap = sections.map(_ -> Seq[String]()).toMap
     val sectionsIter = sections.iterator
     var sectionContents = Vector[String]()
     def sectionDone() {
       if(sectionsIter.hasNext)
-        map(sectionsIter.next()) = sectionContents
+        result += sectionsIter.next() -> sectionContents
       sectionContents = Vector()
     }
     for(line <- io.Source.fromString(model).getLines)
@@ -40,7 +39,7 @@ object ModelReader {
       else
         sectionContents :+= line
     sectionDone()
-    map.toMap
+    result
   }
 
   def parseVersion(map: ModelMap): String =
