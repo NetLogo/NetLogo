@@ -24,7 +24,6 @@ private object CompilerMain {
                                                displayName, program, oldProcedures, extensionManager)
       .parse(subprogram)  // process declarations
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
-    import collection.JavaConverters._  // structureResults.procedures.values is a java.util.Collection
     val taskNumbers = Iterator.from(1)
     for(procedure <- structureResults.procedures.values) {
       procedure.topLevel = subprogram

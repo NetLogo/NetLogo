@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import collection.immutable.ListMap
-import collection.JavaConverters._
 
 object Program {
   def empty(is3D: Boolean = false) =
