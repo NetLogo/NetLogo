@@ -27,22 +27,18 @@ object ModelReader {
   def parseModel(model: String): ModelMap = {
     val map: collection.mutable.HashMap[ModelSection, Seq[String]] =
       sections.map(_ -> Seq[String]())(collection.breakOut)
-    val lines = {
-      val br = new java.io.BufferedReader(new java.io.StringReader(model))
-      Iterator.continually(br.readLine()).takeWhile(_ != null)
-    }
     val sectionsIter = sections.iterator
-    val sectionContents = collection.mutable.Buffer[String]()
+    var sectionContents = Vector[String]()
     def sectionDone() {
       if(sectionsIter.hasNext)
-        map(sectionsIter.next()) = Vector() ++ sectionContents
-      sectionContents.clear()
+        map(sectionsIter.next()) = sectionContents
+      sectionContents = Vector()
     }
-    for(line <- lines)
+    for(line <- io.Source.fromString(model).getLines)
       if(line.startsWith(SEPARATOR))
         sectionDone()
       else
-        sectionContents += line
+        sectionContents :+= line
     sectionDone()
     map.toMap
   }
