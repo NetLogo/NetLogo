@@ -2,8 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.Utils
-import collection.JavaConverters._
+import org.nlogo.util.Utils.getResourceLines
 
 object ModelReader {
 
@@ -20,9 +19,9 @@ object ModelReader {
   val sections = ModelSection.allSections
 
   lazy val defaultShapes: Seq[String] =
-    Vector() ++ Utils.getResourceLines("/system/defaultShapes.txt")
+    Vector() ++ getResourceLines("/system/defaultShapes.txt")
   lazy val defaultLinkShapes: Seq[String] =
-    Vector() ++ Utils.getResourceLines("/system/defaultLinkShapes.txt")
+    Vector() ++ getResourceLines("/system/defaultLinkShapes.txt")
 
   def parseModel(model: String): ModelMap = {
     var result: ModelMap = sections.map(_ -> Seq[String]()).toMap
@@ -46,19 +45,19 @@ object ModelReader {
     map(ModelSection.Version).head
 
   def parseWidgets(lines: Seq[String]): Seq[Seq[String]] = {
-    val widgets = new collection.mutable.ListBuffer[List[String]]
-    val widget = new collection.mutable.ListBuffer[String]
+    var widgets = Vector[Vector[String]]()
+    var widget = Vector[String]()
     for(line <- lines)
       if(line.nonEmpty)
-        widget += line
+        widget :+= line
       else {
         if(!widget.forall(_.isEmpty))
-          widgets += widget.toList
-        widget.clear()
+          widgets :+= widget
+        widget = Vector()
       }
     if(!widget.isEmpty)
-      widgets += widget.toList
-    widgets.toList
+      widgets :+= widget
+    widgets
   }
 
   def stripLines(st: String): String =
