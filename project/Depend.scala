@@ -37,7 +37,7 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("util"),
-      "app" -> List("window"),
+      "app" -> List("mirror", "window"),
       "awt" -> Nil,
       "compiler" -> List("prim","prim/dead","prim/threed"),
       "editor" -> Nil,
