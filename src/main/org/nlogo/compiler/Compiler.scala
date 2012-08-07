@@ -146,7 +146,6 @@ object Compiler extends CompilerInterface {
           .parse(subprogram = true)
       val identifierParser =
         new IdentifierParser(program, procedures, results.procedures, forgiving = false)
-      import collection.JavaConverters._  // results.procedures.values is a java.util.Collection
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens

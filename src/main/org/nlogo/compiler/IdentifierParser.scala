@@ -6,7 +6,6 @@ import org.nlogo.compiler.CompilerExceptionThrowers.{ cAssert, exception }
 import org.nlogo.api.{ CompilerException, Let, Program, Token, TokenType }
 import org.nlogo.nvm.{ Instruction, Procedure, Reporter }
 import org.nlogo.prim._
-import collection.JavaConverters._
 
 /**
  * Converts identifier tokens into instances of primitives.  In "forgiving" mode, used by
@@ -38,6 +37,7 @@ private class IdentifierParser(program: Program,
       if(tokPos < let.startPos || tokPos > let.endPos) None
       else let.children.map(checkLet).find(_.isDefined)
              .getOrElse(if(let.varName == ident) Some(let) else None)
+    import collection.JavaConverters._
     p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {

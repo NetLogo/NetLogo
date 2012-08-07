@@ -12,8 +12,6 @@ import static org.nlogo.api.ModelReader.modelSuffix;
 import static org.nlogo.api.ModelReader.emptyModelPath;
 import org.nlogo.awt.UserCancelException;
 
-import java.util.Map;
-
 /*
  * note that multiple instances of this class may exist
  * as there are now multiple frames that each have their own menu bar
@@ -724,9 +722,9 @@ public strictfp class FileMenu
                       String message, ModelType modelType)
       throws UserCancelException {
     // map elements are { source, info, resources, version }
-    Map<ModelSection, scala.collection.Seq<String>> map =
+    scala.collection.immutable.Map<ModelSection, scala.collection.Seq<String>> map =
         ModelReader.parseModel(source);
-    if (map == null || map.get(ModelSectionJ.VERSION()).isEmpty()) {
+    if (map == null || map.apply(ModelSectionJ.VERSION()).isEmpty()) {
       notifyUserNotValidFile();
     }
     String version = org.nlogo.api.ModelReader.parseVersion(map);
@@ -751,7 +749,7 @@ public strictfp class FileMenu
 
   private boolean firstLoad = true;
 
-  private void openFromMap(final Map<ModelSection, scala.collection.Seq<String>> map,
+  private void openFromMap(final scala.collection.immutable.Map<ModelSection, scala.collection.Seq<String>> map,
                            final String path, String message,
                            final ModelType modelType) {
     try {

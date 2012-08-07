@@ -9,7 +9,6 @@ import api.{ AgentKind, Breed, ErrorSource, ExtensionManager, Let,
              Program, Token, TokenizerInterface, TokenType }
 import nvm.{ Instruction, Procedure }
 import org.nlogo.prim._let
-import collection.JavaConverters._
 
 // This whole thing is pretty ugly.  It's ripe to be discarded and redone from scratch.
 // Properly the actual parsing logic ought to be separated from the parts that build
@@ -350,6 +349,7 @@ private class StructureParser(
       }
       else if(!haveArgList) {
         if(token.tpe == TokenType.OPEN_BRACKET) {
+          import collection.JavaConverters._
           procedure.args.addAll(parseVarList(procedure = procedure).asJava)
           start = tokenBuffer.index
         }
@@ -510,7 +510,6 @@ private class StructureParser(
     var level = 1
     val children = new collection.mutable.ListBuffer[Let]
     def newLet(endPos: Int) = {
-      import collection.JavaConverters._
       val result = Let(name, startPos, endPos, children.toList)
       letToken.value.asInstanceOf[_let].let = result
       procedure.lets.add(result)

@@ -225,22 +225,22 @@ object App{
     def read(path: String): Array[String] = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         Array()
       }
-      else map.get(section).toArray
+      else map(section).toArray
     }
 
     @throws(classOf[java.io.IOException])
     override def getVersion(path:String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         null;
       }
