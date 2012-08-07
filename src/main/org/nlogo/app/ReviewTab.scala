@@ -4,6 +4,7 @@ import javax.swing._
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import java.awt.image.BufferedImage
 import org.nlogo.{ api, mirror, nvm, window }
+import org.nlogo.util.Femto
 import mirror.{ Mirroring, Mirrorables, Serializer }
 
 class ReviewTab(ws: window.GUIWorkspace) extends JPanel
@@ -76,7 +77,8 @@ with window.Events.BeforeLoadEventHandler {
           if(visibleState.isEmpty)
             visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
           val dummy = new mirror.FakeWorld(visibleState) { }
-          val renderer = new org.nlogo.render.Renderer(dummy)
+          val renderer = Femto.get(classOf[api.RendererInterface],
+                                   "org.nlogo.render.Renderer", Array(dummy))
           g.clipRect(position.x, position.y,
                      ws.viewWidget.view.getWidth,
                      ws.viewWidget.view.getHeight)
