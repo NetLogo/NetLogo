@@ -52,8 +52,14 @@ with window.Events.BeforeLoadEventHandler {
         PotemkinInterface(
           position = new java.awt.Point(wrapperPos.x + ws.viewWidget.view.getLocation().x,
                                         wrapperPos.y + ws.viewWidget.view.getLocation().y),
-          image = org.nlogo.awt.Images.paintToImage(
-            ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])))
+          image = {
+            // get off the job thread and onto the event thread
+            ws.waitForResult(
+              new api.ReporterRunnable[BufferedImage]() {
+                override def run() =
+                  org.nlogo.awt.Images.paintToImage(
+                    ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
+              })}))
     }
     val (newState, update) =
       Mirroring.diffs(state, Mirrorables.allMirrorables(ws.world, ws.plotManager.plots))
