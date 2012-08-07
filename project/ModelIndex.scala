@@ -24,7 +24,7 @@ object ModelIndex {
     // generating the index.txt file for a release - ST 6/18/12
     val command = Seq("find", "-H", modelsPath.toString, "-name", "test",
       "-prune", "-o", "-name", "*.nlogo", "-print", "-o", "-name", "*.nlogo3d", "-print")
-    val paths = (command).lines_!
+    val paths = Process(command).lines
     def infoTab(path: String) =
       IO.read(new File(path)).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
     for(path <- paths) {
