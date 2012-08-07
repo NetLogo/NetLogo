@@ -62,10 +62,14 @@ private class Assembler {
     }
     def goTo() {
       if (gotoMark == -1) {
-        storedGoto = Some(new _goto(-99999)) // we'll fix in comeFrom()
+        storedGoto = Some(new _goto) // we'll set the offset in comeFrom()
         add(storedGoto.get)
         gotoMark = code.size
-      } else add(new _goto(gotoMark - code.size))
+      } else {
+        val g = new _goto
+        g.offset = gotoMark - code.size
+        add(g)
+      }
     }
     def comeFrom() {
       storedGoto match {
