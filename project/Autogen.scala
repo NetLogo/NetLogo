@@ -4,26 +4,36 @@ import Keys._
 
 object Autogen {
 
-  val sourceGeneratorTask =
-    (cacheDirectory, scalaSource in Compile, javaSource in Compile, baseDirectory, streams) map {
-      (cacheDir, sdir, jdir, base, s) =>
+  val lexersGeneratorTask =
+    (cacheDirectory, javaSource in Compile, streams) map {
+      (cacheDir, src, s) =>
+        val cache =
+          FileFunction.cached(cacheDir / "lexers", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+            in: Set[File] =>
+              Set(flex(s.log.info(_), src, "agent", "ImportLexer"),
+                  flex(s.log.info(_), src, "lex", "TokenLexer"))
+          }
+        cache(Set(file("..") / "project" / "warning.txt",
+                  file("..") / "project" / "ImportLexer.flex",
+                  file("..") / "project" / "TokenLexer.flex")).toSeq
+    }
+
+  val eventsGeneratorTask =
+    (cacheDirectory, scalaSource in Compile, baseDirectory, streams) map {
+      (cacheDir, src, base, s) =>
         val cache =
           FileFunction.cached(cacheDir / "autogen", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
             in: Set[File] =>
-              Set(events(s.log.info(_), base, sdir, "window"),
-                  events(s.log.info(_), base, sdir, "app"),
-                  flex(s.log.info(_), base, jdir, "agent", "ImportLexer"),
-                  flex(s.log.info(_), base, jdir, "lex", "TokenLexer"))
+              Set(events(s.log.info(_), base, src, "window"),
+                  events(s.log.info(_), base, src, "app"))
           }
         cache(Set(base / "project" / "warning.txt",
-                  base / "project" / "events.txt",
-                  base / "project" / "ImportLexer.flex",
-                  base / "project" / "TokenLexer.flex")).toSeq
+                  base / "project" / "events.txt")).toSeq
     }
 
   def events(log: String => Unit, base: File, dir: File, ppackage: String): File = {
     val file = dir / "org" / "nlogo" / ppackage / "Events.scala"
-    log("creating: " + file)
+    log("generating " + file)
 
     var codeString = ""
     def append(s: String) = codeString += (s + "\n")
@@ -61,13 +71,12 @@ object Autogen {
 
   // this used to be broken into two tasks, but jflex doesnt seem to be threadsafe
   // so we have to run them serially, which means we have to generate them both each time. -JC 6/8/10
-  def flex(log: String => Unit, base: File, dir: File, ppackage: String, kind: String): File = {
-    val project = base / "project"
-    log("generating " + kind + ".java")
-    JFlex.Main.main(Array("--quiet", (project / (kind + ".flex")).asFile.toString))
-    log("creating src/main/org/nlogo/" + ppackage + "/" + kind + ".java")
+  def flex(log: String => Unit, dir: File, ppackage: String, kind: String): File = {
+    val project = file(".") / "project"
     val nlogoPackage = dir / "org" / "nlogo"
     val result = nlogoPackage / ppackage / (kind + ".java")
+    log("generating " + result)
+    JFlex.Main.main(Array("--quiet", (project / (kind + ".flex")).asFile.toString))
     IO.write(result,
       IO.read(project / "warning.txt") +
       IO.read(project / (kind + ".java")))

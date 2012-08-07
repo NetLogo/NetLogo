@@ -7,7 +7,6 @@ object Packaging {
   lazy val moreJars = TaskKey[Set[File]]("more-jars", "build NetLogoLite.jar and HubNet.jar")
 
   val settings = Seq(
-    artifactName := { (_, _, _) => "NetLogo.jar" },
     packageOptions <+= dependencyClasspath in Runtime map {
       classpath =>
         Package.ManifestAttributes((

@@ -2,26 +2,28 @@ scalaVersion := "2.9.2"
 
 name := "NetLogo"
 
+artifactName := { (_, _, _) => "NetLogo.jar" }
+
 onLoadMessage := ""
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
-scalacOptions ++=
+scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
   .split(" ").toSeq
 
-javacOptions ++=
+javacOptions in ThisBuild ++=
   "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.6 -target 1.6"
   .split(" ").toSeq
 
 // only log problems plz
-ivyLoggingLevel := UpdateLogging.Quiet
+ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
 
 // this makes jar-building and script-writing easier
-retrieveManaged := true
+retrieveManaged in ThisBuild := true
 
 // we're not cross-building for different Scala versions
-crossPaths := false
+crossPaths in ThisBuild := false
 
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
@@ -35,13 +37,13 @@ unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
+unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
+
 mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
-sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
-
-resourceGenerators in Compile <+= I18n.resourceGeneratorTask
+sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
 
 Extensions.extensionsTask
 
@@ -59,9 +61,17 @@ nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
-libraryDependencies ++= Seq(
+libraryDependencies in ThisBuild ++= Seq(
   "asm" % "asm-all" % "3.3.1",
   "org.picocontainer" % "picocontainer" % "2.13.6",
+  "org.jmock" % "jmock" % "2.5.1" % "test",
+  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+  "org.scalatest" %% "scalatest" % "1.8" % "test"
+)
+
+libraryDependencies ++= Seq(
   "log4j" % "log4j" % "1.2.16",
   "javax.media" % "jmf" % "2.1.1e",
   "org.pegdown" % "pegdown" % "1.1.0",
@@ -71,12 +81,7 @@ libraryDependencies ++= Seq(
   "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
   "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
   "org.jogl" % "jogl" % "1.1.1" from "http://ccl.northwestern.edu/devel/jogl-1.1.1.jar",
-  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar",
-  "org.jmock" % "jmock" % "2.5.1" % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "1.8" % "test"
+  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>

@@ -1,8 +1,0 @@
-UserReporters
- O> __ignore "avoid compiler warning"
- O> print user-yes-or-no? "blarg" => ERROR You can't get user input headless.
- O> print user-one-of "blarg" [ 1 2 3 ] => ERROR You can't get user input headless.
- O> print user-input "blarg" => ERROR You can't get user input headless.
- O> print user-file => ERROR You can't get user input headless.
- O> print user-new-file => ERROR You can't get user input headless.
- O> print user-directory => ERROR You can't get user input headless.
