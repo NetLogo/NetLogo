@@ -3,7 +3,9 @@ package org.nlogo.app
 import javax.swing._
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import java.awt.image.BufferedImage
+import org.nlogo.awt.UserCancelException
 import org.nlogo.{ api, mirror, nvm, window }
+import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.util.Femto
 import mirror.{ Mirroring, Mirrorables, Serializer }
 
@@ -68,6 +70,7 @@ with window.Events.BeforeLoadEventHandler {
     run :+= Serializer.toBytes(update)
     state = newState
     Scrubber.setEnabled(true)
+    MemoryMeter.update()
   }
 
   object InterfacePanel extends JPanel {
@@ -126,9 +129,33 @@ with window.Events.BeforeLoadEventHandler {
     setSelected(recordingEnabled)
   }
 
+  object SaveAction extends javax.swing.AbstractAction("Save") {
+    def actionPerformed(e: java.awt.event.ActionEvent) {
+      ignoring(classOf[UserCancelException]) {
+        val path = org.nlogo.swing.FileDialog.show(
+          ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
+        val out = new java.io.ObjectOutputStream(
+          new java.io.FileOutputStream(path))
+        out.writeObject(run)
+        out.close()
+      }
+    }
+  }
+
+  object SaveButton extends javax.swing.JButton(SaveAction)
+
   object Toolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(Enabled)
+      add(SaveButton)
+      add(MemoryMeter)
+    }
+  }
+
+  object MemoryMeter extends javax.swing.JLabel {
+    def update() {
+      val megabytes = run.map(_.size.toLong).sum / 1024 / 1024
+      setText(megabytes + " MB")
     }
   }
 
