@@ -12,6 +12,7 @@ with window.Events.BeforeLoadEventHandler {
 
   type Run = Seq[Array[Byte]]
 
+  var recordingEnabled: Boolean = true
   var run: Run = Seq()
   var state: Mirroring.State = Map()
   var visibleState: Mirroring.State = Map()
@@ -26,13 +27,14 @@ with window.Events.BeforeLoadEventHandler {
     new api.NetLogoAdapter {
       val count = Iterator.from(0)
       override def tickCounterChanged(ticks: Double) {
-        if (ticks == 0) {
-          reset()
-        }
-        grab()
-        Scrubber.setMaximum(run.size - 1)
-        InterfacePanel.repaint()
-      }})
+        if (recordingEnabled) {
+          if (ticks == 0) {
+            reset()
+          }
+          grab()
+          Scrubber.setMaximum(run.size - 1)
+          InterfacePanel.repaint()
+        }}})
 
   private def reset() {
     run = Seq()
@@ -114,9 +116,29 @@ with window.Events.BeforeLoadEventHandler {
       }})
   }
 
-  setLayout(new java.awt.BorderLayout)
-  add(InterfacePanel, java.awt.BorderLayout.CENTER)
-  add(Scrubber, java.awt.BorderLayout.SOUTH)
+  object EnabledAction extends javax.swing.AbstractAction("Recording") {
+    def actionPerformed(e: java.awt.event.ActionEvent) {
+      recordingEnabled = !recordingEnabled
+    }
+  }
+
+  object Enabled extends javax.swing.JCheckBox(EnabledAction) {
+    setSelected(recordingEnabled)
+  }
+
+  object Toolbar extends org.nlogo.swing.ToolBar {
+    override def addControls() {
+      add(Enabled)
+    }
+  }
+
+  locally {
+    import java.awt.BorderLayout
+    setLayout(new BorderLayout)
+    add(InterfacePanel, BorderLayout.CENTER)
+    add(Scrubber, BorderLayout.SOUTH)
+    add(Toolbar, BorderLayout.NORTH)
+  }
 
   override def handle(e: window.Events.BeforeLoadEvent) {
     reset()
