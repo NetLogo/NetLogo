@@ -5,7 +5,7 @@ package org.nlogo.sdm.gui
 import org.nlogo.api.{CompilerException, TokenType}
 import org.nlogo.editor.Colorizer
 
-class AggregateProceduresTab(colorizer: Colorizer[TokenType]) extends javax.swing.JPanel {
+class AggregateCodeTab(colorizer: Colorizer[TokenType]) extends javax.swing.JPanel {
   val text = new org.nlogo.editor.EditorArea[TokenType](
     50, 75,
     new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
