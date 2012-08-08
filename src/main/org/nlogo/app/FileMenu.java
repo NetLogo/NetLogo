@@ -221,7 +221,7 @@ public strictfp class FileMenu
               exportPath,
               app.workspace().getModelFileName(),
               app.tabs().infoTab().info(),
-              app.tabs().proceduresTab().getText(),
+              app.tabs().codeTab().getText(),
               app.workspace().getExtensionManager().getJarPaths(),
               app.workspace().getExtensionManager().getExtensionNames());
     }

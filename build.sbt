@@ -1,12 +1,8 @@
-scalaVersion := "2.9.2"
+///
+/// ThisBuild -- applies to subprojects too
+///
 
-name := "NetLogo"
-
-artifactName := { (_, _, _) => "NetLogo.jar" }
-
-onLoadMessage := ""
-
-resourceDirectory in Compile <<= baseDirectory(_ / "resources")
+scalaVersion in ThisBuild := "2.9.2"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
@@ -24,6 +20,32 @@ retrieveManaged in ThisBuild := true
 
 // we're not cross-building for different Scala versions
 crossPaths in ThisBuild := false
+
+threed in ThisBuild := { System.setProperty("org.nlogo.is3d", "true") }
+
+nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
+
+libraryDependencies in ThisBuild ++= Seq(
+  "asm" % "asm-all" % "3.3.1",
+  "org.picocontainer" % "picocontainer" % "2.13.6",
+  "org.jmock" % "jmock" % "2.5.1" % "test",
+  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+  "org.scalatest" %% "scalatest" % "1.8" % "test"
+)
+
+///
+/// top-level project only
+///
+
+name := "NetLogo"
+
+artifactName := { (_, _, _) => "NetLogo.jar" }
+
+onLoadMessage := ""
+
+resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
@@ -55,21 +77,7 @@ NativeLibs.nativeLibsTask
 
 Depend.dependTask
 
-threed := { System.setProperty("org.nlogo.is3d", "true") }
-
-nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
-
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
-
-libraryDependencies in ThisBuild ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
-  "org.picocontainer" % "picocontainer" % "2.13.6",
-  "org.jmock" % "jmock" % "2.5.1" % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "1.8" % "test"
-)
 
 libraryDependencies ++= Seq(
   "log4j" % "log4j" % "1.2.16",

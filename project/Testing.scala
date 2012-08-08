@@ -9,13 +9,15 @@ object Testing {
 
   val configs = Seq(FastTest, MediumTest, SlowTest)
 
-  lazy val tr = InputKey[Unit]("tr", "run TestReporters", test)
-  lazy val tc = InputKey[Unit]("tc", "run TestCommands", test)
-  lazy val te = InputKey[Unit]("te", "run TestExtensions", test)
-  lazy val tm = InputKey[Unit]("tm", "run TestModels", test)
-  lazy val testChecksums = InputKey[Unit]("test-checksums", "run TestChecksums", test)
+  lazy val tr = InputKey[Unit]("tr", "org.nlogo.headless.TestReporters", test)
+  lazy val tc = InputKey[Unit]("tc", "org.nlogo.headless.TestCommands", test)
+  lazy val te = InputKey[Unit]("te", "org.nlogo.headless.TestExtensions", test)
+  lazy val tm = InputKey[Unit]("tm", "org.nlogo.headless.TestModels", test)
+  lazy val testChecksums = InputKey[Unit]("test-checksums", "org.nlogo.headless.TestChecksums", test)
 
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
+
+  import NetLogoBuild.headless
 
   val settings = inConfig(Test)(
     inConfig(FastTest)(Defaults.testTasks) ++
@@ -23,6 +25,10 @@ object Testing {
     inConfig(SlowTest)(Defaults.testTasks) ++
     testKeys.flatMap(Defaults.defaultTestTasks) ++
     testKeys.flatMap(Defaults.testTaskOptions) ++
+    // ugh, sigh - ST 8/8/12
+    testKeys.flatMap(key =>
+      Seq(key <<= oneTest(key, None),
+          key in headless <<= oneTest(key, Some(headless)))) ++
     Seq(
       testOptions in FastTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(fastFilter(path, _))) },
@@ -30,11 +36,7 @@ object Testing {
         Seq(Tests.Filter(mediumFilter(path, _))) },
       testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(slowFilter(path, _))) },
-      tr <<= oneTest(tr, "org.nlogo.headless.TestReporters"),
-      tc <<= oneTest(tc, "org.nlogo.headless.TestCommands"),
-      tm <<= oneTest(tm, "org.nlogo.headless.TestModels"),
-      te <<= oneTest(te, "org.nlogo.headless.TestExtensions"),
-      testChecksums <<= oneTest(testChecksums, "org.nlogo.headless.TestChecksums")
+      testChecksums <<= oneTest(testChecksums, None)
     ))
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
@@ -51,12 +53,26 @@ object Testing {
 
   // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
   // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit], name: String): Project.Initialize[InputTask[Unit]] =
+  def oneTest(key: InputKey[Unit], project: Option[Project]): Project.Initialize[InputTask[Unit]] = {
+    // this part is really awful. I'm sure it can be done a better way, I just
+    // need to run it by Mark. testOnly is defined without needing this rigmarole,
+    // so my custom testOnly variations can be too, I just can't figure out how
+    // right now - ST 8/8/12
+    def mungeSetting[T](k2: SettingKey[T]) =
+      project match {
+        case Some(p) => k2 in p in key
+        case None => k2 in key
+      }
+    def mungeTask[T](k2: TaskKey[T]) =
+      project match {
+        case Some(p) => k2 in p in key
+        case None => k2 in key
+      }
     inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, resolvedScoped, fullClasspath in key, javaHome in key, state) flatMap {
-        case (args, s, frameworks, groups, config, loader, scoped, cp, javaHome, st) =>
+      (argTask, streams, loadedTestFrameworks, mungeTask(testGrouping), mungeTask(testExecution), testLoader, mungeTask(fullClasspath), mungeSetting(javaHome), state) flatMap {
+        case (args, s, frameworks, groups, config, loader, cp, javaHome, st) =>
           implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filter(Defaults.selectedFilter(Seq(name)))
+          val filter = Tests.Filter(Defaults.selectedFilter(Seq(key.key.description.get)))
           val mungedArgs =
             if(args.isEmpty) Nil
             else List("-n", args.mkString(" "))
@@ -68,5 +84,6 @@ object Testing {
               (Tests.showResults(s.log, _, "not found"))
       }
     }
+  }
 
 }

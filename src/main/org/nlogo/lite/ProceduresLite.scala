@@ -7,8 +7,8 @@ import org.nlogo.api.{ AgentKind, ModelSection }
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.{ Event, Events, ProceduresInterface }
 
-// for use from Applet; we don't want the whole ProceduresTab class in that context, because
-// ProceduresTab depends on the new editor, which we don't want in the lite jar
+// for use from Applet; we don't want the whole CodeTab class in that context, because
+// CodeTab depends on the new editor, which we don't want in the lite jar
 
 class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends ProceduresInterface
 with Event.LinkChild with Events.LoadSectionEventHandler

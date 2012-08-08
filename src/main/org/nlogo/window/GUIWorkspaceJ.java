@@ -1096,7 +1096,7 @@ public abstract strictfp class GUIWorkspaceJ
       // Mac 142U1DP3 (and maybe other Mac VMs, and maybe other platforms too,
       // I don't know), the error dialog didn't wind up with the keyboard focus
       // if the Code tab came forward... probably because something that
-      // the call to select() in ProceduresTab was doing was doing invokeLater()
+      // the call to select() in CodeTab was doing was doing invokeLater()
       // itself?  who knows... in any case, this seems to fix it - ST 7/30/04
       org.nlogo.awt.EventQueue.invokeLater
           (new Runnable() {
