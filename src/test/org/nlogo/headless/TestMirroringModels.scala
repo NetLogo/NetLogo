@@ -82,12 +82,13 @@ class TestMirroringModels extends FunSuite with SlowTest {
   def modelsToTest = Seq(
     "models/Sample Models/Networks/Diffusion on a Directed Network.nlogo")
 
-   allTestableModels.foreach { modelPath =>
-     // exclude 1 model for now, failing & we don't know why yet
-     if(!modelPath.endsWith("Diffusion on a Directed Network.nlogo"))
-       test("Mirroring: " + modelPath) {
-         modelRenderingTest(modelPath)
-       }
-   }
+  if (!api.Version.is3D)
+    allTestableModels.foreach { modelPath =>
+      // exclude 1 model for now, failing & we don't know why yet
+      if(!modelPath.endsWith("Diffusion on a Directed Network.nlogo"))
+        test("Mirroring: " + modelPath) {
+          modelRenderingTest(modelPath)
+        }
+    }
 
 }
