@@ -3,7 +3,7 @@ import Keys._
 
 object NetLogoBuild extends Build {
 
-  lazy val all = TaskKey[Unit]("all", "build everything!!!")
+  lazy val all = TaskKey[Unit]("all", "build all the things!!!")
 
   lazy val root =
     Project(id = "NetLogo", base = file("."))
