@@ -9,6 +9,9 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.util.Femto
 import mirror.{ Mirroring, Mirrorables, Serializer }
 
+case class PotemkinInterface(position: java.awt.Point,
+                             image: BufferedImage)
+
 class ReviewTab(ws: window.GUIWorkspace) extends JPanel
 with window.Events.BeforeLoadEventHandler {
 
@@ -21,9 +24,6 @@ with window.Events.BeforeLoadEventHandler {
   var ticks = 0
 
   var potemkinInterface: Option[PotemkinInterface] = None
-
-  case class PotemkinInterface(position: java.awt.Point,
-                               image: BufferedImage)
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
@@ -76,28 +76,35 @@ with window.Events.BeforeLoadEventHandler {
   object InterfacePanel extends JPanel {
     override def paintComponent(g: java.awt.Graphics) {
       super.paintComponent(g)
-      potemkinInterface match {
-        case None =>
-          visibleState = Map()
-          g.setColor(java.awt.Color.GRAY)
-          g.fillRect(0, 0, getWidth, getHeight)
-        case Some(PotemkinInterface(position, image)) =>
-          g.setColor(java.awt.Color.WHITE)
-          g.fillRect(0, 0, getWidth, getHeight)
-          g.drawImage(image, 0, 0, null)
-          if(visibleState.isEmpty)
-            visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
-          val dummy = new mirror.FakeWorld(visibleState) { }
-          val renderer = Femto.get(classOf[api.RendererInterface],
-                                   "org.nlogo.render.Renderer", Array(dummy))
-          g.clipRect(position.x, position.y,
-                     ws.viewWidget.view.getWidth,
-                     ws.viewWidget.view.getHeight)
-          g.translate(position.x, position.y)
-          renderer.paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
+      val position =
+        potemkinInterface match {
+          case None =>
+            g.setColor(java.awt.Color.GRAY)
+            g.fillRect(0, 0, getWidth, getHeight)
+            new java.awt.Point(0, 0)
+          case Some(PotemkinInterface(position, image)) =>
+            g.setColor(java.awt.Color.WHITE)
+            g.fillRect(0, 0, getWidth, getHeight)
+            g.drawImage(image, 0, 0, null)
+            position
+        }
+      if (run.nonEmpty) {
+        if(visibleState.isEmpty)
+          visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
+        val dummy = new mirror.FakeWorld(visibleState) { }
+        val renderer = Femto.get(classOf[api.RendererInterface],
+                                 "org.nlogo.render.Renderer", Array(dummy))
+        g.clipRect(position.x, position.y,
+                   ws.viewWidget.view.getWidth,
+                   ws.viewWidget.view.getHeight)
+        g.translate(position.x, position.y)
+        renderer.paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
       }
     }
   }
+
+  private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
+    Mirroring.merge(oldState, Serializer.fromBytes(bytes))
 
   object Scrubber extends JSlider {
     setValue(0)
@@ -105,8 +112,6 @@ with window.Events.BeforeLoadEventHandler {
     addChangeListener(new ChangeListener{
       def stateChanged(e: ChangeEvent) {
         setBorder(BorderFactory.createTitledBorder("Tick: " + getValue))
-        def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
-          Mirroring.merge(oldState, Serializer.fromBytes(bytes))
         visibleState =
           if(getValue < ticks)
               run.take(getValue + 1)
@@ -142,12 +147,36 @@ with window.Events.BeforeLoadEventHandler {
     }
   }
 
+  object LoadAction extends javax.swing.AbstractAction("Load") {
+    def actionPerformed(e: java.awt.event.ActionEvent) {
+      ignoring(classOf[UserCancelException]) {
+        val path = org.nlogo.swing.FileDialog.show(
+          ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
+        val in = new java.io.ObjectInputStream(
+          new java.io.FileInputStream(path))
+        run = in.readObject().asInstanceOf[Run]
+        potemkinInterface = None
+        ticks = 0
+        visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
+        state = run.foldLeft(Map(): Mirroring.State)(merge)
+        Scrubber.setValue(0)
+        Scrubber.setEnabled(true)
+        Scrubber.setMaximum(run.size - 1)
+        MemoryMeter.update()
+        InterfacePanel.repaint()
+      }
+    }
+  }
+
   object SaveButton extends javax.swing.JButton(SaveAction)
+
+  object LoadButton extends javax.swing.JButton(LoadAction)
 
   object Toolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(Enabled)
       add(SaveButton)
+      add(LoadButton)
       add(MemoryMeter)
     }
   }
