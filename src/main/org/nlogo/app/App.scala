@@ -3,7 +3,8 @@
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World3D, World}
-import org.nlogo.api._
+import org.nlogo.api
+import api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
@@ -136,6 +137,17 @@ object App{
     }
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
+    pico.add(
+      classOf[ReviewTab], "org.nlogo.app.ReviewTab",
+      Array[Parameter](
+        new ComponentParameter(),
+        // loadModel
+        new ConstantParameter(
+          (s: String) => app.fileMenu.openFromSource(
+            s, null, "Loading...", api.ModelType.Library)),
+        // saveModel
+        new ConstantParameter(
+          () => new ModelSaver(pico.getComponent(classOf[App])).save)))
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up

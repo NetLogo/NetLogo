@@ -13,7 +13,10 @@ import javax.imageio.ImageIO
 case class PotemkinInterface(position: java.awt.Point,
                              image: BufferedImage)
 
-class ReviewTab(ws: window.GUIWorkspace) extends JPanel
+class ReviewTab(ws: window.GUIWorkspace,
+                loadModel: String => Unit,
+                saveModel: () => String)
+extends JPanel
 with window.Events.BeforeLoadEventHandler {
 
   type Run = Seq[Array[Byte]]
@@ -142,6 +145,7 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
+        out.writeObject(saveModel())
         out.writeObject(potemkinInterface.get.position)
         val imageByteStream = new java.io.ByteArrayOutputStream
         ImageIO.write(
@@ -161,6 +165,7 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
         val in = new java.io.ObjectInputStream(
           new java.io.FileInputStream(path))
+        loadModel(in.readObject().asInstanceOf[String])
         potemkinInterface =
           Some(
             PotemkinInterface(
