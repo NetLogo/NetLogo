@@ -1,5 +1,6 @@
 import sbt._
 import Keys._
+import NetLogoBuild.headless
 
 object Testing {
 
@@ -17,12 +18,23 @@ object Testing {
 
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
 
-  import NetLogoBuild.headless
+  lazy val settings =
+    fastMediumSlowSettings ++
+    inConfig(Test)(specialTestTaskSettings)
 
-  val settings = inConfig(Test)(
+  lazy val fastMediumSlowSettings =
     inConfig(FastTest)(Defaults.testTasks) ++
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
+    Seq(
+      testOptions in FastTest <<= (fullClasspath in Test) map { path =>
+        Seq(Tests.Filter(fastFilter(path, _))) },
+      testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
+        Seq(Tests.Filter(mediumFilter(path, _))) },
+      testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
+        Seq(Tests.Filter(slowFilter(path, _))) })
+
+  lazy val specialTestTaskSettings =
     testKeys.flatMap(Defaults.defaultTestTasks) ++
     testKeys.flatMap(Defaults.testTaskOptions) ++
     // ugh, sigh - ST 8/8/12
@@ -30,14 +42,8 @@ object Testing {
       Seq(key <<= oneTest(key, None),
           key in headless <<= oneTest(key, Some(headless)))) ++
     Seq(
-      testOptions in FastTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(fastFilter(path, _))) },
-      testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(mediumFilter(path, _))) },
-      testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(slowFilter(path, _))) },
       testChecksums <<= oneTest(testChecksums, None)
-    ))
+    )
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
   private def mediumFilter(path: Classpath, name: String): Boolean =
