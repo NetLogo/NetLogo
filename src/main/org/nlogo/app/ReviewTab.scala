@@ -8,6 +8,7 @@ import org.nlogo.{ api, mirror, nvm, window }
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.util.Femto
 import mirror.{ Mirroring, Mirrorables, Serializer }
+import javax.imageio.ImageIO
 
 case class PotemkinInterface(position: java.awt.Point,
                              image: BufferedImage)
@@ -141,6 +142,12 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
+        out.writeObject(potemkinInterface.get.position)
+        val imageByteStream = new java.io.ByteArrayOutputStream
+        ImageIO.write(
+          potemkinInterface.get.image, "PNG", imageByteStream)
+        imageByteStream.close()
+        out.writeObject(imageByteStream.toByteArray)
         out.writeObject(run)
         out.close()
       }
@@ -154,8 +161,14 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
         val in = new java.io.ObjectInputStream(
           new java.io.FileInputStream(path))
+        potemkinInterface =
+          Some(
+            PotemkinInterface(
+              position = in.readObject().asInstanceOf[java.awt.Point],
+              image = ImageIO.read(
+                new java.io.ByteArrayInputStream(
+                  in.readObject().asInstanceOf[Array[Byte]]))))
         run = in.readObject().asInstanceOf[Run]
-        potemkinInterface = None
         ticks = 0
         visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
         state = run.foldLeft(Map(): Mirroring.State)(merge)
