@@ -1,6 +1,5 @@
 import sbt._
 import Keys._
-import NetLogoBuild.headless
 
 object Testing {
 
@@ -37,13 +36,7 @@ object Testing {
   lazy val specialTestTaskSettings =
     testKeys.flatMap(Defaults.defaultTestTasks) ++
     testKeys.flatMap(Defaults.testTaskOptions) ++
-    // ugh, sigh - ST 8/8/12
-    testKeys.flatMap(key =>
-      Seq(key <<= oneTest(key, None),
-          key in headless <<= oneTest(key, Some(headless)))) ++
-    Seq(
-      testChecksums <<= oneTest(testChecksums, None)
-    )
+    testKeys.map(key => key <<= oneTest(key))
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
   private def mediumFilter(path: Classpath, name: String): Boolean =
@@ -59,23 +52,9 @@ object Testing {
 
   // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
   // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit], project: Option[Project]): Project.Initialize[InputTask[Unit]] = {
-    // this part is really awful. I'm sure it can be done a better way, I just
-    // need to run it by Mark. testOnly is defined without needing this rigmarole,
-    // so my custom testOnly variations can be too, I just can't figure out how
-    // right now - ST 8/8/12
-    def mungeSetting[T](k2: SettingKey[T]) =
-      project match {
-        case Some(p) => k2 in p in key
-        case None => k2 in key
-      }
-    def mungeTask[T](k2: TaskKey[T]) =
-      project match {
-        case Some(p) => k2 in p in key
-        case None => k2 in key
-      }
+  def oneTest(key: InputKey[Unit]): Project.Initialize[InputTask[Unit]] = {
     inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, streams, loadedTestFrameworks, mungeTask(testGrouping), mungeTask(testExecution), testLoader, mungeTask(fullClasspath), mungeSetting(javaHome), state) flatMap {
+      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, fullClasspath in key, javaHome in key, state) flatMap {
         case (args, s, frameworks, groups, config, loader, cp, javaHome, st) =>
           implicit val display = Project.showContextKey(st)
           val filter = Tests.Filter(Defaults.selectedFilter(Seq(key.key.description.get)))
