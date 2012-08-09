@@ -2,8 +2,9 @@ package org.nlogo.app
 
 import javax.swing._
 import javax.swing.event.{ ChangeEvent, ChangeListener }
+import java.awt.BorderLayout
 import java.awt.image.BufferedImage
-import org.nlogo.awt.UserCancelException
+import org.nlogo.awt.{ RowLayout, UserCancelException }
 import org.nlogo.{ api, mirror, nvm, window }
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.util.Femto
@@ -126,17 +127,17 @@ with window.Events.BeforeLoadEventHandler {
       }})
   }
 
-  object EnabledAction extends javax.swing.AbstractAction("Recording") {
+  object EnabledAction extends AbstractAction("Recording") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       recordingEnabled = !recordingEnabled
     }
   }
 
-  object Enabled extends javax.swing.JCheckBox(EnabledAction) {
+  object Enabled extends JCheckBox(EnabledAction) {
     setSelected(recordingEnabled)
   }
 
-  object SaveAction extends javax.swing.AbstractAction("Save") {
+  object SaveAction extends AbstractAction("Save") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
@@ -156,7 +157,7 @@ with window.Events.BeforeLoadEventHandler {
     }
   }
 
-  object LoadAction extends javax.swing.AbstractAction("Load") {
+  object LoadAction extends AbstractAction("Load") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
@@ -184,9 +185,9 @@ with window.Events.BeforeLoadEventHandler {
     }
   }
 
-  object SaveButton extends javax.swing.JButton(SaveAction)
+  object SaveButton extends JButton(SaveAction)
 
-  object LoadButton extends javax.swing.JButton(LoadAction)
+  object LoadButton extends JButton(LoadAction)
 
   object Toolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
@@ -197,18 +198,51 @@ with window.Events.BeforeLoadEventHandler {
     }
   }
 
-  object MemoryMeter extends javax.swing.JLabel {
+  object MemoryMeter extends JLabel {
     def update() {
       val megabytes = run.map(_.size.toLong).sum / 1024 / 1024
       setText(megabytes + " MB")
     }
   }
 
+  class ScrubAction(name: String, fn: Int => Int)
+  extends AbstractAction(name) {
+    def actionPerformed(e: java.awt.event.ActionEvent) {
+      Scrubber.setValue(fn(Scrubber.getValue))
+    }
+  }
+
+  object AllTheWayBackAction
+    extends ScrubAction("|<-", _ => 0)
+  object AllTheWayForwardAction
+    extends ScrubAction("->|", _ => Scrubber.getMaximum)
+  object BackAction
+    extends ScrubAction("<-", _ - 1)
+  object ForwardAction
+    extends ScrubAction("->", _ + 1)
+
+  object ButtonPanel extends JPanel {
+    setLayout(
+    new RowLayout(
+      1, java.awt.Component.LEFT_ALIGNMENT,
+      java.awt.Component.CENTER_ALIGNMENT))
+    add(new JButton(AllTheWayBackAction))
+    add(new JButton(BackAction))
+    add(new JButton(ForwardAction))
+    add(new JButton(AllTheWayForwardAction))
+  }
+
+  object SouthPanel extends JPanel {
+    setLayout(new BorderLayout)
+    add(ButtonPanel, BorderLayout.WEST)
+    add(Scrubber, BorderLayout.CENTER)
+  }
+
   locally {
     import java.awt.BorderLayout
     setLayout(new BorderLayout)
     add(InterfacePanel, BorderLayout.CENTER)
-    add(Scrubber, BorderLayout.SOUTH)
+    add(SouthPanel, BorderLayout.SOUTH)
     add(Toolbar, BorderLayout.NORTH)
   }
 
