@@ -239,6 +239,7 @@ private class StructureParser(
     }
     if(!subprogram)
       extensionManager.finishFullCompilation()
+    newProcedures.values.foreach(_.topLevel = subprogram)
     StructureParser.Results(program, newProcedures, tokensMap.toMap)
   }
   private def updateBreedOwns(breedName: String, isLinkBreed: Boolean): Program = {
