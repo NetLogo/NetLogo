@@ -23,15 +23,20 @@ private object CompilerMain {
     val structureResults = new StructureParser(tokenizer.tokenize(source), // tokenize
                                                displayName, program, oldProcedures, extensionManager)
       .parse(subprogram)  // process declarations
-    val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     val taskNumbers = Iterator.from(1)
-    for(procedure <- structureResults.procedures.values) {
-      procedure.topLevel = subprogram
-      val tokens =
+    // the return type is plural because tasks inside a procedure get
+    // lambda-lifted and become top level procedures
+    def parseProcedure(procedure: Procedure): Seq[ProcedureDefinition] = {
+      val rawTokens = structureResults.tokens(procedure)
+      val iP =
         new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, false)
-        .process(structureResults.tokens(procedure).iterator, procedure)  // resolve references
-      defs ++= new ExpressionParser(procedure, taskNumbers).parse(tokens) // parse
+      val identifiedTokens =
+        iP.process(rawTokens.iterator, procedure)  // resolve references
+      new ExpressionParser(procedure, taskNumbers)
+        .parse(identifiedTokens) // parse
     }
+    val defs: Vector[ProcedureDefinition] =
+      Vector() ++ structureResults.procedures.values.flatMap(parseProcedure)
     // StructureParser found the top level Procedures for us.  ExpressionParser
     // finds command tasks and makes Procedures out of them, too.  the remaining
     // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
