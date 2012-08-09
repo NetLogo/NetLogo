@@ -7,6 +7,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.{ api, mirror, nvm, window }
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.util.Femto
+import org.nlogo.swing.Implicits._
 import mirror.{ Mirroring, Mirrorables, Serializer }
 import javax.imageio.ImageIO
 
@@ -33,14 +34,16 @@ with window.Events.BeforeLoadEventHandler {
     new api.NetLogoAdapter {
       val count = Iterator.from(0)
       override def tickCounterChanged(ticks: Double) {
-        if (recordingEnabled) {
-          if (ticks == 0) {
-            reset()
-          }
-          grab()
-          Scrubber.setMaximum(run.size - 1)
-          InterfacePanel.repaint()
-        }}})
+        // get off the job thread and onto the event thread
+        ws.waitFor{() =>
+          if (recordingEnabled) {
+            if (ticks == 0) {
+              reset()
+            }
+            grab()
+            Scrubber.setMaximum(run.size - 1)
+            InterfacePanel.repaint()
+          }}}})
 
   private def reset() {
     run = Seq()
@@ -60,14 +63,9 @@ with window.Events.BeforeLoadEventHandler {
         PotemkinInterface(
           position = new java.awt.Point(wrapperPos.x + ws.viewWidget.view.getLocation().x,
                                         wrapperPos.y + ws.viewWidget.view.getLocation().y),
-          image = {
-            // get off the job thread and onto the event thread
-            ws.waitForResult(
-              new api.ReporterRunnable[BufferedImage]() {
-                override def run() =
-                  org.nlogo.awt.Images.paintToImage(
-                    ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
-              })}))
+          image =
+            org.nlogo.awt.Images.paintToImage(
+              ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])))
     }
     val (newState, update) =
       Mirroring.diffs(state, Mirrorables.allMirrorables(ws.world, ws.plotManager.plots))
