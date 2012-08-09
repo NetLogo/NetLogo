@@ -99,6 +99,8 @@ all <<= (baseDirectory, streams) map { (base, s) =>
 }
 
 all <<= all.dependsOn(
+  packageBin in Compile,
+  packageBin in Compile in NetLogoBuild.headless,
   Extensions.extensions,
   Packaging.moreJars,
   NativeLibs.nativeLibs,

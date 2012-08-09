@@ -156,10 +156,10 @@ rm -f *.jar
 ./sbt clean all
 
 # remember version number
-export VERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
-export DATE=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+export VERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+export DATE=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
-export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -170,7 +170,7 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 $CP -rp ../../docs .
 $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
-$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar .
+$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar ../../headless/target/NetLogoHeadless.jar .
 $CP ../../target/NetLogoLite.jar .
 $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
@@ -227,10 +227,10 @@ $GREP -rw ^VERSION models && echo "no VERSION sections please; exiting" && exit 
 $GREP -rw \\\$Id models && echo "no \$Id please; exiting" && exit 1
 
 # put copyright notices in code and/or info tabs
-$LN -s ../../dist        # notarize script needs this
-$LN -s ../../resources   # and this
-$LN -s ../../scala       # and this
-$LN -s ../../bin         # and this
+$LN -s ../../dist                 # notarize script needs this
+$LN -s ../../headless/resources   # and this
+$LN -s ../../scala                # and this
+$LN -s ../../bin                  # and this
 ../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
 $RM -f models/legal.txt
 $RM dist resources scala bin

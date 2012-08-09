@@ -13,7 +13,7 @@ object Packaging {
           "Class-Path", classpath.files
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
-            .mkString(" ")))},
+            .mkString(" ") + " NetLogoHeadless.jar"))},
     moreJars <<= (packageBin in Compile, scalaInstance, target, cacheDirectory, streams) map {
       (jar, instance, target, cacheDir, s) =>
         val cache =
