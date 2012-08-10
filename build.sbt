@@ -1,27 +1,49 @@
-scalaVersion := "2.9.2"
+///
+/// ThisBuild -- applies to subprojects too
+///
 
-name := "NetLogo"
+scalaVersion in ThisBuild := "2.9.2"
 
-onLoadMessage := ""
-
-resourceDirectory in Compile <<= baseDirectory(_ / "resources")
-
-scalacOptions ++=
+scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii"
   .split(" ").toSeq
 
-javacOptions ++=
+javacOptions in ThisBuild ++=
   "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.6 -target 1.6"
   .split(" ").toSeq
 
 // only log problems plz
-ivyLoggingLevel := UpdateLogging.Quiet
+ivyLoggingLevel in ThisBuild := UpdateLogging.Quiet
 
 // this makes script-writing easier
-retrieveManaged := true
+retrieveManaged in ThisBuild := true
 
 // we're not cross-building for different Scala versions
-crossPaths := false
+crossPaths in ThisBuild := false
+
+nogen in ThisBuild  := { System.setProperty("org.nlogo.noGenerator", "true") }
+
+libraryDependencies in ThisBuild ++= Seq(
+  "asm" % "asm-all" % "3.3.1",
+  "org.picocontainer" % "picocontainer" % "2.13.6",
+  "org.jmock" % "jmock" % "2.5.1" % "test",
+  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
+  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+  "org.scalatest" %% "scalatest" % "1.8" % "test"
+)
+
+///
+/// top-level project only
+///
+
+name := "NetLogo"
+
+artifactName := { (_, _, _) => "NetLogo.jar" }
+
+onLoadMessage := ""
+
+resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
@@ -35,35 +57,28 @@ unmanagedSourceDirectories in Test <+= baseDirectory(_ / "src" / "tools")
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
+unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
+
 mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
-sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
-
-resourceGenerators in Compile <+= I18n.resourceGeneratorTask
+sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
 
 Extensions.extensionsTask
 
 Depend.dependTask
 
-nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
-
 libraryDependencies ++= Seq(
-  "asm" % "asm-all" % "3.3.1",
-  "org.picocontainer" % "picocontainer" % "2.13.6",
   "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",
   "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
-  "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
-  "org.jmock" % "jmock" % "2.5.1" % "test",
-  "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-  "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "1.8" % "test"
+  "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
 )
 
 all := { () }
 
 all <<= all.dependsOn(
+  packageBin in Compile,
+  packageBin in Compile in NetLogoBuild.headless,
   compile in Test,
   Extensions.extensions)

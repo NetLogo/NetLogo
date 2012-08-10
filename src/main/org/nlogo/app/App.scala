@@ -179,22 +179,22 @@ object App{
     def read(path: String): Array[String] = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         Array()
       }
-      else map.get(section).toArray
+      else map(section).toArray
     }
 
     @throws(classOf[java.io.IOException])
     override def getVersion(path:String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         null;
       }
@@ -295,7 +295,7 @@ class App extends
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, tabs.proceduresTab))
+    frame.addLinkComponent(new CompilerManager(workspace, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
     org.nlogo.util.Exceptions.setHandler(this)
@@ -650,7 +650,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.proceduresTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -658,7 +658,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.proceduresTab.innerSource(source)) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource(source)) }
 
   /**
    * Recompiles the model.  Useful after calling

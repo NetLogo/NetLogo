@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 // Normally we create interfaces like these to resolve an inter-package dependency problem. In this
-// case, we're only keeping ProceduresMenu from depending on ProceduresTab, which maybe isn't
+// case, we're only keeping ProceduresMenu from depending on CodeTab, which maybe isn't
 // strictly necessary since they're both in the app package, but it's still kind of nice. - ST
 // 2/2/09
 

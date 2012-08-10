@@ -20,14 +20,14 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   val interfaceTab = new InterfaceTab(workspace, dialogFactory)
-  val proceduresTab = new MainProceduresTab(workspace)
+  val codeTab = new MainCodeTab(workspace)
 
   var previousTab: java.awt.Component = interfaceTab
   var currentTab: java.awt.Component = interfaceTab
 
   def init(moreTabs: (String, java.awt.Component) *) {
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
-    addTab(I18N.gui.get("tabs.code"), proceduresTab)
+    addTab(I18N.gui.get("tabs.code"), codeTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
   }
@@ -42,12 +42,12 @@ class Tabs(val workspace: GUIWorkspace,
   override def requestFocus() { currentTab.requestFocus() }
   def handle(e: LoadBeginEvent) { setSelectedComponent(interfaceTab) }
   def handle(e: RuntimeErrorEvent) {
-    if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget] &&
-       e.sourceOwner == proceduresTab)
-      highlightRuntimeError(proceduresTab, e)
+    if(!e.jobOwner.isInstanceOf[org.nlogo.window.MonitorWidget])
+      if(e.sourceOwner == codeTab)
+        highlightRuntimeError(codeTab, e)
   }
 
-  def highlightRuntimeError(tab: ProceduresTab, e: RuntimeErrorEvent) {
+  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedComponent(tab)
     // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
     // the selection happens and sometime it doesn't - ST 8/28/04
@@ -59,7 +59,7 @@ class Tabs(val workspace: GUIWorkspace,
   def handle(e: CompiledEvent) {
     def clearErrors() {
       for(i <- 0 until getTabCount)
-        if(getComponentAt(i).isInstanceOf[ProceduresTab])
+        if(getComponentAt(i).isInstanceOf[CodeTab])
           setForegroundAt(i, null)
     }
     def recolorTab(component: java.awt.Component, hasError: Boolean) {
@@ -67,8 +67,8 @@ class Tabs(val workspace: GUIWorkspace,
     }
 
     // recolor tabs
-    if(e.sourceOwner.isInstanceOf[ProceduresTab]) {
-      val tab = e.sourceOwner.asInstanceOf[ProceduresTab]
+    if(e.sourceOwner.isInstanceOf[CodeTab]) {
+      val tab = e.sourceOwner.asInstanceOf[CodeTab]
       if(e.error != null) setSelectedComponent(tab)
       // on null error, clear all errors, as we only get one event for all the files
       if(e.error == null) clearErrors() else recolorTab(tab, e.error != null)
@@ -87,7 +87,7 @@ class Tabs(val workspace: GUIWorkspace,
     }
   }
 
-  def getIndexOfComponent(tab: ProceduresTab): Int =
+  def getIndexOfComponent(tab: CodeTab): Int =
     (0 until getTabCount).find(n => getComponentAt(n) == tab).get
 
   private def stripPath(filename: String): String =

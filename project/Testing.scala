@@ -9,33 +9,34 @@ object Testing {
 
   val configs = Seq(FastTest, MediumTest, SlowTest)
 
-  lazy val tr = InputKey[Unit]("tr", "run TestReporters", test)
-  lazy val tc = InputKey[Unit]("tc", "run TestCommands", test)
-  lazy val te = InputKey[Unit]("te", "run TestExtensions", test)
-  lazy val tm = InputKey[Unit]("tm", "run TestModels", test)
-  lazy val testChecksums = InputKey[Unit]("test-checksums", "run TestChecksums", test)
+  lazy val tr = InputKey[Unit]("tr", "org.nlogo.headless.TestReporters", test)
+  lazy val tc = InputKey[Unit]("tc", "org.nlogo.headless.TestCommands", test)
+  lazy val te = InputKey[Unit]("te", "org.nlogo.headless.TestExtensions", test)
+  lazy val tm = InputKey[Unit]("tm", "org.nlogo.headless.TestModels", test)
+  lazy val testChecksums = InputKey[Unit]("test-checksums", "org.nlogo.headless.TestChecksums", test)
 
   private val testKeys = Seq(tr, tc, te, tm, testChecksums)
 
-  val settings = inConfig(Test)(
+  lazy val settings =
+    fastMediumSlowSettings ++
+    inConfig(Test)(specialTestTaskSettings)
+
+  lazy val fastMediumSlowSettings =
     inConfig(FastTest)(Defaults.testTasks) ++
     inConfig(MediumTest)(Defaults.testTasks) ++
     inConfig(SlowTest)(Defaults.testTasks) ++
-    testKeys.flatMap(Defaults.defaultTestTasks) ++
-    testKeys.flatMap(Defaults.testTaskOptions) ++
     Seq(
       testOptions in FastTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(fastFilter(path, _))) },
       testOptions in MediumTest <<= (fullClasspath in Test) map { path =>
         Seq(Tests.Filter(mediumFilter(path, _))) },
       testOptions in SlowTest <<= (fullClasspath in Test) map { path =>
-        Seq(Tests.Filter(slowFilter(path, _))) },
-      tr <<= oneTest(tr, "org.nlogo.headless.TestReporters"),
-      tc <<= oneTest(tc, "org.nlogo.headless.TestCommands"),
-      tm <<= oneTest(tm, "org.nlogo.headless.TestModels"),
-      te <<= oneTest(te, "org.nlogo.headless.TestExtensions"),
-      testChecksums <<= oneTest(testChecksums, "org.nlogo.headless.TestChecksums")
-    ))
+        Seq(Tests.Filter(slowFilter(path, _))) })
+
+  lazy val specialTestTaskSettings =
+    testKeys.flatMap(Defaults.defaultTestTasks) ++
+    testKeys.flatMap(Defaults.testTaskOptions) ++
+    testKeys.map(key => key <<= oneTest(key))
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
   private def mediumFilter(path: Classpath, name: String): Boolean =
@@ -51,12 +52,12 @@ object Testing {
 
   // mostly copy-and-pasted from Defaults.inputTests. there may well be a better
   // way this could be done - ST 6/17/12
-  def oneTest(key: InputKey[Unit], name: String): Project.Initialize[InputTask[Unit]] =
+  def oneTest(key: InputKey[Unit]): Project.Initialize[InputTask[Unit]] = {
     inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, resolvedScoped, fullClasspath in key, javaHome in key, state) flatMap {
-        case (args, s, frameworks, groups, config, loader, scoped, cp, javaHome, st) =>
+      (argTask, streams, loadedTestFrameworks, testGrouping in key, testExecution in key, testLoader, fullClasspath in key, javaHome in key, state) flatMap {
+        case (args, s, frameworks, groups, config, loader, cp, javaHome, st) =>
           implicit val display = Project.showContextKey(st)
-          val filter = Tests.Filter(Defaults.selectedFilter(Seq(name)))
+          val filter = Tests.Filter(Defaults.selectedFilter(Seq(key.key.description.get)))
           val mungedArgs =
             if(args.isEmpty) Nil
             else List("-n", args.mkString(" "))
@@ -68,5 +69,6 @@ object Testing {
               (Tests.showResults(s.log, _, "not found"))
       }
     }
+  }
 
 }
