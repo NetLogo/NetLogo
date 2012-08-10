@@ -15,6 +15,7 @@ DeadTurtles1
 
 DeadTurtles2
   O> create-mice 1 [ set glob1 self die ]
+  O> follow glob1 => ERROR That mouse is dead.
   [color] of glob1 => ERROR That mouse is dead.
   O> ask glob1 [ set color red ] => ERROR That mouse is dead.
   [pcolor] of glob1 => ERROR That mouse is dead.
