@@ -222,25 +222,25 @@ object App{
   // TODO: lots of duplication here...
   private class ShapeSectionReader(section: ModelSection) extends org.nlogo.shape.ModelSectionReader {
     @throws(classOf[java.io.IOException])
-    def read(path: String) = {
+    def read(path: String): Array[String] = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
-        Array.empty[String]
+        Array()
       }
-      else map.get(section)
+      else map(section).toArray
     }
 
     @throws(classOf[java.io.IOException])
     override def getVersion(path:String) = {
       val map = ModelReader.parseModel(FileIO.file2String(path))
       if (map == null ||
-              map.get(ModelSection.Version) == null ||
-              map.get(ModelSection.Version).length == 0 ||
-              !ModelReader.parseVersion(map).startsWith("NetLogo")) {
+          !map.isDefinedAt(ModelSection.Version) ||
+          map(ModelSection.Version).isEmpty ||
+          !ModelReader.parseVersion(map).startsWith("NetLogo")) {
         // not a valid model file
         null;
       }
@@ -323,7 +323,7 @@ class App extends
 
     val world = if(Version.is3D) new World3D() else new World()
     pico.addComponent(world)
-    _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
+    _workspace = new GUIWorkspace(world, GUIWorkspaceJ.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
       val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
@@ -375,7 +375,7 @@ class App extends
     pico.addComponent(tabs.interfaceTab.getInterfacePanel)
     frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, tabs.proceduresTab))
+    frame.addLinkComponent(new CompilerManager(workspace, tabs.codeTab))
     frame.addLinkComponent(listenerManager)
 
     org.nlogo.util.Exceptions.setHandler(this)
@@ -516,20 +516,20 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AppEvent){
+  def handle(e: AppEvent) {
     import AppEventType._
     e.eventType match {
       case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args(0).toString)
+      case MAGIC_OPEN => magicOpen(e.args.head.toString)
       case START_LOGGING =>
-        startLogging(e.args(0).toString)
-        if(logger!=null)
+        startLogging(e.args.head.toString)
+        if(logger != null)
           logger.modelOpened(workspace.getModelPath())
       case ZIP_LOG_FILES =>
         if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
+          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args.head.toString)
         else
-          logger.zipSessionFiles(e.args(0).toString)
+          logger.zipSessionFiles(e.args.head.toString)
       case DELETE_LOG_FILES =>
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
@@ -814,7 +814,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.proceduresTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabs.codeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -822,7 +822,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.proceduresTab.innerSource(source)) }
+  def setProcedures(source:String) { dispatchThreadOrBust(tabs.codeTab.innerSource(source)) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -875,8 +875,10 @@ class App extends
    * in the same (undocumented) format found in a saved model.
    * @param text the widget specification
    */
-  def makeWidget(text:String){
-    dispatchThreadOrBust( tabs.interfaceTab.getInterfacePanel.loadWidget(text.split("\n").toArray, Version.version) )
+  def makeWidget(text: String){
+    dispatchThreadOrBust(
+      tabs.interfaceTab.getInterfacePanel.loadWidget(
+        text.split("\n").toSeq, Version.version) )
   }
 
   /// helpers for controlling methods

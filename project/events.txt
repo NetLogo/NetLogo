@@ -13,7 +13,7 @@ window.AddInputBoxConstraint - varname: String - constraint: agent.InputBoxConst
 window.AddJob - owner: api.JobOwner - agents: agent.AgentSet - procedure: nvm.Procedure
 window.AddSliderConstraint - slider: SliderWidget - varname: String - minSpec: String - maxSpec: String - incSpec: String - value: java.lang.Double
 window.AfterLoad
-window.App - eventType: AppEventType - args: Array[AnyRef]
+window.App - eventType: AppEventType - args: Seq[AnyRef]
 window.BeforeLoad - modelPath: String - modelType: api.ModelType
 window.CompileAll
 window.CompileMoreSource - owner: api.JobOwner
@@ -21,7 +21,7 @@ window.Compiled - sourceOwner: api.SourceOwner - program: api.Program - procedur
 window.Dirty
 window.EditWidget - widget: api.Editable
 window.Enable2D - enabled: Boolean
-window.ExportInterface - stream: java.io.OutputStream - exceptionBox: Array[java.io.IOException]
+window.ExportInterface - stream: java.io.OutputStream - callback: java.io.IOException => Unit
 window.ExportOutput - filename: String
 window.ExportPlot - whichPlots: PlotWidgetExportType - target: plot.Plot - filename: String
 window.ExportWorld - writer: java.io.PrintWriter
@@ -33,7 +33,7 @@ window.JobStopping - owner: api.JobOwner
 window.Load3DShapes - filename: String
 window.LoadBegin
 window.LoadEnd
-window.LoadSection - version: String - section: AnyRef - lines: Array[String] - text: String
+window.LoadSection - version: String - section: AnyRef - lines: Seq[String] - text: String
 window.ModelSaved - modelPath: String
 window.OpenModel - path: String
 window.Output - clear: Boolean - outputObject: agent.OutputObject - wrapLines: Boolean - toCommandCenter: Boolean

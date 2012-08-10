@@ -88,6 +88,36 @@ if [ $WINDOWS -eq 1 ]; then
   tar tzf "$IJDIR/jres/$VM.tar.gz" > /dev/null
 fi
 
+# ask user whether to build Windows installers
+# (ordinarily you want to, but sometimes you want to
+# skip it, such as when testing changes to this script)
+until [ -n "$MATHEMATICA" ]
+do
+  read -p "Include the Mathematica link? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    MATHEMATICA=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    MATHEMATICA=0
+  fi
+done
+
+# fail early if JLink.jar is missing
+if [ $MATHEMATICA -eq 1 ]; then
+  if [ ! -f Mathematica-Link/Makefile ]; then
+    git submodule update --init Mathematica-Link
+  fi
+  if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
+    cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
+  fi
+  if [ ! -f Mathematica-Link/JLink.jar ]; then
+    echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
+    echo "(it's needed to compile the link, but we don't have a license to distribute it)"
+    exit 1
+  fi
+fi
+
 until [ -n "$REQUIRE_PREVIEWS" ]
 do
   read -p "Require model preview images be present? " -n 1 ANSWER
@@ -112,19 +142,6 @@ do
   fi
 done
 
-# fail early if JLink.jar is missing
-if [ ! -f Mathematica-Link/Makefile ]; then
-  git submodule update --init Mathematica-Link
-fi
-if [ -f ~/nl.41/Mathematica\ Link/JLink.jar ]; then
-  cp ~/nl.41/Mathematica\ Link/JLink.jar Mathematica-Link
-fi
-if [ ! -f Mathematica-Link/JLink.jar ]; then
-  echo "Mathematica-Link/JLink.jar missing. copy it from a Mathematica installation (or the 4.1 branch, if you're a CCL'er)"
-  echo "(it's needed to compile the link, but we don't have a license to distribute it)"
-  exit 1
-fi
-
 # compile, build jars etc.
 cd extensions
 for FOO in *
@@ -139,10 +156,10 @@ rm -f *.jar
 ./sbt clean all
 
 # remember version number
-export VERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
-export DATE=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
+export VERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
+export DATE=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --builddate`
 echo $VERSION":" $DATE
-export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
+export COMPRESSEDVERSION=`$JAVA -cp target/NetLogo.jar:headless/target/NetLogoHeadless.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //" | $SED -e "s/ //g"`
 
 # make fresh staging area
 $RM -rf tmp/netlogo-$COMPRESSEDVERSION
@@ -153,7 +170,7 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 $CP -rp ../../docs .
 $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
-$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar .
+$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar ../../headless/target/NetLogoHeadless.jar .
 $CP ../../target/NetLogoLite.jar .
 $PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
 
@@ -177,9 +194,11 @@ $CP -p \
 $CP -p $SCALA_JAR lib/scala-library.jar
 
 # Mathematica link stuff
-$CP -rp ../../Mathematica-Link Mathematica\ Link
-(cd Mathematica\ Link; NETLOGO=.. make) || exit 1
-$RM Mathematica\ Link/JLink.jar
+if [ $MATHEMATICA -eq 1 ]; then
+  $CP -rp ../../Mathematica-Link Mathematica\ Link
+  (cd Mathematica\ Link; NETLOGO=.. make) || exit 1
+  $RM Mathematica\ Link/JLink.jar
+fi
 
 # stuff version number etc. into readme
 $PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.txt
@@ -208,10 +227,10 @@ $GREP -rw ^VERSION models && echo "no VERSION sections please; exiting" && exit 
 $GREP -rw \\\$Id models && echo "no \$Id please; exiting" && exit 1
 
 # put copyright notices in code and/or info tabs
-$LN -s ../../dist        # notarize script needs this
-$LN -s ../../resources   # and this
-$LN -s ../../scala       # and this
-$LN -s ../../bin         # and this
+$LN -s ../../dist                 # notarize script needs this
+$LN -s ../../headless/resources   # and this
+$LN -s ../../scala                # and this
+$LN -s ../../bin                  # and this
 ../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
 $RM -f models/legal.txt
 $RM dist resources scala bin
@@ -439,7 +458,9 @@ $FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -pat
   | $XARGS -0 $RM -rf
 $RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
-$CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
+if [ $MATHEMATICA -eq 1 ]; then
+  $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
+fi
 
 # stuff version number and date into web page
 cd $COMPRESSEDVERSION

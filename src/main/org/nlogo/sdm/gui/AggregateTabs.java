@@ -9,7 +9,7 @@ import org.nlogo.api.TokenType;
 strictfp class AggregateTabs
     extends javax.swing.JTabbedPane
     implements javax.swing.event.ChangeListener {
-  private final AggregateProceduresTab proceduresTab;
+  private final AggregateCodeTab codeTab;
   private final AggregateModelEditor editor;
 
   AggregateTabs(
@@ -19,14 +19,14 @@ strictfp class AggregateTabs
     addChangeListener(this);
     this.editor = editor;
 
-    proceduresTab = new AggregateProceduresTab(colorizer);
+    codeTab = new AggregateCodeTab(colorizer);
     add(I18N.guiJ().get("tools.sdm.diagram"), activePanel);
-    add(I18N.guiJ().get("tabs.code"), proceduresTab);
+    add(I18N.guiJ().get("tabs.code"), codeTab);
     setSelectedComponent(activePanel);
   }
 
   public void stateChanged(javax.swing.event.ChangeEvent e) {
-    proceduresTab.setText(editor.toNetLogoCode());
+    codeTab.setText(editor.toNetLogoCode());
   }
 
   private static final java.awt.Color ERROR_COLOR = java.awt.Color.RED;
@@ -38,9 +38,9 @@ strictfp class AggregateTabs
 
   void setError(CompilerException e) {
     if (e != null) {
-      setSelectedComponent(proceduresTab);
+      setSelectedComponent(codeTab);
     }
-    proceduresTab.setError(e);
-    setForegroundAt(indexOfComponent(proceduresTab), e != null ? ERROR_COLOR : null);
+    codeTab.setError(e);
+    setForegroundAt(indexOfComponent(codeTab), e != null ? ERROR_COLOR : null);
   }
 }

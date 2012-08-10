@@ -7,14 +7,13 @@ object Packaging {
   lazy val moreJars = TaskKey[Set[File]]("more-jars", "build NetLogoLite.jar and HubNet.jar")
 
   val settings = Seq(
-    artifactName := { (_, _, _) => "NetLogo.jar" },
     packageOptions <+= dependencyClasspath in Runtime map {
       classpath =>
         Package.ManifestAttributes((
           "Class-Path", classpath.files
             .map(f => "lib/" + f.getName)
             .filter(_.endsWith(".jar"))
-            .mkString(" ")))},
+            .mkString(" ") + " NetLogoHeadless.jar"))},
     moreJars <<= (packageBin in Compile, scalaInstance, target, cacheDirectory, streams) map {
       (jar, instance, target, cacheDir, s) =>
         val cache =

@@ -215,7 +215,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   }
 
   // LOADING AND SAVING
-  def load(strings: Array[String], helper: Widget.LoadHelper): Object = {
+  def load(strings: Seq[String], helper: Widget.LoadHelper): Object = {
     val min: String = ModelReader.restoreLines(strings(7))
     val max: String = ModelReader.restoreLines(strings(8))
     val v = strings(9).toDouble
@@ -234,7 +234,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     incrementCode=inc
     value=v
     defaultValue = v
-    val Array(x1,y1,x2,y2) = strings.drop(1).take(4).map(_.toInt)
+    val Seq(x1, y1, x2, y2) = strings.drop(1).take(4).map(_.toInt)
     setSize(x2 - x1, y2 - y1)
     this
   }

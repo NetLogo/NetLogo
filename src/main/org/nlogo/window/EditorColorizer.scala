@@ -3,8 +3,9 @@
 package org.nlogo.window
 
 import java.awt.Color
-import org.nlogo.api.{ CompilerServices, Token, TokenType }
+import org.nlogo.api.{ CompilerServices, Token, TokenType, Version }
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.BrowserLauncher.openURL
 import collection.JavaConverters._
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
@@ -98,7 +99,15 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
       .map(_.name).orNull
 
   def doHelp(comp: java.awt.Component, name: String) {
-    QuickHelp.doHelp(comp, name)
+    def confirmOpen(): Boolean =
+      0 == javax.swing.JOptionPane.showConfirmDialog(
+        comp, name.toUpperCase + " could not be found in the NetLogo Dictionary.\n" +
+        "Would you like to open the full NetLogo Dictionary?",
+        "NetLogo", javax.swing.JOptionPane.YES_NO_OPTION)
+    if (name != null)
+      QuickHelp.doHelp(name, Version.is3D,
+                       openURL(comp, _, true),
+                       confirmOpen _)
   }
 
 }

@@ -66,9 +66,9 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
   }
 
-  def load(lines: Array[String], version:String) {
+  def load(lines: Seq[String], version:String) {
     interfacePanel.loadWidgets(lines, version)
-    setSize (getPreferredSize)
+    setSize(getPreferredSize)
   }
 
   def handle(e: org.nlogo.window.Events.ZoomedEvent) {setSize(getPreferredSize)}

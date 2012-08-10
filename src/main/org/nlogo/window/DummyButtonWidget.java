@@ -145,29 +145,29 @@ public strictfp class DummyButtonWidget
   }
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    if (strings.length > 12 && !strings[12].equals("NIL")) {
-      actionKey(strings[12].charAt(0));
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
+    if (strings.size() > 12 && !strings.apply(12).equals("NIL")) {
+      actionKey(strings.apply(12).charAt(0));
     }
 
     name("");
-    String dName = strings[5];
+    String dName = strings.apply(5);
     if (!dName.equals("NIL")) {
       name(dName);
     } else {
       // to support importing old clients, sometimes there is
       // no display name but there is code intended to be used as
       // the display name ev 8/11/06
-      dName = strings[6];
+      dName = strings.apply(6);
       if (!dName.equals("NIL")) {
         name(dName);
       }
     }
 
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
+    int x1 = Integer.parseInt(strings.apply(1));
+    int y1 = Integer.parseInt(strings.apply(2));
+    int x2 = Integer.parseInt(strings.apply(3));
+    int y2 = Integer.parseInt(strings.apply(4));
     setSize(x2 - x1, y2 - y1);
     return this;
   }

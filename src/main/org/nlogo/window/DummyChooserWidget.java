@@ -80,15 +80,15 @@ public strictfp class DummyChooserWidget
   /// load and save
 
   @Override
-  public Object load(String[] strings, Widget.LoadHelper helper) {
-    int x1 = Integer.parseInt(strings[1]);
-    int y1 = Integer.parseInt(strings[2]);
-    int x2 = Integer.parseInt(strings[3]);
-    int y2 = Integer.parseInt(strings[4]);
+  public Object load(scala.collection.Seq<String> strings, Widget.LoadHelper helper) {
+    int x1 = Integer.parseInt(strings.apply(1));
+    int y1 = Integer.parseInt(strings.apply(2));
+    int x2 = Integer.parseInt(strings.apply(3));
+    int y2 = Integer.parseInt(strings.apply(4));
     setSize(x2 - x1, y2 - y1);
-    name(org.nlogo.api.ModelReader.restoreLines(strings[5]));
-    choicesWrapper(strings[7]);
-    index(Integer.parseInt(strings[8]));
+    name(org.nlogo.api.ModelReader.restoreLines(strings.apply(5)));
+    choicesWrapper(strings.apply(7));
+    index(Integer.parseInt(strings.apply(8)));
     return this;
   }
 

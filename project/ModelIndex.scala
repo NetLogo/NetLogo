@@ -22,10 +22,9 @@ object ModelIndex {
     // -H tells find to follow symbolic links.  we need that because
     // bin/release.sh uses a symbolic link to fool this task into
     // generating the index.txt file for a release - ST 6/18/12
-    val command =
-      "find -H " + modelsPath.toString +
-      " -name test -prune -o -name *.nlogo -print -o -name *.nlogo3d -print"
-    val paths = (command).lines_!
+    val command = Seq("find", "-H", modelsPath.toString, "-name", "test",
+      "-prune", "-o", "-name", "*.nlogo", "-print", "-o", "-name", "*.nlogo3d", "-print")
+    val paths = Process(command).lines
     def infoTab(path: String) =
       IO.read(new File(path)).split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
     for(path <- paths) {

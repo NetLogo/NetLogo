@@ -4,10 +4,15 @@ package org.nlogo.hubnet.client
 
 import org.nlogo.hubnet.mirroring._
 import org.nlogo.render.AbstractRenderer
-import org.nlogo.api.{GraphicsInterface,ShapeList,ViewSettings}
+import org.nlogo.api
+import api.{ GraphicsInterface, ShapeList, ViewSettings }
+import collection.JavaConverters._
 
-class ClientRenderer(world: ClientWorld) extends AbstractRenderer(world, new ShapeList, new ShapeList) {
-  import collection.JavaConverters._
+class ClientRenderer(world: ClientWorld)
+extends AbstractRenderer(world,
+                         new ShapeList(api.AgentKind.Turtle),
+                         new ShapeList(api.AgentKind.Link)) {
+
   override def paintTurtles(g: GraphicsInterface, patchSize: Double) {
     for(data <- world.getTurtles.asScala)
       turtleDrawer.drawTurtle(g, topology, data, patchSize)
