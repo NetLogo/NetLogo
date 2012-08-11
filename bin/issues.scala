@@ -49,7 +49,7 @@ case class Issue(number: Int, title: String)
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "11",
+val req = base <<? Map("milestone" -> "13",
                        "state" -> "closed",
                        "per_page" -> "1000")
 val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
