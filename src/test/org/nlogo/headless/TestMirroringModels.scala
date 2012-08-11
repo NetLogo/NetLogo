@@ -12,6 +12,10 @@ import TestMirroring.withWorkspace
 
 class TestMirroringModels extends FunSuite with SlowTest {
 
+  // prevent annoying JAI message on Linux when using JAI extension
+  // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
+  System.setProperty("com.sun.media.jai.disableMediaLib", "true")
+
   private val testSerializer = true
 
   def modelRenderingTest(path: String) {
