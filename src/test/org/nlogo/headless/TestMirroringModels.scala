@@ -16,8 +16,6 @@ class TestMirroringModels extends FunSuite with SlowTest {
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
 
-  private val testSerializer = true
-
   def modelRenderingTest(path: String) {
     withWorkspace { (ws, mirrorables) =>
       ws.open(path)
@@ -26,10 +24,8 @@ class TestMirroringModels extends FunSuite with SlowTest {
       val (m0, u0) = diffs(Map(), mirrorables())
       var state = Mirroring.merge(
         Map(),
-        if (testSerializer)
-          Serializer.fromBytes(Serializer.toBytes(u0))
-        else
-          u0)
+        Serializer.fromBytes(
+          Serializer.toBytes(u0)))
       // should I test that m0 and state are identical? maybe have a separate test for that
       val dummy = new FakeWorld(state)
       val pico = new Pico
