@@ -36,7 +36,8 @@ object Testing {
   lazy val specialTestTaskSettings =
     testKeys.flatMap(Defaults.defaultTestTasks) ++
     testKeys.flatMap(Defaults.testTaskOptions) ++
-    testKeys.map(key => key <<= oneTest(key))
+    testKeys.map(key => key <<= oneTest(key)) ++
+    testKeys.map(key => logBuffered in key := false)
 
   private def fastFilter(path: Classpath, name: String): Boolean = !slowFilter(path, name)
   private def mediumFilter(path: Classpath, name: String): Boolean =
