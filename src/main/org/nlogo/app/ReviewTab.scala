@@ -27,7 +27,7 @@ with window.Events.BeforeLoadEventHandler {
   var run: Run = Seq()
   var state: Mirroring.State = Map()
   var visibleState: Mirroring.State = Map()
-  var ticks = 0
+  var frame = 0
 
   var potemkinInterface: Option[PotemkinInterface] = None
 
@@ -111,18 +111,18 @@ with window.Events.BeforeLoadEventHandler {
 
   object Scrubber extends JSlider {
     setValue(0)
-    setBorder(BorderFactory.createTitledBorder("Tick: N/A"))
+    setBorder(BorderFactory.createTitledBorder("Frame: N/A"))
     addChangeListener(new ChangeListener{
       def stateChanged(e: ChangeEvent) {
-        setBorder(BorderFactory.createTitledBorder("Tick: " + getValue))
+        setBorder(BorderFactory.createTitledBorder("Frame: " + getValue))
         visibleState =
-          if(getValue < ticks)
+          if(getValue < frame)
               run.take(getValue + 1)
                 .foldLeft(Map(): Mirroring.State)(merge)
           else
-              run.drop(ticks + 1).take(getValue - ticks)
+              run.drop(frame + 1).take(getValue - frame)
                 .foldLeft(visibleState)(merge)
-        ticks = getValue
+        frame = getValue
         InterfacePanel.repaint()
       }})
   }
@@ -173,7 +173,7 @@ with window.Events.BeforeLoadEventHandler {
                 new java.io.ByteArrayInputStream(
                   in.readObject().asInstanceOf[Array[Byte]]))))
         run = in.readObject().asInstanceOf[Run]
-        ticks = 0
+        frame = 0
         visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
         state = run.foldLeft(Map(): Mirroring.State)(merge)
         Scrubber.setValue(0)
