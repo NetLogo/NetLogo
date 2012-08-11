@@ -19,8 +19,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   def modelRenderingTest(path: String) {
     withWorkspace { (ws, mirrorables) =>
       ws.open(path)
-      ws.command("random-seed 0")
-      ws.command(ws.previewCommands)
+      Checksummer.initModelForChecksumming(ws)
       val (m0, u0) = diffs(Map(), mirrorables())
       var state = Mirroring.merge(
         Map(),
@@ -33,6 +32,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
       pico.addComponent(dummy)
       val renderer = pico.getComponent(classOf[api.RendererInterface])
       renderer.resetCache(ws.patchSize)
+      renderer.renderLabelsAsRectangles_=(true)
 
       val realChecksum =
         Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
@@ -55,40 +55,12 @@ class TestMirroringModels extends FunSuite with SlowTest {
     }
   }
 
-  // should eventually be updated to handle 2D/3D distinction - ST 8/6/12
-  def allTestableModels = {
-    def hasExclusion(fileName: String) = {
-      val exclusions = Seq(
-        "SYSTEM-DYNAMICS-SETUP",
-        "MOUSE-DOWN?",
-        "USER-MESSAGE",
-        "MOUSE-INSIDE?",
-        "NEED-TO-MANUALLY-MAKE-PREVIEW-FOR-THIS-MODEL",
-        "USER-YES-OR-NO?",
-        "USER-INPUT",
-        "GIS:")
-      io.Source.fromFile(fileName)
-        .getLines.exists { line =>
-          exclusions.exists { exclusion =>
-            line.toUpperCase contains exclusion
-          }
-        }
-    }
-    io.Source.fromFile("models/test/checksums.txt")
-      .getLines.map(_.split(" - ")(0)) // get model paths
-      .filterNot(hasExclusion)
-  }
-
-  def modelsToTest = Seq(
-    "models/Sample Models/Networks/Diffusion on a Directed Network.nlogo")
-
   if (!api.Version.is3D)
-    allTestableModels.foreach { modelPath =>
+    for(entry <- TestChecksums.checksums.values)
       // exclude 1 model for now, failing & we don't know why yet
-      if(!modelPath.endsWith("Diffusion on a Directed Network.nlogo"))
-        test("Mirroring: " + modelPath) {
-          modelRenderingTest(modelPath)
+      if(!entry.path.endsWith("Diffusion on a Directed Network.nlogo"))
+        test("Mirroring: " + entry.path) {
+          modelRenderingTest(entry.path)
         }
-    }
 
 }
