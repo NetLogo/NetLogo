@@ -1,8 +1,8 @@
-C __bench gui._bench
+C __bench etc._bench
 C __change-language etc._changelanguage
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
-C __delete-log-files gui._deletelogfiles
+C __delete-log-files etc._deletelogfiles
 C __done _done
 C __edit etc._edit
 C __english etc._english
@@ -53,7 +53,7 @@ C __stdout etc._stdout
 C __thunk-did-finish etc._thunkdidfinish
 C __turtlecode etc._turtlecode
 C __updatemonitor gui._updatemonitor
-C __zip-log-files gui._ziplogfiles
+C __zip-log-files etc._ziplogfiles
 C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off plot._autoplotoff
