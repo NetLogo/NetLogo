@@ -1,10 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lite
+package org.nlogo.tools
 
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window.{ Event, VMCheck }
 import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.lite._
 
 object AppletTester {
   def main(args: Array[String]) {
