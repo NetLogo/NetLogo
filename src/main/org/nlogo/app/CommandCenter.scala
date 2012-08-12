@@ -9,7 +9,7 @@ import event.{MouseAdapter, MouseEvent}
 import javax.swing._
 import org.nlogo.api.{ AgentKind, I18N }
 
-class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspace,
+class CommandCenter(workspace: org.nlogo.workspace.AbstractWorkspaceScala,
                     locationToggleAction: Action) extends JPanel
   with org.nlogo.window.CommandCenterInterface
   with org.nlogo.window.Events.LoadBeginEventHandler {

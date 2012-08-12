@@ -10,7 +10,7 @@ public strictfp class WorldViewSettings2D
 
   WorldViewSettings2D(GUIWorkspace workspace, ViewWidget gw) {
     super(workspace, gw);
-    world = workspace.world;
+    world = workspace.world();
   }
 
   @Override

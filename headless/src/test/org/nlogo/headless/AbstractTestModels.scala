@@ -38,7 +38,7 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
   // use DynamicVariable to simplify calls to testModel - ST 3/4/10
   private val _workspace = new DynamicVariable[HeadlessWorkspace](null)
   def workspace = _workspace.value
-  def world = _workspace.value.world()
+  def world = _workspace.value.world
 
   // part of the DSL enabling reporter("someValue") -> expected
   def reporter(s: String) = Reported(workspace.report(s))

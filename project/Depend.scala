@@ -52,7 +52,6 @@ object Depend {
       "prim" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
-      "prim/gui" -> List("window"),
       "prim/plot" -> List("nvm","plot"),
       "properties" -> List("window"),
       "render" -> List("shape"),

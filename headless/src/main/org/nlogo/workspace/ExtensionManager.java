@@ -423,7 +423,7 @@ public strictfp class ExtensionManager
 
   public Object readFromString(String source)
       throws CompilerException {
-    return workspace.readFromString(source);
+    return ((AbstractWorkspaceScala) workspace).readFromString(source);
   }
 
   public void clearAll() {

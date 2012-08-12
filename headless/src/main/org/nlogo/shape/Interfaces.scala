@@ -33,4 +33,4 @@ trait ShapeChangeListener {
   def shapeRemoved(shape: Shape): Unit
 }
 
-class InvalidShapeDescriptionException extends Exception
+class InvalidShapeDescriptionException extends java.io.IOException

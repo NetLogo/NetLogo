@@ -11,7 +11,7 @@ object Benchmarker {
   private val Z           = 2.3263  // z value for 98% confidence, according to the standard normal table
   private val TOLERANCE   = 0.003   // goal: get within 0.3%
   private val formatter   = new java.text.DecimalFormat("0.000")
-  def benchmark(workspace:AbstractWorkspace,minTime:Int,maxTime:Int) {
+  def benchmark(workspace: AbstractWorkspaceScala, minTime: Int, maxTime: Int) {
     val times = new collection.mutable.ListBuffer[Double]
     val goProcedure = workspace.compileCommands("ca benchmark")
     val resultProcedure = workspace.compileReporter("result")
