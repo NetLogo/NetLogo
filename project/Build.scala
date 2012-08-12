@@ -11,7 +11,6 @@ object NetLogoBuild extends Build {
       .settings(Defaults.defaultSettings ++
                 Testing.settings ++
                 Packaging.settings ++
-                Depend.settings ++
                 Dump.settings ++
                 ChecksumsAndPreviews.settings: _*)
       .aggregate(headless)
