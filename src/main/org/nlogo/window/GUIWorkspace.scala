@@ -125,4 +125,58 @@ with Events.LoadSectionEventHandler {
     owner.asInstanceOf[MonitorWidget].value(value)
   }
 
+  ///
+
+  override def movieIsOpen =
+    movieEncoder != null
+
+  override def movieCancel() {
+    if (movieEncoder != null) {
+      movieEncoder.cancel()
+      movieEncoder = null
+    }
+  }
+
+  override def movieClose() {
+    org.nlogo.swing.ModalProgressTask(
+      getFrame, "Exporting movie...",
+      new Runnable() {
+        override def run() {
+          movieEncoder.stop()
+          movieEncoder = null
+        }})
+  }
+
+  override def movieGrabInterface() {
+    movieEncoder.add(
+      org.nlogo.awt.Images.paintToImage(
+        viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]))
+  }
+
+  override def movieGrabView() {
+    movieEncoder.add(exportView())
+  }
+
+  override def movieSetRate(rate: Float) {
+    movieEncoder.setFrameRate(rate)
+  }
+
+  override def movieStart(path: String) {
+    movieEncoder = new org.nlogo.awt.JMFMovieEncoder(15, path)
+  }
+
+  override def movieStatus: String =
+    if(movieEncoder == null)
+      "No movie."
+    else {
+      val builder = new StringBuilder
+      builder ++= movieEncoder.getNumFrames + " frames" + "; "
+      builder ++= "frame rate = " + movieEncoder.getFrameRate
+      if (movieEncoder.isSetup) {
+        val size = movieEncoder.getFrameSize
+        builder ++= "; size = " + size.width + "x" + size.height
+      }
+      builder.toString
+    }
+
 }
