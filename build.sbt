@@ -75,8 +75,6 @@ ModelIndex.modelIndexTask
 
 NativeLibs.nativeLibsTask
 
-Depend.dependTask
-
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
 libraryDependencies ++= Seq(
