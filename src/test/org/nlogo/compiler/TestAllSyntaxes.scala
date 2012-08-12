@@ -394,7 +394,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_importpcolorsrgb string,O---,null,0,1,1 *
                     |_importworld string,O---,null,0,1,1 *
                     |_inspect agent,OTPL,null,0,1,1
-                    |_inspectwithradius agent/number,OTPL,null,0,2,2
                     |_jump number,-T--,null,0,1,1 *
                     |_layoutcircle list or turtle agentset/number,OTPL,null,0,2,2 *
                     |_layoutradial turtle agentset/link agentset/turtle,OTPL,null,0,3,3 *

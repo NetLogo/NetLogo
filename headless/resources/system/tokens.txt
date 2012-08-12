@@ -31,7 +31,6 @@ C __hubnet-set-view-mirroring hubnet._hubnetsetviewmirroring
 C __hubnet-wait-for-clients hubnet._hubnetwaitforclients
 C __hubnet-wait-for-messages hubnet._hubnetwaitformessages
 C __ignore etc._ignore
-C __inspect-with-radius gui._inspectwithradius
 C __let _let
 C __life etc._life
 C __linkcode etc._linkcode
