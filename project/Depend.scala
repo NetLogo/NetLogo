@@ -12,9 +12,9 @@ object Depend {
   val settings = Seq(dependTask)
 
   private lazy val dependTask =
-    depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
-      (cp, base, classes, testClasses, s) =>
-        IO.write(base / "tmp" / "depend.ddf", ddfContents)
+    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams).map{
+      (cp, classes, testClasses, s) =>
+        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
