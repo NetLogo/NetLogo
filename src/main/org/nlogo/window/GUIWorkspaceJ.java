@@ -125,7 +125,7 @@ public abstract strictfp class GUIWorkspaceJ
       try {
         while (true) {
           if (jobManager.anyPrimaryJobs()) {
-            world.comeUpForAir = true;
+            world().comeUpForAir = true;
           }
           // 100 times a second seems like plenty
           Thread.sleep(10);
@@ -190,7 +190,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   @Override
   public void clearDrawing() {
-    world.clearDrawing();
+    world().clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
     if (hubNetManager != null) {
       hubNetManager.sendClear();
@@ -292,7 +292,7 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public double patchSize() {
-    return world.patchSize();
+    return world().patchSize();
   }
 
   public void setDimensions(final org.nlogo.api.WorldDimensions d) {
@@ -353,7 +353,7 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
-    world.changeTopology(wrapX, wrapY);
+    world().changeTopology(wrapX, wrapY);
     viewWidget.view.renderer.changeTopology(wrapX, wrapY);
   }
 
@@ -403,9 +403,9 @@ public abstract strictfp class GUIWorkspaceJ
       if (glView.displayOn()) {
         view.thaw();
       }
-      if ((world.observer().perspective() != PerspectiveJ.FOLLOW()) &&
-          (world.observer().perspective() != PerspectiveJ.RIDE())) {
-        world.observer().home();
+      if ((world().observer().perspective() != PerspectiveJ.FOLLOW()) &&
+          (world().observer().perspective() != PerspectiveJ.RIDE())) {
+        world().observer().home();
       }
       viewWidget.setVisible(true);
       try {
@@ -475,7 +475,7 @@ public abstract strictfp class GUIWorkspaceJ
   // this is called *only* from job thread - ST 8/20/03, 1/15/04
   public void updateDisplay(boolean haveWorldLockAlready) {
     view.dirty();
-    if (!world.displayOn()) {
+    if (!world().displayOn()) {
       return;
     }
     if (!updateManager().shouldUpdateNow()) {
@@ -540,7 +540,7 @@ public abstract strictfp class GUIWorkspaceJ
       updateManager().pseudoTick();
       updateDisplay(true);
     }
-    world.comeUpForAir = updateManager().shouldComeUpForAirAgain();
+    world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
     notifyListeners();
   }
 
@@ -573,7 +573,7 @@ public abstract strictfp class GUIWorkspaceJ
   private double lastTicksListenersHeard = -1.0;
 
   private void notifyListeners() {
-    double ticks = world.tickCounter.ticks();
+    double ticks = world().tickCounter.ticks();
     if (ticks != lastTicksListenersHeard) {
       lastTicksListenersHeard = ticks;
       listenerManager.tickCounterChanged(ticks);
@@ -601,7 +601,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   public void handle(Events.AfterLoadEvent e) {
     setPeriodicUpdatesEnabled(true);
-    world.observer().resetPerspective();
+    world().observer().resetPerspective();
     updateManager().reset();
     updateManager().speed_$eq(0);
     // even when we're in 3D close the window first
@@ -610,12 +610,12 @@ public abstract strictfp class GUIWorkspaceJ
     if (glView != null) {
       glView.close();
     }
-    if (world.program().is3D()) {
+    if (world().program().is3D()) {
       open3DView();
     }
 
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKindJ.Observer()),
+      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG, AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);
@@ -639,7 +639,7 @@ public abstract strictfp class GUIWorkspaceJ
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
     try {
-      glView.addCustomShapes(fileManager.attachPrefix(filename));
+      glView.addCustomShapes(fileManager().attachPrefix(filename));
     } catch (java.net.MalformedURLException ex) {
       throw new IllegalStateException(ex);
     }
@@ -715,7 +715,7 @@ public abstract strictfp class GUIWorkspaceJ
         agents == null) {
       JobWidget widget = (JobWidget) owner;
       if (widget.useKind()) {
-        agents = world.kindToAgentSet(widget.kind());
+        agents = world().kindToAgentSet(widget.kind());
       }
     }
     if (owner.ownsPrimaryJobs()) {
@@ -752,28 +752,28 @@ public abstract strictfp class GUIWorkspaceJ
       new BooleanConstraint(e.defaultValue());
 
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, con);
+      world().observer().variableConstraint(index, con);
     }
   }
 
   public void handle(Events.AddInputBoxConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint());
+      world().observer().variableConstraint(index, e.constraint());
     }
   }
 
   public void handle(Events.AddChooserConstraintEvent e) {
     // now we set the constraint in the observer, so that it is enforced.
-    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
 
     if (index != -1) {
-      world.observer().variableConstraint(index, e.constraint());
+      world().observer().variableConstraint(index, e.constraint());
     }
   }
 
@@ -781,13 +781,13 @@ public abstract strictfp class GUIWorkspaceJ
   public void handle(Events.AddSliderConstraintEvent e) {
     try {
       SliderConstraint con = SliderConstraint.makeSliderConstraint
-          (world.observer(), e.minSpec(), e.maxSpec(), e.incSpec(), e.value(), e.slider().name(), this);
+        (world().observer(), e.minSpec(), e.maxSpec(), e.incSpec(), e.value(), e.slider().name(), this);
       e.slider().removeAllErrors();
       e.slider().setSliderConstraint(con);
       // now we set the constraint in the observer, so that it is enforced.
-      int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
+      int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
       if (index != -1) {
-        world.observer().variableConstraint(index, con);
+        world().observer().variableConstraint(index, con);
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
@@ -798,9 +798,9 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public void handle(Events.RemoveConstraintEvent e) {
-    int index = world.observerOwnsIndexOf(e.varname().toUpperCase());
+    int index = world().observerOwnsIndexOf(e.varname().toUpperCase());
     if (index != -1) {
-      world.observer().variableConstraint(index, null);
+      world().observer().variableConstraint(index, null);
     }
   }
 
@@ -815,7 +815,7 @@ public abstract strictfp class GUIWorkspaceJ
   public abstract void inspectAgent(AgentKind kind, org.nlogo.agent.Agent agent, double radius);
 
   public void inspectAgent(AgentKind kind) {
-    inspectAgent(kind, null, (world.worldWidth() - 1) / 2);
+    inspectAgent(kind, null, (world().worldWidth() - 1) / 2);
   }
 
   /// output
@@ -1033,7 +1033,7 @@ public abstract strictfp class GUIWorkspaceJ
         ((org.nlogo.nvm.HaltException) ex).haltAll()) {
       halt(); // includes turning graphics back on
     } else if (!(owner instanceof MonitorWidget)) {
-      world.displayOn(true);
+      world().displayOn(true);
     }
     // tell the world!
     if (!(ex instanceof org.nlogo.nvm.HaltException)) {
@@ -1093,7 +1093,7 @@ public abstract strictfp class GUIWorkspaceJ
     jobManager.haltSecondary();
     jobManager.haltPrimary();
     getExtensionManager().reset();
-    fileManager.handleModelChange();
+    fileManager().handleModelChange();
     previewCommands_$eq(DefaultPreviewCommands());
     clearDrawing();
     viewManager.resetMouseCors();

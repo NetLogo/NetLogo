@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
-import org.nlogo.workspace.{ AbstractWorkspace, Benchmarker }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, Benchmarker }
 
 class _bench extends Command {
   override def syntax =
@@ -17,7 +17,7 @@ class _bench extends Command {
     new Thread("__bench") {
       override def run() {
         Benchmarker.benchmark(
-          workspace.asInstanceOf[AbstractWorkspace], minTime, maxTime)
+          workspace.asInstanceOf[AbstractWorkspaceScala], minTime, maxTime)
       }
     }.start()
     context.ip = next
