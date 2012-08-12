@@ -17,7 +17,7 @@ class TestTryCatchSafe extends FunSuite {
   type ReporterClass = Class[_ <: Reporter]
 
   if(Version.useGenerator)
-    for(c <- allReporterClasses(new java.io.File("src/main/org/nlogo/prim")))
+    for(c <- allReporterClasses(new java.io.File("headless/src/main/org/nlogo/prim")))
       test(c.getName) {
         processClass(c)
       }
