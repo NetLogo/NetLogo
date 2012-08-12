@@ -4,7 +4,6 @@ package org.nlogo.prim.etc
 
 import org.nlogo.api.{ ReporterRunnable, Syntax }
 import org.nlogo.nvm.{ Context, EngineException, HaltException, Reporter }
-import org.nlogo.workspace.AbstractWorkspace.isApplet
 
 class _userfile extends Reporter {
 
@@ -12,7 +11,7 @@ class _userfile extends Reporter {
     Syntax.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
 
   override def report(context: Context): AnyRef = {
-    if (isApplet)
+    if (workspace.getIsApplet)
       throw new EngineException(
         context, this, "You cannot choose a file from an applet.")
     workspace.updateUI()
