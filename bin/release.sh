@@ -234,6 +234,7 @@ cd ..
 # and make a new one
 $RM -rf docs
 $CP -rp ../../docs .
+$RM -rf docs/scaladoc
 $MV NetLogo\ User\ Manual.pdf docs/
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/*.html
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/dict/*.html
@@ -440,6 +441,7 @@ $FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -pat
 $RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
+$CP -rp ../docs/scaladoc $COMPRESSEDVERSION/docs
 
 # stuff version number and date into web page
 cd $COMPRESSEDVERSION

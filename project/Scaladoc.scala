@@ -23,8 +23,8 @@ object Scaladoc {
                            version + "/src/main€{FILE_PATH}.scala")
     },
     doc in Compile ~= mungeScaladocSourceUrls,
-    // The regular doc task includes doc for the entire main source tree.  But for bundling with the
-    // User Manual, in docs/scaladoc/, we want to document only select classes.  So I copy and pasted
+    // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
+    // web site we want to document only select classes.  So I copy and pasted
     // the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
     // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
     docSmaller <<= (baseDirectory, cacheDirectory, scalacOptions in (Compile, doc), compileInputs in Compile, netlogoVersion, streams) map {
