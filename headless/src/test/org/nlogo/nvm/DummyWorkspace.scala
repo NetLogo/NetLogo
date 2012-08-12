@@ -77,6 +77,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
+  override def benchmark(minTime: Int, maxTime: Int) = unsupported
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported

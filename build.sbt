@@ -65,8 +65,6 @@ aggregate in runMain := false
 
 Extensions.extensionsTask
 
-Depend.dependTask
-
 all := { () }
 
 all <<= all.dependsOn(

@@ -14,12 +14,7 @@ class _bench extends Command {
   override def perform(context: Context) {
     val minTime = argEvalIntValue(context, 0)
     val maxTime = argEvalIntValue(context, 1)
-    new Thread("__bench") {
-      override def run() {
-        Benchmarker.benchmark(
-          workspace.asInstanceOf[AbstractWorkspaceScala], minTime, maxTime)
-      }
-    }.start()
+    workspace.benchmark(minTime, maxTime)
     context.ip = next
   }
 }
