@@ -140,6 +140,7 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def userOneOf(msg: String, xs: api.LogoList): Option[AnyRef] = None
   def userYesOrNo(msg: String): Option[Boolean] = None
   def userMessage(msg: String): Boolean = false
+  def benchmark(minTime: Int, maxTime: Int)
   def getIsApplet: Boolean
   def compiler: CompilerInterface
   def isHeadless: Boolean
