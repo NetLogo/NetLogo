@@ -28,8 +28,14 @@ object Depend {
         main() match {
           case 0 =>
             s.log.info("depend: " + testClasses.toString)
-            test() match { case 0 => ; case fail => sys.error(fail.toString) }
-          case fail => sys.error(fail.toString)
+            test() match {
+              case 0 =>
+              case fail =>
+                s.log.info("depend failed: " + testClasses.toString)
+                sys.error(fail.toString) }
+          case fail =>
+            s.log.info("depend failed: " + classes.toString)
+            sys.error(fail.toString)
         }
       }.dependsOn(compile in Test)
 
