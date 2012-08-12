@@ -9,6 +9,9 @@ import org.nlogo.api._
 object TokenMapper2D extends TokenMapper
 
 class TokenMapper extends TokenMapperInterface {
+
+  val paths = Seq("/system/tokens.txt")
+
   /// public stuff
   def isCommand(s: String) = commands.contains(s.toUpperCase)
   def isKeyword(s: String) = keywords.contains(s.toUpperCase) || s.toUpperCase.endsWith("-OWN")
@@ -33,15 +36,17 @@ class TokenMapper extends TokenMapperInterface {
     "TO", "TO-REPORT", "END", "GLOBALS", "TURTLES-OWN", "LINKS-OWN",
     "PATCHES-OWN", "EXTENSIONS", "__INCLUDES", "DIRECTED-LINK-BREED",
     "UNDIRECTED-LINK-BREED") // no "BREED" here because it conflicts with BREED turtle variable -- CLB
-  private def entries(entryType: String) =
+  private def entries(entryType: String, path: String) =
     for {
-      line <- Utils.getResourceLines("/system/tokens.txt")
+      line <- Utils.getResourceLines(path)
       if !line.startsWith("#")
       Array(tpe, primName, className) = line.split(" ")
       if tpe == entryType
     } yield primName.toUpperCase -> ("org.nlogo.prim." + className)
-  private val commands = Map() ++ entries("C")
-  private val reporters = Map() ++ entries("R")
+  private val commands =
+    paths.foldLeft(Map[String, String]())(_ ++ entries("C", _))
+  private val reporters =
+    paths.foldLeft(Map[String, String]())(_ ++ entries("R", _))
   /// private helper
   private def instantiate[T](name: String) =
     Class.forName(name).newInstance.asInstanceOf[T]

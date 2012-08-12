@@ -61,6 +61,8 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "re
 
 mainClass in Compile := Some("org.nlogo.headless.Main")
 
+aggregate in runMain := false
+
 Extensions.extensionsTask
 
 Depend.dependTask
