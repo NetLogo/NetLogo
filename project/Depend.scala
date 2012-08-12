@@ -9,10 +9,12 @@ object Depend {
   val depend = TaskKey[Unit](
     "depend", "use Classycle to ferret out forbidden dependencies")
 
-  lazy val dependTask =
-    depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
-      (cp, base, classes, testClasses, s) =>
-        IO.write(base / "tmp" / "depend.ddf", ddfContents)
+  val settings = Seq(dependTask)
+
+  private lazy val dependTask =
+    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams).map{
+      (cp, classes, testClasses, s) =>
+        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
@@ -22,8 +24,11 @@ object Depend {
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
                                        testClasses.toString)),
           s.log)
+        s.log.info("depend: " + classes.toString)
         main() match {
-          case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
+          case 0 =>
+            s.log.info("depend: " + testClasses.toString)
+            test() match { case 0 => ; case fail => sys.error(fail.toString) }
           case fail => sys.error(fail.toString)
         }
       }.dependsOn(compile in Test)
@@ -65,7 +70,6 @@ object Depend {
       "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
-      "prim/gui" -> List("window"),
       "prim/hubnet" -> List("nvm"),
       "prim/plot" -> List("nvm","plot"),
       "prim/threed" -> List("nvm"),

@@ -10,6 +10,11 @@ object TokenMapper2D extends TokenMapper(false)
 object TokenMapper3D extends TokenMapper(true)
 
 class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
+
+  // 2D first so 3D can override after
+  val paths = "/system/tokens.txt" +:
+    (if (is3D) Seq("/system/tokens3d.txt") else Seq())
+
   /// public stuff
   def wasRemoved(s: String) = removeds.contains(s.toUpperCase)
   def isCommand(s: String) = commands.contains(s.toUpperCase)
@@ -35,19 +40,17 @@ class TokenMapper(is3D: Boolean) extends TokenMapperInterface {
     "TO", "TO-REPORT", "END", "GLOBALS", "TURTLES-OWN", "LINKS-OWN",
     "PATCHES-OWN", "EXTENSIONS", "__INCLUDES", "DIRECTED-LINK-BREED",
     "UNDIRECTED-LINK-BREED") // no "BREED" here because it conflicts with BREED turtle variable -- CLB
-  private def entries(entryType: String) =
+  private def entries(entryType: String, path: String) =
     for {
-      line <- Utils.getResourceLines("/system/tokens.txt")
+      line <- Utils.getResourceLines(path)
       if !line.startsWith("#")
       Array(tpe, primName, className) = line.split(" ")
       if tpe == entryType
-      // if a 3d version of the prim exists and we got to this point it
-      // should override the 2d version. ev 12/11/06  note the overriding
-      // 3d version must come after the 2d version in tokens.txt - ST 12/19/08
-      if is3D || !className.startsWith("threed.")
     } yield primName.toUpperCase -> ("org.nlogo.prim." + className)
-  private val commands = Map() ++ entries("C")
-  private val reporters = Map() ++ entries("R")
+  private val commands =
+    paths.foldLeft(Map[String, String]())(_ ++ entries("C", _))
+  private val reporters =
+    paths.foldLeft(Map[String, String]())(_ ++ entries("R", _))
   private val removeds =
     (for (
       (primName, className) <- commands ++ reporters if className.startsWith("org.nlogo.prim.dead.")

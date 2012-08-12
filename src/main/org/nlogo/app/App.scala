@@ -347,10 +347,18 @@ class App extends
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.kind, a, radius)
+        org.nlogo.awt.EventQueue.invokeLater(
+          new Runnable {
+            override def run() {
+              monitorManager.inspect(a.kind, a, radius)
+            }})
       }
       override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {
-        monitorManager.inspect(kind, agent, radius)
+        org.nlogo.awt.EventQueue.invokeLater(
+          new Runnable {
+            override def run() {
+              monitorManager.inspect(kind, agent, radius)
+            }})
       }
       override def closeAgentMonitors() { monitorManager.closeAll() }
       override def newRenderer: RendererInterface = {

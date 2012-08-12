@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.agent.World
+import org.nlogo.agent.{ World, OutputObject }
 import org.nlogo.api.{ CompilerException, File, FileMode }
 
 trait FileManager {
@@ -40,4 +40,6 @@ trait FileManager {
   def readLine(): String
   @throws(classOf[java.io.IOException])
   def readChars(num: Int): String
+  def handleModelChange()
+  def writeOutputObject(oo: OutputObject)
 }

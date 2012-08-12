@@ -9,11 +9,10 @@
 // - install conscript if you don't have it already:
 //   curl https://raw.github.com/n8han/conscript/master/setup.sh | sh
 // - install sbt (and the scalas script) through conscript:
-//   cs harrah/xsbt --branch v0.11.3
+//   cs harrah/xsbt --branch v0.12.0
 // - edit ~/.conscript/harrah/xsbt/scalas/launchconfig
-//    and ~/.conscript/harrah/xsbt/sbt/launchconfig
-//   and remove the entire [organization] section
-//   from both files
+//   and change the Scala version from `auto` to `2.9.2`
+//   and change the cross-versioned settings from `true` to `false`
 // - ensure that ~/bin is included in your `PATH` environment variable
 //   (this is where Conscript places the scripts that it manages)
 // - note: if you run the script for the first time and it appears non-responsive, do not fear;
@@ -49,7 +48,7 @@ case class Issue(number: Int, title: String)
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "11",
+val req = base <<? Map("milestone" -> "13",
                        "state" -> "closed",
                        "per_page" -> "1000")
 val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
