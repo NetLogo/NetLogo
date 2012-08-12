@@ -37,7 +37,7 @@ with Events.LoadSectionEventHandler {
 
   ///
 
-  def reload() {
+  override def reload() {
     new Events.AppEvent(AppEventType.RELOAD, Seq())
       .raiseLater(this)
   }
@@ -52,18 +52,18 @@ with Events.LoadSectionEventHandler {
       .raiseLater(this)
   }
 
-  def startLogging(properties: String) {
+  override def startLogging(properties: String) {
     try new Events.AppEvent(AppEventType.START_LOGGING,
                             Seq(fileManager.attachPrefix(properties)))
           .raiseLater(this);
   }
 
-  def zipLogFiles(filename: String) {
+  override def zipLogFiles(filename: String) {
     new Events.AppEvent(AppEventType.ZIP_LOG_FILES, Seq(fileManager.attachPrefix(filename)))
       .raiseLater(this)
   }
 
-  def deleteLogFiles() {
+  override def deleteLogFiles() {
     new Events.AppEvent(AppEventType.DELETE_LOG_FILES, Seq())
       .raiseLater(this)
   }
@@ -80,6 +80,49 @@ with Events.LoadSectionEventHandler {
     try new Events.ExportInterfaceEvent(stream, throw _)
           .raise(this)
     finally stream.close()
+  }
+
+  ///
+
+  // when we've got two views going the mouse reporters should
+  // be smart about which view we might be in and return something that makes
+  // sense ev 12/20/07
+  override def mouseDown = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse clicks - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseDown
+  }
+
+  override def mouseInside = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseInside
+  }
+
+  override def mouseXCor = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseXCor
+  }
+
+  override def mouseYCor = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseYCor
+  }
+
+  ///
+
+  override def beep() {
+    java.awt.Toolkit.getDefaultToolkit().beep()
+  }
+
+  override def updateMonitor(owner: api.JobOwner, value: AnyRef) {
+    owner.asInstanceOf[MonitorWidget].value(value)
   }
 
 }

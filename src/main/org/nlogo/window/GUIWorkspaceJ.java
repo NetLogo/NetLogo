@@ -448,42 +448,6 @@ public abstract strictfp class GUIWorkspaceJ
     }
   }
 
-
-  // when we've got two views going the mouse reporters should
-  // be smart about which view we might be in and return something that makes
-  // sense ev 12/20/07
-  public boolean mouseDown()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse clicks - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager.mouseDown();
-  }
-
-  public boolean mouseInside()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager.mouseInside();
-  }
-
-  public double mouseXCor()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager.mouseXCor();
-  }
-
-  public double mouseYCor()
-      throws LogoException {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents();
-    return viewManager.mouseYCor();
-  }
-
   @Override
   public void updateMode(UpdateMode updateMode) {
     super.updateMode(updateMode);
@@ -583,6 +547,7 @@ public abstract strictfp class GUIWorkspaceJ
   // called only from job thread, by such primitives as
   // _exportinterface and _usermessage, which need to make sure the
   // whole UI is up-to-date before proceeding - ST 8/30/07, 3/3/11
+  @Override
   public void updateUI() {
     // this makes the tick counter et al update
     ThreadUtils.waitFor((GUIWorkspace) this, updateRunner);
@@ -669,6 +634,7 @@ public abstract strictfp class GUIWorkspaceJ
     }
   }
 
+  @Override
   public void addCustomShapes(String filename)
       throws java.io.IOException,
       org.nlogo.shape.InvalidShapeDescriptionException {
