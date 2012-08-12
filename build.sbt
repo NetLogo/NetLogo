@@ -61,9 +61,7 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
 
-mainClass in (Compile, run) := Some("org.nlogo.app.App")
-
-mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
+mainClass in Compile := Some("org.nlogo.app.App")
 
 sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
 
