@@ -427,14 +427,14 @@ strictfp class ModelsLibraryDialog
 
   private strictfp class ModelPreviewPanel extends javax.swing.JPanel {
 
-    private final GraphicsPreview graphicsPreview;
+    private final ModelPreview modelPreview;
     private final javax.swing.JEditorPane textArea;
 
     ModelPreviewPanel() {
       setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-      graphicsPreview = new GraphicsPreview();
-      graphicsPreview.setBorder
+      modelPreview = new ModelPreview();
+      modelPreview.setBorder
           (javax.swing.BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY, 1));
 
       textArea = new javax.swing.JEditorPane();
@@ -442,7 +442,7 @@ strictfp class ModelsLibraryDialog
       textArea.setEditable(false);
       textArea.setOpaque(false);
 
-      add(graphicsPreview);
+      add(modelPreview);
       add(textArea);
       add(javax.swing.Box.createVerticalGlue());
 
@@ -450,7 +450,7 @@ strictfp class ModelsLibraryDialog
     }
 
     void showModel() {
-      graphicsPreview.setImage
+      modelPreview.setImage
           (selected == null || selected.isFolder()
               ? null
               : ModelsLibrary.getImagePath(selected.getFilePath()));
@@ -465,7 +465,7 @@ strictfp class ModelsLibraryDialog
 
       if (selected != null && !selected.isFolder()) {
         textArea.setVisible(true);
-        graphicsPreview.setVisible(true);
+        modelPreview.setVisible(true);
         // HTMLify the model description
         textArea.setText(
             "<html>\n"
@@ -503,7 +503,7 @@ strictfp class ModelsLibraryDialog
         String text = org.nlogo.util.Utils.getResourceAsString("/system/library.html");
         textArea.setText(text);
         textArea.setCaretPosition(0);
-        graphicsPreview.setVisible(false);
+        modelPreview.setVisible(false);
       }
 
       // The conclusion of the above-mentioned work-around
@@ -513,59 +513,6 @@ strictfp class ModelsLibraryDialog
               390,
               textArea.getPreferredSize().height));
       invalidate();
-    }
-  }
-
-  private strictfp class GraphicsPreview extends javax.swing.JPanel {
-    // not JComponent otherwise super.paintComponent() doesn't paint the
-    // background color for reasons I can't fathom - ST 8/3/03
-
-    private java.awt.Image image = null;
-
-    GraphicsPreview() {
-      setBackground(java.awt.Color.BLACK);
-      setOpaque(true);
-      setPreferredSize(new java.awt.Dimension(400, 400));
-      setMinimumSize(getPreferredSize());
-      setMaximumSize(getPreferredSize());
-    }
-
-    void setImage(String imagePath) {
-      image = null;
-      if (imagePath != null) {
-        image = org.nlogo.awt.Images.loadImageFile
-            (imagePath, false); // false = don't cache
-      }
-      repaint();
-    }
-
-    @Override
-    public void paintComponent(java.awt.Graphics g) {
-      if (image == null) {
-        super.paintComponent(g);
-      } else {
-        ((java.awt.Graphics2D) g).setRenderingHint
-            (java.awt.RenderingHints.KEY_RENDERING,
-                java.awt.RenderingHints.VALUE_RENDER_QUALITY);
-        int width = image.getWidth(null);
-        int height = image.getHeight(null);
-        if (width == height) {
-          g.drawImage(image, 0, 0, 400, 400, this);
-        } else if (width > height) {
-          g.drawImage
-              (image,
-                  0, 0,
-                  (int) (width * (400.0 / height)), 400,
-                  this);
-        } else // width < height
-        {
-          g.drawImage
-              (image,
-                  0, 0,
-                  400, (int) (height * (400.0 / width)),
-                  this);
-        }
-      }
     }
   }
 
