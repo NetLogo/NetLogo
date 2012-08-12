@@ -59,7 +59,7 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
 
-mainClass in (Compile, packageBin) := Some("org.nlogo.headless.Main")
+mainClass in Compile := Some("org.nlogo.headless.Main")
 
 Extensions.extensionsTask
 

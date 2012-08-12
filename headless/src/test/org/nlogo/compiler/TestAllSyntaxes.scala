@@ -140,6 +140,10 @@ class TestAllSyntaxes extends FunSuite {
                      |_mod number,number,number,OTPL,null,8,1,1
                      |_modes list,list,OTPL,null,10,1,1
                      |_monitorprecision anything/number,number,O---,null,10,2,2
+                     |_mousedown ,TRUE/FALSE,OTPL,null,10,0,0
+                     |_mouseinside ,TRUE/FALSE,OTPL,null,10,0,0
+                     |_mousexcor ,number,OTPL,null,10,0,0
+                     |_mouseycor ,number,OTPL,null,10,0,0
                      |_mult number,number,number,OTPL,null,8,1,1
                      |_myinlinks ,agentset,-T--,null,10,0,0
                      |_mylinks ,agentset,-T--,null,10,0,0
@@ -244,6 +248,12 @@ class TestAllSyntaxes extends FunSuite {
                      |_turtleset list or turtle agentset or turtle,turtle agentset,OTPL,null,10,1,0
                      |_turtleshere ,turtle agentset,-TP-,null,10,0,0
                      |_turtleson agent or agentset,turtle agentset,OTPL,null,10,1,1
+                     |_userdirectory ,TRUE/FALSE or string,OTPL,null,10,0,0
+                     |_userfile ,TRUE/FALSE or string,OTPL,null,10,0,0
+                     |_userinput anything,string,OTPL,null,10,1,1
+                     |_usernewfile ,TRUE/FALSE or string,OTPL,null,10,0,0
+                     |_useroneof anything/list,anything,OTPL,null,10,2,2
+                     |_useryesorno anything,TRUE/FALSE,OTPL,null,10,1,1
                      |_variance list,number,OTPL,null,10,1,1
                      |_with agentset,TRUE/FALSE block,agentset,OTPL,?,12,1,1
                      |_withmax agentset,number block,agentset,OTPL,?,12,1,1
@@ -257,6 +267,8 @@ class TestAllSyntaxes extends FunSuite {
                     |_askconcurrent agentset/command block,OTPL,?,0,2,2 *
                     |_autoplotoff ,OTPL,null,0,0,0
                     |_autoploton ,OTPL,null,0,0,0
+                    |_beep ,OTPL,null,0,0,0
+                    |_bench number/number,O---,null,0,2,2
                     |_bk number,-T--,null,0,1,1
                     |_carefully command block/command block,OTPL,null,0,2,2
                     |_changelanguage ,O---,null,0,0,0
@@ -293,6 +305,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_every number/command block,OTPL,null,0,2,2 *
                     |_experimentstepend ,O---,null,0,0,0
                     |_exportdrawing string,OTPL,null,0,1,1
+                    |_exportinterface string,OTPL,null,0,1,1
                     |_exportoutput string,OTPL,null,0,1,1
                     |_exportplot string/string,OTPL,null,0,2,2
                     |_exportplots string,OTPL,null,0,1,1
@@ -330,6 +343,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_importpatchcolors string,O---,null,0,1,1 *
                     |_importpcolorsrgb string,O---,null,0,1,1 *
                     |_importworld string,O---,null,0,1,1 *
+                    |_inspect agent,OTPL,null,0,1,1
                     |_jump number,-T--,null,0,1,1 *
                     |_layoutcircle list or turtle agentset/number,OTPL,null,0,2,2 *
                     |_layoutradial turtle agentset/link agentset/turtle,OTPL,null,0,3,3 *
@@ -364,6 +378,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_print anything,OTPL,null,0,1,1
                     |_pwd ,O---,null,0,0,0
                     |_randomseed number,OTPL,null,0,1,1
+                    |_reload ,O---,null,0,0,0 *
                     |_reloadextensions ,OTPL,null,0,0,0 *
                     |_repeat number/command block,OTPL,null,0,2,2
                     |_report anything,OTPL,null,0,1,1
@@ -408,9 +423,11 @@ class TestAllSyntaxes extends FunSuite {
                     |_turtlecode ,-T--,null,0,0,0
                     |_type anything,OTPL,null,0,1,1
                     |_untie ,---L,null,0,0,0 *
+                    |_updatemonitor anything,O---,null,0,1,1 *
                     |_updateplots ,OTPL,null,0,0,0
                     |_uphill variable,-T--,null,0,1,1 *
                     |_uphill4 variable,-T--,null,0,1,1 *
+                    |_usermessage anything,OTPL,null,0,1,1
                     |_wait number,OTPL,null,0,1,1
                     |_watch agent,O---,null,0,1,1 *
                     |_watchme ,-TPL,null,0,0,0 *

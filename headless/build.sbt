@@ -16,6 +16,4 @@ sourceGenerators in Compile <+= Autogen.lexersGeneratorTask
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
-mainClass in (Compile, run) := Some("org.nlogo.headless.Shell")
-
-mainClass in (Compile, packageBin) := Some("org.nlogo.headless.Shell")
+mainClass in Compile := Some("org.nlogo.headless.Shell")

@@ -3,11 +3,14 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
-import org.nlogo.nvm.{ CompilerInterface, Instruction, EngineException, Context, Procedure }
+import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+                      CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
+                       Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 
 import java.io.{IOException,PrintWriter}
+import java.util.WeakHashMap
 
 import AbstractWorkspaceTraits._
 
@@ -15,14 +18,21 @@ object AbstractWorkspaceScala {
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
 }
 
-abstract class AbstractWorkspaceScala(private val _world: World)
-  extends AbstractWorkspace(_world)
-  with Procedures with Plotting with Exporting with Evaluating {
+abstract class AbstractWorkspaceScala(val world: World)
+extends AbstractWorkspace
+with Workspace with Procedures with Plotting with Exporting with Evaluating {
+
+  val fileManager: FileManager = new DefaultFileManager(this)
 
   /**
    * previewCommands used by make-preview and model test
    */
   var previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+
+  val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
+
+  // for _thunkdidfinish (says that a thunk finished running without having stop called)
+  val completedActivations = new WeakHashMap[Activation, java.lang.Boolean]
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
@@ -61,7 +71,7 @@ abstract class AbstractWorkspaceScala(private val _world: World)
 
 object AbstractWorkspaceTraits {
 
-  trait Procedures { this: AbstractWorkspace =>
+  trait Procedures { this: AbstractWorkspaceScala =>
     var procedures: CompilerInterface.ProceduresMap =
       CompilerInterface.NoProcedures
     def init() {

@@ -1,3 +1,4 @@
+C __bench etc._bench
 C __change-language etc._changelanguage
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
@@ -21,6 +22,7 @@ C __patchcode etc._patchcode
 C __plot-pen-hide plot._plotpenhide
 C __plot-pen-show plot._plotpenshow
 C __pwd etc._pwd
+C __reload etc._reload
 C __reload-extensions etc._reloadextensions
 C __set-error-locale etc._seterrorlocale
 C __set-line-thickness etc._setlinethickness
@@ -29,11 +31,13 @@ C __stderr etc._stderr
 C __stdout etc._stdout
 C __thunk-did-finish etc._thunkdidfinish
 C __turtlecode etc._turtlecode
+C __updatemonitor etc._updatemonitor
 C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off plot._autoplotoff
 C auto-plot-on plot._autoploton
 C back _bk
+C beep etc._beep
 C bk _bk
 C ca etc._clearall
 C carefully _carefully
@@ -69,6 +73,7 @@ C downhill4 etc._downhill4
 C error etc._error
 C every etc._every
 C export-all-plots plot._exportplots
+C export-interface etc._exportinterface
 C export-output etc._exportoutput
 C export-plot plot._exportplot
 C export-view etc._exportview
@@ -104,6 +109,7 @@ C import-drawing etc._importdrawing
 C import-pcolors etc._importpatchcolors
 C import-pcolors-rgb etc._importpcolorsrgb
 C import-world etc._importworld
+C inspect etc._inspect
 C jump _jump
 C layout-circle etc._layoutcircle
 C layout-radial etc._layoutradial
@@ -176,6 +182,7 @@ C untie etc._untie
 C update-plots plot._updateplots
 C uphill etc._uphill
 C uphill4 etc._uphill4
+C user-message etc._usermessage
 C wait etc._wait
 C watch etc._watch
 C watch-me etc._watchme
@@ -313,6 +320,10 @@ R min-pxcor etc._minpxcor
 R min-pycor etc._minpycor
 R mod etc._mod
 R modes etc._modes
+R mouse-down? etc._mousedown
+R mouse-inside? etc._mouseinside
+R mouse-xcor etc._mousexcor
+R mouse-ycor etc._mouseycor
 R my-in-links _myinlinks
 R my-links _mylinks
 R my-out-links _myoutlinks
@@ -408,6 +419,12 @@ R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-here etc._turtleshere
 R turtles-on etc._turtleson
+R user-directory etc._userdirectory
+R user-file etc._userfile
+R user-input etc._userinput
+R user-new-file etc._usernewfile
+R user-one-of etc._useroneof
+R user-yes-or-no? etc._useryesorno
 R variance etc._variance
 R with _with
 R with-max etc._withmax
