@@ -450,10 +450,20 @@ strictfp class ModelsLibraryDialog
     }
 
     void showModel() {
-      modelPreview.setImage
+      try {
+        modelPreview.setImage
           (selected == null || selected.isFolder()
-              ? null
-              : ModelsLibrary.getImagePath(selected.getFilePath()));
+           ? null
+           : ModelsLibrary.getImageURL(selected.getFilePath()));
+      }
+      catch(java.net.MalformedURLException ex) {
+        org.nlogo.util.Exceptions.ignore(ex);
+        modelPreview.setImage((java.net.URL) null);
+      }
+      catch(java.net.URISyntaxException ex) {
+        org.nlogo.util.Exceptions.ignore(ex);
+        modelPreview.setImage((java.net.URL) null);
+      }
 
       // This is a work-around for Java's inability to set a maximum
       // width for a JEditorPane and let the height be determined by

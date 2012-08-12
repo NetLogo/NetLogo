@@ -3,6 +3,7 @@
 package org.nlogo.workspace;
 
 import java.io.File;
+import org.nlogo.api.APIVersion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -171,6 +172,18 @@ public strictfp class ModelsLibrary {
       filePath = filePath.substring(0, index);
     }
     return filePath + ".png";
+  }
+
+  public static java.net.URL getImageURL(String filePath)
+    throws java.net.MalformedURLException, java.net.URISyntaxException
+  {
+    String imagePath = getImagePath(filePath);
+    String path = imagePath.substring(imagePath.indexOf("/models/"));
+    return new java.net.URI(
+      "http", "ccl.northwestern.edu",
+      "/netlogo/" + APIVersion.version() + path.replaceAll(File.separator, "/"),
+      null)
+      .toURL();
   }
 
   private static void scanDirectory(java.io.File directory, Node grandparent, Node parent, boolean exclusive) {

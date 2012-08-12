@@ -118,18 +118,6 @@ if [ $MATHEMATICA -eq 1 ]; then
   fi
 fi
 
-until [ -n "$REQUIRE_PREVIEWS" ]
-do
-  read -p "Require model preview images be present? " -n 1 ANSWER
-  echo
-  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
-    REQUIRE_PREVIEWS=1
-  fi
-  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
-    REQUIRE_PREVIEWS=0
-  fi
-done
-
 until [ -n "$DO_RSYNC" ]
 do
   read -p "Rsync to CCL server when done? " -n 1 ANSWER
@@ -231,7 +219,7 @@ $LN -s ../../dist                 # notarize script needs this
 $LN -s ../../headless/resources   # and this
 $LN -s ../../scala                # and this
 $LN -s ../../bin                  # and this
-../../models/bin/notarize.scala $REQUIRE_PREVIEWS || exit 1
+../../models/bin/notarize.scala 0 || exit 1
 $RM -f models/legal.txt
 $RM dist resources scala bin
 

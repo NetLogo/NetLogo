@@ -17,6 +17,13 @@ class ModelPreview extends javax.swing.JPanel {
 
   private var image: Image = null
 
+  def setImage(url: java.net.URL) {
+    image = null
+    if (url != null)
+      image = java.awt.Toolkit.getDefaultToolkit.createImage(url)
+    repaint()
+  }
+
   def setImage(imagePath: String) {
     image = null
     if (imagePath != null)
