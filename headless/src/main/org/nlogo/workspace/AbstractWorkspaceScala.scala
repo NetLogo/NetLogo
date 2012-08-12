@@ -20,7 +20,7 @@ object AbstractWorkspaceScala {
 
 abstract class AbstractWorkspaceScala(val world: World)
 extends AbstractWorkspace
-with Workspace with Procedures with Plotting with Exporting with Evaluating {
+with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -225,4 +225,15 @@ object AbstractWorkspaceTraits {
     def readFromString(string: String): AnyRef =
       evaluator.readFromString(string)
   }
+
+  trait Benchmarking { this: AbstractWorkspaceScala =>
+    override def benchmark(minTime: Int, maxTime: Int) {
+      new Thread("__bench") {
+        override def run() {
+          Benchmarker.benchmark(
+            Benchmarking.this, minTime, maxTime)
+        }}.start()
+    }
+  }
+
 }

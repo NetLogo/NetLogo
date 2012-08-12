@@ -9,7 +9,9 @@ object Depend {
   val depend = TaskKey[Unit](
     "depend", "use Classycle to ferret out forbidden dependencies")
 
-  lazy val dependTask =
+  val settings = Seq(dependTask)
+
+  private lazy val dependTask =
     depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
       (cp, base, classes, testClasses, s) =>
         IO.write(base / "tmp" / "depend.ddf", ddfContents)
@@ -22,8 +24,11 @@ object Depend {
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
                                        testClasses.toString)),
           s.log)
+        s.log.info("depend: " + classes.toString)
         main() match {
-          case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
+          case 0 =>
+            s.log.info("depend: " + testClasses.toString)
+            test() match { case 0 => ; case fail => sys.error(fail.toString) }
           case fail => sys.error(fail.toString)
         }
       }.dependsOn(compile in Test)

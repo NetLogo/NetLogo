@@ -67,8 +67,6 @@ sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
 
 Extensions.extensionsTask
 
-Depend.dependTask
-
 libraryDependencies ++= Seq(
   "steveroy" % "mrjadapter" % "1.2" from "http://ccl.northwestern.edu/devel/mrjadapter-1.2.jar",
   "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
