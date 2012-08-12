@@ -65,8 +65,8 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def getModelDir: String
   def getModelFileName: String
   def fileManager: FileManager
-  // kludgy this is AnyRef, but we don't want to have a compile-time dependency on org.nlogo.plot.
-  // should be cleaned up sometime by introducing api.PlotManager? ST 2/12/08
+  // kludgy this is AnyRef, but we don't want to have a compile-time dependency on the plot
+  // package. should be cleaned up sometime by introducing api.PlotManager? ST 2/12/08
   def plotManager: AnyRef
   def updatePlots(c: Context)
   def setupPlots(c: Context)
@@ -133,6 +133,13 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def movieSetRate(rate: Float) { }
   def movieStart(path: String) { }
   def movieStatus: String = "No movie."
+  def userDirectory: Option[String] = None
+  def userFile: Option[String] = None
+  def userNewFile: Option[String] = None
+  def userInput(msg: String): Option[String] = None
+  def userOneOf(msg: String, xs: api.LogoList): Option[AnyRef] = None
+  def userYesOrNo(msg: String): Option[Boolean] = None
+  def userMessage(msg: String): Boolean = false
   def getIsApplet: Boolean
   def compiler: CompilerInterface
   def isHeadless: Boolean

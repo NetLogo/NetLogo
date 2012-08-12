@@ -34,9 +34,6 @@
 -keep public class org.nlogo.prim.etc.* {
     *;
 }
--keep public class org.nlogo.prim.gui.* {
-    *;
-}
 -keep public class org.nlogo.prim.plot.* {
     *;
 }

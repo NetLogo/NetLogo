@@ -239,7 +239,7 @@ C untie etc._untie
 C update-plots plot._updateplots
 C uphill etc._uphill
 C uphill4 etc._uphill4
-C user-message gui._usermessage
+C user-message etc._usermessage
 C wait etc._wait
 C watch etc._watch
 C watch-me etc._watchme
@@ -511,12 +511,12 @@ R turtles-at etc._turtlesat
 R turtles-at threed._turtlesat
 R turtles-here etc._turtleshere
 R turtles-on etc._turtleson
-R user-directory gui._userdirectory
-R user-file gui._userfile
-R user-input gui._userinput
-R user-new-file gui._usernewfile
-R user-one-of gui._useroneof
-R user-yes-or-no? gui._useryesorno
+R user-directory etc._userdirectory
+R user-file etc._userfile
+R user-input etc._userinput
+R user-new-file etc._usernewfile
+R user-one-of etc._useroneof
+R user-yes-or-no? etc._useryesorno
 R value-from dead._valuefrom
 R values-from dead._valuesfrom
 R variance etc._variance
