@@ -52,6 +52,7 @@ with window.Events.BeforeLoadEventHandler {
     visibleState = Map()
     Scrubber.setValue(0)
     Scrubber.setEnabled(false)
+    Scrubber.border("")
     potemkinInterface = None
   }
 
@@ -73,6 +74,7 @@ with window.Events.BeforeLoadEventHandler {
     run :+= Serializer.toBytes(update)
     state = newState
     Scrubber.setEnabled(true)
+    Scrubber.updateBorder()
     MemoryMeter.update()
   }
 
@@ -110,11 +112,16 @@ with window.Events.BeforeLoadEventHandler {
     Mirroring.merge(oldState, Serializer.fromBytes(bytes))
 
   object Scrubber extends JSlider {
+    def border(s: String) {
+      setBorder(BorderFactory.createTitledBorder(s))
+    }
+    def updateBorder() {
+      border("Ticks: " + ticks.map(x => api.Dump.number(StrictMath.floor(x))).getOrElse(""))
+    }
     setValue(0)
-    setBorder(BorderFactory.createTitledBorder("Frame: N/A"))
+    border("")
     addChangeListener(new ChangeListener{
       def stateChanged(e: ChangeEvent) {
-        setBorder(BorderFactory.createTitledBorder("Frame: " + getValue))
         visibleState =
           if(getValue < frame)
               run.take(getValue + 1)
@@ -122,10 +129,18 @@ with window.Events.BeforeLoadEventHandler {
           else
               run.drop(frame + 1).take(getValue - frame)
                 .foldLeft(visibleState)(merge)
+        updateBorder()
         frame = getValue
         InterfacePanel.repaint()
       }})
   }
+
+  def ticks: Option[Double] =
+    for {
+      entry <- visibleState.get(mirror.AgentKey(Mirrorables.World, 0))
+      result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
+      if result != -1
+    } yield result
 
   object EnabledAction extends AbstractAction("Recording") {
     def actionPerformed(e: java.awt.event.ActionEvent) {

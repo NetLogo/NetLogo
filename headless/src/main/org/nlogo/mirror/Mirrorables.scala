@@ -95,6 +95,7 @@ object Mirrorables {
 
   object MirrorableWorld {
     val Seq(
+      wvTicks,
       wvPatchesWithLabels,
       wvTurtleShapeList,
       wvLinkShapeList,
@@ -119,6 +120,7 @@ object Mirrorables {
     override def kind = World
     override def agentKey = AgentKey(kind, 0) // dummy id for the one and unique world
     override val variables = Map(
+      wvTicks -> Double.box(world.ticks),
       wvPatchesWithLabels -> Int.box(world.patchesWithLabels),
       wvTurtleShapeList -> world.turtleShapeList, // probably not good enough to just pass the shapelists like that...
       wvLinkShapeList -> world.linkShapeList,

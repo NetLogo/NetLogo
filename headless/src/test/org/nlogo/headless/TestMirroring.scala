@@ -145,6 +145,26 @@ class TestMirroring extends FunSuite {
     }
   }
 
+  test("tick counter") {
+    withWorkspace { (ws, mirrorables) =>
+      ws.initForTesting(0)
+      val (m0, u0) = diffs(Map(), mirrorables())
+      var state: State = Mirroring.merge(Map(), u0)
+      // 1 patch + world + observer = 3 objects
+      expect((3, (3, 0, 0))) { (m0.size, sizes(u0)) }
+      checkAllAgents(ws, m0)
+      checkAllAgents(ws, state)
+      ws.command("reset-ticks tick")
+      val (m1, u1) = diffs(m0, mirrorables())
+      expect((3, (0, 0, 1))) { (m1.size, sizes(u1)) }
+      expect(1.0)(m1(AgentKey(World, 0))(MirrorableWorld.wvTicks))
+      ws.command("tick-advance 0.1")
+      val (m2, u2) = diffs(m1, mirrorables())
+      expect((3, (0, 0, 1))) { (m2.size, sizes(u2)) }
+      expect(1.1)(m2(AgentKey(World, 0))(MirrorableWorld.wvTicks))
+    }
+  }
+
   // Test failing, disabling for now (NP 2012-07-26)
 //  test("two turtles, one link, rendering test") {
 //    withWorkspace { (ws, mirrorables) =>

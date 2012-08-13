@@ -171,6 +171,7 @@ class FakeWorld(state: State) extends api.World {
 
   private def worldVar[T](i: Int) = worldVars(i).asInstanceOf[T]
 
+  def ticks = worldVar[Double](wvTicks)
   def patchesWithLabels = worldVar[Int](wvPatchesWithLabels)
   def turtleShapeList = worldVar[api.ShapeList](wvTurtleShapeList)
   def linkShapeList = worldVar[api.ShapeList](wvLinkShapeList)
@@ -238,7 +239,6 @@ class FakeWorld(state: State) extends api.World {
       if (StrictMath.abs(y2 - y1) > StrictMath.abs(yprime - y1)) yprime else y2
     } else y2
 
-  def ticks: Double = unsupported
   def getPatchAt(x: Double, y: Double): api.Patch = unsupported
   def fastGetPatchAt(x: Int, y: Int): api.Patch = unsupported
   def followOffsetX: Double = unsupported
