@@ -87,7 +87,7 @@ object Mirrorables {
   }
   class MirrorableObserver(observer: api.Observer) extends MirrorableAgent(observer) {
     import MirrorableObserver._
-    override def kind = Link
+    override def kind = Observer
     override def nbVariables = lastIndex + 1
     override val variables = Map(
       ovTargetAgent -> Option(observer.targetAgent).map(getAgentKey).map(key => (Serializer.agentKindToInt(key.kind), key.id)))
