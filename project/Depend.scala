@@ -11,9 +11,14 @@ object Depend {
 
   val settings = Seq(dependTask)
 
+  // perhaps this voodoo will make intermittent failures-for-no-apparent-
+  // reason stop. sigh - ST 8/12/12
+  private val lock = new AnyRef
+
   private lazy val dependTask =
-    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams).map{
-      (cp, classes, testClasses, s) =>
+    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
+      (cp, classes, testClasses, s, project) => lock.synchronized {
+        s.log.info("begin depend: " + project.id)
         IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
@@ -37,7 +42,8 @@ object Depend {
             s.log.info("depend failed: " + classes.toString)
             sys.error(fail.toString)
         }
-      }.dependsOn(compile in Test)
+        s.log.info("end depend: " + project.id)
+      }}.dependsOn(compile in Test)
 
   private def ddfContents: String = {
     val buf = new StringBuilder
