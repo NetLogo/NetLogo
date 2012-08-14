@@ -103,6 +103,9 @@ with window.Events.BeforeLoadEventHandler {
                    ws.viewWidget.view.getWidth,
                    ws.viewWidget.view.getHeight)
         g.translate(position.x, position.y)
+        for(drawing <- dummy.trailDrawing)
+          renderer.trailDrawer.readImage(
+            new java.io.ByteArrayInputStream(drawing))
         renderer.paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
       }
     }

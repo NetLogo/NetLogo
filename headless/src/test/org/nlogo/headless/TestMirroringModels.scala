@@ -33,6 +33,9 @@ class TestMirroringModels extends FunSuite with SlowTest {
       val renderer = pico.getComponent(classOf[api.RendererInterface])
       renderer.resetCache(ws.patchSize)
       renderer.renderLabelsAsRectangles_=(true)
+      for(drawing <- dummy.trailDrawing)
+        renderer.trailDrawer.readImage(
+          new java.io.ByteArrayInputStream(drawing))
 
       val realChecksum =
         Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
