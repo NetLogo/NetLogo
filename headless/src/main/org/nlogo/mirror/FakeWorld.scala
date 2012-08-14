@@ -3,6 +3,7 @@
 package org.nlogo.mirror
 
 import org.nlogo.api
+import org.nlogo.util.Femto
 import Mirrorables._
 import Mirroring.State
 import collection.JavaConverters._
@@ -24,6 +25,17 @@ class FakeWorld(state: State) extends api.World {
       groups(Patch), // patches should always be there
       groups.getOrElse(Turtle, Seq()), // there might be no turtles
       groups.getOrElse(Link, Seq())) // there might be no links
+  }
+
+  def newRenderer(settings: api.ViewSettings): api.RendererInterface = {
+    val renderer =
+      Femto.get(classOf[api.RendererInterface],
+                "org.nlogo.render.Renderer", Array(this))
+    renderer.resetCache(settings.patchSize)
+    for(drawing <- trailDrawing)
+      renderer.trailDrawer.readImage(
+        new java.io.ByteArrayInputStream(drawing))
+    renderer
   }
 
   def patchColors: Array[Int] =

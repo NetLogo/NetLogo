@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage
 import org.nlogo.awt.{ RowLayout, UserCancelException }
 import org.nlogo.{ api, mirror, nvm, window }
 import org.nlogo.util.Exceptions.ignoring
-import org.nlogo.util.Femto
 import org.nlogo.swing.Implicits._
 import mirror.{ Mirroring, Mirrorables, Serializer }
 import javax.imageio.ImageIO
@@ -96,17 +95,13 @@ with window.Events.BeforeLoadEventHandler {
       if (run.nonEmpty) {
         if(visibleState.isEmpty)
           visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
-        val dummy = new mirror.FakeWorld(visibleState) { }
-        val renderer = Femto.get(classOf[api.RendererInterface],
-                                 "org.nlogo.render.Renderer", Array(dummy))
         g.clipRect(position.x, position.y,
                    ws.viewWidget.view.getWidth,
                    ws.viewWidget.view.getHeight)
         g.translate(position.x, position.y)
-        for(drawing <- dummy.trailDrawing)
-          renderer.trailDrawer.readImage(
-            new java.io.ByteArrayInputStream(drawing))
-        renderer.paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
+        val dummy = new mirror.FakeWorld(visibleState)
+        dummy.newRenderer(ws.viewWidget.view)
+          .paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
       }
     }
   }

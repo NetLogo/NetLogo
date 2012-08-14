@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.FunSuite
 import org.nlogo.{ api, mirror }
-import org.nlogo.util.{ Pico, SlowTest }
+import org.nlogo.util.SlowTest
 import mirror._
 import Mirroring._
 import Mirrorables._
@@ -27,16 +27,8 @@ class TestMirroringModels extends FunSuite with SlowTest {
           Serializer.toBytes(u0)))
       // should I test that m0 and state are identical? maybe have a separate test for that
       val dummy = new FakeWorld(state)
-      val pico = new Pico
-      pico.add("org.nlogo.render.Renderer")
-      pico.addComponent(dummy)
-      val renderer = pico.getComponent(classOf[api.RendererInterface])
-      renderer.resetCache(ws.patchSize)
+      val renderer = dummy.newRenderer(ws)
       renderer.renderLabelsAsRectangles_=(true)
-      for(drawing <- dummy.trailDrawing)
-        renderer.trailDrawer.readImage(
-          new java.io.ByteArrayInputStream(drawing))
-
       val realChecksum =
         Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
       val mirrorChecksum =
