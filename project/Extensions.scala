@@ -8,33 +8,22 @@ object Extensions {
     "extensions", "builds extensions")
 
   val extensionsTask =
-    extensions <<= (baseDirectory, cacheDirectory, scalaInstance, streams) map {
-      (base, cacheDir, scala, s) =>
+    extensions <<= (baseDirectory, scalaInstance, streams) map {
+      (base, scala, s) =>
         "git submodule --quiet update --init" ! s.log
         val isDirectory = new java.io.FileFilter {
           override def accept(f: File) = f.isDirectory
         }
-        val dirs = IO.listFiles(isDirectory)(base / "extensions").toSeq
-        val caches = dirs.map{dir =>
-          FileFunction.cached(cacheDir / "extensions" / dir.getName,
-                              inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
-            in =>
-              Set(buildExtension(dir, scala.libraryJar, s.log))
-          }}
-        caches.flatMap{cache => cache(Set(base / "NetLogo.jar", base / "NetLogoLite.jar"))}
-    } dependsOn(packageBin in Compile)
-
-  // The "update" is needed ony as long as the extension build.sbt files are
-  // using SNAPSHOT versions of NetLogo.jar. - ST 7/22/12
-  private val sbtBuildCommand =
-    Seq("./sbt", "update", "package")
+        for(dir <- IO.listFiles(isDirectory)(base / "extensions").toSeq)
+        yield buildExtension(dir, scala.libraryJar, s.log)
+    }
 
   private def buildExtension(dir: File, scalaLibrary: File, log: Logger): File = {
-    log.info("building extension: " + dir.getName)
+    log.info("extension: " + dir.getName)
     val jar = dir / (dir.getName + ".jar")
     val exitCode =
       if((dir / "build.sbt").exists)
-        Process(sbtBuildCommand, dir,
+        Process(Seq("./sbt", "package"), dir,
                 "SCALA_JAR" -> scalaLibrary.getPath) ! log
       else
         Process(Seq("make", "-s", jar.getName), dir,

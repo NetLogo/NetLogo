@@ -22,11 +22,6 @@ public strictfp class MonitorWidget
     Events.JobRemovedEventHandler,
     java.awt.event.MouseListener {
 
-  private static final int LEFT_MARGIN = 5;
-  private static final int RIGHT_MARGIN = 6;
-  private static final int BOTTOM_MARGIN = 6;
-  private static final int INSIDE_BOTTOM_MARGIN = 3;
-
   private boolean jobRunning = false;
   private boolean hasError = false;
 
@@ -198,24 +193,7 @@ public strictfp class MonitorWidget
   @Override
   public void paintComponent(java.awt.Graphics g) {
     super.paintComponent(g); // paint background
-    java.awt.FontMetrics fm = g.getFontMetrics();
-    int labelHeight = fm.getMaxDescent() + fm.getMaxAscent();
-    java.awt.Dimension d = getSize();
-    g.setColor(getForeground());
-    String displayName = displayName();
-    int boxHeight = (int) StrictMath.ceil(labelHeight * 1.4);
-    g.drawString(displayName, LEFT_MARGIN,
-        d.height - BOTTOM_MARGIN - boxHeight - fm.getMaxDescent() - 1);
-    g.setColor(java.awt.Color.WHITE);
-    g.fillRect(LEFT_MARGIN, d.height - BOTTOM_MARGIN - boxHeight,
-        d.width - LEFT_MARGIN - RIGHT_MARGIN - 1, boxHeight);
-    g.setColor(java.awt.Color.BLACK);
-    if (!valueString.equals("")) {
-      // int vWidth = fm.stringWidth( valueStr ) ;
-      g.drawString(valueString,
-          LEFT_MARGIN + 5,
-          d.height - BOTTOM_MARGIN - INSIDE_BOTTOM_MARGIN - fm.getMaxDescent());
-    }
+    MonitorPainter.paint(g, getSize(), getForeground(), displayName(), valueString);
   }
 
   private int decimalPlaces = 17;
