@@ -77,18 +77,7 @@ public strictfp class DummyMonitorWidget
   @Override
   public void paintComponent(java.awt.Graphics g) {
     super.paintComponent(g); // paint background
-    java.awt.FontMetrics fm = g.getFontMetrics();
-    int labelHeight = fm.getMaxDescent() + fm.getMaxAscent();
-    java.awt.Dimension d = getSize();
-    g.setColor(getForeground());
-    String displayName = displayName();
-    int boxHeight = (int) StrictMath.ceil(labelHeight * 1.4);
-    g.drawString(displayName, LEFT_MARGIN,
-        d.height - BOTTOM_MARGIN - boxHeight - fm.getMaxDescent() - 1);
-    g.setColor(java.awt.Color.WHITE);
-    g.fillRect(LEFT_MARGIN, d.height - BOTTOM_MARGIN - boxHeight,
-        d.width - LEFT_MARGIN - RIGHT_MARGIN - 1, boxHeight);
-    g.setColor(java.awt.Color.BLACK);
+    MonitorPainter.paint(g, getSize(), getForeground(), displayName(), "");
   }
 
   private int decimalPlaces = 3;
