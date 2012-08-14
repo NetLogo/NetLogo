@@ -33,31 +33,38 @@ def dirs(root: String) =
     .filterNot(_.containsSlice("/build/"))
     .filterNot(_.matches("extensions/.*/src/.*/.*"))
 
-def outputLines(root: String) =
-  for{dir <- dirs(root)
-      flatten = dir.matches("extensions/.*/src/.*")
-      j = lines(dir, "java", flatten)
-      uj = j.distinct
-      s = lines(dir, "scala", flatten)
-      us = s.distinct
-      if j.nonEmpty || s.nonEmpty}
-  yield {
-    tj += j.size; tuj += uj.size; ts += s.size; tus += us.size
-    format.format(dir.replaceAll(root + "/org/nlogo/", "")
-                     .replaceAll(".src.org", "")
-                     .replaceAll(root + "/", "")
-                     .replaceFirst(".src$", "")
-                     .replaceAll("/", "."),
-                  uj.size + us.size, j.size + s.size,
-                  percent(us.size, uj.size + us.size))
-  }
 def firstNumber(s: String) =
   s.dropWhile(!_.isDigit).takeWhile(_.isDigit).mkString.toInt
-def sortAndPrint(root: String) = {
+
+def sortAndPrint(root: String) {
   println(root + ":")
-  outputLines(root).toList.sortBy(firstNumber).reverse.foreach(print)
+  var subtj, subtuj, subts, subtus = 0
+  val entries =
+    for{dir <- dirs(root)
+        flatten = dir.matches("extensions/.*/src/.*")
+        j = lines(dir, "java", flatten)
+        uj = j.distinct
+        s = lines(dir, "scala", flatten)
+        us = s.distinct
+        if j.nonEmpty || s.nonEmpty}
+    yield {
+      subtj += j.size; subtuj += uj.size; subts += s.size; subtus += us.size
+      format.format(dir.replaceAll(root + "/org/nlogo/", "")
+                       .replaceAll(".src.org", "")
+                       .replaceAll(root + "/", "")
+                       .replaceFirst(".src$", "")
+                       .replaceAll("/", "."),
+                    uj.size + us.size, j.size + s.size,
+                    percent(us.size, uj.size + us.size))
+    }
+  entries.toList.sortBy(firstNumber).reverse.foreach(print)
+  println(format.format("SUBTOTAL",
+                        subtuj + subtus, subtj + subts,
+                        percent(subtus, subtuj + subtus)))
+  tj += subtj; tuj += subtuj; ts += subts; tus += subtus
   println()
 }
+
 sortAndPrint("headless/src/main")
 sortAndPrint("headless/src/test")
 sortAndPrint("src/main")
@@ -66,6 +73,7 @@ sortAndPrint("src/tools")
 sortAndPrint("extensions")
 sortAndPrint("project")
 sortAndPrint("bin")
+
 println(format.format("TOTAL",
                       tuj + tus, tj + ts,
                       percent(tus, tuj + tus)))
