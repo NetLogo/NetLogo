@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app;
 
@@ -78,7 +78,7 @@ public strictfp class FileMenu
 
   ///
 
-  private String modelSuffix() {
+  public static String modelSuffix() {
     return org.nlogo.api.Version.is3D() ? "nlogo3d" : "nlogo";
   }
 

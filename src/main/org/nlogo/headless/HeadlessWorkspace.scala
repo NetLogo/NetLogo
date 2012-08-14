@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -17,7 +17,7 @@ import org.nlogo.nvm.{ LabInterface,
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
-import org.picocontainer.parameters.ComponentParameter
+import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -30,10 +30,13 @@ object HeadlessWorkspace {
   def newInstance: HeadlessWorkspace =
     newInstance(classOf[HeadlessWorkspace])
 
+  def newInstance(desiredHubNetPort: Option[Int]): HeadlessWorkspace =
+    newInstance(classOf[HeadlessWorkspace], desiredHubNetPort)
+
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace], desiredHubNetPort: Option[Int] = None): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World])
     pico.addScalaObject("org.nlogo.compiler.Compiler")
@@ -41,7 +44,7 @@ object HeadlessWorkspace {
     pico.add("org.nlogo.render.Renderer")
     pico.add(classOf[HubNetInterface],
              "org.nlogo.hubnet.server.HeadlessHubNetManager",
-             Array[Parameter](new ComponentParameter))
+             Array[Parameter](new ComponentParameter, new ConstantParameter(desiredHubNetPort)))
     pico.addComponent(subclass)
     val hubNetManagerFactory = new AbstractWorkspace.HubNetManagerFactory {
       override def newInstance(workspace: AbstractWorkspace) =

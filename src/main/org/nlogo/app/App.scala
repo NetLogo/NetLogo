@@ -1,27 +1,32 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World3D, World}
-import org.nlogo.api._
+import org.nlogo.api.{LogoException, I18N, APIVersion, CompilerException, ModelType, RendererInterface, Shape, Version, Observer, SimpleJobOwner, HubNetInterface, AggregateManagerInterface, FileIO, ModelSection, ModelReader}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.log.Logger
+import org.nlogo.log.webstart.{LogSendingMode, WebStartXMLWriterAppender}
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.shape.{ShapesManagerInterface, ShapeChangeListener, LinkShapesManagerInterface, TurtleShapesManagerInterface}
-import org.nlogo.util.Pico
-import org.nlogo.window._
-import org.nlogo.window.Events._
+import org.nlogo.swing.Implicits.thunk2runnable
+import org.nlogo.swing.OptionDialog
+import org.nlogo.util.{WebStartUtils, Pico}
+import org.nlogo.window.{ButtonWidget, RuntimeErrorDialog, AppEventType, GLViewManagerInterface, CompilerManager, EditorColorizer, UpdateManager, EditDialogFactoryInterface, WidgetInfo, AbstractWidgetPanel, InterfaceFactory, NetLogoListenerManager, LabManagerInterface, ColorDialog, GUIWorkspace}
+import org.nlogo.window.Events.{CompileAllEvent, LoadBeginEvent, LoadEndEvent, ZoomedEvent, AppEvent, IconifiedEvent, LoadSectionEvent, AboutToQuitEvent, BeforeLoadEvent, ModelSavedEvent}
 import org.nlogo.workspace.{AbstractWorkspace, Controllable}
 import org.nlogo.window.Event.LinkParent
-import org.nlogo.swing.Implicits.thunk2runnable
 
-import org.picocontainer.Characteristics._
 import org.picocontainer.parameters.{ConstantParameter, ComponentParameter}
 import org.picocontainer.Parameter
+import org.apache.log4j.Appender
 
-import javax.swing._
-import java.awt.event.{WindowAdapter, WindowEvent}
 import java.awt.{Toolkit, Dimension, Frame}
+import java.awt.event.{WindowAdapter, WindowEvent}
+import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import javax.swing.{SwingUtilities, JButton, JMenuBar, JMenu, JOptionPane, JDialog, JProgressBar, JFrame}
 
 /**
  * The main class for the complete NetLogo application.
@@ -34,16 +39,33 @@ import java.awt.{Toolkit, Dimension, Frame}
  * for example code.
  */
 object App{
-  
+
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
   var logger: Logger = null
+  var port: Option[Int] = None
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
   private var loggingName: String = null
+
+  // But not these guys!  (Victory for Jason!!)
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
+  private val ContinuousLogModeName = "Continuous"
+  private val AtEndLogModeName = "One-Off"
+  private val ExpectedLogConfigFileName = "netlogo_logging.xml"
+  private val WebStartTempDirTemplate = "netlogo_logging__%s"
+  private val WebStartLogNoConfigFileErrorMsg = ("No '%s' file found; if logging is enabled, you must include a '%s' " +
+          "file in a '.jar' file, and list that '.jar' in the JNLP.").format(Stream.continually(ExpectedLogConfigFileName) take 2: _*)
+  private val WebStartLogModeMsg =
+    ("Your log files will be transfered over a network to an external server for storage.\n\n" +
+    "You can use the \"%s\" logging mode to send logging data to server as it becomes available.\n" +
+    "The downside of this option is that sending lots of data or having too slow of a connection may slow down your computer.\n\n" +
+    "Alternatively, you can use the \"%s\" logging mode, which will send all of your logging data at the end of the session.\n" +
+    "The downside of choosing this option is that you may then have to wait a while after execution for your logs to transfer.\n\n" +
+    "Which logging mode would you like to use?").format(ContinuousLogModeName, AtEndLogModeName)
 
   /**
    * Should be called once at startup to create the application and
@@ -75,6 +97,9 @@ object App{
     // when we call MacHandlers.ready() - ST 11/13/03
     if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
 
+    // Ugh... am I really doing this?  Seems necessary for HubNet, though... --JAB (6/1/12)
+    if (isWebStart) WebStartUtils.disableSecurityManager()
+
     AbstractWorkspace.isApp(true)
     AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
@@ -85,7 +110,7 @@ object App{
     pico.addComponent(classOf[AppletSaver])
     pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
-    pico.as(NO_CACHE).addComponent(classOf[FileMenu])
+    pico.as(org.picocontainer.Characteristics.NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
     pico.addComponent(classOf[ToolsMenu])
     pico.add("org.nlogo.gl.view.ViewManager")
@@ -117,7 +142,7 @@ object App{
           Array[Parameter] (
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter()))
+            new ComponentParameter(), new ConstantParameter(port)))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -129,7 +154,7 @@ object App{
       def newInstance: Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
         w
       }
@@ -174,7 +199,7 @@ object App{
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists) throw new IllegalStateException("File specified to open (" + token + ") was not found!")
-        commandLineModel = modelFile.getAbsolutePath()
+        commandLineModel = modelFile.getAbsolutePath
       }
       else if (token == "--magic") {
         require(commandLineModel == null &&
@@ -191,12 +216,35 @@ object App{
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--logging") loggingName = nextToken()
+      else if (token == "--logging") {
+        if (isWebStart) {
+
+          val timestamp = new SimpleDateFormat("yyyy-MM-dd.HH_mm_ss_SSS").format(Calendar.getInstance().getTime)
+          val targetDirName = WebStartTempDirTemplate.format(timestamp)
+          val files = try {
+            WebStartUtils.extractAllFilesFromJarByMarker(ExpectedLogConfigFileName, targetDirName, (_.getName == ExpectedLogConfigFileName))
+          }
+          catch {
+            case ex: FileNotFoundException => throw new Exception(WebStartLogNoConfigFileErrorMsg, ex)
+          }
+
+          loggingName = files.collectFirst { case x if (x.getName == ExpectedLogConfigFileName) => x.toString }.
+                  getOrElse (throw new Exception("Unknown error in unpacking logging config file!"))
+          Option(logger) foreach (_.changeLogDirectory(loggingName))
+
+        }
+        else loggingName = nextToken()
+      }
       else if (token == "--log-directory") {
-        if (logger != null) logger.changeLogDirectory(nextToken())
+        if (logger != null) {
+          logger.changeLogDirectory(nextToken())
+        }
         else JOptionPane.showConfirmDialog(null,
           "You need to initialize the logger using the --logging options before specifying a directory.",
           "NetLogo", JOptionPane.DEFAULT_OPTION)
+      }
+      else if (token == "--port") {
+        port = Option(nextToken().toInt)
       }
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
@@ -214,7 +262,7 @@ object App{
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists())
           throw new IllegalStateException("File specified to open (" + token + ") was not found!")
-        commandLineModel = modelFile.getAbsolutePath()
+        commandLineModel = modelFile.getAbsolutePath
       }
     }
   }
@@ -248,7 +296,7 @@ object App{
     }
   }
 }
-  
+
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
@@ -263,7 +311,8 @@ class App extends
     AboutToQuitEvent.Handler with
     Controllable {
 
-  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
+  import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch,
+              loggingName, isWebStart, WebStartLogModeMsg, ContinuousLogModeName, AtEndLogModeName}
 
   val frame = new AppFrame
 
@@ -325,17 +374,17 @@ class App extends
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])                                    
+      val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
         override def ticks = _workspace.world.tickCounter.ticks
-        override def updateMode = _workspace.updateMode
+        override def updateMode = _workspace.updateMode()
       }
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.getAgentClass(), a, radius)
+        monitorManager.inspect(a.getAgentClass, a, radius)
       }
       override def inspectAgent(agentClass: Class[_ <: Agent], agent: Agent, radius: Double) {
         monitorManager.inspect(agentClass, agent, radius)
@@ -389,9 +438,9 @@ class App extends
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
-    
+
     pico.addComponent(new EditorFactory(workspace))
-    
+
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
@@ -399,7 +448,7 @@ class App extends
 
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
     workspace.init(viewManager)
-    frame.addLinkComponent(viewManager)    
+    frame.addLinkComponent(viewManager)
 
     fileMenu = pico.getComponent(classOf[FileMenu])
     val menuBar = new JMenuBar(){
@@ -432,23 +481,59 @@ class App extends
     smartPack(frame.getPreferredSize)
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
-    
-    org.nlogo.app.FindDialog.init(frame) 
-    
+
+    org.nlogo.app.FindDialog.init(frame)
+
     Splash.endSplash()
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
   }
-  
+
+  private def generateWebStartAppender: Appender = {
+
+    import annotation.tailrec
+    @tailrec
+    def untilValid[T](resultGiver: () => T, validationCondition: T => Boolean) : T = {
+      val result = resultGiver()
+      if (validationCondition(result))
+        result
+      else
+        untilValid(resultGiver, validationCondition)
+    }
+
+    import LogSendingMode._
+    val nameModePairs = List((ContinuousLogModeName, Continuous),
+                             (AtEndLogModeName, AfterLoggingCompletes))
+
+    val names: Array[AnyRef] = nameModePairs map (_._1) toArray
+    val result = untilValid[Int](
+      () => JOptionPane.showOptionDialog(null,
+                                         WebStartLogModeMsg,
+                                         "Choose Your Logging Mode",
+                                         JOptionPane.DEFAULT_OPTION,
+                                         JOptionPane.QUESTION_MESSAGE,
+                                         null,
+                                         names,
+                                         names(0)),
+      (_ >= 0)
+    )
+
+    val loggingMode = nameModePairs(result)._2
+    val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
+    new WebStartXMLWriterAppender(loggingMode, url)
+
+  }
+
   def startLogging(properties:String) {
     if(new java.io.File(properties).exists) {
       val username =
         JOptionPane.showInputDialog(null, "Enter your name:", "",
           JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
-      if(username != null){
+      if(username != null) {
         logger = new Logger(username)
         listenerManager.addListener(logger)
         Logger.configure(properties)
+        if (isWebStart) logger.addAppender(generateWebStartAppender)
         org.nlogo.api.Version.startLogging()
       }
     }
@@ -494,7 +579,7 @@ class App extends
     else if (commandLineURL != null)
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
-        null, "Starting...", ModelType.Library)
+        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
     else fileMenu.newModel()
   }
 
@@ -521,23 +606,37 @@ class App extends
     e.`type` match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
-      case OPEN_INDEX => openIndex
+      case OPEN_INDEX => openIndex()
       case OPEN_NEXT => openNext(1)
       case OPEN_PREVIOUS => openNext(-1)
       case START_LOGGING =>
         startLogging(e.args(0).toString)
         if(logger!=null)
-          logger.modelOpened(workspace.getModelPath())
+          logger.modelOpened(workspace.getModelPath)
       case ZIP_LOG_FILES =>
+
         if (logger==null)
           org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
         else
           logger.zipSessionFiles(e.args(0).toString)
+
+        if (isWebStart)
+          JOptionPane.showConfirmDialog(null,
+                                        "Your local log files have been zipped, but this action has no affect on remotely-stored log files.",
+                                        "NetLogo",
+                                        JOptionPane.DEFAULT_OPTION)
+
       case DELETE_LOG_FILES =>
         if(logger==null)
           org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
+        else {
           logger.deleteSessionFiles()
+          if (isWebStart)
+            JOptionPane.showConfirmDialog(null,
+                                          "Your local log files have been deleted, but this action has no affect on remotely-stored log files.",
+                                          "NetLogo",
+                                          JOptionPane.DEFAULT_OPTION)
+        }
       case CHANGE_LANGUAGE => changeLanguage()
       case _ =>
     }
@@ -620,7 +719,7 @@ class App extends
       }
     }
   }
-  
+
   /**
    * Internal use only.
    */
@@ -676,7 +775,7 @@ class App extends
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight))
       }
-      preferredSizeAtLoadEndTime = frame.getPreferredSize()
+      preferredSizeAtLoadEndTime = frame.getPreferredSize
     }
     frame.toFront()
     tabs.interfaceTab.requestFocus()
@@ -685,13 +784,66 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
+  def handle(e:AboutToQuitEvent) {
+    if(logger != null) {
+      if (isWebStart) handleWebStartLoggingOnQuit()
+      else            logger.close()
+    }
+  }
+
+  // MUST BE CALLED FROM THE EVENT DISPATCH THREAD (for `finalizeWebStartLoggingSession`) --JAB (5/4/12)
+  private def handleWebStartLoggingOnQuit() {
+
+    def finalizeWebStartLoggingSession() {
+
+      val pbar = new JProgressBar()
+      pbar.setIndeterminate(true)
+      pbar.setString("Please wait while NetLogo transfers your log file...")
+      pbar.setStringPainted(true)
+
+      val dialog = new JDialog(frame, "", true)
+      dialog.setPreferredSize(new java.awt.Dimension(400, 200))
+      dialog.setUndecorated(true)
+      dialog.setModal(true)
+      dialog.add(pbar)
+      dialog.pack()
+      dialog.setLocationRelativeTo(frame)
+
+      concurrent.ops.spawn {
+        logger.close()                                      // Background task: Avoids blocking the progress bar
+        SwingUtilities.invokeLater(() => dialog.dispose())  // Event thread:    Have to somehow tell `dialog` that we no longer need it!
+      }
+
+      dialog.setVisible(true) // Event thread!
+
+    }
+
+    def requestRemoteLogDeletion() {
+      Option(logger) foreach (_.requestRemoteLogDeletion())
+    }
+
+    val textFuncPairs = List(
+      ("Send Full Log Before Quitting", () => finalizeWebStartLoggingSession()),
+      ("Request Log Deletion and Quit", () => requestRemoteLogDeletion()),
+      ("Just Quit Now",                 () => {})
+    )
+
+    val result = OptionDialog.show(
+      frame,
+      "End Logging?",
+      "Closing NetLogo will end your logging session.  What would you like to happen with this session's logs?",
+      textFuncPairs map (_._1) toArray
+    )
+
+    if (result >= 0) textFuncPairs(result)._2() // Run the function associated with the selection
+
+  }
 
   /**
-   * Generates OS standard frame title. 
+   * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -701,8 +853,8 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
-      title 
+      if (workspace.getModelType == ModelType.Normal) title += " {" + workspace.getModelDir + "}"
+      title
     }
   }
 
@@ -861,7 +1013,7 @@ class App extends
    * @see #commandLater
    */
   def pressButton(name:String) {
-    if (java.awt.EventQueue.isDispatchThread()) throw new IllegalStateException("can't call on event thread")
+    if (java.awt.EventQueue.isDispatchThread) throw new IllegalStateException("can't call on event thread")
     val button = findButton(name)
     if (button.forever) {
       button.foreverOn = !button.foreverOn
@@ -899,7 +1051,7 @@ class App extends
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
-  
+
   def smartPack(targetSize:Dimension) {
     val gc = frame.getGraphicsConfiguration
     val maxBounds = gc.getBounds
@@ -910,33 +1062,33 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-    
+
     tabs.interfaceTab.adjustTargetSize(targetSize)
-    
+
     // reduce our size ambitions if necessary
     var newWidth  = StrictMath.min(targetSize.width, maxWidth )
     var newHeight = StrictMath.min(targetSize.height, maxHeight)
-    
+
     // move up/left to get more room if possible and necessary
-    val moveLeft = StrictMath.max(0, frame.getLocation().x + newWidth  - maxX)
-    val moveUp   = StrictMath.max(0, frame.getLocation().y + newHeight - maxY)
-    
+    val moveLeft = StrictMath.max(0, frame.getLocation.x + newWidth  - maxX)
+    val moveUp   = StrictMath.max(0, frame.getLocation.y + newHeight - maxY)
+
     // now we can compute our new position
-    val newX = StrictMath.max(maxBoundsX, frame.getLocation().x - moveLeft)
-    val newY = StrictMath.max(maxBoundsY, frame.getLocation().y - moveUp  )
-    
+    val newX = StrictMath.max(maxBoundsX, frame.getLocation.x - moveLeft)
+    val newY = StrictMath.max(maxBoundsY, frame.getLocation.y - moveUp  )
+
     // and now that we know our position, we can compute our new size
     newWidth  = StrictMath.min(newWidth, maxX - newX)
     newHeight = StrictMath.min(newHeight, maxY - newY)
-    
+
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)
     frame.validate()
-    
+
     // not sure why this is sometimes necessary - ST 11/24/03
     tabs.requestFocus()
   }
-  
+
   /**
    * Internal use only.
    */
@@ -966,11 +1118,13 @@ class App extends
 }
 
 class AppFrame extends JFrame with LinkParent {
+
+  private val linkComponents = new collection.mutable.ListBuffer[Object]()
+
   setIconImage(org.nlogo.awt.Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   getContentPane.setLayout(new java.awt.BorderLayout)
   org.nlogo.awt.FullScreenUtilities.setWindowCanFullScreen(this, true)
-  private val linkComponents = new collection.mutable.ListBuffer[Object]()
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent) {
       try App.app.fileMenu.quit()
@@ -979,6 +1133,8 @@ class AppFrame extends JFrame with LinkParent {
     override def windowIconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, true).raise(App.app)}
     override def windowDeiconified(e: WindowEvent) {new IconifiedEvent(AppFrame.this, false).raise(App.app)}
   })
+
   def addLinkComponent(c:Object) { linkComponents += (c) }
   def getLinkChildren: Array[Object] = linkComponents.toArray
+
 }

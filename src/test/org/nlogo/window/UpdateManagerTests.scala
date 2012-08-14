@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window
 
@@ -150,7 +150,7 @@ speed = 47, frameRateGap = 226757.37 fps, nanoGap = 0.84 fps, slowdown = 0.0 ms,
 speed = 48, frameRateGap = 294724.43 fps, nanoGap = 0.61 fps, slowdown = 0.0 ms, every 63119.000 ticks
 speed = 49, frameRateGap = 383141.76 fps, nanoGap = 0.45 fps, slowdown = 0.0 ms, every 251213.000 ticks
 speed = 50, frameRateGap = 498256.10 fps, nanoGap = 0.33 fps, slowdown = 0.0 ms, every 1000026.000 ticks
-"""
+""".replaceAll("\r\n", "\n")
 
   val continuous = """
 speed = -50, frameRateGap = Infinity fps, nanoGap = 1000.00 fps, slowdown = 1499.0 ms, every 1.000 ticks
@@ -254,6 +254,6 @@ speed = 47, frameRateGap = Infinity fps, nanoGap = 2.11 fps, slowdown = 0.0 ms, 
 speed = 48, frameRateGap = Infinity fps, nanoGap = 1.52 fps, slowdown = 0.0 ms, every 2147483647.000 ticks
 speed = 49, frameRateGap = Infinity fps, nanoGap = 0.93 fps, slowdown = 0.0 ms, every 2147483647.000 ticks
 speed = 50, frameRateGap = Infinity fps, nanoGap = 0.33 fps, slowdown = 0.0 ms, every 2147483647.000 ticks
-"""
+""".replaceAll("\r\n", "\n")
 
 }

@@ -1,13 +1,13 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.workspace
 
 import java.net.{JarURLConnection, URL, URLClassLoader, MalformedURLException}
 import org.nlogo.api.{Dump, ImportErrorHandler, Reporter, ExtensionObject, Primitive, ExtensionException, ClassManager, ErrorSource}
-import collection.mutable.{HashMap, ListBuffer}
+import collection.mutable.HashMap
 import scala.util.control.Exception
-import java.util.zip.{ZipFile, ZipEntry}
-import java.io._
+import java.io.{IOException, FileNotFoundException, PrintWriter}
+import org.nlogo.util.WebStartUtils
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -59,11 +59,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    * breaking the existing extensions API -- CLB
    */
 
-  val ArchiveFileEnding = ".jar"
-  val WebStartTempDir = {
-    val sep = System.getProperty("file.separator")
-    System.getProperty("java.io.tmpdir") + "netlogo_extensions" + sep
-  }
+  private val ArchiveFileEnding = ".jar"
+  private val WsExtensionsFolderName = "netlogo_extensions"
+  private val WsPolicyFileName = "extensions.jarmarker"
 
   // ugly stuff to ensure that we only load
   // the soundbank once. guess anyone else can use it too.
@@ -127,21 +125,13 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // A better alternative to `isFirst` would be preferable
     if (isFirst && isWebStart) {
-
       isFirst = false
-      disableSecurityManager()
-      createDirectory(WebStartTempDir)
-
-      val policyFileName = "extensions.jarmarker"
-      val policyPath = this.getClass.getClassLoader.getResource(policyFileName).toString
-      val localFilePath = downloadFile(policyPath drop (4) dropRight (policyFileName.size + 2))
-      extractFilesFromJar(localFilePath)
-
+      WebStartUtils.extractAllFilesFromJarByMarker(WsPolicyFileName, WsExtensionsFolderName)
     }
 
     // This spaghetti is a bit much for me to refactor properly... --JAB
     var jarPath = {
-      val temp = this.getClass.getClassLoader. getResource(extName + ArchiveFileEnding)
+      val temp = this.getClass.getClassLoader.getResource(extName + ArchiveFileEnding)
       if (temp != null)
         temp.toString
       else
@@ -151,7 +141,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     try {
       jarPath = resolvePathAsURL(jarPath)
       if (AbstractWorkspace.isApplet) {
-        val url: URL = new URL(jarPath)
+        val url = new URL(jarPath)
         // added in r43348. motivation: https://trac.assembla.com/nlogo/ticket/647 .
         // we need to work around http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6785446
         url.openConnection.setUseCaches(false)
@@ -272,9 +262,9 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     Exception.ignoring(classOf[MalformedURLException]) {
       if (isWebStart) {
-        val jarFile = new java.io.File(WebStartTempDir + path)
+        val jarFile = new java.io.File(WebStartUtils.getWebStartPath(WsExtensionsFolderName) + path)
         if (jarFile.exists)
-          return ExtensionManager.toURL(jarFile).toString
+          return ExtensionManager.file2LocalURLStr(jarFile)
       }
     }
 
@@ -285,10 +275,10 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
 
     // If it's a path, look for it relative to the model location
     Exception.ignoring(classOf[MalformedURLException]) {
-    if (path.indexOf('/') > -1) {
+    if (path.contains(java.io.File.separator)) {
         val jarFile = new java.io.File(workspace.attachModelDir(path))
         if (jarFile.exists)
-          return ExtensionManager.toURL(jarFile).toString
+          return ExtensionManager.file2LocalURLStr(jarFile)
       }
     }
 
@@ -296,14 +286,14 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File(workspace.attachModelDir(path))
       if (jarFile.exists)
-        return ExtensionManager.toURL(jarFile).toString
+        return ExtensionManager.file2LocalURLStr(jarFile)
     }
 
     // Then try the extensions folder
     Exception.ignoring(classOf[MalformedURLException]) {
       val jarFile = new java.io.File("extensions" + java.io.File.separator + path)
       if (jarFile.exists)
-        return ExtensionManager.toURL(jarFile).toString
+        return ExtensionManager.file2LocalURLStr(jarFile)
     }
 
     // Give up
@@ -345,30 +335,28 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   // We only want one ClassLoader for every Jar per NetLogo instance
   private def getClassLoader(jarPath: String, errors: ErrorSource, parentLoader: ClassLoader): Option[URLClassLoader] = {
 
-    jars.get(jarPath) match {
-      case Some(container) => Some(container.jarClassLoader)
-      case None            =>
+    jars.get(jarPath) map (_.jarClassLoader) orElse {
 
-        try {
+      try {
 
-          val jarURL = new URL(jarPath)
+        val jarURL = new URL(jarPath)
 
-          // Have the class loader look at URLs from the original extension .jar, the other .jars in the dir,
-          // and the others in the `extensions` folder
-          val parentFolder = new java.io.File(new java.io.File(jarURL.getFile).getParent)
-          val extensionsFolder = new java.io.File("extensions")
-          val urls = jarURL :: getAdditionalJars(parentFolder) ::: getAdditionalJars(extensionsFolder)
+        // Have the class loader look at URLs from the original extension .jar, the other .jars in the dir,
+        // and the others in the `extensions` folder
+        val parentFolder = new java.io.File(new java.io.File(jarURL.getFile).getParent)
+        val extensionsFolder = new java.io.File("extensions")
+        val urls = jarURL :: getAdditionalJars(parentFolder) ::: getAdditionalJars(extensionsFolder)
 
-          // We use the URLClassLoader.newInstance method because that works with
-          // the applet SecurityManager, even tho newLClassLoader(..) does not.
-          Option(java.net.URLClassLoader.newInstance(urls.toArray, parentLoader))
+        // We use the URLClassLoader.newInstance method because that works with
+        // the applet SecurityManager, even tho newLClassLoader(..) does not.
+        Option(java.net.URLClassLoader.newInstance(urls.toArray, parentLoader))
 
-        }
-        catch {
-          case ex: MalformedURLException =>
-            errors.signalError("Invalid URL: " + jarPath)
-            None
-        }
+      }
+      catch {
+        case ex: MalformedURLException =>
+          errors.signalError("Invalid URL: " + jarPath)
+          None
+      }
 
     }
 
@@ -467,28 +455,19 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   override def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
-
     def findExtensionObject(extName: String, typeName: String, value: String): Option[ExtensionObject] = {
-
-      jars.values.toList foreach {
-        container =>
-          if (container.loaded && (container.primManager.name.compareToIgnoreCase(extName) == 0)) {
-            try
-              return Option(container.classManager.readExtensionObject(this, typeName, value))
-            catch {
-              case ex: ExtensionException =>
-                System.err.println(ex)
-                throw new IllegalStateException("Error reading extension object " + extName + ":" + typeName + " " + value + " ==> " + ex.getMessage)
-            }
+      jars.values.toList collectFirst {
+        case container if (container.loaded && (container.primManager.name.equalsIgnoreCase(extName))) =>
+          try
+            container.classManager.readExtensionObject(this, typeName, value)
+          catch {
+            case ex: ExtensionException =>
+              System.err.println(ex)
+              throw new IllegalStateException("Error reading extension object " + extName + ":" + typeName + " " + value + " ==> " + ex.getMessage)
           }
       }
-
-      None
-
     }
-
     findExtensionObject(extName, typeName, value).getOrElse(null)  // Totally gross... --JAB
-
   }
 
   override def replaceIdentifier(name: String): Option[Primitive] = {
@@ -497,17 +476,10 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     val (prefix, pname) = name.splitAt(sepIndex) match { case (x, y) => (x, y drop 1) } // Get rid of ':' at beginning of `y`
     val isQualified = sepIndex != -1
 
-    jars.values.toList foreach {
-      container =>
-        if (container.live) {
-          if (isQualified && (prefix == container.primManager.name.toUpperCase))
-            return Option(container.primManager.getPrimitive(pname))
-          else if (!isQualified && container.primManager.autoImportPrimitives)
-            return Option(container.primManager.getPrimitive(name))
-        }
-    }
-
-    None
+    jars.values.toList.collectFirst {
+      case container if (container.live && isQualified && (prefix == container.primManager.name.toUpperCase)) => (container, pname)
+      case container if (container.live && !isQualified && container.primManager.autoImportPrimitives)        => (container, name)
+    } flatMap { case (container, id) => Option(container.primManager.getPrimitive(id)) }
 
   }
 
@@ -515,24 +487,18 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
    * Returns a String describing all the loaded extensions.
    */
   override def dumpExtensions : String = {
-
     val types = List("EXTENSION", "LOADED", "MODIFIED", "JARPATH")
-    val str = types.mkString("", "\t", "\n") + types.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
-
-    val extras = jars.values.toList map {
-      container => import container._; List(prefix, loaded, modified, jarName).mkString("", "\t", "\n")
-    }
-
+    val str = types.mkString("", "\t", "\n") + types.map (x => List.fill(x.size)('-').mkString).mkString("", "\t", "\n")
+    val extras = jars.values.toList map { container => import container._; List(prefix, loaded, modified, jarName).mkString("", "\t", "\n") }
     (str :: extras).mkString
-
   }
 
   override def getJarPaths : List[String] = {
     import scala.collection.JavaConversions._
     jars.values.toList flatMap {
       jar =>
-        val thisJarPath = jar.extensionName + java.io.File.separator + jar.extensionName + ArchiveFileEnding
-        val additionalJarPaths = jar.classManager.additionalJars.toList map (aJar => jar.extensionName + java.io.File.separator + aJar)
+        val thisJarPath = jar.extensionName + '/' + jar.extensionName + ArchiveFileEnding
+        val additionalJarPaths = jar.classManager.additionalJars.toList map (aJar => jar.extensionName + '/' + aJar)
         thisJarPath :: additionalJarPaths
     }
   }
@@ -547,7 +513,7 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   override def dumpExtensionPrimitives : String = {
 
     val ptypes = List("EXTENSION", "PRIMITIVE", "TYPE")
-    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map (x => List.fill(x.size)('-')).mkString("", "\t", "\n")
+    val pstr = ptypes.mkString("\n\n", "\t", "\n") + ptypes.map (x => List.fill(x.size)('-').mkString).mkString("", "\t", "\n")
 
     import scala.collection.JavaConversions._   // Necessary so we can deal with the Java iterator returned by getPrimitiveNames()
     val extras = jars.values.toList flatMap {
@@ -570,9 +536,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList foreach {
      container =>
 
-        try {
+        try
           container.classManager.unload(this)
-        }
         catch {
           case ex: ExtensionException =>
             System.err.println(ex)
@@ -598,14 +563,12 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     if (!AbstractWorkspace.isApplet && folder.exists && folder.isDirectory) {
       folder.listFiles().toList collect {
         case file if (file.isFile && file.getName.toUpperCase.endsWith(ArchiveFileEnding.toUpperCase)) =>
-          try {
+          try
             ExtensionManager.toURL(file)
-          }
           catch {
             case ex: MalformedURLException =>
               throw new IllegalStateException(ex)
           }
-
       }
     }
     else
@@ -652,9 +615,8 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
   }
 
   private def getModified(jarPath: String, errors: ErrorSource): Long = {
-    try {
+    try
       new URL(jarPath).openConnection.getLastModified
-    }
     catch {
       case ex: IOException =>
         System.err.println(ex)
@@ -696,128 +658,6 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     jars.values.toList collectFirst { case jar if (jar.extensionName.equalsIgnoreCase(identifier)) => jar }
   }
 
-  private def downloadFile(webPath: String): String = {
-
-    val ReadSize = 1024
-    val fileName = webPath.reverse takeWhile (_ != '/') reverse
-    val outPath = WebStartTempDir + System.getProperty("file.separator") + fileName
-
-    val inStream = new BufferedInputStream(new URL(webPath).openStream())
-    val outStream = new FileOutputStream(outPath)
-    val outBuffer = new BufferedOutputStream(outStream, ReadSize)
-    val data = new Array[Byte](ReadSize)
-    var x = inStream.read(data, 0, ReadSize)
-
-    while (x >= 0) {
-      outBuffer.write(data, 0, x)
-      x = inStream.read(data, 0, ReadSize)
-    }
-
-    outBuffer.close()
-    inStream.close()
-    outStream.close()
-
-    outPath
-
-  }
-
-  // Primarily for use with WebStart
-  private def extractFilesFromJar(jarpath: String) {
-
-    val zipFile = new ZipFile(jarpath)
-    val entries = zipFile.entries
-    val buffer = new ListBuffer[ZipEntry]()
-
-    while (entries.hasMoreElements)
-      buffer += entries.nextElement()
-
-    // Sort by name size so we always get directories created before trying to write their children
-    buffer.toList sortBy (_.getName.size) foreach (extractFileFromZip(WebStartTempDir, _, zipFile))
-
-  }
-
-  private def deleteDir(rootFile: java.io.File) {
-    Option(rootFile.listFiles) foreach ( _ foreach (deleteDir(_)) )
-    rootFile.delete()
-  }
-
-  private def createDirectory(path: String) {
-
-    val destFile = new java.io.File(path)
-
-    if (destFile.exists)
-      deleteDir(destFile)
-
-    destFile.mkdir
-
-  }
-
-  private def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
-
-    val target = new java.io.File(dest + entry.getName)
-
-    if (entry.isDirectory)
-      target.mkdir
-    else {
-
-      val inStream = zipFile.getInputStream(entry)
-      val outStream = new java.io.FileOutputStream(target)
-
-      while (inStream.available > 0)
-        outStream.write(inStream.read())
-
-      outStream.close()
-      inStream.close()
-
-    }
-
-  }
-
-  /* Disables security for the rest of the program's execution (specifically added for GoGo with WebStart)
-   * You might then think that I could put this in the GoGo extension code, but, at that point in the
-   * code, we don't have permissions to be changing the security manager, so... something needs to be done
-   * outside of the extension's code.
-   *
-   * I originally only included this around the calls to classManager.runOnce() in this.importExtension(),
-   * (since it was originally only for GoGoWindowsHandler), but it turns out that permissions are also necessary
-   * when GoGo goes to load the serial libraries.  I see no other obvious way to get permissions to that
-   * context than to simply turn the security manager off altogether.
-   *
-   * Possible Alternatives:
-   * a) .policy file -> System.setProperty("java.security.policy", policyFilePath) -> Policy.getPolicy.refresh
-   *    --Tried; fidgetty, hard to debug, didn't seem to be getting applied to the extension's context properly
-   * b) Manually setting security policies through ProtectionDomain
-   *    --Tried; settings did not persist into the extension's context.  Might work better if the constructor
-   *      that involves a ClassLoader were used, but... might actually be bad to persist those policy changes
-   *      beyond the call to runOnce()
-   *
-   * Things that _Won't_ Work:
-   * a) Any changes inside the _extension's_ code.  The WebStart JNLP's <all-permissions/> tag only affects the
-   *    main code that corresponds to the JNLP's `resources` -> `jar` (with `main="true"`).  Other code has to
-   *    get its own permissions set (somehow).  See bugs.sun.com/bugdatabase/view_bug.do?bug_id=4809366 (relevant
-   *    information is towards the bottom)
-   * b) Simply signing the individual extension .jar files
-   * c) Other rain dances/security dances
-   *
-   * If you so choose to do this without disabling the security manager, you'll want to run much of
-   * JavaLibraryPath through this function (and maybe make it available through ExtensionManager so
-   * extensions can use it, too):
-   *
-   * private def doWithPrivs[T](block: => T): T = {
-   *   AccessController.doPrivileged(new PrivilegedAction[T]() {
-   *     def run : T = {
-   *       block
-   *     }
-   *   })
-   * }
-   *
-   * --JAB
-   *
-   */
-  private def disableSecurityManager() {
-    System.setSecurityManager(null)
-  }
-
   private class JarContainer(val extensionName: String, val jarName: String, var jarClassLoader: URLClassLoader, val modified: Long) {
     var prefix: String = null
     var primManager: ExtensionPrimitiveManager = null
@@ -845,7 +685,12 @@ object ExtensionManager {
   // so for now, at least we make this a separate method so the
   // SuppressWarnings annotation is narrowly targeted. - ST 12/7/09
   @SuppressWarnings(Array("deprecation"))
-  private def toURL(file: java.io.File): java.net.URL = {
+  private def toURL(file: java.io.File): URL = {
     file.toURI.toURL
   }
+
+  private def file2LocalURLStr(file: java.io.File): String = {
+    toURL(file).toString.replaceAll("%20", " ")
+  }
+
 }

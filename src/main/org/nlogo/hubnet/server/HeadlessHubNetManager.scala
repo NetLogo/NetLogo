@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.server
 
@@ -11,7 +11,7 @@ import java.util.concurrent.{Executors, ExecutorService}
 
 // TODO: we really need to do something about the printlns in this class.
 // but what?
-class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetManager(workspace){
+class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, desiredPortNumber: Option[Int] = None) extends HubNetManager(workspace){
   // since the server is headless, the clients cant be, or no one would have a view.
   // so, set this to true by default. JC 12/28/10
   HubNetUtils.viewMirroring = true
@@ -58,7 +58,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala) extends HubNetMan
     // for now, I've decided to just fall back on the user name. JC - 12/18/10
     var serverName: String = System.getProperty("org.nlogo.hubnet.server.name")
     if(serverName == null || serverName.trim == "") serverName = System.getProperty("user.name", "")
-    connectionManager.startup(serverName)
+    connectionManager.startup(serverName, desiredPortNumber)
     // println("started HubNet server on port " + connectionManager.port)
   }
 

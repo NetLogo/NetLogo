@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.generator
 
@@ -19,7 +19,7 @@ trait GeneratedInstruction extends Instruction {
     for {
       elem <- ex.getStackTrace
       if elem.getClassName.containsSlice("_asm_")
-      val id = elem.getLineNumber // in bytecode LineNumbers delineate instruction boundaries
+      id = elem.getLineNumber // in bytecode LineNumbers delineate instruction boundaries
       if id > 0
       field <- safelyGetField(id)
     } return field.get(this).asInstanceOf[Instruction]

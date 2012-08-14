@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim
 
@@ -15,8 +15,8 @@ class _commandtask(proc: Procedure) extends Reporter {
 
   override def report(c: Context): AnyRef =
     CommandTask(procedure = proc,
-                  formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
-                  lets = c.letBindings,
-                  locals = c.activation.args)
+                formals = proc.taskFormals.reverse.dropWhile(_ == null).reverse.toArray,
+                lets = c.allLets,
+                locals = c.activation.args)
 
 }

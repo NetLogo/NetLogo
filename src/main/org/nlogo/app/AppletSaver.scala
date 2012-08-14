@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
 
@@ -188,7 +188,7 @@ class AppletSaver(proceduresToHtml: ProceduresToHtmlInterface, buf: StringBuilde
     line("Java must be enabled in your browser settings.")
     line("Mac users must have Mac OS X 10.4 or higher.")
     line("Windows and Linux users may obtain the latest Java from")
-    line("<a href=\"http://java.sun.com/getjava/download.html\">Sun's Java site</a>.</p>")
+    line("<a href=\"http://www.java.com/\">Oracle's Java site</a>.</p>")
     line()
     line("<p><hr>")
     line()

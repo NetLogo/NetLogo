@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.log
 
@@ -10,6 +10,8 @@ import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager 
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
+import collection.JavaConverters.enumerationAsScalaIteratorConverter
+import webstart.WebStartAppender
 
 object Logger {
 
@@ -23,6 +25,7 @@ object Logger {
   val Speed = JLogger.getLogger(name + ".SPEED")
   val Turtles = JLogger.getLogger(name + ".TURTLES")
   val Links = JLogger.getLogger(name + ".LINKS")
+  val CustomMessages = JLogger.getLogger(name + ".CUSTOM_MESSAGES")
 
   val widgetMsg = LogMessage.createWidgetMessage()
   val speedMsg = LogMessage.createSpeedMessage()
@@ -36,6 +39,7 @@ object Logger {
   val commandMsg = LogMessage.createCommandMessage()
   val codeTabMsg = LogMessage.createCodeTabMessage()
   val globalMsg = LogMessage.createGlobalMessage("globals")
+  val customMsg = LogMessage.createCustomMessage()
 
   def logButtonStopped(name: String, onceButton: Boolean, stopping: Boolean) {
     if (Buttons.isInfoEnabled) {
@@ -79,6 +83,10 @@ object Logger {
     else
       Globals.debug(globalMsg)
   }
+  def logCustomMessage(msg: String, nameValuePairs: (String, String)*) {
+    customMsg.updateCustomMessage(msg, nameValuePairs)
+    CustomMessages.info(customMsg)
+  }
 
   ///
 
@@ -95,6 +103,8 @@ object Logger {
 class Logger(studentName: String) extends LoggingListener {
 
   var logDirectory = System.getProperty("java.io.tmpdir")
+  
+  implicit def javaEnum2Iterator[T](e: JEnumeration[T]) = Option(e) map (_.asScala) getOrElse (Iterator())
 
   def configure(reader: java.io.Reader) {
     val configurator = new DOMConfigurator
@@ -102,46 +112,53 @@ class Logger(studentName: String) extends LoggingListener {
   }
 
   def changeLogDirectory(path: String) {
-    val directory = new java.io.File(path)
+    import java.io.File
+    val directory = new File(path)
     if (!directory.isAbsolute) {
-      val newPath = System.getProperty("user.home") + java.io.File.separatorChar + "dummy.txt"
+      val newPath = System.getProperty("user.home") + File.separatorChar + "dummy.txt"
       val urlForm = new java.net.URL(
-        org.nlogo.util.JUtils.toURL(new java.io.File(newPath)),
+        org.nlogo.util.JUtils.toURL(new File(newPath)),
         path)
-      logDirectory = new java.io.File(urlForm.getFile).getAbsolutePath
+      logDirectory = new File(urlForm.getFile).getAbsolutePath
     }
     else if (directory.isDirectory) {
       logDirectory = path
     }
   }
 
-  var filenames: java.util.List[String] = null // for TestLogger
+  def addAppender(appender: Appender) {
+    JLogger.getRootLogger.addAppender(appender)
+  }
+
+  var filenames: JList[String] = null // for TestLogger
 
   def modelOpened(name: String) {
     filenames = new java.util.ArrayList[String]
     filenames.addAll(newFiles(JLogger.getRootLogger.getAllAppenders, name))
     val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
-    while (loggers.hasMoreElements) {
-      val l = loggers.nextElement().asInstanceOf[JLogger]
-      filenames.addAll(newFiles(l.getAllAppenders, name))
-    }
+    loggers foreach { case l: JLogger => filenames.addAll(newFiles(l.getAllAppenders, name)) }
   }
 
   def newFiles(e: JEnumeration[_], name: String): JList[String] = {
     val filenames = new ArrayList[String]
-    while (e.hasMoreElements)
-      for(appender @ (a: FileAppender) <- Some(e.nextElement())) {
-        val filename = logFileName(appender.getName)
-        filenames.add(filename)
-        appender.setFile(filename)
-        for(xappender @ (x: XMLFileAppender) <- Some(appender))
-          setupXMLFileAppender(name, xappender)
-        appender.activateOptions()
-      }
+    e foreach {
+      case xappender: XMLAppender =>
+        setupXMLAppender(name, xappender)
+        xappender match {
+          case appender: FileAppender =>
+            val filename = logFileName(appender.getName)
+            filenames.add(filename)
+            appender.setFile(filename)
+            appender.activateOptions()
+          case wsAppender: WebStartAppender =>
+            wsAppender.initialize()
+          case _                      => // Otherwise, ignore
+        }
+    }
     filenames
   }
 
-  private def setupXMLFileAppender(name: String, xappender: XMLFileAppender) {
+  private def setupXMLAppender(name: String, xappender: XMLAppender) {
     xappender.setStudentName(studentName)
     xappender.setUsername(System.getProperty("user.name"))
     xappender.setIPAddress(getIPAddress)
@@ -150,20 +167,16 @@ class Logger(studentName: String) extends LoggingListener {
   }
 
   def close() {
-    closeFiles(JLogger.getRootLogger.getAllAppenders)
+    closeAppenders(JLogger.getRootLogger.getAllAppenders)  // Is this code redundant...?  What's going on?
     val loggers = JLogger.getRootLogger.getLoggerRepository.getCurrentLoggers
-    while (loggers.hasMoreElements) {
-      val l = loggers.nextElement().asInstanceOf[JLogger]
-      closeFiles(l.getAllAppenders)
-    }
+    loggers foreach { case l: JLogger => closeAppenders(l.getAllAppenders) }
   }
 
-  private def closeFiles(e: JEnumeration[_]) {
-    while (e.hasMoreElements)
-      e.nextElement().asInstanceOf[Appender].close()
+  private def closeAppenders(appenders: TraversableOnce[_]) {
+    appenders foreach { case a: Appender => a.close() }
   }
 
-  def getIPAddress() =
+  def getIPAddress =
     try java.net.InetAddress.getLocalHost.getHostAddress
     catch {
       case _: java.net.UnknownHostException => "unknown"
@@ -176,6 +189,13 @@ class Logger(studentName: String) extends LoggingListener {
     logDirectory +
       System.getProperty("file.separator") + "logfile_" + appender + "_" +
       dateFormat.format(new java.util.Date) + ".xml"
+
+  def requestRemoteLogDeletion() {
+    JLogger.getRootLogger.getAllAppenders foreach {
+      case wsa: WebStartAppender => wsa.deleteLog()
+      case _                     => // Ignore appenders that aren't remote
+    }
+  }
 
   def deleteSessionFiles() {
     Files.deleteSessionFiles(logDirectory)

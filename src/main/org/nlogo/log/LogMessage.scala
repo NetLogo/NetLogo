@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.log
 
@@ -76,6 +76,13 @@ object LogMessage {
                          new LogMessage("breed"))
     msg
   }
+  def createCustomMessage(): LogMessage = {
+    val msg = new LogMessage("special-event")
+    msg.attributes = Array(Array("type", "custom message"))
+    msg.elements = Array(new LogMessage("message"),
+                         new LogMessage("globals"))
+    msg
+  }
 }
 
 class LogMessage private (val tag: String) {
@@ -133,5 +140,17 @@ class LogMessage private (val tag: String) {
   def updateSpeedMessage(value: String) {
     elements(0).data = value
   }
-
+  def updateCustomMessage(msg: String, nameValuePairs: Seq[(String, String)]) {
+    def generateGlobalMsgs(nvPairs: Seq[(String, String)]): Array[LogMessage] = {
+      nvPairs map {
+        case (name, value) =>
+          val msg = new LogMessage("global")
+          msg.attributes = Array(Array("name", name), Array("value", value))
+          msg
+      } toArray
+    }
+    elements(0).data = msg
+    val globmsgs = generateGlobalMsgs(nameValuePairs)
+    elements(1).elements = globmsgs
+  }
 }

@@ -35,6 +35,7 @@ C __inspect-with-radius gui._inspectwithradius
 C __let _let
 C __life etc._life
 C __linkcode etc._linkcode
+C __log-event etc._logevent
 C __magic-open etc._magicopen
 C __make-preview etc._makepreview
 C __mkdir etc._mkdir
@@ -494,7 +495,7 @@ R substring etc._substring
 R subtract-headings etc._subtractheadings
 R sum _sum
 R tan etc._tan
-R task etc._task
+R task _task
 R ticks etc._ticks
 R timer etc._timer
 R towards etc._towards

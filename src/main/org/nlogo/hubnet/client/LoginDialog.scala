@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.client
 
@@ -169,6 +169,10 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def go(callback:LoginCallback) {
     this.loginCallback = callback
     setVisible (true)
+  }
+
+  def initializeCallback(callback: LoginCallback) {
+    this.loginCallback = callback
   }
 
   /**

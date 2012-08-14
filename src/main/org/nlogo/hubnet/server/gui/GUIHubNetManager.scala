@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.server.gui
 
@@ -18,7 +18,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        editorFactory: EditorFactory,
                        ifactory: InterfaceFactory,
-                       menuFactory: MenuBarFactory) extends HubNetManager(workspace) with ViewInterface {
+                       menuFactory: MenuBarFactory,
+                       desiredPortNumber: Option[Int] = None) extends HubNetManager(workspace) with ViewInterface {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -112,7 +113,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     }
     if (serverName == null || serverName.trim == "")
       serverName = new StartupDialog(workspace.getFrame) { setVisible(true) }.getName()
-    connectionManager.startup(serverName)
+    connectionManager.startup(serverName, desiredPortNumber)
     showControlCenter()
   }
 

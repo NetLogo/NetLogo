@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.client
 
@@ -44,9 +44,11 @@ object ClientApp {
         }
         else if (args(i).equalsIgnoreCase("--id")) userid = args(i + 1)
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
-        else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
+        else if (args(i).equalsIgnoreCase("--port")) port = args(i + 1).toInt
       }
+
       app.startup(editorFactory, userid, hostip, port, false, isRoboClient, waitTime, workspace)
+
     } catch {
       case ex: RuntimeException => org.nlogo.util.Exceptions.handle(ex)
     }
@@ -59,6 +61,16 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private var clientPanel: ClientPanel = _
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
+
+  private lazy val isWebStart = System.getProperty("javawebstart.version", null) != null
+
+  // This brings us a step closer to being able to be rid of the `LoginCallback` class;
+  // can't do away with it quite yet, because `ClientApplet` is still in Java (and, thus,
+  // cannot make good use of Scala's first-class functions) --JAB (6/15/2012)
+  private lazy val Callback = (user: String, host: String, port: Int) => login(user, host, port)
+  implicit def func3ToLoginCallback(func: (String, String, Int) => Unit) = new LoginCallback {
+    def apply(user: String, host: String, port: Int) { func(user, host, port) }
+  }
 
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -100,12 +112,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         // ev 7/30/08
         localClientIndex += 1
         login("Local " + localClientIndex, hostip, port)
+
       }
       else {
         addWindowListener(() => handleExit())
         Positioning.center(loginDialog, null)
         loginDialog.addWindowListener(() => handleQuit())
-        doLogin()
+        if (isWebStart) { loginDialog.initializeCallback(Callback); login(userid, hostip, port) }
+        else              doLogin()
       }
     })
   }
@@ -113,11 +127,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private def doLogin() {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
-    if (!isLocal){
-      loginDialog.go(new LoginCallback {
-        def apply(user: String, host: String, port: Int) { login(user, host, port) }
-      })
-    }
+    if (!isLocal) loginDialog.go(Callback)
   }
 
   def completeLogin() { setVisible(true) }
@@ -130,7 +140,6 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     exs match {
       case Some(ex) =>
         handleLoginFailure(ex)
-        clientPanel.disconnect(ex.toString)
       case None =>
         loginDialog.setVisible(false)
         clientPanel.requestFocus()
@@ -160,6 +169,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     EventQueue.mustBeEventDispatchThread()
     OptionDialog.show(ClientApp.this, "Login Failed",
       errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    clientPanel.disconnect(errorMessage.toString)
     loginDialog.setVisible(true)
   }
 

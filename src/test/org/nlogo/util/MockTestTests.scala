@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.util
 
@@ -55,7 +55,7 @@ class MockSuiteTests extends MockSuite{
     val errorMessage = """|java.lang.AssertionError: unexpected invocation: x.a("not an int")
                           |expectations:
                           |  expected once, never invoked: x.a(<int>); returns a default value
-                          |what happened before this: nothing!""".stripMargin
+                          |what happened before this: nothing!""".replaceAll("\r\n", "\n").stripMargin
     assert(e.toString === errorMessage)
   }
 
@@ -72,7 +72,7 @@ class MockSuiteTests extends MockSuite{
     val errorMessage = """|java.lang.AssertionError: unexpected invocation: x.a("not an char")
                           |expectations:
                           |  expected once, never invoked: x.a(<char>); returns a default value
-                          |what happened before this: nothing!""".stripMargin
+                          |what happened before this: nothing!""".replaceAll("\r\n", "\n").stripMargin
     assert(e.toString === errorMessage)
   }
 

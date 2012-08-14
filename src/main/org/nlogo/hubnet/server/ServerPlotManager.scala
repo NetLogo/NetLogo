@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.hubnet.server
 
@@ -25,6 +25,9 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   private def broadcastToClients(a: Any) { broadcastToClients(a, currentPlot.name) }
   private def broadcastToClients(a: Any, plotName: String) {
     if (broadcastEnabled && isBroadcast(plotName)) connectionManager.broadcastPlotControl(a,plotName)
+  }
+  private def broadcastWidgetToClients(a: Any, widgetName: String) {
+    if (broadcastEnabled && isBroadcast(widgetName)) connectionManager.broadcast(widgetName, a)
   }
 
   private def sendToClient(clientId: String, a: Any) {
@@ -67,7 +70,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   // a valid plot since we're not sending the message to a
   // particular plot.  This type of message is handled specially
   // like VIEW ev 9/9/08
-  def clearAll() { broadcastToClients('a', "ALL PLOTS") }
+  def clearAll() { broadcastWidgetToClients('a', "ALL PLOTS") }
 
   // Sends the java.lang.Character 'c', indicating a clear-plot
   def clear() {broadcastToClients('c')}

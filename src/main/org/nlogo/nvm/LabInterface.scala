@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.nvm
 import org.nlogo.api.WorldDimensions
@@ -26,7 +26,8 @@ object LabInterface {
                       tableWriter:Option[java.io.PrintWriter],
                       spreadsheetWriter:Option[java.io.PrintWriter],
                       dims:Option[WorldDimensions],
-                      threads:Int)
+                      threads:Int,
+                      suppressErrors:Boolean)
 }
 trait LabInterface {
   import LabInterface._

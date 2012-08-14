@@ -1,4 +1,4 @@
-// (C) 2012 Uri Wilensky. https://github.com/NetLogo/NetLogo
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
 
@@ -215,7 +215,7 @@ class TestParser extends FunSuite {
 TurtleSet_2D
   O> crt 1
   [turtle-set self] of turtle 0 = turtles => true
-"""
+""".replaceAll("\r\n", "\n")
     val tests = TestParser.parseString("test", code)
 
     val expectedCommandTest = LanguageTest("test", "TurtleSet_2D",

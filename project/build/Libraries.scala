@@ -39,7 +39,10 @@ trait Libraries extends DefaultProject {
   // with Quaqua 7.3.4" - ST 9/2/11
   val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
-    
+
+  // HTTP stuff for remote logging
+  val apache = "org.apache.httpcomponents" % "httpclient" % "4.2"
+
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
                              "lib" / "Mac OS X" / "libjogl_awt.jnilib",
@@ -88,8 +91,7 @@ trait Libraries extends DefaultProject {
   val jmock = "org.jmock" % "jmock" % "2.5.1" % "test"
   val jmockLegacy = "org.jmock" % "jmock-legacy" % "2.5.1" % "test"
   val jmockJUnit = "org.jmock" % "jmock-junit4" % "2.5.1" % "test"
-  val scalacheck = "org.scala-tools.testing" % "scalacheck_2.9.1" % "1.9" % "test" from
-    "http://ccl.northwestern.edu/devel/scalacheck_2.9.1-1.9.jar"
-  val scalatest = "org.scalatest" % "scalatest_2.9.0" % "1.7.1" % "test"
+  val scalacheck = "org.scalacheck" % "scalacheck_2.9.1" % "1.9" % "test"
+  val scalatest = "org.scalatest" %% "scalatest" % "1.8.RC1" % "test"
 
 }

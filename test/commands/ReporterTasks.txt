@@ -294,3 +294,15 @@ y-combinator
   # variant 2: use task syntax instead
   O> set glob1 y task [ifelse-value (?2 = 0) [1] [?2 * (runresult ?1 (?2 - 1))]]
   map [(runresult glob1 ?)] n-values 7 [?] => [1 1 2 6 24 120 720]
+
+reporter-task-body-may-have-different-agent-type
+  is-reporter-task? task size => true
+  is-reporter-task? task pcolor => true
+  is-reporter-task? task end1 => true
+
+reporter-task-body-gets-agent-type-check
+  O> __ignore task [size + link-length] => COMPILER ERROR You can't use link-length in a turtle context, because link-length is link-only.
+
+reporter-task-closes-over-let-inside-task-of-different-agent
+  O> __let z 9 crt 1 [ set glob1 task [ z ] ]
+  runresult glob1 => 9
