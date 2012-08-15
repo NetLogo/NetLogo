@@ -6,6 +6,7 @@ package org.nlogo.log
 // We did not investigate log4j vs. java.util.logging but just went along with Reuven's
 // suggestion. - ST 2/25/08
 
+import java.util.logging.LogManager
 import org.apache.log4j.{ Appender, FileAppender, Logger => JLogger, LogManager }
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version

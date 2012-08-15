@@ -4,6 +4,7 @@ import java.io.Writer
 import java.net.URL
 import message.DirectorMessage.{ToDirectorWrite, ToDirectorAbandon, ToDirectorFinalize}
 
+// A `Writer` subclass for writing log entries to remote locations
 class LogProxyWriter(mode: LogSendingMode, destinations: URL*) extends Writer {
   private val director = new LogDirector(mode, destinations: _*).start()
   override def write(cbuf: Array[Char], off: Int, len: Int) { director ! ToDirectorWrite(cbuf.subSequence(off, off + len).toString) }

@@ -7,6 +7,39 @@ import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
 import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 import collection.mutable.ListBuffer
 
+/*
+
+ This file constitutes a set of three actors that work together to manage a log and its periodic flushing
+
+ (This thing should be made to use Akka at some point....  Also, I don't feel that `LogDirector` should be
+  doing its own transmissions through `LoggingServerHttpHandler`, but I don't know what else _should_ be
+  responsible for doing them. --JAB (8/14/12))
+
+ LogDirector:
+ -Handles external messages regarding:
+ --Flushing the log buffer
+ --Appending to the log buffer
+ --Abruptly closing down the system
+ --Properly closing down the system
+ -Also handles internal messages to flush the buffer (coming from `LogFlushReminder`)
+ -Transmits flushed log messages to preconfigured URLs (which are passed in at the time of object creation)
+
+ LogBufferManager:
+ -Keeps the log buffer in proper state
+ -Handles messages from the Director pertaining to:
+ --Adding to the buffer
+ --Flushing all contents from the buffer
+ ---When flushing, coalesces continuous series of items into the longest string(s) possible
+ ----For example, if the length limit is '10':
+      * Buffer:    ["apple", "ant", "artichoke", "ab", "a", "abcd", "abc", "abcde"]
+      * Coalesced: [["apple", "ant"] (8), ["artichoke"] (9), ["ab", "a", "abcd", "abc"] (10), ["abcde"] (5)]
+
+ LogFlushReminder (Optional):
+ -Sends messages to `LogDirector` to tell it to empty itself.
+ -Is only activated if `LogDirector` is in "continuous mode".
+
+ */
+
 // An actor controller; receives logging data and figures out what to do with it
 class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
 
