@@ -155,8 +155,8 @@ class TestAllSyntaxes extends FunSuite {
                      |_mouseycor ,number,OTPL,null,10,0,0
                      |_moviestatus ,string,OTPL,null,10,0,0
                      |_mult number,number,number,OTPL,null,8,1,1
-                     |_myinlinks ,agentset,-T--,null,10,0,0
-                     |_mylinks ,agentset,-T--,null,10,0,0
+                     |_myinlinks ,link agentset,-T--,null,10,0,0
+                     |_mylinks ,link agentset,-T--,null,10,0,0
                      |_myoutlinks ,link agentset,-T--,null,10,0,0
                      |_myself ,agent,-TPL,null,10,0,0
                      |_nanotime ,number,OTPL,null,10,0,0

@@ -11,7 +11,7 @@ class _myinlinks(breedName: String) extends Reporter {
   def this() = this(null)
 
   override def syntax =
-    Syntax.reporterSyntax(Syntax.AgentsetType, "-T--")
+    Syntax.reporterSyntax(Syntax.LinksetType, "-T--")
 
   override def toString =
     super.toString + ":" + breedName
