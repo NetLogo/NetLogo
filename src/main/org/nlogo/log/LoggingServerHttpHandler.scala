@@ -1,7 +1,6 @@
 package org.nlogo.log
 
 import scala.collection.mutable.HashMap
-import org.nlogo.util.{ZipUtils, NetUtils}
 import java.net.URL
 
 
