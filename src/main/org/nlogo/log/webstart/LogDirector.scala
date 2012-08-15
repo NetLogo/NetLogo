@@ -222,3 +222,12 @@ private[webstart] object LoggingServerMessage {
   case object ToServerFinalize           { override def toString = "finalize" }
 }
 
+
+// An enumeration of modes that `LogDirector` can utilize
+sealed trait LogSendingMode
+
+object LogSendingMode {
+  case object Continuous extends LogSendingMode
+  case object AfterLoggingCompletes extends LogSendingMode
+}
+
