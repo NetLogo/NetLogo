@@ -290,6 +290,7 @@ class TestAllSyntaxes extends FunSuite {
                     |_clearallandresetticks ,O---,null,0,0,0 *
                     |_clearallplots ,OTPL,null,0,0,0
                     |_cleardrawing ,O---,null,0,0,0 *
+                    |_clearglobals ,O---,null,0,0,0 *
                     |_clearlinks ,O---,null,0,0,0 *
                     |_clearoutput ,OTPL,null,0,0,0
                     |_clearpatches ,O---,null,0,0,0 *
