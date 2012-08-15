@@ -2,7 +2,7 @@ package org.nlogo.log.webstart
 
 import java.io.Writer
 import java.net.URL
-import message.DirectorMessage.{ToDirectorWrite, ToDirectorAbandon, ToDirectorFinalize}
+import DirectorMessage.{ToDirectorWrite, ToDirectorAbandon, ToDirectorFinalize}
 
 // A `Writer` subclass for writing log entries to remote locations
 class RemoteLogWriter(mode: LogSendingMode, destinations: URL*) extends Writer {

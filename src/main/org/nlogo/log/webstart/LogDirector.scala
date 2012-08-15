@@ -2,7 +2,7 @@ package org.nlogo.log.webstart
 
 import java.net.URL
 import actors.{TIMEOUT, Actor}
-import message.{DirectorMessage, LogManagementMessage, LoggingServerMessage}
+import message.{LogManagementMessage, LoggingServerMessage}
 import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
 import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 import collection.mutable.ListBuffer
@@ -187,3 +187,15 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
   }
 
 }
+
+// The messaging protocol to be used by logging directors
+sealed trait DirectorMessage
+
+object DirectorMessage {
+  case class ToDirectorWrite(data: String) extends DirectorMessage
+  case object ToDirectorAbandon extends DirectorMessage
+  case object ToDirectorFinalize extends DirectorMessage
+  case object FromDirectorClosed extends DirectorMessage
+}
+
+
