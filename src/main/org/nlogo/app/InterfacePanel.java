@@ -6,7 +6,12 @@ import org.nlogo.api.I18N;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;
 import org.nlogo.api.VersionHistory;
+import org.nlogo.plot.Plot;
+import org.nlogo.plot.PlotManager;
+import org.nlogo.plot.PlotPen;
 import org.nlogo.window.EditorColorizer;
+import org.nlogo.window.PlotWidget;
+import org.nlogo.window.PlotWidgetExportType;
 import org.nlogo.window.Widget;
 
 import javax.swing.JMenuItem;

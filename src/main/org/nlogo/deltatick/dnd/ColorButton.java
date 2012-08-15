@@ -26,9 +26,14 @@ public class ColorButton extends JButton {
     public ColorButton (Frame myFrame, TraitBlock myParent) {
         this.setAction(pickColorAction);
         this.myParent = myParent;
-        setBorder(null);
-        setBorderPainted(false);
-        setMargin(new java.awt.Insets(2, 2, 2, 2));
+
+        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        setBorderPainted(true);
+        //setMargin(new java.awt.Insets(2, 2, 2, 2));
+        this.setMaximumSize(new Dimension(3, 4));
+        this.setMinimumSize(new Dimension(3, 4));
+        this.getPreferredSize();
+        this.setText("color");
         checkForColor = false;
 
     }
@@ -40,7 +45,7 @@ public class ColorButton extends JButton {
                     colorDialog.showDialog();
                     color = colorDialog.getSelectedColor();
                     myParent.addVarColor();
-                    myParent.addVarColorName();
+                    //myParent.addVarColorName();
                     checkForColor = true;
                     myParent.setButtonColor(color);
                     //changeButtonColor(color);

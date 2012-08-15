@@ -83,7 +83,7 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
     def procName(setup:Boolean, pen:Option[PlotPen] = None) = {
       "plot '" + plot.name + "' " + (pen.map("pen '" + _.name + "' ").getOrElse("")) +
-              (if(setup) "setup code" else "update code") 
+              (if(setup) "setup code" else "update code")
     }
 
     // compile the code in the plot

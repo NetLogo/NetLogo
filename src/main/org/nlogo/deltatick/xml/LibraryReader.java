@@ -7,7 +7,6 @@ import javax.xml.parsers.*;
 
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
-import org.nlogo.window.AbstractPlotWidget;
 import org.w3c.dom.*;
 
 /**
@@ -55,7 +54,7 @@ public class LibraryReader {
                     library.getElementsByTagName("library")
             );
 
-            // make the behavior blocks for each element -A. (Sept 13)
+
             NodeList behaviors = library.getElementsByTagName("behavior");
             for (int i = 0; i < behaviors.getLength(); i++) {
                 Node behavior = behaviors.item(i);
@@ -185,6 +184,7 @@ public class LibraryReader {
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
 
             }
+            /*
             else if (behaviorInfo.item(j).getNodeName() == "variation") {
                 block.setCode(
                         reIntroduceLtGt(
@@ -192,12 +192,17 @@ public class LibraryReader {
                 //System.out.println( "LR@" + behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent());
 
             }
-            else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
-                block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
+            */
+            else if (behaviorInfo.item(j).getNodeName() == "behaviorInput") {
+                block.addBehaviorInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
             else if (behaviorInfo.item(j).getNodeName() == "distanceInput") {
                 block.addDistanceInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
+                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
+            }
+            else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
+                block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
         }

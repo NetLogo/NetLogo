@@ -4,9 +4,11 @@ import org.nlogo.api.Shape;
 import org.nlogo.app.App;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
 import org.nlogo.deltatick.dialogs.VariationSelector;
+import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
 import org.nlogo.hotlink.dialogs.StackedShapeIcon;
 import org.nlogo.nvm.Workspace;
@@ -18,6 +20,8 @@ import org.nlogo.shape.editor.ImportDialog;
 import org.nlogo.window.Widget;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -26,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.*;
+import java.util.List;
 
 import org.nlogo.deltatick.dialogs.TraitSelector;
 
@@ -47,15 +52,17 @@ public strictfp class BreedBlock
     transient JButton breedShapeButton;
     transient PrettyInput number;
     transient PrettyInput plural;
+    HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
+    HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
+    List<String> myUsedAgentInputs = new ArrayList<String>();
 
-    //String pluralGiven;
-    //String singular;
     //ShapeSelector myShapeSelector;
     int id;
     transient String trait;
     JTextField traitLabel;
     transient String variation;
-    LinkedList<TraitBlock> myTraits = new LinkedList<TraitBlock>();
+    HashSet<String> myUsedTraits = new HashSet<String>();
+    //HashMap<String, BehaviorInput> myUsedBehaviorInputs = new HashMap<String, BehaviorInput>();
 
     // constructor for breedBlock without trait & variation
     public BreedBlock(Breed breed, String plural, Frame frame) {
@@ -70,8 +77,6 @@ public strictfp class BreedBlock
 
 
 
-        //this.singular() = singular;
-        //this.pluralGiven = plural;
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
@@ -84,6 +89,7 @@ public strictfp class BreedBlock
 
         //setPreferredSize( 250 , 99 );
         //setSize( 250 , 99 );
+
     }
 
     // second constructor for breedBlock with trait & variation
@@ -111,6 +117,41 @@ public strictfp class BreedBlock
         };
     }
 
+    public void addBlock(CodeBlock block) {
+        myBlocks.add(block);
+        this.add(block);
+        block.enableInputs();
+
+        block.showRemoveButton();
+        this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+        block.setMyParent(this);
+        block.doLayout();
+        block.validate();
+        block.repaint();
+        if (block instanceof TraitBlock) {
+            myUsedTraits.add(((TraitBlock) block).getTraitName());
+            ((TraitBlock) block).makeNumberActive();
+            ((TraitBlock) block).enableDropDown();
+            ((TraitBlock) block).colorButton.setEnabled(true);
+        }
+        if (block instanceof BehaviorBlock || block instanceof ConditionBlock) {
+            String tmp = ((BehaviorBlock) block).getBehaviorInputName();
+            addBehaviorInputToList(tmp);
+            String s = ((BehaviorBlock) block).getAgentInputName();
+            addAgentInputToList(s);
+        }
+
+        doLayout();
+        validate();
+        repaint();
+
+        this.getParent().doLayout();
+        this.getParent().validate();
+        this.getParent().repaint();
+    }
+
+
+
 
     //TODO: Figure out how breed declaration always shows up first in code
     public String declareBreed() {
@@ -120,7 +161,6 @@ public strictfp class BreedBlock
     //this is where breeds-own variables show up in NetLogo code -A. (aug 25)
     public String breedVars() {
         String code = "";
-
         if (breed.getOwnVars().size() > 0) {
             code += plural() + "-own [\n";
             for (OwnVar var : breed.getOwnVars()) {
@@ -128,16 +168,10 @@ public strictfp class BreedBlock
             }
             code += "\n";
         }
-        /*
-        for (TraitBlock tBlock : myTraits) {
-            code += tBlock.getTraitName();
-            System.out.println("here");
-        }
-            code += "]\n";
-            */
+
+
         return code;
     }
-
 
 
     // code to setup in NetLogo code window. This method is called in MBgInfo -A.
@@ -154,8 +188,54 @@ public strictfp class BreedBlock
                 }
             }
             code += "]\n";
+            code += setBreedShape();
+            int i;
+            for (CodeBlock block : myBlocks) {
+                if (block instanceof TraitBlock) {
+                    String activeVariation = ((TraitBlock) block).getActiveVariation();
+                    HashMap<String, Variation> tmpHashMap = ((TraitBlock) block).getVariationHashMap();
+                    if (breedVariationHashMap.isEmpty()) {
+                        breedVariationHashMap.putAll(tmpHashMap);
+                    }
+                    else {
+                        breedVariationHashMap.put(activeVariation, tmpHashMap.get(activeVariation));
+                    }
+                }
+            }
+            code += setupTrait();
         }
         return code;
+    }
+
+    public String setupTrait() {
+        String code = "";
+
+        for (String traitName : myUsedTraits) {
+            code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
+
+            int i = 0;
+            int startValue = 0;
+            int endValue = 0;
+
+            for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
+                String variationType = entry.getKey();
+                Variation variation = entry.getValue();
+
+                int k = variation.number;
+                endValue = startValue + k;
+
+                code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
+                        " " + startValue + " " + endValue + "\n";
+                code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
+                code += " set color " + variation.color + " ]] \n";
+
+                i++;
+                startValue = endValue;
+            }
+        }
+
+    return code;
+
     }
 
     // moves Update Code from XML file to procedures tab - A. (feb 14., 2012)
@@ -220,10 +300,9 @@ public strictfp class BreedBlock
         return null;
     }
 
-    // reads through each block in the linked list, myBlocks to read code -a.
+
     public String unPackAsCode() {
         String passBack = "";
-
 
         passBack += "ask " + plural() + " [\n";
         for (CodeBlock block : myBlocks) {
@@ -244,20 +323,14 @@ public strictfp class BreedBlock
         number = new PrettyInput(this);
         number.setText("100");
         label.add(number);
-        /* name of the breed take from plural -a. Getting plural from textfield (Nov 24)
-        name comes from getName in CodeBlock which takes the parameter passed to BreedBlock as name,
-        or from textfield Pretty Input.
-        I want the label to come from CodeBlock name or breedTypeSelector
 
-*/
         plural = new PrettyInput(this);
         plural.setText(getName());
         label.add(plural);
 
-        // add button to change shape -a.
-        label.add(new JLabel(" ("));
+        //label.add(new JLabel(" ("));
         label.add(makeBreedShapeButton());
-        label.add(new JLabel(") to..."));
+        //label.add(new JLabel(") to..."));
 
 
         label.setBackground(getBackground());
@@ -313,10 +386,9 @@ public strictfp class BreedBlock
     }
 
 
-    //Michelle's code for shapes for breeds thta have shape. I removed them because I've added variation to name of breed
-    //-A. (Nov 23)
+
     public String setBreedShape() {
-        if( breedShape != null ) {
+        if (breedShape != null) {
             return "set-default-shape " + plural() + " \"" + breedShape + "\"\n";
         }
         return "";
@@ -327,16 +399,13 @@ public strictfp class BreedBlock
         return breed;
     }
 
-    public void addTraittoBreed ( TraitBlock traitBlock ) {
+    // not used -A. (Aug 10, 2012)
+    public void addTraittoBreed(TraitBlock traitBlock) {
         traitBlock.showColorButton();
         traitBlock.doLayout();
         traitBlock.validate();
         traitBlock.repaint();
-
-        myTraits.add(traitBlock);
-
     }
-
 
 
     public void mouseEnter(MouseEvent evt) {
@@ -366,7 +435,7 @@ public strictfp class BreedBlock
     int beforeDragXLoc;
     int beforeDragYLoc;
 
-    // how the breed block being moved works
+
     public void mousePressed(java.awt.event.MouseEvent evt) {
         Point point = evt.getPoint();
         javax.swing.SwingUtilities.convertPointToScreen(point, this);
@@ -376,7 +445,7 @@ public strictfp class BreedBlock
         beforeDragYLoc = getLocation().y;
     }
 
-    // not sure what the difference is between beforeDragX and beforeDragXLoc -a.
+
     public void mouseDragged(java.awt.event.MouseEvent evt) {
         Point point = evt.getPoint();
         javax.swing.SwingUtilities.convertPointToScreen(point, this);
@@ -392,7 +461,7 @@ public strictfp class BreedBlock
         super.repaint();
     }
 
-    public void removeTraitBlock (TraitBlock traitBlock) {
+    public void removeTraitBlock(TraitBlock traitBlock) {
         remove(traitBlock);
     }
 }

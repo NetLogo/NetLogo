@@ -1,6 +1,11 @@
 package org.nlogo.deltatick.dnd;
 
+import org.nlogo.deltatick.TraitBlock;
+
 import java.awt.*;
+import java.util.HashMap;
+import org.nlogo.deltatick.TraitBlock;
+import org.nlogo.deltatick.xml.Variation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +26,8 @@ public class EnergyInput extends javax.swing.JTextField {
         setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-        this.setToolTipText("How much energy is lost or gained?");
+        this.setToolTipText("How fast?");
     }
+
 
 }

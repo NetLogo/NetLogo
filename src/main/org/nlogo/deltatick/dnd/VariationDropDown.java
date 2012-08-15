@@ -27,14 +27,13 @@ public class VariationDropDown extends JComboBox {
         // TODO figure out a way that this doesn't break when transferred
         this.setAction(updateTraitLabel);
 
-
-
     }
 
     private final javax.swing.Action updateTraitLabel =
             new javax.swing.AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                    myParent.newLabel();
+                    myParent.updateNumber();
                 }
 };
 

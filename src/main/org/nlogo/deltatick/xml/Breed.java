@@ -24,6 +24,7 @@ public class Breed {
     String updateCommands;
     int id;
     LinkedList<OwnVar> ownVars = new LinkedList<OwnVar>();
+    LinkedList<String> ownVarNames = new LinkedList<String>();
 
     public Breed(Node breedNode) {
         // breed attributes
@@ -73,7 +74,7 @@ public class Breed {
     }
 
     /*
-    public String breedVars() {
+    public String getMyTraitName() {
         String code = "";
         if( ownVars.size() > 0 ){
             code += plural + "-own [\n";
@@ -88,6 +89,13 @@ public class Breed {
 
     public LinkedList<OwnVar> getOwnVars() {
         return ownVars;
+    }
+
+    public LinkedList<String> getOwnVarsName() {
+        for (OwnVar ownVar : ownVars) {
+            ownVarNames.add(ownVar.name);
+        }
+        return ownVarNames;
     }
 
     /*

@@ -31,7 +31,7 @@ import java.awt.Component;
  * Time: 2:26 PM
  * To change this template use File | Settings | File Templates.
  */
-
+ // We don't need this class if learners are selecting a pre-determined list of traits
 
 public class TraitSelector
         extends JDialog

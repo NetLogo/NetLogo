@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 
 import org.nlogo.deltatick.dnd.AgentInput;
+import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.dnd.EnergyInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
 
@@ -38,6 +39,7 @@ public abstract class CodeBlock
     // the following are linked so that they're always in order
     Map<String, JTextField> inputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, JTextField> behaviorInputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
@@ -171,6 +173,12 @@ public abstract class CodeBlock
         }
     }
 
+    // This is blank because it's mainly needed for TraitBlock, and none of the other blocks. BreedBlock has a separate setup
+    // setup functions of breedblock and traitblock will override this. (July 31, 2012)
+    public String setup() {
+        return " ";
+    }
+
     public void highlight() {
         this.setBackground(this.getBackground().brighter());
     }
@@ -278,6 +286,15 @@ public abstract class CodeBlock
     }
 
 
+    public void addBehaviorInput(String inputName, String defaultValue) {
+        BehaviorInput behaviorInput = new BehaviorInput(this);
+        behaviorInput.setName(inputName);
+        behaviorInput.setText(defaultValue);
+
+        behaviorInputs.put(inputName, behaviorInput);
+        label.add(behaviorInput);
+    }
+
     public void addAgentInput(String inputName, String defaultValue) {
         AgentInput agentInput = new AgentInput(this);
         agentInput.setName(inputName);
@@ -287,12 +304,21 @@ public abstract class CodeBlock
         label.add(agentInput);
     }
 
+    public Map<String, JTextField> getBehaviorInputs() {
+        return behaviorInputs;
+    }
+
+    public Map<String, JTextField> getAgentInputs() {
+        return agentInputs;
+    }
+
+
     public void addDistanceInput(String inputName, String defaultValue) {
         DistanceInput distanceInput = new DistanceInput(this);
         distanceInput.setName(inputName);
         distanceInput.setText(defaultValue);
 
-        agentInputs.put(inputName, distanceInput);
+        //behaviorInputs.put(inputName, distanceInput);
         label.add(distanceInput);
     }
 
@@ -319,26 +345,13 @@ public abstract class CodeBlock
         myBlocks.add(block);
         this.add(block);
         block.enableInputs();
+
         block.showRemoveButton();
         this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
         block.setMyParent(this);
         block.doLayout();
         block.validate();
         block.repaint();
-
-        /*
-        if (block instanceof TraitBlock) {
-            ((TraitBlock) block).numberAgents();
-        }
-        */
-
-        //block.validate();
-        // pc
-        //block.revalidate();
-        //validate();
-        // pc
-        //revalidate();
-        //repaint();
 
         doLayout();
         validate();
@@ -352,7 +365,25 @@ public abstract class CodeBlock
 
     public void removeBlock(CodeBlock block) {
         myBlocks.remove(block);
+    }
 
+    public void addBehaviorInputToList(String behaviorInputName) {
+        if (myParent != null) {
+            myParent.addBehaviorInputToList(behaviorInputName);
+        }
+        else {
+            ((BreedBlock) this).myUsedBehaviorInputs.add(behaviorInputName);
+        }
+    }
+
+    public void addAgentInputToList(String agentInputName) {
+        if (myParent != null) {
+            myParent.addAgentInputToList(agentInputName);
+        }
+        else {
+            ((BreedBlock) this).myUsedAgentInputs.add(agentInputName);
+
+        }
     }
 
 
@@ -444,10 +475,23 @@ public abstract class CodeBlock
         for (JTextField input : inputs.values()) {
             input.setEditable(false);
         }
+        for (JTextField input : behaviorInputs.values()) {
+            input.setEditable(false);
+        }
+        for (JTextField input : energyInputs.values()) {
+            input.setEditable(false);
+        }
+
     }
 
     public void enableInputs() {
         for (JTextField input : inputs.values()) {
+            input.setEditable(true);
+        }
+        for (JTextField input : behaviorInputs.values()) {
+            input.setEditable(true);
+        }
+        for (JTextField input : energyInputs.values()) {
             input.setEditable(true);
         }
     }
@@ -466,11 +510,11 @@ public abstract class CodeBlock
 
         if (parent instanceof BreedBlock) {
             checkParent = true;
-            System.out.println(getParent());
+
             if (this instanceof TraitBlock) {
 
-                ((BuildPanel) pParent).removeTrait((TraitBlock) this);
-                ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);
+                ((BuildPanel) pParent).removeTrait((TraitBlock) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
+                ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);   // removes from BreedBlock -A. (Aug 8, 2012)
 
             }
         }
@@ -496,7 +540,7 @@ public abstract class CodeBlock
         }
 
         if (parent instanceof BuildPanel) {
-            //System.out.println("parent " + getParent() + " this " + this);
+
             if (this instanceof BreedBlock) {
 
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);

@@ -111,11 +111,12 @@ public class ModelBackgroundInfo {
             //code += breedBlock.setBreedShape();
             code += breedBlock.setup();
         }
-
+         /*
         for (TraitBlock traitBlock : usedTraits) {
 
             code += traitBlock.setup();
         }
+        */
         for (Global global : globals) {
             code += global.setup();
         }
@@ -126,7 +127,7 @@ public class ModelBackgroundInfo {
         //insert setup code for patches here
         code += "  reset-ticks\n";
         if (myPlots.size() > 0) {
-            code += "  do-plotting\n";
+            //code += "  do-plotting\n";
         }
         code += "end\n";
 
@@ -176,7 +177,6 @@ public class ModelBackgroundInfo {
 
     //get entire ArrayList -A. (oct 17)
     public ArrayList<Breed> getBreeds() {
-        //System.out.println(breeds);
         return breeds;
     }
 
@@ -193,6 +193,34 @@ public class ModelBackgroundInfo {
 
     public ArrayList<Envt> getEnvts() {
         return envts;
+    }
+
+    public String[] getTraitTypes() {
+        String[] traitTypes = new String[traits.size()];
+        int i = 0;
+        for (Trait trait : traits) {
+            traitTypes[i] = trait.getNameTrait();
+            i++;
+        }
+        return traitTypes;
+    }
+
+    public ArrayList<Trait> getTraits() {
+        return traits;
+    }
+
+
+
+    public String[] getVariationTypes(String traitName) {
+        String [] variations = null;
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equals(traitName)) {
+                variations = new String[trait.getVariationsList().size()];
+                trait.getVariationsList().toArray(variations);
+            }
+        }
+
+        return variations;
     }
 
     class Global {

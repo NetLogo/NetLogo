@@ -166,9 +166,7 @@ public strictfp class EnvtBlock
 
     public String setup() {
         String code = " ";
-        if (envt.needsSetUpBlock()) {
-            code += "ask patches [ " + envt.getSetupCommands() + " \n";
-        }
+        /*
         if (envt.needsSetUpBlock()) {
             for (OwnVar var : envt.getOwnVars()) {
                 if (var.setupReporter != null) {
@@ -177,6 +175,18 @@ public strictfp class EnvtBlock
             }
             code += "]\n";
         }
+        */
+        if (envt.needsSetUpBlock()) {
+            //code += "ask patches [ \n";
+            for (OwnVar var : envt.getOwnVars()) {
+                if (var.setupReporter != null) {
+                    code += "set " + var.name + " " + var.setupReporter + " \n";
+                }
+            }
+            code += envt.getSetupCommands() + " \n";
+            //code += "]\n";
+        }
+
         return code;
     }
 
@@ -184,29 +194,36 @@ public strictfp class EnvtBlock
     // if pcolor = green, ask patches [ set global water ]
     public String update() {
         String code = "";
+        /*
         if (envt.needsUpdateBlock()) {
             code += "ask patches [\n";
             if (envt.getUpdateCommands() != null) {
                 code += envt.getUpdateCommands();
             }
+            /*
             for (OwnVar var : envt.getOwnVars()) {
                 if (var.updateReporter != null) {
                     code += "set " + var.name + " " + var.updateReporter + "\n";
                 }
             }
+
             code += "]\n";
+
         }
+        */
         return code;
     }
 
     public String unPackAsCode() {
         String passBack = "";
 
-        passBack += "ask patches [\n";
+        //passBack += "ask patches [\n";
+
         for (CodeBlock block : myBlocks) {
             passBack += block.unPackAsCode();
         }
-        passBack += "]\n";
+        //passBack += "]\n";
+        passBack += "\n";
 
         return passBack;
     }

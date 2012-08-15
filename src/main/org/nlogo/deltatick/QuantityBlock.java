@@ -23,6 +23,8 @@ public strictfp class QuantityBlock
     String trait = " ";
     String population;
     String variable;
+    String penSetUpCode;
+    String penUpdateCode;
 
     public QuantityBlock(String name, boolean histo, String bars, String trait) {
         super(name, ColorSchemer.getColor(2));
@@ -33,7 +35,7 @@ public strictfp class QuantityBlock
                 DataFlavor.stringFlavor,
                 quantityBlockFlavor
         };
-        label.add(makeBreedShapeButton());
+        //label.add(makeBreedShapeButton());
         // - quantity block need not have shape change -A. (sept 30)
 
 
@@ -80,8 +82,18 @@ public strictfp class QuantityBlock
         String passBack = "";
         Container parent = getParent();
         if (parent instanceof HistogramBlock) {
+            passBack += "  set-current-plot \"" + parent.getName() + "\"\n";
             passBack += "set-plot-pen-mode 1 \n";
-
+            /*
+            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                    population = entry.getValue().getText().toString();
+                }
+                if (entry.getKey().equalsIgnoreCase("trait")) {
+                    variable = entry.getValue().getText().toString();
+                }
+            }
+            */
             for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase("breed-type")) {
                     population = entry.getValue().getText().toString();
@@ -108,6 +120,8 @@ public strictfp class QuantityBlock
         }
         passBack += "\n";
     }
+        penUpdateCode = passBack;
+
         return passBack;
     }
 
@@ -116,6 +130,7 @@ public strictfp class QuantityBlock
         return inputs;
     }
 
+    /*
     public JPanel makeBreedShapeButton() {
         return new BreedShapeButton();
     }
@@ -129,6 +144,7 @@ public strictfp class QuantityBlock
             //this.setComponentZOrder(this.getParent(),0);
             this.repaint();
         }
+        */
 
         public void mouseReleased(java.awt.event.MouseEvent event) {
         }
@@ -141,6 +157,8 @@ public strictfp class QuantityBlock
 
         public void mousePressed(java.awt.event.MouseEvent event) {
         }
+
+        /*
 
         public void mouseClicked(java.awt.event.MouseEvent event) {
             penColor = JColorChooser.showDialog(null, "Pick a pen color...", java.awt.Color.BLACK);
@@ -169,4 +187,9 @@ public strictfp class QuantityBlock
         //System.out.println(penColor);
         return penColor;
     }
+    */
+    public String getPenUpdateCode() {
+        return penUpdateCode;
+    }
+
 }

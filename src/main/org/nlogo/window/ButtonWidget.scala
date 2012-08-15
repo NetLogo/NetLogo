@@ -478,7 +478,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   // Added by Aditi so the go button automatically added to the interface through DeltaTick runs forever (May 4, 2012)
   def setForeverOn() {
-    _forever = true;
+    //_forever = true;
     //foreverOn = true;
+    forever_=(true)
+  }
+
+  def setForeverOff() {
+    //_forever = true;
+    //foreverOn = true;
+    forever_=(false)
   }
 }

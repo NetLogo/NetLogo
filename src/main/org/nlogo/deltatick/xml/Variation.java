@@ -10,26 +10,19 @@ package org.nlogo.deltatick.xml;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import java.io.Serializable;
 
 
-public class Variation {
-    String name;
+public class Variation implements Serializable {
+    public String name;
+    public String value;
+    public int number;
+    public String color;
 
-    public Variation(Node ownNode) {
-        name = ownNode.getAttributes().getNamedItem("name").getTextContent();
-
-        /*
-        // do we need this for variations? (Feb 20, 2012)
-        NodeList info = ownNode.getChildNodes();
-        for( int i = 0 ; i < info.getLength() ; i++ ) {
-            if( info.item(i).getNodeName() == "setupReporter" ) {
-                setupReporter = info.item(i).getTextContent();
-            }
-
-            if( info.item(i).getNodeName() == "updateReporter" ) {
-                updateReporter = info.item(i).getTextContent();
-            }
-            */
-
+    public Variation(String name, String value, int number) {
+        this.name = name;
+        this.value = value;
+        this.number = number;
+        color = "gray";
     }
 }

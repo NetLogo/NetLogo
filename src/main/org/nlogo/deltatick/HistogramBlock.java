@@ -110,20 +110,22 @@ public class HistogramBlock
     }
 
     public String unPackAsCode() {
-        String passBack = "";
+        String passBack = " ";
+        //System.out.println("HistoBlock ");
 
         //passBack += "  set-current-plot \"" + getName() + "\"\n";
         //passBack += "  histogram [ \"" + variable + " ] of " + population + "\n";
-
+        /*
         for (QuantityBlock quantBlock : getMyBlocks()) {
             quantBlock.unPackAsCommand();
 
-            //for (JTextField input : quantBlock.inputs.values()) {
-              //  passBack += input.getText() + " ";
-            //}
-           // passBack += " ]\"\n";
-            //passBack += "  " + quantBlock.unPackAsCommand();
+            for (JTextField input : quantBlock.inputs.values()) {
+                passBack += input.getText() + " ";
+            }
+            passBack += " ]\"\n";
+            passBack += "  " + quantBlock.unPackAsCommand();
         }
+        */
 
 
         return passBack;

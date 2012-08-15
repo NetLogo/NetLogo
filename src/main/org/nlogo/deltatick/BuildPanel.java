@@ -43,6 +43,7 @@ public class BuildPanel
 
 
 
+
     //DataFlavor"[]" is an array - A. (sept 8)
     DataFlavor[] flavors = new DataFlavor[]{
             DataFlavor.stringFlavor
@@ -67,7 +68,7 @@ public class BuildPanel
     public String unPackAsCode() {
         String passBack = "";
 
-        // declare breeds method called from BreedBlock
+
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.declareBreed();
         }
@@ -75,16 +76,27 @@ public class BuildPanel
         passBack += "\n";
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
-
+            // traitBlock declared as breed variable here -A. (Aug 8, 2012)
+            HashSet<String> allTraits = new HashSet<String>(); // exclusive list of myTraits & myUsedBehInputs to add in breeds-own
+                                                                        //-A. (Aug 10, 2012)
             if ( myTraits.size() > 0 ) {
                 for ( TraitBlock traitBlock : myTraits ) {
                     if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
-                        passBack += traitBlock.breedVars();
-
+                        allTraits.add(traitBlock.getName());
+                        //passBack += traitBlock.getMyTraitName();
                     }
                 }
             }
-            passBack += "\n";
+            if ( breedBlock.myUsedBehaviorInputs.size() > 0) {
+                for (String behInput : breedBlock.myUsedBehaviorInputs) {
+                    allTraits.add(behInput);
+
+                }
+            }
+            for ( String string : allTraits ) {
+                passBack += string + "\n";
+            }
+
             passBack += "]\n";
         }
 
@@ -99,6 +111,7 @@ public class BuildPanel
 
         passBack += "\n";
 
+        //TraitBlock's setup code doesn't come from here at all. It comes from breeds -A. (Aug 8, 2012)
         passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
         passBack += "\n";
 
@@ -112,11 +125,14 @@ public class BuildPanel
         for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.unPackAsCode();
         }
-        passBack += "tick\n";
 
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
+
+        passBack += "tick\n";
+
+
 
         if (myHisto.size() > 0) {
             passBack += "make-histo\n";
@@ -141,7 +157,7 @@ public class BuildPanel
 
             for (HistogramBlock hblock : myHisto) {
                 passBack += "to make-histo\n";
-                //passBack += hblock.unPackAsCode();
+                passBack += hblock.unPackAsCode();
                 for (QuantityBlock qBlock : hblock.getMyBlocks()) {
                     passBack += qBlock.unPackAsCommand();
                 }
@@ -261,10 +277,16 @@ public class BuildPanel
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
     public void addTrait(TraitBlock block) {
+        block.setBounds(0,
+                        0,
+                        block.getPreferredSize().width,
+                        block.getPreferredSize().height);
+        block.dropdownList.setEnabled(false);
+        block.colorButton.setEnabled(false);
         block.doLayout();
         block.validate();
         block.repaint();
-
+        // try revalidate
         myTraits.add(block);
     }
 

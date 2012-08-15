@@ -82,8 +82,33 @@ public strictfp class ConditionBlock
     }
 
     public void addBlock(CodeBlock block) {
-        super.addBlock(block);
-        //this.validate();
+        //super.addBlock(block);
+
+        myBlocks.add(block);
+        this.add(block);
+        block.enableInputs();
+
+        block.showRemoveButton();
+        this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+        block.setMyParent(this);
+        block.doLayout();
+
+        block.validate();
+        block.repaint();
+        if (block instanceof BehaviorBlock) {
+            ((BehaviorBlock) block).updateBehaviorInput();
+        }
+        if (block instanceof BehaviorBlock) {
+            String tmp = ((BehaviorBlock) block).getBehaviorInputName();
+            addBehaviorInputToList(tmp);
+        }
+        doLayout();
+        validate();
+        repaint();
+
+        this.getParent().doLayout();
+        this.getParent().validate();
+        this.getParent().repaint();
     }
 
     // this code is the label you see on the condition block
@@ -95,5 +120,13 @@ public strictfp class ConditionBlock
         removeButton.setVisible(false);
         label.setBackground(getBackground());
         label.add(name);
+    }
+
+    public String getBehaviorInputName() {
+        String behaviorInputName = new String();
+        for ( String s : behaviorInputs.keySet()) {
+            behaviorInputName = s;
+            }
+        return behaviorInputName;
     }
 }

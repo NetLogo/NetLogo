@@ -2,12 +2,11 @@ package org.nlogo.deltatick;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.nlogo.deltatick.dnd.AgentInput;
-import org.nlogo.window.Widget;
+import org.nlogo.deltatick.dnd.BehaviorInput;
+import org.nlogo.deltatick.xml.Variation;
 
 import javax.swing.*;
 
@@ -16,27 +15,15 @@ import javax.swing.*;
 public strictfp class BehaviorBlock
         extends CodeBlock {
 
-    transient AgentInput agentInput;
-    String agentName;
-
-
-
     public BehaviorBlock(String name) {
-        // CodeBlock(String name, Color color) - calling parent block -a.
         super(name, ColorSchemer.getColor(0).brighter());
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 CodeBlock.behaviorBlockFlavor,
                 CodeBlock.codeBlockFlavor,
         };
-        agentInput = new AgentInput( this );
-        agentName = agentInput.getText();
 
-        /*
-        agentInput = new AgentInput(this);
-        agentInput.setText(getName());
-        label.add(agentInput);
-        */
+
     }
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.
 
@@ -56,29 +43,25 @@ public strictfp class BehaviorBlock
         if (inputs.size() > 0) {
             passBack += "[ ";
             for (String input : inputs.keySet()) {
-                passBack += input + " ";
+               // passBack += input + " ]";
             }
             if (agentInputs.size() > 0) {
-            //passBack += "[ ";
-            for (String inputName : agentInputs.keySet()) {
-                passBack += inputName + " ";
+            for (String s : agentInputs.keySet()) {
+                passBack += s;
+
             }
-
+                passBack += " ] + \n";
         }
-
         }
+        if (agentInputs.size() > 0) {
+            passBack += "[";
+            for (String s : agentInputs.keySet()) {
+                passBack += s + " ]\n";
 
-        else if (agentInputs.size() > 0) {
-            passBack += "[ ";
-            for (String inputName : agentInputs.keySet()) {
-                passBack += inputName + " ";
             }
-
         }
 
-        if (inputs.size() > 0 || agentInputs.size() > 0) {
-            passBack += "]";
-        }
+
 
         if ( ifCode != null ) {
         passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
@@ -108,11 +91,59 @@ public strictfp class BehaviorBlock
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }
-        for (JTextField inputName : agentInputs.values()) {
-            passBack += inputName.getText() + " ";
+        for (JTextField agentInput : agentInputs.values()) {
+            passBack += agentInput.getText() + " ";
         }
         passBack += "\n";
-
+        if (myParent instanceof BreedBlock) {
+            for (String name : ((BreedBlock) myParent).myUsedBehaviorInputs) {
+                for (String s : behaviorInputs.keySet()) {
+                    if (name.equals(s)) {
+                        passBack += "set " + name + " " + behaviorInputs.get(name).getText().toString() + "\n";
+                    }
+                }
+                }
+            }
         return passBack;
+    }
+
+    public void updateBehaviorInput() {
+        Container parent = getParent();
+
+        if (parent instanceof TraitBlock) {
+
+            HashMap<String, Variation> hashMap = ((TraitBlock) parent).variationHashMap;
+            String selectedVariationName = ((TraitBlock) parent).getDropdownList().getSelectedItem().toString();
+            String trait = ((TraitBlock) parent).getName();
+            Variation tmp = hashMap.get(selectedVariationName);
+
+            String value = tmp.value;
+
+            //String newValue = new String();
+            for ( String s : behaviorInputs.keySet()) {
+                if (s.equals(trait)) {
+                    //newValue = behaviorInputs.get(s).getText().toString();
+                    JTextField textField = behaviorInputs.get(s);
+                    textField.setText(value);
+                }
+            }
+        }
+    }
+
+    // will work only for one behaviorInput per block -A. (Aug 10, 2012)
+    public String getBehaviorInputName() {
+        String behaviorInputName = new String();
+        for ( String s : behaviorInputs.keySet()) {
+            behaviorInputName = s;
+            }
+        return behaviorInputName;
+    }
+
+    public String getAgentInputName() {
+        String agentInputName = new String();
+        for ( String s : agentInputs.keySet()) {
+            agentInputName = s;
+            }
+        return agentInputName;
     }
 }
