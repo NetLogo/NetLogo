@@ -2,7 +2,7 @@ package org.nlogo.log.webstart
 
 import scala.collection.mutable.HashMap
 import org.nlogo.util.{ZipUtils, NetUtils}
-import java.net.{URLEncoder, URL}
+import java.net.URL
 
 
 private object LoggingServerHttpHandler {
