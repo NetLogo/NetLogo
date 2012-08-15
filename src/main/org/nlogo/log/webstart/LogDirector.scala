@@ -6,7 +6,7 @@ import collection.mutable.ListBuffer
 
 /*
 
- This file constitutes a set of three actors that work together to manage a log and its periodic flushing
+ The `LogDirector` class constitutes a set of three actor classes that work together to manage a log and its periodic flushing
 
  (This thing should be made to use Akka at some point....  Also, I don't feel that `LogDirector` should be
   doing its own transmissions through `LoggingServerHttpHandler`, but I don't know what else _should_ be
