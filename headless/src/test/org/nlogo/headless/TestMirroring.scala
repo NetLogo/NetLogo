@@ -165,44 +165,4 @@ class TestMirroring extends FunSuite {
     }
   }
 
-  // Test failing, disabling for now (NP 2012-07-26)
-//  test("two turtles, one link, rendering test") {
-//    withWorkspace { (ws, mirrorables) =>
-//      ws.command("random-seed 0")
-//      ws.initForTesting(1)
-//      ws.command("ask patch -1 -1 [ sprout 1 ]")
-//      ws.command("ask patch 1 1 [ sprout 1 ]")
-//      ws.command("ask turtles [ create-links-with other turtles]")
-//      val (m0, u0) = diffs(Map(), mirrorables())
-//      checkAllAgents(ws, m0)
-//      val fakeWorld = new FakeWorld(m0)
-//
-//      val pico = new Pico
-//      pico.add("org.nlogo.render.Renderer")
-//      pico.addComponent(fakeWorld)
-//      val renderer = pico.getComponent(classOf[api.RendererInterface])
-//      renderer.resetCache(ws.patchSize)
-//
-//      val realChecksum =
-//        Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
-//      val mirrorChecksum =
-//        Checksummer.calculateGraphicsChecksum(renderer, ws)
-//
-//      def exportPNG(r: api.RendererInterface, suffix: String) = {
-//        new java.io.File("tmp").mkdir()
-//        val outputFile = "two turtles one link." + suffix + ".png"
-//        val outputPath = new java.io.File("tmp/" + outputFile)
-//        javax.imageio.ImageIO.write(r.exportView(ws), "png", outputPath)
-//      }
-//
-//      if (mirrorChecksum != realChecksum) {
-//        exportPNG(ws.renderer, "original")
-//        exportPNG(renderer, "mirror")
-//      }
-//
-//      expect(realChecksum) { mirrorChecksum }
-//
-//    }
-//  }
-
 }
