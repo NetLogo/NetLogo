@@ -57,11 +57,11 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
+  def clearTicks() {
     world.tickCounter.clear()
   }
 
-  def clearAll {
+  def clearAll() {
     world.clearAll()
     clearOutput()
     clearDrawing()
