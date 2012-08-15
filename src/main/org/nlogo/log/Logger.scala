@@ -12,7 +12,6 @@ import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.Version
 import java.util.{ Enumeration => JEnumeration, List => JList, ArrayList }
 import collection.JavaConverters.enumerationAsScalaIteratorConverter
-import webstart.WebStartAppender
 
 object Logger {
 

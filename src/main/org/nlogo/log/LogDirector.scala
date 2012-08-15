@@ -1,4 +1,4 @@
-package org.nlogo.log.webstart
+package org.nlogo.log
 
 import java.net.URL
 import actors.{TIMEOUT, Actor}
@@ -187,9 +187,9 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
   }
 
   // Establishing a message-set through which the logging actors can communicate with one another
-  private[webstart] sealed trait LogManagementMessage
+  private[log] sealed trait LogManagementMessage
 
-  private[webstart] object LogManagementMessage {
+  private[log] object LogManagementMessage {
     case class  Write(data: String) extends LogManagementMessage
     case object Read extends LogManagementMessage
     case object Abandon extends LogManagementMessage
@@ -212,9 +212,9 @@ object DirectorMessage {
 
 
 // The messaging protocol to be used by the remote, log-receiving server
-private[webstart] sealed trait LoggingServerMessage
+private[log] sealed trait LoggingServerMessage
 
-private[webstart] object LoggingServerMessage {
+private[log] object LoggingServerMessage {
   private val Sep = "|"
   case class ToServerWrite(data: String) { override def toString = "write%s%s".format(Sep, data) }
   case object ToServerPulse              { override def toString = "pulse" }
