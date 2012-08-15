@@ -2,9 +2,6 @@ package org.nlogo.log.webstart
 
 import java.net.URL
 import actors.{TIMEOUT, Actor}
-import message.LogManagementMessage
-import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
-import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 import collection.mutable.ListBuffer
 
 /*
@@ -42,6 +39,9 @@ import collection.mutable.ListBuffer
 
 // An actor controller; receives logging data and figures out what to do with it
 class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
+
+  import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
+  import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 
   require(destinations.size > 0)
 
@@ -184,6 +184,17 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
         }
       }
     }
+  }
+
+  // Establishing a message-set through which the logging actors can communicate with one another
+  private[webstart] sealed trait LogManagementMessage
+
+  private[webstart] object LogManagementMessage {
+    case class  Write(data: String) extends LogManagementMessage
+    case object Read extends LogManagementMessage
+    case object Abandon extends LogManagementMessage
+    case object Finalize extends LogManagementMessage
+    case object Flush extends LogManagementMessage
   }
 
 }
