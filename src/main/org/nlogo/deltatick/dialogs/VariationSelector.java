@@ -28,7 +28,9 @@ public class VariationSelector
 
     JLabel label;
     boolean populate;
-    HashMap<String, String> numberVariation = new HashMap<String,String>();
+
+    HashMap<String, String> numberVariation = new HashMap<String, String>();
+
 
 
     ArrayList<JTextField> varInputList = new ArrayList<JTextField>();
@@ -197,16 +199,8 @@ public class VariationSelector
         return populate;
     }
 
-    public HashMap<String, String> data() {
-        //int i = 0;
-        System.out.println(variationList.get(0));
-        System.out.println(numberList.get(0));
 
-        System.out.println(variationList.get(1));
-        System.out.println(numberList.get(1));
-        //for (int i = 0; i <= variationList.size(); i++ ) {
-         //   numberVariation.put( variationList.get(i), numberList.get(i));
-        //}
+  public HashMap<String, String> data() {
 
         int i = 0;
         for ( String string : variationList ) {
