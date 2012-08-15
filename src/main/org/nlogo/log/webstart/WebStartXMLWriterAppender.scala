@@ -2,7 +2,7 @@ package org.nlogo.log.webstart
 
 import java.net.URL
 import org.nlogo.log.{XMLAppender, XMLLayout}
-import org.apache.log4j.WriterAppender
+import org.apache.log4j.{Appender, WriterAppender}
 
 /*
  The `RemoteLogWriter` pretty much needs to be a default param in a sneaky second parameter list here, because:
@@ -16,4 +16,9 @@ class WebStartXMLWriterAppender(mode: LogSendingMode, destinations: URL*)
   /*none*/ def deleteLog()  { writer.delete() }
   /*none*/ def initialize() { initializeTransformer(destinations.mkString("|"), writer) }
   override def close()      { closeDocument(); super.close() }
+}
+
+trait WebStartAppender extends Appender {
+  /*none*/ def deleteLog()
+  /*none*/ def initialize()
 }
