@@ -4,16 +4,16 @@ package org.nlogo.hubnet.server
 
 /**
  * Static utility methods and constants for the HubNet server.
- **/
+ */
 object HubNetUtils {
 
-  /**The multicast group for server discovery **/
+  /**The multicast group for server discovery */
   val SERVER_DISCOVERY_MULTICAST_GROUP = "228.5.8.80" // NOPMD pmd doesn't like hardcoded IPv4 addresses
 
-  /**The multicast port for server discovery **/
+  /**The multicast port for server discovery */
   val SERVER_DISCOVERY_MULTICAST_PORT = 5885
 
-  /**How frequently to broadcast server discovery method, in milliseconds **/
+  /**How frequently to broadcast server discovery method, in milliseconds */
   val SERVER_DISCOVERY_ANNOUNCE_INTERVAL = 1000
 
   // these are terrible - JC 8/21/10
