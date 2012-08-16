@@ -108,14 +108,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         updateCode=updateCode,
         x=originalPen.x,
         defaultColor=color.rgb,
-        _color = color.rgb,
+        color = color.rgb,
         inLegend = inLegend,
         defaultInterval = interval,
-        _interval = interval,
+        interval = interval,
         defaultMode = mode,
-        _mode = originalPen.mode,
-        penModeChanged = originalPen.penModeChanged,
-        _isDown = originalPen.isDown)
+        mode = originalPen.mode,
+        isDown = originalPen.isDown)
       pp.x = originalPen.x
       pp.points = originalPen.points
       pp

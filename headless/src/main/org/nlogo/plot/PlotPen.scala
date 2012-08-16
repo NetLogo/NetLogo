@@ -24,15 +24,14 @@ class PlotPen (
         var updateCode: String,
         var x: Double = 0.0,
         var defaultColor: Int = java.awt.Color.BLACK.getRGB,
-        private var _color: Int = java.awt.Color.BLACK.getRGB(),
+        var color: Int = java.awt.Color.BLACK.getRGB(),
         var inLegend: Boolean = true,
         var defaultInterval: Double = 1.0,
-        private var _interval: Double = 1.0,
+        var interval: Double = 1.0,
         var defaultMode: Int = PlotPen.LINE_MODE,
-        private var _mode:Int = PlotPen.LINE_MODE,
-        var penModeChanged: Boolean = false,
-        private var _isDown: Boolean = true,
-        private var _hidden: Boolean = false)
+        var mode: Int = PlotPen.LINE_MODE,
+        var isDown: Boolean = true,
+        var hidden: Boolean = false)
 extends org.nlogo.api.PlotPenInterface {
 
   hardReset()
@@ -40,38 +39,6 @@ extends org.nlogo.api.PlotPenInterface {
   override def toString = "PlotPen("+name+", "+plot+")"
 
   var points: Vector[PlotPoint] = Vector()
-
-  def color = _color
-  def color_=(newColor: Int) {
-    if(_color != newColor) {
-      _color = newColor
-    }
-  }
-
-  def interval = _interval
-  def interval_=(newInterval: Double) {
-    _interval = newInterval
-  }
-
-  def hidden = _hidden
-  def hidden_=(newIsHidden: Boolean) {
-    if(_hidden != newIsHidden) {
-      _hidden = newIsHidden
-    }
-  }
-
-  def isDown = _isDown
-  def isDown_=(newIsDown: Boolean) {
-    _isDown = newIsDown
-  }
-
-  def mode = _mode
-  def mode_=(newMode: Int) {
-    if( mode != newMode ) {
-      penModeChanged = true
-      _mode = newMode
-    }
-  }
 
   def setupCode(code:String) { setupCode = if(code == null) "" else code }
   def updateCode(code:String) { updateCode = if(code == null) "" else code }

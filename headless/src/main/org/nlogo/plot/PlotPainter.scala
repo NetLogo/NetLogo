@@ -37,10 +37,8 @@ class PlotPainter(plot: Plot) {
   def refresh() {
     gOff.setColor(java.awt.Color.WHITE)
     gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
-    for(pen <- plot.pens; if(! pen.hidden)) {
-      pen.penModeChanged = false
+    for(pen <- plot.pens; if(! pen.hidden))
       refreshPen(pen, collectPointsForPainting(pen))
-    }
   }
 
   /// at painting time, we need to convert each bar to four points

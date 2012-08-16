@@ -9,7 +9,19 @@ import org.nlogo.api.PlotInterface
 // and running of code, and it needs to know about all the Plots.
 // but having an accessible constructor is nice for tests.
 // JC - 12/20/10, ST 8/16/12
-class Plot private[nlogo] (var name:String) extends PlotInterface {
+class Plot(
+  var name: String,
+  var xMin: Double = 0.0,
+  var xMax: Double = 10.0,
+  var yMin: Double = 0.0,
+  var yMax: Double = 10.0,
+  var autoPlotOn: Boolean = true,
+  var defaultXMin: Double = 0.0,
+  var defaultXMax: Double = 10.0,
+  var defaultYMin: Double = 0.0,
+  var defaultYMax: Double = 10.0,
+  var defaultAutoPlotOn: Boolean = true
+) extends PlotInterface {
 
   import Plot._
 
@@ -43,69 +55,9 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
   // headless - ST 3/9/06
   var legendIsOpen = false
 
-  /// default properties
-  private var _defaultXMin = 0.0
-  def defaultXMin = _defaultXMin
-  def defaultXMin_=(defaultXMin: Double){
-    _defaultXMin = defaultXMin
-  }
-
-  private var _defaultXMax = 10.0
-  def defaultXMax = _defaultXMax
-  def defaultXMax_=(defaultXMax: Double){
-    _defaultXMax = defaultXMax
-  }
-
-  private var _defaultYMin = 0.0
-  def defaultYMin = _defaultYMin
-  def defaultYMin_=(defaultYMin: Double) {
-    _defaultYMin = defaultYMin
-  }
-
-  private var _defaultYMax = 10.0
-  def defaultYMax = _defaultYMax
-  def defaultYMax_=(defaultYMax: Double){
-    _defaultYMax = defaultYMax
-  }
-
-  private var _defaultAutoPlotOn = true
-  def defaultAutoPlotOn = _defaultAutoPlotOn
-  def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
-    _defaultAutoPlotOn = defaultAutoPlotOn
-  }
-
   /// current properties
   /// (will be copied from defaults at construction time - ST 2/28/06)
 
-  private var _autoPlotOn = false
-  def autoPlotOn = _autoPlotOn
-  def autoPlotOn_=(autoPlotOn: Boolean){
-    _autoPlotOn = autoPlotOn
-  }
-
-  private var _xMin = 0.0
-  def xMin = _xMin
-  def xMin_=(xMin: Double){
-    _xMin = xMin
-  }
-
-  private var _xMax = 0.0
-  def xMax = _xMax
-  def xMax_=(xMax: Double){
-    _xMax = xMax
-  }
-
-  private var _yMin = 0.0
-  def yMin = _yMin
-  def yMin_=(yMin: Double){
-    _yMin = yMin
-  }
-
-  private var _yMax = 0.0
-  def yMax = _yMax
-  def yMax_=(yMax: Double){
-    _yMax = yMax
-  }
   var setupCode: String = ""
   var updateCode:String = ""
 
