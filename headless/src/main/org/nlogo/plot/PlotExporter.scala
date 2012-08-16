@@ -20,11 +20,11 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
       "legend open?",
       "number of pens")))
     writer.println(csv.dataRow(Array(
-      Double.box(plot.xMin),
-      Double.box(plot.xMax),
-      Double.box(plot.yMin),
-      Double.box(plot.yMax),
-      Boolean.box(plot.autoPlotOn),
+      Double.box(plot.state.xMin),
+      Double.box(plot.state.xMax),
+      Double.box(plot.state.yMin),
+      Double.box(plot.state.yMax),
+      Boolean.box(plot.state.autoPlotOn),
       plot.currentPen.map(_.name).getOrElse(""),
       Boolean.box(plot.legendIsOpen),
       Int.box(plot.pens.size))))

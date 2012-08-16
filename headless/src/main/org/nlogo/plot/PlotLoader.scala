@@ -12,14 +12,15 @@ object PlotLoader {
     val (plotLines, penLines) =
       widget.toList.span(_ != "PENS")
     plot.name(plotLines(5))
-    if (11 < plotLines.length) {
-      plot.defaultXMin = plotLines(8).toDouble
-      plot.defaultXMax = plotLines(9).toDouble
-      plot.defaultYMin = plotLines(10).toDouble
-      plot.defaultYMax = plotLines(11).toDouble
-    }
+    if (11 < plotLines.length)
+      plot.defaultState = plot.defaultState.copy(
+        xMin = plotLines(8).toDouble,
+        xMax = plotLines(9).toDouble,
+        yMin = plotLines(10).toDouble,
+        yMax = plotLines(11).toDouble)
     if (12 < plotLines.length)
-      plot.defaultAutoPlotOn = plotLines(12).toBoolean
+      plot.defaultState = plot.defaultState.copy(
+        autoPlotOn = plotLines(12).toBoolean)
     if (14 < plotLines.length) {
       parseStringLiterals(plotLines(14)) match {
         case Nil => // old style model, no new plot code. this is ok.

@@ -136,10 +136,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   def refreshGUI() {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
-    xAxis.setMin(getLabel(plot.xMin))
-    xAxis.setMax(getLabel(plot.xMax))
-    yAxis.setMin(getLabel(plot.yMin))
-    yAxis.setMax(getLabel(plot.yMax))
+    xAxis.setMin(getLabel(plot.state.xMin))
+    xAxis.setMax(getLabel(plot.state.xMax))
+    yAxis.setMin(getLabel(plot.state.yMin))
+    yAxis.setMax(getLabel(plot.state.yMax))
     legend.refresh()
   }
 
@@ -190,20 +190,25 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def updateCode = plot.updateCode
   def updateCode(updateCode: String){ plot.updateCode=updateCode }
 
-  def defaultXMin = plot.defaultXMin
-  def defaultXMin(defaultXMin: Double){ plot.defaultXMin=defaultXMin }
+  def defaultXMin = plot.defaultState.xMin
+  def defaultXMin(defaultXMin: Double) {
+    plot.defaultState = plot.defaultState.copy(xMin = defaultXMin) }
 
-  def defaultYMin = plot.defaultYMin
-  def defaultYMin(defaultYMin: Double){ plot.defaultYMin=defaultYMin }
+  def defaultXMax = plot.defaultState.xMax
+  def defaultXMax(defaultXMax: Double) {
+    plot.defaultState = plot.defaultState.copy(xMax = defaultXMax) }
 
-  def defaultXMax = plot.defaultXMax
-  def defaultXMax(defaultXMax: Double){ plot.defaultXMax=defaultXMax }
+  def defaultYMin = plot.defaultState.yMin
+  def defaultYMin(defaultYMin: Double) {
+    plot.defaultState = plot.defaultState.copy(yMin = defaultYMin) }
 
-  def defaultYMax = plot.defaultYMax
-  def defaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
+  def defaultYMax = plot.defaultState.yMax
+  def defaultYMax(defaultYMax: Double) {
+    plot.defaultState = plot.defaultState.copy(yMax = defaultYMax) }
 
-  def defaultAutoPlotOn = plot.defaultAutoPlotOn
-  def defaultAutoPlotOn(defaultAutoPlotOn: Boolean){ plot.defaultAutoPlotOn=defaultAutoPlotOn }
+  def defaultAutoPlotOn = plot.defaultState.autoPlotOn
+  def defaultAutoPlotOn(defaultAutoPlotOn: Boolean) {
+    plot.defaultState = plot.defaultState.copy(autoPlotOn = defaultAutoPlotOn) }
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
@@ -218,11 +223,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     s.append((if (null != plotName && plotName.trim != "") plotName else "NIL") + "\n")
     s.append((if (null != xLabel && xLabel.trim != "") xLabel else "NIL") + "\n")
     s.append((if (null != yLabel && yLabel.trim != "") yLabel else "NIL") + "\n")
-    s.append(plot.defaultXMin + "\n")
-    s.append(plot.defaultXMax + "\n")
-    s.append(plot.defaultYMin + "\n")
-    s.append(plot.defaultYMax + "\n")
-    s.append(plot.defaultAutoPlotOn + "\n")
+    s.append(plot.defaultState.xMin + "\n")
+    s.append(plot.defaultState.xMax + "\n")
+    s.append(plot.defaultState.yMin + "\n")
+    s.append(plot.defaultState.yMax + "\n")
+    s.append(plot.defaultState.autoPlotOn + "\n")
     s.append(legend.open + "\n")
     s.append(plot.saveString + "\n")
     s.append("PENS\n")

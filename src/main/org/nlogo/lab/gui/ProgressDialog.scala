@@ -31,7 +31,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val plotWidgetOption: Option[PlotWidget] = {
     if (protocol.runMetricsEveryStep && protocol.metrics.length > 0) {
       // don't use the real plot manager here, use a dummy one.
-      // fixes http://trac.assembla.com/nlogo/ticket/1259
+      // fixes trac.assembla.com/nlogo/ticket/1259
       // the reason for this is that plots normally get added to the plot manager
       // then when clear-all is called (and other things) on the plots
       // in the model, things (such as clearing, which removes temporary pens)
@@ -42,11 +42,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
       val plotWidget = PlotWidget("Behavior Plot", new DummyPlotManager)
-      plotWidget.plot.defaultXMin = 0
-      plotWidget.plot.defaultYMin = 0
-      plotWidget.plot.defaultXMax = 1
-      plotWidget.plot.defaultYMax = 1
-      plotWidget.plot.defaultAutoPlotOn = true
+      plotWidget.plot.defaultState = plotWidget.plot.defaultState.copy(
+        xMax = 1, yMax = 1)
       plotWidget.xLabel("Time")
       plotWidget.yLabel("Behavior")
       plotWidget.clear()

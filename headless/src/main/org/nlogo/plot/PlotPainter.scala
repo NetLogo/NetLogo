@@ -162,15 +162,15 @@ class PlotPainter(plot: Plot) {
   // it on newer VM's, but the bug parade doesn't say it's fixed, so let's be safe.  Not sure
   // exactly what the usable range is, but +/- 16383 seems like a good guess. - ST 3/12/03, 8/1/03
   private def screenX(x: Double): Int = {
-    val range = plot.xMax - plot.xMin
+    val range = plot.state.xMax - plot.state.xMin
     val scale = range / (width - 1)
-    screen(StrictMath.rint((x - plot.xMin) / scale))
+    screen(StrictMath.rint((x - plot.state.xMin) / scale))
   }
 
   private def screenY(y: Double): Int = {
-    val range = plot.yMax - plot.yMin
+    val range = plot.state.yMax - plot.state.yMin
     val scale = range / (height - 1)
-    screen(StrictMath.rint(height - 1 - ((y - plot.yMin) / scale)))
+    screen(StrictMath.rint(height - 1 - ((y - plot.state.yMin) / scale)))
   }
 
   private def screen(p: Double) = if(p > 16383) 16383 else if(p < -16383) -16383 else p.toInt

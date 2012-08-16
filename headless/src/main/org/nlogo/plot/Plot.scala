@@ -2,28 +2,19 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.{ PlotInterface, PlotPenInterface }
+import org.nlogo.api.{ PlotInterface, PlotPenInterface, PlotState }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
 // and running of code, and it needs to know about all the Plots.
 // but having an accessible constructor is nice for tests.
 // JC - 12/20/10, ST 8/16/12
-class Plot(
-  var name: String,
-  var xMin: Double = 0.0,
-  var xMax: Double = 10.0,
-  var yMin: Double = 0.0,
-  var yMax: Double = 10.0,
-  var autoPlotOn: Boolean = true,
-  var defaultXMin: Double = 0.0,
-  var defaultXMax: Double = 10.0,
-  var defaultYMin: Double = 0.0,
-  var defaultYMax: Double = 10.0,
-  var defaultAutoPlotOn: Boolean = true
-) extends PlotInterface {
+class Plot(var name: String, var defaultState: PlotState = PlotState())
+extends PlotInterface {
 
   import Plot._
+
+  var state = defaultState
 
   override def toString = "Plot(" + name + ")"
 
@@ -73,11 +64,7 @@ class Plot(
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
-    xMin=defaultXMin
-    xMax=defaultXMax
-    yMin=defaultYMin
-    yMax=defaultYMax
-    autoPlotOn=defaultAutoPlotOn
+    state = defaultState
   }
 
   def createPlotPen(name: String, temporary: Boolean): PlotPen = {
@@ -89,7 +76,7 @@ class Plot(
   }
 
   def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
-    if(autoPlotOn){
+    if(state.autoPlotOn){
       if(pen.state.mode == PlotPenInterface.BarMode){
         // allow extra room on the right for bar
         growRanges(x + pen.state.interval, y, true)
@@ -103,39 +90,40 @@ class Plot(
     }
   }
 
-  private def growRanges(x:Double, y:Double, extraRoom:Boolean){
-    def adjust(d:Double, factor: Double) = d * (if(extraRoom) factor else 1)
-    if(x > xMax){
-      val newRange = adjust(x - xMin, AutoplotXFactor)
-      xMax=newBound(xMin + newRange, newRange)
+  private def growRanges(x: Double, y: Double, extraRoom: Boolean) {
+    def adjust(d: Double, factor: Double) =
+      d * (if(extraRoom) factor else 1)
+    if(x > state.xMax){
+      val newRange = adjust(x - state.xMin, AutoplotXFactor)
+      state = state.copy(xMax = newBound(state.xMin + newRange, newRange))
     }
-    if(x < xMin){
-      val newRange = adjust(xMax - x, AutoplotXFactor)
-      xMin=newBound(xMax - newRange, newRange)
+    if(x < state.xMin) {
+      val newRange = adjust(state.xMax - x, AutoplotXFactor)
+      state = state.copy(xMin = newBound(state.xMax - newRange, newRange))
     }
-    if(y > yMax){
-      val newRange = adjust(y - yMin, AutoplotYFactor)
-      yMax=newBound(yMin + newRange, newRange)
+    if(y > state.yMax){
+      val newRange = adjust(y - state.yMin, AutoplotYFactor)
+      state = state.copy(yMax = newBound(state.yMin + newRange, newRange))
     }
-    if(y < yMin){
-      val newRange = adjust(yMax - y, AutoplotYFactor)
-      yMin=newBound(yMax - newRange, newRange)
+    if(y < state.yMin){
+      val newRange = adjust(state.yMax - y, AutoplotYFactor)
+      state = state.copy(yMin = newBound(state.yMax - newRange, newRange))
     }
   }
 
   /// histograms
   def setHistogramNumBars(pen: PlotPen, numBars: Int) {
-    pen.state = pen.state.copy(interval = (xMax - xMin) / numBars)
+    pen.state = pen.state.copy(interval = (state.xMax - state.xMin) / numBars)
   }
 
   var histogram: Option[Histogram] = None
 
   def beginHistogram(pen:PlotPen) {
-    histogram = Some(new Histogram(xMin, xMax, pen.state.interval))
+    histogram = Some(new Histogram(state.xMin, state.xMax, pen.state.interval))
   }
 
-  def beginHistogram(pen:PlotPen, bars:Array[Int]){
-    histogram = Some(new Histogram(xMin, pen.state.interval, bars))
+  def beginHistogram(pen:PlotPen, bars: Array[Int]){
+    histogram = Some(new Histogram(state.xMin, pen.state.interval, bars))
   }
 
   def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
@@ -144,15 +132,14 @@ class Plot(
   // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
   def endHistogram(pen:PlotPen){
     pen.softReset()
-    if(autoPlotOn){
+    if (state.autoPlotOn)
       // note that we pass extraRoom as false; we know the exact height
       // of the histogram so there's no point in leaving any extra empty
       // space like we normally do when growing the ranges;
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(xMin, histogram.get.ceiling, false)
-    }
+      growRanges(state.xMin, histogram.get.ceiling, false)
     for((bar, barNumber) <- histogram.get.bars.zipWithIndex) {
       // there is a design decision here not to generate points corresponding to empty bins.  not
       // sure what the right thing is in general, but in the GasLab models we use the histogram
@@ -162,7 +149,7 @@ class Plot(
       if(bar > 0)
         // compute the x coordinates by multiplication instead of repeated adding so that floating
         // point error doesn't accumulate - ST 2/23/06
-        pen.plot(xMin + barNumber * pen.state.interval, bar)
+        pen.plot(state.xMin + barNumber * pen.state.interval, bar)
     }
     histogram = None
   }

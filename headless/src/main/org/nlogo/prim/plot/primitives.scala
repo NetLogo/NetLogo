@@ -86,13 +86,15 @@ class _clearplot extends PlotCommand() {
 }
 class _autoplotoff extends PlotCommand() {
   override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = false
+    val plot = currentPlot(context)
+    plot.state = plot.state.copy(autoPlotOn = false)
     context.ip = next
   }
 }
 class _autoploton extends PlotCommand() {
   override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = true
+    val plot = currentPlot(context)
+    plot.state = plot.state.copy(autoPlotOn = true)
     context.ip = next
   }
 }
@@ -122,8 +124,7 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
       throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
-    plot.xMin = min
-    plot.xMax = max
+    plot.state = plot.state.copy(xMin = min, xMax = max)
     context.ip = next
   }
 }
@@ -136,8 +137,7 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
       throw new EngineException(context, this,
         "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
     val plot = currentPlot(context)
-    plot.yMin = min
-    plot.yMax = max
+    plot.state = plot.state.copy(yMin = min, yMax = max)
     context.ip = next
   }
 }
@@ -227,7 +227,7 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
   override def report(context: Context) =
-    Boolean.box(currentPlot(context).autoPlotOn)
+    Boolean.box(currentPlot(context).state.autoPlotOn)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
   override def report(context: Context) =
@@ -235,19 +235,19 @@ class _plotname extends PlotReporter(Syntax.StringType) {
 }
 class _plotxmin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).xMin)
+    Double.box(currentPlot(context).state.xMin)
 }
 class _plotxmax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).xMax)
+    Double.box(currentPlot(context).state.xMax)
 }
 class _plotymin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).yMin)
+    Double.box(currentPlot(context).state.yMin)
 }
 class _plotymax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).yMax)
+    Double.box(currentPlot(context).state.yMax)
 }
 class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
   override def report(context: Context) =

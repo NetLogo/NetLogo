@@ -20,8 +20,8 @@ class PlotTests extends SimplePlotTest {
     val plot = new Plot("test")
     expect("test")(plot.name)
     expect(0)(plot.pens.size) // no pens
-    assert(plot.defaultAutoPlotOn)
-    assert(plot.autoPlotOn)
+    assert(plot.defaultState.autoPlotOn)
+    assert(plot.state.autoPlotOn)
   }
 
   testPlot("ClearRemovesTemporaryPens") { plot =>
@@ -49,20 +49,20 @@ class PlotTests extends SimplePlotTest {
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.plot(-0.0001, -0.0001)
-    expect(-2.5)(plot.xMin)
-    expect(-1.0)(plot.yMin)
-    expect(10.0)(plot.xMax)
-    expect(10.0)(plot.yMax)
+    expect(-2.5)(plot.state.xMin)
+    expect(-1.0)(plot.state.yMin)
+    expect(10.0)(plot.state.xMax)
+    expect(10.0)(plot.state.yMax)
   }
   testPlot("AutoPlotGrowMax") { plot =>
     val pen = plot.createPlotPen("test", false)
-    expect(0.0)(plot.xMin)
-    expect(0.0)(plot.yMin)
-    expect(10.0)(plot.xMax)
-    expect(10.0)(plot.yMax)
+    expect(0.0)(plot.state.xMin)
+    expect(0.0)(plot.state.yMin)
+    expect(10.0)(plot.state.xMax)
+    expect(10.0)(plot.state.yMax)
     pen.plot(10.0001, 10.0001)
-    expect(12.5)(plot.xMax)
-    expect(11.0)(plot.yMax)
+    expect(12.5)(plot.state.xMax)
+    expect(11.0)(plot.state.yMax)
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
@@ -70,8 +70,8 @@ class PlotTests extends SimplePlotTest {
       mode = PlotPenInterface.BarMode,
       interval = 5.0)
     pen.plot(10.0001, 10.0001)
-    expect(18.8)(plot.xMax)
-    expect(11.0)(plot.yMax)
+    expect(18.8)(plot.state.xMax)
+    expect(11.0)(plot.state.yMax)
   }
   testPlot("HistogramNumBars") { plot =>
     val pen = plot.createPlotPen("test", false)
@@ -103,20 +103,20 @@ class PlotTests extends SimplePlotTest {
     expect(2.0)(pen.points(5).y)
   }
   testPlot("HistogramGrowHeight") { plot =>
-    plot.yMax=5
+    plot.state = plot.state.copy(yMax = 5)
     val pen = plot.createPlotPen("test", false)
     plot.beginHistogram(pen)
     (0 until 5).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expect(5.0)(plot.yMax)
+    expect(5.0)(plot.state.yMax)
     plot.beginHistogram(pen)
     (0 until 10).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expect(10.0)(plot.yMax)
+    expect(10.0)(plot.state.yMax)
     plot.clear()
-    plot.yMax=5
+    plot.state = plot.state.copy(yMax = 5)
     pen.plot(0, 10)
-    expect(11.0)(plot.yMax)
+    expect(11.0)(plot.state.yMax)
   }
   testPlot("Iterator") { plot =>
     plot.pens = Nil

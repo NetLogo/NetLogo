@@ -100,11 +100,12 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
       0
     else {
       val line = nextLine()
-      plot.xMin_=(readNumber(line(0)))
-      plot.xMax_=(readNumber(line(1)))
-      plot.yMin_=(readNumber(line(2)))
-      plot.yMax_=(readNumber(line(3)))
-      plot.autoPlotOn_=(readBoolean(line(4)))
+      plot.state = api.PlotState(
+        xMin = readNumber(line(0)),
+        xMax = readNumber(line(1)),
+        yMin = readNumber(line(2)),
+        yMax = readNumber(line(3)),
+        autoPlotOn = readBoolean(line(4)))
       plot.currentPen_=(readString(line(5)))
       plot.legendIsOpen_=(readBoolean(line(6)))
       readNumber(line(7)).toInt

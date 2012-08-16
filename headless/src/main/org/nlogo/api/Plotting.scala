@@ -2,6 +2,14 @@
 
 package org.nlogo.api
 
+trait PlotInterface {
+  def name: String
+  def getPen(pen: String): Option[PlotPenInterface]
+  def currentPen_=(pen: String)
+  def legendIsOpen_=(open: Boolean)
+  var state: PlotState
+}
+
 object PlotPenInterface {
   val MinMode = 0
   val MaxMode = 2
@@ -13,7 +21,6 @@ object PlotPenInterface {
   val PointMode = 2
   def isValidPlotPenMode(mode: Int) = mode >= 0 && mode <= 2
 }
-
 trait PlotPenInterface {
   def name: String
   var state: PlotPenState
@@ -30,7 +37,7 @@ case class PlotPenState(
 )
 
 case class PlotState(
-  autoPlotOn: Boolean = false,
+  autoPlotOn: Boolean = true,
   xMin: Double = 0,
   xMax: Double = 10,
   yMin: Double = 0,
