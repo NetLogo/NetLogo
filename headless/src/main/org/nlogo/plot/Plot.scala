@@ -7,12 +7,9 @@ import org.nlogo.api.PlotInterface
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
 // and running of code, and it needs to know about all the Plots.
-// however, when using the HubNetClient editor, you don't want a plot to
-// go into the PlotManager, so we have to allow it to just create a new plot.
-// its also nice for tests as well though.
-// JC - 12/20/10
-@SerialVersionUID(0)
-class Plot private[nlogo] (var name:String) extends PlotInterface with Serializable {
+// but having an accessible constructor is nice for tests.
+// JC - 12/20/10, ST 8/16/12
+class Plot private[nlogo] (var name:String) extends PlotInterface {
 
   import Plot._
 
@@ -22,13 +19,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   // AbstractPlotWidget (plot.dirtyListener = Some(this))
   // JC - 12/20/10
   var dirtyListener: Option[Plot.DirtyListener] = None
-
-  var plotListener: Option[PlotListener] = None
-  def setPlotListener(plotListener:PlotListener){
-    if(plotListener == null) sys.error("null plotListener")
-    this.plotListener = Some(plotListener)
-  }
-  def removePlotListener(){ this.plotListener = None }
 
   def name(newName:String){ name = newName }
 
@@ -53,8 +43,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
-     // TODO this line must be cleaned up when we fix up hubnet plotting. the .get here is bad. JC - 6/2/10
-    plotListener.foreach(_.currentPen(p.get.name))
   }
   def currentPen_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
@@ -69,35 +57,30 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   def defaultXMin = _defaultXMin
   def defaultXMin_=(defaultXMin: Double){
     _defaultXMin = defaultXMin
-    plotListener.foreach(_.defaultXMin(defaultXMin))
   }
 
   private var _defaultXMax = 10.0
   def defaultXMax = _defaultXMax
   def defaultXMax_=(defaultXMax: Double){
     _defaultXMax = defaultXMax
-    plotListener.foreach(_.defaultXMax(defaultXMax))
   }
 
   private var _defaultYMin = 0.0
   def defaultYMin = _defaultYMin
   def defaultYMin_=(defaultYMin: Double) {
     _defaultYMin = defaultYMin
-    plotListener.foreach(_.defaultYMin(defaultYMin))
   }
 
   private var _defaultYMax = 10.0
   def defaultYMax = _defaultYMax
   def defaultYMax_=(defaultYMax: Double){
     _defaultYMax = defaultYMax
-    plotListener.foreach(_.defaultYMax(defaultYMax))
   }
 
   private var _defaultAutoPlotOn = true
   def defaultAutoPlotOn = _defaultAutoPlotOn
   def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
     _defaultAutoPlotOn = defaultAutoPlotOn
-    plotListener.foreach(_.defaultAutoPlotOn(defaultAutoPlotOn))
   }
 
   /// current properties
@@ -107,35 +90,30 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   def autoPlotOn = _autoPlotOn
   def autoPlotOn_=(autoPlotOn: Boolean){
     _autoPlotOn = autoPlotOn
-    plotListener.foreach(_.autoPlotOn(autoPlotOn))
   }
 
   private var _xMin = 0.0
   def xMin = _xMin
   def xMin_=(xMin: Double){
     _xMin = xMin
-    plotListener.foreach(_.xMin(xMin))
   }
 
   private var _xMax = 0.0
   def xMax = _xMax
   def xMax_=(xMax: Double){
     _xMax = xMax
-    plotListener.foreach(_.xMax(xMax))
   }
 
   private var _yMin = 0.0
   def yMin = _yMin
   def yMin_=(yMin: Double){
     _yMin = yMin
-    plotListener.foreach(_.yMin(yMin))
   }
 
   private var _yMax = 0.0
   def yMax = _yMax
   def yMax_=(yMax: Double){
     _yMax = yMax
-    plotListener.foreach(_.yMax(yMax))
   }
   var setupCode: String = ""
   var updateCode:String = ""
@@ -158,7 +136,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     yMax=defaultYMax
     autoPlotOn=defaultAutoPlotOn
     makeDirty()
-    plotListener.foreach(_.clear)
     pensDirty = true
   }
 
@@ -208,7 +185,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   /// histograms
   def setHistogramNumBars(pen: PlotPen, numBars: Int) {
     pen.interval = (xMax - xMin) / numBars
-    plotListener.foreach(_.setHistogramNumBars(numBars))
   }
 
   var histogram: Option[Histogram] = None
@@ -250,34 +226,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     histogram = None
   }
 
-  @throws(classOf[java.io.IOException])
-  private def writeObject(out:java.io.ObjectOutputStream){
-    out.writeObject(name)
-    out.writeBoolean(autoPlotOn)
-    out.writeDouble(xMin)
-    out.writeDouble(xMax)
-    out.writeDouble(yMin)
-    out.writeDouble(yMax)
-    out.writeObject(pens)
-    out.writeObject(currentPen.map(_.name))
-  }
-
-  @throws(classOf[java.io.IOException])
-  @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream){
-    name = in.readObject().toString
-    _autoPlotOn = in.readBoolean()
-    _xMin = in.readDouble()
-    _xMax = in.readDouble()
-    _yMin = in.readDouble()
-    _yMax = in.readDouble()
-    plotListener = None
-    pens = in.readObject().asInstanceOf[List[PlotPen]]
-    val currentPenName = in.readObject().asInstanceOf[Option[String]]
-    currentPenName.foreach{ name => _currentPen = pens.find(_.name == name) }
-    histogram = None
-    pens.foreach(_.plot = this)
-  }
 }
 
 object Plot {

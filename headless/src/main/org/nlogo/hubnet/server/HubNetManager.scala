@@ -142,7 +142,6 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends api.HubN
   @throws(classOf[HubNetException])
   def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){
     connectionManager.setClientInterface(interfaceType, interfaceInfo)
-    resetPlotManager()
   }
 
   /// Individualized client views
@@ -221,7 +220,6 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends api.HubN
   def kick(userId:String){ connectionManager.removeClient(userId, true, "Kicked out.") }
   def kickAll(){ connectionManager.removeAllClients() }
   def setViewMirroring(onOff:Boolean){ HubNetUtils.viewMirroring = onOff }
-  def setPlotMirroring(onOff:Boolean){ HubNetUtils.plotMirroring = onOff }
 
   def waitForClients(numClientsToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
     waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.clients.size)
@@ -255,18 +253,6 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala) extends api.HubN
     }
     throw new IllegalStateException("unreachable")
   }
-
-  /// plots
-  private def plotManager = connectionManager.plotManager
-  private def resetPlotManager() {plotManager.initPlotListeners()}
-  def addNarrowcastPlot(plotName: String) = plotManager.addNarrowcastPlot(plotName)
-  def plot(clientId: String, y: Double) {plotManager.narrowcastPlot(clientId, y)}
-  def plot(clientId: String, x: Double, y: Double) {plotManager.narrowcastPlot(clientId, x, y)}
-  def clearPlot(clientId: String) {plotManager.narrowcastClear(clientId)}
-  def plotPenDown(clientId: String, penDown: Boolean) {plotManager.narrowcastPenDown(clientId, penDown)}
-  def setPlotPenMode(clientId: String, plotPenMode: Int) {plotManager.narrowcastPlotPenMode(clientId, plotPenMode)}
-  def setHistogramNumBars(clientId: String, num: Int) {plotManager.narrowcastSetHistogramNumBars(clientId, num)}
-  def setPlotPenInterval(clientId: String, interval: Double) {plotManager.narrowcastSetInterval(clientId, interval)}
 
   // gui related
 

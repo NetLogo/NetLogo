@@ -3,7 +3,6 @@
 package org.nlogo.app;
 
 import org.nlogo.api.I18N;
-import org.nlogo.window.DummyPlotWidget;
 import org.nlogo.window.EditorColorizer;
 import org.nlogo.window.GUIWorkspace;
 import org.nlogo.window.Widget;
@@ -360,12 +359,6 @@ public strictfp class WidgetPanel
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
-    WidgetCreationMenuItem plot = new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY());
-    // if there are no plots in this model, then you can't have a plot in a hubnet client.
-    if (workspace.plotManager().plots().size() == 0) {
-      plot.setEnabled(false);
-    }
-    menu.add(plot);
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
     menu.show(this, e.getX(), e.getY());
   }
@@ -416,18 +409,6 @@ public strictfp class WidgetPanel
           (new org.nlogo.nvm.DefaultCompilerServices(workspace.compiler()));
     } else if (type.equals("DUMMY BUTTON")) {
       return new org.nlogo.window.DummyButtonWidget();
-    } else if (type.equals("DUMMY PLOT")) {
-      // note that plots on the HubNet client must have the name of a plot
-      // on the server, thus, feed the dummy plot widget the names of
-      // the current plots so the user can select one. We override
-      // this method in InterfacePanel since regular plots are handled
-      // differently ev 1/25/07
-      String[] names = workspace.plotManager().getPlotNames();
-      if (names.length > 0) {
-        return DummyPlotWidget.apply(names[0], workspace.plotManager());
-      } else {
-        return DummyPlotWidget.apply("plot 1", workspace.plotManager());
-      }
     } else if (type.equals("DUMMY MONITOR")) {
       return new org.nlogo.window.DummyMonitorWidget();
     } else if (type.equals("DUMMY INPUT") ||  // in the GUI, it's "Input Box"
@@ -688,10 +669,6 @@ public strictfp class WidgetPanel
         if (comps[i] instanceof WidgetWrapper) {
           WidgetWrapper wrapper = (WidgetWrapper) comps[i];
           Widget widget = wrapper.widget();
-          if (widget instanceof DummyPlotWidget &&
-              e.widget().displayName().equals(widget.displayName())) {
-            removeWidget(wrapper);
-          }
         }
       }
       repaint();

@@ -61,7 +61,6 @@ trait HubNetInterface extends ViewInterface {
   def kick(clientName:String)
   def kickAll()
   def setViewMirroring(on:Boolean)
-  def setPlotMirroring(on:Boolean)
 
   /// clients
   @throws(classOf[LogoException])
@@ -105,13 +104,4 @@ trait HubNetInterface extends ViewInterface {
   def getInterfaceWidth: Int
   def getInterfaceHeight: Int
 
-  /// narrowcast plotting
-  def addNarrowcastPlot(plotName: String): Boolean
-  def plot(clientId: String, y: Double)
-  def plot(clientId: String, x: Double, y: Double)
-  def clearPlot(clientId: String)
-  def plotPenDown(clientId: String, penDown: Boolean)
-  def setPlotPenMode(clientId: String, plotPenMode: Int)
-  def setHistogramNumBars(clientId: String, num: Int)
-  def setPlotPenInterval(clientId: String, interval: Double)
 }

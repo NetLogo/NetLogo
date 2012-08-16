@@ -160,7 +160,6 @@ class _histogram extends PlotCommand(Syntax.ListType) {
   override def perform(context: Context) {
     val list = argEvalList(context, 0)
     val pen = currentPen(context)
-    pen.plotListenerReset(false)
     if(pen.interval <= 0)
       throw new EngineException(context, this,
         "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
@@ -291,7 +290,6 @@ final class _plotpenhide extends PlotCommand() {
 final class _plotpenreset extends PlotCommand() {
   override def perform(context: Context) {
     currentPen(context).hardReset()
-    currentPen(context).plotListenerReset(true)
     currentPlot(context).makeDirty()
     context.ip = next
   }

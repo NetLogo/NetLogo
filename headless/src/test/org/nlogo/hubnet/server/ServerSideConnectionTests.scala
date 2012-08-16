@@ -75,7 +75,6 @@ class ServerSideConnectionTests extends MockSuite {
   // that things go smoothly.
   mockTest("complete session"){
     HubNetUtils.viewMirroring = true
-    HubNetUtils.plotMirroring = false
 
     val server = mock[ConnectionManagerInterface]
     val conn = newConnection(server)

@@ -141,14 +141,6 @@ class _hubnetsetviewmirroring extends Command {
   }
 }
 
-class _hubnetsetplotmirroring extends Command {
-  override def syntax = commandSyntax(Array(BooleanType))
-  override def perform(context: Context) {
-    workspace.getHubNetManager.setPlotMirroring(argEvalBooleanValue(context, 0))
-    context.ip = next
-  }
-}
-
 class _hubnetsetclientinterface extends Command {
   def syntax = commandSyntax(Array[Int](StringType, ListType), "O---", false)
   def perform(context: Context) {

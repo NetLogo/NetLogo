@@ -358,16 +358,10 @@ class TestAllSyntaxes extends FunSuite {
                     |_hubnetbroadcastusermessage anything,OTPL,null,0,1,1
                     |_hubnetclearoverride string/agent or agentset/string,OTPL,?,0,3,3
                     |_hubnetclearoverrides string,OTPL,null,0,1,1
-                    |_hubnetclearplot string,OTPL,null,0,1,1
                     |_hubnetcreateclient ,O---,null,0,0,0
                     |_hubnetfetchmessage ,OTPL,null,0,0,0
                     |_hubnetkickallclients ,OTPL,null,0,0,0 *
                     |_hubnetkickclient string,OTPL,null,0,1,1
-                    |_hubnetmakeplotnarrowcast string,OTPL,null,0,1,1
-                    |_hubnetplot string/number,OTPL,null,0,2,2
-                    |_hubnetplotpendown string,OTPL,null,0,1,1
-                    |_hubnetplotpenup string,OTPL,null,0,1,1
-                    |_hubnetplotxy string/number/number,OTPL,null,0,3,3
                     |_hubnetreset ,O---,null,0,0,0
                     |_hubnetresetperspective string,OTPL,null,0,1,1
                     |_hubnetroboclient number,O---,null,0,1,1
@@ -380,10 +374,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_hubnetsendusermessage string or list/anything,OTPL,null,0,2,2
                     |_hubnetsendwatch string/agent,OTPL,null,0,2,2
                     |_hubnetsetclientinterface string/list,O---,null,0,2,2
-                    |_hubnetsethistogramnumbars string/number,OTPL,null,0,2,2
-                    |_hubnetsetplotmirroring TRUE/FALSE,OTPL,null,0,1,1
-                    |_hubnetsetplotpeninterval string/number,OTPL,null,0,2,2
-                    |_hubnetsetplotpenmode string/number,OTPL,null,0,2,2
                     |_hubnetsetviewmirroring TRUE/FALSE,OTPL,null,0,1,1
                     |_hubnetwaitforclients number/number,OTPL,null,0,2,2
                     |_hubnetwaitformessages number/number,OTPL,null,0,2,2

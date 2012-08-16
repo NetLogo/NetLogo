@@ -13,8 +13,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   private val _plots = mutable.Buffer[Plot]()
   def plots = _plots.toList
 
-  var listener: PlotListener = null
-
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
   var currentPlot: Option[Plot] = None
@@ -53,7 +51,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   }
   def clearAll() {
     _plots.foreach(_.clear())
-    if (listener != null) listener.clearAll()
   }
 
   //
@@ -115,10 +112,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
     // save the currently selected plot
     val oldCurrentPlot = currentPlot
     for (plot <- _plots) {
-      // TODO: investigate possibly not setting current plot and current pen if the plot
-      // has no code. using the current design of plot mirroring in hubnet, this
-      // would reduce traffic. another TODO is to possibly redesign plot mirroring
-      // so that this is no longer an issue.
       currentPlot = Some(plot)
       // run the plot code (and pens), only if it was compiled successfully.
       // this line below runs the code if there is any to run, and it tells

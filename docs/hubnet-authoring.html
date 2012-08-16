@@ -38,8 +38,6 @@
         <a href="#clicking-view">Clicking in the view on clients</a>
       <li>
         <a href="#customizing">Customizing the client's view</a>
-      <li>
-        <a href="#plot-updates">Plot updates on the clients</a>
       </ul>
     <h2>
       <a name="primitives" id="primitives">Coding HubNet activities</a>
@@ -232,8 +230,8 @@ if command = &quot;move left&quot;
     <p>
       As mentioned earlier you can also send values to any interface
       elements that display information: monitors, sliders, switches,
-      choosers, and input boxes (note that plots and the view are special
-      cases that have their own sections).
+      choosers, and input boxes (note that view is a special
+      case that has its own section).
     <p>
       There are two primitives that allow you to send information <a href=
       "dictionary.html#hubnet-send"><tt>hubnet-send</tt></a> and <a href=
@@ -326,7 +324,7 @@ if hubnet-message-tag = &quot;step-size&quot;
     </h2>
     <p>
       Open the HubNet Client Editor, found in the Tools Menu. Add any
-      buttons, sliders, switches, monitors, plots, choosers, or notes that
+      buttons, sliders, switches, monitors, choosers, or notes that
       you want just as you would in the interface tab. You'll notice
       that the information you enter for each of the widgets is slightly
       different than in the Interface panel. Widgets on the client
@@ -469,25 +467,3 @@ if hubnet-message-tag = &quot;View&quot;
       <p>
         <b>Code Example:</b> Client Overrides Example
       </blockquote>
-    <h2>
-      <a name="plot-updates" id="plot-updates">Plot updates on the
-      clients</a>
-    </h2>
-    <p>
-      If plot mirroring is enabled (in the HubNet Control Center) and a
-      plot in the NetLogo model changes and a plot with the exact same name
-      exists on the clients, a message with that change is sent to the
-      clients causing the client's plot to make the same change. For
-      example, let's pretend there is a HubNet model that has a plot
-      called Milk Supply in NetLogo and the clients. Milk Supply is the
-      current plot in NetLogo and in the Command Center you type:
-    <pre>
-plot 5
-</pre>
-    <p>
-      This will cause a message to be sent to all the clients telling them
-      that they need to plot a point with a y value of 5 in the next
-      position of the plot. Notice, if you are doing a lot of plotting all
-      at once, this can generate a lot of plotting messages to be sent to
-      the clients.
-

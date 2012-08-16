@@ -381,7 +381,6 @@ menu.tools.hubnetControlCenter.clients = 客户端:
 menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
 menu.tools.hubnetControlCenter.broadcastMessage = 广播消息
 menu.tools.hubnetControlCenter.mirrorViewOn2dClients = 在客户端镜像2D视图
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = 在客户端镜像绘图 (试验中)
 menu.tools.hubnetControlCenter.name = 名称:
 menu.tools.hubnetControlCenter.activity = 活动:
 menu.tools.hubnetControlCenter.unknown = 未知

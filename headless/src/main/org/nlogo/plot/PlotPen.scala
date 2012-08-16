@@ -16,15 +16,10 @@ object PlotPen {
   def isValidPlotPenMode(mode: Int) = mode >= 0 && mode <= 2
 }
 
-// ideally we'd have "val plot" and "val temporary", not vars, but we need to be able
-// to assign them in readObject().  (It seems to me there must be a way to do the
-// serialization that doesn't infect everything with "var", but I'm not going to
-// tackle it right now.) - ST 3/1/10
-@SerialVersionUID(0)
 class PlotPen (
-        var plot: Plot,
+        val plot: Plot,
         var name: String,
-        var temporary: Boolean,
+        val temporary: Boolean,
         var setupCode: String,
         var updateCode: String,
         var x: Double = 0.0,
@@ -38,7 +33,7 @@ class PlotPen (
         var penModeChanged: Boolean = false,
         private var _isDown: Boolean = true,
         private var _hidden: Boolean = false)
-extends org.nlogo.api.PlotPenInterface with Serializable {
+extends org.nlogo.api.PlotPenInterface {
 
   hardReset()
   plot.addPen(this)
@@ -51,14 +46,12 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     if(_color != newColor) {
       _color = newColor
       plot.pensDirty = true
-      plot.plotListener.foreach(_.setPenColor(newColor))
     }
   }
 
   def interval = _interval
   def interval_=(newInterval: Double) {
     _interval = newInterval
-    plot.plotListener.foreach(_.setInterval(newInterval))
   }
 
   def hidden = _hidden
@@ -72,7 +65,6 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   def isDown = _isDown
   def isDown_=(newIsDown: Boolean) {
     _isDown = newIsDown
-    plot.plotListener.foreach(_.penDown(newIsDown))
   }
 
   def mode = _mode
@@ -81,7 +73,6 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
       penModeChanged = true
       _mode = newMode
       plot.makeDirty() // forces redrawing immediately. closes ticket #1004. JC - 6/7/10
-      plot.plotListener.foreach(_.plotPenMode(newMode))
     }
   }
 
@@ -104,12 +95,6 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     }
   }
 
-  // move this out of hard reset because sometimes hardReset is used as part of a multi-step process
-  // and we don't want this to happen until the end ev 1/18/07
-  def plotListenerReset(hardReset: Boolean) {
-    plot.plotListener.foreach(_.resetPen(hardReset))
-  }
-
   def softReset() {
     x = 0.0
     isDown = true
@@ -127,43 +112,10 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     // seem useless but it simplifies the painting logic - ST 2/23/06
     points :+= PlotPoint(x, y, isDown, color)
     if (isDown) plot.perhapsGrowRanges(this, x, y)
-    plot.plotListener.foreach(_.plot(x, y))
   }
 
   def plot(x: Double, y: Double, color: Int, isDown: Boolean) {
     points :+= PlotPoint(x, y, isDown, color)
   }
-
-  // serialization is for HubNet plot mirroring
-
-  @throws(classOf[java.io.IOException])
-  private def writeObject(out: java.io.ObjectOutputStream) {
-    out.writeObject(name)
-    out.writeBoolean(temporary)
-    out.writeDouble(x)
-    out.writeInt(color)
-    out.writeObject(points)
-    out.writeDouble(interval)
-    out.writeBoolean(isDown)
-    out.writeInt(mode)
-  }
-
-  @throws(classOf[java.io.IOException])
-  @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream) {
-    name = in.readObject().asInstanceOf[String]
-    temporary = in.readBoolean()
-    x = in.readDouble()
-    _color = in.readInt()
-    points = readPoints(in)
-    _interval = in.readDouble()
-    _isDown = in.readBoolean()
-    _mode = in.readInt()
-  }
-
-  @throws(classOf[java.io.IOException])
-  @throws(classOf[ClassNotFoundException])
-  def readPoints(in: java.io.ObjectInputStream) =
-    in.readObject().asInstanceOf[Vector[PlotPoint]]
 
 }

@@ -2,9 +2,10 @@
 
 package org.nlogo.hubnet.protocol
 
-import org.nlogo.api.{Version, PlotInterface}
+import org.nlogo.api.Version
 import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
                 ByteArrayOutputStream, ByteArrayInputStream, DataInputStream, IOException, Serializable}
+
 // Message between hubnet clients and hubnet servers
 @SerialVersionUID(0)
 trait Message extends Serializable
@@ -59,22 +60,6 @@ case class AgentPerspectiveMessage(bytes: Array[Byte]) extends Message
  */
 @SerialVersionUID(0)
 case class ViewUpdate(worldData: Array[Byte]) extends Message
-
-/**
- * Message from server tells client to update Plots
- */
-@SerialVersionUID(0)
-case class PlotUpdate(plotInterface: PlotInterface) extends Message {
-  private val bytes = {
-    val out = new ByteArrayOutputStream()
-    new ObjectOutputStream(out).writeObject(plotInterface)
-    out.toByteArray()
-  }
-  def plot = new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject().asInstanceOf[PlotInterface]
-}
-
-@SerialVersionUID(0)
-case class PlotControl(content: AnyRef, plotName: String) extends Message
 
 /**
  * Message from server tells client to display text

@@ -381,7 +381,6 @@ menu.tools.hubnetControlCenter.clients = Клиенты:
 menu.tools.hubnetControlCenter.dateFormat = h:mm:ss
 menu.tools.hubnetControlCenter.broadcastMessage = Передать сообщение
 menu.tools.hubnetControlCenter.mirrorViewOn2dClients = Зеркало 2D  вида на клиентов
-menu.tools.hubnetControlCenter.mirrorPlotsOnClients = Зеркало графиков на клиентах (экспериментально)
 menu.tools.hubnetControlCenter.name = Имя:
 menu.tools.hubnetControlCenter.activity = Активность:
 menu.tools.hubnetControlCenter.unknown = Неизвестно

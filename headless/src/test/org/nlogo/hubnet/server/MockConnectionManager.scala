@@ -4,7 +4,6 @@ package org.nlogo.hubnet.server
 
 import org.nlogo.hubnet.connection.{ConnectionInterface, HubNetException}
 import collection.mutable.ListBuffer
-import org.nlogo.api.PlotInterface
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 class MockControlCenter extends ClientEventListener() {
@@ -34,14 +33,12 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   override def send(node:String, tag:String, message:Any) =
     if (!validTag) throw new HubNetException(tag + " is an invalid tag") else true
   override def setClientInterface(interfaceType:String, interfaceInfo: Iterable[AnyRef]){}
-  override def sendPlot(clientId:String, plot:PlotInterface){}
   override def sendTextMessage(node:String, text:String) = true
   override def sendClearTextMessage(node:String) = true
   override def broadcastClearTextMessage() {}
   override def sendUserMessage(node:String,text:String) = true
   override def broadcastUserMessage(text:String){}
   override def broadcast(msg:Any){}
-  override def broadcastPlotControl(a:Any, plotName:String){}
   override def broadcast(tag: String, message: Any) {
     if (!validTag) throw new HubNetException(tag + " is an invalid tag")
   }
