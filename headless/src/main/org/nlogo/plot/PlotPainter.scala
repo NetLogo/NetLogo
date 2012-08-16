@@ -2,6 +2,7 @@
 
 package org.nlogo.plot
 
+import org.nlogo.api.PlotPenInterface
 
 class PlotPainter(plot: Plot) {
 
@@ -37,21 +38,21 @@ class PlotPainter(plot: Plot) {
   def refresh() {
     gOff.setColor(java.awt.Color.WHITE)
     gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
-    for(pen <- plot.pens; if(! pen.hidden))
+    for(pen <- plot.pens; if !pen.state.hidden)
       refreshPen(pen, collectPointsForPainting(pen))
   }
 
   /// at painting time, we need to convert each bar to four points
   private def collectPointsForPainting(pen: PlotPen): Seq[PlotPoint] = {
-    pen.mode match {
-      case PlotPen.PointMode | PlotPen.LineMode =>
+    pen.state.mode match {
+      case PlotPenInterface.PointMode | PlotPenInterface.LineMode =>
         pen.points
-      case PlotPen.BarMode =>
+      case PlotPenInterface.BarMode =>
         pen.points.flatMap(old =>
           Seq(old.copy(y = 0, isDown = true),
               old.copy(isDown = true),
-              old.copy(x = old.x + pen.interval, isDown = true),
-              old.copy(x = old.x + pen.interval, y = 0, isDown = true)))
+              old.copy(x = old.x + pen.state.interval, isDown = true),
+              old.copy(x = old.x + pen.state.interval, y = 0, isDown = true)))
     }
   }
 
@@ -69,7 +70,7 @@ class PlotPainter(plot: Plot) {
     var coalescing = false
     gOff.asInstanceOf[java.awt.Graphics2D].setRenderingHint(
       java.awt.RenderingHints.KEY_ANTIALIASING,
-      if(pen.mode == PlotPen.PointMode) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
+      if(pen.state.mode == PlotPenInterface.PointMode) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
       else java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
 
     val size = pointsToPlot.size
@@ -79,7 +80,7 @@ class PlotPainter(plot: Plot) {
         color = next.color
         gOff.setColor(new java.awt.Color(color))
       }
-      if(pen.mode == PlotPen.PointMode) { drawPoint(gOff, next) }
+      if(pen.state.mode == PlotPenInterface.PointMode) { drawPoint(gOff, next) }
       else{ // line mode or bar mode
         if(last == null) {
           // it would seem to make more sense to call drawPoint here,

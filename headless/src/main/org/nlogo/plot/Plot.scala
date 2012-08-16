@@ -2,7 +2,7 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.PlotInterface
+import org.nlogo.api.{ PlotInterface, PlotPenInterface }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -85,14 +85,14 @@ class Plot(
   }
 
   def createPlotPen(name: String, temporary: Boolean, setupCode: String, updateCode: String): PlotPen = {
-    new PlotPen(this, name, temporary, setupCode, updateCode)
+    new PlotPen(this, temporary, name, setupCode, updateCode)
   }
 
   def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
     if(autoPlotOn){
-      if(pen.mode == PlotPen.BarMode){
+      if(pen.state.mode == PlotPenInterface.BarMode){
         // allow extra room on the right for bar
-        growRanges(x + pen.interval, y, true)
+        growRanges(x + pen.state.interval, y, true)
       }
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
@@ -125,17 +125,17 @@ class Plot(
 
   /// histograms
   def setHistogramNumBars(pen: PlotPen, numBars: Int) {
-    pen.interval = (xMax - xMin) / numBars
+    pen.state = pen.state.copy(interval = (xMax - xMin) / numBars)
   }
 
   var histogram: Option[Histogram] = None
 
   def beginHistogram(pen:PlotPen) {
-    histogram = Some(new Histogram(xMin, xMax, pen.interval))
+    histogram = Some(new Histogram(xMin, xMax, pen.state.interval))
   }
 
   def beginHistogram(pen:PlotPen, bars:Array[Int]){
-    histogram = Some(new Histogram(xMin, pen.interval, bars))
+    histogram = Some(new Histogram(xMin, pen.state.interval, bars))
   }
 
   def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
@@ -162,7 +162,7 @@ class Plot(
       if(bar > 0)
         // compute the x coordinates by multiplication instead of repeated adding so that floating
         // point error doesn't accumulate - ST 2/23/06
-        pen.plot(xMin + barNumber * pen.interval, bar)
+        pen.plot(xMin + barNumber * pen.state.interval, bar)
     }
     histogram = None
   }

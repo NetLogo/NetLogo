@@ -40,7 +40,7 @@ extends javax.swing.JPanel {
 
     override def paintComponent(g: java.awt.Graphics) {
       val ascent = g.getFontMetrics.getMaxAscent
-      g.setColor(new java.awt.Color(pen.color))
+      g.setColor(new java.awt.Color(pen.state.color))
       g.fillRect(0, 0, ascent, ascent)
       g.setColor(getForeground)
       g.drawRect(0, 0, ascent, ascent)

@@ -234,8 +234,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     import org.nlogo.api.StringUtils.escapeString
     for (pen <- plot.pens; if (!pen.temporary)) {
       s.append("\"" + escapeString(pen.name) + "\" " +
-              pen.defaultInterval + " " + pen.defaultMode + " " +
-              pen.defaultColor + " " + pen.inLegend + " " + pen.saveString + "\n")
+              pen.defaultState.interval + " " + pen.defaultState.mode + " " +
+              pen.defaultState.color + " " + pen.inLegend + " " + pen.saveString + "\n")
     }
   }
 

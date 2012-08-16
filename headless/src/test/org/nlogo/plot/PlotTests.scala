@@ -3,6 +3,7 @@
 package org.nlogo.plot
 
 import org.scalatest.FunSuite
+import org.nlogo.api.PlotPenInterface
 
 trait SimplePlotTest extends FunSuite {
 
@@ -65,8 +66,9 @@ class PlotTests extends SimplePlotTest {
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
-    pen.mode = PlotPen.BarMode
-    pen.interval = 5.0
+    pen.state = pen.state.copy(
+      mode = PlotPenInterface.BarMode,
+      interval = 5.0)
     pen.plot(10.0001, 10.0001)
     expect(18.8)(plot.xMax)
     expect(11.0)(plot.yMax)
@@ -74,7 +76,7 @@ class PlotTests extends SimplePlotTest {
   testPlot("HistogramNumBars") { plot =>
     val pen = plot.createPlotPen("test", false)
     plot.setHistogramNumBars(pen, 5)
-    expect(2.0)(pen.interval)
+    expect(2.0)(pen.state.interval)
   }
   /// histogram tests
   // we already have TestHistogram for basic histogram testing,

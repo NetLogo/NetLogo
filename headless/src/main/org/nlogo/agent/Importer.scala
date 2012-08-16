@@ -121,13 +121,13 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
           case name: String =>
             plot.getPen(name) match {
               case Some(pen) =>
-                pen.isDown_=(readBoolean(line(1)))
-                pen.mode_=(readNumber(line(2)).toInt)
-                pen.interval_=(readNumber(line(3)))
-                pen.color_=(
-                  org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
-                    readNumber(line(4))))
-                pen.x_=(readNumber(line(5)))
+                pen.state = api.PlotPenState(
+                  isDown = readBoolean(line(1)),
+                  mode = readNumber(line(2)).toInt,
+                  interval = readNumber(line(3)),
+                  color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
+                    readNumber(line(4))),
+                  x = readNumber(line(5)))
               case None =>
                 errorHandler.showError(
                   "Error Importing Plots",

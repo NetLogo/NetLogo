@@ -2,8 +2,9 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.Color.translateSavedColor
-import org.nlogo.api.StringUtils.unEscapeString
+import org.nlogo.api
+import api.Color.translateSavedColor
+import api.StringUtils.unEscapeString
 
 object PlotLoader {
 
@@ -45,12 +46,13 @@ object PlotLoader {
         val pen = plot.createPlotPen(spec.name, false,
                                      autoConvert(spec.setupCode),
                                      autoConvert(spec.updateCode))
-        pen.defaultInterval = spec.interval
-        pen.defaultMode = spec.mode
-        pen.defaultColor =
-          if (translateColors)
-            translateSavedColor(spec.color)
-          else spec.color
+        pen.defaultState = pen.defaultState.copy(
+          interval = spec.interval,
+          mode = spec.mode,
+          color =
+            if (translateColors)
+              translateSavedColor(spec.color)
+            else spec.color)
         pen.inLegend = spec.inLegend
       }
     }
@@ -69,7 +71,7 @@ object PlotLoader {
     val (rest1, rest2) = rest.span(_ != '"')
     val List(interval, mode, color, inLegend) =
       rest1.trim.split("\\s+").toList
-    require(PlotPen.isValidPlotPenMode(mode.toInt))
+    require(api.PlotPenInterface.isValidPlotPenMode(mode.toInt))
     // optional; pre-5.0 models don't have them
     val (setup, update) =
       parseStringLiterals(rest2) match {

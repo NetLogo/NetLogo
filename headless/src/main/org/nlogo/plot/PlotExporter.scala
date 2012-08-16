@@ -39,11 +39,11 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     for (pen <- plot.pens) {
       writer.println(csv.dataRow(Array(
         pen.name,
-        Boolean.box(pen.isDown),
-        Int.box(pen.mode),
-        Double.box(pen.interval),
-        org.nlogo.api.Color.argbToColor(pen.color),
-        Double.box(pen.x))))
+        Boolean.box(pen.state.isDown),
+        Int.box(pen.state.mode),
+        Double.box(pen.state.interval),
+        org.nlogo.api.Color.argbToColor(pen.state.color),
+        Double.box(pen.state.x))))
     }
     writer.println()
   }

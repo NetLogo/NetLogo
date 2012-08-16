@@ -156,9 +156,9 @@ class _histogram extends PlotCommand(Syntax.ListType) {
   override def perform(context: Context) {
     val list = argEvalList(context, 0)
     val pen = currentPen(context)
-    if(pen.interval <= 0)
+    if(pen.state.interval <= 0)
       throw new EngineException(context, this,
-        "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
+        "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.state.interval) + ".")
     val plot = currentPlot(context)
     plot.beginHistogram(pen)
     for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
@@ -260,25 +260,29 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType)
 
 final class _plotpendown extends PlotCommand() {
   override def perform(context: Context) {
-    currentPen(context).isDown = true
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(isDown = true)
     context.ip = next
   }
 }
 final class _plotpenup extends PlotCommand() {
   override def perform(context: Context) {
-    currentPen(context).isDown = false
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(isDown = false)
     context.ip = next
   }
 }
 final class _plotpenshow extends PlotCommand() {
   override def perform(context: Context) {
-    currentPen(context).hidden = false
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(hidden = false)
     context.ip = next
   }
 }
 final class _plotpenhide extends PlotCommand() {
   override def perform(context: Context) {
-    currentPen(context).hidden = true
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(hidden = true)
     context.ip = next
   }
 }
@@ -291,7 +295,9 @@ final class _plotpenreset extends PlotCommand() {
 
 final class _setplotpeninterval extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
-    currentPen(context).interval = argEvalDoubleValue(context, 0)
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(
+      interval = argEvalDoubleValue(context, 0))
     context.ip = next
   }
 }
@@ -304,7 +310,8 @@ final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
       throw new EngineException(context, this,
         mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
-    currentPen(context).mode = mode
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(mode = mode)
     context.ip = next
   }
 }
@@ -312,9 +319,11 @@ final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
 final class _setplotpencolor extends PlotCommand(Syntax.NumberType) {
   import org.nlogo.api.Color
   override def perform(context: Context) {
-    currentPen(context).color =
-      Color.getARGBbyPremodulatedColorNumber(
-        Color.modulateDouble(argEvalDoubleValue(context, 0)))
+    val pen = currentPen(context)
+    pen.state = pen.state.copy(
+      color =
+        Color.getARGBbyPremodulatedColorNumber(
+          Color.modulateDouble(argEvalDoubleValue(context, 0))))
     context.ip = next
   }
 }
