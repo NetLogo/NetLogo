@@ -106,19 +106,19 @@ class Plot(
   private def growRanges(x:Double, y:Double, extraRoom:Boolean){
     def adjust(d:Double, factor: Double) = d * (if(extraRoom) factor else 1)
     if(x > xMax){
-      val newRange = adjust(x - xMin, AUTOPLOT_X_FACTOR)
+      val newRange = adjust(x - xMin, AutoplotXFactor)
       xMax=newBound(xMin + newRange, newRange)
     }
     if(x < xMin){
-      val newRange = adjust(xMax - x, AUTOPLOT_X_FACTOR)
+      val newRange = adjust(xMax - x, AutoplotXFactor)
       xMin=newBound(xMax - newRange, newRange)
     }
     if(y > yMax){
-      val newRange = adjust(y - yMin, AUTOPLOT_Y_FACTOR)
+      val newRange = adjust(y - yMin, AutoplotYFactor)
       yMax=newBound(yMin + newRange, newRange)
     }
     if(y < yMin){
-      val newRange = adjust(yMax - y, AUTOPLOT_Y_FACTOR)
+      val newRange = adjust(yMax - y, AutoplotYFactor)
       yMin=newBound(yMax - newRange, newRange)
     }
   }
@@ -172,8 +172,8 @@ class Plot(
 object Plot {
 
   /// autoplot
-  val AUTOPLOT_X_FACTOR = 1.25
-  val AUTOPLOT_Y_FACTOR = 1.10
+  val AutoplotXFactor = 1.25
+  val AutoplotYFactor = 1.10
 
   // The purpose of this is to make the new bounds land on nice
   // numbers like 12.4 instead of long ones like 12.33333333, so
