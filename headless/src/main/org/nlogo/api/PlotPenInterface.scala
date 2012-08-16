@@ -8,7 +8,7 @@ object PlotPenInterface {
 }
 
 trait PlotPenInterface {
-  def isDown_=(isDown: Boolean)
+  var isDown: Boolean
   def mode_=(mode: Int)
   def interval_=(interval: Double)
   def color_=(color: Int)
