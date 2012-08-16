@@ -89,7 +89,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
                  name: String = "",
                  color: ColorInfo = ColorInfo(Color.BLACK),
                  interval: Double = 1.0,
-                 mode: Int = PlotPen.LINE_MODE,
+                 mode: Int = PlotPen.LineMode,
                  inLegend: Boolean = true,
                  setupCode: String = "",
                  updateCode: String = "",

@@ -65,7 +65,7 @@ class PlotTests extends SimplePlotTest {
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
-    pen.mode = PlotPen.BAR_MODE
+    pen.mode = PlotPen.BarMode
     pen.interval = 5.0
     pen.plot(10.0001, 10.0001)
     expect(18.8)(plot.xMax)

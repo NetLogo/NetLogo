@@ -44,9 +44,9 @@ class PlotPainter(plot: Plot) {
   /// at painting time, we need to convert each bar to four points
   private def collectPointsForPainting(pen: PlotPen): Seq[PlotPoint] = {
     pen.mode match {
-      case PlotPen.POINT_MODE | PlotPen.LINE_MODE =>
+      case PlotPen.PointMode | PlotPen.LineMode =>
         pen.points
-      case PlotPen.BAR_MODE =>
+      case PlotPen.BarMode =>
         pen.points.flatMap(old =>
           Seq(old.copy(y = 0, isDown = true),
               old.copy(isDown = true),
@@ -69,7 +69,7 @@ class PlotPainter(plot: Plot) {
     var coalescing = false
     gOff.asInstanceOf[java.awt.Graphics2D].setRenderingHint(
       java.awt.RenderingHints.KEY_ANTIALIASING,
-      if(pen.mode == PlotPen.POINT_MODE) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
+      if(pen.mode == PlotPen.PointMode) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
       else java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
 
     val size = pointsToPlot.size
@@ -79,7 +79,7 @@ class PlotPainter(plot: Plot) {
         color = next.color
         gOff.setColor(new java.awt.Color(color))
       }
-      if(pen.mode == PlotPen.POINT_MODE) { drawPoint(gOff, next) }
+      if(pen.mode == PlotPen.PointMode) { drawPoint(gOff, next) }
       else{ // line mode or bar mode
         if(last == null) {
           // it would seem to make more sense to call drawPoint here,

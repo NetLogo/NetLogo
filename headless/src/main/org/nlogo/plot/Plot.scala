@@ -90,7 +90,7 @@ class Plot(
 
   def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
     if(autoPlotOn){
-      if(pen.mode == PlotPen.BAR_MODE){
+      if(pen.mode == PlotPen.BarMode){
         // allow extra room on the right for bar
         growRanges(x + pen.interval, y, true)
       }

@@ -6,13 +6,12 @@ import collection.mutable.Buffer
 import org.nlogo.api.I18N
 
 object PlotPen {
-  // modes (all static)
   // These are integers, not an enum, because modelers actually use
   // these numbers to refer to the modes in their NetLogo yAxisCode.
   // (Why we didn't use strings, I'm not sure.) - ST 3/21/08
-  val LINE_MODE = 0
-  val BAR_MODE = 1
-  val POINT_MODE = 2
+  val LineMode = 0
+  val BarMode = 1
+  val PointMode = 2
   def isValidPlotPenMode(mode: Int) = mode >= 0 && mode <= 2
 }
 
@@ -28,8 +27,8 @@ class PlotPen (
         var inLegend: Boolean = true,
         var defaultInterval: Double = 1.0,
         var interval: Double = 1.0,
-        var defaultMode: Int = PlotPen.LINE_MODE,
-        var mode: Int = PlotPen.LINE_MODE,
+        var defaultMode: Int = PlotPen.LineMode,
+        var mode: Int = PlotPen.LineMode,
         var isDown: Boolean = true,
         var hidden: Boolean = false)
 extends org.nlogo.api.PlotPenInterface {
