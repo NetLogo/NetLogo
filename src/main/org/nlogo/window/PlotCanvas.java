@@ -9,23 +9,11 @@ strictfp class PlotCanvas extends javax.swing.JPanel {
 
   final Plot plot;
   private final PlotPainter painter;
-  public boolean dirty = true;
 
   void repaintIfNeeded() {
-    if (dirty) {
-      painter.setupOffscreenImage(getWidth(), getHeight());
-      painter.refresh();
-      dirty = false;
-      repaint();
-    }
-  }
-
-  public void makeDirty() {
-    dirty = true;
-  }
-
-  public boolean isDirty() {
-    return dirty;
+    painter.setupOffscreenImage(getWidth(), getHeight());
+    painter.refresh();
+    repaint();
   }
 
   PlotCanvas(Plot plot) {

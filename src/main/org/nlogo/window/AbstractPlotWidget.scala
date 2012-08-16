@@ -14,7 +14,7 @@ import image.BufferedImage
 import Events.{WidgetRemovedEvent, AfterLoadEvent}
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
-        extends Widget with Editable with Plot.DirtyListener with
+        extends Widget with Editable with
                 Events.AfterLoadEventHandler with
                 Events.WidgetRemovedEventHandler with
                 Events.CompiledEventHandler {
@@ -22,7 +22,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   import AbstractPlotWidget._
 
   private var fullyConstructed = false
-  plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val legend = new PlotLegend(plot, this)
   private val nameLabel = new JLabel("", javax.swing.SwingConstants.CENTER)
@@ -141,21 +140,13 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     xAxis.setMax(getLabel(plot.xMax))
     yAxis.setMin(getLabel(plot.yMin))
     yAxis.setMax(getLabel(plot.yMax))
-    if(plot.pensDirty) {
-      legend.refresh()
-      plot.pensDirty = false
-    }
+    legend.refresh()
   }
 
   /// satisfy the usual obligations of top-level widgets
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.plot")
   override def needsPreferredWidthFudgeFactor = false
   override def zoomSubcomponents = true
-  def makeDirty(){
-    // yuck! plot calls makeDirty when its being constructed.
-    // but canvas isnt created yet.
-    if(fullyConstructed) canvas.makeDirty()
-  }
   override def helpLink = Some("docs/programming.html#plotting")
   def propertySet = Properties.plot
   def showLegend = legend.open

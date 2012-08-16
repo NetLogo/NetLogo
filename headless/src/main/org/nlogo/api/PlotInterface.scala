@@ -12,5 +12,4 @@ trait PlotInterface {
   def currentPen_=(pen: String)
   def getPen(pen: String): Option[PlotPenInterface]
   def name: String
-  def makeDirty()
 }

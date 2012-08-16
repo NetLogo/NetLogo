@@ -45,7 +45,6 @@ extends org.nlogo.api.PlotPenInterface {
   def color_=(newColor: Int) {
     if(_color != newColor) {
       _color = newColor
-      plot.pensDirty = true
     }
   }
 
@@ -58,7 +57,6 @@ extends org.nlogo.api.PlotPenInterface {
   def hidden_=(newIsHidden: Boolean) {
     if(_hidden != newIsHidden) {
       _hidden = newIsHidden
-      plot.pensDirty = true
     }
   }
 
@@ -72,7 +70,6 @@ extends org.nlogo.api.PlotPenInterface {
     if( mode != newMode ) {
       penModeChanged = true
       _mode = newMode
-      plot.makeDirty() // forces redrawing immediately. closes ticket #1004. JC - 6/7/10
     }
   }
 

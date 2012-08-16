@@ -101,7 +101,6 @@ class _plot extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
     val y = argEvalDoubleValue(context, 0)
     currentPen(context).plot(y)
-    currentPlot(context).makeDirty()
     context.ip = next
   }
 }
@@ -111,7 +110,6 @@ class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
     currentPen(context).plot(x, y)
-    currentPlot(context).makeDirty()
     context.ip = next
   }
 }
@@ -126,7 +124,6 @@ class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val plot = currentPlot(context)
     plot.xMin = min
     plot.xMax = max
-    plot.makeDirty()
     context.ip = next
   }
 }
@@ -141,7 +138,6 @@ class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
     val plot = currentPlot(context)
     plot.yMin = min
     plot.yMax = max
-    plot.makeDirty()
     context.ip = next
   }
 }
@@ -168,7 +164,6 @@ class _histogram extends PlotCommand(Syntax.ListType) {
     for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
       plot.nextHistogramValue(d)
     plot.endHistogram(pen)
-    plot.makeDirty()
     context.ip = next
   }
 }
@@ -290,7 +285,6 @@ final class _plotpenhide extends PlotCommand() {
 final class _plotpenreset extends PlotCommand() {
   override def perform(context: Context) {
     currentPen(context).hardReset()
-    currentPlot(context).makeDirty()
     context.ip = next
   }
 }

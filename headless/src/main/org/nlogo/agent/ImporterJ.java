@@ -203,7 +203,6 @@ public abstract strictfp class ImporterJ
             importPens(plot, numPens);
             importPoints(plot);
           }
-          plot.makeDirty();
         } catch (ClassCastException e) {
           throw new AbortingImportException
               (ImportError.ILLEGAL_CLASS_CAST_ERROR, "");

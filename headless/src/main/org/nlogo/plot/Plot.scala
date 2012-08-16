@@ -15,14 +15,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
 
   override def toString = "Plot(" + name + ")"
 
-  // this is kind of terrible, but its for
-  // AbstractPlotWidget (plot.dirtyListener = Some(this))
-  // JC - 12/20/10
-  var dirtyListener: Option[Plot.DirtyListener] = None
-
   def name(newName:String){ name = newName }
-
-  def makeDirty(){ dirtyListener.foreach{_.makeDirty() }}
 
   var _pens = List[PlotPen]()
   def pens = _pens
@@ -30,11 +23,9 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
     _pens = pens
     currentPen = pens.headOption
   }
-  var pensDirty = false
 
   def addPen(p:PlotPen){
     pens = pens :+ p
-    pensDirty = true
   }
 
   private var _currentPen: Option[PlotPen] = None
@@ -135,8 +126,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface {
     yMin=defaultYMin
     yMax=defaultYMax
     autoPlotOn=defaultAutoPlotOn
-    makeDirty()
-    pensDirty = true
   }
 
   def createPlotPen(name: String, temporary: Boolean): PlotPen = {
@@ -244,7 +233,4 @@ object Plot {
     org.nlogo.api.Approximate.approximate(bound, places.toInt)
   }
 
-  trait DirtyListener {
-    def makeDirty(): Unit
-  }
 }

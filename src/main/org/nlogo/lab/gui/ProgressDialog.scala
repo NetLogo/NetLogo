@@ -210,7 +210,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
           pen.plot(steps, measurement.asInstanceOf[java.lang.Double].doubleValue)
         }
       }
-      plotWidget.plot.makeDirty()
     }}
   }
 
