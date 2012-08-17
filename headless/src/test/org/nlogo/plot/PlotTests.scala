@@ -48,7 +48,7 @@ class PlotTests extends SimplePlotTest {
   }
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
-    pen.plot(-0.0001, -0.0001)
+    plot.plot(pen, -0.0001, -0.0001)
     expect(-2.5)(plot.state.xMin)
     expect(-1.0)(plot.state.yMin)
     expect(10.0)(plot.state.xMax)
@@ -60,7 +60,7 @@ class PlotTests extends SimplePlotTest {
     expect(0.0)(plot.state.yMin)
     expect(10.0)(plot.state.xMax)
     expect(10.0)(plot.state.yMax)
-    pen.plot(10.0001, 10.0001)
+    plot.plot(pen, 10.0001, 10.0001)
     expect(12.5)(plot.state.xMax)
     expect(11.0)(plot.state.yMax)
   }
@@ -69,7 +69,7 @@ class PlotTests extends SimplePlotTest {
     pen.state = pen.state.copy(
       mode = PlotPenInterface.BarMode,
       interval = 5.0)
-    pen.plot(10.0001, 10.0001)
+    plot.plot(pen, 10.0001, 10.0001)
     expect(18.8)(plot.state.xMax)
     expect(11.0)(plot.state.yMax)
   }
@@ -115,7 +115,7 @@ class PlotTests extends SimplePlotTest {
     expect(10.0)(plot.state.yMax)
     plot.clear()
     plot.state = plot.state.copy(yMax = 5)
-    pen.plot(0, 10)
+    plot.plot(pen, 0, 10)
     expect(11.0)(plot.state.yMax)
   }
   testPlot("Iterator") { plot =>

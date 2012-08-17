@@ -8,6 +8,8 @@ trait PlotInterface {
   def currentPen_=(pen: String)
   def legendIsOpen_=(open: Boolean)
   var state: PlotState
+  def plot(y: Double)
+  def plot(x: Double, y: Double)
 }
 
 object PlotPenInterface {
@@ -24,7 +26,6 @@ object PlotPenInterface {
 trait PlotPenInterface {
   def name: String
   var state: PlotPenState
-  def plot(x: Double, y: Double, color: Int, isDown: Boolean)
 }
 
 case class PlotPenState(

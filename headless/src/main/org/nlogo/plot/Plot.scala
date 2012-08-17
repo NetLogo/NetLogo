@@ -67,15 +67,35 @@ extends PlotInterface {
     state = defaultState
   }
 
-  def createPlotPen(name: String, temporary: Boolean): PlotPen = {
-    this.createPlotPen(name, temporary, "", "")
+  def createPlotPen(name: String, temporary: Boolean = false, setupCode: String = "", updateCode: String = ""): PlotPen = {
+    val pen = new PlotPen(temporary, name, setupCode, updateCode)
+    addPen(pen)
+    pen
   }
 
-  def createPlotPen(name: String, temporary: Boolean, setupCode: String, updateCode: String): PlotPen = {
-    new PlotPen(this, temporary, name, setupCode, updateCode)
+  override def plot(y: Double) {
+    currentPen.foreach(plot(_, y))
   }
 
-  def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
+  def plot(pen: PlotPen, y: Double) {
+    pen.plot(y)
+    if (pen.state.isDown)
+      perhapsGrowRanges(pen, pen.state.x, y)
+  }
+
+  override def plot(x: Double, y: Double) {
+    currentPen.foreach(plot(_, x, y))
+  }
+
+  def plot(pen: PlotPen, x: Double, y: Double) {
+    for(pen <- currentPen) {
+      pen.plot(x, y)
+      if (pen.state.isDown)
+        perhapsGrowRanges(pen, x, y)
+    }
+  }
+
+  def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double){
     if(state.autoPlotOn){
       if(pen.state.mode == PlotPenInterface.BarMode){
         // allow extra room on the right for bar

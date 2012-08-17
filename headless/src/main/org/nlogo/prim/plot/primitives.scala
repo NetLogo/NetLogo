@@ -102,7 +102,7 @@ class _autoploton extends PlotCommand() {
 class _plot extends PlotCommand(Syntax.NumberType) {
   override def perform(context: Context) {
     val y = argEvalDoubleValue(context, 0)
-    currentPen(context).plot(y)
+    currentPlot(context).plot(y)
     context.ip = next
   }
 }
@@ -111,7 +111,7 @@ class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
   override def perform(context: Context) {
     val x = argEvalDoubleValue(context, 0)
     val y = argEvalDoubleValue(context, 1)
-    currentPen(context).plot(x, y)
+    currentPlot(context).plot(x, y)
     context.ip = next
   }
 }

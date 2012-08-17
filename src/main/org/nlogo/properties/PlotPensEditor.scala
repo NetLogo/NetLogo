@@ -101,7 +101,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     def convertToPlotPen(plot: Plot): PlotPen = {
       val pp = new PlotPen(
-        plot = plot,
         name=if(name==null) "" else name,
         temporary=false,
         setupCode=setupCode,
@@ -114,6 +113,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
           mode = originalPen.state.mode,
           isDown = originalPen.state.isDown))
       pp.points = originalPen.points
+      plot.addPen(pp)
       pp
     }
   }
