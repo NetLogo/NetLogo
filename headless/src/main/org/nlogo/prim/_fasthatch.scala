@@ -22,7 +22,7 @@ class _fasthatch(breedName: String) extends Command {
     if (count > 0) {
       val parent = context.agent.asInstanceOf[Turtle]
       val breed =
-        if (breedName.isEmpty) world.turtles
+        if (breedName.isEmpty) parent.getBreed
         else world.getBreed(breedName)
       var i = 0
       while(i < count) {

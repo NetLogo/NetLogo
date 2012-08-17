@@ -111,7 +111,7 @@ public final strictfp class Turtle3D
     child.id(world.newTurtleId());
     world.turtles().add(child);
     if (breed != getBreed()) {
-      setBreed(breed);
+      child.setBreed(breed);
     }
     else if (breed != world.turtles()) {
       getBreed().add(child);
