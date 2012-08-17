@@ -134,11 +134,18 @@ public strictfp class BreedBlock
             ((TraitBlock) block).enableDropDown();
             ((TraitBlock) block).colorButton.setEnabled(true);
         }
-        if (block instanceof BehaviorBlock || block instanceof ConditionBlock) {
+        else if (block instanceof BehaviorBlock) {
             String tmp = ((BehaviorBlock) block).getBehaviorInputName();
             addBehaviorInputToList(tmp);
             String s = ((BehaviorBlock) block).getAgentInputName();
             addAgentInputToList(s);
+        }
+        else if (block instanceof ConditionBlock) {
+            String tmp = ((ConditionBlock) block).getBehaviorInputName();
+            addBehaviorInputToList(tmp);
+            String s = ((ConditionBlock) block).getAgentInputName();
+            addAgentInputToList(s);
+
         }
 
         doLayout();

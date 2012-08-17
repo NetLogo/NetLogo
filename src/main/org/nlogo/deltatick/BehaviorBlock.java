@@ -40,25 +40,26 @@ public strictfp class BehaviorBlock
         //passBack += "to " + getName() + " " + agentInput();
         passBack += "to " + getName() + " ";
 
-        if (inputs.size() > 0) {
+        if (agentInputs.size()  > 0 || inputs.size() > 0 ) {
             passBack += "[ ";
+        }
+
+        if (inputs.size() > 0) {
             for (String input : inputs.keySet()) {
-               // passBack += input + " ]";
-            }
-            if (agentInputs.size() > 0) {
-            for (String s : agentInputs.keySet()) {
-                passBack += s;
+                passBack += input + " ";
 
             }
-                passBack += " ] + \n";
         }
-        }
+
         if (agentInputs.size() > 0) {
-            passBack += "[";
             for (String s : agentInputs.keySet()) {
-                passBack += s + " ]\n";
-
+                passBack += s + " ";
             }
+        }
+
+
+        if (agentInputs.size()  > 0 || inputs.size() > 0 ) {
+            passBack += " ]";
         }
 
 
@@ -94,6 +95,7 @@ public strictfp class BehaviorBlock
         for (JTextField agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
+
         passBack += "\n";
         if (myParent instanceof BreedBlock) {
             for (String name : ((BreedBlock) myParent).myUsedBehaviorInputs) {

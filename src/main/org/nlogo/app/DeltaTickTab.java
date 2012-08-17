@@ -248,11 +248,7 @@ public class DeltaTickTab
                     libraryPanel.add(libraryHolder);
                     libraryHolder.makeNewTab();
 
-                    /*
-                    JScrollPane editorScroll = new JScrollPane();
-                    editorScroll.setPreferredSize(new Dimension(80, 150));
-                    libraryHolder.add(editorScroll);
-                    */
+
 
                     new LibraryReader( workspace.getFrame() , deltaTickTab );
                     libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
@@ -536,6 +532,26 @@ public class DeltaTickTab
             System.out.println(ex.getMessage());
         }
         revalidate() ;
+    }
+
+    public void populatePlotsTest() {
+        try {
+            for ( PlotBlock plotBlock : buildPanel.getMyPlots() ) {
+
+                org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot",false);
+                interfacePanel.addWidget(plotWidget, 30, 0, true, false);
+                plotWidget.displayName(plotBlock.getName());
+                org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot 1");
+                PlotPen plotPen = newPlot.getPen("default").get();
+                for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
+                    plotPen.updateCode(quantBlock.getPenUpdateCode());
+                }
+            }
+        }
+        catch ( Exception ex ) {
+            System.out.println(ex.getMessage());
+        }
+        revalidate();
     }
 
     public void populatePlotsInterface() {
@@ -834,8 +850,9 @@ public class DeltaTickTab
             // pt.getIndenter().handleTab();
             pt.select(0,0);
             //populatePlots();
+            workspace.plotManager().forgetAll();
             populateInterface();
-            populatePlotsInterface();
+            populatePlotsTest();
             populateHistoInterface();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;

@@ -28,7 +28,7 @@ public strictfp class PlotBlock
     boolean histo;
 
     public PlotBlock() {
-        super("new plot", ColorSchemer.getColor(3));
+        super("plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.histo = true;
 
@@ -46,7 +46,7 @@ public strictfp class PlotBlock
 
     //I think this constructor is for histograms- not sure -A. (sept 26)
     public PlotBlock(boolean histo) {
-        super("new plot", ColorSchemer.getColor(3));
+        super("plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.histo = true;
 
@@ -104,15 +104,17 @@ public strictfp class PlotBlock
 
     public String unPackAsCode() {
         String passBack = "";
-        passBack += "  set-current-plot \"" + getName() + "\"\n";
+        //passBack += "  set-current-plot \"" + getName() + "\"\n";
 
+        passBack += " set-current-plot \"plot 1\" \n";
             //?
         for (QuantityBlock quantBlock : getMyBlocks()) {
-            passBack += "  set-current-plot-pen \"" + quantBlock.getName() + " ";
+            //passBack += "  set-current-plot-pen \"" + quantBlock.getName() + " ";
+            passBack += "  set-current-plot-pen \"default\" \n";
             for (JTextField input : quantBlock.inputs.values()) {
-                passBack += input.getText() + " ";
+                //passBack += input.getText() + " ";
             }
-            passBack += "\"\n";
+            //passBack += "\"\n";
             passBack += "  " + quantBlock.unPackAsCommand();
         }
 

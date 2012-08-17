@@ -16,7 +16,7 @@ public strictfp class ConditionBlock
     public ConditionBlock(String name) {
         super(name, ColorSchemer.getColor(1));
         flavors = new DataFlavor[]{
-                //DataFlavor.stringFlavor,
+                DataFlavor.stringFlavor,
                 conditionBlockFlavor,
                 CodeBlock.codeBlockFlavor,
                 CodeBlock.patchBlockFlavor,
@@ -128,5 +128,13 @@ public strictfp class ConditionBlock
             behaviorInputName = s;
             }
         return behaviorInputName;
+    }
+
+    public String getAgentInputName() {
+        String agentInputName = new String();
+        for ( String s : agentInputs.keySet()) {
+            agentInputName = s;
+            }
+        return agentInputName;
     }
 }

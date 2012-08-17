@@ -32,7 +32,8 @@ public class BreedDropTarget
             } else if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
                 return true;
-            } else if (o instanceof TraitBlock) {
+            }
+            else if (o instanceof TraitBlock) {
                 //JComboBox comboBox = ((TraitBlock) block).getDropDownList();
             //QuaquaComboPopup popup = (QuaquaComboPopup) comboBox.getAccessibleContext().getAccessibleChild(0);
             //popup.requestFocus(false);

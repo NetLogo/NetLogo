@@ -135,7 +135,7 @@ public strictfp class TraitBlock
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
-        this.breedName = breedBlock.getName();
+        this.breedName = breedBlock.plural();
         this.traitName = trait.getNameTrait();
         //this.variationNamesValues = variationValue;   // string variation to its numeric value in NetLogo code (Aditi, Aug 7, 2012)
         //this.variationNumbers = variationNumber;     // variation to initial number of the variation in population (Aditi, Aug 7, 2012)
