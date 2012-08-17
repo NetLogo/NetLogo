@@ -1268,7 +1268,7 @@ public abstract strictfp class ImporterJ
   }
 
   // default access for unit testing
-  strictfp class Junk {
+  static strictfp class Junk {
   }
 
   ///

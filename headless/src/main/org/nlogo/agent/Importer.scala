@@ -10,6 +10,7 @@ import org.nlogo.api
 import api.{ AgentKind, AgentVariables, Breed, ImporterUser, PlotInterface }
 import collection.immutable.ListMap
 import collection.JavaConverters._
+import ImporterJ.Junk
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
                _world: World,
