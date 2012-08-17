@@ -35,7 +35,7 @@ public final strictfp class _fastcreateorderedturtles
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
       AgentSet breed =
-          breedName == _createorderedturtles.NO_BREED
+          breedName.equals("")
               ? world.turtles()
               : world.getBreed(breedName);
       for (int i = 0; i < numberOfTurtles; i++) {

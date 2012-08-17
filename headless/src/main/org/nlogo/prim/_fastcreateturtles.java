@@ -35,7 +35,7 @@ public final strictfp class _fastcreateturtles
     int numberOfTurtles = argEvalIntValue(context, 0);
     if (numberOfTurtles > 0) {
       AgentSet breed =
-          breedName == _createturtles.NO_BREED
+        breedName.equals("")
               ? world.turtles()
               : world.getBreed(breedName);
       org.nlogo.util.MersenneTwisterFast random = context.job.random;
