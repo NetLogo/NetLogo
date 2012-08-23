@@ -289,6 +289,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  private val ImportWorldURLProp = "netlogo.world_state_url"
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -499,10 +500,18 @@ class App extends
     }
     else if (commandLineMagic != null)
       workspace.magicOpen(commandLineMagic)
-    else if (commandLineURL != null)
+    else if (commandLineURL != null) {
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
-        null, "Starting...", ModelType.Library)
+        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
+      Option(System.getProperty(ImportWorldURLProp)) foreach {
+        url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
+          import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
+          workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+          workspace.view.dirty();
+          workspace.view.repaint();
+      }
+    }
     else fileMenu.newModel()
   }
 
