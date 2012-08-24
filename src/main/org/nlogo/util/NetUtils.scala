@@ -16,8 +16,7 @@ object NetUtils {
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 
-  // Sharing this has potential for statefulness problems....  Should we just make it anew for each request?
-  val client = new org.apache.http.impl.client.DefaultHttpClient
+  protected def client = new org.apache.http.impl.client.DefaultHttpClient
 
   def httpGet(dest: URL): String = readResponse(client.execute(new HttpGet(dest.toURI)))
 
