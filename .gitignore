@@ -23,6 +23,10 @@ tmp/
 /.project
 /.cache
 /.settings
+headless/.classpath
+headless/.project
+headless/.settings/
+headless/.cache
 
 # other
 /.ensime
