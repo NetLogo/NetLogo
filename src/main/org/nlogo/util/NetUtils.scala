@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity
 
 object NetUtils {
 
+  // Search for explanatory comment by this term: Bad, Bad Bizzle #1
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 

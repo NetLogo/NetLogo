@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream
 // Redundant with other `ZipUtils` files in our codebase, but separated for the sake of simplifying dependencies
 object ZipUtils {
 
+  // Search for explanatory comment by this term: Bad, Bad Bizzle #1
   val DefaultByteEncoding = "ISO-8859-1"
 
   def gzip(data: String, encoding: String = DefaultByteEncoding): Array[Byte] = {
