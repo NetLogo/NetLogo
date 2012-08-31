@@ -25,6 +25,7 @@ object Logger {
   val Turtles = JLogger.getLogger(name + ".TURTLES")
   val Links = JLogger.getLogger(name + ".LINKS")
   val CustomMessages = JLogger.getLogger(name + ".CUSTOM_MESSAGES")
+  val CustomGlobals = JLogger.getLogger(name + ".CUSTOM_GLOBALS")
 
   val widgetMsg = LogMessage.createWidgetMessage()
   val speedMsg = LogMessage.createSpeedMessage()
@@ -39,6 +40,7 @@ object Logger {
   val codeTabMsg = LogMessage.createCodeTabMessage()
   val globalMsg = LogMessage.createGlobalMessage("globals")
   val customMsg = LogMessage.createCustomMessage()
+  val customGlobals = LogMessage.createCustomGlobals()
 
   def logButtonStopped(name: String, onceButton: Boolean, stopping: Boolean) {
     if (Buttons.isInfoEnabled) {
@@ -82,9 +84,13 @@ object Logger {
     else
       Globals.debug(globalMsg)
   }
-  def logCustomMessage(msg: String, nameValuePairs: (String, String)*) {
-    customMsg.updateCustomMessage(msg, nameValuePairs)
+  def logCustomMessage(msg: String) {
+    customMsg.updateCustomMessage(msg)
     CustomMessages.info(customMsg)
+  }
+  def logCustomGlobals(nameValuePairs: (String, String)*) {
+    customGlobals.updateCustomGlobals(nameValuePairs)
+    CustomGlobals.info(customGlobals)
   }
 
   ///

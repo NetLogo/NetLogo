@@ -8,7 +8,10 @@ package org.nlogo.api
  */
 
 object Logger {
-  def logCustomMessage(msg: String, nameValuePairs: (String, String)*) {
-    org.nlogo.log.Logger.logCustomMessage(msg, nameValuePairs: _*)
+  def logCustomMessage(msg: String) {
+    org.nlogo.log.Logger.logCustomMessage(msg)
+  }
+  def logCustomGlobals(nameValuePairs: (String, String)*) {
+    org.nlogo.log.Logger.logCustomGlobals(nameValuePairs: _*)
   }
 }
