@@ -66,7 +66,7 @@ trait Depend extends DefaultProject {
       "plot" -> List("api"),
       "prim" -> List("nvm"),
       "prim/dead" -> List("nvm"),
-      "prim/etc" -> List("nvm", "log"),
+      "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
       "prim/gui" -> List("window"),
       "prim/hubnet" -> List("nvm"),
@@ -91,7 +91,7 @@ trait Depend extends DefaultProject {
       p.depends = allPackages.filter(p2 => packageDefs(p.dir).contains(p2.dir))
     def generate(p: Package) {
       val name = p.dir.replaceAll("/",".")
-      println("[" + name + "] = org.nlogo." + name + (if (name != "log") ".* excluding org.nlogo." + name + ".*.*" else ".*"))
+      println("[" + name + "] = org.nlogo." + name + ".* excluding org.nlogo." + name + ".*.*")
       println("[" + name + "+] = [" + name + "]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
       println("[" + name + "-] = org.nlogo.* excluding [" + name + "+]")
       println("check [" + name + "] independentOf [" + name + "-]")

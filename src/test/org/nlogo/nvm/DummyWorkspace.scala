@@ -85,6 +85,8 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported
+  override def logCustomMessage(msg: String) { }
+  override def logCustomGlobals(nameValuePairs: Seq[(String, String)]) { }
 
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported

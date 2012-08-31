@@ -79,8 +79,13 @@ object LogMessage {
   def createCustomMessage(): LogMessage = {
     val msg = new LogMessage("special-event")
     msg.attributes = Array(Array("type", "custom message"))
-    msg.elements = Array(new LogMessage("message"),
-                         new LogMessage("globals"))
+    msg.elements = Array(new LogMessage("message"))
+    msg
+  }
+  def createCustomGlobals(): LogMessage = {
+    val msg = new LogMessage("special-event")
+    msg.attributes = Array(Array("type", "custom globals"))
+    msg.elements = Array(new LogMessage("globals"))
     msg
   }
 }
@@ -140,7 +145,10 @@ class LogMessage private (val tag: String) {
   def updateSpeedMessage(value: String) {
     elements(0).data = value
   }
-  def updateCustomMessage(msg: String, nameValuePairs: Seq[(String, String)]) {
+  def updateCustomMessage(msg: String) {
+    elements(0).data = msg
+  }
+  def updateCustomGlobals(nameValuePairs: Seq[(String, String)]) {
     def generateGlobalMsgs(nvPairs: Seq[(String, String)]): Array[LogMessage] = {
       nvPairs map {
         case (name, value) =>
@@ -149,8 +157,6 @@ class LogMessage private (val tag: String) {
           msg
       } toArray
     }
-    elements(0).data = msg
-    val globmsgs = generateGlobalMsgs(nameValuePairs)
-    elements(1).elements = globmsgs
+    elements(0).elements = generateGlobalMsgs(nameValuePairs)
   }
 }

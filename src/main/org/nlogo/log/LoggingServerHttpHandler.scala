@@ -1,18 +1,18 @@
-package org.nlogo.log.webstart
+package org.nlogo.log
 
 import scala.collection.mutable.HashMap
-import org.nlogo.util.{ZipUtils, NetUtils}
-import java.net.{URLEncoder, URL}
+import java.net.URL
+
 
 private object LoggingServerHttpHandler {
 
   private val LogPostKey = "logging_data"
 
-  /* Maps a root destination URL (i.e. "http://www.awesomelogs.com/logging") to a URL that logging data
-   * can be POSTed to (i.e. "http://www.awesomelogs.com/logging/152" or even "http://www.logstash.gov")
-   *
-   * DOES NOT SUPPORT SIMULTANEOUSLY WRITING MULTIPLE LOGS TO THE SAME ROOT URL
-   *
+  /*
+  Maps a root destination URL (i.e. "http://www.awesomelogs.com/logging") to a URL that logging data
+  can be POSTed to (i.e. "http://www.awesomelogs.com/logging/152" or even "http://www.logstash.gov")
+
+  DOES NOT SUPPORT SIMULTANEOUSLY WRITING MULTIPLE LOGS TO THE SAME ROOT URL
    */
   private val rootToLogMap = new HashMap[String, URL]
 

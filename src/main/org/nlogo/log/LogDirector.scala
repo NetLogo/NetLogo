@@ -1,14 +1,47 @@
-package org.nlogo.log.webstart
+package org.nlogo.log
 
 import java.net.URL
 import actors.{TIMEOUT, Actor}
-import message.{DirectorMessage, LogManagementMessage, LoggingServerMessage}
-import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
-import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 import collection.mutable.ListBuffer
+
+/*
+
+ The `LogDirector` class constitutes a set of three actor classes that work together to manage a log and its periodic flushing
+
+ (This thing should be made to use Akka at some point....  Also, I don't feel that `LogDirector` should be
+  doing its own transmissions through `LoggingServerHttpHandler`, but I don't know what else _should_ be
+  responsible for doing them. --JAB (8/14/12))
+
+ LogDirector:
+ -Handles external messages regarding:
+ --Flushing the log buffer
+ --Appending to the log buffer
+ --Abruptly closing down the system
+ --Properly closing down the system
+ -Also handles internal messages to flush the buffer (coming from `LogFlushReminder`)
+ -Transmits flushed log messages to preconfigured URLs (which are passed in at the time of object creation)
+
+ LogBufferManager:
+ -Keeps the log buffer in proper state
+ -Handles messages from the Director pertaining to:
+ --Adding to the buffer
+ --Flushing all contents from the buffer
+ ---When flushing, coalesces continuous series of items into the longest string(s) possible
+ ----For example, if the length limit is '10':
+      * Buffer:    ["apple", "ant", "artichoke", "ab", "a", "abcd", "abc", "abcde"]
+      * Coalesced: [["apple", "ant"] (8), ["artichoke"] (9), ["ab", "a", "abcd", "abc"] (10), ["abcde"] (5)]
+
+ LogFlushReminder (Optional):
+ -Sends messages to `LogDirector` to tell it to empty itself.
+ -Is only activated if `LogDirector` is in "continuous mode".
+
+ */
 
 // An actor controller; receives logging data and figures out what to do with it
 class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
+
+  import LogManagementMessage.{Write, Abandon, Flush, Read, Finalize}
+  import LoggingServerMessage.{ToServerWrite, ToServerPulse, ToServerAbandon, ToServerFinalize}
 
   require(destinations.size > 0)
 
@@ -153,4 +186,48 @@ class LogDirector(val mode: LogSendingMode, destinations: URL*) extends Actor {
     }
   }
 
+  // Establishing a message-set through which the logging actors can communicate with one another
+  private[log] sealed trait LogManagementMessage
+
+  private[log] object LogManagementMessage {
+    case class  Write(data: String) extends LogManagementMessage
+    case object Read extends LogManagementMessage
+    case object Abandon extends LogManagementMessage
+    case object Finalize extends LogManagementMessage
+    case object Flush extends LogManagementMessage
+  }
+
 }
+
+
+// The messaging protocol to be used by logging directors
+sealed trait DirectorMessage
+
+object DirectorMessage {
+  case class ToDirectorWrite(data: String) extends DirectorMessage
+  case object ToDirectorAbandon extends DirectorMessage
+  case object ToDirectorFinalize extends DirectorMessage
+  case object FromDirectorClosed extends DirectorMessage
+}
+
+
+// The messaging protocol to be used by the remote, log-receiving server
+private[log] sealed trait LoggingServerMessage
+
+private[log] object LoggingServerMessage {
+  private val Sep = "|"
+  case class ToServerWrite(data: String) { override def toString = "write%s%s".format(Sep, data) }
+  case object ToServerPulse              { override def toString = "pulse" }
+  case object ToServerAbandon            { override def toString = "abandon" }
+  case object ToServerFinalize           { override def toString = "finalize" }
+}
+
+
+// An enumeration of modes that `LogDirector` can utilize
+sealed trait LogSendingMode
+
+object LogSendingMode {
+  case object Continuous extends LogSendingMode
+  case object AfterLoggingCompletes extends LogSendingMode
+}
+

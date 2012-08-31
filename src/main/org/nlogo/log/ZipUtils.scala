@@ -1,9 +1,10 @@
-package org.nlogo.util
+package org.nlogo.log
 
 import collection.mutable.ArrayBuffer
 import java.util.zip.{GZIPInputStream, ZipEntry, ZipFile}
 import java.io.ByteArrayInputStream
 
+// Redundant with other `ZipUtils` files in our codebase, but separated for the sake of simplifying dependencies
 object ZipUtils {
 
   // Search for explanatory comment by this term: Bad, Bad Bizzle #1
@@ -44,16 +45,16 @@ object ZipUtils {
   }
 
   def extractFilesFromJar(jarpath: String, dest: String, entryFilter: ZipEntry => Boolean = (_ => true)): List[java.io.File] = {
-    
+
     import collection.JavaConverters.enumerationAsScalaIteratorConverter
-    
+
     val zipFile = new ZipFile(jarpath)
     val entries = Option(zipFile.entries) map (_.asScala filter (entryFilter)) getOrElse (Iterator[ZipEntry]())
-    
+
     // Sort by name size so we always get directories created before trying to write their children
     entries.toList sortBy (_.getName.size) foreach (extractFileFromZip(dest, _, zipFile))
     new java.io.File(dest).listFiles.toList
-    
+
   }
 
   def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
