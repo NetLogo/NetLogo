@@ -252,4 +252,11 @@ public interface Workspace
   boolean profilingEnabled();
 
   Tracer profilingTracer();
+
+  /*
+   * Primarily for use by Custom Logging extension
+   */
+  void logCustomMessage(String msg);
+  void logCustomGlobals(scala.collection.Seq<scala.Tuple2<String, String>> nameValuePairs);
+
 }

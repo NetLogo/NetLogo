@@ -1324,4 +1324,14 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     return source;
   }
 
+  @Override
+  public void logCustomMessage(String msg) {
+    org.nlogo.log.Logger.logCustomMessage(msg);
+  }
+
+  @Override
+  public void logCustomGlobals(scala.collection.Seq<scala.Tuple2<String, String>> nameValuePairs) {
+    org.nlogo.log.Logger.logCustomGlobals(nameValuePairs);
+  }
+
 }

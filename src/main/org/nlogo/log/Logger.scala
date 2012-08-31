@@ -88,7 +88,7 @@ object Logger {
     customMsg.updateCustomMessage(msg)
     CustomMessages.info(customMsg)
   }
-  def logCustomGlobals(nameValuePairs: (String, String)*) {
+  def logCustomGlobals(nameValuePairs: Seq[(String, String)]) {
     customGlobals.updateCustomGlobals(nameValuePairs)
     CustomGlobals.info(customGlobals)
   }

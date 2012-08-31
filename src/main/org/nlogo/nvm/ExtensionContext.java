@@ -50,4 +50,15 @@ public strictfp class ExtensionContext
   public void importPcolors(java.awt.image.BufferedImage image, boolean asNetLogoColors) {
     org.nlogo.agent.ImportPatchColors.doImport(image, workspace.world(), asNetLogoColors);
   }
+
+  @Override
+  public void logCustomMessage(String msg) {
+    workspace.logCustomMessage(msg);
+  }
+
+  @Override
+  public void logCustomGlobals(scala.collection.Seq<scala.Tuple2<String, String>> nameValuePairs) {
+    workspace.logCustomGlobals(nameValuePairs);
+  }
+
 }
