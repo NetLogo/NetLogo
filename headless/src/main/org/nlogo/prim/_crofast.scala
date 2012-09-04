@@ -6,11 +6,12 @@ import org.nlogo.agent.Turtle
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
-class _fastcreateturtles(breedName: String) extends Command {
+class _crofast(breedName: String) extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.NumberType), "O---", true)
+      Array(Syntax.NumberType),
+      "O---", true)
 
   override def toString =
     super.toString + ":" + breedName
@@ -21,12 +22,12 @@ class _fastcreateturtles(breedName: String) extends Command {
       val breed =
         if (breedName.isEmpty) world.turtles
         else world.getBreed(breedName)
-      val random = context.job.random
       var i = 0
-      while(i < count) {
-        workspace.joinForeverButtons(
-          world.createTurtle(breed, random.nextInt(14),
-                             random.nextInt(360)))
+      while (i < count) {
+        val turtle = world.createTurtle(breed)
+        turtle.colorDouble(Double.box(10.0 * i + 5.0))
+        turtle.heading((360.0 * i) / count)
+        workspace.joinForeverButtons(turtle)
         i += 1
       }
     }

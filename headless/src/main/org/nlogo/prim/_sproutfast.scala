@@ -2,32 +2,34 @@
 
 package org.nlogo.prim
 
+import org.nlogo.agent.Patch
 import org.nlogo.api.Syntax
-import org.nlogo.agent.Turtle
 import org.nlogo.nvm.{ Command, Context }
 
-// replaces _hatch when initialization block is empty
+// replaces _sprout when initialization block is empty
 
-class _fasthatch(breedName: String) extends Command {
+class _sproutfast(breedName: String) extends Command {
 
   override def syntax =
     Syntax.commandSyntax(
-      Array(Syntax.NumberType), "-T--", true)
+      Array(Syntax.NumberType),
+      "--P-", true)
 
   override def toString =
     super.toString + ":" + breedName
 
   override def perform(context: Context) = {
+    val parent = context.agent.asInstanceOf[Patch]
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
-      val parent = context.agent.asInstanceOf[Turtle]
+      val random = context.job.random
       val breed =
-        if (breedName.isEmpty) parent.getBreed
+        if (breedName.isEmpty) world.turtles
         else world.getBreed(breedName)
       var i = 0
-      while(i < count) {
+      while (i < count) {
         workspace.joinForeverButtons(
-          parent.hatch(breed))
+          parent.sprout(random.nextInt(14), random.nextInt(360), breed))
         i += 1
       }
     }

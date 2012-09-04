@@ -21,7 +21,7 @@ package org.nlogo.nvm
 // needed after AgentTypeChecker has run.
 //
 // - A command may wish to cause other commands to be inserted, either instead of or in addition to
-// the original.  For example _hatch replaces itself with _fasthatch if the optional command block
+// the original.  For example _hatch replaces itself with _hatchfast if the optional command block
 // is omitted.  _fd turns into _fd followed by _fdinternal.  And so on.
 //
 // - Any command that takes a Reference argument is custom assembled.  (This wouldn't be necessary

@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context }
 
-class _fastrecurse(original: _call) extends Command {
+class _recursefast(original: _call) extends Command {
 
   token(original.token)
 
