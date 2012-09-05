@@ -253,6 +253,7 @@ cd ..
 # and make a new one
 $RM -rf docs
 $CP -rp ../../docs .
+$RM -rf docs/scaladoc
 $MV NetLogo\ User\ Manual.pdf docs/
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/*.html
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/dict/*.html
@@ -461,6 +462,7 @@ $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 if [ $MATHEMATICA -eq 1 ]; then
   $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
 fi
+$CP -rp ../docs/scaladoc $COMPRESSEDVERSION/docs
 
 # stuff version number and date into web page
 cd $COMPRESSEDVERSION
