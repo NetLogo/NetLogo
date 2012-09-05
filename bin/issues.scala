@@ -62,10 +62,7 @@ val req = base <<? Map("milestone" -> "11",
 val stream = Http(req OK ((_: Response).getResponseBodyAsStream)).apply
 val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
 val issues: List[Issue] =
-  (for {
-    JArray(objs) <- parsed
-    obj <- objs
-  } yield Issue.fromJson(obj)).toList
+  parsed.asInstanceOf[JArray].arr.map(Issue.fromJson)
 
 println(issues.size + " issues fixed!")
 for(Issue(n, title) <- issues.sortBy(_.number))
