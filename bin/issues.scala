@@ -26,7 +26,7 @@ onLoadMessage := ""
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
-  "net.databinder.dispatch" %% "core" % "0.9.0",
+  "net.databinder.dispatch" %% "core" % "0.9.1",
   "net.liftweb" % "lift-json_2.9.1" % "2.4",
   "org.slf4j" % "slf4j-nop" % "1.6.0")
 */
