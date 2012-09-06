@@ -17,15 +17,15 @@ object NetUtils {
   val DefaultByteEncoding = "ISO-8859-1"
   val DefaultReadSize = 1024
 
-  protected def client = new org.apache.http.impl.client.DefaultHttpClient
+  protected def generateClient = new org.apache.http.impl.client.DefaultHttpClient
 
-  def httpGet(dest: URL): String = readResponse(client.execute(new HttpGet(dest.toURI)))
+  def httpGet(dest: URL): String = readResponse(generateClient.execute(new HttpGet(dest.toURI)))
 
   def httpPost(postKVs: Map[String, String], dest: URL, encoding: String = DefaultByteEncoding): String = {
     import collection.JavaConverters.seqAsJavaListConverter
     val post = new HttpPost(dest.toURI)
     post.setEntity(new UrlEncodedFormEntity((postKVs map { case (key, value) => new BasicNameValuePair(key, value) } toSeq) asJava, Charset.forName("UTF-8")))
-    readResponse(client.execute(post))
+    readResponse(generateClient.execute(post))
   }
 
   private def readResponse(response: HttpResponse) = Source.fromInputStream(response.getEntity.getContent).mkString.trim
