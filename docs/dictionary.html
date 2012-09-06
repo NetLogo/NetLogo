@@ -5422,7 +5422,7 @@ ask turtle 1
         netlogo-applet?
       </h4>
       <p>
-        Reports true if the model is running as an applet.
+        Always false.  Included for backwards compatibility with old models.
       </div>
     <div class="dict_entry">
       <h3>
@@ -7186,10 +7186,6 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
         within a string by using another backslash &quot;C:\\&quot;
       <p>
         The change is temporary and is not saved with the model.
-      <p>
-        Note: in applets, this command has no effect, since applets are
-        only allowed to read files from the same directory on the server
-        where the model is stored.
       <pre>
 set-current-directory &quot;C:\\NetLogo&quot;
 ;; Assume it is a Windows Machine

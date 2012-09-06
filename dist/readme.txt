@@ -55,9 +55,8 @@ The release package for this version of NetLogo includes:
 * "NetLogo 3D" application (see 3D section of User Manual)
 * "NetLogo Logging" application (see Logging section of User Manual)
 * "HubNet Client" application
-* "NetLogo.jar", "NetLogoLite.jar", "NetLogoHeadless.jar",
-  "HubNet.jar", "netlogo_logging.xml", "lib" internal support files
-  and folder
+* "NetLogo.jar","NetLogoHeadless.jar", "netlogo_logging.xml",
+  "lib" internal support files and folder
 * "Docs" folder containing a "NetLogo User Manual" -- complete
   documentation in HTML and printable PDF formats
 * "Models" folder with several hundred NetLogo models and HubNet

@@ -81,25 +81,6 @@
         installation that the without-Java installer uses?</b></a>
       </ul>
     <h3>
-      Applets
-    </h3>
-    <ul class="smaller">
-      <li>
-        <a href="#appletjava"><b>I tried to run one of the applets on your
-        site, but it didn't work. What should I do?</b></a>
-      <li>
-        <a href="#secretweb"><b>Can I make my model available as an applet
-        while keeping the code secret?</b></a>
-      <li>
-        <a href="#appletfiles"><b>Can a model saved as an applet use
-        <tt>import-world</tt>, <tt>file-open</tt>, and other commands that
-        read files?</b></a>
-      <li>
-        <a href="#applet200OK"><b>When I tried loading my model as an
-        applet I get an error like: java.lang.ClassFormatError:
-        Incompatible magic value.</b></a>
-      </ul>
-    <h3>
       Running
     </h3>
     <ul class="smaller">
@@ -234,8 +215,6 @@
       NetLogo 3D
     </h3>
     <ul class="smaller">
-      <li>
-        <a href="#applet"><b>Can I make a 3D applet?</b></a>
       <li>
         <a href="#stereo"><b>Does NetLogo 3D work with my stereoscopic
         device?</b></a>
@@ -556,74 +535,6 @@ NetLogo@@@VERSION@@@Installer.exe -q
       <li>Add NETLOGO_JAVA as a variable and set the value to the path of
       the Java installation.
       </ul>
-    <h2>
-      Applets
-    </h2>
-    <h3>
-      <a name="appletjava" id="appletjava"></a>I tried to run one of the
-      applets on your site, but it didn't work. What should I do?
-    </h3>
-    <p>
-      Your web browser must support Java 6 or later. For details on Java
-      requirements see the <a href="applet.html#java">Applet guide</a>.
-    <h3>
-      <a name="secretweb" id="secretweb"></a>Can I make my model available
-      as an applet while keeping the code secret?
-    </h3>
-    <p>
-      Normally, the code is not secret. In order for the applet to operate,
-      the model file containing the code must be accessible.
-    <p>
-      When you use &quot;Save as applet&quot; on the File menu, the HTML
-      page generated contains the source code and a link where the user can
-      download the model file.
-    <p>
-      If you want to keep the code secret, you can remove the source code
-      and the link. Removing the link will make it harder for the user to
-      access the model file, but not impossible.
-    <p>
-      However, Peter Brooks has developed a NetLogo obfuscator which makes
-      the code &quot;as indecipherable as possible&quot;. It is online
-      <a href="http://bert.stuy.edu/pbrooks/netlogo/obfuscator">here</a>.
-    <h3>
-      <a name="appletfiles" id="appletfiles"></a>Can a model saved as an
-      applet use <tt>import-world</tt>, <tt>file-open</tt>, and other
-      commands that read files?
-    </h3>
-    <p>
-      Yes, but only to read files that are stored in the same directory on
-      your web server as the HTML and model files. Unsigned Java applets
-      cannot read files on the user's computer, only the web server.
-    <h3>
-      <a name="applet200OK" id="applet200OK"></a>When I tried loading my
-      model as an applet I get an error like: java.lang.ClassFormatError:
-      Incompatible magic value.
-    </h3>
-    <p>
-      If your web server returns custom error messages in response to
-      requests for non-existent pages it must also return a status code of
-      404 Not Found, otherwise, NetLogo thinks the following data is what
-      it requested and tries to read it as such. This happens even if all
-      the files required to run the applet are present.
-    <p>
-      If you don't have control over the error messages on your web
-      server you can use the following as a workaround:
-    <ul>
-      <li>Create a directory named <tt>META-INF</tt> in the same directory
-      as the applet files.
-      <li>Create a subdirectory of <tt>META-INF</tt> called
-      <tt>services</tt>
-      <li>Create a file called
-      <tt>org.apache.commons.logging.LogFactory</tt> in the
-      <tt>services</tt> subdirectory
-      <li>Add the following line to
-      <tt>org.apache.commons.logging.LogFactory</tt>:
-        <pre>
-org.apache.commons.logging.impl.LogFactoryImpl
-</pre>
-      </ul>
-    <p>
-      Note that all the directory and file names are case sensitive.
     <h2>
       Running
     </h2>
@@ -1258,11 +1169,6 @@ set var1 old-var1
     <h2>
       NetLogo 3D
     </h2>
-    <h3>
-      <a name="applet" id="applet"></a>Can I make a 3D applet?
-    </h3>
-    <p>
-      Not at this time. Perhaps in some future version of NetLogo.
     <h3>
       <a name="stereo" id="stereo"></a>Does NetLogo work with my
       stereoscopic device?

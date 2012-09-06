@@ -43,10 +43,7 @@
       </dirEntry>
       <fileEntry mountPoint="17" file="./NetLogo.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="17" file="./NetLogoHeadless.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="17" file="./HubNet.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="17" file="./netlogo_logging.xml" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="17" file="./NetLogoLite.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="17" file="./NetLogoLite.jar.pack.gz" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="17" file="./readme.txt" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components />
