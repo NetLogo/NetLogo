@@ -81,7 +81,7 @@ private class Assembler {
     }
     def block() { block(stmt.size - 1) }
     def block(pos: Int) { assembleStatements(stmt(pos).asInstanceOf[CommandBlock].statements) }
-    def argCount() = stmt.size
+    def argCount = stmt.size
     def arg(i: Int) = stmt(i).asInstanceOf[ReporterApp].reporter
     def removeArg(i: Int) {
       stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
