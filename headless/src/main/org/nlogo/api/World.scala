@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.util.MersenneTwisterFast
+
 trait World {
   def patchSize: Double
   def worldWidth: Int
@@ -53,6 +55,19 @@ trait World {
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
+  def realloc()
+  def getDimensions: WorldDimensions
+  def isDimensionVariable(variableName: String): Boolean
+  @throws(classOf[WorldDimensionException])
+  def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions
+  def equalDimensions(d: WorldDimensions): Boolean
+  def mainRNG: MersenneTwisterFast
+  def auxRNG: MersenneTwisterFast
+  def observerOwnsIndexOf(name: String): Int
+  @throws(classOf[AgentException])
+  @throws(classOf[LogoException])
+  def setObserverVariableByName(variableName: String, value: AnyRef)
+  def timer: Timer
 
   /**
    * Returns true if there is at least one partially transparent turtle, patch, link, or 3D stamp

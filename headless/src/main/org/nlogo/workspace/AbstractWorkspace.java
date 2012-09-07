@@ -649,11 +649,11 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public org.nlogo.util.MersenneTwisterFast auxRNG() {
-    return world().auxRNG;
+    return world().auxRNG();
   }
 
   public org.nlogo.util.MersenneTwisterFast mainRNG() {
-    return world().mainRNG;
+    return world().mainRNG();
   }
 
   public LogoException lastLogoException() {
