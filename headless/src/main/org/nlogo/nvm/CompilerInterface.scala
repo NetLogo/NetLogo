@@ -54,5 +54,5 @@ trait CompilerInterface {
   def isValidIdentifier(s: String, is3D: Boolean): Boolean
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token]
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Seq[Token]
 }

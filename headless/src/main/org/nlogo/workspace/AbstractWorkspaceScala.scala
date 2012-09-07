@@ -103,7 +103,7 @@ object AbstractWorkspaceTraits {
     override def isReporter(s: String) =
       compiler.isReporter(s, world.program, procedures, getExtensionManager)
 
-    override def tokenizeForColorization(s: String): Array[Token] =
+    override def tokenizeForColorization(s: String): Seq[Token] =
       compiler.tokenizeForColorization(
         s, getExtensionManager, world.program.is3D)
 

@@ -167,7 +167,7 @@ object Compiler extends CompilerInterface {
     tokenizer(false).getTokenAtPosition(source, position)
 
   // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token] =
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Seq[Token] =
     tokenizer(is3D).tokenizeForColorization(source, extensionManager)
 
 }
