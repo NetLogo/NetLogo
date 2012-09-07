@@ -375,7 +375,7 @@ private class StructureParser(
       }
       else if(!haveEnd) {
         if(token.tpe == TokenType.COMMAND && token.value.isInstanceOf[_let])
-          parseLet(procedure, start, new java.util.ArrayList[String])
+          parseLet(procedure, start)
         else if(token.tpe == TokenType.KEYWORD) {
           val keyword = token.value.asInstanceOf[String]
           if(keyword == "END") {
@@ -498,14 +498,14 @@ private class StructureParser(
       }
     }
   }
-  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: java.util.List[String]): Let = {
+  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: Set[String] = Set()): Let = {
     var ancestorNames = oldAncestorNames
     val letToken = tokenBuffer.next()
     val nameToken = tokenBuffer.head
     cAssert(nameToken.tpe == TokenType.IDENT, "Expected variable name here", nameToken)
     val name = nameToken.value.asInstanceOf[String]
     val startPos = tokenBuffer.index - offset
-    cAssert(!ancestorNames.contains(name),
+    cAssert(!ancestorNames(name),
             "There is already a local variable called " + name + " here", nameToken)
     checkName(name, nameToken, null, procedure)
     var level = 1
@@ -530,8 +530,7 @@ private class StructureParser(
         tokenBuffer.next()
       }
       else if(token.tpe == TokenType.COMMAND && token.value.isInstanceOf[_let]) {
-        ancestorNames = new java.util.ArrayList[String](ancestorNames)
-        ancestorNames.add(name)
+        ancestorNames += name
         children += parseLet(procedure, offset, ancestorNames)
       }
       else if(token.tpe == TokenType.KEYWORD) {
