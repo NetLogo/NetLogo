@@ -39,10 +39,12 @@ object Issue {
   def fromJson(j: JValue): Issue = {
     val JInt(n) = j \ "number"
     val JString(title) = j \ "title"
-    Issue(n.toInt, title)
+    val JArray(labels) = j \ "labels"
+    Issue(n.toInt, title,
+          labels.map(_ \ "name").collect{case JString(s) => s})
   }
 }
-case class Issue(number: Int, title: String)
+case class Issue(number: Int, title: String, labels: List[String])
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
@@ -57,8 +59,12 @@ val issues: List[Issue] =
   yield Issue.fromJson(item)
 
 println(issues.size + " issues fixed!")
-for(Issue(n, title) <- issues.sortBy(_.number))
-  println(" * " + title + " ([#" + n + "]" +
+for(Issue(n, title, labels) <- issues.sortBy(_.number)) {
+  val labelsString =
+    if (labels.isEmpty) ""
+    else labels.mkString("", ", ", ": ")
+  println(" * " + labelsString + title + " ([#" + n + "]" +
           "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+}
 
 Http.shutdown()
