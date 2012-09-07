@@ -9,10 +9,17 @@ object Depend {
   val depend = TaskKey[Unit](
     "depend", "use Classycle to ferret out forbidden dependencies")
 
-  lazy val dependTask =
-    depend <<= (fullClasspath in Test, baseDirectory, classDirectory in Compile, classDirectory in Test, streams).map{
-      (cp, base, classes, testClasses, s) =>
-        IO.write(base / "tmp" / "depend.ddf", ddfContents)
+  val settings = Seq(dependTask)
+
+  // perhaps this voodoo will make intermittent failures-for-no-apparent-
+  // reason stop. sigh - ST 8/12/12
+  private val lock = new AnyRef
+
+  private lazy val dependTask =
+    depend <<= (fullClasspath in Test, classDirectory in Compile, classDirectory in Test, streams, thisProject).map{
+      (cp, classes, testClasses, s, project) => lock.synchronized {
+        s.log.info("begin depend: " + project.id)
+        IO.write(file(".") / "tmp" / "depend.ddf", ddfContents)
         import classycle.dependency.DependencyChecker
         def main() = TrapExit(
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
@@ -22,11 +29,21 @@ object Depend {
           DependencyChecker.main(Array("-dependencies=@tmp/depend.ddf",
                                        testClasses.toString)),
           s.log)
+        s.log.info("depend: " + classes.toString)
         main() match {
-          case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
-          case fail => sys.error(fail.toString)
+          case 0 =>
+            s.log.info("depend: " + testClasses.toString)
+            test() match {
+              case 0 =>
+              case fail =>
+                s.log.info("depend failed: " + testClasses.toString)
+                sys.error(fail.toString) }
+          case fail =>
+            s.log.info("depend failed: " + classes.toString)
+            sys.error(fail.toString)
         }
-      }.dependsOn(compile in Test)
+        s.log.info("end depend: " + project.id)
+      }}.dependsOn(compile in Test)
 
   private def ddfContents: String = {
     val buf = new StringBuilder
@@ -64,7 +81,6 @@ object Depend {
       "prim/dead" -> List("nvm"),
       "prim/etc" -> List("nvm"),
       "prim/file" -> List("nvm"),
-      "prim/gui" -> List("window"),
       "prim/hubnet" -> List("nvm"),
       "prim/plot" -> List("nvm","plot"),
       "prim/threed" -> List("nvm"),
@@ -95,7 +111,7 @@ object Depend {
     }
     def generateFooter() {
       println("""
-### HubNet client dependencies (keep HubNet.jar small!)
+### HubNet client dependencies
 
 [HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.mirroring] [hubnet.protocol] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
 check [HubNet-client] independentOf [workspace]

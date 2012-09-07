@@ -24,22 +24,19 @@ public strictfp class FileMenu
 
   private final App app;
   private final ModelSaver modelSaver;
-  private final AppletSaver appletSaver;
 
   ///
 
-  public FileMenu(App app, ModelSaver modelSaver, AppletSaver appletSaver) {
+  public FileMenu(App app, ModelSaver modelSaver) {
     super(I18N.guiJ().get("menu.file"));
     this.app = app;
     this.modelSaver = modelSaver;
-    this.appletSaver = appletSaver;
     addMenuItem('N', new NewAction());
     addMenuItem('O', new OpenAction());
     addMenuItem('M', new ModelsLibraryAction());
     addSeparator();
     addMenuItem('S', new SaveAction());
     addMenuItem('S', true, new SaveAsAction());
-    addMenuItem(new SaveAppletAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
@@ -187,94 +184,6 @@ public strictfp class FileMenu
     void action()
         throws UserCancelException {
       saveAs();
-    }
-  }
-
-  private class SaveAppletAction extends FileMenuAction {
-    SaveAppletAction(String title) {
-      super(title);
-    }
-
-    SaveAppletAction() {
-      super(I18N.guiJ().get("menu.file.saveAsApplet"));
-      // disabled for 3-D since it doesn't work - ST 2/25/05
-      setEnabled(!org.nlogo.api.Version.is3D());
-    }
-
-    @Override
-    void action()
-        throws UserCancelException {
-      // first, force the user to save.
-      save();
-
-      String exportPath = getExportPath("");
-
-      app.resetZoom();
-
-      // Use workspace.modelNameForDisplay() and
-      // workspace.getModelFileName() to guarantee consistency. this should
-      // be fine since we forced a save.
-      appletSaver.save
-          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
-              app.tabs().interfaceTab().getInterfacePanel(),
-              app.workspace().modelNameForDisplay(),
-              exportPath,
-              app.workspace().getModelFileName(),
-              app.tabs().infoTab().info(),
-              app.tabs().codeTab().getText(),
-              app.workspace().getExtensionManager().getJarPaths(),
-              app.workspace().getExtensionManager().getExtensionNames());
-    }
-
-    String getExportPath(String suffix)
-        throws UserCancelException {
-      // we use workspace.getModelFileName() here, because it really should
-      // never any longer be null, now that we've forced the user to save.
-      // it's important that it not be, in fact, since the applet relies
-      // on the model having been saved to some file.
-      String suggestedFileName = app.workspace().getModelFileName();
-
-      // try to guess a decent file name to export to...
-      int suffixIndex = suggestedFileName.lastIndexOf("." + modelSuffix());
-      if (suffixIndex > 0
-          && suffixIndex == suggestedFileName.length() - (modelSuffix().length() + 1)) {
-        suggestedFileName = suggestedFileName.substring(0,
-            suggestedFileName.length() - (modelSuffix().length() + 1));
-      }
-      suggestedFileName = suggestedFileName + suffix + ".html";
-
-      // make the user choose the actual destination...
-      return org.nlogo.swing.FileDialog.show
-          (FileMenu.this, "Saving as Applet", java.awt.FileDialog.SAVE,
-              suggestedFileName);
-    }
-  }
-
-  public javax.swing.AbstractAction saveClientAppletAction() {
-    return new SaveClientAppletAction();
-  }
-
-  private class SaveClientAppletAction extends SaveAppletAction {
-    SaveClientAppletAction() {
-      super(I18N.guiJ().get("menu.file.saveClientAsApplet")); // TODO i18n
-    }
-
-    @Override
-    void action()
-        throws UserCancelException {
-      String exportPath = getExportPath("-client");
-
-      app.resetZoom();
-
-      // Use workspace.modelNameForDisplay() and
-      // workspace.getModelFileName() to guarantee consistency. this should
-      // be fine since we forced a save.
-      appletSaver.saveClient
-          (org.nlogo.awt.Hierarchy.getFrame(FileMenu.this),
-              app.workspace().getHubNetManager().getInterfaceWidth(),
-              app.workspace().getHubNetManager().getInterfaceHeight(),
-              app.workspace().modelNameForDisplay(),
-              exportPath);
     }
   }
 

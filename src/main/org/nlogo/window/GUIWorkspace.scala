@@ -3,6 +3,8 @@
 package org.nlogo.window
 
 import org.nlogo.{ agent, api, shape, workspace }
+import org.nlogo.swing.{ FileDialog, InputDialog, OptionDialog, ModalProgressTask }
+import org.nlogo.awt.UserCancelException
 
 abstract class GUIWorkspace(
   _world: agent.World,
@@ -37,7 +39,7 @@ with Events.LoadSectionEventHandler {
 
   ///
 
-  def reload() {
+  override def reload() {
     new Events.AppEvent(AppEventType.RELOAD, Seq())
       .raiseLater(this)
   }
@@ -52,18 +54,18 @@ with Events.LoadSectionEventHandler {
       .raiseLater(this)
   }
 
-  def startLogging(properties: String) {
+  override def startLogging(properties: String) {
     try new Events.AppEvent(AppEventType.START_LOGGING,
                             Seq(fileManager.attachPrefix(properties)))
           .raiseLater(this);
   }
 
-  def zipLogFiles(filename: String) {
+  override def zipLogFiles(filename: String) {
     new Events.AppEvent(AppEventType.ZIP_LOG_FILES, Seq(fileManager.attachPrefix(filename)))
       .raiseLater(this)
   }
 
-  def deleteLogFiles() {
+  override def deleteLogFiles() {
     new Events.AppEvent(AppEventType.DELETE_LOG_FILES, Seq())
       .raiseLater(this)
   }
@@ -80,6 +82,188 @@ with Events.LoadSectionEventHandler {
     try new Events.ExportInterfaceEvent(stream, throw _)
           .raise(this)
     finally stream.close()
+  }
+
+  ///
+
+  // when we've got two views going the mouse reporters should
+  // be smart about which view we might be in and return something that makes
+  // sense ev 12/20/07
+  override def mouseDown = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse clicks - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseDown
+  }
+
+  override def mouseInside = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseInside
+  }
+
+  override def mouseXCor = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseXCor
+  }
+
+  override def mouseYCor = {
+    // we must first make sure the event thread has had the
+    // opportunity to detect any recent mouse movement - ST 5/3/04
+    waitForQueuedEvents()
+    viewManager.mouseYCor
+  }
+
+  ///
+
+  override def beep() {
+    java.awt.Toolkit.getDefaultToolkit().beep()
+  }
+
+  override def updateMonitor(owner: api.JobOwner, value: AnyRef) {
+    owner.asInstanceOf[MonitorWidget].value(value)
+  }
+
+  ///
+
+  override def movieIsOpen =
+    movieEncoder != null
+
+  override def movieCancel() {
+    if (movieEncoder != null) {
+      movieEncoder.cancel()
+      movieEncoder = null
+    }
+  }
+
+  override def movieClose() {
+    ModalProgressTask(
+      getFrame, "Exporting movie...",
+      new Runnable() {
+        override def run() {
+          movieEncoder.stop()
+          movieEncoder = null
+        }})
+  }
+
+  override def movieGrabInterface() {
+    movieEncoder.add(
+      org.nlogo.awt.Images.paintToImage(
+        viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]))
+  }
+
+  override def movieGrabView() {
+    movieEncoder.add(exportView())
+  }
+
+  override def movieSetRate(rate: Float) {
+    movieEncoder.setFrameRate(rate)
+  }
+
+  override def movieStart(path: String) {
+    movieEncoder = new org.nlogo.awt.JMFMovieEncoder(15, path)
+  }
+
+  override def movieStatus: String =
+    if(movieEncoder == null)
+      "No movie."
+    else {
+      val builder = new StringBuilder
+      builder ++= movieEncoder.getNumFrames + " frames" + "; "
+      builder ++= "frame rate = " + movieEncoder.getFrameRate
+      if (movieEncoder.isSetup) {
+        val size = movieEncoder.getFrameSize
+        builder ++= "; size = " + size.width + "x" + size.height
+      }
+      builder.toString
+    }
+
+  ///
+
+  override def userDirectory: Option[String] =
+    try {
+      view.mouseDown(false)
+      FileDialog.setDirectory(fileManager.getPrefix)
+      val chosen =
+        FileDialog.show(getFrame, "Choose Directory", java.awt.FileDialog.LOAD,
+                        true)  // directories only please
+      Some(chosen + java.io.File.separatorChar)
+    }
+    catch {
+      case _: UserCancelException =>
+        None
+    }
+
+  override def userFile: Option[String] =
+    try {
+      view.mouseDown(false)
+      FileDialog.setDirectory(fileManager.getPrefix)
+      val chosen =
+        FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.LOAD)
+      Some(chosen)
+    }
+    catch {
+      case _: UserCancelException =>
+        None
+    }
+
+  override def userInput(message: String): Option[String] = {
+    view.mouseDown(false)
+    Option(
+      new InputDialog(
+        getFrame, "User Input", message,
+        api.I18N.gui.fn).showInputDialog())
+  }
+
+  override def userMessage(message: String): Boolean = {
+    view.mouseDown(false)
+    val choice =
+      OptionDialog.show(getFrame, "User Message", message,
+                        Array(api.I18N.gui.get("common.buttons.ok"),
+                              api.I18N.gui.get("common.buttons.halt")))
+    choice == 1
+  }
+
+  override def userNewFile: Option[String] =
+    try {
+      view.mouseDown(false)
+      FileDialog.setDirectory(fileManager.getPrefix)
+      val chosen = FileDialog.show(getFrame, "Choose File", java.awt.FileDialog.SAVE)
+      Some(chosen)
+    }
+    catch {
+      case _: UserCancelException =>
+        None
+    }
+
+  override def userOneOf(message: String, xs: api.LogoList): Option[AnyRef] = {
+    val items = xs.map(api.Dump.logoObject).toArray[AnyRef]
+    view.mouseDown(false)
+    val chosen =
+      new OptionDialog(
+        getFrame, "User One Of", message,
+        items, api.I18N.gui.fn).showOptionDialog()
+    for(boxedInt <- Option(chosen))
+    yield
+      xs.get(boxedInt.asInstanceOf[java.lang.Integer].intValue)
+  }
+
+  override def userYesOrNo(message: String): Option[Boolean] = {
+    view.mouseDown(false)
+    val response = OptionDialog.showIgnoringCloseBox(
+      getFrame, "User Yes or No", message,
+      Array(api.I18N.gui.get("common.buttons.yes"),
+            api.I18N.gui.get("common.buttons.no"),
+            api.I18N.gui.get("common.buttons.halt")),
+      false)
+    response match {
+      case 0 => Some(true)
+      case 1 => Some(false)
+      case _ => None
+    }
   }
 
 }

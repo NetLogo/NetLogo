@@ -3,12 +3,15 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk, CompilerException, JobOwner, SimpleJobOwner}
-import org.nlogo.nvm.{ CompilerInterface, Instruction, EngineException, Context, Procedure }
+import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+                      CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
+                       Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 
 import java.io.{IOException,PrintWriter}
+import java.util.WeakHashMap
 
 import AbstractWorkspaceTraits._
 
@@ -16,14 +19,21 @@ object AbstractWorkspaceScala {
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
 }
 
-abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFactory: HubNetManagerFactory)
-  extends AbstractWorkspace(_world, hubNetManagerFactory)
-  with Procedures with Plotting with Exporting with Evaluating {
+abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: HubNetManagerFactory)
+extends AbstractWorkspace(hubNetManagerFactory)
+with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking {
+
+  val fileManager: FileManager = new DefaultFileManager(this)
 
   /**
    * previewCommands used by make-preview and model test
    */
   var previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
+
+  val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
+
+  // for _thunkdidfinish (says that a thunk finished running without having stop called)
+  val completedActivations = new WeakHashMap[Activation, java.lang.Boolean]
 
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
@@ -47,11 +57,11 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
+  def clearTicks() {
     world.tickCounter.clear()
   }
 
-  def clearAll {
+  def clearAll() {
     world.clearAll()
     clearOutput()
     clearDrawing()
@@ -62,7 +72,7 @@ abstract class AbstractWorkspaceScala(private val _world: World, hubNetManagerFa
 
 object AbstractWorkspaceTraits {
 
-  trait Procedures { this: AbstractWorkspace =>
+  trait Procedures { this: AbstractWorkspaceScala =>
     var procedures: CompilerInterface.ProceduresMap =
       CompilerInterface.NoProcedures
     def init() {
@@ -216,4 +226,15 @@ object AbstractWorkspaceTraits {
     def readFromString(string: String): AnyRef =
       evaluator.readFromString(string)
   }
+
+  trait Benchmarking { this: AbstractWorkspaceScala =>
+    override def benchmark(minTime: Int, maxTime: Int) {
+      new Thread("__bench") {
+        override def run() {
+          Benchmarker.benchmark(
+            Benchmarking.this, minTime, maxTime)
+        }}.start()
+    }
+  }
+
 }

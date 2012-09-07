@@ -12,6 +12,7 @@ object NetLogoBuild extends Build {
                 Testing.settings ++
                 Packaging.settings ++
                 Running.settings ++
+                Depend.settings ++
                 Dump.settings ++
                 Scaladoc.settings ++
                 ChecksumsAndPreviews.settings: _*)
@@ -22,7 +23,8 @@ object NetLogoBuild extends Build {
     Project(id = "headless",
             base = file("headless"))
       .configs(Testing.configs: _*)
-      .settings(Testing.settings: _*)
+      .settings(Testing.settings ++
+                Depend.settings: _*)
 
   // surely there's some better way to do these - ST 5/30/12
   lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")

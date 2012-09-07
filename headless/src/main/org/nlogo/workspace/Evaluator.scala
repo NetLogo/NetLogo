@@ -8,7 +8,7 @@ import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
 
-class Evaluator(workspace: AbstractWorkspace) {
+class Evaluator(workspace: AbstractWorkspaceScala) {
 
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner,

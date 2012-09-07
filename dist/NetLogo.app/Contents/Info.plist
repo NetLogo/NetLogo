@@ -59,8 +59,6 @@
   <array>
     <string>x86_64</string>
     <string>i386</string>
-    <string>ppc</string>
-    <string>ppc64</string>
   </array>
   <key>LSRequiresNativeExecution</key>
   <true/>

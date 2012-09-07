@@ -19,10 +19,10 @@ tmp/
 /src/main/org/nlogo/window/Events.scala
 
 # Eclipse
-/.classpath
-/.project
-/.cache
-/.settings
+.classpath
+.project
+.cache
+.settings
 
 # other
 /.ensime

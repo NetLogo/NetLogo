@@ -61,9 +61,9 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
 
-mainClass in (Compile, run) := Some("org.nlogo.app.App")
+mainClass in Compile := Some("org.nlogo.app.App")
 
-mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
+aggregate in runMain := false
 
 sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
 
@@ -74,8 +74,6 @@ InfoTab.infoTabTask
 ModelIndex.modelIndexTask
 
 NativeLibs.nativeLibsTask
-
-Depend.dependTask
 
 moduleConfigurations += ModuleConfiguration("javax.media", JavaNet2Repository)
 
@@ -102,7 +100,6 @@ all <<= all.dependsOn(
   packageBin in Compile,
   packageBin in Compile in NetLogoBuild.headless,
   Extensions.extensions,
-  Packaging.moreJars,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,
   InfoTab.infoTab,

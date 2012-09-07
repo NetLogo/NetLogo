@@ -101,10 +101,10 @@ public strictfp class ViewControlStrip
 
   void reset() {
     enableSizeControls
-        ((workspace.world.maxPxcor() == -workspace.world.minPxcor()
-            || workspace.world.minPxcor() == 0 || workspace.world.maxPxcor() == 0),
-            (workspace.world.maxPycor() == -workspace.world.minPycor()
-                || workspace.world.minPycor() == 0 || workspace.world.maxPycor() == 0));
+      ((workspace.world().maxPxcor() == -workspace.world().minPxcor()
+        || workspace.world().minPxcor() == 0 || workspace.world().maxPxcor() == 0),
+       (workspace.world().maxPycor() == -workspace.world().minPycor()
+        || workspace.world().minPycor() == 0 || workspace.world().maxPycor() == 0));
     // this next line shouldn't be necessary, but in Java 1.4.2U1DP3
     // on OS X it became necessary in the applet, which is
     // probably a VM bug, but it's OK, I think it's harmless
@@ -203,10 +203,10 @@ public strictfp class ViewControlStrip
         return;
       }
 
-      int maxPxcor = workspace.world.maxPxcor();
-      int minPxcor = workspace.world.minPxcor();
-      int maxPycor = workspace.world.maxPycor();
-      int minPycor = workspace.world.minPycor();
+      int maxPxcor = workspace.world().maxPxcor();
+      int minPxcor = workspace.world().minPxcor();
+      int maxPycor = workspace.world().maxPycor();
+      int minPycor = workspace.world().minPycor();
 
       int deltax = sexChange * (increase() ? 1 : -1);
       int deltay = seyChange * (increase() ? 1 : -1);
@@ -249,7 +249,7 @@ public strictfp class ViewControlStrip
 
   private boolean newSizeOK(int sizeX, int sizeY) {
     return sizeX >= 1 && sizeY >= 1 &&
-        workspace.world.patchSize() * sizeX >= getMinimumSize().width;
+        workspace.world().patchSize() * sizeX >= getMinimumSize().width;
   }
 
   private boolean checkWithUser() {

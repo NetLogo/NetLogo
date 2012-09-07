@@ -11,8 +11,10 @@ import org.nlogo.agent.Agent;
 import org.nlogo.api.*;
 import org.nlogo.agent.Importer;
 import org.nlogo.agent.ImporterJ;
+import org.nlogo.agent.World;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.CompilerInterface;
 import org.nlogo.nvm.FileManager;
 import org.nlogo.nvm.Job;
 import org.nlogo.nvm.JobManagerInterface;
@@ -22,24 +24,12 @@ import org.nlogo.nvm.Workspace;
 import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
-    implements Workspace,
+    implements
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 
   /// globals
   /// (some of these probably should be changed not to be public - ST 12/11/01)
-
-  public final org.nlogo.agent.World world;
-
-  public org.nlogo.agent.World world() {
-    return world;
-  }
-
-  protected final DefaultFileManager fileManager;
-
-  public FileManager fileManager() {
-    return fileManager;
-  }
 
   private org.nlogo.nvm.Tracer tracer = null;
 
@@ -60,20 +50,6 @@ public abstract strictfp class AbstractWorkspace
   protected HubNetInterface hubNetManager;
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
-
-  private final WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes =
-      new WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>>(); // public for _every
-
-  public WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes() {
-    return lastRunTimes;
-  }
-
-  // for _thunkdidfinish (says that a thunk finished running without having stop called)
-  private final WeakHashMap<Activation, Boolean> completedActivations = new WeakHashMap<Activation, Boolean>();
-
-  public WeakHashMap<Activation, Boolean> completedActivations() {
-    return completedActivations;
-  }
 
   /**
    * name of the currently loaded model. Will be null if this is a new
@@ -99,16 +75,13 @@ public abstract strictfp class AbstractWorkspace
 
   /// startup
 
-  protected AbstractWorkspace(org.nlogo.agent.World world,
-                              AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
-    this.world = world;
+  protected AbstractWorkspace(AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
     this.hubNetManagerFactory = hubNetManagerFactory;
     modelType = ModelTypeJ.NEW();
-    evaluator = new Evaluator(this);
-    world.compiler_$eq(this);
+    evaluator = new Evaluator((AbstractWorkspaceScala) this);
+    world().compiler_$eq(this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
-        new Object[]{this, world, world});
-    fileManager = new DefaultFileManager(this);
+                           new Object[]{this, world(), world()});
     extensionManager = new ExtensionManager(this);
   }
 
@@ -235,7 +208,7 @@ public abstract strictfp class AbstractWorkspace
         modelDir = null;
       }
       if (modelDir != null) {
-        fileManager.setPrefix(modelDir);
+        fileManager().setPrefix(modelDir);
       }
     }
   }
@@ -416,7 +389,7 @@ public abstract strictfp class AbstractWorkspace
 
   public void halt() {
     jobManager.haltPrimary();
-    world.displayOn(true);
+    world().displayOn(true);
   }
 
   // called by _display from job thread
@@ -446,7 +419,7 @@ public abstract strictfp class AbstractWorkspace
                 // other
                 addNewline, false);
     if (destination == OutputDestinationJ.FILE()) {
-      fileManager.writeOutputObject(oo);
+      fileManager().writeOutputObject(oo);
     } else {
       sendOutput(oo, destination == OutputDestinationJ.OUTPUT_AREA());
     }
@@ -486,13 +459,13 @@ public abstract strictfp class AbstractWorkspace
 
   protected void exportInterfaceGlobals(java.io.PrintWriter writer) {
     writer.println(Dump.csv().header("MODEL SETTINGS"));
-    scala.collection.Seq<String> globals = world.program().interfaceGlobals();
+    scala.collection.Seq<String> globals = world().program().interfaceGlobals();
     writer.println(Dump.csv().variableNameRow(globals));
     Object[] values = new Object[globals.size()];
     int i = 0;
     for (scala.collection.Iterator<String> iter = globals.iterator(); iter.hasNext(); i++) {
       values[i] =
-          world.getObserverVariableByName(iter.next());
+          world().getObserverVariableByName(iter.next());
     }
     writer.println(Dump.csv().dataRow(values));
     writer.println();
@@ -513,8 +486,8 @@ public abstract strictfp class AbstractWorkspace
           @Override
           public void doImport(java.io.BufferedReader reader)
               throws java.io.IOException {
-            world.importWorld
-                (importerErrorHandler(), AbstractWorkspace.this,
+            world().importWorld
+              (importerErrorHandler(), (Workspace) AbstractWorkspace.this,
                     stringReader(), reader);
           }
         });
@@ -525,8 +498,8 @@ public abstract strictfp class AbstractWorkspace
     // we need to clearAll before we import in case
     // extensions are hanging on to old data. ev 4/10/09
     clearAll();
-    world.importWorld
-        (importerErrorHandler(), AbstractWorkspace.this,
+    world().importWorld
+        (importerErrorHandler(), (Workspace) AbstractWorkspace.this,
             stringReader(), new java.io.BufferedReader(reader));
   }
 
@@ -536,7 +509,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-            (s, world, extensionManager, world.program().is3D());
+            (s, world(), extensionManager, world().program().is3D());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -676,34 +649,34 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public org.nlogo.util.MersenneTwisterFast auxRNG() {
-    return world.auxRNG;
+    return world().auxRNG;
   }
 
   public org.nlogo.util.MersenneTwisterFast mainRNG() {
-    return world.mainRNG;
+    return world().mainRNG;
   }
 
   public Object readNumberFromString(String source)
       throws CompilerException {
     return compiler().readNumberFromString
-      (source, world, getExtensionManager(), world.program().is3D());
+      (source, world(), getExtensionManager(), world().program().is3D());
   }
 
   public void checkReporterSyntax(String source)
       throws CompilerException {
     compiler().checkReporterSyntax
-        (source, world.program(), procedures(), getExtensionManager(), false);
+        (source, world().program(), procedures(), getExtensionManager(), false);
   }
 
   public void checkCommandSyntax(String source)
       throws CompilerException {
     compiler().checkCommandSyntax
-        (source, world.program(), procedures(), getExtensionManager(), false);
+        (source, world().program(), procedures(), getExtensionManager(), false);
   }
 
   public boolean isConstant(String s) {
     try {
-      compiler().readFromString(s, world.program().is3D());
+      compiler().readFromString(s, world().program().is3D());
       return true;
     }
     catch(CompilerException e) {
@@ -712,16 +685,16 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world.program().is3D());
+    return compiler().isValidIdentifier(s, world().program().is3D());
   }
 
   public boolean isReporter(String s) {
-    return compiler().isReporter(s, world.program(), procedures(), getExtensionManager());
+    return compiler().isReporter(s, world().program(), procedures(), getExtensionManager());
   }
 
   public Token[] tokenizeForColorization(String s) {
     return compiler().tokenizeForColorization
-      (s, getExtensionManager(), world.program().is3D());
+      (s, getExtensionManager(), world().program().is3D());
   }
 
   public Token getTokenAtPosition(String s, int pos) {
@@ -729,10 +702,8 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world.program().is3D());
+    return compiler().findProcedurePositions(source, world().program().is3D());
   }
-
-  public abstract org.nlogo.nvm.CompilerInterface compiler();
 
   public LogoException lastLogoException() {
     return null;
@@ -741,5 +712,12 @@ public abstract strictfp class AbstractWorkspace
   public void clearLastLogoException() { }
 
   public void lastLogoException_$eq(LogoException e) { }
+
+  public abstract World world();
+  public abstract CompilerInterface compiler();
+  public abstract void clearOutput();
+  public abstract org.nlogo.api.AggregateManagerInterface aggregateManager();
+  public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
+  public abstract FileManager fileManager();
 
 }

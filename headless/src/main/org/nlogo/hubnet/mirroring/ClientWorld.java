@@ -727,6 +727,10 @@ public strictfp class ClientWorld
     }
   }
 
+  public void clearGlobals() {
+    throw new UnsupportedOperationException();
+  }
+
   public org.nlogo.api.AgentSet links() {
     throw new UnsupportedOperationException();
   }

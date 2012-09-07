@@ -5,7 +5,7 @@ package org.nlogo.lite
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ Observer, World, World3D }
 import org.nlogo.api.{ CompilerException, LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
-import org.nlogo.window.{ Event, Events, AppletAdPanel, CompilerManager, InterfacePanelLite, InvalidVersionException,
+import org.nlogo.window.{ Event, Events, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
 
 /**
@@ -43,7 +43,6 @@ with Event.LinkParent {
   val (iP: InterfacePanelLite,
        workspace: LiteWorkspace,
        procedures: ProceduresLite,
-       panel: AppletAdPanel,
        defaultOwner: SimpleJobOwner) = {
     val world = if(Version.is3D) new World3D() else new World
     val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager)
@@ -70,9 +69,7 @@ with Event.LinkParent {
     setBackground(java.awt.Color.WHITE)
     setLayout(new java.awt.BorderLayout)
     add(iP, java.awt.BorderLayout.CENTER)
-    val panel = new AppletAdPanel(iconListener)
-    add(panel, java.awt.BorderLayout.EAST)
-    (iP, workspace, procedures, panel, defaultOwner)
+    (iP, workspace, procedures, defaultOwner)
   }
 
   /** internal use only */
@@ -84,11 +81,6 @@ with Event.LinkParent {
   override def requestFocus() {
     if (iP != null)
       iP.requestFocus()
-  }
-
-  /** internal use only */
-  def setAdVisible(visible: Boolean) {
-    panel.setVisible(visible)
   }
 
   /**

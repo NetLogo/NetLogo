@@ -16,7 +16,7 @@ public strictfp class AgentMonitorView
     extends org.nlogo.window.View {
   public AgentMonitorView(GUIWorkspace workspace) {
     super(workspace);
-    radius = (workspace.world.worldWidth() - 1) / 2;
+    radius = (workspace.world().worldWidth() - 1) / 2;
     addMouseListener(popupListener);
   }
 
@@ -78,7 +78,7 @@ public strictfp class AgentMonitorView
     } else {
       x = ((Link) agent).midpointX();
     }
-    return x - radius - workspace.world.minPxcor();
+    return x - radius - workspace.world().minPxcor();
   }
 
   @Override
@@ -96,7 +96,7 @@ public strictfp class AgentMonitorView
       y = ((Link) agent).midpointY();
     }
 
-    return y + ((viewHeight - 1) / 2) - workspace.world.maxPycor();
+    return y + ((viewHeight - 1) / 2) - workspace.world().maxPycor();
   }
 
   @Override
@@ -108,7 +108,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public void applyNewFontSize(int newFontSize, int zoom) {
-    fontSizeRatio = newFontSize / workspace.world.patchSize();
+    fontSizeRatio = newFontSize / workspace.world().patchSize();
     super.applyNewFontSize(newFontSize, zoom);
   }
 
