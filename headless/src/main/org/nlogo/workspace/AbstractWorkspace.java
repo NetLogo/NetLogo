@@ -701,10 +701,6 @@ public abstract strictfp class AbstractWorkspace
     return compiler().getTokenAtPosition(s, pos);
   }
 
-  public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world().program().is3D());
-  }
-
   public LogoException lastLogoException() {
     return null;
   }

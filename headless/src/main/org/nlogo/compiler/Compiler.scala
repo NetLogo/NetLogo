@@ -126,11 +126,11 @@ object Compiler extends CompilerInterface {
   }
 
   // used for procedures menu
-  def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]] =
+  def findProcedurePositions(source: String, is3D: Boolean): Map[String, (String, Int, Int, Int)] =
     new StructureParserExtras()(tokenizer(is3D)).findProcedurePositions(source)
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String] =
+  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Map[String, String] =
     new StructureParserExtras()(tokenizer(is3D)).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor

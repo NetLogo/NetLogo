@@ -68,6 +68,10 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
     plotManager.clearAll()
     extensionManager.clearAll()
   }
+
+  override def findProcedurePositions(source: String) =
+    compiler.findProcedurePositions(source, world.program.is3D)
+
 }
 
 object AbstractWorkspaceTraits {
