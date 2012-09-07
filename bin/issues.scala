@@ -49,6 +49,7 @@ val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
 val req = base <<? Map("milestone" -> "13",
                        "state" -> "closed",
                        "per_page" -> "1000")
+// println(req.build.getRawUrl)  useful for debugging
 val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
 val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
 val issues: List[Issue] =
