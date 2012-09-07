@@ -15,11 +15,11 @@ object ShapeList {
       .asJava
 }
 
-class ShapeList(val kind: AgentKind, _shapes: Shape*) {
+class ShapeList(val kind: AgentKind, _shapes: Seq[Shape]) {
 
-  def this(kind: AgentKind) = this(kind, Nil: _*)
+  def this(kind: AgentKind) = this(kind, Seq())
 
-  private val shapes = new collection.mutable.HashMap[String, Shape]
+  private val shapes = collection.mutable.HashMap[String, Shape]()
 
   _shapes.foreach(add)
 
