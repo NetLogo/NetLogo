@@ -67,7 +67,7 @@ private object StructureParser {
 private class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
-  var program: Program,
+  oldProgram: Program,
   oldProcedures: Compiler.ProceduresMap,
   extensionManager: ExtensionManager)
 (implicit tokenizer: TokenizerInterface) {
@@ -78,6 +78,8 @@ private class StructureParser(
   private val tokensMap = new collection.mutable.HashMap[Procedure, Iterable[Token]]
 
   private var newProcedures: Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures
+
+  private var program = oldProgram
 
   def parse(subprogram: Boolean): StructureParser.Results = {
     // Warning, incredibly confusing kludginess ahead...  In the usingFiles variable, it would be
