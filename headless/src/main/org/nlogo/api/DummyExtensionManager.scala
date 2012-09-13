@@ -8,18 +8,19 @@ package org.nlogo.api
 class DummyExtensionManager extends ExtensionManager {
   private def unsupported = throw new UnsupportedOperationException
   def storeObject(obj: AnyRef) { }
-  def retrieveObject(): AnyRef = unsupported
+  def retrieveObject: AnyRef = unsupported
+  def initializeHubNet() { }
   def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = unsupported
   def readFromString(src: String): AnyRef = unsupported
   def reset() = unsupported
   def startFullCompilation() { }
   def finishFullCompilation() { }
-  def anyExtensionsLoaded() = false
+  def anyExtensionsLoaded = false
   def replaceIdentifier(name: String): Primitive = null
   def importExtension(jarPath: String, errors: ErrorSource) = unsupported
   def resolvePath(path: String): String = unsupported
   def resolvePathAsURL(path: String): String = unsupported
-  def dumpExtensions(): String = unsupported
+  def dumpExtensions: String = unsupported
   def dumpExtensionPrimitives(): String = unsupported
   def getSource(filename: String): String = unsupported
   def wrap(prim: Primitive, name: String): TokenHolder = unsupported

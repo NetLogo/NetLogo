@@ -29,7 +29,7 @@ private class Optimizer extends DefaultAstVisitor {
   }
 
   private val commandMungers =
-    List[CommandMunger](Fd1, FdLessThan1, FastHatch, FastSprout, FastCrt, FastCro)
+    List[CommandMunger](Fd1, FdLessThan1, HatchFast, SproutFast, CrtFast, CroFast)
   private val reporterMungers =
     List[ReporterMunger](PatchAt, With, OneOfWith, Nsum, Nsum4,
          CountWith, OtherWith, WithOther, AnyOther, AnyOtherWith, CountOther, CountOtherWith,
@@ -185,39 +185,39 @@ private class Optimizer extends DefaultAstVisitor {
       }
     }
   }
-  private object FastHatch extends RewritingCommandMunger {
+  private object HatchFast extends RewritingCommandMunger {
     val clazz = classOf[_hatch]
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fasthatch],
+      root.replace(classOf[_hatchfast],
                    (root.command.asInstanceOf[_hatch]).breedName)
     }
   }
-  private object FastSprout extends RewritingCommandMunger {
+  private object SproutFast extends RewritingCommandMunger {
     val clazz = classOf[_sprout]
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastsprout],
+      root.replace(classOf[_sproutfast],
                    (root.command.asInstanceOf[_sprout]).breedName)
     }
   }
-  private object FastCrt extends RewritingCommandMunger {
+  private object CrtFast extends RewritingCommandMunger {
     val clazz = classOf[_createturtles]
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastcreateturtles],
+      root.replace(classOf[_crtfast],
                    (root.command.asInstanceOf[_createturtles]).breedName)
     }
   }
-  private object FastCro extends RewritingCommandMunger {
+  private object CroFast extends RewritingCommandMunger {
     val clazz = classOf[_createorderedturtles]
     def munge(root: Match) {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
-      root.replace(classOf[_fastcreateorderedturtles],
+      root.replace(classOf[_crofast],
                    (root.command.asInstanceOf[_createorderedturtles]).breedName)
     }
   }

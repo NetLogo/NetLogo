@@ -16,7 +16,7 @@ extends ValueConstraint
   }
 
   // returns AnyRef since this is to satisfy the ValueConstraint interface
-  def defaultValue(): AnyRef =
+  def defaultValue: AnyRef =
     // empty when they start up before they've input anything, and also maybe when they put in
     // something unparsable from a file.
     if(_acceptedValues.isEmpty) ""

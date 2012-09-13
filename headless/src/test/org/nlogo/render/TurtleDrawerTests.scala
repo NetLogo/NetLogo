@@ -97,7 +97,7 @@ class TurtleTestsDrawer extends MockSuite {
       new TurtleDrawer(
         new ShapeList(
           AgentKind.Turtle,
-          makeSquarePolygon(recolorable = testShapeIsRecolorable))) {
+          Seq(makeSquarePolygon(recolorable = testShapeIsRecolorable)))) {
         shapes.resetCache(patchSize)
       }
     }

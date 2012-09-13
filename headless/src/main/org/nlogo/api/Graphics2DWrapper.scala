@@ -14,8 +14,10 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
 
   val isMac =
     System.getProperty("os.name").startsWith("Mac")
+  // re: the try/catch, see issue #199 - ST 9/5/12
   val isQuartz =
-    isMac && java.lang.Boolean.getBoolean("apple.awt.graphics.UseQuartz")
+    try isMac && java.lang.Boolean.getBoolean("apple.awt.graphics.UseQuartz")
+    catch { case _: java.security.AccessControlException => false }
 
   def location(x: Double, y: Double) =
     "(" + (g.getTransform.getTranslateX + x) + " , " + (g.getTransform.getTranslateY + y) + ")"

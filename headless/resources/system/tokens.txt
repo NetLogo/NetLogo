@@ -45,6 +45,7 @@ C cd etc._cleardrawing
 C clear-all etc._clearall
 C clear-all-plots plot._clearallplots
 C clear-drawing etc._cleardrawing
+C clear-globals etc._clearglobals
 C clear-links etc._clearlinks
 C clear-output etc._clearoutput
 C clear-patches etc._clearpatches

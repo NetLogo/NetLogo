@@ -67,7 +67,7 @@ private object StructureParser {
 private class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
-  var program: Program,
+  oldProgram: Program,
   oldProcedures: Compiler.ProceduresMap,
   extensionManager: ExtensionManager)
 (implicit tokenizer: TokenizerInterface) {
@@ -78,6 +78,8 @@ private class StructureParser(
   private val tokensMap = new collection.mutable.HashMap[Procedure, Iterable[Token]]
 
   private var newProcedures: Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures
+
+  private var program = oldProgram
 
   def parse(subprogram: Boolean): StructureParser.Results = {
     // Warning, incredibly confusing kludginess ahead...  In the usingFiles variable, it would be
@@ -373,7 +375,7 @@ private class StructureParser(
       }
       else if(!haveEnd) {
         if(token.tpe == TokenType.COMMAND && token.value.isInstanceOf[_let])
-          parseLet(procedure, start, new java.util.ArrayList[String])
+          parseLet(procedure, start)
         else if(token.tpe == TokenType.KEYWORD) {
           val keyword = token.value.asInstanceOf[String]
           if(keyword == "END") {
@@ -496,14 +498,14 @@ private class StructureParser(
       }
     }
   }
-  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: java.util.List[String]): Let = {
+  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: Set[String] = Set()): Let = {
     var ancestorNames = oldAncestorNames
     val letToken = tokenBuffer.next()
     val nameToken = tokenBuffer.head
     cAssert(nameToken.tpe == TokenType.IDENT, "Expected variable name here", nameToken)
     val name = nameToken.value.asInstanceOf[String]
     val startPos = tokenBuffer.index - offset
-    cAssert(!ancestorNames.contains(name),
+    cAssert(!ancestorNames(name),
             "There is already a local variable called " + name + " here", nameToken)
     checkName(name, nameToken, null, procedure)
     var level = 1
@@ -528,8 +530,7 @@ private class StructureParser(
         tokenBuffer.next()
       }
       else if(token.tpe == TokenType.COMMAND && token.value.isInstanceOf[_let]) {
-        ancestorNames = new java.util.ArrayList[String](ancestorNames)
-        ancestorNames.add(name)
+        ancestorNames += name
         children += parseLet(procedure, offset, ancestorNames)
       }
       else if(token.tpe == TokenType.KEYWORD) {
@@ -544,18 +545,18 @@ private class StructureParser(
 }
 
 private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
+
   /**
    * identifies the positions of all procedure definitions in the given
-   * source. Returns a Map mapping String procedure names to Lists.
-   * Each List contains 4 elements: the String procedure name, the Integer
-   * position of the "to" or "to-report" keyword, the Integer position of the
-   * procedure name, and the Integer position of the "end" keyword.
+   * source. Returns a Map mapping String procedure names to tuples.
+   * Each tuple contains 4 elements: the String procedure name, the Int
+   * position of the "to" or "to-report" keyword, the Int position of the
+   * procedure name, and the Int position of the "end" keyword.
    *
-   * This data structure is used to populate the "procedures" menu in the
-   * GUI.
+   * This data structure is used to populate the "procedures" menu in the GUI.
    */
-  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]] = {
-    val procsTable = new java.util.HashMap[String, java.util.List[AnyRef]]
+  def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] = {
+    var result = Map[String, (String, Int, Int, Int)]()
     // Tokenize the current procedures window source
     val tokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(tokens.hasNext) {
@@ -569,7 +570,6 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
           val nameToken = tokens.head
           if(nameToken.tpe == TokenType.IDENT) {
             val name = nameToken.name
-            val namePos = nameToken.startPos
             // position of end
             var done = false
             while(!done && tokens.hasNext) {
@@ -577,22 +577,16 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
               if(token.tpe == TokenType.KEYWORD && token.value == "END")
                 done = true
             }
-            val endPos = token.endPos
-            // build index
-            val index = new java.util.ArrayList[AnyRef](4)
-            index.add(name)
-            index.add(Int.box(toPos))
-            index.add(Int.box(namePos))
-            index.add(Int.box(endPos))
-            procsTable.put(name, index)
+            result += name -> (name, toPos, nameToken.startPos, token.endPos)
           }
         }
       }
     }
-    procsTable
+    result
   }
-  def findIncludes(sourceFileName: String, source: String): java.util.Map[String, String] = {
-    val includedFiles = new java.util.HashMap[String, String]
+
+  def findIncludes(sourceFileName: String, source: String): Map[String, String] = {
+    var result = Map[String, String]()
     // Tokenize the current procedures window source
     val myTokens = tokenizer.tokenizeRobustly(source).iterator.buffered
     while(myTokens.hasNext) {
@@ -608,18 +602,19 @@ private class StructureParserExtras(implicit tokenizer: TokenizerInterface) {
               pathToken = myTokens.head
             }
             else if(pathToken.tpe == TokenType.CLOSE_BRACKET)
-              return includedFiles
+              return result
             else if(pathToken.tpe == TokenType.CONSTANT && pathToken.value.isInstanceOf[String]) {
               pathToken = myTokens.next()
               filePath = StructureParser.resolvePath(sourceFileName, pathToken.value.asInstanceOf[String])
-              includedFiles.put(pathToken.value.asInstanceOf[String], filePath)
+              result += pathToken.value.asInstanceOf[String] -> filePath
             }
             else
-              return includedFiles
+              return result
           }
         }
       }
     }
-    includedFiles
+    result
   }
+
 }

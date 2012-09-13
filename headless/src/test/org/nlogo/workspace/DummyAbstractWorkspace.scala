@@ -19,8 +19,8 @@ extends AbstractWorkspaceScala(new World)
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
   override def waitForResult[T](runnable: api.ReporterRunnable[T]): T = unsupported
   override def waitForQueuedEvents(): Unit = unsupported
-  override def inspectAgent(agent: api.Agent, radius: Double): Unit = unsupported
-  override def inspectAgent(kind: api.AgentKind, agent: org.nlogo.agent.Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(agent: Agent, radius: Double): Unit = unsupported
+  override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double): Unit = unsupported
   override def clearDrawing(): Unit = unsupported
   override def getAndCreateDrawing(): java.awt.image.BufferedImage = unsupported
   override def open(path: String) = unsupported

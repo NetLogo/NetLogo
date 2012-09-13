@@ -84,11 +84,11 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
 
   // this is for the syntax-highlighting editor in the HubNet client, where we don't have
   // an extension manager.
-  def tokenizeForColorization(source: String): Array[Token] =
-    tokenizeIncludingComments(source).takeWhile(_.tpe != TokenType.EOF).toArray
+  def tokenizeForColorization(source: String): Seq[Token] =
+    tokenizeIncludingComments(source).takeWhile(_.tpe != TokenType.EOF)
 
   // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token] = {
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token] = {
     // In order for extension primitives to be the right color, we need to change
     // the type of the token from TokenType.IDENT to TokenType.COMMAND or TokenType.REPORTER
     // if the identifier is recognized by the extension.

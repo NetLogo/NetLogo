@@ -23,7 +23,7 @@ class DummyCompilerServices extends CompilerServices {
   def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported
-  def tokenizeForColorization(s: String): Array[Token] = unsupported
+  def tokenizeForColorization(s: String): Seq[Token] = unsupported
   def getTokenAtPosition(source: String, position: Int): Token = unsupported
-  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]] = unsupported
+  def findProcedurePositions(source: String) = unsupported
 }

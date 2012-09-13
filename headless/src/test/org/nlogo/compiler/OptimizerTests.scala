@@ -79,36 +79,36 @@ class OptimizerTests extends FunSuite {
       compileReporter("patches with [pycor = x]"))
   }
 
-  test("testFastHatch1") {
-    expect("_fasthatch:[_constdouble:5.0[]]")(
+  test("testHatchFast1") {
+    expect("_hatchfast:[_constdouble:5.0[]]")(
       compileCommands("hatch 5"))
   }
-  test("testFastHatch2") {
-    expect("_fasthatch:FROGS[_constdouble:5.0[]]")(
+  test("testHatchFast2") {
+    expect("_hatchfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("hatch-frogs 5"))
   }
-  test("testFastSprout1") {
-    expect("_fastsprout:[_constdouble:5.0[]]")(
+  test("testSproutFast1") {
+    expect("_sproutfast:[_constdouble:5.0[]]")(
       compileCommands("sprout 5"))
   }
-  test("testFastSprout2") {
-    expect("_fastsprout:FROGS[_constdouble:5.0[]]")(
+  test("testSproutFast2") {
+    expect("_sproutfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("sprout-frogs 5"))
   }
   test("testFastCrt1") {
-    expect("_fastcreateturtles:[_constdouble:5.0[]]")(
+    expect("_crtfast:[_constdouble:5.0[]]")(
       compileCommands("crt 5"))
   }
   test("testFastCrt2") {
-    expect("_fastcreateturtles:FROGS[_constdouble:5.0[]]")(
+    expect("_crtfast:FROGS[_constdouble:5.0[]]")(
       compileCommands("create-frogs 5"))
   }
   test("testFastCro1") {
-    expect("_fastcreateorderedturtles:[_constdouble:5.0[]]")(
+    expect("_crofast:[_constdouble:5.0[]]")(
       compileCommands("cro 5"))
   }
   test("testFastCro2") {
-    expect("_fastcreateorderedturtles:FROGS[_constdouble:5.0[]]")(
+    expect("_crofast:FROGS[_constdouble:5.0[]]")(
       compileCommands("create-ordered-frogs 5"))
   }
   test("countWith1") {

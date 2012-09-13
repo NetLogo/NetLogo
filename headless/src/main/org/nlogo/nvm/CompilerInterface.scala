@@ -46,10 +46,10 @@ trait CompilerInterface {
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef
 
-  def findProcedurePositions(source: String): java.util.Map[String, java.util.List[AnyRef]]
-  def findIncludes(sourceFileName: String, source: String): java.util.Map[String, String]
+  def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)]
+  def findIncludes(sourceFileName: String, source: String): Map[String, String]
   def isValidIdentifier(s: String): Boolean
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager): Boolean
   def getTokenAtPosition(source: String, position: Int): Token
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Array[Token]
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager): Seq[Token]
 }

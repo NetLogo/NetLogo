@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.util.MersenneTwisterFast
+
 trait World {
   def patchSize: Double
   def worldWidth: Int
@@ -15,6 +17,7 @@ trait World {
   def wrap(pos: Double, min: Double, max: Double): Double
   def ticks: Double
   def observer: Observer
+  def clearGlobals()
   def getPatch(i: Int): Patch
   @throws(classOf[AgentException])
   def getPatchAt(x: Double, y: Double): Patch
@@ -52,4 +55,17 @@ trait World {
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
+  def realloc()
+  def getDimensions: WorldDimensions
+  def isDimensionVariable(variableName: String): Boolean
+  @throws(classOf[WorldDimensionException])
+  def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions
+  def equalDimensions(d: WorldDimensions): Boolean
+  def mainRNG: MersenneTwisterFast
+  def auxRNG: MersenneTwisterFast
+  def observerOwnsIndexOf(name: String): Int
+  @throws(classOf[AgentException])
+  @throws(classOf[LogoException])
+  def setObserverVariableByName(variableName: String, value: AnyRef)
+  def timer: Timer
 }

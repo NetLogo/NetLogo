@@ -43,7 +43,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   plot.addPen(this)
   override def toString = "PlotPen("+name+", "+plot+")"
 
-  var points: Buffer[PlotPoint] = Buffer()
+  var points: Vector[PlotPoint] = Vector()
 
   def color = _color
   def color_=(newColor: Int) {
@@ -112,7 +112,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
   def softReset() {
     x = 0.0
     isDown = true
-    points = Buffer()
+    points = Vector()
   }
 
   def plot(y: Double) {
@@ -124,13 +124,13 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     this.x = x
     // note that we add the point even if the pen is up; this may
     // seem useless but it simplifies the painting logic - ST 2/23/06
-    points += PlotPoint(x, y, isDown, color)
+    points :+= PlotPoint(x, y, isDown, color)
     if (isDown) plot.perhapsGrowRanges(this, x, y)
     plot.plotListener.foreach(_.plot(x, y))
   }
 
   def plot(x: Double, y: Double, color: Int, isDown: Boolean) {
-    points += PlotPoint(x, y, isDown, color)
+    points :+= PlotPoint(x, y, isDown, color)
   }
 
   // serialization is for HubNet plot mirroring
@@ -154,7 +154,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
     temporary = in.readBoolean()
     x = in.readDouble()
     _color = in.readInt()
-    points = readPointList(in)
+    points = readPoints(in)
     _interval = in.readDouble()
     _isDown = in.readBoolean()
     _mode = in.readInt()
@@ -162,7 +162,7 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  def readPointList(in:java.io.ObjectInputStream) =
-    in.readObject().asInstanceOf[Buffer[PlotPoint]]
+  def readPoints(in: java.io.ObjectInputStream) =
+    in.readObject().asInstanceOf[Vector[PlotPoint]]
 
 }

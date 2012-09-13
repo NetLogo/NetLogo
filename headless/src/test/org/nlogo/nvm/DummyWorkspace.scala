@@ -32,7 +32,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def exportOutput(path: String) = unsupported
   override def exportPlot(plotName: String, path: String) = unsupported
   override def exportAllPlots(path: String) = unsupported
-  override def inspectAgent(agent: api.Agent, radius: Double) = unsupported
+  override def inspectAgent(agent: Agent, radius: Double) = unsupported
   override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double) = unsupported
   override def getAndCreateDrawing() = unsupported
   override def waitForQueuedEvents() = unsupported

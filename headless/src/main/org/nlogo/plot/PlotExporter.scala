@@ -70,9 +70,7 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     var penDataListsList = Buffer[Seq[PlotPoint]]()
     var maxPenDataListSize = 0
     for (pen <- plot.pens) {
-      var penDataList = pen.points
-      if (penDataList == null)
-        penDataList = Buffer()
+      var penDataList = Option(pen.points).getOrElse(Vector())
       maxPenDataListSize = maxPenDataListSize max penDataList.size
       penDataListsList += penDataList
     }

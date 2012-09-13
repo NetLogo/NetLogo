@@ -15,10 +15,10 @@ tmp/
 \#*
 
 # Eclipse
-/.classpath
-/.project
-/.cache
-/.settings
+.classpath
+.project
+.cache
+.settings
 
 # other
 /.ensime
