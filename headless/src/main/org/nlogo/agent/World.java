@@ -44,7 +44,8 @@ public strictfp class World
     return tickCounter.ticks();
   }
 
-  public final Timer timer = new Timer();
+  private final Timer _timer = new Timer();
+  public Timer timer() { return _timer; }
   private final ShapeList _turtleShapeList;
 
   public ShapeList turtleShapeList() {
@@ -219,11 +220,13 @@ public strictfp class World
 
   // anything that affects the outcome of the model should happen on the
   // main RNG
-  public final MersenneTwisterFast mainRNG = new MersenneTwisterFast();
+  private final MersenneTwisterFast _mainRNG = new MersenneTwisterFast();
+  public MersenneTwisterFast mainRNG() { return _mainRNG; }
 
   // anything that doesn't and can happen non-deterministically (for example monitor updates)
   // should happen on the auxillary rng. JobOwners should know which RNG they use.
-  public final MersenneTwisterFast auxRNG = new MersenneTwisterFast();
+  private final MersenneTwisterFast _auxRNG = new MersenneTwisterFast();
+  public MersenneTwisterFast auxRNG() { return _auxRNG; }
 
   /// random seed generator
 
@@ -1221,7 +1224,7 @@ public strictfp class World
   }
 
   public void setObserverVariableByName(String var, Object value)
-      throws AgentException, LogoException {
+      throws LogoException, AgentException {
     var = var.toUpperCase();
     if (_program.globals().contains(var)) {
       int index = _program.globals().indexOf(var);

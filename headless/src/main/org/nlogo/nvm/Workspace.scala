@@ -7,73 +7,34 @@ import org.nlogo.agent.{ Agent, AgentSet, World }
 import java.util.{ WeakHashMap => JWeakHashMap }
 import java.io.IOException
 
-trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerServices with api.RandomServices {
-  def world: World
-  def breathe() // called when engine comes up for air
+trait Workspace extends api.Workspace with JobManagerOwner {
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
-  def getExtensionManager: api.ExtensionManager
-  def requestDisplayUpdate(force: Boolean)
   def procedures: CompilerInterface.ProceduresMap
   def procedures_=(procedures: CompilerInterface.ProceduresMap)
-  @throws(classOf[api.LogoException])
-  def waitFor(runnable: api.CommandRunnable)
-  @throws(classOf[api.LogoException])
-  def waitForResult[T](runnable: api.ReporterRunnable[T]): T
-  @throws(classOf[IOException])
-  def importWorld(reader: java.io.Reader)
-  @throws(classOf[IOException])
-  def importWorld(path: String)
-  @throws(classOf[IOException])
-  def importDrawing(path: String)
-  def clearDrawing()
-  @throws(classOf[IOException])
-  def exportDrawing(path: String, format: String)
-  @throws(classOf[IOException])
-  def exportView(path: String, format: String)
-  def exportView: java.awt.image.BufferedImage
-  @throws(classOf[IOException])
-  def exportInterface(path: String)
-  @throws(classOf[IOException])
-  def exportWorld(path: String)
-  @throws(classOf[IOException])
-  def exportWorld(writer: java.io.PrintWriter)
-  @throws(classOf[IOException])
-  def exportOutput(path: String)
-  @throws(classOf[IOException])
-  def exportPlot(plotName: String, path: String)
-  @throws(classOf[IOException])
-  def exportAllPlots(path: String)
-  def inspectAgent(agent: api.Agent, radius: Double)
-  def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
-  def getAndCreateDrawing(): java.awt.image.BufferedImage
-  @throws(classOf[api.LogoException])
-  def waitForQueuedEvents()
-  @throws(classOf[api.LogoException])
-  def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: api.OutputDestination)
-  def clearOutput()
-  @throws(classOf[api.LogoException])
-  def clearAll()
-  @throws(classOf[api.CompilerException])
-  def compileForRun(source: String, context: Context, reporter: Boolean): Procedure
-  @throws(classOf[IOException])
-  def convertToNormal(): String
-  def getModelPath: String
-  def setModelPath(path: String)
-  def getModelDir: String
-  def getModelFileName: String
   def fileManager: FileManager
-  // kludgy this is AnyRef, but we don't want to have a compile-time dependency on the plot
-  // package. should be cleaned up sometime by introducing api.PlotManager? ST 2/12/08
-  def plotManager: AnyRef
+  def tick(c: Context, originalInstruction: Instruction)
+  def compiler: CompilerInterface
+  def lastRunTimes: JWeakHashMap[Job, JWeakHashMap[Agent, JWeakHashMap[Command, MutableLong]]]  // for _every
+  def completedActivations: JWeakHashMap[Activation, java.lang.Boolean]  // for _thunkdidfinish
+  def profilingTracer: Tracer
   def updatePlots(c: Context)
   def setupPlots(c: Context)
-  def previewCommands: String
-  def tick(c: Context, originalInstruction: Instruction)
   def resetTicks(c: Context)
-  def clearTicks()
-  @throws(classOf[java.net.MalformedURLException])
-  def attachModelDir(filePath: String): String
+  def inspectAgent(agent: Agent, radius: Double)
+  def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
+
+  @throws(classOf[api.CompilerException])
+  def compileForRun(source: String, context: Context, reporter: Boolean): Procedure
+  @throws(classOf[api.CompilerException])
+  def compileCommands(source: String): Procedure
+  @throws(classOf[api.CompilerException])
+  def compileCommands(source: String, kind: api.AgentKind): Procedure
+  @throws(classOf[api.CompilerException])
+  def compileReporter(source: String): Procedure
+  def runCompiledCommands(owner: api.JobOwner, procedure: Procedure): Boolean
+  def runCompiledReporter(owner: api.JobOwner, procedure: Procedure): AnyRef
+
   @throws(classOf[api.CompilerException])
   def evaluateCommands(owner: api.JobOwner, source: String)
   @throws(classOf[api.CompilerException])
@@ -88,64 +49,5 @@ trait Workspace extends api.ImporterUser with JobManagerOwner with api.CompilerS
   def evaluateReporter(owner: api.JobOwner, source: String, agent: Agent): AnyRef
   @throws(classOf[api.CompilerException])
   def evaluateReporter(owner: api.JobOwner, source: String, agents: AgentSet): AnyRef
-  @throws(classOf[api.CompilerException])
-  def compileCommands(source: String): Procedure
-  @throws(classOf[api.CompilerException])
-  def compileCommands(source: String, kind: api.AgentKind): Procedure
-  @throws(classOf[api.CompilerException])
-  def compileReporter(source: String): Procedure
-  def runCompiledCommands(owner: api.JobOwner, procedure: Procedure): Boolean
-  def runCompiledReporter(owner: api.JobOwner, procedure: Procedure): AnyRef
-  @throws(classOf[InterruptedException])
-  def dispose()
-  def patchSize: Double
-  def changeTopology(wrapX: Boolean, wrapY: Boolean)
-  @throws(classOf[api.LogoException])
-  @throws(classOf[IOException])
-  @throws(classOf[api.CompilerException])
-  def open(modelPath: String)
-  @throws(classOf[api.LogoException])
-  @throws(classOf[api.CompilerException])
-  def openString(modelContents: String)
-  def magicOpen(name: String)
-  def changeLanguage()
-  def mouseDown: Boolean = false
-  def mouseInside: Boolean = false
-  def mouseXCor: Double = 0
-  def mouseYCor: Double = 0
-  def beep() { }
-  def reload() { throw new UnsupportedOperationException }
-  def updateUI() { }
-  def updateMonitor(owner: api.JobOwner, value: AnyRef) { }
-  @throws(classOf[IOException])
-  def addCustomShapes(filename: String) { }
-  def movieIsOpen: Boolean = false
-  def movieAnyFramesCaptured: Boolean = false
-  def movieCancel() { }
-  def movieClose() { }
-  def movieGrabInterface() { }
-  def movieGrabView() { }
-  def movieSetRate(rate: Float) { }
-  def movieStart(path: String) { }
-  def movieStatus: String = "No movie."
-  def userDirectory: Option[String] = None
-  def userFile: Option[String] = None
-  def userNewFile: Option[String] = None
-  def userInput(msg: String): Option[String] = None
-  def userOneOf(msg: String, xs: api.LogoList): Option[AnyRef] = None
-  def userYesOrNo(msg: String): Option[Boolean] = None
-  def userMessage(msg: String): Boolean = false
-  def benchmark(minTime: Int, maxTime: Int)
-  def compiler: CompilerInterface
-  def isHeadless: Boolean
-  def behaviorSpaceRunNumber: Int
-  def behaviorSpaceRunNumber(n: Int)
-  // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
-  // stuff is a mess, should be redone - ST 3/10/09, 1/22/12
-  def lastLogoException: api.LogoException
-  def clearLastLogoException()
-  def lastRunTimes: JWeakHashMap[Job, JWeakHashMap[Agent, JWeakHashMap[Command, MutableLong]]]  // for _every
-  def completedActivations: JWeakHashMap[Activation, java.lang.Boolean]  // for _thunkdidfinish
-  def profilingEnabled: Boolean
-  def profilingTracer: Tracer
+
 }

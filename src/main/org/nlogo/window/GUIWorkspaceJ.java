@@ -530,7 +530,7 @@ public abstract strictfp class GUIWorkspaceJ
     updateManager().reset();
     updateManager().speed_$eq(0);
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG, AgentKindJ.Observer()),
+      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG(), AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);

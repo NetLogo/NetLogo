@@ -48,7 +48,7 @@ strictfp class CommandLine
   public CommandLine(org.nlogo.window.CommandCenterInterface commandCenter,
                      boolean echoCommandsToOutput, int fontSize,
                      org.nlogo.nvm.Workspace workspace) {
-    super(workspace.world().mainRNG);
+    super(workspace.world().mainRNG());
     this.commandCenter = commandCenter;
     this.echoCommandsToOutput = echoCommandsToOutput;
     this.workspace = workspace;

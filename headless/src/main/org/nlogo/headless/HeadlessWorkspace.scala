@@ -270,11 +270,11 @@ with org.nlogo.api.ViewSettings {
     if (!compilerTestingMode)
       world.clearTurtles()
   }
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
+  override def inspectAgent(agent: org.nlogo.agent.Agent, radius: Double) {
     if (!silent)
       println(agent)
   }
-  def inspectAgent(kind: AgentKind, agent: org.nlogo.agent.Agent, radius: Double) {
+  override def inspectAgent(kind: AgentKind, agent: org.nlogo.agent.Agent, radius: Double) {
     if (!silent) {
       println(agent)
     }

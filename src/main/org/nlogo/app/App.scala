@@ -76,7 +76,6 @@ object App{
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
     pico.addScalaObject("org.nlogo.compiler.Compiler")
-    pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
@@ -251,11 +250,10 @@ class App extends
 
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel = new WidgetPanel(workspace)
-      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
+      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) =
         new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
           pico.getComponent(classOf[EditDialogFactoryInterface])) {
         }
-      }
     }
     pico.addComponent(interfaceFactory)
 
@@ -270,7 +268,7 @@ class App extends
         override def ticks = _workspace.world.tickCounter.ticks
         override def updateMode = _workspace.updateMode
       }
-      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
+      def inspectAgent(agent: Agent, radius: Double) {
       }
       override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {
       }

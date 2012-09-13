@@ -19,8 +19,7 @@ object ModelType {
 object ModelTypeJ {
   import ModelType._
   // (I don't think) Java can access the inner objects without reflection, so we provide these
-  // convenience vals for use from the handful of Java clients we still have.  and let them
-  // use the old section names too - ST 7/11/11
+  // convenience vals for use from the handful of Java clients we still have. - ST 7/11/11
   val NEW = New
   val NORMAL = Normal
   val LIBRARY = Library
