@@ -10,9 +10,17 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.swing.Implicits._
 import mirror.{ Mirroring, Mirrorables, Serializer }
 import javax.imageio.ImageIO
+import scala.collection.JavaConverters.asScalaBufferConverter
 
-case class PotemkinInterface(position: java.awt.Point,
-                             image: BufferedImage)
+case class PotemkinInterface(
+  viewPosition: java.awt.Point,
+  image: BufferedImage,
+  fakeWidgets: Seq[FakeWidget])
+
+case class FakeWidget(
+  realWidget: window.Widget,
+  valueStringGetter: () => String
+)
 
 class ReviewTab(ws: window.GUIWorkspace,
                 loadModel: String => Unit,
@@ -34,6 +42,12 @@ with window.Events.BeforeLoadEventHandler {
     new api.NetLogoAdapter {
       val count = Iterator.from(0)
       override def tickCounterChanged(ticks: Double) {
+
+        // try to update the monitors... but...
+        // a) they're still out of sync sometimes
+        // b) I'm not sure it is OK to do that anyway... NP 2012-09-20
+        ws.updateUI() 
+
         // get off the job thread and onto the event thread
         ws.waitFor{() =>
           if (recordingEnabled) {
@@ -43,7 +57,8 @@ with window.Events.BeforeLoadEventHandler {
             grab()
             Scrubber.setMaximum(run.size - 1)
             InterfacePanel.repaint()
-          }}}})
+          }}}}
+    )
 
   private def reset() {
     run = Seq()
@@ -60,48 +75,109 @@ with window.Events.BeforeLoadEventHandler {
       val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
         ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
       val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
+
+      // The position is the position of the view, but the image is the
+      // whole interface, including the view.
       potemkinInterface = Some(
         PotemkinInterface(
-          position = new java.awt.Point(wrapperPos.x + ws.viewWidget.view.getLocation().x,
-                                        wrapperPos.y + ws.viewWidget.view.getLocation().y),
-          image =
-            org.nlogo.awt.Images.paintToImage(
-              ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])))
+          viewPosition = new java.awt.Point(
+            wrapperPos.x + ws.viewWidget.view.getLocation().x,
+            wrapperPos.y + ws.viewWidget.view.getLocation().y),
+          image = org.nlogo.awt.Images.paintToImage(
+            ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]),
+          fakeWidgets = fakeWidgets(ws)))
     }
-    val (newState, update) =
-      Mirroring.diffs(state, Mirrorables.allMirrorables(ws.world, ws.plotManager.plots))
-    run :+= Serializer.toBytes(update)
-    state = newState
-    Scrubber.setEnabled(true)
-    Scrubber.updateBorder()
-    MemoryMeter.update()
+    for {
+      pi <- potemkinInterface
+      widgetValues = pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex
+      mirrorables = Mirrorables.allMirrorables(ws.world, ws.plotManager.plots, widgetValues)
+      (newState, update) = Mirroring.diffs(state, mirrorables)
+    } {
+      run :+= Serializer.toBytes(update)
+      state = newState
+      Scrubber.setEnabled(true)
+      Scrubber.updateBorder()
+      MemoryMeter.update()
+    }
   }
 
+  private def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
+    ws.viewWidget.findWidgetContainer
+      .getWidgetsForSaving.asScala
+      .flatMap {
+        case m: window.MonitorWidget =>
+          Some(FakeWidget(m, () => api.Dump.logoObject(m.value))) // FIXME: not good enough - needs to run the reporter
+        case _ => None
+      }
+      .toList
+
   object InterfacePanel extends JPanel {
+
+    private def repaintView(g: java.awt.Graphics, position: java.awt.Point) {
+      val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
+      try {
+        val view = ws.viewWidget.view
+        g2d.clipRect(position.x, position.y, view.getWidth, view.getHeight)
+        g2d.translate(position.x, position.y)
+        val fakeWorld = new mirror.FakeWorld(visibleState)
+        fakeWorld.newRenderer(view).paint(g2d, view)
+      } finally {
+        g2d.dispose()
+      }
+    }
+
+    private def repaintWidgets(
+      g: java.awt.Graphics,
+      widgets: Seq[FakeWidget],
+      visibleState: Mirroring.State) {
+
+      val container = ws.viewWidget.findWidgetContainer
+      val values = visibleState
+        .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
+        .toSeq
+        .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
+        .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
+      for ((w, v) <- widgets zip values) {
+        val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
+        try {
+          val rw = w.realWidget
+          val bounds = container.getUnzoomedBounds(rw)
+          g2d.setRenderingHint(
+            java.awt.RenderingHints.KEY_ANTIALIASING,
+            java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+          g2d.setFont(rw.getFont)
+          g2d.clipRect(bounds.x, bounds.y, rw.getSize().width, rw.getSize().height) // make sure text doesn't overflow
+          g2d.translate(bounds.x, bounds.y)
+          rw match {
+            case m: window.MonitorWidget =>
+              window.MonitorPainter.paint(
+                g2d, m.getSize, m.getForeground, m.displayName, v)
+            case _ => // ignore for now
+          }
+        } finally {
+          g2d.dispose()
+        }
+      }
+    }
+
     override def paintComponent(g: java.awt.Graphics) {
       super.paintComponent(g)
-      val position =
-        potemkinInterface match {
-          case None =>
-            g.setColor(java.awt.Color.GRAY)
-            g.fillRect(0, 0, getWidth, getHeight)
-            new java.awt.Point(0, 0)
-          case Some(PotemkinInterface(position, image)) =>
-            g.setColor(java.awt.Color.WHITE)
-            g.fillRect(0, 0, getWidth, getHeight)
-            g.drawImage(image, 0, 0, null)
-            position
-        }
+      potemkinInterface match {
+        case None =>
+          g.setColor(java.awt.Color.GRAY)
+          g.fillRect(0, 0, getWidth, getHeight)
+        case Some(PotemkinInterface(position, image, _)) =>
+          g.setColor(java.awt.Color.WHITE)
+          g.fillRect(0, 0, getWidth, getHeight)
+          g.drawImage(image, 0, 0, null)
+      }
       if (run.nonEmpty) {
-        if(visibleState.isEmpty)
+        if (visibleState.isEmpty)
           visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
-        g.clipRect(position.x, position.y,
-                   ws.viewWidget.view.getWidth,
-                   ws.viewWidget.view.getHeight)
-        g.translate(position.x, position.y)
-        val dummy = new mirror.FakeWorld(visibleState)
-        dummy.newRenderer(ws.viewWidget.view)
-          .paint(g.asInstanceOf[java.awt.Graphics2D], ws.viewWidget.view)
+        for (pi <- potemkinInterface) {
+          repaintView(g, pi.viewPosition)
+          repaintWidgets(g, pi.fakeWidgets, visibleState)
+        }
       }
     }
   }
@@ -157,8 +233,10 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
+        // FIXME: what if the model has changed since we started recording the run? NP 2012-09-12
+        // We should save a copy at the point where we start recording
         out.writeObject(saveModel())
-        out.writeObject(potemkinInterface.get.position)
+        out.writeObject(potemkinInterface.get.viewPosition)
         val imageByteStream = new java.io.ByteArrayOutputStream
         ImageIO.write(
           potemkinInterface.get.image, "PNG", imageByteStream)
@@ -181,10 +259,11 @@ with window.Events.BeforeLoadEventHandler {
         potemkinInterface =
           Some(
             PotemkinInterface(
-              position = in.readObject().asInstanceOf[java.awt.Point],
+              viewPosition = in.readObject().asInstanceOf[java.awt.Point],
               image = ImageIO.read(
                 new java.io.ByteArrayInputStream(
-                  in.readObject().asInstanceOf[Array[Byte]]))))
+                  in.readObject().asInstanceOf[Array[Byte]])),
+              fakeWidgets = fakeWidgets(ws)))
         run = in.readObject().asInstanceOf[Run]
         frame = 0
         visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))

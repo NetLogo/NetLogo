@@ -204,7 +204,7 @@ object Serializer {
         Mirrorables.World,
         Mirrorables.Plot,
         Mirrorables.PlotPen,
-        Mirrorables.InterfaceGlobals)
+        Mirrorables.WidgetValue)
 
   implicit def agentKindToInt(kind: Kind): Int =
     kind match {
@@ -215,7 +215,7 @@ object Serializer {
       case Mirrorables.World => 4
       case Mirrorables.Plot => 5
       case Mirrorables.PlotPen => 6
-      case Mirrorables.InterfaceGlobals => 7
+      case Mirrorables.WidgetValue => 7
     }
 
 }
