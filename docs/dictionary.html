@@ -987,6 +987,15 @@ crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
       <p>
         In the final example, note that the result of <tt>atan</tt> equals
         the turtle's heading.
+      <p>
+        If you ever need to convert a turtle heading (obtained with atan
+        or otherwise) to a normal mathematical angle, the following should
+        be helpful:
+<pre>
+to-report heading-to-angle [ h ]
+  report (90 - h) mod 360
+end
+</pre>
       </div>
     <div class="dict_entry">
       <h3>
