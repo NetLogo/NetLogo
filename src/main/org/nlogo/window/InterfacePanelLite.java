@@ -8,7 +8,6 @@ import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.RandomServices;
 import org.nlogo.api.Version;
 import org.nlogo.api.VersionHistory;
-import org.nlogo.app.WidgetWrapper;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -408,8 +407,8 @@ public strictfp class InterfacePanelLite
     // loop backwards so JLayeredPane gives us the components
     // in back-to-front order for saving - ST 9/29/03
     for (int i = comps.length - 1; i >= 0; i--) {
-      if (comps[i] instanceof WidgetWrapper) {
-        WidgetWrapper wrapper = (WidgetWrapper) comps[i];
+      if (comps[i] instanceof WidgetWrapperInterface) {
+        WidgetWrapperInterface wrapper = (WidgetWrapperInterface) comps[i];
         Widget widget = wrapper.widget();
         if (!result.contains(widget)) {
           result.add(widget);

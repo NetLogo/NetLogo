@@ -20,4 +20,6 @@ public interface WidgetWrapperInterface {
   int gridSnap();
 
   boolean isNew();
+
+  Widget widget();
 }
