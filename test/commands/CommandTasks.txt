@@ -221,3 +221,9 @@ command-task-body-gets-agent-type-check
 command-task-closes-over-let-inside-task-of-different-agent
   O> __let z 0 crt 1 [ set glob1 task [ __ignore z ] ]
   O> run glob1
+
+foreach-plus-recursion
+  to explore if tvar = 0 [ set tvar 1 foreach sort turtles-on neighbors [ ask ? [ explore ] ] ] end
+  O> ask patches [ sprout 1 ]
+  O> ask one-of turtles [ explore ]
+  any? turtles with [tvar = 0] => false

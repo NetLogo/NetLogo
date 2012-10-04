@@ -304,7 +304,7 @@ public final strictfp class Context {
       scala.collection.mutable.ListBuffer<LetBinding> buf =
         new scala.collection.mutable.ListBuffer<LetBinding>();
       Context walk = this;
-      while(walk != null) {
+      while(walk != null && activation == walk.activation) {
         buf.$plus$plus$eq(walk.letBindings);
         walk = walk.job.parentContext;
       }
