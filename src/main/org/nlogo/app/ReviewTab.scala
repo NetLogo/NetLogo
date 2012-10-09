@@ -8,7 +8,7 @@ import org.nlogo.awt.{ RowLayout, UserCancelException }
 import org.nlogo.{ api, mirror, nvm, window }
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.swing.Implicits._
-import mirror.{ Mirroring, Mirrorables, Serializer }
+import mirror.{ Mirroring, Mirrorable, Mirrorables, Serializer }
 import javax.imageio.ImageIO
 import scala.collection.JavaConverters.asScalaBufferConverter
 
@@ -22,21 +22,61 @@ case class FakeWidget(
   valueStringGetter: () => String
 )
 
+class ReviewTabState {
+  type Run = Seq[Array[Byte]]
+  private var run: Run = Seq()
+  private var finalState: Mirroring.State = Map()
+  private var frame = 0
+  private var _visibleState: Mirroring.State = Map()
+  def visibleState = _visibleState
+  def size = run.size
+  def megabytes = run.map(_.size.toLong).sum / 1024 / 1024
+  def add(mirrorables: Iterable[Mirrorable]) {
+    val (newState, update) = Mirroring.diffs(finalState, mirrorables)
+    run :+= Serializer.toBytes(update)
+    finalState = newState
+  }
+  def reset() {
+    run = Seq()
+    finalState = Map()
+    _visibleState = Map()
+  }
+  def refreshVisibleState() {
+    if (visibleState.isEmpty)
+      _visibleState = merge(Map(), run.head)
+  }
+  def scrub(newFrame: Int) {
+    _visibleState =
+      if(newFrame < frame)
+        run.take(newFrame + 1)
+          .foldLeft(Map(): Mirroring.State)(merge)
+      else
+        run.drop(frame + 1).take(newFrame - frame)
+          .foldLeft(visibleState)(merge)
+    frame = newFrame
+  }
+  def load(in: java.io.ObjectInputStream) {
+    run = in.readObject().asInstanceOf[Run]
+    frame = 0
+    _visibleState = merge(Map(), run.head)
+    finalState = run.foldLeft(Map(): Mirroring.State)(merge)
+  }
+  def write(out: java.io.ObjectOutputStream) {
+    out.writeObject(run)
+  }
+  private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
+    Mirroring.merge(oldState, Serializer.fromBytes(bytes))
+}
+
 class ReviewTab(ws: window.GUIWorkspace,
                 loadModel: String => Unit,
                 saveModel: () => String)
 extends JPanel
 with window.Events.BeforeLoadEventHandler {
 
-  type Run = Seq[Array[Byte]]
-
   var recordingEnabled: Boolean = true
-  var run: Run = Seq()
-  var state: Mirroring.State = Map()
-  var visibleState: Mirroring.State = Map()
-  var frame = 0
-
-  var potemkinInterface: Option[PotemkinInterface] = None
+  private var potemkinInterface: Option[PotemkinInterface] = None
+  private val tabState = new ReviewTabState
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
@@ -46,7 +86,7 @@ with window.Events.BeforeLoadEventHandler {
         // try to update the monitors... but...
         // a) they're still out of sync sometimes
         // b) I'm not sure it is OK to do that anyway... NP 2012-09-20
-        ws.updateUI() 
+        ws.updateUI()
 
         // get off the job thread and onto the event thread
         ws.waitFor{() =>
@@ -55,15 +95,13 @@ with window.Events.BeforeLoadEventHandler {
               reset()
             }
             grab()
-            Scrubber.setMaximum(run.size - 1)
+            Scrubber.setMaximum(tabState.size - 1)
             InterfacePanel.repaint()
           }}}}
     )
 
   private def reset() {
-    run = Seq()
-    state = Map()
-    visibleState = Map()
+    tabState.reset()
     Scrubber.setValue(0)
     Scrubber.setEnabled(false)
     Scrubber.border("")
@@ -71,7 +109,7 @@ with window.Events.BeforeLoadEventHandler {
   }
 
   private def grab() {
-    if (run.isEmpty) {
+    if (tabState.size == 0) {
       val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
         ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
       val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
@@ -87,14 +125,11 @@ with window.Events.BeforeLoadEventHandler {
             ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]),
           fakeWidgets = fakeWidgets(ws)))
     }
-    for {
-      pi <- potemkinInterface
-      widgetValues = pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex
-      mirrorables = Mirrorables.allMirrorables(ws.world, ws.plotManager.plots, widgetValues)
-      (newState, update) = Mirroring.diffs(state, mirrorables)
-    } {
-      run :+= Serializer.toBytes(update)
-      state = newState
+    for(pi <- potemkinInterface) {
+      tabState.add(
+        Mirrorables.allMirrorables(
+          ws.world, ws.plotManager.plots,
+          pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex))
       Scrubber.setEnabled(true)
       Scrubber.updateBorder()
       MemoryMeter.update()
@@ -119,20 +154,17 @@ with window.Events.BeforeLoadEventHandler {
         val view = ws.viewWidget.view
         g2d.clipRect(position.x, position.y, view.getWidth, view.getHeight)
         g2d.translate(position.x, position.y)
-        val fakeWorld = new mirror.FakeWorld(visibleState)
+        val fakeWorld = new mirror.FakeWorld(tabState.visibleState)
         fakeWorld.newRenderer(view).paint(g2d, view)
       } finally {
         g2d.dispose()
       }
     }
 
-    private def repaintWidgets(
-      g: java.awt.Graphics,
-      widgets: Seq[FakeWidget],
-      visibleState: Mirroring.State) {
+    private def repaintWidgets(g: java.awt.Graphics, widgets: Seq[FakeWidget]) {
 
       val container = ws.viewWidget.findWidgetContainer
-      val values = visibleState
+      val values = tabState.visibleState
         .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
         .toSeq
         .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
@@ -171,19 +203,15 @@ with window.Events.BeforeLoadEventHandler {
           g.fillRect(0, 0, getWidth, getHeight)
           g.drawImage(image, 0, 0, null)
       }
-      if (run.nonEmpty) {
-        if (visibleState.isEmpty)
-          visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
+      if (tabState.size > 0) {
+        tabState.refreshVisibleState()
         for (pi <- potemkinInterface) {
           repaintView(g, pi.viewPosition)
-          repaintWidgets(g, pi.fakeWidgets, visibleState)
+          repaintWidgets(g, pi.fakeWidgets)
         }
       }
     }
   }
-
-  private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
-    Mirroring.merge(oldState, Serializer.fromBytes(bytes))
 
   object Scrubber extends JSlider {
     def border(s: String) {
@@ -196,22 +224,15 @@ with window.Events.BeforeLoadEventHandler {
     border("")
     addChangeListener(new ChangeListener{
       def stateChanged(e: ChangeEvent) {
-        visibleState =
-          if(getValue < frame)
-              run.take(getValue + 1)
-                .foldLeft(Map(): Mirroring.State)(merge)
-          else
-              run.drop(frame + 1).take(getValue - frame)
-                .foldLeft(visibleState)(merge)
+        tabState.scrub(getValue)
         updateBorder()
-        frame = getValue
         InterfacePanel.repaint()
       }})
   }
 
   def ticks: Option[Double] =
     for {
-      entry <- visibleState.get(mirror.AgentKey(Mirrorables.World, 0))
+      entry <- tabState.visibleState.get(mirror.AgentKey(Mirrorables.World, 0))
       result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
       if result != -1
     } yield result
@@ -242,7 +263,7 @@ with window.Events.BeforeLoadEventHandler {
           potemkinInterface.get.image, "PNG", imageByteStream)
         imageByteStream.close()
         out.writeObject(imageByteStream.toByteArray)
-        out.writeObject(run)
+        tabState.write(out)
         out.close()
       }
     }
@@ -264,13 +285,10 @@ with window.Events.BeforeLoadEventHandler {
                 new java.io.ByteArrayInputStream(
                   in.readObject().asInstanceOf[Array[Byte]])),
               fakeWidgets = fakeWidgets(ws)))
-        run = in.readObject().asInstanceOf[Run]
-        frame = 0
-        visibleState = Mirroring.merge(Map(), Serializer.fromBytes(run.head))
-        state = run.foldLeft(Map(): Mirroring.State)(merge)
+        tabState.load(in)
         Scrubber.setValue(0)
         Scrubber.setEnabled(true)
-        Scrubber.setMaximum(run.size - 1)
+        Scrubber.setMaximum(tabState.size - 1)
         MemoryMeter.update()
         InterfacePanel.repaint()
       }
@@ -292,8 +310,7 @@ with window.Events.BeforeLoadEventHandler {
 
   object MemoryMeter extends JLabel {
     def update() {
-      val megabytes = run.map(_.size.toLong).sum / 1024 / 1024
-      setText(megabytes + " MB")
+      setText(tabState.megabytes + " MB")
     }
   }
 
