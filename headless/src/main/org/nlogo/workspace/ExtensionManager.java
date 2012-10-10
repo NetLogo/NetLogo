@@ -2,6 +2,7 @@
 
 package org.nlogo.workspace;
 
+import org.nlogo.api.ClassManager;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.ErrorSource;
@@ -86,6 +87,15 @@ public strictfp class ExtensionManager
     return jarsLoaded > 0;
   }
 
+  public Iterable<ClassManager> loadedExtensions() {
+    java.util.ArrayList<ClassManager> result =
+      new java.util.ArrayList<ClassManager>();
+    for (JarContainer jar : jars.values()) {
+      result.add(jar.classManager);
+    }
+    return result;
+  }
+
   public String getSource(String filename)
       throws java.io.IOException {
     return workspace.getSource(filename);
@@ -142,7 +152,7 @@ public strictfp class ExtensionManager
         return;
       }
 
-      org.nlogo.api.ClassManager classManager =
+      ClassManager classManager =
           getClassManager(jarPath, myClassLoader, errors);
 
       if (classManager == null) {
@@ -323,7 +333,7 @@ public strictfp class ExtensionManager
   }
 
   // We want a new ClassManager per Jar Load
-  private org.nlogo.api.ClassManager getClassManager(String jarPath,
+  private ClassManager getClassManager(String jarPath,
                                                      java.net.URLClassLoader myClassLoader,
                                                      ErrorSource errors)
       throws CompilerException {
@@ -346,7 +356,7 @@ public strictfp class ExtensionManager
       Object classMang = myClassLoader.loadClass(classMangName).newInstance();
 
       try {
-        return (org.nlogo.api.ClassManager) classMang;
+        return (ClassManager) classMang;
       } catch (ClassCastException ex) {
         errors.signalError("Bad extension: The ClassManager doesn't implement "
             + "org.nlogo.api.ClassManager");
@@ -700,7 +710,7 @@ public strictfp class ExtensionManager
     public java.net.URLClassLoader jarClassLoader;
     public final long modified;
     public ExtensionPrimitiveManager primManager;
-    public org.nlogo.api.ClassManager classManager;
+    public ClassManager classManager;
 
     // loaded means that the load method has been called for this extension.
     // any further recompiles with extension still in it should not call the load method.

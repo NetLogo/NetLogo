@@ -28,6 +28,12 @@ RecursiveCallInsideAsk2
   count turtles => 2
   glob1 => 27
 
+recursion-over-ask
+  to explore if tvar = 0 [ set tvar 1 ask turtles-on neighbors [ explore ] ] end
+  O> ask patches [ sprout 1 ]
+  O> ask one-of turtles [ explore ]
+  any? turtles with [tvar = 0] => false
+
 AskInsideReporterProcedure
   to-report foo ask turtle 1 [ set glob1 who ] report 10 end
   O> crt 2

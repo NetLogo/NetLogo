@@ -59,6 +59,9 @@ trait ExtensionManager {
   /** Returns true if any extensions have been imported in the current model. */
   def anyExtensionsLoaded: Boolean
 
+  /** uses java.lang.Iterable for easy access from Java */
+  def loadedExtensions: java.lang.Iterable[ClassManager]
+
   /** Returns the identifier "name" by its imported implementation, if any, or null if not. */
   def replaceIdentifier(name: String): Primitive
 

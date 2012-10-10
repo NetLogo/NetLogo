@@ -4,5 +4,4 @@ package org.nlogo.api
 
 case class Let(varName: String = null,
                startPos: Int = -1,
-               endPos: Int = -1,
-               children: List[Let] = Nil)
+               endPos: Int = -1)
