@@ -649,60 +649,11 @@ public abstract strictfp class AbstractWorkspace
   }
 
   public org.nlogo.util.MersenneTwisterFast auxRNG() {
-    return world().auxRNG;
+    return world().auxRNG();
   }
 
   public org.nlogo.util.MersenneTwisterFast mainRNG() {
-    return world().mainRNG;
-  }
-
-  public Object readNumberFromString(String source)
-      throws CompilerException {
-    return compiler().readNumberFromString
-      (source, world(), getExtensionManager(), world().program().is3D());
-  }
-
-  public void checkReporterSyntax(String source)
-      throws CompilerException {
-    compiler().checkReporterSyntax
-        (source, world().program(), procedures(), getExtensionManager(), false);
-  }
-
-  public void checkCommandSyntax(String source)
-      throws CompilerException {
-    compiler().checkCommandSyntax
-        (source, world().program(), procedures(), getExtensionManager(), false);
-  }
-
-  public boolean isConstant(String s) {
-    try {
-      compiler().readFromString(s, world().program().is3D());
-      return true;
-    }
-    catch(CompilerException e) {
-      return false;
-    }
-  }
-
-  public boolean isValidIdentifier(String s) {
-    return compiler().isValidIdentifier(s, world().program().is3D());
-  }
-
-  public boolean isReporter(String s) {
-    return compiler().isReporter(s, world().program(), procedures(), getExtensionManager());
-  }
-
-  public Token[] tokenizeForColorization(String s) {
-    return compiler().tokenizeForColorization
-      (s, getExtensionManager(), world().program().is3D());
-  }
-
-  public Token getTokenAtPosition(String s, int pos) {
-    return compiler().getTokenAtPosition(s, pos);
-  }
-
-  public java.util.Map<String, java.util.List<Object>> findProcedurePositions(String source) {
-    return compiler().findProcedurePositions(source, world().program().is3D());
+    return world().mainRNG();
   }
 
   public LogoException lastLogoException() {

@@ -126,11 +126,11 @@ object Compiler extends CompilerInterface {
   }
 
   // used for procedures menu
-  def findProcedurePositions(source: String, is3D: Boolean): java.util.Map[String, java.util.List[AnyRef]] =
+  def findProcedurePositions(source: String, is3D: Boolean): Map[String, (String, Int, Int, Int)] =
     new StructureParserExtras()(tokenizer(is3D)).findProcedurePositions(source)
 
   // used for includes menu
-  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): java.util.Map[String, String] =
+  def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Map[String, String] =
     new StructureParserExtras()(tokenizer(is3D)).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
@@ -167,7 +167,7 @@ object Compiler extends CompilerInterface {
     tokenizer(false).getTokenAtPosition(source, position)
 
   // this is for the syntax-highlighting editor
-  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Array[Token] =
+  def tokenizeForColorization(source: String, extensionManager: ExtensionManager, is3D: Boolean): Seq[Token] =
     tokenizer(is3D).tokenizeForColorization(source, extensionManager)
 
 }

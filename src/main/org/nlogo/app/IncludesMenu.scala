@@ -25,7 +25,7 @@ with org.nlogo.window.Events.CompiledEventHandler
 
   override def populate(menu: javax.swing.JPopupMenu) {
     import collection.JavaConverters._
-    includesTable = target.getIncludesTable.asScala.toMap
+    includesTable = target.getIncludesTable
     if(includesTable.isEmpty) {
       val nullItem = new javax.swing.JMenuItem("<No Includes Defined>")
       nullItem.setEnabled(false)

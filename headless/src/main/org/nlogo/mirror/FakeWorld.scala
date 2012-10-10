@@ -2,8 +2,7 @@
 
 package org.nlogo.mirror
 
-import org.nlogo.api
-import org.nlogo.util.Femto
+import org.nlogo.{ api, util }
 import Mirrorables._
 import Mirroring.State
 import collection.JavaConverters._
@@ -29,8 +28,9 @@ class FakeWorld(state: State) extends api.World {
 
   def newRenderer(settings: api.ViewSettings): api.RendererInterface = {
     val renderer =
-      Femto.get(classOf[api.RendererInterface],
-                "org.nlogo.render.Renderer", Array(this))
+      util.Femto.get(
+        classOf[api.RendererInterface],
+        "org.nlogo.render.Renderer", Array(this))
     renderer.resetCache(settings.patchSize)
     for(drawing <- trailDrawing)
       renderer.trailDrawer.readImage(
@@ -274,6 +274,17 @@ class FakeWorld(state: State) extends api.World {
   def allStoredValues: Iterator[AnyRef] = unsupported
   def trailDrawer: api.TrailDrawerInterface = unsupported
   def mayHavePartiallyTransparentObjects: Boolean = unsupported
+  def timer: api.Timer = unsupported
+  def setObserverVariableByName(variableName: String, value: AnyRef): Unit = unsupported
+  def observerOwnsIndexOf(name: String): Int = unsupported
+  def auxRNG: util.MersenneTwisterFast = unsupported
+  def mainRNG: util.MersenneTwisterFast = unsupported
+  def equalDimensions(d: api.WorldDimensions): Boolean = unsupported
+  def setDimensionVariable(variableName: String, value: Int, d: api.WorldDimensions): api.WorldDimensions = unsupported
+  def isDimensionVariable(variableName: String): Boolean = unsupported
+  def getDimensions: api.WorldDimensions = unsupported
+  def realloc(): Unit = unsupported
+  def clearGlobals(): Unit = unsupported
 
   private def unsupported = throw new UnsupportedOperationException
 }

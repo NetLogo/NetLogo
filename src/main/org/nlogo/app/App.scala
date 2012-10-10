@@ -83,8 +83,6 @@ object App{
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
     pico.addScalaObject("org.nlogo.compiler.Compiler")
-    pico.addComponent(classOf[AppletSaver])
-    pico.addComponent(classOf[ProceduresToHtml])
     pico.addComponent(classOf[App])
     pico.as(NO_CACHE).addComponent(classOf[FileMenu])
     pico.addComponent(classOf[ModelSaver])
@@ -315,15 +313,9 @@ class App extends
 
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel = new WidgetPanel(workspace)
-      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
+      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) =
         new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
-          pico.getComponent(classOf[EditDialogFactoryInterface])) {
-          override def addControls() {
-            super.addControls()
-            add(new JButton(fileMenu.saveClientAppletAction()))
-          }
-        }
-      }
+          pico.getComponent(classOf[EditDialogFactoryInterface]))
     }
     pico.addComponent(interfaceFactory)
 
@@ -345,12 +337,11 @@ class App extends
         override def updateMode = _workspace.updateMode
       }
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
-      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
-        val a = agent.asInstanceOf[org.nlogo.agent.Agent]
+      def inspectAgent(agent: Agent, radius: Double) {
         org.nlogo.awt.EventQueue.invokeLater(
           new Runnable {
             override def run() {
-              monitorManager.inspect(a.kind, a, radius)
+              monitorManager.inspect(agent.kind, agent, radius)
             }})
       }
       override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {

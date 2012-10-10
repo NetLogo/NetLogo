@@ -31,7 +31,7 @@ object Scaladoc {
       (base, cache, options, inputs, version, s) =>
         val apiSources = Seq(
           "app/App.scala", "headless/HeadlessWorkspace.scala",
-          "lite/InterfaceComponent.scala", "lite/Applet.scala", "lite/AppletPanel.scala",
+          "lite/InterfaceComponent.scala", "lite/AppletPanel.scala",
           "api/", "agent/", "workspace/", "nvm/")
         val sourceFilter: File => Boolean = path =>
           apiSources.exists(ok => path.toString.containsSlice("src/main/org/nlogo/" + ok))

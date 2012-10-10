@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import java.awt.image.BufferedImage
-import org.nlogo.api
+import org.nlogo.{ api, agent }
 import org.nlogo.util.MersenneTwisterFast
 
 /**
@@ -33,7 +33,7 @@ extends api.Context {
 
   def importPcolors(image: BufferedImage, asNetLogoColors: Boolean) {
     org.nlogo.agent.ImportPatchColors.doImport(
-      image, workspace.world, asNetLogoColors)
+      image, workspace.world.asInstanceOf[agent.World], asNetLogoColors)
   }
 
 }

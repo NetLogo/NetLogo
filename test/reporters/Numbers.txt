@@ -272,7 +272,7 @@ Min6
   min [373 37 373733 337.0 37] => 37
 
 Mean1
-  mean [] => ERROR math operation produced a non-number
+  mean [] => ERROR List is empty.
 
 Mean2
   mean [1] => 1

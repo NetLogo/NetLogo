@@ -5,8 +5,6 @@ package org.nlogo.app
 import org.pegdown.{ PegDownProcessor, Extensions }
 import java.io.InputStream
 
-// This gets tested by TestAppletSaver and TestInfoFormatter. - ST 9/7/10
-
 object InfoFormatter {
 
   type MarkDownString = String

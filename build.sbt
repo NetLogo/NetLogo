@@ -100,7 +100,6 @@ all <<= all.dependsOn(
   packageBin in Compile,
   packageBin in Compile in NetLogoBuild.headless,
   Extensions.extensions,
-  Packaging.moreJars,
   NativeLibs.nativeLibs,
   ModelIndex.modelIndex,
   InfoTab.infoTab,

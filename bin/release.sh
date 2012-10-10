@@ -170,9 +170,7 @@ cd tmp/netlogo-$COMPRESSEDVERSION
 $CP -rp ../../docs .
 $CP -p ../../dist/readme.txt .
 $CP -p ../../dist/netlogo_logging.xml .
-$CP -p ../../target/NetLogo.jar ../../target/HubNet.jar ../../headless/target/NetLogoHeadless.jar .
-$CP ../../target/NetLogoLite.jar .
-$PACK200 --modification-time=latest --effort=9 --strip-debug --no-keep-file-order --unknown-attribute=strip NetLogoLite.jar.pack.gz NetLogoLite.jar
+$CP -p ../../target/NetLogo.jar ../../headless/target/NetLogoHeadless.jar .
 
 # fill lib directory
 $MKDIR lib
@@ -209,7 +207,7 @@ $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
 $MKDIR extensions
 $CP -rp ../../extensions/[a-z]* extensions
 $RM -rf extensions/sample extensions/sample-scala
-$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,NetLogoLite.jar,scala-library*.jar,sbt}
+$RM -rf extensions/*/{src,Makefile,manifest.txt,classes,tests.txt,README.md,build.xml,turtle.gif,.classpath,.project,.settings,project,target,build.sbt,*.zip,bin,NetLogo.jar,scala-library*.jar,sbt}
 # Apple's license won't let us include this - ST 2/6/12
 $RM -f extensions/qtj/QTJava.jar
 
@@ -253,6 +251,7 @@ cd ..
 # and make a new one
 $RM -rf docs
 $CP -rp ../../docs .
+$RM -rf docs/scaladoc
 $MV NetLogo\ User\ Manual.pdf docs/
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/*.html
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/dict/*.html
@@ -439,7 +438,7 @@ fi
 
 # make directory with web pages and so on
 cd ..
-$CP -p netlogo-$COMPRESSEDVERSION/{NetLogo,NetLogoLite}.jar netlogo-$COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION
+$CP -p netlogo-$COMPRESSEDVERSION/NetLogo.jar $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/docs $COMPRESSEDVERSION
 $CP -rp netlogo-$COMPRESSEDVERSION/models $COMPRESSEDVERSION
 if [ $WINDOWS -eq 1 ]
@@ -450,17 +449,10 @@ $CP -p ../dist/index.html $COMPRESSEDVERSION
 $CP -p ../dist/title.jpg $COMPRESSEDVERSION
 $CP -p ../dist/donate.png $COMPRESSEDVERSION
 $CP -p ../dist/os-*.gif $COMPRESSEDVERSION
-$CP -rp ../models/test/applet $COMPRESSEDVERSION
-$CP $COMPRESSEDVERSION/NetLogoLite.jar $COMPRESSEDVERSION/NetLogoLite.jar.pack.gz $COMPRESSEDVERSION/applet
-$CP ../target/HubNet.jar $COMPRESSEDVERSION/applet
-$CP -rp netlogo-$COMPRESSEDVERSION/extensions/{sound,matrix,table,bitmap,gis} $COMPRESSEDVERSION/applet
-$FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -path \*/.git \) -print0 \
-  | $XARGS -0 $RM -rf
-$RM -rf $COMPRESSEDVERSION/applet/*/classes
-$CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 if [ $MATHEMATICA -eq 1 ]; then
   $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
 fi
+$CP -rp ../docs/scaladoc $COMPRESSEDVERSION/docs
 
 # stuff version number and date into web page
 cd $COMPRESSEDVERSION

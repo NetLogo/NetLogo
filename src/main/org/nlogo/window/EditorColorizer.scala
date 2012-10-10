@@ -71,7 +71,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer[TokenType] {
   def isCloser(token: TokenType) =
     token == TokenType.CLOSE_PAREN || token == TokenType.CLOSE_BRACKET
 
-  def tokenizeForColorization(line: String): Array[Token] =
+  def tokenizeForColorization(line: String): Seq[Token] =
     compiler.tokenizeForColorization(line)
 
   ///

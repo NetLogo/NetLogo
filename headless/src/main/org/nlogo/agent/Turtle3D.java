@@ -101,7 +101,7 @@ public final strictfp class Turtle3D
   }
 
   @Override
-  public Turtle hatch() {
+  public Turtle hatch(AgentSet breed) {
     Turtle3D child = new Turtle3D(world);
     child.heading = heading;
     child.xcor = xcor;
@@ -110,7 +110,10 @@ public final strictfp class Turtle3D
     child.variables = variables.clone();
     child.id(world.newTurtleId());
     world.turtles().add(child);
-    if (getBreed() != world.turtles()) {
+    if (breed != getBreed()) {
+      child.setBreed(breed);
+    }
+    else if (breed != world.turtles()) {
       getBreed().add(child);
     }
     child.getPatchHere().addTurtle(child);

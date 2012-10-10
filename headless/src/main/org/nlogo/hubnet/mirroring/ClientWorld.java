@@ -727,6 +727,10 @@ public strictfp class ClientWorld
     }
   }
 
+  public void clearGlobals() {
+    throw new UnsupportedOperationException();
+  }
+
   public org.nlogo.api.AgentSet links() {
     throw new UnsupportedOperationException();
   }
@@ -841,6 +845,46 @@ public strictfp class ClientWorld
 
   public boolean mayHavePartiallyTransparentObjects() {
     return false;
+  }
+
+  public org.nlogo.api.Timer timer() {
+    throw new UnsupportedOperationException();
+  }
+
+  public void setObserverVariableByName(String variableName, Object value) {
+    throw new UnsupportedOperationException();
+  }
+
+  public int observerOwnsIndexOf(String name) {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.util.MersenneTwisterFast mainRNG() {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.util.MersenneTwisterFast auxRNG() {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean equalDimensions(org.nlogo.api.WorldDimensions d) {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.api.WorldDimensions setDimensionVariable(String variableName, int value, org.nlogo.api.WorldDimensions d) {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean isDimensionVariable(String variableName) {
+    throw new UnsupportedOperationException();
+  }
+
+  public org.nlogo.api.WorldDimensions getDimensions() {
+    throw new UnsupportedOperationException();
+  }
+
+  public void realloc() {
+    throw new UnsupportedOperationException();
   }
 
 }

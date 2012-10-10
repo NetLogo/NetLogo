@@ -45,8 +45,8 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.0.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.1.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.1/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL

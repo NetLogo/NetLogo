@@ -112,7 +112,7 @@ object Depend {
     }
     def generateFooter() {
       println("""
-### HubNet client dependencies (keep HubNet.jar small!)
+### HubNet client dependencies
 
 [HubNet-client] = [hubnet.client] [hubnet.connection] [hubnet.mirroring] [hubnet.protocol] excluding org.nlogo.hubnet.client.App org.nlogo.hubnet.client.App$ org.nlogo.hubnet.client.ClientApp
 check [HubNet-client] independentOf [workspace]

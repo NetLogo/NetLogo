@@ -987,6 +987,15 @@ crt 1 [ set heading 30  fd 1  print atan xcor ycor ]
       <p>
         In the final example, note that the result of <tt>atan</tt> equals
         the turtle's heading.
+      <p>
+        If you ever need to convert a turtle heading (obtained with atan
+        or otherwise) to a normal mathematical angle, the following should
+        be helpful:
+<pre>
+to-report heading-to-angle [ h ]
+  report (90 - h) mod 360
+end
+</pre>
       </div>
     <div class="dict_entry">
       <h3>
@@ -1329,7 +1338,7 @@ show ceiling -4.5
         <img alt="Observer Command" src="images/observer.gif">
       </h4>
       <p>
-        Resets all global variables to zero, and calls clear-ticks,
+        Combines the effects of clear-globals, clear-ticks,
         clear-turtles, clear-patches, clear-drawing, clear-all-plots, and
         clear-output.
       </div>
@@ -1359,6 +1368,18 @@ show ceiling -4.5
       </h4>
       <p>
         Clears all lines and stamps drawn by turtles.
+      </div>
+    <div class="dict_entry">
+      <h3>
+        <a name="clear-globals" id="clear-globals">clear-globals</a>
+      </h3>
+      <h4>
+        clear-globals
+        <br>
+        <img alt="Observer Command" src="images/observer.gif">
+      </h4>
+      <p>
+        Sets all global variables to 0.
       </div>
     <div class="dict_entry">
       <h3>
@@ -5410,7 +5431,7 @@ ask turtle 1
         netlogo-applet?
       </h4>
       <p>
-        Reports true if the model is running as an applet.
+        Always false.  Included for backwards compatibility with old models.
       </div>
     <div class="dict_entry">
       <h3>
@@ -7174,10 +7195,6 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
         within a string by using another backslash &quot;C:\\&quot;
       <p>
         The change is temporary and is not saved with the model.
-      <p>
-        Note: in applets, this command has no effect, since applets are
-        only allowed to read files from the same directory on the server
-        where the model is stored.
       <pre>
 set-current-directory &quot;C:\\NetLogo&quot;
 ;; Assume it is a Windows Machine
@@ -8661,8 +8678,7 @@ show user-input &quot;What is your name?&quot;
     </div>
     <div class="dict_entry">
       <h3>
-        <a name="message" id="message"></a><a name="user-message" id=
-        "user-message">user-message</a>
+        <a name="user-message" id="user-message">user-message</a>
       </h3>
       <h4>
         user-message <i>value</i>

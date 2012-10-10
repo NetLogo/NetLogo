@@ -2,15 +2,15 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet}
-import org.nlogo.api.{AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-                      CompilerException, JobOwner, SimpleJobOwner}
+import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet }
+import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
+                       CompilerException, JobOwner, SimpleJobOwner, Token }
 import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
 
-import java.io.{IOException,PrintWriter}
+import java.io.{ IOException, PrintWriter }
 import java.util.WeakHashMap
 
 import AbstractWorkspaceTraits._
@@ -21,7 +21,7 @@ object AbstractWorkspaceScala {
 
 abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspace(hubNetManagerFactory)
-with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking {
+with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking with Compiler {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -57,20 +57,63 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
     requestDisplayUpdate(true)
   }
 
-  def clearTicks{
+  def clearTicks() {
     world.tickCounter.clear()
   }
 
-  def clearAll {
+  def clearAll() {
     world.clearAll()
     clearOutput()
     clearDrawing()
     plotManager.clearAll()
     extensionManager.clearAll()
   }
+
 }
 
 object AbstractWorkspaceTraits {
+
+  trait Compiler { this: AbstractWorkspaceScala =>
+
+    @throws(classOf[CompilerException])
+    override def readNumberFromString(source: String) =
+      compiler.readNumberFromString(
+        source, world, getExtensionManager, world.program.is3D)
+
+    @throws(classOf[CompilerException])
+    override def checkReporterSyntax(source: String) =
+      compiler.checkReporterSyntax(
+        source, world.program, procedures, getExtensionManager, false)
+
+    @throws(classOf[CompilerException])
+    def checkCommandSyntax(source: String) =
+      compiler.checkCommandSyntax(
+        source, world.program, procedures, getExtensionManager, false)
+
+    def isConstant(s: String) =
+      try {
+        compiler.readFromString(s, world.program.is3D)
+        true
+      }
+      catch { case _: CompilerException => false }
+
+    override def isValidIdentifier(s: String) =
+      compiler.isValidIdentifier(s, world.program.is3D)
+
+    override def isReporter(s: String) =
+      compiler.isReporter(s, world.program, procedures, getExtensionManager)
+
+    override def tokenizeForColorization(s: String): Seq[Token] =
+      compiler.tokenizeForColorization(
+        s, getExtensionManager, world.program.is3D)
+
+    override def getTokenAtPosition(s: String, pos: Int): Token =
+      compiler.getTokenAtPosition(s, pos)
+
+    override def findProcedurePositions(source: String) =
+      compiler.findProcedurePositions(source, world.program.is3D)
+
+  }
 
   trait Procedures { this: AbstractWorkspaceScala =>
     var procedures: CompilerInterface.ProceduresMap =

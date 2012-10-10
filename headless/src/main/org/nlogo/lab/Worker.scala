@@ -125,7 +125,7 @@ class Worker(val protocol: Protocol)
               if(ws.world.observerOwnsIndexOf(name.toUpperCase) == -1)
                 throw new FailedException(
                   "Global variable does not exist:\n" + name)
-              ws.world.setObserverVariableByName(name, value)
+              ws.world.setObserverVariableByName(name, value.asInstanceOf[AnyRef])
             }
       }
       def exitConditionTrue =
