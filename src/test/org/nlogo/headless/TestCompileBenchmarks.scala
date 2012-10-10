@@ -14,7 +14,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
     "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   // this is here to help us remember that when the list of benchmarks changes, this file and the
-  // contents of models/test/bench both need updating too - ST 2/11/09
+  // contents of test/benchdumps both need updating too - ST 2/11/09
   test("names") {
     assert(names.mkString("\n") === ChecksumsAndPreviews.allBenchmarks.mkString("\n"))
   }
@@ -30,17 +30,8 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           result
         }
         val source =
-          io.Source.fromFile("models/test/bench/" + BranchName.branch + "/" + name + ".txt")
+          io.Source.fromFile("test/benchdumps/" + name + ".txt")
         assert(dump === source.getLines.mkString("","\n","\n"))
       }
   }
-}
-
-object BranchName {
-  // the benchmarks dumps may be different on some branches, but since the benchmark models aren't
-  // open source, they're in a separate repo.  so, in that separate repo, we have a "master"
-  // directory with the dumps for the master branch here in the main repo, and for any branch here
-  // which needs different dumps, there's a corresponding directory in the models repo.
-  // A bit kludgy I guess, but it's OK. - ST 11/17/11
-  val branch = "5.0.x"
 }
