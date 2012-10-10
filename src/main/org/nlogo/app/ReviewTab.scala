@@ -139,10 +139,9 @@ with window.Events.BeforeLoadEventHandler {
   private def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
     ws.viewWidget.findWidgetContainer
       .getWidgetsForSaving.asScala
-      .flatMap {
+      .collect {
         case m: window.MonitorWidget =>
-          Some(FakeWidget(m, () => api.Dump.logoObject(m.value))) // FIXME: not good enough - needs to run the reporter
-        case _ => None
+          FakeWidget(m, () => api.Dump.logoObject(m.value)) // FIXME: not good enough - needs to run the reporter
       }
       .toList
 
