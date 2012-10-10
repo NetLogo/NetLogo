@@ -151,11 +151,25 @@ with window.Events.BeforeLoadEventHandler {
     private def repaintView(g: java.awt.Graphics, position: java.awt.Point) {
       val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       try {
-        val view = ws.viewWidget.view
+        val view = ws.view
+        object FakeViewSettings extends api.ViewSettings {
+          // disregard spotlight/perspective settings in the
+          // "real" view, but delegate other methods to it
+          def fontSize = view.fontSize
+          def patchSize = view.patchSize
+          def viewWidth = view.viewWidth
+          def viewHeight = view.viewHeight
+          def viewOffsetX = view.viewOffsetX
+          def viewOffsetY = view.viewOffsetY
+          def drawSpotlight = false
+          def renderPerspective = false
+          def perspective = api.Perspective.Observe
+          def isHeadless = view.isHeadless
+        }
         g2d.clipRect(position.x, position.y, view.getWidth, view.getHeight)
         g2d.translate(position.x, position.y)
         val fakeWorld = new mirror.FakeWorld(tabState.visibleState)
-        fakeWorld.newRenderer(view).paint(g2d, view)
+        fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
       } finally {
         g2d.dispose()
       }
