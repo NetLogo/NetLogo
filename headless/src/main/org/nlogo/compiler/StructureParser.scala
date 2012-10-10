@@ -498,7 +498,7 @@ private class StructureParser(
       }
     }
   }
-  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: Set[String] = Set()): Let = {
+  private def parseLet(procedure: Procedure, offset: Int, oldAncestorNames: Set[String] = Set()) {
     var ancestorNames = oldAncestorNames
     val letToken = tokenBuffer.next()
     val nameToken = tokenBuffer.head
@@ -509,12 +509,10 @@ private class StructureParser(
             "There is already a local variable called " + name + " here", nameToken)
     checkName(name, nameToken, null, procedure)
     var level = 1
-    val children = new collection.mutable.ListBuffer[Let]
-    def newLet(endPos: Int) = {
-      val result = Let(name, startPos, endPos, children.toList)
+    def newLet(endPos: Int) {
+      val result = Let(name, startPos, endPos)
       letToken.value.asInstanceOf[_let].let = result
       procedure.lets.add(result)
-      result
     }
     while(true) {
       if(!tokenBuffer.hasNext)
@@ -526,21 +524,24 @@ private class StructureParser(
       }
       else if(token.tpe == TokenType.CLOSE_BRACKET) {
         level -= 1
-        if(level == 0) return newLet(tokenBuffer.index - offset)
+        if(level == 0) {
+          newLet(tokenBuffer.index - offset)
+          return
+        }
         tokenBuffer.next()
       }
       else if(token.tpe == TokenType.COMMAND && token.value.isInstanceOf[_let]) {
         ancestorNames += name
-        children += parseLet(procedure, offset, ancestorNames)
+        parseLet(procedure, offset, ancestorNames)
       }
       else if(token.tpe == TokenType.KEYWORD) {
         val keyword = token.value.asInstanceOf[String]
         if(keyword != "END") exception("Expected ] or END", token)
-        return newLet(tokenBuffer.index - offset)
+        newLet(tokenBuffer.index - offset)
+        return
       }
       else tokenBuffer.next()
     }
-    throw new IllegalStateException
   }
 }
 

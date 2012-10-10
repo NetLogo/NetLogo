@@ -91,16 +91,28 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
     }
   }
 
+  // At present (October 2012) this is only used in the slider constraint code, which has been known
+  // since we wrote it not to handle threading correctly.  It hasn't been fixed because the feature
+  // (reporters as slider bounds) is relatively little known and little used.  This code might
+  // actually be correct if called from the job thread, but actually, the current slider code
+  // doesn't do that, it calls it from the event thread.  The event thread should not be running
+  // NetLogo code; submitting jobs through the job manager is supposed to be the only way that
+  // NetLogo code is ever run.  Fixing it wouldn't be easy because the event thread is not allowed
+  // to block waiting for the job thread to finish something, since this may cause deadlock.  (And
+  // not just in theory either; it definitely deadlocks in practice.)  So, consider this code
+  // to have a big "beware" sign on it -- it shouldn't be called from the event thread, but it
+  // isn't actually known whether it works when called from the job thread, either.
+  //
+  // Note that this code is very similar to the ProcedureRunner code above, which is used by
+  // plotting.  That code, I believe to be correct and to handle threading correctly.  But the
+  // snippets of code in plots are always commands, never reporters, so the plotting stuff never
+  // needs makeReporterThunk. - ST 10/9/12
   @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, agent: Agent, owner: JobOwner): ReporterLogoThunk =
     if(source.trim.isEmpty) throw new IllegalStateException("empty reporter source")
     else new MyLogoThunk(source, agent, owner, false) with ReporterLogoThunk {
       @throws(classOf[LogoException])
       def call(): Object  = {
-        // This really ought to create a job and submit it through the job manager, instead of just
-        // calling the procedure directly.  This is temporary code that never got cleaned up.
-        // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
-        // is ever run. - ST 1/8/10
         val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
         val context = new Context(job, agent, 0, null)
         try context.callReporterProcedure(new Activation(procedure, null, 0))
