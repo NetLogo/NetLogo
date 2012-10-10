@@ -1,0 +1,1173 @@
+globals [INITIAL-DENSITY FGCOLOR BGCOLOR RESULT]
+interfaceGlobals [initial-density fgcolor bgcolor]
+turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]
+patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR LIVING? LIVE-NEIGHBORS]
+links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
+breeds 
+link-breeds 
+
+procedure BENCHMARK:[_repeatlocal:0]{O---}:
+[0]_asm_procedurebenchmark_randomseed_0 "random-seed 22" double => void
+      _constdouble:22.0 => double
+         L0
+          LDC 22.0
+         L1
+          DSTORE 2
+          DLOAD 2
+          D2L
+          LSTORE 4
+          LLOAD 4
+          LDC -2147483648
+          LCMP
+          IFLT L2
+          LLOAD 4
+          LDC 2147483647
+          LCMP
+          IFLE L3
+         L2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          NEW scala/collection/mutable/StringBuilder
+          DUP
+          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          LLOAD 4
+          L2I
+          I2L
+          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
+          RETURN
+[1]_resettimer
+[2]_asm_procedurebenchmark_call_1 "setup-random"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[3]_asm_procedurebenchmark_repeatlocal_2 "" double => void
+      _constdouble:500.0 => double
+         L0
+          LDC 500.0
+         L1
+          DSTORE 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          ICONST_0
+          NEW org/nlogo/nvm/MutableLong
+          DUP
+          ALOAD 0
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
+          AASTORE
+          ALOAD 1
+          ICONST_5
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+          RETURN
+[4]_asm_procedurebenchmark_call_3 "go"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_call_3.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_5
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[5]_asm_procedurebenchmark_repeatlocalinternal_4 "" => void
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          ICONST_0
+          AALOAD
+          CHECKCAST org/nlogo/nvm/MutableLong
+          ASTORE 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_0
+          LCMP
+          IFGT L1
+          ALOAD 1
+          BIPUSH 6
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L2
+         L1
+          ALOAD 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_1
+          LSUB
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+          RETURN
+[6]_asm_procedurebenchmark_setobservervariable_5 "set result timer" Object => void
+      _timer => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
+          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
+         L4
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_3
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[7]_asm_procedurebenchmark_return_6 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure BENCHMARK-__LIFE:[_repeatlocal:0]{O---}:
+[0]_asm_procedurebenchmarklife_randomseed_0 "random-seed 22" double => void
+      _constdouble:22.0 => double
+         L0
+          LDC 22.0
+         L1
+          DSTORE 2
+          DLOAD 2
+          D2L
+          LSTORE 4
+          LLOAD 4
+          LDC -2147483648
+          LCMP
+          IFLT L2
+          LLOAD 4
+          LDC 2147483647
+          LCMP
+          IFLE L3
+         L2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          NEW scala/collection/mutable/StringBuilder
+          DUP
+          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
+          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
+          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          LLOAD 4
+          L2I
+          I2L
+          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
+          RETURN
+[1]_resettimer
+[2]_asm_procedurebenchmarklife_call_1 "setup-random"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmarklife_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_3
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[3]_asm_procedurebenchmarklife_repeatlocal_2 "" double => void
+      _constdouble:500.0 => double
+         L0
+          LDC 500.0
+         L1
+          DSTORE 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          ICONST_0
+          NEW org/nlogo/nvm/MutableLong
+          DUP
+          ALOAD 0
+          DLOAD 2
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmarklife_repeatlocal_2.validLong (D)J
+          INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
+          AASTORE
+          ALOAD 1
+          ICONST_5
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+          RETURN
+[4]_life
+[5]_asm_procedurebenchmarklife_repeatlocalinternal_3 "" => void
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
+          ICONST_0
+          AALOAD
+          CHECKCAST org/nlogo/nvm/MutableLong
+          ASTORE 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_0
+          LCMP
+          IFGT L1
+          ALOAD 1
+          BIPUSH 6
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L2
+         L1
+          ALOAD 2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
+          LCONST_1
+          LSUB
+          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
+          ALOAD 1
+          ICONST_4
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L2
+          RETURN
+[6]_asm_procedurebenchmarklife_setobservervariable_4 "set result timer" Object => void
+      _timer => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmarklife_setobservervariable_4.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
+          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
+         L4
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_3
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[7]_asm_procedurebenchmarklife_return_5 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure SETUP-RANDOM:[]{O---}:
+[0]_clearall
+[1]_resetticks
+[2]_asm_proceduresetuprandom_ask_0 "ask patches" AgentSet => void
+      _patches => AgentSet
+         L0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+         L1
+          ASTORE 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          INSTANCEOF org/nlogo/agent/Observer
+          IFNE L2
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+          ALOAD 1
+          ALOAD 2
+          ICONST_3
+          INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
+          ALOAD 1
+          BIPUSH 8
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
+          RETURN
+[3]_asm_proceduresetuprandom_ifelse_1 "ifelse random-float 1.0 < initial-density" boolean => void
+      _lessthan double,Object => boolean
+        _randomfloat double => double
+          _constdouble:1.0 => double
+        _observervariable:INITIAL-DENSITY => Object
+         L0
+          DCONST_1
+         L1
+          DSTORE 2
+          DLOAD 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
+          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
+          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
+          DMUL
+         L2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_0
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+         L3
+          ASTORE 4
+          DSTORE 2
+          ALOAD 4
+          ASTORE 5
+          ALOAD 5
+          INSTANCEOF java/lang/Double
+          IFEQ L4
+          DLOAD 2
+          ALOAD 5
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          DCMPG
+          IFGE L5
+          ICONST_1
+          GOTO L6
+         L5
+          ICONST_0
+         L6
+          GOTO L7
+         L4
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          ICONST_2
+          ANEWARRAY java/lang/Object
+          DUP
+          ICONST_0
+          GETSTATIC org/nlogo/api/TypeNames$.MODULE$ : Lorg/nlogo/api/TypeNames$;
+          DLOAD 2
+          INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
+          INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
+          AASTORE
+          DUP
+          ICONST_1
+          GETSTATIC org/nlogo/api/TypeNames$.MODULE$ : Lorg/nlogo/api/TypeNames$;
+          ALOAD 4
+          INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L7
+          ISTORE 2
+          ALOAD 1
+          ILOAD 2
+          IFEQ L8
+          ICONST_4
+          GOTO L9
+         L8
+          BIPUSH 6
+         L9
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L10
+          RETURN
+[4]_asm_proceduresetuprandom_call_2 "cell-birth"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ICONST_5
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[5]_asm_proceduresetuprandom_goto_3 "" => void
+         L0
+          ALOAD 1
+          BIPUSH 7
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[6]_asm_proceduresetuprandom_call_4 "cell-death"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetuprandom_call_4.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          BIPUSH 7
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[7]_asm_proceduresetuprandom_done_5 "" => void
+         L0
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.finished : Z
+         L1
+          RETURN
+[8]_asm_proceduresetuprandom_return_6 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure CELL-BIRTH:[]{-TP-}:
+[0]_asm_procedurecellbirth_setpatchvariable_0 "set living? true" Object => void
+      _constboolean:true => Boolean
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurecellbirth_setpatchvariable_0.kept2_value : Ljava/lang/Boolean;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_5
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[1]_asm_procedurecellbirth_setpatchvariable_1 "set pcolor fgcolor" Object => void
+      _observervariable:FGCOLOR => Object
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_1
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[2]_asm_procedurecellbirth_return_2 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure CELL-DEATH:[]{-TP-}:
+[0]_asm_procedurecelldeath_setpatchvariable_0 "set living? false" Object => void
+      _constboolean:false => Boolean
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurecelldeath_setpatchvariable_0.kept2_value : Ljava/lang/Boolean;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_5
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[1]_asm_procedurecelldeath_setpatchvariable_1 "set pcolor bgcolor" Object => void
+      _observervariable:BGCOLOR => Object
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+         L4
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ICONST_2
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L5
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L5
+          RETURN
+[2]_asm_procedurecelldeath_return_2 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
+procedure GO:[]{O---}:
+[0]_asm_procedurego_ask_0 "ask patches" AgentSet => void
+      _patches => AgentSet
+         L0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+         L1
+          ASTORE 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          INSTANCEOF org/nlogo/agent/Observer
+          IFNE L2
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+          ALOAD 1
+          ALOAD 2
+          ICONST_1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
+          ALOAD 1
+          ICONST_3
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
+          RETURN
+[1]_asm_procedurego_setpatchvariable_1 "set live-neighbors count neighbors with [living?" Object => void
+      _countwith AgentSet,Reporter => double
+        _neighbors => AgentSet
+        _asm_procedurego_patchvariable_2 "living?" => Object
+              TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+             L3
+              ACONST_NULL
+              ASTORE 2
+             L0
+              ALOAD 1
+              GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+              ICONST_5
+              INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+              ASTORE 2
+             L1
+              ALOAD 2
+              GOTO L4
+             L2
+              ASTORE 3
+              NEW org/nlogo/nvm/EngineException
+              DUP
+              ALOAD 1
+              ALOAD 0
+              ALOAD 3
+              INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+              INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+              ATHROW
+             L4
+              ARETURN
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ASTORE 2
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/Turtle
+          IFEQ L4
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/Turtle
+          INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
+          GOTO L5
+         L4
+          ALOAD 2
+          INSTANCEOF org/nlogo/agent/Patch
+          IFEQ L6
+          ALOAD 2
+          CHECKCAST org/nlogo/agent/Patch
+         L5
+          INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
+          GOTO L7
+         L6
+          NEW scala/MatchError
+          DUP
+          ALOAD 2
+          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          ATHROW
+         L7
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_setpatchvariable_1.keptinstr4 : Lorg/nlogo/prim/_asm_procedurego_patchvariable_2;
+          ASTORE 3
+          ASTORE 2
+          ALOAD 3
+          ALOAD 2
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Reporter.checkAgentSetClass (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+          NEW org/nlogo/nvm/Context
+          DUP
+          ALOAD 1
+          ALOAD 2
+          INVOKESPECIAL org/nlogo/nvm/Context.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/agent/AgentSet;)V
+          ASTORE 4
+          ICONST_0
+          ISTORE 5
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
+          ASTORE 6
+         L8
+          ALOAD 6
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L9
+          ALOAD 6
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
+          ASTORE 7
+          ALOAD 4
+          ALOAD 7
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/nvm/Context.evaluateReporter (Lorg/nlogo/agent/Agent;Lorg/nlogo/nvm/Reporter;)Ljava/lang/Object;
+          ASTORE 8
+          ALOAD 8
+          INSTANCEOF java/lang/Boolean
+          IFEQ L10
+          ALOAD 8
+          CHECKCAST java/lang/Boolean
+          INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
+          IFEQ L8
+          ILOAD 5
+          ICONST_1
+          IADD
+          ISTORE 5
+          GOTO L8
+         L10
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          ICONST_3
+          ANEWARRAY java/lang/Object
+          DUP
+          ICONST_0
+          LDC "COUNT"
+          AASTORE
+          DUP
+          ICONST_1
+          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
+          ALOAD 7
+          INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
+          AASTORE
+          DUP
+          ICONST_2
+          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
+          ALOAD 8
+          INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
+          AASTORE
+          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L9
+          ILOAD 5
+          I2D
+         L11
+          DSTORE 2
+          NEW java/lang/Double
+          DUP
+          DLOAD 2
+          INVOKESPECIAL java/lang/Double.<init> (D)V
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          BIPUSH 6
+          ALOAD 2
+          INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
+         L1
+          ALOAD 1
+          ICONST_2
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+          GOTO L12
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L12
+          RETURN
+[2]_asm_procedurego_done_3 "" => void
+         L0
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.finished : Z
+         L1
+          RETURN
+[3]_asm_procedurego_ask_4 "ask patches" AgentSet => void
+      _patches => AgentSet
+         L0
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+         L1
+          ASTORE 2
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          INSTANCEOF org/nlogo/agent/Observer
+          IFNE L2
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L3
+          ALOAD 2
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_ask_4.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/AgentSet;
+          IF_ACMPNE L2
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          GETSTATIC org/nlogo/api/I18N$.MODULE$ : Lorg/nlogo/api/I18N$;
+          INVOKEVIRTUAL org/nlogo/api/I18N$.errors ()Lorg/nlogo/api/I18N$BundleKind;
+          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
+          INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L2
+          ALOAD 1
+          ALOAD 2
+          ICONST_4
+          INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
+          ALOAD 1
+          BIPUSH 10
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L4
+          RETURN
+[4]_asm_procedurego_ifelse_5 "ifelse live-neighbors = 3" boolean => void
+      _equal Object,double => boolean
+        _patchvariable:LIVE-NEIGHBORS => Object
+        _constdouble:3.0 => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ACONST_NULL
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          BIPUSH 6
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+          ASTORE 2
+         L1
+          ALOAD 2
+          GOTO L4
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L4
+          LDC 3.0
+         L5
+          DSTORE 3
+          ASTORE 2
+          ALOAD 2
+          ASTORE 5
+          ALOAD 5
+          INSTANCEOF java/lang/Double
+          IFEQ L6
+          DLOAD 3
+          ALOAD 5
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          DCMPL
+          IFNE L7
+          ICONST_1
+          GOTO L8
+         L7
+          ICONST_0
+          GOTO L8
+         L6
+          ICONST_0
+         L8
+          ISTORE 2
+          ALOAD 1
+          ILOAD 2
+          IFEQ L9
+          ICONST_5
+          GOTO L10
+         L9
+          BIPUSH 7
+         L10
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L11
+          RETURN
+[5]_asm_procedurego_call_6 "cell-birth"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_call_6.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          BIPUSH 6
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[6]_asm_procedurego_goto_7 "" => void
+         L0
+          ALOAD 1
+          BIPUSH 9
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[7]_asm_procedurego_if_8 "if live-neighbors != 2" boolean => void
+      _notequal Object,double => boolean
+        _patchvariable:LIVE-NEIGHBORS => Object
+        _constdouble:2.0 => double
+          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
+         L3
+          ACONST_NULL
+          ASTORE 2
+         L0
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          BIPUSH 6
+          INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
+          ASTORE 2
+         L1
+          ALOAD 2
+          GOTO L4
+         L2
+          ASTORE 3
+          NEW org/nlogo/nvm/EngineException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 3
+          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
+          ATHROW
+         L4
+          LDC 2.0
+         L5
+          DSTORE 3
+          ASTORE 2
+          ALOAD 2
+          ASTORE 5
+          ALOAD 5
+          INSTANCEOF java/lang/Double
+          IFEQ L6
+          DLOAD 3
+          ALOAD 5
+          CHECKCAST java/lang/Double
+          INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+          DCMPL
+          IFEQ L7
+          ICONST_1
+          GOTO L8
+         L7
+          ICONST_0
+          GOTO L8
+         L6
+          ICONST_1
+         L8
+          ISTORE 2
+          ALOAD 1
+          ILOAD 2
+          IFEQ L9
+          BIPUSH 8
+          GOTO L10
+         L9
+          BIPUSH 9
+         L10
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L11
+          RETURN
+[8]_asm_procedurego_call_9 "cell-death"
+         L0
+          NEW org/nlogo/nvm/Activation
+          DUP
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_call_9.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+          ALOAD 1
+          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          BIPUSH 9
+          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
+          ALOAD 1
+          SWAP
+          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L1
+          RETURN
+[9]_asm_procedurego_done_10 "" => void
+         L0
+          ALOAD 1
+          ICONST_1
+          PUTFIELD org/nlogo/nvm/Context.finished : Z
+         L1
+          RETURN
+[10]_tick
+[11]_asm_procedurego_return_11 "" => void
+         L0
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
+          ALOAD 1
+          ICONST_0
+          PUTFIELD org/nlogo/nvm/Context.stopping : Z
+         L1
+          RETURN
+
