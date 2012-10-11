@@ -13,7 +13,7 @@ import javax.imageio.ImageIO
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 case class PotemkinInterface(
-  viewPosition: java.awt.Point,
+  viewArea: java.awt.geom.Area,
   image: BufferedImage,
   fakeWidgets: Seq[FakeWidget])
 
@@ -117,14 +117,23 @@ with window.Events.BeforeLoadEventHandler {
 
       // The position is the position of the view, but the image is the
       // whole interface, including the view.
-      potemkinInterface = Some(
-        PotemkinInterface(
-          viewPosition = new java.awt.Point(
-            wrapperPos.x + ws.viewWidget.view.getLocation().x,
-            wrapperPos.y + ws.viewWidget.view.getLocation().y),
-          image = org.nlogo.awt.Images.paintToImage(
-            ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component]),
-          fakeWidgets = fakeWidgets(ws)))
+      val widgets = fakeWidgets(ws)
+      val view = ws.viewWidget.view
+      val viewArea = new java.awt.geom.Area(new java.awt.Rectangle(
+        wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
+        view.getWidth, view.getHeight))
+
+      // remove widgets from the clip area of the view:
+      val container = ws.viewWidget.findWidgetContainer
+      for {
+        w <- widgets
+        bounds = container.getUnzoomedBounds(w.realWidget)
+        widgetArea = new java.awt.geom.Area(bounds)
+      } viewArea.subtract(widgetArea)
+
+      val image = org.nlogo.awt.Images.paintToImage(
+        ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
+      potemkinInterface = Some(PotemkinInterface(viewArea, image, widgets))
     }
     for(pi <- potemkinInterface) {
       tabState.add(
@@ -147,7 +156,7 @@ with window.Events.BeforeLoadEventHandler {
 
   object InterfacePanel extends JPanel {
 
-    private def repaintView(g: java.awt.Graphics, position: java.awt.Point) {
+    private def repaintView(g: java.awt.Graphics, area: java.awt.geom.Area) {
       val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       try {
         val view = ws.view
@@ -165,8 +174,8 @@ with window.Events.BeforeLoadEventHandler {
           def perspective = api.Perspective.Observe
           def isHeadless = view.isHeadless
         }
-        g2d.clipRect(position.x, position.y, view.getWidth, view.getHeight)
-        g2d.translate(position.x, position.y)
+        g2d.setClip(area)
+        g2d.translate(area.getBounds.x, area.getBounds.y)
         val fakeWorld = new mirror.FakeWorld(tabState.visibleState)
         fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
       } finally {
@@ -211,7 +220,7 @@ with window.Events.BeforeLoadEventHandler {
         case None =>
           g.setColor(java.awt.Color.GRAY)
           g.fillRect(0, 0, getWidth, getHeight)
-        case Some(PotemkinInterface(position, image, _)) =>
+        case Some(PotemkinInterface(_, image, _)) =>
           g.setColor(java.awt.Color.WHITE)
           g.fillRect(0, 0, getWidth, getHeight)
           g.drawImage(image, 0, 0, null)
@@ -219,7 +228,7 @@ with window.Events.BeforeLoadEventHandler {
       if (tabState.size > 0) {
         tabState.refreshVisibleState()
         for (pi <- potemkinInterface) {
-          repaintView(g, pi.viewPosition)
+          repaintView(g, pi.viewArea)
           repaintWidgets(g, pi.fakeWidgets)
         }
       }
@@ -270,7 +279,7 @@ with window.Events.BeforeLoadEventHandler {
         // FIXME: what if the model has changed since we started recording the run? NP 2012-09-12
         // We should save a copy at the point where we start recording
         out.writeObject(saveModel())
-        out.writeObject(potemkinInterface.get.viewPosition)
+        out.writeObject(potemkinInterface.get.viewArea)
         val imageByteStream = new java.io.ByteArrayOutputStream
         ImageIO.write(
           potemkinInterface.get.image, "PNG", imageByteStream)
@@ -293,7 +302,7 @@ with window.Events.BeforeLoadEventHandler {
         potemkinInterface =
           Some(
             PotemkinInterface(
-              viewPosition = in.readObject().asInstanceOf[java.awt.Point],
+              viewArea = in.readObject().asInstanceOf[java.awt.geom.Area],
               image = ImageIO.read(
                 new java.io.ByteArrayInputStream(
                   in.readObject().asInstanceOf[Array[Byte]])),
