@@ -197,24 +197,6 @@ public abstract strictfp class GUIWorkspaceJ
     }
   }
 
-  @Override
-  public void resetTicks(org.nlogo.nvm.Context context) {
-    super.resetTicks(context);
-    new Events.TickStateChangeEvent(true).raiseLater(this);
-  }
-
-  @Override
-  public void clearTicks() {
-    super.clearTicks();
-    new Events.TickStateChangeEvent(false).raiseLater(this);
-  }
-
-  @Override
-  public void clearAll() {
-    super.clearAll();
-    new Events.TickStateChangeEvent(false).raiseLater(this);
-  }
-
   public boolean sendPixels() {
     return view.renderer.trailDrawer().sendPixels();
   }

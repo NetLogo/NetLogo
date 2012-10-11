@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.{ agent, api, shape, workspace }
+import org.nlogo.{ agent, api, nvm, shape, workspace }
 import org.nlogo.swing.{ FileDialog, InputDialog, OptionDialog, ModalProgressTask }
 import org.nlogo.awt.UserCancelException
 
@@ -35,6 +35,23 @@ with Events.LoadSectionEventHandler {
           shape.LinkShape.parseShapes(e.lines.toArray, e.version))
       case _ =>
     }
+  }
+
+  ///
+
+  override def resetTicks(context: nvm.Context) {
+    super.resetTicks(context)
+    new Events.TickStateChangeEvent(true).raiseLater(this)
+  }
+
+  override def clearTicks() {
+    super.clearTicks()
+    new Events.TickStateChangeEvent(false).raiseLater(this)
+  }
+
+  override def clearAll() {
+    super.clearAll()
+    new Events.TickStateChangeEvent(false).raiseLater(this)
   }
 
   ///
