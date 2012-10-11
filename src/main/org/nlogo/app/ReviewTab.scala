@@ -85,10 +85,9 @@ with window.Events.BeforeLoadEventHandler {
         for(pi <- potemkinInterface) {
           val monitors = pi.fakeWidgets.collect{
             case FakeWidget(m: window.MonitorWidget, _) => m}
-          for(monitor <- monitors)
+          for(monitor <- monitors; reporter <- monitor.reporter)
             monitor.value(
-              ws.evaluator.ProcedureRunner.report(
-                monitor.procedure().code(0).args(0)))
+              ws.evaluator.ProcedureRunner.report(reporter))
         }
         // get off the job thread and onto the event thread
         ws.waitFor{() =>
