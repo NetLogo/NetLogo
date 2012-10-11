@@ -255,7 +255,6 @@ R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
 R __hubnet-in-q-size hubnet._hubnetinqsize
 R __hubnet-out-q-size hubnet._hubnetoutqsize
-R __monitorprecision etc._monitorprecision
 R __nano-time etc._nanotime
 R __patchcol _patchcol
 R __patchrow _patchrow

@@ -126,7 +126,15 @@ public strictfp class MonitorWidget
 
   public void value(Object value) {
     this.value = value;
-    String newString = Dump.logoObject(value);
+    String newString;
+    if (value instanceof Double) {
+      newString = Dump.number(
+        org.nlogo.api.Approximate.approximate(
+          ((Double) value).doubleValue(), decimalPlaces));
+    }
+    else {
+      newString = Dump.logoObject(value);
+    }
     if (!newString.equals(valueString)) {
       valueString = newString;
       repaint();
@@ -224,8 +232,8 @@ public strictfp class MonitorWidget
       source(null, "", null);
       halt();
     } else {
-      source("to __monitor [] __observercode loop [ __updatemonitor __monitorprecision (",
-          innerSource, "\n) " + decimalPlaces() + " ] end");
+      source("to __monitor [] __observercode loop [ __updatemonitor (",
+             innerSource, "\n)] end");
     }
     chooseDisplayName();
   }

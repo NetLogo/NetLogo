@@ -88,7 +88,7 @@ with window.Events.BeforeLoadEventHandler {
           for(monitor <- monitors)
             monitor.value(
               ws.evaluator.ProcedureRunner.report(
-                monitor.procedure().code(0).args(0).args(0)))
+                monitor.procedure().code(0).args(0)))
         }
         // get off the job thread and onto the event thread
         ws.waitFor{() =>
