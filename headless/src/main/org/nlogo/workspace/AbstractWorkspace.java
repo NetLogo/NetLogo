@@ -48,7 +48,7 @@ public abstract strictfp class AbstractWorkspace
   public final org.nlogo.nvm.JobManagerInterface jobManager;
   private final HubNetManagerFactory hubNetManagerFactory;
   protected HubNetInterface hubNetManager;
-  protected final Evaluator evaluator;
+  public final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
   /**

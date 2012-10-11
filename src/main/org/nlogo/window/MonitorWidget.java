@@ -120,6 +120,10 @@ public strictfp class MonitorWidget
 
   private String valueString = "";
 
+  public String valueString() {
+    return valueString;
+  }
+
   public void value(Object value) {
     this.value = value;
     String newString = Dump.logoObject(value);

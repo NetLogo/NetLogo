@@ -6,7 +6,7 @@ import java.util.ArrayList
 import org.nlogo.agent.ArrayAgentSet
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
-import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure}
+import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
 
 class Evaluator(workspace: AbstractWorkspaceScala) {
 
@@ -55,15 +55,17 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
 
   ///
 
-  private[workspace] def withContext(context: Context)(f: => Unit) {
+  def withContext(context: Context)(f: => Unit) {
     val oldContext = ProcedureRunner.context
     ProcedureRunner.context = context
     try f
     finally ProcedureRunner.context = oldContext
   }
 
-  private object ProcedureRunner {
-    var context: Context = null
+  object ProcedureRunner {
+    private[Evaluator] var context: Context = null
+    def report(reporter: Reporter, a: Agent = workspace.world.observer) =
+      context.evaluateReporter(a, reporter)
     def run(p: Procedure): Boolean = {
       val oldActivation = context.activation
       val newActivation = new Activation(p, context.activation, 1)

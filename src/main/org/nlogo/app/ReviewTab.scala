@@ -82,12 +82,14 @@ with window.Events.BeforeLoadEventHandler {
     new api.NetLogoAdapter {
       val count = Iterator.from(0)
       override def tickCounterChanged(ticks: Double) {
-
-        // try to update the monitors... but...
-        // a) they're still out of sync sometimes
-        // b) I'm not sure it is OK to do that anyway... NP 2012-09-20
-        ws.updateUI()
-
+        for(pi <- potemkinInterface) {
+          val monitors = pi.fakeWidgets.collect{
+            case FakeWidget(m: window.MonitorWidget, _) => m}
+          for(monitor <- monitors)
+            monitor.value(
+              ws.evaluator.ProcedureRunner.report(
+                monitor.procedure().code(0).args(0).args(0)))
+        }
         // get off the job thread and onto the event thread
         ws.waitFor{() =>
           if (recordingEnabled) {
@@ -141,9 +143,8 @@ with window.Events.BeforeLoadEventHandler {
       .getWidgetsForSaving.asScala
       .collect {
         case m: window.MonitorWidget =>
-          FakeWidget(m, () => api.Dump.logoObject(m.value)) // FIXME: not good enough - needs to run the reporter
-      }
-      .toList
+          FakeWidget(m, () => m.valueString)
+      }.toList
 
   object InterfacePanel extends JPanel {
 

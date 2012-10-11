@@ -37,10 +37,24 @@ with Events.LoadSectionEventHandler {
     }
   }
 
-  ///
+  /// tick counter
+
+  // withContext sets up evaluator so that if someone wants to respond to ticks on the job thread by
+  // running some code, they can. we're using this to run monitor code from the model run recording
+  // code.  and, TickStateChangeEvent is there too if someone wants to respond to ticks on the event
+  // thread (example: ButtonWidget uses it to enable/disable a button depending on whether the tick
+  // counter has been started) - ST 10/11/12
+
+  override def tick(context: nvm.Context, originalInstruction: nvm.Instruction) {
+    evaluator.withContext(context) {
+      super.tick(context, originalInstruction)
+    }
+  }
 
   override def resetTicks(context: nvm.Context) {
-    super.resetTicks(context)
+    evaluator.withContext(context) {
+      super.resetTicks(context)
+    }
     new Events.TickStateChangeEvent(true).raiseLater(this)
   }
 
