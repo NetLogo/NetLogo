@@ -7,9 +7,7 @@ import java.io.IOException
 trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def world: World
   def aggregateManager: AggregateManagerInterface
-  def breathe() // called when engine comes up for air
   def getExtensionManager: ExtensionManager
-  def requestDisplayUpdate(force: Boolean)
   @throws(classOf[LogoException])
   def waitFor(runnable: CommandRunnable)
   @throws(classOf[LogoException])
@@ -82,7 +80,6 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def mouseYCor: Double = 0
   def beep() { }
   def reload() { throw new UnsupportedOperationException }
-  def updateUI() { }
   def updateMonitor(owner: JobOwner, value: AnyRef) { }
   @throws(classOf[IOException])
   def addCustomShapes(filename: String) { }

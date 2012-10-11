@@ -45,6 +45,17 @@ with Events.LoadSectionEventHandler {
   // thread (example: ButtonWidget uses it to enable/disable a button depending on whether the tick
   // counter has been started) - ST 10/11/12
 
+  override def notifyListeners(context: nvm.Context) {
+    val ticks: Double = world.tickCounter.ticks
+    if (ticks != (lastTicksListenersHeard: Double)) {
+      lastTicksListenersHeard = ticks
+      evaluator.withContext(context) {
+        listenerManager.tickCounterChanged(ticks)
+      }
+    }
+    listenerManager.possibleViewUpdate()
+  }
+
   override def tick(context: nvm.Context, originalInstruction: nvm.Instruction) {
     evaluator.withContext(context) {
       super.tick(context, originalInstruction)

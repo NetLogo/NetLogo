@@ -516,26 +516,26 @@ public abstract strictfp class GUIWorkspaceJ
 
   // this is called on the job thread when the engine comes up for air - ST 1/10/07
   @Override
-  public void breathe() {
+  public void breathe(org.nlogo.nvm.Context context) {
     jobManager.maybeRunSecondaryJobs();
     if (updateMode() == UpdateModeJ.CONTINUOUS()) {
       updateManager().pseudoTick();
       updateDisplay(true);
     }
     world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
-    notifyListeners();
+    notifyListeners(context);
   }
 
   // called only from job thread, by such primitives as
   // _exportinterface and _usermessage, which need to make sure the
   // whole UI is up-to-date before proceeding - ST 8/30/07, 3/3/11
   @Override
-  public void updateUI() {
+  public void updateUI(org.nlogo.nvm.Context context) {
     // this makes the tick counter et al update
     ThreadUtils.waitFor((GUIWorkspace) this, updateRunner);
     // resetting first ensures that if we are allowed to update the view, we will
     updateManager().reset();
-    requestDisplayUpdate(true);
+    requestDisplayUpdate(context, true);
   }
 
   // on the job thread,
@@ -544,24 +544,17 @@ public abstract strictfp class GUIWorkspaceJ
   // - _tickadvance calls requestDisplayUpdate(false)
   // - ST 1/4/07, 3/3/11
   @Override
-  public void requestDisplayUpdate(boolean force) {
+  public void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force) {
     if (force) {
       updateManager().pseudoTick();
     }
     updateDisplay(true); // haveWorldLockAlready = true
-    notifyListeners();
+    notifyListeners(context);
   }
 
-  private double lastTicksListenersHeard = -1.0;
+  protected double lastTicksListenersHeard = -1.0;
 
-  private void notifyListeners() {
-    double ticks = world().tickCounter.ticks();
-    if (ticks != lastTicksListenersHeard) {
-      lastTicksListenersHeard = ticks;
-      listenerManager.tickCounterChanged(ticks);
-    }
-    listenerManager.possibleViewUpdate();
-  }
+  protected abstract void notifyListeners(org.nlogo.nvm.Context context);
 
   @Override
   public void halt() {

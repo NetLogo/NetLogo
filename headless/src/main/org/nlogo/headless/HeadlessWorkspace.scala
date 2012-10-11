@@ -12,7 +12,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface,
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        HubNetInterface, CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.{ World, World3D }
-import org.nlogo.nvm.{ LabInterface,
+import org.nlogo.nvm.{ LabInterface, Context,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
@@ -422,7 +422,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(force: Boolean) {
+  override def requestDisplayUpdate(context: org.nlogo.nvm.Context, force: Boolean) {
     if (hubnetManager != null)
       hubnetManager.incrementalUpdateFromEventThread()
   }
@@ -430,7 +430,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def breathe() { }
+  override def breathe(context: Context) { }
 
   /**
    * Internal use only.
@@ -478,7 +478,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def runtimeError(owner: org.nlogo.api.JobOwner, context: org.nlogo.nvm.Context,
+  def runtimeError(owner: org.nlogo.api.JobOwner, context: Context,
                    instruction: org.nlogo.nvm.Instruction, ex: Exception) {
     ex match {
       case le: LogoException =>

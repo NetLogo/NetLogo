@@ -358,7 +358,7 @@ public final strictfp class Context {
   private void comeUpForAir(Command command)
       throws HaltException {
     if (command.switches && job.owner.ownsPrimaryJobs()) {
-      command.workspace.breathe();
+      command.workspace.breathe(this);
     }
     if (Thread.currentThread().isInterrupted()) {
       command.world.comeUpForAir = false;

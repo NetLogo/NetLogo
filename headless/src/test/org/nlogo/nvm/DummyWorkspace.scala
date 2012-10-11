@@ -13,8 +13,8 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def procedures = CompilerInterface.NoProcedures
   override def procedures_=(procedures: CompilerInterface.ProceduresMap) = unsupported
   override def aggregateManager() = unsupported
-  override def requestDisplayUpdate(force: Boolean) = unsupported
-  override def breathe() = unsupported
+  override def requestDisplayUpdate(context: Context, force: Boolean) = unsupported
+  override def breathe(context: Context) = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager() = new DummyExtensionManager

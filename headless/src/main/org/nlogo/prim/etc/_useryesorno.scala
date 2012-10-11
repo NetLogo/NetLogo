@@ -13,7 +13,7 @@ class _useryesorno extends Reporter {
 
   override def report(context: Context) = {
     val message = Dump.logoObject(args(0).report(context))
-    workspace.updateUI()
+    workspace.updateUI(context)
     val result =
       workspace.waitForResult(
         new ReporterRunnable[Option[Boolean]] {

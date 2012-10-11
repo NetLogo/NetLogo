@@ -14,7 +14,7 @@ class _userfile extends Reporter {
     if (workspace.getIsApplet)
       throw new EngineException(
         context, this, "You cannot choose a file from an applet.")
-    workspace.updateUI()
+    workspace.updateUI(context)
     val result: Option[String] =
       workspace.waitForResult(
         new ReporterRunnable[Option[String]] {

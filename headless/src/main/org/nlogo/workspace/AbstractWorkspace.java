@@ -393,10 +393,10 @@ public abstract strictfp class AbstractWorkspace
   }
 
   // called by _display from job thread
-  public abstract void requestDisplayUpdate(boolean force);
+  public abstract void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force);
 
   // called when the engine comes up for air
-  public abstract void breathe();
+  public abstract void breathe(org.nlogo.nvm.Context context);
 
   /// output
 

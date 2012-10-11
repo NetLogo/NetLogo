@@ -47,14 +47,14 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
     updatePlots(context)
-    requestDisplayUpdate(true)
+    requestDisplayUpdate(context, true)
   }
 
-  def resetTicks(context:Context) {
+  def resetTicks(context: Context) {
     world.tickCounter.reset()
     setupPlots(context)
     updatePlots(context)
-    requestDisplayUpdate(true)
+    requestDisplayUpdate(context, true)
   }
 
   def clearTicks() {

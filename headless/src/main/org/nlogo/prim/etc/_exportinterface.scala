@@ -12,7 +12,7 @@ class _exportinterface extends Command {
     val path =
       workspace.fileManager.attachPrefix(
         argEvalString(context, 0))
-    workspace.updateUI()
+    workspace.updateUI(context)
     workspace.waitFor(
       new CommandRunnable() {
         override def run() {
