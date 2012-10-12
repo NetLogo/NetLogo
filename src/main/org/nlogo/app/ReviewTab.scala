@@ -75,8 +75,8 @@ extends JPanel
 with window.Events.BeforeLoadEventHandler {
 
   var recordingEnabled: Boolean = true
-  private var potemkinInterface: Option[PotemkinInterface] = None
-  private val tabState = new ReviewTabState
+  var potemkinInterface: Option[PotemkinInterface] = None
+  val tabState = new ReviewTabState
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
@@ -100,7 +100,7 @@ with window.Events.BeforeLoadEventHandler {
           }}}}
     )
 
-  private def reset() {
+  def reset() {
     tabState.reset()
     Scrubber.setValue(0)
     Scrubber.setEnabled(false)
@@ -108,7 +108,7 @@ with window.Events.BeforeLoadEventHandler {
     potemkinInterface = None
   }
 
-  private def grab() {
+  def grab() {
     if (tabState.size == 0) {
       val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
         ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
@@ -145,7 +145,7 @@ with window.Events.BeforeLoadEventHandler {
     }
   }
 
-  private def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
+  def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
     ws.viewWidget.findWidgetContainer
       .getWidgetsForSaving.asScala
       .collect {
@@ -155,7 +155,7 @@ with window.Events.BeforeLoadEventHandler {
 
   object InterfacePanel extends JPanel {
 
-    private def repaintView(g: java.awt.Graphics, area: java.awt.geom.Area) {
+    def repaintView(g: java.awt.Graphics, area: java.awt.geom.Area) {
       val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       try {
         val view = ws.view
@@ -182,7 +182,7 @@ with window.Events.BeforeLoadEventHandler {
       }
     }
 
-    private def repaintWidgets(g: java.awt.Graphics, widgets: Seq[FakeWidget]) {
+    def repaintWidgets(g: java.awt.Graphics, widgets: Seq[FakeWidget]) {
 
       val container = ws.viewWidget.findWidgetContainer
       val values = tabState.visibleState
