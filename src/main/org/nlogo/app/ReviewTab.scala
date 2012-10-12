@@ -80,7 +80,6 @@ with window.Events.BeforeLoadEventHandler {
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
-      val count = Iterator.from(0)
       override def tickCounterChanged(ticks: Double) {
         for(pi <- potemkinInterface) {
           val monitors = pi.fakeWidgets.collect{
