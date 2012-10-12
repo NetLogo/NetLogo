@@ -30,7 +30,15 @@ class ReviewTabState {
   private var _visibleState: Mirroring.State = Map()
   def visibleState = _visibleState
   def size = run.size
-  def megabytes = run.map(_.size.toLong).sum / 1024 / 1024
+  object Memory {
+    private def toMB(bytes: Long) = bytes / 1024 / 1024
+    // arbitrarily, I say we need enough memory for about ten frames and at least 32 MB:
+    def safeThreshold = math.max(toMB(run.takeRight(10).map(_.size.toLong).sum), 32)
+    def free = toMB(Runtime.getRuntime().freeMemory())
+    def usedByRun = toMB(run.map(_.size.toLong).sum)
+    def underSafeThreshold = free < safeThreshold
+    var userWarned = false
+  }
   def add(mirrorables: Iterable[Mirrorable]) {
     val (newState, update) = Mirroring.diffs(finalState, mirrorables)
     run :+= Serializer.toBytes(update)
@@ -40,6 +48,7 @@ class ReviewTabState {
     run = Seq()
     finalState = Map()
     _visibleState = Map()
+    Memory.userWarned = false
   }
   def refreshVisibleState() {
     if (visibleState.isEmpty)
@@ -60,6 +69,7 @@ class ReviewTabState {
     frame = 0
     _visibleState = merge(Map(), run.head)
     finalState = run.foldLeft(Map(): Mirroring.State)(merge)
+    Memory.userWarned = false
   }
   def write(out: java.io.ObjectOutputStream) {
     out.writeObject(run)
@@ -87,7 +97,9 @@ with window.Events.BeforeLoadEventHandler {
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        if (recordingEnabled) {
+        if (recordingEnabled)
+          ws.waitFor(() => checkMemory())
+        if (recordingEnabled) { // checkMemory may turn off recording
           updateMonitors()
           // switch from job thread to event thread
           ws.waitFor(() => grab())
@@ -113,6 +125,26 @@ with window.Events.BeforeLoadEventHandler {
     Scrubber.setEnabled(false)
     Scrubber.border("")
     potemkinInterface = None
+  }
+
+  def checkMemory() {
+    if (!tabState.Memory.userWarned) {
+      if (tabState.Memory.underSafeThreshold)
+        System.gc() // try to collect garbage before actually warning
+      if (tabState.Memory.underSafeThreshold) {
+        tabState.Memory.userWarned = true
+        val answer = JOptionPane.showConfirmDialog(this,
+          "Memory is getting low. do you want to stop recording?",
+          "Low Memory", JOptionPane.YES_NO_OPTION)
+        if (answer == JOptionPane.YES_OPTION)
+          stopRecording()
+      }
+    }
+  }
+
+  def stopRecording() {
+    recordingEnabled = false
+    Enabled.setSelected(recordingEnabled)
   }
 
   def grab() {
@@ -143,11 +175,22 @@ with window.Events.BeforeLoadEventHandler {
         ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
       potemkinInterface = Some(PotemkinInterface(viewArea, image, widgets))
     }
-    for(pi <- potemkinInterface) {
-      tabState.add(
-        Mirrorables.allMirrorables(
+    for (pi <- potemkinInterface) {
+      try {
+        val mirrorables = Mirrorables.allMirrorables(
           ws.world, ws.plotManager.plots,
-          pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex))
+          pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex)
+        tabState.add(mirrorables)
+      } catch {
+        case e: java.lang.OutOfMemoryError =>
+          // happens if user ignored our warning or if "GC overhead limit exceeded"
+          // (the latter being harder to prevent in advance)
+          JOptionPane.showMessageDialog(this,
+            "Not enough memory. Turning off recording.",
+            "Low memory", JOptionPane.WARNING_MESSAGE)
+          stopRecording()
+        case e => throw e // rethrow anything else
+      }
       Scrubber.setEnabled(true)
       Scrubber.updateBorder()
       MemoryMeter.update()
@@ -327,15 +370,17 @@ with window.Events.BeforeLoadEventHandler {
   object Toolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(Enabled)
+      add(new org.nlogo.swing.ToolBar.Separator())
       add(SaveButton)
       add(LoadButton)
+      add(new org.nlogo.swing.ToolBar.Separator())
       add(MemoryMeter)
     }
   }
 
   object MemoryMeter extends JLabel {
     def update() {
-      setText(tabState.megabytes + " MB")
+      setText(tabState.Memory.usedByRun + " MB")
     }
   }
 
