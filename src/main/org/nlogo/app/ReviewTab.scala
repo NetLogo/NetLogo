@@ -66,6 +66,12 @@ class ReviewTabState {
   }
   private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
     Mirroring.merge(oldState, Serializer.fromBytes(bytes))
+  def ticks(state: Mirroring.State = visibleState): Option[Double] =
+    for {
+      entry <- state.get(mirror.AgentKey(Mirrorables.World, 0))
+      result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
+      if result != -1
+    } yield result
 }
 
 class ReviewTab(ws: window.GUIWorkspace,
@@ -244,7 +250,7 @@ with window.Events.BeforeLoadEventHandler {
       setBorder(BorderFactory.createTitledBorder(s))
     }
     def updateBorder() {
-      border("Ticks: " + ticks.map(x => api.Dump.number(StrictMath.floor(x))).getOrElse(""))
+      border("Ticks: " + tabState.ticks().map(x => api.Dump.number(StrictMath.floor(x))).getOrElse(""))
     }
     setValue(0)
     border("")
@@ -255,13 +261,6 @@ with window.Events.BeforeLoadEventHandler {
         InterfacePanel.repaint()
       }})
   }
-
-  def ticks: Option[Double] =
-    for {
-      entry <- tabState.visibleState.get(mirror.AgentKey(Mirrorables.World, 0))
-      result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
-      if result != -1
-    } yield result
 
   object EnabledAction extends AbstractAction("Recording") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
