@@ -81,24 +81,25 @@ with window.Events.BeforeLoadEventHandler {
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        for(pi <- potemkinInterface) {
-          val monitors = pi.fakeWidgets.collect{
-            case FakeWidget(m: window.MonitorWidget, _) => m}
-          for(monitor <- monitors; reporter <- monitor.reporter)
-            monitor.value(
-              ws.evaluator.ProcedureRunner.report(reporter))
-        }
-        // get off the job thread and onto the event thread
-        ws.waitFor{() =>
-          if (recordingEnabled) {
-            if (ticks == 0) {
-              reset()
-            }
-            grab()
-            Scrubber.setMaximum(tabState.size - 1)
-            InterfacePanel.repaint()
-          }}}}
-    )
+        if (recordingEnabled) {
+          updateMonitors()
+          // switch from job thread to event thread
+          ws.waitFor(() => grab())
+        }}})
+
+  // only callable from the job thread, and only once evaluator.withContext(...) has properly
+  // set up ProcedureRunner's execution context. it would be problematic to try to trigger
+  // monitors to update from the event thread, because the event thread is not allowed to
+  // block waiting for the job thread. - ST 10/12/12
+  def updateMonitors() {
+    for(pi <- potemkinInterface) {
+      val monitors = pi.fakeWidgets.collect{
+        case FakeWidget(m: window.MonitorWidget, _) => m}
+      for(monitor <- monitors; reporter <- monitor.reporter)
+        monitor.value(
+          ws.evaluator.ProcedureRunner.report(reporter))
+    }
+  }
 
   def reset() {
     tabState.reset()
@@ -109,6 +110,8 @@ with window.Events.BeforeLoadEventHandler {
   }
 
   def grab() {
+    if (ws.world.ticks == 0)
+      reset()
     if (tabState.size == 0) {
       val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
         ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
@@ -143,6 +146,8 @@ with window.Events.BeforeLoadEventHandler {
       Scrubber.updateBorder()
       MemoryMeter.update()
     }
+    Scrubber.setMaximum(tabState.size - 1)
+    InterfacePanel.repaint()
   }
 
   def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
