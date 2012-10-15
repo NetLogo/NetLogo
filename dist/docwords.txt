@@ -177,6 +177,7 @@ Jython
 Kalimba
 KeySerial
 Keyspan
+Knockoff
 Koto
 Kuebrich
 LANs

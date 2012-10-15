@@ -620,6 +620,7 @@ Kinda
 Kinemouse
 Kitaoka
 Klomp
+Knockoff
 Koch's
 KochCurve
 Kofi

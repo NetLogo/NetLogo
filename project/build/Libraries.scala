@@ -39,6 +39,7 @@ trait Libraries extends DefaultProject {
   // with Quaqua 7.3.4" - ST 9/2/11
   val swingLayout = "ch.randelshofer" % "swing-layout" % "7.3.4" from
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
+  val knockoff = "com.tristanhunt" %% "knockoff" % "0.8.1"
 
   // HTTP stuff for remote logging
   val apache = "org.apache.httpcomponents" % "httpclient" % "4.2"

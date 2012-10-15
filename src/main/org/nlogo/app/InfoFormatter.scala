@@ -2,6 +2,7 @@
 
 package org.nlogo.app
 
+import com.tristanhunt.knockoff.DefaultDiscounter._
 import java.io.InputStream
 
 // This gets tested by TestAppletSaver and TestInfoFormatter. - ST 9/7/10
@@ -30,7 +31,8 @@ object InfoFormatter {
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
             replace("{H3-FONT-SIZE}", fontSize.toString) + "\n-->\n</style>"
 
-  def toInnerHtml(str: MarkDownString): HTML = "<pre>" + str + "</pre>"
+  // Knockoff fails to do some of the nice things that PegDown did (like autolinks), but... whatever; works with WebStart. --JAB (10/16/12)
+  def toInnerHtml(str: MarkDownString): HTML = toXHTML(knockoff(str)).toString()
 
   def wrapHtml(body: HTML, fontSize:Int=defaultFontSize): HTML = {
     "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
