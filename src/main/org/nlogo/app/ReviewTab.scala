@@ -65,8 +65,8 @@ class ReviewTabState {
           .foldLeft(visibleState)(merge)
     frame = newFrame
   }
-  def load(in: java.io.ObjectInputStream) {
-    _run = in.readObject().asInstanceOf[Run]
+  def load(run: Run) {
+    _run = run
     frame = 0
     _visibleState = merge(Map(), _run.head)
     finalState = _run.foldLeft(Map(): Mirroring.State)(merge)
@@ -353,16 +353,17 @@ with window.Events.BeforeLoadEventHandler {
           ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
         val in = new java.io.ObjectInputStream(
           new java.io.FileInputStream(path))
-        loadModel(in.readObject().asInstanceOf[String])
-        potemkinInterface =
-          Some(
-            PotemkinInterface(
-              viewArea = new java.awt.geom.Area(in.readObject().asInstanceOf[java.awt.Shape]),
-              image = ImageIO.read(
-                new java.io.ByteArrayInputStream(
-                  in.readObject().asInstanceOf[Array[Byte]])),
-              fakeWidgets = fakeWidgets(ws)))
-        tabState.load(in)
+        val Seq(
+          modelString: String,
+          viewShape: java.awt.Shape,
+          imageBytes: Array[Byte],
+          run: tabState.Run) = Stream.continually(in.readObject()).take(4)
+        in.close()
+        loadModel(modelString)
+        val viewArea = new java.awt.geom.Area(viewShape)
+        val image = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
+        potemkinInterface = Some(PotemkinInterface(viewArea, image, fakeWidgets(ws)))
+        tabState.load(run)
         Scrubber.setValue(0)
         Scrubber.setEnabled(true)
         Scrubber.setMaximum(tabState.size - 1)
