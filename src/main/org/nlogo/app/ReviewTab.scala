@@ -24,55 +24,53 @@ case class FakeWidget(
 
 class ReviewTabState {
   type Run = Seq[Array[Byte]]
-  private var run: Run = Seq()
+  private var _run: Run = Seq()
+  def run = _run
   private var finalState: Mirroring.State = Map()
   private var frame = 0
   private var _visibleState: Mirroring.State = Map()
   def visibleState = _visibleState
-  def size = run.size
+  def size = _run.size
   object Memory {
     private def toMB(bytes: Long) = bytes / 1024 / 1024
     // arbitrarily, I say we need enough memory for about ten frames and at least 32 MB:
-    def safeThreshold = math.max(toMB(run.takeRight(10).map(_.size.toLong).sum), 32)
+    def safeThreshold = math.max(toMB(_run.takeRight(10).map(_.size.toLong).sum), 32)
     def free = toMB(Runtime.getRuntime().freeMemory())
-    def usedByRun = toMB(run.map(_.size.toLong).sum)
+    def usedByRun = toMB(_run.map(_.size.toLong).sum)
     def underSafeThreshold = free < safeThreshold
     var userWarned = false
   }
   def add(mirrorables: Iterable[Mirrorable]) {
     val (newState, update) = Mirroring.diffs(finalState, mirrorables)
-    run :+= Serializer.toBytes(update)
+    _run :+= Serializer.toBytes(update)
     finalState = newState
   }
   def reset() {
-    run = Seq()
+    _run = Seq()
     finalState = Map()
     _visibleState = Map()
     Memory.userWarned = false
   }
   def refreshVisibleState() {
     if (visibleState.isEmpty)
-      _visibleState = merge(Map(), run.head)
+      _visibleState = merge(Map(), _run.head)
   }
   def scrub(newFrame: Int) {
     _visibleState =
       if(newFrame < frame)
-        run.take(newFrame + 1)
+        _run.take(newFrame + 1)
           .foldLeft(Map(): Mirroring.State)(merge)
       else
-        run.drop(frame + 1).take(newFrame - frame)
+        _run.drop(frame + 1).take(newFrame - frame)
           .foldLeft(visibleState)(merge)
     frame = newFrame
   }
   def load(in: java.io.ObjectInputStream) {
-    run = in.readObject().asInstanceOf[Run]
+    _run = in.readObject().asInstanceOf[Run]
     frame = 0
-    _visibleState = merge(Map(), run.head)
-    finalState = run.foldLeft(Map(): Mirroring.State)(merge)
+    _visibleState = merge(Map(), _run.head)
+    finalState = _run.foldLeft(Map(): Mirroring.State)(merge)
     Memory.userWarned = false
-  }
-  def write(out: java.io.ObjectOutputStream) {
-    out.writeObject(run)
   }
   private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
     Mirroring.merge(oldState, Serializer.fromBytes(bytes))
@@ -319,25 +317,30 @@ with window.Events.BeforeLoadEventHandler {
 
   object SaveAction extends AbstractAction("Save") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
+      def thingsToSave = {
+        // Area is not serializable so we save a shape instead:
+        val viewAreaShape = java.awt.geom.AffineTransform
+          .getTranslateInstance(0, 0)
+          .createTransformedShape(potemkinInterface.get.viewArea)
+        val image = {
+          val byteStream = new java.io.ByteArrayOutputStream
+          ImageIO.write(potemkinInterface.get.image, "PNG", byteStream)
+          byteStream.close()
+          byteStream.toByteArray
+        }
+        Seq(
+          saveModel(),
+          viewAreaShape,
+          image,
+          tabState.run)
+      }
+
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
-        // FIXME: what if the model has changed since we started recording the run? NP 2012-09-12
-        // We should save a copy at the point where we start recording
-        out.writeObject(saveModel())
-        // Area is not serializable so we save a shape instead:
-        val viewAreaShape = java.awt.geom.AffineTransform
-          .getTranslateInstance(0, 0)
-          .createTransformedShape(potemkinInterface.get.viewArea)
-        out.writeObject(viewAreaShape)
-        val imageByteStream = new java.io.ByteArrayOutputStream
-        ImageIO.write(
-          potemkinInterface.get.image, "PNG", imageByteStream)
-        imageByteStream.close()
-        out.writeObject(imageByteStream.toByteArray)
-        tabState.write(out)
+        thingsToSave.foreach(out.writeObject)
         out.close()
       }
     }
