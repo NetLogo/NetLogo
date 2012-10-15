@@ -31,6 +31,8 @@ class ReviewTabState {
   private var _visibleState: Mirroring.State = Map()
   def visibleState = _visibleState
   def size = _run.size
+  var currentModel: Option[String] = None
+
   object Memory {
     private def toMB(bytes: Long) = bytes / 1024 / 1024
     // arbitrarily, I say we need enough memory for about ten frames and at least 32 MB:
@@ -47,6 +49,7 @@ class ReviewTabState {
   }
   def reset() {
     _run = Seq()
+    currentModel = None
     finalState = Map()
     _visibleState = Map()
     Memory.userWarned = false
@@ -173,6 +176,7 @@ with window.Events.BeforeLoadEventHandler {
       val image = org.nlogo.awt.Images.paintToImage(
         ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
       potemkinInterface = Some(PotemkinInterface(viewArea, image, widgets))
+      tabState.currentModel = Some(saveModel())
       SaveButton.setEnabled(true)
     }
     for (pi <- potemkinInterface) {
@@ -329,7 +333,7 @@ with window.Events.BeforeLoadEventHandler {
           byteStream.toByteArray
         }
         Seq(
-          saveModel(),
+          tabState.currentModel.get,
           viewAreaShape,
           image,
           tabState.run)
@@ -360,6 +364,7 @@ with window.Events.BeforeLoadEventHandler {
           run: tabState.Run) = Stream.continually(in.readObject()).take(4)
         in.close()
         loadModel(modelString)
+        tabState.currentModel = Some(modelString)
         val viewArea = new java.awt.geom.Area(viewShape)
         val image = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
         potemkinInterface = Some(PotemkinInterface(viewArea, image, fakeWidgets(ws)))
