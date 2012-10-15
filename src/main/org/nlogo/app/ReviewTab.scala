@@ -125,6 +125,7 @@ with window.Events.BeforeLoadEventHandler {
     Scrubber.setEnabled(false)
     Scrubber.border("")
     potemkinInterface = None
+    SaveButton.setEnabled(false)
   }
 
   def checkMemory() {
@@ -174,6 +175,7 @@ with window.Events.BeforeLoadEventHandler {
       val image = org.nlogo.awt.Images.paintToImage(
         ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
       potemkinInterface = Some(PotemkinInterface(viewArea, image, widgets))
+      SaveButton.setEnabled(true)
     }
     for (pi <- potemkinInterface) {
       try {
@@ -357,6 +359,7 @@ with window.Events.BeforeLoadEventHandler {
         Scrubber.setValue(0)
         Scrubber.setEnabled(true)
         Scrubber.setMaximum(tabState.size - 1)
+        SaveButton.setEnabled(true)
         MemoryMeter.update()
         InterfacePanel.repaint()
       }
