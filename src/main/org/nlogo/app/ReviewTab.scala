@@ -327,7 +327,11 @@ with window.Events.BeforeLoadEventHandler {
         // FIXME: what if the model has changed since we started recording the run? NP 2012-09-12
         // We should save a copy at the point where we start recording
         out.writeObject(saveModel())
-        out.writeObject(potemkinInterface.get.viewArea)
+        // Area is not serializable so we save a shape instead:
+        val viewAreaShape = java.awt.geom.AffineTransform
+          .getTranslateInstance(0, 0)
+          .createTransformedShape(potemkinInterface.get.viewArea)
+        out.writeObject(viewAreaShape)
         val imageByteStream = new java.io.ByteArrayOutputStream
         ImageIO.write(
           potemkinInterface.get.image, "PNG", imageByteStream)
@@ -350,7 +354,7 @@ with window.Events.BeforeLoadEventHandler {
         potemkinInterface =
           Some(
             PotemkinInterface(
-              viewArea = in.readObject().asInstanceOf[java.awt.geom.Area],
+              viewArea = new java.awt.geom.Area(in.readObject().asInstanceOf[java.awt.Shape]),
               image = ImageIO.read(
                 new java.io.ByteArrayInputStream(
                   in.readObject().asInstanceOf[Array[Byte]])),
