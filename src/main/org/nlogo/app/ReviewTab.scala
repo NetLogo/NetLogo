@@ -125,6 +125,8 @@ with window.Events.BeforeLoadEventHandler {
     Scrubber.setValue(0)
     Scrubber.setEnabled(false)
     Scrubber.border("")
+    NotesArea.setEnabled(false)
+    NotesArea.setText("")
     potemkinInterface = None
     SaveButton.setEnabled(false)
   }
@@ -197,6 +199,7 @@ with window.Events.BeforeLoadEventHandler {
       }
       Scrubber.setEnabled(true)
       Scrubber.updateBorder()
+      NotesArea.setEnabled(true)
       MemoryMeter.update()
     }
     Scrubber.setMaximum(tabState.size - 1)
@@ -336,7 +339,8 @@ with window.Events.BeforeLoadEventHandler {
           tabState.currentModel.get,
           viewAreaShape,
           image,
-          tabState.run)
+          tabState.run,
+          NotesArea.getText)
       }
 
       ignoring(classOf[UserCancelException]) {
@@ -361,7 +365,8 @@ with window.Events.BeforeLoadEventHandler {
           modelString: String,
           viewShape: java.awt.Shape,
           imageBytes: Array[Byte],
-          run: tabState.Run) = Stream.continually(in.readObject()).take(4)
+          run: tabState.Run,
+          notes: String) = Stream.continually(in.readObject()).take(5)
         in.close()
         loadModel(modelString)
         tabState.currentModel = Some(modelString)
@@ -374,6 +379,8 @@ with window.Events.BeforeLoadEventHandler {
         Scrubber.setMaximum(tabState.size - 1)
         SaveButton.setEnabled(true)
         MemoryMeter.update()
+        NotesArea.setText(notes)
+        NotesArea.setEnabled(true)
         InterfacePanel.repaint()
       }
     }
@@ -427,18 +434,36 @@ with window.Events.BeforeLoadEventHandler {
     add(new JButton(AllTheWayForwardAction))
   }
 
+  object NotesArea extends JTextArea("") {
+    setLineWrap(true)
+    setRows(3)
+  }
+
+  object NotesPanel extends JPanel {
+    setLayout(new BorderLayout)
+    add(new JLabel("General notes on current run"), BorderLayout.NORTH)
+    add(new JScrollPane(NotesArea), BorderLayout.CENTER)
+  }
+
   object SouthPanel extends JPanel {
     setLayout(new BorderLayout)
     add(ButtonPanel, BorderLayout.WEST)
     add(Scrubber, BorderLayout.CENTER)
   }
 
+  object SplitPane extends JSplitPane(
+    JSplitPane.VERTICAL_SPLIT,
+    InterfacePanel,
+    NotesPanel) {
+    setResizeWeight(1.0)
+    setDividerLocation(1.0)
+  }
+
   locally {
-    import java.awt.BorderLayout
     setLayout(new BorderLayout)
-    add(InterfacePanel, BorderLayout.CENTER)
-    add(SouthPanel, BorderLayout.SOUTH)
     add(Toolbar, BorderLayout.NORTH)
+    add(SplitPane, BorderLayout.CENTER)
+    add(SouthPanel, BorderLayout.SOUTH)
   }
 
   override def handle(e: window.Events.BeforeLoadEvent) {
