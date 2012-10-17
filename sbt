@@ -9,7 +9,7 @@ else
     export JAVA_HOME=/usr/lib/jvm/java-6-sun
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6+`
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6*`
     else
       export JAVA_HOME=/usr
     fi

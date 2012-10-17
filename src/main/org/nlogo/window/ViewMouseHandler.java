@@ -89,7 +89,7 @@ public strictfp class ViewMouseHandler
   }
 
   public void mouseExited(java.awt.event.MouseEvent e) {
-    mouseInside = false;
+    mouseInside = parent.contains(e.getPoint());
   }
 
   public void mouseDragged(java.awt.event.MouseEvent e) {
