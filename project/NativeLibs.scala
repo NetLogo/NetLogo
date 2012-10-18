@@ -5,7 +5,7 @@ import Keys._
 
 object NativeLibs {
 
-  val nativeLibs = TaskKey[Unit](
+  val nativeLibs = TaskKey[Seq[File]](
     "native-libs", "download native libraries for JOGL and Quaqua")
 
   lazy val nativeLibsTask =
