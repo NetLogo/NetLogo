@@ -216,7 +216,7 @@ with window.Events.BeforeLoadEventHandler {
 
   object InterfacePanel extends JPanel {
 
-    def repaintView(g: java.awt.Graphics, area: java.awt.geom.Area) {
+    def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       try {
         val view = ws.view
@@ -234,8 +234,10 @@ with window.Events.BeforeLoadEventHandler {
           def perspective = api.Perspective.Observe
           def isHeadless = view.isHeadless
         }
-        g2d.setClip(area)
-        g2d.translate(area.getBounds.x, area.getBounds.y)
+        val paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
+        paintArea.intersect(viewArea) // avoid spilling outside interface panel
+        g2d.setClip(paintArea)
+        g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
         val fakeWorld = new mirror.FakeWorld(tabState.visibleState)
         fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
       } finally {
