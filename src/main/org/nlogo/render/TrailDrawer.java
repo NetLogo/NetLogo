@@ -210,7 +210,7 @@ public strictfp class TrailDrawer
       importDrawing(file.getInputStream());
     }
     catch (javax.imageio.IIOException ex) {
-      throw new javax.imageio.IIOException("Unsupporter image format: " + file.getPath(), ex);
+      throw new javax.imageio.IIOException("Unsupported image format: " + file.getPath(), ex);
     }
   }
 
