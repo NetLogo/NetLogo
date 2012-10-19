@@ -12,6 +12,8 @@ trait TrailDrawerInterface extends DrawingInterface {
   @throws(classOf[java.io.IOException])
   def readImage(is: java.io.InputStream)
   @throws(classOf[java.io.IOException])
+  def importDrawing(is: java.io.InputStream)
+  @throws(classOf[java.io.IOException])
   def importDrawing(file: File)
   def getAndCreateDrawing(dirty: Boolean): java.awt.image.BufferedImage
   def clearDrawing()
