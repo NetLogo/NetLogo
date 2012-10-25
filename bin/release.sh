@@ -131,12 +131,12 @@ for FOO in *
 do
   echo "cleaning extension" $FOO
   cd $FOO
-  rm -f $FOO.jar $FOO.jar.pack.gz
+  # rm -f $FOO.jar $FOO.jar.pack.gz
   cd ..
 done
 cd ..
-rm -f *.jar
-./sbt clean all
+# rm -f *.jar
+./sbt all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -413,7 +413,7 @@ $CHMOD -R go+rX .
 if [ $WINDOWS -eq 1 ]
 then
   $PERL -pi -e "s/\@\@\@VM\@\@\@/$VM/g" NetLogo.install4j
-  "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
+  INSTALL4J_JAVA_HOME_OVERRIDE=`/usr/libexec/java_home -F -v1.6*` "$IJDIR/$IJ" --quiet -r "$COMPRESSEDVERSION" -d "." NetLogo.install4j
   $CHMOD -R a+x *.exe
   $DU -h *.exe
   $MV *.exe ../$COMPRESSEDVERSION
