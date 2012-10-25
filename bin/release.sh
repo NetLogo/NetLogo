@@ -13,7 +13,7 @@ FIND=find
 GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
-JAVA=java
+JAVA=`/usr/libexec/java_home -F -v1.6*`/bin/java
 LN=ln
 LS=ls
 MAKE=make
@@ -136,7 +136,7 @@ do
 done
 cd ..
 rm -f *.jar
-bin/sbt clean all
+./sbt clean all
 
 # remember version number
 export VERSION=`$JAVA -cp NetLogo.jar:$SCALA_JAR org.nlogo.headless.Main --version | $SED -e "s/NetLogo //"`
@@ -234,6 +234,7 @@ cd ..
 # and make a new one
 $RM -rf docs
 $CP -rp ../../docs .
+$RM -rf docs/scaladoc
 $MV NetLogo\ User\ Manual.pdf docs/
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/*.html
 $PERL -p -i -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" docs/dict/*.html
@@ -281,7 +282,7 @@ $PERL -0 -p -i -e 's|<title>.+?NetLogo User Manual.+?</title>|<title>NetLogo $EN
 ( cd ../..
   mv models models.tmp
   ln -s tmp/netlogo-$COMPRESSEDVERSION/models
-  bin/sbt model-index
+  ./sbt model-index
   rm models
   mv models.tmp models
 ) || exit 1
@@ -440,6 +441,7 @@ $FIND $COMPRESSEDVERSION/applet \( -name .DS_Store -or -name .gitignore -or -pat
 $RM -rf $COMPRESSEDVERSION/applet/*/classes
 $CP -rp ../models/Code\ Examples/GIS/data $COMPRESSEDVERSION/applet
 $CP -p ../Mathematica-Link/NetLogo-Mathematica\ Tutorial.pdf $COMPRESSEDVERSION/docs
+$CP -rp ../docs/scaladoc $COMPRESSEDVERSION/docs
 
 # stuff version number and date into web page
 cd $COMPRESSEDVERSION
@@ -468,11 +470,11 @@ $FIND tmp/$COMPRESSEDVERSION \( -name .DS_Store -or -name .gitignore \) -print0 
 
 # done
 if [ $DO_RSYNC -eq 1 ]; then
-  $RSYNC -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
+  $RSYNC -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo
 else
   echo
   echo "to upload to CCL server, do:"
-  echo "rsync -av --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
+  echo "rsync -av --inplace --progress --delete tmp/$COMPRESSEDVERSION ccl.northwestern.edu:/usr/local/www/netlogo"
 fi
 
 echo

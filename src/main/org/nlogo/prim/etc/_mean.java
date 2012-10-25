@@ -30,6 +30,10 @@ public final strictfp class _mean extends Reporter implements Pure {
 
   public double report_1(Context context, LogoList list) throws LogoException {
     double sum = 0;
+    if (list.isEmpty()) {
+      throw new EngineException(
+        context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
+    }
     for (Iterator<Object> it = list.iterator(); it.hasNext();) {
       Object elt = it.next();
       if (!(elt instanceof Double)) {

@@ -9,7 +9,7 @@ else
     export JAVA_HOME=/usr/lib/jvm/java-6-sun
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6+`
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.6*`
     else
       export JAVA_HOME=/usr
     fi
@@ -45,8 +45,8 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.0-RC4.jar
-URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.0-RC4/sbt-launch.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-0.12.1.jar
+URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.12.1/sbt-launch.jar'
 
 if [ ! -f $SBT_LAUNCH ] ; then
   echo "downloading" $URL

@@ -3,7 +3,7 @@ import Keys._
 
 object Compiling {
 
-  private val java5 = TaskKey[Unit]("java5")
+  private val java5 = TaskKey[File]("java5")
 
   val settings = Seq(
     java5 <<= (baseDirectory, streams) map { (base, s) =>
@@ -13,6 +13,7 @@ object Compiling {
         s.log.info("downloading " + url)
         IO.download(url, classes)
       }
+      classes
     },
     compile in Compile <<= (compile in Compile).dependsOn(java5)
   )
