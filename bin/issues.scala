@@ -48,7 +48,7 @@ case class Issue(number: Int, title: String, labels: List[String])
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "12",
+val req = base <<? Map("milestone" -> "15",
                        "state" -> "closed",
                        "per_page" -> "1000")
 // println(req.build.getRawUrl)  useful for debugging
