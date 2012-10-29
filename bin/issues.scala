@@ -59,7 +59,7 @@ val issues: List[Issue] =
   yield Issue.fromJson(item)
 
 println(issues.size + " issues fixed!")
-for(Issue(n, title, labels) <- issues.sortBy(_.number)) {
+for(Issue(n, title, labels) <- issues.sortBy(_.number).sortBy(_.labels.mkString)) {
   val labelsString =
     if (labels.isEmpty) ""
     else labels.mkString("", ", ", ": ")
