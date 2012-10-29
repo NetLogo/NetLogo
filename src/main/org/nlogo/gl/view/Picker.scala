@@ -127,7 +127,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     }
     item.action match {
       case Inspect =>
-        view.viewManager.workspace.inspectAgent(item.agent, 3)
+        view.viewManager.workspace.inspectAgent(item.agent.asInstanceOf[org.nlogo.agent.Agent], 3)
       case Follow =>
         observer.setPerspective(Perspective.Follow, item.agent)
         val distance = (item.agent.asInstanceOf[Turtle].size * 5).toInt

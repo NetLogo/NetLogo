@@ -78,7 +78,7 @@ public abstract strictfp class Instruction
   public void init(Workspace workspace) {
     if (workspace != null) {
       this.workspace = workspace;
-      world = workspace.world();
+      world = (org.nlogo.agent.World) workspace.world();
     }
     for (int i = 0; i < args.length; i++) {
       args[i].init(workspace);

@@ -50,8 +50,7 @@ public strictfp class Procedure {
   public Let getTaskFormal(int n, Token token) {
     while (taskFormals.size() < n) {
       taskFormals.$plus$eq(
-          new Let("?" + n, token.startPos(), token.endPos(),
-                  (scala.collection.immutable.List<Let>) ((Object) scala.collection.immutable.Nil$.MODULE$))); // NOPMD
+          new Let("?" + n, token.startPos(), token.endPos()));
     }
     return taskFormals.apply(n - 1);
   }

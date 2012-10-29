@@ -140,7 +140,7 @@ public abstract strictfp class ImporterJ
         if (line[0].trim().equals("RANDOM STATE")) {
           hasMoreLines(false);
           line = nextLine();
-          world.mainRNG.load(line[0]);
+          world.mainRNG().load(line[0]);
         }
       }
 

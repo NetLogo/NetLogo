@@ -166,6 +166,18 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   @Override
+  public void importWorld(String filename) throws java.io.IOException {
+    super.importWorld(filename);
+    new org.nlogo.window.Events.TickStateChangeEvent(true).raiseLater(this);
+  }
+
+  @Override
+  public void importWorld(java.io.Reader reader) throws java.io.IOException {
+    super.importWorld(reader);
+    new org.nlogo.window.Events.TickStateChangeEvent(true).raiseLater(this);
+  }
+
+  @Override
   public void importDrawing(org.nlogo.api.File file)
       throws java.io.IOException {
     view.renderer.trailDrawer().importDrawing(file);
@@ -615,7 +627,7 @@ public abstract strictfp class GUIWorkspaceJ
     }
 
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG, AgentKindJ.Observer()),
+      evaluateCommands(new SimpleJobOwner("startup", world().mainRNG(), AgentKindJ.Observer()),
           "without-interruption [ startup ]", false);
     } catch (CompilerException error) {
       org.nlogo.util.Exceptions.ignore(error);

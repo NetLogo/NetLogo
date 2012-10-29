@@ -16,6 +16,7 @@ class DummyExtensionManager extends ExtensionManager {
   def startFullCompilation() { }
   def finishFullCompilation() { }
   def anyExtensionsLoaded = false
+  def loadedExtensions = java.util.Collections.emptyList[ClassManager]
   def replaceIdentifier(name: String): Primitive = null
   def importExtension(jarPath: String, errors: ErrorSource) = unsupported
   def resolvePath(path: String): String = unsupported

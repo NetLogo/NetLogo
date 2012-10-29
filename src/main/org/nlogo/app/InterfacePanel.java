@@ -137,7 +137,7 @@ strictfp class InterfacePanel
     if (fromRegistry != null) {
       return fromRegistry;
     } else if (type.equalsIgnoreCase("SLIDER")) {
-      return new org.nlogo.window.SliderWidget(workspace.world().auxRNG) {
+      return new org.nlogo.window.SliderWidget(workspace.world().auxRNG()) {
         @Override
         public int sourceOffset() {
           return org.nlogo.workspace.Evaluator.sourceOffset(AgentKindJ.Observer(), false);
@@ -148,11 +148,11 @@ strictfp class InterfacePanel
     {
       return new org.nlogo.window.ChooserWidget(workspace);
     } else if (type.equals("BUTTON")) {
-      return new org.nlogo.window.ButtonWidget(workspace.world().mainRNG);
+      return new org.nlogo.window.ButtonWidget(workspace.world().mainRNG());
     } else if (type.equals("PLOT")) {
       return org.nlogo.window.PlotWidget.apply(workspace.plotManager());
     } else if (type.equals("MONITOR")) {
-      return new org.nlogo.window.MonitorWidget(workspace.world().auxRNG);
+      return new org.nlogo.window.MonitorWidget(workspace.world().auxRNG());
     } else if (type.equals("INPUT") ||  // in the GUI, it's "Input Box"
         type.equals("INPUTBOX"))  // in saved models, it's "INPUTBOX"
     {

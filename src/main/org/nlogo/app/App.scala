@@ -76,6 +76,7 @@ object App{
     if(System.getProperty("os.name").startsWith("Mac")) MacHandlers.init()
 
     AbstractWorkspace.isApp(true)
+    AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
     Logger.beQuiet()
     processCommandLineArguments(args)
@@ -324,12 +325,11 @@ class App extends
         override def updateMode = _workspace.updateMode
       }
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
-      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
-        val a = agent.asInstanceOf[org.nlogo.agent.Agent]
+      def inspectAgent(agent: Agent, radius: Double) {
         org.nlogo.awt.EventQueue.invokeLater(
           new Runnable {
             override def run() {
-              monitorManager.inspect(a.kind, a, radius)
+              monitorManager.inspect(agent.kind, agent, radius)
             }})
       }
       override def inspectAgent(kind: AgentKind, agent: Agent, radius: Double) {
