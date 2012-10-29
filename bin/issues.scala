@@ -27,13 +27,13 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.9.3",
-  "net.liftweb" % "lift-json_2.9.1" % "2.4",
+  "org.json4s" %% "json4s-native" % "3.0.0",
   "org.slf4j" % "slf4j-nop" % "1.6.0")
 */
 
 import dispatch._
-import net.liftweb.json.JsonParser
-import net.liftweb.json.JsonAST._
+import org.json4s.JsonAST._
+import org.json4s.native.JsonParser
 
 object Issue {
   def fromJson(j: JValue): Issue = {
