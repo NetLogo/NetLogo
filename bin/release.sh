@@ -13,7 +13,12 @@ FIND=find
 GREP=grep
 HDIUTIL=hdiutil
 IJ=bin/install4jc
-JAVA=`/usr/libexec/java_home -F -v1.6*`/bin/java
+if [[ $OSTYPE = linux* ]]; then
+  JAVA=/usr/lib/jvm/java-6-sun/bin/java
+else
+  # if not on Linux, assume Mac (should be the case for the real release)
+  JAVA=`/usr/libexec/java_home -F -v1.6*`/bin/java
+fi
 LN=ln
 LS=ls
 MAKE=make
