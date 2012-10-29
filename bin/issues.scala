@@ -48,23 +48,32 @@ case class Issue(number: Int, title: String, labels: List[String])
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "15",
-                       "state" -> "closed",
-                       "per_page" -> "1000")
-// println(req.build.getRawUrl)  useful for debugging
-val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
-val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
-val issues: List[Issue] =
+
+def getIssues(state: String): List[Issue] = {
+  val req = base <<? Map("milestone" -> "15",
+                         "state" -> state,
+                         "per_page" -> "1000")
+  // println(req.build.getRawUrl)  useful for debugging
+  val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
+  val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
   for (item <- array)
   yield Issue.fromJson(item)
-
-println(issues.size + " issues fixed!")
-for(Issue(n, title, labels) <- issues.sortBy(_.number).sortBy(_.labels.mkString)) {
-  val labelsString =
-    if (labels.isEmpty) ""
-    else labels.mkString("", ", ", ": ")
-  println(" * " + labelsString + title + " ([#" + n + "]" +
-          "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
 }
+
+def report(state: String) {
+  val issues = getIssues(state)
+  println(issues.size + " issues with state = " + state)
+  for(Issue(n, title, labels) <- issues.sortBy(_.number).sortBy(_.labels.mkString)) {
+    val labelsString =
+      if (labels.isEmpty) ""
+      else labels.mkString("", ", ", ": ")
+    println(" * " + labelsString + title + " ([#" + n + "]" +
+            "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+  }
+}
+
+report("closed")
+println()
+report("open")
 
 Http.shutdown()
