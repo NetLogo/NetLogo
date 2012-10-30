@@ -3043,13 +3043,13 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Task primitives
     </h3>
     <p>
-      The new primitives associated with tasks are <tt>task</tt>,
+      Primitives specific to tasks are <tt>task</tt>,
       <tt>is-command-task?</tt>, and <tt>is-reporter-task?</tt>.
     <p>
-      The <tt>run</tt> command now accepts command tasks as well as
+      The <tt>run</tt> command accepts command tasks as well as
       strings.
     <p>
-      The <tt>runresult</tt> reporter now accepts reporter tasks as well as
+      The <tt>runresult</tt> reporter accepts reporter tasks as well as
       strings.
     <p>
       These primitives also accept tasks: <tt>foreach</tt>, <tt>map</tt>,
@@ -3084,8 +3084,8 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
     </h3>
     <p>
       Simple uses of <tt>foreach</tt>, <tt>map</tt>, <tt>reduce</tt>,
-      <tt>filter</tt>, <tt>n-values</tt>, and <tt>sort-by</tt> can now be
-      written with a more concise syntax. You can now write:
+      <tt>filter</tt>, <tt>n-values</tt>, and <tt>sort-by</tt> can be
+      written with an esspecially concise syntax. You can write:
     <pre>
 map abs [1 -2 3 -4] =&gt; [1 2 3 4]
 reduce + [1 2 3 4] =&gt; 10
