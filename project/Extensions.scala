@@ -14,9 +14,7 @@ object Extensions {
         val isDirectory = new java.io.FileFilter {
           override def accept(f: File) = f.isDirectory
         }
-        // temporarily disabling gogo extension build until I figure out
-        // what in it is crashing the Scala 2.10.0-RC1 compiler - ST 10/30/12
-        for(dir <- IO.listFiles(isDirectory)(base / "extensions").toSeq if dir.getName != "gogo")
+        for(dir <- IO.listFiles(isDirectory)(base / "extensions").toSeq)
         yield buildExtension(dir, scala.libraryJar, s.log)
     }
 

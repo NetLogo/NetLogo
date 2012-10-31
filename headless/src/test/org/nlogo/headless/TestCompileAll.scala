@@ -10,11 +10,9 @@ import org.nlogo.util.SlowTest
 class TestCompileAll extends FunSuite with SlowTest {
 
   for (path <- ModelsLibrary.getModelPaths)
-    // temporarily skip GoGo models because of Scala 2.10 issues - ST 10/30/12
-    if (!path.containsSlice("GoGo"))
-      test("compile: " + path) {
-        compile(path)
-      }
+    test("compile: " + path) {
+      compile(path)
+    }
 
   def compile(path: String) {
     import java.io.File.separatorChar
