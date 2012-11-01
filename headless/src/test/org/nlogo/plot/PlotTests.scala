@@ -73,11 +73,6 @@ class PlotTests extends SimplePlotTest {
     expect(18.8)(plot.state.xMax)
     expect(11.0)(plot.state.yMax)
   }
-  testPlot("HistogramNumBars") { plot =>
-    val pen = plot.createPlotPen("test", false)
-    plot.setHistogramNumBars(pen, 5)
-    expect(2.0)(pen.state.interval)
-  }
   /// histogram tests
   // we already have TestHistogram for basic histogram testing,
   // so these just need to test the extra histogram code in

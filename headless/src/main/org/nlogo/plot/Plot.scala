@@ -132,9 +132,6 @@ extends PlotInterface {
   }
 
   /// histograms
-  def setHistogramNumBars(pen: PlotPen, numBars: Int) {
-    pen.state = pen.state.copy(interval = (state.xMax - state.xMin) / numBars)
-  }
 
   var histogram: Option[Histogram] = None
 

@@ -7,7 +7,7 @@ import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
-class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
+class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface with PlotRunner {
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()
