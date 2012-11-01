@@ -173,7 +173,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   }
 
   // this was inlined in runPrimaryJobs() and runSecondaryJobs(), but I separated it out as a
-  // temporary workaround for SI-6409.  that bug has trouble with try/catch nested inside other
+  // temporary workaround for SI-6191.  that bug has trouble with try/catch nested inside other
   // constructs - ST 7/15/12
   private def step(job: Job) {
     try lock.synchronized { job.step() }
