@@ -4653,7 +4653,7 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L9
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L9
           ALOAD 1
@@ -4856,7 +4856,7 @@ procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L18
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L18
           ALOAD 1
@@ -6786,7 +6786,7 @@ procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L2
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L2
           ALOAD 1
@@ -9114,7 +9114,7 @@ procedure LIST-RULES:[RULES]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L2
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L2
           ALOAD 1

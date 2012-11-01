@@ -1705,7 +1705,7 @@ procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L26
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L26
           ALOAD 1
@@ -2295,7 +2295,7 @@ procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L26
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L26
           ALOAD 1
@@ -3080,7 +3080,7 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L10
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L10
           ALOAD 1
@@ -3352,7 +3352,7 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L12
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L12
           ALOAD 1
@@ -3496,7 +3496,7 @@ procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L12
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L12
           ALOAD 1

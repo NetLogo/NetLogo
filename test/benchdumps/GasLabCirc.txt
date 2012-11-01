@@ -2393,7 +2393,7 @@ procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L6
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L6
           ALOAD 1
@@ -2509,7 +2509,7 @@ procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L6
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L6
           ALOAD 1
@@ -14411,7 +14411,7 @@ procedure OVERLAPPING?:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L21
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L21
           ALOAD 1

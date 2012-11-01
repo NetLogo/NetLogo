@@ -2351,7 +2351,7 @@ procedure FIND-TARGET:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L1
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L1
           ALOAD 1
@@ -2483,7 +2483,7 @@ procedure FIND-TARGET:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isTask ()Z
           IFEQ L1
-          GETSTATIC org/nlogo/nvm/NonLocalExit.singleton : Lorg/nlogo/nvm/NonLocalExit;
+          GETSTATIC org/nlogo/nvm/NonLocalExit$.MODULE$ : Lorg/nlogo/nvm/NonLocalExit$;
           ATHROW
          L1
           ALOAD 1

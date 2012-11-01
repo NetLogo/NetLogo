@@ -8,7 +8,7 @@ import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
-import org.nlogo.nvm.NonLocalExit;
+import org.nlogo.nvm.NonLocalExit$;
 import org.nlogo.nvm.Procedure;
 
 public final strictfp class _report
@@ -29,7 +29,7 @@ public final strictfp class _report
     context.stopping = false;
     context.ip = next;
     if (context.activation.procedure().isTask()) {
-      throw NonLocalExit.singleton;
+      throw NonLocalExit$.MODULE$;
     } else if (context.activation.procedure().tpe != Procedure.Type.REPORTER) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim._report.canOnlyUseInToReport", displayName()));
