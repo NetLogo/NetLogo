@@ -508,8 +508,8 @@ class App extends
         url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
           import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
           workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-          workspace.view.dirty();
-          workspace.view.repaint();
+          workspace.view.dirty()
+          workspace.view.repaint()
       }
     }
     else fileMenu.newModel()
