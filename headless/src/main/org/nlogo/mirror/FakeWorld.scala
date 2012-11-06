@@ -8,6 +8,11 @@ import Mirroring.State
 import collection.JavaConverters._
 import api.AgentVariableNumbers._
 
+object FakeWorld {
+  // is3D is cached here because the api call is slow
+  private val is3D = api.Version.is3D
+}
+
 class FakeWorld(state: State) extends api.World {
 
   import MirrorableWorld._
@@ -205,7 +210,7 @@ class FakeWorld(state: State) extends api.World {
       worldVar[collection.immutable.ListMap[String, Boolean]](breedsVar).map {
         case (breedName, isDirected) => breedName -> api.Breed(breedName, "", Seq(), isDirected)
       }
-    api.Program.empty(api.Version.is3D).copy(
+    api.Program.empty(FakeWorld.is3D).copy(
       breeds = makeBreedMap(wvTurtleBreeds),
       linkBreeds = makeBreedMap(wvLinkBreeds))
   }
