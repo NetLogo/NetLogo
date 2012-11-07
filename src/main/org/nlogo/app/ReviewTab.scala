@@ -1,192 +1,148 @@
 package org.nlogo.app
 
-import javax.swing._
-import javax.swing.event.{ ChangeEvent, ChangeListener }
 import java.awt.BorderLayout
+import java.awt.Color.{ GRAY, WHITE }
 import java.awt.image.BufferedImage
-import org.nlogo.awt.{ RowLayout, UserCancelException }
-import org.nlogo.{ api, mirror, nvm, window }
-import org.nlogo.util.Exceptions.ignoring
-import org.nlogo.swing.Implicits._
-import mirror.{ Mirroring, Mirrorable, Mirrorables, Serializer }
-import javax.imageio.ImageIO
+
+import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 
+import org.nlogo.api
+import org.nlogo.awt.UserCancelException
+import org.nlogo.awt.EventQueue.invokeLater
+import org.nlogo.mirror
+import org.nlogo.mirror.Mirrorables
+import org.nlogo.swing.Implicits.thunk2runnable
+import org.nlogo.util.Exceptions.ignoring
+import org.nlogo.window
+
+import javax.imageio.ImageIO
+import javax.swing.{ AbstractAction, BorderFactory, DefaultListModel, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
+import javax.swing.border.EmptyBorder
+import javax.swing.event.{ ChangeEvent, ChangeListener, ListSelectionEvent, ListSelectionListener }
+
 case class PotemkinInterface(
-  viewArea: java.awt.geom.Area,
-  image: BufferedImage,
-  fakeWidgets: Seq[FakeWidget])
+  val viewArea: java.awt.geom.Area,
+  val image: BufferedImage,
+  val fakeWidgets: Seq[FakeWidget])
 
 case class FakeWidget(
-  realWidget: window.Widget,
-  valueStringGetter: () => String
-)
+  val realWidget: window.Widget,
+  val valueStringGetter: () => String)
 
-class ReviewTabState {
-  type Run = Seq[Array[Byte]]
-  private var _run: Run = Seq()
-  def run = _run
-  private var finalState: Mirroring.State = Map()
-  private var frame = 0
-  private var _visibleState: Mirroring.State = Map()
-  def visibleState = _visibleState
-  def size = _run.size
-  var currentModel: Option[String] = None
+class ReviewTab(
+  ws: window.GUIWorkspace,
+  loadModel: String => Unit,
+  saveModel: () => String)
+  extends JPanel
+  with window.Events.BeforeLoadEventHandler {
 
   object Memory {
-    private def toMB(bytes: Long) = bytes / 1024 / 1024
-    // arbitrarily, I say we need enough memory for about ten frames and at least 32 MB:
-    def safeThreshold = math.max(toMB(_run.takeRight(10).map(_.size.toLong).sum), 32)
+    def toMB(bytes: Long) = bytes / 1024 / 1024
+    def safeThreshold = 64 // arbitrary - needs to be tweaked...
     def free = toMB(Runtime.getRuntime().freeMemory())
-    def usedByRun = toMB(_run.map(_.size.toLong).sum)
+    def usedByRuns = toMB(tabState.sizeInBytes)
     def underSafeThreshold = free < safeThreshold
-    var userWarned = false
+    def check() {
+      if (!tabState.userWarnedForMemory) {
+        if (underSafeThreshold)
+          System.gc() // try to collect garbage before actually warning
+        if (underSafeThreshold) {
+          tabState.userWarnedForMemory = true
+          val answer = JOptionPane.showConfirmDialog(ReviewTab.this,
+            "Memory is getting low. do you want to stop recording?",
+            "Low Memory", JOptionPane.YES_NO_OPTION)
+          if (answer == JOptionPane.YES_OPTION)
+            stopRecording()
+        }
+      }
+    }
   }
-  def add(mirrorables: Iterable[Mirrorable]) {
-    val (newState, update) = Mirroring.diffs(finalState, mirrorables)
-    _run :+= Serializer.toBytes(update)
-    finalState = newState
-  }
-  def reset() {
-    _run = Seq()
-    currentModel = None
-    finalState = Map()
-    _visibleState = Map()
-    Memory.userWarned = false
-  }
-  def refreshVisibleState() {
-    if (visibleState.isEmpty)
-      _visibleState = merge(Map(), _run.head)
-  }
-  def scrub(newFrame: Int) {
-    _visibleState =
-      if(newFrame < frame)
-        _run.take(newFrame + 1)
-          .foldLeft(Map(): Mirroring.State)(merge)
-      else
-        _run.drop(frame + 1).take(newFrame - frame)
-          .foldLeft(visibleState)(merge)
-    frame = newFrame
-  }
-  def load(run: Run) {
-    _run = run
-    frame = 0
-    _visibleState = merge(Map(), _run.head)
-    finalState = _run.foldLeft(Map(): Mirroring.State)(merge)
-    Memory.userWarned = false
-  }
-  private def merge(oldState: Mirroring.State, bytes: Array[Byte]): Mirroring.State =
-    Mirroring.merge(oldState, Serializer.fromBytes(bytes))
-  def ticks(state: Mirroring.State = visibleState): Option[Double] =
-    for {
-      entry <- state.get(mirror.AgentKey(Mirrorables.World, 0))
-      result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
-      if result != -1
-    } yield result
-}
 
-class ReviewTab(ws: window.GUIWorkspace,
-                loadModel: String => Unit,
-                saveModel: () => String)
-extends JPanel
-with window.Events.BeforeLoadEventHandler {
+  private def nameFromPath(path: String) =
+    new java.io.File(path).getName
+      .replaceAll("\\.[^.]*$", "") // remove extension
 
-  var recordingEnabled: Boolean = true
-  var potemkinInterface: Option[PotemkinInterface] = None
-  val tabState = new ReviewTabState
+  val tabState = new ReviewTabState()
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        if (recordingEnabled)
-          ws.waitFor(() => checkMemory())
-        if (recordingEnabled) { // checkMemory may turn off recording
+        if (tabState.recordingEnabled)
+          ws.waitFor(() => Memory.check())
+        if (tabState.recordingEnabled) { // checkMemory may turn off recording
+          if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
+            ws.waitFor(() => startNewRun())
           updateMonitors()
           // switch from job thread to event thread
           ws.waitFor(() => grab())
-        }}})
+        }
+      }
+    })
 
   // only callable from the job thread, and only once evaluator.withContext(...) has properly
   // set up ProcedureRunner's execution context. it would be problematic to try to trigger
   // monitors to update from the event thread, because the event thread is not allowed to
   // block waiting for the job thread. - ST 10/12/12
   def updateMonitors() {
-    for(pi <- potemkinInterface) {
-      val monitors = pi.fakeWidgets.collect{
-        case FakeWidget(m: window.MonitorWidget, _) => m}
-      for(monitor <- monitors; reporter <- monitor.reporter)
-        monitor.value(
-          ws.evaluator.ProcedureRunner.report(reporter))
-    }
-  }
-
-  def reset() {
-    tabState.reset()
-    Scrubber.setValue(0)
-    Scrubber.setEnabled(false)
-    Scrubber.border("")
-    NotesArea.setEnabled(false)
-    NotesArea.setText("")
-    potemkinInterface = None
-    SaveButton.setEnabled(false)
-  }
-
-  def checkMemory() {
-    if (!tabState.Memory.userWarned) {
-      if (tabState.Memory.underSafeThreshold)
-        System.gc() // try to collect garbage before actually warning
-      if (tabState.Memory.underSafeThreshold) {
-        tabState.Memory.userWarned = true
-        val answer = JOptionPane.showConfirmDialog(this,
-          "Memory is getting low. do you want to stop recording?",
-          "Low Memory", JOptionPane.YES_NO_OPTION)
-        if (answer == JOptionPane.YES_OPTION)
-          stopRecording()
-      }
-    }
+    for {
+      run <- tabState.currentRun
+      fakeWidgets = run.potemkinInterface.fakeWidgets
+      monitor <- fakeWidgets.collect { case FakeWidget(m: window.MonitorWidget, _) => m }
+      reporter <- monitor.reporter
+    } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
   }
 
   def stopRecording() {
-    recordingEnabled = false
-    Enabled.setSelected(recordingEnabled)
+    tabState.recordingEnabled = false
+    Enabled.setSelected(tabState.recordingEnabled)
+  }
+
+  def startNewRun() {
+
+    val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
+      ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
+    val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
+
+    // The position is the position of the view, but the image is the
+    // whole interface, including the view.
+    val widgets = fakeWidgets(ws)
+    val view = ws.viewWidget.view
+    val viewArea = new java.awt.geom.Area(new java.awt.Rectangle(
+      wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
+      view.getWidth, view.getHeight))
+
+    // remove widgets from the clip area of the view:
+    val container = ws.viewWidget.findWidgetContainer
+    for {
+      w <- widgets
+      bounds = container.getUnzoomedBounds(w.realWidget)
+      widgetArea = new java.awt.geom.Area(bounds)
+    } viewArea.subtract(widgetArea)
+
+    val image = org.nlogo.awt.Images.paintToImage(
+      ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
+
+    val newInterface = PotemkinInterface(viewArea, image, widgets)
+    SaveButton.setEnabled(true)
+    val name = Option(ws.getModelFileName)
+      .map(nameFromPath)
+      .getOrElse("Untitled")
+    val run = tabState.newRun(name, saveModel(), newInterface)
+    runListModel.addElement(run)
+    RunList.setSelectedValue(run, true)
   }
 
   def grab() {
-    if (ws.world.ticks == 0)
-      reset()
-    if (tabState.size == 0) {
-      val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
-        ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
-      val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
 
-      // The position is the position of the view, but the image is the
-      // whole interface, including the view.
-      val widgets = fakeWidgets(ws)
-      val view = ws.viewWidget.view
-      val viewArea = new java.awt.geom.Area(new java.awt.Rectangle(
-        wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
-        view.getWidth, view.getHeight))
-
-      // remove widgets from the clip area of the view:
-      val container = ws.viewWidget.findWidgetContainer
-      for {
-        w <- widgets
-        bounds = container.getUnzoomedBounds(w.realWidget)
-        widgetArea = new java.awt.geom.Area(bounds)
-      } viewArea.subtract(widgetArea)
-
-      val image = org.nlogo.awt.Images.paintToImage(
-        ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
-      potemkinInterface = Some(PotemkinInterface(viewArea, image, widgets))
-      tabState.currentModel = Some(saveModel())
-      SaveButton.setEnabled(true)
-    }
-    for (pi <- potemkinInterface) {
+    for (run <- tabState.currentRun) {
       try {
+        val widgetValues = run.potemkinInterface.fakeWidgets
+          .map(_.valueStringGetter.apply)
+          .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(
-          ws.world, ws.plotManager.plots,
-          pi.fakeWidgets.map(_.valueStringGetter.apply).zipWithIndex)
-        tabState.add(mirrorables)
+          ws.world, ws.plotManager.plots, widgetValues)
+        run.append(mirrorables)
       } catch {
         case e: java.lang.OutOfMemoryError =>
           // happens if user ignored our warning or if "GC overhead limit exceeded"
@@ -197,12 +153,14 @@ with window.Events.BeforeLoadEventHandler {
           stopRecording()
         case e => throw e // rethrow anything else
       }
-      Scrubber.setEnabled(true)
-      Scrubber.updateBorder()
       NotesArea.setEnabled(true)
       MemoryMeter.update()
+      for (data <- run.data) {
+        Scrubber.setEnabled(true)
+        Scrubber.updateBorder()
+        Scrubber.setMaximum(data.lastFrameIndex)
+      }
     }
-    Scrubber.setMaximum(tabState.size - 1)
     InterfacePanel.repaint()
   }
 
@@ -217,46 +175,53 @@ with window.Events.BeforeLoadEventHandler {
   object InterfacePanel extends JPanel {
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
-      val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-      try {
-        val view = ws.view
+      for {
+        run <- tabState.currentRun
+        data <- run.data
+        fakeWorld = new mirror.FakeWorld(data.currentFrame)
+        paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
+        g2d = g.create.asInstanceOf[java.awt.Graphics2D]
+      } {
         object FakeViewSettings extends api.ViewSettings {
           // disregard spotlight/perspective settings in the
           // "real" view, but delegate other methods to it
-          def fontSize = view.fontSize
-          def patchSize = view.patchSize
-          def viewWidth = view.viewWidth
-          def viewHeight = view.viewHeight
-          def viewOffsetX = view.viewOffsetX
-          def viewOffsetY = view.viewOffsetY
+          def fontSize = ws.view.fontSize
+          def patchSize = ws.view.patchSize
+          def viewWidth = ws.view.viewWidth
+          def viewHeight = ws.view.viewHeight
+          def viewOffsetX = ws.view.viewOffsetX
+          def viewOffsetY = ws.view.viewOffsetY
           def drawSpotlight = false
           def renderPerspective = false
           def perspective = api.Perspective.Observe
-          def isHeadless = view.isHeadless
+          def isHeadless = ws.view.isHeadless
         }
-        val paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         paintArea.intersect(viewArea) // avoid spilling outside interface panel
-        g2d.setClip(paintArea)
-        g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-        val fakeWorld = new mirror.FakeWorld(tabState.visibleState)
-        fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
-      } finally {
-        g2d.dispose()
+        try {
+          g2d.setClip(paintArea)
+          g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
+          fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
+        } finally {
+          g2d.dispose()
+        }
       }
     }
 
     def repaintWidgets(g: java.awt.Graphics, widgets: Seq[FakeWidget]) {
-
-      val container = ws.viewWidget.findWidgetContainer
-      val values = tabState.visibleState
-        .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
-        .toSeq
-        .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
-        .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-      for ((w, v) <- widgets zip values) {
+      for {
+        run <- tabState.currentRun
+        data <- run.data
+        values = data.currentFrame
+          .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
+          .toSeq
+          .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
+          .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
+        (w, v) <- widgets zip values
+      } {
         val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
         try {
           val rw = w.realWidget
+          val container = ws.viewWidget.findWidgetContainer
           val bounds = container.getUnzoomedBounds(rw)
           g2d.setRenderingHint(
             java.awt.RenderingHints.KEY_ANTIALIASING,
@@ -278,21 +243,15 @@ with window.Events.BeforeLoadEventHandler {
 
     override def paintComponent(g: java.awt.Graphics) {
       super.paintComponent(g)
-      potemkinInterface match {
-        case None =>
-          g.setColor(java.awt.Color.GRAY)
-          g.fillRect(0, 0, getWidth, getHeight)
-        case Some(PotemkinInterface(_, image, _)) =>
-          g.setColor(java.awt.Color.WHITE)
-          g.fillRect(0, 0, getWidth, getHeight)
-          g.drawImage(image, 0, 0, null)
-      }
-      if (tabState.size > 0) {
-        tabState.refreshVisibleState()
-        for (pi <- potemkinInterface) {
-          repaintView(g, pi.viewArea)
-          repaintWidgets(g, pi.fakeWidgets)
-        }
+      g.setColor(if (tabState.currentRun.isDefined) WHITE else GRAY)
+      g.fillRect(0, 0, getWidth, getHeight)
+      for {
+        run <- tabState.currentRun
+        pi = run.potemkinInterface
+      } {
+        g.drawImage(pi.image, 0, 0, null)
+        repaintView(g, pi.viewArea)
+        repaintWidgets(g, pi.fakeWidgets)
       }
     }
   }
@@ -302,58 +261,104 @@ with window.Events.BeforeLoadEventHandler {
       setBorder(BorderFactory.createTitledBorder(s))
     }
     def updateBorder() {
-      border("Ticks: " + tabState.ticks().map(x => api.Dump.number(StrictMath.floor(x))).getOrElse(""))
+      val newBorder = tabState.currentRun match {
+        case None => ""
+        case Some(run) => "Ticks: " +
+          (for { data <- run.data; ticks <- data.currentTicks }
+            yield api.Dump.number(StrictMath.floor(ticks))).getOrElse("")
+      }
+      border(newBorder)
     }
     setValue(0)
     border("")
-    addChangeListener(new ChangeListener{
+    addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
-        tabState.scrub(getValue)
+        for {
+          run <- tabState.currentRun
+          data <- run.data
+        } data.setCurrentFrame(getValue)
         updateBorder()
         InterfacePanel.repaint()
-      }})
+      }
+    })
   }
 
   object EnabledAction extends AbstractAction("Recording") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
-      recordingEnabled = !recordingEnabled
+      tabState.recordingEnabled = !tabState.recordingEnabled
     }
   }
 
   object Enabled extends JCheckBox(EnabledAction) {
-    setSelected(recordingEnabled)
+    setSelected(tabState.recordingEnabled)
   }
 
   object SaveAction extends AbstractAction("Save") {
     def actionPerformed(e: java.awt.event.ActionEvent) {
-      def thingsToSave = {
-        // Area is not serializable so we save a shape instead:
-        val viewAreaShape = java.awt.geom.AffineTransform
-          .getTranslateInstance(0, 0)
-          .createTransformedShape(potemkinInterface.get.viewArea)
-        val image = {
-          val byteStream = new java.io.ByteArrayOutputStream
-          ImageIO.write(potemkinInterface.get.image, "PNG", byteStream)
-          byteStream.close()
-          byteStream.toByteArray
+      for {
+        run <- tabState.currentRun
+        data <- run.data
+      } {
+        def thingsToSave = {
+          // Area is not serializable so we save a shape instead:
+          val viewAreaShape = java.awt.geom.AffineTransform
+            .getTranslateInstance(0, 0)
+            .createTransformedShape(run.potemkinInterface.viewArea)
+          val image = {
+            val byteStream = new java.io.ByteArrayOutputStream
+            ImageIO.write(run.potemkinInterface.image, "PNG", byteStream)
+            byteStream.close()
+            byteStream.toByteArray
+          }
+          Seq(
+            run.modelString,
+            viewAreaShape,
+            image,
+            data.rawDiffs,
+            NotesArea.getText)
         }
-        Seq(
-          tabState.currentModel.get,
-          viewAreaShape,
-          image,
-          tabState.run,
-          NotesArea.getText)
-      }
-
-      ignoring(classOf[UserCancelException]) {
-        val path = org.nlogo.swing.FileDialog.show(
-          ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE, "run.dat")
-        val out = new java.io.ObjectOutputStream(
-          new java.io.FileOutputStream(path))
-        thingsToSave.foreach(out.writeObject)
-        out.close()
+        ignoring(classOf[UserCancelException]) {
+          val path = org.nlogo.swing.FileDialog.show(
+            ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
+            run.name + ".nlrun")
+          val out = new java.io.ObjectOutputStream(
+            new java.io.FileOutputStream(path))
+          thingsToSave.foreach(out.writeObject)
+          out.close()
+        }
       }
     }
+  }
+
+  def refreshInterface() {
+    tabState.currentRun match {
+      case None => {
+        NotesArea.setEnabled(false)
+        NotesArea.setText("")
+        SaveButton.setEnabled(false)
+      }
+      case Some(run) => {
+        NotesArea.setText(run.generalNotes)
+        NotesArea.setEnabled(true)
+        SaveButton.setEnabled(run.dirty)
+      }
+    }
+    tabState.currentRunData match {
+      case None => {
+        Scrubber.setMaximum(0)
+        Scrubber.setValue(0)
+        Scrubber.setEnabled(false)
+      }
+      case Some(data) => {
+        Scrubber.setMaximum(data.lastFrameIndex)
+        Scrubber.setValue(data.currentFrameIndex)
+        Scrubber.setEnabled(true)
+      }
+    }
+    Scrubber.updateBorder()
+    MemoryMeter.update()
+    Scrubber.repaint()
+    InterfacePanel.repaint()
   }
 
   object LoadAction extends AbstractAction("Load") {
@@ -367,50 +372,71 @@ with window.Events.BeforeLoadEventHandler {
           modelString: String,
           viewShape: java.awt.Shape,
           imageBytes: Array[Byte],
-          run: tabState.Run,
+          rawDiffs: Seq[Array[Byte]],
           notes: String) = Stream.continually(in.readObject()).take(5)
         in.close()
-        loadModel(modelString)
-        tabState.currentModel = Some(modelString)
-        val viewArea = new java.awt.geom.Area(viewShape)
-        val image = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
-        potemkinInterface = Some(PotemkinInterface(viewArea, image, fakeWidgets(ws)))
-        tabState.load(run)
-        Scrubber.setValue(0)
-        Scrubber.setEnabled(true)
-        Scrubber.setMaximum(tabState.size - 1)
-        SaveButton.setEnabled(true)
-        MemoryMeter.update()
-        NotesArea.setText(notes)
-        NotesArea.setEnabled(true)
-        InterfacePanel.repaint()
+
+        val newInterface = PotemkinInterface(
+          new java.awt.geom.Area(viewShape),
+          ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
+        val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface)
+        runListModel.addElement(run)
+        RunList.setSelectedValue(run, true)
       }
     }
+  }
+
+  val runListModel = new DefaultListModel()
+  object RunList extends JList(runListModel) {
+    setBorder(BorderFactory.createLoweredBevelBorder())
+    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+
+    this.getSelectionModel.addListSelectionListener(
+      new ListSelectionListener {
+        def valueChanged(p1: ListSelectionEvent) {
+          if (getSelectedIndex != -1) {
+            val run = RunList.getSelectedValue.asInstanceOf[Run]
+            tabState.setCurrentRun(run)
+            if (run.modelString != saveModel()) {
+              loadModel(run.modelString)
+              App.app.tabs.setSelectedComponent(ReviewTab.this)
+            }
+            refreshInterface()
+          }
+        }
+      })
   }
 
   object SaveButton extends JButton(SaveAction)
 
   object LoadButton extends JButton(LoadAction)
 
-  object Toolbar extends org.nlogo.swing.ToolBar {
+  object RunListToolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
-      add(Enabled)
-      add(new org.nlogo.swing.ToolBar.Separator())
       add(SaveButton)
       add(LoadButton)
-      add(new org.nlogo.swing.ToolBar.Separator())
-      add(MemoryMeter)
     }
   }
 
-  object MemoryMeter extends JLabel {
+  object RunToolBar extends org.nlogo.swing.ToolBar {
+    override def addControls() {
+      add(Enabled)
+    }
+  }
+
+  object MemoryMeter extends JPanel {
+    setLayout(new BorderLayout)
+    setBorder(new EmptyBorder(5, 5, 5, 5))
+    add(new JLabel("Memory used by runs: "), BorderLayout.WEST)
+    val meterLabel = new JLabel("%5d MB".format(Memory.usedByRuns))
+    add(meterLabel, BorderLayout.EAST)
     def update() {
-      setText(tabState.Memory.usedByRun + " MB")
+      meterLabel.setText(Memory.usedByRuns + " MB")
     }
   }
 
   class ScrubAction(name: String, fn: Int => Int)
-  extends AbstractAction(name) {
+    extends AbstractAction(name) {
     def actionPerformed(e: java.awt.event.ActionEvent) {
       Scrubber.setValue(fn(Scrubber.getValue))
     }
@@ -425,11 +451,11 @@ with window.Events.BeforeLoadEventHandler {
   object ForwardAction
     extends ScrubAction("->", _ + 1)
 
-  object ButtonPanel extends JPanel {
+  object ScrubberButtonsPanel extends JPanel {
     setLayout(
-    new RowLayout(
-      1, java.awt.Component.LEFT_ALIGNMENT,
-      java.awt.Component.CENTER_ALIGNMENT))
+      new org.nlogo.awt.RowLayout(
+        1, java.awt.Component.LEFT_ALIGNMENT,
+        java.awt.Component.CENTER_ALIGNMENT))
     add(new JButton(AllTheWayBackAction))
     add(new JButton(BackAction))
     add(new JButton(ForwardAction))
@@ -447,15 +473,39 @@ with window.Events.BeforeLoadEventHandler {
     add(new JScrollPane(NotesArea), BorderLayout.CENTER)
   }
 
-  object SouthPanel extends JPanel {
+  object ScrubberPanel extends JPanel {
     setLayout(new BorderLayout)
-    add(ButtonPanel, BorderLayout.WEST)
+    add(ScrubberButtonsPanel, BorderLayout.WEST)
     add(Scrubber, BorderLayout.CENTER)
   }
 
-  object SplitPane extends JSplitPane(
+  object RunListPanel extends JPanel {
+    setLayout(new BorderLayout)
+    add(RunListToolbar, BorderLayout.NORTH)
+    add(RunList, BorderLayout.CENTER)
+    add(MemoryMeter, BorderLayout.SOUTH)
+
+  }
+
+  object InterfaceScrollPane extends JScrollPane {
+    setViewportView(InterfacePanel)
+  }
+
+  object RunPanel extends JPanel {
+    setLayout(new BorderLayout)
+    add(RunToolBar, BorderLayout.NORTH)
+    add(InterfaceScrollPane, BorderLayout.CENTER)
+    add(ScrubberPanel, BorderLayout.SOUTH)
+  }
+
+  object PrimarySplitPane extends JSplitPane(
+    JSplitPane.HORIZONTAL_SPLIT,
+    RunListPanel,
+    SecondarySplitPane)
+
+  object SecondarySplitPane extends JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
-    InterfacePanel,
+    RunPanel,
     NotesPanel) {
     setResizeWeight(1.0)
     setDividerLocation(1.0)
@@ -463,13 +513,11 @@ with window.Events.BeforeLoadEventHandler {
 
   locally {
     setLayout(new BorderLayout)
-    add(Toolbar, BorderLayout.NORTH)
-    add(SplitPane, BorderLayout.CENTER)
-    add(SouthPanel, BorderLayout.SOUTH)
+    add(RunListToolbar, BorderLayout.NORTH)
+    add(PrimarySplitPane, BorderLayout.CENTER)
   }
 
   override def handle(e: window.Events.BeforeLoadEvent) {
-    reset()
+    refreshInterface()
   }
-
 }
