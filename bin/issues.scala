@@ -26,14 +26,14 @@ onLoadMessage := ""
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
-  "net.databinder.dispatch" %% "dispatch-core" % "0.9.2",
-  "net.liftweb" % "lift-json_2.9.1" % "2.4",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.9.3",
+  "org.json4s" %% "json4s-native" % "3.0.0",
   "org.slf4j" % "slf4j-nop" % "1.6.0")
 */
 
 import dispatch._
-import net.liftweb.json.JsonParser
-import net.liftweb.json.JsonAST._
+import org.json4s.JsonAST._
+import org.json4s.native.JsonParser
 
 object Issue {
   def fromJson(j: JValue): Issue = {
@@ -48,23 +48,32 @@ case class Issue(number: Int, title: String, labels: List[String])
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "13",
-                       "state" -> "closed",
-                       "per_page" -> "1000")
-// println(req.build.getRawUrl)  useful for debugging
-val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
-val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
-val issues: List[Issue] =
+
+def getIssues(state: String): List[Issue] = {
+  val req = base <<? Map("milestone" -> "13",
+                         "state" -> state,
+                         "per_page" -> "1000")
+  // println(req.build.getRawUrl)  useful for debugging
+  val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
+  val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
   for (item <- array)
   yield Issue.fromJson(item)
-
-println(issues.size + " issues fixed!")
-for(Issue(n, title, labels) <- issues.sortBy(_.number)) {
-  val labelsString =
-    if (labels.isEmpty) ""
-    else labels.mkString("", ", ", ": ")
-  println(" * " + labelsString + title + " ([#" + n + "]" +
-          "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
 }
+
+def report(state: String) {
+  val issues = getIssues(state)
+  println(issues.size + " issues with state = " + state)
+  for(Issue(n, title, labels) <- issues.sortBy(_.number).sortBy(_.labels.mkString)) {
+    val labelsString =
+      if (labels.isEmpty) ""
+      else labels.mkString("", ", ", ": ")
+    println(" * " + labelsString + title + " ([#" + n + "]" +
+            "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+  }
+}
+
+report("closed")
+println()
+report("open")
 
 Http.shutdown()
