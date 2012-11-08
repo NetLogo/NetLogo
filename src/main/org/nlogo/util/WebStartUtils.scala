@@ -5,7 +5,12 @@ import java.io.FileNotFoundException
 
 object WebStartUtils {
 
-  private val tempDirPathTemplate = System.getProperty("java.io.tmpdir") + "%s" + System.getProperty("file.separator")
+  private val tempDirPathTemplate = {
+    val tempProp = System.getProperty("java.io.tmpdir")
+    val sep      = System.getProperty("file.separator")
+    val tempDir  = if (tempProp endsWith sep) tempProp else tempProp + sep
+    tempDir + "%s" + sep
+  }
 
   def extractAllFilesFromJarByMarker(markerFileName: String,
                                      desiredFolderName: String,
