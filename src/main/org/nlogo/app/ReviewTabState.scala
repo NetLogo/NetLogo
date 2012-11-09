@@ -30,8 +30,7 @@ class ReviewTabState(
   }
 
   private def avoidDuplicate(name: String) =
-    (None +: Stream.from(1).map(n => Some(" (" + n + ")")))
-      .map(name + _.getOrElse(""))
+    (name +: Stream.from(1).map(i => name + " (" + i + ")"))
       .find(str => _runs.forall(_.name != str))
       .get
 
