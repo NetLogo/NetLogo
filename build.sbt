@@ -31,8 +31,9 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-  "org.scalacheck" % "scalacheck_2.10.0-RC2" % "1.10.0" % "test",
-  "org.scalatest" % "scalatest_2.10.0-RC2" % "1.8" % "test"
+   // the "cross"es can be dropped once 2.10.0 final is out - ST 11/17/12
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test" cross(CrossVersion.full),
+  "org.scalatest" %% "scalatest" % "1.8" % "test" cross(CrossVersion.full)
 )
 
 ///
