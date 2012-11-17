@@ -45,7 +45,6 @@ public strictfp class Procedure {
   public final scala.collection.mutable.ArrayBuffer<Let> taskFormals =
       new scala.collection.mutable.ArrayBuffer<Let>();
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public Let getTaskFormal(int n, Token token) {
     while (taskFormals.size() < n) {
       taskFormals.$plus$eq(
