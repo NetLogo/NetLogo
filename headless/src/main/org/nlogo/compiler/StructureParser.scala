@@ -14,7 +14,7 @@ import org.nlogo.prim._let
 // Properly the actual parsing logic ought to be separated from the parts that build
 // the actual data structures in the results. - ST 7/15/12
 
-private object StructureParser {
+object StructureParser {
 
   case class Results(
     program: Program,
@@ -64,7 +64,7 @@ private object StructureParser {
  * Calling parse() has no side effects, it just constructs a Results object.  Exception: the
  * ExtensionManager gets side effected (it loads and unloads extensions).
  */
-private class StructureParser(
+class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
   oldProgram: Program,

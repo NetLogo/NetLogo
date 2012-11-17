@@ -14,7 +14,7 @@ class OptimizerTests extends FunSuite {
   def compileCommands(source:String) =
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
-  private def compile(source:String):ProcedureDefinition = {
+  def compile(source:String):ProcedureDefinition = {
     val results = new StructureParser(tokenizer.tokenize(source), None, Program.empty(),
                                       nvm.CompilerInterface.NoProcedures,
                                       new DummyExtensionManager)

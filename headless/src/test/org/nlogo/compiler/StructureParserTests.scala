@@ -8,8 +8,8 @@ import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
 
 class StructureParserTests extends FunSuite {
-  // private so StructureParser.Results doesn't escape compiler package
-  private def compile(source: String, program: Program): StructureParser.Results = {
+
+  def compile(source: String, program: Program): StructureParser.Results = {
     implicit val tokenizer = Compiler.Tokenizer2D
     new StructureParser(tokenizer.tokenize(source), None, program,
       nvm.CompilerInterface.NoProcedures, new DummyExtensionManager)
