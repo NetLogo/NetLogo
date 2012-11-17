@@ -34,7 +34,7 @@ private class IdentifierParser(program: Program,
   }
   private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
-      if(tokPos < let.startPos || tokPos > let.endPos || let.varName != ident)
+      if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
         Some(let)

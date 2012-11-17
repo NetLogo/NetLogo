@@ -474,7 +474,7 @@ private class StructureParser(
                 " in the " + proc.name + " procedure", token)
         val iter2 = proc.lets.iterator()
         while(iter2.hasNext)
-          cAssert(varName != iter2.next().varName,
+          cAssert(varName != iter2.next().name,
                   "There is already a local variable called " + varName + " in the " +
                   proc.name + " procedure", token)
       }

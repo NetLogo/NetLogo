@@ -42,12 +42,12 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // to a local. This can be useful for testing. - ST 11/3/10, 2/6/11
         val exempt = l.token.name.equalsIgnoreCase("__LET")
         if(!procedure.isTask && askNestingLevel == 0 && !exempt) {
-          stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.varName))
+          stmt.command = new _setprocedurevariable(new _procedurevariable(procedure.args.size, l.let.name))
           stmt.command.token(stmt.command.token)
           stmt.removeArgument(0)
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
-          procedure.args.add(l.let.varName)
+          procedure.args.add(l.let.name)
           procedure.lets.remove(l.let)
           super.visitStatement(stmt)
         }
@@ -82,7 +82,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
         // it would be nice if the next line were easier to read - ST 2/6/11
         for(index <- procedure.alteredLets.get(l.let).orElse(Option(procedure.parent).flatMap(_.alteredLets.get(l.let)))) {
           val oldToken = expr.reporter.token
-          expr.reporter = new _procedurevariable(index.intValue, l.let.varName)
+          expr.reporter = new _procedurevariable(index.intValue, l.let.name)
           expr.reporter.token(oldToken)
         }
       case _ =>
