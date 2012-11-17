@@ -14057,7 +14057,7 @@ procedure DRAW-VERT-LINE:[XVAL]{OTPL}:
          L1
           RETURN
 
-procedure LAST-N:[N THE-LIST]{OTPL}:
+reporter procedure LAST-N:[N THE-LIST]{OTPL}:
 [0]_asm_procedurelastn_ifelse_0 "ifelse n >= length the-list" boolean => void
       _greaterorequal Object,double => boolean
         _procedurevariable:N => Object

@@ -5152,7 +5152,7 @@ procedure WIGGLE:[]{-T--}:
          L1
           RETURN
 
-procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
+reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
 [0]_asm_proceduregetnestscent_setprocedurevariable_0 "" Object => void
       _patchrightandahead
         _asm_proceduregetnestscent_procedurevariable_1 "angle" => Object
@@ -5507,7 +5507,7 @@ procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
          L1
           RETURN
 
-procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
+reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
 [0]_asm_procedurechemicalscent_setprocedurevariable_0 "" Object => void
       _patchrightandahead
         _asm_procedurechemicalscent_procedurevariable_1 "angle" => Object

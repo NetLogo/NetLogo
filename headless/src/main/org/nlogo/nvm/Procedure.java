@@ -125,6 +125,9 @@ public strictfp class Procedure {
     if (indent) {
       buf.append("   ");
     }
+    if(tpe == Type.REPORTER) {
+      buf.append("reporter ");
+    }
     buf.append(displayName);
     if (parent != null) {
       buf.append(":" + parent.displayName);

@@ -40,6 +40,11 @@ class StructureParserTests extends FunSuite {
     expect(1)(results.procedures.size)
     expect("procedure GO:[]{OTPL}:\n")(results.procedures("GO").dump)
   }
+  test("reporterProcedure") {
+    val results = compile("to-report foo report 0 end", Program.empty())
+    expect(1)(results.procedures.size)
+    expect("reporter procedure FOO:[]{OTPL}:\n")(results.procedures("FOO").dump)
+  }
   test("declarations1") {
     val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.empty())
     assert(results.procedures.isEmpty)

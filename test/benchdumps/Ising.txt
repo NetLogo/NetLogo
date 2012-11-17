@@ -1605,7 +1605,7 @@ procedure RECOLOR:[]{-TP-}:
          L1
           RETURN
 
-procedure MAGNETIZATION:[]{OTPL}:
+reporter procedure MAGNETIZATION:[]{OTPL}:
 [0]_asm_proceduremagnetization_report_0 "report sum-of-spins / count patches" Object => void
       _div double,double => double
         _observervariable:SUM-OF-SPINS => Object
