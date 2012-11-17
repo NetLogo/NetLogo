@@ -6,15 +6,13 @@ import org.scalatest.FunSuite
 import org.nlogo.api.{ CompilerException, DummyExtensionManager, Program }
 import org.nlogo.nvm
 
-// Normally we don't bother declaring stuff in test classes private, but sometimes (as a few times
-// below) it's necessary in order to avoid "escapes its defining scope" errors. - ST 11/25/08
 class ExpressionParserTests extends FunSuite {
 
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
 
   /// helpers
-  private def compile(source: String): Seq[Statements] = { // must be private
+  def compile(source: String): Seq[Statements] = {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = Program.empty
     implicit val tokenizer = Compiler.Tokenizer2D
@@ -46,7 +44,7 @@ class ExpressionParserTests extends FunSuite {
     expect(preorderDump)(statementsToString(compile(source), source))
   }
   // preorder traversal
-  private class PositionsCheckVisitor(source: String) extends DefaultAstVisitor { // must be private
+  class PositionsCheckVisitor(source: String) extends DefaultAstVisitor {
     val buf = new StringBuilder()
     override def visitCommandBlock(node: CommandBlock) { visit(node); super.visitCommandBlock(node) }
     override def visitReporterApp(node: ReporterApp) { visit(node); super.visitReporterApp(node) }

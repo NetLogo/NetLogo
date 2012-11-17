@@ -4590,7 +4590,7 @@ procedure COLOR-PATCH:[]{-TP-}:
          L1
           RETURN
 
-procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
+reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
 [0]_asm_procedurebindigit_ifelse_0 "ifelse (power-of-two = 0" boolean => void
       _equal Object,double => boolean
         _procedurevariable:POWER-OF-TWO => Object
@@ -6003,7 +6003,7 @@ procedure EXTRAPOLATE-SWITCHES:[]{OTPL}:
          L1
           RETURN
 
-procedure CALCULATE-RULE:[RRESULT]{OTPL}:
+reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
 [0]_asm_procedurecalculaterule_setprocedurevariable_0 "" Object => void
       _constdouble:0.0 => Double
          L0
@@ -8735,7 +8735,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
          L1
           RETURN
 
-procedure LIST-RULES:[RULES]{OTPL}:
+reporter procedure LIST-RULES:[RULES]{OTPL}:
 [0]_asm_procedurelistrules_setprocedurevariable_0 "" Object => void
       _constlist:[] => LogoList
          L0

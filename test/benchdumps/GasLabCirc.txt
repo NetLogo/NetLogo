@@ -2342,7 +2342,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 
-procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
+reporter procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
 [0]_asm_procedureconvertheadingx_report_0 "report sin heading-angle" Object => void
       _sin double => double
         _procedurevariable:HEADING-ANGLE => Object
@@ -2458,7 +2458,7 @@ procedure CONVERT-HEADING-X:[HEADING-ANGLE]{OTPL}:
          L1
           RETURN
 
-procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
+reporter procedure CONVERT-HEADING-Y:[HEADING-ANGLE]{OTPL}:
 [0]_asm_procedureconvertheadingy_report_0 "report cos heading-angle" Object => void
       _cos double => double
         _procedurevariable:HEADING-ANGLE => Object
@@ -13965,7 +13965,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
          L1
           RETURN
 
-procedure OVERLAPPING?:[]{-T--}:
+reporter procedure OVERLAPPING?:[]{-T--}:
 [0]_asm_procedureoverlapping_report_0 "report any? other particles in-radius ((size + largest-particle-size) / 2)
                               with [distance myself < (size + [size] of myself) / 2" Object => void
       _anyotherwith AgentSet,Reporter => boolean

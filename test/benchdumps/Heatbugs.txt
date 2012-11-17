@@ -2163,7 +2163,7 @@ procedure STEP:[TARGET]{-T--}:
          L1
           RETURN
 
-procedure FIND-TARGET:[]{-T--}:
+reporter procedure FIND-TARGET:[]{-T--}:
 [0]_asm_procedurefindtarget_ifelse_0 "ifelse temp < ideal-temp" boolean => void
       _lessthan Object,Object => boolean
         _patchvariable:TEMP => Object

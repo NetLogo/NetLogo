@@ -4126,7 +4126,7 @@ procedure TURN-TOWARDS-GRAIN:[BEST-DIRECTION BEST-AMOUNT]{-T--}:
          L1
           RETURN
 
-procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
+reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
 [0]_asm_proceduregrainahead_setprocedurevariable_0 "" Object => void
       _constdouble:0.0 => Double
          L0
@@ -8208,7 +8208,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
          L1
           RETURN
 
-procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
+reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
 [0]_asm_procedureareaofequalitytriangle_report_0 "report (num-people * (num-people - 1) / 2) / (num-people ^ 2" Object => void
       _div double,double => double
         _div double,double => double

@@ -35,7 +35,7 @@ import org.objectweb.asm.Opcodes.{ ALOAD, DLOAD, FLOAD, ILOAD, LLOAD }
  *  The other PeepholeOptimizers will be run regardless.
  */
 
-private class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
+class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
   // we have to synchronize because we could be compiling stuff on multiple threads
   def isSafe(m: Method): Boolean = synchronized {
     val hashKey = getHashKey(m)

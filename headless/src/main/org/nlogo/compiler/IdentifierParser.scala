@@ -28,12 +28,12 @@ private class IdentifierParser(program: Program,
   }
   private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
-      if(tokPos < let.startPos || tokPos > let.endPos || let.varName != ident)
+      if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
         Some(let)
     import collection.JavaConverters._
-    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
     val ident = tok.value.asInstanceOf[String]

@@ -8,7 +8,7 @@ import org.nlogo.util.SlowTest
 
 class TestCompileBenchmarks extends FunSuite with SlowTest{
 
-  private val names = Seq(
+  val names = Seq(
     "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
     "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
     "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")

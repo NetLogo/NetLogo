@@ -1376,7 +1376,7 @@ procedure ALIGN:[]{-T--}:
          L1
           RETURN
 
-procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
+reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
 [0]_asm_procedureaverageflockmateheading_report_0 "report atan mean [sin heading] of flockmates
               mean [cos heading] of flockmates" Object => void
       _atan double,double => double
@@ -1874,7 +1874,7 @@ procedure COHERE:[]{-T--}:
          L1
           RETURN
 
-procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
+reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
 [0]_asm_procedureaverageheadingtowardsflockmates_report_0 "report atan mean [sin (towards myself + 180)] of flockmates
               mean [cos (towards myself + 180)] of flockmates" Object => void
       _atan double,double => double
@@ -2951,7 +2951,7 @@ procedure TURN-AT-MOST:[TURN MAX-TURN]{-T--}:
          L1
           RETURN
 
-procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
+reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
 [0]_asm_proceduremysubtractheadings_ifelse_0 "ifelse abs (h1 - h2) <= 180" boolean => void
       _lessorequal double,double => boolean
         _abs double => double
