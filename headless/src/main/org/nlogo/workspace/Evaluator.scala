@@ -156,7 +156,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
     callingProcedure: Procedure, reporter: Boolean): Procedure = {
 
     val vars =
-      if (callingProcedure == null) new ArrayList[String]()
+      if (callingProcedure == null) Vector()
       else callingProcedure.args
     val agentKindHint = Evaluator.agentKindHint(kind)
 
@@ -166,10 +166,10 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
       // "to-report foo report 3 die end" is syntactically valid but
       // "to-report foo report (3 die) end" isn't. - ST 11/12/09
       "to-report __runresult " +
-        vars.toString.replace(',', ' ') + " " +
+        vars.mkString("[", " ", "]") + " " +
         agentKindHint + " report ( " + source + " \n) __done end"
     else
-      "to __run " + vars.toString.replace(',', ' ') + " " + agentKindHint + " " + source + "\nend"
+      "to __run " + vars.mkString("[", " ", "]") + " " + agentKindHint + " " + source + "\nend"
     val results = workspace.compiler.compileMoreCode(
       wrappedSource,
       Some(if(reporter) "runresult" else "run"),

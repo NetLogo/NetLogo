@@ -353,7 +353,7 @@ private class StructureParser(
       else if(!haveArgList) {
         if(token.tpe == TokenType.OPEN_BRACKET) {
           import collection.JavaConverters._
-          procedure.args.addAll(parseVarList(procedure = procedure).asJava)
+          procedure.args ++= parseVarList(procedure = procedure)
           start = tokenBuffer.index
         }
         haveArgList = true

@@ -47,7 +47,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
           stmt.removeArgument(0)
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
-          procedure.args.add(l.let.name)
+          procedure.args :+= l.let.name
           procedure.lets.remove(l.let)
           super.visitStatement(stmt)
         }
@@ -60,7 +60,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
           procedure.localsCount += 1
           procedure.lets.remove(r.let)
           // actual name here doesn't really matter, I don't think - ST 11/10/05
-          procedure.args.add("_repeatlocal:" + vn)
+          procedure.args :+= "_repeatlocal:" + vn
         }
         super.visitStatement(stmt)
       case ri: _repeatinternal =>
