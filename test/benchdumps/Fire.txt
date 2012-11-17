@@ -1895,7 +1895,7 @@ procedure GO:[]{O---}:
          L1
           RETURN
 
-procedure BURNING?:[]{-TP-}:
+reporter procedure BURNING?:[]{-TP-}:
 [0]_asm_procedureburning_report_0 "report (pcolor > (red - 4)) and (pcolor <" Object => void
       _and
         _greaterthan Object,double => boolean
@@ -2139,7 +2139,7 @@ procedure BURNING?:[]{-TP-}:
          L1
           RETURN
 
-procedure PERCENT-BURNED:[]{OTPL}:
+reporter procedure PERCENT-BURNED:[]{OTPL}:
 [0]_asm_procedurepercentburned_ifelse_0 "ifelse initial-trees > 0" boolean => void
       _greaterthan Object,double => boolean
         _observervariable:INITIAL-TREES => Object

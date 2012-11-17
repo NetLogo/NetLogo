@@ -8,7 +8,7 @@ import org.nlogo.prim.{_plus,_equal}
 
 class PeepholeSafeCheckerTests extends FunSuite {
 
-  private val checker = new PeepholeSafeChecker
+  val checker = new PeepholeSafeChecker
   import checker._
 
   test("plusSafe") {

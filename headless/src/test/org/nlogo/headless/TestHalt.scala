@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ CompilerException, RendererInterface, Version }
+import org.nlogo.api.{ LogoException, RendererInterface, Version }
 import org.nlogo.agent.World
 import org.nlogo.nvm.{ CompilerInterface, HaltException }
 import org.nlogo.util.SlowTest
@@ -24,11 +24,11 @@ class TestHalt extends FunSuite with SlowTest {
     var workspace =
       HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
     workspace.initForTesting(0, 0, 0, 0, "globals [x]")
-    var ex: CompilerException = null
+    var ex: LogoException = null
     val thread = new Thread("TestHalt.testHalt") {
       override def run() {
         try workspace.command("loop [ set x x + 1 ]")
-        catch { case e: CompilerException => ex = e }
+        catch { case e: LogoException => ex = e }
       }
     }
     thread.start()

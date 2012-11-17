@@ -9,7 +9,7 @@ import org.nlogo.nvm
 class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
-  private def compile(source: String): Seq[ProcedureDefinition] = {
+  def compile(source: String): Seq[ProcedureDefinition] = {
     implicit val tokenizer = Compiler.Tokenizer2D
     val program = Program.empty
     val results = new StructureParser(
