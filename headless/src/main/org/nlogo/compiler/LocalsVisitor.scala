@@ -48,7 +48,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
           procedure.alteredLets.put(l.let, procedure.args.size)
           procedure.localsCount += 1
           procedure.args :+= l.let.name
-          procedure.lets.remove(l.let)
+          procedure.lets = procedure.lets.filterNot(_ eq l.let)
           super.visitStatement(stmt)
         }
         else stmt.drop(1).foreach(_.accept(this)) // drop(1) skips the _letvariable which won't be evaluated
@@ -58,7 +58,7 @@ private class LocalsVisitor extends DefaultAstVisitor {
           vn = procedure.args.size
           stmt.command = new _repeatlocal(vn)
           procedure.localsCount += 1
-          procedure.lets.remove(r.let)
+          procedure.lets = procedure.lets.filterNot(_ eq r.let)
           // actual name here doesn't really matter, I don't think - ST 11/10/05
           procedure.args :+= "_repeatlocal:" + vn
         }

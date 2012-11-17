@@ -39,7 +39,7 @@ private class IdentifierParser(program: Program,
       else
         Some(let)
     import collection.JavaConverters._
-    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
     val ident = tok.value.asInstanceOf[String]

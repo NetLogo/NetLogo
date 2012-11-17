@@ -472,9 +472,8 @@ private class StructureParser(
         cAssert(!proc.args.contains(varName),
                 "There is already a local variable called " + varName +
                 " in the " + proc.name + " procedure", token)
-        val iter2 = proc.lets.iterator()
-        while(iter2.hasNext)
-          cAssert(varName != iter2.next().name,
+        for(let <- proc.lets)
+          cAssert(varName != let.name,
                   "There is already a local variable called " + varName + " in the " +
                   proc.name + " procedure", token)
       }
@@ -514,7 +513,7 @@ private class StructureParser(
     def newLet(endPos: Int) {
       val result = Let(name, startPos, endPos)
       letToken.value.asInstanceOf[_let].let = result
-      procedure.lets.add(result)
+      procedure.lets :+= result
     }
     while(true) {
       if(!tokenBuffer.hasNext)

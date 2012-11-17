@@ -7,9 +7,6 @@ import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static scala.collection.JavaConversions.asJavaIterable;
 
 public strictfp class Procedure {
@@ -57,7 +54,9 @@ public strictfp class Procedure {
     return taskFormals.apply(n - 1);
   }
 
-  public final List<Let> lets = new ArrayList<Let>();
+  public scala.collection.immutable.Vector<Let> lets =
+    scala.collection.immutable.Vector$.MODULE$.empty();
+
   // each Int is the position of that variable in the procedure's args list
   public final scala.collection.mutable.HashMap<Let, Integer> alteredLets =
       new scala.collection.mutable.HashMap<Let, Integer>();
