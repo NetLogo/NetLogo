@@ -174,7 +174,7 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   def addMenuItem(i: Int, name: String) {
-    tabsMenu.addMenuItem(('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
+    tabsMenu.addMenuItem(name, ('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
   }
 
   private def stripPath(filename: String): String =
