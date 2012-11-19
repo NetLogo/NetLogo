@@ -34,10 +34,20 @@ class Tabs(val workspace: GUIWorkspace,
     addTab(I18N.gui.get("tabs.run"), interfaceTab)
     addTab(I18N.gui.get("tabs.info"), infoTab)
     addTab(I18N.gui.get("tabs.code"), codeTab)
-    addTab("Review", reviewTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)
+  }
+
+  def showReviewTab() {
+    if (indexOfComponent(reviewTab) == -1) {
+      addTab("Review", reviewTab)
+      addMenuItem(getTabCount() - 1, "Review")
+      reviewTab.startRecording()
+    }
+    org.nlogo.window.Event.rehash()
+    setSelectedComponent(reviewTab)
+    org.nlogo.awt.EventQueue.invokeLater(() => requestFocus())
   }
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {
@@ -176,7 +186,7 @@ class Tabs(val workspace: GUIWorkspace,
   }
 
   def addMenuItem(i: Int, name: String) {
-    tabsMenu.addMenuItem(('1' + i).toChar, RichAction{ _ => Tabs.this.setSelectedIndex(i) })
+    tabsMenu.addMenuItem(name, ('1' + i).toChar, RichAction { _ => Tabs.this.setSelectedIndex(i) })
   }
 
   private def stripPath(filename: String): String =

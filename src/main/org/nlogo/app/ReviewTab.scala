@@ -93,6 +93,11 @@ class ReviewTab(
     } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
   }
 
+  def startRecording() {
+    tabState.recordingEnabled = true
+    Enabled.setSelected(tabState.recordingEnabled)
+  }
+
   def stopRecording() {
     tabState.recordingEnabled = false
     Enabled.setSelected(tabState.recordingEnabled)
