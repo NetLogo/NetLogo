@@ -1,0 +1,220 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;HTTP client service</title><link rel="stylesheet" type="text/css" href="css/hc-tutorial.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><link rel="home" href="index.html" title="HttpClient Tutorial"><link rel="up" href="index.html" title="HttpClient Tutorial"><link rel="prev" href="authentication.html" title="Chapter&nbsp;4.&nbsp;HTTP authentication"><link rel="next" href="fluent.html" title="Chapter&nbsp;6.&nbsp;Fluent API"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="banner"><a class="bannerLeft" href="http://www.apache.org/" title="Apache Software Foundation"><img style="border:none;" src="images/asf_logo_wide.gif"></a><a class="bannerRight" href="http://hc.apache.org/httpcomponents-client-ga/" title="Apache HttpComponents Client"><img style="border:none;" src="images/hc_logo.png"></a><div class="clear"></div></div><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;5.&nbsp;HTTP client service</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="authentication.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="fluent.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;5.&nbsp;HTTP client service"><div class="titlepage"><div><div><h2 class="title"><a name="httpagent"></a>Chapter&nbsp;5.&nbsp;HTTP client service</h2></div></div></div>
+    
+    <div class="section" title="5.1.&nbsp;HttpClient facade"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1152"></a>5.1.&nbsp;HttpClient facade</h2></div></div></div>
+        
+        <p><code class="interfacename">HttpClient</code> interface represents the most essential
+            contract for HTTP request execution. It imposes no restrictions or particular details on
+            the request execution process and leaves the specifics of connection management, state
+            management, authentication and redirect handling up to individual implementations. This
+            should make it easier to decorate the interface with additional functionality such as
+            response content caching.</p>
+        <p><code class="classname">DefaultHttpClient</code> is the default implementation of the
+                <code class="interfacename">HttpClient</code> interface. This class acts as a facade to
+            a number of special purpose handler or strategy interface implementations responsible
+            for handling of a particular aspect of the HTTP protocol such as redirect or
+            authentication handling or making decision about connection persistence and keep alive
+            duration. This enables the users to selectively replace default implementation of those
+            aspects with custom, application specific ones.</p>
+        <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+
+httpclient.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy() {
+
+    @Override
+    public long getKeepAliveDuration(
+            HttpResponse response,
+            HttpContext context) {
+        long keepAlive = super.getKeepAliveDuration(response, context);
+        if (keepAlive == -1) {
+            // Keep connections alive 5 seconds if a keep-alive value 
+            // has not be explicitly set by the server 
+            keepAlive = 5000;
+        }
+        return keepAlive;
+    }
+    
+});
+</pre>
+        <p><code class="classname">DefaultHttpClient</code> also maintains a list of protocol
+            interceptors intended for processing outgoing requests and incoming responses and
+            provides methods for managing those interceptors. New protocol interceptors can be
+            introduced to the protocol processor chain or removed from it if needed. Internally
+            protocol interceptors are stored in a simple <code class="classname">java.util.ArrayList</code>.
+            They are executed in the same natural order as they are added to the list.</p>
+        <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+httpclient.removeRequestInterceptorByClass(RequestUserAgent.class);
+httpclient.addRequestInterceptor(new HttpRequestInterceptor() {
+
+    public void process(
+            HttpRequest request, HttpContext context)
+            throws HttpException, IOException {
+        request.setHeader(HTTP.USER_AGENT, "My-own-client");
+    }
+    
+});
+</pre>
+        <p><code class="classname">DefaultHttpClient</code> is thread safe. It is recommended that the
+            same instance of this class is reused for multiple request executions. When an instance
+            of <code class="classname">DefaultHttpClient</code> is no longer needed and is about to go out
+            of scope the connection manager associated with it must be shut down by calling the
+                <code class="methodname">ClientConnectionManager#shutdown()</code> method.</p>
+        <pre class="programlisting">
+HttpClient httpclient = new DefaultHttpClient();
+// Do something useful
+httpclient.getConnectionManager().shutdown();
+</pre>
+    </div>
+    <div class="section" title="5.2.&nbsp;HttpClient parameters"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1169"></a>5.2.&nbsp;HttpClient parameters</h2></div></div></div>
+        
+        <p>These are parameters that be used to customize the behaviour of the default HttpClient
+            implementation:</p>
+        <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                <p title="ClientPNames.HANDLE_REDIRECTS='http.protocol.handle-redirects':">
+                    <b><code class="constant">ClientPNames.HANDLE_REDIRECTS</code>='http.protocol.handle-redirects':&nbsp;</b>
+                    defines whether redirects should be handled automatically. This parameter
+                        expects a value of type <code class="classname">java.lang.Boolean</code>. If this
+                        parameter is not set HttpClient will handle redirects automatically.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.REJECT_RELATIVE_REDIRECT='http.protocol.reject-relative-redirect':">
+                    <b><code class="constant">ClientPNames.REJECT_RELATIVE_REDIRECT</code>='http.protocol.reject-relative-redirect':&nbsp;</b>
+                    defines whether relative redirects should be rejected. HTTP specification
+                        requires the location value be an absolute URI. This parameter expects a
+                        value of type <code class="classname">java.lang.Boolean</code>. If this parameter is
+                        not set relative redirects will be allowed.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.MAX_REDIRECTS='http.protocol.max-redirects':">
+                    <b><code class="constant">ClientPNames.MAX_REDIRECTS</code>='http.protocol.max-redirects':&nbsp;</b>
+                    defines the maximum number of redirects to be followed. The limit on
+                        number of redirects is intended to prevent infinite loops caused by broken
+                        server side scripts. This parameter expects a value of type
+                            <code class="classname">java.lang.Integer</code>. If this parameter is not set
+                        no more than 100 redirects will be allowed.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.ALLOW_CIRCULAR_REDIRECTS='http.protocol.allow-circular-redirects':">
+                    <b><code class="constant">ClientPNames.ALLOW_CIRCULAR_REDIRECTS</code>='http.protocol.allow-circular-redirects':&nbsp;</b>
+                    defines whether circular redirects (redirects to the same location) should
+                        be allowed. The HTTP spec is not sufficiently clear whether circular
+                        redirects are permitted, therefore optionally they can be enabled. This
+                        parameter expects a value of type <code class="classname">java.lang.Boolean</code>.
+                        If this parameter is not set circular redirects will be disallowed.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.CONNECTION_MANAGER_FACTORY_CLASS_NAME='http.connection-manager.factory-class-name':">
+                    <b><code class="constant">ClientPNames.CONNECTION_MANAGER_FACTORY_CLASS_NAME</code>='http.connection-manager.factory-class-name':&nbsp;</b>
+                    defines the class name of the default
+                            <code class="interfacename">ClientConnectionManager</code> implementation.
+                        This parameter expects a value of type
+                            <code class="classname">java.lang.String</code>. If this parameter is not set
+                            <code class="classname">SingleClientConnManager</code> will be used per
+                        default.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.VIRTUAL_HOST='http.virtual-host':">
+                    <b><code class="constant">ClientPNames.VIRTUAL_HOST</code>='http.virtual-host':&nbsp;</b>
+                    defines the virtual host settings to be used in the <code class="literal">Host</code>
+                        header instead of the physical host. This parameter expects a value of
+                        type <code class="classname">HttpHost</code>. The HttpHost port does not have to
+                        be specified as it will be derived from the target.
+                        If this parameter is not set, the name or
+                        IP address (and port if required) of the target host will be used.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.DEFAULT_HEADERS='http.default-headers':">
+                    <b><code class="constant">ClientPNames.DEFAULT_HEADERS</code>='http.default-headers':&nbsp;</b>
+                    defines the request headers to be sent per default with each request. This
+                        parameter expects a value of type
+                            <code class="interfacename">java.util.Collection</code> containing
+                            <code class="interfacename">Header</code> objects.
+                </p>
+            </li><li class="listitem">
+                <p title="ClientPNames.DEFAULT_HOST='http.default-host':">
+                    <b><code class="constant">ClientPNames.DEFAULT_HOST</code>='http.default-host':&nbsp;</b>
+                    defines the default host. The default value will be used if the target
+                        host is not explicitly specified in the request URI (relative URIs). This
+                        parameter expects a value of type <code class="classname">HttpHost</code>.
+                </p>
+            </li></ul></div>
+    </div>
+    <div class="section" title="5.3.&nbsp;Automatic redirect handling"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1225"></a>5.3.&nbsp;Automatic redirect handling</h2></div></div></div>
+        
+        <p>HttpClient handles all types of redirects automatically, except those explicitly
+            prohibited by the HTTP specification as requiring user intervention. <code class="literal">See
+                Other</code> (status code 303) redirects on <code class="literal">POST</code> and
+                <code class="literal">PUT</code> requests are converted to <code class="literal">GET</code> requests as
+            required by the HTTP specification.</p>
+    </div>
+    <div class="section" title="5.4.&nbsp;HTTP client and execution context"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1232"></a>5.4.&nbsp;HTTP client and execution context</h2></div></div></div>
+        
+        <p>The <code class="classname">DefaultHttpClient</code> treats HTTP requests as immutable objects
+            that are never supposed to change in the course of request execution. Instead, it
+            creates a private mutable copy of the original request object, whose properties can be
+            updated depending on the execution context. Therefore the final request properties such
+            as the target host and request URI can be determined by examining the content of the
+            local HTTP context after the request has been executed.</p>
+        <p>The final HttpRequest object in the execution context always represents
+            the state of the message _exactly_ as it was sent to the target server.
+            Per default HTTP/1.0 and HTTP/1.1 use relative request URIs. However if the request 
+            is sent via a proxy in a non-tunneling mode then the URI will be absolute.</p>
+        <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+
+HttpContext localContext = new BasicHttpContext();
+HttpGet httpget = new HttpGet("http://localhost:8080/"); 
+HttpResponse response = httpclient.execute(httpget, localContext);
+HttpHost target = (HttpHost) localContext.getAttribute(
+        ExecutionContext.HTTP_TARGET_HOST);
+HttpUriRequest req = (HttpUriRequest) localContext.getAttribute(
+        ExecutionContext.HTTP_REQUEST);
+
+System.out.println("Target host: " + target);
+System.out.println("Final request URI: " + req.getURI()); // relative URI (no proxy used)
+System.out.println("Final request method: " + req.getMethod());
+</pre>
+    </div>
+  <div class="section" title="5.5.&nbsp;Compressed response content"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1238"></a>5.5.&nbsp;Compressed response content</h2></div></div></div>
+    
+    <p>
+      The <code class="classname">ContentEncodingHttpClient</code> is a simple sub-class of
+      <code class="classname">DefaultHttpClient</code> which adds support indicating to servers that it will 
+      support <code class="literal">gzip</code> and <code class="literal">deflate</code> compressed responses. It does 
+      this via the existing published APIs of <a class="link" href="fundamentals.html#protocol_interceptors" title="1.5.&nbsp;HTTP protocol interceptors">HTTP Protocol 
+      Interceptors </a>. Depending on the type of response (text will compress well versus 
+      images, which are typically already well-compressed), this can speed up responses due to the 
+      smaller amount of network traffic involved, along with saving bandwidth, which can be 
+      important in mobile environments. The <code class="classname">RequestAcceptEncoding</code>
+      and <code class="classname">ResponseContentEncoding</code> interceptors used as also part of the 
+      published API and can be used by other <code class="interfacename">DefaultHttpClient</code>
+      implementations. These provide transparent handling of <code class="literal">gzip</code> and 
+      <code class="literal">deflate</code> encoding, so it will not be apparent to clients that this 
+      processing has happened.
+    </p>
+    <pre class="programlisting">
+ContentEncodingHttpClient httpclient = new ContentEncodingHttpClient();
+HttpGet httpget = new HttpGet("http://www.yahoo.com/");
+HttpResponse response = httpclient.execute(httpget);
+
+Header h = rsp.getFirstHeader("Content-Encoding");
+if (h != null) {
+    System.out.println("----------------------------------------");
+    System.out.println("Response is " + h.getValue() + " encoded");
+    System.out.println("----------------------------------------");
+}
+</pre>
+    <p>
+      One can also add the <code class="classname">RequestAcceptEncoding</code> and 
+      <code class="classname">ResponseContentEncoding</code> interceptors to an instance of the 
+      <code class="classname">DefaultHttpClient</code>, if desired.
+    </p>
+    <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+httpclient.addRequestInterceptor(new RequestAcceptEncoding());
+httpclient.addResponseInterceptor(new ResponseContentEncoding());
+</pre>
+  </div>
+</div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="authentication.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="fluent.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;HTTP authentication&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Fluent API</td></tr></table></div></body></html>

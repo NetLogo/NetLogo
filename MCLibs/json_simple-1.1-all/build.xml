@@ -1,0 +1,32 @@
+<project name="json-simple" default="main" basedir=".">
+	<property name="current-version" value="1.1"/>
+	<property name="jar-name" value="json_simple-${current-version}.jar"/>
+	
+	<target name="main" depends="jar">
+	</target>
+	
+	<target name="clean">
+		<delete includeemptydirs="true">
+			<fileset dir="build/main" includes="**/*"/>
+		 </delete>
+		<delete file="lib/${jar-name}"/>
+	</target>
+	
+	<target name="mkdir">
+	    <mkdir dir="build/main"/>
+	</target>
+	
+	<target name="compile" depends="mkdir">
+		<javac 	srcdir="src" 
+				destdir="build/main"
+				includes="**/*.java"
+				target="1.2"
+				source="1.2"/>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar	destfile="lib/${jar-name}"
+				basedir="build/main"
+				includes="**/*.class"/>
+	</target>
+</project>
