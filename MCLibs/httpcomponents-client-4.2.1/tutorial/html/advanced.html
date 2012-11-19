@@ -1,0 +1,189 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;8.&nbsp;Advanced topics</title><link rel="stylesheet" type="text/css" href="css/hc-tutorial.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><link rel="home" href="index.html" title="HttpClient Tutorial"><link rel="up" href="index.html" title="HttpClient Tutorial"><link rel="prev" href="caching.html" title="Chapter&nbsp;7.&nbsp;HTTP Caching"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="banner"><a class="bannerLeft" href="http://www.apache.org/" title="Apache Software Foundation"><img style="border:none;" src="images/asf_logo_wide.gif"></a><a class="bannerRight" href="http://hc.apache.org/httpcomponents-client-ga/" title="Apache HttpComponents Client"><img style="border:none;" src="images/hc_logo.png"></a><div class="clear"></div></div><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;8.&nbsp;Advanced topics</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="caching.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;8.&nbsp;Advanced topics"><div class="titlepage"><div><div><h2 class="title"><a name="advanced"></a>Chapter&nbsp;8.&nbsp;Advanced topics</h2></div></div></div>
+    
+    <div class="section" title="8.1.&nbsp;Custom client connections"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1339"></a>8.1.&nbsp;Custom client connections</h2></div></div></div>
+        
+        <p>In certain situations it may be necessary to customize the way HTTP messages get
+            transmitted across the wire beyond what is possible using HTTP parameters in
+            order to be able to deal non-standard, non-compliant behaviours. For instance, for web
+            crawlers it may be necessary to force HttpClient into accepting malformed response heads
+            in order to salvage the content of the messages. </p>
+        <p>Usually the process of plugging in a custom message parser or a custom connection
+            implementation involves several steps:</p>
+        <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                <p>Provide a custom <code class="interfacename">LineParser</code> /
+                        <code class="interfacename">LineFormatter</code> interface implementation.
+                    Implement message parsing / formatting logic as required.</p>
+                <pre class="programlisting">
+class MyLineParser extends BasicLineParser {
+
+    @Override
+    public Header parseHeader(
+            final CharArrayBuffer buffer) throws ParseException {
+        try {
+            return super.parseHeader(buffer);
+        } catch (ParseException ex) {
+            // Suppress ParseException exception
+            return new BasicHeader("invalid", buffer.toString());
+        }
+    }
+    
+}
+</pre>
+            </li><li class="listitem">
+                <p>Provide a custom <code class="interfacename">OperatedClientConnection</code>
+                    implementation. Replace default request / response parsers, request / response
+                    formatters with custom ones as required. Implement different message writing /
+                    reading code if necessary.</p>
+                <pre class="programlisting">
+class MyClientConnection extends DefaultClientConnection {
+
+    @Override
+    protected HttpMessageParser createResponseParser(
+            final SessionInputBuffer buffer,
+            final HttpResponseFactory responseFactory, 
+            final HttpParams params) {
+        return new DefaultResponseParser(
+                buffer, 
+                new MyLineParser(), 
+                responseFactory, 
+                params);
+    }
+    
+}
+</pre>
+            </li><li class="listitem">
+                <p>Provide a custom <code class="interfacename">ClientConnectionOperator</code>
+                    interface implementation in order to create connections of new class. Implement
+                    different socket initialization code if necessary.</p>
+                <pre class="programlisting">
+class MyClientConnectionOperator extends DefaultClientConnectionOperator {
+    
+    public MyClientConnectionOperator(final SchemeRegistry sr) {
+        super(sr);
+    }
+
+    @Override
+    public OperatedClientConnection createConnection() {
+        return new MyClientConnection();
+    }
+    
+}
+</pre>
+            </li><li class="listitem">
+                <p>Provide a custom <code class="interfacename">ClientConnectionManager</code>
+                    interface implementation in order to create connection operator of new
+                    class.</p>
+                <pre class="programlisting">
+class MyClientConnManager extends SingleClientConnManager {
+    
+    public MyClientConnManager(
+            final HttpParams params,
+            final SchemeRegistry sr) {
+        super(params, sr);
+    }
+
+    @Override
+    protected ClientConnectionOperator createConnectionOperator(
+            final SchemeRegistry sr) {
+        return new MyClientConnectionOperator(sr);
+    }
+    
+}
+</pre>
+            </li></ul></div>
+    </div>
+    <div class="section" title="8.2.&nbsp;Stateful HTTP connections"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="stateful_conn"></a>8.2.&nbsp;Stateful HTTP connections</h2></div></div></div>
+        
+        <p>While HTTP specification assumes that session state information is always embedded in
+            HTTP messages in the form of HTTP cookies and therefore HTTP connections are always
+            stateless, this assumption does not always hold true in real life. There are cases when
+            HTTP connections are created with a particular user identity or within a particular
+            security context and therefore cannot be shared with other users and can be reused by
+            the same user only. Examples of such stateful HTTP connections are
+                <code class="literal">NTLM</code> authenticated connections and SSL connections with client
+            certificate authentication.</p>
+        <div class="section" title="8.2.1.&nbsp;User token handler"><div class="titlepage"><div><div><h3 class="title"><a name="d5e1365"></a>8.2.1.&nbsp;User token handler</h3></div></div></div>
+            
+            <p>HttpClient relies on <code class="interfacename">UserTokenHandler</code> interface to
+                determine if the given execution context is user specific or not. The token object
+                returned by this handler is expected to uniquely identify the current user if the
+                context is user specific or to be null if the context does not contain any resources
+                or details specific to the current user. The user token will be used to ensure that
+                user specific resources will not be shared with or reused by other users.</p>
+            <p>The default implementation of the <code class="interfacename">UserTokenHandler</code>
+                interface uses an instance of Principal class to represent a state object for HTTP
+                connections, if it can be obtained from the given execution context.
+                    <code class="classname">DefaultUserTokenHandler</code> will use the user principle of
+                connection based authentication schemes such as <code class="literal">NTLM</code> or that of
+                the SSL session with client authentication turned on. If both are unavailable, null
+                token will be returned.</p>
+            <p>Users can provide a custom implementation if the default one does not satisfy
+                their needs:</p>
+            <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+httpclient.setUserTokenHandler(new UserTokenHandler() {
+
+    public Object getUserToken(HttpContext context) {
+        return context.getAttribute("my-token");
+    }
+    
+});
+</pre>
+        </div>
+        <div class="section" title="8.2.2.&nbsp;User token and execution context"><div class="titlepage"><div><div><h3 class="title"><a name="d5e1375"></a>8.2.2.&nbsp;User token and execution context</h3></div></div></div>
+            
+            <p>In the course of HTTP request execution HttpClient adds the following user
+                identity related objects to the execution context: </p>
+            <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                    <p title="ClientContext.USER_TOKEN='http.user-token':">
+                        <b><code class="constant">ClientContext.USER_TOKEN</code>='http.user-token':&nbsp;</b>
+                        Object instance representing the actual user identity, usually
+                            expected to be an instance of <code class="interfacename">Principle</code>
+                            interface
+                    </p>
+                </li></ul></div>
+            <p>One can find out whether or not the connection used to execute the request was
+                stateful by examining the content of the local HTTP context after the request has
+                been executed.</p>
+            <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+HttpContext localContext = new BasicHttpContext();
+HttpGet httpget = new HttpGet("http://localhost:8080/"); 
+HttpResponse response = httpclient.execute(httpget, localContext);
+HttpEntity entity = response.getEntity();
+EntityUtils.consume(entity);
+Object userToken = localContext.getAttribute(ClientContext.USER_TOKEN);
+System.out.println(userToken);
+</pre>
+            <div class="section" title="8.2.2.1.&nbsp;Persistent stateful connections"><div class="titlepage"><div><div><h4 class="title"><a name="d5e1387"></a>8.2.2.1.&nbsp;Persistent stateful connections</h4></div></div></div>
+                
+                <p>Please note that a persistent connection that carries a state object can be reused
+                    only if the same state object is bound to the execution context when requests
+                    are executed. So, it is really important to ensure the either same context is
+                    reused for execution of subsequent HTTP requests by the same user or the user
+                    token is bound to the context prior to request execution.</p>
+                <pre class="programlisting">
+DefaultHttpClient httpclient = new DefaultHttpClient();
+HttpContext localContext1 = new BasicHttpContext();
+HttpGet httpget1 = new HttpGet("http://localhost:8080/"); 
+HttpResponse response1 = httpclient.execute(httpget1, localContext1);
+HttpEntity entity1 = response1.getEntity();
+EntityUtils.consume(entity1);
+Principal principal = (Principal) localContext1.getAttribute(
+        ClientContext.USER_TOKEN);
+
+HttpContext localContext2 = new BasicHttpContext();
+localContext2.setAttribute(ClientContext.USER_TOKEN, principal);
+HttpGet httpget2 = new HttpGet("http://localhost:8080/"); 
+HttpResponse response2 = httpclient.execute(httpget2, localContext2);
+HttpEntity entity2 = response2.getEntity();
+EntityUtils.consume(entity2);
+</pre>
+            </div>
+        </div>
+
+    </div>
+
+</div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="caching.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;7.&nbsp;HTTP Caching&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>

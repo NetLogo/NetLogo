@@ -1,0 +1,147 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;6.&nbsp;Fluent API</title><link rel="stylesheet" type="text/css" href="css/hc-tutorial.css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"><link rel="home" href="index.html" title="HttpClient Tutorial"><link rel="up" href="index.html" title="HttpClient Tutorial"><link rel="prev" href="httpagent.html" title="Chapter&nbsp;5.&nbsp;HTTP client service"><link rel="next" href="caching.html" title="Chapter&nbsp;7.&nbsp;HTTP Caching"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="banner"><a class="bannerLeft" href="http://www.apache.org/" title="Apache Software Foundation"><img style="border:none;" src="images/asf_logo_wide.gif"></a><a class="bannerRight" href="http://hc.apache.org/httpcomponents-client-ga/" title="Apache HttpComponents Client"><img style="border:none;" src="images/hc_logo.png"></a><div class="clear"></div></div><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;6.&nbsp;Fluent API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="httpagent.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="caching.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;6.&nbsp;Fluent API"><div class="titlepage"><div><div><h2 class="title"><a name="fluent"></a>Chapter&nbsp;6.&nbsp;Fluent API</h2></div></div></div>
+  
+  <div class="section" title="6.1.&nbsp;Easy to use facade API"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1259"></a>6.1.&nbsp;Easy to use facade API</h2></div></div></div>
+    
+    <p>
+    As of version of 4.2 HttpClient comes with an easy to use facade API based on the concept 
+    of a fluent interface. Fluent facade API exposes only the most fundamental functions of 
+    HttpClient and is intended for simple use cases that do not require the full flexibility of 
+    HttpClient. For instance, fluent facade API relieves the users from having to deal with 
+    connection management and resource deallocation.  
+    </p>
+    <p>Here are several examples of HTTP requests executed through the HC fluent API</p>
+    <pre class="programlisting">
+// Execute a GET with timeout settings and return response content as String.
+Request.Get("http://somehost/")
+        .connectTimeout(1000)
+        .socketTimeout(1000)
+        .execute().returnContent().asString();
+
+    </pre>
+    <pre class="programlisting">
+// Execute a POST with the 'expect-continue' handshake, using HTTP/1.1,
+// containing a request body as String and return response content as byte array.
+Request.Post("http://somehost/do-stuff")
+        .useExpectContinue()
+        .version(HttpVersion.HTTP_1_1)
+        .bodyString("Important stuff", ContentType.DEFAULT_TEXT)
+        .execute().returnContent().asBytes();
+
+    </pre>
+    <pre class="programlisting">
+// Execute a POST with a custom header through the proxy containing a request body
+// as an HTML form and save the result to the file
+Request.Post("http://somehost/some-form")
+        .addHeader("X-Custom-header", "stuff")
+        .viaProxy(new HttpHost("myproxy", 8080))
+        .bodyForm(Form.form().add("username", "vip").add("password", "secret").build())
+        .execute().saveContent(new File("result.dump"));
+
+    </pre>
+    <p>One can also use <code class="classname">Executor</code> directly in order to execute requests in 
+    a specific security context whereby authentication details are cached and re-used for 
+    subsequent requests.
+    </p>
+    <pre class="programlisting">
+Executor executor = Executor.newInstance()
+        .auth(new HttpHost("somehost"), "username", "password")
+        .auth(new HttpHost("myproxy", 8080), "username", "password")
+        .authPreemptive(new HttpHost("myproxy", 8080));
+
+executor.execute(Request.Get("http://somehost/"))
+        .returnContent().asString();
+
+executor.execute(Request.Post("http://somehost/do-stuff")
+        .useExpectContinue()
+        .bodyString("Important stuff", ContentType.DEFAULT_TEXT))
+        .returnContent().asString();
+
+    </pre>
+    <div class="section" title="6.1.1.&nbsp;Response handling"><div class="titlepage"><div><div><h3 class="title"><a name="d5e1269"></a>6.1.1.&nbsp;Response handling</h3></div></div></div>
+      
+      <p>The fluent facade API generally relieves the users from having to deal with 
+      connection management and resource deallocation. In most cases, though, this comes at 
+      a price of having to buffer content of response messages in memory. It is highly 
+      recommended to use <code class="interfacename">ResponseHandler</code> for HTTP response 
+      processing in order to avoid having to buffer content in memory.</p>
+      <pre class="programlisting">
+Document result = Request.Get("http://somehost/content")
+        .execute().handleResponse(new ResponseHandler&lt;Document&gt;() {
+
+    public Document handleResponse(final HttpResponse response) throws IOException {
+        StatusLine statusLine = response.getStatusLine();
+        HttpEntity entity = response.getEntity();
+        if (statusLine.getStatusCode() &gt;= 300) {
+            throw new HttpResponseException(
+                    statusLine.getStatusCode(),
+                    statusLine.getReasonPhrase());
+        }
+        if (entity == null) {
+            throw new ClientProtocolException("Response contains no content");
+        }
+        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+            ContentType contentType = ContentType.getOrDefault(entity);
+            if (!contentType.equals(ContentType.APPLICATION_XML)) {
+                throw new ClientProtocolException("Unexpected content type:" + contentType);
+            }
+            String charset = contentType.getCharset();
+            if (charset == null) {
+                charset = HTTP.DEFAULT_CONTENT_CHARSET;
+            }
+            return docBuilder.parse(entity.getContent(), charset);
+        } catch (ParserConfigurationException ex) {
+            throw new IllegalStateException(ex);
+        } catch (SAXException ex) {
+            throw new ClientProtocolException("Malformed XML document", ex);
+        }
+    }
+
+    });
+
+      </pre>
+    </div>
+    <div class="section" title="6.1.2.&nbsp;Asynchronous execution"><div class="titlepage"><div><div><h3 class="title"><a name="d5e1274"></a>6.1.2.&nbsp;Asynchronous execution</h3></div></div></div>
+      
+      <p>The fluent facade API can be used to execute multiple requests asynchronously using 
+      background threads.
+      </p> 
+      <pre class="programlisting">
+ExecutorService threadpool = Executors.newFixedThreadPool(2);
+Async async = Async.newInstance().use(threadpool);
+
+Request[] requests = new Request[] {
+        Request.Get("http://www.google.com/"),
+        Request.Get("http://www.yahoo.com/"),
+        Request.Get("http://www.apache.com/"),
+        Request.Get("http://www.apple.com/")
+};
+
+Queue&lt;Future&lt;Content&gt;&gt; queue = new LinkedList&lt;Future&lt;Content&gt;&gt;();
+for (final Request request: requests) {
+    Future&lt;Content&gt; future = async.execute(request, new FutureCallback&lt;Content&gt;() {
+        
+        public void failed(final Exception ex) {
+            System.out.println(ex.getMessage() + ": " + request);
+        }
+        
+        public void completed(final Content content) {
+            System.out.println("Request completed: " + request);
+        }
+        
+        public void cancelled() {
+        }
+        
+    });
+    queue.add(future);
+}
+
+// Process the queue
+
+      </pre>
+    </div>
+  </div>
+</div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="httpagent.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="caching.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;HTTP client service&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;7.&nbsp;HTTP Caching</td></tr></table></div></body></html>
