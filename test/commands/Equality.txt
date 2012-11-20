@@ -1,5 +1,6 @@
 lists-of-agentsets-can-be-equal
-  (list (patch-set patch 0 0)) = (list (patch-set patch 0 0)) => true
+  O> set glob1 one-of patches
+  (list (patch-set glob1)) = (list (patch-set glob1)) => true
 
 two-dead-turtles-are-equal
   O> crt 1 [ set glob1 (list self) ]
