@@ -33,7 +33,6 @@ object Equality {
           o1 == o2
       })
 
-  // assumes we already checked sizes are equal
   private def sameElements(l1: LogoList, l2: LogoList): Boolean =
     if (l1.size != l2.size)
       false

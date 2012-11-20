@@ -65,7 +65,7 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
     }
     // these next three cases are sneaky -- NetLogo considers dead agents to be
     // equal to each other, and to nobody.  Dead agents have an id of minus one,
-    // so that's what makes thesecases work.  - ST 10/28/03, 11/20/12 */
+    // so that's what makes these cases work.  - ST 10/28/03, 11/20/12 */
     else if (sourceObject instanceof Link) {
       return Long.valueOf
           (((Link) sourceObject).id).hashCode();
