@@ -68,14 +68,16 @@ class ReviewTab(
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        if (tabState.recordingEnabled)
-          ws.waitFor(() => Memory.check())
-        if (tabState.recordingEnabled) { // checkMemory may turn off recording
-          if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
-            ws.waitFor(() => startNewRun())
-          updateMonitors()
-          // switch from job thread to event thread
-          ws.waitFor(() => grab())
+        if (ws.world.ticks != -1) {
+          if (tabState.recordingEnabled)
+            ws.waitFor(() => Memory.check())
+          if (tabState.recordingEnabled) { // checkMemory may turn off recording
+            if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
+              ws.waitFor(() => startNewRun())
+            updateMonitors()
+            // switch from job thread to event thread
+            ws.waitFor(() => grab())
+          }
         }
       }
     })
