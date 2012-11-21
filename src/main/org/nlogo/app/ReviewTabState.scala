@@ -32,6 +32,14 @@ class ReviewTabState(
     fireIntervalRemoved(this, 0, lastIndex)
   }
 
+  def closeCurrentRun() {
+    for (run <- currentRun) {
+      val index = _runs.indexOf(run)
+      _runs = _runs.filterNot(_ == run)
+      fireIntervalRemoved(this, index, index)
+    }
+  }
+
   private def avoidDuplicate(name: String) =
     (name +: Stream.from(1).map(i => name + " (" + i + ")"))
       .find(str => _runs.forall(_.name != str))

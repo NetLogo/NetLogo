@@ -416,16 +416,24 @@ class ReviewTab(
     }
   }
 
-  object RunListToolbar extends org.nlogo.swing.ToolBar {
-    override def addControls() {
-      add(saveButton)
-      add(loadButton)
-      add(closeAllButton)
+  val closeCurrentButton = actionButton("Close current") { () =>
+    for (run <- tabState.currentRun) {
+      if (!run.dirty ||
+        userConfirms("Close current run",
+          "The current run has unsaved data. Are you sure you want to close the current run?")) {
+        tabState.closeCurrentRun()
+        refreshInterface()
+      }
     }
   }
 
-  object RunToolBar extends org.nlogo.swing.ToolBar {
+  object ReviewToolBar extends org.nlogo.swing.ToolBar {
     override def addControls() {
+      add(saveButton)
+      add(loadButton)
+      add(closeCurrentButton)
+      add(closeAllButton)
+      add(new org.nlogo.swing.ToolBar.Separator)
       add(Enabled)
     }
   }
@@ -482,10 +490,8 @@ class ReviewTab(
 
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
-    add(RunListToolbar, BorderLayout.NORTH)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
     add(MemoryMeter, BorderLayout.SOUTH)
-
   }
 
   object InterfaceScrollPane extends JScrollPane {
@@ -494,7 +500,6 @@ class ReviewTab(
 
   object RunPanel extends JPanel {
     setLayout(new BorderLayout)
-    add(RunToolBar, BorderLayout.NORTH)
     add(InterfaceScrollPane, BorderLayout.CENTER)
     add(ScrubberPanel, BorderLayout.SOUTH)
   }
@@ -514,7 +519,7 @@ class ReviewTab(
 
   locally {
     setLayout(new BorderLayout)
-    add(RunListToolbar, BorderLayout.NORTH)
+    add(ReviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
     refreshInterface()
   }
