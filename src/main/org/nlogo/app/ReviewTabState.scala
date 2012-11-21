@@ -64,6 +64,14 @@ class ReviewTabState(
     _currentRun = Some(run)
   }
 
+  def undirty(run: Run) {
+    val index = _runs.indexOf(run)
+    if (index != -1) {
+      run.dirty = false
+      fireContentsChanged(this, index, index)
+    }
+  }
+
   def dirty = runs.exists(_.dirty)
   def sizeInBytes: Long = _runs.map(_.sizeInBytes).sum
 }
@@ -78,7 +86,10 @@ class Run(
 
   private var _dirty: Boolean = false
   def dirty = _dirty || data.map(_.dirty).getOrElse(false)
-  def dirty_=(value: Boolean) { _dirty = value }
+  def dirty_=(value: Boolean) {
+    _dirty = value
+    if (!_dirty) _data.foreach(_.dirty = false)
+  }
 
   private var _data: Option[RunData] = None
   def data = _data
@@ -122,6 +133,7 @@ class RunData private (private var _rawDiffs: Seq[Array[Byte]]) {
   def size = _rawDiffs.length
   private var _dirty = false
   def dirty = _dirty
+  def dirty_=(value: Boolean) { _dirty = value }
 
   private var frameCache = Map[Int, Mirroring.State]()
 
