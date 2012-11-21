@@ -465,6 +465,10 @@ class ReviewTab(
     extends ScrubAction("<-", _ - 1)
   object ForwardAction
     extends ScrubAction("->", _ + 1)
+  object BigStepBackAction
+    extends ScrubAction("<<-", _ - 5)
+  object BigStepForwardAction
+    extends ScrubAction("->>", _ + 5)
 
   object ScrubberButtonsPanel extends JPanel {
     setLayout(
@@ -472,8 +476,10 @@ class ReviewTab(
         1, java.awt.Component.LEFT_ALIGNMENT,
         java.awt.Component.CENTER_ALIGNMENT))
     add(new JButton(AllTheWayBackAction))
+    add(new JButton(BigStepBackAction))
     add(new JButton(BackAction))
     add(new JButton(ForwardAction))
+    add(new JButton(BigStepForwardAction))
     add(new JButton(AllTheWayForwardAction))
   }
 
