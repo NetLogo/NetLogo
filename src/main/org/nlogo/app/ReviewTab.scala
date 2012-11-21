@@ -46,15 +46,17 @@ class ReviewTab(
           System.gc() // try to collect garbage before actually warning
         if (underSafeThreshold) {
           tabState.userWarnedForMemory = true
-          val answer = JOptionPane.showConfirmDialog(ReviewTab.this,
-            "Memory is getting low. do you want to stop recording?",
-            "Low Memory", JOptionPane.YES_NO_OPTION)
-          if (answer == JOptionPane.YES_OPTION)
+          if (userConfirms("Low Memory",
+            "Memory is getting low. Do you want to stop recording?"))
             stopRecording()
         }
       }
     }
   }
+
+  private def userConfirms(title: String, message: String) =
+    JOptionPane.showConfirmDialog(ReviewTab.this, message,
+      title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
 
   private def nameFromPath(path: String) =
     new java.io.File(path).getName
@@ -405,16 +407,20 @@ class ReviewTab(
       })
   }
 
-  val clearAllButton = actionButton("Clear all") { () =>
-    tabState.reset()
-    refreshInterface()
+  val closeAllButton = actionButton("Close all") { () =>
+    if (!tabState.dirty ||
+      userConfirms("Close all runs",
+        "Some runs have unsaved data. Are you sure you want to close all runs?")) {
+      tabState.reset()
+      refreshInterface()
+    }
   }
 
   object RunListToolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(saveButton)
       add(loadButton)
-      add(clearAllButton)
+      add(closeAllButton)
     }
   }
 
