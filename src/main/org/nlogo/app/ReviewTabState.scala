@@ -25,9 +25,11 @@ class ReviewTabState(
   def userWarnedForMemory_=(b: Boolean) { _userWarnedForMemory = b }
 
   def reset() {
+    val lastIndex = _runs.size - 1
     _runs = Seq[Run]()
     _currentRun = None
     _userWarnedForMemory = false
+    fireIntervalRemoved(this, 0, lastIndex)
   }
 
   private def avoidDuplicate(name: String) =

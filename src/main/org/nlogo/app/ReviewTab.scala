@@ -399,6 +399,13 @@ class ReviewTab(
     }
   }
 
+  object ClearAllAction extends AbstractAction("Clear all") {
+    def actionPerformed(e: java.awt.event.ActionEvent) {
+      tabState.reset()
+      refreshInterface()
+    }
+  }
+
   object RunList extends JList(tabState) {
     setBorder(BorderFactory.createLoweredBevelBorder())
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -420,13 +427,14 @@ class ReviewTab(
   }
 
   object SaveButton extends JButton(SaveAction)
-
   object LoadButton extends JButton(LoadAction)
+  object ClearAllButton extends JButton(ClearAllAction)
 
   object RunListToolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(SaveButton)
       add(LoadButton)
+      add(ClearAllButton)
     }
   }
 
