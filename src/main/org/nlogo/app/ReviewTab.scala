@@ -136,7 +136,7 @@ class ReviewTab(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
     val newInterface = PotemkinInterface(viewArea, image, widgets)
-    SaveButton.setEnabled(true)
+    saveButton.setEnabled(true)
     val name = Option(ws.getModelFileName)
       .map(nameFromPath)
       .getOrElse("Untitled")
@@ -304,41 +304,39 @@ class ReviewTab(
     setSelected(tabState.recordingEnabled)
   }
 
-  object SaveAction extends AbstractAction("Save") {
-    def actionPerformed(e: java.awt.event.ActionEvent) {
-      for {
-        run <- tabState.currentRun
-        data <- run.data
-      } {
-        def thingsToSave = {
-          // Area is not serializable so we save a shape instead:
-          val viewAreaShape = java.awt.geom.AffineTransform
-            .getTranslateInstance(0, 0)
-            .createTransformedShape(run.potemkinInterface.viewArea)
-          val image = {
-            val byteStream = new java.io.ByteArrayOutputStream
-            ImageIO.write(run.potemkinInterface.image, "PNG", byteStream)
-            byteStream.close()
-            byteStream.toByteArray
-          }
-          Seq(
-            run.modelString,
-            viewAreaShape,
-            image,
-            data.rawDiffs,
-            NotesArea.getText)
+  val saveButton = actionButton("Save") { () =>
+    for {
+      run <- tabState.currentRun
+      data <- run.data
+    } {
+      def thingsToSave = {
+        // Area is not serializable so we save a shape instead:
+        val viewAreaShape = java.awt.geom.AffineTransform
+          .getTranslateInstance(0, 0)
+          .createTransformedShape(run.potemkinInterface.viewArea)
+        val image = {
+          val byteStream = new java.io.ByteArrayOutputStream
+          ImageIO.write(run.potemkinInterface.image, "PNG", byteStream)
+          byteStream.close()
+          byteStream.toByteArray
         }
-        ignoring(classOf[UserCancelException]) {
-          val path = org.nlogo.swing.FileDialog.show(
-            ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
-            run.name + ".nlrun")
-          val out = new java.io.ObjectOutputStream(
-            new java.io.FileOutputStream(path))
-          thingsToSave.foreach(out.writeObject)
-          out.close()
-          run.dirty = false
-          refreshInterface()
-        }
+        Seq(
+          run.modelString,
+          viewAreaShape,
+          image,
+          data.rawDiffs,
+          NotesArea.getText)
+      }
+      ignoring(classOf[UserCancelException]) {
+        val path = org.nlogo.swing.FileDialog.show(
+          ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
+          run.name + ".nlrun")
+        val out = new java.io.ObjectOutputStream(
+          new java.io.FileOutputStream(path))
+        thingsToSave.foreach(out.writeObject)
+        out.close()
+        run.dirty = false
+        refreshInterface()
       }
     }
   }
@@ -348,12 +346,12 @@ class ReviewTab(
       case None => {
         NotesArea.setEnabled(false)
         NotesArea.setText("")
-        SaveButton.setEnabled(false)
+        saveButton.setEnabled(false)
       }
       case Some(run) => {
         NotesArea.setText(run.generalNotes)
         NotesArea.setEnabled(true)
-        SaveButton.setEnabled(run.dirty)
+        saveButton.setEnabled(run.dirty)
       }
     }
     tabState.currentRunData match {
@@ -375,34 +373,25 @@ class ReviewTab(
     InterfacePanel.repaint()
   }
 
-  object LoadAction extends AbstractAction("Load") {
-    def actionPerformed(e: java.awt.event.ActionEvent) {
-      ignoring(classOf[UserCancelException]) {
-        val path = org.nlogo.swing.FileDialog.show(
-          ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
-        val in = new java.io.ObjectInputStream(
-          new java.io.FileInputStream(path))
-        val Seq(
-          modelString: String,
-          viewShape: java.awt.Shape,
-          imageBytes: Array[Byte],
-          rawDiffs: Seq[Array[Byte]],
-          notes: String) = Stream.continually(in.readObject()).take(5)
-        in.close()
+  val loadButton = actionButton("Load") { () =>
+    ignoring(classOf[UserCancelException]) {
+      val path = org.nlogo.swing.FileDialog.show(
+        ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
+      val in = new java.io.ObjectInputStream(
+        new java.io.FileInputStream(path))
+      val Seq(
+        modelString: String,
+        viewShape: java.awt.Shape,
+        imageBytes: Array[Byte],
+        rawDiffs: Seq[Array[Byte]],
+        notes: String) = Stream.continually(in.readObject()).take(5)
+      in.close()
 
-        val newInterface = PotemkinInterface(
-          new java.awt.geom.Area(viewShape),
-          ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
-        val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface)
-        RunList.setSelectedValue(run, true)
-      }
-    }
-  }
-
-  object ClearAllAction extends AbstractAction("Clear all") {
-    def actionPerformed(e: java.awt.event.ActionEvent) {
-      tabState.reset()
-      refreshInterface()
+      val newInterface = PotemkinInterface(
+        new java.awt.geom.Area(viewShape),
+        ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
+      val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface)
+      RunList.setSelectedValue(run, true)
     }
   }
 
@@ -426,15 +415,16 @@ class ReviewTab(
       })
   }
 
-  object SaveButton extends JButton(SaveAction)
-  object LoadButton extends JButton(LoadAction)
-  object ClearAllButton extends JButton(ClearAllAction)
+  val clearAllButton = actionButton("Clear all") { () =>
+    tabState.reset()
+    refreshInterface()
+  }
 
   object RunListToolbar extends org.nlogo.swing.ToolBar {
     override def addControls() {
-      add(SaveButton)
-      add(LoadButton)
-      add(ClearAllButton)
+      add(saveButton)
+      add(loadButton)
+      add(clearAllButton)
     }
   }
 
@@ -455,37 +445,26 @@ class ReviewTab(
     }
   }
 
-  class ScrubAction(name: String, fn: Int => Int)
+  class Action(name: String, fn: () => Unit)
     extends AbstractAction(name) {
-    def actionPerformed(e: java.awt.event.ActionEvent) {
-      Scrubber.setValue(fn(Scrubber.getValue))
-    }
+    def actionPerformed(e: java.awt.event.ActionEvent) { fn() }
   }
-
-  object AllTheWayBackAction
-    extends ScrubAction("|<-", _ => 0)
-  object AllTheWayForwardAction
-    extends ScrubAction("->|", _ => Scrubber.getMaximum)
-  object BackAction
-    extends ScrubAction("<-", _ - 1)
-  object ForwardAction
-    extends ScrubAction("->", _ + 1)
-  object BigStepBackAction
-    extends ScrubAction("<<-", _ - 5)
-  object BigStepForwardAction
-    extends ScrubAction("->>", _ + 5)
+  def actionButton(name: String)(fn: () => Unit) =
+    new JButton(new Action(name, fn))
+  def scrubActionButton(name: String)(fn: Int => Int) =
+    new JButton(new Action(name, { () => Scrubber.setValue(fn(Scrubber.getValue)) }))
 
   object ScrubberButtonsPanel extends JPanel {
     setLayout(
       new org.nlogo.awt.RowLayout(
         1, java.awt.Component.LEFT_ALIGNMENT,
         java.awt.Component.CENTER_ALIGNMENT))
-    add(new JButton(AllTheWayBackAction))
-    add(new JButton(BigStepBackAction))
-    add(new JButton(BackAction))
-    add(new JButton(ForwardAction))
-    add(new JButton(BigStepForwardAction))
-    add(new JButton(AllTheWayForwardAction))
+    add(scrubActionButton("|<-") { _ => 0 })
+    add(scrubActionButton("<<-") { _ - 5 })
+    add(scrubActionButton("<-") { _ - 1 })
+    add(scrubActionButton("->") { _ + 1 })
+    add(scrubActionButton("->>") { _ + 5 })
+    add(scrubActionButton("->|") { _ => Scrubber.getMaximum })
   }
 
   object NotesArea extends JTextArea("") {
