@@ -3,10 +3,8 @@ package org.nlogo.app
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 import java.awt.image.BufferedImage
-
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
-
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.awt.EventQueue.invokeLater
@@ -15,7 +13,6 @@ import org.nlogo.mirror.Mirrorables
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-
 import javax.imageio.ImageIO
 import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
@@ -81,6 +78,7 @@ class ReviewTab(
               updateMonitors()
               // switch from job thread to event thread
               ws.waitFor(() => grab())
+              refreshInterface()
             }
           }
         }
@@ -136,16 +134,15 @@ class ReviewTab(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
     val newInterface = PotemkinInterface(viewArea, image, widgets)
-    saveButton.setEnabled(true)
     val name = Option(ws.getModelFileName)
       .map(nameFromPath)
       .getOrElse("Untitled")
     val run = tabState.newRun(name, saveModel(), newInterface)
     RunList.setSelectedValue(run, true)
+    refreshInterface()
   }
 
   def grab() {
-
     for (run <- tabState.currentRun) {
       try {
         val widgetValues = run.potemkinInterface.fakeWidgets
@@ -164,15 +161,8 @@ class ReviewTab(
           stopRecording()
         case e => throw e // rethrow anything else
       }
-      NotesArea.setEnabled(true)
-      MemoryMeter.update()
-      for (data <- run.data) {
-        Scrubber.setEnabled(true)
-        Scrubber.updateBorder()
-        Scrubber.setMaximum(data.lastFrameIndex)
-      }
+      refreshInterface()
     }
-    InterfacePanel.repaint()
   }
 
   def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
@@ -520,6 +510,7 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(RunListToolbar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
+    refreshInterface()
   }
 
   override def handle(e: window.Events.BeforeLoadEvent) {
