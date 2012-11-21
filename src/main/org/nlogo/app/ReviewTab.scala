@@ -497,7 +497,7 @@ class ReviewTab(
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
     add(RunListToolbar, BorderLayout.NORTH)
-    add(RunList, BorderLayout.CENTER)
+    add(new JScrollPane(RunList), BorderLayout.CENTER)
     add(MemoryMeter, BorderLayout.SOUTH)
 
   }
