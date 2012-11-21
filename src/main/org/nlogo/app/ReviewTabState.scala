@@ -3,11 +3,6 @@ package org.nlogo.app
 import org.nlogo.mirror
 import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
 
-abstract sealed class RecordingStatus
-case object Active extends RecordingStatus
-case object Paused extends RecordingStatus
-case object Over extends RecordingStatus
-
 class ReviewTabState(
   private var _runs: Seq[Run] = Seq[Run](),
   private var _currentRun: Option[Run] = None,
@@ -35,22 +30,27 @@ class ReviewTabState(
       .get
 
   def newRun(name: String, modelString: String, potemkineInterface: PotemkinInterface): Run = {
-    val recordingStatus = if (_recordingEnabled) Active else Paused
-    _runs :+= new Run(avoidDuplicate(name), modelString, potemkineInterface, recordingStatus)
-    _currentRun = _runs.lastOption
-    runs.last
+    val run = new Run(avoidDuplicate(name), modelString, potemkineInterface)
+    addRun(run)
   }
 
   def loadRun(name: String, modelString: String, rawDiffs: Seq[Array[Byte]], potemkineInterface: PotemkinInterface): Run = {
-    val run = new Run(avoidDuplicate(name), modelString, potemkineInterface, Over)
+    val run = new Run(avoidDuplicate(name), modelString, potemkineInterface)
     run.load(rawDiffs)
+    addRun(run)
+  }
+
+  private def addRun(run: Run) = {
     _runs :+= run
-    _recordingEnabled = false
-    _currentRun = _runs.lastOption
+    setCurrentRun(run)
     run
   }
 
   def setCurrentRun(run: Run) {
+    for {
+      previousRun <- _currentRun
+      if previousRun != run
+    } previousRun.stillRecording = false
     _currentRun = Some(run)
   }
 
@@ -62,13 +62,13 @@ class Run(
   var name: String,
   val modelString: String,
   val potemkinInterface: PotemkinInterface,
-  var recordingStatus: RecordingStatus,
-  _rawDiffs: Seq[Array[Byte]] = Seq(),
   var generalNotes: String = "",
   var annotations: Map[Int, String] = Map()) {
+  var stillRecording = true
 
   private var _dirty: Boolean = false
   def dirty = _dirty || data.map(_.dirty).getOrElse(false)
+  def dirty_=(value: Boolean) { _dirty = value }
 
   private var _data: Option[RunData] = None
   def data = _data
@@ -77,6 +77,7 @@ class Run(
 
   def load(rawDiffs: Seq[Array[Byte]]) {
     _data = Some(RunData.load(rawDiffs))
+    stillRecording = false
   }
   def append(mirrorables: Iterable[Mirrorable]) {
     if (_data.isEmpty)
@@ -144,6 +145,7 @@ class RunData private (private var _rawDiffs: Seq[Array[Byte]]) {
   }
 
   def currentTicks = ticksAt(_currentFrame)
+  def ticksAtLastFrame = ticksAt(_lastFrame)
   def ticksAt(frame: Mirroring.State): Option[Double] = {
     for {
       entry <- frame.get(mirror.AgentKey(Mirrorables.World, 0))

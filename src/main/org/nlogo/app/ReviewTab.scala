@@ -74,9 +74,14 @@ class ReviewTab(
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
               ws.waitFor(() => startNewRun())
-            updateMonitors()
-            // switch from job thread to event thread
-            ws.waitFor(() => grab())
+            for {
+              run <- tabState.currentRun
+              if run.stillRecording
+            } {
+              updateMonitors()
+              // switch from job thread to event thread
+              ws.waitFor(() => grab())
+            }
           }
         }
       }
@@ -332,6 +337,8 @@ class ReviewTab(
             new java.io.FileOutputStream(path))
           thingsToSave.foreach(out.writeObject)
           out.close()
+          run.dirty = false
+          refreshInterface()
         }
       }
     }
@@ -365,6 +372,7 @@ class ReviewTab(
     Scrubber.updateBorder()
     MemoryMeter.update()
     Scrubber.repaint()
+    RunList.repaint()
     InterfacePanel.repaint()
   }
 
