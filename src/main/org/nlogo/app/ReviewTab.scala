@@ -17,7 +17,7 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, BorderFactory, DefaultListModel, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
+import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, ListSelectionEvent, ListSelectionListener }
 
@@ -141,7 +141,6 @@ class ReviewTab(
       .map(nameFromPath)
       .getOrElse("Untitled")
     val run = tabState.newRun(name, saveModel(), newInterface)
-    runListModel.addElement(run)
     RunList.setSelectedValue(run, true)
   }
 
@@ -395,14 +394,12 @@ class ReviewTab(
           new java.awt.geom.Area(viewShape),
           ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
         val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface)
-        runListModel.addElement(run)
         RunList.setSelectedValue(run, true)
       }
     }
   }
 
-  val runListModel = new DefaultListModel()
-  object RunList extends JList(runListModel) {
+  object RunList extends JList(tabState) {
     setBorder(BorderFactory.createLoweredBevelBorder())
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
 

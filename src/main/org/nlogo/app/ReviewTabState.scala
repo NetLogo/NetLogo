@@ -2,12 +2,18 @@ package org.nlogo.app
 
 import org.nlogo.mirror
 import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
+import javax.swing.AbstractListModel
 
 class ReviewTabState(
   private var _runs: Seq[Run] = Seq[Run](),
   private var _currentRun: Option[Run] = None,
   private var _recordingEnabled: Boolean = false,
-  private var _userWarnedForMemory: Boolean = false) {
+  private var _userWarnedForMemory: Boolean = false)
+  extends AbstractListModel {
+
+  // ListModel methods:
+  override def getElementAt(index: Int): AnyRef = _runs(index)
+  override def getSize = _runs.size
 
   def runs = _runs
   def currentRun = _currentRun
@@ -43,6 +49,8 @@ class ReviewTabState(
   private def addRun(run: Run) = {
     _runs :+= run
     setCurrentRun(run)
+    val lastIndex = _runs.size - 1
+    fireIntervalAdded(this, lastIndex, lastIndex)
     run
   }
 
