@@ -17,6 +17,8 @@ import javax.imageio.ImageIO
 import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, ListSelectionEvent, ListSelectionListener }
+import javax.swing.event.DocumentListener
+import javax.swing.event.DocumentEvent
 
 case class PotemkinInterface(
   val viewArea: java.awt.geom.Area,
@@ -317,7 +319,7 @@ class ReviewTab(
           viewAreaShape,
           image,
           data.rawDiffs,
-          NotesArea.getText)
+          run.generalNotes)
       }
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
@@ -382,7 +384,7 @@ class ReviewTab(
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
-      val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface)
+      val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface, notes)
       RunList.setSelectedValue(run, true)
     }
   }
@@ -416,7 +418,7 @@ class ReviewTab(
     }
   }
 
-  val closeCurrentButton = actionButton("Close current") { () =>
+  val closeCurrentButton = actionButton("Close") { () =>
     for (run <- tabState.currentRun) {
       if (!run.dirty ||
         userConfirms("Close current run",
@@ -474,6 +476,24 @@ class ReviewTab(
   object NotesArea extends JTextArea("") {
     setLineWrap(true)
     setRows(3)
+    override def setText(text: String) {
+      for {
+        run <- tabState.currentRun
+        if getText != run.generalNotes
+      } super.setText(text)
+    }
+    object NotesListener extends DocumentListener {
+      private def updateNotesInRun() {
+        for (run <- tabState.currentRun) {
+          run.generalNotes = NotesArea.getText
+          saveButton.setEnabled(run.dirty)
+        }
+      }
+      def insertUpdate(e: DocumentEvent) { updateNotesInRun() }
+      def removeUpdate(e: DocumentEvent) { updateNotesInRun() }
+      def changedUpdate(e: DocumentEvent) { updateNotesInRun() }
+    }
+    getDocument.addDocumentListener(NotesListener)
   }
 
   object NotesPanel extends JPanel {

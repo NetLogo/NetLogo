@@ -50,8 +50,9 @@ class ReviewTabState(
     addRun(run)
   }
 
-  def loadRun(name: String, modelString: String, rawDiffs: Seq[Array[Byte]], potemkineInterface: PotemkinInterface): Run = {
-    val run = new Run(avoidDuplicate(name), modelString, potemkineInterface)
+  def loadRun(name: String, modelString: String, rawDiffs: Seq[Array[Byte]],
+    potemkineInterface: PotemkinInterface, generalNotes: String): Run = {
+    val run = new Run(avoidDuplicate(name), modelString, potemkineInterface, generalNotes)
     run.load(rawDiffs)
     addRun(run)
   }
@@ -88,8 +89,8 @@ class Run(
   var name: String,
   val modelString: String,
   val potemkinInterface: PotemkinInterface,
-  var generalNotes: String = "",
-  var annotations: Map[Int, String] = Map()) {
+  private var _generalNotes: String = "",
+  private var _annotations: Map[Int, String] = Map()) {
   var stillRecording = true
 
   private var _dirty: Boolean = false
@@ -101,6 +102,12 @@ class Run(
 
   private var _data: Option[RunData] = None
   def data = _data
+
+  def generalNotes = _generalNotes
+  def generalNotes_=(text: String) {
+    _generalNotes = text
+    dirty = true
+  }
 
   def sizeInBytes = _data.map(_.sizeInBytes).getOrElse(0L)
 
