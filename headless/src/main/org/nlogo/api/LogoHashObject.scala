@@ -37,11 +37,14 @@ class LogoHashObject(val sourceObject: AnyRef) {
       case d: java.lang.Double if d.doubleValue == 0.0 =>
         LogoHashObject.ZeroCode
 
-      // these next two cases are sneaky -- NetLogo considers dead turtles to be
+      // these next three cases are sneaky -- NetLogo considers dead turtles to be
       // equal to each other, and to nobody.  Dead turtles have an id of minus one,
-      // so that's what makes the next two cases work.  - ST 10/28/03*/
+      // so that's what makes these cases work.  - ST 10/28/03, 11/20/12
       case t: Turtle =>
         t.id.hashCode
+
+      case l: Link =>
+        l.id.hashCode
 
       case Nobody =>
         LogoHashObject.NobodyCode
