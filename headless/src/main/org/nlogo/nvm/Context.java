@@ -21,9 +21,8 @@ public final strictfp class Context {
   public boolean waiting = false; // are we waiting on a child job?
   private boolean inReporterProcedure = false;
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public scala.collection.immutable.List<LetBinding> letBindings =
-      (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+    scala.collection.immutable.List.empty();
 
   /**
    * It is necessary for each Context to have its own stopping flag

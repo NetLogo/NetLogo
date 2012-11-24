@@ -117,7 +117,7 @@ class ClientWorldTests extends FunSuite {
     expectResult(0)(buf.sortedTurtles.size)
   }
 
-  private def roundTripT(turtle: TurtleData) = {
+  def roundTripT(turtle: TurtleData) = {
     val bos = new ByteArrayOutputStream()
     val os = new DataOutputStream(bos)
     turtle.serialize(os)
@@ -125,7 +125,7 @@ class ClientWorldTests extends FunSuite {
       new ByteArrayInputStream(bos.toByteArray())))
   }
 
-  private def roundTripP(patch: PatchData) = {
+  def roundTripP(patch: PatchData) = {
     val bos = new ByteArrayOutputStream()
     val os = new DataOutputStream(bos)
     patch.serialize(os)

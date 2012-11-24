@@ -724,7 +724,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
          L1
           RETURN
 
-procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
+reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
 [0]_asm_procedurefindpartner_setprocedurevariable_0 "" Object => void
       _randomfloat double => double
         _sum LogoList => double

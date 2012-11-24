@@ -7,9 +7,6 @@ import org.nlogo.api.SourceOwner;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Token;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static scala.collection.JavaConversions.asJavaIterable;
 
 public strictfp class Procedure {
@@ -26,7 +23,6 @@ public strictfp class Procedure {
   public final String displayName;
   public int pos;
   public int endPos;
-  public List<String> args = new ArrayList<String>();
   public String usableBy = "OTPL";
   public int localsCount = 0;
   public boolean topLevel = false;
@@ -34,6 +30,9 @@ public strictfp class Procedure {
   public final Procedure parent;
   public final scala.collection.mutable.ArrayBuffer<Procedure> children =
       new scala.collection.mutable.ArrayBuffer<Procedure>();
+
+  public scala.collection.immutable.Vector<String> args =
+    scala.collection.immutable.Vector$.MODULE$.empty();
 
   public boolean isTask() {
     return parent != null;
@@ -46,7 +45,6 @@ public strictfp class Procedure {
   public final scala.collection.mutable.ArrayBuffer<Let> taskFormals =
       new scala.collection.mutable.ArrayBuffer<Let>();
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public Let getTaskFormal(int n, Token token) {
     while (taskFormals.size() < n) {
       taskFormals.$plus$eq(
@@ -55,7 +53,9 @@ public strictfp class Procedure {
     return taskFormals.apply(n - 1);
   }
 
-  public final List<Let> lets = new ArrayList<Let>();
+  public scala.collection.immutable.Vector<Let> lets =
+    scala.collection.immutable.Vector$.MODULE$.empty();
+
   // each Int is the position of that variable in the procedure's args list
   public final scala.collection.mutable.HashMap<Let, Integer> alteredLets =
       new scala.collection.mutable.HashMap<Let, Integer>();
@@ -106,13 +106,7 @@ public strictfp class Procedure {
     buf.append("[");
     buf.append(name);
     buf.append(":");
-    boolean first = true ;
-    for(String a : args) {
-      buf.append(first ? "[" : " ");
-      buf.append(a);
-      first = false;
-    }
-    buf.append("]");
+    buf.append(args.mkString("[", " ", "]"));
     buf.append(":");
     buf.append(usableBy);
     buf.append("]");
@@ -125,21 +119,16 @@ public strictfp class Procedure {
     if (indent) {
       buf.append("   ");
     }
+    if(tpe == Type.REPORTER) {
+      buf.append("reporter ");
+    }
     buf.append(displayName);
     if (parent != null) {
       buf.append(":" + parent.displayName);
     }
     buf.append(":");
-    boolean first = true ;
-    buf.append("[");
-    for(String a : args) {
-      if(!first) {
-        buf.append(" ");
-      }
-      buf.append(a);
-      first = false;
-    }
-    buf.append("]{" + usableBy + "}:\n");
+    buf.append(args.mkString("[", " ", "]"));
+    buf.append("{" + usableBy + "}:\n");
     for (int i = 0; i < code.length; i++) {
       if (indent) {
         buf.append("   ");
