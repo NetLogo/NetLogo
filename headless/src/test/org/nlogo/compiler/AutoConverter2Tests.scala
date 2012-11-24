@@ -14,7 +14,7 @@ class AutoConverter2Tests extends FunSuite {
       breeds = collection.immutable.ListMap("FROGS" -> Breed("FROGS", "FROG"))))
   def tester(version: String, before: String, after: String, subprogram: Boolean = true) {
     val converter = new AutoConverter2(workspace, false)(Compiler.Tokenizer2D)
-    expect(after)(converter.convert(before, subprogram, false, "NetLogo " + version))
+    expectResult(after)(converter.convert(before, subprogram, false, "NetLogo " + version))
   }
   test("valuesFrom0") {
     tester("3.1", "print values-from patches [5]", "print [5] of patches") }

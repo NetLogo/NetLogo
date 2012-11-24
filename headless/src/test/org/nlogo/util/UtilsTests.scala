@@ -27,18 +27,18 @@ class UtilsTests2 extends PropSpec with PropertyChecks {
 
   property("unescape is inverse of escape") {
     forAll((ns: String) =>
-      expect(ns)(
+      expectResult(ns)(
         Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns))))}
 
   property("escape is inverse of unescape") {
     forAll((ns: String) =>
-      expect(ns)(
+      expectResult(ns)(
         Utils.unescapeSpacesInURL(Utils.escapeSpacesInURL(ns))))}
 
   property("reader2String is inverse of StringReader") {
     forAll(arbitrary[String], Gen.chooseNum(1, 4096))(
       (ns, bufferSize) =>
-        expect(ns)(
+        expectResult(ns)(
           Utils.reader2String(new java.io.StringReader(ns), bufferSize)))}
 
 }

@@ -19,7 +19,7 @@ class StructureParserTests extends FunSuite {
     val results = compile("", Program.empty())
     assert(results.procedures.isEmpty)
     assert(results.tokens.isEmpty)
-    expect("globals []\n" +
+    expectResult("globals []\n" +
       "interfaceGlobals []\n" +
       "turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]\n" +
       "patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]\n" +
@@ -37,13 +37,13 @@ class StructureParserTests extends FunSuite {
   }
   test("commandProcedure") {
     val results = compile("to go fd 1 end", Program.empty())
-    expect(1)(results.procedures.size)
-    expect("procedure GO:[]{OTPL}:\n")(results.procedures("GO").dump)
+    expectResult(1)(results.procedures.size)
+    expectResult("procedure GO:[]{OTPL}:\n")(results.procedures("GO").dump)
   }
   test("declarations1") {
     val results = compile("globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]", Program.empty())
     assert(results.procedures.isEmpty)
-    expect("globals [G1 G2]\n" +
+    expectResult("globals [G1 G2]\n" +
       "interfaceGlobals []\n" +
       "turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2]\n" +
       "patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR P1 P2]\n" +
@@ -54,7 +54,7 @@ class StructureParserTests extends FunSuite {
   test("declarations2") {
     val results = compile("breed [b1s b1] b1s-own [b11 b12] breed [b2s b2] b2s-own [b21 b22]", Program.empty())
     assert(results.procedures.isEmpty)
-    expect("globals []\n" +
+    expectResult("globals []\n" +
       "interfaceGlobals []\n" +
       "turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE]\n" +
       "patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]\n" +

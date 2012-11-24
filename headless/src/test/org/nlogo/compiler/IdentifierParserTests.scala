@@ -17,7 +17,7 @@ class IdentifierParserTests extends FunSuite {
       program, nvm.CompilerInterface.NoProcedures,
       new DummyExtensionManager)
       .parse(false)
-    expect(1)(results.procedures.size)
+    expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
       results.procedures, false)
@@ -26,14 +26,14 @@ class IdentifierParserTests extends FunSuite {
   }
 
   test("empty") {
-    expect("")(compile("").mkString)
+    expectResult("")(compile("").mkString)
   }
   test("interface global") {
-    expect("Token(X,REPORTER,_observervariable:0)")(
+    expectResult("Token(X,REPORTER,_observervariable:0)")(
       compile("print x").drop(1).mkString)
   }
   test("let") {
-    expect("Token(let,COMMAND,_let)" + "Token(Y,REPORTER,_letvariable(Y))" + "Token(5,CONSTANT,5.0)")(
+    expectResult("Token(let,COMMAND,_let)" + "Token(Y,REPORTER,_letvariable(Y))" + "Token(5,CONSTANT,5.0)")(
       compile("let y 5").mkString)
   }
 

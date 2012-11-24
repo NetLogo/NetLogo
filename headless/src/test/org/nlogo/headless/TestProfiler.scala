@@ -165,9 +165,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // extensions, so we put it here because it's a SlowTest - ST 1/19/12
   test("isReporter on extension prims") {
     workspace.initForTesting(5, "extensions [profiler]")
-    expect(false) { workspace.isReporter("profiler:start") }
-    expect(true) { workspace.isReporter("profiler:report") }
-    expect(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
+    expectResult(false) { workspace.isReporter("profiler:start") }
+    expectResult(true) { workspace.isReporter("profiler:report") }
+    expectResult(false) { workspace.isReporter("profiler:ghjfgjhkfhgjk") }
   }
 
 }

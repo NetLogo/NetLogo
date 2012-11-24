@@ -18,7 +18,7 @@ class TestAllSyntaxes extends FunSuite {
   def entry(name: String) =
     shorten(name) + " " + instruction(name).syntax.dump
   def doTest(classNames: Set[String], expected: String) {
-    expect(expected)(
+    expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
   val c = Compiler.TokenMapper2D.allCommandClassNames
