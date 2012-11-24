@@ -17,7 +17,7 @@ class LoggerTests extends FunSuite {
     logger.modelOpened("models/Sample Models/Biology/Ants.nlogo")
     Logger.logSpeedSlider(20)
     logger.close()
-    expect(1)(logger.filenames.size)
+    expectResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n" )
     val timestamp = log.substring(log.indexOf("timestamp=\"") + 11, log.indexOf("\" level"))
@@ -29,13 +29,13 @@ class LoggerTests extends FunSuite {
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.SPEED\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"speed\">\n    " +
       "<value>20.0</value>\n  </event>\n</eventSet>\n"
-    expect(expected)(log)
+    expectResult(expected)(log)
   }
   test("tick counter") {
     logger.modelOpened("models/Sample Models/Biology/Ants.nlogo")
     logger.tickCounterChanged(50)
     logger.close()
-    expect(1)(logger.filenames.size)
+    expectResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
@@ -47,13 +47,13 @@ class LoggerTests extends FunSuite {
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.GLOBALS\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"ticks\">\n    " +
       "<name>ticks</name>\n    <value>50.0</value>\n  </event>\n</eventSet>\n"
-    expect(expected)(log)
+    expectResult(expected)(log)
   }
   test("code tab error") {
     logger.modelOpened("models/Sample Models/Biology/Ants.nlogo")
     logger.codeTabCompiled("foo", new CompilerException("error!!!", 99, 999, "blargh"))
     logger.close()
-    expect(1)(logger.filenames.size)
+    expectResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
@@ -65,13 +65,13 @@ class LoggerTests extends FunSuite {
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>foo</code>\n    <errorMessage startPos=\"99\" endPos=\"999\">error!!!</errorMessage>\n  </event>\n</eventSet>\n"
-    expect(expected)(log)
+    expectResult(expected)(log)
   }
   test("code tab no error") {
     logger.modelOpened("models/Sample Models/Biology/Ants.nlogo")
     logger.codeTabCompiled("bar", null)
     logger.close()
-    expect(1)(logger.filenames.size)
+    expectResult(1)(logger.filenames.size)
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n")
     val timestamp = log.substring(log.indexOf("timestamp=\"" ) + 11, log.indexOf( "\" level"))
@@ -83,6 +83,6 @@ class LoggerTests extends FunSuite {
       org.nlogo.api.Version.version + "\">\n  <event logger=\"org.nlogo.log.Logger.CODE\" " +
       "timestamp=\""+ timestamp + "\" level=\"INFO\" type=\"compiled\">\n    " +
       "<code>bar</code>\n    <errorMessage startPos=\"0\" endPos=\"0\">success</errorMessage>\n  </event>\n</eventSet>\n"
-    expect(expected)(log)
+    expectResult(expected)(log)
   }
 }
