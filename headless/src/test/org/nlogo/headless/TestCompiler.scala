@@ -7,17 +7,12 @@ import org.nlogo.api.{ CompilerException, Version }
 
 class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
-  // disable the whole suite in 3D
-  override def testNames =
-    if(Version.is3D) Set()
-    else super.testNames
-
   var workspace: HeadlessWorkspace = _
   override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
   override def afterEach() { workspace.dispose() }
 
   def declare(source:String) {
-    workspace.initForTesting(-5,5,-5,5,source)
+    workspace.initForTesting(5, source)
   }
   def declareBad(source:String,expectedError:String) {
     val exception = intercept[CompilerException] {
@@ -140,7 +135,7 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
                "You already defined WEIGHT as a EDGES variable")
   }
   test("BreedOwnsNoConflict") {
-    workspace.initForTesting(-5,5,-5,5,
+    workspace.initForTesting(5,
                              "undirected-link-breed [edges edge]\n" +
                              "breed [nodes node]\n" +
                              "breed [foos foo]\n" +
