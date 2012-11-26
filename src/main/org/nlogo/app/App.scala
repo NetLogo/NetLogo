@@ -139,10 +139,6 @@ object App{
       classOf[ReviewTab], "org.nlogo.app.ReviewTab",
       Array[Parameter](
         new ComponentParameter(),
-        // loadModel
-        new ConstantParameter(
-          (s: String) => app.fileMenu.openFromSource(
-            s, null, "Loading...", api.ModelType.Library)),
         // saveModel
         new ConstantParameter(
           () => new ModelSaver(pico.getComponent(classOf[App])).save)))

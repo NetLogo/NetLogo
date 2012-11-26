@@ -19,6 +19,9 @@ import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.event.DocumentListener
 import javax.swing.event.DocumentEvent
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
+import java.io.IOException
 
 case class PotemkinInterface(
   val viewArea: java.awt.geom.Area,
@@ -31,7 +34,6 @@ case class FakeWidget(
 
 class ReviewTab(
   ws: window.GUIWorkspace,
-  loadModel: String => Unit,
   saveModel: () => String)
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
@@ -367,10 +369,24 @@ class ReviewTab(
     InterfacePanel.repaint()
   }
 
-  val loadButton = actionButton("Load") { () =>
-    ignoring(classOf[UserCancelException]) {
-      val path = org.nlogo.swing.FileDialog.show(
-        ReviewTab.this, "Load Run", java.awt.FileDialog.LOAD, null)
+  def chooseFiles: Seq[String] = {
+    val fc = new JFileChooser()
+    fc.setDialogTitle("Open NetLogo Model Run(s)")
+    fc.setFileFilter(new FileNameExtensionFilter(
+      "NetLogo Model Runs (*.nlrun)", "nlrun"))
+    fc.setMultiSelectionEnabled(true)
+    if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+      fc.getSelectedFiles.map(_.getPath())
+    else
+      Seq()
+  }
+
+  /**
+   * Loads a run from `path` and returns either the loaded run
+   * in case of success or the path in case of failure
+   */
+  def loadRun(path: String): Either[String, Run] =
+    try {
       val in = new java.io.ObjectInputStream(
         new java.io.FileInputStream(path))
       val Seq(
@@ -380,12 +396,31 @@ class ReviewTab(
         rawDiffs: Seq[Array[Byte]],
         notes: String) = Stream.continually(in.readObject()).take(5)
       in.close()
-
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
       val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface, notes)
+      Right(run)
+    } catch {
+      case ex: Exception => Left(path)
+    }
+
+  val loadButton = actionButton("Load") { () =>
+    val results = chooseFiles.map(loadRun)
+    val loadedRuns = results.flatMap(_.right.toOption)
+    // select the last loaded run if we have one:
+    loadedRuns.lastOption.foreach { run =>
       RunList.setSelectedValue(run, true)
+    }
+    val errors = results.flatMap(_.left.toOption)
+    if (errors.nonEmpty) {
+      val (notStr, fileStr) =
+        if (errors.size > 1) ("they are not", "files")
+        else ("it is not a", "file")
+      val msg = "Something went wrong while trying to load the following " +
+        fileStr + ":\n\n" + errors.mkString("\n") + "\n\n" +
+        "Maybe " + notStr + " proper NetLogo Model Run " + fileStr + "?"
+      JOptionPane.showMessageDialog(this, msg, "NetLogo", JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -400,7 +435,11 @@ class ReviewTab(
             val run = RunList.getSelectedValue.asInstanceOf[Run]
             tabState.setCurrentRun(run)
             if (run.modelString != saveModel()) {
-              loadModel(run.modelString)
+              ignoring(classOf[UserCancelException]) {
+                App.app.fileMenu.offerSave()
+              }
+              org.nlogo.window.ModelLoader.load(ReviewTab.this,
+                null, api.ModelType.Library, run.modelString)
               App.app.tabs.setSelectedComponent(ReviewTab.this)
             }
             refreshInterface()
