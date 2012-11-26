@@ -3,25 +3,25 @@ package org.nlogo.app
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 import java.awt.image.BufferedImage
+
+import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
+
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.mirror
 import org.nlogo.mirror.Mirrorables
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
+import org.nlogo.window.{ InvalidVersionException, WidgetWrapperInterface }
+
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
+import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
-import javax.swing.event.{ ChangeEvent, ChangeListener, ListSelectionEvent, ListSelectionListener }
-import javax.swing.event.DocumentListener
-import javax.swing.event.DocumentEvent
-import javax.swing.JFileChooser
+import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import java.io.IOException
 
 case class PotemkinInterface(
   val viewArea: java.awt.geom.Area,

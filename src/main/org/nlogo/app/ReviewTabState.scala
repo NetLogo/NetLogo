@@ -1,7 +1,8 @@
 package org.nlogo.app
 
 import org.nlogo.mirror
-import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
+import org.nlogo.mirror.{Mirrorable, Mirrorables, Mirroring, Serializer}
+
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
