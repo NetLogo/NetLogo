@@ -39,7 +39,9 @@ mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
-sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
+sourceGenerators in Compile <+= EventsGenerator.task
+
+sourceGenerators in Compile <+= JFlexRunner.task
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
