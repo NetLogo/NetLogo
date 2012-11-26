@@ -327,6 +327,10 @@ class ReviewTab(
         val path = org.nlogo.swing.FileDialog.show(
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
           run.name + ".nlrun")
+        if (new java.io.File(path).exists &&
+          !userConfirms("Save Model Run", "The file " + path +
+            " already exists. Do you want to overwrite it?"))
+          throw new UserCancelException
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
         thingsToSave.foreach(out.writeObject)
