@@ -234,7 +234,7 @@ public strictfp class MonitorWidget
   public scala.Option<org.nlogo.nvm.Reporter> reporter() {
     org.nlogo.nvm.Procedure p = procedure();
     return scala.Option.apply(
-      p == null ? null : p.code[0].args[0]);
+      p == null ? null : p.code()[0].args[0]);
   }
 
   public void wrapSource(String innerSource) {
