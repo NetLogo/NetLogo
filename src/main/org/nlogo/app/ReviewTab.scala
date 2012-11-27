@@ -18,7 +18,7 @@ import org.nlogo.window
 import org.nlogo.window.{ InvalidVersionException, WidgetWrapperInterface }
 
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, BorderFactory, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
+import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -300,7 +300,7 @@ class ReviewTab(
     setSelected(tabState.recordingEnabled)
   }
 
-  val saveButton = actionButton("Save") { () =>
+  val saveButton = actionButton("Save", "save") { () =>
     for {
       run <- tabState.currentRun
       data <- run.data
@@ -346,12 +346,16 @@ class ReviewTab(
       case None => {
         NotesArea.setEnabled(false)
         NotesArea.setText("")
-        saveButton.setEnabled(false)
+        (saveButton +: closeCurrentButton +:
+          closeAllButton +: scrubButtons)
+          .foreach(_.setEnabled(false))
       }
       case Some(run) => {
         NotesArea.setText(run.generalNotes)
         NotesArea.setEnabled(true)
         saveButton.setEnabled(run.dirty)
+        (closeCurrentButton +: closeAllButton +: scrubButtons)
+          .foreach(_.setEnabled(true))
       }
     }
     tabState.currentRunData match {
@@ -410,7 +414,7 @@ class ReviewTab(
       case ex: Exception => Left(path)
     }
 
-  val loadButton = actionButton("Load") { () =>
+  val loadButton = actionButton("Load", "open") { () =>
     val results = chooseFiles.map(loadRun)
     val loadedRuns = results.flatMap(_.right.toOption)
     // select the last loaded run if we have one:
@@ -457,7 +461,7 @@ class ReviewTab(
       })
   }
 
-  val closeAllButton = actionButton("Close all") { () =>
+  val closeAllButton = actionButton("Close all", "close-all") { () =>
     if (!tabState.dirty ||
       userConfirms("Close all runs",
         "Some runs have unsaved data. Are you sure you want to close all runs?")) {
@@ -466,7 +470,7 @@ class ReviewTab(
     }
   }
 
-  val closeCurrentButton = actionButton("Close") { () =>
+  val closeCurrentButton = actionButton("Close", "close") { () =>
     for (run <- tabState.currentRun) {
       if (!run.dirty ||
         userConfirms("Close current run",
@@ -499,26 +503,39 @@ class ReviewTab(
     }
   }
 
-  class Action(name: String, fn: () => Unit)
+  class ReviewAction(name: String, icon: String, fn: () => Unit)
     extends AbstractAction(name) {
+    val image = new ImageIcon(classOf[ReviewTab].getResource("/images/" + icon + ".gif"))
+    putValue(javax.swing.Action.SMALL_ICON, image)
     def actionPerformed(e: java.awt.event.ActionEvent) { fn() }
   }
-  def actionButton(name: String)(fn: () => Unit) =
-    new JButton(new Action(name, fn))
-  def scrubActionButton(name: String)(fn: Int => Int) =
-    new JButton(new Action(name, { () => Scrubber.setValue(fn(Scrubber.getValue)) }))
+  def actionButton(name: String, icon: String)(fn: () => Unit) = {
+    new JButton(new ReviewAction(name, icon, fn))
+  }
+
+  val scrubButtons: Seq[JButton] = Seq[(String, String, Int => Int)](
+    ("all-back", "Go to beginning of run", { _ => 0 }),
+    ("big-back", "Go back five steps", { _ - 5 }),
+    ("back", "Go back one step", { _ - 1 }),
+    ("forward", "Go forward one step", { _ + 1 }),
+    ("big-forward", "Go forward five steps", { _ + 5 }),
+    ("all-forward", "Go to end of run", { _ => Scrubber.getMaximum }))
+    .map {
+      case (name, tip, newValue) =>
+        val setNewValue = { () => Scrubber.setValue(newValue(Scrubber.getValue)) }
+        val icon = name
+        val action = new ReviewAction(tip, icon, setNewValue)
+        val button = new JButton(action)
+        button.setToolTipText(tip)
+        button.setHideActionText(true)
+        button
+    }
 
   object ScrubberButtonsPanel extends JPanel {
-    setLayout(
-      new org.nlogo.awt.RowLayout(
-        1, java.awt.Component.LEFT_ALIGNMENT,
-        java.awt.Component.CENTER_ALIGNMENT))
-    add(scrubActionButton("|<-") { _ => 0 })
-    add(scrubActionButton("<<-") { _ - 5 })
-    add(scrubActionButton("<-") { _ - 1 })
-    add(scrubActionButton("->") { _ + 1 })
-    add(scrubActionButton("->>") { _ + 5 })
-    add(scrubActionButton("->|") { _ => Scrubber.getMaximum })
+    setLayout(new org.nlogo.awt.RowLayout(
+      1, java.awt.Component.LEFT_ALIGNMENT,
+      java.awt.Component.CENTER_ALIGNMENT))
+    scrubButtons.foreach(add)
   }
 
   object NotesArea extends JTextArea("") {
