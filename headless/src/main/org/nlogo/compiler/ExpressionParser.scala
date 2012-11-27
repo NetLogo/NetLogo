@@ -336,7 +336,7 @@ private class ExpressionParser(procedure: Procedure,
           // if next is an EOF, we complain and point to the open paren.
           cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
           // we also special case an out-of-place command, since this is what the command center does
-          // if you leave off a final paren (because of the implicit __done).
+          // if you leave off a final paren (because of the __done at the end).
           cAssert(token.tpe != TokenType.COMMAND, MISSING_CLOSE_PAREN, openParen)
           // if it's anything else other than ), we complain and point to the next token itself.
           cAssert(token.tpe == TokenType.CLOSE_PAREN, EXPECTED_CLOSE_PAREN_HERE, token)
