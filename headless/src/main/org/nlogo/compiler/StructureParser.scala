@@ -341,7 +341,7 @@ class StructureParser(
         tokenBuffer.next()
         haveName = true
         procedure = new Procedure(isReporterProcedure,
-          token, token.name.toUpperCase, displayName, null)
+          token.name.toUpperCase, token, displayName)
         checkName(procedure.name, token, null, null)
         cAssert(!newProcedures.isDefinedAt(procedure.name),
                 "Cannot redefine " + procedure.name, token)
