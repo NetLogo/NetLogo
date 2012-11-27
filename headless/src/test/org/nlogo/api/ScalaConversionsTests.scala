@@ -102,11 +102,11 @@ class ScalaConversionsTests extends FunSuite {
     }
   }
 
-  private def testConversion(vals: Tuple2[Any, Any]) {
+  def testConversion(vals: Tuple2[Any, Any]) {
     testConversion(vals._1, vals._2)
   }
 
-  private def testConversion(input: Any, expected: Any) {
+  def testConversion(input: Any, expected: Any) {
     val actual = input.toLogoObject
     expect(expected)(actual)
   }

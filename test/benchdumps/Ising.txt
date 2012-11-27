@@ -1605,7 +1605,7 @@ procedure RECOLOR:[]{-TP-}:
          L1
           RETURN
 
-procedure MAGNETIZATION:[]{OTPL}:
+reporter procedure MAGNETIZATION:[]{OTPL}:
 [0]_asm_proceduremagnetization_report_0 "report sum-of-spins / count patches" Object => void
       _div double,double => double
         _observervariable:SUM-OF-SPINS => Object
@@ -1692,9 +1692,8 @@ procedure MAGNETIZATION:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L10
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1

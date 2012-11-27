@@ -34,12 +34,12 @@ private class IdentifierParser(program: Program,
   }
   private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {
     def checkLet(let: Let): Option[Let] =
-      if(tokPos < let.startPos || tokPos > let.endPos || let.varName != ident)
+      if(tokPos < let.start || tokPos > let.end || let.name != ident)
         None
       else
         Some(let)
     import collection.JavaConverters._
-    p.lets.asScala.map(checkLet).find(_.isDefined).getOrElse(None)
+    p.lets.map(checkLet).find(_.isDefined).getOrElse(None)
   }
   private def processToken2(tok: Token, procedure: Procedure, tokPos: Int): Token = {
     val ident = tok.value.asInstanceOf[String]
@@ -74,14 +74,12 @@ private class IdentifierParser(program: Program,
             newProcedures.getOrElse(ident,
               return newToken(getAgentVariableReporter(ident, tok),
                               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
-        callproc.tpe match {
-          case Procedure.Type.COMMAND =>
-            newToken(new _call(callproc),
-                     ident, TokenType.COMMAND, tok.startPos, tok.endPos, tok.fileName)
-          case Procedure.Type.REPORTER =>
-            newToken(new _callreport(callproc),
-                     ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
-        }
+        val (tokenType, caller) =
+          if (callproc.isReporter)
+            (TokenType.REPORTER, new _callreport(callproc))
+          else
+            (TokenType.COMMAND, new _call(callproc))
+        newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
       }
     }
   }

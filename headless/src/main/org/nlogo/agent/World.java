@@ -1173,9 +1173,8 @@ public strictfp class World
 
   /// program
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
   scala.collection.immutable.Seq<String> noStrings =
-      (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+    scala.collection.immutable.List.empty();
 
   private Program _program = newProgram();
 

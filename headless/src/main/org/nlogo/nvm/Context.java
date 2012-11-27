@@ -21,9 +21,8 @@ public final strictfp class Context {
   public boolean waiting = false; // are we waiting on a child job?
   private boolean inReporterProcedure = false;
 
-  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public scala.collection.immutable.List<LetBinding> letBindings =
-      (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
+    scala.collection.immutable.List.empty();
 
   /**
    * It is necessary for each Context to have its own stopping flag
@@ -84,7 +83,7 @@ public final strictfp class Context {
     Command command = null;
     try {
       do {
-        command = activation.procedure().code[ip];
+        command = activation.procedure().code()[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.kind());
         }
@@ -112,7 +111,7 @@ public final strictfp class Context {
     Command command = null;
     try {
       do {
-        command = activation.procedure().code[ip];
+        command = activation.procedure().code()[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.kind());
         }
@@ -182,7 +181,7 @@ public final strictfp class Context {
     if (activation.procedure().isTask()) {
       throw NonLocalExit$.MODULE$;
     }
-    if (activation.procedure().topLevel) {
+    if (activation.procedure().topLevel()) {
       // In the BehaviorSpace case, there are two cases: stop
       // used inside a procedure called from the go commands,
       // and stop used in the go commands themselves.  (People
@@ -235,7 +234,7 @@ public final strictfp class Context {
     ip = 0;
     try {
       do {
-        command = activation.procedure().code[ip];
+        command = activation.procedure().code()[ip];
         if ((agentBit & command.agentBits) == 0) {
           command.throwAgentClassException(this, agent.kind());
         }
@@ -325,12 +324,12 @@ public final strictfp class Context {
         context = ((EngineException) ex).context();
       }
       if (instruction == null) {
-        instruction = activation.procedure().code[ip];
+        instruction = activation.procedure().code()[ip];
       }
       if (context == null) {
         context = this;
       }
-      activation.procedure().code[ip].workspace
+      activation.procedure().code()[ip].workspace
           .runtimeError(job.owner, context, instruction, ex);
     } catch (RuntimeException ex2) {
       // well we tried to report the original exception to the user,

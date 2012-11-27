@@ -14,7 +14,7 @@ import org.nlogo.prim._let
 // Properly the actual parsing logic ought to be separated from the parts that build
 // the actual data structures in the results. - ST 7/15/12
 
-private object StructureParser {
+object StructureParser {
 
   case class Results(
     program: Program,
@@ -64,7 +64,7 @@ private object StructureParser {
  * Calling parse() has no side effects, it just constructs a Results object.  Exception: the
  * ExtensionManager gets side effected (it loads and unloads extensions).
  */
-private class StructureParser(
+class StructureParser(
   originalTokens: Seq[Token],
   displayName: Option[String],
   oldProgram: Program,
@@ -340,10 +340,8 @@ private class StructureParser(
         cAssert(token.tpe == TokenType.IDENT, "You can't use " + token.name.toUpperCase + " to name a procedure", token)
         tokenBuffer.next()
         haveName = true
-        procedure = new Procedure(
-          if(isReporterProcedure) Procedure.Type.REPORTER
-          else Procedure.Type.COMMAND,
-          token, token.name.toUpperCase, displayName, null)
+        procedure = new Procedure(isReporterProcedure,
+          token.name.toUpperCase, token, displayName)
         checkName(procedure.name, token, null, null)
         cAssert(!newProcedures.isDefinedAt(procedure.name),
                 "Cannot redefine " + procedure.name, token)
@@ -353,7 +351,7 @@ private class StructureParser(
       else if(!haveArgList) {
         if(token.tpe == TokenType.OPEN_BRACKET) {
           import collection.JavaConverters._
-          procedure.args.addAll(parseVarList(procedure = procedure).asJava)
+          procedure.args ++= parseVarList(procedure = procedure)
           start = tokenBuffer.index
         }
         haveArgList = true
@@ -472,9 +470,8 @@ private class StructureParser(
         cAssert(!proc.args.contains(varName),
                 "There is already a local variable called " + varName +
                 " in the " + proc.name + " procedure", token)
-        val iter2 = proc.lets.iterator()
-        while(iter2.hasNext)
-          cAssert(varName != iter2.next().varName,
+        for(let <- proc.lets)
+          cAssert(varName != let.name,
                   "There is already a local variable called " + varName + " in the " +
                   proc.name + " procedure", token)
       }
@@ -514,7 +511,7 @@ private class StructureParser(
     def newLet(endPos: Int) {
       val result = Let(name, startPos, endPos)
       letToken.value.asInstanceOf[_let].let = result
-      procedure.lets.add(result)
+      procedure.lets :+= result
     }
     while(true) {
       if(!tokenBuffer.hasNext)
