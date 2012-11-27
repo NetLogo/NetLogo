@@ -335,6 +335,7 @@ class ReviewTab(
           new java.io.FileOutputStream(path))
         thingsToSave.foreach(out.writeObject)
         out.close()
+        run.name = nameFromPath(path)
         tabState.undirty(run)
         refreshInterface()
       }
