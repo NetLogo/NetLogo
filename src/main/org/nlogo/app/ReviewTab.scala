@@ -400,6 +400,7 @@ class ReviewTab(
         rawDiffs: Seq[Array[Byte]],
         notes: String) = Stream.continually(in.readObject()).take(5)
       in.close()
+      loadModelIfNeeded(modelString)
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
@@ -428,24 +429,28 @@ class ReviewTab(
     }
   }
 
+  def loadModelIfNeeded(modelString: String) {
+    val currentModelString = saveModel()
+    if (modelString != currentModelString) {
+      ignoring(classOf[UserCancelException]) {
+        App.app.fileMenu.offerSave()
+      }
+      org.nlogo.window.ModelLoader.load(ReviewTab.this,
+        null, api.ModelType.Library, modelString)
+      App.app.tabs.setSelectedComponent(ReviewTab.this)
+    }
+  }
+
   object RunList extends JList(tabState) {
     setBorder(BorderFactory.createLoweredBevelBorder())
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-
     this.getSelectionModel.addListSelectionListener(
       new ListSelectionListener {
         def valueChanged(p1: ListSelectionEvent) {
           if (getSelectedIndex != -1) {
             val run = RunList.getSelectedValue.asInstanceOf[Run]
             tabState.setCurrentRun(run)
-            if (run.modelString != saveModel()) {
-              ignoring(classOf[UserCancelException]) {
-                App.app.fileMenu.offerSave()
-              }
-              org.nlogo.window.ModelLoader.load(ReviewTab.this,
-                null, api.ModelType.Library, run.modelString)
-              App.app.tabs.setSelectedComponent(ReviewTab.this)
-            }
+            loadModelIfNeeded(run.modelString)
             refreshInterface()
           }
         }
