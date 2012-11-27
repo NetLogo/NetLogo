@@ -12,7 +12,7 @@ javaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 javaSource in Test <<= baseDirectory(_ / "src" / "test")
 
-sourceGenerators in Compile <+= Autogen.lexersGeneratorTask
+sourceGenerators in Compile <+= JFlexRunner.task
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 

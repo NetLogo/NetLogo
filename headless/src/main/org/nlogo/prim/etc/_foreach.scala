@@ -39,7 +39,8 @@ class _foreach extends Command {
       context.ip = next
     }
     catch {
-      case NonLocalExit if context.activation.procedure.tpe == Procedure.Type.COMMAND =>
+      case NonLocalExit
+          if !context.activation.procedure.isReporter =>
         context.stop()
     }
   }
