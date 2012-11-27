@@ -358,7 +358,7 @@ public abstract strictfp class AbstractWorkspace
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
                                  boolean reporter)
       throws CompilerException {
-    String key = source + "@" + context.activation.procedure().args.size() +
+    String key = source + "@" + context.activation.procedure().args().size() +
         "@" + context.agentBit;
     Procedure proc = codeBits.get(key);
     if (proc == null) {

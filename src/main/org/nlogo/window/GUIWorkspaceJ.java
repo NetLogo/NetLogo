@@ -1053,7 +1053,7 @@ public abstract strictfp class GUIWorkspaceJ
 
       // check to see if the error occurred inside a "run" or "runresult" instruction;
       // if so, report the error as having occurred there - ST 5/7/03
-      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure().getOwner();
+      org.nlogo.api.SourceOwner sourceOwner = context.activation.procedure().owner();
       if (instruction.token() == null) {
         posAndLength = new int[]{-1, 0};
       } else {

@@ -340,9 +340,7 @@ class StructureParser(
         cAssert(token.tpe == TokenType.IDENT, "You can't use " + token.name.toUpperCase + " to name a procedure", token)
         tokenBuffer.next()
         haveName = true
-        procedure = new Procedure(
-          if(isReporterProcedure) Procedure.Type.REPORTER
-          else Procedure.Type.COMMAND,
+        procedure = new Procedure(isReporterProcedure,
           token, token.name.toUpperCase, displayName, null)
         checkName(procedure.name, token, null, null)
         cAssert(!newProcedures.isDefinedAt(procedure.name),
