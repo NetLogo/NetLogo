@@ -78,7 +78,7 @@ with Events.CompileAllEventHandler {
       workspace.procedures = results.proceduresMap
       for(procedure <- workspace.procedures.values)
         if (procedure.fileName.isEmpty)
-          procedure.setOwner(proceduresInterface)
+          procedure.owner = proceduresInterface
       workspace.init()
       workspace.world.program(results.program)
       new Events.CompiledEvent(
@@ -111,7 +111,7 @@ with Events.CompileAllEventHandler {
           workspace.world.program, workspace.procedures, workspace.getExtensionManager)
       if (!results.procedures.isEmpty) {
         results.head.init(workspace)
-        results.head.setOwner(owner)
+        results.head.owner = owner
         new Events.CompiledEvent(
           owner, workspace.world.program, results.head, null).raise(this)
       }
@@ -155,7 +155,7 @@ with Events.CompileAllEventHandler {
             e.owner.source, Some(e.owner.classDisplayName), workspace.world.program,
             workspace.procedures, workspace.getExtensionManager)
         results.head.init(workspace)
-        results.head.setOwner(e.owner)
+        results.head.owner = e.owner
         new Events.CompiledEvent(
           e.owner, workspace.world.program, results.head, null)
           .raise(this)

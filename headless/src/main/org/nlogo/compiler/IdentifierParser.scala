@@ -68,14 +68,12 @@ private class IdentifierParser(program: Program,
             newProcedures.getOrElse(ident,
               return newToken(getAgentVariableReporter(ident, tok),
                               ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)))
-        callproc.tpe match {
-          case Procedure.Type.COMMAND =>
-            newToken(new _call(callproc),
-                     ident, TokenType.COMMAND, tok.startPos, tok.endPos, tok.fileName)
-          case Procedure.Type.REPORTER =>
-            newToken(new _callreport(callproc),
-                     ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
-        }
+        val (tokenType, caller) =
+          if (callproc.isReporter)
+            (TokenType.REPORTER, new _callreport(callproc))
+          else
+            (TokenType.COMMAND, new _call(callproc))
+        newToken(caller, ident, tokenType, tok.startPos, tok.endPos, tok.fileName)
       }
     }
   }

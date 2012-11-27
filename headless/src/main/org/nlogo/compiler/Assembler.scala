@@ -18,12 +18,13 @@ private class Assembler {
   def assemble(procdef: ProcedureDefinition) {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
-    val ret = proc.tpe match {
-      case Procedure.Type.COMMAND =>
-        if (proc.isTask) new _done
-        else new _return
-      case Procedure.Type.REPORTER => new _returnreport
-    }
+    val ret =
+      if (proc.isReporter)
+        new _returnreport
+      else if (proc.isTask)
+        new _done
+      else
+        new _return
     ret.token(new Token("END", TokenType.KEYWORD, ret)(proc.endPos, proc.endPos, proc.fileName))
     code += ret
     for ((cmd, n) <- code.toList.zipWithIndex) {

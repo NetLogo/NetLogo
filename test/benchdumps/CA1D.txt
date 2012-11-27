@@ -1258,9 +1258,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -1269,10 +1268,9 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1939,9 +1937,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -1950,10 +1947,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -2101,9 +2097,8 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
@@ -2112,10 +2107,9 @@ procedure GO:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.parent : Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPNE L4
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.parent ()Lorg/nlogo/nvm/Procedure;
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFEQ L4
          L3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -4728,9 +4722,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L10
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L10
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -4931,9 +4924,8 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L19
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L19
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -6805,9 +6797,8 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -9129,9 +9120,8 @@ reporter procedure LIST-RULES:[RULES]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L3
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L3
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1

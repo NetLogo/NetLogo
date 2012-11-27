@@ -1753,9 +1753,8 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L27
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L27
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2353,9 +2352,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L27
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L27
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3140,9 +3138,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L11
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L11
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3412,9 +3409,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L13
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -3556,9 +3552,8 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/nvm/Procedure;
-          GETFIELD org/nlogo/nvm/Procedure.tpe : Lorg/nlogo/nvm/Procedure$Type;
-          GETSTATIC org/nlogo/nvm/Procedure$Type.REPORTER : Lorg/nlogo/nvm/Procedure$Type;
-          IF_ACMPEQ L13
+          INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
+          IFNE L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
