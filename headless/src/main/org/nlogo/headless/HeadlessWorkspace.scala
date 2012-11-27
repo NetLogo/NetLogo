@@ -200,11 +200,11 @@ with org.nlogo.api.ViewSettings {
     // setup some test plots.
     plotManager.forgetAll()
     val plot1 = plotManager.newPlot("plot1")
-    plot1.createPlotPen("pen1", false)
-    plot1.createPlotPen("pen2", false)
+    plot1.createPlotPen(name = "pen1")
+    plot1.createPlotPen(name = "pen2")
     val plot2 = plotManager.newPlot("plot2")
-    plot2.createPlotPen("pen1", false)
-    plot2.createPlotPen("pen2", false)
+    plot2.createPlotPen(name = "pen1")
+    plot2.createPlotPen(name = "pen2")
     plotManager.compileAllPlots()
 
     clearDrawing()

@@ -6,9 +6,11 @@ package org.nlogo.agent
 // we'll convert it at method at a time, as needed, by relocating
 // methods from ImporterJ to here. - ST 7/11/12
 
-import org.nlogo.api.{ AgentKind, AgentVariables, Breed, ImporterUser }
+import org.nlogo.api
+import api.{ AgentKind, AgentVariables, Breed, ImporterUser, PlotInterface }
 import collection.immutable.ListMap
 import collection.JavaConverters._
+import ImporterJ.Junk
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
                _world: World,
@@ -57,5 +59,151 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
 
   def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] =
     breeds.values.flatMap(_.owns).toSeq.asJava
+
+  /// plots
+
+  def importPlots() {
+    if (hasMoreLines(false)) {
+      val firstLine = nextLine()
+      val currentPlot = firstLine(0)
+      if (currentPlot.nonEmpty)
+        importerUser.currentPlot(currentPlot)
+      while (hasMoreLines(false)) {
+        val line = nextLine()
+        try {
+          val plotName = getTokenValue(line(0), false, false).asInstanceOf[String]
+          val plot = importerUser.getPlot(plotName)
+          if (plot == null) {
+            errorHandler.showError("Error Importing Plots",
+                "The plot \"" + plotName + "\" does not exist.",
+                false)
+            // gobble up remaining lines of this section
+            while (hasMoreLines(false)) { }
+            return
+          } else {
+            val numPens = importIntro(plot)
+            importPens(plot, numPens)
+            importPoints(plot)
+          }
+        }
+        catch { case e: ClassCastException =>
+          throw new ImporterJ.AbortingImportException(
+            ImporterJ.ImportError.ILLEGAL_CLASS_CAST_ERROR, "")
+        }
+      }
+    }
+  }
+
+  def importIntro(plot: PlotInterface): Int = {
+    // this is the header line and we don't really care about it since
+    // we have to set everything by hand anyway.
+    if (!hasMoreLines(false) || !hasMoreLines(false))
+      0
+    else {
+      val line = nextLine()
+      plot.state = api.PlotState(
+        xMin = readNumber(line(0)),
+        xMax = readNumber(line(1)),
+        yMin = readNumber(line(2)),
+        yMax = readNumber(line(3)),
+        autoPlotOn = readBoolean(line(4)))
+      plot.currentPen_=(readString(line(5)))
+      plot.legendIsOpen_=(readBoolean(line(6)))
+      readNumber(line(7)).toInt
+    }
+  }
+
+  def importPens(plot: api.PlotInterface, numPens: Int) {
+    if (hasMoreLines(false))
+      for (i <- 0 until numPens; if hasMoreLines(false)) {
+        val line = nextLine()
+        getTokenValue(line(0), false, false) match {
+          case _: Junk =>
+            return
+          case name: String =>
+            plot.getPen(name) match {
+              case Some(pen) =>
+                pen.state = api.PlotPenState(
+                  isDown = readBoolean(line(1)),
+                  mode = readNumber(line(2)).toInt,
+                  interval = readNumber(line(3)),
+                  color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
+                    readNumber(line(4))),
+                  x = readNumber(line(5)))
+              case None =>
+                errorHandler.showError(
+                  "Error Importing Plots",
+                  "The pen \"" + name + "\" does not exist.", false)
+                while (hasMoreLines(false)) {
+                  nextLine()
+                }
+            }
+        }
+      }
+  }
+
+  def importPoints(plot: PlotInterface) {
+    if (hasMoreLines(false)) {
+      val line = nextLine()
+      val penCount = ((line.size - 1) / 4) + 1
+      val pens = Array.tabulate(penCount)(i =>
+        readString(line(i * 4)))
+      if (hasMoreLines(false))
+        while (hasMoreLines(true)) {
+          val data = nextLine()
+          for (i <- 0 until pens.size) {
+            plot.getPen(pens(i)) match {
+              case Some(pen) =>
+                plot.currentPen_=(pen.name)
+                // there may be blank fields in the list of points
+                // since some pens may have more points than others.
+                if (data(i * 4).nonEmpty)
+                  try {
+                    pen.state = pen.state.copy(
+                      color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
+                        readNumber(data(i * 4 + 2)).toInt),
+                      isDown = readBoolean(data(i * 4 + 3)))
+                    plot.plot(
+                      x = readNumber(data(i * 4)),
+                      y = readNumber(data(i * 4 + 1)))
+                  }
+                  catch { case e: ClassCastException =>
+                    errorHandler.showError("Import Error",
+                        "Error while importing " + plot.name +
+                            ", this point will be skipped.", false)
+                  }
+              case None =>
+                errorHandler.showError(
+                  "Error Importing Plots",
+                  "The pen \"" + pens(i) + "\" does not exist.", false)
+            }
+          }
+        }
+    }
+  }
+
+  private def readNumber(line: String) =
+    getTokenValue(line, false, false) match {
+      case d: java.lang.Double =>
+        d.doubleValue
+      case _: Junk =>
+        0
+    }
+
+  private def readBoolean(line: String) =
+    getTokenValue(line, false, false) match {
+      case b: java.lang.Boolean =>
+        b.booleanValue
+      case _: Junk =>
+        false
+    }
+
+  private def readString(line: String) =
+    getTokenValue(line, false, false) match {
+      case s: String =>
+        s
+      case _: Junk =>
+        null
+    }
 
 }

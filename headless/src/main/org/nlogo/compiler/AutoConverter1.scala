@@ -457,9 +457,7 @@ class AutoConverter1(implicit tokenizer: TokenizerInterface) {
                                   "is-turtle-agentset?" -> "is-turtle-set?",
                                   "is-link-agentset?" -> "is-link-set?")
   private val CONVERSIONS18 = Map("ppd" -> "plot-pen-down",
-                                  "ppu" -> "plot-pen-up",
-                                  "__hubnet-ppd" -> "__hubnet-plot-pen-down",
-                                  "__hubnet-ppu" -> "__hubnet-plot-pen-up")
+                                  "ppu" -> "plot-pen-up")
   private val CONVERSIONS19 = Map("rgb" -> "approximate-rgb",
                                   "hsb" -> "approximate-hsb")
   private val CONVERSIONS20 = Map("__tie" -> "tie",

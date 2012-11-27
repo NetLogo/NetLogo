@@ -2,8 +2,9 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.Color.translateSavedColor
-import org.nlogo.api.StringUtils.unEscapeString
+import org.nlogo.api
+import api.Color.translateSavedColor
+import api.StringUtils.unEscapeString
 
 object PlotLoader {
 
@@ -11,14 +12,15 @@ object PlotLoader {
     val (plotLines, penLines) =
       widget.toList.span(_ != "PENS")
     plot.name(plotLines(5))
-    if (11 < plotLines.length) {
-      plot.defaultXMin = plotLines(8).toDouble
-      plot.defaultXMax = plotLines(9).toDouble
-      plot.defaultYMin = plotLines(10).toDouble
-      plot.defaultYMax = plotLines(11).toDouble
-    }
+    if (11 < plotLines.length)
+      plot.defaultState = plot.defaultState.copy(
+        xMin = plotLines(8).toDouble,
+        xMax = plotLines(9).toDouble,
+        yMin = plotLines(10).toDouble,
+        yMax = plotLines(11).toDouble)
     if (12 < plotLines.length)
-      plot.defaultAutoPlotOn = plotLines(12).toBoolean
+      plot.defaultState = plot.defaultState.copy(
+        autoPlotOn = plotLines(12).toBoolean)
     if (14 < plotLines.length) {
       parseStringLiterals(plotLines(14)) match {
         case Nil => // old style model, no new plot code. this is ok.
@@ -45,12 +47,13 @@ object PlotLoader {
         val pen = plot.createPlotPen(spec.name, false,
                                      autoConvert(spec.setupCode),
                                      autoConvert(spec.updateCode))
-        pen.defaultInterval = spec.interval
-        pen.defaultMode = spec.mode
-        pen.defaultColor =
-          if (translateColors)
-            translateSavedColor(spec.color)
-          else spec.color
+        pen.defaultState = pen.defaultState.copy(
+          interval = spec.interval,
+          mode = spec.mode,
+          color =
+            if (translateColors)
+              translateSavedColor(spec.color)
+            else spec.color)
         pen.inLegend = spec.inLegend
       }
     }
@@ -69,7 +72,7 @@ object PlotLoader {
     val (rest1, rest2) = rest.span(_ != '"')
     val List(interval, mode, color, inLegend) =
       rest1.trim.split("\\s+").toList
-    require(PlotPen.isValidPlotPenMode(mode.toInt))
+    require(api.PlotPenInterface.isValidPlotPenMode(mode.toInt))
     // optional; pre-5.0 models don't have them
     val (setup, update) =
       parseStringLiterals(rest2) match {

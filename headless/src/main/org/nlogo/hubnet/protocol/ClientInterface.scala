@@ -23,7 +23,7 @@ case class ClientInterface(
   @transient private val clientWidgetTags: List[String] =
     if(widgets.isEmpty) Nil
     else
-      "ALL PLOTS" :: widgets.map{ widget =>
+      widgets.map{ widget =>
         if (widget(0) == "VIEW") "VIEW"
         else {
           val tag = widget(5)
