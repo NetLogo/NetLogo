@@ -21,8 +21,12 @@ public final strictfp class Context {
   public boolean waiting = false; // are we waiting on a child job?
   private boolean inReporterProcedure = false;
 
+  // Reverting to old way of initializing an empty List because
+  // the Eclipse java compiler gets trumped by a simple List.empty()
+  // and thinks the method call is ambiguous. NP 2012-11-28.
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public scala.collection.immutable.List<LetBinding> letBindings =
-    scala.collection.immutable.List.empty();
+    (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
 
   /**
    * It is necessary for each Context to have its own stopping flag

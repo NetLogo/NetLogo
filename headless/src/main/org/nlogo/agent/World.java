@@ -18,6 +18,7 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
+import org.nlogo.nvm.LetBinding;
 import org.nlogo.util.MersenneTwisterFast;
 
 import java.util.Arrays;
@@ -1173,8 +1174,12 @@ public strictfp class World
 
   /// program
 
+  // Reverting to old way of initializing an empty List because
+  // the Eclipse java compiler gets trumped by a simple List.empty()
+  // and thinks the method call is ambiguous. NP 2012-11-28.
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
   scala.collection.immutable.Seq<String> noStrings =
-    scala.collection.immutable.List.empty();
+    (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
 
   private Program _program = newProgram();
 
