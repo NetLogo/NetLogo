@@ -1674,8 +1674,7 @@ procedure COLORIZE:[]{-TP-}:
           GOTO L8
          L7
           ICONST_0
-         L8
-          GOTO L9
+          GOTO L8
          L6
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1699,18 +1698,18 @@ procedure COLORIZE:[]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L9
+         L8
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L10
+          IFEQ L9
           ICONST_1
-          GOTO L11
-         L10
+          GOTO L10
+         L9
           ICONST_3
-         L11
+         L10
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L11
           RETURN
 [1]_asm_procedurecolorize_setpatchvariable_1 "set pcolor item n" Object => void
       _item

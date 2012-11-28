@@ -1479,10 +1479,8 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               ALOAD 3
               INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
               ASTORE 7
-             L4
-              ALOAD 7
-              INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-              IFEQ L5
+              GOTO L4
+             L5
               ALOAD 7
               INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
               ASTORE 8
@@ -1494,47 +1492,48 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
               CHECKCAST java/lang/Double
               INVOKEVIRTUAL java/util/ArrayList.add (Ljava/lang/Object;)Z
               POP
-              GOTO L7
+              GOTO L4
              L6
               ALOAD 8
               INSTANCEOF java/lang/String
-              IFEQ L8
+              IFEQ L7
               ALOAD 5
               ALOAD 8
               CHECKCAST java/lang/String
               INVOKEVIRTUAL java/util/ArrayList.add (Ljava/lang/Object;)Z
               POP
-              GOTO L7
-             L8
+              GOTO L4
+             L7
               ALOAD 8
               INSTANCEOF org/nlogo/agent/Agent
-              IFEQ L7
+              IFEQ L4
               ALOAD 6
               ALOAD 8
               CHECKCAST org/nlogo/agent/Agent
               INVOKEVIRTUAL java/util/ArrayList.add (Ljava/lang/Object;)Z
               POP
-             L7
-              GOTO L4
-             L5
+             L4
+              ALOAD 7
+              INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+              IFNE L5
               ALOAD 4
               INVOKEVIRTUAL java/util/ArrayList.isEmpty ()Z
-              IFNE L9
+              IFNE L8
               ALOAD 4
               INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
               ALOAD 4
+              INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
+              GOTO L2
+             L8
+              ALOAD 5
+              INVOKEVIRTUAL java/util/ArrayList.isEmpty ()Z
+              IFNE L9
+              ALOAD 5
+              INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
+              ALOAD 5
               INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
               GOTO L2
              L9
-              ALOAD 5
-              INVOKEVIRTUAL java/util/ArrayList.isEmpty ()Z
-              IFNE L10
-              ALOAD 5
-              INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
-              ALOAD 5
-              INVOKESTATIC org/nlogo/api/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/api/LogoList;
-              GOTO L2
-             L10
               ALOAD 6
               INVOKESTATIC java/util/Collections.sort (Ljava/util/List;)V
               ALOAD 6

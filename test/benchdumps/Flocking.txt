@@ -1519,10 +1519,8 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
           ASTORE 5
-         L7
-          ALOAD 5
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L8
+          GOTO L7
+         L8
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 6
@@ -1557,8 +1555,10 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
           DSTORE 3
-          GOTO L7
-         L8
+         L7
+          ALOAD 5
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L8
           ALOAD 0
           DLOAD 3
           ALOAD 2
@@ -1608,10 +1608,8 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
           ASTORE 5
-         L14
-          ALOAD 5
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L15
+          GOTO L14
+         L15
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 6
@@ -1646,8 +1644,10 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
           DSTORE 3
-          GOTO L14
-         L15
+         L14
+          ALOAD 5
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L15
           ALOAD 0
           DLOAD 3
           ALOAD 2
@@ -2118,10 +2118,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
           ASTORE 5
-         L7
-          ALOAD 5
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L8
+          GOTO L7
+         L8
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 6
@@ -2156,8 +2154,10 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
           DSTORE 3
-          GOTO L7
-         L8
+         L7
+          ALOAD 5
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L8
           ALOAD 0
           DLOAD 3
           ALOAD 2
@@ -2207,10 +2207,8 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
           ASTORE 5
-         L14
-          ALOAD 5
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L15
+          GOTO L14
+         L15
           ALOAD 5
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 6
@@ -2245,8 +2243,10 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
           DSTORE 3
-          GOTO L14
-         L15
+         L14
+          ALOAD 5
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L15
           ALOAD 0
           DLOAD 3
           ALOAD 2

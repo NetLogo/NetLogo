@@ -3004,8 +3004,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           GOTO L5
          L4
           ICONST_0
-         L5
-          GOTO L6
+          GOTO L5
          L3
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -3029,18 +3028,18 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L6
+         L5
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L7
+          IFEQ L6
           ICONST_5
-          GOTO L8
-         L7
+          GOTO L7
+         L6
           BIPUSH 11
-         L8
+         L7
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
+         L8
           RETURN
 [11]_asm_procedurebugmove_return_13 "" => void
          L0

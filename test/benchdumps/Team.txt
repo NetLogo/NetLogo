@@ -1856,8 +1856,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L6
          L5
           ICONST_0
-         L6
-          GOTO L7
+          GOTO L6
          L4
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1881,18 +1880,18 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L7
+         L6
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L7
           ICONST_3
-          GOTO L9
-         L8
+          GOTO L8
+         L7
           BIPUSH 6
-         L9
+         L8
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L9
           RETURN
 [3]_asm_procedurepickteammembers_call_3 "make-newcomer"
          L0
@@ -5803,10 +5802,8 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
             ASTORE 5
-           L6
-            ALOAD 5
-            INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-            IFEQ L7
+            GOTO L6
+           L7
             ALOAD 5
             INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
             ASTORE 6
@@ -5841,8 +5838,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL java/lang/Double.doubleValue ()D
             DADD
             DSTORE 3
-            GOTO L6
-           L7
+           L6
+            ALOAD 5
+            INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+            IFNE L7
             ALOAD 0
             DLOAD 3
             ALOAD 2

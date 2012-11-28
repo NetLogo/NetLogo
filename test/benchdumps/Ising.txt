@@ -1007,8 +1007,7 @@ procedure UPDATE:[EDIFF]{-TP-}:
           GOTO L9
          L8
           ICONST_0
-         L9
-          GOTO L10
+          GOTO L9
          L7
           NEW org/nlogo/nvm/EngineException
           DUP
@@ -1032,36 +1031,36 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L10
-          IFNE L11
-         L12
+         L9
+          IFNE L10
+         L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-         L13
+         L12
           DCONST_0
-         L14
+         L13
           DSTORE 3
           ASTORE 2
           ALOAD 2
           ASTORE 5
           ALOAD 5
           INSTANCEOF java/lang/Double
-          IFEQ L15
+          IFEQ L14
           ALOAD 5
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DLOAD 3
           DCMPL
-          IFLE L16
+          IFLE L15
           ICONST_1
-          GOTO L17
-         L16
-          ICONST_0
-         L17
-          GOTO L18
+          GOTO L16
          L15
+          ICONST_0
+         L16
+          GOTO L17
+         L14
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1089,11 +1088,11 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L18
-          IFEQ L19
-         L20
+         L17
+          IFEQ L18
+         L19
           DCONST_1
-         L21
+         L20
           DSTORE 2
           DLOAD 2
           ALOAD 1
@@ -1101,19 +1100,19 @@ procedure UPDATE:[EDIFF]{-TP-}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
-         L22
+         L21
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
           ICONST_0
           AALOAD
-         L23
+         L22
           ASTORE 2
          L0
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L24
+          GOTO L23
          L1
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -1125,22 +1124,22 @@ procedure UPDATE:[EDIFF]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L24
+         L23
           DSTORE 2
           DLOAD 2
           DNEG
-         L25
+         L24
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
-         L26
+         L25
           ASTORE 2
          L2
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L27
+          GOTO L26
          L3
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
@@ -1152,13 +1151,13 @@ procedure UPDATE:[EDIFF]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L27
+         L26
           DSTORE 4
           DSTORE 2
           DLOAD 4
           DCONST_0
           DCMPL
-          IFNE L28
+          IFNE L27
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1168,45 +1167,45 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L28
+         L27
           DLOAD 2
           DLOAD 4
           DDIV
-         L29
+         L28
           DSTORE 2
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.exp (D)D
-         L30
+         L29
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DCMPG
-          IFGE L31
+          IFGE L30
           ICONST_1
-          GOTO L32
+          GOTO L31
+         L30
+          ICONST_0
          L31
+          GOTO L32
+         L18
           ICONST_0
          L32
           GOTO L33
-         L19
-          ICONST_0
-         L33
-          GOTO L34
-         L11
+         L10
           ICONST_1
-         L34
+         L33
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L35
+          IFEQ L34
           ICONST_2
-          GOTO L36
-         L35
+          GOTO L35
+         L34
           ICONST_3
-         L36
+         L35
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L37
+         L36
           RETURN
 [2]_asm_procedureupdate_call_2 "flip"
          L0

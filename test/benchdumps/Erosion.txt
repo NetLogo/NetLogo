@@ -1881,39 +1881,38 @@ procedure RECOLOR:[]{-TP-}:
           ASTORE 5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 6
-         L13
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L14
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 7
+          GOTO L13
+         L14
           ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
+          ASTORE 6
+          ALOAD 6
           INSTANCEOF java/lang/Double
-          IFEQ L15
-          ALOAD 7
+          IFEQ L13
+          ALOAD 6
           CHECKCAST java/lang/Double
           ASTORE 8
           ALOAD 8
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DSTORE 9
           ALOAD 5
-          IFNULL L16
+          IFNULL L15
           DLOAD 9
           DLOAD 3
           DCMPG
-          IFGE L15
-         L16
+          IFGE L13
+         L15
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
-         L15
-          GOTO L13
-         L14
+         L13
+          ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L14
           ALOAD 5
-          IFNONNULL L17
+          IFNONNULL L16
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -1930,14 +1929,14 @@ procedure RECOLOR:[]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L17
+         L16
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-         L18
+         L17
           LDC 100.0
-         L19
+         L18
           LDC -10.0
-         L20
+         L19
           DSTORE 8
           DSTORE 6
           DSTORE 4
@@ -1952,23 +1951,23 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 6
           DLOAD 8
           DCMPL
-          IFLE L21
+          IFLE L20
           DLOAD 4
           DLOAD 8
           DCMPG
-          IFGE L22
+          IFGE L21
           DCONST_1
           DSTORE 10
-          GOTO L23
-         L22
+          GOTO L22
+         L21
           DLOAD 4
           DLOAD 6
           DCMPL
-          IFLE L24
+          IFLE L23
           DCONST_0
           DSTORE 10
-          GOTO L23
-         L24
+          GOTO L22
+         L23
           DLOAD 6
           DLOAD 4
           DSUB
@@ -1981,26 +1980,26 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 14
           DDIV
           DSTORE 10
-          GOTO L23
-         L21
+          GOTO L22
+         L20
           DLOAD 4
           DLOAD 8
           DCMPL
-          IFLE L25
+          IFLE L24
           DCONST_1
           DSTORE 10
-          GOTO L23
+          GOTO L22
+         L24
+          DLOAD 4
+          DLOAD 6
+          DCMPG
+          IFGE L25
+          DCONST_0
+          DSTORE 10
+          GOTO L22
          L25
           DLOAD 4
           DLOAD 6
-          DCMPG
-          IFGE L26
-          DCONST_0
-          DSTORE 10
-          GOTO L23
-         L26
-          DLOAD 4
-          DLOAD 6
           DSUB
           DSTORE 12
           DLOAD 8
@@ -2011,7 +2010,7 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 14
           DDIV
           DSTORE 10
-         L23
+         L22
           DLOAD 10
           LDC 10.0
           DMUL
@@ -2019,24 +2018,24 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 10
           LDC 9.9999
           DCMPL
-          IFLT L27
+          IFLT L26
           LDC 9.9999
           DSTORE 10
-          GOTO L28
-         L27
+          GOTO L27
+         L26
           DLOAD 10
           DCONST_0
           DCMPG
-          IFGE L28
+          IFGE L27
           DCONST_0
           DSTORE 10
-         L28
+         L27
           ALOAD 0
           DLOAD 2
           DLOAD 10
           DADD
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_3.validDouble (D)D
-         L29
+         L28
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -2053,7 +2052,7 @@ procedure RECOLOR:[]{-TP-}:
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L30
+          GOTO L29
          L5
           ASTORE 3
           NEW org/nlogo/nvm/EngineException
@@ -2064,7 +2063,7 @@ procedure RECOLOR:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L30
+         L29
           RETURN
 [4]_asm_procedurerecolor_return_4 "" => void
          L0
@@ -4021,39 +4020,38 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 6
-         L61
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L62
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 7
+          GOTO L61
+         L62
           ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
+          ASTORE 6
+          ALOAD 6
           INSTANCEOF java/lang/Double
-          IFEQ L63
-          ALOAD 7
+          IFEQ L61
+          ALOAD 6
           CHECKCAST java/lang/Double
           ASTORE 8
           ALOAD 8
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DSTORE 9
           ALOAD 5
-          IFNULL L64
+          IFNULL L63
           DLOAD 9
           DLOAD 3
           DCMPG
-          IFGE L63
-         L64
+          IFGE L61
+         L63
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
-         L63
-          GOTO L61
-         L62
+         L61
+          ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L62
           ALOAD 5
-          IFNONNULL L65
+          IFNONNULL L64
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -4070,10 +4068,10 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L65
+         L64
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-         L66
+         L65
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -4089,7 +4087,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           ICONST_2
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L67
+         L66
           RETURN
 [2]_asm_procedureflow_if_4 "if amount > 0" boolean => void
       _greaterthan Object,double => boolean
@@ -4841,39 +4839,38 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 6
-         L61
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-          IFEQ L62
-          ALOAD 6
-          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
           ASTORE 7
+          GOTO L61
+         L62
           ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
+          ASTORE 6
+          ALOAD 6
           INSTANCEOF java/lang/Double
-          IFEQ L63
-          ALOAD 7
+          IFEQ L61
+          ALOAD 6
           CHECKCAST java/lang/Double
           ASTORE 8
           ALOAD 8
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DSTORE 9
           ALOAD 5
-          IFNULL L64
+          IFNULL L63
           DLOAD 9
           DLOAD 3
           DCMPG
-          IFGE L63
-         L64
+          IFGE L61
+         L63
           DLOAD 9
           DSTORE 3
           ALOAD 8
           ASTORE 5
-         L63
-          GOTO L61
-         L62
+         L61
+          ALOAD 7
+          INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+          IFNE L62
           ALOAD 5
-          IFNONNULL L65
+          IFNONNULL L64
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -4890,10 +4887,10 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L65
+         L64
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-         L66
+         L65
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -4909,7 +4906,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ALOAD 1
           BIPUSH 6
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L67
+         L66
           RETURN
 [6]_asm_procedureflow_setpatchvariable_8 "set water water - amount" Object => void
       _minus double,double => double
