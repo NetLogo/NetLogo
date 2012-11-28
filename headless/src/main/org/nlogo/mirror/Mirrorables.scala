@@ -14,8 +14,6 @@ object Mirrorables {
   case object Link extends Kind
   case object Observer extends Kind
   case object World extends Kind
-  case object Plot extends Kind
-  case object PlotPen extends Kind
   case object WidgetValue extends Kind
 
   implicit def agentKindToMirrorKind(agentKind: api.AgentKind) = agentKind match {
@@ -145,59 +143,6 @@ object Mirrorables {
         } else None))
   }
 
-  object MirrorablePlot {
-    val Seq(
-      pvXMin,
-      pvXMax,
-      pvYMin,
-      pvYMax,
-      pvLegendIsOpen,
-      _*) = Stream.from(0)
-  }
-
-  class MirrorablePlot(val p: plot.Plot, val plots: List[plot.Plot]) extends Mirrorable {
-    import MirrorablePlot._
-    override def kind = Plot
-    override def agentKey = AgentKey(kind, plots.indexOf(p))
-    override val variables = Map(
-      pvXMin -> Double.box(p.xMin),
-      pvXMax -> Double.box(p.xMax),
-      pvYMin -> Double.box(p.yMin),
-      pvYMax -> Double.box(p.yMax),
-      pvLegendIsOpen -> Boolean.box(p.legendIsOpen))
-  }
-
-  object MirrorablePlotPen {
-    val Seq( // init vals for indices by pattern matching over range of getters
-      ppvName,
-      ppvIsDown,
-      ppvMode,
-      ppvInterval,
-      ppvColor,
-      ppvX,
-      ppvPoints,
-      _*) = Stream.from(0)
-  }
-  class MirrorablePlotPen(val pen: plot.PlotPen, val plots: List[plot.Plot]) extends Mirrorable {
-    import MirrorablePlotPen._
-    override def kind = PlotPen
-    override def agentKey = {
-      // we combine the plot id and the pen id (which are both
-      // originally Ints) into a single Long:
-      val plotId: Long = plots.indexOf(pen.plot)
-      val penId: Long = pen.plot.pens.indexOf(pen)
-      AgentKey(kind, (plotId << 32) | penId)
-    }
-    override val variables = Map(
-      ppvName -> pen.name,
-      ppvIsDown -> Boolean.box(pen.isDown),
-      ppvMode -> Int.box(pen.mode),
-      ppvInterval -> Double.box(pen.interval),
-      ppvColor -> org.nlogo.api.Color.argbToColor(pen.color),
-      ppvX -> Double.box(pen.x),
-      ppvPoints -> pen.points.toList)
-  }
-
   object MirrorableWidgetValue {
     val wvvValueString = 0
   }
@@ -210,8 +155,7 @@ object Mirrorables {
       wvvValueString -> value)
   }
 
-  def allMirrorables(world: api.World, plots: List[plot.Plot],
-                     widgetValues: Seq[(String, Int)]): Iterable[Mirrorable] = {
+  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)]): Iterable[Mirrorable] = {
     import collection.JavaConverters._
     val turtles = world.turtles.agents.asScala.map(t => new MirrorableTurtle(t.asInstanceOf[api.Turtle]))
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))
@@ -219,9 +163,6 @@ object Mirrorables {
     val worldIterable = Iterable(new MirrorableWorld(world))
     val observerIterable = Iterable(new MirrorableObserver(world.observer))
     val widgetValuesIterable = widgetValues.map { case (v, i) => new MirrorableWidgetValue(v, i) }
-    // val plotMirrorables = for { p <- plots } yield new MirrorablePlot(p, plots)
-    // val plotPens = for { p <- plots; pp <- p.pens } yield new MirrorablePlotPen(pp, plots)
-    // (worldIterable ++ observerIterable ++ interfaceGlobals ++ turtles ++ patches ++ links ++ plotMirrorables ++ plotPens)
     (worldIterable ++ observerIterable ++ widgetValuesIterable ++ turtles ++ patches ++ links)
   }
 

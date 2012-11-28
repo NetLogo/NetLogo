@@ -154,8 +154,7 @@ class ReviewTab(
         val widgetValues = run.potemkinInterface.fakeWidgets
           .map(_.valueStringGetter.apply)
           .zipWithIndex
-        val mirrorables = Mirrorables.allMirrorables(
-          ws.world, ws.plotManager.plots, widgetValues)
+        val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         run.append(mirrorables)
       } catch {
         case e: java.lang.OutOfMemoryError =>
