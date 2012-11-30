@@ -1,9 +1,9 @@
 package org.nlogo.app
 
 import org.nlogo.mirror
-import org.nlogo.mirror.{Mirrorable, Mirrorables, Mirroring, Serializer}
-
+import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
 import javax.swing.AbstractListModel
+import org.nlogo.plot.PlotAction
 
 class ReviewTabState(
   private var _runs: Seq[Run] = Seq[Run](),
@@ -21,6 +21,7 @@ class ReviewTabState(
   def currentRunData = for { run <- currentRun; data <- run.data } yield data
   def recordingEnabled = _recordingEnabled
   def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
+  def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
 
   def userWarnedForMemory = _userWarnedForMemory
   def userWarnedForMemory_=(b: Boolean) { _userWarnedForMemory = b }
@@ -51,10 +52,15 @@ class ReviewTabState(
     addRun(run)
   }
 
-  def loadRun(name: String, modelString: String, rawDiffs: Seq[Array[Byte]],
-    potemkineInterface: PotemkinInterface, generalNotes: String): Run = {
+  def loadRun(
+    name: String,
+    modelString: String,
+    rawDiffs: Seq[Array[Byte]],
+    plotActionFrames: Seq[Seq[PlotAction]],
+    potemkineInterface: PotemkinInterface,
+    generalNotes: String): Run = {
     val run = new Run(avoidDuplicate(name), modelString, potemkineInterface, generalNotes)
-    run.load(rawDiffs)
+    run.load(rawDiffs, plotActionFrames)
     addRun(run)
   }
 
@@ -112,40 +118,45 @@ class Run(
 
   def sizeInBytes = _data.map(_.sizeInBytes).getOrElse(0L)
 
-  def load(rawDiffs: Seq[Array[Byte]]) {
-    _data = Some(RunData.load(rawDiffs))
+  def load(rawDiffs: Seq[Array[Byte]], plotActionFrames: Seq[Seq[PlotAction]]) {
+    _data = Some(RunData.load(rawDiffs, plotActionFrames))
     stillRecording = false
   }
-  def append(mirrorables: Iterable[Mirrorable]) {
+  def append(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
     if (_data.isEmpty)
-      _data = Some(RunData.start(mirrorables))
+      _data = Some(RunData.start(mirrorables, plotActions))
     else
-      _data.foreach(_.append(mirrorables))
+      _data.foreach(_.append(mirrorables, plotActions))
   }
 
   override def toString = (if (dirty) "* " else "") + name
 }
 
 object RunData {
-  def start(mirrorables: Iterable[Mirrorable]): RunData = {
-    val data = new RunData(Seq())
-    data.append(mirrorables)
+  def start(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]): RunData = {
+    val data = new RunData(Seq(), Seq())
+    data.append(mirrorables, plotActions)
     data.setCurrentFrame(0)
     data
   }
-  def load(rawDiffs: Seq[Array[Byte]]): RunData = {
-    val data = new RunData(rawDiffs)
-    for (diff <- rawDiffs) data.appendFrame(data.merge(data.lastFrame, diff))
+  def load(rawDiffs: Seq[Array[Byte]], plotActionFrames: Seq[Seq[PlotAction]]): RunData = {
+    val data = new RunData(rawDiffs, plotActionFrames)
+    for {
+      (diff, plotActions) <- rawDiffs zip plotActionFrames
+    } data.appendFrame(data.merge(data.lastFrame, diff), plotActions)
     data.setCurrentFrame(0)
     data
   }
 }
 
-class RunData private (private var _rawDiffs: Seq[Array[Byte]]) {
+class RunData private (
+  private var _rawDiffs: Seq[Array[Byte]],
+  private var _plotActionFrames: Seq[Seq[PlotAction]]) {
 
   // TODO: now that we have a frame cache, that should be accounted for in memory size
   def sizeInBytes = _rawDiffs.map(_.size.toLong).sum
   def rawDiffs = _rawDiffs
+  def plotActionFrames = _plotActionFrames
   def size = _rawDiffs.length
   private var _dirty = false
   def dirty = _dirty
@@ -174,7 +185,8 @@ class RunData private (private var _rawDiffs: Seq[Array[Byte]]) {
   def lastFrame = _lastFrame
   def lastFrameIndex = _lastFrameIndex
 
-  private def appendFrame(newFrame: Mirroring.State) {
+  private def appendFrame(newFrame: Mirroring.State, plotActions: Seq[PlotAction]) {
+    _plotActionFrames :+= plotActions
     val stateCacheInterval = 5 // maybe this should be definable somewhere else
     _lastFrameIndex += 1
     if (_lastFrameIndex % stateCacheInterval == 0)
@@ -209,10 +221,10 @@ class RunData private (private var _rawDiffs: Seq[Array[Byte]]) {
       frameCache.getOrElse(index, merge(frame(index - 1), rawDiffs(index)))
   }
 
-  def append(mirrorables: Iterable[Mirrorable]) {
+  def append(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
     val (newFrame, diff) = Mirroring.diffs(lastFrame, mirrorables)
     _rawDiffs :+= Serializer.toBytes(diff)
-    appendFrame(newFrame)
+    appendFrame(newFrame, plotActions)
     _dirty = true
   }
 

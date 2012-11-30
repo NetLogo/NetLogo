@@ -39,7 +39,7 @@ extends PlotCommand(args: _*) {
   override def syntax =
     Syntax.commandSyntax(args.toArray)
   override def perform(context: Context) {
-    plotManager.run(action(context))
+    PlotAction.forward(action(context))
     context.ip = next
   }
   def action(context: Context): PlotAction

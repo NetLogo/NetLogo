@@ -3,11 +3,9 @@ package org.nlogo.app
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 import java.awt.image.BufferedImage
-
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
-
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
@@ -16,12 +14,14 @@ import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ InvalidVersionException, WidgetWrapperInterface }
-
 import javax.imageio.ImageIO
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.nlogo.plot.PlotAction
+import scala.collection.mutable.Subscriber
+import scala.collection.mutable.ListBuffer
 
 case class PotemkinInterface(
   val viewArea: java.awt.geom.Area,
@@ -37,6 +37,29 @@ class ReviewTab(
   saveModel: () => String)
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
+
+  /**
+   * The PlotActionBuffer logs all plotting actions, whether we are
+   * recording or not. This is important because if we want to start
+   * recording at some point, we need to mirror all actions from the
+   * start to bring the plots to their actual state. NP 2012-11-29
+   */
+  object PlotActionBuffer
+    extends Subscriber[PlotAction, PlotAction.Pub] {
+
+    PlotAction.subscribe(this)
+
+    val buffer = new ListBuffer[PlotAction]
+    def notify(pub: PlotAction.Pub, action: PlotAction) {
+      buffer += action
+    }
+    def clear() = buffer.clear()
+    def grab() = {
+      val actions = buffer.toSeq
+      clear()
+      actions
+    }
+  }
 
   object Memory {
     def toMB(bytes: Long) = bytes / 1024 / 1024
@@ -71,16 +94,16 @@ class ReviewTab(
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        if (ws.world.ticks != -1) {
+        println("tickCounterChanged " + ticks)
+        if (ws.world.ticks == -1) {
+          PlotActionBuffer.clear()
+        } else {
           if (tabState.recordingEnabled)
             ws.waitFor(() => Memory.check())
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
               ws.waitFor(() => startNewRun())
-            for {
-              run <- tabState.currentRun
-              if run.stillRecording
-            } {
+            if (tabState.currentlyRecording) {
               updateMonitors()
               // switch from job thread to event thread
               ws.waitFor(() => grab())
@@ -155,7 +178,8 @@ class ReviewTab(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        run.append(mirrorables)
+        run.append(mirrorables, PlotActionBuffer.grab())
+        run.data.foreach(d => println(d.plotActionFrames))
       } catch {
         case e: java.lang.OutOfMemoryError =>
           // happens if user ignored our warning or if "GC overhead limit exceeded"
@@ -408,7 +432,11 @@ class ReviewTab(
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
-      val run = tabState.loadRun(nameFromPath(path), modelString, rawDiffs, newInterface, notes)
+      val plotActionFrames = Seq[Seq[PlotAction]]() // TODO: load actions from file
+      val run = tabState.loadRun(
+        nameFromPath(path), modelString,
+        rawDiffs, plotActionFrames,
+        newInterface, notes)
       Right(run)
     } catch {
       case ex: Exception => Left(path)
@@ -606,6 +634,7 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(ReviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
+    PlotActionBuffer.clear() // make sure object is constructed and subscribed
     refreshInterface()
   }
 
