@@ -1768,8 +1768,10 @@ procedure GO:[]{O---}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 5
-          GOTO L2
-         L3
+         L2
+          ALOAD 5
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          IFEQ L3
           ALOAD 5
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 6
@@ -1810,26 +1812,25 @@ procedure GO:[]{O---}:
           ALOAD 7
           CHECKCAST java/lang/Boolean
           INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFNE L2
+          IFNE L5
           ICONST_0
-          GOTO L5
-         L2
-          ALOAD 5
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
-          IFNE L3
-          ICONST_1
+          GOTO L6
          L5
+          GOTO L2
+         L3
+          ICONST_1
+         L6
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L6
+          IFEQ L7
           ICONST_1
-          GOTO L7
-         L6
-          ICONST_2
+          GOTO L8
          L7
-          PUTFIELD org/nlogo/nvm/Context.ip : I
+          ICONST_2
          L8
+          PUTFIELD org/nlogo/nvm/Context.ip : I
+         L9
           RETURN
 [1]_asm_procedurego_stop_2 "stop" => void
          L0
@@ -2069,32 +2070,34 @@ procedure GO:[]{O---}:
           GOTO L8
          L7
           ICONST_0
-          GOTO L8
+         L8
+          GOTO L9
          L6
           ALOAD 2
           INSTANCEOF java/lang/String
-          IFEQ L9
+          IFEQ L10
           ALOAD 3
           INSTANCEOF java/lang/String
-          IFEQ L9
+          IFEQ L10
           ALOAD 2
           CHECKCAST java/lang/String
           ALOAD 3
           CHECKCAST java/lang/String
           INVOKEVIRTUAL java/lang/String.compareTo (Ljava/lang/String;)I
-          IFLT L10
+          IFLT L11
           ICONST_1
-          GOTO L8
-         L10
+          GOTO L12
+         L11
           ICONST_0
-          GOTO L8
-         L9
+         L12
+          GOTO L9
+         L10
           ALOAD 2
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L11
+          IFEQ L13
           ALOAD 3
           INSTANCEOF org/nlogo/agent/Agent
-          IFEQ L11
+          IFEQ L13
           ALOAD 2
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
@@ -2105,17 +2108,18 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.agentBit ()I
-          IF_ICMPNE L11
+          IF_ICMPNE L13
           ALOAD 4
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.compareTo (Lorg/nlogo/agent/Agent;)I
-          IFLT L12
+          IFLT L14
           ICONST_1
-          GOTO L8
-         L12
+          GOTO L15
+         L14
           ICONST_0
-          GOTO L8
-         L11
+         L15
+          GOTO L9
+         L13
           NEW org/nlogo/nvm/EngineException
           DUP
           ALOAD 1
@@ -2137,18 +2141,18 @@ procedure GO:[]{O---}:
           INVOKEINTERFACE org/nlogo/api/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L8
+         L9
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L13
+          IFEQ L16
           ICONST_5
-          GOTO L14
-         L13
+          GOTO L17
+         L16
           BIPUSH 6
-         L14
+         L17
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L15
+         L18
           RETURN
 [5]_asm_procedurego_setturtlevariable_6 "set virus-check-timer 0" Object => void
       _constdouble:0.0 => Double
