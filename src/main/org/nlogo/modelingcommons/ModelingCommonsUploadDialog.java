@@ -1,7 +1,10 @@
 package org.nlogo.modelingcommons;
 
+import org.nlogo.awt.UserCancelException;
+import org.nlogo.swing.FileDialog;
 import org.nlogo.swing.ModalProgressTask;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -10,14 +13,18 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.Component;
+import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,18 +42,26 @@ public class ModelingCommonsUploadDialog extends JDialog {
   private JComboBox groupComboBox;
   private DisablableComboBox visibilityComboBox;
   private DisablableComboBox changeabilityComboBox;
+  private JRadioButton useCurrentViewRadioButton;
+  private JRadioButton autoGenerateViewRadioButton;
+  private JRadioButton noPreviewRadioButton;
+  private JRadioButton imageFromFileRadioButton;
+  private JButton selectFileButton;
+  private JLabel selectedFileLabel;
+  private ButtonGroup previewImageButtonGroup;
   private ModelingCommons communicator;
   private Frame frame;
   private int groupPermissionIndex;
   private int userPermissionIndex;
   private int everyonePermissionIndex;
+  private String uploadImageFilePath;
   ModelingCommonsUploadDialog(final Frame frame, final ModelingCommons communicator, String errorLabelText) {
     super(frame, "Upload Model to Modeling Commons", true);
     this.communicator = communicator;
     this.frame = frame;
     errorLabel.setText(errorLabelText);
     personNameLabel.setText("Hello " + communicator.getPerson().getFirstName() + " " + communicator.getPerson().getLastName());
-    setSize(400, 300);
+    setSize(500, 500);
     setResizable(false);
 
     setContentPane(contentPane);
@@ -83,7 +98,6 @@ public class ModelingCommonsUploadDialog extends JDialog {
     List<ModelingCommons.Group> groups = new ArrayList<ModelingCommons.Group>(communicator.getGroups());
     groups.add(0, null);
     groupComboBox.setModel(new DefaultComboBoxModel(groups.toArray()));
-
     everyonePermissionIndex = visibilityComboBox.addItem(ModelingCommons.Permission.getPermissions().get("a"), true);
     changeabilityComboBox.addItem(ModelingCommons.Permission.getPermissions().get("a"), true);
     groupPermissionIndex = visibilityComboBox.addItem(ModelingCommons.Permission.getPermissions().get("g"), false);
@@ -111,6 +125,32 @@ public class ModelingCommonsUploadDialog extends JDialog {
 
 
 
+      }
+    });
+
+    selectFileButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        try {
+          uploadImageFilePath = FileDialog.show(frame, "Select image to use as preview image", java.awt.FileDialog.LOAD);
+          String toSet = uploadImageFilePath;
+          FontMetrics metrics = selectedFileLabel.getFontMetrics(selectedFileLabel.getFont());
+          System.out.println("" + selectedFileLabel.getMaximumSize().width);
+          while(metrics.stringWidth(toSet) > selectedFileLabel.getMaximumSize().width) {
+            toSet = "\u2026" + toSet.substring(2);
+          }
+          selectedFileLabel.setText(toSet);
+        } catch(UserCancelException e) {}
+      }
+    });
+    useCurrentViewRadioButton.setSelected(true);
+    selectedFileLabel.setEnabled(false);
+    selectFileButton.setEnabled(false);
+    imageFromFileRadioButton.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        selectedFileLabel.setEnabled(imageFromFileRadioButton.isSelected());
+        selectFileButton.setEnabled(imageFromFileRadioButton.isSelected());
       }
     });
 
@@ -147,14 +187,24 @@ public class ModelingCommonsUploadDialog extends JDialog {
         ModelingCommons.Group group = (ModelingCommons.Group)groupComboBox.getSelectedItem();
         ModelingCommons.Permission visibility = (ModelingCommons.Permission)visibilityComboBox.getSelectedItem();
         ModelingCommons.Permission changeability = (ModelingCommons.Permission)changeabilityComboBox.getSelectedItem();
-        System.out.println("Group " +  group);
-        System.out.println("Visibility " + visibility);
-        System.out.println("Change " + changeability);
+        ModelingCommons.PreviewImage previewImage = null;
+        if(useCurrentViewRadioButton.isSelected()) {
+          System.out.println("Preview image is current preview");
+          previewImage = communicator.new CurrentViewPreviewImage();
+        } else if(imageFromFileRadioButton.isSelected()) {
+          if(uploadImageFilePath != null) {
+            System.out.println("Preview image is path " + uploadImageFilePath);
+            previewImage = communicator.new FilePreviewImage(uploadImageFilePath);
+          }
+        }
+
+
         final String result = communicator.uploadModel(
             modelName,
             group,
             visibility,
-            changeability
+            changeability,
+            previewImage
         );
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
@@ -168,6 +218,10 @@ public class ModelingCommonsUploadDialog extends JDialog {
               communicator.promptForUpload("Error connecting to Modeling Commons");
             } else if(result.equals("SUCCESS")) {
               communicator.promptForSuccess();
+            } else if(result.equals("INVALID_PREVIEW_IMAGE")) {
+              communicator.promptForUpload("Invalid preview image");
+            } else if(result.equals("SUCCESS_PREVIEW_NOT_SAVED")) {
+              communicator.promptForSuccess("The model was uploaded, but the preview image was not saved");
             } else {
               communicator.promptForUpload("Unknown server error");
             }

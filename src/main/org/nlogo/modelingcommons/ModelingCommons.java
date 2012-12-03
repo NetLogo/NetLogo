@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,12 +19,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.nlogo.app.App;
 import org.nlogo.app.ModelSaver;
 import org.nlogo.swing.ModalProgressTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import java.awt.Frame;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +57,13 @@ public class ModelingCommons {
   private String uploadedModelName;
   private ModelSaver modelSaver;
   private Frame frame;
+  private App app;
   private List<Group> groups = null;
 
-  public ModelingCommons(ModelSaver modelSaver, Frame frame) {
+  public ModelingCommons(ModelSaver modelSaver, Frame frame, App app) {
     this.modelSaver = modelSaver;
     this.frame = frame;
+    this.app = app;
   }
   public class Person {
     private String firstName;
@@ -144,6 +152,29 @@ public class ModelingCommons {
       return permissions;
     }
   }
+  public abstract class PreviewImage {
+    public abstract BufferedImage getPreviewImage() throws IOException;
+  }
+  public class CurrentViewPreviewImage extends PreviewImage {
+    public CurrentViewPreviewImage() {}
+
+    @Override
+    public BufferedImage getPreviewImage() throws IOException {
+      return app.workspace().exportView();
+    }
+  }
+  public class FilePreviewImage extends PreviewImage {
+    private String filePath;
+    public FilePreviewImage(String filePath) {
+      this.filePath = filePath;
+    }
+
+    @Override
+    public BufferedImage getPreviewImage() throws IOException {
+      return ImageIO.read(new File(filePath));
+    }
+  }
+
   String login(String email, String password) {
     System.out.println("Logging in");
     try {
@@ -213,7 +244,7 @@ public class ModelingCommons {
     }
   }
 
-  String uploadModel(final String modelName, final Group group, final Permission visibility, final Permission changeability) {
+  String uploadModel(final String modelName, final Group group, final Permission visibility, final Permission changeability, final PreviewImage previewImage) {
     System.out.println("uploading model");
     try {
 
@@ -231,6 +262,20 @@ public class ModelingCommons {
           return modelName + ".nlogo";
         }
       });
+      if(previewImage != null) {
+        try {
+          ByteArrayOutputStream previewImageStream = new ByteArrayOutputStream();
+          BufferedImage image = previewImage.getPreviewImage();
+          if(image == null) {
+            return "INVALID_PREVIEW_IMAGE";
+          }
+          ImageIO.write(image, "png", previewImageStream);
+          requestEntity.addPart("new_model[uploaded_preview]", new ByteArrayBody(previewImageStream.toByteArray(), modelName + ".png"));
+        } catch(IOException e) {
+          return "INVALID_PREVIEW_IMAGE";
+        }
+      }
+
       post.setEntity(requestEntity);
 
       HttpResponse response =  http.execute(post);
