@@ -191,7 +191,7 @@ public strictfp class FileMenu
         @Override
         void action() throws UserCancelException {
           checkWithUserBeforeSavingModelFromOldVersion();
-          ModelingCommons communicator = new ModelingCommons(modelSaver, org.nlogo.awt.Hierarchy.getFrame(FileMenu.this));
+          ModelingCommons communicator = new ModelingCommons(modelSaver, org.nlogo.awt.Hierarchy.getFrame(FileMenu.this), app);
           communicator.saveToModelingCommons();
         }
     }
