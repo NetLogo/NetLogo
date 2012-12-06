@@ -27,7 +27,7 @@ val nonExecutableExtensions =
   "aif au ogg wav dat bsearch mf properties nbm java_NEW psd iml gitignore ensime sbt md " +
   "dll so jnilib js inf"
 val nonExecutableFullNames =
-  "README PkgInfo Makefile COPYING .gitmodules"
+  "README LICENSE PkgInfo Makefile COPYING .gitmodules"
 
 for{path <- Process("find . -type f -perm +0100").lines; if !skip(path)} {
   if(executableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
