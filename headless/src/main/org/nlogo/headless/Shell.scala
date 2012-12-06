@@ -14,6 +14,9 @@ object Shell {
       .takeWhile(_ != null)
   }
 
+  def isQuit(s: String) =
+    List(":QUIT", ":EXIT").contains(s.trim.toUpperCase)
+
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     System.err.println(Version.fullVersion)
@@ -24,7 +27,8 @@ object Shell {
       case Some(path) =>
         workspace.open(path)
     }
-    input.foreach(run(workspace, _))
+    input.takeWhile(!isQuit(_))
+      .foreach(run(workspace, _))
     workspace.dispose()
   }
 
