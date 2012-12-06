@@ -7,6 +7,7 @@ exec bin/scala -classpath bin -deprecation -nocompdaemon -Dfile.encoding=UTF-8 "
 import sys.process.Process
 
 def skip(path: String): Boolean =
+  path.endsWith("/.git") ||
   path.containsSlice("/.git/") ||
   path.containsSlice("/tmp/") ||
   path.endsWith("~") ||
@@ -27,7 +28,7 @@ val nonExecutableExtensions =
   "aif au ogg wav dat bsearch mf properties nbm java_NEW psd iml gitignore ensime sbt md " +
   "dll so jnilib js inf"
 val nonExecutableFullNames =
-  "README PkgInfo Makefile COPYING .gitmodules"
+  "README LICENSE PkgInfo Makefile COPYING .gitmodules .gitattributes"
 
 for{path <- Process("find . -type f -perm +0100").lines; if !skip(path)} {
   if(executableExtensions.split(" ").forall(ext => !path.endsWith("." + ext)) &&
