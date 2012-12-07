@@ -10,69 +10,107 @@ object PlotAction extends Publisher[PlotAction] {
     publish(action)
   }
 
-  case class ClearPlot(plot: Plot)
+  case class ClearPlot(plotName: String)
     extends PlotAction
-  case class PlotY(plot: Plot, pen: PlotPen, y: Double)
+  case class PlotY(plotName: String, penName: String, y: Double)
     extends PlotAction
-  case class PlotXY(plot: Plot, pen: PlotPen, x: Double, y: Double)
+  case class PlotXY(plotName: String, penName: String, x: Double, y: Double)
     extends PlotAction
-  case class Histogram(plot: Plot, pen: PlotPen, values: Seq[Double])
+  case class Histogram(plotName: String, penName: String, values: Seq[Double])
     extends PlotAction
-  case class AutoPlot(plot: Plot, on: Boolean)
+  case class AutoPlot(plotName: String, on: Boolean)
     extends PlotAction
-  case class SetRange(plot: Plot, isX: Boolean, min: Double, max: Double)
+  case class SetRange(plotName: String, isX: Boolean, min: Double, max: Double)
     extends PlotAction
-  case class PenDown(pen: PlotPen, down: Boolean)
+  case class PenDown(plotName: String, penName: String, down: Boolean)
     extends PlotAction
-  case class HidePen(pen: PlotPen, hidden: Boolean)
+  case class HidePen(plotName: String, penName: String, hidden: Boolean)
     extends PlotAction
-  case class ResetPen(pen: PlotPen)
+  case class ResetPen(plotName: String, penName: String)
     extends PlotAction
-  case class SetPenInterval(pen: PlotPen, interval: Double)
+  case class SetPenInterval(plotName: String, penName: String, interval: Double)
     extends PlotAction
-  case class SetPenMode(pen: PlotPen, mode: Int)
+  case class SetPenMode(plotName: String, penName: String, mode: Int)
     extends PlotAction
-  case class SetPenColor(pen: PlotPen, color: Int)
+  case class SetPenColor(plotName: String, penName: String, color: Int)
     extends PlotAction
-  case class CreateTemporaryPen(plot: Plot, name: String)
+  case class CreateTemporaryPen(plotName: String, penName: String)
     extends PlotAction
 }
 
 trait PlotRunner {
 
+  def getPlotOption(name: String): Option[Plot]
+  def getPlotPen(plotName: String, penName: String): Option[PlotPen]
+
   def run(action: PlotAction) = action match {
-    case PlotAction.ClearPlot(plot) =>
-      plot.clear()
-    case PlotAction.PlotY(plot, pen, y) =>
-      plot.plot(pen, y)
-    case PlotAction.PlotXY(plot, pen, x, y) =>
-      plot.plot(pen, x, y)
-    case PlotAction.Histogram(plot, pen, values) =>
-      plot.beginHistogram(pen)
-      values.foreach(plot.nextHistogramValue)
-      plot.endHistogram(pen)
-    case PlotAction.AutoPlot(plot, on) =>
-      plot.state = plot.state.copy(autoPlotOn = on)
-    case PlotAction.SetRange(plot, isX, min, max) =>
-      plot.state =
-        if (isX)
-          plot.state.copy(xMin = min, xMax = max)
-        else
-          plot.state.copy(yMin = min, yMax = max)
-    case PlotAction.PenDown(pen, down) =>
-      pen.state = pen.state.copy(isDown = down)
-    case PlotAction.HidePen(pen, hidden) =>
-      pen.state = pen.state.copy(hidden = hidden)
-    case PlotAction.ResetPen(pen) =>
-      pen.hardReset()
-    case PlotAction.SetPenInterval(pen, interval) =>
-      pen.state = pen.state.copy(interval = interval)
-    case PlotAction.SetPenMode(pen, mode) =>
-      pen.state = pen.state.copy(mode = mode)
-    case PlotAction.SetPenColor(pen, color) =>
-      pen.state = pen.state.copy(color = color)
-    case PlotAction.CreateTemporaryPen(plot, name) =>
-      plot.currentPen = plot.getPen(name).getOrElse(plot.createPlotPen(name, true))
+    case PlotAction.ClearPlot(plotName) =>
+      for { plot <- getPlotOption(plotName) }
+        plot.clear()
+    case PlotAction.PlotY(plotName, penName, y) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } plot.plot(pen, y)
+    case PlotAction.PlotXY(plotName, penName, x, y) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } plot.plot(pen, x, y)
+    case PlotAction.Histogram(plotName, penName, values) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } {
+        plot.beginHistogram(pen)
+        values.foreach(plot.nextHistogramValue)
+        plot.endHistogram(pen)
+      }
+    case PlotAction.AutoPlot(plotName, on) =>
+      for { plot <- getPlotOption(plotName) }
+        plot.state = plot.state.copy(autoPlotOn = on)
+    case PlotAction.SetRange(plotName, isX, min, max) =>
+      for { plot <- getPlotOption(plotName) }
+        plot.state =
+          if (isX)
+            plot.state.copy(xMin = min, xMax = max)
+          else
+            plot.state.copy(yMin = min, yMax = max)
+    case PlotAction.PenDown(plotName, penName, down) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.state = pen.state.copy(isDown = down)
+    case PlotAction.HidePen(plotName, penName, hidden) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.state = pen.state.copy(hidden = hidden)
+    case PlotAction.ResetPen(plotName, penName) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.hardReset()
+    case PlotAction.SetPenInterval(plotName, penName, interval) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.state = pen.state.copy(interval = interval)
+    case PlotAction.SetPenMode(plotName, penName, mode) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.state = pen.state.copy(mode = mode)
+    case PlotAction.SetPenColor(plotName, penName, color) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen <- plot.getPen(penName)
+      } pen.state = pen.state.copy(color = color)
+    case PlotAction.CreateTemporaryPen(plotName, penName) =>
+      for {
+        plot <- getPlotOption(plotName)
+        pen = plot.getPen(penName).getOrElse(plot.createPlotPen(penName, true))
+      } plot.currentPen = pen
   }
 
 }

@@ -44,8 +44,11 @@ class PlotManager(factory: LogoThunkFactory)
     plot
   }
 
-  // possible null return
-  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name)).orNull
+  def getPlotOption(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
+  def getPlot(name: String): Plot = getPlotOption(name).orNull
+
+  def getPlotPen(plotName: String, penName: String) =
+    getPlotOption(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
   def getPlotNames: Array[String] = _plots.map(_.name).toArray

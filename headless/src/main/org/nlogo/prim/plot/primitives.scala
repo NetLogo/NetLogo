@@ -58,7 +58,7 @@ extends Reporter with Helpers {
 class _clearallplots extends PlotCommand() {
   override def perform(context: Context) {
     for (plot <- plotManager.plots)
-      PlotAction.forward(PlotAction.ClearPlot(plot))
+      PlotAction.forward(PlotAction.ClearPlot(plot.name))
     context.ip = next
   }
 }
@@ -95,19 +95,16 @@ class _setcurrentplot extends PlotCommand(Syntax.StringType) {
 
 class _clearplot extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.ClearPlot(
-      currentPlot(context))
+    PlotAction.ClearPlot(currentPlot(context).name)
 }
 
 class _autoplotoff extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.AutoPlot(
-      currentPlot(context), on = false)
+    PlotAction.AutoPlot(currentPlot(context).name, on = false)
 }
 class _autoploton extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.AutoPlot(
-      currentPlot(context), on = true)
+    PlotAction.AutoPlot(currentPlot(context).name, on = true)
 }
 
 class SetPlotRangeCommand(isX: Boolean) extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
@@ -120,7 +117,7 @@ class SetPlotRangeCommand(isX: Boolean) extends PlotActionCommand(Syntax.NumberT
         "the minimum must be less than the maximum, but " + min +
         " is greater than or equal to " + max)
     PlotAction.SetRange(
-      plot = currentPlot(context),
+      plotName = currentPlot(context).name,
       isX = isX, min = min, max = max)
   }
 }
@@ -130,7 +127,7 @@ class _setplotyrange extends SetPlotRangeCommand(isX = false)
 class _createtemporaryplotpen extends PlotActionCommand(Syntax.StringType) {
   override def action(context: Context) =
     PlotAction.CreateTemporaryPen(
-      currentPlot(context), argEvalString(context, 0))
+      currentPlot(context).name, argEvalString(context, 0))
 }
 
 class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
@@ -215,16 +212,16 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType)
 class _plot extends PlotActionCommand(Syntax.NumberType) {
   override def action(context: Context) =
     PlotAction.PlotY(
-      currentPlot(context),
-      currentPen(context),
+      currentPlot(context).name,
+      currentPen(context).name,
       argEvalDoubleValue(context, 0))
 }
 
 class _plotxy extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
   override def action(context: Context) =
     PlotAction.PlotXY(
-      currentPlot(context),
-      currentPen(context),
+      currentPlot(context).name,
+      currentPen(context).name,
       argEvalDoubleValue(context, 0),
       argEvalDoubleValue(context, 1))
 }
@@ -241,7 +238,7 @@ class _histogram extends PlotActionCommand(Syntax.ListType) {
           d.doubleValue
       }.toSeq
     PlotAction.Histogram(
-      currentPlot(context), pen, values)
+      currentPlot(context).name, pen.name, values)
   }
 }
 
@@ -255,35 +252,50 @@ class _sethistogramnumbars extends PlotActionCommand(Syntax.NumberType) {
     val pen = currentPen(context)
     val newInterval = (plot.state.xMax - plot.state.xMin) / numBars
     PlotAction.SetPenInterval(
-      pen, newInterval)
+      plot.name, pen.name, newInterval)
   }
 }
 class _setplotpeninterval extends PlotActionCommand(Syntax.NumberType) {
   override def action(context: Context) =
     PlotAction.SetPenInterval(
-      currentPen(context),
+      currentPlot(context).name,
+      currentPen(context).name,
       argEvalDoubleValue(context, 0))
 }
 
 class _plotpendown extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.PenDown(currentPen(context), down = true)
+    PlotAction.PenDown(
+      currentPlot(context).name,
+      currentPen(context).name,
+      down = true)
 }
 class _plotpenup extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.PenDown(currentPen(context), down = false)
+    PlotAction.PenDown(
+      currentPlot(context).name,
+      currentPen(context).name,
+      down = false)
 }
 class _plotpenshow extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.HidePen(currentPen(context), hidden = false)
+    PlotAction.HidePen(
+      currentPlot(context).name,
+      currentPen(context).name,
+      hidden = false)
 }
 class _plotpenhide extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.HidePen(currentPen(context), hidden = true)
+    PlotAction.HidePen(
+      currentPlot(context).name,
+      currentPen(context).name,
+      hidden = true)
 }
 class _plotpenreset extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.ResetPen(currentPen(context))
+    PlotAction.ResetPen(
+      currentPlot(context).name,
+      currentPen(context).name)
 }
 
 class _setplotpenmode extends PlotActionCommand(Syntax.NumberType) {
@@ -293,7 +305,9 @@ class _setplotpenmode extends PlotActionCommand(Syntax.NumberType) {
       throw new EngineException(context, this,
         mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
-    PlotAction.SetPenMode(currentPen(context), mode)
+    val plotName = currentPlot(context).name
+    val penName = currentPen(context).name
+    PlotAction.SetPenMode(plotName, penName, mode)
   }
 }
 
@@ -302,7 +316,9 @@ class _setplotpencolor extends PlotActionCommand(Syntax.NumberType) {
     val color =
       api.Color.getARGBbyPremodulatedColorNumber(
         api.Color.modulateDouble(argEvalDoubleValue(context, 0)))
-    PlotAction.SetPenColor(currentPen(context), color)
+    val plotName = currentPlot(context).name
+    val penName = currentPen(context).name
+    PlotAction.SetPenColor(plotName, penName, color)
   }
 }
 

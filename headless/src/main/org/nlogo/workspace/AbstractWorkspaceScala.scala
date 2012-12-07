@@ -130,7 +130,7 @@ object AbstractWorkspaceTraits {
 
     // methods used when importing plots
     def currentPlot(plot: String) {
-      plotManager.currentPlot = Some(plotManager.getPlot(plot))
+      plotManager.currentPlot = plotManager.getPlotOption(plot)
     }
 
     def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
