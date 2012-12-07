@@ -9,7 +9,7 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
-import org.nlogo.mirror.Mirrorables
+import org.nlogo.mirror.{ Mirrorables, Serializer }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
@@ -179,7 +179,6 @@ class ReviewTab(
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         run.append(mirrorables, PlotActionBuffer.grab())
-        run.data.foreach(d => println(d.plotActionFrames))
       } catch {
         case e: java.lang.OutOfMemoryError =>
           // happens if user ignored our warning or if "GC overhead limit exceeded"
@@ -208,7 +207,7 @@ class ReviewTab(
       for {
         run <- tabState.currentRun
         data <- run.data
-        fakeWorld = new mirror.FakeWorld(data.currentFrame)
+        fakeWorld = new mirror.FakeWorld(data.currentFrame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       } {
@@ -241,7 +240,7 @@ class ReviewTab(
       for {
         run <- tabState.currentRun
         data <- run.data
-        values = data.currentFrame
+        values = data.currentFrame.mirroredState
           .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
           .toSeq
           .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
@@ -339,11 +338,14 @@ class ReviewTab(
           byteStream.close()
           byteStream.toByteArray
         }
+        val rawUpdates = data.deltas.map { d =>
+          Serializer.toBytes(d.mirroredUpdate)
+        }
         Seq(
           run.modelString,
           viewAreaShape,
           image,
-          data.rawDiffs,
+          rawUpdates,
           run.generalNotes)
       }
       ignoring(classOf[UserCancelException]) {
@@ -425,17 +427,19 @@ class ReviewTab(
         modelString: String,
         viewShape: java.awt.Shape,
         imageBytes: Array[Byte],
-        rawDiffs: Seq[Array[Byte]],
+        rawMirroredUpdates: Seq[Array[Byte]],
         notes: String) = Stream.continually(in.readObject()).take(5)
       in.close()
       loadModelIfNeeded(modelString)
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
-        ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)), fakeWidgets(ws))
+        ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)),
+        fakeWidgets(ws))
+      val mirroredUpdates = rawMirroredUpdates.map(Serializer.fromBytes)
       val plotActionFrames = Seq[Seq[PlotAction]]() // TODO: load actions from file
       val run = tabState.loadRun(
         nameFromPath(path), modelString,
-        rawDiffs, plotActionFrames,
+        mirroredUpdates, plotActionFrames,
         newInterface, notes)
       Right(run)
     } catch {
