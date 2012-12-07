@@ -1,7 +1,6 @@
 package org.nlogo.plot
 
 import scala.collection.mutable.Publisher
-import scala.collection.mutable.Subscriber
 
 sealed trait PlotAction
 
@@ -42,15 +41,9 @@ object PlotAction extends Publisher[PlotAction] {
     extends PlotAction
 }
 
-trait PlotRunner
-  extends Subscriber[PlotAction, PlotAction.Pub] {
-  self: PlotManager =>
+trait PlotRunner {
 
-  PlotAction.subscribe(this)
-
-  def notify(pub: PlotAction.Pub, action: PlotAction) {
-    run(action)
-  }
+  def clearAll(): Unit
 
   def run(action: PlotAction) = action match {
     case PlotAction.ClearAll =>
