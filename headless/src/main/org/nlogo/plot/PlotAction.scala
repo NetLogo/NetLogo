@@ -7,12 +7,9 @@ sealed trait PlotAction
 object PlotAction extends Publisher[PlotAction] {
 
   def forward(action: PlotAction) = {
-    println(action)
     publish(action)
   }
 
-  case object ClearAll
-    extends PlotAction
   case class ClearPlot(plot: Plot)
     extends PlotAction
   case class PlotY(plot: Plot, pen: PlotPen, y: Double)
@@ -43,11 +40,7 @@ object PlotAction extends Publisher[PlotAction] {
 
 trait PlotRunner {
 
-  def clearAll(): Unit
-
   def run(action: PlotAction) = action match {
-    case PlotAction.ClearAll =>
-      clearAll()
     case PlotAction.ClearPlot(plot) =>
       plot.clear()
     case PlotAction.PlotY(plot, pen, y) =>

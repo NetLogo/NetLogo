@@ -55,10 +55,14 @@ extends Reporter with Helpers {
 // commands requiring only the plot manager (it's ok if there are no plots)
 //
 
-class _clearallplots extends PlotActionCommand() {
-  override def action(context: Context) =
-    PlotAction.ClearAll
+class _clearallplots extends PlotCommand() {
+  override def perform(context: Context) {
+    for (plot <- plotManager.plots)
+      PlotAction.forward(PlotAction.ClearPlot(plot))
+    context.ip = next
+  }
 }
+
 class _setupplots extends PlotCommand() {
   override def callsOtherCode = true
   override def perform(context: Context) {
