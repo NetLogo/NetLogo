@@ -10,6 +10,7 @@ import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
 import org.nlogo.mirror.{ Mirrorables, Serializer }
+import org.nlogo.plot.{ Plot, PlotPen, PlotAction }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
@@ -19,14 +20,15 @@ import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBo
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.nlogo.plot.PlotAction
 import scala.collection.mutable.Subscriber
 import scala.collection.mutable.ListBuffer
+import org.nlogo.window.PlotCanvas
 
 case class PotemkinInterface(
   val viewArea: java.awt.geom.Area,
   val image: BufferedImage,
-  val fakeWidgets: Seq[FakeWidget])
+  val fakeWidgets: Seq[FakeWidget],
+  val fakeCanvases: Seq[PlotCanvas])
 
 case class FakeWidget(
   val realWidget: window.Widget,
@@ -162,7 +164,10 @@ class ReviewTab(
     val image = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
-    val newInterface = PotemkinInterface(viewArea, image, widgets)
+    val plots = fakePlots(ws)
+    val canvases = fakePlotCanvases(plots)
+
+    val newInterface = PotemkinInterface(viewArea, image, widgets, canvases)
     val name = Option(ws.getModelFileName)
       .map(nameFromPath)
       .getOrElse("Untitled")
@@ -200,6 +205,19 @@ class ReviewTab(
         case m: window.MonitorWidget =>
           FakeWidget(m, () => m.valueString)
       }.toList
+
+  def fakePlots(ws: org.nlogo.window.GUIWorkspace) =
+    ws.plotManager.plots.map { realPlot =>
+      val fakePlot = new Plot(realPlot.name)
+      for (realPen <- realPlot.pens) {
+        val fakePen = new PlotPen(false, realPen.name)
+        fakePlot.addPen(fakePen)
+      }
+      fakePlot
+    }
+
+  def fakePlotCanvases(fakePlots: Seq[Plot]) =
+    fakePlots.map(p => new window.PlotCanvas(p))
 
   object InterfacePanel extends JPanel {
 
@@ -434,7 +452,7 @@ class ReviewTab(
       val newInterface = PotemkinInterface(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)),
-        fakeWidgets(ws))
+        fakeWidgets(ws),fakePlotCanvases(fakePlots(ws)))
       val mirroredUpdates = rawMirroredUpdates.map(Serializer.fromBytes)
       val plotActionFrames = Seq[Seq[PlotAction]]() // TODO: load actions from file
       val run = tabState.loadRun(

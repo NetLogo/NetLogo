@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPainter;
 
-strictfp class PlotCanvas extends javax.swing.JPanel {
+strictfp public class PlotCanvas extends javax.swing.JPanel {
 
   final Plot plot;
   private final PlotPainter painter;
@@ -16,7 +16,7 @@ strictfp class PlotCanvas extends javax.swing.JPanel {
     repaint();
   }
 
-  PlotCanvas(Plot plot) {
+  public PlotCanvas(Plot plot) {
     this.plot = plot;
     painter = new PlotPainter(plot);
     setOpaque(true);
