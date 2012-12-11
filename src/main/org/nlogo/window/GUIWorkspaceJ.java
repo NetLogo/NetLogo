@@ -991,7 +991,7 @@ public abstract strictfp class GUIWorkspaceJ
     if (plotnum < 0) {
       return null;
     } else {
-      return plotManager().getPlot(plotNames[plotnum]);
+      return plotManager().getPlot(plotNames[plotnum]).getOrElse(null);
     }
   }
 

@@ -44,15 +44,15 @@ class PlotManager(factory: LogoThunkFactory)
     plot
   }
 
-  def getPlotOption(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
-  def getPlot(name: String): Plot = getPlotOption(name).orNull
+  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
+//  def getPlotOrNull(name: String): Plot = getPlot(name).orNull
 
   def getPlotPen(plotName: String, penName: String) =
-    getPlotOption(plotName).flatMap(_.getPen(penName))
+    getPlot(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
   def getPlotNames: Array[String] = _plots.map(_.name).toArray
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
+  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_).isEmpty).get
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None

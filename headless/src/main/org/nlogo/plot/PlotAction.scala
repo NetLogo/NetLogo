@@ -40,26 +40,26 @@ object PlotAction extends Publisher[PlotAction] {
 
 trait PlotRunner {
 
-  def getPlotOption(name: String): Option[Plot]
+  def getPlot(name: String): Option[Plot]
   def getPlotPen(plotName: String, penName: String): Option[PlotPen]
 
   def run(action: PlotAction) = action match {
     case PlotAction.ClearPlot(plotName) =>
-      for { plot <- getPlotOption(plotName) }
+      for { plot <- getPlot(plotName) }
         plot.clear()
     case PlotAction.PlotY(plotName, penName, y) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } plot.plot(pen, y)
     case PlotAction.PlotXY(plotName, penName, x, y) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } plot.plot(pen, x, y)
     case PlotAction.Histogram(plotName, penName, values) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } {
         plot.beginHistogram(pen)
@@ -67,10 +67,10 @@ trait PlotRunner {
         plot.endHistogram(pen)
       }
     case PlotAction.AutoPlot(plotName, on) =>
-      for { plot <- getPlotOption(plotName) }
+      for { plot <- getPlot(plotName) }
         plot.state = plot.state.copy(autoPlotOn = on)
     case PlotAction.SetRange(plotName, isX, min, max) =>
-      for { plot <- getPlotOption(plotName) }
+      for { plot <- getPlot(plotName) }
         plot.state =
           if (isX)
             plot.state.copy(xMin = min, xMax = max)
@@ -78,37 +78,37 @@ trait PlotRunner {
             plot.state.copy(yMin = min, yMax = max)
     case PlotAction.PenDown(plotName, penName, down) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(isDown = down)
     case PlotAction.HidePen(plotName, penName, hidden) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(hidden = hidden)
     case PlotAction.ResetPen(plotName, penName) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.hardReset()
     case PlotAction.SetPenInterval(plotName, penName, interval) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(interval = interval)
     case PlotAction.SetPenMode(plotName, penName, mode) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(mode = mode)
     case PlotAction.SetPenColor(plotName, penName, color) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(color = color)
     case PlotAction.CreateTemporaryPen(plotName, penName) =>
       for {
-        plot <- getPlotOption(plotName)
+        plot <- getPlot(plotName)
         pen = plot.getPen(penName).getOrElse(plot.createPlotPen(penName, true))
       } plot.currentPen = pen
   }

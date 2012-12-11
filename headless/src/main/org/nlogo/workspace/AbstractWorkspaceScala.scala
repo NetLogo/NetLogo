@@ -130,10 +130,10 @@ object AbstractWorkspaceTraits {
 
     // methods used when importing plots
     def currentPlot(plot: String) {
-      plotManager.currentPlot = plotManager.getPlotOption(plot)
+      plotManager.currentPlot = plotManager.getPlot(plot)
     }
 
-    def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
+    def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot).orNull
 
     // The PlotManager has already-compiled thunks that it runs to setup and update
     // plots.  But those thunks need a Context to run in, which isn't known until
@@ -181,7 +181,7 @@ object AbstractWorkspaceTraits {
         Dump.csv.encode(
           plotManager.currentPlot.map(_.name).getOrElse("")))
       plotManager.getPlotNames.foreach { name =>
-        new PlotExporter(plotManager.getPlot(name),Dump.csv).export(writer)
+        new PlotExporter(plotManager.getPlot(name).orNull, Dump.csv).export(writer)
         writer.println()
       }
     }
@@ -191,7 +191,7 @@ object AbstractWorkspaceTraits {
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
-          new PlotExporter(plotManager.getPlot(plotName),Dump.csv).export(writer)
+          new PlotExporter(plotManager.getPlot(plotName).orNull, Dump.csv).export(writer)
         }
       }.export("plot",modelFileName,"")
     }
@@ -203,7 +203,7 @@ object AbstractWorkspaceTraits {
           exportInterfaceGlobals(writer)
 
           plotManager.getPlotNames.foreach { name =>
-            new PlotExporter(plotManager.getPlot(name),Dump.csv).export(writer)
+            new PlotExporter(plotManager.getPlot(name).orNull, Dump.csv).export(writer)
             writer.println()
           }
         }
