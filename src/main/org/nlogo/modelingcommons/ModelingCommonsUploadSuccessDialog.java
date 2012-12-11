@@ -27,6 +27,7 @@ public class ModelingCommonsUploadSuccessDialog extends JDialog {
     super(frame, "Upload To Modeling Commons Successful", true);
 
     setSize(400, 200);
+    this.setLocationRelativeTo(frame);
     setResizable(false);
     this.frame = frame;
     this.communicator = communicator;

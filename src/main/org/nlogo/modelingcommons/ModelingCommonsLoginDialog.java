@@ -31,49 +31,50 @@ public class ModelingCommonsLoginDialog extends JDialog {
   private ModelingCommons communicator;
 
   ModelingCommonsLoginDialog(Frame frame, ModelingCommons communicator, String errorLabelText) {
-        super(frame, "Login To Modeling Commons", true);
+    super(frame, "Login To Modeling Commons", true);
     this.communicator = communicator;
-        this.frame = frame;
-        setSize(400, 200);
-        setResizable(false);
-        setContentPane(contentPane);
-        getRootPane().setDefaultButton(loginButton);
+    this.frame = frame;
+    setSize(400, 200);
+    this.setLocationRelativeTo(frame);
+    setResizable(false);
+    setContentPane(contentPane);
+    getRootPane().setDefaultButton(loginButton);
 
-        errorLabel.setText(errorLabelText);
+    errorLabel.setText(errorLabelText);
 
-        createAccountButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            BrowserLauncher.openURL(createAccountButton, "http://localhost:3000/account/new", false);
-          }
-        });
+    createAccountButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+      BrowserLauncher.openURL(createAccountButton, "http://localhost:3000/account/new", false);
+      }
+    });
 
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+    loginButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            onOK();
+        }
+    });
 
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+    cancelButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            onCancel();
+        }
+    });
 
 
-// call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
+    //call onCancel() when cross is clicked
+    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent e) {
+            onCancel();
+        }
+    });
 
 // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    contentPane.registerKeyboardAction(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            onCancel();
+        }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
