@@ -10,7 +10,7 @@ import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
 import org.nlogo.mirror.{ Mirrorables, Serializer }
-import org.nlogo.plot.{ Plot, PlotPen, PlotAction }
+import org.nlogo.plot.{ Plot, PlotPen, PlotAction, PlotManager }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
@@ -47,12 +47,12 @@ class ReviewTab(
    * start to bring the plots to their actual state. NP 2012-11-29
    */
   object PlotActionBuffer
-    extends Subscriber[PlotAction, PlotAction.Pub] {
+    extends Subscriber[PlotAction, PlotManager#Pub] {
 
-    PlotAction.subscribe(this)
+    ws.plotManager.subscribe(this)
 
     val buffer = new ListBuffer[PlotAction]
-    def notify(pub: PlotAction.Pub, action: PlotAction) {
+    def notify(pub: PlotManager#Pub, action: PlotAction) {
       buffer += action
     }
     def clear() = buffer.clear()

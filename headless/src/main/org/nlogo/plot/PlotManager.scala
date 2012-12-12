@@ -4,24 +4,22 @@ package org.nlogo.plot
 
 import scala.collection.mutable
 import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
-import scala.collection.mutable.Subscriber
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
 class PlotManager(factory: LogoThunkFactory)
   extends PlotManagerInterface
   with PlotRunner
-  with Subscriber[PlotAction, PlotAction.Pub] {
+  with mutable.Publisher[PlotAction] {
+
+  override def publish(action: PlotAction) {
+    super.publish(action)
+    run(action)
+  }
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()
   def plots = _plots.toList
-
-  // subscribe to plotting actions and run'em when we get'em
-  PlotAction.subscribe(this)
-  override def notify(pub: PlotAction.Pub, action: PlotAction) {
-    run(action)
-  }
 
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.

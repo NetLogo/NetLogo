@@ -4,11 +4,7 @@ import scala.collection.mutable.Publisher
 
 sealed trait PlotAction
 
-object PlotAction extends Publisher[PlotAction] {
-
-  def forward(action: PlotAction) = {
-    publish(action)
-  }
+object PlotAction  {
 
   case class ClearPlot(plotName: String)
     extends PlotAction

@@ -39,7 +39,7 @@ extends PlotCommand(args: _*) {
   override def syntax =
     Syntax.commandSyntax(args.toArray)
   override def perform(context: Context) {
-    PlotAction.forward(action(context))
+    plotManager.publish(action(context))
     context.ip = next
   }
   def action(context: Context): PlotAction
@@ -58,7 +58,7 @@ extends Reporter with Helpers {
 class _clearallplots extends PlotCommand() {
   override def perform(context: Context) {
     for (plot <- plotManager.plots)
-      PlotAction.forward(PlotAction.ClearPlot(plot.name))
+      plotManager.publish(PlotAction.ClearPlot(plot.name))
     context.ip = next
   }
 }

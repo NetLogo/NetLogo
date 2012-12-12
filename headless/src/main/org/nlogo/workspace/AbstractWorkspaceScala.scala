@@ -9,7 +9,6 @@ import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineExcept
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
 import org.nlogo.workspace.AbstractWorkspace.HubNetManagerFactory
-
 import java.io.{ IOException, PrintWriter }
 import java.util.WeakHashMap
 
