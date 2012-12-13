@@ -435,7 +435,7 @@ class ReviewTab(
    * Loads a run from `path` and returns either the loaded run
    * in case of success or the path in case of failure
    */
-  def loadRun(path: String): Either[String, Run] =
+  def loadRun(path: String): Either[String, ModelRun] =
     try {
       val in = new java.io.ObjectInputStream(
         new java.io.FileInputStream(path))
@@ -499,7 +499,7 @@ class ReviewTab(
       new ListSelectionListener {
         def valueChanged(p1: ListSelectionEvent) {
           if (getSelectedIndex != -1) {
-            val run = RunList.getSelectedValue.asInstanceOf[Run]
+            val run = RunList.getSelectedValue.asInstanceOf[ModelRun]
             tabState.setCurrentRun(run)
             loadModelIfNeeded(run.modelString)
             refreshInterface()
