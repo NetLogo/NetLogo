@@ -24,14 +24,18 @@ import scala.collection.mutable.Subscriber
 import scala.collection.mutable.ListBuffer
 import org.nlogo.window.PlotCanvas
 
-case class PotemkinInterface(
-  val viewArea: java.awt.geom.Area,
-  val image: BufferedImage,
-  val fakeWidgets: Seq[FakeWidget],
-  val fakeCanvases: Seq[PlotCanvas])
+object WidgetHooks {
+  def apply(ws: window.GUIWorkspace) =
+    for {
+      container <- Option(ws.viewWidget.findWidgetContainer).toSeq
+      allWidgets = container.getWidgetsForSaving.asScala
+      monitors = allWidgets.collect { case m: window.MonitorWidget => m }
+      m <- monitors
+    } yield WidgetHook(m, () => m.valueString)
+}
 
-case class FakeWidget(
-  val realWidget: window.Widget,
+case class WidgetHook(
+  val widget: window.Widget,
   val valueStringGetter: () => String)
 
 class ReviewTab(
@@ -91,12 +95,11 @@ class ReviewTab(
     new java.io.File(path).getName
       .replaceAll("\\.[^.]*$", "") // remove extension
 
-  val tabState = new ReviewTabState()
+  val tabState = new ReviewTabState(WidgetHooks(ws))
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
-        println("tickCounterChanged " + ticks)
         if (ws.world.ticks == -1) {
           PlotActionBuffer.clear()
         } else {
@@ -122,9 +125,7 @@ class ReviewTab(
   // block waiting for the job thread. - ST 10/12/12
   def updateMonitors() {
     for {
-      run <- tabState.currentRun
-      fakeWidgets = run.potemkinInterface.fakeWidgets
-      monitor <- fakeWidgets.collect { case FakeWidget(m: window.MonitorWidget, _) => m }
+      monitor <- tabState.widgetHooks.collect { case WidgetHook(m: window.MonitorWidget, _) => m }
       reporter <- monitor.reporter
     } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
   }
@@ -147,31 +148,29 @@ class ReviewTab(
 
     // The position is the position of the view, but the image is the
     // whole interface, including the view.
-    val widgets = fakeWidgets(ws)
     val view = ws.viewWidget.view
     val viewArea = new java.awt.geom.Area(new java.awt.Rectangle(
       wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
       view.getWidth, view.getHeight))
 
+    tabState.widgetHooks = WidgetHooks(ws)
+
     // remove widgets from the clip area of the view:
     val container = ws.viewWidget.findWidgetContainer
     for {
-      w <- widgets
-      bounds = container.getUnzoomedBounds(w.realWidget)
+      w <- tabState.widgetHooks
+      bounds = container.getUnzoomedBounds(w.widget)
       widgetArea = new java.awt.geom.Area(bounds)
     } viewArea.subtract(widgetArea)
 
     val image = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
-    val plots = fakePlots(ws)
-    val canvases = fakePlotCanvases(plots)
-
-    val newInterface = PotemkinInterface(viewArea, image, widgets, canvases)
     val name = Option(ws.getModelFileName)
-      .map(nameFromPath)
+      .map(path => tabState.uniqueName(nameFromPath(path)))
       .getOrElse("Untitled")
-    val run = tabState.newRun(name, saveModel(), newInterface)
+    val run = new ModelRun(name, saveModel(), viewArea, image, "", Map())
+    tabState.addRun(run)
     RunList.setSelectedValue(run, true)
     refreshInterface()
   }
@@ -179,7 +178,7 @@ class ReviewTab(
   def grab() {
     for (run <- tabState.currentRun) {
       try {
-        val widgetValues = run.potemkinInterface.fakeWidgets
+        val widgetValues = tabState.widgetHooks
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
@@ -197,27 +196,6 @@ class ReviewTab(
       refreshInterface()
     }
   }
-
-  def fakeWidgets(ws: org.nlogo.window.GUIWorkspace) =
-    ws.viewWidget.findWidgetContainer
-      .getWidgetsForSaving.asScala
-      .collect {
-        case m: window.MonitorWidget =>
-          FakeWidget(m, () => m.valueString)
-      }.toList
-
-  def fakePlots(ws: org.nlogo.window.GUIWorkspace) =
-    ws.plotManager.plots.map { realPlot =>
-      val fakePlot = new Plot(realPlot.name)
-      for (realPen <- realPlot.pens) {
-        val fakePen = new PlotPen(false, realPen.name)
-        fakePlot.addPen(fakePen)
-      }
-      fakePlot
-    }
-
-  def fakePlotCanvases(fakePlots: Seq[Plot]) =
-    fakePlots.map(p => new window.PlotCanvas(p))
 
   object InterfacePanel extends JPanel {
 
@@ -254,7 +232,7 @@ class ReviewTab(
       }
     }
 
-    def repaintWidgets(g: java.awt.Graphics, widgets: Seq[FakeWidget]) {
+    def repaintWidgets(g: java.awt.Graphics, hooks: Seq[WidgetHook]) {
       for {
         run <- tabState.currentRun
         data <- run.data
@@ -263,20 +241,19 @@ class ReviewTab(
           .toSeq
           .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
           .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-        (w, v) <- widgets zip values
+        (w, v) <- hooks.map(_.widget) zip values
       } {
         val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
         try {
-          val rw = w.realWidget
           val container = ws.viewWidget.findWidgetContainer
-          val bounds = container.getUnzoomedBounds(rw)
+          val bounds = container.getUnzoomedBounds(w)
           g2d.setRenderingHint(
             java.awt.RenderingHints.KEY_ANTIALIASING,
             java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-          g2d.setFont(rw.getFont)
-          g2d.clipRect(bounds.x, bounds.y, rw.getSize().width, rw.getSize().height) // make sure text doesn't overflow
+          g2d.setFont(w.getFont)
+          g2d.clipRect(bounds.x, bounds.y, w.getSize().width, w.getSize().height) // make sure text doesn't overflow
           g2d.translate(bounds.x, bounds.y)
-          rw match {
+          w match {
             case m: window.MonitorWidget =>
               window.MonitorPainter.paint(
                 g2d, m.getSize, m.getForeground, m.displayName, v)
@@ -294,11 +271,10 @@ class ReviewTab(
       g.fillRect(0, 0, getWidth, getHeight)
       for {
         run <- tabState.currentRun
-        pi = run.potemkinInterface
       } {
-        g.drawImage(pi.image, 0, 0, null)
-        repaintView(g, pi.viewArea)
-        repaintWidgets(g, pi.fakeWidgets)
+        g.drawImage(run.backgroundImage, 0, 0, null)
+        repaintView(g, run.viewArea)
+        repaintWidgets(g, tabState.widgetHooks)
       }
     }
   }
@@ -341,29 +317,7 @@ class ReviewTab(
   }
 
   val saveButton = actionButton("Save", "save") { () =>
-    for {
-      run <- tabState.currentRun
-      data <- run.data
-    } {
-      def thingsToSave = {
-        // Area is not serializable so we save a shape instead:
-        val viewAreaShape = java.awt.geom.AffineTransform
-          .getTranslateInstance(0, 0)
-          .createTransformedShape(run.potemkinInterface.viewArea)
-        val image = {
-          val byteStream = new java.io.ByteArrayOutputStream
-          ImageIO.write(run.potemkinInterface.image, "PNG", byteStream)
-          byteStream.close()
-          byteStream.toByteArray
-        }
-        val rawMirroredUpdates = data.deltas.map(_.rawMirroredUpdate)
-        Seq(
-          run.modelString,
-          viewAreaShape,
-          image,
-          rawMirroredUpdates,
-          run.generalNotes)
-      }
+    for (run <- tabState.currentRun) {
       ignoring(classOf[UserCancelException]) {
         val path = org.nlogo.swing.FileDialog.show(
           ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
@@ -374,8 +328,7 @@ class ReviewTab(
           throw new UserCancelException
         val out = new java.io.ObjectOutputStream(
           new java.io.FileOutputStream(path))
-        thingsToSave.foreach(out.writeObject)
-        out.close()
+        ModelRunIO.save(out, run)
         run.name = nameFromPath(path)
         tabState.undirty(run)
         refreshInterface()
@@ -439,23 +392,10 @@ class ReviewTab(
     try {
       val in = new java.io.ObjectInputStream(
         new java.io.FileInputStream(path))
-      val Seq(
-        modelString: String,
-        viewShape: java.awt.Shape,
-        imageBytes: Array[Byte],
-        rawMirroredUpdates: Seq[Array[Byte]],
-        notes: String) = Stream.continually(in.readObject()).take(5)
-      in.close()
-      loadModelIfNeeded(modelString)
-      val newInterface = PotemkinInterface(
-        new java.awt.geom.Area(viewShape),
-        ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)),
-        fakeWidgets(ws),fakePlotCanvases(fakePlots(ws)))
-      val plotActionFrames = Seq[Seq[PlotAction]]() // TODO: load actions from file
-      val run = tabState.loadRun(
-        nameFromPath(path), modelString,
-        rawMirroredUpdates, plotActionFrames,
-        newInterface, notes)
+      val name = tabState.uniqueName(nameFromPath(path))
+      val run = ModelRunIO.load(in, name)
+      tabState.addRun(run)
+      loadModelIfNeeded(run.modelString)
       Right(run)
     } catch {
       case ex: Exception => Left(path)
@@ -488,6 +428,7 @@ class ReviewTab(
       }
       org.nlogo.window.ModelLoader.load(ReviewTab.this,
         null, api.ModelType.Library, modelString)
+      tabState.widgetHooks = WidgetHooks(ws)
       App.app.tabs.setSelectedComponent(ReviewTab.this)
     }
   }

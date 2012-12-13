@@ -3,11 +3,13 @@ package org.nlogo.app
 import org.nlogo.mirror
 import org.nlogo.mirror.{Mirrorable, Mirrorables, Mirroring, Serializer}
 import org.nlogo.plot.{Plot, PlotAction}
+import java.awt.image.BufferedImage
 
 class ModelRun(
   var name: String,
   val modelString: String,
-  val potemkinInterface: PotemkinInterface,
+  val viewArea: java.awt.geom.Area,
+  val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
   private var _annotations: Map[Int, String] = Map()) {
   var stillRecording = true

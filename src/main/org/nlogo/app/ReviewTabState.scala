@@ -5,6 +5,7 @@ import org.nlogo.plot.PlotAction
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
+  var widgetHooks: Seq[WidgetHook] = Seq(),
   private var _runs: Seq[ModelRun] = Seq[ModelRun](),
   private var _currentRun: Option[ModelRun] = None,
   private var _recordingEnabled: Boolean = false,
@@ -16,6 +17,7 @@ class ReviewTabState(
   override def getSize = _runs.size
 
   def runs = _runs
+
   def currentRun = _currentRun
   def currentRunData = for { run <- currentRun; data <- run.data } yield data
   def recordingEnabled = _recordingEnabled
@@ -41,29 +43,12 @@ class ReviewTabState(
     }
   }
 
-  private def avoidDuplicate(name: String) =
+  def uniqueName(name: String) =
     (name +: Stream.from(1).map(i => name + " (" + i + ")"))
       .find(str => _runs.forall(_.name != str))
       .get
 
-  def newRun(name: String, modelString: String, potemkineInterface: PotemkinInterface): ModelRun = {
-    val run = new ModelRun(avoidDuplicate(name), modelString, potemkineInterface)
-    addRun(run)
-  }
-
-  def loadRun(
-    name: String,
-    modelString: String,
-    rawMirroredUpdates: Seq[Array[Byte]],
-    plotActionSeqs: Seq[Seq[PlotAction]],
-    potemkineInterface: PotemkinInterface,
-    generalNotes: String): ModelRun = {
-    val run = new ModelRun(avoidDuplicate(name), modelString, potemkineInterface, generalNotes)
-    run.load(rawMirroredUpdates, plotActionSeqs)
-    addRun(run)
-  }
-
-  private def addRun(run: ModelRun) = {
+  def addRun(run: ModelRun) = {
     _runs :+= run
     setCurrentRun(run)
     val lastIndex = _runs.size - 1
