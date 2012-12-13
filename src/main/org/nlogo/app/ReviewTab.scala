@@ -9,7 +9,7 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
-import org.nlogo.mirror.{ Mirrorables, Serializer }
+import org.nlogo.mirror.{ Mirrorables }
 import org.nlogo.plot.{ Plot, PlotPen, PlotAction, PlotManager }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
@@ -356,14 +356,12 @@ class ReviewTab(
           byteStream.close()
           byteStream.toByteArray
         }
-        val rawUpdates = data.deltas.map { d =>
-          Serializer.toBytes(d.mirroredUpdate)
-        }
+        val rawMirroredUpdates = data.deltas.map(_.rawMirroredUpdate)
         Seq(
           run.modelString,
           viewAreaShape,
           image,
-          rawUpdates,
+          rawMirroredUpdates,
           run.generalNotes)
       }
       ignoring(classOf[UserCancelException]) {
@@ -453,11 +451,10 @@ class ReviewTab(
         new java.awt.geom.Area(viewShape),
         ImageIO.read(new java.io.ByteArrayInputStream(imageBytes)),
         fakeWidgets(ws),fakePlotCanvases(fakePlots(ws)))
-      val mirroredUpdates = rawMirroredUpdates.map(Serializer.fromBytes)
       val plotActionFrames = Seq[Seq[PlotAction]]() // TODO: load actions from file
       val run = tabState.loadRun(
         nameFromPath(path), modelString,
-        mirroredUpdates, plotActionFrames,
+        rawMirroredUpdates, plotActionFrames,
         newInterface, notes)
       Right(run)
     } catch {

@@ -5,6 +5,7 @@ import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring }
 import javax.swing.AbstractListModel
 import org.nlogo.plot.PlotAction
 import org.nlogo.plot.Plot
+import org.nlogo.mirror.Serializer
 
 class ReviewTabState(
   private var _runs: Seq[Run] = Seq[Run](),
@@ -56,12 +57,12 @@ class ReviewTabState(
   def loadRun(
     name: String,
     modelString: String,
-    mirroredUpdates: Seq[mirror.Update],
+    rawMirroredUpdates: Seq[Array[Byte]],
     plotActionSeqs: Seq[Seq[PlotAction]],
     potemkineInterface: PotemkinInterface,
     generalNotes: String): Run = {
     val run = new Run(avoidDuplicate(name), modelString, potemkineInterface, generalNotes)
-    run.load(mirroredUpdates, plotActionSeqs)
+    run.load(rawMirroredUpdates, plotActionSeqs)
     addRun(run)
   }
 
@@ -119,8 +120,8 @@ class Run(
 
   def sizeInBytes = _data.map(_.sizeInBytes).getOrElse(0L)
 
-  def load(mirroredUpdates: Seq[mirror.Update], plotActionSeqs: Seq[Seq[PlotAction]]) {
-    val deltas = (mirroredUpdates, plotActionSeqs).zipped.map(Delta(_, _))
+  def load(rawMirroredUpdates: Seq[Array[Byte]], plotActionSeqs: Seq[Seq[PlotAction]]) {
+    val deltas = (rawMirroredUpdates, plotActionSeqs).zipped.map(Delta(_, _))
     _data = Some(load(deltas))
     stillRecording = false
   }
@@ -156,9 +157,15 @@ class Run(
     }
   }
 
+  object Delta {
+    def apply(mirroredUpdate: mirror.Update, plotActions: Seq[PlotAction]): Delta =
+      Delta(Serializer.toBytes(mirroredUpdate), plotActions)
+  }
   case class Delta(
-    mirroredUpdate: mirror.Update,
-    plotActions: Seq[PlotAction])
+    val rawMirroredUpdate: Array[Byte],
+    val plotActions: Seq[PlotAction]) {
+    def mirroredUpdate: mirror.Update = Serializer.fromBytes(rawMirroredUpdate)
+  }
 
   class Data protected[Run] (private var _deltas: Seq[Delta]) {
 
