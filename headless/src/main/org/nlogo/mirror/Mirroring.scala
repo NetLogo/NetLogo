@@ -70,7 +70,7 @@ object Mirroring {
   }
 
   private def mergeValues(oldValues: Seq[AnyRef], changes: Seq[Change]): Seq[AnyRef] = {
-    val newValues = oldValues.toArray
+    val newValues = Array(oldValues: _*)
     for (Change(variable, value) <- changes)
       newValues(variable) = value
     newValues.toSeq
