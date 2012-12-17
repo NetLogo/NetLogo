@@ -2,47 +2,45 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
-import java.awt.image.BufferedImage
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.mutable.{ ListBuffer, Subscriber }
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
-import org.nlogo.mirror.{ Mirrorables }
-import org.nlogo.plot.{ Plot, PlotPen, PlotAction, PlotManager }
+import org.nlogo.mirror.Mirrorables
+import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ InvalidVersionException, WidgetWrapperInterface }
-import javax.imageio.ImageIO
+import org.nlogo.window.{ MonitorWidget, Widget, WidgetWrapperInterface }
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import scala.collection.mutable.Subscriber
-import scala.collection.mutable.ListBuffer
-import org.nlogo.window.PlotCanvas
-
-object WidgetHooks {
-  def apply(ws: window.GUIWorkspace) =
-    for {
-      container <- Option(ws.viewWidget.findWidgetContainer).toSeq
-      allWidgets = container.getWidgetsForSaving.asScala
-      monitors = allWidgets.collect { case m: window.MonitorWidget => m }
-      m <- monitors
-    } yield WidgetHook(m, () => m.valueString)
-}
-
-case class WidgetHook(
-  val widget: window.Widget,
-  val valueStringGetter: () => String)
+import org.nlogo.window.PlotWidget
 
 class ReviewTab(
   ws: window.GUIWorkspace,
   saveModel: () => String)
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
+
+  private def workspaceWidgets =
+    Option(ws.viewWidget.findWidgetContainer)
+      .toSeq.flatMap(_.getWidgetsForSaving.asScala)
+
+  case class WidgetHook(
+    val widget: Widget,
+    val valueStringGetter: () => String)
+
+  private def widgetHooks = workspaceWidgets
+    .collect { case m: MonitorWidget => m }
+    .map(m => WidgetHook(m, () => m.valueString))
+
+  private def plotWidgets = workspaceWidgets
+    .collect { case pw: PlotWidget => pw }
 
   /**
    * The PlotActionBuffer logs all plotting actions, whether we are
@@ -95,7 +93,7 @@ class ReviewTab(
     new java.io.File(path).getName
       .replaceAll("\\.[^.]*$", "") // remove extension
 
-  val tabState = new ReviewTabState(WidgetHooks(ws))
+  val tabState = new ReviewTabState()
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
@@ -125,7 +123,7 @@ class ReviewTab(
   // block waiting for the job thread. - ST 10/12/12
   def updateMonitors() {
     for {
-      monitor <- tabState.widgetHooks.collect { case WidgetHook(m: window.MonitorWidget, _) => m }
+      monitor <- widgetHooks.collect { case WidgetHook(m: window.MonitorWidget, _) => m }
       reporter <- monitor.reporter
     } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
   }
@@ -143,7 +141,7 @@ class ReviewTab(
   def startNewRun() {
 
     val wrapper = org.nlogo.awt.Hierarchy.findAncestorOfClass(
-      ws.viewWidget, classOf[org.nlogo.window.WidgetWrapperInterface])
+      ws.viewWidget, classOf[window.WidgetWrapperInterface])
     val wrapperPos = wrapper.map(_.getLocation).getOrElse(new java.awt.Point(0, 0))
 
     // The position is the position of the view, but the image is the
@@ -153,13 +151,11 @@ class ReviewTab(
       wrapperPos.x + view.getLocation().x, wrapperPos.y + view.getLocation().y,
       view.getWidth, view.getHeight))
 
-    tabState.widgetHooks = WidgetHooks(ws)
-
     // remove widgets from the clip area of the view:
     val container = ws.viewWidget.findWidgetContainer
     for {
-      w <- tabState.widgetHooks
-      bounds = container.getUnzoomedBounds(w.widget)
+      w <- widgetHooks.map(_.widget)
+      bounds = container.getUnzoomedBounds(w)
       widgetArea = new java.awt.geom.Area(bounds)
     } viewArea.subtract(widgetArea)
 
@@ -178,11 +174,13 @@ class ReviewTab(
   def grab() {
     for (run <- tabState.currentRun) {
       try {
-        val widgetValues = tabState.widgetHooks
+        val widgetValues = widgetHooks
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        run.append(mirrorables, PlotActionBuffer.grab())
+        run.data
+          .getOrElse(run.init(ws.plotManager.plots))
+          .append(mirrorables, PlotActionBuffer.grab())
       } catch {
         case e: java.lang.OutOfMemoryError =>
           // happens if user ignored our warning or if "GC overhead limit exceeded"
@@ -232,7 +230,7 @@ class ReviewTab(
       }
     }
 
-    def repaintWidgets(g: java.awt.Graphics, hooks: Seq[WidgetHook]) {
+    def repaintWidgets(g: java.awt.Graphics) {
       for {
         run <- tabState.currentRun
         data <- run.data
@@ -241,7 +239,7 @@ class ReviewTab(
           .toSeq
           .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
           .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-        (w, v) <- hooks.map(_.widget) zip values
+        (w, v) <- widgetHooks.map(_.widget) zip values
       } {
         val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
         try {
@@ -265,6 +263,28 @@ class ReviewTab(
       }
     }
 
+    def repaintPlots(g: java.awt.Graphics) {
+      for {
+        data <- tabState.currentRunData
+        container = ws.viewWidget.findWidgetContainer
+        widgets = plotWidgets
+          .map { pw => pw.plotName -> pw }
+          .toMap
+        plot <- data.currentFrame.plots
+        widget <- widgets.get(plot.name)
+        widgetBounds = container.getUnzoomedBounds(widget)
+        canvasBounds = widget.canvas.getBounds()
+        g2d = g.create.asInstanceOf[java.awt.Graphics2D]
+        painter = new PlotPainter(plot)
+      } {
+        g2d.translate(
+          widgetBounds.x + canvasBounds.x,
+          widgetBounds.y + canvasBounds.y)
+        painter.setupOffscreenImage(canvasBounds.width, canvasBounds.height)
+        painter.drawImage(g2d)
+      }
+    }
+
     override def paintComponent(g: java.awt.Graphics) {
       super.paintComponent(g)
       g.setColor(if (tabState.currentRun.isDefined) WHITE else GRAY)
@@ -274,7 +294,8 @@ class ReviewTab(
       } {
         g.drawImage(run.backgroundImage, 0, 0, null)
         repaintView(g, run.viewArea)
-        repaintWidgets(g, tabState.widgetHooks)
+        repaintWidgets(g)
+        repaintPlots(g)
       }
     }
   }
@@ -393,9 +414,11 @@ class ReviewTab(
       val in = new java.io.ObjectInputStream(
         new java.io.FileInputStream(path))
       val name = tabState.uniqueName(nameFromPath(path))
-      val run = ModelRunIO.load(in, name)
-      tabState.addRun(run)
-      loadModelIfNeeded(run.modelString)
+      val run = ModelRunIO.load(in, name) { run =>
+        tabState.addRun(run)
+        loadModelIfNeeded(run.modelString)
+        ws
+      }
       Right(run)
     } catch {
       case ex: Exception => Left(path)
@@ -428,7 +451,6 @@ class ReviewTab(
       }
       org.nlogo.window.ModelLoader.load(ReviewTab.this,
         null, api.ModelType.Library, modelString)
-      tabState.widgetHooks = WidgetHooks(ws)
       App.app.tabs.setSelectedComponent(ReviewTab.this)
     }
   }

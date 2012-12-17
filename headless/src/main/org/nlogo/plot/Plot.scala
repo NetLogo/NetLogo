@@ -9,7 +9,8 @@ import org.nlogo.api.{ PlotInterface, PlotPenInterface, PlotState }
 // and running of code, and it needs to know about all the Plots.
 // but having an accessible constructor is nice for tests.
 // JC - 12/20/10, ST 8/16/12
-// Also used by the clone method, which is itself used for model runs
+// Also used by the clone method, which is itself used for model runs,
+// and by ModelRun.Frame.apply when starting a new run
 // NP 2012-12-17
 class Plot(var name: String, var defaultState: PlotState = PlotState())
 extends PlotInterface {

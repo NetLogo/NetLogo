@@ -1,12 +1,11 @@
 package org.nlogo.app
 
-import org.nlogo.plot.PlotAction
+import org.nlogo.window.PlotWidget
 
 import javax.swing.AbstractListModel
 
 class ReviewTabState(
-  var widgetHooks: Seq[WidgetHook] = Seq(),
-  private var _runs: Seq[ModelRun] = Seq[ModelRun](),
+  private var _runs: Seq[ModelRun] = Seq(),
   private var _currentRun: Option[ModelRun] = None,
   private var _recordingEnabled: Boolean = false,
   private var _userWarnedForMemory: Boolean = false)

@@ -4,6 +4,9 @@ import java.io.ObjectOutputStream
 import javax.imageio.ImageIO
 import java.io.ObjectInputStream
 import org.nlogo.plot.PlotAction
+import org.nlogo.plot.Plot
+import org.nlogo.window.GUIWorkspace
+import org.nlogo.workspace.AbstractWorkspaceScala
 
 object ModelRunIO {
   def save(out: ObjectOutputStream, run: ModelRun) {
@@ -31,19 +34,21 @@ object ModelRunIO {
     out.close()
   }
 
-  def load(in: ObjectInputStream, name: String): ModelRun = {
-    val Seq(
-      modelString: String,
-      viewShape: java.awt.Shape,
-      imageBytes: Array[Byte],
-      rawMirroredUpdates: Seq[Array[Byte]],
-      plotActionFrames: Seq[Seq[PlotAction]],
-      generalNotes: String) = Stream.continually(in.readObject()).take(6)
+  def load(in: ObjectInputStream, name: String)
+    (workspaceLoader: ModelRun => AbstractWorkspaceScala): ModelRun = {
+    def read[A]() = in.readObject().asInstanceOf[A]
+    val modelString = read[String]()
+    val viewShape = read[java.awt.Shape]()
+    val imageBytes = read[Array[Byte]]()
+    val rawMirroredUpdates = read[Seq[Array[Byte]]]()
+    val plotActionFrames = read[Seq[Seq[PlotAction]]]()
+    val generalNotes = read[String]()
     in.close()
     val viewArea = new java.awt.geom.Area(viewShape)
     val backgroundImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
     val run = new ModelRun(name, modelString, viewArea, backgroundImage, generalNotes)
-    run.load(rawMirroredUpdates, plotActionFrames)
+    val ws = workspaceLoader(run)
+    run.load(ws.plotManager.plots, rawMirroredUpdates, plotActionFrames)
     run
   }
 }
