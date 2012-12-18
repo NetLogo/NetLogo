@@ -91,11 +91,9 @@ extends PlotInterface {
   }
 
   def plot(pen: PlotPen, x: Double, y: Double) {
-    for(pen <- currentPen) {
-      pen.plot(x, y)
-      if (pen.state.isDown)
-        perhapsGrowRanges(pen, x, y)
-    }
+    pen.plot(x, y)
+    if (pen.state.isDown)
+      perhapsGrowRanges(pen, x, y)
   }
 
   def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double){
