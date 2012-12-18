@@ -79,6 +79,15 @@ class ModelRun(
       delta.plotActions.foreach(newFrame.run)
       newFrame
     }
+
+    def ticks: Option[Double] = {
+      for {
+        entry <- mirroredState.get(mirror.AgentKey(Mirrorables.World, 0))
+        result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
+        if result != -1
+      } yield result
+    }
+
   }
 
   object Delta {
@@ -133,16 +142,6 @@ class ModelRun(
       if (_lastFrameIndex % frameCacheInterval == 0)
         frameCache += _lastFrameIndex -> newFrame
       _lastFrame = newFrame
-    }
-
-    def currentTicks = ticksAt(_currentFrame)
-    def ticksAtLastFrame = ticksAt(_lastFrame)
-    def ticksAt(frame: Frame): Option[Double] = {
-      for {
-        entry <- frame.mirroredState.get(mirror.AgentKey(Mirrorables.World, 0))
-        result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
-        if result != -1
-      } yield result
     }
 
     def frame(index: Int): Frame = {

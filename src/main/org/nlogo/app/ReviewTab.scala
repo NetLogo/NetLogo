@@ -308,7 +308,7 @@ class ReviewTab(
       val newBorder = tabState.currentRun match {
         case None => ""
         case Some(run) => "Ticks: " +
-          (for { data <- run.data; ticks <- data.currentTicks }
+          (for { data <- run.data; ticks <- data.currentFrame.ticks }
             yield api.Dump.number(StrictMath.floor(ticks))).getOrElse("")
       }
       border(newBorder)
