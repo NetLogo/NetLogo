@@ -33,24 +33,14 @@ class ModelRun(
 
   def sizeInBytes = _data.map(_.sizeInBytes).getOrElse(0L)
 
-  def init(realPlots: Seq[Plot]): Data = {
-    val data = new Data(realPlots, Seq())
-    _data = Some(data)
-    data
-  }
-
-  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]): Data = {
-    val data = init(realPlots)
-    data.append(mirrorables, plotActions)
-    data.setCurrentFrame(0)
-    data
+  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
+    _data = Some(Data(realPlots))
+    _data.foreach(_.append(mirrorables, plotActions))
   }
 
   def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], plotActionSeqs: Seq[Seq[PlotAction]]) {
     val deltas = (rawMirroredUpdates, plotActionSeqs).zipped.map(Delta(_, _))
-    val data = init(realPlots)
-    deltas.foreach(data.appendFrame)
-    data.setCurrentFrame(0)
+    _data = Some(Data(realPlots, deltas))
     stillRecording = false
   }
 
@@ -80,14 +70,11 @@ class ModelRun(
       newFrame
     }
 
-    def ticks: Option[Double] = {
+    def ticks: Option[Double] =
       for {
         entry <- mirroredState.get(mirror.AgentKey(Mirrorables.World, 0))
-        result = entry(Mirrorables.MirrorableWorld.wvTicks).asInstanceOf[Double]
-        if result != -1
-      } yield result
-    }
-
+        ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
+      } yield ticks.asInstanceOf[Double]
   }
 
   object Delta {
@@ -100,69 +87,50 @@ class ModelRun(
     def mirroredUpdate: mirror.Update = Serializer.fromBytes(rawMirroredUpdate)
   }
 
-  class Data protected[ModelRun] (val realPlots: Seq[Plot], private var _deltas: Seq[Delta]) {
+  object Data {
+    def apply(realPlots: Seq[Plot]) = new Data(realPlots)
+    def apply(realPlots: Seq[Plot], deltas: Seq[Delta]) = {
+      val data = new Data(realPlots)
+      deltas.foreach(data.appendFrame)
+      data
+    }
+  }
 
+  class Data private (val realPlots: Seq[Plot]) {
+
+    private var _deltas = Seq[Delta]()
     def deltas = _deltas
+    def size = _deltas.length
 
     // TODO: change memory approach completely
     def sizeInBytes = 0L
 
-    def size = _deltas.length
     private var _dirty = false
     def dirty = _dirty
     def dirty_=(value: Boolean) { _dirty = value }
 
+    def lastFrameIndex = size - 1
+    private def lastFrame = frame(lastFrameIndex).getOrElse(Frame(realPlots))
+
     private var frameCache = Map[Int, Frame]()
-
-    private var _currentFrame: Frame = Frame(realPlots)
-    private var _currentFrameIndex = -1
-
-    def currentFrame = _currentFrame
-    def currentFrameIndex = _currentFrameIndex
-    def setCurrentFrame(index: Int) {
-      if (!_deltas.isDefinedAt(index)) {
-        val msg = "Frame " + index + " does not exist. " +
-          "Sequence size is " + _deltas.size
-        throw new IllegalArgumentException(msg)
-      }
-      val newCurrentFrame = frame(index)
-      _currentFrame = newCurrentFrame
-      _currentFrameIndex = index
-    }
-
-    private var _lastFrame: Frame = _currentFrame
-    private var _lastFrameIndex = -1
-    def lastFrame = _lastFrame
-    def lastFrameIndex = _lastFrameIndex
-
-    protected[ModelRun] def appendFrame(delta: Delta) {
+    private def appendFrame(delta: Delta) {
       val newFrame = lastFrame.applyDelta(delta)
-      val frameCacheInterval = 5 // maybe this should be definable somewhere else
-      _lastFrameIndex += 1
-      if (_lastFrameIndex % frameCacheInterval == 0)
-        frameCache += _lastFrameIndex -> newFrame
-      _lastFrame = newFrame
+      // TODO make interval definable elsewhere
+      if (lastFrameIndex % 5 != 0) frameCache -= lastFrameIndex
+      frameCache += size -> newFrame
+      _deltas :+= delta // added at the end not to mess up lastFrame and size
     }
 
-    def frame(index: Int): Frame = {
-      if (!_deltas.isDefinedAt(index)) {
-        val msg = "Frame " + index + " does not exist. " +
-          "Sequence size is " + _deltas.size
-        throw new IllegalArgumentException(msg)
-      }
-      if (index == currentFrameIndex)
-        _currentFrame
-      else if (index == lastFrameIndex)
-        _lastFrame
-      else frameCache.getOrElse(index,
-        frame(index - 1).applyDelta(_deltas(index)))
-    }
+    def frame(index: Int): Option[Frame] =
+      if (!_deltas.isDefinedAt(index))
+        None
+      else frameCache.get(index)
+        .orElse(frame(index - 1).map(_.applyDelta(deltas(index))))
 
     def append(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
       val (newMirroredState, mirroredUpdate) =
         Mirroring.diffs(lastFrame.mirroredState, mirrorables)
       val delta = Delta(mirroredUpdate, plotActions)
-      _deltas :+= delta
       appendFrame(delta)
       _dirty = true
     }

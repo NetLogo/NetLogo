@@ -178,9 +178,11 @@ class ReviewTab(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        run.data
-          .getOrElse(run.init(ws.plotManager.plots))
-          .append(mirrorables, PlotActionBuffer.grab())
+        val plotActions = PlotActionBuffer.grab()
+        run.data match {
+          case None => run.start(ws.plotManager.plots, mirrorables, plotActions)
+          case Some(data) => data.append(mirrorables, plotActions)
+        }
       } catch {
         case e: java.lang.OutOfMemoryError =>
           // happens if user ignored our warning or if "GC overhead limit exceeded"
@@ -199,9 +201,8 @@ class ReviewTab(
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       for {
-        run <- tabState.currentRun
-        data <- run.data
-        fakeWorld = new mirror.FakeWorld(data.currentFrame.mirroredState)
+        frame <- currentFrame
+        fakeWorld = new mirror.FakeWorld(frame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       } {
@@ -232,9 +233,8 @@ class ReviewTab(
 
     def repaintWidgets(g: java.awt.Graphics) {
       for {
-        run <- tabState.currentRun
-        data <- run.data
-        values = data.currentFrame.mirroredState
+        frame <- currentFrame
+        values = frame.mirroredState
           .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
           .toSeq
           .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
@@ -265,12 +265,12 @@ class ReviewTab(
 
     def repaintPlots(g: java.awt.Graphics) {
       for {
-        data <- tabState.currentRunData
+        frame <- currentFrame
         container = ws.viewWidget.findWidgetContainer
         widgets = plotWidgets
           .map { pw => pw.plotName -> pw }
           .toMap
-        plot <- data.currentFrame.plots
+        plot <- frame.plots
         widget <- widgets.get(plot.name)
         widgetBounds = container.getUnzoomedBounds(widget)
         canvasBounds = widget.canvas.getBounds()
@@ -300,27 +300,24 @@ class ReviewTab(
     }
   }
 
+  def currentFrame: Option[ModelRun#Frame] =
+    tabState.currentRunData.flatMap(_.frame(Scrubber.getValue))
+
   object Scrubber extends JSlider {
     def border(s: String) {
       setBorder(BorderFactory.createTitledBorder(s))
     }
     def updateBorder() {
-      val newBorder = tabState.currentRun match {
-        case None => ""
-        case Some(run) => "Ticks: " +
-          (for { data <- run.data; ticks <- data.currentFrame.ticks }
-            yield api.Dump.number(StrictMath.floor(ticks))).getOrElse("")
-      }
-      border(newBorder)
+      val newBorder = for {
+        frame <- currentFrame
+        ticks <- frame.ticks
+      } yield "Ticks: " + api.Dump.number(StrictMath.floor(ticks))
+      border(newBorder.getOrElse(""))
     }
     setValue(0)
     border("")
     addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
-        for {
-          run <- tabState.currentRun
-          data <- run.data
-        } data.setCurrentFrame(getValue)
         updateBorder()
         InterfacePanel.repaint()
       }
@@ -381,8 +378,7 @@ class ReviewTab(
         Scrubber.setEnabled(false)
       }
       case Some(data) => {
-        Scrubber.setMaximum(data.lastFrameIndex)
-        Scrubber.setValue(data.currentFrameIndex)
+        Scrubber.setMaximum(data.size - 1)
         Scrubber.setEnabled(true)
       }
     }
