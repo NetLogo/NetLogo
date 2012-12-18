@@ -69,8 +69,8 @@ class ModelRun(
     extends PlotRunner {
 
     override def getPlot(name: String) =
-      plots.find(_.name == name)
-    def getPlotPen(plotName: String, penName: String) =
+      plots.find(_.name.equalsIgnoreCase(name))
+    override def getPlotPen(plotName: String, penName: String) =
       getPlot(plotName).flatMap(_.getPen(penName))
 
     def applyDelta(delta: Delta): Frame = {
