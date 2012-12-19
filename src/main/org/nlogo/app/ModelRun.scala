@@ -118,7 +118,7 @@ class ModelRun(
       // TODO make interval definable elsewhere
       if (lastFrameIndex % 5 != 0) frameCache -= lastFrameIndex
       frameCache += size -> newFrame
-      _deltas :+= delta // added at the end not to mess up lastFrame and size
+      _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
     }
 
     def frame(index: Int): Option[Frame] =

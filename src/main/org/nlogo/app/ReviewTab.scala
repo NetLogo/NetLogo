@@ -378,7 +378,7 @@ class ReviewTab(
         Scrubber.setEnabled(false)
       }
       case Some(data) => {
-        Scrubber.setMaximum(data.size - 1)
+        Scrubber.setMaximum(data.lastFrameIndex)
         Scrubber.setEnabled(true)
       }
     }
