@@ -65,26 +65,6 @@ class ReviewTab(
     }
   }
 
-  object Memory {
-    def toMB(bytes: Long) = bytes / 1024 / 1024
-    def safeThreshold = 64 // arbitrary - needs to be tweaked...
-    def free = toMB(Runtime.getRuntime().freeMemory())
-    def usedByRuns = toMB(tabState.sizeInBytes)
-    def underSafeThreshold = free < safeThreshold
-    def check() {
-      if (!tabState.userWarnedForMemory) {
-        if (underSafeThreshold)
-          System.gc() // try to collect garbage before actually warning
-        if (underSafeThreshold) {
-          tabState.userWarnedForMemory = true
-          if (userConfirms("Low Memory",
-            "Memory is getting low. Do you want to stop recording?"))
-            stopRecording()
-        }
-      }
-    }
-  }
-
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
@@ -101,8 +81,6 @@ class ReviewTab(
         if (ws.world.ticks == -1) {
           PlotActionBuffer.clear()
         } else {
-          if (tabState.recordingEnabled)
-            ws.waitFor(() => Memory.check())
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
               ws.waitFor(() => startNewRun())
@@ -185,8 +163,6 @@ class ReviewTab(
         }
       } catch {
         case e: java.lang.OutOfMemoryError =>
-          // happens if user ignored our warning or if "GC overhead limit exceeded"
-          // (the latter being harder to prevent in advance)
           JOptionPane.showMessageDialog(this,
             "Not enough memory. Turning off recording.",
             "Low memory", JOptionPane.WARNING_MESSAGE)
@@ -383,7 +359,6 @@ class ReviewTab(
       }
     }
     Scrubber.updateBorder()
-    MemoryMeter.update()
     Scrubber.repaint()
     RunList.repaint()
     InterfacePanel.repaint()
@@ -498,17 +473,6 @@ class ReviewTab(
     }
   }
 
-  object MemoryMeter extends JPanel {
-    setLayout(new BorderLayout)
-    setBorder(new EmptyBorder(5, 5, 5, 5))
-    add(new JLabel("Memory used by runs: "), BorderLayout.WEST)
-    val meterLabel = new JLabel("%5d MB".format(Memory.usedByRuns))
-    add(meterLabel, BorderLayout.EAST)
-    def update() {
-      meterLabel.setText(Memory.usedByRuns + " MB")
-    }
-  }
-
   class ReviewAction(name: String, icon: String, fn: () => Unit)
     extends AbstractAction(name) {
     val image = new ImageIcon(classOf[ReviewTab].getResource("/images/" + icon + ".gif"))
@@ -582,7 +546,6 @@ class ReviewTab(
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
-    add(MemoryMeter, BorderLayout.SOUTH)
   }
 
   object InterfaceScrollPane extends JScrollPane {

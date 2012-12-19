@@ -31,8 +31,6 @@ class ModelRun(
     dirty = true
   }
 
-  def sizeInBytes = _data.map(_.sizeInBytes).getOrElse(0L)
-
   def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
     _data = Some(Data(realPlots))
     _data.foreach(_.append(mirrorables, plotActions))
@@ -101,9 +99,6 @@ class ModelRun(
     private var _deltas = Seq[Delta]()
     def deltas = _deltas
     def size = _deltas.length
-
-    // TODO: change memory approach completely
-    def sizeInBytes = 0L
 
     private var _dirty = false
     def dirty = _dirty

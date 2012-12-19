@@ -7,8 +7,7 @@ import javax.swing.AbstractListModel
 class ReviewTabState(
   private var _runs: Seq[ModelRun] = Seq(),
   private var _currentRun: Option[ModelRun] = None,
-  private var _recordingEnabled: Boolean = false,
-  private var _userWarnedForMemory: Boolean = false)
+  private var _recordingEnabled: Boolean = false)
   extends AbstractListModel {
 
   // ListModel methods:
@@ -23,14 +22,10 @@ class ReviewTabState(
   def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
   def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
 
-  def userWarnedForMemory = _userWarnedForMemory
-  def userWarnedForMemory_=(b: Boolean) { _userWarnedForMemory = b }
-
   def reset() {
     val lastIndex = _runs.size - 1
     _runs = Seq[ModelRun]()
     _currentRun = None
-    _userWarnedForMemory = false
     fireIntervalRemoved(this, 0, lastIndex)
   }
 
@@ -72,6 +67,5 @@ class ReviewTabState(
   }
 
   def dirty = runs.exists(_.dirty)
-  def sizeInBytes: Long = _runs.map(_.sizeInBytes).sum
 }
 
