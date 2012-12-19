@@ -338,7 +338,7 @@ class ReviewTab(
     Scrubber.setEnabled(data.isDefined)
     NotesArea.setText(run.map(_.generalNotes).getOrElse(""))
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    (NotesArea +: closeCurrentButton +: closeAllButton +: scrubButtons)
+    (NotesArea +: renameButton +: closeCurrentButton +: closeAllButton +: scrubButtons)
       .foreach(_.setEnabled(run.isDefined))
     Scrubber.updateBorder()
     Scrubber.repaint()
@@ -444,10 +444,28 @@ class ReviewTab(
     }
   }
 
+  val renameButton = actionButton("Rename", "edit") { () =>
+    for {
+      run <- tabState.currentRun
+      icon = new ImageIcon(classOf[ReviewTab].getResource("/images/edit.gif"))
+      answer <- Option(JOptionPane.showInputDialog(this,
+        "Please enter new name:",
+        "Rename run",
+        JOptionPane.PLAIN_MESSAGE, icon, null, run.name)
+        .asInstanceOf[String])
+      if answer.nonEmpty
+    } {
+      run.name = "" // not to interfere with uniqueName
+      run.name = tabState.uniqueName(answer)
+      refreshInterface()
+    }
+  }
+
   object ReviewToolBar extends org.nlogo.swing.ToolBar {
     override def addControls() {
       add(saveButton)
       add(loadButton)
+      add(renameButton)
       add(closeCurrentButton)
       add(closeAllButton)
       add(new org.nlogo.swing.ToolBar.Separator)
