@@ -22,6 +22,9 @@ class ModelRun(
     if (!_dirty) _data.foreach(_.dirty = false)
   }
 
+  var currentFrameIndex = 0
+  def currentFrame = _data.flatMap(_.frame(currentFrameIndex))
+
   private var _data: Option[Data] = None
   def data = _data
 

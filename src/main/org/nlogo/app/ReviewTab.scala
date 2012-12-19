@@ -177,7 +177,7 @@ class ReviewTab(
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       for {
-        frame <- currentFrame
+        frame <- tabState.currentFrame
         fakeWorld = new mirror.FakeWorld(frame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
@@ -209,7 +209,7 @@ class ReviewTab(
 
     def repaintWidgets(g: java.awt.Graphics) {
       for {
-        frame <- currentFrame
+        frame <- tabState.currentFrame
         values = frame.mirroredState
           .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
           .toSeq
@@ -241,7 +241,7 @@ class ReviewTab(
 
     def repaintPlots(g: java.awt.Graphics) {
       for {
-        frame <- currentFrame
+        frame <- tabState.currentFrame
         container = ws.viewWidget.findWidgetContainer
         widgets = plotWidgets
           .map { pw => pw.plotName -> pw }
@@ -276,16 +276,13 @@ class ReviewTab(
     }
   }
 
-  def currentFrame: Option[ModelRun#Frame] =
-    tabState.currentRunData.flatMap(_.frame(Scrubber.getValue))
-
   object Scrubber extends JSlider {
     def border(s: String) {
       setBorder(BorderFactory.createTitledBorder(s))
     }
     def updateBorder() {
       val newBorder = for {
-        frame <- currentFrame
+        frame <- tabState.currentFrame
         ticks <- frame.ticks
       } yield "Ticks: " + api.Dump.number(StrictMath.floor(ticks))
       border(newBorder.getOrElse(""))
@@ -294,6 +291,7 @@ class ReviewTab(
     border("")
     addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
+        tabState.currentRun.foreach(_.currentFrameIndex = getValue)
         updateBorder()
         InterfacePanel.repaint()
       }
@@ -331,33 +329,15 @@ class ReviewTab(
   }
 
   def refreshInterface() {
-    tabState.currentRun match {
-      case None => {
-        NotesArea.setEnabled(false)
-        NotesArea.setText("")
-        (saveButton +: closeCurrentButton +:
-          closeAllButton +: scrubButtons)
-          .foreach(_.setEnabled(false))
-      }
-      case Some(run) => {
-        NotesArea.setText(run.generalNotes)
-        NotesArea.setEnabled(true)
-        saveButton.setEnabled(run.dirty)
-        (closeCurrentButton +: closeAllButton +: scrubButtons)
-          .foreach(_.setEnabled(true))
-      }
-    }
-    tabState.currentRunData match {
-      case None => {
-        Scrubber.setMaximum(0)
-        Scrubber.setValue(0)
-        Scrubber.setEnabled(false)
-      }
-      case Some(data) => {
-        Scrubber.setMaximum(data.lastFrameIndex)
-        Scrubber.setEnabled(true)
-      }
-    }
+    val run = tabState.currentRun
+    val data = tabState.currentRunData
+    Scrubber.setValue(run.map(_.currentFrameIndex).getOrElse(0))
+    Scrubber.setMaximum(data.map(_.lastFrameIndex).getOrElse(0))
+    Scrubber.setEnabled(data.isDefined)
+    NotesArea.setText(run.map(_.generalNotes).getOrElse(""))
+    saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
+    (NotesArea +: closeCurrentButton +: closeAllButton +: scrubButtons)
+      .foreach(_.setEnabled(run.isDefined))
     Scrubber.updateBorder()
     Scrubber.repaint()
     RunList.repaint()

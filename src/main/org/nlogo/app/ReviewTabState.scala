@@ -17,7 +17,9 @@ class ReviewTabState(
   def runs = _runs
 
   def currentRun = _currentRun
-  def currentRunData = for { run <- currentRun; data <- run.data } yield data
+  def currentRunData = currentRun.flatMap(_.data)
+  def currentFrame = currentRun.flatMap(_.currentFrame)
+  def currentFrameIndex = currentRun.map(_.currentFrameIndex).getOrElse(0)
   def recordingEnabled = _recordingEnabled
   def recordingEnabled_=(b: Boolean) { _recordingEnabled = b }
   def currentlyRecording = _recordingEnabled && currentRun.map(_.stillRecording).getOrElse(false)
