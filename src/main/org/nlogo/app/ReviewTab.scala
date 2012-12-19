@@ -2,10 +2,13 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
+import java.awt.Dimension
+
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.collection.mutable.{ ListBuffer, Subscriber }
+
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror
@@ -14,12 +17,11 @@ import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ MonitorWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ InvalidVersionException, MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
+
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
-import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.nlogo.window.PlotWidget
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -524,6 +526,7 @@ class ReviewTab(
   }
 
   object RunListPanel extends JPanel {
+    setPreferredSize(new Dimension(200, 0))
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
   }
