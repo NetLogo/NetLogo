@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.0-RC5"
+scalaVersion in ThisBuild := "2.10.0"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -Xfatal-warnings -Ywarn-adapted-args"
@@ -31,9 +31,9 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-   // the "cross"es can be dropped once 2.10.0 final is out - ST 11/17/12
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test" cross(CrossVersion.full),
-  "org.scalatest" %% "scalatest" % "2.0.M5-B1" % "test" cross(CrossVersion.full)
+   // the "_2.10.0-RC5"es can be dropped 2.10.0 versions are published - ST 12/20/12
+  "org.scalacheck" % "scalacheck_2.10.0-RC5" % "1.10.0" % "test",
+  "org.scalatest" % "scalatest_2.10.0-RC5" % "2.0.M5-B1" % "test"
 )
 
 ///
