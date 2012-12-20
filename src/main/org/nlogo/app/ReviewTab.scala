@@ -335,10 +335,11 @@ class ReviewTab(
     val data = tabState.currentRunData
     Scrubber.setValue(run.map(_.currentFrameIndex).getOrElse(0))
     Scrubber.setMaximum(data.map(_.lastFrameIndex).getOrElse(0))
-    Scrubber.setEnabled(data.isDefined)
+    (Scrubber +: scrubButtons)
+      .foreach(_.setEnabled(data.filter(_.size > 1).isDefined))
     NotesArea.setText(run.map(_.generalNotes).getOrElse(""))
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    (NotesArea +: renameButton +: closeCurrentButton +: closeAllButton +: scrubButtons)
+    Seq(NotesArea, renameButton, closeCurrentButton, closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
     Scrubber.updateBorder()
     Scrubber.repaint()
