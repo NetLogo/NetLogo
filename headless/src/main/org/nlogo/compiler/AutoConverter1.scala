@@ -17,7 +17,7 @@ object AutoConverter1 {
     "  ;; of the procedure.)\n" +
     "  __clear-all-and-reset-ticks"
 }
-class AutoConverter1(implicit tokenizer: TokenizerInterface) {
+class AutoConverter1(tokenizer: TokenizerInterface) {
   def convert(originalSource: String, subprogram: Boolean, reporter: Boolean, version: String): String = {
     var source = originalSource
     if(source.trim.length == 0) return source

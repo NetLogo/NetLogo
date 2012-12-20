@@ -11,7 +11,7 @@ import org.nlogo.prim._constdouble
 // This class was automatically converted from Scala to Java using a program called jatran.  I did
 // some hand cleaning up of the code, but not that much, so beware. - ST 12/10/08
 
-class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit tokenizer: TokenizerInterface) {
+class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean, tokenizer: TokenizerInterface) {
   def convert(originalSource: String, subprogram: Boolean, reporter: Boolean, version: String): String = {
     var source = originalSource
     if(source.trim.length == 0) return source
@@ -92,11 +92,12 @@ class AutoConverter2(workspace: Workspace, ignoreErrors: Boolean)(implicit token
     // This code is adapted from the first half or so of the compile() method. - ST 6/29/06
     val results: StructureParser.Results =
       new StructureParser(tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
-                          workspace.world.program, workspace.procedures,
-                          workspace.getExtensionManager).parse(subprogram)
+                          StructureParser.Results(workspace.world.program, workspace.procedures))
+        .parse(subprogram)
     val identifierParser: IdentifierParser =
       new IdentifierParser(workspace.world.program, workspace.procedures,
-                           results.procedures, true )
+                           results.procedures, workspace.getExtensionManager,
+                           forgiving = true)
                           // true = parse in "forgiving" mode, in which any
                           // unknown identifiers are assumed to be global
                           // variables (i.e., sliders/switches/choices that we

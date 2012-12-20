@@ -15,17 +15,16 @@ class ExpressionParserTests extends FunSuite {
   def compile(source: String, is3D: Boolean): Seq[Statements] = {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = Program.empty(is3D)
-    implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
+    val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val results = new StructureParser(
       tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
-      program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      StructureParser.emptyResults())
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, false)
+        results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)
   }
