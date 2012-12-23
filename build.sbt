@@ -31,9 +31,8 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock" % "2.5.1" % "test",
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
-   // the "_2.10.0-RC5"es can be dropped 2.10.0 versions are published - ST 12/20/12
-  "org.scalacheck" % "scalacheck_2.10.0-RC5" % "1.10.0" % "test",
-  "org.scalatest" % "scalatest_2.10.0-RC5" % "2.0.M5-B1" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+  "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 )
 
 ///
