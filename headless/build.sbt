@@ -17,3 +17,7 @@ sourceGenerators in Compile <+= JFlexRunner.task
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
 mainClass in Compile := Some("org.nlogo.headless.Shell")
+
+seq(Testing.settings: _*)
+
+seq(Depend.settings: _*)

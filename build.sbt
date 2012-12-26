@@ -104,3 +104,21 @@ all <<= all.dependsOn(
   ModelIndex.modelIndex,
   InfoTab.infoTab,
   Scaladoc.docSmaller)
+
+///
+/// settings from project/*.scala
+///
+
+seq(Testing.settings: _*)
+
+seq(Packaging.settings: _*)
+
+seq(Running.settings: _*)
+
+seq(Depend.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(Scaladoc.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)
