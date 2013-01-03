@@ -4,13 +4,6 @@ package org.nlogo.lex ;
 import org.nlogo.api.Token;
 import org.nlogo.api.TokenType;
 
-// Mostly the following spec is reasonably straightforward.
-// There is some slight weirdness about supporting the triple-underscore
-// syntax, the one that lets you type ___foo as a shorthand for
-// __magic-open "foo".  This is handled by the MAGIC-OPEN state
-// with the aid of the distinction between
-// IDENTIFIER_CHAR_NOT_UNDERSCORE and IDENTIFIER_CHAR. - ST 2/5/07
-
 // Since this is automatically generated code it's not surprising
 // it'd produce a few warnings - ST 3/6/08
 @SuppressWarnings({"unused","fallthrough"})
@@ -138,15 +131,13 @@ import org.nlogo.api.TokenType;
 %unicode
 %char
 %type Token
-%state MAGIC_OPEN
 %state LITERAL
 
 STRING_TEXT=(\\\"|\\r|\\n|\\t|\\\\|\\[^\"]|[^\r\n\"\\])*
 NONNEWLINE_WHITE_SPACE_CHAR=[ \t\b\012]
 LETTER=[:letter:]
 DIGIT=[:digit:]
-IDENTIFIER_CHAR_NOT_UNDERSCORE={LETTER} | {DIGIT} | [\.?=\*!<>:#\+/%\$\^\'&-]
-IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
+IDENTIFIER_CHAR={LETTER} | {DIGIT} | [_\.?=\*!<>:#\+/%\$\^\'&-]
 
 %%
 
@@ -219,34 +210,7 @@ IDENTIFIER_CHAR={IDENTIFIER_CHAR_NOT_UNDERSCORE} | _
     yychar , yychar + text.length() , fileName ) ;
 }
 
-<YYINITIAL> ___ {
-  yybegin( MAGIC_OPEN ) ;
-  org.nlogo.api.TokenHolder cmd = tokenMapper.getCommand( "__magic-open" ) ;
-  Token token = new Token( "__magic-open" , TokenType_COMMAND , cmd , yychar , yychar + 3 , fileName ) ;
-  cmd.token( token ) ;
-  return token ;
-}
-
-<MAGIC_OPEN> \n {
-  yybegin( YYINITIAL ) ;
-}
-<MAGIC_OPEN> {IDENTIFIER_CHAR}* {
-  String text = yytext() ;
-  yybegin( YYINITIAL ) ;
-  return new Token
-    ( "\"" + text + "\"" , TokenType_CONSTANT , text ,
-      yychar , yychar + text.length() , fileName ) ;
-}
-
-<YYINITIAL> {IDENTIFIER_CHAR_NOT_UNDERSCORE}{IDENTIFIER_CHAR}* {
-  return ident() ;
-}
-
-<YYINITIAL> _{IDENTIFIER_CHAR_NOT_UNDERSCORE}{IDENTIFIER_CHAR}* {
-  return ident() ;
-}
-
-<YYINITIAL> __{IDENTIFIER_CHAR_NOT_UNDERSCORE}{IDENTIFIER_CHAR}* {
+<YYINITIAL> {IDENTIFIER_CHAR}+ {
   return ident() ;
 }
 

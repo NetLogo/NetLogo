@@ -167,7 +167,6 @@ class TokenizerTests extends FunSuite {
     expect(TokenType.COMMAND)(
       tokenizer.tokenizeAllowingRemovedPrims("histogram-from").head.tpe)
   }
-  // underscore stuff
   test("Empty1") {
     val tokens = tokenize("")
     expect("")(tokens.mkString)
@@ -176,53 +175,9 @@ class TokenizerTests extends FunSuite {
     val tokens = tokenize("\n")
     expect("")(tokens.mkString)
   }
-  test("OneUnderscore1") {
-    val tokens = tokenizeRobustly("_")
-    // not really the right error message, but this whole magic-open thing is a kludge anyway
-    expect("Token(_,BAD,This non-standard character is not allowed.)")(
-      tokens.mkString)
-  }
-  test("OneUnderscore2") {
-    val tokens = tokenizeRobustly("_\n")
-    // not really the right error message, but this whole magic-open thing is a kludge anyway
-    expect("Token(_,BAD,This non-standard character is not allowed.)")(
-      tokens.mkString)
-  }
-  test("TwoUnderscores1") {
-    val tokens = tokenizeRobustly("__")
-    // not really the right error message, but this whole magic-open thing is a kludge anyway
-    expect("Token(_,BAD,This non-standard character is not allowed.)" +
-           "Token(_,BAD,This non-standard character is not allowed.)")(
-      tokens.mkString)
-  }
-  test("TwoUnderscores2") {
-    val tokens = tokenizeRobustly("__\n")
-    // not really the right error message, but this whole magic-open thing is a kludge anyway
-    expect("Token(_,BAD,This non-standard character is not allowed.)" +
-           "Token(_,BAD,This non-standard character is not allowed.)")(
-      tokens.mkString)
-  }
-  test("ThreeUnderscores1") {
-    val tokens = tokenize("___")
-    expect("Token(__magic-open,COMMAND,_magicopen)")(
-      tokens.mkString)
-  }
-  test("ThreeUnderscores2") {
-    val tokens = tokenize("___\n")
-    expect("Token(__magic-open,COMMAND,_magicopen)")(
-      tokens.mkString)
-  }
-  test("ThreeUnderscoresAndFoo1") {
-    val tokens = tokenize("___foo")
-    expect("Token(__magic-open,COMMAND,_magicopen)" +
-                 "Token(\"foo\",CONSTANT,foo)")(
-      tokens.mkString)
-  }
-  test("ThreeUnderscoresAndFoo2") {
-    val tokens = tokenize("___foo\n")
-    expect("Token(__magic-open,COMMAND,_magicopen)" +
-                 "Token(\"foo\",CONSTANT,foo)")(
-      tokens.mkString)
+  test("underscore") {
+    val tokens = tokenize("_")
+    expect("Token(_,IDENT,_)")(tokens.mkString)
   }
   test("ListOfArrays") {
     val tokens = tokenize("[{{array: 0}} {{array: 1}}]")

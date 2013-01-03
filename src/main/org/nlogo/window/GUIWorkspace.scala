@@ -44,11 +44,6 @@ with Events.LoadSectionEventHandler {
       .raiseLater(this)
   }
 
-  override def magicOpen(name: String) {
-    new Events.AppEvent(AppEventType.MAGIC_OPEN, Seq(name))
-      .raiseLater(this)
-  }
-
   override def changeLanguage() {
     new Events.AppEvent(AppEventType.CHANGE_LANGUAGE, Seq())
       .raiseLater(this)

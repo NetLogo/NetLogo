@@ -159,6 +159,14 @@ strictfp class CommandLine
       setText("");
       return;
     }
+    if (inner.trim().startsWith("___")) {
+      scala.collection.mutable.ListBuffer<Object> buf =
+        new scala.collection.mutable.ListBuffer<Object>();
+      buf.$plus$eq(inner.trim().substring(3));
+      new org.nlogo.window.Events.AppEvent(org.nlogo.window.AppEventType.MAGIC_OPEN, buf)
+        .raiseLater(this);
+      return;
+    }
     if(workspace.isReporter(inner)) {
       inner = "show " + inner;
       setText(inner);
