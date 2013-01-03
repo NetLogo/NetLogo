@@ -30,18 +30,21 @@ private class SetVisitor extends DefaultAstVisitor {
     }
   }
 }
+
 private object SetVisitor {
   type ReporterClass = Class[_ <: Reporter]
   type CommandClass = Class[_ <: Command]
+  // pending resolution of https://issues.scala-lang.org/browse/SI-6723
+  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/12
   val classes = Map[ReporterClass, CommandClass](
-         classOf[_letvariable]           -> classOf[_setletvariable],
-         classOf[_turtleorlinkvariable]  -> classOf[_setturtleorlinkvariable],
-         classOf[_patchvariable]         -> classOf[_setpatchvariable],
-         classOf[_observervariable]      -> classOf[_setobservervariable],
-         classOf[_linkbreedvariable]     -> classOf[_setlinkbreedvariable],
-         classOf[_procedurevariable]     -> classOf[_setprocedurevariable],
-         classOf[_turtlevariable]        -> classOf[_setturtlevariable],
-         classOf[_breedvariable]         -> classOf[_setbreedvariable],
-         classOf[_linkvariable]          -> classOf[_setlinkvariable]
-    )
+    (classOf[_letvariable]          , classOf[_setletvariable]),
+    (classOf[_turtleorlinkvariable] , classOf[_setturtleorlinkvariable]),
+    (classOf[_patchvariable]        , classOf[_setpatchvariable]),
+    (classOf[_observervariable]     , classOf[_setobservervariable]),
+    (classOf[_linkbreedvariable]    , classOf[_setlinkbreedvariable]),
+    (classOf[_procedurevariable]    , classOf[_setprocedurevariable]),
+    (classOf[_turtlevariable]       , classOf[_setturtlevariable]),
+    (classOf[_breedvariable]        , classOf[_setbreedvariable]),
+    (classOf[_linkvariable]         , classOf[_setlinkvariable])
+  )
 }

@@ -803,40 +803,34 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L3
           ASTORE 2
           DCONST_0
-          DSTORE 3
+          DSTORE 6
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 5
+          ASTORE 3
          L4
-          ALOAD 5
+          ALOAD 3
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L5
-          ALOAD 5
+          ALOAD 3
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
-          ASTORE 6
-          ALOAD 6
+          ASTORE 4
+          ALOAD 4
           INSTANCEOF java/lang/Double
-          IFEQ L6
-          ALOAD 6
+          IFEQ L4
+          ALOAD 4
           CHECKCAST java/lang/Double
-          ASTORE 7
-          DLOAD 3
-          ALOAD 7
+          ASTORE 5
+          DLOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
-          DSTORE 3
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 8
-          GOTO L4
-         L6
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 8
+          DSTORE 6
           GOTO L4
          L5
           ALOAD 0
-          DLOAD 3
+          DLOAD 6
           INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
-         L7
+         L6
           DSTORE 2
           DLOAD 2
           ALOAD 1
@@ -844,7 +838,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextDouble ()D
           DMUL
-         L8
+         L7
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -860,7 +854,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
+         L8
           RETURN
 [1]_asm_procedurefindpartner_setprocedurevariable_3 "" Object => void
       _nobody => Nobody$

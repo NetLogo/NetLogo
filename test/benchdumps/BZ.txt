@@ -1104,14 +1104,12 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
               DSTORE 3
               ASTORE 2
               ALOAD 2
-              ASTORE 5
-              ALOAD 5
               INSTANCEOF java/lang/Double
               IFEQ L8
-              ALOAD 5
+              ALOAD 2
               CHECKCAST java/lang/Double
-              ASTORE 6
-              ALOAD 6
+              ASTORE 5
+              ALOAD 5
               INVOKEVIRTUAL java/lang/Double.doubleValue ()D
               DLOAD 3
               DCMPL
@@ -1121,8 +1119,6 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
              L9
               ICONST_0
              L10
-              ISTORE 7
-              ILOAD 7
               GOTO L11
              L8
               NEW org/nlogo/nvm/EngineException
@@ -1334,20 +1330,20 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ALOAD 1
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/Context.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/agent/AgentSet;)V
-          ASTORE 4
+          ASTORE 5
           ICONST_0
-          ISTORE 5
+          ISTORE 9
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
-          ASTORE 6
+          ASTORE 4
          L5
-          ALOAD 6
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L6
-          ALOAD 6
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 7
-          ALOAD 4
+          ALOAD 5
           ALOAD 7
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/nvm/Context.evaluateReporter (Lorg/nlogo/agent/Agent;Lorg/nlogo/nvm/Reporter;)Ljava/lang/Object;
@@ -1357,20 +1353,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           IFEQ L7
           ALOAD 8
           CHECKCAST java/lang/Boolean
-          ASTORE 9
-          ALOAD 9
+          ASTORE 6
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFEQ L8
-          ILOAD 5
+          IFEQ L5
+          ILOAD 9
           ICONST_1
           IADD
-          ISTORE 5
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          GOTO L9
-         L8
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-         L9
-          ASTORE 10
+          ISTORE 9
           GOTO L5
          L7
           NEW org/nlogo/nvm/EngineException
@@ -1404,9 +1394,9 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-          ILOAD 5
+          ILOAD 9
           I2D
-         L10
+         L8
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1422,7 +1412,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L11
+         L9
           RETURN
 [4]_asm_procedurefindnewstate_setprocedurevariable_5 "" Object => void
       _countwith AgentSet,Reporter => double
@@ -1515,20 +1505,20 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ALOAD 1
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/Context.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/agent/AgentSet;)V
-          ASTORE 4
+          ASTORE 5
           ICONST_0
-          ISTORE 5
+          ISTORE 9
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
-          ASTORE 6
+          ASTORE 4
          L5
-          ALOAD 6
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L6
-          ALOAD 6
+          ALOAD 4
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           ASTORE 7
-          ALOAD 4
+          ALOAD 5
           ALOAD 7
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/nvm/Context.evaluateReporter (Lorg/nlogo/agent/Agent;Lorg/nlogo/nvm/Reporter;)Ljava/lang/Object;
@@ -1538,20 +1528,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           IFEQ L7
           ALOAD 8
           CHECKCAST java/lang/Boolean
-          ASTORE 9
-          ALOAD 9
+          ASTORE 6
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
-          IFEQ L8
-          ILOAD 5
+          IFEQ L5
+          ILOAD 9
           ICONST_1
           IADD
-          ISTORE 5
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          GOTO L9
-         L8
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-         L9
-          ASTORE 10
+          ISTORE 9
           GOTO L5
          L7
           NEW org/nlogo/nvm/EngineException
@@ -1585,9 +1569,9 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-          ILOAD 5
+          ILOAD 9
           I2D
-         L10
+         L8
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -1603,7 +1587,7 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L11
+         L9
           RETURN
 [5]_asm_procedurefindnewstate_ifelse_7 "ifelse state = 0" boolean => void
       _equal Object,double => boolean
@@ -1633,15 +1617,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DSTORE 3
           ASTORE 2
           ALOAD 2
-          ASTORE 5
-          ALOAD 5
           INSTANCEOF java/lang/Double
           IFEQ L5
-          ALOAD 5
+          ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 3
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
@@ -1650,13 +1632,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L6
           ICONST_0
          L7
-          ISTORE 7
+          ISTORE 6
           GOTO L8
          L5
           ICONST_0
-          ISTORE 7
+          ISTORE 6
          L8
-          ILOAD 7
+          ILOAD 6
          L9
           ISTORE 2
           ALOAD 1
@@ -1918,58 +1900,54 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
+          ASTORE 10
+          ALOAD 10
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L7
-          ALOAD 3
+          ALOAD 10
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 4
-          ALOAD 4
+          ASTORE 2
+          ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 5
+          ASTORE 4
           GOTO L8
          L7
-          ALOAD 3
+          ALOAD 10
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L9
-          ALOAD 3
+          ALOAD 10
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 6
-          ALOAD 6
-          ASTORE 5
+          ASTORE 3
+          ALOAD 3
+          ASTORE 4
          L8
-          ALOAD 5
-          ASTORE 2
           DCONST_0
-          DSTORE 7
-          ALOAD 2
+          DSTORE 8
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/AgentSet;
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
-          ASTORE 9
+          ASTORE 5
          L10
-          ALOAD 9
+          ALOAD 5
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
           IFEQ L11
-          ALOAD 9
+          ALOAD 5
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
           CHECKCAST org/nlogo/agent/Patch
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariable (I)Ljava/lang/Object;
-          ASTORE 10
-          ALOAD 10
+          ASTORE 7
+          ALOAD 7
           INSTANCEOF java/lang/Double
           IFEQ L12
-          ALOAD 10
+          ALOAD 7
           CHECKCAST java/lang/Double
-          ASTORE 11
-          DLOAD 7
-          ALOAD 11
+          ASTORE 6
+          DLOAD 8
+          ALOAD 6
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
-          DSTORE 7
-          GETSTATIC scala/runtime/BoxedUnit.UNIT : Lscala/runtime/BoxedUnit;
-          ASTORE 12
+          DSTORE 8
           GOTO L10
          L12
           NEW org/nlogo/nvm/EngineException
@@ -1985,14 +1963,14 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           DUP
           ICONST_0
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
-          ALOAD 10
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           INVOKEVIRTUAL java/lang/String.toString ()Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           GETSTATIC org/nlogo/api/TypeNames$.MODULE$ : Lorg/nlogo/api/TypeNames$;
-          ALOAD 10
+          ALOAD 7
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.name (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
           INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
@@ -2001,13 +1979,13 @@ procedure FIND-NEW-STATE:[A B S]{-TP-}:
           ATHROW
          L11
           ALOAD 0
-          DLOAD 7
+          DLOAD 8
           INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
           GOTO L13
          L9
           NEW scala/MatchError
           DUP
-          ALOAD 3
+          ALOAD 10
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L13
