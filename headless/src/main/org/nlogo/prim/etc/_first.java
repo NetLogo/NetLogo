@@ -61,7 +61,3 @@ public final strictfp class _first
     return string.substring(0, 1);
   }
 }
-
-
-
-

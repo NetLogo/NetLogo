@@ -12,4 +12,3 @@ class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: Abstract
 
   override def propertySet = Properties.dummyInput
 }
-

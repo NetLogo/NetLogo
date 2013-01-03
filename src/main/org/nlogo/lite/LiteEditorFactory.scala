@@ -15,4 +15,3 @@ class LiteEditorFactory(compiler: CompilerServices) extends EditorFactory {
       new EditorColorizer(compiler), I18N.gui.fn)
   }
 }
-

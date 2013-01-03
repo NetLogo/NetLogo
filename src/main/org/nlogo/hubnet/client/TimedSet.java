@@ -224,5 +224,3 @@ strictfp class TimedSet
     }
   }
 }
-
-
