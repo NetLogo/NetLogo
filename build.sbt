@@ -65,7 +65,7 @@ mainClass in Compile := Some("org.nlogo.app.App")
 
 aggregate in runMain := false
 
-sourceGenerators in Compile <+= Autogen.eventsGeneratorTask
+sourceGenerators in Compile <+= EventsGenerator.task
 
 Extensions.extensionsTask
 

@@ -207,6 +207,7 @@ fi
 $PERL -pi -e "s/\@\@\@VERSION\@\@\@/$VERSION/g" readme.txt
 $PERL -pi -e "s/\@\@\@DATE\@\@\@/$DATE/g" readme.txt
 $PERL -pi -e "s/\@\@\@UNIXNAME\@\@\@/netlogo-$COMPRESSEDVERSION/g" readme.txt
+cat ../../LICENSE >> readme.txt
 
 # include extensions
 $MKDIR extensions
