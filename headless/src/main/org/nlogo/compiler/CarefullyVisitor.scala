@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.api.I18N
-import org.nlogo.compiler.CompilerExceptionThrowers._
+import org.nlogo.compiler.Fail._
 import org.nlogo.prim._
 
 /**

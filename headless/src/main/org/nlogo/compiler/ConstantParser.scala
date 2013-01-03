@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.compiler.CompilerExceptionThrowers.{ cAssert, exception }
+import org.nlogo.compiler.Fail.{ cAssert, exception }
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Link, Observer, Patch, Turtle, World, World3D }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._

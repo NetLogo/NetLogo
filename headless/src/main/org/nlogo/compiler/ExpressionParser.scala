@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers.{ cAssert, exception }
+import Fail.{ cAssert, exception }
 import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
