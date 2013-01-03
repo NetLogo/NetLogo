@@ -85,13 +85,13 @@ object Compiler extends CompilerInterface {
   @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new LiteralParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new LiteralParser().getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
       new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-        .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+        .getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
@@ -106,7 +106,7 @@ object Compiler extends CompilerInterface {
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer(world.program.is3D)))
     val result = new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getConstantFromFile(tokens)
+      .getLiteralFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
     // more values left - ST 2/18/04
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04
