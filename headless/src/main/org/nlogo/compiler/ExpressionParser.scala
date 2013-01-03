@@ -351,7 +351,7 @@ private class ExpressionParser(procedure: Procedure,
           tokens.next()
           val (reporter, rApp) = token.tpe match {
             case TokenType.CONSTANT =>
-              val r = ConstantParser.makeConstantReporter(token.value)
+              val r = LiteralParser.makeConstantReporter(token.value)
               r.token(token)
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
             case TokenType.REPORTER =>
@@ -575,8 +575,8 @@ private class ExpressionParser(procedure: Procedure,
       // we can easily find out where the expression ends.  it's OK to pass a null world and
       // extensionManager here because we only ever use this code when we are parsing constant lists
       // while compiling code.  When we're reading lists from export files and such we go straight
-      // to the ConstantParser through Compiler.readFromString ev 3/20/08
-      val tmp = ConstantParser.makeConstantReporter(new ConstantParser(null, null).parseConstantList(tokens.next(), tokens))
+      // to the LiteralParser through Compiler.readFromString ev 3/20/08
+      val tmp = LiteralParser.makeConstantReporter(new LiteralParser(null, null).parseConstantList(tokens.next(), tokens))
       val token = tokens.next()
       tmp.token(new Token("", TokenType.CONSTANT, null)(openBracket.startPos, token.endPos, token.fileName))
       new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)

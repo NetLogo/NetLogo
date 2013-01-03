@@ -15,7 +15,7 @@ import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
  * from a Iterator[Token]. It implements all the complicated stuff surrounding
  * constant agents and constant agentsets, when necessary.
  */
-private object ConstantParser {
+private object LiteralParser {
   def makeConstantReporter(value: AnyRef): Reporter =
     value match {
       case b: java.lang.Boolean => new _constboolean(b)
@@ -27,7 +27,7 @@ private object ConstantParser {
     }
 }
 
-private class ConstantParser(world: World = null, extensionManager: ExtensionManager = null) {
+private class LiteralParser(world: World = null, extensionManager: ExtensionManager = null) {
 
   /// all error messages used in this class
   private val BAD_AGENT = "Not an agent"

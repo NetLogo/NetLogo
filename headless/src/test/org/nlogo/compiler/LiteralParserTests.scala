@@ -7,7 +7,7 @@ import org.nlogo.agent.{AgentSet, Patch, Turtle, World}
 import org.nlogo.api.{CompilerException, Dump, ExtensionManager, ExtensionObject, LogoList}
 import org.nlogo.util.MockSuite
 
-class ConstantParserTests extends FunSuite with MockSuite {
+class LiteralParserTests extends FunSuite with MockSuite {
 
   def defaultWorld = {
     val world = new World
@@ -19,11 +19,11 @@ class ConstantParserTests extends FunSuite with MockSuite {
   def toConstant(input: String,
                  world: World = defaultWorld,
                  extensionManager: ExtensionManager = null): AnyRef =
-    new ConstantParser(world, extensionManager)
+    new LiteralParser(world, extensionManager)
       .getConstantValue(Compiler.Tokenizer2D.tokenize(input).iterator)
   def toConstantList(input: String, world: World = defaultWorld): LogoList = {
     val tokens = Compiler.Tokenizer2D.tokenize(input).iterator
-    new ConstantParser(world, null).parseConstantList(tokens.next(), tokens)
+    new LiteralParser(world, null).parseConstantList(tokens.next(), tokens)
   }
 
   def testError(input: String, error: String, world: World = defaultWorld) {
@@ -112,12 +112,12 @@ class ConstantParserTests extends FunSuite with MockSuite {
 
 }
 
-class ConstantParser3DTests extends FunSuite {
+class LiteralParser3DTests extends FunSuite {
   val world = new org.nlogo.agent.World3D
   world.createPatches(-10, 10, -10, 10, -10, 10)
   world.realloc()
   def toConstant(input: String): Object =
-    new ConstantParser(world, null).getConstantValue(Compiler.Tokenizer3D.tokenize(input).iterator)
+    new LiteralParser(world, null).getConstantValue(Compiler.Tokenizer3D.tokenize(input).iterator)
   test("parsePatch") {
     val result = toConstant("{patch 1 3 4}").asInstanceOf[Patch]
     expect("(patch 1 3 4)")(
