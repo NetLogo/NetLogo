@@ -1,14 +1,14 @@
 ReadString1
-  read-from-string "" => ERROR Expected a constant.
+  read-from-string "" => ERROR Expected a literal value.
 
 ReadString2
-  read-from-string "a" => ERROR Expected a constant.
+  read-from-string "a" => ERROR Expected a literal value.
 
 ReadString3
-  read-from-string "abc" => ERROR Expected a constant.
+  read-from-string "abc" => ERROR Expected a literal value.
 
 ReadString4
-  read-from-string "  a" => ERROR Expected a constant.
+  read-from-string "  a" => ERROR Expected a literal value.
 
 ReadString5
   read-from-string "5" => 5
@@ -38,10 +38,10 @@ ReadString13
   read-from-string "pi" => 3.141592653589793
 
 ReadString14
-  read-from-string "no-label" => ERROR Expected a constant.
+  read-from-string "no-label" => ERROR Expected a literal value.
 
 ReadString15
-  read-from-string "1 2" => ERROR Extra characters after constant.
+  read-from-string "1 2" => ERROR Extra characters after literal.
 
 ReadString16a
   read-from-string "98748937489374893743789473894.0" => 9.874893748937489E28
@@ -59,7 +59,7 @@ ReadString19
   read-from-string "[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]" => [[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]
 
 ReadString20
-  read-from-string "[[[[[]]]]]]" => ERROR Extra characters after constant.
+  read-from-string "[[[[[]]]]]]" => ERROR Extra characters after literal.
 
 ReadString21
   read-from-string "true" => true
