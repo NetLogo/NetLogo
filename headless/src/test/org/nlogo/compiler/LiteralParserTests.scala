@@ -95,8 +95,8 @@ class LiteralParserTests extends FunSuite with MockSuite {
     expect(input)(Dump.agentset(result, true))
   }
   test("badAgent") { testError("{foobar}", "FOOBAR is not an agentset") }
-  test("badLiteral") { testError("foobar", "Expected a literal.") }
-  test("badLiteralReporter") { testError("round", "Expected a literal.") }
+  test("badLiteral") { testError("foobar", "Expected a literal value.") }
+  test("badLiteralReporter") { testError("round", "Expected a literal value.") }
 
   mockTest("extension literal") {
     val manager = mock[ExtensionManager]
