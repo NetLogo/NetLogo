@@ -160,11 +160,21 @@ strictfp class CommandLine
       return;
     }
     if (inner.trim().startsWith("___")) {
-      scala.collection.mutable.ListBuffer<Object> buf =
-        new scala.collection.mutable.ListBuffer<Object>();
-      buf.$plus$eq(inner.trim().substring(3));
-      new org.nlogo.window.Events.AppEvent(org.nlogo.window.AppEventType.MAGIC_OPEN, buf)
+      new Events.MagicOpenEvent(inner.trim().substring(3))
         .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__change-language")) {
+      new Events.ChangeLanguageEvent()
+        .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__reload")) {
+      new Events.ReloadEvent()
+        .raiseLater(this);
+      setText("");
       return;
     }
     if(workspace.isReporter(inner)) {

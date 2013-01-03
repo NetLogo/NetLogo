@@ -65,7 +65,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
   override def patchSize() = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
-  override def changeLanguage() = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles() = unsupported
