@@ -14,7 +14,7 @@ class AutoConverter1Tests extends FunSuite {
 
   def test(version:String,before:String,after:String,subprogram:Boolean) {
     expectResult(after) {
-      new AutoConverter1()(Compiler.Tokenizer2D)
+      new AutoConverter1(Compiler.Tokenizer2D)
         .convert(before, subprogram, false,"NetLogo " + version)
     }
   }

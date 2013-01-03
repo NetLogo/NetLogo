@@ -17,7 +17,8 @@ import nvm.{ Instruction, Procedure, Reporter }
 private class IdentifierParser(program: Program,
                                oldProcedures: Compiler.ProceduresMap,
                                newProcedures: Compiler.ProceduresMap,
-                               forgiving: Boolean) {
+                               extensionManager: api.ExtensionManager,
+                               forgiving: Boolean = false) {
 
   def process(tokens: Iterator[Token], procedure: Procedure): Seq[Token] = {
     // make sure the procedure name doesn't conflict with a special identifier -- CLB
@@ -34,7 +35,40 @@ private class IdentifierParser(program: Program,
         processToken2(token, procedure, it.count)
       else token
     }
-    it.map(processToken).toSeq
+    it.map(processTokenWithExtensionManager).map(processToken).toSeq
+  }
+
+  // replaces an identifier token with its imported implementation, if necessary
+  private def processTokenWithExtensionManager(token: Token): Token = {
+    def wrap(primitive: api.Primitive, name: String): nvm.Instruction =
+      primitive match {
+        case c: api.Command  =>
+          new prim._extern(c)
+        case r: api.Reporter =>
+          new prim._externreport(r)
+      }
+    if(token.tpe != TokenType.IDENT ||
+       extensionManager == null || !extensionManager.anyExtensionsLoaded)
+      token
+    else {
+      val name = token.value.asInstanceOf[String]
+      val replacement = extensionManager.replaceIdentifier(name)
+      replacement match {
+        // if there's no replacement, make no change.
+        case null =>
+          token
+        case primitive =>
+          val newType =
+            if(primitive.isInstanceOf[api.Command])
+              TokenType.COMMAND
+            else TokenType.REPORTER
+          val instruction = wrap(primitive, name)
+          val newToken = Token(token.name, newType, instruction)(
+            token.startPos, token.endPos, token.fileName)
+          instruction.token(newToken)
+          newToken
+      }
+    }
   }
 
   private def getLetFromArg(p: Procedure, ident: String, tokPos: Int): Option[Let] = {

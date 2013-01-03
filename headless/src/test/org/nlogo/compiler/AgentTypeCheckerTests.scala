@@ -10,17 +10,16 @@ class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   def compile(source: String, is3D: Boolean): Seq[ProcedureDefinition] = {
-    implicit val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
-    val program = Program.empty(is3D)
+    val tokenizer = if (is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenize(source), None, program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      tokenizer.tokenize(source), None, StructureParser.emptyResults(is3D))
       .parse(false)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     for (procedure <- results.procedures.values) {
+      new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
       val tokens =
-        new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-                             results.procedures, false)
+        new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
+                             results.procedures, new DummyExtensionManager)
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }

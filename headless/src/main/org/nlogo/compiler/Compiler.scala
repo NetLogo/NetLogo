@@ -48,11 +48,10 @@ object Compiler extends CompilerInterface {
   // that we don't know about.
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    implicit val t = tokenizer(program.is3D)
-    val results = new StructureParser(t.tokenizeRobustly(source), None,
-                                      program, oldProcedures, extensionManager)
+    val results = new StructureParser(tokenizer(program.is3D).tokenizeRobustly(source), None,
+                                      StructureParser.Results(program, oldProcedures))
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, !parse)
+    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, extensionManager, !parse)
     for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
@@ -66,9 +65,9 @@ object Compiler extends CompilerInterface {
     // go away after 4.1, we'll just do it... - ST 2/23/09
     val workspace = w.asInstanceOf[Workspace]
     // AutoConverter1 handles the easy conversions
-    val result1 = new AutoConverter1()(tokenizer(is3D)).convert(source, subprogram, reporter, version)
+    val result1 = new AutoConverter1(tokenizer(is3D)).convert(source, subprogram, reporter, version)
     // AutoConverter2 handles the hard ones that require parsing
-    new AutoConverter2(workspace, ignoreErrors)(tokenizer(is3D))
+    new AutoConverter2(workspace, ignoreErrors, tokenizer(is3D))
       .convert(result1, subprogram, reporter, version)
   }
 
@@ -127,11 +126,11 @@ object Compiler extends CompilerInterface {
 
   // used for procedures menu
   def findProcedurePositions(source: String, is3D: Boolean): Map[String, (String, Int, Int, Int)] =
-    new StructureParserExtras()(tokenizer(is3D)).findProcedurePositions(source)
+    new StructureParserExtras(tokenizer(is3D)).findProcedurePositions(source)
 
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String, is3D: Boolean): Map[String, String] =
-    new StructureParserExtras()(tokenizer(is3D)).findIncludes(sourceFileName, source)
+    new StructureParserExtras(tokenizer(is3D)).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
   def isValidIdentifier(s: String, is3D: Boolean) = tokenizer(is3D).isValidIdentifier(s)
@@ -139,13 +138,12 @@ object Compiler extends CompilerInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
     try {
-      implicit val t = tokenizer(program.is3D)
       val results =
-        new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, program, procedures, extensionManager)
+        new StructureParser(tokenizer(program.is3D).tokenize("to __is-reporter? report " + s + "\nend"),
+                            None, StructureParser.Results(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, forgiving = false)
+        new IdentifierParser(program, procedures, results.procedures, extensionManager, forgiving = false)
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens

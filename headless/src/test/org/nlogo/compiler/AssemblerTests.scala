@@ -8,18 +8,15 @@ import org.nlogo.api.{ DummyExtensionManager, Program }
 
 class AssemblerTests extends FunSuite {
   def compile(keyword: String, source: String): nvm.Procedure = {
-    implicit val tokenizer = Compiler.Tokenizer2D
-    val program = Program.empty()
     val results = new StructureParser(
-      tokenizer.tokenize(keyword + " foo " + source + "\nend"), None,
-      program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize(keyword + " foo " + source + "\nend"), None,
+      StructureParser.emptyResults())
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
-      new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-                           results.procedures, false)
+      new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
+                           results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     for (procdef <- new ExpressionParser(procedure).parse(tokens)) {
       procdef.accept(new ArgumentStuffer)

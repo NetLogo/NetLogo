@@ -7,7 +7,6 @@ import org.nlogo.api.{ DummyExtensionManager, Program }
 import org.nlogo.nvm
 
 class OptimizerTests extends FunSuite {
-  implicit val tokenizer = Compiler.Tokenizer2D
   def compileReporter(source:String) =
     compile("globals [glob1] breed [frogs frog] to-report __test [x] report " + source + "\nend")
       .statements.head.head.toString
@@ -15,15 +14,14 @@ class OptimizerTests extends FunSuite {
     compile("globals [glob1] breed [frogs frog] to __test [x] " + source + "\nend")
       .statements.head.toString
   def compile(source:String):ProcedureDefinition = {
-    val results = new StructureParser(tokenizer.tokenize(source), None, Program.empty(),
-                                      nvm.CompilerInterface.NoProcedures,
-                                      new DummyExtensionManager)
+    val results = new StructureParser(Compiler.Tokenizer2D.tokenize(source), None,
+                                      StructureParser.emptyResults())
       .parse(false)
     expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-                           results.procedures,false)
+                           results.procedures, new DummyExtensionManager)
       .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head
     procdef.accept(new ConstantFolder)
