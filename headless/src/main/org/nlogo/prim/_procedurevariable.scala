@@ -17,4 +17,3 @@ class _procedurevariable(_vn: Int, val name: String) extends Reporter {
   def report_1(context: Context): AnyRef =
     context.activation.args(_vn)
 }
-

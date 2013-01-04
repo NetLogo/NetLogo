@@ -65,4 +65,3 @@ extends ObjectInputStream(in) {
     }
   }
 }
-

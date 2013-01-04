@@ -159,6 +159,24 @@ strictfp class CommandLine
       setText("");
       return;
     }
+    if (inner.trim().startsWith("___")) {
+      new Events.MagicOpenEvent(inner.trim().substring(3))
+        .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__change-language")) {
+      new Events.ChangeLanguageEvent()
+        .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__reload")) {
+      new Events.ReloadEvent()
+        .raiseLater(this);
+      setText("");
+      return;
+    }
     if(workspace.isReporter(inner)) {
       inner = "show " + inner;
       setText(inner);

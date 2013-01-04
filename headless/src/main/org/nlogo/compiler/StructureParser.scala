@@ -19,6 +19,7 @@ package org.nlogo.compiler
 
 import org.nlogo.{ api, nvm }
 import api.{ Token, TokenType }
+import Fail._
 
 object StructureParser {
 
@@ -57,7 +58,7 @@ object StructureParser {
       Iterator.iterate(firstResults){results =>
         assert(!subprogram)
         val path = extensionManager.resolvePath(results.includes.head.value.asInstanceOf[String])
-        CompilerExceptionThrowers.cAssert(path.endsWith(".nls"),
+        cAssert(path.endsWith(".nls"),
           "Included files must end with .nls",
           results.includes.head)
         val newResults =
@@ -113,8 +114,7 @@ class StructureParser(
           else oldResults,
           subprogram)
       case NoSuccess(msg, rest) =>
-        CompilerExceptionThrowers.exception(
-          msg, rest.first)
+        exception(msg, rest.first)
     }
     // avoid leaking ThreadLocals due to some deprecated stuff in
     // Scala 2.10 that will be removed in Scala 2.11.  see
@@ -296,7 +296,7 @@ trait DuplicateChecker extends StructureDeclarations {
     for {
       Procedure(_, _, inputs, _) <- declarations
       input <- inputs
-    } CompilerExceptionThrowers.cAssert(
+    } cAssert(
       inputs.count(_.name == input.name) == 1,
       "There is already a local variable called " + input.name + " here", input.token)
     // O(n^2) -- maybe we should fold instead
@@ -315,7 +315,7 @@ trait DuplicateChecker extends StructureDeclarations {
     for{
       (decl1, decl2) <- allPairs(declarations)
       (kind, token) <- checkPair(decl1, decl2)
-    } CompilerExceptionThrowers.exception("Redeclaration of " + kind, token)
+    } exception("Redeclaration of " + kind, token)
   }
 
   def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: Map[String, String]) {
@@ -368,7 +368,7 @@ trait DuplicateChecker extends StructureDeclarations {
             case _ =>
               false
           }
-      CompilerExceptionThrowers.cAssert(
+      cAssert(
         used._1 != occ.identifier.name || isBreedVariableException,
         "You already defined " + occ.identifier.name + " as a " + used._2,
         occ.identifier.token)

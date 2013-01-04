@@ -130,4 +130,3 @@ public strictfp class DummyMonitorWidget
     return this;
   }
 }
-
