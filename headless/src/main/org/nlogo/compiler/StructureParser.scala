@@ -104,7 +104,7 @@ class StructureParser(
 
   def parse(subprogram: Boolean): StructureParser.Results = {
     val reader = new SeqReader[Token](tokens, _.startPos)
-    program(reader) match {
+    try program(reader) match {
       case Success(declarations, _) =>
         rejectDuplicateDeclarations(declarations)
         rejectDuplicateNames(declarations, usedNames(oldResults.program, oldResults.procedures))
@@ -115,6 +115,19 @@ class StructureParser(
       case NoSuccess(msg, rest) =>
         CompilerExceptionThrowers.exception(
           msg, rest.first)
+    }
+    // avoid leaking ThreadLocals due to some deprecated stuff in
+    // Scala 2.10 that will be removed in Scala 2.11.  see
+    // https://issues.scala-lang.org/browse/SI-4929 and
+    // https://github.com/scala/scala/commit/dce6b34c38a6d774961ca6f9fd50b11300ecddd6
+    // - ST 1/3/13
+    finally {
+      val field = getClass.getDeclaredField("scala$util$parsing$combinator$Parsers$$lastNoSuccessVar")
+      field.setAccessible(true)
+      val field2 = classOf[scala.util.DynamicVariable[_]].getDeclaredField("tl")
+      field2.setAccessible(true)
+      field2.get(field.get(this)).asInstanceOf[java.lang.ThreadLocal[_]].remove()
+      field.set(this, null)
     }
   }
 
