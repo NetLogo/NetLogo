@@ -18,11 +18,14 @@ object TestHalt {
   }
 }
 class TestHalt extends FunSuite with SlowTest {
+  // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
+  // it's a local variable rather than a top-level class member - ST 1/8/13
+  var workspace: HeadlessWorkspace = null
   if(!Version.is3D)
     test("halt") {
       import TestHalt._
       finalized = false
-      var workspace =
+      workspace =
         HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
       workspace.initForTesting(0, 0, 0, 0, "globals [x]")
       var ex: LogoException = null
