@@ -3,56 +3,77 @@
 package org.nlogo.headless
 
 import org.scalatest.FunSuite
-import org.nlogo.api.{ AggregateManagerInterface, LogoException, RendererInterface, Version }
-import org.nlogo.agent.World
-import org.nlogo.nvm.{ CompilerInterface, HaltException }
 import org.nlogo.util.SlowTest
+import org.nlogo.{ api, agent, nvm }
 
 object TestHalt {
   // This is ugly, but since we use PicoContainer to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   var finalized = false
-  class MyWorkspace(world: World, compiler: CompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
+  class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,
+    renderer: api.RendererInterface, aggregateManager: api.AggregateManagerInterface)
   extends HeadlessWorkspace(world, compiler, renderer, aggregateManager, null) {
-    override def finalize() { finalized = true; super.finalize() }
+    override def finalize() {
+      finalized = true
+      super.finalize()
+    }
   }
 }
+
 class TestHalt extends FunSuite with SlowTest {
+
   // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
   // it's a local variable rather than a top-level class member - ST 1/8/13
   var workspace: HeadlessWorkspace = null
-  if(!Version.is3D)
-    test("halt") {
-      import TestHalt._
-      finalized = false
-      workspace =
-        HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
-      workspace.initForTesting(0, 0, 0, 0, "globals [x]")
-      var ex: LogoException = null
+
+  def withWorkspace(body: => Unit) {
+    import TestHalt._
+    finalized = false
+    workspace = HeadlessWorkspace.newInstance(classOf[MyWorkspace])
+    body
+    workspace.halt()
+    workspace.dispose()
+    workspace = null
+    for (i <- 1 to 20)
+      if (!finalized) { Thread.sleep(200); System.gc() }
+    assert(finalized)
+  }
+
+  test("halt 0") {
+    withWorkspace { }
+  }
+
+  test("halt 1") {
+    withWorkspace {
+      // multiply possible memory leaks
+      workspace.compileCommands("")
+    }
+  }
+
+  if (!api.Version.is3D)
+    test("halt 2") {
+      var ex: api.LogoException = null
       val thread = new Thread("TestHalt.testHalt") {
         override def run() {
           try workspace.command("loop [ set x x + 1 ]")
-          catch { case e: LogoException => ex = e }
+          catch { case e: api.LogoException => ex = e }
         }
       }
-      thread.start()
-      def loop() {
-        if (ex != null) throw ex
-        if (workspace.report("x").asInstanceOf[Double] < 10) {
-          Thread.sleep(5)
-          loop()
+      withWorkspace {
+        workspace.initForTesting(0, 0, 0, 0, "globals [x]")
+        thread.start()
+        def loop() {
+          if (ex != null) throw ex
+          if (workspace.report("x").asInstanceOf[Double] < 10) {
+            Thread.sleep(5)
+            loop()
+          }
         }
+        loop()
       }
-      loop()
-      workspace.halt()
-      workspace.dispose()
-      workspace = null
       thread.join()
       if (ex != null)
-        assert(ex.isInstanceOf[HaltException])
-      System.gc()
-      for (i <- 1 to 50)
-        if (!finalized) { Thread.sleep(200); System.gc() }
-      assert(finalized)
+        assert(ex.isInstanceOf[nvm.HaltException])
     }
+
 }
