@@ -15,17 +15,15 @@ class ExpressionParserTests extends FunSuite {
   def compile(source: String): Seq[Statements] = {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = Program.empty
-    implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenize(wrappedSource), None,
-      program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize(wrappedSource), None,
+      StructureParser.emptyResults)
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, false)
+        results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)
   }

@@ -11,16 +11,15 @@ class IdentifierParserTests extends FunSuite {
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"
     val program = Program.empty().copy(interfaceGlobals = Seq("X"))
-    implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenize(wrappedSource), None,
-      program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize(wrappedSource), None,
+      StructureParser.Results(program))
       .parse(false)
     expect(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
-    new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-      results.procedures, false)
+    new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
+    new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
+      results.procedures, new DummyExtensionManager)
       .process(results.tokens(procedure).iterator, procedure)
       .iterator.takeWhile(_.tpe != TokenType.EOF)
   }

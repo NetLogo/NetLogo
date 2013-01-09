@@ -47,11 +47,10 @@ object Compiler extends CompilerInterface {
   // that we don't know about.
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    implicit val t = tokenizer
-    val results = new StructureParser(t.tokenizeRobustly(source), None,
-                                      program, oldProcedures, extensionManager)
+    val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
+                                      StructureParser.Results(program, oldProcedures))
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, !parse)
+    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, extensionManager, !parse)
     for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
@@ -114,11 +113,11 @@ object Compiler extends CompilerInterface {
 
   // used for procedures menu
   def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] =
-    new StructureParserExtras()(tokenizer).findProcedurePositions(source)
+    new StructureParserExtras(tokenizer).findProcedurePositions(source)
 
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String): Map[String, String] =
-    new StructureParserExtras()(tokenizer).findIncludes(sourceFileName, source)
+    new StructureParserExtras(tokenizer).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
   def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
@@ -126,13 +125,12 @@ object Compiler extends CompilerInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
     try {
-      implicit val t = tokenizer
       val results =
-        new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, program, procedures, extensionManager)
+        new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend"),
+                            None, StructureParser.Results(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, forgiving = false)
+        new IdentifierParser(program, procedures, results.procedures, extensionManager, forgiving = false)
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens
