@@ -355,7 +355,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_life ,O---,null,0,0,0 *
                     |_linkcode ,---L,null,0,0,0
                     |_loop command block,OTPL,null,0,1,1
-                    |_magicopen string,O---,null,0,1,1 *
                     |_makepreview ,O---,null,0,0,0
                     |_mkdir string,OTPL,null,0,1,1
                     |_moveto turtle or patch,-T--,null,0,1,1 *

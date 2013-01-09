@@ -291,8 +291,6 @@ implements CompilerServices, LogoThunkFactory {
     jobManager.addJobFromJobThread(job);
   }
 
-  public abstract void magicOpen(String name);
-
   public abstract void changeLanguage();
 
   // this is used to cache the compiled code used by the "run"

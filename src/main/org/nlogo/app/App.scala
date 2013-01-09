@@ -375,7 +375,8 @@ class App extends
       else libraryOpen(commandLineModel) // --open from command line
     }
     else if (commandLineMagic != null)
-      workspace.magicOpen(commandLineMagic)
+      new AppEvent(AppEventType.MAGIC_OPEN, Seq(commandLineMagic))
+        .raise(this)
     else if (commandLineURL != null)
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),

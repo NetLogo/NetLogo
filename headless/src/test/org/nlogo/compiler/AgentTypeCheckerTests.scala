@@ -119,8 +119,4 @@ class AgentTypeCheckerTests extends FunSuite {
     testError("to foo crt 1 [ sprout 1 ] end", "You can't use sprout in a turtle context, because sprout is patch-only.") }
   test("crt3") {
     testError("to foo crt 1 [ crt 1 ] end", "You can't use crt in a turtle context, because crt is observer-only.") }
-  test("magicOpen") {
-    testError("to foo ask turtles [ ___foo ] end",
-      "You can't use __magic-open in a turtle context, because __magic-open is observer-only.")
-  }
 }
