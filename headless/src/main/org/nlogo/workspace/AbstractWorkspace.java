@@ -103,19 +103,6 @@ public abstract strictfp class AbstractWorkspace
    */
   public abstract boolean compilerTestingMode();
 
-  /**
-   * Shuts down the background thread associated with this workspace,
-   * allowing resources to be freed.
-   */
-  public void dispose()
-      throws InterruptedException {
-    jobManager.die();
-    getExtensionManager().reset();
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
-    }
-  }
-
   /// headless?
 
   public abstract boolean isHeadless();

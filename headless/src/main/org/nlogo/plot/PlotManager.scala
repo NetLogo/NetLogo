@@ -50,6 +50,11 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   def forgetAll() {
     _plots.clear()
     currentPlot = None
+    // not strictly necessary to clear the thunk maps since the references
+    // are weak, but might as well help the GC (and the help human porer-over of heap
+    // dumps) - ST 1/18/13
+    penThunks.clear()
+    plotThunks.clear()
   }
   def clearAll() {
     _plots.foreach(_.clear())
