@@ -80,3 +80,19 @@ all <<= all.dependsOn(
   packageBin in Compile in NetLogoBuild.headless,
   compile in Test,
   Extensions.extensions)
+
+///
+/// settings from project/*.scala
+///
+
+seq(Testing.settings: _*)
+
+seq(Packaging.settings: _*)
+
+seq(Running.settings: _*)
+
+seq(Depend.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)
