@@ -13,4 +13,4 @@ package org.nlogo.api
  */
 
 abstract class LogoException(message: String, cause: Throwable = null)
-extends Exception(message, cause)
+extends RuntimeException(message, cause)

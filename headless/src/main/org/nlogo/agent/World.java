@@ -1224,7 +1224,7 @@ public strictfp class World
   }
 
   public void setObserverVariableByName(String var, Object value)
-      throws LogoException, AgentException {
+      throws AgentException {
     var = var.toUpperCase();
     if (_program.globals().contains(var)) {
       int index = _program.globals().indexOf(var);

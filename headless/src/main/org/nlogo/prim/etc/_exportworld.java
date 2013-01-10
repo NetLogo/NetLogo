@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -16,13 +15,13 @@ public final strictfp class _exportworld
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     final String filePath = argEvalString(context, 0);
     // Workspace.waitFor() switches to the event thread if we're
     // running with a GUI - ST 12/17/04
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
-          public void run() throws LogoException {
+          public void run() {
             try {
               workspace.exportWorld
                   (workspace.fileManager()

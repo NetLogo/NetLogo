@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -19,7 +18,7 @@ public final strictfp class _watch
   }
 
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     if (agent.id == -1) {
       throw new EngineException(context, this,

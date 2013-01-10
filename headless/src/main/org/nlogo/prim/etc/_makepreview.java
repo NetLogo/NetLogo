@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,7 +16,7 @@ public final strictfp class _makepreview
   }
 
   @Override
-  public void perform(Context context) throws LogoException {
+  public void perform(Context context) {
     try {
       // based on _run.perform - ST 1/25/11
       String modelPath = workspace.getModelPath();

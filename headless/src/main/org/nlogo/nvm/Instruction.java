@@ -12,7 +12,6 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.util.Thunk;
@@ -260,7 +259,7 @@ public abstract strictfp class Instruction
 
   // checking of numeric types
 
-  public long validLong(double d) throws LogoException {
+  public long validLong(double d) {
     // 9007199254740992 is the largest/smallest integer
     // exactly representable in a double - ST 1/29/08
     if (d > 9007199254740992L || d < -9007199254740992L) {
@@ -277,14 +276,14 @@ public abstract strictfp class Instruction
     return d <= 9007199254740992L && d >= -9007199254740992L;
   }
 
-  public Double newValidDouble(double d) throws LogoException {
+  public Double newValidDouble(double d) {
     if (Double.isInfinite(d) || Double.isNaN(d)) {
       invalidDouble(d);
     }
     return Double.valueOf(d);
   }
 
-  public double validDouble(double d) throws LogoException {
+  public double validDouble(double d) {
     // yeah, this line is repeated from the previous method,
     // but factoring it out would cost us a method call, and this
     // is extremely efficiency-critical code, so... - ST 11/1/04
@@ -298,7 +297,7 @@ public abstract strictfp class Instruction
     return d;
   }
 
-  private void invalidDouble(double d) throws LogoException {
+  private void invalidDouble(double d) {
     // it's hard to get a context here in some situations because
     // of optimizations. the context will get set later.
     throw new EngineException
@@ -356,7 +355,7 @@ public abstract strictfp class Instruction
   //
   // Convenience methods that do type checking and casting
 
-  public org.nlogo.agent.Agent argEvalAgent(Context context, int argIndex) throws LogoException {
+  public org.nlogo.agent.Agent argEvalAgent(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       org.nlogo.agent.Agent agent = (org.nlogo.agent.Agent) obj;
@@ -370,7 +369,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex) throws LogoException {
+  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (org.nlogo.agent.AgentSet) obj;
@@ -379,8 +378,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind)
-      throws LogoException {
+  public org.nlogo.agent.AgentSet argEvalAgentSet(Context context, int argIndex, AgentKind kind) {
     Object obj = args[argIndex].report(context);
     try {
       AgentSet set = (org.nlogo.agent.AgentSet) obj;
@@ -394,7 +392,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public Boolean argEvalBoolean(Context context, int argIndex) throws LogoException {
+  public Boolean argEvalBoolean(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (Boolean) obj;
@@ -403,7 +401,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public boolean argEvalBooleanValue(Context context, int argIndex) throws LogoException {
+  public boolean argEvalBooleanValue(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return ((Boolean) obj).booleanValue();
@@ -412,15 +410,15 @@ public abstract strictfp class Instruction
     }
   }
 
-  public double argEvalDoubleValue(Context context, int argIndex) throws LogoException {
+  public double argEvalDoubleValue(Context context, int argIndex) {
     return argEvalDouble(context, argIndex).doubleValue();
   }
 
-  public int argEvalIntValue(Context context, int argIndex) throws LogoException {
+  public int argEvalIntValue(Context context, int argIndex) {
     return argEvalDouble(context, argIndex).intValue();
   }
 
-  public org.nlogo.api.LogoList argEvalList(Context context, int argIndex) throws LogoException {
+  public org.nlogo.api.LogoList argEvalList(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (LogoList) obj;
@@ -429,7 +427,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.Patch argEvalPatch(Context context, int argIndex) throws LogoException {
+  public org.nlogo.agent.Patch argEvalPatch(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (org.nlogo.agent.Patch) obj;
@@ -438,7 +436,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public String argEvalString(Context context, int argIndex) throws LogoException {
+  public String argEvalString(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (String) obj;
@@ -447,7 +445,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public Double argEvalDouble(Context context, int argIndex) throws LogoException {
+  public Double argEvalDouble(Context context, int argIndex) {
     Reporter arg = args[argIndex];
     Object obj = arg.report(context);
     try {
@@ -457,7 +455,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.Turtle argEvalTurtle(Context context, int argIndex) throws LogoException {
+  public org.nlogo.agent.Turtle argEvalTurtle(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (org.nlogo.agent.Turtle) obj;
@@ -466,7 +464,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public org.nlogo.agent.Link argEvalLink(Context context, int argIndex) throws LogoException {
+  public org.nlogo.agent.Link argEvalLink(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (org.nlogo.agent.Link) obj;
@@ -475,7 +473,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public ReporterTask argEvalReporterTask(Context context, int argIndex) throws LogoException {
+  public ReporterTask argEvalReporterTask(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (ReporterTask) obj;
@@ -484,7 +482,7 @@ public abstract strictfp class Instruction
     }
   }
 
-  public CommandTask argEvalCommandTask(Context context, int argIndex) throws LogoException {
+  public CommandTask argEvalCommandTask(Context context, int argIndex) {
     Object obj = args[argIndex].report(context);
     try {
       return (CommandTask) obj;

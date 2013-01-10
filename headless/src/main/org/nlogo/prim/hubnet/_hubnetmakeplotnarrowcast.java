@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.hubnet;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -16,13 +15,11 @@ public final strictfp class _hubnetmakeplotnarrowcast
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     final String name = argEvalString(context, 0);
-
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
-          public void run() throws LogoException {
+          public void run() {
             if (!workspace.getHubNetManager().addNarrowcastPlot(name)) {
               throw new EngineException
                   (context, _hubnetmakeplotnarrowcast.this,

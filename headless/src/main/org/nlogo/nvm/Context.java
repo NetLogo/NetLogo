@@ -73,8 +73,7 @@ public final strictfp class Context {
   }
 
   // this method runs only until a command switches
-  void stepConcurrent()
-      throws LogoException {
+  void stepConcurrent() {
     if (agent.id == -1) // is our agent dead?
     {
       finished = true;
@@ -101,8 +100,7 @@ public final strictfp class Context {
   }
 
   // this method runs until the context is finished
-  void runExclusive()
-      throws LogoException {
+  void runExclusive() {
     if (agent.id == -1) // is our agent dead?
     {
       finished = true;
@@ -155,8 +153,7 @@ public final strictfp class Context {
         || activation != job.parentContext.activation;
   }
 
-  public void runExclusiveJob(AgentSet agentset, int address)
-      throws LogoException {
+  public void runExclusiveJob(AgentSet agentset, int address) {
     new ExclusiveJob
         (job.owner, agentset, activation.procedure(), address, this, job.random)
         .run();
@@ -219,14 +216,12 @@ public final strictfp class Context {
   // caller should call reporter.checkAgentClass() or
   // reporter.checkAgentSetClass() beforehand
   public Object evaluateReporter(Agent agent,
-                                 Reporter reporter)
-      throws LogoException {
+                                 Reporter reporter) {
     this.agent = agent;
     return reporter.report(this);
   }
 
-  public Object callReporterProcedure(Activation newActivation)
-      throws LogoException {
+  public Object callReporterProcedure(Activation newActivation) {
     boolean oldInReporterProcedure = inReporterProcedure;
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job

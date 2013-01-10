@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoHashObject;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -24,7 +23,7 @@ public final strictfp class _removeduplicates
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     LogoList list = argEvalList(context, 0);
     LogoListBuilder result = new LogoListBuilder();
     HashSet<Object> seenHash = new HashSet<Object>();

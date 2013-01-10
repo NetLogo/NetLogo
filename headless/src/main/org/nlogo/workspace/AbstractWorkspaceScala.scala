@@ -88,17 +88,14 @@ object AbstractWorkspaceTraits {
 
   trait Compiler { this: AbstractWorkspaceScala =>
 
-    @throws(classOf[CompilerException])
     override def readNumberFromString(source: String) =
       compiler.readNumberFromString(
         source, world, getExtensionManager, world.program.is3D)
 
-    @throws(classOf[CompilerException])
     override def checkReporterSyntax(source: String) =
       compiler.checkReporterSyntax(
         source, world.program, procedures, getExtensionManager, false)
 
-    @throws(classOf[CompilerException])
     def checkCommandSyntax(source: String) =
       compiler.checkCommandSyntax(
         source, world.program, procedures, getExtensionManager, false)
@@ -225,60 +222,47 @@ object AbstractWorkspaceTraits {
   }
 
   trait Evaluating { this: AbstractWorkspace =>
-    @throws(classOf[CompilerException])
     def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
       evaluator.makeReporterThunk(source, world.observer,
                                   new SimpleJobOwner(jobOwnerName, auxRNG))
-    @throws(classOf[CompilerException])
     def makeCommandThunk(source: String, jobOwnerName: String): CommandLogoThunk =
       evaluator.makeCommandThunk(source, world.observer,
                                  new SimpleJobOwner(jobOwnerName, auxRNG))
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String) {
       evaluator.evaluateCommands(owner, source)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) {
       evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
                          waitForCompletion: Boolean) {
       val agents = new ArrayAgentSet(agent.kind, 1, false, world)
       agents.add(agent)
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
                          waitForCompletion: Boolean) {
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String) =
       evaluator.evaluateReporter(owner, source, world.observers)
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
       val agents = new ArrayAgentSet(agent.kind, 1, false, world)
       agents.add(agent)
       evaluator.evaluateReporter(owner, source, agents)
     }
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
       evaluator.evaluateReporter(owner, source, agents)
-    @throws(classOf[CompilerException])
     def compileCommands(source: String): Procedure =
       compileCommands(source, AgentKind.Observer)
-    @throws(classOf[CompilerException])
     def compileCommands(source: String, kind: AgentKind): Procedure =
       evaluator.compileCommands(source, kind)
-    @throws(classOf[CompilerException])
     def compileReporter(source: String): Procedure =
       evaluator.compileReporter(source)
     def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean =
       evaluator.runCompiledCommands(owner, procedure)
     def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
       evaluator.runCompiledReporter(owner, procedure)
-    @throws(classOf[CompilerException])
     def readFromString(string: String): AnyRef =
       evaluator.readFromString(string)
   }

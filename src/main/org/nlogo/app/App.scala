@@ -779,7 +779,6 @@ class App extends
    * @throws IllegalStateException if called from the AWT event queue thread
    * @see #commandLater
    */
-  @throws(classOf[CompilerException])
   def command(source: String) {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
@@ -793,7 +792,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @see #command
    */
-  @throws(classOf[CompilerException])
   def commandLater(source: String){
     workspace.evaluateCommands(owner, source, false)
   }
@@ -810,7 +808,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @throws IllegalStateException if called from the AWT event queue thread
    */
-  @throws(classOf[CompilerException])
   def report(source: String): Object = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())

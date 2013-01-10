@@ -260,18 +260,15 @@ public abstract strictfp class GUIWorkspaceJ
     ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
-  public void waitFor(CommandRunnable runnable)
-      throws LogoException {
+  public void waitFor(CommandRunnable runnable) {
     ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
-  public <T> T waitForResult(ReporterRunnable<T> runnable)
-      throws LogoException {
+  public <T> T waitForResult(ReporterRunnable<T> runnable) {
     return ThreadUtils.waitForResult((GUIWorkspace) this, runnable);
   }
 
-  public void waitForQueuedEvents()
-      throws LogoException {
+  public void waitForQueuedEvents() {
     ThreadUtils.waitForQueuedEvents((GUIWorkspace) this);
   }
 

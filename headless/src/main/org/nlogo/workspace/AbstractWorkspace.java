@@ -339,8 +339,7 @@ public abstract strictfp class AbstractWorkspace
       new WeakHashMap<String, Procedure>();
 
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
-                                 boolean reporter)
-      throws CompilerException {
+                                 boolean reporter) {
     String key = source + "@" + context.activation.procedure().args().size() +
         "@" + context.agentBit;
     Procedure proc = codeBits.get(key);
@@ -365,10 +364,9 @@ public abstract strictfp class AbstractWorkspace
 
   // called from an "other" thread (neither event thread nor job thread)
   public abstract void open(String path)
-      throws java.io.IOException, CompilerException, LogoException;
+      throws java.io.IOException, LogoException;
 
-  public abstract void openString(String modelContents)
-      throws CompilerException, LogoException;
+  public abstract void openString(String modelContents);
 
   public void halt() {
     jobManager.haltPrimary();
@@ -385,8 +383,7 @@ public abstract strictfp class AbstractWorkspace
 
   public void outputObject(Object object, Object owner,
                            boolean addNewline, boolean readable,
-                           OutputDestination destination)
-      throws LogoException {
+                           OutputDestination destination) {
     org.nlogo.agent.OutputObject oo =
         new org.nlogo.agent.OutputObject
             (
@@ -410,8 +407,7 @@ public abstract strictfp class AbstractWorkspace
 
   // called from job thread - ST 10/1/03
   protected abstract void sendOutput(org.nlogo.agent.OutputObject oo,
-                                     boolean toOutputArea)
-      throws LogoException;
+                                     boolean toOutputArea);
 
   /// importing
 

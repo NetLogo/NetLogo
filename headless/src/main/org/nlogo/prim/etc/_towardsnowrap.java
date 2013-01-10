@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,7 +16,7 @@ public final strictfp class _towardsnowrap extends Reporter {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     org.nlogo.agent.Agent agent = argEvalAgent(context, 0);
     if (agent instanceof org.nlogo.agent.Link) {
       throw new EngineException(context, this,

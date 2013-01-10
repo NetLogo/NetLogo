@@ -8,7 +8,6 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.EngineException;
@@ -27,7 +26,7 @@ public final strictfp class _turtleson
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     Object agentOrSet = args[0].report(context);
     List<Turtle> resultList = new ArrayList<Turtle>();
     if (agentOrSet instanceof Turtle) {

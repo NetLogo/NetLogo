@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -21,12 +20,11 @@ public final strictfp class _first
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     return report_1(context, args[0].report(context));
   }
 
-  public Object report_1(final org.nlogo.nvm.Context context, Object obj)
-      throws LogoException {
+  public Object report_1(final org.nlogo.nvm.Context context, Object obj) {
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.isEmpty()) {
@@ -45,16 +43,14 @@ public final strictfp class _first
     }
   }
 
-  public Object report_2(final org.nlogo.nvm.Context context, LogoList list)
-      throws LogoException {
+  public Object report_2(final org.nlogo.nvm.Context context, LogoList list) {
     if (list.isEmpty()) {
       throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
     }
     return list.first();
   }
 
-  public Object report_3(final org.nlogo.nvm.Context context, String string)
-      throws LogoException {
+  public Object report_3(final org.nlogo.nvm.Context context, String string) {
     if (string.length() == 0) {
       throw new EngineException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
     }

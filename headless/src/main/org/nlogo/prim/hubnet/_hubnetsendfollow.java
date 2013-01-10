@@ -3,7 +3,6 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.agent.Agent;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -19,7 +18,7 @@ public strictfp class _hubnetsendfollow
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     final String client = argEvalString(context, 0);
     final Agent agent = argEvalAgent(context, 1);
     final double radius = argEvalDoubleValue(context, 2);

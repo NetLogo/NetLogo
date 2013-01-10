@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -17,11 +16,11 @@ public final strictfp class _stop
   }
 
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     perform_1(context);
   }
 
-  public void perform_1(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform_1(final org.nlogo.nvm.Context context) {
     // check: are we in an ask?
     if (!context.atTopActivation()) {
       // if so, then "stop" means that this agent prematurely
@@ -41,7 +40,7 @@ public final strictfp class _stop
   }
 
   // identical to perform_1() above... BUT with a profiling hook added
-  public void profiling_perform_1(final org.nlogo.nvm.Context context) throws LogoException {
+  public void profiling_perform_1(final org.nlogo.nvm.Context context) {
     if (!context.atTopActivation()) {
       context.finished = true;
     } else {

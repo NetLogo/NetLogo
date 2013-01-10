@@ -2,13 +2,12 @@
 
 package org.nlogo.prim.hubnet;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
 public final strictfp class _hubnetplotpendown
     extends org.nlogo.nvm.Command {
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     final String name = argEvalString(context, 0);
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {

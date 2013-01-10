@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Equality;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -30,7 +29,7 @@ public final strictfp class _notequal1
   }
 
   @Override
-  public Object report(final Context context) throws LogoException {
+  public Object report(final Context context) {
     return report_1(context, args[0].report(context))
         ? Boolean.TRUE
         : Boolean.FALSE;

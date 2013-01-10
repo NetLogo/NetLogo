@@ -3,7 +3,7 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.api.{AgentKind, LogoException, JobOwner}
+import org.nlogo.api.{AgentKind, JobOwner}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
 import org.nlogo.util.Exceptions.ignoring
@@ -33,7 +33,6 @@ class JobManager(jobManagerOwner: JobManagerOwner,
   def makeConcurrentJob(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Job =
     new ConcurrentJob(owner, agentSet, procedure, 0, null, owner.random)
 
-  @throws(classOf[LogoException])
   def callReporterProcedure(owner: JobOwner, agentSet: AgentSet, procedure: Procedure): Object =
     new ExclusiveJob(owner, agentSet, procedure, 0, null, owner.random).callReporterProcedure()
 

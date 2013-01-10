@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -18,8 +17,7 @@ public final strictfp class _extractrgb
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
-
+  public Object report(final org.nlogo.nvm.Context context) {
     return report_1(context, argEvalDoubleValue(context, 0));
   }
 

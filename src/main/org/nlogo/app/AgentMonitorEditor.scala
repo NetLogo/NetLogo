@@ -393,7 +393,6 @@ with org.nlogo.window.Events.JobRemovedEventHandler
     editor.selectAll()
   }
 
-  @throws(classOf[org.nlogo.api.CompilerException])
   @throws(classOf[org.nlogo.api.AgentException])
   private def parseTurtleOrDouble(text: String): Turtle = {
     val obj = workspace.compiler.readFromString(

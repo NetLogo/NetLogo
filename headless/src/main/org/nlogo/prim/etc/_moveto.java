@@ -6,7 +6,6 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EngineException;
@@ -20,8 +19,7 @@ public final strictfp class _moveto
   }
 
   @Override
-  public void perform(final org.nlogo.nvm.Context context)
-      throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     Agent otherAgent = argEvalAgent(context, 0);
     if (otherAgent.id == -1) {
       throw new EngineException(context, this,

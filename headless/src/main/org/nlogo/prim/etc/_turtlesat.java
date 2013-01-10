@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.AgentKindJ;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -18,8 +17,7 @@ public final strictfp class _turtlesat
   }
 
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     double dx = argEvalDoubleValue(context, 0);
     double dy = argEvalDoubleValue(context, 1);
     org.nlogo.agent.Patch patch = null;

@@ -3,7 +3,6 @@
 package org.nlogo.prim.hubnet;
 
 import org.nlogo.api.Dump;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
@@ -16,7 +15,7 @@ import static scala.collection.JavaConversions.asScalaBuffer;
 public final strictfp class _hubnetsendclearoutput
     extends org.nlogo.nvm.Command {
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     Object clients = args[0].report(context);
 
     java.util.List<String> nodes = new java.util.ArrayList<String>();

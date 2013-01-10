@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Link;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -16,11 +15,11 @@ public final strictfp class _linkheading extends Reporter {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     return report_1(context);
   }
 
-  public double report_1(Context context) throws LogoException {
+  public double report_1(Context context) {
     try {
       Link link = (Link) context.agent;
       return world.protractor().towards(link.end1(), link.end2(), true);

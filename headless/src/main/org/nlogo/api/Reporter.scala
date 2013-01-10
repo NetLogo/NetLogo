@@ -19,7 +19,6 @@ trait Reporter extends Primitive {
    * @throws ExtensionException
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def report(args: Array[Argument], context: Context): AnyRef
 
 }

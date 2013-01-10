@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -19,7 +18,7 @@ public final strictfp class _setxy
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     Turtle turtle = (Turtle) context.agent;
     Double newx = argEvalDouble(context, 0);
     Double newy = argEvalDouble(context, 1);
@@ -43,8 +42,7 @@ public final strictfp class _setxy
     context.ip = next;
   }
 
-  public void perform_1(final Context context, double xvalue, double yvalue)
-      throws LogoException {
+  public void perform_1(final Context context, double xvalue, double yvalue) {
     Turtle turtle = (Turtle) context.agent;
     try {
       turtle.xandycor(turtle.shortestPathX(xvalue),

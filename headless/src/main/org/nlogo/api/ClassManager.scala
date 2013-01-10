@@ -53,7 +53,6 @@ trait ClassManager {
    * @param value    The string representation of the object
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[CompilerException])
   def readExtensionObject(reader: ExtensionManager, typeName: String, value: String): ExtensionObject
 
   /**
