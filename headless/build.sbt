@@ -21,3 +21,7 @@ mainClass in Compile := Some("org.nlogo.headless.Shell")
 seq(Testing.settings: _*)
 
 seq(Depend.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)
