@@ -239,8 +239,7 @@ public final strictfp class Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) // NOPMD empty catch block
-    {
+    } catch (NonLocalExit$ e) {
       // do nothing
     } catch (LogoException ex) {
       EngineException.rethrow(ex, this, command);
@@ -262,7 +261,7 @@ public final strictfp class Context {
 
   public Object getLet(Let let) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
+    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
     {
       LetBinding binding = rest.head();
       if (let == binding.let()) {
@@ -276,7 +275,7 @@ public final strictfp class Context {
 
   public void setLet(Let let, Object value) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
+    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
     {
       LetBinding binding = rest.head();
       if (let == binding.let()) {

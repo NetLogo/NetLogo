@@ -23,8 +23,7 @@ strictfp class ModelsLibraryDialog
 
   public static String open(java.awt.Frame parent)
       throws org.nlogo.awt.UserCancelException {
-    if (me == null)  // NOPMD not threadsafe, but OK since it's event-thread-only
-    {
+    if (me == null) {
       me = new ModelsLibraryDialog(parent);
       me.tree.setSelectionRow(0);
     }
@@ -711,13 +710,7 @@ strictfp class ModelsLibraryDialog
         // models in the library. This will force Java to allocate
         // a new char array containing only the stuff we're
         // interested in saving. - ER 12/02/07
-        // PMD doesn't like you to call the String constructor,
-        // so we'll do it this way instead; the effect is exactly
-        // the same - ER 12/03/07
-        StringBuilder sb = new StringBuilder(info.length());
-        sb.append(info);
-        info = sb.toString();
-        this.info = info;
+        this.info = new String(info);
       } else {
         this.info = "";
       }

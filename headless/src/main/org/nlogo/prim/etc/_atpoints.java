@@ -158,7 +158,9 @@ public final strictfp class _atpoints
         if (patch != null) {
           result.add(patch);
         }
-      } catch (AgentException e) { } // NOPMD
+      } catch (AgentException e) {
+        // do nothing
+      }
     }
     return result;
   }

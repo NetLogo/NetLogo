@@ -82,7 +82,7 @@ public strictfp class World
   // can get to it very quickly.  And since every Instruction has a
   // World object in it, the engine can always get to World quickly.
   //  - ST 1/10/07
-  public volatile boolean comeUpForAir = false;  // NOPMD pmd doesn't like 'volatile'
+  public volatile boolean comeUpForAir = false;
 
   public World() {
     _turtleShapeList = new ShapeList(AgentKindJ.Turtle());

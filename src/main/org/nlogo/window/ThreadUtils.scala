@@ -28,7 +28,7 @@ object ThreadUtils {
   }
 
   private class Result[T] {
-    @volatile var done = false // NOPMD pmd doesn't like 'volatile'
+    @volatile var done = false
     var value: T = _
     var ex: Exception = null
   }
