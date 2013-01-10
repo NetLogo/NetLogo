@@ -35,7 +35,9 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
           parentContext.activation
       context.ip = address
       context.finished = false
+      val oldLets = context.letBindings
       context.runExclusive()
+      context.letBindings = oldLets
     }
   }
 
