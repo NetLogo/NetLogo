@@ -17,12 +17,12 @@ abstract class AbstractTestWorld extends Assertions {
 
   private def makeTurtles(world: World, turtles: Array[Array[Int]]) {
     turtles.foreach(makeTurtle(world, _))
-    expect(turtles.size)(world.turtles.count)
+    expectResult(turtles.size)(world.turtles.count)
   }
 
   private def checkTurtles(world: World, size: Int) {
-    expect(size)(world.turtles.count)
-    expect(size)(world.turtles.toLogoList.size)
+    expectResult(size)(world.turtles.count)
+    expectResult(size)(world.turtles.toLogoList.size)
     assert(world.turtles.toLogoList.forall(_ != null))
   }
 
@@ -64,7 +64,7 @@ abstract class AbstractTestWorld extends Assertions {
     val iter = world.turtles.shufflerator(world.mainRNG)
     for(who <- Seq(4, 3, 2, 0, 1)) {
       assert(iter.hasNext)
-      expect(who)(iter.next.id)
+      expectResult(who)(iter.next.id)
     }
     assert(!iter.hasNext)
   }
@@ -73,13 +73,13 @@ abstract class AbstractTestWorld extends Assertions {
     val world = makeWorld(d)
     makeTurtles(world, turtleList)
     val link = makeLink(world, linkList)
-    expect(0)(world.protractor.distanceToLink(link, 0, 0))
-    expect(1)(world.protractor.distanceToLink(link, 1, 0))
+    expectResult(0)(world.protractor.distanceToLink(link, 0, 0))
+    expectResult(1)(world.protractor.distanceToLink(link, 1, 0))
   }
 
   def testShortestPath(d: WorldDimensions) {
     val world = makeWorld(d)
-    expect(3)(world.topology.shortestPathY(2, -2))
-    expect(5)(world.topology.shortestPathX(2, -2))
+    expectResult(3)(world.topology.shortestPathY(2, -2))
+    expectResult(5)(world.topology.shortestPathX(2, -2))
   }
 }

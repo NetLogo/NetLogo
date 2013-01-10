@@ -169,7 +169,6 @@ class ReviewTab(
             "Not enough memory. Turning off recording.",
             "Low memory", JOptionPane.WARNING_MESSAGE)
           stopRecording()
-        case e => throw e // rethrow anything else
       }
       refreshInterface()
     }

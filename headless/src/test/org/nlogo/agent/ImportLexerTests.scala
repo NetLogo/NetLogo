@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 
 class ImportLexerTests extends FunSuite {
   def testSimple(source: String, expectedFields: List[String]) {
-    expect(expectedFields)(ImportLexer.lex(source).toList)
+    expectResult(expectedFields)(ImportLexer.lex(source).toList)
   }
   def testInvalid(source: String, messageStart: String) {
     val e = intercept[ImportLexer.LexerException] {

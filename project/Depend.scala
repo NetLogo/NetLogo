@@ -160,7 +160,7 @@ check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 [JMF] = javax.media.* excluding javax.media.opengl.*
 check [JMF-free-zone] directlyIndependentOf [JMF]
 
-[Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
+[Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.app.App$ org.nlogo.lite.InterfaceComponent
 check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 
 [Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils

@@ -20,7 +20,7 @@ class ExpressionParserTests extends FunSuite {
       tokenizer.tokenizeAllowingRemovedPrims(wrappedSource), None,
       StructureParser.emptyResults())
       .parse(false)
-    expect(1)(results.procedures.size)
+    expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
@@ -40,8 +40,8 @@ class ExpressionParserTests extends FunSuite {
     }).mkString
   /// helper
   def testStartAndEnd(source: String, preorderDump: String) {
-    expect(preorderDump)(statementsToString(compile(source, false), source))
-    expect(preorderDump)(
+    expectResult(preorderDump)(statementsToString(compile(source, false), source))
+    expectResult(preorderDump)(
       statementsToString(compile(source, true), source))
   }
   // preorder traversal
@@ -66,12 +66,12 @@ class ExpressionParserTests extends FunSuite {
   }
 
   def runTest(input: String, result: String) {
-    expect(result)(compile(input, false).mkString)
-    expect(result)(compile(input, true).mkString)
+    expectResult(result)(compile(input, false).mkString)
+    expectResult(result)(compile(input, true).mkString)
   }
   def runTest(input: String, result2D: String, result3D: String) {
-    expect(result2D)(compile(input, false).mkString)
-    expect(result3D)(compile(input, true).mkString)
+    expectResult(result2D)(compile(input, false).mkString)
+    expectResult(result3D)(compile(input, true).mkString)
   }
   def runFailure(input: String, message: String, start: Int, end: Int) {
     doFailure(input, message, start, end, false)
@@ -81,9 +81,9 @@ class ExpressionParserTests extends FunSuite {
     val e = intercept[CompilerException] {
       compile(input, is3D)
     }
-    expect(message)(e.getMessage)
-    expect(start + PREAMBLE.length())(e.startPos)
-    expect(end + PREAMBLE.length())(e.endPos)
+    expectResult(message)(e.getMessage)
+    expectResult(start + PREAMBLE.length())(e.startPos)
+    expectResult(end + PREAMBLE.length())(e.endPos)
   }
 
   /// now, the actual tests

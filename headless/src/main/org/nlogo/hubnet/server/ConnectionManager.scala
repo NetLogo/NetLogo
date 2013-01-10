@@ -257,7 +257,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   def broadcast(tag:String, message:Any) {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
     if (!(message.isInstanceOf[Serializable])) throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
-    broadcastMessage(new WidgetControl(message.asInstanceOf[Serializable], tag))
+    broadcastMessage(new WidgetControl(message.asInstanceOf[AnyRef with Serializable], tag))
   }
 
   /**
@@ -268,7 +268,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   @throws(classOf[HubNetException])
   def send (userId:String, tag:String, message:Any) = {
     if (!isValidTag(tag)) throw new HubNetException(tag + " is not a valid tag on the client.")
-    sendUserMessage(userId, new WidgetControl(message.asInstanceOf[Serializable], tag))
+    sendUserMessage(userId, new WidgetControl(message.asInstanceOf[AnyRef with Serializable], tag))
   }
 
   @throws(classOf[HubNetException])

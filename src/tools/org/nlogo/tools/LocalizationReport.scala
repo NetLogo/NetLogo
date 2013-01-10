@@ -180,8 +180,8 @@ object LocalizationReport {
       // print all the data in this report.
       // the code isn't that difficult to follow
       def printReport() {
-        def printWrapped[A](seq: {def size:Int}, message: String)(f: => Unit) {
-          if(seq.size > 0 || verbose){
+        def printWrapped[A](seq: Iterable[_], message: String)(f: => Unit) {
+          if(seq.nonEmpty || verbose){
             println("======= " + seq.size + " " + message + " =======")
             f
             println()
@@ -243,7 +243,7 @@ object LocalizationReport {
                 if (funny) Wrong(translation) else Good(translation)
               } catch {
                 // an exception was thrown trying to get the value of this key.
-                case e => Exploded(e)
+                case e: Exception => Exploded(e)
               }
             }
           }

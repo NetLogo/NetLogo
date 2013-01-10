@@ -259,14 +259,17 @@ class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
     org.nlogo.window.ExternalFileManager with
-    AppEventHandler with
     BeforeLoadEventHandler with
     LoadBeginEventHandler with
     LoadSectionEventHandler with
     LoadEndEventHandler with
+    LoggingEventHandler with
     ModelSavedEventHandler with
-    Events.SwitchedTabsEventHandler with
     AboutToQuitEventHandler with
+    Events.ChangeLanguageEventHandler with
+    Events.MagicOpenEventHandler with
+    Events.ReloadEventHandler with
+    Events.SwitchedTabsEventHandler with
     Controllable {
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
@@ -497,7 +500,8 @@ class App extends
       else libraryOpen(commandLineModel) // --open from command line
     }
     else if (commandLineMagic != null)
-      workspace.magicOpen(commandLineMagic)
+      new Events.MagicOpenEvent(commandLineMagic)
+        .raise(this)
     else if (commandLineURL != null)
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
@@ -519,42 +523,19 @@ class App extends
     smartPack(frame.getPreferredSize)
   }
 
-  // AppEvent stuff (kludgy)
-  /**
-   * Internal use only.
-   */
-  def handle(e: AppEvent) {
-    import AppEventType._
-    e.eventType match {
-      case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args.head.toString)
-      case START_LOGGING =>
-        startLogging(e.args.head.toString)
-        if(logger != null)
-          logger.modelOpened(workspace.getModelPath())
-      case ZIP_LOG_FILES =>
-        if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args.head.toString)
-        else
-          logger.zipSessionFiles(e.args.head.toString)
-      case DELETE_LOG_FILES =>
-        if(logger==null)
-          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
-          logger.deleteSessionFiles()
-      case CHANGE_LANGUAGE => changeLanguage()
-      case _ =>
-    }
-  }
+  /// more event handlers
 
-  private def reload() {
+  def handle(e: Events.ReloadEvent) {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
-    else commandLater("print \"can't, new model\"")
+    if (modelType != ModelType.New && path != null)
+      openFromSource(FileIO.file2String(path), path, modelType)
+    else
+      commandLater("print \"can't, new model\"")
   }
 
-  private def magicOpen(name: String) {
+  def handle(e: Events.MagicOpenEvent) {
+    import e.name
     import collection.JavaConverters._
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
@@ -573,7 +554,7 @@ class App extends
     }
   }
 
-  def changeLanguage() {
+  def handle(e: Events.ChangeLanguageEvent) {
     val locales = I18N.availableLocales
     val languages = locales.map{l => l.getDisplayName(l) }
     val index = org.nlogo.swing.OptionDialog.showAsList(frame,
@@ -586,6 +567,32 @@ class App extends
     }
     val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
     org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
+  }
+
+  /**
+   * Internal use only.
+   */
+  def handle(e: LoggingEvent) {
+    import LoggingEventType._
+    e.eventType match {
+      case START_LOGGING =>
+        startLogging(e.name)
+        if (logger != null)
+          logger.modelOpened(workspace.getModelPath)
+      case ZIP_LOG_FILES =>
+        if (logger == null)
+          org.nlogo.log.Files.zipSessionFiles(
+            System.getProperty("java.io.tmpdir"), e.name)
+        else
+          logger.zipSessionFiles(e.name)
+      case DELETE_LOG_FILES =>
+        if (logger == null)
+          org.nlogo.log.Files.deleteSessionFiles(
+            System.getProperty("java.io.tmpdir"))
+        else
+          logger.deleteSessionFiles()
+      case _ =>
+    }
   }
 
   ///

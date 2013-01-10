@@ -13,7 +13,7 @@ object EventsGenerator {
               Set(events(s.log.info(_), base, src, "window"),
                   events(s.log.info(_), base, src, "app"))
           }
-        cache(Set(base / "project" / "warning.txt",
+        cache(Set(base / "headless" / "project" / "warning.txt",
                   base / "project" / "events.txt")).toSeq
     }
 
@@ -24,7 +24,7 @@ object EventsGenerator {
     var codeString = ""
     def append(s: String) = codeString += (s + "\n")
 
-    append(IO.read(base / "project" / "warning.txt"))
+    append(IO.read(base / "headless" / "project" / "warning.txt"))
 
     append("package org.nlogo." + ppackage + "\n")
     append("import org.nlogo._")

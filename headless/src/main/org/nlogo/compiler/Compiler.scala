@@ -74,7 +74,7 @@ object Compiler extends CompilerInterface {
   ///
 
   /// TODO: There are a few places below where we downcast api.World to agent.World in order to pass
-  /// it to ConstantParser.  This should really be cleaned up so that ConstantParser uses api.World
+  /// it to LiteralParser.  This should really be cleaned up so that LiteralParser uses api.World
   /// too. - ST 2/23/09
 
   // In the following 3 methods, the initial call to NumberParser is a performance optimization.
@@ -85,18 +85,18 @@ object Compiler extends CompilerInterface {
   @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new LiteralParser().getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-        .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+        .getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer(is3D).tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
@@ -105,8 +105,8 @@ object Compiler extends CompilerInterface {
     val tokens: Iterator[Token] =
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer(world.program.is3D)))
-    val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getConstantFromFile(tokens)
+    val result = new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      .getLiteralFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
     // more values left - ST 2/18/04
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04

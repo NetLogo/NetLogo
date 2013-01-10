@@ -17,4 +17,3 @@ class SelectableJLabel(str: String) extends JTextField(" " + str + " ") {
   setForeground(UIManager.getColor("Label.foreground"))
   setBackground(UIManager.getColor("Label.background"))
 }
-

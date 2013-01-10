@@ -34,17 +34,17 @@ class SliderDataTests extends PropSpec with PropertyChecks {
     forAll((r: Int) =>
       whenever(r % 2 == 1) { // get an odd number so it doesn't end in zero.
         // use 1.r
-        expect(r.toString.length)(
+        expectResult(r.toString.length)(
           new SliderData(minimum = (1 + "." + r).toDouble).precision)})}
 
   property("precision for ints should always be zero") {
     forAll((i: Int) =>
       whenever(!i.toDouble.toString.contains("E")) {
-        expect(0)(new SliderData(minimum = i).precision)})}
+        expectResult(0)(new SliderData(minimum = i).precision)})}
 
   property("sanity precision tests") {
     def testPrecision(d: Double, expected: Int) {
-      expect(expected)(
+      expectResult(expected)(
         new SliderData(minimum = d).precision)
     }
     testPrecision(1.1, 1)
@@ -59,7 +59,7 @@ class SliderDataTests extends PropSpec with PropertyChecks {
     testPrecision(1.2340000, 3) // 1.234
 
     def testPrecision2(minimum: Double, increment: Double, expected: Int) {
-      expect(expected)(
+      expectResult(expected)(
         new SliderData(minimum = minimum, increment = increment).precision)
     }
 
@@ -78,29 +78,29 @@ class SliderDataTests extends PropSpec with PropertyChecks {
   // effective max tests
   //
   property("effective max sanity tests") {
-    expect(100.0)(
+    expectResult(100.0)(
       new SliderData(minimum = 0,maximum = 100,increment = 1).effectiveMaximum)
-    expect(50.0)(
+    expectResult(50.0)(
       new SliderData(minimum = 25,maximum = 50,increment = 1).effectiveMaximum)
-    expect(50.0)(
+    expectResult(50.0)(
       new SliderData(minimum = 0.1,maximum = 50,increment = 0.1).effectiveMaximum)
-    expect(49.0)(
+    expectResult(49.0)(
       new SliderData(minimum = 25,maximum = 50,increment = 2).effectiveMaximum)
-    expect(49.0)(
+    expectResult(49.0)(
       new SliderData(minimum = 25,maximum = 50,increment = 3).effectiveMaximum)
-    expect(46.0)(
+    expectResult(46.0)(
       new SliderData(minimum = 25,maximum = 50,increment = 7).effectiveMaximum)
   }
 
   property("when min > max, effective max is always min") {
     forAll((min: Double, max: Double) =>
       whenever(min > max) {
-        expect(min)(
+        expectResult(min)(
           new SliderData(minimum = min, maximum = max).effectiveMaximum)})}
 
   property("when inc == 0, effective max is always min") {
     forAll((min: Double) =>
-      expect(min)(
+      expectResult(min)(
         new SliderData(minimum = min, increment = 0).effectiveMaximum))}
 
   property("effective maximum is never greater than max") {

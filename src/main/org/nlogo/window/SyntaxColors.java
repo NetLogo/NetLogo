@@ -26,4 +26,3 @@ public strictfp class SyntaxColors {
       java.awt.Color.BLACK; // black
 
 }
-

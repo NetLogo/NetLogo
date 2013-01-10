@@ -13,4 +13,3 @@ tmp/cloc.pl \
   --exclude-dir=tmp,project/build/classycle,project/plugins/src_managed \
   --progress-rate=0 \
   .
-

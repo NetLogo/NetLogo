@@ -15,7 +15,7 @@ class TestLoadAndSave extends FunSuite {
         "org.nlogo.compiler.Compiler")))
   test("load and save") {
     val protocols = loader.loadAll(new File("test/lab/protocols.xml"))
-    expect(org.nlogo.api.FileIO.file2String("test/lab/protocols.xml").replaceAll("\r\n", "\n"))(
+    expectResult(org.nlogo.api.FileIO.file2String("test/lab/protocols.xml").replaceAll("\r\n", "\n"))(
       "<?xml version=\"1.0\" encoding=\"us-ascii\"?>" + "\n" +
       ProtocolLoader.DOCTYPE + "\n" +
       ProtocolSaver.save(protocols))

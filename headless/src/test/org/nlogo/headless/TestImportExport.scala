@@ -63,7 +63,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     assert(delete(filename))
 
     // the two strings exports be equal except for the date
-    expect(dropLines(export1, 3))(
+    expectResult(dropLines(export1, 3))(
       dropLines(export2, 3))
   }
 
@@ -169,7 +169,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("import-world \"" + filename + "\"")
       val importedColors = workspace.renderer.trailDrawer.colors
 
-      expect(realColors.size)(importedColors.size)
+      expectResult(realColors.size)(importedColors.size)
 
       // right now we can't test the pixels because they are not pixel for pixel the same, what we
       // import is exactly as was, however, when we copy it for one image to the drawing image the
@@ -186,7 +186,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     val expected = Checksummer.calculateWorldChecksum(workspace)
     testCommand("import-world \"" + filename + "\"")
     val actual = Checksummer.calculateWorldChecksum(workspace)
-    expect(expected)(actual)
+    expectResult(expected)(actual)
   }
 
   test("testExportLinks") {
@@ -199,7 +199,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     val expected = Checksummer.calculateWorldChecksum(workspace)
     testCommand("import-world \"" + filename + "\"")
     val actual = Checksummer.calculateWorldChecksum(workspace)
-    expect(expected)(actual)
+    expectResult(expected)(actual)
     testReporter("count links", "1")
     testReporter("count nodes", "2")
     testReporter("[heading] of node 1", "180")
@@ -215,8 +215,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean =
             {
               assert(!fatalError)
-              expect("Error Importing Drawing")(title)
-              expect("Invalid data length, the drawing will not be imported")(
+              expectResult("Error Importing Drawing")(title)
+              expectResult("Invalid data length, the drawing will not be imported")(
                 errorDetails)
               true
             }
@@ -231,8 +231,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
             assert(!fatalError)
-            expect("Error Importing Drawing")(title)
-            expect("Invalid data length, the drawing will not be imported")(
+            expectResult("Error Importing Drawing")(title)
+            expectResult("Invalid data length, the drawing will not be imported")(
               errorDetails)
             true
           }
@@ -246,27 +246,27 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testCommand("export-world \"" + filename + "\"")
     testCommand("import-world \"" + filename + "\"")
     testReporter("subject", "nobody")
-    expect(workspace.world.observer().perspective())(Perspective.Observe)
+    expectResult(workspace.world.observer().perspective())(Perspective.Observe)
     testCommand("crt 1")
     testCommand("watch turtle 0")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "0")
-    expect(workspace.world.observer().perspective())(Perspective.Watch)
+    expectResult(workspace.world.observer().perspective())(Perspective.Watch)
     testCommand("crt 1")
     testCommand("follow turtle 1")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    expect(workspace.world.observer().perspective())(Perspective.Follow)
+    expectResult(workspace.world.observer().perspective())(Perspective.Follow)
     testCommand("ride turtle 1")
     testCommand("export-world \"" + filename + "\"")
     testCommand("ca")
     testCommand("import-world \"" + filename + "\"")
     testReporter("[who] of subject", "1")
-    expect(workspace.world.observer().perspective())(Perspective.Ride)
+    expectResult(workspace.world.observer().perspective())(Perspective.Ride)
   }
 
   if(!Version.is3D)
@@ -276,8 +276,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
-            expect("Error Importing Plots")(title)
-            expect("The plot \"plot 2\" does not exist.")(
+            expectResult("Error Importing Plots")(title)
+            expectResult("The plot \"plot 2\" does not exist.")(
               errorDetails)
             true
           }
@@ -294,8 +294,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
                         fatalError: Boolean) =
             {
               assert(!fatalError)
-              expect("Error Importing Plots")(title)
-              expect("The pen \"default 1\" does not exist.")(errorDetails)
+              expectResult("Error Importing Plots")(title)
+              expectResult("The pen \"default 1\" does not exist.")(errorDetails)
               true
             }}
       testCommand("import-world \"plot-simple.csv\"")
@@ -310,7 +310,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       testCommand("ca import-world \"../../" + filename + "\"")
       testCommand("export-world \"../../" + filename + "\"")
       val export2 = org.nlogo.api.FileIO.file2String(filename)
-      expect(dropLines(export1, 3))(
+      expectResult(dropLines(export1, 3))(
         dropLines(export2, 3))
     }
 
@@ -433,8 +433,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
               assert(fatalError)
-              expect("Fatal Error- Incorrect Structure For Import File")(title)
-              expect("The agents are in the wrong order in the import file. " +
+              expectResult("Fatal Error- Incorrect Structure For Import File")(title)
+              expectResult("The agents are in the wrong order in the import file. " +
                 "The global variables should be first, followed by the turtles, " +
                 "followed by the patches.  Found TURTLES but needed " +
                 "GLOBALS\n\nThe import will now abort.")(errorDetails)
@@ -458,10 +458,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
         new org.nlogo.agent.ImporterJ.ErrorHandler() {
           def showError(title: String, errorDetails: String, fatalError: Boolean) = {
             assert(!fatalError)
-            expect("Warning: Too Many Values For Agent")(title)
+            expectResult("Warning: Too Many Values For Agent")(title)
             errorNumber(0) match {
               case 0 =>
-                expect("Error Importing at Line 7: There are a total of "
+                expectResult("Error Importing at Line 7: There are a total of "
                   + "10 Global variables declared in this model "
                   + "(including built-in variables).  The import-world "
                   + "file has at least one agent in the GLOBALS section "
@@ -470,7 +470,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
                   + "be ignored for this section.")(
                   errorDetails)
               case 1 =>
-                expect("Error Importing at Line 54: There are a total of "
+                expectResult("Error Importing at Line 54: There are a total of "
                   + "5 Patch variables declared in this model "
                   + "(including built-in variables).  The import-world "
                   + "file has at least one agent in the PATCHES section "
@@ -486,7 +486,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
           }
         }
       testCommand("import-world \"test/import/extra-values.csv\"")
-      expect(2)(errorNumber(0))
+      expectResult(2)(errorNumber(0))
     }
 
   // this is a focused test with a small number of turtles
@@ -536,7 +536,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testCommand("import-world \"" + filename + "\"")
     testCommand("crt 100")
     val newResult = workspace.report("sum [who] of turtles")
-    expect(actualResult)(newResult)
+    expectResult(actualResult)(newResult)
     assert(delete(filename))
   }
 

@@ -10,12 +10,13 @@ import org.nlogo.agent.{BooleanConstraint, ConstantSliderConstraint, DynamicSlid
 class TestConstraintModels extends AbstractTestModels {
 
   testModel("Boolean Constraint Constructor",
-    Model(Switch(name="on?", on=true), Switch(name="off?", on=false))) {
+            Model(widgets = List(Switch(name="on?", on=true),
+                                 Switch(name="off?", on=false)))) {
 
     reporter("on?") -> true
     reporter("off?") -> false
 
-    val con = new BooleanConstraint(){
+    object con extends BooleanConstraint {
       def default = defaultValue.asInstanceOf[java.lang.Boolean].booleanValue
       def apply(s:String): Boolean = coerceValue(s).asInstanceOf[java.lang.Boolean].booleanValue
     }
@@ -35,10 +36,10 @@ class TestConstraintModels extends AbstractTestModels {
   }
 
   testModel("Chooser Constraint",
-    Model(
+    Model(widgets = List(
       Chooser(name = "foo", choices = List(1, 2, 3, 4, 5), index = 0),
       Chooser(name = "bar", choices = List("a", "b", "c", "d"), index = 3),
-      Chooser(name = "mix", choices = List(12, "aaa", 34, "bbb", 56), index = 0))) {
+      Chooser(name = "mix", choices = List(12, "aaa", 34, "bbb", 56), index = 0)))) {
 
     reporter("foo") -> 1d
     reporter("bar") -> "d"
@@ -54,13 +55,13 @@ class TestConstraintModels extends AbstractTestModels {
   }
 
   testModel("InputBox Constraint Loading",
-    Model(
+    Model(widgets = List(
       InputBox(name="number", value=5d, typ=InputBoxTypes.Num),
       InputBox(name="string", value="this is a string", typ=InputBoxTypes.Str),
       InputBox(name="reporter", value="max-pxcor", typ=InputBoxTypes.StrReporter),
       InputBox(name="commands", value="show 1", typ=InputBoxTypes.StrCommand),
       InputBox(name="colors", value=0, typ=InputBoxTypes.Col)
-      )){
+      ))){
 
     reporter("string") -> "this is a string"
     observer>>"set string \"some string\""
@@ -127,7 +128,7 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModel("Slider Constraints2",
     Model("globals [ foo ] to setup set foo 10 end",
-      Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1"))) {
+      widgets = List(Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1")))) {
 
     // world is -16 16 -16 16 at start
     observer>>"setup"
@@ -142,7 +143,8 @@ class TestConstraintModels extends AbstractTestModels {
   }
 
   testModel("Slider Bounds Do Not Affect RNG",
-    Model(Slider(name="foo", min="0", max="10 + random 10", current="0", inc="1"))) {
+    Model(widgets = List(
+      Slider(name="foo", min="0", max="10 + random 10", current="0", inc="1")))) {
     val randomState = workspace.report("__random-state")
     observer>>"set foo 5"
     reporter("__random-state") -> randomState
@@ -150,7 +152,7 @@ class TestConstraintModels extends AbstractTestModels {
 
   testModel("Slider Constraints Coercion",
     Model("globals [ foo ] to setup set foo 10 end",
-      Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1"))) {
+      widgets = List(Slider(name="x-loc", min="min-pxcor", max="foo + 30", current="0", inc="1")))) {
 
     observer>>"setup"
     val index = world.observerOwnsIndexOf("X-LOC")

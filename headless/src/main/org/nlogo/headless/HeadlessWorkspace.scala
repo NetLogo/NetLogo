@@ -440,16 +440,6 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def magicOpen(name: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  override def changeLanguage() = unsupported
-
-  /**
-   * Internal use only.
-   */
   def startLogging(properties: String) = unsupported
 
   /**

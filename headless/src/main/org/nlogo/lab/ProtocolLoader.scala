@@ -5,6 +5,7 @@ package org.nlogo.lab
 import org.nlogo.api.CompilerServices
 import org.w3c.dom
 import org.xml.sax
+import language.implicitConversions
 
 object ProtocolLoader
 {

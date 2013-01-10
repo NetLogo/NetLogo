@@ -339,132 +339,138 @@ class AutoConverter1(tokenizer: TokenizerInterface) {
     }
     buf.toString
   }
-  private val CONVERSIONS1 = Map("pc" -> "pcolor",
-                                 "pc-of" -> "[pcolor] of",
-                                 "histogram" -> "histogram-from",
-                                 "set-plot-pen" -> "create-temporary-plot-pen",
-                                 "random" -> "random-or-random-float")
-  private val CONVERSIONS2 = Map("any" -> "any?",
-                                 "user-yes-or-no" -> "user-yes-or-no?")
-  private val CONVERSIONS3 = Map("cc" -> "clear-output")
-  private val CONVERSIONS4 = Map("pen-down?" -> "pen-mode != \"up\"")
-  private val CONVERSIONS5 = Map("cg" -> "cp ct",
-                                 "clear-graphics" -> "cp ct",
-                                 "export-graphics" -> "export-view",
-                                 "movie-grab-graphics" -> "movie-grab-view")
-  private val CONVERSIONS6 = Map("stamp" -> "set pcolor")
-  private val CONVERSIONS7 = Map("get-date-and-time" -> "date-and-time")
-  private val CONVERSIONS8 = Map("screen-max-x" -> "max-pxcor",
-                                 "screen-min-x" -> "min-pxcor",
-                                 "screen-max-y" -> "max-pycor",
-                                 "screen-min-y" -> "min-pycor",
-                                 "screen-size-x" -> "world-width",
-                                 "screen-size-y" -> "world-height",
-                                 "no-label" -> "\"\"")
-  private val CONVERSIONS9 = Map("random-one-of" -> "one-of",
-                                 "random-n-of" -> "n-of")
-  private val CONVERSIONS10 = Map("screen-min-z" -> "min-pzcor",
-                                  "screen-max-z" -> "max-pzcor",
-                                  "screen-size-z" -> "world-depth",
-                                  "shape3d" -> "shape",
-                                  "observe" -> "reset-perspective")
-  private val CONVERSIONS11 = Map("user-choose-directory" -> "user-directory",
-                                  "user-choose-file" -> "user-file",
-                                  "user-choose-new-file" -> "user-new-file",
-                                  "user-choice" -> "user-one-of")
-  private val CONVERSIONS12 = Map("left" -> "set heading heading -",
-                                  "right" -> "set heading heading +",
-                                  "left3d" -> "left",
-                                  "right3d" -> "right",
-                                  "pitch-up" -> "set pitch pitch +",
-                                  "pitch-down" -> "set pitch pitch -",
-                                  "pitch-up3d" -> "tilt-up",
-                                  "pitch-down3d" -> "tilt-down",
-                                  "diffuse3d" -> "diffuse",
-                                  "at-points3d" -> "at-points",
-                                  "set-gaze-xyz" -> "facexyz",
-                                  "patch-ahead3d" -> "patch-ahead",
-                                  "screen-size-z" -> "world-depth",
-                                  "patch-left3d-and-ahead" -> "patch-left-and-ahead",
-                                  "patch-right3d-and-ahead" -> "patch-right-and-ahead",
-                                  "patch3d" -> "patch",
-                                  "patch-at3d" -> "patch-at",
-                                  "turtles-at3d" -> "turtles-at")
-  private val CONVERSIONS13 = Map("cct" -> "crt",
-                                  "create-custom-turtles" -> "crt")
-  private val CONVERSIONS14 = Map("histogram-list" -> "histogram",
-                                  "random-int-or-float" -> "random-or-random-float")
-  private val CONVERSIONS15 = Map("showturtle" -> "show-turtle",
-                                  "hideturtle" -> "hide-turtle",
-                                  "__both-ends" -> "both-ends",
-                                  "__create-link-from" -> "create-link-from",
-                                  "__create-links-from" -> "create-links-from",
-                                  "__create-link-to" -> "create-link-to",
-                                  "__create-links-to" -> "create-links-to",
-                                  "__create-link-with" -> "create-link-with",
-                                  "__create-links-with" -> "create-links-with",
-                                  "__end1" -> "end1",
-                                  "__end2" -> "end2",
-                                  "__in-link-neighbor?" -> "in-link-neighbor?",
-                                  "__in-link-neighbors" -> "in-link-neighbors",
-                                  "__in-link-from" -> "in-link-from",
-                                  "__is-link?" -> "is-link?",
-                                  "__layout-circle" -> "layout-circle",
-                                  "__layout-magspring" -> "layout-magspring",
-                                  "__layout-radial" -> "layout-radial",
-                                  "__layout-spring" -> "layout-spring",
-                                  "__layout-tutte" -> "layout-tutte",
-                                  "__link-neighbor?" -> "link-neighbor?",
-                                  "__link-neighbors" -> "link-neighbors",
-                                  "__link-with" -> "link-with",
-                                  "__my-links" -> "my-links",
-                                  "__my-in-links" -> "my-in-links",
-                                  "__my-out-links" -> "my-out-links",
-                                  "__other-end" -> "other-end",
-                                  "__out-link-neighbor?" -> "out-link-neighbor?",
-                                  "__out-link-neighbors" -> "out-link-neighbors",
-                                  "__out-link-to" -> "out-link-to",
-                                  "__remove-link-from" -> "remove-link-from",
-                                  "__remove-links-from" -> "remove-links-from",
-                                  "__remove-link-to" -> "remove-link-to",
-                                  "__remove-links-to" -> "remove-links-to",
-                                  "__remove-link-with" -> "remove-link-with",
-                                  "__remove-links-with" -> "remove-links-with")
-  private val CONVERSIONS16 = Map("plot-point" -> "plotxy",
-                                  "message" -> "user-message",
-                                  "showturtle" -> "show-turtle",
-                                  "hideturtle" -> "hide-turtle",
-                                  "face-no-wrap" -> "face-nowrap",
-                                  "facexy-no-wrap" -> "facexy-nowrap",
-                                  "distance-no-wrap" -> "distance-nowrap",
-                                  "distancexy-no-wrap" -> "distancexy-nowrap",
-                                  "in-cone-no-wrap" -> "in-cone-nowrap",
-                                  "in-radius-no-wrap" -> "in-radius-nowrap",
-                                  "towards-no-wrap" -> "towards-nowrap",
-                                  "towardsxy-no-wrap" -> "towardsxy-nowrap",
-                                  "agent?" -> "is-agent?",
-                                  "agentset?" -> "is-agentset?",
-                                  "boolean?" -> "is-boolean?",
-                                  "list?" -> "is-list?",
-                                  "number?" -> "is-number?",
-                                  "patch?" -> "is-patch?",
-                                  "string?" -> "is-string?",
-                                  "turtle?" -> "is-turtle?")
-  private val CONVERSIONS17 = Map("output" -> "report",
-                                  "patch-agentset?" -> "is-patch-set?",
-                                  "is-patch-agentset?" -> "is-patch-set?",
-                                  "turtle-agentset?" -> "is-turtle-set?",
-                                  "is-turtle-agentset?" -> "is-turtle-set?",
-                                  "is-link-agentset?" -> "is-link-set?")
-  private val CONVERSIONS18 = Map("ppd" -> "plot-pen-down",
-                                  "ppu" -> "plot-pen-up")
-  private val CONVERSIONS19 = Map("rgb" -> "approximate-rgb",
-                                  "hsb" -> "approximate-hsb")
-  private val CONVERSIONS20 = Map("__tie" -> "tie",
-                                  "__untie" -> "untie")
 
-  private val CONVERSIONS21 = Map("setup-plots" -> "my-setup-plots",
-                                  "update-plots" -> "my-update-plots")
+  // pending resolution of https://issues.scala-lang.org/browse/SI-6723
+  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/12
+
+  private val CONVERSIONS1 = Map(("pc", "pcolor"),
+                                 ("pc-of", "[pcolor] of"),
+                                 ("histogram", "histogram-from"),
+                                 ("set-plot-pen", "create-temporary-plot-pen"),
+                                 ("random", "random-or-random-float"))
+  private val CONVERSIONS2 = Map(("any", "any?"),
+                                 ("user-yes-or-no", "user-yes-or-no?"))
+  private val CONVERSIONS3 = Map(("cc", "clear-output"))
+  private val CONVERSIONS4 = Map(("pen-down?", "pen-mode != \"up\""))
+  private val CONVERSIONS5 = Map(("cg", "cp ct"),
+                                 ("clear-graphics", "cp ct"),
+                                 ("export-graphics", "export-view"),
+                                 ("movie-grab-graphics", "movie-grab-view"))
+  private val CONVERSIONS6 = Map(("stamp", "set pcolor"))
+  private val CONVERSIONS7 = Map(("get-date-and-time", "date-and-time"))
+  private val CONVERSIONS8 = Map(("screen-max-x", "max-pxcor"),
+                                 ("screen-min-x", "min-pxcor"),
+                                 ("screen-max-y", "max-pycor"),
+                                 ("screen-min-y", "min-pycor"),
+                                 ("screen-size-x", "world-width"),
+                                 ("screen-size-y", "world-height"),
+                                 ("no-label", "\"\""))
+  private val CONVERSIONS9 = Map(("random-one-of", "one-of"),
+                                 ("random-n-of", "n-of"))
+  private val CONVERSIONS10 = Map(("screen-min-z", "min-pzcor"),
+                                  ("screen-max-z", "max-pzcor"),
+                                  ("screen-size-z", "world-depth"),
+                                  ("shape3d", "shape"),
+                                  ("observe", "reset-perspective"))
+  private val CONVERSIONS11 = Map(("user-choose-directory", "user-directory"),
+                                  ("user-choose-file", "user-file"),
+                                  ("user-choose-new-file", "user-new-file"),
+                                  ("user-choice", "user-one-of"))
+  private val CONVERSIONS12 = Map(("left", "set heading heading -"),
+                                  ("right", "set heading heading +"),
+                                  ("left3d", "left"),
+                                  ("right3d", "right"),
+                                  ("pitch-up", "set pitch pitch +"),
+                                  ("pitch-down", "set pitch pitch -"),
+                                  ("pitch-up3d", "tilt-up"),
+                                  ("pitch-down3d", "tilt-down"),
+                                  ("diffuse3d", "diffuse"),
+                                  ("at-points3d", "at-points"),
+                                  ("set-gaze-xyz", "facexyz"),
+                                  ("patch-ahead3d", "patch-ahead"),
+                                  ("screen-size-z", "world-depth"),
+                                  ("patch-left3d-and-ahead", "patch-left-and-ahead"),
+                                  ("patch-right3d-and-ahead", "patch-right-and-ahead"),
+                                  ("patch3d", "patch"),
+                                  ("patch-at3d", "patch-at"),
+                                  ("turtles-at3d", "turtles-at"))
+  private val CONVERSIONS13 = Map(("cct", "crt"),
+                                  ("create-custom-turtles", "crt"))
+  private val CONVERSIONS14 = Map(("histogram-list", "histogram"),
+                                  ("random-int-or-float", "random-or-random-float"))
+  private val CONVERSIONS15 = Map(("showturtle", "show-turtle"),
+                                  ("hideturtle", "hide-turtle"),
+                                  ("__both-ends", "both-ends"),
+                                  ("__create-link-from", "create-link-from"),
+                                  ("__create-links-from", "create-links-from"),
+                                  ("__create-link-to", "create-link-to"),
+                                  ("__create-links-to", "create-links-to"),
+                                  ("__create-link-with", "create-link-with"),
+                                  ("__create-links-with", "create-links-with"),
+                                  ("__end1", "end1"),
+                                  ("__end2", "end2"),
+                                  ("__in-link-neighbor?", "in-link-neighbor?"),
+                                  ("__in-link-neighbors", "in-link-neighbors"),
+                                  ("__in-link-from", "in-link-from"),
+                                  ("__is-link?", "is-link?"),
+                                  ("__layout-circle", "layout-circle"),
+                                  ("__layout-magspring", "layout-magspring"),
+                                  ("__layout-radial", "layout-radial"),
+                                  ("__layout-spring", "layout-spring"),
+                                  ("__layout-tutte", "layout-tutte"),
+                                  ("__link-neighbor?", "link-neighbor?"),
+                                  ("__link-neighbors", "link-neighbors"),
+                                  ("__link-with", "link-with"),
+                                  ("__my-links", "my-links"),
+                                  ("__my-in-links", "my-in-links"),
+                                  ("__my-out-links", "my-out-links"),
+                                  ("__other-end", "other-end"),
+                                  ("__out-link-neighbor?", "out-link-neighbor?"),
+                                  ("__out-link-neighbors", "out-link-neighbors"),
+                                  ("__out-link-to", "out-link-to"),
+                                  ("__remove-link-from", "remove-link-from"),
+                                  ("__remove-links-from", "remove-links-from"),
+                                  ("__remove-link-to", "remove-link-to"),
+                                  ("__remove-links-to", "remove-links-to"),
+                                  ("__remove-link-with", "remove-link-with"),
+                                  ("__remove-links-with", "remove-links-with"))
+  private val CONVERSIONS16 = Map(("plot-point", "plotxy"),
+                                  ("message", "user-message"),
+                                  ("showturtle", "show-turtle"),
+                                  ("hideturtle", "hide-turtle"),
+                                  ("face-no-wrap", "face-nowrap"),
+                                  ("facexy-no-wrap", "facexy-nowrap"),
+                                  ("distance-no-wrap", "distance-nowrap"),
+                                  ("distancexy-no-wrap", "distancexy-nowrap"),
+                                  ("in-cone-no-wrap", "in-cone-nowrap"),
+                                  ("in-radius-no-wrap", "in-radius-nowrap"),
+                                  ("towards-no-wrap", "towards-nowrap"),
+                                  ("towardsxy-no-wrap", "towardsxy-nowrap"),
+                                  ("agent?", "is-agent?"),
+                                  ("agentset?", "is-agentset?"),
+                                  ("boolean?", "is-boolean?"),
+                                  ("list?", "is-list?"),
+                                  ("number?", "is-number?"),
+                                  ("patch?", "is-patch?"),
+                                  ("string?", "is-string?"),
+                                  ("turtle?", "is-turtle?"))
+  private val CONVERSIONS17 = Map(("output", "report"),
+                                  ("patch-agentset?", "is-patch-set?"),
+                                  ("is-patch-agentset?", "is-patch-set?"),
+                                  ("turtle-agentset?", "is-turtle-set?"),
+                                  ("is-turtle-agentset?", "is-turtle-set?"),
+                                  ("is-link-agentset?", "is-link-set?"))
+  private val CONVERSIONS18 = Map(("ppd", "plot-pen-down"),
+                                  ("ppu", "plot-pen-up"),
+                                  ("__hubnet-ppd", "__hubnet-plot-pen-down"),
+                                  ("__hubnet-ppu", "__hubnet-plot-pen-up"))
+  private val CONVERSIONS19 = Map(("rgb", "approximate-rgb"),
+                                  ("hsb", "approximate-hsb"))
+  private val CONVERSIONS20 = Map(("__tie", "tie"),
+                                  ("__untie", "untie"))
+
+  private val CONVERSIONS21 = Map(("setup-plots", "my-setup-plots"),
+                                  ("update-plots", "my-update-plots"))
 
   private val CONVERSIONS22 = Map("clear-all" -> AutoConverter1.clearAllAndResetTicks,
                                   "ca" -> AutoConverter1.clearAllAndResetTicks)

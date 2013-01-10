@@ -15,4 +15,3 @@ class _moviestatus extends Reporter {
           workspace.movieStatus
       })
 }
-

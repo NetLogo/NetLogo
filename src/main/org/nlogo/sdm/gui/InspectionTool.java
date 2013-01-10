@@ -35,4 +35,3 @@ strictfp class InspectionTool
     return new AggregateUndoableTool(new org.jhotdraw.standard.DragTracker(editor(), f), editor);
   }
 }
-

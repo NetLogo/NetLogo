@@ -87,7 +87,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1
@@ -176,7 +176,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -254,7 +254,7 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_call_3.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
           LSTORE 4
           LLOAD 4
           L2D
@@ -387,7 +387,7 @@ procedure GO:[]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -489,7 +489,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -567,7 +567,7 @@ procedure MAKE-NODE:[OLD-NODE]{O---}:
           ALOAD 1
           ALOAD 0
           ALOAD 3
-          INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
+          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -750,7 +750,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
                   ALOAD 0
                   ALOAD 2
                   ALOAD 1
-                  INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_count_1.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+                  INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
                   ALOAD 0
                   GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_1.world : Lorg/nlogo/agent/World;
                   GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
@@ -803,31 +803,33 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
          L3
           ASTORE 2
           DCONST_0
-          DSTORE 3
+          DSTORE 6
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/api/LogoList.iterator ()Ljava/util/Iterator;
-          ASTORE 5
+          ASTORE 3
          L4
-          ALOAD 5
+          ALOAD 3
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z
           IFEQ L5
-          ALOAD 5
+          ALOAD 3
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
-          ASTORE 6
-          ALOAD 6
+          ASTORE 4
+          ALOAD 4
           INSTANCEOF java/lang/Double
           IFEQ L4
-          DLOAD 3
-          ALOAD 6
+          ALOAD 4
           CHECKCAST java/lang/Double
+          ASTORE 5
+          DLOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DADD
-          DSTORE 3
+          DSTORE 6
           GOTO L4
          L5
           ALOAD 0
-          DLOAD 3
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_setprocedurevariable_0.validDouble (D)D
+          DLOAD 6
+          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validDouble (D)D
          L6
           DSTORE 2
           DLOAD 2
@@ -954,7 +956,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
             ALOAD 0
             ALOAD 2
             ALOAD 1
-            INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefindpartner_count_6.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
+            INVOKEVIRTUAL org/nlogo/nvm/Instruction.mustNotBeDirected (Lorg/nlogo/agent/AgentSet;Lorg/nlogo/nvm/Context;)V
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedurefindpartner_count_6.world : Lorg/nlogo/agent/World;
             GETFIELD org/nlogo/agent/World.linkManager : Lorg/nlogo/agent/LinkManager;
@@ -1117,7 +1119,7 @@ reporter procedure FIND-PARTNER:[TOTAL PARTNER]{OTPL}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
+          INVOKEVIRTUAL scala/LowPriorityImplicits.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
           INVOKEVIRTUAL org/nlogo/api/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
@@ -1342,7 +1344,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           DUP
           ALOAD 0
           DLOAD 2
-          INVOKEVIRTUAL org/nlogo/prim/_asm_procedurelayout_repeatlocal_0.validLong (D)J
+          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
           INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
           AASTORE
           ALOAD 1

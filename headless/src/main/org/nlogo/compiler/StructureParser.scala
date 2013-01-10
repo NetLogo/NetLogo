@@ -19,6 +19,7 @@ package org.nlogo.compiler
 
 import org.nlogo.{ api, nvm }
 import api.{ Token, TokenType }
+import Fail._
 
 object StructureParser {
 
@@ -57,7 +58,7 @@ object StructureParser {
       Iterator.iterate(firstResults){results =>
         assert(!subprogram)
         val path = extensionManager.resolvePath(results.includes.head.value.asInstanceOf[String])
-        CompilerExceptionThrowers.cAssert(path.endsWith(".nls"),
+        cAssert(path.endsWith(".nls"),
           "Included files must end with .nls",
           results.includes.head)
         val newResults =
@@ -104,7 +105,7 @@ class StructureParser(
 
   def parse(subprogram: Boolean): StructureParser.Results = {
     val reader = new SeqReader[Token](tokens, _.startPos)
-    program(reader) match {
+    try program(reader) match {
       case Success(declarations, _) =>
         rejectDuplicateDeclarations(declarations)
         rejectDuplicateNames(declarations, usedNames(oldResults.program, oldResults.procedures))
@@ -113,8 +114,20 @@ class StructureParser(
           else oldResults,
           subprogram)
       case NoSuccess(msg, rest) =>
-        CompilerExceptionThrowers.exception(
-          msg, rest.first)
+        exception(msg, rest.first)
+    }
+    // avoid leaking ThreadLocals due to some deprecated stuff in
+    // Scala 2.10 that will be removed in Scala 2.11.  see
+    // https://issues.scala-lang.org/browse/SI-4929 and
+    // https://github.com/scala/scala/commit/dce6b34c38a6d774961ca6f9fd50b11300ecddd6
+    // - ST 1/3/13
+    finally {
+      val field = getClass.getDeclaredField("scala$util$parsing$combinator$Parsers$$lastNoSuccessVar")
+      field.setAccessible(true)
+      val field2 = classOf[scala.util.DynamicVariable[_]].getDeclaredField("tl")
+      field2.setAccessible(true)
+      field2.get(field.get(this)).asInstanceOf[java.lang.ThreadLocal[_]].remove()
+      field.set(this, null)
     }
   }
 
@@ -283,7 +296,7 @@ trait DuplicateChecker extends StructureDeclarations {
     for {
       Procedure(_, _, inputs, _) <- declarations
       input <- inputs
-    } CompilerExceptionThrowers.cAssert(
+    } cAssert(
       inputs.count(_.name == input.name) == 1,
       "There is already a local variable called " + input.name + " here", input.token)
     // O(n^2) -- maybe we should fold instead
@@ -302,7 +315,7 @@ trait DuplicateChecker extends StructureDeclarations {
     for{
       (decl1, decl2) <- allPairs(declarations)
       (kind, token) <- checkPair(decl1, decl2)
-    } CompilerExceptionThrowers.exception("Redeclaration of " + kind, token)
+    } exception("Redeclaration of " + kind, token)
   }
 
   def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: Map[String, String]) {
@@ -338,6 +351,8 @@ trait DuplicateChecker extends StructureDeclarations {
           kind.name + " variable"
         case _: Procedure =>
           "procedure"
+        case _ =>
+          throw new IllegalArgumentException(decl.toString)
       }
     def check(used: Used, occ: Occurrence) {
       def isBreedVariableException =
@@ -353,7 +368,7 @@ trait DuplicateChecker extends StructureDeclarations {
             case _ =>
               false
           }
-      CompilerExceptionThrowers.cAssert(
+      cAssert(
         used._1 != occ.identifier.name || isBreedVariableException,
         "You already defined " + occ.identifier.name + " as a " + used._2,
         occ.identifier.token)
@@ -472,7 +487,6 @@ trait ResultsBuilder extends StructureDeclarations {
           program.breeds,
           program.breeds(breedName).copy(owns = newOwns)))
   }
-
 }
 
 /// Allows our combinators to take their input from a Seq.

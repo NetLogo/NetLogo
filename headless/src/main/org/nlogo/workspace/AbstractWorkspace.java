@@ -103,19 +103,6 @@ public abstract strictfp class AbstractWorkspace
    */
   public abstract boolean compilerTestingMode();
 
-  /**
-   * Shuts down the background thread associated with this workspace,
-   * allowing resources to be freed.
-   */
-  public void dispose()
-      throws InterruptedException {
-    jobManager.die();
-    getExtensionManager().reset();
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
-    }
-  }
-
   /// headless?
 
   public abstract boolean isHeadless();
@@ -345,10 +332,6 @@ public abstract strictfp class AbstractWorkspace
   public void addJobFromJobThread(org.nlogo.nvm.Job job) {
     jobManager.addJobFromJobThread(job);
   }
-
-  public abstract void magicOpen(String name);
-
-  public abstract void changeLanguage();
 
   // this is used to cache the compiled code used by the "run"
   // and "runresult" prims - ST 6/7/07

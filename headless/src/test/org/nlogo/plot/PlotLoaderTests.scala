@@ -11,79 +11,79 @@ class PlotLoaderTests extends TestPlotLoaderHelper{
   // PlotLoader.parseStringLiterals
 
   test("none") {
-    expect(Nil)(PlotLoader.parseStringLiterals(""))
+    expectResult(Nil)(PlotLoader.parseStringLiterals(""))
   }
   test("one") {
-    expect(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
+    expectResult(List("foo"))(PlotLoader.parseStringLiterals("\"foo\""))
   }
   test("one empty") {
-    expect(List(""))(PlotLoader.parseStringLiterals("\"\""))
+    expectResult(List(""))(PlotLoader.parseStringLiterals("\"\""))
   }
   test("two") {
-    expect(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expectResult(List("foo", "bar"))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
   }
   test("escaped quotes") {
-    expect(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
+    expectResult(List("print \"foo\""))(PlotLoader.parseStringLiterals("\"print \\\"foo\\\"\""))
   }
   test("extra spaces") {  // bug #48
-    expect(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
-    expect(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
-    expect(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
-    expect(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
-    expect(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
-    expect(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
-    expect(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
+    expectResult(List("foo" , "bar" ))(PlotLoader.parseStringLiterals("\"foo\" \"bar\""))
+    expectResult(List(" foo", "bar" ))(PlotLoader.parseStringLiterals("\" foo\" \"bar\""))
+    expectResult(List(" foo", " bar"))(PlotLoader.parseStringLiterals("\" foo\" \" bar\""))
+    expectResult(List("foo" , " bar"))(PlotLoader.parseStringLiterals("\"foo\" \" bar\""))
+    expectResult(List("foo ", "bar" ))(PlotLoader.parseStringLiterals("\"foo \" \"bar\""))
+    expectResult(List("foo ", "bar "))(PlotLoader.parseStringLiterals("\"foo \" \"bar \""))
+    expectResult(List("foo" , "bar "))(PlotLoader.parseStringLiterals("\"foo\" \"bar \""))
   }
 
   // PlotLoader.parsePen
 
   test("easy pen") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with spaces in name") {
-    expect("PenSpec(grass / 4,1.0,0,-10899396,true,,)")(
+    expectResult("PenSpec(grass / 4,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"grass / 4\" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with adjacent spaces in name") {
-    expect("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,,)")(
+    expectResult("PenSpec(  grass  /  4    ,1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"  grass  /  4    \" 1.0 0 -10899396 true").toString)
   }
 
   test("pen with double quotes in name") {
-    expect("PenSpec(\"\"\",1.0,0,-10899396,true,,)")(
+    expectResult("PenSpec(\"\"\",1.0,0,-10899396,true,,)")(
       PlotLoader.parsePen("\"\\\"\\\"\\\"\" 1.0 0 -10899396 true").toString)
   }
 
   test("a bunch of white space before code is ok.") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,count turtles,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,count turtles,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true       \"count turtles\" \"\"").toString)
   }
 
   test("pen with command code, with escaped quotes command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,ticks \" \" ticks,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"ticks \\\" \\\" ticks\" \"\"").toString)
   }
 
   test("pen with simple command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,crt 1,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,crt 1,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"crt 1\" \"\"").toString)
   }
 
   test("pen with no x and y axis code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true").toString)
   }
 
   test("pen with empty command code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"\" \"\"").toString)
   }
 
   test("pen with multi-line code") {
-    expect("PenSpec(sheep,1.0,0,-13345367,true,foo\nbar,)")(
+    expectResult("PenSpec(sheep,1.0,0,-13345367,true,foo\nbar,)")(
       PlotLoader.parsePen("\"sheep\" 1.0 0 -13345367 true \"foo\\nbar\" \"\"").toString)
   }
 
@@ -106,29 +106,29 @@ Number
 true
 false""".replaceAll("\r\n", "\n")
     val plot = load(plotLines)
-    expect(0)(plot.pens.size) // no default pen anymore.
+    expectResult(0)(plot.pens.size) // no default pen anymore.
   }
 
   def twice(s: String) = s + s
 
   test("converter converts plot setup code") {
     val plot = load(MCPlot(setupCode = "crt 1").toString, twice)
-    expect("crt 1crt 1")(plot.setupCode)
+    expectResult("crt 1crt 1")(plot.setupCode)
   }
 
   test("converter converts plot update code") {
     val plot = load(MCPlot(updateCode = "crt 2").toString, twice)
-    expect("crt 2crt 2")(plot.updateCode)
+    expectResult("crt 2crt 2")(plot.updateCode)
   }
 
   test("converter converts plot pen setup code") {
     val plot = load(MCPlot(pens = Pens(Pen(setupCode = "crt 3"))).toString, twice)
-    expect("crt 3crt 3")(plot.pens(0).setupCode)
+    expectResult("crt 3crt 3")(plot.pens(0).setupCode)
   }
 
   test("converter converts plot pen update code") {
     val plot = load(MCPlot(pens = Pens(Pen(updateCode = "crt 4"))).toString, twice)
-    expect("crt 4crt 4")(plot.pens(0).updateCode)
+    expectResult("crt 4crt 4")(plot.pens(0).updateCode)
   }
 
   test("convert everything") {
@@ -137,12 +137,12 @@ false""".replaceAll("\r\n", "\n")
         pens = Pens(
           Pen(setupCode = "crt 3", updateCode = "crt 4"),
           Pen(setupCode = "crt 5", updateCode = "crt 6"))).toString, twice)
-    expect("crt 1crt 1")(plot.setupCode)
-    expect("crt 2crt 2")(plot.updateCode)
-    expect("crt 3crt 3")(plot.pens(0).setupCode)
-    expect("crt 4crt 4")(plot.pens(0).updateCode)
-    expect("crt 5crt 5")(plot.pens(1).setupCode)
-    expect("crt 6crt 6")(plot.pens(1).updateCode)
+    expectResult("crt 1crt 1")(plot.setupCode)
+    expectResult("crt 2crt 2")(plot.updateCode)
+    expectResult("crt 3crt 3")(plot.pens(0).setupCode)
+    expectResult("crt 4crt 4")(plot.pens(0).updateCode)
+    expectResult("crt 5crt 5")(plot.pens(1).setupCode)
+    expectResult("crt 6crt 6")(plot.pens(1).updateCode)
   }
 }
 

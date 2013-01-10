@@ -32,11 +32,11 @@ object Plugins {
         sys.error("Tab-Name not found in manifest"))
       val className = Option(attributes.getValue("Class-Name")).getOrElse(
         sys.error("Class-Name not found in manifest"))
-      val loader = new java.net.URLClassLoader(Array(url),
-        Thread.currentThread.getContextClassLoader) {
-          def load(x: String) = findClass(x)  // findClass is protected
-        }
-      pico.addComponent(className, loader.load(className))
+      class Loader extends java.net.URLClassLoader(
+          Array(url), Thread.currentThread.getContextClassLoader) {
+        def load(x: String) = findClass(x)  // findClass is protected; this gives us access
+      }
+      pico.addComponent(className, (new Loader).load(className))
       val component = pico.getComponent(className).asInstanceOf[java.awt.Component]
       (tabName, component)
     }
