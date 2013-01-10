@@ -68,6 +68,17 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
     extensionManager.clearAll()
   }
 
+  /**
+   * Shuts down the background thread associated with this workspace,
+   * allowing resources to be freed.
+   */
+  @throws(classOf[InterruptedException])
+  def dispose() {
+    jobManager.die()
+    plotManager.forgetAll()
+    extensionManager.reset()
+  }
+
 }
 
 object AbstractWorkspaceTraits {

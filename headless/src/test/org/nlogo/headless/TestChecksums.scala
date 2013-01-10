@@ -11,10 +11,12 @@ class TestChecksums extends FunSuite with SlowTest {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo
-  override def runTest (testName : java.lang.String, reporter : Reporter, stopper : Stopper,
-                        configMap : scala.collection.immutable.Map[java.lang.String, Any], tracker : Tracker){
-    val shouldRun = configMap.get("model").map(testName contains _.asInstanceOf[String]).getOrElse(true)
-    if(shouldRun) super.runTest(testName, reporter, stopper, configMap, tracker)
+  override def runTest (testName : java.lang.String, args: Args): Status = {
+    val shouldRun = args.configMap.get("model").map(testName contains _.asInstanceOf[String]).getOrElse(true)
+    if(shouldRun)
+      super.runTest(testName, args)
+    else
+      SucceededStatus
   }
 
   // prevent annoying JAI message on Linux when using JAI extension
@@ -66,7 +68,9 @@ object TestChecksums extends ChecksumTester(println _) {
             addFailure(entry.path + ": " + t.getMessage)
         }
       }
-      implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run() {fn()}}
+      import language.implicitConversions
+      implicit def thunk2runnable(fn: () => Unit): Runnable =
+        new Runnable {def run() {fn()}}
       executor.execute(doit _)
     }
     executor.shutdown()

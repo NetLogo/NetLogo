@@ -17,8 +17,8 @@ class PlotTests extends SimplePlotTest {
 
   test("Constructor") {
     val plot = new Plot("test")
-    expect("test")(plot.name)
-    expect(0)(plot.pens.size) // no pens
+    expectResult("test")(plot.name)
+    expectResult(0)(plot.pens.size) // no pens
     assert(plot.defaultAutoPlotOn)
     assert(plot.autoPlotOn)
   }
@@ -26,9 +26,9 @@ class PlotTests extends SimplePlotTest {
   testPlot("ClearRemovesTemporaryPens") { plot =>
     plot.createPlotPen("permanent", false)
     plot.createPlotPen("temporary", true)
-    expect(2)(plot.pens.size)
+    expectResult(2)(plot.pens.size)
     plot.clear()
-    expect(1)(plot.pens.size)
+    expectResult(1)(plot.pens.size)
   }
   testPlot("ClearMisc") { plot =>
     plot.pens = Nil
@@ -38,43 +38,43 @@ class PlotTests extends SimplePlotTest {
     pen1.plot(50)
     pen1.plot(100)
     pen2.plot(25)
-    expect(2)(pen1.points.size)
-    expect(1)(pen2.points.size)
+    expectResult(2)(pen1.points.size)
+    expectResult(1)(pen2.points.size)
     plot.clear()
-    expect(0)(pen1.points.size)
-    expect(0)(pen2.points.size)
-    expect(pen1)(plot.currentPen.get)
+    expectResult(0)(pen1.points.size)
+    expectResult(0)(pen2.points.size)
+    expectResult(pen1)(plot.currentPen.get)
   }
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.plot(-0.0001, -0.0001)
-    expect(-2.5)(plot.xMin)
-    expect(-1.0)(plot.yMin)
-    expect(10.0)(plot.xMax)
-    expect(10.0)(plot.yMax)
+    expectResult(-2.5)(plot.xMin)
+    expectResult(-1.0)(plot.yMin)
+    expectResult(10.0)(plot.xMax)
+    expectResult(10.0)(plot.yMax)
   }
   testPlot("AutoPlotGrowMax") { plot =>
     val pen = plot.createPlotPen("test", false)
-    expect(0.0)(plot.xMin)
-    expect(0.0)(plot.yMin)
-    expect(10.0)(plot.xMax)
-    expect(10.0)(plot.yMax)
+    expectResult(0.0)(plot.xMin)
+    expectResult(0.0)(plot.yMin)
+    expectResult(10.0)(plot.xMax)
+    expectResult(10.0)(plot.yMax)
     pen.plot(10.0001, 10.0001)
-    expect(12.5)(plot.xMax)
-    expect(11.0)(plot.yMax)
+    expectResult(12.5)(plot.xMax)
+    expectResult(11.0)(plot.yMax)
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.mode = PlotPen.BAR_MODE
     pen.interval = 5.0
     pen.plot(10.0001, 10.0001)
-    expect(18.8)(plot.xMax)
-    expect(11.0)(plot.yMax)
+    expectResult(18.8)(plot.xMax)
+    expectResult(11.0)(plot.yMax)
   }
   testPlot("HistogramNumBars") { plot =>
     val pen = plot.createPlotPen("test", false)
     plot.setHistogramNumBars(pen, 5)
-    expect(2.0)(pen.interval)
+    expectResult(2.0)(pen.interval)
   }
   /// histogram tests
   // we already have TestHistogram for basic histogram testing,
@@ -86,19 +86,19 @@ class PlotTests extends SimplePlotTest {
     // 0 1 4 9 16 25 36 49 64 81 100 121
     (0 to 11).map(i => (i * i) % 10).foreach(plot.nextHistogramValue(_))
     plot.endHistogram(pen)
-    expect(6)(pen.points.size)
-    expect(0.0)(pen.points(0).x)
-    expect(1.0)(pen.points(1).x)
-    expect(4.0)(pen.points(2).x)
-    expect(5.0)(pen.points(3).x)
-    expect(6.0)(pen.points(4).x)
-    expect(9.0)(pen.points(5).x)
-    expect(2.0)(pen.points(0).y)
-    expect(3.0)(pen.points(1).y)
-    expect(2.0)(pen.points(2).y)
-    expect(1.0)(pen.points(3).y)
-    expect(2.0)(pen.points(4).y)
-    expect(2.0)(pen.points(5).y)
+    expectResult(6)(pen.points.size)
+    expectResult(0.0)(pen.points(0).x)
+    expectResult(1.0)(pen.points(1).x)
+    expectResult(4.0)(pen.points(2).x)
+    expectResult(5.0)(pen.points(3).x)
+    expectResult(6.0)(pen.points(4).x)
+    expectResult(9.0)(pen.points(5).x)
+    expectResult(2.0)(pen.points(0).y)
+    expectResult(3.0)(pen.points(1).y)
+    expectResult(2.0)(pen.points(2).y)
+    expectResult(1.0)(pen.points(3).y)
+    expectResult(2.0)(pen.points(4).y)
+    expectResult(2.0)(pen.points(5).y)
   }
   testPlot("HistogramGrowHeight") { plot =>
     plot.yMax=5
@@ -106,34 +106,34 @@ class PlotTests extends SimplePlotTest {
     plot.beginHistogram(pen)
     (0 until 5).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expect(5.0)(plot.yMax)
+    expectResult(5.0)(plot.yMax)
     plot.beginHistogram(pen)
     (0 until 10).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expect(10.0)(plot.yMax)
+    expectResult(10.0)(plot.yMax)
     plot.clear()
     plot.yMax=5
     pen.plot(0, 10)
-    expect(11.0)(plot.yMax)
+    expectResult(11.0)(plot.yMax)
   }
   testPlot("Iterator") { plot =>
     plot.pens = Nil
     val pen1 = plot.createPlotPen("pen1", false)
     plot.createPlotPen("pen2", false)
     plot.createPlotPen("pen3", false)
-    expect(3)(plot.pens.size)
-    expect(pen1)(plot.pens.head)
+    expectResult(3)(plot.pens.size)
+    expectResult(pen1)(plot.pens.head)
     // pens should come back in same order inserted
-    expect(List("pen1", "pen2", "pen3"))(plot.pens.map(_.name))
+    expectResult(List("pen1", "pen2", "pen3"))(plot.pens.map(_.name))
   }
   testPlot("Get") { plot =>
     plot.pens = Nil
     val pen1 = plot.createPlotPen("PEN1", false)
     val pen2 = plot.createPlotPen("pen2", false)
-    expect(2)(plot.pens.size)
-    expect(pen1)(plot.getPen("pen1").get)
-    expect(pen2)(plot.getPen("PEN2").get)
-    expect(null)(plot.getPen("pen3").orNull)
-    expect(pen1)(plot.pens.head)
+    expectResult(2)(plot.pens.size)
+    expectResult(pen1)(plot.getPen("pen1").get)
+    expectResult(pen2)(plot.getPen("PEN2").get)
+    expectResult(null)(plot.getPen("pen3").orNull)
+    expectResult(pen1)(plot.pens.head)
   }
 }

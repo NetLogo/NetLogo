@@ -75,12 +75,8 @@ class Tokenizer(tokenMapper: TokenMapper) extends TokenizerInterface {
   }
 
   def isValidIdentifier(ident: String): Boolean =
-    tokenizeRobustly(ident) match {
-      case Seq(
-        Token(_, TokenType.IDENT, _),
-        Token(_, TokenType.EOF, _)) => true
-      case _ => false
-    }
+    tokenizeRobustly(ident).take(2).map(_.tpe) ==
+      Seq(TokenType.IDENT, TokenType.EOF)
 
   // this is for the syntax-highlighting editor in the HubNet client, where we don't have
   // an extension manager.

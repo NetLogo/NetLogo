@@ -48,12 +48,7 @@ trait ModelCreator {
   // a can have N widgets. plots, sliders, etc are widgets.
   trait Widget
 
-  object Model{
-    def apply(widgets: Widget*): Model = Model("", "", widgets.toList)
-    def apply(code: String,widgets: Widget*): Model = Model(code, "", widgets.toList)
-  }
-
-  case class Model(code:String = "", previewCode: String = "", widgets: List[Widget] = Nil) {
+  case class Model(code: String = "", previewCode: String = "", widgets: List[Widget] = Nil) {
     val sliders = widgets.filter(_.isInstanceOf[Slider])
     val switches = widgets.filter(_.isInstanceOf[Switch])
     val choosers = widgets.filter(_.isInstanceOf[Chooser])

@@ -65,10 +65,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
                     "--table", tablePath, "--spreadsheet", spreadsheetPath,
                     "--threads", threads.toString, "--suppress-errors"))
     if (wantTable)
-      expect(slurp(filename + "-table.csv"))(
+      expectResult(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))
     if (wantSpreadsheet)
-      expect(slurp(filename + "-spreadsheet.csv"))(
+      expectResult(slurp(filename + "-spreadsheet.csv"))(
         withoutFirst6Lines(slurp(spreadsheetPath)))
   }
   // sorry this has gotten so baroque with all the closures and tuples and
@@ -85,7 +85,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       for (((suffix, _), writer) <- fns zip writers) {
         val resultsPath = filename + suffix
         withClue(resultsPath) {
-          expect(slurp(resultsPath))(
+          expectResult(slurp(resultsPath))(
           withoutFirst6Lines(stripLineFeeds(writer.toString)))
         }
       }
@@ -128,7 +128,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val workspace =
       runExperiment(0, "globals [counter foo]",
         "testImmediateExit")
-    expect(Double.box(99))(
+    expectResult(Double.box(99))(
       workspace.report("foo"))
   }
   test("CarryoverBetweenRuns") {
@@ -137,7 +137,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     // no setup commands, so foo doesn't get reset
     newWorker("testCarryover")
       .run(workspace, () => workspace, 1)
-    expect(Double.box(20))(
+    expectResult(Double.box(20))(
       workspace.report("foo"))
   }
   test("ResizingWorld1") {
@@ -153,7 +153,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val workspace = runExperiment(0, "", "runNumber")
     // I suppose we could reset the run number to 0 after a run, and we do that in the GUI, but I
     // can't see a reason to ensure it headless - ST 7/7/10
-    expect(Double.box(3))(
+    expectResult(Double.box(3))(
       workspace.report("behaviorspace-run-number"))
   }
   // test export-graphics in headless mode
@@ -241,7 +241,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     // pass.)
     def log2(n:Double) = math.floor(math.log(n) / math.log(2)).toInt
     withClue("elapsed time: " + elapsed) {
-      expect(log2(8 / processors)(log2(elapsed))
+      expectResult(log2(8 / processors)(log2(elapsed))
   }
   */
   test("dontRunMetricsIfNoListener") {
@@ -251,7 +251,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       .run(workspace, () => workspace, 1)
     // with no output being generated, the metrics shouldn't be run at all,
     // so no runtime error
-    expect(Double.box(2))(
+    expectResult(Double.box(2))(
       workspace.report("ticks"))
   }
 }

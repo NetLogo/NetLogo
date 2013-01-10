@@ -13,23 +13,23 @@ class LetScoperTests extends FunSuite {
       Compiler.Tokenizer2D.tokenize(wrappedSource), None,
       StructureParser.emptyResults)
       .parse(false)
-    expect(1)(results.procedures.size)
+    expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
     procedure.lets
   }
 
   test("empty") {
-    expect("")(compile("").mkString)
+    expectResult("")(compile("").mkString)
   }
 
   test("let") {
-    expect("Let(Y,2,5)")(
+    expectResult("Let(Y,2,5)")(
       compile("let y 5 print y").mkString)
   }
 
   test("local let") {
-    expect("Let(X,5,6)")(
+    expectResult("Let(X,5,6)")(
       compile("ask turtles [ let x 5 ] print 0").mkString)
   }
 

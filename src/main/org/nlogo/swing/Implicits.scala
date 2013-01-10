@@ -6,6 +6,7 @@ import javax.swing.event.DocumentListener
 import javax.swing._
 import java.awt.event._
 import java.awt.{Container, Component}
+import language.implicitConversions
 
 object Implicits {
   implicit def thunk2runnable(fn: () => Unit): Runnable =

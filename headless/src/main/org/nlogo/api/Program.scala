@@ -43,7 +43,7 @@ case class Program private(
   def dump = {
     def seq(xs: Seq[_]) =
       xs.mkString("[", " ", "]")
-    def map(xs: collection.Map[_, _]) =
+    def map[K, V](xs: collection.Map[K, V]) =
       xs.map{case (k, v) => k + " = " + v}
         .mkString("", "\n", "\n")
         .trim

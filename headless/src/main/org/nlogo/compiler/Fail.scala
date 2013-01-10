@@ -2,9 +2,9 @@
 
 package org.nlogo.compiler
 
-import org.nlogo.api.{CompilerException, Token}
+import org.nlogo.api.{ CompilerException, Token }
 
-object CompilerExceptionThrowers {
+object Fail {
 
   // "desc" is by-name so we don't retrieve error messages from i18n bundles unless the error is
   // actually triggered, thereby avoiding spurious warnings for missing errors on non-English

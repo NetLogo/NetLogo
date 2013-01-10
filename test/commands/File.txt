@@ -227,7 +227,7 @@ FileReadNumberThenLetter
   O> file-close
   O> file-open glob2
   O> __ignore file-read
-  O> __ignore file-read => ERROR Expected a constant. (line number 1, character 4)
+  O> __ignore file-read => ERROR Expected a literal value. (line number 1, character 4)
 
 FileReadBadToken
   O> __mkdir "tmp/File"

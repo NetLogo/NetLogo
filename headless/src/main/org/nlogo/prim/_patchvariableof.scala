@@ -26,25 +26,19 @@ class _patchvariableof(_vn: Int) extends Reporter {
     report_1(context, args(0).report(context))
 
   def report_1(context: Context, arg0: AnyRef) =
-    arg0 match {
+    try arg0 match {
       case agent: Agent =>
         if (agent.id == -1)
           throw new EngineException(
             context, this, I18N.errors.getN(
               "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-        try agent.getPatchVariable(_vn)
-        catch { case ex: AgentException =>
-          throw new EngineException(context, this, ex.getMessage) }
+        agent.getPatchVariable(_vn)
       case sourceSet: AgentSet =>
         val result = new LogoListBuilder
-        try {
-          val iter = sourceSet.shufflerator(context.job.random)
-          while(iter.hasNext)
-            result.add(iter.next().getPatchVariable(_vn))
-          result.toLogoList
-        }
-        catch { case ex: AgentException =>
-          throw new EngineException(context, this, ex.getMessage) }
+        val iter = sourceSet.shufflerator(context.job.random)
+        while(iter.hasNext)
+          result.add(iter.next().getPatchVariable(_vn))
+        result.toLogoList
       case x =>
         throw new ArgumentTypeException(
           context, this, 0,
@@ -52,27 +46,29 @@ class _patchvariableof(_vn: Int) extends Reporter {
             Syntax.TurtlesetType | Syntax.PatchsetType,
           x)
     }
+    catch { case ex: AgentException =>
+      throw new EngineException(context, this, ex.getMessage) }
 
-  def report_2(context: Context, sourceSet: AgentSet) = {
-    val result = new LogoListBuilder
+  def report_2(context: Context, sourceSet: AgentSet) =
     try {
+      val result = new LogoListBuilder
       val iter = sourceSet.shufflerator(context.job.random)
       while(iter.hasNext)
         result.add(iter.next().getPatchVariable(_vn))
       result.toLogoList
     }
-    catch { case ex: AgentException =>
+     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
-  }
 
-  def report_3(context: Context, agent: Agent) = {
-    if (agent.id == -1)
-      throw new EngineException(
-        context, this, I18N.errors.getN(
-          "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-    try agent.getPatchVariable(_vn)
+  def report_3(context: Context, agent: Agent) =
+    try {
+      if (agent.id == -1)
+        throw new EngineException(
+          context, this, I18N.errors.getN(
+            "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+      agent.getPatchVariable(_vn)
+    }
     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
-  }
 
 }

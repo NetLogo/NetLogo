@@ -140,15 +140,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
             activeButton = job.owner
         }
         if(!skip)
-          try lock.synchronized { job.step() }
-          catch {
-            case ex: LogoException =>
-              job.result = ex
-              manager.finishJobs(primaryJobs, job.owner)
-            case ex: RuntimeException =>
-              job.result = ex
-              manager.finishJobs(primaryJobs, job.owner)
-          }
+          step(job)
         if (job.buttonTurnIsOver) {
           activeButton = null
           job.buttonTurnIsOver = false
@@ -175,16 +167,23 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
         }
       }
       else
-        try lock.synchronized { job.step() }
-        catch {
-          case ex: LogoException =>
-            job.result = ex
-            manager.finishJobs(primaryJobs, job.owner)
-          case ex: RuntimeException =>
-            job.result = ex
-            manager.finishJobs(primaryJobs, job.owner)
-        }
+        step(job)
       i += 1
+    }
+  }
+
+  // this was inlined in runPrimaryJobs() and runSecondaryJobs(), but I separated it out as a
+  // temporary workaround for SI-6191.  that bug has trouble with try/catch nested inside other
+  // constructs - ST 7/15/12
+  private def step(job: Job) {
+    try lock.synchronized { job.step() }
+    catch {
+      case ex: LogoException =>
+        job.result = ex
+        manager.finishJobs(primaryJobs, job.owner)
+      case ex: RuntimeException =>
+        job.result = ex
+        manager.finishJobs(primaryJobs, job.owner)
     }
   }
 

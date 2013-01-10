@@ -59,7 +59,7 @@ class VersionTests extends FunSuite {
     import java.text.SimpleDateFormat
     val format = new SimpleDateFormat("MMMM d, yyyy")
     val date = format.parse(buildDate)
-    expect(format.format(date))(buildDate)
+    expectResult(format.format(date))(buildDate)
     assert(date.after(new SimpleDateFormat("y").parse("1998")))
     assert(date.before(new SimpleDateFormat("y").parse("2100")))
   }

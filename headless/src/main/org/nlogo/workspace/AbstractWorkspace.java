@@ -97,16 +97,6 @@ implements CompilerServices, LogoThunkFactory {
    */
   public abstract boolean compilerTestingMode();
 
-  /**
-   * Shuts down the background thread associated with this workspace,
-   * allowing resources to be freed.
-   */
-  public void dispose()
-      throws InterruptedException {
-    jobManager.die();
-    getExtensionManager().reset();
-  }
-
   /// headless?
 
   public abstract boolean isHeadless();

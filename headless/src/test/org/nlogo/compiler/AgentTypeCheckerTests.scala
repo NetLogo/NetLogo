@@ -32,7 +32,7 @@ class AgentTypeCheckerTests extends FunSuite {
   def testOne(source: String, expected: String) {
     val defs = compile(source)
     val buf = new StringBuilder
-    expect(expected)(
+    expectResult(expected)(
       defs.map { pd: ProcedureDefinition => pd.procedure.name + ":" + pd.procedure.usableBy }
         .mkString(" "))
   }
@@ -40,8 +40,10 @@ class AgentTypeCheckerTests extends FunSuite {
     doTestError(source, error)
   }
   def doTestError(source: String, error: String) {
-    val e = intercept[CompilerException] { compile(source) }
-    expect(error)(e.getMessage)
+    val e = intercept[CompilerException] {
+      compile(source)
+    }
+    expectResult(error)(e.getMessage)
   }
   /// tests not involving blocks (easy)
   test("easy1") { testBoth("to foo end", "FOO:OTPL") }

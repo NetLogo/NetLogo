@@ -20,7 +20,7 @@ function restoreSttySettings() {
   if [[ -n $SCALA_RUNNER_DEBUG ]]; then
     echo "restoring stty: $saved_stty"
   fi
-    
+
   stty $saved_stty
   saved_stty=""
 }
@@ -38,7 +38,7 @@ trap onExit INT
 # save terminal settings
 saved_stty=$(stty -g 2>/dev/null)
 # clear on error so we don't later try to restore them
-if [[ ! $? ]]; then  
+if [[ ! $? ]]; then
   saved_stty=""
 fi
 if [[ -n $SCALA_RUNNER_DEBUG ]]; then
@@ -79,7 +79,7 @@ fi
 TOOL_CLASSPATH=""
 if [ -z "$TOOL_CLASSPATH" ] ; then
     # hardcode this - ST 8/9/11
-    for ext in "$HOME"/.sbt/boot/scala-2.9.2/lib/* ; do
+    for ext in "$HOME"/.sbt/boot/scala-2.10.0/lib/* ; do
         if [ -z "$TOOL_CLASSPATH" ] ; then
             TOOL_CLASSPATH="$ext"
         else

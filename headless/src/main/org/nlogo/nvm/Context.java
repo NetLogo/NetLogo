@@ -273,7 +273,8 @@ public final strictfp class Context {
       if (let == binding.let()) {
         return binding.value();
       }
-      rest = rest.tail();
+      // typecast necessary as of Scala 2.10.0-RC1 - ST 7/7/12, 11/1/12
+      rest = ((scala.collection.immutable.$colon$colon<LetBinding>) rest).tail();
     }
     return job.parentContext.getLet(let);
   }
@@ -287,7 +288,8 @@ public final strictfp class Context {
         binding.value_$eq(value);
         return;
       }
-      rest = rest.tail();
+      // typecast necessary as of Scala 2.10.0-RC1 - ST 7/7/12, 11/1/12
+      rest = ((scala.collection.immutable.$colon$colon<LetBinding>) rest).tail();
     }
     job.parentContext.setLet(let, value);
   }
