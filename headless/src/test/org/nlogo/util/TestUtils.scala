@@ -10,11 +10,10 @@ object TestUtils {
 
   import org.scalatest.Assertions._
 
-  class RoundTrip[T](t: T) {
+  implicit class RoundTrip[T](val t: T) {
     def writeThenRead: T = roundTripSerialization(t)
     def isSerializable = roundTripSerialization(t) === t
   }
-  implicit def AnyToRoundTrip[T](t: T) = new RoundTrip(t)
 
   def roundTripSerialization[T](t: T) = {
     val bytes = new ByteArrayOutputStream()

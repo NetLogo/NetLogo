@@ -15,17 +15,15 @@ class ExpressionParserTests extends FunSuite {
   def compile(source: String): Seq[Statements] = {
     val wrappedSource = PREAMBLE + source + POSTAMBLE
     val program = Program.empty
-    implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenize(wrappedSource), None,
-      program, nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize(wrappedSource), None,
+      StructureParser.emptyResults)
       .parse(false)
-    expect(1)(results.procedures.size)
+    expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, false)
+        results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     new ExpressionParser(procedure).parse(tokens).map(_.statements)
   }
@@ -41,7 +39,7 @@ class ExpressionParserTests extends FunSuite {
     }).mkString
   /// helper
   def testStartAndEnd(source: String, preorderDump: String) {
-    expect(preorderDump)(statementsToString(compile(source), source))
+    expectResult(preorderDump)(statementsToString(compile(source), source))
   }
   // preorder traversal
   class PositionsCheckVisitor(source: String) extends DefaultAstVisitor {
@@ -65,16 +63,16 @@ class ExpressionParserTests extends FunSuite {
   }
 
   def runTest(input: String, result: String) {
-    expect(result)(compile(input).mkString)
+    expectResult(result)(compile(input).mkString)
   }
   def runFailure(input: String, message: String, start: Int, end: Int) {
     doFailure(input, message, start, end)
   }
   def doFailure(input: String, message: String, start: Int, end: Int) {
     val e = intercept[CompilerException] { compile(input) }
-    expect(message)(e.getMessage)
-    expect(start + PREAMBLE.length())(e.startPos)
-    expect(end + PREAMBLE.length())(e.endPos)
+    expectResult(message)(e.getMessage)
+    expectResult(start + PREAMBLE.length())(e.startPos)
+    expectResult(end + PREAMBLE.length())(e.endPos)
   }
 
   /// now, the actual tests

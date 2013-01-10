@@ -9,42 +9,42 @@ class AbstractWorkspaceTests extends FunSuite with BeforeAndAfterEach {
   val workspace = new DummyAbstractWorkspace
   override def afterEach() { workspace.dispose() }
   test("MakeModelNameForDisplay") {
-    expect("there")(makeModelNameForDisplay("there.nlogo"))
+    expectResult("there")(makeModelNameForDisplay("there.nlogo"))
   }
   test("MakeModelNameForDisplay2") {
-    expect("there")(makeModelNameForDisplay("there"))
+    expectResult("there")(makeModelNameForDisplay("there"))
   }
   test("MakeModelNameForDisplay3") {
-    expect("th.ere")(makeModelNameForDisplay("th.ere"))
+    expectResult("th.ere")(makeModelNameForDisplay("th.ere"))
   }
   test("MakeModelNameForDisplay4") {
-    expect("th.ere")(makeModelNameForDisplay("th.ere.nlogo"))
+    expectResult("th.ere")(makeModelNameForDisplay("th.ere.nlogo"))
   }
   test("MakeModelNameForDisplay5") {
-    expect("foo.nlogo2")(makeModelNameForDisplay("foo.nlogo2"))
+    expectResult("foo.nlogo2")(makeModelNameForDisplay("foo.nlogo2"))
   }
   test("MakeModelNameForDisplayWithNullArg") {
-    expect("Untitled")(makeModelNameForDisplay(null))
+    expectResult("Untitled")(makeModelNameForDisplay(null))
   }
   ///
   test("GuessExportName1") {
     workspace.setModelPath("foo.nlogo")
-    expect("foo graphics.png")(workspace.guessExportName("graphics.png"))
+    expectResult("foo graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("GuessExportName2") {
     workspace.setModelPath("fo.o.nlogo")
-    expect("fo.o graph.ics.png")(workspace.guessExportName("graph.ics.png"))
+    expectResult("fo.o graph.ics.png")(workspace.guessExportName("graph.ics.png"))
   }
   test("GuessExportName3") {
     workspace.setModelPath("foo.nlogo.nlogo")
-    expect("foo.nlogo graphics.png")(workspace.guessExportName("graphics.png"))
+    expectResult("foo.nlogo graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("GuessExportName4") {
     workspace.setModelPath(null)
-    expect("graphics.png")(workspace.guessExportName("graphics.png"))
+    expectResult("graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("GuessExportName5") {
     workspace.setModelPath("foo")
-    expect("foo graphics.png")(workspace.guessExportName("graphics.png"))
+    expectResult("foo graphics.png")(workspace.guessExportName("graphics.png"))
   }
 }

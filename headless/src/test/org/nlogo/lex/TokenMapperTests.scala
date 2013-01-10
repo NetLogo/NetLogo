@@ -6,12 +6,12 @@ import org.scalatest.FunSuite
 import TokenMapper2D._
 
 class TokenMapperTests extends FunSuite {
-  test("OneCommand1") { expect("_fd")(getCommand("FD").toString) }
-  test("OneCommand2") { expect("_fd")(getCommand("fd").toString) }
+  test("OneCommand1") { expectResult("_fd")(getCommand("FD").toString) }
+  test("OneCommand2") { expectResult("_fd")(getCommand("fd").toString) }
   test("BadCommand") { intercept[NoSuchElementException] { getCommand("gkhgjkh") } }
 
-  test("OneReporter1") { expect("_timer")(getReporter("TIMER").toString) }
-  test("OneReporter2") { expect("_timer")(getReporter("timer").toString) }
+  test("OneReporter1") { expectResult("_timer")(getReporter("TIMER").toString) }
+  test("OneReporter2") { expectResult("_timer")(getReporter("timer").toString) }
   test("BadReporter") { intercept[NoSuchElementException] { getReporter("gkhgjkh") } }
 
   test("OneKeyword1") { assert(isKeyword("to")) }
@@ -21,11 +21,11 @@ class TokenMapperTests extends FunSuite {
   test("BadConstantException") { intercept[NoSuchElementException] { getConstant("fnord666") } }
   test("OneIsConstant1") { assert(isConstant("FALSE")) }
   test("OneIsConstant2") { assert(isConstant("false")) }
-  test("OneConstant1") { expect(java.lang.Boolean.FALSE)(getConstant("FALSE")) }
-  test("OneConstant2") { expect(java.lang.Boolean.FALSE)(getConstant("false")) }
-  test("ColorConstant1") { expect(105d)(getConstant("blue")) }
-  test("ColorConstant2") { expect(105d)(getConstant("BLUE")) }
-  test("GrayAndGrey") { expect(getConstant("grey"))(getConstant("GRAY")) }
+  test("OneConstant1") { expectResult(java.lang.Boolean.FALSE)(getConstant("FALSE")) }
+  test("OneConstant2") { expectResult(java.lang.Boolean.FALSE)(getConstant("false")) }
+  test("ColorConstant1") { expectResult(105d)(getConstant("blue")) }
+  test("ColorConstant2") { expectResult(105d)(getConstant("BLUE")) }
+  test("GrayAndGrey") { expectResult(getConstant("grey"))(getConstant("GRAY")) }
 
   test("reporter1") { assert(isReporter("random")) }
   test("reporter2") { assert(!isReporter("fd")) }
@@ -38,7 +38,7 @@ class TokenMapperTests extends FunSuite {
   test("command5") { assert(!isCommand("random-or-random-float")) }
 
   test("patch2D") {
-    expect("org.nlogo.prim._patch")(
+    expectResult("org.nlogo.prim._patch")(
       TokenMapper2D.getReporter("patch").getClass.getName)
   }
 }

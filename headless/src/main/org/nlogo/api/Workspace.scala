@@ -69,14 +69,11 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   @throws(classOf[LogoException])
   @throws(classOf[CompilerException])
   def openString(modelContents: String)
-  def magicOpen(name: String)
-  def changeLanguage()
   def mouseDown: Boolean = false
   def mouseInside: Boolean = false
   def mouseXCor: Double = 0
   def mouseYCor: Double = 0
   def beep() { }
-  def reload() { throw new UnsupportedOperationException }
   def updateUI() { }
   def updateMonitor(owner: JobOwner, value: AnyRef) { }
   @throws(classOf[IOException])

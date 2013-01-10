@@ -419,16 +419,6 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def magicOpen(name: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  override def changeLanguage() = unsupported
-
-  /**
-   * Internal use only.
-   */
   // This lastLogoException stuff is gross.  We should write methods that are declared to throw
   // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
   override var lastLogoException: LogoException = null

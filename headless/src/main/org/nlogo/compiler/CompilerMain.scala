@@ -4,32 +4,31 @@ package org.nlogo.compiler
 
 // One design principle here is that calling the compiler shouldn't have any side effects that are
 // visible to the caller; it should only cause results to be constructed and returned.  There is a
-// big exception to that principle, though, which is that the ExtensionManager gets side-effected in
-// StructureParser. - ST 2/21/08, 1/21/09
+// big exception to that principle, though, which is that the ExtensionManager gets side-effected
+// as we load and unload extensions. - ST 2/21/08, 1/21/09, 12/7/12
 
-import org.nlogo.api.{ExtensionManager, Program, Version}
-import org.nlogo.nvm.{CompilerResults, GeneratorInterface, Procedure}
+import org.nlogo.api
+import api.{ ExtensionManager, Program, Version }
+import org.nlogo.nvm.{ CompilerResults, GeneratorInterface, Procedure }
 import org.nlogo.util.Femto
 
 private object CompilerMain {
-
-  // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
               oldProcedures: Compiler.ProceduresMap,
               extensionManager: ExtensionManager): CompilerResults = {
 
-    implicit val tokenizer = Compiler.Tokenizer2D
-    val structureResults = new StructureParser(tokenizer.tokenize(source), // tokenize
-                                               displayName, program, oldProcedures, extensionManager)
-      .parse(subprogram)  // process declarations
+    val structureResults = StructureParser.parseAll(
+      Compiler.Tokenizer2D,
+      source, displayName, program, subprogram, oldProcedures, extensionManager)
     val taskNumbers = Iterator.from(1)
     // the return type is plural because tasks inside a procedure get
     // lambda-lifted and become top level procedures
     def parseProcedure(procedure: Procedure): Seq[ProcedureDefinition] = {
       val rawTokens = structureResults.tokens(procedure)
+      new LetScoper(procedure, rawTokens, structureResults.program.usedNames ++ (structureResults.procedures.keys ++ oldProcedures.keys).map(_ -> "procedure")).scan()
       val iP =
-        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, false)
+        new IdentifierParser(structureResults.program, oldProcedures, structureResults.procedures, extensionManager, false)
       val identifiedTokens =
         iP.process(rawTokens.iterator, procedure)  // resolve references
       new ExpressionParser(procedure, taskNumbers)
@@ -43,6 +42,7 @@ private object CompilerMain {
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
+      // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
@@ -68,4 +68,5 @@ private object CompilerMain {
       defs.map(_.procedure).filterNot(_.isTask),
       structureResults.program)
   }
+
 }

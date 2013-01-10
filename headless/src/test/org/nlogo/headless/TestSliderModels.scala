@@ -9,7 +9,7 @@ package org.nlogo.headless
 class TestSliderModels extends AbstractTestModels {
 
   val modelCode = "globals [glob1] to-report square [x] report x * x end"
-  val theModel = Model(modelCode,Slider(name="density", max="99", current="57.0"))
+  val theModel = Model(modelCode, widgets = List(Slider(name="density", max="99", current="57.0")))
 
   testModel("simple slider test", theModel){
     reporter("glob1") -> 0.0

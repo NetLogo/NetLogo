@@ -4,6 +4,7 @@ package org.nlogo.generator
 
 import java.lang.reflect.Method
 import org.nlogo.nvm.{ Command, CustomGenerated, Instruction, Reporter }
+import org.objectweb.asm.Type
 
 private object BytecodeUtils {
 
@@ -42,5 +43,11 @@ private object BytecodeUtils {
     else allMethods.filter(m => m.getName.startsWith("report_") ||
       m.getName.startsWith("perform_"))
   }
+
+  def checkClassHasMethod(c: Class[_], name: String, descriptor: String): Boolean =
+    c != null &&
+      (c.getDeclaredMethods.exists(method => method.getName == name &&
+        Type.getMethodDescriptor(method) == descriptor)
+        || checkClassHasMethod(c.getSuperclass, name, descriptor))
 
 }

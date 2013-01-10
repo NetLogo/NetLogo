@@ -18,7 +18,7 @@ class TestAllSyntaxes extends FunSuite {
   def entry(name: String) =
     shorten(name) + " " + instruction(name).syntax.dump
   def doTest(classNames: Set[String], expected: String) {
-    expect(expected)(
+    expectResult(expected)(
       classNames.toSeq.sortBy(shorten).map(entry).mkString("\n"))
   }
   val c = Compiler.TokenMapper2D.allCommandClassNames
@@ -271,7 +271,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_bench number/number,O---,null,0,2,2
                     |_bk number,-T--,null,0,1,1
                     |_carefully command block/command block,OTPL,null,0,2,2
-                    |_changelanguage ,O---,null,0,0,0
                     |_changetopology TRUE/FALSE/TRUE/FALSE,OTPL,null,0,2,2
                     |_clearall ,O---,null,0,0,0 *
                     |_clearallandresetticks ,O---,null,0,0,0 *
@@ -301,7 +300,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_downhill variable,-T--,null,0,1,1 *
                     |_downhill4 variable,-T--,null,0,1,1 *
                     |_edit ,O---,null,0,0,0
-                    |_english ,O---,null,0,0,0
                     |_error anything,OTPL,null,0,1,1
                     |_every number/command block,OTPL,null,0,2,2 *
                     |_experimentstepend ,O---,null,0,0,0
@@ -355,7 +353,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_life ,O---,null,0,0,0 *
                     |_linkcode ,---L,null,0,0,0
                     |_loop command block,OTPL,null,0,1,1
-                    |_magicopen string,O---,null,0,1,1 *
                     |_makepreview ,O---,null,0,0,0
                     |_mkdir string,OTPL,null,0,1,1
                     |_moveto turtle or patch,-T--,null,0,1,1 *
@@ -379,7 +376,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_print anything,OTPL,null,0,1,1
                     |_pwd ,O---,null,0,0,0
                     |_randomseed number,OTPL,null,0,1,1
-                    |_reload ,O---,null,0,0,0 *
                     |_reloadextensions ,OTPL,null,0,0,0 *
                     |_repeat number/command block,OTPL,null,0,2,2
                     |_report anything,OTPL,null,0,1,1
@@ -396,7 +392,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_setcurrentplot string,OTPL,null,0,1,1
                     |_setcurrentplotpen string,OTPL,null,0,1,1
                     |_setdefaultshape turtle agentset or link agentset/string,O---,null,0,2,2
-                    |_seterrorlocale string/string,O---,null,0,2,2
                     |_sethistogramnumbars number,OTPL,null,0,1,1
                     |_setlinethickness number,-T--,null,0,1,1 *
                     |_setpatchsize number,O---,null,0,1,1 *
@@ -410,7 +405,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_show anything,OTPL,null,0,1,1
                     |_showlink ,---L,null,0,0,0 *
                     |_showturtle ,-T--,null,0,0,0 *
-                    |_spanish ,O---,null,0,0,0
                     |_sprout number/command block (optional),--P-,-T--,0,2,2 *
                     |_stamp ,-T-L,null,0,0,0 *
                     |_stamperase ,-T-L,null,0,0,0 *

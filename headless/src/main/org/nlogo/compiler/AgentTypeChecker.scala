@@ -63,7 +63,7 @@ package org.nlogo.compiler
 //
 // Whew!  Got all that?
 
-import org.nlogo.compiler.CompilerExceptionThrowers._
+import org.nlogo.compiler.Fail._
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Instruction, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _task }

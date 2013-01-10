@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers.{ cAssert, exception }
+import Fail.{ cAssert, exception }
 import org.nlogo.api.{ Syntax, Token, TokenType, TypeNames }
 import Syntax.compatible
 import org.nlogo.nvm.{ Command, Instruction, Procedure, Referenceable, Reporter}
@@ -17,7 +17,7 @@ import org.nlogo.prim._
  *  - "expression" is a syntactic form which can occur as an argument to a command or to a
  *    reporter. expressions denote values. there are two basic kinds of expression:
  *     - reporter applications (infix or prefix). Note that this is reporter in the internal sense,
- *       which includes variables and constants. So these include, e.g., turtles with [ true ], 5 +
+ *       which includes variables and literals. So these include, e.g., turtles with [ true ], 5 +
  *       10, 5, [1 2 3].
  *     - blocks. command and reporter blocks are expressions of this type.  a command block contains
  *       zero or more statements, while a reporter block contains exactly one expression.
@@ -336,7 +336,7 @@ private class ExpressionParser(procedure: Procedure,
           // if next is an EOF, we complain and point to the open paren.
           cAssert(tokens.head.tpe != TokenType.EOF, MISSING_CLOSE_PAREN, openParen)
           // we also special case an out-of-place command, since this is what the command center does
-          // if you leave off a final paren (because of the implicit __done).
+          // if you leave off a final paren (because of the __done at the end).
           cAssert(token.tpe != TokenType.COMMAND, MISSING_CLOSE_PAREN, openParen)
           // if it's anything else other than ), we complain and point to the next token itself.
           cAssert(token.tpe == TokenType.CLOSE_PAREN, EXPECTED_CLOSE_PAREN_HERE, token)
@@ -351,7 +351,7 @@ private class ExpressionParser(procedure: Procedure,
           tokens.next()
           val (reporter, rApp) = token.tpe match {
             case TokenType.CONSTANT =>
-              val r = ConstantParser.makeConstantReporter(token.value)
+              val r = LiteralParser.makeLiteralReporter(token.value)
               r.token(token)
               (r, new ReporterApp(r, token.startPos, token.endPos, token.fileName))
             case TokenType.REPORTER =>
@@ -374,7 +374,7 @@ private class ExpressionParser(procedure: Procedure,
               sys.error("unexpected token type: " + token.tpe)
           }
           // handle the case of the concise task syntax, where I can write e.g. "map + ..." instead
-          // of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for constants
+          // of "map [?1 + ?2] ...".  for the task primitive itself we allow this even for literals
           // and nullary reporters, for the other primitives like map we require the reporter to
           // take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).  the
           // !variadic check is to prevent "map (f a) ..." from being misparsed.
@@ -497,7 +497,7 @@ private class ExpressionParser(procedure: Procedure,
 
   /**
    * parses a block (i.e., anything in brackets). This deals with reporter blocks (a single
-   * expression), command blocks (statements), and constant lists (any number of constants). The
+   * expression), command blocks (statements), and literal lists (any number of literals). The
    * initial opening bracket should still be the first token in the tokens in the DelayedBlock.
    */
   private def parseDelayedBlock(block: DelayedBlock, goalType: Int): Expression = {
@@ -571,12 +571,12 @@ private class ExpressionParser(procedure: Procedure,
       new ReporterApp(task, openBracket.startPos, closeBracket.endPos, openBracket.fileName)
     }
     else if(compatible(goalType, Syntax.ListType)) {
-      // parseConstantList() deals with the open bracket itself, but it leaves the close bracket so
+      // parseLiteralList() deals with the open bracket itself, but it leaves the close bracket so
       // we can easily find out where the expression ends.  it's OK to pass a null world and
-      // extensionManager here because we only ever use this code when we are parsing constant lists
+      // extensionManager here because we only ever use this code when we are parsing literal lists
       // while compiling code.  When we're reading lists from export files and such we go straight
-      // to the ConstantParser through Compiler.readFromString ev 3/20/08
-      val tmp = ConstantParser.makeConstantReporter(new ConstantParser(null, null).parseConstantList(tokens.next(), tokens))
+      // to the LiteralParser through Compiler.readFromString ev 3/20/08
+      val tmp = LiteralParser.makeLiteralReporter(new LiteralParser(null, null).parseLiteralList(tokens.next(), tokens))
       val token = tokens.next()
       tmp.token(new Token("", TokenType.CONSTANT, null)(openBracket.startPos, token.endPos, token.fileName))
       new ReporterApp(tmp, openBracket.startPos, token.endPos, token.fileName)
@@ -591,7 +591,7 @@ private class ExpressionParser(procedure: Procedure,
   /**
    * represents a block whose contents we have not yet parsed. Since correctly parsing a block required
    * knowing its expected type, we have to do it in two passes. It will eventually be resolved into
-   * an ReporterBlock, CommandBlock or a constant list. */
+   * an ReporterBlock, CommandBlock or a literal list. */
   private class DelayedBlock(val tokens: Seq[Token],
                              var start: Int,
                              var end: Int,

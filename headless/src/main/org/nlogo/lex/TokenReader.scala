@@ -5,9 +5,9 @@ package org.nlogo.lex
 import org.nlogo.api.{ CompilerException, File, FileMode, Token, TokenizerInterface, TokenReaderInterface, TokenType }
 import java.io.IOException
 
-// This exists to support the file-read primitive, which uses ConstantParser.  During normal
+// This exists to support the file-read primitive, which uses LiteralParser.  During normal
 // compilation we just slurp all of the code into memory before doing any parsing, but it
-// wouldn't be OK for file-read to slurp a whole data file, so ConstantParser uses Iterator[Token].
+// wouldn't be OK for file-read to slurp a whole data file, so LiteralParser uses Iterator[Token].
 
 class TokenReader(file: File, tokenizer: TokenizerInterface) extends TokenReaderInterface {
   def hasNext = true // code elsewhere is expected to detect eof for us

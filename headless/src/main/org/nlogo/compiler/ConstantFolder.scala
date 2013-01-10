@@ -15,7 +15,7 @@ package org.nlogo.compiler
 
 // I think compile time reporting is definitely good. - ST 2/12/09
 
-import org.nlogo.compiler.CompilerExceptionThrowers._
+import org.nlogo.compiler.Fail._
 
 import org.nlogo.api.CompilerException
 import org.nlogo.api.LogoException
@@ -25,7 +25,7 @@ private class ConstantFolder extends DefaultAstVisitor {
   override def visitReporterApp(app: ReporterApp) {
     super.visitReporterApp(app)
     if (app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
-      val newReporter = ConstantParser.makeConstantReporter(applyReporter(app))
+      val newReporter = LiteralParser.makeLiteralReporter(applyReporter(app))
       newReporter.storedSourceStartPosition = app.reporter.getSourceStartPosition
       newReporter.storedSourceEndPosition = app.reporter.getSourceEndPosition
       app.reporter = newReporter

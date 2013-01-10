@@ -9,16 +9,15 @@ import org.nlogo.nvm
 class ConstantFolderTests extends FunSuite {
 
   def compile(source: String): String = {
-    implicit val tokenizer = Compiler.Tokenizer2D
     val results = new StructureParser(
-      tokenizer.tokenize("to-report __test report " + source + "\nend"), None,
-      Program.empty(), nvm.CompilerInterface.NoProcedures, new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize("to-report __test report " + source + "\nend"), None,
+      StructureParser.emptyResults)
       .parse(false)
-    expect(1)(results.procedures.size)
+    expectResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val tokens =
       new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
-        results.procedures, false)
+        results.procedures, new DummyExtensionManager)
         .process(results.tokens(procedure).iterator, procedure)
     val procdef = new ExpressionParser(procedure).parse(tokens).head
     procdef.accept(new ConstantFolder)
@@ -26,22 +25,22 @@ class ConstantFolderTests extends FunSuite {
   }
 
   /// not pure
-  test("testNonConstant") { expect("_timer[]")(compile("timer")) }
+  test("testNonConstant") { expectResult("_timer[]")(compile("timer")) }
   test("testNestedNonConstant") {
-    expect("_plus[_constdouble:1.0[], _timer[]]")(
+    expectResult("_plus[_constdouble:1.0[], _timer[]]")(
       compile("1 + timer"))
   }
 
   /// pure, easy
-  test("testNumber") { expect("_constdouble:1.0[]")(compile("1")) }
-  test("testBoolean") { expect("_constboolean:true[]")(compile("true")) }
-  test("testList") { expect("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
-  test("testString") { expect("_conststring:\"foo\"[]")(compile("\"foo\"")) }
-  test("testNobody") { expect("_nobody[]")(compile("nobody")) }
+  test("testNumber") { expectResult("_constdouble:1.0[]")(compile("1")) }
+  test("testBoolean") { expectResult("_constboolean:true[]")(compile("true")) }
+  test("testList") { expectResult("_constlist:[1 2 3][]")(compile("[1 2 3]")) }
+  test("testString") { expectResult("_conststring:\"foo\"[]")(compile("\"foo\"")) }
+  test("testNobody") { expectResult("_nobody[]")(compile("nobody")) }
 
   /// pure, harder
-  test("testAddition") { expect("_constdouble:4.0[]")(compile("2 + 2")) }
-  test("testNesting") { expect("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
+  test("testAddition") { expectResult("_constdouble:4.0[]")(compile("2 + 2")) }
+  test("testNesting") { expectResult("_constdouble:19.0[]")(compile("2 + 3 * 4 + 5")) }
 
   /// runtime errors
   test("testError") {
@@ -50,7 +49,7 @@ class ConstantFolderTests extends FunSuite {
       try compile("1 / 0")
       catch {
         case ex: CompilerException =>
-          expect("Runtime error: Division by zero.")(ex.getMessage)
+          expectResult("Runtime error: Division by zero.")(ex.getMessage)
           throw ex
       }
     }

@@ -1,7 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.compiler
-import org.nlogo.compiler.CompilerExceptionThrowers.{ cAssert, exception }
+
+import org.nlogo.compiler.Fail.{ cAssert, exception }
 import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Link, Observer, Patch, Turtle, World }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._
@@ -9,13 +10,13 @@ import org.nlogo.api
 import api.{ ExtensionManager, LogoList, Nobody, Token, TokenType }
 
 /**
- * The constant parser.
- * This class contains methods which are used to parse constant NetLogo values
+ * The literal parser.
+ * This class contains methods which are used to parse literal NetLogo values
  * from a Iterator[Token]. It implements all the complicated stuff surrounding
- * constant agents and constant agentsets, when necessary.
+ * literal agents and literal agentsets, when necessary.
  */
-private object ConstantParser {
-  def makeConstantReporter(value: AnyRef): Reporter =
+private object LiteralParser {
+  def makeLiteralReporter(value: AnyRef): Reporter =
     value match {
       case b: java.lang.Boolean => new _constboolean(b)
       case d: java.lang.Double => new _constdouble(d)
@@ -26,7 +27,7 @@ private object ConstantParser {
     }
 }
 
-private class ConstantParser(world: World = null, extensionManager: ExtensionManager = null) {
+private class LiteralParser(world: World = null, extensionManager: ExtensionManager = null) {
 
   /// all error messages used in this class
   private val BAD_AGENT = "Not an agent"
@@ -39,14 +40,14 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   private val EXPECTED_BREED = "Expected breed"
   private val EXPECTED_CLOSE_BRACE = "Expected closing brace."
   private val EXPECTED_CLOSE_PAREN = "Expected a closing parenthesis."
-  private val EXPECTED_CONSTANT = "Expected a constant."
+  private val EXPECTED_LITERAL = "Expected a literal value."
   private val EXPECTED_NUMBER = "Expected a number."
   private val EXPECTED_INT_ETC = "Expected number, list, string or boolean"
   private val EXPECTED_OPEN_BRACE = "Expected open brace."
   private val EXPECTED_OPEN_BRACKET = "Internal error: Expected an opening bracket here."
-  private val EXTRA_STUFF_AFTER_CONSTANT = "Extra characters after constant."
+  private val EXTRA_STUFF_AFTER_LITERAL = "Extra characters after literal."
   private val EXTRA_STUFF_AFTER_NUMBER = "Extra characters after number."
-  private val ILLEGAL_AGENT_CONSTANT = "Can only have constant agents and agentsets if importing."
+  private val ILLEGAL_AGENT_LITERAL = "Can only have literal agents and agentsets if importing."
   private val MISSING_CLOSE_BRACKET = "No closing bracket for this open bracket."
   private val NOT_AN_AGENTSET = " is not an agentset"
   private val NOT_A_BREED = " is not a breed"
@@ -60,23 +61,23 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   private val EXTENSION_TYPE_PATTERN = java.util.regex.Pattern.compile("\\{\\{(\\S*):(\\S*)\\s(.*)\\}\\}");
 
   /**
-  * reads a constant value from a token vector. The entire vector must denote a single constant
+  * reads a literal value from a token vector. The entire vector must denote a single literal
   * value; extra garbage at the end is illegal. Used for read-from-string and other things.
   * @param tokens the input tokens
   * @param world  the current world. It's OK for this to be null, and if it
-  *               is, constant agents and agentsets will cause an error.
+  *               is, literal agents and agentsets will cause an error.
   */
-  def getConstantValue(tokens: Iterator[Token]): AnyRef = {
-    val result = readConstantPrefix(tokens.next(), tokens)
+  def getLiteralValue(tokens: Iterator[Token]): AnyRef = {
+    val result = readLiteralPrefix(tokens.next(), tokens)
     // make sure there's no extra stuff at the end...
     val extra = tokens.next()
-    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_CONSTANT, extra)
+    cAssert(extra.tpe == TokenType.EOF, EXTRA_STUFF_AFTER_LITERAL, extra)
     result
   }
 
-  // Reads in a constant from a File.
-  def getConstantFromFile(tokens: Iterator[Token]): AnyRef =
-    readConstantPrefix(tokens.next(), tokens)
+  // Reads in a literal from a File.
+  def getLiteralFromFile(tokens: Iterator[Token]): AnyRef =
+    readLiteralPrefix(tokens.next(), tokens)
 
   def getNumberValue(tokens: Iterator[Token]) = {
     val token = tokens.next()
@@ -88,26 +89,26 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   }
 
   /**
-  * reads a constant value from the beginning of a token vector. This
+  * reads a literal value from the beginning of a token vector. This
   * method leaves the rest of the token vector intact (i.e., extra garbage
-  * after the constant is OK).
+  * after the literal is OK).
   *
   * @param tokens the input tokens
   * @param world  the current world. It's OK for this to be null, and if it
-  *               is, constant agents and agentsets will cause an error.
+  *               is, literal agents and agentsets will cause an error.
   */
-  private def readConstantPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
+  private def readLiteralPrefix(token: Token, tokens: Iterator[Token]): AnyRef = {
     token.tpe match {
       case TokenType.LITERAL =>
-        parseConstantLiteral(token)
+        parseSimpleLiteral(token)
       case TokenType.CONSTANT =>
         token.value
       case TokenType.OPEN_BRACKET =>
-        parseConstantList(token, tokens)
+        parseLiteralList(token, tokens)
       case TokenType.OPEN_BRACE =>
-        parseConstantAgentOrAgentSet(token, tokens)
+        parseLiteralAgentOrAgentSet(token, tokens)
       case TokenType.OPEN_PAREN =>
-        val result = readConstantPrefix(tokens.next(), tokens)
+        val result = readLiteralPrefix(tokens.next(), tokens)
         // if next is anything else other than ), we complain and point to the next token
         // itself. since we don't do syntax highlighting, it doesn't matter so much what the token
         // is, and we use a message which doesn't rely on that context.
@@ -115,18 +116,18 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
         cAssert(closeParen.tpe == TokenType.CLOSE_PAREN, EXPECTED_CLOSE_PAREN, closeParen)
         result
       case TokenType.COMMENT =>
-        // just skip comments when reading a constant - ev 7/10/07
-        readConstantPrefix(tokens.next(), tokens)
+        // just skip comments when reading a literal - ev 7/10/07
+        readLiteralPrefix(tokens.next(), tokens)
       case _ =>
-        exception(EXPECTED_CONSTANT, token)
+        exception(EXPECTED_LITERAL, token)
     }
   }
 
   /**
-  * parses a constant list. Assumes the open bracket was already eaten.  Eats the list
+  * parses a literal list. Assumes the open bracket was already eaten.  Eats the list
   * contents and the close bracket.
   */
-  def parseConstantList(openBracket: Token, tokens: Iterator[Token]) = {
+  def parseLiteralList(openBracket: Token, tokens: Iterator[Token]) = {
     var list = LogoList()
     var done = false
     while(!done) {
@@ -134,15 +135,15 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       token.tpe match {
         case TokenType.CLOSE_BRACKET => done = true
         case TokenType.EOF => exception(MISSING_CLOSE_BRACKET, openBracket)
-        case _ => list = list.lput(readConstantPrefix(token, tokens))
+        case _ => list = list.lput(readLiteralPrefix(token, tokens))
       }
     }
     list
   }
 
-  private def parseConstantLiteral(token: Token): AnyRef = {
+  private def parseSimpleLiteral(token: Token): AnyRef = {
     // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_CONSTANT, token)
+    cAssert(world != null, ILLEGAL_AGENT_LITERAL, token)
     val matcher = EXTENSION_TYPE_PATTERN.matcher(token.value.asInstanceOf[String])
     if(matcher.matches)
       extensionManager.readExtensionObject(matcher.group(1), matcher.group(2), matcher.group(3))
@@ -151,11 +152,11 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   }
 
   /**
-  * parses a constant agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
+  * parses a literal agent (e.g. "{turtle 3}" or "{patch 1 2}" or "{link 5 6}"
   */
-  private def parseConstantAgent(token: Token, tokens: Iterator[Token]) = {
+  private def parseLiteralAgent(token: Token, tokens: Iterator[Token]) = {
     // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_CONSTANT, token)
+    cAssert(world != null, ILLEGAL_AGENT_LITERAL, token)
     val agentKind = token.value
     if(agentKind.isInstanceOf[org.nlogo.prim._patch]) {
       val pxcor = parsePcor(tokens)
@@ -180,7 +181,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   }
 
   /**
-   * parses a double. This is a helper method for parseConstantAgent().
+   * parses a double. This is a helper method for parseLiteralAgent().
    */
   private def parsePcor(tokens: Iterator[Token]): Double = {
     val token = tokens.next()
@@ -197,14 +198,14 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
   }
 
   /**
-   * parses a constant agent or agentset. It recognizes a number of forms:
+   * parses a literal agent or agentset. It recognizes a number of forms:
    *   {turtle 4} {patch 0 1} {breed-singular 2} {all-turtles} {all-patches} {observer}
    *   {breed some-breed} {turtles 1 2 3 4 5} {patches [1 2] [3 4] [5 6]} {links [0 1] [1 2]}
-   * To parse the turtle and patch forms, it uses parseConstantAgent().
+   * To parse the turtle and patch forms, it uses parseLiteralAgent().
    */
-  private def parseConstantAgentOrAgentSet(braceToken: Token, tokens: Iterator[Token]): AnyRef = {  // returns Agent or AgentSet
+  private def parseLiteralAgentOrAgentSet(braceToken: Token, tokens: Iterator[Token]): AnyRef = {  // returns Agent or AgentSet
     // we shouldn't get here if we aren't importing, but check just in case
-    cAssert(world != null, ILLEGAL_AGENT_CONSTANT, braceToken)
+    cAssert(world != null, ILLEGAL_AGENT_LITERAL, braceToken)
     val token = tokens.next()
     // next token should be an identifier or reporter. reporter is a special case because "turtles"
     // and "patches" end up getting turned into Reporters when tokenizing, which is kind of ugly.
@@ -274,7 +275,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
-        val value = readConstantPrefix(token, tokens)
+        val value = readLiteralPrefix(token, tokens)
         cAssert(value.isInstanceOf[java.lang.Double], BAD_TURTLE_SET_ARGS, token)
         agentset.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
         token = tokens.next()
@@ -287,7 +288,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
-        val listVal = readConstantPrefix(token, tokens).asInstanceOf[LogoList]
+        val listVal = readLiteralPrefix(token, tokens).asInstanceOf[LogoList]
         cAssert(listVal.size == 3 &&
                 listVal.get(0).isInstanceOf[java.lang.Double] &&
                 listVal.get(1).isInstanceOf[java.lang.Double] &&
@@ -307,7 +308,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)
-        val listVal = readConstantPrefix(token, tokens).asInstanceOf[LogoList]
+        val listVal = readLiteralPrefix(token, tokens).asInstanceOf[LogoList]
         cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
                 BAD_PATCH_SET_ARGS, token)
         try {
@@ -325,7 +326,7 @@ private class ConstantParser(world: World = null, extensionManager: ExtensionMan
     else if(List(classOf[_turtle], classOf[_patch], classOf[_link])
             .contains(token.value.getClass)) {
       // we have a single agent, turtle patch or link
-      val result = parseConstantAgent(token, tokens)
+      val result = parseLiteralAgent(token, tokens)
       val closeBrace = tokens.next()
       cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
       result

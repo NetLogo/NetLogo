@@ -30,4 +30,3 @@ class _userdirectory extends Reporter {
   }
 
 }
-

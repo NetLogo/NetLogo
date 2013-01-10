@@ -19,18 +19,18 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
       testCommand("ask turtle 0 [ __ignore [who] of frogs with [age = ([age] of [spots] of self)]]")
     }
     // is the error message correct?
-    expect("That frog is dead.")(ex.getMessage)
+    expectResult("That frog is dead.")(ex.getMessage)
     // is the error message attributed to the right agent? frog 2 is dead,
     // but it's frog 1 that actually encountered the error
-    expect("frog 1")(ex.context.agent.toString)
+    expectResult("frog 1")(ex.context.agent.toString)
   }
   test("argumentTypeException") {
     testCommand("set glob1 [1.4]")
     val ex = intercept[ArgumentTypeException] {
       testCommand("__ignore 0 < position 5 item 0 glob1")
     }
-    expect("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
-    expect("POSITION")(ex.instruction.token.name.toUpperCase)
+    expectResult("POSITION expected input to be a string or list but got the number 1.4 instead.")(ex.getMessage)
+    expectResult("POSITION")(ex.instruction.token.name.toUpperCase)
   }
   test("breedOwnRedeclaration") {
     val ex = intercept[CompilerException] {
@@ -39,7 +39,7 @@ class TestErrorMessages extends AbstractTestLanguage with FunSuite with BeforeAn
         Program.empty,
         workspace.getExtensionManager)
     }
-    expect("Redeclaration of HUNTERS-OWN")(ex.getMessage)
+    expectResult("Redeclaration of HUNTERS-OWN")(ex.getMessage)
   }
 
 }

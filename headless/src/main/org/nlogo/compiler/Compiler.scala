@@ -47,11 +47,10 @@ object Compiler extends CompilerInterface {
   // that we don't know about.
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
-    implicit val t = tokenizer
-    val results = new StructureParser(t.tokenizeRobustly(source), None,
-                                      program, oldProcedures, extensionManager)
+    val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
+                                      StructureParser.Results(program, oldProcedures))
       .parse(subprogram)
-    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, !parse)
+    val identifierParser = new IdentifierParser(program, CompilerInterface.NoProcedures, results.procedures, extensionManager, !parse)
     for(procedure <- results.procedures.values) {
       val tokens = identifierParser.process(results.tokens(procedure).iterator, procedure)
       if(parse)
@@ -62,7 +61,7 @@ object Compiler extends CompilerInterface {
   ///
 
   /// TODO: There are a few places below where we downcast api.World to agent.World in order to pass
-  /// it to ConstantParser.  This should really be cleaned up so that ConstantParser uses api.World
+  /// it to LiteralParser.  This should really be cleaned up so that LiteralParser uses api.World
   /// too. - ST 2/23/09
 
   // In the following 3 methods, the initial call to NumberParser is a performance optimization.
@@ -73,18 +72,18 @@ object Compiler extends CompilerInterface {
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser().getConstantValue(tokenizer.tokenize(source).iterator))
+      new LiteralParser().getLiteralValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-        .getConstantValue(tokenizer.tokenize(source).iterator))
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+        .getLiteralValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): java.lang.Double =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer.tokenize(source).iterator))
 
   @throws(classOf[CompilerException])
@@ -93,8 +92,8 @@ object Compiler extends CompilerInterface {
     val tokens: Iterator[Token] =
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer))
-    val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getConstantFromFile(tokens)
+    val result = new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      .getLiteralFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
     // more values left - ST 2/18/04
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04
@@ -114,11 +113,11 @@ object Compiler extends CompilerInterface {
 
   // used for procedures menu
   def findProcedurePositions(source: String): Map[String, (String, Int, Int, Int)] =
-    new StructureParserExtras()(tokenizer).findProcedurePositions(source)
+    new StructureParserExtras(tokenizer).findProcedurePositions(source)
 
   // used for includes menu
   def findIncludes(sourceFileName: String, source: String): Map[String, String] =
-    new StructureParserExtras()(tokenizer).findIncludes(sourceFileName, source)
+    new StructureParserExtras(tokenizer).findIncludes(sourceFileName, source)
 
   // used by VariableNameEditor
   def isValidIdentifier(s: String) = tokenizer.isValidIdentifier(s)
@@ -126,13 +125,12 @@ object Compiler extends CompilerInterface {
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager) =
     try {
-      implicit val t = tokenizer
       val results =
-        new StructureParser(t.tokenize("to __is-reporter? report " + s + "\nend"),
-                            None, program, procedures, extensionManager)
+        new StructureParser(tokenizer.tokenize("to __is-reporter? report " + s + "\nend"),
+                            None, StructureParser.Results(program, procedures))
           .parse(subprogram = true)
       val identifierParser =
-        new IdentifierParser(program, procedures, results.procedures, forgiving = false)
+        new IdentifierParser(program, procedures, results.procedures, extensionManager, forgiving = false)
       val proc = results.procedures.values.head
       val tokens = identifierParser.process(results.tokens(proc).iterator, proc)
       tokens

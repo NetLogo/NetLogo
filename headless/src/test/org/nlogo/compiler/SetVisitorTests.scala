@@ -14,7 +14,7 @@ class SetVisitorTests extends FunSuite {
     stmt.addArgument(new ReporterApp(r, 0, 0, ""))
     stmt.addArgument(new ReporterApp(new _constdouble(Double.box(5)), 0, 0, ""))
     stmt.accept(new SetVisitor)
-    expect(setterClass.getName.substring("org.nlogo.prim.".length) + ":" + spec + "[_constdouble:5.0[]]")(
+    expectResult(setterClass.getName.substring("org.nlogo.prim.".length) + ":" + spec + "[_constdouble:5.0[]]")(
       stmt.toString)
   }
   test("test1") { tester(new _turtlevariable(Turtle.VAR_HEADING), Turtle.VAR_HEADING.toString, classOf[_setturtlevariable]) }

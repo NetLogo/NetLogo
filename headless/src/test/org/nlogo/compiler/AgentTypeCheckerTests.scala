@@ -10,18 +10,16 @@ class AgentTypeCheckerTests extends FunSuite {
 
   /// first some helpers
   def compile(source: String): Seq[ProcedureDefinition] = {
-    implicit val tokenizer = Compiler.Tokenizer2D
-    val program = Program.empty
     val results = new StructureParser(
-      tokenizer.tokenize(source), None, program,
-      nvm.CompilerInterface.NoProcedures,
-      new DummyExtensionManager)
+      Compiler.Tokenizer2D.tokenize(source), None,
+      StructureParser.emptyResults)
       .parse(false)
     val defs = new collection.mutable.ArrayBuffer[ProcedureDefinition]
     for (procedure <- results.procedures.values) {
+      new LetScoper(procedure, results.tokens(procedure), results.program.usedNames).scan()
       val tokens =
-        new IdentifierParser(program, nvm.CompilerInterface.NoProcedures,
-                             results.procedures, false)
+        new IdentifierParser(results.program, nvm.CompilerInterface.NoProcedures,
+                             results.procedures, new DummyExtensionManager)
           .process(results.tokens(procedure).iterator, procedure)
       defs ++= new ExpressionParser(procedure).parse(tokens)
     }
@@ -34,7 +32,7 @@ class AgentTypeCheckerTests extends FunSuite {
   def testOne(source: String, expected: String) {
     val defs = compile(source)
     val buf = new StringBuilder
-    expect(expected)(
+    expectResult(expected)(
       defs.map { pd: ProcedureDefinition => pd.procedure.name + ":" + pd.procedure.usableBy }
         .mkString(" "))
   }
@@ -42,8 +40,10 @@ class AgentTypeCheckerTests extends FunSuite {
     doTestError(source, error)
   }
   def doTestError(source: String, error: String) {
-    val e = intercept[CompilerException] { compile(source) }
-    expect(error)(e.getMessage)
+    val e = intercept[CompilerException] {
+      compile(source)
+    }
+    expectResult(error)(e.getMessage)
   }
   /// tests not involving blocks (easy)
   test("easy1") { testBoth("to foo end", "FOO:OTPL") }
@@ -121,8 +121,4 @@ class AgentTypeCheckerTests extends FunSuite {
     testError("to foo crt 1 [ sprout 1 ] end", "You can't use sprout in a turtle context, because sprout is patch-only.") }
   test("crt3") {
     testError("to foo crt 1 [ crt 1 ] end", "You can't use crt in a turtle context, because crt is observer-only.") }
-  test("magicOpen") {
-    testError("to foo ask turtles [ ___foo ] end",
-      "You can't use __magic-open in a turtle context, because __magic-open is observer-only.")
-  }
 }

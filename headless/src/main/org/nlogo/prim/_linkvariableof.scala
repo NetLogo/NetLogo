@@ -25,23 +25,18 @@ class _linkvariableof(_vn: Int) extends Reporter {
     report_1(context, args(0).report(context))
 
   def report_1(context: Context, agentOrSet: AnyRef): AnyRef =
-    agentOrSet match {
+    try agentOrSet match {
       case agent: Agent =>
         if (agent.id == -1)
           throw new EngineException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
                              agent.classDisplayName))
-        try agent.getLinkVariable(_vn)
-        catch { case ex: AgentException =>
-          throw new EngineException(context, this, ex.getMessage) }
+        agent.getLinkVariable(_vn)
       case sourceSet: AgentSet =>
         val result = new LogoListBuilder
-        try {
-          val iter = sourceSet.shufflerator(context.job.random)
-          while(iter.hasNext)
-            result.add(iter.next().getLinkVariable(_vn))
-        } catch { case ex: AgentException =>
-          throw new EngineException(context, this, ex.getMessage) }
+        val iter = sourceSet.shufflerator(context.job.random)
+        while(iter.hasNext)
+          result.add(iter.next().getLinkVariable(_vn))
         result.toLogoList
      case _ =>
       throw new ArgumentTypeException(
@@ -49,26 +44,29 @@ class _linkvariableof(_vn: Int) extends Reporter {
         Syntax.LinksetType | Syntax.LinkType,
         agentOrSet)
     }
-
-  def report_2(context: Context, agent: Agent): AnyRef = {
-    if (agent.id == -1)
-      throw new EngineException(context, this,
-        I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
-                         agent.classDisplayName))
-    try agent.getLinkVariable(_vn)
     catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
-  }
 
-  def report_3(context: Context, sourceSet: AgentSet): LogoList = {
-    val result = new LogoListBuilder
+  def report_2(context: Context, agent: Agent): AnyRef =
     try {
+      if (agent.id == -1)
+        throw new EngineException(context, this,
+          I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
+                           agent.classDisplayName))
+      agent.getLinkVariable(_vn)
+    }
+    catch { case ex: AgentException =>
+      throw new EngineException(context, this, ex.getMessage) }
+
+  def report_3(context: Context, sourceSet: AgentSet): LogoList =
+    try {
+      val result = new LogoListBuilder
       val iter = sourceSet.shufflerator(context.job.random)
       while(iter.hasNext)
         result.add(iter.next().getLinkVariable(_vn))
-    } catch { case ex: AgentException =>
+      result.toLogoList
+    }
+    catch { case ex: AgentException =>
       throw new EngineException(context, this, ex.getMessage) }
-    result.toLogoList
-  }
 
 }
