@@ -77,11 +77,7 @@ all <<= all.dependsOn(
 /// settings from project/*.scala
 ///
 
-seq(Testing.settings: _*)
-
 seq(Packaging.settings: _*)
-
-seq(Depend.settings: _*)
 
 seq(Dump.settings: _*)
 
