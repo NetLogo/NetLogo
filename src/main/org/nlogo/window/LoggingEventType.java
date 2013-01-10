@@ -2,8 +2,6 @@
 
 package org.nlogo.window;
 
-public enum AppEventType {
-  RELOAD, MAGIC_OPEN,
-  CHANGE_LANGUAGE
+public enum LoggingEventType {
+  START_LOGGING, ZIP_LOG_FILES, DELETE_LOG_FILES
 }
-

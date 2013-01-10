@@ -1,10 +1,8 @@
 C __bench etc._bench
-C __change-language etc._changelanguage
 C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __done _done
 C __edit etc._edit
-C __english etc._english
 C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __fire etc._fire
@@ -21,11 +19,8 @@ C __patchcode etc._patchcode
 C __plot-pen-hide plot._plotpenhide
 C __plot-pen-show plot._plotpenshow
 C __pwd etc._pwd
-C __reload etc._reload
 C __reload-extensions etc._reloadextensions
-C __set-error-locale etc._seterrorlocale
 C __set-line-thickness etc._setlinethickness
-C __spanish etc._spanish
 C __stderr etc._stderr
 C __stdout etc._stdout
 C __thunk-did-finish etc._thunkdidfinish

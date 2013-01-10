@@ -329,4 +329,3 @@ class WorldPreview(width: Int, height: Int)
     }
   }
 }
-

@@ -9,4 +9,3 @@ trait ReporterTask extends Task {
 trait CommandTask extends Task {
   def perform(c: Context, args: Array[AnyRef])
 }
-

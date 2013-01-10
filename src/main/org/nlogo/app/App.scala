@@ -205,11 +205,13 @@ object App{
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
-    AppEventHandler with
     BeforeLoadEventHandler with
     LoadBeginEventHandler with
     LoadEndEventHandler with
     ModelSavedEventHandler with
+    Events.ChangeLanguageEventHandler with
+    Events.MagicOpenEventHandler with
+    Events.ReloadEventHandler with
     Events.SwitchedTabsEventHandler with
     Controllable {
 
@@ -375,7 +377,7 @@ class App extends
       else libraryOpen(commandLineModel) // --open from command line
     }
     else if (commandLineMagic != null)
-      new AppEvent(AppEventType.MAGIC_OPEN, Seq(commandLineMagic))
+      new Events.MagicOpenEvent(commandLineMagic)
         .raise(this)
     else if (commandLineURL != null)
       fileMenu.openFromSource(
@@ -384,28 +386,17 @@ class App extends
     else fileMenu.newModel()
   }
 
-  // AppEvent stuff (kludgy)
-  /**
-   * Internal use only.
-   */
-  def handle(e: AppEvent) {
-    import AppEventType._
-    e.eventType match {
-      case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args.head.toString)
-      case CHANGE_LANGUAGE => changeLanguage()
-      case _ =>
-    }
-  }
-
-  private def reload() {
+  def handle(e: Events.ReloadEvent) {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
-    else commandLater("print \"can't, new model\"")
+    if (modelType != ModelType.New && path != null)
+      openFromSource(FileIO.file2String(path), path, modelType)
+    else
+      commandLater("print \"can't, new model\"")
   }
 
-  private def magicOpen(name: String) {
+  def handle(e: Events.MagicOpenEvent) {
+    import e.name
     import collection.JavaConverters._
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
@@ -424,7 +415,7 @@ class App extends
     }
   }
 
-  def changeLanguage() {
+  def handle(e: Events.ChangeLanguageEvent) {
     val locales = I18N.availableLocales
     val languages = locales.map{l => l.getDisplayName(l) }
     val index = org.nlogo.swing.OptionDialog.showAsList(frame,

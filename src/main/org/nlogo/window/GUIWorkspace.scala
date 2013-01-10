@@ -33,18 +33,6 @@ with Events.LoadSectionEventHandler {
 
   ///
 
-  override def reload() {
-    new Events.AppEvent(AppEventType.RELOAD, Seq())
-      .raiseLater(this)
-  }
-
-  override def changeLanguage() {
-    new Events.AppEvent(AppEventType.CHANGE_LANGUAGE, Seq())
-      .raiseLater(this)
-  }
-
-  ///
-
   @throws(classOf[java.io.IOException])
   def exportInterface(filename: String) {
     // there's a form of ImageIO.write that just takes a filename, but if we use that when the

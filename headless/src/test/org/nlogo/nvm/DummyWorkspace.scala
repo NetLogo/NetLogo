@@ -63,7 +63,6 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
   override def patchSize() = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
-  override def changeLanguage() = unsupported
   override def lastRunTimes() = unsupported
   override def completedActivations() = unsupported
   override def compiler() = unsupported
