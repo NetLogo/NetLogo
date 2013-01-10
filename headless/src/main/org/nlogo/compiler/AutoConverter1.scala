@@ -341,7 +341,7 @@ class AutoConverter1(tokenizer: TokenizerInterface) {
   }
 
   // pending resolution of https://issues.scala-lang.org/browse/SI-6723
-  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/12
+  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/13
 
   private val CONVERSIONS1 = Map(("pc", "pcolor"),
                                  ("pc-of", "[pcolor] of"),
