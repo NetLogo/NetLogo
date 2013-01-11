@@ -459,6 +459,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override var lastLogoException: LogoException = null
+  override def clearLastLogoException() { lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
