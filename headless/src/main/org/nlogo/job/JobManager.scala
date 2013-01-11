@@ -3,7 +3,7 @@
 package org.nlogo.job
 
 import org.nlogo.nvm.{ExclusiveJob, ConcurrentJob, Procedure, Job, JobManagerOwner}
-import org.nlogo.api.{AgentKind, JobOwner}
+import org.nlogo.api.{AgentKind, JobOwner, LogoException}
 import org.nlogo.agent.{Agent, Observer, Turtle, Link, AgentSet, World}
 import java.util.List
 import org.nlogo.util.Exceptions.ignoring
@@ -154,7 +154,8 @@ class JobManager(jobManagerOwner: JobManagerOwner,
       thread.isTimeToRunSecondaryJobs = true
       ignoring(classOf[InterruptedException]) { job.synchronized {job.wait(50)} }
     }
-    if (job.result.isInstanceOf[RuntimeException]) throw job.result.asInstanceOf[RuntimeException]
+    if (job.result.isInstanceOf[Exception] && !job.result.isInstanceOf[LogoException])
+      throw job.result.asInstanceOf[Exception]
   }
 
   def finishJobs(jobs: List[Job], owner: JobOwner) {
