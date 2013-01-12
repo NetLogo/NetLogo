@@ -29,6 +29,18 @@ class ReviewTab(
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
 
+  object API {
+    def loadedRuns: Seq[ModelRunInterface] = tabState.runs
+    def loadRun(inputStream: java.io.InputStream, name: String): Unit = {
+      val uniqueName = tabState.uniqueName(nameFromPath(name))
+      ModelRunIO.load(inputStream, uniqueName) { run =>
+        tabState.addRun(run)
+        loadModelIfNeeded(run.modelString)
+        ws
+      }
+    }
+  }
+
   private def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
       .toSeq.flatMap(_.getWidgetsForSaving.asScala)
@@ -160,7 +172,7 @@ class ReviewTab(
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         val plotActions = PlotActionBuffer.grab()
         run.data match {
-          case None => run.start(ws.plotManager.plots, mirrorables, plotActions)
+          case None       => run.start(ws.plotManager.plots, mirrorables, plotActions)
           case Some(data) => data.append(mirrorables, plotActions)
         }
       } catch {
@@ -320,9 +332,7 @@ class ReviewTab(
           !userConfirms("Save Model Run", "The file " + path +
             " already exists. Do you want to overwrite it?"))
           throw new UserCancelException
-        val out = new java.io.ObjectOutputStream(
-          new java.io.FileOutputStream(path))
-        ModelRunIO.save(out, run)
+        run.save(new java.io.FileOutputStream(path))
         run.name = nameFromPath(path)
         tabState.undirty(run)
         refreshInterface()
@@ -359,27 +369,21 @@ class ReviewTab(
       Seq()
   }
 
-  /**
-   * Loads a run from `path` and returns either the loaded run
-   * in case of success or the path in case of failure
-   */
-  def loadRun(path: String): Either[String, ModelRun] =
-    try {
-      val in = new java.io.ObjectInputStream(
-        new java.io.FileInputStream(path))
-      val name = tabState.uniqueName(nameFromPath(path))
-      val run = ModelRunIO.load(in, name) { run =>
-        tabState.addRun(run)
-        loadModelIfNeeded(run.modelString)
-        ws
-      }
-      Right(run)
-    } catch {
-      case ex: Exception => Left(path)
-    }
-
   val loadButton = actionButton("Load", "open") { () =>
-    val results = chooseFiles.map(loadRun)
+    val results: Seq[Either[String, ModelRun]] =
+      chooseFiles.map { path =>
+        // Load a run from `path` and returns either the loaded run
+        // in case of success or the path in case of failure
+        try {
+          val in = new java.io.FileInputStream(path)
+          val name = nameFromPath(path)
+          API.loadRun(in, name)
+          val run = tabState.runs.last
+          Right(run)
+        } catch {
+          case ex: Exception => Left(path)
+        }
+      }
     val loadedRuns = results.flatMap(_.right.toOption)
     // select the last loaded run if we have one:
     loadedRuns.lastOption.foreach { run =>

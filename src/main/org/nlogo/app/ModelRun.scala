@@ -6,13 +6,21 @@ import org.nlogo.mirror
 import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
 import org.nlogo.plot.{ Plot, PlotAction, PlotRunner }
 
+trait ModelRunInterface {
+  self: ModelRun =>
+  def name: String
+  def save(outputStream: java.io.OutputStream): Unit
+}
+
 class ModelRun(
   var name: String,
   val modelString: String,
   val viewArea: java.awt.geom.Area,
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
-  private var _annotations: Map[Int, String] = Map()) {
+  private var _annotations: Map[Int, String] = Map())
+  extends ModelRunInterface
+  with SavableRun {
   var stillRecording = true
 
   private var _dirty: Boolean = false

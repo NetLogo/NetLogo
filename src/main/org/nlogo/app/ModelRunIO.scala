@@ -7,35 +7,41 @@ import org.nlogo.plot.PlotAction
 import org.nlogo.plot.Plot
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspaceScala
+import java.io.OutputStream
+import java.io.InputStream
 
-object ModelRunIO {
-  def save(out: ObjectOutputStream, run: ModelRun) {
+trait SavableRun {
+  self: ModelRun =>
+  def save(outputStream: OutputStream) {
+    val oos = new ObjectOutputStream(outputStream)
     // Area is not serializable so we save a shape instead:
     val viewAreaShape = java.awt.geom.AffineTransform
       .getTranslateInstance(0, 0)
-      .createTransformedShape(run.viewArea)
+      .createTransformedShape(viewArea)
     val imageBytes = {
       val byteStream = new java.io.ByteArrayOutputStream
-      ImageIO.write(run.backgroundImage, "PNG", byteStream)
+      ImageIO.write(backgroundImage, "PNG", byteStream)
       byteStream.close()
       byteStream.toByteArray
     }
-    val deltas = run.data.toSeq.flatMap(_.deltas)
+    val deltas = data.toSeq.flatMap(_.deltas)
     val rawMirroredUpdates = deltas.map(_.rawMirroredUpdate)
     val plotActionFrames = deltas.map(_.plotActions)
     val thingsToSave = Seq(
-      run.modelString,
+      modelString,
       viewAreaShape,
       imageBytes,
       rawMirroredUpdates,
       plotActionFrames,
-      run.generalNotes)
-    thingsToSave.foreach(out.writeObject)
-    out.close()
+      generalNotes)
+    thingsToSave.foreach(oos.writeObject)
+    oos.close()
   }
+}
 
-  def load(in: ObjectInputStream, name: String)
-    (workspaceLoader: ModelRun => AbstractWorkspaceScala): ModelRun = {
+object ModelRunIO {
+  def load(inputStream: InputStream, name: String)(workspaceLoader: ModelRun => AbstractWorkspaceScala): ModelRun = {
+    val in = new java.io.ObjectInputStream(inputStream)
     def read[A]() = in.readObject().asInstanceOf[A]
     val modelString = read[String]()
     val viewShape = read[java.awt.Shape]()
