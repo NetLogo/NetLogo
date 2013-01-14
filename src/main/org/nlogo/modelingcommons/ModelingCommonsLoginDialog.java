@@ -30,13 +30,10 @@ public class ModelingCommonsLoginDialog extends JDialog {
   private Frame frame;
   private ModelingCommons communicator;
 
-  ModelingCommonsLoginDialog(Frame frame, ModelingCommons communicator, String errorLabelText) {
+  ModelingCommonsLoginDialog(Frame frame, final ModelingCommons communicator, String errorLabelText) {
     super(frame, "Login To Modeling Commons", true);
     this.communicator = communicator;
     this.frame = frame;
-    setSize(400, 200);
-    this.setLocationRelativeTo(frame);
-    setResizable(false);
     setContentPane(contentPane);
     getRootPane().setDefaultButton(loginButton);
 
@@ -44,7 +41,8 @@ public class ModelingCommonsLoginDialog extends JDialog {
 
     createAccountButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-      BrowserLauncher.openURL(createAccountButton, "http://localhost:3000/account/new", false);
+        dispose();
+        communicator.promptForCreateAccount();
       }
     });
 
@@ -69,46 +67,47 @@ public class ModelingCommonsLoginDialog extends JDialog {
         }
     });
 
-// call onCancel() on ESCAPE
+    // call onCancel() on ESCAPE
     contentPane.registerKeyboardAction(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             onCancel();
         }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
 
-    private void onOK() {
-      final String email_address = emailField.getText();
-      final String password = passwordField.getText();
-      dispose();
-      ModalProgressTask.apply(org.nlogo.awt.Hierarchy.getFrame(this), "Connecting to Modeling Commons", new Runnable() {
-        public void run() {
-          final String status = communicator.login(email_address, password);
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              if(status.equals("INVALID_CREDENTIALS")) {
-                communicator.promptForLogin("Invalid email address or password");
-              } else if(status.equals("MISSING_PARAMETERS")) {
-                communicator.promptForLogin("Missing email address or password");
-              } else if(status.equals("CONNECTION_ERROR")) {
-                communicator.promptForLogin("Error connecting to Modeling Commons");
-              } else if(status.equals("SUCCESS")) {
-                communicator.promptForUpload();
-              } else {
-                communicator.promptForLogin("Unknown server error");
-              }
+    this.pack();
+    this.setLocationRelativeTo(frame);
+    this.setResizable(false);
+  }
+
+  private void onOK() {
+    final String email_address = emailField.getText();
+    final String password = passwordField.getText();
+    dispose();
+    ModalProgressTask.apply(org.nlogo.awt.Hierarchy.getFrame(this), "Connecting to Modeling Commons", new Runnable() {
+      public void run() {
+        final String status = communicator.login(email_address, password);
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            if(status.equals("INVALID_CREDENTIALS")) {
+              communicator.promptForLogin("Invalid email address or password");
+            } else if(status.equals("MISSING_PARAMETERS")) {
+              communicator.promptForLogin("Missing email address or password");
+            } else if(status.equals("CONNECTION_ERROR")) {
+              communicator.promptForLogin("Error connecting to Modeling Commons");
+            } else if(status.equals("SUCCESS")) {
+              communicator.promptForUpload();
+            } else {
+              communicator.promptForLogin("Unknown server error");
             }
-          });
+          }
+        });
 
-        }
-      });
+      }
+    });
+  }
 
-
-
-    }
-    private void onCancel() {
-// add your code here if necessary
-        dispose();
-    }
+  private void onCancel() {
+      dispose();
+  }
 
 }

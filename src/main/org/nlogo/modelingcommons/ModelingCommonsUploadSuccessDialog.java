@@ -26,9 +26,6 @@ public class ModelingCommonsUploadSuccessDialog extends JDialog {
   ModelingCommonsUploadSuccessDialog(Frame frame, ModelingCommons communicator, String errorLabelText) {
     super(frame, "Upload To Modeling Commons Successful", true);
 
-    setSize(400, 200);
-    this.setLocationRelativeTo(frame);
-    setResizable(false);
     this.frame = frame;
     this.communicator = communicator;
     successLabel.setText("Model '" + communicator.getUploadedModelName() + "' created successfully");
@@ -63,6 +60,10 @@ public class ModelingCommonsUploadSuccessDialog extends JDialog {
         onClose();
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+    this.pack();
+    this.setLocationRelativeTo(frame);
+    this.setResizable(false);
   }
 
   private void onOpenModel() {
