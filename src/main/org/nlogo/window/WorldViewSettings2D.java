@@ -68,7 +68,7 @@ public strictfp class WorldViewSettings2D
            */
           new Events.RemoveAllJobsEvent().raise(gWidget);
           if (hubnetDecision() == KICK /* kick clients first, then resize world */) {
-            workspace.hubnetManager().reset();
+            workspace.hubNetManager().reset();
           }
 
           world.clearTurtles();

@@ -160,8 +160,8 @@ public abstract strictfp class GUIWorkspaceJ
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
     view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
     view.renderer.trailDrawer().stamp(agent, erase);
-    if (hubNetManager != null) {
-      hubNetManager.sendStamp(agent, erase);
+    if (hubNetManager() != null) {
+      hubNetManager().sendStamp(agent, erase);
     }
   }
 
@@ -204,8 +204,8 @@ public abstract strictfp class GUIWorkspaceJ
   public void clearDrawing() {
     world().clearDrawing();
     view.renderer.trailDrawer().clearDrawing();
-    if (hubNetManager != null) {
-      hubNetManager.sendClear();
+    if (hubNetManager() != null) {
+      hubNetManager().sendClear();
     }
   }
 
@@ -695,8 +695,8 @@ public abstract strictfp class GUIWorkspaceJ
                        Object color, double size, String mode) {
     view.renderer.trailDrawer().drawLine
         (x0, y0, x1, y1, color, size, mode);
-    if (hubNetManager != null) {
-      hubNetManager.sendLine(x0, y0, x1, y1, color, size, mode);
+    if (hubNetManager() != null) {
+      hubNetManager().sendLine(x0, y0, x1, y1, color, size, mode);
     }
   }
 
@@ -1096,8 +1096,8 @@ public abstract strictfp class GUIWorkspaceJ
       setModelPath(e.modelPath());
       setModelType(e.modelType());
     }
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    if (hubNetManager() != null) {
+      hubNetManager().disconnect();
     }
     jobManager.haltSecondary();
     jobManager.haltPrimary();
@@ -1124,29 +1124,29 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public void handle(Events.AboutToQuitEvent e) {
-    if (hubNetManager != null) {
-      hubNetManager.disconnect();
+    if (hubNetManager() != null) {
+      hubNetManager().disconnect();
     }
   }
 
   @Override
   public void hubNetRunning(boolean hubNetRunning) {
-    if (this.hubNetRunning != hubNetRunning) {
+    if (this.hubNetRunning() != hubNetRunning) {
       if (hubNetRunning) {
-        viewManager.add(hubNetManager);
+        viewManager.add(hubNetManager());
       } else {
-        viewManager.remove(hubNetManager);
+        viewManager.remove(hubNetManager());
       }
     }
 
-    this.hubNetRunning = hubNetRunning;
+    super.hubNetRunning(hubNetRunning);
     hubNetControlCenterAction.setEnabled(hubNetRunning);
   }
 
   public final javax.swing.Action hubNetControlCenterAction =
       new javax.swing.AbstractAction(I18N.guiJ().get("menu.tools.hubNetControlCenter")) {
         public void actionPerformed(java.awt.event.ActionEvent e) {
-          hubNetManager.showControlCenter();
+          hubNetManager().showControlCenter();
         }
       };
 

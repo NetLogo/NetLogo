@@ -12,12 +12,12 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   val world = new World
   override def procedures = CompilerInterface.NoProcedures
   override def procedures_=(procedures: CompilerInterface.ProceduresMap) = unsupported
-  override def aggregateManager() = unsupported
+  override def aggregateManager = unsupported
   override def requestDisplayUpdate(force: Boolean) = unsupported
   override def breathe() = unsupported
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
-  override def getExtensionManager() = new DummyExtensionManager
+  override def getExtensionManager = new DummyExtensionManager
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported
   override def importWorld(path: String) = unsupported
@@ -26,7 +26,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def clearDrawing() = unsupported
   override def exportDrawing(path: String, format: String) = unsupported
   override def exportView(path: String, format: String) = unsupported
-  override def exportView() = unsupported
+  override def exportView = unsupported
   override def exportInterface(path: String) = unsupported
   override def exportWorld(path: String) = unsupported
   override def exportWorld(writer: java.io.PrintWriter) = unsupported
@@ -36,7 +36,7 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def inspectAgent(agent: Agent, radius: Double) = unsupported
   override def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double) = unsupported
   override def getAndCreateDrawing() = unsupported
-  override def getHubNetManager() = unsupported
+  override def getHubNetManager = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
                    destination: OutputDestination) = unsupported
@@ -44,12 +44,12 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def clearAll() = unsupported
   override def compileForRun(source: String, context: Context, reporter: Boolean) = unsupported
   override def convertToNormal() = unsupported
-  override def getModelPath() = unsupported
+  override def getModelPath = unsupported
   override def setModelPath(path: String) = unsupported
-  override def getModelDir() = unsupported
-  override def getModelFileName() = unsupported
-  override def fileManager() = unsupported
-  override def plotManager() = unsupported
+  override def getModelDir = unsupported
+  override def getModelFileName = unsupported
+  override def fileManager = unsupported
+  override def plotManager = unsupported
   override def attachModelDir(filePath: String) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String) = unsupported
   override def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) = unsupported
@@ -63,20 +63,20 @@ class DummyWorkspace extends DummyCompilerServices with Workspace {
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
-  override def patchSize() = unsupported
+  override def patchSize = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported
   override def startLogging(properties: String) = unsupported
   override def zipLogFiles(filename: String) = unsupported
   override def deleteLogFiles() = unsupported
-  override def lastRunTimes() = unsupported
-  override def completedActivations() = unsupported
-  override def compiler() = unsupported
+  override def lastRunTimes = unsupported
+  override def completedActivations = unsupported
+  override def compiler = unsupported
   override def open(modelPath: String) = unsupported
   override def openString(modelContents: String) = unsupported
   override def dispose() { }
-  override def lastLogoException() = unsupported
+  override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
-  override def isHeadless() = unsupported
+  override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported

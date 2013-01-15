@@ -24,78 +24,22 @@ import org.nlogo.nvm.Workspace;
 import org.nlogo.util.Femto;
 
 public abstract strictfp class AbstractWorkspace
-    implements
-    org.nlogo.api.LogoThunkFactory,
-    org.nlogo.api.HubNetWorkspaceInterface {
+  implements org.nlogo.api.LogoThunkFactory, org.nlogo.api.CompilerServices {
 
-  /// globals
-  /// (some of these probably should be changed not to be public - ST 12/11/01)
-
-  private org.nlogo.nvm.Tracer tracer = null;
-
-  public org.nlogo.nvm.Tracer profilingTracer() {
-    return tracer;
-  }
-
-  public boolean profilingEnabled() {
-    return tracer != null;
-  }
-
-  public void setProfilingTracer(org.nlogo.nvm.Tracer tracer) {
-    this.tracer = tracer;
+  public interface HubNetManagerFactory {
+    HubNetInterface newInstance(AbstractWorkspace workspace);
   }
 
   public final org.nlogo.nvm.JobManagerInterface jobManager;
-  private final HubNetManagerFactory hubNetManagerFactory;
-  protected HubNetInterface hubNetManager;
   protected final Evaluator evaluator;
-  protected final ExtensionManager extensionManager;
-
-  /**
-   * name of the currently loaded model. Will be null if this is a new
-   * (unsaved) model. To get a version for display to the user, see
-   * modelNameForDisplay(). This is NOT a full path name, however, it does
-   * end in ".nlogo".
-   */
-  protected String modelFileName;
-
-  /**
-   * path to the directory from which the current model was loaded. NetLogo
-   * uses this as the default path for file I/O, when reloading models,
-   * locating HubNet clients, etc. This is null if this is a new (unsaved)
-   * model.
-   */
-  private String modelDir;
-
-  /**
-   * type of the currently loaded model. Certain aspects of NetLogo's
-   * behavior depend on this, i.e. whether to force a save-as and so on.
-   */
-  private ModelType modelType;
 
   /// startup
 
-  protected AbstractWorkspace(AbstractWorkspace.HubNetManagerFactory hubNetManagerFactory) {
-    this.hubNetManagerFactory = hubNetManagerFactory;
-    modelType = ModelTypeJ.NEW();
+  protected AbstractWorkspace() {
     evaluator = new Evaluator((AbstractWorkspaceScala) this);
     world().compiler_$eq(this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
                            new Object[]{this, world(), world()});
-    extensionManager = new ExtensionManager(this);
-  }
-
-  public org.nlogo.api.ExtensionManager getExtensionManager() {
-    return extensionManager;
-  }
-
-  public boolean isExtensionName(String name) {
-    return extensionManager.isExtensionName(name);
-  }
-
-  public void importExtensionData(String name, List<String[]> data, org.nlogo.api.ImportErrorHandler handler)
-      throws org.nlogo.api.ExtensionException {
-    extensionManager.importExtensionData(name, data, handler);
   }
 
   /**
@@ -145,55 +89,27 @@ public abstract strictfp class AbstractWorkspace
     AbstractWorkspace.isApplet = isApplet;
   }
 
-  /// hubnet
-
-  public HubNetInterface getHubNetManager() {
-    if (hubNetManager == null && hubNetManagerFactory != null) {
-      hubNetManager = hubNetManagerFactory.newInstance(this);
-    }
-    return hubNetManager;
-  }
-
-  // merely return, don't create if it isn't already there.
-  public HubNetInterface hubnetManager() {
-    return hubNetManager;
-  }
-
-  public interface HubNetManagerFactory {
-    HubNetInterface newInstance(AbstractWorkspace workspace);
-  }
-
-  protected boolean hubNetRunning = false;
-
-  public boolean hubNetRunning() {
-    return hubNetRunning;
-  }
-
-  public void hubNetRunning(boolean hubNetRunning) {
-    this.hubNetRunning = hubNetRunning;
-  }
-
-  public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
-    return null;
-  }
-
   /// model name utilities
 
-  public void setModelPath(String modelPath) {
-    if (modelPath == null) {
-      modelFileName = null;
-      modelDir = null;
-    } else {
-      java.io.File file = new java.io.File(modelPath).getAbsoluteFile();
-      modelFileName = file.getName();
-      modelDir = file.getParent();
-      if (modelDir.equals("")) {
-        modelDir = null;
-      }
-      if (modelDir != null) {
-        fileManager().setPrefix(modelDir);
-      }
+  /**
+   * converts a model's filename to an externally displayable model name.
+   * The argument may be null, the return value will never be.
+   * <p/>
+   * Package protected for unit testing.
+   */
+  static String makeModelNameForDisplay(String str) {
+    if (str == null) {
+      return "Untitled";
     }
+    int suffixIndex = str.lastIndexOf(".nlogo");
+    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
+      str = str.substring(0, str.length() - 6);
+    }
+    suffixIndex = str.lastIndexOf(".nlogo3d");
+    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
+      str = str.substring(0, str.length() - 8);
+    }
+    return str;
   }
 
   /**
@@ -230,93 +146,6 @@ public abstract strictfp class AbstractWorkspace
   public static java.net.URL toURL(java.io.File file)
       throws java.net.MalformedURLException {
     return file.toURL();
-  }
-
-  /**
-   * instantly converts the current model to ModelTypeJ.NORMAL. This is used
-   * by the __edit command to enable quick saving of library models. It
-   * probably shouldn't be used anywhere else.
-   */
-  public String convertToNormal()
-      throws java.io.IOException {
-    java.io.File git = new java.io.File(".git");
-    if (!git.exists() || !git.isDirectory()) {
-      throw new java.io.IOException("no .git directory found");
-    }
-    modelType = ModelTypeJ.NORMAL();
-    return getModelPath();
-  }
-
-  protected void setModelType(ModelType modelType) {
-    this.modelType = modelType;
-  }
-
-  /**
-   * returns the full pathname of the currently loaded model, if any. This
-   * may return null in some cases, for instance if this is a new model.
-   */
-  public String getModelPath() {
-    if (modelDir == null || modelFileName == null) {
-      return null;
-    }
-    return modelDir + java.io.File.separatorChar + modelFileName;
-  }
-
-  /**
-   * returns the name of the file from which the current model was loaded.
-   * May be null if, for example, this is a new model.
-   */
-  public String getModelFileName() {
-    return modelFileName;
-  }
-
-  /**
-   * returns the full path to the directory from which the current model was
-   * loaded. May be null if, for example, this is a new model.
-   */
-  public String getModelDir() {
-    return modelDir;
-  }
-
-  public ModelType getModelType() {
-    return modelType;
-  }
-
-  /**
-   * whether the user needs to enter a new filename to save this model.
-   * We need to do a "save as" if the model is new, from the
-   * models library, or converted.
-   * <p/>
-   * Basically, only normal models can get silently saved.
-   */
-  public boolean forceSaveAs() {
-    return modelType == ModelTypeJ.NEW()
-      || modelType == ModelTypeJ.LIBRARY();
-  }
-
-  public String modelNameForDisplay() {
-    return makeModelNameForDisplay(modelFileName);
-  }
-
-  /**
-   * converts a model's filename to an externally displayable model name.
-   * The argument may be null, the return value will never be.
-   * <p/>
-   * Package protected for unit testing.
-   */
-  static String makeModelNameForDisplay(String str) {
-    if (str == null) {
-      return "Untitled";
-    }
-    int suffixIndex = str.lastIndexOf(".nlogo");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
-      str = str.substring(0, str.length() - 6);
-    }
-    suffixIndex = str.lastIndexOf(".nlogo3d");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
-      str = str.substring(0, str.length() - 8);
-    }
-    return str;
   }
 
   /// methods that may be called from the job thread by prims
@@ -484,7 +313,7 @@ public abstract strictfp class AbstractWorkspace
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-            (s, world(), extensionManager, world().program().is3D());
+            (s, world(), getExtensionManager(), world().program().is3D());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -566,22 +395,10 @@ public abstract strictfp class AbstractWorkspace
     file.open(org.nlogo.api.FileModeJ.WRITE());
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
-          (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);
+        (file.getPrintWriter(), "BehaviorSpace", getModelFileName(), experimentName);
       file.getPrintWriter().flush(); // perhaps not necessary, but just in case... - ST 2/23/05
     }
     return file;
-  }
-
-  /// BehaviorSpace
-
-  private int _behaviorSpaceRunNumber = 0;
-
-  public int behaviorSpaceRunNumber() {
-    return _behaviorSpaceRunNumber;
-  }
-
-  public void behaviorSpaceRunNumber(int n) {
-    _behaviorSpaceRunNumber = n;
   }
 
   public String getSource(String filename)
@@ -623,27 +440,16 @@ public abstract strictfp class AbstractWorkspace
     loader.load(strings, version, worldInterface);
   }
 
-  public org.nlogo.util.MersenneTwisterFast auxRNG() {
-    return world().auxRNG();
-  }
-
-  public org.nlogo.util.MersenneTwisterFast mainRNG() {
-    return world().mainRNG();
-  }
-
-  public LogoException lastLogoException() {
-    return null;
-  }
-
-  public void clearLastLogoException() { }
-
-  public void lastLogoException_$eq(LogoException e) { }
-
   public abstract World world();
   public abstract CompilerInterface compiler();
   public abstract void clearOutput();
-  public abstract org.nlogo.api.AggregateManagerInterface aggregateManager();
   public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
   public abstract FileManager fileManager();
+  public abstract String getModelPath();
+  public abstract String getModelFileName();
+  public abstract ExtensionManager getExtensionManager();
+  public abstract org.nlogo.api.AggregateManagerInterface aggregateManager();
+  public abstract boolean profilingEnabled();
+  public abstract String getModelDir();
 
 }
