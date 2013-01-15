@@ -33,11 +33,9 @@ class ReviewTab(
     def loadedRuns: Seq[ModelRunInterface] = tabState.runs
     def loadRun(inputStream: java.io.InputStream, name: String): Unit = {
       val uniqueName = tabState.uniqueName(nameFromPath(name))
-      ModelRunIO.load(inputStream, uniqueName) { run =>
-        tabState.addRun(run)
-        loadModelIfNeeded(run.modelString)
-        ws
-      }
+      val run = ModelRunIO.load(inputStream, uniqueName)
+      tabState.addRun(run)
+      loadModelIfNeeded(run.modelString)
     }
   }
 

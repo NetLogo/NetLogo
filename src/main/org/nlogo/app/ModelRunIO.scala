@@ -5,10 +5,11 @@ import javax.imageio.ImageIO
 import java.io.ObjectInputStream
 import org.nlogo.plot.PlotAction
 import org.nlogo.plot.Plot
-import org.nlogo.window.GUIWorkspace
-import org.nlogo.workspace.AbstractWorkspaceScala
 import java.io.OutputStream
 import java.io.InputStream
+import org.nlogo.api.ModelReader
+import org.nlogo.api.ModelSection
+import org.nlogo.plot.PlotLoader
 
 trait SavableRun {
   self: ModelRun =>
@@ -40,7 +41,7 @@ trait SavableRun {
 }
 
 object ModelRunIO {
-  def load(inputStream: InputStream, name: String)(workspaceLoader: ModelRun => AbstractWorkspaceScala): ModelRun = {
+  def load(inputStream: InputStream, name: String): ModelRun = {
     val in = new java.io.ObjectInputStream(inputStream)
     def read[A]() = in.readObject().asInstanceOf[A]
     val modelString = read[String]()
@@ -53,8 +54,22 @@ object ModelRunIO {
     val viewArea = new java.awt.geom.Area(viewShape)
     val backgroundImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
     val run = new ModelRun(name, modelString, viewArea, backgroundImage, generalNotes)
-    val ws = workspaceLoader(run)
-    run.load(ws.plotManager.plots, rawMirroredUpdates, plotActionFrames)
+    val plots = parsePlots(modelString)
+    run.load(plots, rawMirroredUpdates, plotActionFrames)
     run
+  }
+
+  private def parsePlots(model: String): Seq[Plot] = {
+    val modelMap = ModelReader.parseModel(model)
+    val interfaceSection = modelMap(ModelSection.Interface)
+    val widgets = ModelReader.parseWidgets(interfaceSection)
+    for {
+      widget <- widgets
+      if widget.head == "PLOT"
+      plot = new Plot("")
+    } yield {
+      PlotLoader.parsePlot(widget.toArray, plot, identity)
+      plot
+    }
   }
 }
