@@ -451,5 +451,6 @@ public abstract strictfp class AbstractWorkspace
   public abstract org.nlogo.api.AggregateManagerInterface aggregateManager();
   public abstract boolean profilingEnabled();
   public abstract String getModelDir();
+  public abstract void setProfilingTracer(org.nlogo.nvm.Tracer tracer);
 
 }

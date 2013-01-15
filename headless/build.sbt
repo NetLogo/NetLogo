@@ -4,6 +4,8 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
+scalacOptions in Compile += "-Xlint"
+
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
