@@ -145,10 +145,6 @@ public abstract strictfp class AbstractWorkspace
     AbstractWorkspace.isApplet = isApplet;
   }
 
-  public boolean getIsApplet() {
-    return isApplet;
-  }
-
   /// hubnet
 
   public HubNetInterface getHubNetManager() {

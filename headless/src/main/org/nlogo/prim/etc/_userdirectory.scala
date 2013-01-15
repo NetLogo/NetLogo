@@ -11,9 +11,6 @@ class _userdirectory extends Reporter {
     Syntax.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
 
   override def report(context: Context): AnyRef = {
-    if (workspace.getIsApplet)
-      throw new EngineException(
-        context, this, "You cannot choose a directory from an applet.")
     workspace.updateUI()
     val result: Option[String] =
       workspace.waitForResult(

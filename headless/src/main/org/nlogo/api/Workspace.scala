@@ -91,7 +91,6 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def userYesOrNo(msg: String): Option[Boolean] = None
   def userMessage(msg: String): Boolean = false
   def benchmark(minTime: Int, maxTime: Int)
-  def getIsApplet: Boolean
   def isHeadless: Boolean
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int)

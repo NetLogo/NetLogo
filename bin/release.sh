@@ -25,7 +25,6 @@ MAKE=make
 MKDIR=mkdir
 MV=mv
 OPEN=open
-PACK200=pack200
 PERL=perl
 RM=rm
 RSYNC=rsync
