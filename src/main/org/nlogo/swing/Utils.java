@@ -48,8 +48,7 @@ public final strictfp class Utils {
         try {
           javax.swing.UIManager.setLookAndFeel
               ("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e)  // NOPMD
-        {
+        } catch (Exception e) {
           javax.swing.UIManager.setLookAndFeel
               (javax.swing.UIManager.getSystemLookAndFeelClassName());
         }
@@ -88,11 +87,9 @@ public final strictfp class Utils {
           : "quaqua";
       System.load(new java.io.File(".").getCanonicalPath() + "/lib/Mac OS X/lib" + libraryName + ".jnilib");
       System.setProperty("Quaqua.jniIsPreloaded", "true");
-    } catch (java.io.IOException ex) // NOPMD
-    {
+    } catch (java.io.IOException ex) {
       // ignore
-    } catch (UnsatisfiedLinkError ex) // NOPMD
-    {
+    } catch (UnsatisfiedLinkError ex) {
       // ignore
     }
   }

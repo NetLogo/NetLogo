@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
@@ -18,8 +17,7 @@ import java.util.Iterator;
 public final strictfp class _nof
     extends Reporter {
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new EngineException(context, this,

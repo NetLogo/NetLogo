@@ -8,9 +8,7 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def world: World
   def aggregateManager: AggregateManagerInterface
   def getExtensionManager: ExtensionManager
-  @throws(classOf[LogoException])
   def waitFor(runnable: CommandRunnable)
-  @throws(classOf[LogoException])
   def waitForResult[T](runnable: ReporterRunnable[T]): T
   @throws(classOf[IOException])
   def importWorld(reader: java.io.Reader)
@@ -38,12 +36,9 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def exportAllPlots(path: String)
   def getAndCreateDrawing(): java.awt.image.BufferedImage
   def getHubNetManager: HubNetInterface
-  @throws(classOf[LogoException])
   def waitForQueuedEvents()
-  @throws(classOf[LogoException])
   def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: OutputDestination)
   def clearOutput()
-  @throws(classOf[LogoException])
   def clearAll()
   @throws(classOf[IOException])
   def convertToNormal(): String
@@ -62,12 +57,8 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def dispose()
   def patchSize: Double
   def changeTopology(wrapX: Boolean, wrapY: Boolean)
-  @throws(classOf[LogoException])
   @throws(classOf[IOException])
-  @throws(classOf[CompilerException])
   def open(modelPath: String)
-  @throws(classOf[LogoException])
-  @throws(classOf[CompilerException])
   def openString(modelContents: String)
   def startLogging(properties: String)
   def zipLogFiles(filename: String)
@@ -98,7 +89,6 @@ trait Workspace extends ImporterUser with CompilerServices with RandomServices {
   def userYesOrNo(msg: String): Option[Boolean] = None
   def userMessage(msg: String): Boolean = false
   def benchmark(minTime: Int, maxTime: Int)
-  def getIsApplet: Boolean
   def isHeadless: Boolean
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int)

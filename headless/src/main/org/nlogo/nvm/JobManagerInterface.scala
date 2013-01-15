@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{Agent, AgentSet}
-import org.nlogo.api.{JobOwner, LogoException}
+import org.nlogo.api.JobOwner
 
 trait JobManagerInterface {
   def isInterrupted: Boolean
@@ -15,7 +15,6 @@ trait JobManagerInterface {
   def anyPrimaryJobs(): Boolean
   def addJob(job: Job, waitForCompletion: Boolean)
   def makeConcurrentJob(owner: JobOwner, agentset: AgentSet, procedure: Procedure): Job
-  @throws(classOf[LogoException])
   def callReporterProcedure(owner: JobOwner, agentset: AgentSet, procedure: Procedure): AnyRef
   def addReporterJobAndWait(owner: JobOwner, agentset: AgentSet, procedure: Procedure): AnyRef
   def addJobFromJobThread(job: Job)

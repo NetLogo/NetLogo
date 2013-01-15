@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Equality;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -15,7 +14,7 @@ public final strictfp class _position
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       Object value = args[0].report(context);

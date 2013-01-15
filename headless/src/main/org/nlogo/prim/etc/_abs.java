@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Pure;
@@ -17,7 +16,7 @@ public final strictfp class _abs extends Reporter implements Pure {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     return report_1(context, argEvalDoubleValue(context, 0));
   }
 

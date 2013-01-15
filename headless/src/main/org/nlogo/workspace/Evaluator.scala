@@ -10,7 +10,6 @@ import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
 
 class Evaluator(workspace: AbstractWorkspaceScala) {
 
-  @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner,
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
@@ -21,17 +20,14 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
       waitForCompletion)
   }
 
-  @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet = workspace.world.observers): Object = {
     val procedure = invokeCompiler(source, None, false, agents.kind)
     workspace.jobManager.addReporterJobAndWait(owner, agents, procedure)
   }
 
-  @throws(classOf[CompilerException])
   def compileCommands(source: String, kind: AgentKind): Procedure =
     invokeCompiler(source, None, true, kind)
 
-  @throws(classOf[CompilerException])
   def compileReporter(source: String) =
     invokeCompiler(source, None, false, AgentKind.Observer)
 
@@ -49,7 +45,6 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
 
   ///
 
-  @throws(classOf[CompilerException])
   def compileForRun(source: String, context: Context,reporter: Boolean) =
     invokeCompilerForRun(source, context.agent.kind, context.activation.procedure, reporter)
 
@@ -109,11 +104,9 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
   // plotting.  That code, I believe to be correct and to handle threading correctly.  But the
   // snippets of code in plots are always commands, never reporters, so the plotting stuff never
   // needs makeReporterThunk. - ST 10/9/12
-  @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, agent: Agent, owner: JobOwner): ReporterLogoThunk =
     if(source.trim.isEmpty) throw new IllegalStateException("empty reporter source")
     else new MyLogoThunk(source, agent, owner, false) with ReporterLogoThunk {
-      @throws(classOf[LogoException])
       def call(): Object  = {
         val job = new ExclusiveJob(owner, agentset, procedure, 0, null, owner.random)
         val context = new Context(job, agent, 0, null)
@@ -134,16 +127,13 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
       }
     }
 
-  @throws(classOf[CompilerException])
   def makeCommandThunk(source: String, agent: Agent, owner: JobOwner): CommandLogoThunk =
     if(source.trim.isEmpty)
       new CommandLogoThunk { def call() = false }
     else new MyLogoThunk(source + "\n__thunk-did-finish", agent, owner, true) with CommandLogoThunk {
-      @throws(classOf[LogoException])
       def call(): Boolean = ProcedureRunner.run(procedure)
     }
 
-  @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
     val agentset = new ArrayAgentSet(agent.kind, 1, false, workspace.world)
     agentset.add(agent)
@@ -153,7 +143,6 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
 
   ///
 
-  @throws(classOf[CompilerException])
   def invokeCompilerForRun(source: String, kind: AgentKind,
     callingProcedure: Procedure, reporter: Boolean): Procedure = {
 
@@ -182,7 +171,6 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
   }
 
 
-  @throws(classOf[CompilerException])
   private def invokeCompiler(source: String, displayName: Option[String], commands: Boolean, kind: AgentKind) = {
     val wrappedSource = Evaluator.getHeader(kind, commands) + source + Evaluator.getFooter(commands)
     val results =
@@ -192,7 +180,6 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
     results.head
   }
 
-  @throws(classOf[CompilerException])
   def readFromString(string: String) =
     workspace.compiler.readFromString(
       string, workspace.world, workspace.getExtensionManager,

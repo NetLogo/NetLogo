@@ -4,20 +4,13 @@ package org.nlogo.api
 
 trait HubNetInterface extends ViewInterface {
   /// getting messages
-  @throws(classOf[LogoException])
   def messageWaiting: Boolean
   def numberOfMessagesWaiting: Int
-  @throws(classOf[LogoException])
   def enterMessage: Boolean
-  @throws(classOf[LogoException])
   def exitMessage: Boolean
-  @throws(classOf[LogoException])
   def fetchMessage()
-  @throws(classOf[LogoException])
   def getMessage: AnyRef
-  @throws(classOf[LogoException])
   def getMessageSource: String
-  @throws(classOf[LogoException])
   def getMessageTag: String
 
   /// sending messages
@@ -25,28 +18,23 @@ trait HubNetInterface extends ViewInterface {
   /**
    * Send a message to all clients
    */
-  @throws(classOf[LogoException])
   def broadcast(variableName: String, data: Any)
-  @throws(classOf[LogoException])
   def broadcast(data: Any)
   def sendText(nodes: Seq[String], text: String)
   def clearText(nodes: Seq[String])
   def broadcastClearText()
   def sendUserMessage(nodes: Seq[String], text: String)
 
-  @throws(classOf[LogoException])
   def broadcastUserMessage(text: String)
 
   /**
    * Send a message to each node (client) in the list for the given tag
    */
-  @throws(classOf[LogoException])
   def send(nodes: Seq[String], tag: String, message: Any)
 
   /**
    * Send message to a single client for the given tag
    */
-  @throws(classOf[LogoException])
   def send(node: String, tag: String, message: Any): Boolean
 
   /// connection management
@@ -63,7 +51,6 @@ trait HubNetInterface extends ViewInterface {
   def setViewMirroring(on:Boolean)
 
   /// clients
-  @throws(classOf[LogoException])
   def setClientInterface(clientType: String, interfaceInfo:Iterable[AnyRef])
   def newClient(isRobo: Boolean, waitTime: Int)
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]

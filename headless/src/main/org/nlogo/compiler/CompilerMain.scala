@@ -35,7 +35,7 @@ private object CompilerMain {
         .parse(identifiedTokens) // parse
     }
     val defs: Vector[ProcedureDefinition] =
-      Vector() ++ structureResults.procedures.values.flatMap(parseProcedure)
+      structureResults.procedures.values.flatMap(parseProcedure).toVector
     // StructureParser found the top level Procedures for us.  ExpressionParser
     // finds command tasks and makes Procedures out of them, too.  the remaining
     // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11

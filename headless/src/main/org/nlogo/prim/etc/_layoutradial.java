@@ -6,7 +6,6 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -23,8 +22,7 @@ public final strictfp class _layoutradial
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     AgentSet nodeset = argEvalAgentSet(context, 0, AgentKindJ.Turtle());
     AgentSet linkset = argEvalAgentSet(context, 1, AgentKindJ.Link());
     Turtle root = argEvalTurtle(context, 2);

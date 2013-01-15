@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoHashObject;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
@@ -18,7 +17,7 @@ public final strictfp class _modes
     extends Reporter
     implements Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     LinkedHashMap<LogoHashObject, MutableInteger> counts =
         new LinkedHashMap<LogoHashObject, MutableInteger>();
     LogoList list = argEvalList(context, 0);

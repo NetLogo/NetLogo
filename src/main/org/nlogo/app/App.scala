@@ -128,7 +128,7 @@ object App{
       def newInstance: Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
         w
       }
@@ -613,8 +613,8 @@ class App extends
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(makeFrameTitle)
-      if (workspace.hubnetManager() != null) {
-        workspace.hubnetManager().setTitle(workspace.modelNameForDisplay,
+      if (workspace.hubNetManager != null) {
+        workspace.hubNetManager.setTitle(workspace.modelNameForDisplay,
           workspace.getModelDir, workspace.getModelType)
       }
     }
@@ -627,7 +627,8 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
-    if(workspace.hubnetManager() != null) workspace.hubnetManager().closeClientEditor()
+    if(workspace.hubNetManager != null)
+      workspace.hubNetManager.closeClientEditor()
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
@@ -690,7 +691,7 @@ class App extends
    * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -700,7 +701,8 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType == ModelType.Normal)
+        title += " {" + workspace.getModelDir + "}"
       title
     }
   }
@@ -787,7 +789,6 @@ class App extends
    * @throws IllegalStateException if called from the AWT event queue thread
    * @see #commandLater
    */
-  @throws(classOf[CompilerException])
   def command(source: String) {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
@@ -801,7 +802,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @see #command
    */
-  @throws(classOf[CompilerException])
   def commandLater(source: String){
     workspace.evaluateCommands(owner, source, false)
   }
@@ -818,7 +818,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @throws IllegalStateException if called from the AWT event queue thread
    */
-  @throws(classOf[CompilerException])
   def report(source: String): Object = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())

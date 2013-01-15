@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -21,8 +20,7 @@ public final strictfp class _follow
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id == -1) {
       throw new EngineException(context, this,

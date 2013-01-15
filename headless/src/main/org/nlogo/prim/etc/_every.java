@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -27,8 +26,7 @@ public final strictfp class _every
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     //the current time given in nanoseconds so we must multiply by 1000000000 to get the delay
     //and we treat negative numbers the same as zero
     long delay =

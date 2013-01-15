@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 
@@ -16,8 +15,7 @@ public final strictfp class _patchleftandahead
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context)
-      throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) context.agent;
     try {
       return turtle.getPatchAtHeadingAndDistance

@@ -117,8 +117,4 @@ seq(Running.settings: _*)
 
 seq(Depend.settings: _*)
 
-seq(Dump.settings: _*)
-
 seq(Scaladoc.settings: _*)
-
-seq(ChecksumsAndPreviews.settings: _*)

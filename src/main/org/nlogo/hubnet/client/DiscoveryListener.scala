@@ -9,7 +9,7 @@ import org.nlogo.hubnet.protocol.DiscoveryMessage
 
 object DiscoveryListener {
   /**The multicast group for server discovery */
-  val SERVER_DISCOVERY_MULTICAST_GROUP = "228.5.8.80" // NOPMD pmd doesn't like hardcoded IPv4 addresses
+  val SERVER_DISCOVERY_MULTICAST_GROUP = "228.5.8.80"
   /**The multicast port for server discovery */
   val SERVER_DISCOVERY_MULTICAST_PORT = 5885
 }

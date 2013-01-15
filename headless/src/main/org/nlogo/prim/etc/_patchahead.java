@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -17,8 +16,7 @@ public final strictfp class _patchahead
   }
 
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     try {
       org.nlogo.agent.Turtle turtle =
           (org.nlogo.agent.Turtle) context.agent;

@@ -417,8 +417,7 @@ public strictfp class JMFMovieEncoder
 
   ///
 
-  private static void ignore(Throwable t) // NOPMD ok to ignore
-  {
+  private static void ignore(Throwable t) {
     // do nothing, but you could put debugging output here,
     // or a debugger breakpoint... - ST 5/14/03
   }

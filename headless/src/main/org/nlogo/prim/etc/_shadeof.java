@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 
@@ -10,7 +9,7 @@ public final strictfp class _shadeof
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     double color1 = argEvalDoubleValue(context, 0);
     double color2 = argEvalDoubleValue(context, 1);
     color1 = org.nlogo.api.Color.findCentralColorNumber(color1);

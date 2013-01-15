@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -21,12 +20,11 @@ public final strictfp class _butlast
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     return report_1(context, args[0].report(context));
   }
 
-  public Object report_1(final org.nlogo.nvm.Context context, Object arg0)
-      throws LogoException {
+  public Object report_1(final org.nlogo.nvm.Context context, Object arg0) {
     if (arg0 instanceof LogoList) {
       LogoList list = (LogoList) arg0;
       if (list.isEmpty()) {
@@ -47,8 +45,7 @@ public final strictfp class _butlast
     }
   }
 
-  public String report_2(final org.nlogo.nvm.Context context, String arg0)
-      throws LogoException {
+  public String report_2(final org.nlogo.nvm.Context context, String arg0) {
     if (arg0.length() == 0) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().name()));
@@ -56,8 +53,7 @@ public final strictfp class _butlast
     return arg0.substring(0, arg0.length() - 1);
   }
 
-  public LogoList report_3(final org.nlogo.nvm.Context context, LogoList arg0)
-      throws LogoException {
+  public LogoList report_3(final org.nlogo.nvm.Context context, LogoList arg0) {
     if (arg0.isEmpty()) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));

@@ -41,7 +41,7 @@ abstract class AbstractTestLanguage extends Assertions {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
         Program.empty(Version.is3D),
-        workspace.getExtensionManager())
+        workspace.getExtensionManager)
     }
     workspace.procedures = results.proceduresMap
     workspace.world.program(results.program)
@@ -50,7 +50,7 @@ abstract class AbstractTestLanguage extends Assertions {
   }
 
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
-    workspace.lastLogoException = null
+    workspace.clearLastLogoException()
     val actualResult = workspace.evaluateReporter(owner,
       if(mode == NormalMode) reporter
       else ("runresult \"" + org.nlogo.api.StringUtils.escapeString(reporter) + "\""),
@@ -99,7 +99,7 @@ abstract class AbstractTestLanguage extends Assertions {
   def testCommand(command: String,
                   kind: AgentKind = AgentKind.Observer,
                   mode: TestMode = NormalMode) {
-    workspace.lastLogoException = null
+    workspace.clearLastLogoException()
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
