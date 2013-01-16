@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
+import org.nlogo.nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
@@ -22,12 +22,12 @@ object Compiler extends CompilerInterface {
   private def tokenizer(is3D: Boolean) = if(is3D) Tokenizer3D else Tokenizer2D
 
   // used to compile the Code tab, including declarations
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager)
+  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager, flags)
 
   // used to compile a single procedures only, from outside the Code tab
-  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager)
+  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
 
   // these two used by input boxes
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
