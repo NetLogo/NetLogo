@@ -1,4 +1,6 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.review
 
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
@@ -11,8 +13,7 @@ import scala.collection.mutable.{ ListBuffer, Subscriber }
 
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror
-import org.nlogo.mirror.Mirrorables
+import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO, ModelRunInterface }
 import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
@@ -25,7 +26,9 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 class ReviewTab(
   ws: window.GUIWorkspace,
-  saveModel: () => String)
+  saveModel: () => String,
+  offerSave: () => Unit,
+  selectReviewTab: () => Unit)
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
 
@@ -190,7 +193,7 @@ class ReviewTab(
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       for {
         frame <- tabState.currentFrame
-        fakeWorld = new mirror.FakeWorld(frame.mirroredState)
+        fakeWorld = new FakeWorld(frame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       } {
@@ -403,11 +406,11 @@ class ReviewTab(
     val currentModelString = saveModel()
     if (modelString != currentModelString) {
       ignoring(classOf[UserCancelException]) {
-        App.app.fileMenu.offerSave()
+        offerSave()
       }
       org.nlogo.window.ModelLoader.load(ReviewTab.this,
         null, api.ModelType.Library, modelString)
-      App.app.tabs.setSelectedComponent(ReviewTab.this)
+      selectReviewTab()
     }
   }
 

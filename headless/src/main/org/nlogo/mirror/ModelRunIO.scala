@@ -1,15 +1,15 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-import java.io.ObjectOutputStream
+package org.nlogo.mirror
+
+import java.io.{ InputStream, ObjectOutputStream, OutputStream }
+
+import scala.Option.option2Iterable
+
+import org.nlogo.api.{ ModelReader, ModelSection }
+import org.nlogo.plot.{ Plot, PlotAction, PlotLoader }
+
 import javax.imageio.ImageIO
-import java.io.ObjectInputStream
-import org.nlogo.plot.PlotAction
-import org.nlogo.plot.Plot
-import java.io.OutputStream
-import java.io.InputStream
-import org.nlogo.api.ModelReader
-import org.nlogo.api.ModelSection
-import org.nlogo.plot.PlotLoader
 
 trait SavableRun {
   self: ModelRun =>

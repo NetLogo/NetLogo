@@ -136,12 +136,17 @@ object App{
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
     pico.add(
-      classOf[ReviewTab], "org.nlogo.app.ReviewTab",
+      classOf[org.nlogo.review.ReviewTab], "org.nlogo.review.ReviewTab",
       Array[Parameter](
         new ComponentParameter(),
         // saveModel
         new ConstantParameter(
-          () => new ModelSaver(pico.getComponent(classOf[App])).save)))
+          () => new ModelSaver(pico.getComponent(classOf[App])).save),
+        new ConstantParameter(
+          () => pico.getComponent(classOf[App]).fileMenu.offerSave()),
+        new ConstantParameter(
+          () => pico.getComponent(classOf[App]).tabs.setSelectedComponent(
+            pico.getComponent(classOf[App]).tabs.reviewTab))))
     pico.addComponent(classOf[AgentMonitorManager])
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
