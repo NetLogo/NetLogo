@@ -72,7 +72,7 @@ object Compiler {
       case pure: nvm.Pure if pure.args.isEmpty =>
         compileLiteral(pure.report(null))
       case Infix(op) =>
-        s"(${arg(0)}) $op (${arg(1)})"
+        s"(${arg(0)} $op ${arg(1)})"
     }
   }
 
