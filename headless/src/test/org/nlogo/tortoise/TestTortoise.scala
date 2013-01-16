@@ -16,7 +16,7 @@ class TestTortoise extends FunSuite {
 
   def compare(logo: String) {
     expectResult(netlogo(logo)) {
-      Rhino.run(Compiler.compile(logo))
+      Rhino.run(Compiler.compileReporter(logo))
     }
   }
 

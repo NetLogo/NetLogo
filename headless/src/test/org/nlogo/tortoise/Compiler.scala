@@ -11,7 +11,7 @@ object Compiler {
     Femto.scalaSingleton(classOf[nvm.CompilerInterface],
       "org.nlogo.compiler.Compiler")
 
-  def compile(logo: String): String = {
+  def compileReporter(logo: String): String = {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands = false) +
         logo + workspace.Evaluator.getFooter(commands = false)
@@ -19,14 +19,14 @@ object Compiler {
       compiler.compileMoreCode(wrapped, None, api.Program.empty(),
         nvm.CompilerInterface.NoProcedures, new api.DummyExtensionManager,
         nvm.CompilerFlags(foldConstants = false))
-    compileReporter(results.head.code.head.args(0))
+    generateReporter(results.head.code.head.args(0))
   }
 
   ///
 
-  def compileReporter(r: nvm.Reporter): String = {
+  def generateReporter(r: nvm.Reporter): String = {
     def arg(i: Int) =
-      compileReporter(r.args(i))
+      generateReporter(r.args(i))
     r match {
       case pure: nvm.Pure if pure.args.isEmpty =>
         compileLiteral(pure.report(null))

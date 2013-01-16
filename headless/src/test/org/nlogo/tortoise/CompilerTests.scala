@@ -6,28 +6,28 @@ import org.scalatest.FunSuite
 
 class TestCompiler extends FunSuite {
 
-  import Compiler.compile
+  import Compiler.compileReporter
 
   test("literals") {
     expectResult("1")(
-      compile("1"))
+      compileReporter("1"))
     expectResult("1")(
-      compile("1.0"))
+      compileReporter("1.0"))
     expectResult("[]")(
-      compile("[]"))
+      compileReporter("[]"))
     expectResult("[1, [2], 3]")(
-      compile("[1 [2] 3]"))
+      compileReporter("[1 [2] 3]"))
   }
 
   test("arithmetic expressions") {
     expectResult("(2) + (2)")(
-      compile("2 + 2"))
+      compileReporter("2 + 2"))
     expectResult("((1) + (2)) + (3)")(
-      compile("1 + 2 + 3"))
+      compileReporter("1 + 2 + 3"))
     expectResult("(1) + ((2) + (3))")(
-      compile("1 + (2 + 3)"))
+      compileReporter("1 + (2 + 3)"))
     expectResult("((1) + (2)) + ((3) + (4))")(
-      compile("(1 + 2) + (3 + 4)"))
+      compileReporter("(1 + 2) + (3 + 4)"))
   }
 
 }
