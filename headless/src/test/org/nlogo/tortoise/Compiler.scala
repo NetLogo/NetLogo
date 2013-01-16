@@ -11,18 +11,59 @@ object Compiler {
     Femto.scalaSingleton(classOf[nvm.CompilerInterface],
       "org.nlogo.compiler.Compiler")
 
-  def compileReporter(logo: String): String = {
+  // Turning off constant folding in the NetLogo compiler makes it easier to write tests, since with
+  // constant folding off, a simple test case like "2 + 2" gets compiled into "_plus(_constdouble:2.0,
+  // _constdouble:2.0)" instead of "_constdouble:4.0". - ST 1/16/13
+  val flags = nvm.CompilerFlags(foldConstants = false, useGenerator = false)
+
+  def compile(logo: String, commands: Boolean): String = {
     val wrapped =
-      workspace.Evaluator.getHeader(api.AgentKind.Observer, commands = false) +
-        logo + workspace.Evaluator.getFooter(commands = false)
+      workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
+        logo + workspace.Evaluator.getFooter(commands)
     val results =
       compiler.compileMoreCode(wrapped, None, api.Program.empty(),
-        nvm.CompilerInterface.NoProcedures, new api.DummyExtensionManager,
-        nvm.CompilerFlags(foldConstants = false))
-    generateReporter(results.head.code.head.args(0))
+        nvm.CompilerInterface.NoProcedures, new api.DummyExtensionManager, flags)
+    if (commands)
+      generateCommands(results.head.code)
+    else
+      generateReporter(results.head.code.head.args(0))
   }
 
+  def compileReporter(logo: String): String =
+    compile(logo, commands = false)
+
+  def compileCommands(logo: String): String =
+    compile(logo, commands = true)
+
   ///
+
+  def generateCommands(cs: Seq[nvm.Command]): String =
+    cs.map(generateCommand)
+      .filter(_.nonEmpty)
+      .mkString("(function () {\n", "\n", "}).call(this);")
+
+  ///
+
+  def generateCommand(c: nvm.Command): String = {
+    val args = c.args.map(generateReporter).mkString(", ")
+    c match {
+      case _: prim._return =>
+        "return;"
+      case _: prim._done =>
+        ""
+      case _: prim.etc._observercode =>
+        ""
+      case Command(op) =>
+        s"$op($args);"
+    }
+  }
+
+  object Command {
+    def unapply(c: nvm.Command): Option[String] =
+      PartialFunction.condOpt(c) {
+        case _: prim.etc._outputprint => "println"
+      }
+  }
 
   def generateReporter(r: nvm.Reporter): String = {
     def arg(i: Int) =

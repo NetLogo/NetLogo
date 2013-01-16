@@ -3,6 +3,7 @@
 package org.nlogo.tortoise
 
 import sun.org.mozilla.javascript.internal.NativeArray
+import java.io.StringWriter
 import org.nlogo.api
 
 object Rhino {
@@ -11,7 +12,14 @@ object Rhino {
     (new javax.script.ScriptEngineManager)
       .getEngineByName("JavaScript")
 
-  def run(script: String) =
+  def run(script: String): String = {
+    val sw = new StringWriter
+    engine.getContext.setWriter(new java.io.PrintWriter(sw))
+    engine.eval(script)
+    sw.toString
+  }
+
+  def eval(script: String): AnyRef =
     fromRhino(engine.eval(script))
 
   def fromRhino(x: AnyRef): AnyRef =

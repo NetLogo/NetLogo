@@ -8,16 +8,22 @@ import org.nlogo.util.{ Femto, MersenneTwisterFast }
 
 class TestTortoise extends FunSuite {
 
-  System.setProperty("org.nlogo.noGenerator", "true")
   val ws = headless.HeadlessWorkspace.newInstance
+  ws.silent = true
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
-  def netlogo(logo: String) =
-    ws.report(logo)
 
   def compare(logo: String) {
-    expectResult(netlogo(logo)) {
-      Rhino.run(Compiler.compileReporter(logo))
-    }
+    val expected = ws.report(logo)
+    val actual = Rhino.eval(Compiler.compileReporter(logo))
+    expectResult(expected)(actual)
+  }
+
+  def compareCommands(logo: String) {
+    ws.clearOutput()
+    ws.command(logo)
+    val expected = ws.outputAreaBuffer.toString
+    val actual = Rhino.run(Compiler.compileCommands(logo))
+    expectResult(expected)(actual)
   }
 
   test("comments") {
@@ -51,6 +57,17 @@ class TestTortoise extends FunSuite {
     compare("(1 - 2) - 3")
     compare("2 * 3 + 4 * 5")
     compare("6 / 2 + 12 / 6")
+  }
+
+  test("empty commands") {
+    compareCommands("")
+  }
+
+  test("printing") {
+    compareCommands("output-print 1")
+    compareCommands("output-print \"foo\"")
+    compareCommands("output-print 2 + 2")
+    compareCommands("output-print 1 output-print 2 output-print 3")
   }
 
 }
