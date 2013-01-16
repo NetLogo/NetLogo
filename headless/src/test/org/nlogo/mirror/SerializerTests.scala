@@ -8,7 +8,7 @@ import Serializer.{ toBytes, fromBytes }
 class SerializerTests extends FunSuite {
 
   def roundTrip(update: Update) {
-    expect(update) { fromBytes(toBytes(update)) }
+    expectResult(update) { fromBytes(toBytes(update)) }
   }
 
   test("empty") {

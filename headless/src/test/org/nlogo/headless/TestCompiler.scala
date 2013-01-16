@@ -18,13 +18,13 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
     val exception = intercept[CompilerException] {
       declare(source)
     }
-    expect(expectedError)(exception.getMessage)
+    expectResult(expectedError)(exception.getMessage)
   }
   def badCommand(command:String,expectedError:String) {
     val exception = intercept[CompilerException] {
       workspace.command(command)
     }
-    expect(expectedError)(exception.getMessage)
+    expectResult(expectedError)(exception.getMessage)
   }
 
   test("LetSameVariableTwice1") {
@@ -156,19 +156,19 @@ class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterE
   for(x <- reporters)
     test("is a reporter: '" + x + "'") {
       workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
-      expect(true) { workspace.isReporter(x) }
+      expectResult(true) { workspace.isReporter(x) }
     }
   for(x <- nonReporters)
     test("isn't a reporter: '" + x + "'") {
       workspace.initForTesting(5, HeadlessWorkspace.TestDeclarations)
-      expect(false) { workspace.isReporter(x) }
+      expectResult(false) { workspace.isReporter(x) }
     }
 
   test("isReporter on user-defined procedures") {
     workspace.initForTesting(5, "to foo end to-report bar [] report 5 end")
     import collection.JavaConverters._
-    expect(false) { workspace.isReporter("foo") }
-    expect(true) { workspace.isReporter("bar") }
+    expectResult(false) { workspace.isReporter("foo") }
+    expectResult(true) { workspace.isReporter("bar") }
   }
 
 }

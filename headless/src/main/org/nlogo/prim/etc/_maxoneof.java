@@ -5,7 +5,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 
@@ -22,7 +21,7 @@ public final strictfp class _maxoneof
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     AgentSet sourceSet = argEvalAgentSet(context, 0);
     args[1].checkAgentSetClass(sourceSet, context);
     double winningValue = -Double.MAX_VALUE;

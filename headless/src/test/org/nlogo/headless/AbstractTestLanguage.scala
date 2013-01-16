@@ -41,7 +41,7 @@ abstract class AbstractTestLanguage extends Assertions {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source,
         Program.empty(Version.is3D),
-        workspace.getExtensionManager())
+        workspace.getExtensionManager)
     }
     workspace.procedures = results.proceduresMap
     workspace.world.program(results.program)
@@ -50,7 +50,7 @@ abstract class AbstractTestLanguage extends Assertions {
   }
 
   def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
-    workspace.lastLogoException = null
+    workspace.clearLastLogoException()
     val actualResult = workspace.evaluateReporter(owner,
       if(mode == NormalMode) reporter
       else ("runresult \"" + org.nlogo.api.StringUtils.escapeString(reporter) + "\""),
@@ -62,7 +62,7 @@ abstract class AbstractTestLanguage extends Assertions {
     // the same, but it's good to have a both, partially as a way of giving both
     // Utils.recursivelyEqual() and Dump.logoObject() lots of testing! - ST 5/8/03
     withClue(mode + ": not equals(): reporter \"" + reporter + "\"") {
-      expect(expectedResult)(
+      expectResult(expectedResult)(
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(Equality.equals(actualResult,
@@ -78,15 +78,15 @@ abstract class AbstractTestLanguage extends Assertions {
       fail("failed to cause runtime error: \"" + reporter + "\"")
     }
     catch {
-      case ex =>
+      case ex: Exception =>
         // PureConstantOptimizer turns some errors that would be runtime errors into compile-time
         // errors, so we have to check for those
         if(ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix))
-          expect(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
+          expectResult(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(
             ex.getMessage)
         else
           withClue(mode + ": reporter: " + reporter) {
-            expect(expectedError)(actualError)
+            expectResult(expectedError)(actualError)
           }
     }
   }
@@ -99,7 +99,7 @@ abstract class AbstractTestLanguage extends Assertions {
   def testCommand(command: String,
                   kind: AgentKind = AgentKind.Observer,
                   mode: TestMode = NormalMode) {
-    workspace.lastLogoException = null
+    workspace.clearLastLogoException()
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
       else ("run \"" + org.nlogo.api.StringUtils.escapeString(command) + "\""),
@@ -117,7 +117,7 @@ abstract class AbstractTestLanguage extends Assertions {
     catch {
       case ex: LogoException =>
         withClue(mode + ": command: " + command) {
-          expect(error)(ex.getMessage)
+          expectResult(error)(ex.getMessage)
         }
     }
   }
@@ -131,7 +131,7 @@ abstract class AbstractTestLanguage extends Assertions {
     catch {
       case ex: LogoException =>
         withClue(mode + ": command: " + command) {
-          expect(stackTrace)(workspace.lastErrorReport.stackTrace.get)
+          expectResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }
   }
@@ -144,7 +144,7 @@ abstract class AbstractTestLanguage extends Assertions {
     }
     catch {
       case ex: CompilerException =>
-        expect(errorMessage)(ex.getMessage)
+        expectResult(errorMessage)(ex.getMessage)
     }
   }
 }

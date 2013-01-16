@@ -3,19 +3,20 @@
 package org.nlogo.api
 
 import java.{lang => jl}
+import language.implicitConversions
 
 object ScalaConversions {
 
   // implicits so if you want, you can write
   // "x.toLogoObject" instead of "toLogoObject(x)" and
   // "xs.toLogoList" instead of "toLogoList(xs)"
-  implicit def toRichAny(a: Any) = new {
+  implicit class RichAny(val a: Any) {
     def toLogoObject = ScalaConversions.toLogoObject(a)
   }
-  implicit def toRichSeq[T](seq: Seq[T]) = new {
+  implicit class RichSeq[T](val seq: Seq[T]) {
     def toLogoList = ScalaConversions.toLogoList(seq)
   }
-  implicit def toRichArray[T](arr: Array[T]) = new {
+  implicit class RichArray[T](arr: Array[T]) {
     def toLogoList = ScalaConversions.toLogoList(arr)
   }
 

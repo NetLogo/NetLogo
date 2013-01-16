@@ -2,6 +2,7 @@
 
 package org.nlogo.mirror
 
+import scala.language.implicitConversions
 import java.io.{ ByteArrayOutputStream, DataOutputStream, DataOutput,
                  ByteArrayInputStream, DataInputStream }
 import collection.immutable.{ ListMap, Vector }
@@ -188,9 +189,9 @@ object Serializer {
                        readValues())
     var changes = Vector[(AgentKey, Seq[Change])]()
     for(_ <- 0 until data.readInt())
-      changes :+= (readAgentKey(),
+      changes :+= ((readAgentKey(),
                    (for(_ <- 0 until data.readInt())
-                    yield Change(data.readInt(), readValue())))
+                    yield Change(data.readInt(), readValue()))))
     Update(deaths = deaths,
            births = births,
            changes = changes)

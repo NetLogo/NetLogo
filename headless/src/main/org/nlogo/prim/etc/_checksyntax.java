@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.CompilerException;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 
@@ -18,7 +17,7 @@ import org.nlogo.nvm.Reporter;
 public final strictfp class _checksyntax
     extends Reporter {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     try {
       workspace.compileForRun
           (argEvalString(context, 0), context, false);

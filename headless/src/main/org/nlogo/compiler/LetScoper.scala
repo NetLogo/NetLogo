@@ -1,6 +1,6 @@
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers.{ cAssert, exception }
+import Fail.{ cAssert, exception }
 import org.nlogo.{ api, nvm }
 import api.{ Token, TokenType, Let }
 import nvm.Procedure

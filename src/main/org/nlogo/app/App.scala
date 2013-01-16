@@ -128,7 +128,7 @@ object App{
       def newInstance: Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
         w
       }
@@ -264,14 +264,17 @@ class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
     org.nlogo.window.ExternalFileManager with
-    AppEventHandler with
     BeforeLoadEventHandler with
     LoadBeginEventHandler with
     LoadSectionEventHandler with
     LoadEndEventHandler with
+    LoggingEventHandler with
     ModelSavedEventHandler with
-    Events.SwitchedTabsEventHandler with
     AboutToQuitEventHandler with
+    Events.ChangeLanguageEventHandler with
+    Events.MagicOpenEventHandler with
+    Events.ReloadEventHandler with
+    Events.SwitchedTabsEventHandler with
     Controllable {
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
@@ -502,7 +505,8 @@ class App extends
       else libraryOpen(commandLineModel) // --open from command line
     }
     else if (commandLineMagic != null)
-      workspace.magicOpen(commandLineMagic)
+      new Events.MagicOpenEvent(commandLineMagic)
+        .raise(this)
     else if (commandLineURL != null)
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
@@ -524,42 +528,19 @@ class App extends
     smartPack(frame.getPreferredSize)
   }
 
-  // AppEvent stuff (kludgy)
-  /**
-   * Internal use only.
-   */
-  def handle(e: AppEvent) {
-    import AppEventType._
-    e.eventType match {
-      case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args.head.toString)
-      case START_LOGGING =>
-        startLogging(e.args.head.toString)
-        if(logger != null)
-          logger.modelOpened(workspace.getModelPath())
-      case ZIP_LOG_FILES =>
-        if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args.head.toString)
-        else
-          logger.zipSessionFiles(e.args.head.toString)
-      case DELETE_LOG_FILES =>
-        if(logger==null)
-          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
-          logger.deleteSessionFiles()
-      case CHANGE_LANGUAGE => changeLanguage()
-      case _ =>
-    }
-  }
+  /// more event handlers
 
-  private def reload() {
+  def handle(e: Events.ReloadEvent) {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.file2String(path), path, modelType)
-    else commandLater("print \"can't, new model\"")
+    if (modelType != ModelType.New && path != null)
+      openFromSource(FileIO.file2String(path), path, modelType)
+    else
+      commandLater("print \"can't, new model\"")
   }
 
-  private def magicOpen(name: String) {
+  def handle(e: Events.MagicOpenEvent) {
+    import e.name
     import collection.JavaConverters._
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name).asScala
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
@@ -578,7 +559,7 @@ class App extends
     }
   }
 
-  def changeLanguage() {
+  def handle(e: Events.ChangeLanguageEvent) {
     val locales = I18N.availableLocales
     val languages = locales.map{l => l.getDisplayName(l) }
     val index = org.nlogo.swing.OptionDialog.showAsList(frame,
@@ -591,6 +572,32 @@ class App extends
     }
     val restart = "Langauge changed.\nYou must restart NetLogo for the changes to take effect."
     org.nlogo.swing.OptionDialog.show(frame, "Change Language", restart, Array(I18N.gui.get("common.buttons.ok")))
+  }
+
+  /**
+   * Internal use only.
+   */
+  def handle(e: LoggingEvent) {
+    import LoggingEventType._
+    e.eventType match {
+      case START_LOGGING =>
+        startLogging(e.name)
+        if (logger != null)
+          logger.modelOpened(workspace.getModelPath)
+      case ZIP_LOG_FILES =>
+        if (logger == null)
+          org.nlogo.log.Files.zipSessionFiles(
+            System.getProperty("java.io.tmpdir"), e.name)
+        else
+          logger.zipSessionFiles(e.name)
+      case DELETE_LOG_FILES =>
+        if (logger == null)
+          org.nlogo.log.Files.deleteSessionFiles(
+            System.getProperty("java.io.tmpdir"))
+        else
+          logger.deleteSessionFiles()
+      case _ =>
+    }
   }
 
   ///
@@ -611,8 +618,8 @@ class App extends
     org.nlogo.window.RuntimeErrorDialog.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(makeFrameTitle)
-      if (workspace.hubnetManager() != null) {
-        workspace.hubnetManager().setTitle(workspace.modelNameForDisplay,
+      if (workspace.hubNetManager != null) {
+        workspace.hubNetManager.setTitle(workspace.modelNameForDisplay,
           workspace.getModelDir, workspace.getModelType)
       }
     }
@@ -625,7 +632,8 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     RuntimeErrorDialog.setModelName(modelName)
     if(AbstractWorkspace.isApp) frame.setTitle(makeFrameTitle)
-    if(workspace.hubnetManager() != null) workspace.hubnetManager().closeClientEditor()
+    if(workspace.hubNetManager != null)
+      workspace.hubNetManager.closeClientEditor()
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
@@ -688,7 +696,7 @@ class App extends
    * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -698,7 +706,8 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType == ModelType.Normal)
+        title += " {" + workspace.getModelDir + "}"
       title
     }
   }
@@ -785,7 +794,6 @@ class App extends
    * @throws IllegalStateException if called from the AWT event queue thread
    * @see #commandLater
    */
-  @throws(classOf[CompilerException])
   def command(source: String) {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
@@ -799,7 +807,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @see #command
    */
-  @throws(classOf[CompilerException])
   def commandLater(source: String){
     workspace.evaluateCommands(owner, source, false)
   }
@@ -816,7 +823,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @throws IllegalStateException if called from the AWT event queue thread
    */
-  @throws(classOf[CompilerException])
   def report(source: String): Object = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())

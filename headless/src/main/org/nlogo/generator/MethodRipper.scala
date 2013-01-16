@@ -99,7 +99,7 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
         // What we probably want to do is just leave static method calls still pointing to the
         // old _prim class, unless they are other weird special calls like "class" above, or if
         // they are private access.  super.visitMethodInsn(opcode,owner,name,desc);
-      } else if (checkClassHasMethod(classOf[Instruction], name, desc))
+      } else if (BytecodeUtils.checkClassHasMethod(classOf[Instruction], name, desc))
         // it's probably okay to let them call a method from Instruction. ~Forrest (7/16/2006)
         super.visitMethodInsn(opcode, bgen.fullClassName, name, desc)
       else
@@ -125,9 +125,4 @@ private class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisi
       mv.visitTryCatchBlock(start, end, handler, tpe)
     }
   }
-  private def checkClassHasMethod(c: Class[_], name: String, descriptor: String): Boolean =
-    c != null &&
-      (c.getDeclaredMethods.exists(method => method.getName == name &&
-        Type.getMethodDescriptor(method) == descriptor)
-        || checkClassHasMethod(c.getSuperclass, name, descriptor))
 }

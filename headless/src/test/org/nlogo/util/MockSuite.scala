@@ -8,7 +8,7 @@ import org.jmock.integration.junit4.JUnit4Mockery
 import scala.util.DynamicVariable
 import org.hamcrest.{Description, BaseMatcher, Matcher}
 import org.jmock.api.Action
-import reflect.ClassManifest
+import reflect.ClassTag
 import org.jmock.lib.legacy.ClassImposteriser
 
 /**
@@ -73,7 +73,7 @@ trait MockSuite extends FunSuite {
   }
 
   // use this method to create a mock object
-  def mock[T : ClassManifest]: T = context.mock(erasure[T])
+  def mock[T : ClassTag]: T = context.mock(erasure[T])
 
   // use this method to set up expectations on the mock objects
   def expecting(f: => Unit) {
@@ -126,25 +126,25 @@ trait MockSuite extends FunSuite {
   // a(Class<T> type) an(Class<T> type) aNonNull(Class<T> type)
   // The argument is an instance of type or a subclass of type and not null.
   // The type argument is required to force Java to type-check the argument at compile time.
-  def a[T : ClassManifest]: Matcher[T] = aMatcher
-  def an[T : ClassManifest]: Matcher[T] = aMatcher
-  def aNonNull[T : ClassManifest]: Matcher[T] = aMatcher
-  private def aMatcher[T: ClassManifest]: Matcher[T] = new BaseMatcher[T]() {
+  def a[T : ClassTag]: Matcher[T] = aMatcher
+  def an[T : ClassTag]: Matcher[T] = aMatcher
+  def aNonNull[T : ClassTag]: Matcher[T] = aMatcher
+  private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T]() {
     def describeTo(description:Description){
       description.appendText("<" + erasure[T].toString + ">")
     }
     override def matches(a: Any) = {
       if (a == null) false
       else {
-        implicitly[ClassManifest[T]] match {
-          case ClassManifest.Int => a.isInstanceOf[java.lang.Integer]
-          case ClassManifest.Double => a.isInstanceOf[java.lang.Double]
-          case ClassManifest.Boolean => a.isInstanceOf[java.lang.Boolean]
-          case ClassManifest.Byte => a.isInstanceOf[java.lang.Byte]
-          case ClassManifest.Short => a.isInstanceOf[java.lang.Short]
-          case ClassManifest.Long => a.isInstanceOf[java.lang.Long]
-          case ClassManifest.Float => a.isInstanceOf[java.lang.Float]
-          case ClassManifest.Char => a.isInstanceOf[java.lang.Character]
+        implicitly[ClassTag[T]] match {
+          case ClassTag.Int => a.isInstanceOf[java.lang.Integer]
+          case ClassTag.Double => a.isInstanceOf[java.lang.Double]
+          case ClassTag.Boolean => a.isInstanceOf[java.lang.Boolean]
+          case ClassTag.Byte => a.isInstanceOf[java.lang.Byte]
+          case ClassTag.Short => a.isInstanceOf[java.lang.Short]
+          case ClassTag.Long => a.isInstanceOf[java.lang.Long]
+          case ClassTag.Float => a.isInstanceOf[java.lang.Float]
+          case ClassTag.Char => a.isInstanceOf[java.lang.Character]
           case _ => erasure[T].isAssignableFrom(a.asInstanceOf[AnyRef].getClass)
         }
       }
@@ -153,19 +153,19 @@ trait MockSuite extends FunSuite {
 
   // aNull(Class<T> type): The argument is null.
   // The type argument is required to force Java to type-check the argument at compile time.
-  def aNull[T : ClassManifest]: Matcher[T] = Expectations.aNull(erasure[T])
+  def aNull[T : ClassTag]: Matcher[T] = Expectations.aNull(erasure[T])
 
   //  not(m): The argument does not match the Matcher m.
   def not[T](m:Matcher[T]) = arg(org.hamcrest.core.IsNot.not(m))
   def not[T](t:T) = arg(org.hamcrest.core.IsNot.not(t))
   //  anyOf(m1, m2, ..., mn): The argument matches one of the Matchers m1 to mn.
-  // had to add ClassManifest here only because if its not there the two methods
+  // had to add ClassTag here only because if its not there the two methods
   // have the same signature after erasure, and wont compile. nasty hack, but it works.
   // same for allOf below. - JC 6/24/10
-  def anyOf[T : ClassManifest](ts:T*) = org.hamcrest.core.AnyOf.anyOf(ts.map(equal(_)):_*)
+  def anyOf[T : ClassTag](ts:T*) = org.hamcrest.core.AnyOf.anyOf(ts.map(equal(_)):_*)
   def anyOf[T](ts:Matcher[T]*) = org.hamcrest.core.AnyOf.anyOf(ts:_*)
   //  allOf(m1, m2, ..., mn): The argument matches all of the Matchers m1 to mn.
-  def allOf[T : ClassManifest](ts:T*) = org.hamcrest.core.AllOf.allOf(ts.map(equal(_)):_*)
+  def allOf[T : ClassTag](ts:T*) = org.hamcrest.core.AllOf.allOf(ts.map(equal(_)):_*)
   def allOf[T](ts:Matcher[T]*) = org.hamcrest.core.AllOf.allOf(ts:_*)
 
 
@@ -188,7 +188,7 @@ trait MockSuite extends FunSuite {
 
   //
   // Ordering
-  // allows (and enforces) - one(m).x then one(m).y
+  // allows (and enforces) - one(m).x andThen one(m).y
   // (stolen from specs source code
   //  http://code.google.com/p/specs/source/browse/trunk/src/main/scala/org/specs/mock/JMocker.scala)
   //
@@ -197,17 +197,13 @@ trait MockSuite extends FunSuite {
   def inSequence(sequence: Sequence) = expectations.inSequence(sequence)
 
   /** this class allows an expectation to declare that another expectation should follow */
-  implicit def after(v: =>Any) = new InSequenceThen(v)
-
-  /** this class allows an expectation to declare that another expectation should follow */
-  class InSequenceThen(firstExpectation: =>Any) {
+  implicit class InSequenceThen(firstExpectation: =>Any) {
     val sequence = {
       val s = context.sequence("s")
       firstExpectation; inSequence(s)
       s
     }
-    def then(otherExpectation: Any) = {
-      otherExpectation
+    def andThen(otherExpectation: Any) = {
       inSequence(sequence)
       this
     }
@@ -227,5 +223,5 @@ trait MockSuite extends FunSuite {
     if(_expectations != null) _expectations.value
     else throw new IllegalStateException("must be inside mockTest(testname){...} to make this call.")
   }
-  private def erasure[T](implicit mf: ClassManifest[T]): Class[T] = mf.erasure.asInstanceOf[Class[T]]
+  private def erasure[T](implicit mf: ClassTag[T]): Class[T] = mf.runtimeClass.asInstanceOf[Class[T]]
 }

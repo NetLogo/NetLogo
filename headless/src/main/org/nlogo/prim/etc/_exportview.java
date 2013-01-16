@@ -2,18 +2,17 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _exportview
     extends org.nlogo.nvm.Command {
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     final String filePath = argEvalString(context, 0);
     workspace.waitFor
         (new org.nlogo.api.CommandRunnable() {
-          public void run() throws LogoException {
+          public void run() {
             try {
               workspace.exportView
                   (workspace.fileManager().attachPrefix

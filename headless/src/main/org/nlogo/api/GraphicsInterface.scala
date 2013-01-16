@@ -39,4 +39,3 @@ trait GraphicsInterface {
   def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double)
   def getFontMetrics: java.awt.FontMetrics
 }
-

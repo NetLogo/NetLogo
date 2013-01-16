@@ -25,7 +25,6 @@ MAKE=make
 MKDIR=mkdir
 MV=mv
 OPEN=open
-PACK200=pack200
 PERL=perl
 RM=rm
 RSYNC=rsync
@@ -34,7 +33,7 @@ TAR=tar
 XARGS=xargs
 
 # other
-SCALA_JAR=$HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
+SCALA_JAR=$HOME/.sbt/boot/scala-2.10.0/lib/scala-library.jar
 IJVERSION=5.0.11
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_33_server

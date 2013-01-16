@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Reporter;
 
@@ -10,7 +9,7 @@ public final strictfp class _xor
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     boolean b1 = argEvalBooleanValue(context, 0);
     boolean b2 = argEvalBooleanValue(context, 1);
     if (b1) {

@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet }
 import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
-                       CompilerException, JobOwner, SimpleJobOwner, Token }
+                       CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
 import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
                        Procedure, Job, Command, MutableLong, Workspace, Activation }
 import org.nlogo.plot.{ PlotExporter, PlotManager }
@@ -18,9 +18,10 @@ object AbstractWorkspaceScala {
   val DefaultPreviewCommands = "setup repeat 75 [ go ]"
 }
 
-abstract class AbstractWorkspaceScala(val world: World, hubNetManagerFactory: HubNetManagerFactory)
-extends AbstractWorkspace(hubNetManagerFactory)
-with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking with Compiler {
+abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory: HubNetManagerFactory)
+extends AbstractWorkspace
+with Workspace with Procedures with Plotting with Exporting with Evaluating with Benchmarking
+with Compiling with Profiling with Extensions with HubNet with BehaviorSpace with Paths {
 
   val fileManager: FileManager = new DefaultFileManager(this)
 
@@ -65,26 +66,41 @@ with Workspace with Procedures with Plotting with Exporting with Evaluating with
     clearOutput()
     clearDrawing()
     plotManager.clearAll()
-    extensionManager.clearAll()
+    getExtensionManager.clearAll()
   }
+
+  /**
+   * Shuts down the background thread associated with this workspace,
+   * allowing resources to be freed.
+   */
+  @throws(classOf[InterruptedException])
+  def dispose() {
+    jobManager.die()
+    plotManager.forgetAll()
+    getExtensionManager.reset()
+    if (hubNetManager != null)
+      hubNetManager.disconnect()
+  }
+
+  override def mainRNG = world.mainRNG
+  override def auxRNG = world.auxRNG
+  override def lastLogoException: LogoException = null
+  override def clearLastLogoException() { }
 
 }
 
 object AbstractWorkspaceTraits {
 
-  trait Compiler { this: AbstractWorkspaceScala =>
+  trait Compiling { this: AbstractWorkspaceScala =>
 
-    @throws(classOf[CompilerException])
     override def readNumberFromString(source: String) =
       compiler.readNumberFromString(
         source, world, getExtensionManager, world.program.is3D)
 
-    @throws(classOf[CompilerException])
     override def checkReporterSyntax(source: String) =
       compiler.checkReporterSyntax(
         source, world.program, procedures, getExtensionManager, false)
 
-    @throws(classOf[CompilerException])
     def checkCommandSyntax(source: String) =
       compiler.checkCommandSyntax(
         source, world.program, procedures, getExtensionManager, false)
@@ -149,7 +165,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Exporting extends Plotting { this: AbstractWorkspace =>
+  trait Exporting extends Plotting { this: AbstractWorkspaceScala =>
 
     def exportDrawingToCSV(writer:PrintWriter)
     def exportOutputAreaToCSV(writer:PrintWriter)
@@ -162,8 +178,8 @@ object AbstractWorkspaceTraits {
           exportDrawingToCSV(writer)
           exportOutputAreaToCSV(writer)
           exportPlotsToCSV(writer)
-          extensionManager.exportWorld(writer)
-        } }.export("world",modelFileName,"")
+          getExtensionManager.exportWorld(writer)
+        } }.export("world",getModelFileName,"")
     }
 
     def exportWorld(writer:PrintWriter){
@@ -171,7 +187,7 @@ object AbstractWorkspaceTraits {
       exportDrawingToCSV(writer)
       exportOutputAreaToCSV(writer)
       exportPlotsToCSV(writer)
-      extensionManager.exportWorld(writer)
+      getExtensionManager.exportWorld(writer)
     }
 
     def exportPlotsToCSV(writer: PrintWriter) {
@@ -192,7 +208,7 @@ object AbstractWorkspaceTraits {
           exportInterfaceGlobals(writer)
           new PlotExporter(plotManager.getPlot(plotName).orNull, Dump.csv).export(writer)
         }
-      }.export("plot",modelFileName,"")
+      }.export("plot",getModelFileName,"")
     }
 
     @throws(classOf[IOException])
@@ -206,65 +222,52 @@ object AbstractWorkspaceTraits {
             writer.println()
           }
         }
-      }.export("plots",modelFileName,"")
+      }.export("plots",getModelFileName,"")
     }
   }
 
-  trait Evaluating { this: AbstractWorkspace =>
-    @throws(classOf[CompilerException])
+  trait Evaluating { this: AbstractWorkspaceScala =>
     def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =
       evaluator.makeReporterThunk(source, world.observer,
                                   new SimpleJobOwner(jobOwnerName, auxRNG))
-    @throws(classOf[CompilerException])
     def makeCommandThunk(source: String, jobOwnerName: String): CommandLogoThunk =
       evaluator.makeCommandThunk(source, world.observer,
                                  new SimpleJobOwner(jobOwnerName, auxRNG))
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String) {
       evaluator.evaluateCommands(owner, source)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, waitForCompletion: Boolean) {
       evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
                          waitForCompletion: Boolean) {
       val agents = new ArrayAgentSet(agent.kind, 1, false, world)
       agents.add(agent)
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
                          waitForCompletion: Boolean) {
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String) =
       evaluator.evaluateReporter(owner, source, world.observers)
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
       val agents = new ArrayAgentSet(agent.kind, 1, false, world)
       agents.add(agent)
       evaluator.evaluateReporter(owner, source, agents)
     }
-    @throws(classOf[CompilerException])
     def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
       evaluator.evaluateReporter(owner, source, agents)
-    @throws(classOf[CompilerException])
     def compileCommands(source: String): Procedure =
       compileCommands(source, AgentKind.Observer)
-    @throws(classOf[CompilerException])
     def compileCommands(source: String, kind: AgentKind): Procedure =
       evaluator.compileCommands(source, kind)
-    @throws(classOf[CompilerException])
     def compileReporter(source: String): Procedure =
       evaluator.compileReporter(source)
     def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean =
       evaluator.runCompiledCommands(owner, procedure)
     def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
       evaluator.runCompiledReporter(owner, procedure)
-    @throws(classOf[CompilerException])
     def readFromString(string: String): AnyRef =
       evaluator.readFromString(string)
   }
@@ -277,6 +280,155 @@ object AbstractWorkspaceTraits {
             Benchmarking.this, minTime, maxTime)
         }}.start()
     }
+  }
+
+  trait Profiling { this: AbstractWorkspaceScala =>
+    private var _tracer: org.nlogo.nvm.Tracer = null
+    override def profilingEnabled = _tracer != null
+    override def profilingTracer = _tracer
+    def setProfilingTracer(tracer: org.nlogo.nvm.Tracer) {
+      _tracer = tracer
+    }
+  }
+
+  trait Extensions { this: AbstractWorkspaceScala =>
+    private val _extensionManager: ExtensionManager =
+      new ExtensionManager(this)
+    override def getExtensionManager =
+      _extensionManager
+    override def isExtensionName(name: String) =
+      _extensionManager.isExtensionName(name);
+    @throws(classOf[org.nlogo.api.ExtensionException])
+    override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) {
+      _extensionManager.importExtensionData(name, data, handler)
+    }
+  }
+
+  trait HubNet extends org.nlogo.api.HubNetWorkspaceInterface {
+    this: AbstractWorkspaceScala =>
+
+    private var _hubNetRunning = false
+    private var _hubNetManager: org.nlogo.api.HubNetInterface = null
+
+    def hubNetRunning = _hubNetRunning
+    override def hubNetRunning(hubNetRunning: Boolean) {
+      _hubNetRunning = hubNetRunning
+    }
+
+    // merely return, don't create if it isn't already there.
+    def hubNetManager = _hubNetManager
+    def getHubNetManager = {
+      if (_hubNetManager == null && hubNetManagerFactory != null)
+        _hubNetManager = hubNetManagerFactory.newInstance(this)
+      _hubNetManager
+    }
+
+    def getPropertiesInterface: org.nlogo.api.WorldPropertiesInterface = null
+  }
+
+  trait BehaviorSpace { this: org.nlogo.api.Workspace =>
+    private var _behaviorSpaceRunNumber = 0
+    override def behaviorSpaceRunNumber = _behaviorSpaceRunNumber
+    override def behaviorSpaceRunNumber(n: Int) {
+      _behaviorSpaceRunNumber = n
+    }
+  }
+
+  trait Paths { this: AbstractWorkspaceScala =>
+
+    /**
+     * name of the currently loaded model. Will be null if this is a new
+     * (unsaved) model. To get a version for display to the user, see
+     * modelNameForDisplay(). This is NOT a full path name, however, it does
+     * end in ".nlogo".
+     */
+    private var _modelFileName: String = null
+
+    /**
+     * path to the directory from which the current model was loaded. NetLogo
+     * uses this as the default path for file I/O, when reloading models,
+     * locating HubNet clients, etc. This is null if this is a new (unsaved)
+     * model.
+     */
+    private var _modelDir: String = null
+
+    /**
+     * type of the currently loaded model. Certain aspects of NetLogo's
+     * behavior depend on this, i.e. whether to force a save-as and so on.
+     */
+    private var _modelType: ModelType = ModelType.New
+
+    /**
+     * instantly converts the current model to ModelTypeJ.NORMAL. This is used
+     * by the __edit command to enable quick saving of library models. It
+     * probably shouldn't be used anywhere else.
+     */
+    @throws(classOf[java.io.IOException])
+    def convertToNormal() = {
+      val git = new java.io.File(".git")
+      if (!git.exists || !git.isDirectory)
+        throw new java.io.IOException("no .git directory found")
+      _modelType = ModelType.Normal
+      getModelPath
+    }
+
+    def setModelType(modelType: ModelType) {
+      _modelType = modelType
+    }
+
+    /**
+     * returns the full pathname of the currently loaded model, if any. This
+     * may return null in some cases, for instance if this is a new model.
+     */
+    def getModelPath: String =
+      if (_modelDir == null || _modelFileName == null)
+        null
+      else
+        _modelDir + java.io.File.separatorChar + _modelFileName
+
+    /**
+     * returns the name of the file from which the current model was loaded.
+     * May be null if, for example, this is a new model.
+     */
+    def getModelFileName = _modelFileName
+
+    /**
+     * returns the full path to the directory from which the current model was
+     * loaded. May be null if, for example, this is a new model.
+     */
+    def getModelDir = _modelDir
+
+    def getModelType = _modelType
+
+    /**
+     * whether the user needs to enter a new filename to save this model.
+     * We need to do a "save as" if the model is new, from the
+     * models library, or converted.
+     * <p/>
+     * Basically, only normal models can get silently saved.
+     */
+    def forceSaveAs =
+      _modelType == ModelType.New || _modelType == ModelType.Library
+
+    def modelNameForDisplay =
+      AbstractWorkspace.makeModelNameForDisplay(_modelFileName)
+
+    def setModelPath(modelPath: String) {
+      if (modelPath == null) {
+        _modelFileName = null
+        _modelDir = null
+      }
+      else {
+        val file = new java.io.File(modelPath).getAbsoluteFile
+        _modelFileName = file.getName
+        _modelDir = file.getParent
+        if (_modelDir == "")
+          _modelDir = null
+        if (_modelDir != null)
+          fileManager.setPrefix(_modelDir)
+      }
+    }
+
   }
 
 }

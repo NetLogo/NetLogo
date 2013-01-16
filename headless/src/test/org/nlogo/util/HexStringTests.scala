@@ -26,11 +26,11 @@ class HexStringTests2 extends PropSpec with PropertyChecks {
 
   property("8 characters per Int") {
     forAll((ns: Array[Int]) =>
-      expect(ns.size * 8)(
+      expectResult(ns.size * 8)(
         toHexString(ns).size))}
   property("2 characters per Byte") {
     forAll((ns: Array[Byte]) =>
-      expect(ns.size * 2)(
+      expectResult(ns.size * 2)(
         toHexString(ns).size))}
 
   property("output for Int parses as hex string") {

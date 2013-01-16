@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -19,7 +18,7 @@ public final strictfp class _length extends Reporter implements Pure {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     Object obj = args[0].report(context);
     if (obj instanceof LogoList) {
       return report_2(context, (LogoList) obj);
@@ -30,7 +29,7 @@ public final strictfp class _length extends Reporter implements Pure {
         (context, this, 0, Syntax.ListType() | Syntax.StringType(), obj);
   }
 
-  public double report_1(Context context, Object obj) throws LogoException {
+  public double report_1(Context context, Object obj) {
     if (obj instanceof LogoList) {
       return ((LogoList) obj).size();
     } else if (obj instanceof String) {

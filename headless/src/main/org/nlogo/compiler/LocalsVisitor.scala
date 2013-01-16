@@ -2,7 +2,7 @@
 
 package org.nlogo.compiler
 
-import CompilerExceptionThrowers._
+import Fail._
 import org.nlogo.api.I18N
 import org.nlogo.nvm.Procedure
 import org.nlogo.prim._

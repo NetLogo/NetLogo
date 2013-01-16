@@ -112,7 +112,7 @@ class Supervisor(dialog: java.awt.Dialog,
     }
     catch {
       case e: InterruptedException => // ignore
-      case e => org.nlogo.util.Exceptions.handle(e)
+      case t: Throwable => org.nlogo.util.Exceptions.handle(t)
     }
     finally { bailOut() }
   }

@@ -38,7 +38,6 @@ trait Agent {
     * @throws LogoException
     * @throws AgentException If value is the wrong type for the given variable or if you try to change variables that cannot be changed
     */
-  @throws(classOf[LogoException])
   @throws(classOf[AgentException])
   def setVariable(vn: Int, value: AnyRef)
 

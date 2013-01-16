@@ -4,7 +4,6 @@ package org.nlogo.nvm;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.JobOwner;
-import org.nlogo.api.LogoException;
 
 public abstract strictfp class Job {
 
@@ -40,7 +39,7 @@ public abstract strictfp class Job {
     this.random = random;
   }
 
-  public abstract void step() throws LogoException;
+  public abstract void step();
 
   public void finish() {
     state = DONE;

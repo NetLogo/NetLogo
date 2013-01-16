@@ -2,8 +2,6 @@
 
 package org.nlogo.nvm;
 
-import org.nlogo.api.LogoException;
-
 public abstract strictfp class Command
     extends Instruction {
 
@@ -11,8 +9,7 @@ public abstract strictfp class Command
     return false;
   }
 
-  public abstract void perform(Context context)
-      throws LogoException;
+  public abstract void perform(Context context);
 
   // the assembler will change this to the ip value for the next instruction
   public int next = -1;

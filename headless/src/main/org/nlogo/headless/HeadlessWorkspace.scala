@@ -355,7 +355,7 @@ with org.nlogo.api.ViewSettings {
 
   /// world importing error handling
 
-  var importerErrorHandler =
+  var importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler =
     new org.nlogo.agent.ImporterJ.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(
@@ -423,8 +423,8 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override def requestDisplayUpdate(context: org.nlogo.nvm.Context, force: Boolean) {
-    if (hubnetManager != null)
-      hubnetManager.incrementalUpdateFromEventThread()
+    if (hubNetManager != null)
+      hubNetManager.incrementalUpdateFromEventThread()
   }
 
   /**
@@ -436,16 +436,6 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def periodicUpdate() { }
-
-  /**
-   * Internal use only.
-   */
-  override def magicOpen(name: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  override def changeLanguage() = unsupported
 
   /**
    * Internal use only.
@@ -468,7 +458,10 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override var lastLogoException: LogoException = null
+
+  private var _lastLogoException: LogoException = null
+  override def lastLogoException: LogoException = _lastLogoException
+  override def clearLastLogoException() { _lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -482,7 +475,7 @@ with org.nlogo.api.ViewSettings {
                    instruction: org.nlogo.nvm.Instruction, ex: Exception) {
     ex match {
       case le: LogoException =>
-        lastLogoException = le
+        _lastLogoException = le
         lastErrorReport = new ErrorReport(owner, context, instruction, le)
       case _ =>
         System.err.println("owner: " + owner.displayName)
@@ -497,6 +490,7 @@ with org.nlogo.api.ViewSettings {
    *
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
+  @throws(classOf[java.io.IOException])
   override def open(path: String) {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
@@ -544,7 +538,7 @@ with org.nlogo.api.ViewSettings {
     evaluateCommands(defaultOwner, source, true)
     if (lastLogoException != null) {
       val ex = lastLogoException
-      lastLogoException = null
+      _lastLogoException = null
       throw ex
     }
   }
@@ -564,7 +558,7 @@ with org.nlogo.api.ViewSettings {
     val result = evaluateReporter(defaultOwner, source, world.observer)
     if (lastLogoException != null) {
       val ex = lastLogoException
-      lastLogoException = null
+      _lastLogoException = null
       throw ex
     }
     result

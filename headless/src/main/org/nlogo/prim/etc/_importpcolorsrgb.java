@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -17,8 +16,7 @@ public final strictfp class _importpcolorsrgb
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     try {
       org.nlogo.agent.ImportPatchColors.importPatchColors
           (workspace.fileManager().getFile

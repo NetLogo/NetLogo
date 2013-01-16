@@ -4,7 +4,7 @@ package org.nlogo.lite
 
 import java.util.{ ArrayList, List => JList }
 import org.nlogo.agent.{ Observer, World, World3D }
-import org.nlogo.api.{ CompilerException, LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
+import org.nlogo.api.{ LogoException, ModelSection, ModelType, Version, SimpleJobOwner }
 import org.nlogo.window.{ Event, Events, CompilerManager, InterfacePanelLite, InvalidVersionException,
                           ModelLoader, NetLogoListenerManager, RuntimeErrorDialog }
 
@@ -122,7 +122,6 @@ with Event.LinkParent {
    * @throws IllegalStateException if called from the AWT event queue thread
    * @see #commandLater
    */
-  @throws(classOf[CompilerException])
   def command(source: String) {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(defaultOwner, source)
@@ -138,7 +137,6 @@ with Event.LinkParent {
    *          if the code fails to compile
    * @see #command
    */
-  @throws(classOf[CompilerException])
   def commandLater(source: String) {
     workspace.evaluateCommands(defaultOwner, source, false)
   }
@@ -157,7 +155,6 @@ with Event.LinkParent {
    *                               if the code fails to compile
    * @throws IllegalStateException if called from the AWT event queue thread
    */
-  @throws(classOf[CompilerException])
   def report(source: String): AnyRef = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(defaultOwner, source)

@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ JobOwner, LogoException }
+import org.nlogo.api.JobOwner
 import org.nlogo.util.MersenneTwisterFast
 
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
@@ -15,7 +15,6 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
   // we are not suspendable. we run to the end and that's it
   override def step() { throw new UnsupportedOperationException() }
 
-  @throws(classOf[LogoException])
   def run() {
     // Note that this relies on shufflerators making a copy, which might change in a future
     // implementation. The cases where it matters are those where something happens that changes the
@@ -35,12 +34,13 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
           parentContext.activation
       context.ip = address
       context.finished = false
+      val oldLets = context.letBindings
       context.runExclusive()
+      context.letBindings = oldLets
     }
   }
 
   // used by Evaluator.MyThunk
-  @throws(classOf[LogoException])
   def callReporterProcedure() =
     new Context(this, agentset.iterator.next(), 0, null)
      .callReporterProcedure(new Activation(topLevelProcedure, null, 0))

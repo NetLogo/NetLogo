@@ -7,7 +7,6 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -26,15 +25,14 @@ public final strictfp class _inconenowrap
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     return report_1(context, argEvalAgentSet(context, 0),
         argEvalDoubleValue(context, 1),
         argEvalDoubleValue(context, 2));
   }
 
   public AgentSet report_1(final org.nlogo.nvm.Context context, AgentSet sourceSet,
-                           double radius, double angle)
-      throws LogoException {
+                           double radius, double angle) {
     if (sourceSet.kind() == AgentKindJ.Link()) {
       throw new EngineException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));

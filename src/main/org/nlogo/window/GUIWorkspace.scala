@@ -81,34 +81,20 @@ with Events.LoadSectionEventHandler {
 
   ///
 
-  override def reload() {
-    new Events.AppEvent(AppEventType.RELOAD, Seq())
-      .raiseLater(this)
-  }
-
-  override def magicOpen(name: String) {
-    new Events.AppEvent(AppEventType.MAGIC_OPEN, Seq(name))
-      .raiseLater(this)
-  }
-
-  override def changeLanguage() {
-    new Events.AppEvent(AppEventType.CHANGE_LANGUAGE, Seq())
-      .raiseLater(this)
-  }
-
   override def startLogging(properties: String) {
-    try new Events.AppEvent(AppEventType.START_LOGGING,
-                            Seq(fileManager.attachPrefix(properties)))
-          .raiseLater(this);
+    try new Events.LoggingEvent(LoggingEventType.START_LOGGING,
+                                fileManager.attachPrefix(properties))
+      .raiseLater(this);
   }
 
   override def zipLogFiles(filename: String) {
-    new Events.AppEvent(AppEventType.ZIP_LOG_FILES, Seq(fileManager.attachPrefix(filename)))
+    new Events.LoggingEvent(LoggingEventType.ZIP_LOG_FILES,
+                            fileManager.attachPrefix(filename))
       .raiseLater(this)
   }
 
   override def deleteLogFiles() {
-    new Events.AppEvent(AppEventType.DELETE_LOG_FILES, Seq())
+    new Events.LoggingEvent(LoggingEventType.DELETE_LOG_FILES, "")
       .raiseLater(this)
   }
 

@@ -72,7 +72,7 @@ class ModelSaver(app: App) {
 
     // reserved for HubNet client
     section {
-      for(manager <- Option(app.tabs.workspace.hubnetManager))
+      for(manager <- Option(app.tabs.workspace.hubNetManager))
         manager.save(buf)
     }
 

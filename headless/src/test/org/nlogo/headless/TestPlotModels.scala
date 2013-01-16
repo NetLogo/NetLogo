@@ -6,7 +6,7 @@ import org.nlogo.plot.{PlotPoint, PlotPen}
 
 class TestPlotModels extends AbstractTestModels {
 
-  implicit def pen2ContainsPoint(pen:PlotPen) = new {
+  implicit class PenContainsPoint(val pen: PlotPen) {
     // couldnt call contains here because it seemed to call the java method instead.
     def containsPoint(x:Double, y:Double) = {
       pen.points.find((p:PlotPoint) => p.x == x && p.y == y).isDefined
@@ -17,7 +17,7 @@ class TestPlotModels extends AbstractTestModels {
   def onlyPen = workspace.plotManager.currentPlot.get.pens.head
 
   val modelCode = "breed [dogs dog] to setup reset-ticks clear-all-plots end  to go create-dogs 1 tick end"
-  val theModel = Model(modelCode, Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2"))))
+  val theModel = Model(modelCode, widgets = List(Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2")))))
 
   testModel("plot on tick", theModel) {
     observer>>"setup"
@@ -65,22 +65,24 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModel("setup-plots",
-    Model(modelCode,
-      Plot(setupCode = "create-dogs 5", pens = Pens(Pen(updateCode = "plot count dogs * 2"))))){
+    Model(modelCode, widgets = List(
+      Plot(setupCode = "create-dogs 5",
+           pens = Pens(Pen(updateCode = "plot count dogs * 2")))))) {
     observer>>"setup-plots"
     reporter("count dogs") -> 5.0
   }
 
   testModel("plot with setup code and pen with setup code",
-    Model(modelCode,
-      Plot(setupCode = "create-dogs 5", pens = Pens(Pen(setupCode = "create-dogs 3"))))){
+    Model(modelCode, widgets = List(
+      Plot(setupCode = "create-dogs 5",
+           pens = Pens(Pen(setupCode = "create-dogs 3")))))){
     reporter("count dogs") -> 0.0
     observer>>"setup-plots"
     reporter("count dogs") -> 8.0
   }
 
   testModel("pen with no update code should not get plotted on tick",
-    Model(modelCode,Plot(pens = Pens(Pen(updateCode = ""))))){
+    Model(modelCode, widgets = List(Plot(pens = Pens(Pen(updateCode = "")))))) {
 
     observer>>"reset-ticks"
     assert(onlyPen.points.size === 0)
@@ -89,7 +91,8 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModel("plot update code should run on tick",
-    Model(modelCode,Plot(updateCode = "plot count turtles", pens=Pens(Pen())))){
+    Model(modelCode, widgets = List(Plot(updateCode = "plot count turtles",
+                               pens = Pens(Pen()))))) {
     observer>>"reset-ticks clear-all-plots"
     assert(onlyPen.points.size === 0)
 
@@ -99,10 +102,10 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModel("two plots with setup code",
-    Model(modelCode,
+    Model(modelCode, widgets = List(
       Plot(setupCode = "create-dogs 5", pens = Pens(Pen(updateCode = "plot count dogs * 2"))),
       Plot(setupCode = "create-dogs 2", pens = Pens(Pen(updateCode = "plot count dogs * 2")))
-      )){
+      ))){
 
     reporter("count dogs") -> 0.0
     observer>>"setup-plots"
@@ -110,8 +113,8 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModel("stop in plot update code",
-    Model(modelCode,
-      Plot(updateCode = "create-dogs 7 stop", pens = Pens(Pen(updateCode = "create-dogs 8"))))){
+    Model(modelCode, widgets = List(
+      Plot(updateCode = "create-dogs 7 stop", pens = Pens(Pen(updateCode = "create-dogs 8")))))){
 
     reporter("count dogs") -> 0.0
     observer>>"update-plots"
@@ -120,7 +123,8 @@ class TestPlotModels extends AbstractTestModels {
 
   val modelCode2 = "breed [dogs dog] to go tick create-dogs 4 end"
   testModel("stop in plot update code doesnt kill outer procedure",
-    Model(modelCode2, Plot(updateCode = "create-dogs 1 stop", pens = Pens(Pen(updateCode = "create-dogs 42"))))){
+    Model(modelCode2, widgets = List(Plot(updateCode = "create-dogs 1 stop",
+                                pens = Pens(Pen(updateCode = "create-dogs 42")))))) {
     observer>>"ca"
     reporter("count dogs") -> 0.0
     observer>>"reset-ticks"
@@ -137,7 +141,8 @@ class TestPlotModels extends AbstractTestModels {
   // same exact test as the previous test, just call update-plots directly instead of tick.
   val modelCode3 = "breed [dogs dog] to go update-plots create-dogs 4 end"
   testModel("stop in plot update code doesnt kill outer procedure (2)",
-    Model(modelCode3, Plot(updateCode = "create-dogs 1 stop", pens = Pens(Pen(updateCode = "create-dogs 42"))))){
+    Model(modelCode3, widgets = List(Plot(updateCode = "create-dogs 1 stop",
+                                pens = Pens(Pen(updateCode = "create-dogs 42")))))) {
     observer>>"ca"
     reporter("count dogs") -> 0.0
     observer>>"reset-ticks"
@@ -152,16 +157,18 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModel("inner stop doesnt prevent pens from running",
-    Model(modelCode,
-      Plot(updateCode = "ask turtles [stop]", pens = Pens(Pen(updateCode = "create-dogs 8"))))){
+    Model(modelCode, widgets = List(
+      Plot(updateCode = "ask turtles [stop]",
+           pens = Pens(Pen(updateCode = "create-dogs 8")))))) {
     reporter("count dogs") -> 0.0
     observer>>"update-plots"
     reporter("count dogs") -> 8.0
   }
 
   testModel("stop in pen doesnt prevent other pens from running",
-    Model(modelCode,
-      Plot(pens = Pens(Pen(updateCode = "create-dogs 8 stop"), Pen(updateCode = "create-dogs 8 stop"))))){
+    Model(modelCode, widgets = List(
+      Plot(pens = Pens(Pen(updateCode = "create-dogs 8 stop"),
+                       Pen(updateCode = "create-dogs 8 stop")))))){
     reporter("count dogs") -> 0.0
     observer>>"update-plots"
     reporter("count dogs") -> 16.0
@@ -177,8 +184,9 @@ class TestPlotModels extends AbstractTestModels {
    */
   val modelCode4 = "globals [x]"
   testModel("plot code uses aux rng",
-    Model(modelCode4, Plot(updateCode = "set x n-values 10 [random 10]",
-      pens = Pens(Pen(updateCode = "set x n-values 10 [random 10]"))))){
+    Model(modelCode4, widgets = List(
+      Plot(updateCode = "set x n-values 10 [random 10]",
+           pens = Pens(Pen(updateCode = "set x n-values 10 [random 10]")))))) {
     observer>>"reset-ticks"
     observer>>"random-seed 10"
     assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 4.0, 2.0, 4.0, 5.0, 4.0, 7.0, 9.0]")
@@ -188,22 +196,22 @@ class TestPlotModels extends AbstractTestModels {
   }
 
   testModelCompileError("Plot With Bad Update Code Should Throw Exception on Load (headless only)",
-    Model(modelCode, Plot(updateCode="weijefwef"))){ ex =>
+    Model(modelCode, widgets = List(Plot(updateCode="weijefwef")))) { ex =>
     assert("Nothing named WEIJEFWEF has been defined" === ex.getMessage)
   }
 
   testModelCompileError("Plot With Bad Setup Code Should Throw Exception on Load (headless only)",
-    Model(modelCode, Plot(setupCode="weijefwef"))){ ex =>
+    Model(modelCode, widgets = List(Plot(setupCode="weijefwef")))){ ex =>
     assert("Nothing named WEIJEFWEF has been defined" === ex.getMessage)
   }
 
   testModelCompileError("Plot With Bad Pen Setup Code Should Throw Exception on Load (headless only)",
-    Model(modelCode, Plot(pens = Pens(Pen(setupCode = "create-fails 8"))))){ ex =>
+    Model(modelCode, widgets = List(Plot(pens = Pens(Pen(setupCode = "create-fails 8")))))) { ex =>
     assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
   }
 
   testModelCompileError("Plot With Bad Pen Update Code Should Throw Exception on Load (headless only)",
-    Model(modelCode, Plot(pens = Pens(Pen(updateCode = "create-fails 8"))))){ ex =>
+    Model(modelCode, widgets = List(Plot(pens = Pens(Pen(updateCode = "create-fails 8")))))) { ex =>
     assert("Nothing named CREATE-FAILS has been defined" === ex.getMessage)
   }
 }

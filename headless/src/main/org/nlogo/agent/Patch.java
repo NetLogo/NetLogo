@@ -10,7 +10,6 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public strictfp class Patch
 
   @Override
   public void setObserverVariable(int vn, Object value)
-      throws AgentException, LogoException {
+      throws AgentException {
     world.observer().setObserverVariable(vn, value);
   }
 

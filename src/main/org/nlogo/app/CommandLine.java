@@ -159,6 +159,24 @@ strictfp class CommandLine
       setText("");
       return;
     }
+    if (inner.trim().startsWith("___")) {
+      new Events.MagicOpenEvent(inner.trim().substring(3))
+        .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__change-language")) {
+      new Events.ChangeLanguageEvent()
+        .raiseLater(this);
+      setText("");
+      return;
+    }
+    if (inner.trim().equalsIgnoreCase("__reload")) {
+      new Events.ReloadEvent()
+        .raiseLater(this);
+      setText("");
+      return;
+    }
     if(workspace.isReporter(inner)) {
       inner = "show " + inner;
       setText(inner);
@@ -334,8 +352,8 @@ strictfp class CommandLine
               ((ExecutionString) obj).string.equals(string));
     }
 
-    // not actually using this at present, but pmd yells at us if
-    // we override equals() without overriding hashCode() too.. - ST 9/1/03
+    // not actually using this at present, but pmd yelled at us if
+    // we overrode equals() without overriding hashCode() too.. - ST 9/1/03
     @Override
     public int hashCode() {
       return kind.hashCode() + string.hashCode();

@@ -1,8 +1,11 @@
 # app package
 
-app.WidgetSelected - widget: window.Widget - selected: Boolean
-app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
+app.ChangeLanguage
 app.IndenterChanged - isSmart: Boolean
+app.MagicOpen - name: String
+app.Reload
+app.SwitchedTabs - oldTab: java.awt.Component - newTab: java.awt.Component
+app.WidgetSelected - widget: window.Widget - selected: Boolean
 
 # window package
 
@@ -13,7 +16,6 @@ window.AddInputBoxConstraint - varname: String - constraint: agent.InputBoxConst
 window.AddJob - owner: api.JobOwner - agents: agent.AgentSet - procedure: nvm.Procedure
 window.AddSliderConstraint - slider: SliderWidget - varname: String - minSpec: String - maxSpec: String - incSpec: String - value: java.lang.Double
 window.AfterLoad
-window.App - eventType: AppEventType - args: Seq[AnyRef]
 window.BeforeLoad - modelPath: String - modelType: api.ModelType
 window.CompileAll
 window.CompileMoreSource - owner: api.JobOwner
@@ -34,6 +36,7 @@ window.Load3DShapes - filename: String
 window.LoadBegin
 window.LoadEnd
 window.LoadSection - version: String - section: AnyRef - lines: Seq[String] - text: String
+window.Logging - eventType: LoggingEventType - name: String
 window.ModelSaved - modelPath: String
 window.OpenModel - path: String
 window.Output - clear: Boolean - outputObject: agent.OutputObject - wrapLines: Boolean - toCommandCenter: Boolean

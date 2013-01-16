@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
+import org.nlogo.nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
@@ -22,22 +22,18 @@ object Compiler extends CompilerInterface {
   private def tokenizer(is3D: Boolean) = if(is3D) Tokenizer3D else Tokenizer2D
 
   // used to compile the Code tab, including declarations
-  @throws(classOf[CompilerException])
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager)
+  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager, flags)
 
   // used to compile a single procedures only, from outside the Code tab
-  @throws(classOf[CompilerException])
-  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager)
+  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
 
   // these two used by input boxes
-  @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to __bogus-name " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
   }
-  @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to-report __bogus-name report " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
@@ -46,7 +42,6 @@ object Compiler extends CompilerInterface {
   // like in the auto-converter we want to compile as far as we can but
   // we assume that any tokens we don't recognize are actually globals
   // that we don't know about.
-  @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     val results = new StructureParser(tokenizer(program.is3D).tokenizeRobustly(source), None,
                                       StructureParser.Results(program, oldProcedures))
@@ -74,7 +69,7 @@ object Compiler extends CompilerInterface {
   ///
 
   /// TODO: There are a few places below where we downcast api.World to agent.World in order to pass
-  /// it to ConstantParser.  This should really be cleaned up so that ConstantParser uses api.World
+  /// it to LiteralParser.  This should really be cleaned up so that LiteralParser uses api.World
   /// too. - ST 2/23/09
 
   // In the following 3 methods, the initial call to NumberParser is a performance optimization.
@@ -82,31 +77,27 @@ object Compiler extends CompilerInterface {
   // the result is a number.  So we try the fast path through NumberParser first before falling
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
-  @throws(classOf[CompilerException])
   def readFromString(source: String, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser().getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new LiteralParser().getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): AnyRef =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-        .getConstantValue(tokenizer(is3D).tokenize(source).iterator))
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+        .getLiteralValue(tokenizer(is3D).tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager, is3D: Boolean): java.lang.Double =
     NumberParser.parse(source).right.getOrElse(
-      new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer(is3D).tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val tokens: Iterator[Token] =
       Femto.get(classOf[TokenReaderInterface], "org.nlogo.lex.TokenReader",
                 Array(currFile, tokenizer(world.program.is3D)))
-    val result = new ConstantParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
-      .getConstantFromFile(tokens)
+    val result = new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
+      .getLiteralFromFile(tokens)
     // now skip whitespace, so that the model can use file-at-end? to see whether there are any
     // more values left - ST 2/18/04
     // org.nlogo.util.File requires us to maintain currFile.pos ourselves -- yuck!!! - ST 8/5/04

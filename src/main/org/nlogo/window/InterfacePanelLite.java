@@ -73,12 +73,11 @@ public strictfp class InterfacePanelLite
     addWidget((Widget) viewWidget, 0, 0);
   }
 
-  // made protected so that hubnet could override it to implement message throttling. -JC 8/19/10
-  protected java.awt.event.KeyAdapter getKeyAdapter() {
+  public java.awt.event.KeyAdapter getKeyAdapter() {
     return new ButtonKeyAdapter();
   }
 
-  protected class ButtonKeyAdapter extends java.awt.event.KeyAdapter {
+  public class ButtonKeyAdapter extends java.awt.event.KeyAdapter {
     protected boolean keyIsHandleable(KeyEvent e) {
       return e.getKeyChar() != KeyEvent.CHAR_UNDEFINED &&
           !e.isActionKey() &&

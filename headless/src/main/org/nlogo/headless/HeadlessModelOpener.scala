@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, InputBoxConstraint, SliderConstraint}
-import org.nlogo.api.{CompilerException, FileIO, LogoException, LogoList,
+import org.nlogo.api.{CompilerException, FileIO, LogoList,
                       ModelReader, ModelSection, Program, ValueConstraint, Version}
 import org.nlogo.plot.PlotLoader
 import org.nlogo.shape.{LinkShape, VectorShape}
@@ -21,8 +21,6 @@ object HeadlessModelOpener {
 // when they don't have to. - JC 10/27/09
 class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
-  @throws(classOf[CompilerException])
-  @throws(classOf[LogoException])
   def openFromMap(map: ModelReader.ModelMap) {
 
     // get out if the model is opened. (WHY? - JC 10/27/09)

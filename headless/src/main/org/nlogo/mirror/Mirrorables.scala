@@ -2,6 +2,7 @@
 
 package org.nlogo.mirror
 
+import scala.language.implicitConversions
 import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.api
 import org.nlogo.plot
@@ -116,36 +117,39 @@ object Mirrorables {
       wvNbInterfaceGlobals,
       _*) = Stream.from(0)
   }
+
   class MirrorableWorld(world: api.World) extends Mirrorable {
     import MirrorableWorld._
     override def kind = World
     override def agentKey = AgentKey(kind, 0) // dummy id for the one and unique world
+    // pending resolution of https://issues.scala-lang.org/browse/SI-6723
+    // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/9/13
     override val variables = Map(
-      wvTicks -> Double.box(world.ticks),
-      wvPatchesWithLabels -> Int.box(world.patchesWithLabels),
-      wvTurtleShapeList -> world.turtleShapeList, // probably not good enough to just pass the shapelists like that...
-      wvLinkShapeList -> world.linkShapeList,
-      wvPatchSize -> Double.box(world.patchSize),
-      wvWorldWidth -> Int.box(world.worldWidth),
-      wvWorldHeight -> Int.box(world.worldHeight),
-      wvMinPxcor -> Int.box(world.minPxcor),
-      wvMinPycor -> Int.box(world.minPycor),
-      wvMaxPxcor -> Int.box(world.maxPxcor),
-      wvMaxPycor -> Int.box(world.maxPycor),
-      wvWrappingAllowedInX -> Boolean.box(world.wrappingAllowedInX),
-      wvWrappingAllowedInY -> Boolean.box(world.wrappingAllowedInY),
-      wvPatchesAllBlack -> Boolean.box(world.patchesAllBlack),
-      wvTurtleBreeds -> world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected },
-      wvLinkBreeds -> world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected },
-      wvUnbreededLinksAreDirected -> Boolean.box(world.links.isDirected),
-      wvTrailDrawing ->
+      (wvTicks, Double.box(world.ticks)),
+      (wvPatchesWithLabels, Int.box(world.patchesWithLabels)),
+      (wvTurtleShapeList, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
+      (wvLinkShapeList, world.linkShapeList),
+      (wvPatchSize, Double.box(world.patchSize)),
+      (wvWorldWidth, Int.box(world.worldWidth)),
+      (wvWorldHeight, Int.box(world.worldHeight)),
+      (wvMinPxcor, Int.box(world.minPxcor)),
+      (wvMinPycor, Int.box(world.minPycor)),
+      (wvMaxPxcor, Int.box(world.maxPxcor)),
+      (wvMaxPycor, Int.box(world.maxPycor)),
+      (wvWrappingAllowedInX, Boolean.box(world.wrappingAllowedInX)),
+      (wvWrappingAllowedInY, Boolean.box(world.wrappingAllowedInY)),
+      (wvPatchesAllBlack, Boolean.box(world.patchesAllBlack)),
+      (wvTurtleBreeds, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (wvLinkBreeds, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (wvUnbreededLinksAreDirected, Boolean.box(world.links.isDirected)),
+      (wvTrailDrawing,
         (if (world.trailDrawer.isDirty) {
           val outputStream = new java.io.ByteArrayOutputStream
           val img = world.trailDrawer.getDrawing.asInstanceOf[java.awt.image.BufferedImage]
           javax.imageio.ImageIO.write(img, "png", outputStream)
           Some(outputStream.toByteArray())
-        } else None),
-      wvNbInterfaceGlobals -> Int.box(world.program.interfaceGlobals.size))
+        } else None)),
+      (wvNbInterfaceGlobals, Int.box(world.program.interfaceGlobals.size)))
   }
 
   object MirrorableWidgetValue {
@@ -172,3 +176,4 @@ object Mirrorables {
   }
 
 }
+

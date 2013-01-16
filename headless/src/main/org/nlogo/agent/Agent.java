@@ -7,7 +7,6 @@ import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.ValueConstraint;
 
@@ -75,7 +74,7 @@ public abstract strictfp class Agent
   public abstract Object getVariable(int vn);
 
   public abstract void setVariable(int vn, Object value)
-      throws AgentException, LogoException;
+      throws AgentException;
 
   public ValueConstraint variableConstraint(int vn) {
     return variableConstraints[vn];
@@ -106,7 +105,7 @@ public abstract strictfp class Agent
       throws AgentException;
 
   public abstract void setObserverVariable(int vn, Object value)
-      throws AgentException, LogoException;
+      throws AgentException;
 
   public abstract void setTurtleVariable(int vn, Object value)
       throws AgentException;
