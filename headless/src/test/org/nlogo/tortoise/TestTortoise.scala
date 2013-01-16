@@ -43,4 +43,14 @@ class TestTortoise extends FunSuite {
     compare("[false true]")
   }
 
+  test("arithmetic") {
+    compare("2 + 2")
+    compare("1 + 2 + 3")
+    compare("1 - 2 - 3")
+    compare("1 - (2 - 3)")
+    compare("(1 - 2) - 3")
+    compare("2 * 3 + 4 * 5")
+    compare("6 / 2 + 12 / 6")
+  }
+
 }
