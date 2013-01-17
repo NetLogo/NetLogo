@@ -27,3 +27,7 @@ seq(Depend.settings: _*)
 seq(Dump.settings: _*)
 
 seq(ChecksumsAndPreviews.settings: _*)
+
+seq(coffeeSettings: _*)
+
+(CoffeeKeys.bare in (Compile, CoffeeKeys.coffee)) := true

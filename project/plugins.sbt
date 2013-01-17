@@ -1,5 +1,7 @@
 addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "0.0.10")
 
+addSbtPlugin("me.lessis" % "coffeescripted-sbt" % "0.2.3")
+
 libraryDependencies +=
   "de.jflex" % "jflex" % "1.4.3"
 
