@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -22,7 +21,7 @@ public final strictfp class _while
   }
 
   @Override
-  public void perform(Context context) throws LogoException {
+  public void perform(Context context) {
     perform_1(context, argEvalBooleanValue(context, 0));
   }
 

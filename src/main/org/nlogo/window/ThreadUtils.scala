@@ -9,7 +9,6 @@ object ThreadUtils {
   /// asking for stuff to happen on the event thread
   val DO_NOTHING = new CommandRunnable() {def run() {}}
 
-  @throws(classOf[LogoException])
   def waitForQueuedEvents(workspace: GUIWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
 
   def waitFor(workspace: GUIWorkspace, runnable: Runnable): Unit = {
@@ -24,18 +23,16 @@ object ThreadUtils {
     def run() = { fn(); Boolean.box(true) }
   }
 
-  @throws(classOf[LogoException])
   def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable) {
     waitForResult(workspace, reporter(runnable.run _))
   }
 
   private class Result[T] {
-    @volatile var done = false // NOPMD pmd doesn't like 'volatile'
+    @volatile var done = false
     var value: T = _
     var ex: Exception = null
   }
 
-  @throws(classOf[LogoException])
   def waitForResult[T](workspace: GUIWorkspace, runnable: ReporterRunnable[T]) = {
     val result = new Result[T]()
     // in order to wait for the event thread without deadlocking,

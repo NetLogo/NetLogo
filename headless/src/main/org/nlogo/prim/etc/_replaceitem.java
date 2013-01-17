@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -15,7 +14,7 @@ public final strictfp class _replaceitem
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     int index = argEvalIntValue(context, 0);
     Object obj = args[1].report(context);
     Object elt = args[2].report(context);

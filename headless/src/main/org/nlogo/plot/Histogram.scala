@@ -23,4 +23,10 @@ class Histogram(xMin: Double, interval: Double, val bars: Array[Int]) {
       _ceiling = _ceiling max bars(bar)
     }
   }
+
+  override def clone = {
+    val newHistogram = new Histogram(xMin, interval, bars.clone)
+    newHistogram._ceiling = _ceiling
+    newHistogram
+  }
 }

@@ -26,70 +26,16 @@ import org.nlogo.util.Femto;
 public abstract strictfp class AbstractWorkspace
 implements CompilerServices, LogoThunkFactory {
 
-  /// globals
-  /// (some of these probably should be changed not to be public - ST 12/11/01)
-
-  private org.nlogo.nvm.Tracer tracer = null;
-
-  public org.nlogo.nvm.Tracer profilingTracer() {
-    return tracer;
-  }
-
-  public boolean profilingEnabled() {
-    return tracer != null;
-  }
-
-  public void setProfilingTracer(org.nlogo.nvm.Tracer tracer) {
-    this.tracer = tracer;
-  }
-
   public final org.nlogo.nvm.JobManagerInterface jobManager;
-  protected final Evaluator evaluator;
-  protected final ExtensionManager extensionManager;
-
-  /**
-   * name of the currently loaded model. Will be null if this is a new
-   * (unsaved) model. To get a version for display to the user, see
-   * modelNameForDisplay(). This is NOT a full path name, however, it does
-   * end in ".nlogo".
-   */
-  protected String modelFileName;
-
-  /**
-   * path to the directory from which the current model was loaded. NetLogo
-   * uses this as the default path for file I/O, when reloading models,
-   * etc. This is null if this is a new (unsaved) model.
-   */
-  private String modelDir;
-
-  /**
-   * type of the currently loaded model. Certain aspects of NetLogo's
-   * behavior depend on this, i.e. whether to force a save-as and so on.
-   */
-  private ModelType modelType;
+  public final Evaluator evaluator;
 
   /// startup
 
   protected AbstractWorkspace() {
-    modelType = ModelTypeJ.NEW();
     evaluator = new Evaluator((AbstractWorkspaceScala) this);
     world().compiler_$eq((AbstractWorkspaceScala) this);
     jobManager = Femto.get(JobManagerInterface.class, "org.nlogo.job.JobManager",
                            new Object[]{this, world(), world()});
-    extensionManager = new ExtensionManager(this);
-  }
-
-  public org.nlogo.api.ExtensionManager getExtensionManager() {
-    return extensionManager;
-  }
-
-  public boolean isExtensionName(String name) {
-    return extensionManager.isExtensionName(name);
-  }
-
-  public void importExtensionData(String name, List<String[]> data, org.nlogo.api.ImportErrorHandler handler)
-      throws org.nlogo.api.ExtensionException {
-    extensionManager.importExtensionData(name, data, handler);
   }
 
   /**
@@ -129,27 +75,27 @@ implements CompilerServices, LogoThunkFactory {
     AbstractWorkspace.isApp = isApp;
   }
 
-  public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
-    return null;
-  }
-
   /// model name utilities
 
-  public void setModelPath(String modelPath) {
-    if (modelPath == null) {
-      modelFileName = null;
-      modelDir = null;
-    } else {
-      java.io.File file = new java.io.File(modelPath).getAbsoluteFile();
-      modelFileName = file.getName();
-      modelDir = file.getParent();
-      if (modelDir.equals("")) {
-        modelDir = null;
-      }
-      if (modelDir != null) {
-        fileManager().setPrefix(modelDir);
-      }
+  /**
+   * converts a model's filename to an externally displayable model name.
+   * The argument may be null, the return value will never be.
+   * <p/>
+   * Package protected for unit testing.
+   */
+  static String makeModelNameForDisplay(String str) {
+    if (str == null) {
+      return "Untitled";
     }
+    int suffixIndex = str.lastIndexOf(".nlogo");
+    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
+      str = str.substring(0, str.length() - 6);
+    }
+    suffixIndex = str.lastIndexOf(".nlogo3d");
+    if (suffixIndex > 0 && suffixIndex == str.length() - 8) {
+      str = str.substring(0, str.length() - 8);
+    }
+    return str;
   }
 
   /**
@@ -188,89 +134,6 @@ implements CompilerServices, LogoThunkFactory {
     return file.toURL();
   }
 
-  /**
-   * instantly converts the current model to ModelTypeJ.NORMAL. This is used
-   * by the __edit command to enable quick saving of library models. It
-   * probably shouldn't be used anywhere else.
-   */
-  public String convertToNormal()
-      throws java.io.IOException {
-    java.io.File git = new java.io.File(".git");
-    if (!git.exists() || !git.isDirectory()) {
-      throw new java.io.IOException("no .git directory found");
-    }
-    modelType = ModelTypeJ.NORMAL();
-    return getModelPath();
-  }
-
-  protected void setModelType(ModelType modelType) {
-    this.modelType = modelType;
-  }
-
-  /**
-   * returns the full pathname of the currently loaded model, if any. This
-   * may return null in some cases, for instance if this is a new model.
-   */
-  public String getModelPath() {
-    if (modelDir == null || modelFileName == null) {
-      return null;
-    }
-    return modelDir + java.io.File.separatorChar + modelFileName;
-  }
-
-  /**
-   * returns the name of the file from which the current model was loaded.
-   * May be null if, for example, this is a new model.
-   */
-  public String getModelFileName() {
-    return modelFileName;
-  }
-
-  /**
-   * returns the full path to the directory from which the current model was
-   * loaded. May be null if, for example, this is a new model.
-   */
-  public String getModelDir() {
-    return modelDir;
-  }
-
-  public ModelType getModelType() {
-    return modelType;
-  }
-
-  /**
-   * whether the user needs to enter a new filename to save this model.
-   * We need to do a "save as" if the model is new, from the
-   * models library, or converted.
-   * <p/>
-   * Basically, only normal models can get silently saved.
-   */
-  public boolean forceSaveAs() {
-    return modelType == ModelTypeJ.NEW()
-      || modelType == ModelTypeJ.LIBRARY();
-  }
-
-  public String modelNameForDisplay() {
-    return makeModelNameForDisplay(modelFileName);
-  }
-
-  /**
-   * converts a model's filename to an externally displayable model name.
-   * The argument may be null, the return value will never be.
-   * <p/>
-   * Package protected for unit testing.
-   */
-  static String makeModelNameForDisplay(String str) {
-    if (str == null) {
-      return "Untitled";
-    }
-    int suffixIndex = str.lastIndexOf(".nlogo");
-    if (suffixIndex > 0 && suffixIndex == str.length() - 6) {
-      str = str.substring(0, str.length() - 6);
-    }
-    return str;
-  }
-
   /// methods that may be called from the job thread by prims
 
   public void joinForeverButtons(org.nlogo.agent.Agent agent) {
@@ -287,8 +150,7 @@ implements CompilerServices, LogoThunkFactory {
       new WeakHashMap<String, Procedure>();
 
   public Procedure compileForRun(String source, org.nlogo.nvm.Context context,
-                                 boolean reporter)
-      throws CompilerException {
+                                 boolean reporter) {
     String key = source + "@" + context.activation.procedure().args().size() +
         "@" + context.agentBit;
     Procedure proc = codeBits.get(key);
@@ -313,10 +175,9 @@ implements CompilerServices, LogoThunkFactory {
 
   // called from an "other" thread (neither event thread nor job thread)
   public abstract void open(String path)
-      throws java.io.IOException, CompilerException, LogoException;
+      throws java.io.IOException, LogoException;
 
-  public abstract void openString(String modelContents)
-      throws CompilerException, LogoException;
+  public abstract void openString(String modelContents);
 
   public void halt() {
     jobManager.haltPrimary();
@@ -324,17 +185,16 @@ implements CompilerServices, LogoThunkFactory {
   }
 
   // called by _display from job thread
-  public abstract void requestDisplayUpdate(boolean force);
+  public abstract void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force);
 
   // called when the engine comes up for air
-  public abstract void breathe();
+  public abstract void breathe(org.nlogo.nvm.Context context);
 
   /// output
 
   public void outputObject(Object object, Object owner,
                            boolean addNewline, boolean readable,
-                           OutputDestination destination)
-      throws LogoException {
+                           OutputDestination destination) {
     org.nlogo.agent.OutputObject oo =
         new org.nlogo.agent.OutputObject
             (
@@ -358,8 +218,7 @@ implements CompilerServices, LogoThunkFactory {
 
   // called from job thread - ST 10/1/03
   protected abstract void sendOutput(org.nlogo.agent.OutputObject oo,
-                                     boolean toOutputArea)
-      throws LogoException;
+                                     boolean toOutputArea);
 
   /// importing
 
@@ -440,7 +299,7 @@ implements CompilerServices, LogoThunkFactory {
           throws Importer.StringReaderException {
         try {
           return compiler().readFromString
-            (s, world(), extensionManager);
+            (s, world(), getExtensionManager());
         } catch (CompilerException ex) {
           throw new Importer.StringReaderException
               (ex.getMessage());
@@ -514,22 +373,10 @@ implements CompilerServices, LogoThunkFactory {
     file.open(org.nlogo.api.FileModeJ.WRITE());
     if (includeHeader) {
       org.nlogo.agent.AbstractExporter.exportHeader
-          (file.getPrintWriter(), "BehaviorSpace", modelFileName, experimentName);
+        (file.getPrintWriter(), "BehaviorSpace", getModelFileName(), experimentName);
       file.getPrintWriter().flush(); // perhaps not necessary, but just in case... - ST 2/23/05
     }
     return file;
-  }
-
-  /// BehaviorSpace
-
-  private int _behaviorSpaceRunNumber = 0;
-
-  public int behaviorSpaceRunNumber() {
-    return _behaviorSpaceRunNumber;
-  }
-
-  public void behaviorSpaceRunNumber(int n) {
-    _behaviorSpaceRunNumber = n;
   }
 
   public String getSource(String filename)
@@ -549,26 +396,16 @@ implements CompilerServices, LogoThunkFactory {
     loader.load(strings, worldInterface);
   }
 
-  public org.nlogo.util.MersenneTwisterFast auxRNG() {
-    return world().auxRNG();
-  }
-
-  public org.nlogo.util.MersenneTwisterFast mainRNG() {
-    return world().mainRNG();
-  }
-
-  public LogoException lastLogoException() {
-    return null;
-  }
-
-  public void clearLastLogoException() { }
-
-  public void lastLogoException_$eq(LogoException e) { }
-
   public abstract World world();
   public abstract CompilerInterface compiler();
   public abstract void clearOutput();
   public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
   public abstract FileManager fileManager();
+  public abstract String getModelPath();
+  public abstract String getModelFileName();
+  public abstract ExtensionManager getExtensionManager();
+  public abstract boolean profilingEnabled();
+  public abstract String getModelDir();
+  public abstract void setProfilingTracer(org.nlogo.nvm.Tracer tracer);
 
 }

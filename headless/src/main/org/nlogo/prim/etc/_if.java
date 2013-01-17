@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -11,8 +10,7 @@ public final strictfp class _if
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     perform_1(context, argEvalBooleanValue(context, 0));
   }
 

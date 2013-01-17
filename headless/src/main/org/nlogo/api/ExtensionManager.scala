@@ -21,10 +21,8 @@ trait ExtensionManager {
   /** @return the stored object */
   def retrieveObject: AnyRef
 
-  @throws(classOf[CompilerException])
   def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject
 
-  @throws(classOf[CompilerException])
   def readFromString(src: String): AnyRef
 
   /**
@@ -73,7 +71,6 @@ trait ExtensionManager {
    * @param errors  the ErrorSource to use when a CompilerException needs
    *                to be thrown.
    */
-  @throws(classOf[CompilerException])
   def importExtension(jarPath: String, errors: ErrorSource)
 
   def resolvePath(path: String): String

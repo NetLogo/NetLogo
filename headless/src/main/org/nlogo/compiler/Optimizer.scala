@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.agent.Patch
-import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ Command, Instruction, Reporter }
 import org.nlogo.prim._
 
@@ -11,16 +11,13 @@ import org.nlogo.prim._
 
 private class Optimizer extends DefaultAstVisitor {
 
-  override def visitProcedureDefinition(defn: ProcedureDefinition) {
-    if(Version.useOptimizer)
-      super.visitProcedureDefinition(defn)
-  }
   override def visitStatement(stmt: Statement) {
     super.visitStatement(stmt)
     val oldCommand = stmt.command
     commandMungers.filter(_.clazz eq oldCommand.getClass)
       .find{munger => munger.munge(stmt); stmt.command != oldCommand}
   }
+
   override def visitReporterApp(app: ReporterApp) {
     super.visitReporterApp(app)
     val oldReporter = app.reporter

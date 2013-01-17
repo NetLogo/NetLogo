@@ -21,7 +21,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def get: AnyRef
 
   /**
@@ -31,7 +30,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getAgentSet: AgentSet
 
   /**
@@ -41,7 +39,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getAgent: Agent
 
   /**
@@ -51,7 +48,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getBoolean: java.lang.Boolean
 
   /**
@@ -61,7 +57,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getBooleanValue: Boolean
 
   /**
@@ -72,7 +67,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getIntValue: Int
 
   /**
@@ -82,7 +76,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getDoubleValue: Double
 
   /**
@@ -92,7 +85,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getList: LogoList
 
   /**
@@ -102,7 +94,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getPatch: Patch
 
   /**
@@ -112,7 +103,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getString: String
 
   /**
@@ -122,7 +112,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getTurtle: Turtle
 
   /**
@@ -132,7 +121,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getLink: Link
 
   /**
@@ -142,7 +130,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getReporterTask: ReporterTask
 
   /**
@@ -152,7 +139,6 @@ trait Argument {
    * @throws LogoException      if a LogoException occurred while evaluating this argument
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def getCommandTask: CommandTask
 
 }

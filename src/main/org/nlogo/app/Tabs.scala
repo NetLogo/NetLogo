@@ -9,6 +9,7 @@ import org.nlogo.swing.RichAction
 import org.nlogo.api.I18N
 
 class Tabs(val workspace: GUIWorkspace,
+           val reviewTab: org.nlogo.review.ReviewTab,
            dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent
   with LoadBeginEventHandler with RuntimeErrorEventHandler with CompiledEventHandler{
@@ -30,6 +31,16 @@ class Tabs(val workspace: GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), codeTab)
     for((name, tab) <- moreTabs)
       addTab(name, tab)
+  }
+
+  def showReviewTab() {
+    if (indexOfComponent(reviewTab) == -1) {
+      addTab("Review", reviewTab)
+      reviewTab.startRecording()
+    }
+    org.nlogo.window.Event.rehash()
+    setSelectedComponent(reviewTab)
+    org.nlogo.awt.EventQueue.invokeLater(() => requestFocus())
   }
 
   def stateChanged(e: javax.swing.event.ChangeEvent) {

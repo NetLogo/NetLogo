@@ -27,9 +27,9 @@ class PlotExporterTests extends SimplePlotTest {
     plot.pens = Nil
     // since it only has one pen, current pen will default to it.
     val pen = plot.createPlotPen("test pen",true)
-    pen.plot(5)
-    pen.plot(8)
-    pen.plot(17)
+    plot.plot(pen, 5)
+    plot.plot(pen, 8)
+    plot.plot(pen, 17)
     val export = exportPlotToString(plot)
     assert(EXPORT_RESULT === export.replaceAll("\r\n","\n"))
   }

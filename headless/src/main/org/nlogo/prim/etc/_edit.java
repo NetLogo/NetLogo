@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.OutputDestinationJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -21,7 +20,7 @@ public final strictfp class _edit
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     String path = null;
     try {
       path = workspace.convertToNormal();

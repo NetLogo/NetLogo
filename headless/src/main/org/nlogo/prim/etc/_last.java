@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -21,7 +20,7 @@ public final strictfp class _last
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     Object obj = args[0].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;

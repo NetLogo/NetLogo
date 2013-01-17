@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.nlogo.api.{ CompilerException, ExtensionManager, NumberParser, Program, Token,
                        TokenizerInterface, TokenReaderInterface, TokenType, TokenMapperInterface, World }
-import org.nlogo.nvm.{ CompilerInterface, CompilerResults, Procedure, Workspace }
+import org.nlogo.nvm.{ CompilerInterface, CompilerFlags, CompilerResults, Procedure, Workspace }
 import org.nlogo.util.Femto
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
@@ -21,22 +21,18 @@ object Compiler extends CompilerInterface {
   private def tokenizer = Tokenizer2D
 
   // used to compile the Code tab, including declarations
-  @throws(classOf[CompilerException])
-  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager)
+  def compileProgram(source: String, program: Program, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, None, program, false, CompilerInterface.NoProcedures, extensionManager, flags)
 
   // used to compile a single procedures only, from outside the Code tab
-  @throws(classOf[CompilerException])
-  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager): CompilerResults =
-    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager)
+  def compileMoreCode(source: String, displayName: Option[String], program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, flags: CompilerFlags): CompilerResults =
+    CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
 
   // these two used by input boxes
-  @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to __bogus-name " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
   }
-  @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     checkSyntax("to-report __bogus-name report " + source + "\nend",
                 true, program, procedures, extensionManager, parse)
@@ -45,7 +41,6 @@ object Compiler extends CompilerInterface {
   // like in the auto-converter we want to compile as far as we can but
   // we assume that any tokens we don't recognize are actually globals
   // that we don't know about.
-  @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {
     val results = new StructureParser(tokenizer.tokenizeRobustly(source), None,
                                       StructureParser.Results(program, oldProcedures))
@@ -69,24 +64,20 @@ object Compiler extends CompilerInterface {
   // the result is a number.  So we try the fast path through NumberParser first before falling
   // back to the slow path where we actually tokenize. - ST 4/7/11
 
-  @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
     NumberParser.parse(source).right.getOrElse(
       new LiteralParser().getLiteralValue(tokenizer.tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   def readFromString(source: String, world: World, extensionManager: ExtensionManager): AnyRef =
     NumberParser.parse(source).right.getOrElse(
       new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
         .getLiteralValue(tokenizer.tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   def readNumberFromString(source: String, world: World, extensionManager: ExtensionManager): java.lang.Double =
     NumberParser.parse(source).right.getOrElse(
       new LiteralParser(world.asInstanceOf[org.nlogo.agent.World], extensionManager)
       .getNumberValue(tokenizer.tokenize(source).iterator))
 
-  @throws(classOf[CompilerException])
   @throws(classOf[java.io.IOException])
   def readFromFile(currFile: org.nlogo.api.File, world: World, extensionManager: ExtensionManager): AnyRef = {
     val tokens: Iterator[Token] =

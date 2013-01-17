@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.{ agent, api, shape, workspace }
+import org.nlogo.{ agent, api, nvm, shape, workspace }
 import org.nlogo.swing.{ FileDialog, InputDialog, OptionDialog, ModalProgressTask }
 import org.nlogo.awt.UserCancelException
 
@@ -29,6 +29,48 @@ with Events.LoadSectionEventHandler {
           shape.LinkShape.parseShapes(e.lines.toArray, e.version))
       case _ =>
     }
+  }
+
+  /// tick counter
+
+  // withContext sets up evaluator so that if someone wants to respond to ticks on the job thread by
+  // running some code, they can. we're using this to run monitor code from the model run recording
+  // code.  and, TickStateChangeEvent is there too if someone wants to respond to ticks on the event
+  // thread (example: ButtonWidget uses it to enable/disable a button depending on whether the tick
+  // counter has been started) - ST 10/11/12
+
+  override def notifyListeners(context: nvm.Context) {
+    val ticks: Double = world.tickCounter.ticks
+    if (ticks != (lastTicksListenersHeard: Double)) {
+      lastTicksListenersHeard = ticks
+      evaluator.withContext(context) {
+        listenerManager.tickCounterChanged(ticks)
+      }
+    }
+    listenerManager.possibleViewUpdate()
+  }
+
+  override def tick(context: nvm.Context, originalInstruction: nvm.Instruction) {
+    evaluator.withContext(context) {
+      super.tick(context, originalInstruction)
+    }
+  }
+
+  override def resetTicks(context: nvm.Context) {
+    evaluator.withContext(context) {
+      super.resetTicks(context)
+    }
+    new Events.TickStateChangeEvent(true).raiseLater(this)
+  }
+
+  override def clearTicks() {
+    super.clearTicks()
+    new Events.TickStateChangeEvent(false).raiseLater(this)
+  }
+
+  override def clearAll() {
+    super.clearAll()
+    new Events.TickStateChangeEvent(false).raiseLater(this)
   }
 
   ///

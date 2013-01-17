@@ -3,7 +3,8 @@
 package org.nlogo.app
 
 import org.nlogo.agent.{Agent, World}
-import org.nlogo.api._
+import org.nlogo.api
+import api._
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{CompilerInterface, Workspace, WorkspaceFactory}
 import org.nlogo.util.Pico
@@ -90,13 +91,25 @@ object App{
       def newInstance: Workspace = {
         val w = Class.forName("org.nlogo.headless.HeadlessWorkspace").
                 getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-        w.setModelPath(app.workspace.getModelPath())
+        w.setModelPath(app.workspace.getModelPath)
         w.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
         w
       }
     }
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
+    pico.add(
+      classOf[org.nlogo.review.ReviewTab], "org.nlogo.review.ReviewTab",
+      Array[Parameter](
+        new ComponentParameter(),
+        // saveModel
+        new ConstantParameter(
+          () => new ModelSaver(pico.getComponent(classOf[App])).save),
+        new ConstantParameter(
+          () => pico.getComponent(classOf[App]).fileMenu.offerSave()),
+        new ConstantParameter(
+          () => pico.getComponent(classOf[App]).tabs.setSelectedComponent(
+            pico.getComponent(classOf[App]).tabs.reviewTab))))
     app = pico.getComponent(classOf[App])
     // It's pretty silly, but in order for the splash screen to show up
     // for more than a fraction of a second, we want to initialize as
@@ -502,7 +515,7 @@ class App extends
    * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
-    if(workspace.getModelFileName() == null) "NetLogo"
+    if(workspace.getModelFileName == null) "NetLogo"
     else{
       var title = workspace.modelNameForDisplay
       // on OS X, use standard window title format. otherwise use Windows convention
@@ -512,7 +525,8 @@ class App extends
       else title = "NetLogo " + (8212.toChar) + " " + title
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
+      if (workspace.getModelType == ModelType.Normal)
+        title += " {" + workspace.getModelDir + "}"
       title
     }
   }
@@ -599,7 +613,6 @@ class App extends
    * @throws IllegalStateException if called from the AWT event queue thread
    * @see #commandLater
    */
-  @throws(classOf[CompilerException])
   def command(source: String) {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
@@ -613,7 +626,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @see #command
    */
-  @throws(classOf[CompilerException])
   def commandLater(source: String){
     workspace.evaluateCommands(owner, source, false)
   }
@@ -630,7 +642,6 @@ class App extends
    * @throws org.nlogo.api.CompilerException if the code fails to compile
    * @throws IllegalStateException if called from the AWT event queue thread
    */
-  @throws(classOf[CompilerException])
   def report(source: String): Object = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateReporter(owner, source, workspace.world.observer())

@@ -15,4 +15,6 @@ class ToolsMenu(app: App) extends org.nlogo.swing.Menu(I18N.gui.get("menu.tools"
   addMenuItem(I18N.gui("halt"), app.workspace.halt _)
   addSeparator()
   addMenuItem('/', app.tabs.interfaceTab.commandCenterAction)
+  addSeparator()
+  addMenuItem("Show Review Tab", 'R', true, app.tabs.showReviewTab _)
 }

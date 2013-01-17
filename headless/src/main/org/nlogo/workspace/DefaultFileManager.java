@@ -2,7 +2,6 @@
 
 package org.nlogo.workspace;
 
-import org.nlogo.api.CompilerException;
 import org.nlogo.api.I18N;
 
 import java.util.ArrayList;
@@ -313,7 +312,7 @@ public final strictfp class DefaultFileManager
   }
 
   public Object read(org.nlogo.agent.World world)
-      throws java.io.IOException, CompilerException {
+      throws java.io.IOException {
     if (eof()) {
       throw new java.io.EOFException();
     }

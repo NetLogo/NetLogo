@@ -120,9 +120,21 @@ public strictfp class MonitorWidget
 
   private String valueString = "";
 
+  public String valueString() {
+    return valueString;
+  }
+
   public void value(Object value) {
     this.value = value;
-    String newString = Dump.logoObject(value);
+    String newString;
+    if (value instanceof Double) {
+      newString = Dump.number(
+        org.nlogo.api.Approximate.approximate(
+          ((Double) value).doubleValue(), decimalPlaces));
+    }
+    else {
+      newString = Dump.logoObject(value);
+    }
     if (!newString.equals(valueString)) {
       valueString = newString;
       repaint();
@@ -215,13 +227,23 @@ public strictfp class MonitorWidget
     chooseDisplayName();
   }
 
+  // fragile -- depends on the details of what code wrapSource wraps
+  // the user's reporter and what the resulting compiled code looks
+  // like. model runs code calls this to grab the Reporter to run
+  // at tick time - ST 10/11/12
+  public scala.Option<org.nlogo.nvm.Reporter> reporter() {
+    org.nlogo.nvm.Procedure p = procedure();
+    return scala.Option.apply(
+      p == null ? null : p.code()[0].args[0]);
+  }
+
   public void wrapSource(String innerSource) {
     if (innerSource.trim().equals("")) {
       source(null, "", null);
       halt();
     } else {
-      source("to __monitor [] __observercode loop [ __updatemonitor __monitorprecision (",
-          innerSource, "\n) " + decimalPlaces() + " ] end");
+      source("to __monitor [] __observercode loop [ __updatemonitor (",
+             innerSource, "\n)] end");
     }
     chooseDisplayName();
   }

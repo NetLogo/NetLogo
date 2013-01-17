@@ -357,12 +357,6 @@ public strictfp class WidgetPanel
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.chooser"), "CHOOSER", e.getX(), e.getY()));
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.input"), "INPUT", e.getX(), e.getY()));
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.monitor"), "MONITOR", e.getX(), e.getY()));
-    WidgetCreationMenuItem plot = new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.plot"), "PLOT", e.getX(), e.getY());
-    // if there are no plots in this model, then you can't have a plot in a hubnet client.
-    if (workspace.plotManager().plots().size() == 0) {
-      plot.setEnabled(false);
-    }
-    menu.add(plot);
     menu.add(new WidgetCreationMenuItem(I18N.guiJ().get("tabs.run.widgets.note"), "NOTE", e.getX(), e.getY()));
     menu.show(this, e.getX(), e.getY());
   }
@@ -776,5 +770,6 @@ public strictfp class WidgetPanel
 
     return true;
   }
+
 
 }

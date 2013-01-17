@@ -13,7 +13,7 @@ import table.{DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, Tab
 import org.nlogo.window.{ColorDialog, PlotWidget}
 import org.nlogo.plot.{Plot, PlotPen}
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
-import org.nlogo.api.{I18N, TokenType}
+import org.nlogo.api.{I18N, TokenType, PlotPenInterface, PlotPenState}
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer[TokenType])
         extends PropertyEditor(accessor, handlesOwnErrors = true) {
@@ -75,9 +75,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       new Pen(
         pp,
         pp.name,
-        color = ColorInfo(pp.defaultColor),
-        interval=pp.defaultInterval,
-        mode=pp.defaultMode,
+        color = ColorInfo(pp.defaultState.color),
+        interval=pp.defaultState.interval,
+        mode=pp.defaultState.mode,
         inLegend=pp.inLegend,
         setupCode = pp.setupCode, updateCode = pp.updateCode,
         setupError = plotManager.getPenSetupError(pp),
@@ -89,7 +89,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
                  name: String = "",
                  color: ColorInfo = ColorInfo(Color.BLACK),
                  interval: Double = 1.0,
-                 mode: Int = PlotPen.LINE_MODE,
+                 mode: Int = PlotPenInterface.LineMode,
                  inLegend: Boolean = true,
                  setupCode: String = "",
                  updateCode: String = "",
@@ -101,23 +101,19 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     def convertToPlotPen(plot: Plot): PlotPen = {
       val pp = new PlotPen(
-        plot = plot,
         name=if(name==null) "" else name,
         temporary=false,
         setupCode=setupCode,
         updateCode=updateCode,
-        x=originalPen.x,
-        defaultColor=color.rgb,
-        _color = color.rgb,
         inLegend = inLegend,
-        defaultInterval = interval,
-        _interval = interval,
-        defaultMode = mode,
-        _mode = originalPen.mode,
-        penModeChanged = originalPen.penModeChanged,
-        _isDown = originalPen.isDown)
-      pp.x = originalPen.x
+        defaultState = PlotPenState(
+          color = color.rgb,
+          x=originalPen.state.x,
+          interval = interval,
+          mode = originalPen.state.mode,
+          isDown = originalPen.state.isDown))
       pp.points = originalPen.points
+      plot.addPen(pp)
       pp
     }
   }

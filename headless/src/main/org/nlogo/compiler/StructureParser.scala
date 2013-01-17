@@ -418,7 +418,7 @@ trait ResultsBuilder extends StructureDeclarations {
     val proc = new nvm.Procedure(
       p.isReporter, p.tokens.tail.head.value.asInstanceOf[String],
       p.tokens.tail.head, displayName, null)
-    proc.args = Vector(p.inputs.map(_.name): _*)
+    proc.args = p.inputs.map(_.name).toVector
     (proc, p.tokens.drop(2).init :+ Token.eof)
   }
 

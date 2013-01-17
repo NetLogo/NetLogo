@@ -21,8 +21,12 @@ public final strictfp class Context {
   public boolean waiting = false; // are we waiting on a child job?
   private boolean inReporterProcedure = false;
 
+  // Reverting to old way of initializing an empty List because
+  // the Eclipse java compiler gets trumped by a simple List.empty()
+  // and thinks the method call is ambiguous. NP 2012-11-28.
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
   public scala.collection.immutable.List<LetBinding> letBindings =
-    scala.collection.immutable.List.empty();
+    (scala.collection.immutable.List<LetBinding>) ((Object) scala.collection.immutable.Nil$.MODULE$);
 
   /**
    * It is necessary for each Context to have its own stopping flag
@@ -73,8 +77,7 @@ public final strictfp class Context {
   }
 
   // this method runs only until a command switches
-  void stepConcurrent()
-      throws LogoException {
+  void stepConcurrent() {
     if (agent.id == -1) // is our agent dead?
     {
       finished = true;
@@ -101,8 +104,7 @@ public final strictfp class Context {
   }
 
   // this method runs until the context is finished
-  void runExclusive()
-      throws LogoException {
+  void runExclusive() {
     if (agent.id == -1) // is our agent dead?
     {
       finished = true;
@@ -155,8 +157,7 @@ public final strictfp class Context {
         || activation != job.parentContext.activation;
   }
 
-  public void runExclusiveJob(AgentSet agentset, int address)
-      throws LogoException {
+  public void runExclusiveJob(AgentSet agentset, int address) {
     new ExclusiveJob
         (job.owner, agentset, activation.procedure(), address, this, job.random)
         .run();
@@ -219,14 +220,12 @@ public final strictfp class Context {
   // caller should call reporter.checkAgentClass() or
   // reporter.checkAgentSetClass() beforehand
   public Object evaluateReporter(Agent agent,
-                                 Reporter reporter)
-      throws LogoException {
+                                 Reporter reporter) {
     this.agent = agent;
     return reporter.report(this);
   }
 
-  public Object callReporterProcedure(Activation newActivation)
-      throws LogoException {
+  public Object callReporterProcedure(Activation newActivation) {
     boolean oldInReporterProcedure = inReporterProcedure;
     Command command = null;
     inReporterProcedure = true; // so use of "ask" will create an exclusive job
@@ -244,8 +243,7 @@ public final strictfp class Context {
         }
       }
       while (!finished && job.result == null);
-    } catch (NonLocalExit$ e) // NOPMD empty catch block
-    {
+    } catch (NonLocalExit$ e) {
       // do nothing
     } catch (LogoException ex) {
       EngineException.rethrow(ex, this, command);
@@ -267,7 +265,7 @@ public final strictfp class Context {
 
   public Object getLet(Let let) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
+    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
     {
       LetBinding binding = rest.head();
       if (let == binding.let()) {
@@ -281,7 +279,7 @@ public final strictfp class Context {
 
   public void setLet(Let let, Object value) {
     scala.collection.immutable.List<LetBinding> rest = letBindings;
-    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$) // NOPMD
+    while ((Object) rest != scala.collection.immutable.Nil$.MODULE$)
     {
       LetBinding binding = rest.head();
       if (let == binding.let()) {
@@ -359,7 +357,7 @@ public final strictfp class Context {
   private void comeUpForAir(Command command)
       throws HaltException {
     if (command.switches && job.owner.ownsPrimaryJobs()) {
-      command.workspace.breathe();
+      command.workspace.breathe(this);
     }
     if (Thread.currentThread().isInterrupted()) {
       command.world.comeUpForAir = false;

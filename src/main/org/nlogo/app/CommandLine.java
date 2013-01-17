@@ -352,8 +352,8 @@ strictfp class CommandLine
               ((ExecutionString) obj).string.equals(string));
     }
 
-    // not actually using this at present, but pmd yells at us if
-    // we override equals() without overriding hashCode() too.. - ST 9/1/03
+    // not actually using this at present, but pmd yelled at us if
+    // we overrode equals() without overriding hashCode() too.. - ST 9/1/03
     @Override
     public int hashCode() {
       return kind.hashCode() + string.hashCode();

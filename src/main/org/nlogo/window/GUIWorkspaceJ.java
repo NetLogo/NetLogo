@@ -190,24 +190,6 @@ public abstract strictfp class GUIWorkspaceJ
     view.renderer.trailDrawer().clearDrawing();
   }
 
-  @Override
-  public void resetTicks(org.nlogo.nvm.Context context) {
-    super.resetTicks(context);
-    new Events.TickStateChangeEvent(true).raiseLater(this);
-  }
-
-  @Override
-  public void clearTicks() {
-    super.clearTicks();
-    new Events.TickStateChangeEvent(false).raiseLater(this);
-  }
-
-  @Override
-  public void clearAll() {
-    super.clearAll();
-    new Events.TickStateChangeEvent(false).raiseLater(this);
-  }
-
   public boolean sendPixels() {
     return view.renderer.trailDrawer().sendPixels();
   }
@@ -241,18 +223,15 @@ public abstract strictfp class GUIWorkspaceJ
     ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
-  public void waitFor(CommandRunnable runnable)
-      throws LogoException {
+  public void waitFor(CommandRunnable runnable) {
     ThreadUtils.waitFor((GUIWorkspace) this, runnable);
   }
 
-  public <T> T waitForResult(ReporterRunnable<T> runnable)
-      throws LogoException {
+  public <T> T waitForResult(ReporterRunnable<T> runnable) {
     return ThreadUtils.waitForResult((GUIWorkspace) this, runnable);
   }
 
-  public void waitForQueuedEvents()
-      throws LogoException {
+  public void waitForQueuedEvents() {
     ThreadUtils.waitForQueuedEvents((GUIWorkspace) this);
   }
 
@@ -338,11 +317,6 @@ public abstract strictfp class GUIWorkspaceJ
 
   public boolean compilerTestingMode() {
     return false;
-  }
-
-  @Override
-  public org.nlogo.api.WorldPropertiesInterface getPropertiesInterface() {
-    return viewWidget.settings();
   }
 
   public void changeTopology(boolean wrapX, boolean wrapY) {
@@ -471,26 +445,26 @@ public abstract strictfp class GUIWorkspaceJ
 
   // this is called on the job thread when the engine comes up for air - ST 1/10/07
   @Override
-  public void breathe() {
+  public void breathe(org.nlogo.nvm.Context context) {
     jobManager.maybeRunSecondaryJobs();
     if (updateMode() == UpdateModeJ.CONTINUOUS()) {
       updateManager().pseudoTick();
       updateDisplay(true);
     }
     world().comeUpForAir = updateManager().shouldComeUpForAirAgain();
-    notifyListeners();
+    notifyListeners(context);
   }
 
   // called only from job thread, by such primitives as
   // _exportinterface and _usermessage, which need to make sure the
   // whole UI is up-to-date before proceeding - ST 8/30/07, 3/3/11
   @Override
-  public void updateUI() {
+  public void updateUI(org.nlogo.nvm.Context context) {
     // this makes the tick counter et al update
     ThreadUtils.waitFor((GUIWorkspace) this, updateRunner);
     // resetting first ensures that if we are allowed to update the view, we will
     updateManager().reset();
-    requestDisplayUpdate(true);
+    requestDisplayUpdate(context, true);
   }
 
   // on the job thread,
@@ -499,24 +473,17 @@ public abstract strictfp class GUIWorkspaceJ
   // - _tickadvance calls requestDisplayUpdate(false)
   // - ST 1/4/07, 3/3/11
   @Override
-  public void requestDisplayUpdate(boolean force) {
+  public void requestDisplayUpdate(org.nlogo.nvm.Context context, boolean force) {
     if (force) {
       updateManager().pseudoTick();
     }
     updateDisplay(true); // haveWorldLockAlready = true
-    notifyListeners();
+    notifyListeners(context);
   }
 
-  private double lastTicksListenersHeard = -1.0;
+  protected double lastTicksListenersHeard = -1.0;
 
-  private void notifyListeners() {
-    double ticks = world().tickCounter.ticks();
-    if (ticks != lastTicksListenersHeard) {
-      lastTicksListenersHeard = ticks;
-      listenerManager.tickCounterChanged(ticks);
-    }
-    listenerManager.possibleViewUpdate();
-  }
+  protected abstract void notifyListeners(org.nlogo.nvm.Context context);
 
   @Override
   public void halt() {
@@ -903,7 +870,7 @@ public abstract strictfp class GUIWorkspaceJ
     if (plotnum < 0) {
       return null;
     } else {
-      return plotManager().getPlot(plotNames[plotnum]);
+      return plotManager().getPlot(plotNames[plotnum]).getOrElse(null);
     }
   }
 

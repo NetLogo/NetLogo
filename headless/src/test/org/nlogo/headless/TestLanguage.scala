@@ -190,7 +190,7 @@ class TestParser extends FunSuite {
 
   // tests for parsing line items.
   // (pending resolution of https://issues.scala-lang.org/browse/SI-6723
-  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/12)
+  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/13)
   val tests = List(
     ("O> crt 1", Command("O", "crt 1")),
 

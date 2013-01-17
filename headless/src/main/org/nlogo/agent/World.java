@@ -18,6 +18,7 @@ import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ValueConstraint;
 import org.nlogo.api.WorldDimensionException;
 import org.nlogo.api.WorldDimensions;
+import org.nlogo.nvm.LetBinding;
 import org.nlogo.util.MersenneTwisterFast;
 
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public strictfp class World
   // can get to it very quickly.  And since every Instruction has a
   // World object in it, the engine can always get to World quickly.
   //  - ST 1/10/07
-  public volatile boolean comeUpForAir = false;  // NOPMD pmd doesn't like 'volatile'
+  public volatile boolean comeUpForAir = false;
 
   public World() {
     _turtleShapeList = new ShapeList(AgentKindJ.Turtle());
@@ -1172,8 +1173,12 @@ public strictfp class World
 
   /// program
 
+  // Reverting to old way of initializing an empty List because
+  // the Eclipse java compiler gets trumped by a simple List.empty()
+  // and thinks the method call is ambiguous. NP 2012-11-28.
+  @SuppressWarnings("unchecked") // Java doesn't know about variance
   scala.collection.immutable.Seq<String> noStrings =
-    scala.collection.immutable.List.empty();
+    (scala.collection.immutable.List<String>) ((Object) scala.collection.immutable.Nil$.MODULE$);
 
   private Program _program = newProgram();
 
@@ -1223,7 +1228,7 @@ public strictfp class World
   }
 
   public void setObserverVariableByName(String var, Object value)
-      throws LogoException, AgentException {
+      throws AgentException {
     var = var.toUpperCase();
     if (_program.globals().contains(var)) {
       int index = _program.globals().indexOf(var);

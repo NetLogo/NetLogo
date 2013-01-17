@@ -9,5 +9,5 @@ class _netlogoapplet extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(Syntax.BooleanType)
   override def report(context: Context) =
-    Boolean.box(false)
+    java.lang.Boolean.FALSE
 }

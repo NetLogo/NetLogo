@@ -62,12 +62,12 @@ class TestStackTraces extends AbstractTestModels {
   object PlotSetup extends CodeType {
     val procName = "plot 'p' setup code"
     def plot(code: String) =
-      Plot(name = "p", setupCode = code)
+      Plot(name = "p", pens = Pens(Pen(name = "pp")), setupCode = code)
   }
   object PlotUpdate extends CodeType {
     val procName = "plot 'p' update code"
     def plot(code: String) =
-      Plot(name = "p", updateCode = code)
+      Plot(name = "p", pens = Pens(Pen(name = "pp")), updateCode = code)
   }
   object PenSetup extends CodeType {
     val procName = "plot 'p' pen 'pp' setup code"

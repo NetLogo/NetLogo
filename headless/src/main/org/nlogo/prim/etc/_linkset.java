@@ -8,7 +8,6 @@ import org.nlogo.agent.Link;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -31,8 +30,7 @@ public final strictfp class _linkset
   }
 
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     LinkedHashSet<Link> resultSet = new LinkedHashSet<Link>();
     for (int i = 0; i < args.length; i++) {
       Object elt = args[i].report(context);
@@ -60,8 +58,7 @@ public final strictfp class _linkset
         world);
   }
 
-  private void descendList(Context context, LogoList tempList, Set<Link> result)
-      throws LogoException {
+  private void descendList(Context context, LogoList tempList, Set<Link> result) {
     for (Object obj : tempList) {
       if (obj instanceof Link) {
         result.add((Link) obj);

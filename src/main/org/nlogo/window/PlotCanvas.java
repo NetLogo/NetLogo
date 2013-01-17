@@ -5,30 +5,18 @@ package org.nlogo.window;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPainter;
 
-strictfp class PlotCanvas extends javax.swing.JPanel {
+strictfp public class PlotCanvas extends javax.swing.JPanel {
 
   final Plot plot;
   private final PlotPainter painter;
-  public boolean dirty = true;
 
   void repaintIfNeeded() {
-    if (dirty) {
-      painter.setupOffscreenImage(getWidth(), getHeight());
-      painter.refresh();
-      dirty = false;
-      repaint();
-    }
+    painter.setupOffscreenImage(getWidth(), getHeight());
+    painter.refresh();
+    repaint();
   }
 
-  public void makeDirty() {
-    dirty = true;
-  }
-
-  public boolean isDirty() {
-    return dirty;
-  }
-
-  PlotCanvas(Plot plot) {
+  public PlotCanvas(Plot plot) {
     this.plot = plot;
     painter = new PlotPainter(plot);
     setOpaque(true);
@@ -135,14 +123,14 @@ strictfp class PlotCanvas extends javax.swing.JPanel {
 
   private double fromScreenXCor(double screenX) {
     double width = getWidth() - 1;
-    double range = plot.xMax() - plot.xMin();
-    return plot.xMin() + screenX * range / width;
+    double range = plot.state().xMax() - plot.state().xMin();
+    return plot.state().xMin() + screenX * range / width;
   }
 
   private double fromScreenYCor(double screenY) {
     double height = getHeight() - 1;
-    double range = plot.yMax() - plot.yMin();
-    return plot.yMax() - screenY * range / height;
+    double range = plot.state().yMax() - plot.state().yMin();
+    return plot.state().yMax() - screenY * range / height;
   }
 
 }

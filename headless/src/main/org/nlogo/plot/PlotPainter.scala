@@ -2,6 +2,7 @@
 
 package org.nlogo.plot
 
+import org.nlogo.api.PlotPenInterface
 
 class PlotPainter(plot: Plot) {
 
@@ -37,23 +38,21 @@ class PlotPainter(plot: Plot) {
   def refresh() {
     gOff.setColor(java.awt.Color.WHITE)
     gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
-    for(pen <- plot.pens; if(! pen.hidden)) {
-      pen.penModeChanged = false
+    for(pen <- plot.pens; if !pen.state.hidden)
       refreshPen(pen, collectPointsForPainting(pen))
-    }
   }
 
   /// at painting time, we need to convert each bar to four points
   private def collectPointsForPainting(pen: PlotPen): Seq[PlotPoint] = {
-    pen.mode match {
-      case PlotPen.POINT_MODE | PlotPen.LINE_MODE =>
+    pen.state.mode match {
+      case PlotPenInterface.PointMode | PlotPenInterface.LineMode =>
         pen.points
-      case PlotPen.BAR_MODE =>
+      case PlotPenInterface.BarMode =>
         pen.points.flatMap(old =>
           Seq(old.copy(y = 0, isDown = true),
               old.copy(isDown = true),
-              old.copy(x = old.x + pen.interval, isDown = true),
-              old.copy(x = old.x + pen.interval, y = 0, isDown = true)))
+              old.copy(x = old.x + pen.state.interval, isDown = true),
+              old.copy(x = old.x + pen.state.interval, y = 0, isDown = true)))
     }
   }
 
@@ -71,7 +70,7 @@ class PlotPainter(plot: Plot) {
     var coalescing = false
     gOff.asInstanceOf[java.awt.Graphics2D].setRenderingHint(
       java.awt.RenderingHints.KEY_ANTIALIASING,
-      if(pen.mode == PlotPen.POINT_MODE) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
+      if(pen.state.mode == PlotPenInterface.PointMode) java.awt.RenderingHints.VALUE_ANTIALIAS_OFF
       else java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
 
     val size = pointsToPlot.size
@@ -81,7 +80,7 @@ class PlotPainter(plot: Plot) {
         color = next.color
         gOff.setColor(new java.awt.Color(color))
       }
-      if(pen.mode == PlotPen.POINT_MODE) { drawPoint(gOff, next) }
+      if(pen.state.mode == PlotPenInterface.PointMode) { drawPoint(gOff, next) }
       else{ // line mode or bar mode
         if(last == null) {
           // it would seem to make more sense to call drawPoint here,
@@ -163,15 +162,15 @@ class PlotPainter(plot: Plot) {
   // it on newer VM's, but the bug parade doesn't say it's fixed, so let's be safe.  Not sure
   // exactly what the usable range is, but +/- 16383 seems like a good guess. - ST 3/12/03, 8/1/03
   private def screenX(x: Double): Int = {
-    val range = plot.xMax - plot.xMin
+    val range = plot.state.xMax - plot.state.xMin
     val scale = range / (width - 1)
-    screen(StrictMath.rint((x - plot.xMin) / scale))
+    screen(StrictMath.rint((x - plot.state.xMin) / scale))
   }
 
   private def screenY(y: Double): Int = {
-    val range = plot.yMax - plot.yMin
+    val range = plot.state.yMax - plot.state.yMin
     val scale = range / (height - 1)
-    screen(StrictMath.rint(height - 1 - ((y - plot.yMin) / scale)))
+    screen(StrictMath.rint(height - 1 - ((y - plot.state.yMin) / scale)))
   }
 
   private def screen(p: Double) = if(p > 16383) 16383 else if(p < -16383) -16383 else p.toInt

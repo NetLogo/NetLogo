@@ -8,15 +8,15 @@ package org.nlogo.compiler
 // as we load and unload extensions. - ST 2/21/08, 1/21/09, 12/7/12
 
 import org.nlogo.api
-import api.{ ExtensionManager, Program, Version }
-import org.nlogo.nvm.{ CompilerResults, GeneratorInterface, Procedure }
+import api.{ ExtensionManager, Program }
+import org.nlogo.nvm.{ CompilerFlags, CompilerResults, GeneratorInterface, Procedure }
 import org.nlogo.util.Femto
 
 private object CompilerMain {
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-              oldProcedures: Compiler.ProceduresMap,
-              extensionManager: ExtensionManager): CompilerResults = {
+    oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
+    flags: CompilerFlags): CompilerResults = {
 
     val structureResults = StructureParser.parseAll(
       Compiler.Tokenizer2D,
@@ -35,26 +35,28 @@ private object CompilerMain {
         .parse(identifiedTokens) // parse
     }
     val defs: Vector[ProcedureDefinition] =
-      Vector() ++ structureResults.procedures.values.flatMap(parseProcedure)
+      structureResults.procedures.values.flatMap(parseProcedure).toVector
     // StructureParser found the top level Procedures for us.  ExpressionParser
     // finds command tasks and makes Procedures out of them, too.  the remaining
     // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
-      procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
+      if (flags.foldConstants)
+        procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
       // SimpleOfVisitor performs an optimization, but also sets up for SetVisitor - ST 2/21/08
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
       procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
-      procdef.accept(new Optimizer)   // do various code-improving rewrites
+      if (flags.useOptimizer)
+        procdef.accept(new Optimizer)   // do various code-improving rewrites
     }
     new AgentTypeChecker(defs).parse()  // catch agent type inconsistencies
     for(procdef <- defs) {
       procdef.accept(new ArgumentStuffer) // fill args arrays in Commands & Reporters
       new Assembler().assemble(procdef)     // flatten tree to command array
-      if(Version.useGenerator) // generate byte code
+      if (flags.useGenerator) // generate byte code
         procdef.procedure.code =
           Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
                     Array(source, procdef.procedure,

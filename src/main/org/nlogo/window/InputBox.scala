@@ -478,8 +478,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       scroller.setVisible(true)
     }
     @throws(classOf[ValueConstraint.Violation])
-    @throws(classOf[LogoException])
-    @throws(classOf[CompilerException])
     def readValue(text: String): Object = {
       constraint.assertConstraint(text)
       return text
@@ -504,7 +502,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     override def defaultValue = "0"
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
-    @throws(classOf[CompilerException])
     override def readValue(text: String) = {
       constraint.assertConstraint(text)
       compiler.checkReporterSyntax(text)
@@ -515,7 +512,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, plainFont) {
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
-    @throws(classOf[CompilerException])
     override def readValue(text: String) = {
       constraint.assertConstraint(text)
       compiler.checkCommandSyntax(text)
@@ -524,14 +520,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
 
   private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, plainFont) {
-    @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
     override def enableMultiline = false
     override def defaultValue = org.nlogo.agent.World.ZERO
   }
 
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
-    @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
     override def colorPanel(panel: JButton) {
       panel.setVisible(true)

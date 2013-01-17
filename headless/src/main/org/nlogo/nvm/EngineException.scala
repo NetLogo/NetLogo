@@ -5,7 +5,6 @@ package org.nlogo.nvm
 import org.nlogo.api.{ LogoException, Version }
 
 object EngineException {
-  @throws(classOf[LogoException])
   def rethrow(ex: LogoException, context: Context, instruction: Instruction) {
     ex match {
       case ee: EngineException =>

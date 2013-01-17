@@ -65,7 +65,6 @@ trait World {
   def auxRNG: MersenneTwisterFast
   def observerOwnsIndexOf(name: String): Int
   @throws(classOf[AgentException])
-  @throws(classOf[LogoException])
   def setObserverVariableByName(variableName: String, value: AnyRef)
   def timer: Timer
 }

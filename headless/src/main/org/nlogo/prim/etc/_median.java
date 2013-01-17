@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -19,7 +18,7 @@ public final strictfp class _median
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final Context context) throws LogoException {
+  public Object report(final Context context) {
     LogoList list = argEvalList(context, 0);
     int badElts = 0;
     List<Double> nums =

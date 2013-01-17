@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -19,14 +18,13 @@ public final strictfp class _log extends Reporter implements Pure {
   }
 
   @Override
-  public Object report(Context context)
-      throws LogoException {
+  public Object report(Context context) {
     return report_1(context,
         argEvalDoubleValue(context, 0),
         argEvalDoubleValue(context, 1));
   }
 
-  public double report_1(Context context, double n, double base) throws LogoException {
+  public double report_1(Context context, double n, double base) {
     if (n <= 0) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", n));

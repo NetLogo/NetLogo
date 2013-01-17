@@ -41,7 +41,6 @@ abstract class DefaultClassManager extends ClassManager {
 
   /** Default defines no extension objects, thus, we cannot read any extension objects. */
   @throws(classOf[ExtensionException])
-  @throws(classOf[CompilerException])
   override def readExtensionObject(em: ExtensionManager, typeName: String, value: String): ExtensionObject =
     throw new IllegalStateException("readExtensionObject not implemented for " + this)
 

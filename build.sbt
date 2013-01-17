@@ -92,7 +92,3 @@ seq(Packaging.settings: _*)
 seq(Running.settings: _*)
 
 seq(Depend.settings: _*)
-
-seq(Dump.settings: _*)
-
-seq(ChecksumsAndPreviews.settings: _*)

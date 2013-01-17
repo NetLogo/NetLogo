@@ -9,6 +9,7 @@ import org.nlogo.api.RandomServices;
 import org.nlogo.api.Version;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -376,6 +377,29 @@ public strictfp class InterfacePanelLite
         revalidate();
       }
     }
+  }
+
+  @Override
+  public List<org.nlogo.window.Widget> getWidgetsForSaving() {
+    /* This is copied from WidgetPanel. Would be better to have a unified implementation
+     * but there is currently no common superclass where to put it. I tried converting
+     * WidgetContainer to a scala trait and have the implementation there, but I ran into
+     * all sorts of trouble. Might give it another try eventually. NP 2012-09-13.
+     */
+    List<org.nlogo.window.Widget> result = new ArrayList<org.nlogo.window.Widget>();
+    java.awt.Component[] comps = getComponents();
+    // loop backwards so JLayeredPane gives us the components
+    // in back-to-front order for saving - ST 9/29/03
+    for (int i = comps.length - 1; i >= 0; i--) {
+      if (comps[i] instanceof WidgetWrapperInterface) {
+        WidgetWrapperInterface wrapper = (WidgetWrapperInterface) comps[i];
+        Widget widget = wrapper.widget();
+        if (!result.contains(widget)) {
+          result.add(widget);
+        }
+      }
+    }
+    return result;
   }
 
 }

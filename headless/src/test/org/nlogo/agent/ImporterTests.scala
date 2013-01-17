@@ -53,7 +53,7 @@ class ImporterTests extends FunSuite with OneInstancePerTest {
     if(turtleBreedVar)
       expectResult(world.turtles)(result)
     else
-      assert(result.isInstanceOf[Importer#Junk])
+      assert(result.isInstanceOf[ImporterJ.Junk])
   }
 
   test("Jikes115BugTest1") {

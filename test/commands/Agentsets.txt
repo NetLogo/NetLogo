@@ -172,7 +172,6 @@ Agentsets8
   [color] of turtles at-points [ [ [ 1 2 ] ] ] => ERROR Invalid list of points: [[[1 2]]]
 
 InvalidAtPoints_2D
-  O> __ignore "avoid pmd warning"
   [color] of turtles at-points [ [ 1 2 3 ] ] => ERROR Invalid list of points: [[1 2 3]]
 
 Agentsets9
