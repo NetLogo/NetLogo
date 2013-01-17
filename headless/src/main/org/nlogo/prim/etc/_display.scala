@@ -10,7 +10,7 @@ class _display extends Command {
     Syntax.commandSyntax(true)
   override def perform(context: Context) {
     world.displayOn(true)
-    workspace.requestDisplayUpdate(true)
+    workspace.requestDisplayUpdate(context, true)
     context.ip = next
   }
 }

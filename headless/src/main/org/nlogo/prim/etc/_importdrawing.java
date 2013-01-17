@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
 
@@ -17,7 +16,7 @@ public final strictfp class _importdrawing
   }
 
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final org.nlogo.nvm.Context context) {
     try {
       workspace.importDrawing
           (workspace.fileManager().attachPrefix

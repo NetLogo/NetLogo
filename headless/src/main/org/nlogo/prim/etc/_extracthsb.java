@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.Syntax;
@@ -19,11 +18,11 @@ public final strictfp class _extracthsb
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     return report_1(context, args[0].report(context));
   }
 
-  public LogoList report_1(Context context, Object obj) throws LogoException {
+  public LogoList report_1(Context context, Object obj) {
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.size() != 3) {
@@ -71,8 +70,7 @@ public final strictfp class _extracthsb
             (color));
   }
 
-  public LogoList report_3(Context context, LogoList list)
-      throws LogoException {
+  public LogoList report_3(Context context, LogoList list) {
     if (list.size() != 3) {
       throw new org.nlogo.nvm.EngineException
           (context, this, displayName() + " an rgb list must have 3 elements");

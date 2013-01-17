@@ -49,8 +49,8 @@ extends AbstractWorkspaceScala(new World)
                             ex: Exception) = unsupported
   override def ownerFinished(owner: api.JobOwner) = unsupported
   override def updateDisplay(haveWorldLockAlready: Boolean): Unit = unsupported
-  override def requestDisplayUpdate(force: Boolean) = unsupported
-  override def breathe(): Unit = unsupported
+  override def requestDisplayUpdate(context: org.nlogo.nvm.Context, force: Boolean) = unsupported
+  override def breathe(context: org.nlogo.nvm.Context): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def compiler: CompilerInterface = unsupported

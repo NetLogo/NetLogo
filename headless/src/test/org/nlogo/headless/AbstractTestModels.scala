@@ -82,5 +82,6 @@ trait AbstractTestModels extends FunSuite with ModelCreator {
     intercept[LogoException] {
       workspace.command(commands)
     }
+    workspace.clearLastLogoException()
   }
 }

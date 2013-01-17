@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.api.{ JobOwner, LogoException}
+import org.nlogo.api.{ JobOwner, LogoException }
 import org.nlogo.util.MersenneTwisterFast
 
 class ConcurrentJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
@@ -46,7 +46,6 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, random) 
     contexts(count) = context
   }
 
-  @throws(classOf[LogoException])
   override def step() {
     if (contexts == null)
       initialize()

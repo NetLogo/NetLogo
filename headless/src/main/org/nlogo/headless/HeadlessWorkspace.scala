@@ -11,7 +11,7 @@ import org.nlogo.api.{ AgentKind, Program, Version, RendererInterface, WorldDime
                        ModelReader, CompilerException, LogoException, SimpleJobOwner,
                        CommandRunnable, ReporterRunnable, UpdateMode }
 import org.nlogo.agent.World
-import org.nlogo.nvm.{ LabInterface,
+import org.nlogo.nvm.{ Context, LabInterface,
                        Workspace, DefaultCompilerServices, CompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
@@ -182,11 +182,11 @@ with org.nlogo.api.ViewSettings {
     // setup some test plots.
     plotManager.forgetAll()
     val plot1 = plotManager.newPlot("plot1")
-    plot1.createPlotPen("pen1", false)
-    plot1.createPlotPen("pen2", false)
+    plot1.createPlotPen(name = "pen1")
+    plot1.createPlotPen(name = "pen2")
     val plot2 = plotManager.newPlot("plot2")
-    plot2.createPlotPen("pen1", false)
-    plot2.createPlotPen("pen2", false)
+    plot2.createPlotPen(name = "pen1")
+    plot2.createPlotPen(name = "pen2")
     plotManager.compileAllPlots()
 
     clearDrawing()
@@ -337,7 +337,7 @@ with org.nlogo.api.ViewSettings {
 
   /// world importing error handling
 
-  var importerErrorHandler =
+  var importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler =
     new org.nlogo.agent.ImporterJ.ErrorHandler {
       override def showError(title: String, errorDetails: String, fatalError: Boolean) = {
         System.err.println(
@@ -404,24 +404,23 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  override def requestDisplayUpdate(force: Boolean) { }
+  override def requestDisplayUpdate(context: Context, force: Boolean) { }
 
   /**
    * Internal use only.
    */
-  override def breathe() { }
+  override def breathe(context: Context) { }
 
   /**
    * Internal use only.
    */
   def periodicUpdate() { }
 
-  /**
-   * Internal use only.
-   */
   // This lastLogoException stuff is gross.  We should write methods that are declared to throw
   // LogoException, rather than requiring that this variable be checked. - ST 2/28/05
-  override var lastLogoException: LogoException = null
+  private var _lastLogoException: LogoException = null
+  override def lastLogoException: LogoException = _lastLogoException
+  override def clearLastLogoException() { _lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -431,11 +430,11 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def runtimeError(owner: org.nlogo.api.JobOwner, context: org.nlogo.nvm.Context,
+  def runtimeError(owner: org.nlogo.api.JobOwner, context: Context,
                    instruction: org.nlogo.nvm.Instruction, ex: Exception) {
     ex match {
       case le: LogoException =>
-        lastLogoException = le
+        _lastLogoException = le
         lastErrorReport = new ErrorReport(owner, context, instruction, le)
       case _ =>
         System.err.println("owner: " + owner.displayName)
@@ -450,6 +449,7 @@ with org.nlogo.api.ViewSettings {
    *
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
+  @throws(classOf[java.io.IOException])
   override def open(path: String) {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
@@ -497,7 +497,7 @@ with org.nlogo.api.ViewSettings {
     evaluateCommands(defaultOwner, source, true)
     if (lastLogoException != null) {
       val ex = lastLogoException
-      lastLogoException = null
+      _lastLogoException = null
       throw ex
     }
   }
@@ -517,7 +517,7 @@ with org.nlogo.api.ViewSettings {
     val result = evaluateReporter(defaultOwner, source, world.observer)
     if (lastLogoException != null) {
       val ex = lastLogoException
-      lastLogoException = null
+      _lastLogoException = null
       throw ex
     }
     result

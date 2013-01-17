@@ -17,7 +17,7 @@ class _tickadvance extends Command {
       throw new EngineException(
         context, this, I18N.errors.get("org.nlogo.prim.etc.$common.tickCounterNotStarted"))
     world.tickCounter.tick(amount)
-    workspace.requestDisplayUpdate(false)
+    workspace.requestDisplayUpdate(context, false)
     context.ip = next
   }
 }

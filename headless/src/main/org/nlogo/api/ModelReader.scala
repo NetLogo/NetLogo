@@ -18,9 +18,9 @@ object ModelReader {
   val sections = ModelSection.allSections
 
   lazy val defaultShapes: Seq[String] =
-    Vector() ++ getResourceLines("/system/defaultShapes.txt")
+    getResourceLines("/system/defaultShapes.txt").toSeq
   lazy val defaultLinkShapes: Seq[String] =
-    Vector() ++ getResourceLines("/system/defaultLinkShapes.txt")
+    getResourceLines("/system/defaultLinkShapes.txt").toSeq
 
   def parseModel(model: String): ModelMap = {
     var result: ModelMap = sections.map(_ -> Seq[String]()).toMap

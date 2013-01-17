@@ -19,6 +19,7 @@ tmp/
 .project
 .cache
 .settings
+.worksheet
 
 # other
 /.ensime

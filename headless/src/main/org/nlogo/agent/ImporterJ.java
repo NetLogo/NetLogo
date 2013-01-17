@@ -9,8 +9,6 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Breed;
 import org.nlogo.api.ImporterUser;
 import org.nlogo.api.Perspective;
-import org.nlogo.api.PlotInterface;
-import org.nlogo.api.PlotPenInterface;
 import org.nlogo.api.WorldDimensions;
 
 import scala.collection.Seq;
@@ -124,6 +122,8 @@ public abstract strictfp class ImporterJ
     }
   }
 
+  abstract void importPlots();
+
   public void importWorld(java.io.BufferedReader fileBuff)
       throws java.io.IOException {
     lines = fileBuff;
@@ -175,159 +175,6 @@ public abstract strictfp class ImporterJ
       errorHandler.showError("Error Importing Drawing",
           "Invalid data length, the drawing will not be imported", false);
     }
-  }
-
-  void importPlots()
-      throws java.io.IOException {
-    if (hasMoreLines(false)) {
-      String[] line = nextLine();
-      String currentPlot = line[0];
-      if (currentPlot.length() > 0) {
-        importerUser.currentPlot(currentPlot);
-      }
-
-      while (hasMoreLines(false)) {
-        line = nextLine();
-        try {
-          String plotName = (String) getTokenValue(line[0], false, false);
-          PlotInterface plot = importerUser.getPlot(plotName);
-          if (plot == null) {
-            errorHandler.showError("Error Importing Plots",
-                "The plot \"" + plotName + "\" does not exist.",
-                false);
-            // gobble up remaining lines of this section
-            while (hasMoreLines(false)) { } // NOPMD empty while loop OK
-            return;
-          } else {
-            int numPens = importIntro(plot);
-            importPens(plot, numPens);
-            importPoints(plot);
-          }
-          plot.makeDirty();
-        } catch (ClassCastException e) {
-          throw new AbortingImportException
-              (ImportError.ILLEGAL_CLASS_CAST_ERROR, "");
-        }
-      }
-    }
-  }
-
-  int importIntro(PlotInterface plot)
-      throws java.io.IOException {
-    // this is the header line and we don't really care about it since
-    // we have to set everything by hand anyway.
-    if (hasMoreLines(false) &&
-        hasMoreLines(false)) {
-      String[] line = nextLine();
-      plot.xMin_$eq(readNumber(line[0]));
-      plot.xMax_$eq(readNumber(line[1]));
-      plot.yMin_$eq(readNumber(line[2]));
-      plot.yMax_$eq(readNumber(line[3]));
-      plot.autoPlotOn_$eq(readBoolean(line[4]));
-      plot.currentPen_$eq(readString(line[5]));
-      plot.legendIsOpen_$eq(readBoolean(line[6]));
-      return (int) readNumber(line[7]);
-    }
-    return 0;
-  }
-
-  void importPens(PlotInterface plot, int numPens)
-      throws java.io.IOException {
-    if (hasMoreLines(false)) {
-      for (int i = 0; i < numPens; i++) {
-        if (hasMoreLines(false)) {
-          String[] line = nextLine();
-          Object value = getTokenValue(line[0], false, false);
-          if (value instanceof Junk) {
-            return;
-          }
-          scala.Option<PlotPenInterface> penMaybe = plot.getPen((String) value);
-          if (penMaybe.isDefined()) {
-            PlotPenInterface pen = penMaybe.get();
-            pen.isDown_$eq(readBoolean(line[1]));
-            pen.mode_$eq((int) readNumber(line[2]));
-            pen.interval_$eq(readNumber(line[3]));
-            pen.color_$eq(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber
-                (readNumber(line[4])));
-            pen.x_$eq(readNumber(line[5]));
-          } else {
-            errorHandler.showError("Error Importing Plots",
-                "The pen \"" + value + "\" does not exist.", false);
-            while (hasMoreLines(false)) {
-              nextLine();
-            }
-          }
-        }
-      }
-    }
-  }
-
-  void importPoints(PlotInterface plot)
-      throws java.io.IOException {
-    if (hasMoreLines(false)) {
-      String[] line = nextLine();
-      String[] pens = new String[((line.length - 1) / 4) + 1];
-
-      for (int i = 0; i < pens.length; i++) {
-        pens[i] = readString(line[i * 4]);
-      }
-
-      if (hasMoreLines(false)) {
-        while (hasMoreLines(true)) {
-          String[] data = nextLine();
-          for (int i = 0; i < pens.length; i++) {
-            scala.Option<PlotPenInterface> penMaybe = plot.getPen(pens[i]);
-            if (penMaybe.isDefined()) {
-              PlotPenInterface pen = penMaybe.get();
-              // there may be blank fields in the list of points
-              // since some pens may have more points than others.
-              if (data[i * 4].length() > 0) {
-                try {
-                  pen.plot(readNumber(data[i * 4]),
-                      readNumber(data[i * 4 + 1]),
-                      org.nlogo.api.Color.getARGBbyPremodulatedColorNumber
-                          ((int) readNumber(data[i * 4 + 2])),
-                      readBoolean(data[i * 4 + 3]));
-                } catch (ClassCastException e) {
-                  errorHandler.showError("Import Error",
-                      "Error while importing " + plot.name() +
-                          ", this point will be skipped.", false);
-
-                }
-              }
-            } else {
-              errorHandler.showError("Error Importing Plots",
-                  "The pen \"" + pens[i] + "\" does not exist.", false);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private double readNumber(String line) {
-    Object value = getTokenValue(line, false, false);
-    if (!(value instanceof Junk)) {
-      return ((Double) value).doubleValue();
-    }
-    return 0;
-  }
-
-  private boolean readBoolean(String line) {
-    Object value = getTokenValue(line, false, false);
-    if (!(value instanceof Junk)) {
-      return ((Boolean) value).booleanValue();
-    }
-    return false;
-  }
-
-  private String readString(String line) {
-    Object value = getTokenValue(line, false, false);
-    if (!(value instanceof Junk)) {
-      return (String) value;
-    }
-
-    return null;
   }
 
   void importOutputArea()
@@ -1261,7 +1108,7 @@ public abstract strictfp class ImporterJ
     }
   }
 
-  enum ImportError {
+  static enum ImportError {
     // nonfatal
     ILLEGAL_AGENT_VAR_ERROR,
     ILLEGAL_SHAPE_ERROR,
@@ -1309,7 +1156,7 @@ public abstract strictfp class ImporterJ
 
   static final String NO_DETAILS = "";
 
-  class AbortingImportException extends RuntimeException {
+  static class AbortingImportException extends RuntimeException {
     ImportError errorType;
     public String title;
     public String details;
@@ -1417,7 +1264,7 @@ public abstract strictfp class ImporterJ
   }
 
   // default access for unit testing
-  strictfp class Junk {
+  static strictfp class Junk {
   }
 
   ///

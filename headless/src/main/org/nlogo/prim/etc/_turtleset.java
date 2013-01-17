@@ -8,7 +8,6 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -32,8 +31,7 @@ public final strictfp class _turtleset
   }
 
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     LinkedHashSet<Turtle> resultSet =
         new LinkedHashSet<Turtle>();
     for (int i = 0; i < args.length; i++) {
@@ -63,8 +61,7 @@ public final strictfp class _turtleset
         world);
   }
 
-  private void descendList(Context context, LogoList tempList, Set<Turtle> result)
-      throws LogoException {
+  private void descendList(Context context, LogoList tempList, Set<Turtle> result) {
     for (Iterator<Object> iter = tempList.iterator();
          iter.hasNext();) {
       Object obj = iter.next();

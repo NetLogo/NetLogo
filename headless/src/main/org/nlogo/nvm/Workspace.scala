@@ -8,6 +8,9 @@ import java.util.{ WeakHashMap => JWeakHashMap }
 import java.io.IOException
 
 trait Workspace extends api.Workspace with JobManagerOwner {
+  def breathe(context: Context) // called when engine comes up for air
+  def requestDisplayUpdate(context: Context, force: Boolean)
+  def updateUI(context: Context) { }
   def joinForeverButtons(agent: Agent)
   def addJobFromJobThread(job: Job)
   def procedures: CompilerInterface.ProceduresMap
@@ -24,30 +27,19 @@ trait Workspace extends api.Workspace with JobManagerOwner {
   def inspectAgent(agent: Agent, radius: Double)
   def inspectAgent(kind: api.AgentKind, agent: Agent, radius: Double)
 
-  @throws(classOf[api.CompilerException])
   def compileForRun(source: String, context: Context, reporter: Boolean): Procedure
-  @throws(classOf[api.CompilerException])
   def compileCommands(source: String): Procedure
-  @throws(classOf[api.CompilerException])
   def compileCommands(source: String, kind: api.AgentKind): Procedure
-  @throws(classOf[api.CompilerException])
   def compileReporter(source: String): Procedure
   def runCompiledCommands(owner: api.JobOwner, procedure: Procedure): Boolean
   def runCompiledReporter(owner: api.JobOwner, procedure: Procedure): AnyRef
 
-  @throws(classOf[api.CompilerException])
   def evaluateCommands(owner: api.JobOwner, source: String)
-  @throws(classOf[api.CompilerException])
   def evaluateCommands(owner: api.JobOwner, source: String, waitForCompletion: Boolean)
-  @throws(classOf[api.CompilerException])
   def evaluateCommands(owner: api.JobOwner, source: String, agent: Agent, waitForCompletion: Boolean)
-  @throws(classOf[api.CompilerException])
   def evaluateCommands(owner: api.JobOwner, source: String, agents: AgentSet, waitForCompletion: Boolean)
-  @throws(classOf[api.CompilerException])
   def evaluateReporter(owner: api.JobOwner, source: String): AnyRef
-  @throws(classOf[api.CompilerException])
   def evaluateReporter(owner: api.JobOwner, source: String, agent: Agent): AnyRef
-  @throws(classOf[api.CompilerException])
   def evaluateReporter(owner: api.JobOwner, source: String, agents: AgentSet): AnyRef
 
 }

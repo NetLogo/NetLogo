@@ -202,7 +202,6 @@ R __dump etc._dump
 R __dump-extension-prims etc._dumpextensionprims
 R __dump-extensions etc._dumpextensions
 R __dump1 etc._dump1
-R __monitorprecision etc._monitorprecision
 R __nano-time etc._nanotime
 R __patchcol _patchcol
 R __patchrow _patchrow

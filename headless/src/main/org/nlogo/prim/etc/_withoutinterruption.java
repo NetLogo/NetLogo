@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -23,13 +22,11 @@ public final strictfp class _withoutinterruption
   }
 
   @Override
-  public void perform(final Context context)
-      throws LogoException {
+  public void perform(final Context context) {
     perform_1(context);
   }
 
-  public void perform_1(final Context context)
-      throws LogoException {
+  public void perform_1(final Context context) {
     AgentSet agentset =
         new org.nlogo.agent.ArrayAgentSet
             (context.agent.kind(), 1, false, world);

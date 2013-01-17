@@ -3,7 +3,6 @@
 package org.nlogo.workspace;
 
 import org.nlogo.api.ClassManager;
-import org.nlogo.api.CompilerException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.ErrorSource;
 import org.nlogo.api.ExtensionException;
@@ -133,8 +132,7 @@ public strictfp class ExtensionManager
   }
 
   // called each time extensions is parsed
-  public void importExtension(String extName, ErrorSource errors)
-      throws CompilerException {
+  public void importExtension(String extName, ErrorSource errors) {
     String jarPath = identifierToJar(extName);
 
     try {
@@ -297,8 +295,7 @@ public strictfp class ExtensionManager
   }
 
   // We only want one ClassLoader for every Jar per NetLogo instance
-  private java.net.URLClassLoader getClassLoader(String jarPath, ErrorSource errors, ClassLoader parentLoader)
-      throws CompilerException {
+  private java.net.URLClassLoader getClassLoader(String jarPath, ErrorSource errors, ClassLoader parentLoader) {
     JarContainer theJarContainer = jars.get(jarPath);
     if (theJarContainer != null) {
       return theJarContainer.jarClassLoader;
@@ -334,9 +331,8 @@ public strictfp class ExtensionManager
 
   // We want a new ClassManager per Jar Load
   private ClassManager getClassManager(String jarPath,
-                                                     java.net.URLClassLoader myClassLoader,
-                                                     ErrorSource errors)
-      throws CompilerException {
+                                       java.net.URLClassLoader myClassLoader,
+                                       ErrorSource errors) {
     JarContainer theJarContainer = jars.get(jarPath);
 
     if ((theJarContainer != null) && (theJarContainer.loaded)) {
@@ -381,7 +377,7 @@ public strictfp class ExtensionManager
    * Gets the name of an extension's ClassManager implementation from the manifest.
    */
   private String getClassManagerName(String jarPath, ErrorSource errors)
-      throws java.io.IOException, CompilerException {
+      throws java.io.IOException {
     java.net.URL jarURL = new java.net.URL("jar", "", jarPath + "!/");
     java.net.JarURLConnection jarConnection = (java.net.JarURLConnection) jarURL.openConnection();
     String name = null;
@@ -403,8 +399,7 @@ public strictfp class ExtensionManager
   /**
    * Gets the extension name from the manifest.
    */
-  private String getExtensionName(String jarPath, ErrorSource errors)
-      throws CompilerException {
+  private String getExtensionName(String jarPath, ErrorSource errors) {
     try {
       java.net.URL jarURL = new java.net.URL("jar", "", jarPath + "!/");
       java.net.JarURLConnection jarConnection = (java.net.JarURLConnection) jarURL.openConnection();
@@ -431,9 +426,8 @@ public strictfp class ExtensionManager
     return null;
   }
 
-  public Object readFromString(String source)
-      throws CompilerException {
-    return ((AbstractWorkspaceScala) workspace).readFromString(source);
+  public Object readFromString(String source) {
+    return workspace.readFromString(source);
   }
 
   public void clearAll() {
@@ -444,8 +438,7 @@ public strictfp class ExtensionManager
 
   public org.nlogo.api.ExtensionObject readExtensionObject(String extName,
                                                            String typeName,
-                                                           String value)
-      throws CompilerException {
+                                                           String value) {
     JarContainer theJarContainer = null;
 
     extName = extName.toUpperCase();
@@ -653,8 +646,7 @@ public strictfp class ExtensionManager
     return true;
   }
 
-  private long getModified(String jarPath, ErrorSource errors)
-      throws CompilerException {
+  private long getModified(String jarPath, ErrorSource errors) {
     try {
       return new java.net.URL(jarPath)
           .openConnection().getLastModified();

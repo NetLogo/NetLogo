@@ -6,7 +6,6 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -26,7 +25,7 @@ public final strictfp class _maxnof
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new EngineException(context, this,

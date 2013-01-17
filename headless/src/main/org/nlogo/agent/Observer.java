@@ -5,7 +5,6 @@ package org.nlogo.agent;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentKind;
 import org.nlogo.api.AgentKindJ;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.ValueConstraint;
@@ -99,13 +98,13 @@ public strictfp class Observer
 
   @Override
   public void setVariable(int vn, Object value)
-      throws AgentException, LogoException {
+      throws AgentException {
     setObserverVariable(vn, value);
   }
 
 
   public void assertVariableConstraint(int vn, Object value)
-      throws AgentException, LogoException {
+      throws AgentException {
     ValueConstraint con = variableConstraint(vn);
     if (con != null) {
       con.assertConstraint(value);
@@ -114,7 +113,7 @@ public strictfp class Observer
 
   @Override
   public void setObserverVariable(int vn, Object value)
-      throws AgentException, LogoException {
+      throws AgentException {
     assertVariableConstraint(vn, value);
     variables[vn] = value;
   }

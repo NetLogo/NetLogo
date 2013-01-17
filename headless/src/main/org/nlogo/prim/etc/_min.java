@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -21,11 +20,11 @@ public final strictfp class _min extends Reporter implements Pure {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     return report_1(context, argEvalList(context, 0));
   }
 
-  public double report_1(Context context, LogoList list) throws LogoException {
+  public double report_1(Context context, LogoList list) {
     double winner = 0;
     Double boxedWinner = null;
     for (Object elt : list) {

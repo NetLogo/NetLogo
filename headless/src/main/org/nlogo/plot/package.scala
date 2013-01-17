@@ -23,7 +23,6 @@ package org.nlogo
  *
  * PlotExporter is used to export the plot data in CSV format.
  *
- * Many classes are serializable in order to support HubNet plot mirroring.
  */
 
 package object plot

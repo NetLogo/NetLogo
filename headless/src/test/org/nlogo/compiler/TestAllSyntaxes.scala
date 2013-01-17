@@ -139,7 +139,6 @@ class TestAllSyntaxes extends FunSuite {
                      |_minus number,number,number,OTPL,null,7,1,1
                      |_mod number,number,number,OTPL,null,8,1,1
                      |_modes list,list,OTPL,null,10,1,1
-                     |_monitorprecision anything/number,number,O---,null,10,2,2
                      |_mousedown ,TRUE/FALSE,OTPL,null,10,0,0
                      |_mouseinside ,TRUE/FALSE,OTPL,null,10,0,0
                      |_mousexcor ,number,OTPL,null,10,0,0

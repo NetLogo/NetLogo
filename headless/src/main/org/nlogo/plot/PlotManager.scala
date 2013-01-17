@@ -7,13 +7,19 @@ import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
-class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
+class PlotManager(factory: LogoThunkFactory)
+  extends PlotManagerInterface
+  with PlotRunner
+  with mutable.Publisher[PlotAction] {
+
+  override def publish(action: PlotAction) {
+    super.publish(action)
+    run(action)
+  }
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()
   def plots = _plots.toList
-
-  var listener: PlotListener = null
 
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
@@ -36,12 +42,15 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
     plot
   }
 
-  // possible null return
-  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name)).orNull
+  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
+//  def getPlotOrNull(name: String): Plot = getPlot(name).orNull
+
+  def getPlotPen(plotName: String, penName: String) =
+    getPlot(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
   def getPlotNames: Array[String] = _plots.map(_.name).toArray
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
+  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_).isEmpty).get
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None
@@ -58,7 +67,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
   }
   def clearAll() {
     _plots.foreach(_.clear())
-    if (listener != null) listener.clearAll()
   }
 
   //
@@ -120,10 +128,6 @@ class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
     // save the currently selected plot
     val oldCurrentPlot = currentPlot
     for (plot <- _plots) {
-      // TODO: investigate possibly not setting current plot and current pen if the plot
-      // has no code. using the current design of plot mirroring in hubnet, this
-      // would reduce traffic. another TODO is to possibly redesign plot mirroring
-      // so that this is no longer an issue.
       currentPlot = Some(plot)
       // run the plot code (and pens), only if it was compiled successfully.
       // this line below runs the code if there is any to run, and it tells

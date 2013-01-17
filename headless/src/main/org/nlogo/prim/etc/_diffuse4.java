@@ -6,10 +6,10 @@ import org.nlogo.agent.PatchException;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Command;
+import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
 
 public final strictfp class _diffuse4
@@ -31,7 +31,7 @@ public final strictfp class _diffuse4
   }
 
   @Override
-  public void perform(final org.nlogo.nvm.Context context) throws LogoException {
+  public void perform(final Context context) {
     double diffuseparam = argEvalDoubleValue(context, 0);
     if (diffuseparam < 0.0 || diffuseparam > 1.0) {
       throw new EngineException

@@ -3,6 +3,7 @@
 package org.nlogo.plot
 
 import org.scalatest.FunSuite
+import org.nlogo.api.PlotPenInterface
 
 trait SimplePlotTest extends FunSuite {
 
@@ -19,8 +20,8 @@ class PlotTests extends SimplePlotTest {
     val plot = new Plot("test")
     expectResult("test")(plot.name)
     expectResult(0)(plot.pens.size) // no pens
-    assert(plot.defaultAutoPlotOn)
-    assert(plot.autoPlotOn)
+    assert(plot.defaultState.autoPlotOn)
+    assert(plot.state.autoPlotOn)
   }
 
   testPlot("ClearRemovesTemporaryPens") { plot =>
@@ -47,34 +48,30 @@ class PlotTests extends SimplePlotTest {
   }
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
-    pen.plot(-0.0001, -0.0001)
-    expectResult(-2.5)(plot.xMin)
-    expectResult(-1.0)(plot.yMin)
-    expectResult(10.0)(plot.xMax)
-    expectResult(10.0)(plot.yMax)
+    plot.plot(pen, -0.0001, -0.0001)
+    expectResult(-2.5)(plot.state.xMin)
+    expectResult(-1.0)(plot.state.yMin)
+    expectResult(10.0)(plot.state.xMax)
+    expectResult(10.0)(plot.state.yMax)
   }
   testPlot("AutoPlotGrowMax") { plot =>
     val pen = plot.createPlotPen("test", false)
-    expectResult(0.0)(plot.xMin)
-    expectResult(0.0)(plot.yMin)
-    expectResult(10.0)(plot.xMax)
-    expectResult(10.0)(plot.yMax)
-    pen.plot(10.0001, 10.0001)
-    expectResult(12.5)(plot.xMax)
-    expectResult(11.0)(plot.yMax)
+    expectResult(0.0)(plot.state.xMin)
+    expectResult(0.0)(plot.state.yMin)
+    expectResult(10.0)(plot.state.xMax)
+    expectResult(10.0)(plot.state.yMax)
+    plot.plot(pen, 10.0001, 10.0001)
+    expectResult(12.5)(plot.state.xMax)
+    expectResult(11.0)(plot.state.yMax)
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
-    pen.mode = PlotPen.BAR_MODE
-    pen.interval = 5.0
-    pen.plot(10.0001, 10.0001)
-    expectResult(18.8)(plot.xMax)
-    expectResult(11.0)(plot.yMax)
-  }
-  testPlot("HistogramNumBars") { plot =>
-    val pen = plot.createPlotPen("test", false)
-    plot.setHistogramNumBars(pen, 5)
-    expectResult(2.0)(pen.interval)
+    pen.state = pen.state.copy(
+      mode = PlotPenInterface.BarMode,
+      interval = 5.0)
+    plot.plot(pen, 10.0001, 10.0001)
+    expectResult(18.8)(plot.state.xMax)
+    expectResult(11.0)(plot.state.yMax)
   }
   /// histogram tests
   // we already have TestHistogram for basic histogram testing,
@@ -101,20 +98,20 @@ class PlotTests extends SimplePlotTest {
     expectResult(2.0)(pen.points(5).y)
   }
   testPlot("HistogramGrowHeight") { plot =>
-    plot.yMax=5
+    plot.state = plot.state.copy(yMax = 5)
     val pen = plot.createPlotPen("test", false)
     plot.beginHistogram(pen)
     (0 until 5).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expectResult(5.0)(plot.yMax)
+    expectResult(5.0)(plot.state.yMax)
     plot.beginHistogram(pen)
     (0 until 10).foreach(_ => plot.nextHistogramValue(0))
     plot.endHistogram(pen)
-    expectResult(10.0)(plot.yMax)
+    expectResult(10.0)(plot.state.yMax)
     plot.clear()
-    plot.yMax=5
-    pen.plot(0, 10)
-    expectResult(11.0)(plot.yMax)
+    plot.state = plot.state.copy(yMax = 5)
+    plot.plot(pen, 0, 10)
+    expectResult(11.0)(plot.state.yMax)
   }
   testPlot("Iterator") { plot =>
     plot.pens = Nil

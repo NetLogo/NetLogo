@@ -11,7 +11,7 @@ class _userdirectory extends Reporter {
     Syntax.reporterSyntax(Syntax.StringType | Syntax.BooleanType)
 
   override def report(context: Context): AnyRef = {
-    workspace.updateUI()
+    workspace.updateUI(context)
     val result: Option[String] =
       workspace.waitForResult(
         new ReporterRunnable[Option[String]] {

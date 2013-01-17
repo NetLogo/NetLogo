@@ -4,6 +4,8 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 
 resourceDirectory in Compile <<= baseDirectory(_ / "resources")
 
+scalacOptions in Compile += "-Xlint"
+
 scalaSource in Compile <<= baseDirectory(_ / "src" / "main")
 
 scalaSource in Test <<= baseDirectory(_ / "src" / "test")
@@ -21,3 +23,7 @@ mainClass in Compile := Some("org.nlogo.headless.Shell")
 seq(Testing.settings: _*)
 
 seq(Depend.settings: _*)
+
+seq(Dump.settings: _*)
+
+seq(ChecksumsAndPreviews.settings: _*)

@@ -11,7 +11,6 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -27,7 +26,7 @@ import java.util.Set;
 public final strictfp class _atpoints
     extends Reporter {
   @Override
-  public Object report(final Context context) throws LogoException {
+  public Object report(final Context context) {
     // part 1: get arguments, context.checked validity
     AgentSet sourceSet = argEvalAgentSet(context, 0);
     List<Agent> result = new ArrayList<Agent>();
@@ -105,8 +104,7 @@ public final strictfp class _atpoints
     return false;
   }
 
-  private Set<Patch> getPatchesAtPoints(Context context, Agent agent, LogoList points)
-      throws LogoException {
+  private Set<Patch> getPatchesAtPoints(Context context, Agent agent, LogoList points) {
     // use LinkedHashSet here because we want fast lookup, but we also need
     // predictable ordering so runs are reproducible - ST 8/13/03
     LinkedHashSet<Patch> result =
@@ -139,7 +137,9 @@ public final strictfp class _atpoints
         if (patch != null) {
           result.add(patch);
         }
-      } catch (AgentException e) { } // NOPMD
+      } catch (AgentException e) {
+        // do nothing
+      }
     }
     return result;
   }

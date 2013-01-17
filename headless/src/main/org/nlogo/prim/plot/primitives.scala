@@ -2,9 +2,11 @@
 
 package org.nlogo.prim.plot
 
-import org.nlogo.api.{ CommandRunnable, I18N, Syntax }
+import org.nlogo.api
+import api.Syntax
 import org.nlogo.nvm.{ Command, Context, EngineException, Instruction, Reporter }
-import org.nlogo.plot.PlotManager
+import org.nlogo.plot
+import plot.{ PlotManager, PlotAction }
 
 //
 // base classes
@@ -17,7 +19,7 @@ trait Helpers extends Instruction {
     plotManager.currentPlot.getOrElse(
       throw new EngineException(
         context, this,
-        I18N.errors.get("org.nlogo.plot.noPlotSelected")))
+        api.I18N.errors.get("org.nlogo.plot.noPlotSelected")))
   def currentPen(context: Context) = {
     val plot = currentPlot(context)
     plot.currentPen.getOrElse(
@@ -32,6 +34,17 @@ extends Command with Helpers {
     Syntax.commandSyntax(args.toArray)
 }
 
+abstract class PlotActionCommand(args: Int*)
+extends PlotCommand(args: _*) {
+  override def syntax =
+    Syntax.commandSyntax(args.toArray)
+  override def perform(context: Context) {
+    plotManager.publish(action(context))
+    context.ip = next
+  }
+  def action(context: Context): PlotAction
+}
+
 abstract class PlotReporter(returnType: Int, args: Int*)
 extends Reporter with Helpers {
   override def syntax =
@@ -44,10 +57,12 @@ extends Reporter with Helpers {
 
 class _clearallplots extends PlotCommand() {
   override def perform(context: Context) {
-    plotManager.clearAll()
+    for (plot <- plotManager.plots)
+      plotManager.publish(PlotAction.ClearPlot(plot.name))
     context.ip = next
   }
 }
+
 class _setupplots extends PlotCommand() {
   override def callsOtherCode = true
   override def perform(context: Context) {
@@ -66,10 +81,10 @@ class _setcurrentplot extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val plot = plotManager.getPlot(name)
-    if (plot == null)
+    if (plot.isEmpty)
       throw new EngineException(context, this,
         "no such plot: \"" + name + "\"")
-    plotManager.currentPlot = Some(plot)
+    plotManager.currentPlot = plot
     context.ip = next
   }
 }
@@ -78,122 +93,52 @@ class _setcurrentplot extends PlotCommand(Syntax.StringType) {
 // commands requiring that there be a current plot.
 //
 
-class _clearplot extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPlot(context).clear()
-    context.ip = next
-  }
-}
-class _autoplotoff extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = false
-    context.ip = next
-  }
-}
-class _autoploton extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPlot(context).autoPlotOn = true
-    context.ip = next
-  }
+class _clearplot extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.ClearPlot(currentPlot(context).name)
 }
 
-class _plot extends PlotCommand(Syntax.NumberType) {
-  override def perform(context: Context) {
-    val y = argEvalDoubleValue(context, 0)
-    currentPen(context).plot(y)
-    currentPlot(context).makeDirty()
-    context.ip = next
-  }
+class _autoplotoff extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlot(currentPlot(context).name, on = false)
+}
+class _autoploton extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlot(currentPlot(context).name, on = true)
 }
 
-class _plotxy extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
-  override def perform(context: Context) {
-    val x = argEvalDoubleValue(context, 0)
-    val y = argEvalDoubleValue(context, 1)
-    currentPen(context).plot(x, y)
-    currentPlot(context).makeDirty()
-    context.ip = next
-  }
-}
-
-class _setplotxrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
-  override def perform(context: Context) {
+class SetPlotRangeCommand(isX: Boolean) extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
+  override def action(context: Context) = {
     val min = argEvalDoubleValue(context, 0)
     val max = argEvalDoubleValue(context, 1)
     if (min >= max)
-      throw new EngineException(context, this,
-        "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
-    val plot = currentPlot(context)
-    plot.xMin = min
-    plot.xMax = max
-    plot.makeDirty()
-    context.ip = next
+      throw new EngineException(
+        context, this,
+        "the minimum must be less than the maximum, but " + min +
+        " is greater than or equal to " + max)
+    PlotAction.SetRange(
+      plotName = currentPlot(context).name,
+      isX = isX, min = min, max = max)
   }
 }
+class _setplotxrange extends SetPlotRangeCommand(isX = true)
+class _setplotyrange extends SetPlotRangeCommand(isX = false)
 
-class _setplotyrange extends PlotCommand(Syntax.NumberType, Syntax.NumberType) {
-  override def perform(context: Context) {
-    val min = argEvalDoubleValue(context, 0)
-    val max = argEvalDoubleValue(context, 1)
-    if (min >= max)
-      throw new EngineException(context, this,
-        "the minimum must be less than the maximum, but " +  min + " is greater than or equal to " + max)
-    val plot = currentPlot(context)
-    plot.yMin = min
-    plot.yMax = max
-    plot.makeDirty()
-    context.ip = next
-  }
-}
-
-class _createtemporaryplotpen extends PlotCommand(Syntax.StringType) {
-  override def perform(context: Context) {
-    val name = argEvalString(context, 0)
-    val plot = currentPlot(context)
-    plot.currentPen = plot.getPen(name).getOrElse(plot.createPlotPen(name, true))
-    context.ip = next
-  }
-}
-
-class _histogram extends PlotCommand(Syntax.ListType) {
-  import org.nlogo.api.Dump
-  override def perform(context: Context) {
-    val list = argEvalList(context, 0)
-    val pen = currentPen(context)
-    pen.plotListenerReset(false)
-    if(pen.interval <= 0)
-      throw new EngineException(context, this,
-        "You cannot histogram with a plot-pen-interval of " + Dump.number(pen.interval) + ".")
-    val plot = currentPlot(context)
-    plot.beginHistogram(pen)
-    for(d <- list.scalaIterator.collect{case d: java.lang.Double => d.doubleValue})
-      plot.nextHistogramValue(d)
-    plot.endHistogram(pen)
-    plot.makeDirty()
-    context.ip = next
-  }
-}
-
-class _sethistogramnumbars extends PlotCommand(Syntax.NumberType) {
-  override def perform(context: Context) {
-    val numBars = argEvalIntValue(context, 0)
-    if (numBars < 1)
-      throw new EngineException(context, this,
-        "You cannot make a histogram with " + numBars + " bars.")
-    currentPlot(context).setHistogramNumBars(currentPen(context), numBars)
-    context.ip = next
-  }
+class _createtemporaryplotpen extends PlotActionCommand(Syntax.StringType) {
+  override def action(context: Context) =
+    PlotAction.CreateTemporaryPen(
+      currentPlot(context).name, argEvalString(context, 0))
 }
 
 class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
-    if (plotManager.getPlot(name) == null) {
+    if (plotManager.getPlot(name).isEmpty) {
       throw new EngineException(context, this, "no such plot: \"" + name + "\"")
     }
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
-    workspace.waitFor(new CommandRunnable {
+    workspace.waitFor(new api.CommandRunnable {
       def run() {
         try workspace.exportPlot(name, workspace.fileManager.attachPrefix(path))
         catch {
@@ -213,7 +158,7 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
     if (plotManager.getPlotNames.length == 0)
       throw new EngineException(context, this, "there are no plots to export")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
-    workspace.waitFor(new CommandRunnable {
+    workspace.waitFor(new api.CommandRunnable {
       def run() {
         try workspace.exportAllPlots(workspace.fileManager.attachPrefix(path))
         catch {
@@ -233,7 +178,7 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
   override def report(context: Context) =
-    Boolean.box(currentPlot(context).autoPlotOn)
+    Boolean.box(currentPlot(context).state.autoPlotOn)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
   override def report(context: Context) =
@@ -241,19 +186,19 @@ class _plotname extends PlotReporter(Syntax.StringType) {
 }
 class _plotxmin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).xMin)
+    Double.box(currentPlot(context).state.xMin)
 }
 class _plotxmax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).xMax)
+    Double.box(currentPlot(context).state.xMax)
 }
 class _plotymin extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).yMin)
+    Double.box(currentPlot(context).state.yMin)
 }
 class _plotymax extends PlotReporter(Syntax.NumberType) {
   override def report(context: Context) =
-    Double.box(currentPlot(context).yMax)
+    Double.box(currentPlot(context).state.yMax)
 }
 class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType) {
   override def report(context: Context) =
@@ -264,70 +209,120 @@ class _plotpenexists extends PlotReporter(Syntax.BooleanType, Syntax.StringType)
 // plot pen prims
 //
 
-final class _plotpendown extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPen(context).isDown = true
-    context.ip = next
-  }
+class _plot extends PlotActionCommand(Syntax.NumberType) {
+  override def action(context: Context) =
+    PlotAction.PlotY(
+      currentPlot(context).name,
+      currentPen(context).name,
+      argEvalDoubleValue(context, 0))
 }
-final class _plotpenup extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPen(context).isDown = false
-    context.ip = next
-  }
+
+class _plotxy extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
+  override def action(context: Context) =
+    PlotAction.PlotXY(
+      currentPlot(context).name,
+      currentPen(context).name,
+      argEvalDoubleValue(context, 0),
+      argEvalDoubleValue(context, 1))
 }
-final class _plotpenshow extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPen(context).hidden = false
-    context.ip = next
-  }
-}
-final class _plotpenhide extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPen(context).hidden = true
-    context.ip = next
-  }
-}
-final class _plotpenreset extends PlotCommand() {
-  override def perform(context: Context) {
-    currentPen(context).hardReset()
-    currentPen(context).plotListenerReset(true)
-    currentPlot(context).makeDirty()
-    context.ip = next
+
+class _histogram extends PlotActionCommand(Syntax.ListType) {
+  override def action(context: Context) = {
+    val list = argEvalList(context, 0)
+    val pen = currentPen(context)
+    if(pen.state.interval <= 0)
+      throw new EngineException(context, this,
+        "You cannot histogram with a plot-pen-interval of " + api.Dump.number(pen.state.interval) + ".")
+    val values = list.scalaIterator.collect{
+        case d: java.lang.Double =>
+          d.doubleValue
+      }.toSeq
+    PlotAction.Histogram(
+      currentPlot(context).name, pen.name, values)
   }
 }
 
-final class _setplotpeninterval extends PlotCommand(Syntax.NumberType) {
-  override def perform(context: Context) {
-    currentPen(context).interval = argEvalDoubleValue(context, 0)
-    context.ip = next
+class _sethistogramnumbars extends PlotActionCommand(Syntax.NumberType) {
+  override def action(context: Context) = {
+    val numBars = argEvalIntValue(context, 0)
+    if (numBars < 1)
+      throw new EngineException(context, this,
+        "You cannot make a histogram with " + numBars + " bars.")
+    val plot = currentPlot(context)
+    val pen = currentPen(context)
+    val newInterval = (plot.state.xMax - plot.state.xMin) / numBars
+    PlotAction.SetPenInterval(
+      plot.name, pen.name, newInterval)
   }
 }
+class _setplotpeninterval extends PlotActionCommand(Syntax.NumberType) {
+  override def action(context: Context) =
+    PlotAction.SetPenInterval(
+      currentPlot(context).name,
+      currentPen(context).name,
+      argEvalDoubleValue(context, 0))
+}
 
-final class _setplotpenmode extends PlotCommand(Syntax.NumberType) {
-  import org.nlogo.api.PlotPenInterface
-  override def perform(context: Context) {
+class _plotpendown extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.PenDown(
+      currentPlot(context).name,
+      currentPen(context).name,
+      down = true)
+}
+class _plotpenup extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.PenDown(
+      currentPlot(context).name,
+      currentPen(context).name,
+      down = false)
+}
+class _plotpenshow extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.HidePen(
+      currentPlot(context).name,
+      currentPen(context).name,
+      hidden = false)
+}
+class _plotpenhide extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.HidePen(
+      currentPlot(context).name,
+      currentPen(context).name,
+      hidden = true)
+}
+class _plotpenreset extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.ResetPen(
+      currentPlot(context).name,
+      currentPen(context).name)
+}
+
+class _setplotpenmode extends PlotActionCommand(Syntax.NumberType) {
+  override def action(context: Context) = {
     val mode = argEvalIntValue(context, 0)
-    if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
+    if (mode < api.PlotPenInterface.MinMode || mode > api.PlotPenInterface.MaxMode) {
       throw new EngineException(context, this,
         mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
-    currentPen(context).mode = mode
-    context.ip = next
+    val plotName = currentPlot(context).name
+    val penName = currentPen(context).name
+    PlotAction.SetPenMode(plotName, penName, mode)
   }
 }
 
-final class _setplotpencolor extends PlotCommand(Syntax.NumberType) {
-  import org.nlogo.api.Color
-  override def perform(context: Context) {
-    currentPen(context).color =
-      Color.getARGBbyPremodulatedColorNumber(
-        Color.modulateDouble(argEvalDoubleValue(context, 0)))
-    context.ip = next
+class _setplotpencolor extends PlotActionCommand(Syntax.NumberType) {
+  override def action(context: Context) = {
+    val color =
+      api.Color.getARGBbyPremodulatedColorNumber(
+        api.Color.modulateDouble(argEvalDoubleValue(context, 0)))
+    val plotName = currentPlot(context).name
+    val penName = currentPen(context).name
+    PlotAction.SetPenColor(plotName, penName, color)
   }
 }
 
-final class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
+class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
   override def perform(context: Context) {
     val penName = argEvalString(context, 0)
     val plot = currentPlot(context)

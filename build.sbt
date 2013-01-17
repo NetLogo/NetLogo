@@ -78,7 +78,3 @@ all <<= all.dependsOn(
 ///
 
 seq(Packaging.settings: _*)
-
-seq(Dump.settings: _*)
-
-seq(ChecksumsAndPreviews.settings: _*)

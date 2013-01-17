@@ -9,7 +9,6 @@ import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Equality;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -21,7 +20,7 @@ public final strictfp class _member
     extends Reporter
     implements org.nlogo.nvm.Pure {
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       Object value = args[0].report(context);

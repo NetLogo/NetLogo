@@ -5,7 +5,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
 import org.nlogo.nvm.Reporter;
@@ -19,7 +18,7 @@ public final strictfp class _otherend
   }
 
   @Override
-  public Object report(final org.nlogo.nvm.Context context) throws LogoException {
+  public Object report(final org.nlogo.nvm.Context context) {
     Link link;
     Turtle node;
     if (context.agent instanceof Link) {

@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{ World, OutputObject }
-import org.nlogo.api.{ CompilerException, File, FileMode }
+import org.nlogo.api.{ File, FileMode }
 
 trait FileManager {
   def getPrefix: String
@@ -34,7 +34,6 @@ trait FileManager {
   @throws(classOf[java.io.IOException])
   def getErrorInfo: String
   @throws(classOf[java.io.IOException])
-  @throws(classOf[CompilerException])
   def read(world: World): AnyRef
   @throws(classOf[java.io.IOException])
   def readLine(): String

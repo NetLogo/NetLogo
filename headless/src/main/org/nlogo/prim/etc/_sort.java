@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -27,13 +26,11 @@ public final strictfp class _sort
   }
 
   @Override
-  public Object report(final Context context)
-      throws LogoException {
+  public Object report(final Context context) {
     return report_1(context, args[0].report(context));
   }
 
-  public Object report_1(final Context context, Object obj)
-      throws LogoException {
+  public Object report_1(final Context context, Object obj) {
     if (obj instanceof AgentSet) {
       return ((AgentSet) obj).toLogoList();
     } else if (obj instanceof LogoList) {

@@ -6,7 +6,6 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
@@ -24,7 +23,7 @@ public final strictfp class _layoutcircle
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     Object nodes = args[0].report(context);
     double radius = argEvalDoubleValue(context, 1);
     try {

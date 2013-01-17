@@ -35,7 +35,7 @@ private object SetVisitor {
   type ReporterClass = Class[_ <: Reporter]
   type CommandClass = Class[_ <: Command]
   // pending resolution of https://issues.scala-lang.org/browse/SI-6723
-  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/12
+  // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/3/13
   val classes = Map[ReporterClass, CommandClass](
     (classOf[_letvariable]          , classOf[_setletvariable]),
     (classOf[_turtleorlinkvariable] , classOf[_setturtleorlinkvariable]),

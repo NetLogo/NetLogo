@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.EngineException;
@@ -18,7 +17,7 @@ public final strictfp class _towardsxy extends Reporter {
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     try {
       return validDouble
           (world.protractor().towards

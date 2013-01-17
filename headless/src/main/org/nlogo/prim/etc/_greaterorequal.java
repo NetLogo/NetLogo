@@ -7,7 +7,6 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.TypeNames;
 import org.nlogo.nvm.Context;
@@ -26,7 +25,7 @@ public final strictfp class _greaterorequal
   }
 
   @Override
-  public Object report(Context context) throws LogoException {
+  public Object report(Context context) {
     return report_1(context,
         args[0].report(context),
         args[1].report(context))
@@ -34,8 +33,7 @@ public final strictfp class _greaterorequal
         : Boolean.FALSE;
   }
 
-  public boolean report_1(Context context, Object o1, Object o2)
-      throws LogoException {
+  public boolean report_1(Context context, Object o1, Object o2) {
     if (o1 instanceof Double && o2 instanceof Double) {
       return ((Double) o1).doubleValue() >= ((Double) o2).doubleValue();
     }
@@ -74,7 +72,7 @@ public final strictfp class _greaterorequal
     return arg0.compareTo(arg1) >= 0;
   }
 
-  public boolean report_7(Context context, double arg0, Object arg1) throws LogoException {
+  public boolean report_7(Context context, double arg0, Object arg1) {
     if (arg1 instanceof Double) {
       return arg0 >= ((Double) arg1).doubleValue();
     }
@@ -83,7 +81,7 @@ public final strictfp class _greaterorequal
             TypeNames.aName(arg0), TypeNames.aName(arg1)));
   }
 
-  public boolean report_8(Context context, Object arg0, double arg1) throws LogoException {
+  public boolean report_8(Context context, Object arg0, double arg1) {
     if (arg0 instanceof Double) {
       return ((Double) arg0).doubleValue() >= arg1;
     }

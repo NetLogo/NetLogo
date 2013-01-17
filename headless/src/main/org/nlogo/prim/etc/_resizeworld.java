@@ -3,7 +3,6 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.I18N;
-import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -20,7 +19,7 @@ public final strictfp class _resizeworld
   }
 
   @Override
-  public void perform(final Context context) throws LogoException {
+  public void perform(final Context context) {
     final int newMinX = argEvalIntValue(context, 0);
     final int newMaxX = argEvalIntValue(context, 1);
     final int newMinY = argEvalIntValue(context, 2);

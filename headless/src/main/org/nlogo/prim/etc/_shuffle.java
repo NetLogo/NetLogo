@@ -2,7 +2,6 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.api.LogoException;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -14,7 +13,7 @@ import java.util.Collections;
 public final strictfp class _shuffle
     extends Reporter {
   @Override
-  public Object report(final Context context) throws LogoException {
+  public Object report(final Context context) {
     // we can't call Collections.shuffle() on a LogoList because
     // LogoList.Iterator doesn't support set() - ST 8/1/06
     ArrayList<Object> result =

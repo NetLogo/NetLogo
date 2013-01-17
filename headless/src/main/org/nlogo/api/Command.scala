@@ -28,7 +28,6 @@ trait Command extends Primitive {
    * @throws LogoException      (if one of the evaluated arguments throws a LogoException)
    */
   @throws(classOf[ExtensionException])
-  @throws(classOf[LogoException])
   def perform(args: Array[Argument], context: Context)
 
 }
