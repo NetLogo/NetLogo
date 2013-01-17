@@ -13,7 +13,7 @@ import scala.collection.mutable.{ ListBuffer, Subscriber }
 
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO, ModelRunInterface }
+import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
 import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
@@ -32,13 +32,11 @@ class ReviewTab(
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
 
-  object API {
-    def loadedRuns: Seq[ModelRunInterface] = tabState.runs
-    def loadRun(inputStream: java.io.InputStream): Unit = {
-      val run = ModelRunIO.load(inputStream)
-      tabState.addRun(run)
-      loadModelIfNeeded(run.modelString)
-    }
+  def loadedRuns: Seq[api.ModelRun] = tabState.runs
+  def loadRun(inputStream: java.io.InputStream): Unit = {
+    val run = ModelRunIO.load(inputStream)
+    tabState.addRun(run)
+    loadModelIfNeeded(run.modelString)
   }
 
   private def workspaceWidgets =
@@ -374,7 +372,7 @@ class ReviewTab(
         // Load a run from `path` and returns either the loaded run
         // in case of success or the path in case of failure
         try {
-          API.loadRun(new java.io.FileInputStream(path))
+          loadRun(new java.io.FileInputStream(path))
           val run = tabState.runs.last
           Right(run)
         } catch {

@@ -5,12 +5,7 @@ package org.nlogo.mirror
 import java.awt.image.BufferedImage
 
 import org.nlogo.plot.{ Plot, PlotAction, PlotRunner }
-
-trait ModelRunInterface {
-  self: ModelRun =>
-  def name: String
-  def save(outputStream: java.io.OutputStream): Unit
-}
+import org.nlogo.api
 
 class ModelRun(
   var name: String,
@@ -19,7 +14,7 @@ class ModelRun(
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
   private var _annotations: Map[Int, String] = Map())
-  extends ModelRunInterface
+  extends api.ModelRun
   with SavableRun {
   var stillRecording = true
 
