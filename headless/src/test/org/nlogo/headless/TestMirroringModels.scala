@@ -52,7 +52,11 @@ class TestMirroringModels extends FunSuite with SlowTest {
 
   for (path <- TestChecksums.checksums.values.map(_.path))
     // exclude 1 model for now, failing & we don't know why yet
-    if (!path.endsWith("Diffusion on a Directed Network.nlogo"))
+    if (!path.endsWith("Diffusion on a Directed Network.nlogo") &&
+        // exclude features not existing on core branch
+        !path.containsSlice("/GIS/") &&
+        !path.containsSlice("/System Dynamics/") &&
+        !path.containsSlice("Movie Example"))
       test("Mirroring: " + path) {
         modelRenderingTest(path)
       }
