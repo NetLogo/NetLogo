@@ -181,7 +181,7 @@ $MKDIR lib
 $CP -p \
   ../../lib_managed/jars/javax.media/jmf/jmf-2.1.1e.jar \
   ../../lib_managed/jars/asm/asm-all/asm-all-3.3.1.jar \
-  ../../lib_managed/bundles/log4j/log4j/log4j-1.2.16.jar \
+  ../../lib_managed/bundles/log4j/log4j/log4j-1.2.17.jar \
   ../../lib_managed/jars/org.picocontainer/picocontainer/picocontainer-2.13.6.jar \
   ../../lib_managed/jars/org.parboiled/parboiled-core/parboiled-core-1.0.2.jar \
   ../../lib_managed/jars/org.parboiled/parboiled-java/parboiled-java-1.0.2.jar \
