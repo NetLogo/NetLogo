@@ -31,8 +31,8 @@ object Mirroring {
       yield Change(i, now(i))
 
   def diffs(oldState: State, mirrorables: TraversableOnce[Mirrorable]): (State, Update) = {
-    val births: mutable.Buffer[Birth] = mutable.ArrayBuffer()
-    val deaths: mutable.Buffer[Death] = mutable.ArrayBuffer()
+    var births: Vector[Birth] = Vector()
+    var deaths: Vector[Death] = Vector()
     var changes: Map[AgentKey, Seq[Change]] = Map()
     var newState: State = oldState
     var seen: Set[AgentKey] = Set()
@@ -47,16 +47,16 @@ object Mirroring {
           newState += key -> vars
         }
       } else {
-        births += Birth(key, vars)
+        births :+= Birth(key, vars)
         newState += key -> vars
       }
     }
     for (key <- oldState.keys)
       if (!seen.contains(key)) {
-        deaths += Death(key)
+        deaths :+= Death(key)
         newState -= key
       }
-    (newState, Update(deaths.toVector, births.toVector, changes.toSeq))
+    (newState, Update(deaths, births, changes.toSeq))
   }
 
   def merge(oldState: State, update: Update): State = {
