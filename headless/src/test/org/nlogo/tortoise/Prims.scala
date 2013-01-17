@@ -16,6 +16,14 @@ object Prims {
       }
   }
 
+  object NormalReporter {
+    def unapply(r: nvm.Reporter): Option[String] =
+      PartialFunction.condOpt(r) {
+        case _: prim._turtles  => "World.turtles"
+        case _: prim._count    => "AgentSet.count"
+      }
+  }
+
   object SpecialCommand {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
@@ -29,6 +37,8 @@ object Prims {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
         case _: prim.etc._outputprint => "println"
+        case _: prim.etc._clearall    => "World.clearall"
+        case _: prim._crofast         => "World.crofast"
       }
   }
 

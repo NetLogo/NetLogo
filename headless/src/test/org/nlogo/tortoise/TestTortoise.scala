@@ -10,6 +10,7 @@ class TestTortoise extends FunSuite {
 
   val ws = headless.HeadlessWorkspace.newInstance
   ws.silent = true
+  ws.initForTesting(0)
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
 
   def compare(logo: String) {
@@ -68,6 +69,15 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print \"foo\"")
     compareCommands("output-print 2 + 2")
     compareCommands("output-print 1 output-print 2 output-print 3")
+  }
+
+  test("agents") {
+    compareCommands("clear-all")
+    compareCommands("output-print count turtles")
+    compareCommands("cro 5")
+    compareCommands("output-print count turtles")
+    compareCommands("clear-all")
+    compareCommands("output-print count turtles")
   }
 
 }

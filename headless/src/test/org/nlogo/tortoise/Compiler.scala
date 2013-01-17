@@ -45,7 +45,7 @@ object Compiler {
   ///
 
   def generateCommand(c: nvm.Command): String = {
-    val args = c.args.map(generateReporter).mkString(", ")
+    def args = c.args.map(generateReporter).mkString(", ")
     c match {
       case Prims.SpecialCommand(op) =>
         op
@@ -57,11 +57,14 @@ object Compiler {
   def generateReporter(r: nvm.Reporter): String = {
     def arg(i: Int) =
       generateReporter(r.args(i))
+    def args = r.args.map(generateReporter).mkString(", ")
     r match {
       case pure: nvm.Pure if pure.args.isEmpty =>
         compileLiteral(pure.report(null))
       case Prims.InfixReporter(op) =>
         s"(${arg(0)} $op ${arg(1)})"
+      case Prims.NormalReporter(op) =>
+        s"$op($args)"
     }
   }
 

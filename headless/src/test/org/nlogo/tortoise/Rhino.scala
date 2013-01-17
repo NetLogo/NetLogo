@@ -5,12 +5,16 @@ package org.nlogo.tortoise
 import sun.org.mozilla.javascript.internal.NativeArray
 import java.io.StringWriter
 import org.nlogo.api
+import org.nlogo.util.Utils.getResourceAsString
 
 object Rhino {
 
   val engine =
     (new javax.script.ScriptEngineManager)
       .getEngineByName("JavaScript")
+
+  engine.eval(
+    getResourceAsString("/js/engine.js"))
 
   def run(script: String): String = {
     val sw = new StringWriter
