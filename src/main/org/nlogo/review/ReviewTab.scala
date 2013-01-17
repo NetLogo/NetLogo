@@ -34,9 +34,8 @@ class ReviewTab(
 
   object API {
     def loadedRuns: Seq[ModelRunInterface] = tabState.runs
-    def loadRun(inputStream: java.io.InputStream, name: String): Unit = {
-      val uniqueName = tabState.uniqueName(nameFromPath(name))
-      val run = ModelRunIO.load(inputStream, uniqueName)
+    def loadRun(inputStream: java.io.InputStream): Unit = {
+      val run = ModelRunIO.load(inputStream)
       tabState.addRun(run)
       loadModelIfNeeded(run.modelString)
     }
@@ -375,9 +374,7 @@ class ReviewTab(
         // Load a run from `path` and returns either the loaded run
         // in case of success or the path in case of failure
         try {
-          val in = new java.io.FileInputStream(path)
-          val name = nameFromPath(path)
-          API.loadRun(in, name)
+          API.loadRun(new java.io.FileInputStream(path))
           val run = tabState.runs.last
           Right(run)
         } catch {
