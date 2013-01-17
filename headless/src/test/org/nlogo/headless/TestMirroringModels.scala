@@ -51,11 +51,11 @@ class TestMirroringModels extends FunSuite with SlowTest {
   }
 
   if (!api.Version.is3D)
-    for(entry <- TestChecksums.checksums.values)
+    for (path <- TestChecksums.checksums.values.map(_.path))
       // exclude 1 model for now, failing & we don't know why yet
-      if(!entry.path.endsWith("Diffusion on a Directed Network.nlogo"))
-        test("Mirroring: " + entry.path) {
-          modelRenderingTest(entry.path)
+      if (!path.endsWith("Diffusion on a Directed Network.nlogo"))
+        test("Mirroring: " + path) {
+          modelRenderingTest(path)
         }
 
 }

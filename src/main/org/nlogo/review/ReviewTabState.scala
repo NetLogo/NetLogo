@@ -1,8 +1,9 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-import org.nlogo.window.PlotWidget
+package org.nlogo.review
 
 import javax.swing.AbstractListModel
+import org.nlogo.mirror.ModelRun
 
 class ReviewTabState(
   private var _runs: Seq[ModelRun] = Seq(),

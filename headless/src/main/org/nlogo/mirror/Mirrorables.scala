@@ -80,15 +80,18 @@ object Mirrorables {
   }
 
   object MirrorableObserver {
-    val ovTargetAgent = 0
-    val lastIndex = ovTargetAgent
+    def ovTargetAgent(nbInterfaceGlobals: Int) = nbInterfaceGlobals
   }
-  class MirrorableObserver(observer: api.Observer) extends MirrorableAgent(observer) {
+  class MirrorableObserver(observer: api.Observer, nbInterfaceGlobals: Int) extends MirrorableAgent(observer) {
     import MirrorableObserver._
     override def kind = Observer
-    override def nbVariables = lastIndex + 1
+    override def nbVariables = nbInterfaceGlobals + 1
+    private def targetAgent =
+      Option(observer.targetAgent)
+        .map(getAgentKey)
+        .map(key => (Serializer.agentKindToInt(key.kind), key.id))
     override val variables = Map(
-      ovTargetAgent -> Option(observer.targetAgent).map(getAgentKey).map(key => (Serializer.agentKindToInt(key.kind), key.id)))
+      ovTargetAgent(nbInterfaceGlobals) -> targetAgent)
   }
 
   object MirrorableWorld {
@@ -111,6 +114,7 @@ object Mirrorables {
       wvLinkBreeds,
       wvUnbreededLinksAreDirected,
       wvTrailDrawing,
+      wvNbInterfaceGlobals,
       _*) = Stream.from(0)
   }
 
@@ -138,13 +142,14 @@ object Mirrorables {
       (wvTurtleBreeds, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
       (wvLinkBreeds, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
       (wvUnbreededLinksAreDirected, Boolean.box(world.links.isDirected)),
-      (wvTrailDrawing ->
+      (wvTrailDrawing,
         (if (world.trailDrawer.isDirty) {
           val outputStream = new java.io.ByteArrayOutputStream
           val img = world.trailDrawer.getDrawing.asInstanceOf[java.awt.image.BufferedImage]
           javax.imageio.ImageIO.write(img, "png", outputStream)
           Some(outputStream.toByteArray())
-        } else None)))
+        } else None)),
+      (wvNbInterfaceGlobals, Int.box(world.program.interfaceGlobals.size)))
   }
 
   object MirrorableWidgetValue {
@@ -165,9 +170,10 @@ object Mirrorables {
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))
     val links = world.links.agents.asScala.map(l => new MirrorableLink(l.asInstanceOf[api.Link]))
     val worldIterable = Iterable(new MirrorableWorld(world))
-    val observerIterable = Iterable(new MirrorableObserver(world.observer))
+    val observerIterable = Iterable(new MirrorableObserver(world.observer, world.program.interfaceGlobals.size))
     val widgetValuesIterable = widgetValues.map { case (v, i) => new MirrorableWidgetValue(v, i) }
     (worldIterable ++ observerIterable ++ widgetValuesIterable ++ turtles ++ patches ++ links)
   }
 
 }
+

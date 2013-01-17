@@ -1,10 +1,16 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
 
-import org.nlogo.mirror
-import org.nlogo.mirror.{ Mirrorable, Mirrorables, Mirroring, Serializer }
 import org.nlogo.plot.{ Plot, PlotAction, PlotRunner }
+
+trait ModelRunInterface {
+  self: ModelRun =>
+  def name: String
+  def save(outputStream: java.io.OutputStream): Unit
+}
 
 class ModelRun(
   var name: String,
@@ -12,7 +18,9 @@ class ModelRun(
   val viewArea: java.awt.geom.Area,
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
-  private var _annotations: Map[Int, String] = Map()) {
+  private var _annotations: Map[Int, String] = Map())
+  extends ModelRunInterface
+  with SavableRun {
   var stillRecording = true
 
   private var _dirty: Boolean = false
@@ -73,19 +81,19 @@ class ModelRun(
 
     def ticks: Option[Double] =
       for {
-        entry <- mirroredState.get(mirror.AgentKey(Mirrorables.World, 0))
+        entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
         ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
       } yield ticks.asInstanceOf[Double]
   }
 
   object Delta {
-    def apply(mirroredUpdate: mirror.Update, plotActions: Seq[PlotAction]): Delta =
+    def apply(mirroredUpdate: Update, plotActions: Seq[PlotAction]): Delta =
       Delta(Serializer.toBytes(mirroredUpdate), plotActions)
   }
   case class Delta(
     val rawMirroredUpdate: Array[Byte],
     val plotActions: Seq[PlotAction]) {
-    def mirroredUpdate: mirror.Update = Serializer.fromBytes(rawMirroredUpdate)
+    def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
   }
 
   object Data {

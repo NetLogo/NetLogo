@@ -2,6 +2,7 @@
 
 package org.nlogo.mirror
 
+import scala.collection.mutable
 // no dependencies except Scala standard library
 
 abstract class Kind
@@ -30,8 +31,8 @@ object Mirroring {
       yield Change(i, now(i))
 
   def diffs(oldState: State, mirrorables: TraversableOnce[Mirrorable]): (State, Update) = {
-    var births: Seq[Birth] = Vector()
-    var deaths: Seq[Death] = Vector()
+    val births: mutable.Buffer[Birth] = mutable.ArrayBuffer()
+    val deaths: mutable.Buffer[Death] = mutable.ArrayBuffer()
     var changes: Map[AgentKey, Seq[Change]] = Map()
     var newState: State = oldState
     var seen: Set[AgentKey] = Set()
@@ -46,16 +47,16 @@ object Mirroring {
           newState += key -> vars
         }
       } else {
-        births :+= Birth(key, vars)
+        births += Birth(key, vars)
         newState += key -> vars
       }
     }
     for (key <- oldState.keys)
       if (!seen.contains(key)) {
-        deaths :+= Death(key)
+        deaths += Death(key)
         newState -= key
       }
-    (newState, Update(deaths, births, changes.toSeq))
+    (newState, Update(deaths.toVector, births.toVector, changes.toSeq))
   }
 
   def merge(oldState: State, update: Update): State = {

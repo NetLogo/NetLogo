@@ -1,4 +1,6 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.review
 
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
@@ -11,8 +13,7 @@ import scala.collection.mutable.{ ListBuffer, Subscriber }
 
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror
-import org.nlogo.mirror.Mirrorables
+import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO, ModelRunInterface }
 import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
@@ -25,9 +26,21 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 class ReviewTab(
   ws: window.GUIWorkspace,
-  saveModel: () => String)
+  saveModel: () => String,
+  offerSave: () => Unit,
+  selectReviewTab: () => Unit)
   extends JPanel
   with window.Events.BeforeLoadEventHandler {
+
+  object API {
+    def loadedRuns: Seq[ModelRunInterface] = tabState.runs
+    def loadRun(inputStream: java.io.InputStream, name: String): Unit = {
+      val uniqueName = tabState.uniqueName(nameFromPath(name))
+      val run = ModelRunIO.load(inputStream, uniqueName)
+      tabState.addRun(run)
+      loadModelIfNeeded(run.modelString)
+    }
+  }
 
   private def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
@@ -160,7 +173,7 @@ class ReviewTab(
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
         val plotActions = PlotActionBuffer.grab()
         run.data match {
-          case None => run.start(ws.plotManager.plots, mirrorables, plotActions)
+          case None       => run.start(ws.plotManager.plots, mirrorables, plotActions)
           case Some(data) => data.append(mirrorables, plotActions)
         }
       } catch {
@@ -179,7 +192,7 @@ class ReviewTab(
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       for {
         frame <- tabState.currentFrame
-        fakeWorld = new mirror.FakeWorld(frame.mirroredState)
+        fakeWorld = new FakeWorld(frame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       } {
@@ -319,9 +332,7 @@ class ReviewTab(
           !userConfirms("Save Model Run", "The file " + path +
             " already exists. Do you want to overwrite it?"))
           throw new UserCancelException
-        val out = new java.io.ObjectOutputStream(
-          new java.io.FileOutputStream(path))
-        ModelRunIO.save(out, run)
+        run.save(new java.io.FileOutputStream(path))
         run.name = nameFromPath(path)
         tabState.undirty(run)
         refreshInterface()
@@ -358,27 +369,21 @@ class ReviewTab(
       Seq()
   }
 
-  /**
-   * Loads a run from `path` and returns either the loaded run
-   * in case of success or the path in case of failure
-   */
-  def loadRun(path: String): Either[String, ModelRun] =
-    try {
-      val in = new java.io.ObjectInputStream(
-        new java.io.FileInputStream(path))
-      val name = tabState.uniqueName(nameFromPath(path))
-      val run = ModelRunIO.load(in, name) { run =>
-        tabState.addRun(run)
-        loadModelIfNeeded(run.modelString)
-        ws
-      }
-      Right(run)
-    } catch {
-      case ex: Exception => Left(path)
-    }
-
   val loadButton = actionButton("Load", "open") { () =>
-    val results = chooseFiles.map(loadRun)
+    val results: Seq[Either[String, ModelRun]] =
+      chooseFiles.map { path =>
+        // Load a run from `path` and returns either the loaded run
+        // in case of success or the path in case of failure
+        try {
+          val in = new java.io.FileInputStream(path)
+          val name = nameFromPath(path)
+          API.loadRun(in, name)
+          val run = tabState.runs.last
+          Right(run)
+        } catch {
+          case ex: Exception => Left(path)
+        }
+      }
     val loadedRuns = results.flatMap(_.right.toOption)
     // select the last loaded run if we have one:
     loadedRuns.lastOption.foreach { run =>
@@ -400,11 +405,11 @@ class ReviewTab(
     val currentModelString = saveModel()
     if (modelString != currentModelString) {
       ignoring(classOf[UserCancelException]) {
-        App.app.fileMenu.offerSave()
+        offerSave()
       }
       org.nlogo.window.ModelLoader.load(ReviewTab.this,
         null, api.ModelType.Library, modelString)
-      App.app.tabs.setSelectedComponent(ReviewTab.this)
+      selectReviewTab()
     }
   }
 

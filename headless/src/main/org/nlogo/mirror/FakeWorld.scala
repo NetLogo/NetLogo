@@ -157,16 +157,18 @@ class FakeWorld(state: State) extends api.World {
     }
   }
 
-  class FakeObserver(val vars: Seq[AnyRef]) extends api.Observer with FakeAgent {
+  class FakeObserver(val vars: Seq[AnyRef], val nbInterfaceGlobals: Int) extends api.Observer with FakeAgent {
     import MirrorableObserver._
-    def targetAgent: api.Agent = vars(ovTargetAgent).asInstanceOf[Option[(Int, Long)]].flatMap {
-      case (agentKind, id) =>
+    def targetAgent: api.Agent = {
+      vars(ovTargetAgent(nbInterfaceGlobals)).asInstanceOf[Option[(Int, Long)]].flatMap {
+        case (agentKind, id) =>
         Serializer.agentKindFromInt(agentKind) match {
           case Turtle => turtles.agentSeq.find(_.id == id)
           case Link   => links.agentSeq.find(_.id == id)
           case Patch  => patches.agentSeq.find(_.id == id)
         }
     }.orNull
+    }
     def kind = api.AgentKind.Observer
     def id = 0
     def size = 0
@@ -232,7 +234,8 @@ class FakeWorld(state: State) extends api.World {
 
   def getPatch(i: Int): api.Patch = patches.agentSeq(i)
 
-  override lazy val observer: api.Observer = new FakeObserver(observerVars)
+  override lazy val observer: api.Observer =
+    new FakeObserver(observerVars, worldVar[Int](wvNbInterfaceGlobals))
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     // This is basically copied from org.nlogo.agent.Topology to avoid a dependency to the latter.
