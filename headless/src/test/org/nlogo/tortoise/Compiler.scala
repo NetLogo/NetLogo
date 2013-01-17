@@ -2,7 +2,7 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ api, nvm, prim, workspace }
+import org.nlogo.{ api, nvm, workspace }
 import org.nlogo.util.Femto
 
 object Compiler {
@@ -47,22 +47,11 @@ object Compiler {
   def generateCommand(c: nvm.Command): String = {
     val args = c.args.map(generateReporter).mkString(", ")
     c match {
-      case _: prim._return =>
-        "return;"
-      case _: prim._done =>
-        ""
-      case _: prim.etc._observercode =>
-        ""
-      case Command(op) =>
+      case Prims.SpecialCommand(op) =>
+        op
+      case Prims.NormalCommand(op) =>
         s"$op($args);"
     }
-  }
-
-  object Command {
-    def unapply(c: nvm.Command): Option[String] =
-      PartialFunction.condOpt(c) {
-        case _: prim.etc._outputprint => "println"
-      }
   }
 
   def generateReporter(r: nvm.Reporter): String = {
@@ -71,19 +60,9 @@ object Compiler {
     r match {
       case pure: nvm.Pure if pure.args.isEmpty =>
         compileLiteral(pure.report(null))
-      case Infix(op) =>
+      case Prims.InfixReporter(op) =>
         s"(${arg(0)} $op ${arg(1)})"
     }
-  }
-
-  object Infix {
-    def unapply(r: nvm.Reporter): Option[String] =
-      PartialFunction.condOpt(r) {
-        case _: prim._plus     => "+"
-        case _: prim._minus    => "-"
-        case _: prim.etc._mult => "*"
-        case _: prim.etc._div  => "/"
-      }
   }
 
   def compileLiteral(x: AnyRef): String =

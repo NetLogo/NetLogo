@@ -34,9 +34,10 @@ class TestCompiler extends FunSuite {
     import Compiler.{compileCommands => compile}
     val expected = """|(function () {
                       |println((2 + 2));
+                      |println((3 * 3));
                       |return;}).call(this);""".stripMargin
     expectResult(expected)(
-      compile("output-print 2 + 2"))
+      compile("output-print 2 + 2 output-print 3 * 3"))
   }
 
 }
