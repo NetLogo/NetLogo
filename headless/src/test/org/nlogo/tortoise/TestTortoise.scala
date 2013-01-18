@@ -3,8 +3,9 @@
 package org.nlogo.tortoise
 
 import org.scalatest.FunSuite
-import org.nlogo.{ api, nvm, headless, prim }
-import org.nlogo.util.{ Femto, MersenneTwisterFast }
+import
+  org.nlogo.{ api, nvm, headless, prim },
+  org.nlogo.util.{ Femto, MersenneTwisterFast }
 
 class TestTortoise extends FunSuite {
 
