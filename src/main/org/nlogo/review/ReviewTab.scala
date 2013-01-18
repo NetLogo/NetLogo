@@ -9,16 +9,15 @@ import java.awt.Dimension
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.collection.mutable.{ ListBuffer, Subscriber }
 
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
 import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
-import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
+import org.nlogo.plot.{ PlotActionBuffer, PlotPainter }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ InvalidVersionException, MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
 
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
@@ -60,22 +59,7 @@ class ReviewTab(
    * recording at some point, we need to mirror all actions from the
    * start to bring the plots to their actual state. NP 2012-11-29
    */
-  object PlotActionBuffer
-    extends Subscriber[PlotAction, PlotManager#Pub] {
-
-    ws.plotManager.subscribe(this)
-
-    val buffer = new ListBuffer[PlotAction]
-    def notify(pub: PlotManager#Pub, action: PlotAction) {
-      buffer += action
-    }
-    def clear() = buffer.clear()
-    def grab() = {
-      val actions = buffer.toSeq
-      clear()
-      actions
-    }
-  }
+  private val plotActionBuffer = new PlotActionBuffer(ws.plotManager)
 
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
@@ -91,7 +75,7 @@ class ReviewTab(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
         if (ws.world.ticks == -1) {
-          PlotActionBuffer.clear()
+          plotActionBuffer.clear()
         } else {
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
@@ -168,7 +152,7 @@ class ReviewTab(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        val plotActions = PlotActionBuffer.grab()
+        val plotActions = plotActionBuffer.grab()
         run.data match {
           case None       => run.start(ws.plotManager.plots, mirrorables, plotActions)
           case Some(data) => data.append(mirrorables, plotActions)
@@ -576,7 +560,7 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(ReviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
-    PlotActionBuffer.clear() // make sure object is constructed and subscribed
+    plotActionBuffer.clear() // make sure object is constructed and subscribed
     refreshInterface()
   }
 
