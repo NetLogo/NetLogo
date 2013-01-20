@@ -32,20 +32,28 @@ class TestCompiler extends FunSuite {
 
   test("commands: arithmetic + printing") {
     import Compiler.{compileCommands => compile}
-    val expected = """|(function () {
-                      |println((2 + 2));
-                      |println((3 * 3));}).call(this);""".stripMargin
+    val expected = """|println((2 + 2));
+                      |println((3 * 3));""".stripMargin
     expectResult(expected)(
       compile("output-print 2 + 2 output-print 3 * 3"))
   }
 
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
-    val expected = """|(function () {
-                      |World.createorderedturtles(5);
-                      |println(AgentSet.count(World.turtles()));}).call(this);""".stripMargin
+    val expected = """|World.createorderedturtles(5);
+                      |println(AgentSet.count(World.turtles()));""".stripMargin
     expectResult(expected)(
       compile("cro 5 output-print count turtles"))
+  }
+
+  test("commands: while true") {
+    import Compiler.{compileCommands => compile}
+    val input = "while [true] [cro 1]"
+    val expected =
+      """while (true) {
+        |World.createorderedturtles(1);
+        |}""".stripMargin
+    expectResult(expected)(compile(input))
   }
 
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.tortoise
 
-import org.nlogo.{ api, compiler, nvm, workspace }
+import org.nlogo.{ api, compiler, nvm, prim, workspace }
 
 object Compiler {
 
@@ -43,19 +43,20 @@ object Compiler {
   def generateCommands(cs: compiler.Statements): String =
     cs.map(generateCommand)
       .filter(_.nonEmpty)
-      .mkString("(function () {\n", "\n", "}).call(this);")
+      .mkString("\n")
 
   ///
 
-  def generateCommand(c: compiler.Statement): String = {
-    def args =
-      c.args.collect{case x: compiler.ReporterApp =>
-                       generateReporter(x)}
-        .mkString(", ")
-    c.command match {
-      case Prims.SpecialCommand(op) =>
-        op
-      case Prims.NormalCommand(op) =>
+  def generateCommand(s: compiler.Statement): String = {
+    s.command match {
+      case _: prim._done             => ""
+      case _: prim.etc._observercode => ""
+      case _: prim.etc._while        => Prims.generateWhile(s)
+      case Prims.NormalCommand(op)   =>
+        def args =
+          s.args.collect{case x: compiler.ReporterApp =>
+            generateReporter(x)}
+                  .mkString(", ")
         s"$op($args);"
     }
   }

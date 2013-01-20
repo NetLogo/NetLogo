@@ -27,7 +27,7 @@ object Rhino {
   def run(script: String): String = {
     val sw = new StringWriter
     engine.getContext.setWriter(new PrintWriter(sw))
-    engine.eval(script)
+    engine.eval(s"(function () {\n $script \n }).call(this);")
     sw.toString
   }
 
