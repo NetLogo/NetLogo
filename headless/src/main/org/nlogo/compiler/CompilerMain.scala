@@ -15,9 +15,16 @@ import org.nlogo.util.Femto
 private object CompilerMain {
 
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-    oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
-    flags: CompilerFlags): CompilerResults = {
+      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
+      flags: CompilerFlags): CompilerResults = {
+    val (defs, structureResults) =
+      frontEnd(source, displayName, program, subprogram, oldProcedures, extensionManager)
+    backEnd(defs, structureResults, source, extensionManager.profilingEnabled, flags)
+  }
 
+  def frontEnd(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
+      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager)
+    : (Seq[ProcedureDefinition], StructureParser.Results) = {
     val structureResults = StructureParser.parseAll(
       if (program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D,
       source, displayName, program, subprogram, oldProcedures, extensionManager)
@@ -34,11 +41,13 @@ private object CompilerMain {
       new ExpressionParser(procedure, taskNumbers)
         .parse(identifiedTokens) // parse
     }
-    val defs: Vector[ProcedureDefinition] =
-      structureResults.procedures.values.flatMap(parseProcedure).toVector
-    // StructureParser found the top level Procedures for us.  ExpressionParser
-    // finds command tasks and makes Procedures out of them, too.  the remaining
-    // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
+    (structureResults.procedures.values.flatMap(parseProcedure).toVector, structureResults)
+  }
+
+  // StructureParser found the top level Procedures for us.  ExpressionParser
+  // finds command tasks and makes Procedures out of them, too.  the remaining
+  // phases handle all ProcedureDefinitions from both sources. - ST 2/4/11
+  def backEnd(defs: Seq[ProcedureDefinition], structureResults: StructureParser.Results, source: String, profilingEnabled: Boolean, flags: CompilerFlags): CompilerResults = {
     for(procdef <- defs) {
       procdef.accept(new ReferenceVisitor)  // handle ReferenceType
       if (flags.foldConstants)
@@ -50,7 +59,7 @@ private object CompilerMain {
       procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
-        procdef.accept(new Optimizer(program.is3D))   // do various code-improving rewrites
+        procdef.accept(new Optimizer(structureResults.program.is3D))   // do various code-improving rewrites
     }
     new AgentTypeChecker(defs).parse()  // catch agent type inconsistencies
     for(procdef <- defs) {
@@ -61,7 +70,7 @@ private object CompilerMain {
           Femto.get(classOf[GeneratorInterface], "org.nlogo.generator.Generator",
                     Array(source, procdef.procedure,
                           Boolean.box(
-                            extensionManager.profilingEnabled)))
+                            profilingEnabled)))
             .generate()
     }
     // only return top level procedures.
