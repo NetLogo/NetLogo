@@ -87,4 +87,14 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
+  test("let") {
+    compareCommands("let x 5  output-print x")
+  }
+
+  test("let + while") {
+    compareCommands(
+      "let x 10 " +
+      "while [x > 0] [ set x x - 1 ]")
+  }
+
 }

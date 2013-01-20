@@ -48,10 +48,21 @@ object Compiler {
   ///
 
   def generateCommand(s: compiler.Statement): String = {
+    def arg(i: Int) =
+      s.args(i) match {
+        case app: compiler.ReporterApp =>
+          generateReporter(app)
+      }
     s.command match {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
       case _: prim.etc._while        => Prims.generateWhile(s)
+      case l: prim._let =>
+        // arg 0 is the name but we don't access it because LetScoper took care of it.
+        // arg 1 is the value.
+        s"var ${l.let.name} = ${arg(1)}"
+      case set: prim._set =>
+        s"${arg(0)} = ${arg(1)}"
       case Prims.NormalCommand(op)   =>
         def args =
           s.args.collect{case x: compiler.ReporterApp =>
@@ -70,6 +81,8 @@ object Compiler {
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty =>
         compileLiteral(pure.report(null))
+      case lv: prim._letvariable =>
+        lv.let.name
       case Prims.InfixReporter(op) =>
         s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op) =>

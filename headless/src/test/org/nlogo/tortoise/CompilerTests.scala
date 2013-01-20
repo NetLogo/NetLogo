@@ -56,4 +56,12 @@ class TestCompiler extends FunSuite {
     expectResult(expected)(compile(input))
   }
 
+  test("commands: let") {
+    import Compiler.{compileCommands => compile}
+    val input = "let x 5 output-print x"
+    val expected = """|var X = 5
+                      |println(X);""".stripMargin
+    expectResult(expected)(compile(input))
+  }
+
 }
