@@ -34,8 +34,7 @@ class TestCompiler extends FunSuite {
     import Compiler.{compileCommands => compile}
     val expected = """|(function () {
                       |println((2 + 2));
-                      |println((3 * 3));
-                      |return;}).call(this);""".stripMargin
+                      |println((3 * 3));}).call(this);""".stripMargin
     expectResult(expected)(
       compile("output-print 2 + 2 output-print 3 * 3"))
   }
@@ -43,9 +42,8 @@ class TestCompiler extends FunSuite {
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
     val expected = """|(function () {
-                      |World.crofast(5);
-                      |println(AgentSet.count(World.turtles()));
-                      |return;}).call(this);""".stripMargin
+                      |World.createorderedturtles(5);
+                      |println(AgentSet.count(World.turtles()));}).call(this);""".stripMargin
     expectResult(expected)(
       compile("cro 5 output-print count turtles"))
   }

@@ -27,7 +27,6 @@ object Prims {
   object SpecialCommand {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
-        case _: prim._return           => "return;"
         case _: prim._done             => ""
         case _: prim.etc._observercode => ""
       }
@@ -36,9 +35,9 @@ object Prims {
   object NormalCommand {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
-        case _: prim.etc._outputprint => "println"
-        case _: prim.etc._clearall    => "World.clearall"
-        case _: prim._crofast         => "World.crofast"
+        case _: prim.etc._outputprint      => "println"
+        case _: prim.etc._clearall         => "World.clearall"
+        case _: prim._createorderedturtles => "World.createorderedturtles"
       }
   }
 
