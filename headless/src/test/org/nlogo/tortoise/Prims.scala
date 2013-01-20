@@ -27,15 +27,6 @@ object Prims {
       }
   }
 
-  object SpecialCommand {
-    def unapply(c: nvm.Command): Option[String] =
-      PartialFunction.condOpt(c) {
-        case _: prim._done             => ""
-        case _: prim.etc._observercode => ""
-        case _: prim.etc._while        => "while"
-      }
-  }
-
   object NormalCommand {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
