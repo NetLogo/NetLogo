@@ -9,9 +9,7 @@ import
 
 class TestTortoise extends FunSuite {
 
-  val ws = headless.HeadlessWorkspace.newInstance
-  ws.silent = true
-  ws.initForTesting(0)
+  var ws: headless.HeadlessWorkspace = null
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
 
   def compare(logo: String) {
@@ -24,16 +22,32 @@ class TestTortoise extends FunSuite {
     ws.clearOutput()
     ws.command(logo)
     val expected = ws.outputAreaBuffer.toString
-    val actual = Rhino.run(Compiler.compileCommands(logo))
+    val actual = Rhino.run(Compiler.compileCommands(logo, ws.procedures))
     expectResult(expected)(actual)
   }
 
-  test("comments") {
+  def defineProcedures(logo: String) {
+    Rhino.eval(Compiler.compileProcedure(logo))
+    ws.initForTesting(0, 0, 0, 0, logo)
+  }
+
+  def tester(testName: String)(body: => Unit) {
+    test(testName) {
+      ws = headless.HeadlessWorkspace.newInstance
+      ws.silent = true
+      ws.initForTesting(0)
+      body
+    }
+  }
+
+  ///
+
+  tester("comments") {
     compare("3 ; comment")
     compare("[1 ; comment\n2]")
   }
 
-  test("simple literals") {
+  tester("simple literals") {
     compare("false")
     compare("true")
     compare("2")
@@ -41,7 +55,7 @@ class TestTortoise extends FunSuite {
     compare("\"foo\"")
   }
 
-  test("literal lists") {
+  tester("literal lists") {
     compare("[]")
     compare("[1]")
     compare("[1 2]")
@@ -51,7 +65,7 @@ class TestTortoise extends FunSuite {
     compare("[false true]")
   }
 
-  test("arithmetic") {
+  tester("arithmetic") {
     compare("2 + 2")
     compare("1 + 2 + 3")
     compare("1 - 2 - 3")
@@ -61,18 +75,18 @@ class TestTortoise extends FunSuite {
     compare("6 / 2 + 12 / 6")
   }
 
-  test("empty commands") {
+  tester("empty commands") {
     compareCommands("")
   }
 
-  test("printing") {
+  tester("printing") {
     compareCommands("output-print 1")
     compareCommands("output-print \"foo\"")
     compareCommands("output-print 2 + 2")
     compareCommands("output-print 1 output-print 2 output-print 3")
   }
 
-  test("agents") {
+  tester("agents") {
     compareCommands("clear-all")
     compareCommands("output-print count turtles")
     compareCommands("cro 5")
@@ -81,20 +95,41 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
-  test("while loops") {
+  tester("while loops") {
     compareCommands("clear-all")
     compareCommands("while [count turtles < 5] [cro 1]")
     compareCommands("output-print count turtles")
   }
 
-  test("let") {
+  tester("let") {
     compareCommands("let x 5  output-print x")
   }
 
-  test("let + while") {
+  tester("let + while") {
     compareCommands(
       "let x 10 " +
       "while [x > 0] [ set x x - 1 ]")
+  }
+
+  tester("procedure call") {
+    defineProcedures("to foo cro 1 end")
+    compareCommands("clear-all")
+    compareCommands("foo foo foo")
+    compareCommands("output-print count turtles")
+  }
+
+  tester("procedure call with one input") {
+    defineProcedures("to foo [x] cro x end")
+    compareCommands("clear-all")
+    compareCommands("foo 1 foo 2 foo 3")
+    compareCommands("output-print count turtles")
+  }
+
+  tester("procedure call with three inputs") {
+    defineProcedures("to foo [x y z] cro x + y cro z end")
+    compareCommands("clear-all")
+    compareCommands("foo 1 2 3")
+    compareCommands("output-print count turtles")
   }
 
 }

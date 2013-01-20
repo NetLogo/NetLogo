@@ -31,9 +31,9 @@ object Compiler extends CompilerInterface {
     CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
 
   // used by Tortoise. bails after parsing so we can put a different back end on.
-  def frontEnd(source: String) =
+  def frontEnd(source: String, oldProcedures: ProceduresMap = CompilerInterface.NoProcedures) =
     CompilerMain.frontEnd(source, None, Program.empty(), true,
-      CompilerInterface.NoProcedures, new api.DummyExtensionManager)
+      oldProcedures, new api.DummyExtensionManager)
 
   // these two used by input boxes
   def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean) {

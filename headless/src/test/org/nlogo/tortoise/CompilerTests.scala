@@ -64,4 +64,13 @@ class TestCompiler extends FunSuite {
     expectResult(expected)(compile(input))
   }
 
+  test("command procedure") {
+    import Compiler.{compileProcedure => compile}
+    val input = "to foo output-print 5 end"
+    val expected = """function FOO () {
+                     |println(5);
+                     |};""".stripMargin
+    expectResult(expected)(compile(input))
+  }
+
 }

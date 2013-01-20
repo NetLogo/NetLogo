@@ -11,8 +11,16 @@ object Compiler {
   def compileReporter(logo: String): String =
     compile(logo, commands = false)
 
-  def compileCommands(logo: String): String =
-    compile(logo, commands = true)
+  def compileCommands(logo: String, oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String =
+    compile(logo, commands = true, oldProcedures)
+
+  def compileProcedure(logo: String): String = {
+    val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
+    val body = generateCommands(defs.head.statements)
+    val name = defs.head.procedure.name
+    val args = defs.head.procedure.args.mkString(", ")
+    s"function $name ($args) {\n$body\n};"
+  }
 
   ///
 
@@ -24,11 +32,12 @@ object Compiler {
   //   `__observer-code` command followed by the `report` command, so the
   //   actual reporter is the first (and only) argument to `report`
 
-  def compile(logo: String, commands: Boolean): String = {
+  def compile(logo: String, commands: Boolean,
+      oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String = {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
-    val (defs, _) = compiler.Compiler.frontEnd(wrapped)  // Seq[ProcedureDefinition]
+    val (defs, _) = compiler.Compiler.frontEnd(wrapped, oldProcedures)  // Seq[ProcedureDefinition]
     if (commands)
       generateCommands(defs.head.statements)
     else
@@ -53,6 +62,10 @@ object Compiler {
         case app: compiler.ReporterApp =>
           generateReporter(app)
       }
+    def args =
+      s.args.collect{case x: compiler.ReporterApp =>
+          generateReporter(x)}
+        .mkString(", ")
     s.command match {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
@@ -63,11 +76,9 @@ object Compiler {
         s"var ${l.let.name} = ${arg(1)}"
       case set: prim._set =>
         s"${arg(0)} = ${arg(1)}"
+      case call: prim._call =>
+        s"${call.procedure.name}($args);"
       case Prims.NormalCommand(op)   =>
-        def args =
-          s.args.collect{case x: compiler.ReporterApp =>
-            generateReporter(x)}
-                  .mkString(", ")
         s"$op($args);"
     }
   }
@@ -83,6 +94,8 @@ object Compiler {
         compileLiteral(pure.report(null))
       case lv: prim._letvariable =>
         lv.let.name
+      case pv: prim._procedurevariable =>
+        pv.name
       case Prims.InfixReporter(op) =>
         s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op) =>
