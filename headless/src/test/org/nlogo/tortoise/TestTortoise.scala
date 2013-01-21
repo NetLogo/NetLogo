@@ -108,7 +108,8 @@ class TestTortoise extends FunSuite {
   tester("let + while") {
     compareCommands(
       "let x 10 " +
-      "while [x > 0] [ set x x - 1 ]")
+      "while [x > 0] [ set x x - 1 ] " +
+      "output-print x")
   }
 
   tester("procedure call") {
