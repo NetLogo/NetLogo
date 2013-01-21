@@ -27,7 +27,7 @@ class TestTortoise extends FunSuite {
   }
 
   def defineProcedures(logo: String) {
-    Rhino.eval(Compiler.compileProcedure(logo))
+    Rhino.eval(Compiler.compileProcedures(logo))
     ws.initForTesting(0, 0, 0, 0, logo)
   }
 
@@ -131,5 +131,15 @@ class TestTortoise extends FunSuite {
     compareCommands("foo 1 2 3")
     compareCommands("output-print count turtles")
   }
+
+  tester("procedure two procs") {
+    defineProcedures("""|to foo [x y z] cro x + y cro z end
+                        |to goo [z] cro z * 10 end""".stripMargin)
+    compareCommands("clear-all")
+    compareCommands("foo 1 2 3")
+    compareCommands("goo 10")
+    compareCommands("output-print count turtles")
+  }
+
 
 }

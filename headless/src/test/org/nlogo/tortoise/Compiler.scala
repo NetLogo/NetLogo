@@ -15,12 +15,22 @@ object Compiler {
     oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String =
     compile(logo, commands = true, oldProcedures)
 
+  // TODO: this isn't actually used anymore, should it just be removed?
   def compileProcedure(logo: String): String = {
     val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
-    val body = generateCommands(defs.head.statements)
-    val name = defs.head.procedure.name
-    val args = defs.head.procedure.args.mkString(", ")
-    s"function $name ($args) {\n$body\n};"
+    compileProcedureDef(defs.head)
+  }
+
+
+  def compileProcedures(logo: String): String = {
+    val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
+    defs.map(compileProcedureDef).mkString("\n")
+  }
+
+  private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
+    val body = generateCommands(pd.statements)
+    val args = pd.procedure.args.mkString(", ")
+    s"function ${pd.procedure.name} ($args) {\n$body\n};"
   }
 
   ///
