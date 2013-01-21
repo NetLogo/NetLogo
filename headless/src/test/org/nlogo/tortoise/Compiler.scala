@@ -67,22 +67,28 @@ object Compiler {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
       case _: prim.etc._while        => Prims.generateWhile(s)
+      case _: prim.etc._if           => Prims.generateIf(s)
+      case _: prim.etc._ifelse       => Prims.generateIfElse(s)
       case l: prim._let
         // arg 0 is the name but we don't access it because LetScoper took care of it.
         // arg 1 is the value.
                                      => s"var ${l.let.name} = ${arg(1)};"
-      case set: prim._set            => s"${arg(0)} = ${arg(1)};"
+      case _: prim._set              => s"${arg(0)} = ${arg(1)};"
       case call: prim._call          => s"${call.procedure.name}($args)"
+      case _: prim.etc._report       => s"return $args;"
       case Prims.NormalCommand(op)   => s"$op($args);"
     }
   }
 
   def generateReporter(r: compiler.ReporterApp): String = {
     def arg(i: Int) = genArg(r.args(i))
+    def args = r.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(", ")
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => lv.let.name
       case pv: prim._procedurevariable      => pv.name
+      case call: prim._callreport =>
+        s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
     }

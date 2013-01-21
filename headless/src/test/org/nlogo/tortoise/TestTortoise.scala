@@ -142,5 +142,14 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
+  tester("if") {
+    compareCommands("if true [ output-print 5 ]")
+    compareCommands("if false [ output-print 5 ]")
+  }
+
+  tester("simple recursive call") {
+    defineProcedures("to-report fact [n] ifelse n = 0 [ report 1 ] [ report n * fact (n - 1) ] end")
+    compareCommands("output-print fact 6")
+  }
 
 }

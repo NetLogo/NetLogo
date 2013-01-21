@@ -3,7 +3,6 @@
 package org.nlogo.tortoise
 
 import org.nlogo.{ compiler, nvm, prim }
-import compiler.{CommandBlock, ReporterBlock}
 
 object Prims {
 
@@ -14,6 +13,7 @@ object Prims {
         case _: prim._minus       => "-"
         case _: prim.etc._mult    => "*"
         case _: prim.etc._div     => "/"
+        case _: prim._equal       => "==="
         case _: prim._lessthan    => "<"
         case _: prim._greaterthan => ">"
       }
@@ -37,14 +37,50 @@ object Prims {
   }
 
   def generateWhile(w: compiler.Statement): String = {
-    val pred = Compiler.generateReporter(w.args.head match {
-      case r: ReporterBlock => r.app
-    })
-    val body = Compiler.generateCommands(w.args.tail.head match {
-      case cb: CommandBlock => cb.statements
-    })
+    val pred = w.args.head match {
+      case r: compiler.ReporterBlock =>
+        Compiler.generateReporter(r.app)
+    }
+    val body = w.args.tail.head match {
+      case cb: compiler.CommandBlock =>
+        Compiler.generateCommands(cb.statements)
+    }
     s"""while ($pred) {
       |$body
+      |}""".stripMargin
+  }
+
+  def generateIf(s: compiler.Statement): String = {
+    val pred = s.args.head match {
+      case r: compiler.ReporterApp =>
+        Compiler.generateReporter(r)
+    }
+    val body = s.args.tail.head match {
+      case cb: compiler.CommandBlock =>
+        Compiler.generateCommands(cb.statements)
+    }
+    s"""if ($pred) {
+      |$body
+      |}""".stripMargin
+  }
+
+  def generateIfElse(s: compiler.Statement): String = {
+    val pred = s.args.head match {
+      case r: compiler.ReporterApp =>
+        Compiler.generateReporter(r)
+    }
+    val thenBlock = s.args.tail.head match {
+      case cb: compiler.CommandBlock =>
+        Compiler.generateCommands(cb.statements)
+    }
+    val elseBlock = s.args.tail.tail.head match {
+      case cb: compiler.CommandBlock =>
+        Compiler.generateCommands(cb.statements)
+    }
+    s"""if ($pred) {
+      |$thenBlock
+      |} else {
+      |$elseBlock
       |}""".stripMargin
   }
 
