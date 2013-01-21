@@ -133,7 +133,7 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count turtles")
   }
 
-  tester("procedure two procs") {
+  tester("multiple procedures") {
     defineProcedures("""|to foo [x y z] cro x + y cro z end
                         |to goo [z] cro z * 10 end""".stripMargin)
     compareCommands("clear-all")

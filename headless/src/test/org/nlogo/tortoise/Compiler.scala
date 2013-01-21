@@ -21,16 +21,16 @@ object Compiler {
     compileProcedureDef(defs.head)
   }
 
-
   def compileProcedures(logo: String): String = {
     val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
     defs.map(compileProcedureDef).mkString("\n")
   }
 
   private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
+    val name = pd.procedure.name
     val body = generateCommands(pd.statements)
     val args = pd.procedure.args.mkString(", ")
-    s"function ${pd.procedure.name} ($args) {\n$body\n};"
+    s"function $name ($args) {\n$body\n};"
   }
 
   ///
@@ -87,8 +87,7 @@ object Compiler {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => lv.let.name
       case pv: prim._procedurevariable      => pv.name
-      case call: prim._callreport =>
-        s"${call.procedure.name}($args)"
+      case call: prim._callreport           => s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
     }
