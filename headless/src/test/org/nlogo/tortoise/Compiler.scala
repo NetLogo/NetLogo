@@ -11,7 +11,8 @@ object Compiler {
   def compileReporter(logo: String): String =
     compile(logo, commands = false)
 
-  def compileCommands(logo: String, oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String =
+  def compileCommands(logo: String,
+    oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String =
     compile(logo, commands = true, oldProcedures)
 
   def compileProcedure(logo: String): String = {
@@ -38,79 +39,50 @@ object Compiler {
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
     val (defs, _) = compiler.Compiler.frontEnd(wrapped, oldProcedures)  // Seq[ProcedureDefinition]
-    if (commands)
-      generateCommands(defs.head.statements)
-    else
-      defs.head.statements.tail.head.args.head match {
-        case app: compiler.ReporterApp =>
-          generateReporter(app)
-      }
+    if (commands) generateCommands(defs.head.statements)
+    else genArg(defs.head.statements.tail.head.args.head)
   }
 
   ///
 
   def generateCommands(cs: compiler.Statements): String =
-    cs.map(generateCommand)
-      .filter(_.nonEmpty)
-      .mkString("\n")
+    cs.map(generateCommand).filter(_.nonEmpty).mkString("\n")
 
   ///
 
   def generateCommand(s: compiler.Statement): String = {
-    def arg(i: Int) =
-      s.args(i) match {
-        case app: compiler.ReporterApp =>
-          generateReporter(app)
-      }
-    def args =
-      s.args.collect{case x: compiler.ReporterApp =>
-          generateReporter(x)}
-        .mkString(", ")
+    def arg(i: Int) = genArg(s.args(i))
+    def args = s.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(", ")
     s.command match {
       case _: prim._done             => ""
       case _: prim.etc._observercode => ""
       case _: prim.etc._while        => Prims.generateWhile(s)
-      case l: prim._let =>
+      case l: prim._let
         // arg 0 is the name but we don't access it because LetScoper took care of it.
         // arg 1 is the value.
-        s"var ${l.let.name} = ${arg(1)}"
-      case set: prim._set =>
-        s"${arg(0)} = ${arg(1)}"
-      case call: prim._call =>
-        s"${call.procedure.name}($args);"
-      case Prims.NormalCommand(op)   =>
-        s"$op($args);"
+                                     => s"var ${l.let.name} = ${arg(1)};"
+      case set: prim._set            => s"${arg(0)} = ${arg(1)};"
+      case call: prim._call          => s"${call.procedure.name}($args)"
+      case Prims.NormalCommand(op)   => s"$op($args);"
     }
   }
 
   def generateReporter(r: compiler.ReporterApp): String = {
-    def arg(i: Int) =
-      r.args(i) match {
-        case app: compiler.ReporterApp =>
-          generateReporter(app)
-      }
+    def arg(i: Int) = genArg(r.args(i))
     r.reporter match {
-      case pure: nvm.Pure if r.args.isEmpty =>
-        compileLiteral(pure.report(null))
-      case lv: prim._letvariable =>
-        lv.let.name
-      case pv: prim._procedurevariable =>
-        pv.name
-      case Prims.InfixReporter(op) =>
-        s"(${arg(0)} $op ${arg(1)})"
-      case Prims.NormalReporter(op) =>
-        val generatedArgs =
-          r.args.indices.map(arg).mkString(", ")
-        s"$op($generatedArgs)"
+      case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
+      case lv: prim._letvariable            => lv.let.name
+      case pv: prim._procedurevariable      => pv.name
+      case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
+      case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
     }
   }
 
-  def compileLiteral(x: AnyRef): String =
-    x match {
-      case ll: api.LogoList =>
-        ll.map(compileLiteral).mkString("[", ", ", "]")
-      case x =>
-        api.Dump.logoObject(x, readable = true, exporting = false)
-    }
+  def compileLiteral(x: AnyRef): String = x match {
+    case ll: api.LogoList => ll.map(compileLiteral).mkString("[", ", ", "]")
+    case x                => api.Dump.logoObject(x, readable = true, exporting = false)
+  }
 
+  def genArg(e: compiler.Expression) =
+    e match { case app: compiler.ReporterApp => generateReporter(app) }
 }
