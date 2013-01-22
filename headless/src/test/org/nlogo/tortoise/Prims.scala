@@ -22,7 +22,7 @@ object Prims {
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim._turtles  => "World.turtles"
+        case _: prim._turtles  => "world.turtles"
         case _: prim._count    => "AgentSet.count"
       }
   }
@@ -31,51 +31,35 @@ object Prims {
     def unapply(c: nvm.Command): Option[String] =
       PartialFunction.condOpt(c) {
         case _: prim.etc._outputprint      => "println"
-        case _: prim.etc._clearall         => "World.clearall"
-        case _: prim._createorderedturtles => "World.createorderedturtles"
+        case _: prim.etc._clearall         => "world.clearall"
+        case _: prim._createorderedturtles => "world.createorderedturtles"
       }
   }
 
   def generateWhile(w: compiler.Statement): String = {
-    val pred = genReporterBlock(w.args.head)
-    val body = genCommandBlock(w.args.tail.head)
+    val pred = Compiler.genReporterBlock(w.args.head)
+    val body = Compiler.genCommandBlock(w.args.tail.head)
     s"""while ($pred) {
       |$body
       |}""".stripMargin
   }
 
   def generateIf(s: compiler.Statement): String = {
-    val pred = genReporterApp(s.args.head)
-    val body = genCommandBlock(s.args.tail.head)
+    val pred = Compiler.genReporterApp(s.args.head)
+    val body = Compiler.genCommandBlock(s.args.tail.head)
     s"""if ($pred) {
       |$body
       |}""".stripMargin
   }
 
   def generateIfElse(s: compiler.Statement): String = {
-    val pred      = genReporterApp(s.args.head)
-    val thenBlock = genCommandBlock(s.args.tail.head)
-    val elseBlock = genCommandBlock(s.args.tail.tail.head)
+    val pred      = Compiler.genReporterApp(s.args.head)
+    val thenBlock = Compiler.genCommandBlock(s.args.tail.head)
+    val elseBlock = Compiler.genCommandBlock(s.args.tail.tail.head)
     s"""if ($pred) {
       |$thenBlock
       |} else {
       |$elseBlock
       |}""".stripMargin
-  }
-
-  // these could be merged into one function, genExpression
-  // but i think the resulting code wold be confusing and potentially error prone.
-  // having different functions for each is more clear.
-
-  // TODO: they might belong in Compiler though?
-
-  private def genReporterApp(e: compiler.Expression) = e match {
-    case r: compiler.ReporterApp => Compiler.generateReporter(r)
-  }
-  private def genReporterBlock(e: compiler.Expression) = e match {
-    case r: compiler.ReporterBlock => Compiler.generateReporter(r.app)
-  }
-  private def genCommandBlock(e: compiler.Expression) = e match {
-    case cb: compiler.CommandBlock => Compiler.generateCommands(cb.statements)
   }
 }

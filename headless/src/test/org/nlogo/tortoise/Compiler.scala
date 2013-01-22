@@ -98,6 +98,18 @@ object Compiler {
     case x                => api.Dump.logoObject(x, readable = true, exporting = false)
   }
 
-  def genArg(e: compiler.Expression) =
-    e match { case app: compiler.ReporterApp => generateReporter(app) }
+  // these could be merged into one function, genExpression
+  // but i think the resulting code wold be confusing and potentially error prone.
+  // having different functions for each is more clear.
+
+  def genReporterApp(e: compiler.Expression) = e match {
+    case r: compiler.ReporterApp => generateReporter(r)
+  }
+  def genArg(e: compiler.Expression) = genReporterApp(e)
+  def genReporterBlock(e: compiler.Expression) = e match {
+    case r: compiler.ReporterBlock => Compiler.generateReporter(r.app)
+  }
+  def genCommandBlock(e: compiler.Expression) = e match {
+    case cb: compiler.CommandBlock => Compiler.generateCommands(cb.statements)
+  }
 }

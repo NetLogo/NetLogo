@@ -14,7 +14,7 @@ class TestTortoise extends FunSuite {
 
   def compare(logo: String) {
     val expected = ws.report(logo)
-    val actual = Rhino.eval(Compiler.compileReporter(logo))
+    val actual = evalJS(Compiler.compileReporter(logo))
     expectResult(expected)(actual)
   }
 
@@ -22,13 +22,26 @@ class TestTortoise extends FunSuite {
     ws.clearOutput()
     ws.command(logo)
     val expected = ws.outputAreaBuffer.toString
-    val actual = Rhino.run(Compiler.compileCommands(logo, ws.procedures))
+    val actual = runJS(Compiler.compileCommands(logo, ws.procedures))
     expectResult(expected)(actual)
   }
 
   def defineProcedures(logo: String) {
-    Rhino.eval(Compiler.compileProcedures(logo))
+    evalJS(Compiler.compileProcedures(logo))
     ws.initForTesting(0, 0, 0, 0, logo)
+  }
+
+  // these two are super helpful when running failing tests
+  // the show the javascript before it gets executed.
+  // TODO: what is the difference between eval and run?
+  def evalJS(javascript: String) = {
+    //println(javascript)
+    Rhino.eval(javascript)
+  }
+
+  def runJS(javascript: String) = {
+    //println(javascript)
+    Rhino.run(javascript)
   }
 
   def tester(testName: String)(body: => Unit) {
