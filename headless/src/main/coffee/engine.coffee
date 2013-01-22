@@ -17,9 +17,3 @@ AgentSet =
   count: (x) => x.length
 
 world = new World
-
-###
-# I'm using this code below for some simple testing using the coffee command
-world.createorderedturtles(4)
-console.log(t.heading for t in world.turtles())
-###
