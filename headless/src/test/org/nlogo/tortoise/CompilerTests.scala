@@ -40,8 +40,8 @@ class TestCompiler extends FunSuite {
 
   test("commands: turtle creation") {
     import Compiler.{compileCommands => compile}
-    val expected = """|World.createorderedturtles(5);
-                      |println(AgentSet.count(World.turtles()));""".stripMargin
+    val expected = """|world.createorderedturtles(5);
+                      |println(AgentSet.count(world.turtles()));""".stripMargin
     expectResult(expected)(
       compile("cro 5 output-print count turtles"))
   }
@@ -51,7 +51,7 @@ class TestCompiler extends FunSuite {
     val input = "while [true] [cro 1]"
     val expected =
       """while (true) {
-        |World.createorderedturtles(1);
+        |world.createorderedturtles(1);
         |}""".stripMargin
     expectResult(expected)(compile(input))
   }
