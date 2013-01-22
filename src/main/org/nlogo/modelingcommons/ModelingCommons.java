@@ -25,11 +25,9 @@ import org.nlogo.app.ModelSaver;
 import org.nlogo.headless.HeadlessWorkspace;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.swing.MessageDialog;
-import org.nlogo.swing.ModalProgressTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -741,7 +739,7 @@ public class ModelingCommons {
 
 
   public void promptForLogin(final String error) {
-    JDialog loginDialog = new ModelingCommonsLoginDialog(frame, this, error);
+    JDialog loginDialog = new LoginDialog(frame, this, error);
     loginDialog.setVisible(true);
   }
   public void promptForLogin() {
@@ -754,7 +752,7 @@ public class ModelingCommons {
         if(status.equals("SUCCESS")) {
           ModelingCommons.this.groups = groups;
           boolean enableAutoGeneratePreviewImage = app.workspace().getProcedures().get("SETUP") != null && app.workspace().getProcedures().get("GO") != null;
-          JDialog uploadDialog = new ModelingCommonsUploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
+          JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
           uploadDialog.setVisible(true);
         } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
           MessageDialog.show("Error connecting to Modeling Commons", "Invalid response from Modeling Commons");
@@ -770,7 +768,7 @@ public class ModelingCommons {
     promptForUpload(" ");
   }
   public void promptForSuccess(final String error) {
-    JDialog successDialog = new ModelingCommonsUploadSuccessDialog(frame, this, error);
+    JDialog successDialog = new UploadSuccessDialog(frame, this, error);
     successDialog.setVisible(true);
   }
   public void promptForSuccess() {
@@ -784,7 +782,7 @@ public class ModelingCommons {
           ModelingCommons.this.newUserAgreement = newUserAgreement;
           ModelingCommons.this.priorityCountries = priorityCountries;
           ModelingCommons.this.unpriorityCountries = unpriorityCountries;
-          JDialog createAccountDialog = new ModelingCommonsNewUserDialog(frame, ModelingCommons.this, error);
+          JDialog createAccountDialog = new NewUserDialog(frame, ModelingCommons.this, error);
           createAccountDialog.setVisible(true);
         } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
           MessageDialog.show("Error connecting to Modeling Commons", "Invalid response from Modeling Commons");
