@@ -6,7 +6,6 @@ class World
   _nextId = 0
   _turtles = []
   turtles:      => _turtles
-  count:        => _turtles.length
   clearall:     => _turtles = []
   createturtle: (x, y, heading) =>
     _turtles.push(new Turtle((_nextId++), x, y, heading))
