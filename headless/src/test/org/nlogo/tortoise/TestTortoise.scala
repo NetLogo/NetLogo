@@ -173,6 +173,18 @@ class TestTortoise extends FunSuite {
 
   tester("ask") {
     compareCommands("clear-all")
-    compareCommands("cro 1 ask turtles [fd 1] ask turtles [output-print ycor]")
+    compareCommands("cro 3")
+    compareCommands("__ask-sorted turtles [ output-print 0 ]")
   }
+
+  tester("turtle motion 1") {
+    compareCommands("clear-all")
+    compareCommands("cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
+  }
+
+  tester("turtle motion 2") {
+    compareCommands("clear-all")
+    compareCommands("cro 8 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
+  }
+
 }

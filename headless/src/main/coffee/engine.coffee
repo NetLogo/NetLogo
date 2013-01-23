@@ -1,6 +1,21 @@
 class Turtle
   constructor: (@id, @x, @y, @heading) ->
-  fd: (amount) -> @y += amount # TODO: put a real calculation here...
+  fd: (amount) ->
+    @x += amount * Trig.sin(@heading)
+    @y += amount * Trig.cos(@heading)
+    return
+  rt: (amount) ->
+    @heading += amount
+    keepHeadingInRange()
+    return
+  lt: (amount) ->
+    @heading -= amount
+    keepHeadingInRange()
+    return
+  keepHeadingInRange = ->
+    if (heading < 0 || heading >= 360)
+      heading = ((heading % 360) + 360) % 360
+    return
 
 class World
   _nextId = 0
@@ -29,7 +44,10 @@ class Agents
     (@askAgent(a, f) for a in agents)
     return
   # obvious hack for now.
-  getVariable: (n) => @_currentAgent.y
+  getVariable: (n) =>
+    switch n
+      when 3 then @_currentAgent.x
+      when 4 then @_currentAgent.y
 
 Prims =
   fd: (n) => AgentSet.currentAgent().fd(n)
@@ -37,3 +55,16 @@ Prims =
 AgentSet = new Agents
 
 world = new World
+
+Trig =
+  squash: (x) ->
+    if (Math.abs(x) < 3.2e-15)
+      0
+    else
+      x
+  degreesToRadians: (degrees) ->
+    degrees * Math.PI / 180
+  sin: (degrees) ->
+    @squash(Math.sin(@degreesToRadians(degrees)))
+  cos: (degrees) ->
+    @squash(Math.cos(@degreesToRadians(degrees)))

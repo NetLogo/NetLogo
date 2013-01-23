@@ -75,14 +75,14 @@ class TestCompiler extends FunSuite {
 
   test("commands: ask simple") {
     import Compiler.{compileCommands => compile}
-    val input = "ask turtles [fd 1]"
+    val input = "__ask-sorted turtles [fd 1]"
     val expected = "AgentSet.ask(world.turtles(), function(){ Prims.fd(1) })"
     expectResult(expected)(compile(input))
   }
 
   test("commands: ask with turtle variable") {
     import Compiler.{compileCommands => compile}
-    val input = "ask turtles [output-print xcor]"
+    val input = "__ask-sorted turtles [output-print xcor]"
     val expected = "AgentSet.ask(world.turtles(), function(){ println(AgentSet.getVariable(3)) })"
     expectResult(expected)(compile(input))
   }
