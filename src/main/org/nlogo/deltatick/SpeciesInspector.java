@@ -3,6 +3,8 @@ package org.nlogo.deltatick;
 import org.nlogo.api.Color;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
@@ -31,6 +33,7 @@ public class SpeciesInspector extends JPanel {
     JLabel lowestEnergyValue = new JLabel("0");
     JTextField highestEnergyBlank = new JTextField();
     JButton okayButton = new JButton("Okay"); // placeholder button to test sending values - A. (Jan 22, 2013)
+    JButton addTrait = new JButton("add trait");
 
     JFrame myFrame;
 
@@ -55,10 +58,11 @@ public class SpeciesInspector extends JPanel {
         setupTopPanel();
 
         TitledBorder titleBottomPanel;
-        titleBottomPanel = BorderFactory.createTitledBorder("Traits");
-        bottomPanel.setBorder(titleBottomPanel);
-        //setupBottomPanel();
+        Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        titleBottomPanel = BorderFactory.createTitledBorder(loweredetched, "Traits");
 
+        bottomPanel.setBorder(titleBottomPanel);
+        setupBottomPanel();
 
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         pane.add(topPanel);
@@ -118,21 +122,35 @@ public class SpeciesInspector extends JPanel {
     }
 
     public void setupBottomPanel() {
+        GroupLayout layout = new GroupLayout(bottomPanel);
+        bottomPanel.setLayout(layout);
+
         traitsTabbedPane = new JTabbedPane();
-        bottomPanel.add(traitsTabbedPane);
+
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                .addComponent(addTrait)
+                .addComponent(traitsTabbedPane)
+        );
+
+        layout.setHorizontalGroup(
+                layout.createParallelGroup()
+                .addComponent(addTrait)
+                .addComponent(traitsTabbedPane)
+        );
+
+        validate();
+
         if (countTabs == 1) {
             JPanel panel1 = new JPanel();
-            traitsTabbedPane.addTab("add trait", panel1);
-
+            traitsTabbedPane.addTab("add trait1", panel1);
         }
-
-
     }
 
     public void activateOkayButton() {
         okayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                System.out.println(endLifeSpanBlank.getText());
+
                 myParent.breed.setOwnVarMaxReporter("age", endLifeSpanBlank.getText());
                 myParent.breed.setOwnVarMaxReporter("energy", highestEnergyBlank.getText());
                 myFrame.setVisible(false);   //TODO how to close a JFrame - A (Jan 23, 2013)

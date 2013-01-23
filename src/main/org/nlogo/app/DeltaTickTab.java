@@ -337,21 +337,9 @@ public class DeltaTickTab
                 TraitBlock newTraitBlock;
                 traitTypeSelector.showMe(buildPanel, buildPanel.getBgInfo());
 
-
-                /*     not needed if users are picking traits from a list (Aditi, Aug 7, 2012)
-                traitSelector.showMe( buildPanel );
-                variationSelector.showMe();
-                if (variationSelector.check() == true) {
-                newTraitBlock = new TraitBlock( traitSelector.selectedBreed(), traitSelector.traitName(),
-                        variationSelector.getVariationList(), variationSelector.getNumberList(), variationSelector.data() );
-                        */
-
                 newTraitBlock = new TraitBlock(traitTypeSelector.getSelectedBreedBlock(), traitTypeSelector.getSelectedTrait(),
                         traitTypeSelector.getSelectedTrait().getVariationHashMap());
-                    /*   not necessary if user selects a trait - Aditi (Aug 7, 2012)
-                    userInput.addTraitAndVariations( traitSelector.selectedBreed(), traitSelector.traitName(),
-                            variationSelector.getVariationList());
-                            */
+
                 userInput.addTraitAndVariations( traitTypeSelector.getSelectedBreed(), traitTypeSelector.getSelectedTraitName(),
                         traitTypeSelector.getSelectedTrait().getVariationsList());
                 buildPanel.addTrait(newTraitBlock);
@@ -431,21 +419,16 @@ public class DeltaTickTab
             new javax.swing.AbstractAction( "Build operator block" ) {
                 public void actionPerformed ( ActionEvent e ) {
                     OperatorBlock newOBlock;
-                    // show OperatorBlock dialog
-                    //trial.initComponents();
-                    //trial.activateButtons();
+
                     obBuilder.showMe(userInput);
                     if ( obBuilder.check()  == true ) {
 
-                        //newOBlock = new OperatorBlock( obBuilder, userInput );
                         newOBlock = new OperatorBlock( obBuilder.selectedBreed(), obBuilder.selectedTrait(),
                                 obBuilder.selectedTrait2(),
                                 userInput.getVariations(obBuilder.selectedBreed(), obBuilder.selectedTrait()),
                                 userInput.getVariations(obBuilder.selectedBreed(), obBuilder.selectedTrait2()));
 
-                        //newOBlock = new OperatorBlock( obBuilder.selectedBreed(), obBuilder.selectedTrait(),
-                               // obBuilder.selectedTrait2(), userInput );
-                        //libraryPanel.add(newOBlock);
+
                         libraryHolder.addOperatortoTab(newOBlock);
                         deltaTickTab.addDragSource(newOBlock);
                     }
@@ -464,7 +447,6 @@ public class DeltaTickTab
         if (interfaceCount == 0) {
         org.nlogo.window.Widget setupWidget = interfacePanel.makeWidget("BUTTON",false);
         interfacePanel.addWidget(setupWidget, 0, 0, true, false);
-        //org.nlogo.window.ButtonWidget buttonWidget = interface
         if (setupWidget instanceof org.nlogo.window.ButtonWidget) {
           org.nlogo.window.ButtonWidget button =
               (org.nlogo.window.ButtonWidget) setupWidget;
@@ -474,19 +456,17 @@ public class DeltaTickTab
 
         org.nlogo.window.Widget goWidget = interfacePanel.makeWidget("BUTTON",false);
         interfacePanel.addWidget(goWidget, 60, 0, true, false);
-        //org.nlogo.window.ButtonWidget buttonWidget = interface
+
         if (goWidget instanceof org.nlogo.window.ButtonWidget) {
           org.nlogo.window.ButtonWidget button =
               (org.nlogo.window.ButtonWidget) goWidget;
             button.displayName("go");
             button.wrapSource("go");
-            //(ButtonWidget) button.forever_=(!button.forever());
             button.setForeverOn();
         }
 
         org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
         interfacePanel.addWidget(drawWidget, 0, 130, true, false);
-        //org.nlogo.window.ButtonWidget buttonWidget = interface
         if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
           org.nlogo.window.ButtonWidget button =
               (org.nlogo.window.ButtonWidget) drawWidget;
