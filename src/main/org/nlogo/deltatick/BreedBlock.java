@@ -26,6 +26,7 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -50,6 +51,7 @@ public strictfp class BreedBlock
     transient Frame parentFrame;
     transient ShapeSelector selector;
     transient JButton breedShapeButton;
+    transient JButton inspectSpeciesButton;
     transient PrettyInput number;
     transient PrettyInput plural;
     HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
@@ -76,7 +78,6 @@ public strictfp class BreedBlock
         number.setText(breed.getStartQuant());
 
 
-
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
@@ -93,6 +94,7 @@ public strictfp class BreedBlock
     }
 
     // second constructor for breedBlock with trait & variation
+    // not used (jan 20, 2013)
     public BreedBlock(Breed breed, String plural, String traitName, String variationName, Frame frame) {
         super(plural, ColorSchemer.getColor(3));
         this.parentFrame = frame;
@@ -124,6 +126,7 @@ public strictfp class BreedBlock
 
         block.showRemoveButton();
         this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+
         block.setMyParent(this);
         block.doLayout();
         block.validate();
@@ -175,8 +178,6 @@ public strictfp class BreedBlock
             }
             code += "\n";
         }
-
-
         return code;
     }
 
@@ -191,7 +192,12 @@ public strictfp class BreedBlock
             }
             for (OwnVar var : breed.getOwnVars()) {
                 if (var.setupReporter != null) {
-                    code += "set " + var.name + " " + var.setupReporter + "\n";
+                    if (var.name.equalsIgnoreCase("energy") || var.name.equalsIgnoreCase("age")) {
+                        code += "set " + var.name + " " + "random" + " " + var.maxReporter + "\n";
+                    }
+                    else {
+                        code += "set " + var.name + " " + var.setupReporter + "\n";
+                    }
                 }
             }
             code += "]\n";
@@ -326,8 +332,7 @@ public strictfp class BreedBlock
         label.add(removeButton);
         label.add(new JLabel("Ask"));
 
-        // number of turtles of a breed starting with -a.
-        number = new PrettyInput(this);
+        number = new PrettyInput(this); // number of turtles of a breed starting with -a.
         number.setText("100");
         label.add(number);
 
@@ -339,6 +344,9 @@ public strictfp class BreedBlock
         label.add(makeBreedShapeButton());
         //label.add(new JLabel(") to..."));
 
+        //label.add(makeInspectSpeciesButton());
+        inspectSpeciesButton = new InspectSpeciesButton(this);
+        label.add(inspectSpeciesButton);
 
         label.setBackground(getBackground());
         add(label);
@@ -348,7 +356,6 @@ public strictfp class BreedBlock
     private final javax.swing.Action pickBreedShape =
             new javax.swing.AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-
                 }
             };
 
@@ -358,6 +365,42 @@ public strictfp class BreedBlock
         breedShapeButton.addActionListener(this);
         breedShapeButton.setSize(40, 40);
         return breedShapeButton;
+    }
+
+//    public JButton makeInspectSpeciesButton() {
+//        inspectSpeciesButton = new JButton();
+//        inspectSpeciesButton.addActionListener(this);
+//        inspectSpeciesButton.setAction(inspectSpecies);
+//        return inspectSpeciesButton;
+//    }
+
+
+
+    public class InspectSpeciesButton extends JButton {
+        InspectSpeciesButton inspectSpeciesButton;
+        BreedBlock myParent;
+
+        public InspectSpeciesButton(BreedBlock bBlock) {
+            setPreferredSize(new Dimension(20, 20));
+            setAction(inspectSpecies);
+            setBorder(null);
+            setForeground(java.awt.Color.gray);
+            setBorderPainted(false);
+            setMargin(new java.awt.Insets(1, 1, 1, 1));
+            this.myParent = bBlock;
+        }
+
+        private final javax.swing.Action inspectSpecies =
+                new javax.swing.AbstractAction("Inspect") {
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        JFrame jFrame = new JFrame("Species Inspector");
+                        SpeciesInspector speciesInspector = new SpeciesInspector(myParent, jFrame);
+                        // add a way to close window (setDefaultCloseOperation) - A. (jan 21, 2013)
+                        speciesInspector.addPanels(jFrame.getContentPane());
+                        jFrame.pack();
+                        jFrame.setVisible(true);
+                    }
+                };
     }
 
     // when clicks on shape selection -a.
@@ -392,8 +435,6 @@ public strictfp class BreedBlock
         return org.nlogo.shape.VectorShape.parseShapes(shapes, version);
     }
 
-
-
     public String setBreedShape() {
         if (breedShape != null) {
             return "set-default-shape " + plural() + " \"" + breedShape + "\"\n";
@@ -401,19 +442,16 @@ public strictfp class BreedBlock
         return "";
     }
 
-
     public Breed myBreed() {
         return breed;
     }
 
-    // not used -A. (Aug 10, 2012)
-    public void addTraittoBreed(TraitBlock traitBlock) {
+    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
         traitBlock.showColorButton();
         traitBlock.doLayout();
         traitBlock.validate();
         traitBlock.repaint();
     }
-
 
     public void mouseEnter(MouseEvent evt) {
     }

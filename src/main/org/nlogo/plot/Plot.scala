@@ -47,6 +47,11 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
     pensDirty = true
   }
 
+  //added by Aditi to remove a pen from a plot in DeltaTick (Jan 19, 2013)
+  def removePen(p:PlotPen) {
+    //pens = pens :- p
+  }
+
   private var _currentPen: Option[PlotPen] = None
   // take the first pen if there is no current pen set
   def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
@@ -58,6 +63,9 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   }
   def currentPen_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
+
+
+
 
   // This only affects the UI, not headless operation, but because it is included when a plot is
   // exported, we keep it here rather than in PlotWidget, so that exporting can stay totally

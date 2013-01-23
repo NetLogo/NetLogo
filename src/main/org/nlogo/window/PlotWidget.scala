@@ -18,7 +18,9 @@ object PlotWidget{
 
     //plot.createPlotPen(plot.name, false);
 
-    plot.createPlotPen("default", false, "", "plot count turtles")
+    // The following line is original code from NetLogo commented out by Aditi to independently create and rename pens
+    // in DeltaTickTab (~line 589) -Aditi (Jan 17. 2013)
+    //plot.createPlotPen("default", false, "", "plot count turtles")
 
     // recompiling here is somewhat ugly.
     // we should probably ask the plotManager to create a new pen and it could recompile it.

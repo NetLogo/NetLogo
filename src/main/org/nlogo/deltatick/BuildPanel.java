@@ -68,7 +68,6 @@ public class BuildPanel
     public String unPackAsCode() {
         String passBack = "";
 
-
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.declareBreed();
         }
@@ -118,31 +117,31 @@ public class BuildPanel
         passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
         passBack += "\n";
 
+        // begin function to go
         passBack += "to go\n";
         passBack += bgInfo.updateBlock(myBreeds, myEnvts);
-
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.unPackAsCode();
         }
-
         for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.unPackAsCode();
         }
-
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
-
         passBack += "tick\n";
-
-
-
         if (myHisto.size() > 0) {
             passBack += "make-histo\n";
         }
         passBack += "end\n";
         passBack += "\n";
 
+        //new function: to draw - Aditi (jan 17, 2013)
+        passBack += "to draw\n";
+        passBack += bgInfo.drawCode() + "\n";
+        passBack += "end\n";
+
+        // remaining procedures
         passBack += unPackProcedures();
         passBack += "\n";
 
@@ -210,6 +209,10 @@ public class BuildPanel
         }
         passBack += "end\n";
         passBack += "\n";
+
+        passBack += "to draw\n";
+        passBack += bgInfo.drawCode() + "\n";
+        passBack += "end\n";
 
         passBack += unPackProcedures();
         passBack += "\n";
@@ -364,6 +367,24 @@ public class BuildPanel
     public List<PlotBlock> getMyPlots() {
         return myPlots;
     }
+
+    public boolean getMyPlot(String name) {
+        boolean check = false;
+        for (PlotBlock plotBlock : this.getMyPlots()) {
+            if (plotBlock.getName().equalsIgnoreCase(name)) {
+                check = true;
+            }
+        }
+        return check;
+    }
+
+//    public PlotBlock getMyPlotBlock(String name) {
+//        for (PlotBlock plotBlock : this.getMyPlots()) {
+//            if (plotBlock.getName().equalsIgnoreCase(name)) {
+//                return plotBlock;
+//            }
+//        }
+//    }
 
     public List<HistogramBlock> getMyHisto() {
         return myHisto;

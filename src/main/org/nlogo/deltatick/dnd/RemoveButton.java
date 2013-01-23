@@ -1,5 +1,7 @@
 package org.nlogo.deltatick.dnd;
 
+import org.nlogo.deltatick.PlotBlock;
+
 import javax.swing.*;
 import java.awt.*;
 

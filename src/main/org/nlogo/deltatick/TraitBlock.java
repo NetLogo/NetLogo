@@ -263,9 +263,7 @@ public strictfp class TraitBlock
 
     public String getMyTraitName() {
         String passback = "";
-
         passback += traitName + "\n ";
-
         return passback;
     }
 
@@ -279,11 +277,9 @@ public strictfp class TraitBlock
         int startValue = 0;
         int endValue = 0;
 
-
         for (Map.Entry<String, Variation> entry : variationHashMap.entrySet()) {
             String variationType = entry.getKey();
             Variation variation = entry.getValue();
-
 
             int k = variation.number;
             endValue = startValue + k;
@@ -302,9 +298,6 @@ public strictfp class TraitBlock
     public String setupNew() {
         String passBack = "";
         int i = 1;
-
-
-
 
         passBack += "let " + traitName + i + " sublist all-" + breedName + "-" + traitName +
                                 " " + traitName + "-start " + number.getText().toString() + "\n";
@@ -401,6 +394,7 @@ public strictfp class TraitBlock
         return passBack;
     }
      // this setup is not used anymore -A (Aug 8, 2012)
+
     public String setupOld() {
         String passBack = "";
         System.out.println("varNum " + this.getVarNum());
@@ -447,8 +441,6 @@ public strictfp class TraitBlock
     public ArrayList<String> getVariations() {
         return varList;
     }
-
-
 
     public void addBlock(CodeBlock block) {
         myBlocks.add(block);

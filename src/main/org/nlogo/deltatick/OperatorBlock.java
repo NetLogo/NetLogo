@@ -20,7 +20,6 @@ public class OperatorBlock
 
     JLabel name;
     OperatorBlockBuilder obBuilder;
-    UserInput userInput;
     JComboBox dropdownList;
     JComboBox dropdownList2;
     String traitA;

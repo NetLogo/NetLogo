@@ -26,6 +26,7 @@ public class ModelBackgroundInfo {
     String go;
     String library;
     String version;
+    String draw;
 
     public ModelBackgroundInfo() {
     }
@@ -38,16 +39,21 @@ public class ModelBackgroundInfo {
         go = null;
         library = null;
         version = null;
+        draw = null;
         traits.clear();
     }
 
-    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library) throws Exception {
+    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
             }
             if (go.getLength() > 0) {
                 this.go = go.item(0).getTextContent();
+            }
+
+            if (draw.getLength() > 0) {
+                this.draw = draw.item(0).getTextContent();
             }
 
             // populating class variable, breeds with the given breedNodes nodelist -A. (oct 17)
@@ -113,10 +119,8 @@ public class ModelBackgroundInfo {
         }
          /*
         for (TraitBlock traitBlock : usedTraits) {
-
             code += traitBlock.setup();
-        }
-        */
+        } */
         for (Global global : globals) {
             code += global.setup();
         }
@@ -139,6 +143,7 @@ public class ModelBackgroundInfo {
         if (go != null) {
             code += go;
         }
+
         for (BreedBlock breedBlock : usedBreeds) {
             code += breedBlock.update();
         }
@@ -149,6 +154,14 @@ public class ModelBackgroundInfo {
             code += envtBlock.update();
         }
 
+        return code;
+    }
+
+    public String drawCode() {
+        String code = "";
+        if (draw != null) {
+            code += draw;
+        }
         return code;
     }
 

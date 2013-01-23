@@ -1,5 +1,7 @@
 package org.nlogo.deltatick;
 
+import org.nlogo.app.WidgetWrapper;
+import org.nlogo.deltatick.dnd.ColorButton;
 import org.nlogo.window.Widget;
 
 import javax.swing.*;
@@ -17,6 +19,7 @@ public strictfp class QuantityBlock
         extends CodeBlock {
 
     transient JPanel penColorButton;
+    transient JFrame parent;
     Color penColor = Color.black;
     boolean histo = false;
     String bars = "0";
@@ -25,6 +28,8 @@ public strictfp class QuantityBlock
     String variable;
     String penSetUpCode;
     String penUpdateCode;
+    String penColorString;
+    ColorButton colorButton = new ColorButton(parent, this);
 
     public QuantityBlock(String name, boolean histo, String bars, String trait) {
         super(name, ColorSchemer.getColor(2));
@@ -37,8 +42,8 @@ public strictfp class QuantityBlock
         };
         //label.add(makeBreedShapeButton());
         // - quantity block need not have shape change -A. (sept 30)
-
-
+        label.add(colorButton);
+        colorButton.setPreferredSize(new Dimension(30, 30));
     }
 
     public String unPackAsCode() {
@@ -81,47 +86,57 @@ public strictfp class QuantityBlock
     public String unPackAsCommand() {
         String passBack = "";
         Container parent = getParent();
-        if (parent instanceof HistogramBlock) {
-            passBack += "  set-current-plot \"" + parent.getName() + "\"\n";
-            passBack += "set-plot-pen-mode 1 \n";
-            /*
-            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("breed-type")) {
-                    population = entry.getValue().getText().toString();
-                }
-                if (entry.getKey().equalsIgnoreCase("trait")) {
-                    variable = entry.getValue().getText().toString();
-                }
-            }
-            */
-            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("breed-type")) {
-                    population = entry.getValue().getText().toString();
-                }
-                if (entry.getKey().equalsIgnoreCase("trait")) {
-                    variable = entry.getValue().getText().toString();
-                }
-            }
 
+        /* not being used because HistogramBlock is not used any more -Aditi (Jan 15, 2013)
+        if (parent instanceof HistogramBlock) {
+            passBack += "set-plot-pen-mode 1 \n";
+
+            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                    population = entry.getValue().getText().toString();
+                }
+                if (entry.getKey().equalsIgnoreCase("trait")) {
+                    variable = entry.getValue().getText().toString();
+                }
+            }
             //passBack += "set-histogram-num-bars " + bars + "\n";
             //passBack += "set-plot-x-range 0 max " + getName() + " ";
             //passBack += "plotxy" + x + y + "\n";
-
             passBack += "histogram [ " + variable + " ] of " + population ;
             passBack += "\n";
         }
+        */
 
         if (parent instanceof PlotBlock) {
+            passBack += "  set-current-plot-pen \"" + this.getName() + "\" \n";
+            if (colorButton.gotColor() == true) {
+                passBack += "set-plot-pen-color " + colorButton.getSelectedColorName() + "\n";
+            }
 
-            passBack += "plot " + getName() + " ";
+            if (((PlotBlock) parent).isHisto == true) {
+                passBack += "set-plot-pen-mode 1 \n";
+                for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                    population = entry.getValue().getText().toString();
+                }
+                if (entry.getKey().equalsIgnoreCase("trait")) {
+                    variable = entry.getValue().getText().toString();
+                }
+            }
+            passBack += "histogram [ " + variable + " ] of " + population ;
+            passBack += "\n";
+            }
 
-        for (JTextField input : inputs.values()) {
-            passBack += input.getText() + " ";
-        }
+            else {
+                passBack += "plot " + getName() + " ";
+                for (JTextField input : inputs.values()) {
+                    passBack += input.getText() + " ";
+                }
+            }
+
         passBack += "\n";
-    }
+        }
         penUpdateCode = passBack;
-
         return passBack;
     }
 
@@ -130,33 +145,24 @@ public strictfp class QuantityBlock
         return inputs;
     }
 
-    /*
-    public JPanel makeBreedShapeButton() {
-        return new BreedShapeButton();
+    public void setButtonColor( Color color ) {
+        colorButton.setBackground(color);
+        colorButton.setOpaque(true);
+        colorButton.setBorderPainted(false);
     }
 
-    class BreedShapeButton extends JPanel implements MouseListener {
 
-        BreedShapeButton() {
-            this.setSize(30, 30);
-            this.setBackground(penColor);
-            this.addMouseListener(this);
-            //this.setComponentZOrder(this.getParent(),0);
-            this.repaint();
-        }
-        */
+    public void mouseReleased(java.awt.event.MouseEvent event) {
+    }
 
-        public void mouseReleased(java.awt.event.MouseEvent event) {
-        }
+    public void mouseEntered(java.awt.event.MouseEvent event) {
+    }
 
-        public void mouseEntered(java.awt.event.MouseEvent event) {
-        }
+    public void mouseExited(java.awt.event.MouseEvent event) {
+    }
 
-        public void mouseExited(java.awt.event.MouseEvent event) {
-        }
-
-        public void mousePressed(java.awt.event.MouseEvent event) {
-        }
+    public void mousePressed(java.awt.event.MouseEvent event) {
+    }
 
         /*
 

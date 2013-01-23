@@ -122,16 +122,7 @@ public abstract class CodeBlock
         private final javax.swing.Action deleteAction =
                 new javax.swing.AbstractAction("X") {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
-                        //CodeBlock homePanel = (CodeBlock) myParent.getParent();
                         myParent.die();
-
-                        /*
-                        for (CodeBlock block : myBlocks) {
-                            if ( block instanceof TraitBlock ) {
-                                block.die();
-                            }
-                        }
-                        */
                     }
                 };
     }
@@ -507,15 +498,11 @@ public abstract class CodeBlock
         Container pParent = parent.getParent();
         //checkParent = false;
 
-
         if (parent instanceof BreedBlock) {
             checkParent = true;
-
             if (this instanceof TraitBlock) {
-
                 ((BuildPanel) pParent).removeTrait((TraitBlock) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
                 ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);   // removes from BreedBlock -A. (Aug 8, 2012)
-
             }
         }
         if (parent instanceof JPanel) {
@@ -532,24 +519,17 @@ public abstract class CodeBlock
                 }
             }
         }
-
-
         if (parent instanceof CodeBlock) {
-
             ((CodeBlock) parent).removeBlock(this);
         }
-
         if (parent instanceof BuildPanel) {
-
             if (this instanceof BreedBlock) {
-
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
                 for (Component child : getComponents()) {
-                if (child instanceof TraitBlock) {
-                ((BreedBlock) this).removeTraitBlock((TraitBlock) child);
-                ((BuildPanel) parent).removeTrait((TraitBlock) child);
-                }
-
+                    if (child instanceof TraitBlock) {
+                        ((BreedBlock) this).removeTraitBlock((TraitBlock) child);
+                        ((BuildPanel) parent).removeTrait((TraitBlock) child);
+                    }
                 }
             }
             if (this instanceof PlotBlock) {
@@ -561,7 +541,7 @@ public abstract class CodeBlock
         }
 
 
-        // kill off any subblocks
+        // remove any subblocks
         for (Component child : getComponents()) {
             if (child.getClass() == CodeBlock.class) {
                 ((CodeBlock) child).die();

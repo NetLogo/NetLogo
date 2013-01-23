@@ -49,8 +49,7 @@ public class HistogramBlock
             for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase("breed-type")) {
                     population = entry.getValue().toString();
-                    System.out.println("values " + inputs.values());
-                    System.out.println("keys " + inputs.keySet());
+
                 }
                 if (entry.getKey().equalsIgnoreCase("trait")) {
                     variable = entry.getValue().toString();
@@ -112,7 +111,7 @@ public class HistogramBlock
     public String unPackAsCode() {
         String passBack = " ";
         //System.out.println("HistoBlock ");
-
+        passBack += "  set-current-plot \"" + getName() + "\"\n";
         //passBack += "  set-current-plot \"" + getName() + "\"\n";
         //passBack += "  histogram [ \"" + variable + " ] of " + population + "\n";
         /*

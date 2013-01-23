@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
  */
 public class OwnVar {
     public String name;
+    public String maxReporter;
     public String setupReporter;
     public String updateReporter;
 
@@ -21,6 +22,10 @@ public class OwnVar {
 
         NodeList info = ownVarNode.getChildNodes();
         for (int i = 0; i < info.getLength(); i++) {
+            if (info.item(i).getNodeName() == "maxReporter") {
+                maxReporter = info.item(i).getTextContent();
+            }
+
             if (info.item(i).getNodeName() == "setupReporter") {
                 setupReporter = info.item(i).getTextContent();
             }

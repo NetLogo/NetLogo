@@ -25,30 +25,37 @@ public strictfp class PlotBlock
     PlotBlock plotBlock = this; // for deleteAction
     JTextField plotNameField;
     org.nlogo.plot.Plot netLogoPlot;
-    boolean histo;
+    boolean isHisto;
 
     public PlotBlock() {
         super("plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        this.histo = true;
+        this.isHisto = false;
 
         addMouseMotionListener(this);
         addMouseListener(this);
 
-
-        //BreedBlock uses these 2 data flavors to unpackAsCode and check validity of block.
-        // I don't think PlotBlock uses these data flavors - A.
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 plotBlockFlavor
         };
     }
 
-    //I think this constructor is for histograms- not sure -A. (sept 26)
+    //constructor is for histograms if argument is true- not sure -A. (jan 15, 2013)
     public PlotBlock(boolean histo) {
         super("plot", ColorSchemer.getColor(3));
+        this.isHisto = histo;
+
+        label.add(removeButton);
+        if (this.isHisto == true) {
+            label.add(new JLabel("Histogram of "));
+        }
+        else {
+            label.add(new JLabel("Graph of "));
+        }
+        label.add(plotNameField);
+
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        this.histo = true;
 
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -90,13 +97,14 @@ public strictfp class PlotBlock
         return blocks;
     }
 
+
     public void makeLabel() {
         plotNameField = new PrettyInput(this);
         label.add(removeButton);
-        label.add(new JLabel("Graph of "));
         label.add(plotNameField);
         label.setBackground(getBackground());
     }
+
 
     public String getName() {
         return plotNameField.getText();
@@ -104,22 +112,14 @@ public strictfp class PlotBlock
 
     public String unPackAsCode() {
         String passBack = "";
-        //passBack += "  set-current-plot \"" + getName() + "\"\n";
+        passBack += "  set-current-plot \"" + getName() + "\"\n";
 
-        passBack += " set-current-plot \"plot 1\" \n";
-            //?
         for (QuantityBlock quantBlock : getMyBlocks()) {
-            //passBack += "  set-current-plot-pen \"" + quantBlock.getName() + " ";
-            passBack += "  set-current-plot-pen \"default\" \n";
-            for (JTextField input : quantBlock.inputs.values()) {
-                //passBack += input.getText() + " ";
-            }
-            //passBack += "\"\n";
             passBack += "  " + quantBlock.unPackAsCommand();
         }
-
         return passBack;
     }
+
 
     public void mouseEnter(MouseEvent evt) {
     }
@@ -169,8 +169,8 @@ public strictfp class PlotBlock
         plotNameField.setText(name);
     }
 
-    public boolean histogram() {
-        return histo;
+    public boolean isHistogram() {
+        return isHisto;
     }
 
     public void getPlotPen () {

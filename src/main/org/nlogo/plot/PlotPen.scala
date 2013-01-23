@@ -41,6 +41,7 @@ class PlotPen (
         private var _mode:Int = PlotPen.LINE_MODE,
         var penModeChanged: Boolean = false,
         private var _isDown: Boolean = true,
+
         private var _hidden: Boolean = false)
 extends org.nlogo.api.PlotPenInterface with Serializable {
 
@@ -88,6 +89,9 @@ extends org.nlogo.api.PlotPenInterface with Serializable {
       plot.plotListener.foreach(_.plotPenMode(newMode))
     }
   }
+
+  //written by Aditi to get the name of a plotPen in DTT in Java -Aditi (Jan 18, 2013)
+  def getPenName() = name
 
   def setupCode(code:String) { setupCode = if(code == null) "" else code }
   def updateCode(code:String) { updateCode = if(code == null) "" else code }

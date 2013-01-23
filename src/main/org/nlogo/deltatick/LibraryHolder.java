@@ -61,38 +61,27 @@ public class LibraryHolder extends JPanel {
 
      // This is called only for TraitBlock & operatorBlock
       //TODo This changes the name of the tab to "panel" (March 9)
-    public void addLibrarytoTab( TraitBlock block ) {
-       tabbedPane.addTab( "panel", panel );
-
-
-       traits.add(block);
-       //getVariation(block);
+    public void addTraittoTab( TraitBlock block, int numberTraits ) {
+        if (numberTraits == 1) {
+            panel = (JComponent) new JPanel();
+            panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
+        }
+        panel.add(block);
+        tabbedPane.addTab("Your blocks", panel);
+        traits.add(block);
     }
-
-
-
 
     public void removeTraitBlock ( TraitBlock tBlock ) {
         traits.remove(tBlock);
     }
 
-
-
-
-
     public void addOperatortoTab( OperatorBlock oBlock ) {
-       tabbedPane.addTab( "panel", panel );
-       operatorBlocksList.add(oBlock);
-       //getVariation(block);
-
+        panel.add(oBlock);
+        tabbedPane.addTab( "Your blocks", panel );
+        operatorBlocksList.add(oBlock);
     }
 
-    //TODO: Get rid of this hard coding (Feb 21, 2012)
-
-
-
     public void makeNewTab() {
-
         panel = (JComponent) new JPanel();
         panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
         JScrollPane sp = new JScrollPane(panel);
@@ -129,7 +118,6 @@ public class LibraryHolder extends JPanel {
 
     public void setTabName( String name ) {
         // TODO Change to using indexOfTabComponent
-        //int i = tabbedPane.indexOfTabComponent(LibraryHolder.this);
         tabbedPane.setTitleAt((countTabs - 1), name);
     }
 

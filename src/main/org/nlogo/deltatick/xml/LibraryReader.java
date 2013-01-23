@@ -51,7 +51,8 @@ public class LibraryReader {
                     library.getElementsByTagName("envt"),
                     library.getElementsByTagName("setup"),
                     library.getElementsByTagName("go"),
-                    library.getElementsByTagName("library")
+                    library.getElementsByTagName("library"),
+                    library.getElementsByTagName("draw")
             );
 
 

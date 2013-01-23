@@ -38,8 +38,7 @@ public class Breed {
         this.id = id;
 
         // breed info: setup code, update code, own variables
-        // The NodeList interface provides the abstraction of an
-        // ordered collection of nodes, without defining or constraining how
+        // The NodeList interface provides the abstraction of an ordered collection of nodes, without defining or constraining how
         // this collection is implemented   -A. (aug 25)
 
         // in DTD/XML file, Elements Breed are childNodes of breedNode -A. (sept 13)
@@ -96,6 +95,24 @@ public class Breed {
             ownVarNames.add(ownVar.name);
         }
         return ownVarNames;
+    }
+
+    public String getOwnVarMaxReporter (String ownVarName) {
+        String s = new String();
+        for (OwnVar ownVar : ownVars) {
+            if (ownVar.name.equalsIgnoreCase(ownVarName)) {
+                s = ownVar.maxReporter;
+            }
+        }
+        return s;
+    }
+
+    public void setOwnVarMaxReporter (String ownVarName, String maxReporter) {
+        for (OwnVar ownVar : ownVars) {
+            if (ownVar.name.equalsIgnoreCase(ownVarName)) {
+                ownVar.maxReporter = maxReporter;
+            }
+        }
     }
 
     /*

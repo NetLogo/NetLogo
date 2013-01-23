@@ -10,6 +10,7 @@ import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
 class PlotManager(factory: LogoThunkFactory) extends PlotManagerInterface {
 
   // all the plots in the model
+  //private
   private val _plots = mutable.Buffer[Plot]()
   def plots = _plots.toList
 

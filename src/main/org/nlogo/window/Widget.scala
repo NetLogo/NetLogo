@@ -106,6 +106,11 @@ abstract class Widget extends JPanel {
     repaint()
   }
 
+  //added by Aditi to access display name of a widget for plots -Aditi (Jan 18, 2013)
+  def getDisplayName : String = {
+    return displayName;
+  }
+
   override def paintComponent(g: Graphics): Unit = {
     var g2d: Graphics2D = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)

@@ -18,10 +18,10 @@ public class VariationDropDown extends JComboBox {
     String [] variationArray;
     String selectedVariation;
 
-    public VariationDropDown (ArrayList variationList, TraitBlock myParent) {
+    public VariationDropDown (ArrayList<String> variationList, TraitBlock myParent) {
         this.variationList = variationList;
         variationArray = new String[variationList.size()];
-        variationArray = (String[]) variationList.toArray(variationArray);
+        variationArray = variationList.toArray(variationArray);
         this.setModel(new javax.swing.DefaultComboBoxModel(variationArray));
         this.myParent = myParent;
         // TODO figure out a way that this doesn't break when transferred
