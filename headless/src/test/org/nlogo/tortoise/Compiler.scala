@@ -76,7 +76,8 @@ object Compiler {
       case _: prim._set              => s"${arg(0)} = ${arg(1)};"
       case call: prim._call          => s"${call.procedure.name}($args)"
       case _: prim.etc._report       => s"return $args;"
-      case Prims.NormalCommand(op)   => s"$op($args);"
+      case _: prim._ask              => Prims.generateAsk(s)
+      case Prims.NormalCommand(op)   => s"$op($args)"
     }
   }
 
@@ -90,6 +91,7 @@ object Compiler {
       case call: prim._callreport           => s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
+      case tv: prim._turtlevariable         => s"AgentSet.getVariable(${tv.vn})"
     }
   }
 

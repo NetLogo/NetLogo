@@ -33,6 +33,7 @@ object Prims {
         case _: prim.etc._outputprint      => "println"
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim._createorderedturtles => "world.createorderedturtles"
+        case _: prim._fd                   => "Prims.fd"
       }
   }
 
@@ -62,4 +63,13 @@ object Prims {
       |$elseBlock
       |}""".stripMargin
   }
+
+  def generateAsk(s: compiler.Statement): String = {
+    val agents = Compiler.genReporterApp(s.args.head)
+    val body   = Compiler.genCommandBlock(s.args.tail.head)
+    s"AgentSet.ask($agents, ${fun(body)})"
+  }
+
+  def fun(body: String) = s"function(){ $body }"
+
 }

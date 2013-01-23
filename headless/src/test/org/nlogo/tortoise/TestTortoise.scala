@@ -28,7 +28,10 @@ class TestTortoise extends FunSuite {
 
   def defineProcedures(logo: String) {
     evalJS(Compiler.compileProcedures(logo))
-    ws.initForTesting(0, 0, 0, 0, logo)
+    // setting the world size to something bigger than zero
+    // so we can test things like:
+    // cro 1 ask turtles [fd 1 outputprint ycor]
+    ws.initForTesting(5, 5, 5, 5, logo)
   }
 
   // these two are super helpful when running failing tests
@@ -48,7 +51,10 @@ class TestTortoise extends FunSuite {
     test(testName) {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
-      ws.initForTesting(0)
+      // setting the world size to something bigger than zero
+      // so we can test things like:
+      // cro 1 ask turtles [fd 1 outputprint ycor]
+      ws.initForTesting(5)
       body
     }
   }
@@ -147,9 +153,9 @@ class TestTortoise extends FunSuite {
   }
 
   tester("multiple procedures") {
+    compareCommands("clear-all")
     defineProcedures("""|to foo [x y z] cro x + y cro z end
                         |to goo [z] cro z * 10 end""".stripMargin)
-    compareCommands("clear-all")
     compareCommands("foo 1 2 3")
     compareCommands("goo 10")
     compareCommands("output-print count turtles")
@@ -165,4 +171,8 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print fact 6")
   }
 
+  tester("ask") {
+    compareCommands("clear-all")
+    compareCommands("cro 1 ask turtles [fd 1] ask turtles [output-print ycor]")
+  }
 }
