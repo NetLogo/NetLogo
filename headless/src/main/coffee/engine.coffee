@@ -5,20 +5,21 @@ collectUpdates = ->
   Updates = []
   result
 
+updated = (obj, vars...) ->
+  # is there some less simpleminded way we could build this? surely there
+  # must be. my CoffeeScript fu is stoppable - ST 1/24/13
+  change = {}
+  for v in vars
+    change[v] = obj[v]
+  oneUpdate = {}
+  oneUpdate[obj.id] = change
+  update = {}
+  update.turtles = oneUpdate
+  update.patches = {}
+  Updates.push(update)
+  return
+
 class Turtle
-  updated = (obj, vars...) ->
-    # is there some less simpleminded way we could build this? surely there
-    # must be. my CoffeeScript fu is stoppable - ST 1/24/13
-    change = {}
-    for v in vars
-      change[v] = obj[v]
-    oneUpdate = {}
-    oneUpdate[obj.id] = change
-    update = {}
-    update.turtles = oneUpdate
-    update.patches = {}
-    Updates.push(update)
-    return
   constructor: (@id, @xcor, @ycor, @heading) ->
     updated(this, "xcor", "ycor", "heading")
   fd: (amount) ->
