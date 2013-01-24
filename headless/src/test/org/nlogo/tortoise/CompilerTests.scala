@@ -87,4 +87,10 @@ class TestCompiler extends FunSuite {
     expectResult(expected)(compile(input))
   }
 
+  test("commands: die") {
+    import Compiler.{compileCommands => compile}
+    val input = "__ask-sorted turtles [die]"
+    val expected = "AgentSet.ask(world.turtles(), function(){ AgentSet.die() })"
+    expectResult(expected)(compile(input))
+  }
 }

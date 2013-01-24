@@ -1,3 +1,8 @@
+# from: http://coffeescriptcookbook.com/chapters/arrays/filtering-arrays
+unless Array::filter
+  Array::filter = (callback) ->
+    element for element in this when callback(element)
+
 class Turtle
   constructor: (@id, @x, @y, @heading) ->
   fd: (amount) ->
@@ -16,11 +21,19 @@ class Turtle
     if (heading < 0 || heading >= 360)
       heading = ((heading % 360) + 360) % 360
     return
+  die: () ->
+    if(@id != -1)
+      world.removeTurtle(@id)
+      @id = -1
+    return
 
 class World
   _nextId = 0
   _turtles = []
   turtles: -> _turtles
+  removeTurtle: (id) ->
+    _turtles = @turtles().filter (t) -> t.id != id
+    return
   clearall: ->
     _turtles = []
     return
@@ -48,6 +61,12 @@ class Agents
     switch n
       when 3 then @_currentAgent.x
       when 4 then @_currentAgent.y
+  # I'm putting some things in Agents, and some in Prims
+  # I did that on purpose to show how arbitrary/confusing this seems.
+  # May we should put *everything* in Prims, and Agents can be private.
+  # Prims could/would/should be the compiler/runtime interface.
+  die: () ->
+    @_currentAgent.die()
 
 Prims =
   fd: (n) -> AgentSet.currentAgent().fd(n)

@@ -187,4 +187,9 @@ class TestTortoise extends FunSuite {
     compareCommands("cro 8 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
+  tester("turtle death") {
+    compareCommands("clear-all")
+    compareCommands("cro 8 __ask-sorted turtles [die]")
+    compareCommands("__ask-sorted turtles [output-print xcor]")
+  }
 }

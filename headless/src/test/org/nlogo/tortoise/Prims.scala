@@ -34,6 +34,7 @@ object Prims {
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim._createorderedturtles => "world.createorderedturtles"
         case _: prim._fd                   => "Prims.fd"
+        case _: prim.etc._die              => "AgentSet.die"
       }
   }
 
