@@ -31,7 +31,7 @@ class TestTortoise extends FunSuite {
     // setting the world size to something bigger than zero
     // so we can test things like:
     // cro 1 ask turtles [fd 1 outputprint ycor]
-    ws.initForTesting(5, 5, 5, 5, logo)
+    ws.initForTesting(-5, 5, -5, 5, logo)
   }
 
   // these two are super helpful when running failing tests
@@ -191,5 +191,10 @@ class TestTortoise extends FunSuite {
     compareCommands("clear-all")
     compareCommands("cro 8 __ask-sorted turtles [die]")
     compareCommands("__ask-sorted turtles [output-print xcor]")
+  }
+
+  tester("patches") {
+    compareCommands("clear-all")
+    compareCommands("__ask-sorted patches [output-print pxcor]")
   }
 }

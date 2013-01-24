@@ -28,10 +28,21 @@ class Turtle
       @id = -1
     return
 
+class Patch
+  constructor: (@pxcor, @pycor) ->
+
 class World
+  # any variables used in the constructor should come
+  # before the constructor, else they get overwritten after it.
   _nextId = 0
   _turtles = []
+  _patches = []
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+    nested = (new Patch(x, y) for x in [@minPxcor..@maxPxcor] for y in [@minPycor..@maxPycor])
+    # http://stackoverflow.com/questions/4631525/concatenating-an-array-of-arrays-in-coffeescript
+    _patches = [].concat nested...
   turtles: -> _turtles
+  patches: -> _patches
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
@@ -58,23 +69,26 @@ class Agents
     (@askAgent(a, f) for a in agents)
     return
   # obvious hack for now.
-  getVariable: (n) ->
+  getTurtleVariable: (n) ->
     switch n
       when 3 then @_currentAgent.x
       when 4 then @_currentAgent.y
+  getPatchVariable: (n) ->
+    switch n
+      when 0 then @_currentAgent.pxcor
+      when 1 then @_currentAgent.pycor
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
-  die: () ->
-    @_currentAgent.die()
+  die: () -> @_currentAgent.die()
 
 Prims =
   fd: (n) -> AgentSet.currentAgent().fd(n)
 
 AgentSet = new Agents
 
-world = new World
+world = new World(-5,5,-5,5)
 
 Trig =
   squash: (x) ->

@@ -23,6 +23,7 @@ object Prims {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
         case _: prim._turtles  => "world.turtles"
+        case _: prim._patches  => "world.patches"
         case _: prim._count    => "AgentSet.count"
       }
   }

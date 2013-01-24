@@ -91,7 +91,8 @@ object Compiler {
       case call: prim._callreport           => s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
-      case tv: prim._turtlevariable         => s"AgentSet.getVariable(${tv.vn})"
+      case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
+      case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
     }
   }
 

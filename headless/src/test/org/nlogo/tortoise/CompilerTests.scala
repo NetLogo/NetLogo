@@ -83,7 +83,7 @@ class TestCompiler extends FunSuite {
   test("commands: ask with turtle variable") {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [output-print xcor]"
-    val expected = "AgentSet.ask(world.turtles(), function(){ println(AgentSet.getVariable(3)) })"
+    val expected = "AgentSet.ask(world.turtles(), function(){ println(AgentSet.getTurtleVariable(3)) })"
     expectResult(expected)(compile(input))
   }
 
@@ -91,6 +91,13 @@ class TestCompiler extends FunSuite {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted turtles [die]"
     val expected = "AgentSet.ask(world.turtles(), function(){ AgentSet.die() })"
+    expectResult(expected)(compile(input))
+  }
+
+  test("commands: ask patches with variable") {
+    import Compiler.{compileCommands => compile}
+    val input = "__ask-sorted patches [output-print pxcor]"
+    val expected = "AgentSet.ask(world.patches(), function(){ println(AgentSet.getPatchVariable(0)) })"
     expectResult(expected)(compile(input))
   }
 }
