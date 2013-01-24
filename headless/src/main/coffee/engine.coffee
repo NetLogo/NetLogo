@@ -1,16 +1,38 @@
+Updates = []
+
+collectUpdates = ->
+  result = JSON.stringify(Updates)
+  Updates = []
+  result
+
 class Turtle
+  updated = (obj, vars...) ->
+    change = {}
+    for v in vars
+      change[v] = obj[v]
+    oneUpdate = {}
+    oneUpdate[obj.id] = change
+    update = {}
+    update.turtles = oneUpdate
+    update.patches = {}
+    Updates.push(update)
+    return
   constructor: (@id, @xcor, @ycor, @heading) ->
+    updated(this, "xcor", "ycor", "heading")
   fd: (amount) ->
     @xcor += amount * Trig.sin(@heading)
     @ycor += amount * Trig.cos(@heading)
+    updated(this, "xcor", "ycor")
     return
   rt: (amount) ->
     @heading += amount
     keepHeadingInRange()
+    updated(this, "heading")
     return
   lt: (amount) ->
     @heading -= amount
     keepHeadingInRange()
+    updated(this, "heading")
     return
   keepHeadingInRange = ->
     if (heading < 0 || heading >= 360)
@@ -20,6 +42,7 @@ class Turtle
     if(@id != -1)
       world.removeTurtle(@id)
       @id = -1
+      updated(this, "id")
     return
 
 class Patch
@@ -42,6 +65,7 @@ class World
     return
   clearall: ->
     _turtles = []
+    # TODO: need to kill the turtles off one by one so they emit death cries in JSON
     return
   createturtle: (x, y, heading) ->
     _turtles.push(new Turtle((_nextId++), x, y, heading))

@@ -22,7 +22,9 @@ class TestTortoise extends FunSuite {
     ws.clearOutput()
     ws.command(logo)
     val expected = ws.outputAreaBuffer.toString
-    val actual = runJS(Compiler.compileCommands(logo, ws.procedures))
+    val (actual, json) =
+      runJS(Compiler.compileCommands(logo, ws.procedures))
+    // println(json) TODO: compare it to what comes from NetLogo
     expectResult(expected)(actual)
   }
 
@@ -42,7 +44,7 @@ class TestTortoise extends FunSuite {
     Rhino.eval(javascript)
   }
 
-  def runJS(javascript: String) = {
+  def runJS(javascript: String): (String, String) = {
     //println(javascript)
     Rhino.run(javascript)
   }

@@ -31,3 +31,5 @@ seq(ChecksumsAndPreviews.settings: _*)
 seq(coffeeSettings: _*)
 
 (CoffeeKeys.bare in (Compile, CoffeeKeys.coffee)) := true
+
+seq(Tortoise.settings: _*)
