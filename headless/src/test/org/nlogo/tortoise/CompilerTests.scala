@@ -100,4 +100,25 @@ class TestCompiler extends FunSuite {
     val expected = "AgentSet.ask(world.patches(), function(){ println(AgentSet.getPatchVariable(0)) })"
     expectResult(expected)(compile(input))
   }
+
+  test("commands: ask turtles to set color") {
+    import Compiler.{compileCommands => compile}
+    val input = "__ask-sorted turtles [set color green]"
+    val expected = "AgentSet.ask(world.turtles(), function(){ ??? = 55 })"
+    expectResult(expected)(compile(input))
+  }
+
+  test("commands: ask turtles to set pcolor") {
+    import Compiler.{compileCommands => compile}
+    val input = "__ask-sorted turtles [set pcolor green]"
+    val expected = "AgentSet.ask(world.turtles(), function(){ ??? = 55 })"
+    expectResult(expected)(compile(input))
+  }
+
+  test("commands: ask patches to set pcolor") {
+    import Compiler.{compileCommands => compile}
+    val input = "__ask-sorted patches [set pcolor green]"
+    val expected = "AgentSet.ask(world.patches(), function(){ ??? = 55 })"
+    expectResult(expected)(compile(input))
+  }
 }
