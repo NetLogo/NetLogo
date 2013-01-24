@@ -18,8 +18,10 @@ object Rhino {
   val engine =
     (new javax.script.ScriptEngineManager)
       .getEngineByName("JavaScript")
-  // the original CoffeeScript for this is in headless/src/main/coffee/engine.coffee.
-  // sbt compiles it to JavaScript for us
+  // the original CoffeeScript for these are in headless/src/main/coffee.
+  // sbt compiles them to JavaScript for us
+  engine.eval(
+    getResourceAsString("/js/compat.js"))
   engine.eval(
     getResourceAsString("/js/engine.js"))
 
