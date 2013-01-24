@@ -8,57 +8,61 @@ import org.nlogo.{ api, mirror }, api.AgentVariables, mirror._
 import Mirrorables._
 
 object JSONSerializer {
+
   def serialize(update: Update): String = {
 
-    def toJValue(v: AnyRef): JValue = v match {
-      case d: java.lang.Double  => JDouble(d)
-      case b: java.lang.Boolean => JBool(b)
-      case _                    => JString(v.toString)
-    }
-
-    def births(k: mirror.Kind): Seq[JField] =
+    def births: Seq[(Kind, JField)] =
       for {
         Birth(AgentKey(kind, id), values) <- update.births
-        if kind == k
         varNames = getImplicitVariables(kind)
         varFields = varNames zip values.map(toJValue)
-      } yield JField(id.toString, JObject(varFields: _*))
+      } yield kind -> JField(id.toString, JObject(varFields: _*))
 
-    def changes(k: mirror.Kind): Seq[JField] =
+    def changes: Seq[(Kind, JField)] =
       for {
         (AgentKey(kind, id), changes) <- update.changes
-        if kind == k
         varNames = getImplicitVariables(kind)
         implicitVars = for {
           Change(varIndex, value) <- changes
           varName = if (varNames.length > varIndex) varNames(varIndex) else varIndex.toString
         } yield varName -> toJValue(value)
-      } yield JField(id.toString, JObject(implicitVars: _*))
+      } yield kind -> JField(id.toString, JObject(implicitVars: _*))
 
-    def deaths(k: mirror.Kind): Seq[JField] =
+    def deaths: Seq[(Kind, JField)] =
       for {
         Death(AgentKey(kind, id)) <- update.deaths
-        if kind == k
-      } yield JField(id.toString, JNull)
+      } yield kind -> JField(id.toString, JObject(JField("WHO", -1)))
 
-    val turtleUpdates = births(Turtle) ++ changes(Turtle) ++ deaths(Turtle)
-    val patchUpdates = births(Patch) ++ changes(Patch)
-    compact(render(
-      ("turtles" -> JObject(turtleUpdates: _*)) ~
-        ("patches" -> JObject(patchUpdates: _*))))
+    val fieldsByKind: Map[Kind, Seq[JField]] =
+      (births ++ changes ++ deaths)
+        .groupBy(_._1) // group by kinds
+        .mapValues(_.map(_._2)) // remove kind from pairs
+
+    val keysToKind = Seq(
+      "turtles" -> Turtle,
+      "patches" -> Patch)
+
+    val objectsByKey: Seq[(String, JObject)] =
+      for {
+        (key, kind) <- keysToKind
+        fields = fieldsByKind.getOrElse(kind, Seq())
+      } yield key -> JObject(fields: _*)
+
+    compact(render(JObject(objectsByKey: _*)))
+  }
+
+  def toJValue(v: AnyRef): JValue = v match {
+    case d: java.lang.Double  => JDouble(d)
+    case b: java.lang.Boolean => JBool(b)
+    case _                    => JString(v.toString)
   }
 
   def getImplicitVariables(kind: Kind): Seq[String] =
     kind match {
-      case Mirrorables.Turtle =>
-        AgentVariables.getImplicitTurtleVariables(false)
-      case Mirrorables.Patch =>
-        AgentVariables.getImplicitPatchVariables(false)
-      case Mirrorables.Link =>
-        AgentVariables.getImplicitLinkVariables
-      case _ =>
-        println("Don't know how to get implicit vars for " + kind.toString)
-        Seq()
+      case Turtle => AgentVariables.getImplicitTurtleVariables(false)
+      case Patch  => AgentVariables.getImplicitPatchVariables(false)
+      case Link   => AgentVariables.getImplicitLinkVariables
+      case _      => println("Don't know how to get implicit vars for " + kind.toString); Seq() // TODO: raise actual exception?
     }
 
 }

@@ -1,7 +1,7 @@
 package org.nlogo.mirror
 
 import org.json4s.JsonDSL.string2jvalue
-import org.json4s.native.JsonMethods.{ pretty, parse, render }
+import org.json4s.native.JsonMethods.{ compact, pretty, parse, render }
 import org.json4s.string2JsonInput
 import org.nlogo.headless.TestMirroring.withWorkspace
 import org.scalatest.FunSuite
@@ -48,7 +48,9 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
       "ask turtles [ die ]" ->
         """|{
            |  "turtles":{
-           |    "0":null
+           |    "0":{
+           |      "WHO":-1
+           |    }
            |  },
            |  "patches":{
            |
@@ -56,7 +58,7 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
            |}""".stripMargin)
       .map {
         case (cmd, json) => // prettify:
-          (cmd, pretty(render(parse(json))))
+          (cmd, render(parse(json)))
       }
 
     withWorkspace { (ws, mirrorables) =>
@@ -66,8 +68,9 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
         case (previousState, (cmd, expectedJSON)) =>
           ws.command(cmd)
           val (nextState, update) = Mirroring.diffs(previousState, mirrorables())
-          val json = pretty(render(parse(JSONSerializer.serialize(update))))
-          json should equal(expectedJSON)
+          val json = render(parse(JSONSerializer.serialize(update)))
+          val format = compact _
+          format(json) should equal(format(expectedJSON))
           nextState
       }
     }
