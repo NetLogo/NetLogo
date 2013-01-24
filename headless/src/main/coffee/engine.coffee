@@ -5,10 +5,10 @@ unless Array::filter
     element for element in this when callback(element)
 
 class Turtle
-  constructor: (@id, @x, @y, @heading) ->
+  constructor: (@id, @xcor, @ycor, @heading) ->
   fd: (amount) ->
-    @x += amount * Trig.sin(@heading)
-    @y += amount * Trig.cos(@heading)
+    @xcor += amount * Trig.sin(@heading)
+    @ycor += amount * Trig.cos(@heading)
     return
   rt: (amount) ->
     @heading += amount
@@ -71,8 +71,8 @@ class Agents
   # obvious hack for now.
   getTurtleVariable: (n) ->
     switch n
-      when 3 then @_currentAgent.x
-      when 4 then @_currentAgent.y
+      when 3 then @_currentAgent.xcor
+      when 4 then @_currentAgent.ycor
   getPatchVariable: (n) ->
     switch n
       when 0 then @_currentAgent.pxcor
