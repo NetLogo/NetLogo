@@ -14,6 +14,11 @@ import org.nlogo.util.Femto
 
 private object CompilerMain {
 
+  // the frontEndOnly flag is currently just for Tortoise and can hopefully go away in the future.
+  // Tortoise currently needs SetVisitor to happen even though SetVisitor is technically part of the
+  // back end.  An example of how this might be redone in the future would be to fold the
+  // functionality of SetVisitor into IdentifierParser. - ST 1/24/13
+
   def compile(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
       oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager,
       flags: CompilerFlags): CompilerResults = {
@@ -23,7 +28,7 @@ private object CompilerMain {
   }
 
   def frontEnd(source: String, displayName: Option[String], program: Program, subprogram: Boolean,
-      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager)
+      oldProcedures: Compiler.ProceduresMap, extensionManager: ExtensionManager, frontEndOnly: Boolean = false)
     : (Seq[ProcedureDefinition], StructureParser.Results) = {
     val structureResults = StructureParser.parseAll(
       if (program.is3D) Compiler.Tokenizer3D else Compiler.Tokenizer2D,
@@ -42,7 +47,9 @@ private object CompilerMain {
         .parse(identifiedTokens) // parse
     }
     val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
-    for(procdef <- procDefs) procdef.accept(new SetVisitor)
+    if (frontEndOnly)  // for Tortoise
+      for(procdef <- procDefs)
+        procdef.accept(new SetVisitor)
     (procDefs, structureResults)
   }
 
@@ -58,6 +65,7 @@ private object CompilerMain {
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
+      procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
         procdef.accept(new Optimizer(structureResults.program.is3D))   // do various code-improving rewrites
