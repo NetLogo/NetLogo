@@ -2,19 +2,14 @@ package org.nlogo.drawing
 
 import scala.collection.mutable
 import org.nlogo.api
-import DrawingActions._
+import DrawingAction._
+import org.nlogo.mirror.ActionBroker
 
 class DrawingActionBroker(val trailDrawer: api.TrailDrawerInterface)
-  extends api.TrailDrawerInterface
-  with mutable.Publisher[DrawingAction] {
+  extends ActionBroker[DrawingAction]
+  with api.TrailDrawerInterface {
 
-  val runner = new DrawingActionRunner(trailDrawer)
-
-  override def publish(action: DrawingAction) {
-    super.publish(action)
-    println(action)
-    runner.run(action)
-  }
+  override val runner = new DrawingActionRunner(trailDrawer)
 
   override def drawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,

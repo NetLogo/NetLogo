@@ -1,11 +1,13 @@
 package org.nlogo.drawing
 
 import org.nlogo.api.TrailDrawerInterface
-import DrawingActions._
+import DrawingAction._
+import org.nlogo.mirror.ActionRunner
 
-class DrawingActionRunner(val trailDrawer: TrailDrawerInterface) {
+class DrawingActionRunner(val trailDrawer: TrailDrawerInterface)
+  extends ActionRunner[DrawingAction] {
 
-  def run(action: DrawingAction) = action match {
+  override def run(action: DrawingAction) = action match {
     case DrawLine(x1, y1, x2, y2, penColor, penSize, penMode) =>
       trailDrawer.drawLine(x1, y1, x2, y2, penColor, penSize, penMode)
     case SetColors(colors) =>

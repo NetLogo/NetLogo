@@ -4,7 +4,7 @@ package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
 
-import org.nlogo.plot.{ Plot, PlotAction, PlotRunner }
+import org.nlogo.plot.{ Plot, PlotAction, PlotActionRunner }
 import org.nlogo.api
 
 class ModelRun(
@@ -60,7 +60,7 @@ class ModelRun(
   case class Frame private (
     mirroredState: Mirroring.State,
     plots: Seq[Plot])
-    extends PlotRunner {
+    extends PlotActionRunner {
 
     override def getPlot(name: String) =
       plots.find(_.name.equalsIgnoreCase(name))

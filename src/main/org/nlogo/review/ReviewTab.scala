@@ -5,23 +5,21 @@ package org.nlogo.review
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 import java.awt.Dimension
-
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
-
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
-import org.nlogo.plot.{ PlotActionBuffer, PlotPainter }
+import org.nlogo.mirror.{ ActionBuffer, FakeWorld, Mirrorables, ModelRun, ModelRunIO }
+import org.nlogo.plot.PlotPainter
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
-
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.nlogo.plot.PlotAction
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -59,7 +57,7 @@ class ReviewTab(
    * recording at some point, we need to mirror all actions from the
    * start to bring the plots to their actual state. NP 2012-11-29
    */
-  private val plotActionBuffer = new PlotActionBuffer(ws.plotManager)
+  private val plotActionBuffer = new ActionBuffer[PlotAction](ws.plotManager)
 
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,

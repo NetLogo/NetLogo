@@ -1,8 +1,10 @@
 package org.nlogo.drawing
 
-sealed trait DrawingAction
+import org.nlogo.mirror.Action
 
-object DrawingActions {
+sealed trait DrawingAction extends Action
+
+object DrawingAction {
 
   // TODO: these will need to be serialized, and I should take
   // take into account wrt the case class members
