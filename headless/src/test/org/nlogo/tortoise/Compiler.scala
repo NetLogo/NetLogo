@@ -6,7 +6,7 @@ import org.nlogo.{ api, compiler, nvm, prim, workspace }
 
 object Compiler {
 
-  // two main entry points. input is NetLogo, result is JavaScript.
+  // three main entry points. input is NetLogo, result is JavaScript.
 
   def compileReporter(logo: String): String =
     compile(logo, commands = false)
@@ -16,14 +16,9 @@ object Compiler {
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = true, oldProcedures, program)
 
-  // TODO: this isn't actually used anymore, should it just be removed?
-  def compileProcedure(logo: String): String = {
-    val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
-    RuntimeInit(sp) + compileProcedureDef(defs.head)
-  }
-
   def compileProcedures(logo: String): String = {
-    val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
+    // (Seq[ProcedureDefinition], StructureParser.Results)
+    val (defs, sp) = compiler.Compiler.frontEnd(logo)
     RuntimeInit(sp) + defs.map(compileProcedureDef).mkString("\n")
   }
 
@@ -110,7 +105,7 @@ object Compiler {
   }
 
   // these could be merged into one function, genExpression
-  // but i think the resulting code wold be confusing and potentially error prone.
+  // but I think the resulting code would be confusing and potentially error prone.
   // having different functions for each is more clear.
 
   def genReporterApp(e: compiler.Expression) = e match {
@@ -125,9 +120,12 @@ object Compiler {
   }
 }
 
+// RuntimeInit generates JavaScript code that does any initialization that needs to happen
+// before any user code runs, for example creating patches
 
 object RuntimeInit{
-  def apply(sp: compiler.StructureParser.Results) = new RuntimeInit(sp).init
+  def apply(sp: compiler.StructureParser.Results): String =
+    new RuntimeInit(sp).init
 }
 
 class RuntimeInit(sp: compiler.StructureParser.Results) {
@@ -137,10 +135,9 @@ class RuntimeInit(sp: compiler.StructureParser.Results) {
   // if there are patches-own variables, we need recreate the patches
   // really, we should just do this always
   // but it screws up a bunch of the tests and i dont want to
-  // but that off right now. -JC 1/24/13
+  // bite that off right now. -JC 1/24/13
   def initWorld =
-  // 5 default variables, anything else is a patches-own
-    if(sp.program.patchesOwn.size > 5)
+    if (sp.program.patchesOwn.size > patchBuiltinCount)
       "world = new World(-5,5,-5,5)\n"
     else ""
 
@@ -149,17 +146,17 @@ class RuntimeInit(sp: compiler.StructureParser.Results) {
   // if not, do nothing.
   def globals = vars(sp.program.globals, "Globals")
 
-  // just tell the runtime how many turtles-own varibles there are.
-  // TODO: i pulled 13 out of thin air.
-  // how/where do i programmatically get the real number?
-  def turtlesOwn = vars(sp.program.turtlesOwn.drop(13), "TurtlesOwn")
-
-  // just tell the runtime how many patches-own varibles there are.
-  // TODO: i pulled 5 out of thin air.
-  // how/where do i programmatically get the real number?
-  def patchesOwn = vars(sp.program.patchesOwn.drop(5), "PatchesOwn")
+  // tell the runtime how many *-own variables there are
+  val turtleBuiltinCount =
+    api.AgentVariables.getImplicitTurtleVariables(is3D = false).size
+  val patchBuiltinCount =
+    api.AgentVariables.getImplicitPatchVariables(is3D = false).size
+  def turtlesOwn =
+    vars(sp.program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
+  def patchesOwn =
+    vars(sp.program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
 
   private def vars(s: Seq[String], initPath: String) =
-    if (s.size > 0) s"$initPath.init(${s.size})\n"
+    if (s.nonEmpty) s"$initPath.init(${s.size})\n"
     else ""
 }
