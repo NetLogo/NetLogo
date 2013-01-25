@@ -25,6 +25,7 @@ class TestTortoise extends FunSuite {
     val (actual, json) =
       runJS(Compiler.compileCommands(logo, ws.procedures))
     // println(json) TODO: compare it to what comes from NetLogo
+    println(actual)
     expectResult(expected)(actual)
   }
 
@@ -171,6 +172,10 @@ class TestTortoise extends FunSuite {
   tester("simple recursive call") {
     defineProcedures("to-report fact [n] ifelse n = 0 [ report 1 ] [ report n * fact (n - 1) ] end")
     compareCommands("output-print fact 6")
+  }
+
+  tester("rng") {
+    compareCommands("random-seed 0 output-print random 100000")
   }
 
   tester("ask") {
