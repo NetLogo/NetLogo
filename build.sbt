@@ -65,8 +65,6 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "re
 
 mainClass in Compile := Some("org.nlogo.app.App")
 
-aggregate in runMain := false
-
 sourceGenerators in Compile <+= EventsGenerator.task
 
 Extensions.extensionsTask
