@@ -199,4 +199,15 @@ class TestTortoise extends FunSuite {
     compareCommands("clear-all")
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }
+
+  tester("set globals") {
+    compareCommands("clear-all")
+    compareCommands("__ask-sorted patches [output-print pxcor]")
+  }
+
+  test("globals: set") {
+    defineProcedures("globals [x] to foo [i] set x i output-print x end")
+    compareCommands("clear-all")
+    compareCommands("foo 5 foo 6 foo 7")
+  }
 }

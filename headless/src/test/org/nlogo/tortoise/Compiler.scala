@@ -17,14 +17,22 @@ object Compiler {
 
   // TODO: this isn't actually used anymore, should it just be removed?
   def compileProcedure(logo: String): String = {
-    val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
-    compileProcedureDef(defs.head)
+    val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
+    globals(sp) + compileProcedureDef(defs.head)
   }
 
   def compileProcedures(logo: String): String = {
-    val (defs, _) = compiler.Compiler.frontEnd(logo)  // Seq[ProcedureDefinition]
-    defs.map(compileProcedureDef).mkString("\n")
+    val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
+    globals(sp) + defs.map(compileProcedureDef).mkString("\n")
   }
+
+  // if there are any globals,
+  // tell the runtime how many there are, it will initialize them all to 0.
+  // if not, do nothing.
+  private def globals(sp: compiler.StructureParser.Results) =
+    if (sp.program.globals.size > 0)
+      s"Globals.init(${sp.program.globals.size})\n"
+    else ""
 
   private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
     val name = pd.procedure.name
@@ -93,6 +101,7 @@ object Compiler {
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
+      case ov: prim._observervariable       => s"Globals[${ov.vn}]"
     }
   }
 

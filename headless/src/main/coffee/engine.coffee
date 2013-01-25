@@ -107,6 +107,13 @@ class Agents
 Prims =
   fd: (n) -> AgentSet.currentAgent().fd(n)
 
+Globals =
+  globals: []
+  # compiler generates call to init, which just
+  # tells the runtime how many globals there are.
+  # they are all initialized to 0
+  init: (n) -> @globals = 0 for x in [0..n-1]
+
 AgentSet = new Agents
 
 world = new World(-5,5,-5,5)
