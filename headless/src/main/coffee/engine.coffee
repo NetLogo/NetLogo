@@ -1,28 +1,61 @@
+turtleBuiltinCount = 13
+patchBuiltinCount = 5
+
 Updates = []
 
 collectUpdates = ->
-  result = JSON.stringify(Updates)
+  result = JSON.stringify(
+    if (Updates.length == 0)
+      [turtles: {}, patches: {}]
+    else
+      Updates)
   Updates = []
   result
+
+# gross hack - ST 1/25/13
+died = (id) ->
+  update = {}
+  update.patches = {}
+  update.turtles = {}
+  update.turtles[id] = "WHO": -1
+  Updates.push(update)
+  return
 
 updated = (obj, vars...) ->
   # is there some less simpleminded way we could build this? surely there
   # must be. my CoffeeScript fu is stoppable - ST 1/24/13
   change = {}
   for v in vars
-    change[v] = obj[v]
+    if (v == "plabelcolor")
+      change["PLABEL-COLOR"] = obj[v]
+    else if (v == "labelcolor")
+      change["LABEL-COLOR"] = obj[v]
+    else if (v == "pensize")
+      change["PEN-SIZE"] = obj[v]
+    else if (v == "penmode")
+      change["PEN-MODE"] = obj[v]
+    else if (v == "hidden")
+      change["HIDDEN?"] = obj[v]
+    else if (v == "id")
+      change["WHO"] = obj[v]
+    else
+      change[v.toUpperCase()] = obj[v]
   oneUpdate = {}
   oneUpdate[obj.id] = change
   update = {}
-  update.turtles = oneUpdate
-  update.patches = {}
+  if (obj instanceof Turtle)
+    update.turtles = oneUpdate
+    update.patches = {}
+  else
+    update.turtles = {}
+    update.patches = oneUpdate
   Updates.push(update)
   return
 
 class Turtle
   _vars = []
-  constructor: (@id, @xcor, @ycor, @heading) ->
-    updated(this, "xcor", "ycor", "heading")
+  constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
+    updated(this, "id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "turtles", "hidden", "size", "pensize", "penmode")
     @_vars = TurtlesOwn.vars
   vars: -> @_vars
   fd: (amount) ->
@@ -44,11 +77,11 @@ class Turtle
     if (heading < 0 || heading >= 360)
       heading = ((heading % 360) + 360) % 360
     return
-  die: () ->
-    if(@id != -1)
+  die: ->
+    if (@id != -1)
       world.removeTurtle(@id)
+      died(@id)
       @id = -1
-      updated(this, "id")
     return
   # TODO: add the rest of the turtle variables here
   getTurtleVariable: (n) ->
@@ -56,7 +89,7 @@ class Turtle
       when 3 then @xcor
       when 4 then @ycor
       # case for turtles-own variables
-      else @_vars[n-13]
+      else @_vars[n - turtleBuiltInCount]
 
   # TODO: add the rest of the turtle variables here
   setTurtleVariable: (n, v) ->
@@ -64,11 +97,11 @@ class Turtle
       when 3 then @xcor = v
       when 4 then @ycor = v
       # case for turtles-own variables
-      else @_vars[n-13] = v
+      else @_vars[n - turtleBuiltInCount] = v
 
 class Patch
   _vars = []
-  constructor: (@pxcor, @pycor, @pcolor) ->
+  constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
     @_vars = TurtlesOwn.vars
   # TODO: add the rest of the patch variables here.
   getPatchVariable: (n) ->
@@ -77,15 +110,15 @@ class Patch
       when 1 then @pycor
       when 2 then @pcolor
       # case for patches-own variables
-      else @_vars[n-5]
+      else @_vars[n - patchBuiltinCount]
     # TODO: add the rest of the patch variables here.
   setPatchVariable: (n, v) ->
     switch n
-      when 0 then @pxcor = v
-      when 1 then @pycor = v
-      when 2 then @pcolor = v
+      when 2
+        @pcolor = v
+        updated(this, "pcolor")
       # case for patches-own variables
-      else @_vars[n-5] = v
+      else @_vars[n - patchBuiltinCount] = v
 
 class World
   # any variables used in the constructor should come
@@ -94,23 +127,30 @@ class World
   _turtles = []
   _patches = []
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
-    nested = (new Patch(x, y) for x in [@minPxcor..@maxPxcor] for y in [@minPycor..@maxPycor])
+    width = (maxPxcor - minPxcor) + 1
+    nested =
+      for x in [@minPxcor..@maxPxcor]
+        for y in [@minPycor..@maxPycor]
+          new Patch((width * (@maxPycor - y)) + x - @minPxcor, x, y)
     # http://stackoverflow.com/questions/4631525/concatenating-an-array-of-arrays-in-coffeescript
     _patches = [].concat nested...
+    for p in _patches
+      updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   turtles: -> _turtles
   patches: -> _patches
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
   clearall: ->
-    _turtles = []
-    # TODO: need to kill the turtles off one by one so they emit death cries in JSON
+    for t in @turtles()
+      t.die()
+    _nextId = 0
     return
-  createturtle: (x, y, heading) ->
-    _turtles.push(new Turtle((_nextId++), x, y, heading))
+  createturtle: (x, y, heading, color) ->
+    _turtles.push(new Turtle((_nextId++), color, heading, x, y))
     return
   createorderedturtles: (n) ->
-    (@createturtle(0, 0, num * (360 / n)) for num in [0..n-1])
+    (@createturtle(0, 0, num * (360 / n), (num * 10 + 5) % 140) for num in [0..n-1])
     return
 
 class Agents
@@ -129,7 +169,7 @@ class Agents
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
-  die: () -> @_currentAgent.die()
+  die: -> @_currentAgent.die()
   getTurtleVariable: (n)    -> @_currentAgent.getTurtleVariable(n)
   setTurtleVariable: (n, v) -> @_currentAgent.setTurtleVariable(n, v)
   getPatchVariable:  (n)    -> @_currentAgent.getPatchVariable(n)
@@ -170,8 +210,3 @@ Trig =
     @squash(Math.sin(@degreesToRadians(degrees)))
   cos: (degrees) ->
     @squash(Math.cos(@degreesToRadians(degrees)))
-
-# this gets overridden by the compiler,
-# but not yet for compareCommands
-world = new World(-5,5,-5,5)
-

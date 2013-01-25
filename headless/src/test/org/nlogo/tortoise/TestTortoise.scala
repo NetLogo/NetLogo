@@ -4,13 +4,16 @@ package org.nlogo.tortoise
 
 import org.scalatest.FunSuite
 import
-  org.nlogo.{ api, nvm, headless, prim },
+  org.nlogo.{ api, nvm, headless, mirror, prim },
   org.nlogo.util.{ Femto, MersenneTwisterFast }
 
 class TestTortoise extends FunSuite {
 
   var ws: headless.HeadlessWorkspace = null
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
+  def mirrorables: Iterable[mirror.Mirrorable] =
+    mirror.Mirrorables.allMirrorables(ws.world)
+  var state: mirror.Mirroring.State = Map()
 
   def compare(logo: String) {
     val expected = ws.report(logo)
@@ -19,21 +22,41 @@ class TestTortoise extends FunSuite {
   }
 
   def compareCommands(logo: String) {
+    // println(s"logo = $logo")
     ws.clearOutput()
     ws.command(logo)
-    val expected = ws.outputAreaBuffer.toString
-    val (actual, json) =
+    val (newState, update) = mirror.Mirroring.diffs(state, mirrorables)
+    state = newState
+    // println(s"state = $state")
+    // println(s"update = $update")
+    val expectedJson = "[" + mirror.JSONSerializer.serialize(update) + "]"
+    // println(s"expectedJson = $expectedJson")
+    val expectedOutput = ws.outputAreaBuffer.toString
+    val (actualOutput, actualJson) =
       runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
-    // println(json) TODO: compare it to what comes from NetLogo
-    expectResult(expected)(actual)
+    expectResult(expectedOutput)(actualOutput)
+    Rhino.eval("expectedModel = new AgentModel")
+    Rhino.eval("actualModel = new AgentModel")
+    Rhino.eval("expectedUpdates = " + expectedJson)
+    Rhino.eval("actualUpdates = " + actualJson)
+    Rhino.eval("expectedModel.updates(expectedUpdates)")
+    Rhino.eval("actualModel.updates(actualUpdates)")
+    val expectedModel = Rhino.eval("JSON.stringify(expectedModel)").asInstanceOf[String]
+    val actualModel = Rhino.eval("JSON.stringify(actualModel)").asInstanceOf[String]
+    // println(" exp upt = " + expectedJson)
+    // println(" act upt = " + actualJson)
+    // println("expected = " + expectedModel)
+    // println("  actual = " + actualModel)
+    org.skyscreamer.jsonassert.JSONAssert.assertEquals(
+      expectedModel, actualModel, true)  // strict = true
+    // println()
   }
 
-  def defineProcedures(logo: String) {
-    evalJS(Compiler.compileProcedures(logo))
-    // setting the world size to something bigger than zero
-    // so we can test things like:
-    // cro 1 ask turtles [fd 1 outputprint ycor]
-    ws.initForTesting(-5, 5, -5, 5, logo)
+  // use single-patch world by default to keep generated JSON to a minimum
+  def defineProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0) {
+    evalJS(Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor))
+    ws.initForTesting(minPxcor, maxPxcor, minPycor, maxPycor, logo)
+    state = Map()
   }
 
   // these two are super helpful when running failing tests
@@ -53,10 +76,9 @@ class TestTortoise extends FunSuite {
     test(testName) {
       ws = headless.HeadlessWorkspace.newInstance
       ws.silent = true
-      // setting the world size to something bigger than zero
-      // so we can test things like:
-      // cro 1 ask turtles [fd 1 outputprint ycor]
-      ws.initForTesting(5)
+      defineProcedures("")
+      state = Map()
+      compareCommands("clear-all")
       body
     }
   }
@@ -107,17 +129,17 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print 1 output-print 2 output-print 3")
   }
 
-  tester("agents") {
-    compareCommands("clear-all")
+  tester("turtle creation") {
     compareCommands("output-print count turtles")
-    compareCommands("cro 5")
+    compareCommands("cro 1")
+    compareCommands("output-print count turtles")
+    compareCommands("cro 4")
     compareCommands("output-print count turtles")
     compareCommands("clear-all")
     compareCommands("output-print count turtles")
   }
 
   tester("while loops") {
-    compareCommands("clear-all")
     compareCommands("while [count turtles < 5] [cro 1]")
     compareCommands("output-print count turtles")
   }
@@ -135,31 +157,27 @@ class TestTortoise extends FunSuite {
 
   tester("procedure call") {
     defineProcedures("to foo cro 1 end")
-    compareCommands("clear-all")
     compareCommands("foo foo foo")
     compareCommands("output-print count turtles")
   }
 
   tester("procedure call with one input") {
     defineProcedures("to foo [x] cro x end")
-    compareCommands("clear-all")
     compareCommands("foo 1 foo 2 foo 3")
     compareCommands("output-print count turtles")
   }
 
   tester("procedure call with three inputs") {
     defineProcedures("to foo [x y z] cro x + y cro z end")
-    compareCommands("clear-all")
     compareCommands("foo 1 2 3")
     compareCommands("output-print count turtles")
   }
 
   tester("multiple procedures") {
-    compareCommands("clear-all")
     defineProcedures("""|to foo [x y z] cro x + y cro z end
                         |to goo [z] cro z * 10 end""".stripMargin)
     compareCommands("foo 1 2 3")
-    compareCommands("goo 10")
+    compareCommands("goo 2")
     compareCommands("output-print count turtles")
   }
 
@@ -178,35 +196,31 @@ class TestTortoise extends FunSuite {
   }
 
   tester("ask") {
-    compareCommands("clear-all")
     compareCommands("cro 3")
     compareCommands("__ask-sorted turtles [ output-print 0 ]")
   }
 
   tester("turtle motion 1") {
-    compareCommands("clear-all")
+    defineProcedures("", -1, 1, -1, 1)
     compareCommands("cro 4 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
   tester("turtle motion 2") {
-    compareCommands("clear-all")
+    defineProcedures("", -1, 1, -1, 1)
     compareCommands("cro 8 __ask-sorted turtles [fd 1] __ask-sorted turtles [output-print xcor output-print ycor]")
   }
 
   tester("turtle death") {
-    compareCommands("clear-all")
     compareCommands("cro 8 __ask-sorted turtles [die]")
     compareCommands("__ask-sorted turtles [output-print xcor]")
   }
 
   tester("patches") {
-    compareCommands("clear-all")
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }
 
   tester("globals: set") {
     defineProcedures("globals [x] to foo [i] set x i output-print x end")
-    compareCommands("clear-all")
     compareCommands("foo 5 foo 6 foo 7")
   }
 
@@ -218,7 +232,6 @@ class TestTortoise extends FunSuite {
         |to celldeath set living? false set pcolor black end
       """.stripMargin
     defineProcedures(src)
-    compareCommands("clear-all")
     compareCommands("__ask-sorted patches [cellbirth output-print living?]")
     compareCommands("__ask-sorted patches [celldeath output-print living?]")
   }
@@ -249,7 +262,7 @@ class TestTortoise extends FunSuite {
         |end
       """.stripMargin
     defineProcedures(lifeSrc)
-    compareCommands("clear-all setup repeat 15 [go]")
+    compareCommands("setup repeat 15 [go]")
     compareCommands("__ask-sorted patches [output-print living?]")
   }
   */

@@ -52,9 +52,15 @@ object JSONSerializer {
   }
 
   def toJValue(v: AnyRef): JValue = v match {
-    case d: java.lang.Double  => JDouble(d)
+    case d: java.lang.Double  =>
+      if (d.intValue == d.doubleValue)
+        JInt(d.intValue)
+      else
+        JDouble(d.doubleValue)
+    case i: java.lang.Integer => JInt(i.intValue)
     case b: java.lang.Boolean => JBool(b)
-    case _                    => JString(v.toString)
+    case s: java.lang.String  => JString(s)
+    case x                    => JString(v.toString)
   }
 
   def getImplicitVariables(kind: Kind): Seq[String] =
@@ -62,7 +68,7 @@ object JSONSerializer {
       case Turtle => AgentVariables.getImplicitTurtleVariables(false)
       case Patch  => AgentVariables.getImplicitPatchVariables(false)
       case Link   => AgentVariables.getImplicitLinkVariables
-      case _      => println("Don't know how to get implicit vars for " + kind.toString); Seq() // TODO: raise actual exception?
+      case _      => Seq() // TODO: raise exception instead?
     }
 
 }

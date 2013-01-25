@@ -16,10 +16,11 @@ object Compiler {
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = true, oldProcedures, program)
 
-  def compileProcedures(logo: String): String = {
+  def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): String = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
     val (defs, sp) = compiler.Compiler.frontEnd(logo)
-    RuntimeInit(sp) + defs.map(compileProcedureDef).mkString("\n")
+    new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
+      defs.map(compileProcedureDef).mkString("\n")
   }
 
   private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
@@ -123,28 +124,17 @@ object Compiler {
 // RuntimeInit generates JavaScript code that does any initialization that needs to happen
 // before any user code runs, for example creating patches
 
-object RuntimeInit{
-  def apply(sp: compiler.StructureParser.Results): String =
-    new RuntimeInit(sp).init
-}
+class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
 
-class RuntimeInit(sp: compiler.StructureParser.Results) {
-  def init = globals + turtlesOwn + patchesOwn + initWorld
-
-  // this is a dirty hack.
-  // if there are patches-own variables, we need recreate the patches
-  // really, we should just do this always
-  // but it screws up a bunch of the tests and i dont want to
-  // bite that off right now. -JC 1/24/13
-  def initWorld =
-    if (sp.program.patchesOwn.size > patchBuiltinCount)
-      "world = new World(-5,5,-5,5)\n"
-    else ""
+  def init =
+    globals + turtlesOwn + patchesOwn +
+      "collectUpdates();\n" +
+      s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"
 
   // if there are any globals,
   // tell the runtime how many there are, it will initialize them all to 0.
   // if not, do nothing.
-  def globals = vars(sp.program.globals, "Globals")
+  def globals = vars(program.globals, "Globals")
 
   // tell the runtime how many *-own variables there are
   val turtleBuiltinCount =
@@ -152,9 +142,9 @@ class RuntimeInit(sp: compiler.StructureParser.Results) {
   val patchBuiltinCount =
     api.AgentVariables.getImplicitPatchVariables(is3D = false).size
   def turtlesOwn =
-    vars(sp.program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
+    vars(program.turtlesOwn.drop(turtleBuiltinCount), "TurtlesOwn")
   def patchesOwn =
-    vars(sp.program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
+    vars(program.patchesOwn.drop(patchBuiltinCount), "PatchesOwn")
 
   private def vars(s: Seq[String], initPath: String) =
     if (s.nonEmpty) s"$initPath.init(${s.size})\n"

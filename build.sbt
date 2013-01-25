@@ -33,6 +33,7 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
   "org.scalatest" %% "scalatest" % "2.0.M5b" % "test",
+  "org.skyscreamer" % "jsonassert" % "1.1.0" % "test",
   "org.json4s" %% "json4s-native" % "3.1.0"
 )
 

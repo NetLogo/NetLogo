@@ -164,7 +164,7 @@ object Mirrorables {
       wvvValueString -> value)
   }
 
-  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)]): Iterable[Mirrorable] = {
+  def allMirrorables(world: api.World, widgetValues: Seq[(String, Int)] = Seq()): Iterable[Mirrorable] = {
     import collection.JavaConverters._
     val turtles = world.turtles.agents.asScala.map(t => new MirrorableTurtle(t.asInstanceOf[api.Turtle]))
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))
