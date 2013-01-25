@@ -56,15 +56,19 @@ public class ModelBackgroundInfo {
                 this.draw = draw.item(0).getTextContent();
             }
 
+            for (int i = 0; i < traitNodes.getLength(); i++) {
+                Node traitNode = traitNodes.item(i);
+                traits.add(new Trait(traitNode));
+            }
+
             // populating class variable, breeds with the given breedNodes nodelist -A. (oct 17)
             for (int i = 0; i < breedNodes.getLength(); i++) {
                 Node breedNode = breedNodes.item(i);
                 breeds.add(new Breed(breedNode));
             }
 
-            for (int i = 0; i < traitNodes.getLength(); i++) {
-                Node traitNode = traitNodes.item(i);
-                traits.add(new Trait(traitNode));
+            for (Breed breed : breeds) {
+                breed.setTraitsArrayList(traits);
             }
 
 
@@ -78,10 +82,6 @@ public class ModelBackgroundInfo {
                 globals.add(new Global(globalNode));
             }
 
-            //for (int i = 0 ; i < patchNodes.getLength(); i++) {
-            //  Node patchNode = patchNodes.item(i);
-            //patches.add( new Patch( patchNode ));
-            //}
 
             this.library = library.item(0).getAttributes().getNamedItem("name").getTextContent();
             this.version = library.item(0).getAttributes().getNamedItem("version").getTextContent();
@@ -193,6 +193,8 @@ public class ModelBackgroundInfo {
         return breeds;
     }
 
+
+
     public String[] getEnvtTypes() {
         String[] envtTypes = new String[envts.size()];
         int i = 0;
@@ -222,8 +224,6 @@ public class ModelBackgroundInfo {
         return traits;
     }
 
-
-
     public String[] getVariationTypes(String traitName) {
         String [] variations = null;
         for (Trait trait : traits) {
@@ -232,7 +232,6 @@ public class ModelBackgroundInfo {
                 trait.getVariationsList().toArray(variations);
             }
         }
-
         return variations;
     }
 

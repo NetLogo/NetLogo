@@ -26,7 +26,6 @@ public class Trait {
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
 
 
-
     public Trait(Node traitNode) {
         traitName = traitNode.getAttributes().getNamedItem("name").getTextContent();
 

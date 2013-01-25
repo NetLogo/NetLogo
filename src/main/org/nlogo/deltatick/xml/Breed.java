@@ -3,6 +3,7 @@ package org.nlogo.deltatick.xml;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -25,6 +26,7 @@ public class Breed {
     int id;
     LinkedList<OwnVar> ownVars = new LinkedList<OwnVar>();
     LinkedList<String> ownVarNames = new LinkedList<String>();
+    ArrayList<Trait> traits = new ArrayList<Trait>();
 
     public Breed(Node breedNode) {
         // breed attributes
@@ -58,6 +60,26 @@ public class Breed {
         }
     }
 
+    public void setTraitsArrayList(ArrayList <Trait> traits) {
+        this.traits = traits;
+
+    }
+
+    public ArrayList<Trait> getTraitsArrayList() {
+        return traits;
+    }
+
+    public String[] getVariationTypes(String traitName) {
+        String [] variations = null;
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equals(traitName)) {
+                variations = new String[trait.getVariationsList().size()];
+                trait.getVariationsList().toArray(variations);
+            }
+        }
+        return variations;
+    }
+
     /*
     public String declareBreed() {
         return "breed [ " + plural + " " + singular + " ]\n";
@@ -71,20 +93,6 @@ public class Breed {
     public String singular() {
         return singular;
     }
-
-    /*
-    public String getMyTraitName() {
-        String code = "";
-        if( ownVars.size() > 0 ){
-            code += plural + "-own [\n";
-            for( OwnVar var : ownVars ) {
-                code += "  " + var.name + "\n";
-            }
-            code += "]\n";
-        }
-        return code;
-    }
-    */
 
     public LinkedList<OwnVar> getOwnVars() {
         return ownVars;
@@ -190,4 +198,6 @@ public class Breed {
     public String getStartQuant() {
         return startQuant;
     }
+
+
 }

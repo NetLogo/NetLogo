@@ -8,6 +8,7 @@ import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
 import org.nlogo.hotlink.dialogs.StackedShapeIcon;
@@ -57,7 +58,6 @@ public strictfp class BreedBlock
     HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
-
     //ShapeSelector myShapeSelector;
     int id;
     transient String trait;
@@ -350,6 +350,33 @@ public strictfp class BreedBlock
 
         label.setBackground(getBackground());
         add(label);
+    }
+
+    public String[] getTraitTypes() {
+            String[] traitTypes = new String[breed.getTraitsArrayList().size()];
+            int i = 0;
+            for (Trait trait : breed.getTraitsArrayList()) {
+                traitTypes[i] = trait.getNameTrait();
+                i++;
+            }
+            return traitTypes;
+        }
+
+    public ArrayList<Trait> getTraits() {
+        return breed.getTraitsArrayList();
+    }
+
+
+
+    public String[] getVariationTypes(String traitName) {
+        String [] variations = null;
+        for (Trait trait : breed.getTraitsArrayList()) {
+            if (trait.getNameTrait().equals(traitName)) {
+                variations = new String[trait.getVariationsList().size()];
+                trait.getVariationsList().toArray(variations);
+            }
+        }
+        return variations;
     }
 
 

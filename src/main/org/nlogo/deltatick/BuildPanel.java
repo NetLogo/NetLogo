@@ -83,8 +83,6 @@ public class BuildPanel
                     if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
                         allTraits.add(traitBlock.getName());
                         //passBack += traitBlock.getMyTraitName();
-                        System.out.println("breedName " + traitBlock.breedName);
-                        System.out.println("plural() " + breedBlock.plural());
 
                     }
                 }

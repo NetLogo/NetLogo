@@ -60,8 +60,12 @@ public class TraitTypeSelector
         this.setVisible(false);
     }
 
+    public TraitTypeSelector() {
+        initComponents();
+        this.setVisible(true);
+    }
+
     public void showMe(BuildPanel buildPanel, ModelBackgroundInfo backgroundInfo) {
-        //Show breeds in buildPanel
         this.bgInfo = backgroundInfo;
         this.bPanel = buildPanel;
         myBreedsList = new JList();
@@ -148,7 +152,6 @@ public class TraitTypeSelector
     public void activateButtons() {
         add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //getSelectedTrait();
                 thisDialog.setVisible(false);
             }
         });

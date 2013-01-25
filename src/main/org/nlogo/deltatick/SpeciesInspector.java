@@ -1,12 +1,14 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.api.Color;
+import org.nlogo.deltatick.dialogs.TraitEditor;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,6 +40,7 @@ public class SpeciesInspector extends JPanel {
     JFrame myFrame;
 
     JTabbedPane traitsTabbedPane;
+    TraitEditor traitEditor;
     int countTabs = 1;
 
     public SpeciesInspector (BreedBlock myParent, JFrame myFrame) {
@@ -46,7 +49,7 @@ public class SpeciesInspector extends JPanel {
         breedName.setText(myParent.plural());
         highestEnergyBlank.setText(myParent.breed.getOwnVarMaxReporter("energy"));
         endLifeSpanBlank.setText(myParent.breed.getOwnVarMaxReporter("age"));
-        activateOkayButton();
+        activateButtons();
     }
 
     public void addPanels(Container pane) {
@@ -147,13 +150,20 @@ public class SpeciesInspector extends JPanel {
         }
     }
 
-    public void activateOkayButton() {
+    public void activateButtons() {
         okayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
                 myParent.breed.setOwnVarMaxReporter("age", endLifeSpanBlank.getText());
                 myParent.breed.setOwnVarMaxReporter("energy", highestEnergyBlank.getText());
                 myFrame.setVisible(false);   //TODO how to close a JFrame - A (Jan 23, 2013)
+            }
+        });
+        addTrait.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                traitEditor = new TraitEditor();
+                traitEditor.setTraits(myParent.getTraits());
+                traitEditor.showMe();
             }
         });
     }
