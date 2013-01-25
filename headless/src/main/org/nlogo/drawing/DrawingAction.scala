@@ -1,6 +1,6 @@
 package org.nlogo.drawing
 
-import org.nlogo.mirror.Action
+import org.nlogo.api.Action
 
 sealed trait DrawingAction extends Action
 

@@ -57,7 +57,7 @@ object Depend {
       "app" -> List("review"),
       "awt" -> Nil,
       "compiler" -> List("prim","prim/dead","prim/threed"),
-      "drawing" -> List("api"),
+      "drawing" -> List("api", "mirror"),
       "editor" -> Nil,
       "generator" -> List("prim","prim/dead","prim/threed"),
       "gl/render" -> List("shape"),

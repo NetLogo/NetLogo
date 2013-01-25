@@ -1,6 +1,6 @@
 package org.nlogo.plot
 
-import org.nlogo.mirror.ActionRunner
+import org.nlogo.api.ActionRunner
 
 trait PlotActionRunner extends ActionRunner[PlotAction] {
 

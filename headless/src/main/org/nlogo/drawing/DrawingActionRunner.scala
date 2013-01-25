@@ -2,7 +2,7 @@ package org.nlogo.drawing
 
 import org.nlogo.api.TrailDrawerInterface
 import DrawingAction._
-import org.nlogo.mirror.ActionRunner
+import org.nlogo.api.ActionRunner
 
 class DrawingActionRunner(val trailDrawer: TrailDrawerInterface)
   extends ActionRunner[DrawingAction] {

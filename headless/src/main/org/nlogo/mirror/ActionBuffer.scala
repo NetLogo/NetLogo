@@ -2,20 +2,7 @@ package org.nlogo.mirror
 
 import scala.collection.mutable
 
-trait Action
-
-trait ActionRunner[A <: Action] {
-  def run(action: A): Unit
-}
-
-trait ActionBroker[A <: Action]
-  extends mutable.Publisher[A] {
-  val runner: ActionRunner[A]
-  override def publish(action: A) {
-    super.publish(action)
-    runner.run(action)
-  }
-}
+import org.nlogo.api.{ Action, ActionBroker }
 
 /**
  * An ActionBuffer logs all plotting actions

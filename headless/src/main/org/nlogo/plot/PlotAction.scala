@@ -1,6 +1,6 @@
 package org.nlogo.plot
 
-import org.nlogo.mirror.Action
+import org.nlogo.api.Action
 
 sealed trait PlotAction extends Action
 

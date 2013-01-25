@@ -3,7 +3,7 @@ package org.nlogo.drawing
 import scala.collection.mutable
 import org.nlogo.api
 import DrawingAction._
-import org.nlogo.mirror.ActionBroker
+import org.nlogo.api.ActionBroker
 
 class DrawingActionBroker(val trailDrawer: api.TrailDrawerInterface)
   extends ActionBroker[DrawingAction]
