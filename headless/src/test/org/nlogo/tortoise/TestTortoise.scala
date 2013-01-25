@@ -25,7 +25,6 @@ class TestTortoise extends FunSuite {
     val (actual, json) =
       runJS(Compiler.compileCommands(logo, ws.procedures))
     // println(json) TODO: compare it to what comes from NetLogo
-    println(actual)
     expectResult(expected)(actual)
   }
 
