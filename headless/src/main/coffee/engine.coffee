@@ -20,8 +20,11 @@ updated = (obj, vars...) ->
   return
 
 class Turtle
+  _vars = []
   constructor: (@id, @xcor, @ycor, @heading) ->
     updated(this, "xcor", "ycor", "heading")
+    @_vars = TurtlesOwn.vars
+  vars: -> @_vars
   fd: (amount) ->
     @xcor += amount * Trig.sin(@heading)
     @ycor += amount * Trig.cos(@heading)
@@ -47,9 +50,42 @@ class Turtle
       @id = -1
       updated(this, "id")
     return
+  # TODO: add the rest of the turtle variables here
+  getTurtleVariable: (n) ->
+    switch n
+      when 3 then @xcor
+      when 4 then @ycor
+      # case for turtles-own variables
+      else @_vars[n-13]
+
+  # TODO: add the rest of the turtle variables here
+  setTurtleVariable: (n, v) ->
+    switch n
+      when 3 then @xcor = v
+      when 4 then @ycor = v
+      # case for turtles-own variables
+      else @_vars[n-13] = v
 
 class Patch
-  constructor: (@pxcor, @pycor) ->
+  _vars = []
+  constructor: (@pxcor, @pycor, @pcolor) ->
+    @_vars = TurtlesOwn.vars
+  # TODO: add the rest of the patch variables here.
+  getPatchVariable: (n) ->
+    switch n
+      when 0 then @pxcor
+      when 1 then @pycor
+      when 2 then @pcolor
+      # case for patches-own variables
+      else @_vars[n-5]
+    # TODO: add the rest of the patch variables here.
+  setPatchVariable: (n, v) ->
+    switch n
+      when 0 then @pxcor = v
+      when 1 then @pycor = v
+      when 2 then @pcolor = v
+      # case for patches-own variables
+      else @_vars[n-5] = v
 
 class World
   # any variables used in the constructor should come
@@ -89,34 +125,38 @@ class Agents
   ask: (agents, f) ->
     (@askAgent(a, f) for a in agents)
     return
-  # obvious hack for now.
-  getTurtleVariable: (n) ->
-    switch n
-      when 3 then @_currentAgent.xcor
-      when 4 then @_currentAgent.ycor
-  getPatchVariable: (n) ->
-    switch n
-      when 0 then @_currentAgent.pxcor
-      when 1 then @_currentAgent.pycor
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
   die: () -> @_currentAgent.die()
+  getTurtleVariable: (n)    -> @_currentAgent.getTurtleVariable(n)
+  setTurtleVariable: (n, v) -> @_currentAgent.setTurtleVariable(n, v)
+  getPatchVariable:  (n)    -> @_currentAgent.getPatchVariable(n)
+  setPatchVariable:  (n, v) -> @_currentAgent.setPatchVariable(n, v)
+
 
 Prims =
   fd: (n) -> AgentSet.currentAgent().fd(n)
 
 Globals =
-  globals: []
+  vars: []
   # compiler generates call to init, which just
   # tells the runtime how many globals there are.
   # they are all initialized to 0
-  init: (n) -> @globals = 0 for x in [0..n-1]
+  init: (n) -> @vars = (0 for x in [0..n-1])
+  getGlobal: (n) -> @vars[n]
+  setGlobal: (n, v) -> @vars[n] = v
+
+TurtlesOwn =
+  vars: []
+  init: (n) -> @vars = (0 for x in [0..n-1])
+
+PatchesOwn =
+  vars: []
+  init: (n) -> @vars = (0 for x in [0..n-1])
 
 AgentSet = new Agents
-
-world = new World(-5,5,-5,5)
 
 Trig =
   squash: (x) ->
@@ -130,3 +170,8 @@ Trig =
     @squash(Math.sin(@degreesToRadians(degrees)))
   cos: (degrees) ->
     @squash(Math.cos(@degreesToRadians(degrees)))
+
+# this gets overridden by the compiler,
+# but not yet for compareCommands
+world = new World(-5,5,-5,5)
+

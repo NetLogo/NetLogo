@@ -41,7 +41,9 @@ private object CompilerMain {
       new ExpressionParser(procedure, taskNumbers)
         .parse(identifiedTokens) // parse
     }
-    (structureResults.procedures.values.flatMap(parseProcedure).toVector, structureResults)
+    val procDefs = structureResults.procedures.values.flatMap(parseProcedure).toVector
+    for(procdef <- procDefs) procdef.accept(new SetVisitor)
+    (procDefs, structureResults)
   }
 
   // StructureParser found the top level Procedures for us.  ExpressionParser
@@ -56,7 +58,6 @@ private object CompilerMain {
       procdef.accept(new SimpleOfVisitor)  // convert _of(_*variable) => _*variableof
       procdef.accept(new TaskVisitor)  // handle _reportertask
       procdef.accept(new LocalsVisitor)  // convert _let/_repeat to _locals
-      procdef.accept(new SetVisitor)   // convert _set to specific setters
       procdef.accept(new CarefullyVisitor)  // connect _carefully to _errormessage
       if (flags.useOptimizer)
         procdef.accept(new Optimizer(structureResults.program.is3D))   // do various code-improving rewrites

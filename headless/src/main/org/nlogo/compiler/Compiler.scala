@@ -31,8 +31,8 @@ object Compiler extends CompilerInterface {
     CompilerMain.compile(source, displayName, program, true, oldProcedures, extensionManager, flags)
 
   // used by Tortoise. bails after parsing so we can put a different back end on.
-  def frontEnd(source: String, oldProcedures: ProceduresMap = CompilerInterface.NoProcedures): (Seq[ProcedureDefinition], StructureParser.Results) =
-    CompilerMain.frontEnd(source, None, Program.empty(), true,
+  def frontEnd(source: String, oldProcedures: ProceduresMap = CompilerInterface.NoProcedures, program: Program = Program.empty()): (Seq[ProcedureDefinition], StructureParser.Results) =
+    CompilerMain.frontEnd(source, None, program, true,
       oldProcedures, new api.DummyExtensionManager)
 
   // these two used by input boxes

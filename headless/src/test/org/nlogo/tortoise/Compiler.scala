@@ -12,27 +12,20 @@ object Compiler {
     compile(logo, commands = false)
 
   def compileCommands(logo: String,
-    oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String =
-    compile(logo, commands = true, oldProcedures)
+    oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    program: api.Program = api.Program.empty()): String =
+    compile(logo, commands = true, oldProcedures, program)
 
   // TODO: this isn't actually used anymore, should it just be removed?
   def compileProcedure(logo: String): String = {
     val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
-    globals(sp) + compileProcedureDef(defs.head)
+    RuntimeInit(sp) + compileProcedureDef(defs.head)
   }
 
   def compileProcedures(logo: String): String = {
     val (defs, sp) = compiler.Compiler.frontEnd(logo)  // (Seq[ProcedureDefinition], StructureParser.Results)
-    globals(sp) + defs.map(compileProcedureDef).mkString("\n")
+    RuntimeInit(sp) + defs.map(compileProcedureDef).mkString("\n")
   }
-
-  // if there are any globals,
-  // tell the runtime how many there are, it will initialize them all to 0.
-  // if not, do nothing.
-  private def globals(sp: compiler.StructureParser.Results) =
-    if (sp.program.globals.size > 0)
-      s"Globals.init(${sp.program.globals.size})\n"
-    else ""
 
   private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {
     val name = pd.procedure.name
@@ -52,11 +45,12 @@ object Compiler {
   //   actual reporter is the first (and only) argument to `report`
 
   def compile(logo: String, commands: Boolean,
-      oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures): String = {
+      oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures,
+      program: api.Program = api.Program.empty()): String = {
     val wrapped =
       workspace.Evaluator.getHeader(api.AgentKind.Observer, commands) +
         logo + workspace.Evaluator.getFooter(commands)
-    val (defs, _) = compiler.Compiler.frontEnd(wrapped, oldProcedures)  // Seq[ProcedureDefinition]
+    val (defs, _) = compiler.Compiler.frontEnd(wrapped, oldProcedures, program)  // Seq[ProcedureDefinition]
     if (commands) generateCommands(defs.head.statements)
     else genArg(defs.head.statements.tail.head.args.head)
   }
@@ -88,6 +82,9 @@ object Compiler {
       case _: prim._ask              => Prims.generateAsk(s)
       case _: prim._asksorted        => Prims.generateAsk(s)
       case Prims.NormalCommand(op)   => s"$op($args)"
+      case s: prim._setobservervariable => s"Globals.setGlobal(${s.vn},${arg(0)})"
+      case s: prim._setturtlevariable   => s"AgentSet.setTurtleVariable(${s.vn},${arg(0)})"
+      case s: prim._setpatchvariable    => s"AgentSet.setPatchVariable(${s.vn},${arg(0)})"
     }
   }
 
@@ -103,7 +100,7 @@ object Compiler {
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
-      case ov: prim._observervariable       => s"Globals[${ov.vn}]"
+      case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
     }
   }
 
@@ -126,4 +123,43 @@ object Compiler {
   def genCommandBlock(e: compiler.Expression) = e match {
     case cb: compiler.CommandBlock => Compiler.generateCommands(cb.statements)
   }
+}
+
+
+object RuntimeInit{
+  def apply(sp: compiler.StructureParser.Results) = new RuntimeInit(sp).init
+}
+
+class RuntimeInit(sp: compiler.StructureParser.Results) {
+  def init = globals + turtlesOwn + patchesOwn + initWorld
+
+  // this is a dirty hack.
+  // if there are patches-own variables, we need recreate the patches
+  // really, we should just do this always
+  // but it screws up a bunch of the tests and i dont want to
+  // but that off right now. -JC 1/24/13
+  def initWorld =
+  // 5 default variables, anything else is a patches-own
+    if(sp.program.patchesOwn.size > 5)
+      "world = new World(-5,5,-5,5)\n"
+    else ""
+
+  // if there are any globals,
+  // tell the runtime how many there are, it will initialize them all to 0.
+  // if not, do nothing.
+  def globals = vars(sp.program.globals, "Globals")
+
+  // just tell the runtime how many turtles-own varibles there are.
+  // TODO: i pulled 13 out of thin air.
+  // how/where do i programmatically get the real number?
+  def turtlesOwn = vars(sp.program.turtlesOwn.drop(13), "TurtlesOwn")
+
+  // just tell the runtime how many patches-own varibles there are.
+  // TODO: i pulled 5 out of thin air.
+  // how/where do i programmatically get the real number?
+  def patchesOwn = vars(sp.program.patchesOwn.drop(5), "PatchesOwn")
+
+  private def vars(s: Seq[String], initPath: String) =
+    if (s.size > 0) s"$initPath.init(${s.size})\n"
+    else ""
 }

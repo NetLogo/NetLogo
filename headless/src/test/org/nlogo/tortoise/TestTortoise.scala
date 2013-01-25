@@ -23,7 +23,7 @@ class TestTortoise extends FunSuite {
     ws.command(logo)
     val expected = ws.outputAreaBuffer.toString
     val (actual, json) =
-      runJS(Compiler.compileCommands(logo, ws.procedures))
+      runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
     // println(json) TODO: compare it to what comes from NetLogo
     expectResult(expected)(actual)
   }
@@ -200,17 +200,27 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }
 
-  tester("set globals") {
-    compareCommands("clear-all")
-    compareCommands("__ask-sorted patches [output-print pxcor]")
-  }
-
-  test("globals: set") {
+  tester("globals: set") {
     defineProcedures("globals [x] to foo [i] set x i output-print x end")
     compareCommands("clear-all")
     compareCommands("foo 5 foo 6 foo 7")
   }
+
+  tester("patch variables") {
+    val src =
+      """
+        |patches-own [ living? live-neighbors ]
+        |to cellbirth set living? true  set pcolor white end
+        |to celldeath set living? false set pcolor black end
+      """.stripMargin
+    defineProcedures(src)
+    compareCommands("clear-all")
+    compareCommands("__ask-sorted patches [cellbirth output-print living?]")
+    compareCommands("__ask-sorted patches [celldeath output-print living?]")
+  }
+
   /*
+  TODO: we need to implement random-float to make this work.
   test("life") {
     val lifeSrc =
       """

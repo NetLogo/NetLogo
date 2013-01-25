@@ -107,9 +107,9 @@ class TestCompiler extends FunSuite {
     val expected =
      """|Globals.init(3)
         |function FOO () {
-        |println(Globals[2])
-        |println(Globals[1])
-        |println(Globals[0])
+        |println(Globals.getGlobal(2))
+        |println(Globals.getGlobal(1))
+        |println(Globals.getGlobal(0))
         |};""".stripMargin
     expectResult(expected)(compile(input))
   }
@@ -120,8 +120,8 @@ class TestCompiler extends FunSuite {
     val expected =
      """|Globals.init(1)
         |function FOO () {
-        |Globals[0] = 5;
-        |println(Globals[0])
+        |Globals.setGlobal(0,5)
+        |println(Globals.getGlobal(0))
         |};""".stripMargin
     expectResult(expected)(compile(input))
   }
