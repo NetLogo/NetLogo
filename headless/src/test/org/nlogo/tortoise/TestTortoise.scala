@@ -210,4 +210,28 @@ class TestTortoise extends FunSuite {
     compareCommands("clear-all")
     compareCommands("foo 5 foo 6 foo 7")
   }
+  /*
+  test("life") {
+    val lifeSrc =
+      """
+        |patches-own [ living? live-neighbors ]
+        |
+        |to setup-random
+        |  clear-all
+        |  ask patches [ ifelse random-float 100.0 < 35 [ cell-birth ] [ cell-death ] ]
+        |end
+        |
+        |to cell-birth set living? true  set pcolor white end
+        |to cell-death set living? false set pcolor black end
+        |
+        |to go
+        |  ask patches [ set live-neighbors count neighbors with [living?] ]
+        |  ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]
+        |end
+      """.stripMargin
+    defineProcedures(lifeSrc)
+    compareCommands("clear-all setup-random repeat 50 [go]")
+    compareCommands("__ask-sorted patches [output-print living?]")
+  }
+  */
 }

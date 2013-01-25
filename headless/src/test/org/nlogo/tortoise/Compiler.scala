@@ -84,6 +84,8 @@ object Compiler {
       case _: prim._set              => s"${arg(0)} = ${arg(1)};"
       case call: prim._call          => s"${call.procedure.name}($args)"
       case _: prim.etc._report       => s"return $args;"
+      // we need ask, we just shouldn't rely on it for test results.
+      case _: prim._ask              => Prims.generateAsk(s)
       case _: prim._asksorted        => Prims.generateAsk(s)
       case Prims.NormalCommand(op)   => s"$op($args)"
     }
