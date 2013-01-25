@@ -4,7 +4,9 @@ package org.nlogo.tortoise
 
 import
   org.nlogo.api,
-  org.nlogo.util.Utils.getResourceAsString
+  org.nlogo.util,
+    util.Utils.getResourceAsString,
+    util.MersenneTwisterFast
 import java.io.{ PrintWriter, StringWriter }
 import sun.org.mozilla.javascript.internal.NativeArray
 
@@ -25,6 +27,9 @@ object Rhino {
   val libs = Seq("/json2.js", "/js/compat.js", "/js/engine.js")
   for (lib <- libs)
     engine.eval(getResourceAsString(lib))
+
+  // make a random number generator available
+  engine.put("Random", new MersenneTwisterFast)
 
   // returns anything that got output-printed along the way, and any JSON
   // generated too

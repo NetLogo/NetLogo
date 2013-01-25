@@ -25,6 +25,7 @@ object Prims {
         case _: prim._turtles  => "world.turtles"
         case _: prim._patches  => "world.patches"
         case _: prim._count    => "AgentSet.count"
+        case _: prim._random   => "Random.nextLong"
       }
   }
 
@@ -36,6 +37,7 @@ object Prims {
         case _: prim._createorderedturtles => "world.createorderedturtles"
         case _: prim._fd                   => "Prims.fd"
         case _: prim.etc._die              => "AgentSet.die"
+        case _: prim.etc._randomseed       => "Random.setSeed"
       }
   }
 

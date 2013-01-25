@@ -173,6 +173,10 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print fact 6")
   }
 
+  tester("rng") {
+    compareCommands("random-seed 0 output-print random 100000")
+  }
+
   tester("ask") {
     compareCommands("clear-all")
     compareCommands("cro 3")
