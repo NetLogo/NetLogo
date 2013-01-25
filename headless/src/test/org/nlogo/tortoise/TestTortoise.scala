@@ -224,29 +224,34 @@ class TestTortoise extends FunSuite {
   }
 
   /*
-  TODO: we need to implement random-float to make this work.
-    or make the setup deterministic (e.g. by setting up the R pentomino)
+  TODO: _neighbors, _with
   test("life") {
     val lifeSrc =
       """
         |patches-own [ living? live-neighbors ]
         |
-        |to setup-random
+        |to setup
         |  clear-all
-        |  ask patches [ ifelse random-float 100.0 < 35 [ cell-birth ] [ cell-death ] ]
+        |  ask patch  0  0 [ set living? true ]
+        |  ask patch -1  0 [ set living? true ]
+        |  ask patch  0 -1 [ set living? true ]
+        |  ask patch  0  1 [ set living? true ]
+        |  ask patch  1  1 [ set living? true ]
         |end
         |
         |to cell-birth set living? true  set pcolor white end
         |to cell-death set living? false set pcolor black end
         |
         |to go
-        |  ask patches [ set live-neighbors count neighbors with [living?] ]
+        |  ask patches [
+        |    set live-neighbors count neighbors with [living?] ]
         |  ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]
         |end
       """.stripMargin
     defineProcedures(lifeSrc)
-    compareCommands("clear-all setup-random repeat 50 [go]")
+    compareCommands("clear-all setup repeat 15 [go]")
     compareCommands("__ask-sorted patches [output-print living?]")
   }
   */
+
 }
