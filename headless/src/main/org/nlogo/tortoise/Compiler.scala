@@ -128,7 +128,6 @@ class RuntimeInit(program: api.Program, minPxcor: Int, maxPxcor: Int, minPycor: 
 
   def init =
     globals + turtlesOwn + patchesOwn +
-      "collectUpdates();\n" +
       s"world = new World($minPxcor, $maxPxcor, $minPycor, $maxPycor);\n"
 
   // if there are any globals,

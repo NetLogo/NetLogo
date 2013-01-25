@@ -127,6 +127,7 @@ class World
   _turtles = []
   _patches = []
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+    collectUpdates()
     width = (maxPxcor - minPxcor) + 1
     nested =
       for x in [@minPxcor..@maxPxcor]
