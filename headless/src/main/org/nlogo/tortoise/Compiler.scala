@@ -95,6 +95,9 @@ object Compiler {
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
       case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
+      case tv: prim._turtleorlinkvariable   =>
+        val vn = api.AgentVariables.getImplicitTurtleVariables(false).indexOf(tv.varName)
+        s"AgentSet.getTurtleVariable($vn)"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
       case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
     }

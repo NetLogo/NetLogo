@@ -86,18 +86,23 @@ class Turtle
   # TODO: add the rest of the turtle variables here
   getTurtleVariable: (n) ->
     switch n
+      when 0 then @id
+      when 1 then @color
+      when 2 then @heading
       when 3 then @xcor
       when 4 then @ycor
       # case for turtles-own variables
-      else @_vars[n - turtleBuiltInCount]
+      else @_vars[n - turtleBuiltinCount]
 
   # TODO: add the rest of the turtle variables here
   setTurtleVariable: (n, v) ->
     switch n
+      when 1 then @color = v
+      when 2 then @heading = v
       when 3 then @xcor = v
       when 4 then @ycor = v
       # case for turtles-own variables
-      else @_vars[n - turtleBuiltInCount] = v
+      else @_vars[n - turtleBuiltinCount] = v
 
 class Patch
   _vars = []
