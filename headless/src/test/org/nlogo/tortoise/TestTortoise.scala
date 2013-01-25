@@ -225,6 +225,7 @@ class TestTortoise extends FunSuite {
 
   /*
   TODO: we need to implement random-float to make this work.
+    or make the setup deterministic (e.g. by setting up the R pentomino)
   test("life") {
     val lifeSrc =
       """
