@@ -84,7 +84,7 @@ public abstract strictfp class GUIWorkspaceJ
 
     viewWidget = new ViewWidget((GUIWorkspace) this);
     view = viewWidget.view;
-    drawingActionBroker = new DrawingActionBroker(view.renderer.trailDrawer());
+    drawingActionBroker = new DrawingActionBroker(view.renderer.trailDrawer(), world);
     viewManager.setPrimary(view);
 
     PeriodicUpdater periodicUpdater = new PeriodicUpdater(jobManager);

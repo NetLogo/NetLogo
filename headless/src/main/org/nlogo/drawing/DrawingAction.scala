@@ -17,7 +17,7 @@ object DrawingAction {
     extends DrawingAction
   case class SetColors(colors: Array[Int]) extends DrawingAction
   case class SendPixels(dirty: Boolean) extends DrawingAction
-  case class Stamp(agent: org.nlogo.api.Agent, erase: Boolean) extends DrawingAction
+  case class Stamp(agentKind: String, agentId: Long, erase: Boolean) extends DrawingAction
   case class CreateDrawing(dirty: Boolean) extends DrawingAction
   case class ClearDrawing() extends DrawingAction
   case class RescaleDrawing() extends DrawingAction

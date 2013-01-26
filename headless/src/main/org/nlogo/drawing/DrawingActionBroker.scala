@@ -5,11 +5,13 @@ import org.nlogo.api
 import DrawingAction._
 import org.nlogo.api.ActionBroker
 
-class DrawingActionBroker(val trailDrawer: api.TrailDrawerInterface)
+class DrawingActionBroker(
+  val trailDrawer: api.TrailDrawerInterface,
+  val world: api.World)
   extends ActionBroker[DrawingAction]
   with api.TrailDrawerInterface {
 
-  override val runner = new DrawingActionRunner(trailDrawer)
+  override val runner = new DrawingActionRunner(trailDrawer, world)
 
   override def drawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,
@@ -19,7 +21,7 @@ class DrawingActionBroker(val trailDrawer: api.TrailDrawerInterface)
   override def setColors(colors: Array[Int]) { publish(SetColors(colors)) }
   override def sendPixels(dirty: Boolean) { publish(SendPixels(dirty)) }
   override def stamp(agent: api.Agent, erase: Boolean) {
-    publish(Stamp(agent, erase))
+    publish(Stamp(agent.kind.toString, agent.id, erase))
   }
   override def clearDrawing() { publish(ClearDrawing()) }
   override def rescaleDrawing() { publish(RescaleDrawing()) }
