@@ -215,6 +215,16 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted turtles [output-print xcor]")
   }
 
+  tester("turtle size") {
+    compareCommands("cro 1 __ask-sorted turtles [ set size 5 ]")
+    compareCommands("__ask-sorted turtles [ output-print size ]")
+  }
+
+  tester("turtle color") {
+    compareCommands("cro 1 __ask-sorted turtles [ set color blue ]")
+    compareCommands("__ask-sorted turtles [ output-print blue ]")
+  }
+
   tester("patches") {
     compareCommands("__ask-sorted patches [output-print pxcor]")
   }

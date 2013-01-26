@@ -1,5 +1,5 @@
-turtleBuiltinCount = 13
-patchBuiltinCount = 5
+turtleBuiltins = ["id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "hidden", "size", "pensize", "penmode"]
+patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
 
 Updates = []
 
@@ -55,7 +55,7 @@ updated = (obj, vars...) ->
 class Turtle
   _vars = []
   constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
-    updated(this, "id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "turtles", "hidden", "size", "pensize", "penmode")
+    updated(this, turtleBuiltins...)
     @_vars = TurtlesOwn.vars
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
@@ -78,47 +78,33 @@ class Turtle
       died(@id)
       @id = -1
     return
-  # TODO: add the rest of the turtle variables here
   getTurtleVariable: (n) ->
-    switch n
-      when 0 then @id
-      when 1 then @color
-      when 2 then @heading
-      when 3 then @xcor
-      when 4 then @ycor
-      # case for turtles-own variables
-      else @_vars[n - turtleBuiltinCount]
-
-  # TODO: add the rest of the turtle variables here
+    if (n < turtleBuiltins.length)
+      this[turtleBuiltins[n]]
+    else
+       @_vars[n - turtleBuiltins.length]
   setTurtleVariable: (n, v) ->
-    switch n
-      when 1 then @color = v
-      when 2 then @heading = v
-      when 3 then @xcor = v
-      when 4 then @ycor = v
-      # case for turtles-own variables
-      else @_vars[n - turtleBuiltinCount] = v
+    if (n < turtleBuiltins.length)
+      this[turtleBuiltins[n]] = v
+      updated(this, turtleBuiltins[n])
+    else
+       @_vars[n - turtleBuiltins.length] = v
 
 class Patch
   _vars = []
   constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
     @_vars = TurtlesOwn.vars
-  # TODO: add the rest of the patch variables here.
   getPatchVariable: (n) ->
-    switch n
-      when 0 then @pxcor
-      when 1 then @pycor
-      when 2 then @pcolor
-      # case for patches-own variables
-      else @_vars[n - patchBuiltinCount]
-    # TODO: add the rest of the patch variables here.
+    if (n < patchBuiltins.length)
+      this[patchBuiltins[n]]
+    else
+       @_vars[n - patchBuiltins.length]
   setPatchVariable: (n, v) ->
-    switch n
-      when 2
-        @pcolor = v
-        updated(this, "pcolor")
-      # case for patches-own variables
-      else @_vars[n - patchBuiltinCount] = v
+    if (n < patchBuiltins.length)
+      this[patchBuiltins[n]] = v
+      updated(this, patchBuiltins[n])
+    else
+       @_vars[n - patchBuiltins.length] = v
 
 class World
   # any variables used in the constructor should come

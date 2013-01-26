@@ -80,6 +80,9 @@ object Compiler {
       case Prims.NormalCommand(op)   => s"$op($args)"
       case s: prim._setobservervariable => s"Globals.setGlobal(${s.vn},${arg(0)})"
       case s: prim._setturtlevariable   => s"AgentSet.setTurtleVariable(${s.vn},${arg(0)})"
+      case s: prim._setturtleorlinkvariable =>
+        val vn = api.AgentVariables.getImplicitTurtleVariables(false).indexOf(s.varName)
+        s"AgentSet.setTurtleVariable($vn,${arg(0)})"
       case s: prim._setpatchvariable    => s"AgentSet.setPatchVariable(${s.vn},${arg(0)})"
     }
   }
