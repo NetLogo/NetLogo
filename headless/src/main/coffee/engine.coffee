@@ -57,25 +57,20 @@ class Turtle
   constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     updated(this, "id", "color", "heading", "xcor", "ycor", "shape", "label", "labelcolor", "breed", "turtles", "hidden", "size", "pensize", "penmode")
     @_vars = TurtlesOwn.vars
+  keepHeadingInRange: ->
+    if (@heading < 0 || @heading >= 360)
+      @heading = ((@heading % 360) + 360) % 360
+    return
   vars: -> @_vars
   fd: (amount) ->
     @xcor += amount * Trig.sin(@heading)
     @ycor += amount * Trig.cos(@heading)
     updated(this, "xcor", "ycor")
     return
-  rt: (amount) ->
+  right: (amount) ->
     @heading += amount
-    keepHeadingInRange()
+    @keepHeadingInRange()
     updated(this, "heading")
-    return
-  lt: (amount) ->
-    @heading -= amount
-    keepHeadingInRange()
-    updated(this, "heading")
-    return
-  keepHeadingInRange = ->
-    if (heading < 0 || heading >= 360)
-      heading = ((heading % 360) + 360) % 360
     return
   die: ->
     if (@id != -1)
@@ -184,6 +179,9 @@ class Agents
 
 Prims =
   fd: (n) -> AgentSet.currentAgent().fd(n)
+  bk: (n) -> AgentSet.currentAgent().fd(-n)
+  right: (n) -> AgentSet.currentAgent().right(n)
+  left: (n) -> AgentSet.currentAgent().right(-n)
 
 Globals =
   vars: []
