@@ -89,6 +89,9 @@ class Turtle
       updated(this, turtleBuiltins[n])
     else
        @_vars[n - turtleBuiltins.length] = v
+  getPatchHere: -> world.getPatchAt(@xcor, @ycor)
+  getPatchVariable: (n)    -> @getPatchHere().getPatchVariable(n)
+  setPatchVariable: (n, v) -> @getPatchHere().setPatchVariable(n, v)
 
 class Patch
   _vars = []
@@ -125,6 +128,9 @@ class World
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   turtles: -> _turtles
   patches: -> _patches
+  # TODO: I do believe this is borken.
+  getPatchAt: (x, y) ->
+    return _patches[(Math.floor(x) - @minPxcor) + (Math.floor(y) - @minPycor)]
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return
