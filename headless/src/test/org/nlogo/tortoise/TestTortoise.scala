@@ -275,6 +275,11 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
   }
 
+  tester("with 2"){
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = -3 and pycor = 2] [ output-print self ]")
+  }
+
   tester("with + turtles accessing turtle and patch vars"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 ask turtles [fd 1]")
@@ -289,6 +294,16 @@ class TestTortoise extends FunSuite {
   tester("get turtle") {
     compareCommands("cro 5")
     compareCommands("__ask-sorted turtles [ output-print self ]")
+  }
+
+  tester("patch set") {
+    compareCommands("__ask-sorted patches with [pxcor = -1 and pycor = 0] [ set pcolor green ]")
+  }
+
+  tester("and, or") {
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("output-print count patches with [pxcor = 0 or pycor = 0]")
+    compareCommands("output-print count patches with [pxcor = 0 and pycor = 0]")
   }
 
 //  tester("neighbors") {

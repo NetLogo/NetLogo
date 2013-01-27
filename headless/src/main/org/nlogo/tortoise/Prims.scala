@@ -17,6 +17,8 @@ object Prims {
         case _: prim._notequal    => "!="
         case _: prim._lessthan    => "<"
         case _: prim._greaterthan => ">"
+        case _: prim._and         => "&&"
+        case _: prim._or          => "||"
       }
   }
 
