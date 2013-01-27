@@ -56,7 +56,7 @@ class Turtle
   _vars = []
   constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     updated(this, turtleBuiltins...)
-    @_vars = TurtlesOwn.vars
+    @_vars = (x for x in TurtlesOwn.vars)
   toString: -> "(turtle " + @id + ")"
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
@@ -97,7 +97,7 @@ class Turtle
 class Patch
   _vars = []
   constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
-    @_vars = TurtlesOwn.vars
+    @_vars = (x for x in PatchesOwn.vars)
   toString: -> "(patch " + @pxcor + " " + @pycor + ")"
   getPatchVariable: (n) ->
     if (n < patchBuiltins.length)
@@ -165,7 +165,10 @@ class Agents
     res = f()
     @_self = oldAgent
     res
-  ask: (agents, f) ->
+  ask: (agentsOrAgent, f) ->
+    agents = agentsOrAgent
+    if (! (typeIsArray agentsOrAgent))
+      agents = [agentsOrAgent]
     (@askAgent(a, f) for a in agents)
     return
   agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)

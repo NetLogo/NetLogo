@@ -311,7 +311,6 @@ class TestTortoise extends FunSuite {
 //    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print (word pxcor ", " pycor) ]]""")
 //  }
 
-
   tester("setting a built-in patch variable") {
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
@@ -319,16 +318,19 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [ output-print self output-print pcolor ]")
   }
 
-/* TODO: fails!
   tester("setting a patches-own variable") {
     defineProcedures("patches-own [foo]", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
     compareCommands("output-print count patches with [foo = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
   }
- */
 
-/*
+  tester("patch set") {
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("ask patch 0 0 [ set pcolor green ]")
+    compareCommands("output-print count patches with [pcolor = green]")
+  }
+
   tester("life") {
     val lifeSrc =
       """
@@ -357,6 +359,5 @@ class TestTortoise extends FunSuite {
     compareCommands("setup")// repeat 15 [go]")
     compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
   }
- */
 
 }
