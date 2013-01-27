@@ -89,20 +89,23 @@ object Compiler {
 
   def generateReporter(r: compiler.ReporterApp): String = {
     def arg(i: Int) = genArg(r.args(i))
-    def args = r.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(", ")
+    def args = argsSep(", ")
+    def argsSep(sep: String) =
+      r.args.collect{ case x: compiler.ReporterApp => genArg(x) }.mkString(sep)
     r.reporter match {
       case pure: nvm.Pure if r.args.isEmpty => compileLiteral(pure.report(null))
       case lv: prim._letvariable            => lv.let.name
       case pv: prim._procedurevariable      => pv.name
       case call: prim._callreport           => s"${call.procedure.name}($args)"
       case Prims.InfixReporter(op)          => s"(${arg(0)} $op ${arg(1)})"
-      case Prims.NormalReporter(op)         => s"$op(${r.args.map(genArg).mkString(", ")})"
+      case Prims.NormalReporter(op)         => s"$op($args)"
       case tv: prim._turtlevariable         => s"AgentSet.getTurtleVariable(${tv.vn})"
       case tv: prim._turtleorlinkvariable   =>
         val vn = api.AgentVariables.getImplicitTurtleVariables(false).indexOf(tv.varName)
         s"AgentSet.getTurtleVariable($vn)"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
       case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
+      case s: prim._word                    => argsSep(" + ")
     }
   }
 

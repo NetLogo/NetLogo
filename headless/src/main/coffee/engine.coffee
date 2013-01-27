@@ -128,9 +128,10 @@ class World
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
   turtles: -> _turtles
   patches: -> _patches
-  # TODO: I do believe this is borken.
+  # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
-    return _patches[(Math.floor(x) - @minPxcor) + (Math.floor(y) - @minPycor)]
+    index = (Math.round(x) - @minPxcor) * (@maxPycor - @minPycor + 1) + (Math.round(y) - @minPycor)
+    return _patches[index]
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
     return

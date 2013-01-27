@@ -247,22 +247,28 @@ class TestTortoise extends FunSuite {
   }
 
   /**
+  TODO: uh oh, the engines patches arent really in the same order
+   as __ask-sorted puts them in. -JC 1/27/13
+  tester("patch order"){
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("""__ask-sorted patches [output-print (word pxcor "," pycor)]""")
+  }
+  */
+
   tester("turtles get patch variables"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 ]")
     compareCommands("""__ask-sorted turtles [output-print (word pxcor "," pycor) ]""")
   }
 
-
   tester("turtles set patch variables"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 set pcolor blue ]")
     compareCommands("__ask-sorted turtles [output-print color]")
     compareCommands("__ask-sorted turtles [output-print pcolor]")
-    compareCommands("__ask-sorted patches [output-print pcolor]")
+    // TODO: uncomment this when patch order test is fixed
+    //compareCommands("__ask-sorted patches [output-print pcolor]")
   }
-  **/
-
 
   /*
   TODO: _neighbors, _with
