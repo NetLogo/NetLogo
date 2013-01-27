@@ -115,12 +115,13 @@ class World
   _nextId = 0
   _turtles = []
   _patches = []
+  width = 0
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
-    width = (maxPxcor - minPxcor) + 1
+    width = (@maxPxcor - @minPxcor) + 1
     nested =
-      for x in [@minPxcor..@maxPxcor]
-        for y in [@minPycor..@maxPycor]
+      for y in [@maxPycor..@minPycor]
+        for x in [@minPxcor..@maxPxcor]
           new Patch((width * (@maxPycor - y)) + x - @minPxcor, x, y)
     # http://stackoverflow.com/questions/4631525/concatenating-an-array-of-arrays-in-coffeescript
     _patches = [].concat nested...
@@ -130,7 +131,7 @@ class World
   patches: -> _patches
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
-    index = (Math.round(x) - @minPxcor) * (@maxPycor - @minPycor + 1) + (Math.round(y) - @minPycor)
+    index  = (@maxPycor - Math.round(y)) * width + (Math.round(x) - @minPxcor)
     return _patches[index]
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
