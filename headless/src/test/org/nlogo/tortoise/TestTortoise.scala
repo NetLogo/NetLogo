@@ -353,7 +353,9 @@ class TestTortoise extends FunSuite {
         |end
       """.stripMargin
     defineProcedures(lifeSrc, -5, 5, -5, 5)
-    compareCommands("setup repeat 15 [go]")
+    compareCommands("setup")
+    for (_ <- 1 to 5)
+      compareCommands("go")
     compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
   }
 
