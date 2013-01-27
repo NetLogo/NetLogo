@@ -9,7 +9,7 @@ import org.nlogo.swing.RichAction
 import org.nlogo.api.I18N
 
 class Tabs(val workspace: GUIWorkspace,
-           val reviewTab: org.nlogo.review.ReviewTab,
+           val reviewTab: org.nlogo.window.ReviewTabInterface,
            monitorManager: AgentMonitorManager,
            dialogFactory: EditDialogFactoryInterface) extends javax.swing.JTabbedPane
   with javax.swing.event.ChangeListener with org.nlogo.window.Event.LinkParent

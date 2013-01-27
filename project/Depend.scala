@@ -54,7 +54,7 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api"),
       "api" -> List("util"),
-      "app" -> List("review"),
+      "app" -> List("window"),
       "awt" -> Nil,
       "compiler" -> List("prim","prim/dead","prim/threed"),
       "drawing" -> List("api", "mirror"),

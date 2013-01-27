@@ -27,6 +27,7 @@ class ReviewTab(
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
   extends JPanel
+  with window.ReviewTabInterface
   with window.Events.BeforeLoadEventHandler {
 
   def loadedRuns: Seq[api.ModelRun] = tabState.runs

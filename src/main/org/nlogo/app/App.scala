@@ -136,7 +136,8 @@ object App{
     pico.addComponent(classOf[WorkspaceFactory], factory)
     pico.addComponent(classOf[Tabs])
     pico.add(
-      classOf[org.nlogo.review.ReviewTab], "org.nlogo.review.ReviewTab",
+      classOf[org.nlogo.window.ReviewTabInterface],
+      "org.nlogo.review.ReviewTab",
       Array[Parameter](
         new ComponentParameter(),
         // saveModel
