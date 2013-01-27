@@ -13,7 +13,7 @@ object Shell {
   def main(argv: Array[String]) {
     setHeadlessProperty()
     Rhino.eval(Compiler.compileProcedures(
-      "", 3, 3, 3, 3))
+      "", -16, 16, -16, 16))
     System.err.println("Tortoise Shell 1.0")
     input.takeWhile(!isQuit(_))
       .foreach(run)
