@@ -240,38 +240,38 @@ class Torus
       world.getPatchAt(pxcor, pycor + 1)
 
   getPatchSouth: (pxcor, pycor) ->
-    if (pycor == @minPycor) 
+    if (pycor == @minPycor)
       world.getPatchAt(pxcor, @maxPycor)
     else
       world.getPatchAt(pxcor, pycor - 1)
 
   getPatchEast: (pxcor, pycor) ->
-    if (pxcor == @maxPxcor) 
+    if (pxcor == @maxPxcor)
       world.getPatchAt(@minPxcor, pycor)
     else
       world.getPatchAt(pxcor + 1, pycor)
 
   getPatchWest: (pxcor, pycor) ->
-    if (pxcor == @minPxcor) 
+    if (pxcor == @minPxcor)
       world.getPatchAt(@maxPxcor, pycor)
     else
       world.getPatchAt(pxcor - 1, pycor)
 
   getPatchNorthWest: (pxcor, pycor) ->
-    if (pycor == @maxPycor) 
-      if (pxcor == @minPxcor) 
+    if (pycor == @maxPycor)
+      if (pxcor == @minPxcor)
         world.getPatchAt(@maxPxcor, @minPycor)
       else
         world.getPatchAt(pxcor - 1, @minPycor)
-      
-     else if (pxcor == @minPxcor) 
+
+     else if (pxcor == @minPxcor)
       world.getPatchAt(@maxPxcor, pycor + 1)
     else
       world.getPatchAt(pxcor - 1, pycor + 1)
-    
+
   getPatchSouthWest: (pxcor, pycor) ->
-    if (pycor == @minPycor) 
-      if (pxcor == @minPxcor) 
+    if (pycor == @minPycor)
+      if (pxcor == @minPxcor)
         world.getPatchAt(@maxPxcor, @maxPycor)
       else
         world.getPatchAt(pxcor - 1, @maxPycor)
@@ -281,7 +281,7 @@ class Torus
       world.getPatchAt(pxcor - 1, pycor - 1)
 
   getPatchSouthEast: (pxcor, pycor) ->
-    if (pycor == @minPycor) 
+    if (pycor == @minPycor)
       if (pxcor == @maxPxcor)
         world.getPatchAt(@minPxcor, @maxPycor)
       else
@@ -290,10 +290,10 @@ class Torus
       world.getPatchAt(@minPxcor, pycor - 1)
     else
       world.getPatchAt(pxcor + 1, pycor - 1)
-    
+
   getPatchNorthEast: (pxcor, pycor) ->
-    if (pycor == @maxPycor) 
-      if (pxcor == @maxPxcor) 
+    if (pycor == @maxPycor)
+      if (pxcor == @maxPxcor)
         world.getPatchAt(@minPxcor, @minPycor)
       else
         world.getPatchAt(pxcor + 1, @minPycor)
