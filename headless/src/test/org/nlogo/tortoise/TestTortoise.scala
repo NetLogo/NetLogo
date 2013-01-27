@@ -275,23 +275,67 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
   }
 
-  tester("with + turtles accessing tutrle and patch vars"){
+  tester("with 2"){
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = -3 and pycor = 2] [ output-print self ]")
+  }
+
+  tester("with + turtles accessing turtle and patch vars"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 ask turtles [fd 1]")
     compareCommands("__ask-sorted turtles with [pxcor =  1] [output-print pycor]")
     compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
   }
 
+  tester("get patch") {
+    compareCommands("output-print patch 0 0")
+  }
 
-  /*
-  TODO: _neighbors,
-  test("life") {
+  tester("get turtle") {
+    compareCommands("cro 5")
+    compareCommands("__ask-sorted turtles [ output-print self ]")
+  }
+
+  tester("patch set") {
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = -1 and pycor = 0] [ set pcolor green ]")
+    compareCommands("ask patch 0 0 [ set pcolor green ]")
+    compareCommands("output-print count patches with [pcolor = green]")
+  }
+
+  tester("and, or") {
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("output-print count patches with [pxcor = 0 or pycor = 0]")
+    compareCommands("output-print count patches with [pxcor = 0 and pycor = 0]")
+  }
+
+//  tester("neighbors") {
+//    defineProcedures("", -5, 5, -5, 5)
+//    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print (word pxcor ", " pycor) ]]""")
+//  }
+
+  tester("setting a built-in patch variable") {
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set pcolor green ]")
+    compareCommands("output-print count patches with [pcolor = green]")
+    compareCommands("__ask-sorted patches [ output-print self output-print pcolor ]")
+  }
+
+  tester("setting a patches-own variable") {
+    defineProcedures("patches-own [foo]", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
+    compareCommands("output-print count patches with [foo = green]")
+    compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
+  }
+
+  tester("life") {
     val lifeSrc =
       """
         |patches-own [ living? live-neighbors ]
         |
         |to setup
         |  clear-all
+        |  ask patches [set living? false]
         |  ask patch  0  0 [ set living? true ]
         |  ask patch -1  0 [ set living? true ]
         |  ask patch  0 -1 [ set living? true ]
@@ -299,19 +343,18 @@ class TestTortoise extends FunSuite {
         |  ask patch  1  1 [ set living? true ]
         |end
         |
-        |to cell-birth set living? true  set pcolor white end
-        |to cell-death set living? false set pcolor black end
+        |to cellbirth set living? true  set pcolor white end
+        |to celldeath set living? false set pcolor 0.0 end
         |
         |to go
-        |  ask patches [
-        |    set live-neighbors count neighbors with [living?] ]
-        |  ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]
+        |  ;ask patches [
+        |  ;  set live-neighbors count neighbors with [living?] ]
+        |  ;ask patches [ ifelse live-neighbors = 3 [ cellbirth ] [ if live-neighbors != 2 [ celldeath ] ] ]
         |end
       """.stripMargin
-    defineProcedures(lifeSrc)
+    defineProcedures(lifeSrc, -5, 5, -5, 5)
     compareCommands("setup repeat 15 [go]")
-    compareCommands("__ask-sorted patches [output-print living?]")
+    compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
   }
-  */
 
 }

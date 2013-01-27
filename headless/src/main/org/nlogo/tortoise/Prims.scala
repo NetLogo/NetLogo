@@ -13,19 +13,24 @@ object Prims {
         case _: prim._minus       => "-"
         case _: prim.etc._mult    => "*"
         case _: prim.etc._div     => "/"
-        case _: prim._equal       => "=="
+        case _: prim._equal       => "==="
+        case _: prim._notequal    => "!=="
         case _: prim._lessthan    => "<"
         case _: prim._greaterthan => ">"
+        case _: prim._and         => "&&"
+        case _: prim._or          => "||"
       }
   }
 
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim._turtles  => "world.turtles"
-        case _: prim._patches  => "world.patches"
-        case _: prim._count    => "AgentSet.count"
-        case _: prim._random   => "Random.nextLong"
+        case _: prim.etc._self  => "AgentSet.self"
+        case _: prim._patch     => "world.getPatchAt"
+        case _: prim._turtles   => "world.turtles"
+        case _: prim._patches   => "world.patches"
+        case _: prim._count     => "AgentSet.count"
+        case _: prim._random    => "Random.nextLong"
       }
   }
 

@@ -32,8 +32,8 @@ class TestCompiler extends FunSuite {
 
   test("equality"){
     import Compiler.{compileReporter => compile}
-    expectResult("(2 == 2)")(compile("2 = 2"))
-    expectResult("""("hello" == "hello")""")(compile(""""hello" = "hello""""))
+    expectResult("(2 === 2)")(compile("2 = 2"))
+    expectResult("""("hello" === "hello")""")(compile(""""hello" = "hello""""))
   }
 
   test("commands: arithmetic + printing") {
@@ -160,7 +160,7 @@ class TestCompiler extends FunSuite {
     import Compiler.{compileCommands => compile}
     val input = "__ask-sorted patches with [pxcor = 1] [output-print pycor]"
     val expectedAgentFilter =
-      "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) == 1) })"
+      "AgentSet.agentFilter(world.patches(), function(){ return (AgentSet.getPatchVariable(0) === 1) })"
     val expected = s"AgentSet.ask($expectedAgentFilter, function(){ println(AgentSet.getPatchVariable(1)) })"
     expectResult(expected)(compile(input))
   }
