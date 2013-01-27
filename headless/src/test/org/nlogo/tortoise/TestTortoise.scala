@@ -328,6 +328,7 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
   }
 
+  /*
   tester("life") {
     val lifeSrc =
       """
@@ -358,5 +359,6 @@ class TestTortoise extends FunSuite {
       compareCommands("go")
     compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
   }
+  */
 
 }
