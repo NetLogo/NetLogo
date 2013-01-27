@@ -297,7 +297,10 @@ class TestTortoise extends FunSuite {
   }
 
   tester("patch set") {
+    defineProcedures("", -5, 5, -5, 5)
     compareCommands("__ask-sorted patches with [pxcor = -1 and pycor = 0] [ set pcolor green ]")
+    compareCommands("ask patch 0 0 [ set pcolor green ]")
+    compareCommands("output-print count patches with [pcolor = green]")
   }
 
   tester("and, or") {
@@ -323,12 +326,6 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches with [pxcor = 2 and pycor = 3] [ set foo green ]")
     compareCommands("output-print count patches with [foo = green]")
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
-  }
-
-  tester("patch set") {
-    defineProcedures("", -5, 5, -5, 5)
-    compareCommands("ask patch 0 0 [ set pcolor green ]")
-    compareCommands("output-print count patches with [pcolor = green]")
   }
 
   tester("life") {
