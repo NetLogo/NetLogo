@@ -347,9 +347,9 @@ class TestTortoise extends FunSuite {
         |to celldeath set living? false set pcolor 0.0 end
         |
         |to go
-        |  ;ask patches [
-        |  ;  set live-neighbors count neighbors with [living?] ]
-        |  ;ask patches [ ifelse live-neighbors = 3 [ cellbirth ] [ if live-neighbors != 2 [ celldeath ] ] ]
+        |  ask patches [
+        |    set live-neighbors count neighbors with [living?] ]
+        |  ask patches [ ifelse live-neighbors = 3 [ cellbirth ] [ if live-neighbors != 2 [ celldeath ] ] ]
         |end
       """.stripMargin
     defineProcedures(lifeSrc, -5, 5, -5, 5)
