@@ -14,6 +14,7 @@ object Prims {
         case _: prim.etc._mult    => "*"
         case _: prim.etc._div     => "/"
         case _: prim._equal       => "=="
+        case _: prim._notequal    => "!="
         case _: prim._lessthan    => "<"
         case _: prim._greaterthan => ">"
       }

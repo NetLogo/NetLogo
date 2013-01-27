@@ -108,6 +108,7 @@ class Patch
       updated(this, patchBuiltins[n])
     else
        @_vars[n - patchBuiltins.length] = v
+  getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
 
 class World
   # any variables used in the constructor should come
@@ -116,9 +117,11 @@ class World
   _turtles = []
   _patches = []
   width = 0
+  _topology = null
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
     collectUpdates()
     width = (@maxPxcor - @minPxcor) + 1
+    _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
     nested =
       for y in [@maxPycor..@minPycor]
         for x in [@minPxcor..@maxPxcor]
@@ -127,8 +130,9 @@ class World
     _patches = [].concat nested...
     for p in _patches
       updated(p, "pxcor", "pycor", "pcolor", "plabel", "plabelcolor")
-  turtles: -> _turtles
-  patches: -> _patches
+  topology: -> _topology
+  turtles:  -> _turtles
+  patches:  -> _patches
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
     index  = (@maxPycor - Math.round(y)) * width + (Math.round(x) - @minPxcor)
@@ -147,6 +151,7 @@ class World
   createorderedturtles: (n) ->
     (@createturtle(0, 0, num * (360 / n), (num * 10 + 5) % 140) for num in [0..n-1])
     return
+  getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
 class Agents
   count: (x) -> x.length
@@ -178,6 +183,12 @@ Prims =
   bk: (n) -> AgentSet.currentAgent().fd(-n)
   right: (n) -> AgentSet.currentAgent().right(n)
   left: (n) -> AgentSet.currentAgent().right(-n)
+  getNeighbors: -> AgentSet.currentAgent().getNeighbors()
+  patch: (x, y) ->
+    p = world.getPatchAt(x, y)
+    console.log("found this patch at #{x} #{y}")
+    console.log(p)
+    p
 
 Globals =
   vars: []
@@ -210,3 +221,87 @@ Trig =
     @squash(Math.sin(@degreesToRadians(degrees)))
   cos: (degrees) ->
     @squash(Math.cos(@degreesToRadians(degrees)))
+
+
+class Torus
+  constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
+  getNeighbors: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor && pxcor == @minPxcor)
+      if (pycor == @maxPycor && pycor == @minPycor) []
+      else  [@getPatchNorth(pxcor, pycor), @getPatchSouth(pxcor, pycor)]
+    else if (pycor == @maxPycor && pycor == @minPycor)
+      [@getPatchEast(pxcor, pycor), @getPatchWest(pxcor, pycor)]
+    else [@getPatchNorth(pxcor, pycor),     @getPatchEast(pxcor, pycor),
+          @getPatchSouth(pxcor, pycor),     @getPatchWest(pxcor, pycor),
+          @getPatchNorthEast(pxcor, pycor), @getPatchSouthEast(pxcor, pycor),
+          @getPatchSouthWest(pxcor, pycor), @getPatchNorthWest(pxcor, pycor)]
+
+  getPatchNorth: (pxcor, pycor) ->
+    if (pycor == @maxPycor)
+      world.getPatchAt(pxcor, @minPycor)
+    else
+      world.getPatchAt(pxcor, pycor + 1)
+
+  getPatchSouth: (pxcor, pycor) ->
+    if (pycor == @minPycor) 
+      world.getPatchAt(pxcor, @maxPycor)
+    else
+      world.getPatchAt(pxcor, pycor - 1)
+
+  getPatchEast: (pxcor, pycor) ->
+    if (pxcor == @maxPxcor) 
+      world.getPatchAt(@minPxcor, pycor)
+    else
+      world.getPatchAt(pxcor + 1, pycor)
+
+  getPatchWest: (pxcor, pycor) ->
+    if (pxcor == @minPxcor) 
+      world.getPatchAt(@maxPxcor, pycor)
+    else
+      world.getPatchAt(pxcor - 1, pycor)
+
+  getPatchNorthWest: (pxcor, pycor) ->
+    if (pycor == @maxPycor) 
+      if (pxcor == @minPxcor) 
+        world.getPatchAt(@maxPxcor, @minPycor)
+      else
+        world.getPatchAt(pxcor - 1, @minPycor)
+      
+     else if (pxcor == @minPxcor) 
+      world.getPatchAt(@maxPxcor, pycor + 1)
+    else
+      world.getPatchAt(pxcor - 1, pycor + 1)
+    
+  getPatchSouthWest: (pxcor, pycor) ->
+    if (pycor == @minPycor) 
+      if (pxcor == @minPxcor) 
+        world.getPatchAt(@maxPxcor, @maxPycor)
+      else
+        world.getPatchAt(pxcor - 1, @maxPycor)
+    else if (pxcor == @minPxcor)
+      world.getPatchAt(@maxPxcor, pycor - 1)
+    else
+      world.getPatchAt(pxcor - 1, pycor - 1)
+
+  getPatchSouthEast: (pxcor, pycor) ->
+    if (pycor == @minPycor) 
+      if (pxcor == @maxPxcor)
+        world.getPatchAt(@minPxcor, @maxPycor)
+      else
+        world.getPatchAt(pxcor + 1, @maxPycor)
+    else if (pxcor == @maxPxcor)
+      world.getPatchAt(@minPxcor, pycor - 1)
+    else
+      world.getPatchAt(pxcor + 1, pycor - 1)
+    
+  getPatchNorthEast: (pxcor, pycor) ->
+    if (pycor == @maxPycor) 
+      if (pxcor == @maxPxcor) 
+        world.getPatchAt(@minPxcor, @minPycor)
+      else
+        world.getPatchAt(pxcor + 1, @minPycor)
+    else if (pxcor == @maxPxcor)
+      world.getPatchAt(@minPxcor, pycor + 1)
+    else
+      world.getPatchAt(pxcor + 1, pycor + 1)

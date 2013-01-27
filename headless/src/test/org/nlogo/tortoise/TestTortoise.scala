@@ -275,23 +275,26 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
   }
 
-  tester("with + turtles accessing tutrle and patch vars"){
+  tester("with + turtles accessing turtle and patch vars"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 ask turtles [fd 1]")
     compareCommands("__ask-sorted turtles with [pxcor =  1] [output-print pycor]")
     compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
   }
 
+//  tester("neighbors") {
+//    defineProcedures("", -5, 5, -5, 5)
+//    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print (word pxcor ", " pycor) ]]""")
+//  }
 
-  /*
-  TODO: _neighbors,
-  test("life") {
+  tester("life") {
     val lifeSrc =
       """
         |patches-own [ living? live-neighbors ]
         |
         |to setup
         |  clear-all
+        |  ask patches [set living? false]
         |  ask patch  0  0 [ set living? true ]
         |  ask patch -1  0 [ set living? true ]
         |  ask patch  0 -1 [ set living? true ]
@@ -299,19 +302,18 @@ class TestTortoise extends FunSuite {
         |  ask patch  1  1 [ set living? true ]
         |end
         |
-        |to cell-birth set living? true  set pcolor white end
-        |to cell-death set living? false set pcolor black end
+        |to cellbirth set living? true  set pcolor white end
+        |to celldeath set living? false set pcolor 0.0 end
         |
         |to go
-        |  ask patches [
-        |    set live-neighbors count neighbors with [living?] ]
-        |  ask patches [ ifelse live-neighbors = 3 [ cell-birth ] [ if live-neighbors != 2 [ cell-death ] ] ]
+        |  ;ask patches [
+        |  ;  set live-neighbors count neighbors with [living?] ]
+        |  ;ask patches [ ifelse live-neighbors = 3 [ cellbirth ] [ if live-neighbors != 2 [ celldeath ] ] ]
         |end
       """.stripMargin
-    defineProcedures(lifeSrc)
-    compareCommands("setup repeat 15 [go]")
-    compareCommands("__ask-sorted patches [output-print living?]")
+    defineProcedures(lifeSrc, -5, 5, -5, 5)
+    compareCommands("setup")// repeat 15 [go]")
+    compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
   }
-  */
 
 }

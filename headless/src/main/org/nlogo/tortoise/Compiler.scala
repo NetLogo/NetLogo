@@ -83,7 +83,9 @@ object Compiler {
       case s: prim._setturtleorlinkvariable =>
         val vn = api.AgentVariables.getImplicitTurtleVariables(false).indexOf(s.varName)
         s"AgentSet.setTurtleVariable($vn,${arg(0)})"
-      case s: prim._setpatchvariable    => s"AgentSet.setPatchVariable(${s.vn},${arg(0)})"
+      case s: prim._setpatchvariable => s"AgentSet.setPatchVariable(${s.vn},${arg(0)})"
+      case r: prim._repeat           =>
+        s"for(var i = 0; i < ${arg(0)}; i++) { ${genCommandBlock(s.args(1))} }"
     }
   }
 
@@ -110,6 +112,8 @@ object Compiler {
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
         s"AgentSet.agentFilter($agents, function(){ return $filter })"
+      case p: prim._patch                   => s"Prims.patch($args)"
+      case n: prim._neighbors               => s"Prims.getNeighbors()"
     }
   }
 
