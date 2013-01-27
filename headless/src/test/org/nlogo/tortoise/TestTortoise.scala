@@ -118,6 +118,11 @@ class TestTortoise extends FunSuite {
     compare("6 / 2 + 12 / 6")
   }
 
+  tester("equality") {
+    compare("5 = 5")
+    compare(""""hello" = "hello"""")
+  }
+
   tester("empty commands") {
     compareCommands("")
   }
@@ -254,7 +259,7 @@ class TestTortoise extends FunSuite {
   tester("turtles get patch variables"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 ]")
-    compareCommands("""__ask-sorted turtles [output-print (word pxcor "," pycor) ]""")
+    compareCommands("""__ask-sorted turtles [output-print (word pxcor "," pycor)]""")
   }
 
   tester("turtles set patch variables"){
@@ -265,8 +270,21 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [output-print pcolor]")
   }
 
+  tester("with"){
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("__ask-sorted patches with [pxcor = 1] [output-print pycor]")
+  }
+
+  tester("with + turtles accessing tutrle and patch vars"){
+    defineProcedures("", -5, 5, -5, 5)
+    compareCommands("cro 5 ask turtles [fd 1]")
+    compareCommands("__ask-sorted turtles with [pxcor =  1] [output-print pycor]")
+    compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
+  }
+
+
   /*
-  TODO: _neighbors, _with
+  TODO: _neighbors,
   test("life") {
     val lifeSrc =
       """

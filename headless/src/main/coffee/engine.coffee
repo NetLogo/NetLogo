@@ -155,11 +155,13 @@ class Agents
   askAgent: (a, f) ->
     oldAgent = @_currentAgent
     @_currentAgent = a
-    f()
+    res = f()
     @_currentAgent = oldAgent
+    res
   ask: (agents, f) ->
     (@askAgent(a, f) for a in agents)
     return
+  agentFilter: (agents, f) -> a for a in agents when @askAgent(a, f)
   # I'm putting some things in Agents, and some in Prims
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
