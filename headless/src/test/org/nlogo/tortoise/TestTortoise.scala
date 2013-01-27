@@ -253,13 +253,13 @@ class TestTortoise extends FunSuite {
 
   tester("patch order"){
     defineProcedures("", -5, 5, -5, 5)
-    compareCommands("""__ask-sorted patches [output-print (word pxcor "," pycor)]""")
+    compareCommands("""__ask-sorted patches [ output-print self ]""")
   }
 
   tester("turtles get patch variables"){
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("cro 5 __ask-sorted turtles [ fd 1 ]")
-    compareCommands("""__ask-sorted turtles [output-print (word pxcor "," pycor)]""")
+    compareCommands("""__ask-sorted turtles [ output-print self ]""")
   }
 
   tester("turtles set patch variables"){
@@ -311,7 +311,7 @@ class TestTortoise extends FunSuite {
 
 //  tester("neighbors") {
 //    defineProcedures("", -5, 5, -5, 5)
-//    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print (word pxcor ", " pycor) ]]""")
+//    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print self ]]""")
 //  }
 
   tester("setting a built-in patch variable") {
@@ -357,7 +357,7 @@ class TestTortoise extends FunSuite {
     compareCommands("setup")
     for (_ <- 1 to 5)
       compareCommands("go")
-    compareCommands("""__ask-sorted patches [output-print (word "(" pxcor ", " pycor ") -> " living?) ]""")
+    compareCommands("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
   }
   */
 
