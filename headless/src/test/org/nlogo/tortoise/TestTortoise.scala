@@ -282,6 +282,15 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted turtles with [pxcor = -1] [output-print ycor]")
   }
 
+  tester("get patch") {
+    compareCommands("output-print patch 0 0")
+  }
+
+  tester("get turtle") {
+    compareCommands("cro 5")
+    compareCommands("__ask-sorted turtles [ output-print self ]")
+  }
+
 //  tester("neighbors") {
 //    defineProcedures("", -5, 5, -5, 5)
 //    compareCommands("""__ask-sorted patches [ __ask-sorted neighbors [ output-print (word pxcor ", " pycor) ]]""")

@@ -57,6 +57,7 @@ class Turtle
   constructor: (@id, @color, @heading, @xcor, @ycor, @shape = "default", @label = "", @labelcolor = 9.9, @breed ="TURTLES", @hidden = false, @size = 1.0, @pensize = 1.0, @penmode = "up") ->
     updated(this, turtleBuiltins...)
     @_vars = TurtlesOwn.vars
+  toString: -> "(turtle " + @id + ")"
   keepHeadingInRange: ->
     if (@heading < 0 || @heading >= 360)
       @heading = ((@heading % 360) + 360) % 360
@@ -97,6 +98,7 @@ class Patch
   _vars = []
   constructor: (@id, @pxcor, @pycor, @pcolor = 0.0, @plabel = "", @plabelcolor = 9.9) ->
     @_vars = TurtlesOwn.vars
+  toString: -> "(patch " + @pxcor + " " + @pycor + ")"
   getPatchVariable: (n) ->
     if (n < patchBuiltins.length)
       this[patchBuiltins[n]]
@@ -155,13 +157,13 @@ class World
 
 class Agents
   count: (x) -> x.length
-  _currentAgent: 0
-  currentAgent: -> @_currentAgent
+  _self: 0
+  self: -> @_self
   askAgent: (a, f) ->
-    oldAgent = @_currentAgent
-    @_currentAgent = a
+    oldAgent = @_self
+    @_self = a
     res = f()
-    @_currentAgent = oldAgent
+    @_self = oldAgent
     res
   ask: (agents, f) ->
     (@askAgent(a, f) for a in agents)
@@ -171,19 +173,19 @@ class Agents
   # I did that on purpose to show how arbitrary/confusing this seems.
   # May we should put *everything* in Prims, and Agents can be private.
   # Prims could/would/should be the compiler/runtime interface.
-  die: -> @_currentAgent.die()
-  getTurtleVariable: (n)    -> @_currentAgent.getTurtleVariable(n)
-  setTurtleVariable: (n, v) -> @_currentAgent.setTurtleVariable(n, v)
-  getPatchVariable:  (n)    -> @_currentAgent.getPatchVariable(n)
-  setPatchVariable:  (n, v) -> @_currentAgent.setPatchVariable(n, v)
+  die: -> @_self.die()
+  getTurtleVariable: (n)    -> @_self.getTurtleVariable(n)
+  setTurtleVariable: (n, v) -> @_self.setTurtleVariable(n, v)
+  getPatchVariable:  (n)    -> @_self.getPatchVariable(n)
+  setPatchVariable:  (n, v) -> @_self.setPatchVariable(n, v)
 
 
 Prims =
-  fd: (n) -> AgentSet.currentAgent().fd(n)
-  bk: (n) -> AgentSet.currentAgent().fd(-n)
-  right: (n) -> AgentSet.currentAgent().right(n)
-  left: (n) -> AgentSet.currentAgent().right(-n)
-  getNeighbors: -> AgentSet.currentAgent().getNeighbors()
+  fd: (n) -> AgentSet.self().fd(n)
+  bk: (n) -> AgentSet.self().fd(-n)
+  right: (n) -> AgentSet.self().right(n)
+  left: (n) -> AgentSet.self().right(-n)
+  getNeighbors: -> AgentSet.self().getNeighbors()
   patch: (x, y) -> world.getPatchAt(x, y)
 
 Globals =
