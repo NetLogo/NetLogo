@@ -184,11 +184,7 @@ Prims =
   right: (n) -> AgentSet.currentAgent().right(n)
   left: (n) -> AgentSet.currentAgent().right(-n)
   getNeighbors: -> AgentSet.currentAgent().getNeighbors()
-  patch: (x, y) ->
-    p = world.getPatchAt(x, y)
-    console.log("found this patch at #{x} #{y}")
-    console.log(p)
-    p
+  patch: (x, y) -> world.getPatchAt(x, y)
 
 Globals =
   vars: []
