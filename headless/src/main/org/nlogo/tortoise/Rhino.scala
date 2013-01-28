@@ -31,6 +31,9 @@ object Rhino {
   // make a random number generator available
   engine.put("Random", new MersenneTwisterFast)
 
+  // ensure exact matching results
+  engine.put("StrictMath", Strict)
+
   // returns anything that got output-printed along the way, and any JSON
   // generated too
   def run(script: String): (String, String) = {

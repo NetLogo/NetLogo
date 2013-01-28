@@ -142,7 +142,7 @@ class World
   patches:  -> _patches
   # TODO: this needs to support all topologies
   getPatchAt: (x, y) ->
-    index  = (@maxPycor - Math.round(y)) * width + (Math.round(x) - @minPxcor)
+    index  = (@maxPycor - StrictMath.round(y)) * width + (StrictMath.round(x) - @minPxcor)
     return _patches[index]
   removeTurtle: (id) ->
     _turtles = @turtles().filter (t) -> t.id != id
@@ -223,16 +223,14 @@ AgentSet = new Agents
 
 Trig =
   squash: (x) ->
-    if (Math.abs(x) < 3.2e-15)
+    if (StrictMath.abs(x) < 3.2e-15)
       0
     else
       x
-  degreesToRadians: (degrees) ->
-    degrees * Math.PI / 180
   sin: (degrees) ->
-    @squash(Math.sin(@degreesToRadians(degrees)))
+    @squash(StrictMath.sin(StrictMath.toRadians(degrees)))
   cos: (degrees) ->
-    @squash(Math.cos(@degreesToRadians(degrees)))
+    @squash(StrictMath.cos(StrictMath.toRadians(degrees)))
 
 
 class Torus
