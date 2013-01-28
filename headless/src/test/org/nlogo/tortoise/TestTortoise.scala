@@ -411,10 +411,7 @@ class TestTortoise extends FunSuite {
       compareCommands("__ask-sorted turtles [ fd 1 ]")
   }
 
-/*
- currently fails because the topology stuff doesn't wrap turtles
- around the world edges right - ST 1/27/13
-  tester("termites, TODO: WORK IN PROGRESS") {
+  tester("termites") {
     val code =
       """
        |turtles-own [next steps]
@@ -488,6 +485,5 @@ class TestTortoise extends FunSuite {
     for (_ <- 1 to 20)
       compareCommands("go")
   }
- */
 
 }
