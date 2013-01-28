@@ -35,8 +35,6 @@ class TestTortoise extends FunSuite {
     val (actualOutput, actualJson) =
       runJS(Compiler.compileCommands(logo, ws.procedures, ws.world.program))
     expectResult(expectedOutput)(actualOutput)
-    Rhino.eval("expectedModel = new AgentModel")
-    Rhino.eval("actualModel = new AgentModel")
     Rhino.eval("expectedUpdates = " + expectedJson)
     Rhino.eval("actualUpdates = " + actualJson)
     Rhino.eval("expectedModel.updates(expectedUpdates)")
@@ -57,6 +55,8 @@ class TestTortoise extends FunSuite {
     evalJS(Compiler.compileProcedures(logo, minPxcor, maxPxcor, minPycor, maxPycor))
     ws.initForTesting(minPxcor, maxPxcor, minPycor, maxPycor, logo)
     state = Map()
+    Rhino.eval("expectedModel = new AgentModel")
+    Rhino.eval("actualModel = new AgentModel")
   }
 
   // these two are super helpful when running failing tests
@@ -328,7 +328,6 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
   }
 
-  /*
   tester("life") {
     val lifeSrc =
       """
@@ -359,6 +358,5 @@ class TestTortoise extends FunSuite {
       compareCommands("go")
     compareCommands("""__ask-sorted patches [output-print (word self " -> " living?) ]""")
   }
-  */
 
 }
