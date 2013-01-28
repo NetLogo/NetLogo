@@ -77,7 +77,7 @@ class TestCompiler extends FunSuite {
                      |function FOO () {
                      |println(5)
                      |};""".stripMargin
-    expectResult(expected)(compile(input))
+    expectResult(expected)(compile(input)._1)
   }
 
   test("commands: ask simple") {
@@ -119,7 +119,7 @@ class TestCompiler extends FunSuite {
         |println(Globals.getGlobal(1))
         |println(Globals.getGlobal(0))
         |};""".stripMargin
-    expectResult(expected)(compile(input))
+    expectResult(expected)(compile(input)._1)
   }
 
   test("globals: set") {
@@ -132,7 +132,7 @@ class TestCompiler extends FunSuite {
         |Globals.setGlobal(0,5)
         |println(Globals.getGlobal(0))
         |};""".stripMargin
-    expectResult(expected)(compile(input))
+    expectResult(expected)(compile(input)._1)
   }
 
   test("commands: ask turtles to set color") {

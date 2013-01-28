@@ -3,24 +3,29 @@
 package org.nlogo.tortoise
 
 import org.nlogo.{ api, compiler, nvm, prim, workspace }
+import compiler.Compiler.ProceduresMap
 
 object Compiler {
 
   // three main entry points. input is NetLogo, result is JavaScript.
 
-  def compileReporter(logo: String): String =
-    compile(logo, commands = false)
+  def compileReporter(logo: String,
+    oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    program: api.Program = api.Program.empty()): String =
+    compile(logo, commands = false, oldProcedures, program)
 
   def compileCommands(logo: String,
-    oldProcedures: compiler.Compiler.ProceduresMap = nvm.CompilerInterface.NoProcedures,
+    oldProcedures: ProceduresMap = nvm.CompilerInterface.NoProcedures,
     program: api.Program = api.Program.empty()): String =
     compile(logo, commands = true, oldProcedures, program)
 
-  def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): String = {
+  def compileProcedures(logo: String, minPxcor: Int = 0, maxPxcor: Int = 0, minPycor: Int = 0, maxPycor: Int = 0): (String, api.Program, ProceduresMap) = {
     // (Seq[ProcedureDefinition], StructureParser.Results)
     val (defs, sp) = compiler.Compiler.frontEnd(logo)
-    new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
-      defs.map(compileProcedureDef).mkString("\n")
+    val js =
+      new RuntimeInit(sp.program, minPxcor, maxPycor, minPycor, maxPycor).init +
+        defs.map(compileProcedureDef).mkString("\n")
+    (js, sp.program, sp.procedures)
   }
 
   private def compileProcedureDef(pd: compiler.ProcedureDefinition): String = {

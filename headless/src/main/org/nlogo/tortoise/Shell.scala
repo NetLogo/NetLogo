@@ -12,8 +12,8 @@ object Shell {
 
   def main(argv: Array[String]) {
     setHeadlessProperty()
-    Rhino.eval(Compiler.compileProcedures(
-      "", -16, 16, -16, 16))
+    val (js, _, _) = Compiler.compileProcedures("", -16, 16, -16, 16)
+    Rhino.eval(js)
     System.err.println("Tortoise Shell 1.0")
     input.takeWhile(!isQuit(_))
       .foreach(run)
