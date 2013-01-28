@@ -458,5 +458,6 @@ class TestTortoise extends FunSuite {
     for (_ <- 1 to 20)
       compareCommands("go")
   }
+ */
 
 }
