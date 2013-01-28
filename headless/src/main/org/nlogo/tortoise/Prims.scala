@@ -9,16 +9,18 @@ object Prims {
   object InfixReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim._plus        => "+"
-        case _: prim._minus       => "-"
-        case _: prim.etc._mult    => "*"
-        case _: prim.etc._div     => "/"
-        case _: prim._equal       => "==="
-        case _: prim._notequal    => "!=="
-        case _: prim._lessthan    => "<"
-        case _: prim._greaterthan => ">"
-        case _: prim._and         => "&&"
-        case _: prim._or          => "||"
+        case _: prim._plus               => "+"
+        case _: prim._minus              => "-"
+        case _: prim.etc._mult           => "*"
+        case _: prim.etc._div            => "/"
+        case _: prim._equal              => "==="
+        case _: prim._notequal           => "!=="
+        case _: prim._lessthan           => "<"
+        case _: prim._greaterthan        => ">"
+        case _: prim.etc._greaterorequal => ">="
+        case _: prim.etc._lessorequal    => "<="
+        case _: prim._and                => "&&"
+        case _: prim._or                 => "||"
       }
   }
 
