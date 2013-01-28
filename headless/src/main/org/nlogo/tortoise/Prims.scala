@@ -44,6 +44,7 @@ object Prims {
         case _: prim.etc._outputprint      => "println"
         case _: prim.etc._clearall         => "world.clearall"
         case _: prim._createturtles        => "world.createturtles"
+        case _: prim._sprout               => "Prims.sprout"
         case _: prim._createorderedturtles => "world.createorderedturtles"
         case _: prim._fd                   => "Prims.fd"
         case _: prim._bk                   => "Prims.bk"

@@ -116,6 +116,9 @@ class Patch
     else
        @_vars[n - patchBuiltins.length] = v
   getNeighbors: -> world.getNeighbors(@pxcor, @pycor) # world.getTopology().getNeighbors(this)
+  sprout: (n) ->
+    (world.createturtle(@pxcor, @pycor, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
+    return
 
 class World
   # any variables used in the constructor should come
@@ -202,6 +205,7 @@ Prims =
   left: (n) -> AgentSet.self().right(-n)
   setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
+  sprout: (n) -> AgentSet.self().sprout(n)
   patch: (x, y) -> world.getPatchAt(x, y)
   randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
   randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)

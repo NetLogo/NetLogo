@@ -368,6 +368,11 @@ class TestTortoise extends FunSuite {
     compareCommands("output-print count patches with [pcolor = green]")
   }
 
+  tester("sprout") {
+    compareCommands("random-seed 0 " +
+      "__ask-sorted patches with [pxcor >= 0] [ sprout 1 ]")
+  }
+
   tester("life") {
     val lifeSrc =
       """
