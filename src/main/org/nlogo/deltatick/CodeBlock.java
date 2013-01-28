@@ -56,6 +56,9 @@ public abstract class CodeBlock
     RemoveButton removeButton = new RemoveButton(this);
     //constructor of RemoveButton takes a CodeBlock as parameter hence "this" -A. (Sept 10)
 
+    public CodeBlock() {
+
+    }
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
     public CodeBlock(String name, Color color) {
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);

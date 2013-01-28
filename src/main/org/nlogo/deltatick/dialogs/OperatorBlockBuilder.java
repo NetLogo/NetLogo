@@ -30,6 +30,7 @@ public class OperatorBlockBuilder
     JCheckBox checkBox;
     JRadioButton and;
     JRadioButton or;
+    JRadioButton neither;
     ButtonGroup buttonGroup;
     JButton build;
     JButton cancel;
@@ -80,12 +81,15 @@ public class OperatorBlockBuilder
 
         and = new JRadioButton("and");
         or = new JRadioButton("or");
+        neither = new JRadioButton("neither");
         buttonGroup = new ButtonGroup();
         buttonGroup.add(and);
         buttonGroup.add(or);
+        buttonGroup.add(neither);
         and.setSelected(true);
         and.setEnabled(false);
         or.setEnabled(false);
+        neither.setEnabled(false);
 
         build = new JButton( "Build");
         cancel = new JButton( "Cancel" );
@@ -116,6 +120,7 @@ public class OperatorBlockBuilder
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(and)
                                         .addComponent(or)
+                                        .addComponent(neither)
                                 )
                                 .addComponent(jScrollPane2)
                                 .addGroup(layout.createSequentialGroup()
@@ -135,6 +140,7 @@ public class OperatorBlockBuilder
                                 .addComponent(checkBox)
                                 .addComponent(and)
                                 .addComponent(or)
+                                .addComponent(neither)
                         )
                         .addComponent(jScrollPane2)
                         .addGroup(layout.createParallelGroup()
@@ -152,11 +158,13 @@ public class OperatorBlockBuilder
                 if (selected == true) {
                     and.setEnabled(true);
                     or.setEnabled(true);
+                    neither.setEnabled(true);
                     jScrollPane2.getViewport().getView().setEnabled(true);
                 }
                 else {
                     and.setEnabled(false);
                     or.setEnabled(false);
+                    neither.setEnabled(false);
                     jScrollPane2.getViewport().getView().setEnabled(false);
                 }
       }
@@ -249,7 +257,6 @@ public class OperatorBlockBuilder
             }
         });
         jScrollPane2.setViewportView(allTraits2);
-
     }
 
     public void disableScroll() {
@@ -260,7 +267,6 @@ public class OperatorBlockBuilder
     public boolean check() {
         return populate;
     }
-
 
     public String selectedTrait () {
         return allTraits.getSelectedValue().toString();
@@ -274,11 +280,8 @@ public class OperatorBlockBuilder
         return allBreeds.getSelectedValue().toString();
     }
 
-
     public void setMyParent(DeltaTickTab tab) {
         myParent = tab;
 
     }
-
-
 }

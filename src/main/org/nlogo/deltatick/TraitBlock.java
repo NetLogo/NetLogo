@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 //import javax.swing.
@@ -72,6 +73,9 @@ public strictfp class TraitBlock
     String color;
     ColorButton colorButton = new ColorButton(parentFrame, this);
     VariationDropDown dropdownList;
+
+    JPanel rectPanel;
+    Boolean removedRectPanel = false;
 
     //variables for second constructor
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
@@ -137,10 +141,6 @@ public strictfp class TraitBlock
                 CodeBlock.codeBlockFlavor};
         this.breedName = breedBlock.plural();
         this.traitName = trait.getNameTrait();
-        //this.variationNamesValues = variationValue;   // string variation to its numeric value in NetLogo code (Aditi, Aug 7, 2012)
-        //this.variationNumbers = variationNumber;     // variation to initial number of the variation in population (Aditi, Aug 7, 2012)
-        //this.valueNumbers = valueNumber;
-        //this.varList = variations;
         this.variationHashMap = variationHashMap;
 
         varColor = new HashMap<String, Color>();
@@ -148,28 +148,13 @@ public strictfp class TraitBlock
             String variation = variationEntry.getKey();
             varColor.put(variation, Color.lightGray);
         }
-
-
         colorButton.setPreferredSize(new Dimension(30, 30));
-        //label.add(colorButton);
-
-        //JPanel newPanel = new JPanel();
-        //label.add(name);
-
-        //dropdownList = new VariationDropDown(trait.getVariationsList(), this);
-        //label.add(dropdownList);
-        //newPanel.add(dropdownList);
-        //label.add(newPanel);
-        //number = new PrettyInput(this);
-        //label.add(number);
-
 
         dropdownList = new VariationDropDown(trait.getVariationsList(), this);
         number = new PrettyInput(this);
         java.util.List<Component> componentList = new ArrayList<Component>(5);
         componentList.add(name); componentList.add(dropdownList); componentList.add(number);
         int y = 0;
-        //label.add(new JLabel ("If"));
 
         for (Component c : componentList) {
           label.add(c);
@@ -324,20 +309,7 @@ public strictfp class TraitBlock
         String passBack = "";
 
         int i = 0;
-        //for (Map.Entry<String, String> entry : traitNumVar.entrySet()) {
-          //  String variationType = entry.getKey();
-            //String numberType = entry.getValue();
 
-
-            //int startValue = 0;
-            //int endValue = 0;
-
-            //int k = Integer.parseInt(entry.getValue());
-
-
-            //endValue = startValue + k;
-            //passBack += "let " + traitName + i + " sublist big-list-" + traitName + " " + traitName + "_start " +
-              //      number.getText().toString() + "\n";
         passBack += "let " + traitName + i + " sublist all-" + breedName + "-" + traitName +
                                 " " + traitName + "-start " + number.getText().toString() + "\n";
         passBack += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " \"" + dropdownList.getSelectedVariation()
@@ -449,6 +421,10 @@ public strictfp class TraitBlock
 
         block.showRemoveButton();
         this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+        if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
+            remove(rectPanel);
+            removedRectPanel = true;
+        }
         block.setMyParent(this);
         block.doLayout();
 
@@ -492,12 +468,20 @@ public strictfp class TraitBlock
         }
     }
 
-    public void enableDropDown() {
-        dropdownList.setEnabled(true);
+    public void addRect() {
+        rectPanel = new JPanel();
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        JLabel label = new JLabel();
+        label.setText("Add blocks here");
+        rectPanel.add(label);
+        add(rectPanel);
     }
 
 
-
+    public void enableDropDown() {
+        dropdownList.setEnabled(true);
+    }
 
 
    // making label for the old constructor -A (Aug 8, 2012)
@@ -552,6 +536,10 @@ public strictfp class TraitBlock
 
     public String getActiveVariation() {
         return dropdownList.getSelectedItem().toString();
+    }
+
+    public String getBreedName() {
+        return breedName;
     }
 
 }

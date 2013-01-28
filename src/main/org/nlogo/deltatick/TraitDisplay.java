@@ -10,11 +10,11 @@ import javax.swing.table.AbstractTableModel;
  * Time: 9:43 PM
  * To change this template use File | Settings | File Templates.
  */
-//public class TraitEditor extends AbstractTableModel {
+//public class TraitSelector extends AbstractTableModel {
 //    JTable newTable;
 //    String[] columnNames = {"Trait", "Variation String", "Variation Value", "Color", "Edit"};
 //
-//    public TraitEditor () {
+//    public TraitSelector () {
 //
 //
 //

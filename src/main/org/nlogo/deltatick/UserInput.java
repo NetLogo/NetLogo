@@ -36,9 +36,19 @@ public class UserInput
         addTrait( bName, tName );
         for ( String variation : vNames ) {
             addVariation( bName, tName, variation );
-            //System.out.println( "userInput" + bName + " " + tName + " " + variation);
         }
+    }
 
+    public void removeTrait( String bName, String tName) {
+        for (ui_Breed breed : ui_breeds) {
+            if (breed.getName().equalsIgnoreCase(bName)) {
+                for (int i = 0; i < breed.ui_traits.size(); i++) {
+                    if (breed.ui_traits.get(i).getName().equalsIgnoreCase(tName)) {
+                        breed.ui_traits.remove(i);
+                    }
+                }
+            }
+        }
     }
 
     public void addTrait ( String bname, String tname ) {
@@ -129,8 +139,6 @@ public class UserInput
 
     public class ui_Variation {
         String name;
-
-
 
         public void setName( String input ) {
             name = input;

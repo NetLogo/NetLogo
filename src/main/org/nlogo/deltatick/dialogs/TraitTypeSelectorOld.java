@@ -22,7 +22,7 @@ import java.util.HashMap;
  * Time: 12:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TraitTypeSelector
+public class TraitTypeSelectorOld
     extends JDialog {
 
     //Buttons & text
@@ -54,13 +54,13 @@ public class TraitTypeSelector
     private javax.swing.JDialog thisDialog = this;
 
 
-    public TraitTypeSelector(Frame parent) {
+    public TraitTypeSelectorOld(Frame parent) {
         super(parent, true);
         initComponents();
         this.setVisible(false);
     }
 
-    public TraitTypeSelector() {
+    public TraitTypeSelectorOld() {
         initComponents();
         this.setVisible(true);
     }

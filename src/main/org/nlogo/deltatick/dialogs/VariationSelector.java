@@ -2,12 +2,8 @@ package org.nlogo.deltatick.dialogs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.nlogo.deltatick.dialogs.TraitSelector;
 
 /**
  * Created by IntelliJ IDEA.

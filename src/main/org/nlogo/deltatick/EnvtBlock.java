@@ -150,8 +150,6 @@ public strictfp class EnvtBlock
     }
     */
 
-
-
     public String OwnVars() {
         String code = "";
         if (envt.getOwnVars().size() > 0) {
@@ -191,10 +189,9 @@ public strictfp class EnvtBlock
     }
 
     //TODO: Give patches a name such that breeds can talk directly to them
-    // if pcolor = green, ask patches [ set global water ]
+
     public String update() {
         String code = "";
-        /*
         if (envt.needsUpdateBlock()) {
             code += "ask patches [\n";
             if (envt.getUpdateCommands() != null) {
@@ -206,11 +203,10 @@ public strictfp class EnvtBlock
                     code += "set " + var.name + " " + var.updateReporter + "\n";
                 }
             }
-
             code += "]\n";
-
         }
         */
+        }
         return code;
     }
 

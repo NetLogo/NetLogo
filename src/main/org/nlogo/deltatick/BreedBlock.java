@@ -1,40 +1,31 @@
 package org.nlogo.deltatick;
 
+import com.sun.java.swing.plaf.nimbus.LoweredBorder;
 import org.nlogo.api.Shape;
-import org.nlogo.app.App;
+import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
-import org.nlogo.deltatick.dialogs.VariationSelector;
-import org.nlogo.deltatick.dnd.BehaviorInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
-import org.nlogo.hotlink.dialogs.StackedShapeIcon;
-import org.nlogo.nvm.Workspace;
-import org.nlogo.shape.DrawableShape;
-import org.nlogo.shape.ShapesManagerInterface;
-import org.nlogo.shape.TurtleShapesManagerInterface;
 import org.nlogo.shape.VectorShape;
 import org.nlogo.shape.editor.ImportDialog;
-import org.nlogo.window.Widget;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.*;
 import java.util.List;
 
-import org.nlogo.deltatick.dialogs.TraitSelector;
+import org.nlogo.deltatick.dialogs.TraitSelectorOld;
 
 // BreedBlock contains code for how whatever happens in BreedBlock is converted into NetLogo code -A. (aug 25)
 
@@ -52,7 +43,7 @@ public strictfp class BreedBlock
     transient Frame parentFrame;
     transient ShapeSelector selector;
     transient JButton breedShapeButton;
-    transient JButton inspectSpeciesButton;
+    public transient JButton inspectSpeciesButton;
     transient PrettyInput number;
     transient PrettyInput plural;
     HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
@@ -64,8 +55,15 @@ public strictfp class BreedBlock
     JTextField traitLabel;
     transient String variation;
     HashSet<String> myUsedTraits = new HashSet<String>();
-    //HashMap<String, BehaviorInput> myUsedBehaviorInputs = new HashMap<String, BehaviorInput>();
+    boolean hasSpeciesInspector;
 
+    JPanel rectPanel;
+    boolean removedRectPanel = false;
+
+    //dummy constructor - Aditi (Jan 27, 2013)
+   public BreedBlock() {
+
+   }
     // constructor for breedBlock without trait & variation
     public BreedBlock(Breed breed, String plural, Frame frame) {
         super(plural, ColorSchemer.getColor(3));
@@ -77,7 +75,6 @@ public strictfp class BreedBlock
         this.breed = breed;
         number.setText(breed.getStartQuant());
 
-
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
@@ -87,10 +84,6 @@ public strictfp class BreedBlock
                 breedBlockFlavor,
                 //patchBlockFlavor
         };
-
-        //setPreferredSize( 250 , 99 );
-        //setSize( 250 , 99 );
-
     }
 
     // second constructor for breedBlock with trait & variation
@@ -108,7 +101,7 @@ public strictfp class BreedBlock
         this.trait = traitName;
         this.variation = variationName;
 
-        TraitSelector traitSelector = new TraitSelector(frame);
+        TraitSelectorOld traitSelector = new TraitSelectorOld(frame);
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
         flavors = new DataFlavor[]{
@@ -123,9 +116,13 @@ public strictfp class BreedBlock
         myBlocks.add(block);
         this.add(block);
         block.enableInputs();
-
         block.showRemoveButton();
         this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+
+        if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
+            remove(rectPanel);
+            removedRectPanel = true;
+            }
 
         block.setMyParent(this);
         block.doLayout();
@@ -136,6 +133,8 @@ public strictfp class BreedBlock
             ((TraitBlock) block).makeNumberActive();
             ((TraitBlock) block).enableDropDown();
             ((TraitBlock) block).colorButton.setEnabled(true);
+            ((TraitBlock) block).addRect();
+
         }
         else if (block instanceof BehaviorBlock) {
             String tmp = ((BehaviorBlock) block).getBehaviorInputName();
@@ -148,19 +147,16 @@ public strictfp class BreedBlock
             addBehaviorInputToList(tmp);
             String s = ((ConditionBlock) block).getAgentInputName();
             addAgentInputToList(s);
+            ((ConditionBlock) block).addRect();
 
         }
-
         doLayout();
         validate();
         repaint();
-
         this.getParent().doLayout();
         this.getParent().validate();
         this.getParent().repaint();
     }
-
-
 
 
     //TODO: Figure out how breed declaration always shows up first in code
@@ -180,7 +176,6 @@ public strictfp class BreedBlock
         }
         return code;
     }
-
 
     // code to setup in NetLogo code window. This method is called in MBgInfo -A.
     public String setup() {
@@ -266,7 +261,6 @@ public strictfp class BreedBlock
             }
             code += "]\n";
         }
-
         return code;
     }
 
@@ -281,16 +275,7 @@ public strictfp class BreedBlock
         return plural.getText();
     }
 
-    //public java.awt.Dimension getMinimumSize() {
-    //    return new java.awt.Dimension( 250 , 99 );
-    //}
 
-    //public Dimension getPreferredSize() {
-    //    return new java.awt.Dimension( 250 , 99 );
-    //}
-
-
-    //I don't understand dataflavors
     public Object getTransferData(DataFlavor dataFlavor)
             throws UnsupportedFlavorException {
         if (isDataFlavorSupported(dataFlavor)) {
@@ -340,16 +325,24 @@ public strictfp class BreedBlock
         plural.setText(getName());
         label.add(plural);
 
-        //label.add(new JLabel(" ("));
         label.add(makeBreedShapeButton());
-        //label.add(new JLabel(") to..."));
-
-        //label.add(makeInspectSpeciesButton());
         inspectSpeciesButton = new InspectSpeciesButton(this);
         label.add(inspectSpeciesButton);
 
+        addRect();
         label.setBackground(getBackground());
         add(label);
+        add(rectPanel);
+
+    }
+
+    public void addRect() {
+        rectPanel = new JPanel();
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        JLabel label = new JLabel();
+        label.setText("Add blocks here");
+        rectPanel.add(label);
     }
 
     public String[] getTraitTypes() {
@@ -394,22 +387,12 @@ public strictfp class BreedBlock
         return breedShapeButton;
     }
 
-//    public JButton makeInspectSpeciesButton() {
-//        inspectSpeciesButton = new JButton();
-//        inspectSpeciesButton.addActionListener(this);
-//        inspectSpeciesButton.setAction(inspectSpecies);
-//        return inspectSpeciesButton;
-//    }
-
-
-
     public class InspectSpeciesButton extends JButton {
-        InspectSpeciesButton inspectSpeciesButton;
         BreedBlock myParent;
 
         public InspectSpeciesButton(BreedBlock bBlock) {
             setPreferredSize(new Dimension(20, 20));
-            setAction(inspectSpecies);
+            //setAction(inspectSpecies);
             setBorder(null);
             setForeground(java.awt.Color.gray);
             setBorderPainted(false);
@@ -417,17 +400,19 @@ public strictfp class BreedBlock
             this.myParent = bBlock;
         }
 
-        private final javax.swing.Action inspectSpecies =
-                new javax.swing.AbstractAction("Inspect") {
-                    public void actionPerformed(java.awt.event.ActionEvent e) {
-                        JFrame jFrame = new JFrame("Species Inspector");
-                        SpeciesInspector speciesInspector = new SpeciesInspector(myParent, jFrame);
-                        // add a way to close window (setDefaultCloseOperation) - A. (jan 21, 2013)
-                        speciesInspector.addPanels(jFrame.getContentPane());
-                        jFrame.pack();
-                        jFrame.setVisible(true);
-                    }
-                };
+
+
+//        private final javax.swing.Action inspectSpecies =
+//                new javax.swing.AbstractAction("Inspect") {
+//                    public void actionPerformed(java.awt.event.ActionEvent e) {
+//                        JFrame jFrame = new JFrame("Species Inspector");
+//                        SpeciesInspectorPanel speciesInspector = new SpeciesInspectorPanel(myParent, jFrame);
+//                        // TODO add a way to close window (setDefaultCloseOperation) - A. (jan 21, 2013)
+//                        speciesInspector.addPanels(jFrame.getContentPane());
+//                        jFrame.pack();
+//                        jFrame.setVisible(true);
+//                    }
+//                };
     }
 
     // when clicks on shape selection -a.
@@ -535,6 +520,14 @@ public strictfp class BreedBlock
 
     public void removeTraitBlock(TraitBlock traitBlock) {
         remove(traitBlock);
+    }
+
+    public boolean getHasSpeciesInspector () {
+        return hasSpeciesInspector;
+    }
+
+    public void setHasSpeciesInspector(boolean value) {
+        hasSpeciesInspector = value;
     }
 }
 

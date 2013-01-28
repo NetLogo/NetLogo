@@ -47,14 +47,10 @@ public class LibraryHolder extends JPanel {
     public LibraryHolder() {
         tabbedPane = new JTabbedPane();
         add(tabbedPane);
-
-
         tabbedPane.addChangeListener(new ChangeListener() {
-      public void stateChanged(ChangeEvent e) {
-
-      }
-        }   );
-
+            public void stateChanged(ChangeEvent e) {
+                }
+        });
         countTabs = 0;
         currentTab = 0;
     }
@@ -62,17 +58,26 @@ public class LibraryHolder extends JPanel {
      // This is called only for TraitBlock & operatorBlock
       //TODo This changes the name of the tab to "panel" (March 9)
     public void addTraittoTab( TraitBlock block, int numberTraits ) {
+        String tabName = new String("Your blocks" + numberTraits);
+
         if (numberTraits == 1) {
             panel = (JComponent) new JPanel();
             panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
         }
         panel.add(block);
-        tabbedPane.addTab("Your blocks", panel);
+        tabbedPane.addTab(tabName , panel);
         traits.add(block);
     }
 
     public void removeTraitBlock ( TraitBlock tBlock ) {
         traits.remove(tBlock);
+        panel.remove(tBlock);
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            int count = ((JPanel) tabbedPane.getComponentAt(i)).getComponentCount();
+            if (count == 0) {
+               tabbedPane.removeTabAt(i);
+            } // if
+        } // for
     }
 
     public void addOperatortoTab( OperatorBlock oBlock ) {
@@ -131,30 +136,9 @@ public class LibraryHolder extends JPanel {
         return names;
     }
 
-    /*
-    public String[] getVariation() {
-        for (TraitBlock block : traits ) {
-            String[] names = new String[block.varList.size()];
-            for ( i = 0; i < block.varList.size(); i++ ) {
-                names[i] = block.varList.get(i);
-            }
+    public void clear() {
+        //traits.clear();
 
-
-
-            for (String string : block.varList) {
-                variations = new String[block.varList.size()];
-                variations.add(string);
-                public int getSize() {
-                return strings.length;
-            }
-            public Object getElementAt(int i) {
-                return strings[i];
-            }
-            }
-        }
-        return variations;
     }
-    */
-
 
 }

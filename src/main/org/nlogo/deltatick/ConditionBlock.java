@@ -3,6 +3,7 @@ package org.nlogo.deltatick;
 import org.nlogo.window.Widget;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -12,6 +13,9 @@ import java.util.HashMap;
 
 public strictfp class ConditionBlock
         extends CodeBlock {
+
+    JPanel rectPanel;
+    Boolean removedRectPanel = false;
 
     public ConditionBlock(String name) {
         super(name, ColorSchemer.getColor(1));
@@ -90,6 +94,10 @@ public strictfp class ConditionBlock
 
         block.showRemoveButton();
         this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+        if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
+            remove(rectPanel);
+            removedRectPanel = true;
+        }
         block.setMyParent(this);
         block.doLayout();
 
@@ -120,6 +128,16 @@ public strictfp class ConditionBlock
         removeButton.setVisible(false);
         label.setBackground(getBackground());
         label.add(name);
+    }
+
+    public void addRect() {
+        rectPanel = new JPanel();
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        JLabel label = new JLabel();
+        label.setText("Add blocks here");
+        rectPanel.add(label);
+        add(rectPanel);
     }
 
     public String getBehaviorInputName() {

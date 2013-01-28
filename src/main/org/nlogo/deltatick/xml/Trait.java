@@ -57,6 +57,10 @@ public class Trait {
         }
     }
 
+    public Trait() {
+
+    }
+
     public String getNameTrait() {
         return traitName;
     }
