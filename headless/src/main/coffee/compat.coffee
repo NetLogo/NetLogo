@@ -9,7 +9,7 @@ unless Array::filter
 unless println
   println = console.log
 
-typeIsArray = ( value ) ->
+typeIsArray = (value) ->
   value and
   typeof value is 'object' and
   value instanceof Array and

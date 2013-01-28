@@ -14,10 +14,8 @@ collectUpdates = ->
 
 # gross hack - ST 1/25/13
 died = (id) ->
-  update = {}
-  update.patches = {}
-  update.turtles = {}
-  update.turtles[id] = "WHO": -1
+  update = patches: {}, turtles: {}
+  update.turtles[id] = WHO: -1
   Updates.push(update)
   return
 
@@ -156,10 +154,10 @@ class World
     _turtles.push(new Turtle((_nextId++), color, heading, x, y))
     return
   createorderedturtles: (n) ->
-    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n)) for num in [0..n-1])
+    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n)) for num in [0...n])
     return
   createturtles: (n) ->
-    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0..n-1])
+    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0...n])
     return
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
@@ -207,7 +205,7 @@ Globals =
   # compiler generates call to init, which just
   # tells the runtime how many globals there are.
   # they are all initialized to 0
-  init: (n) -> @vars = (0 for x in [0..n-1])
+  init: (n) -> @vars = (0 for x in [0...n])
   getGlobal: (n) -> @vars[n]
   setGlobal: (n, v) -> @vars[n] = v
 
