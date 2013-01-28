@@ -16,3 +16,8 @@ typeIsArray = ( value ) ->
   typeof value.length is 'number' and
   typeof value.splice is 'function' and
   not ( value.propertyIsEnumerable 'length' )
+
+unless Random
+  Random = {}
+  Random.nextInt = (limit) -> Math.floor(Math.random() * limit)
+  Random.nextLong = Random.nextInt
