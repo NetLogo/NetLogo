@@ -3,9 +3,10 @@
 package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
-
-import org.nlogo.plot.{ Plot, PlotAction, PlotActionRunner }
 import org.nlogo.api
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
+import org.nlogo.api.Action
 
 class ModelRun(
   var name: String,
@@ -37,13 +38,13 @@ class ModelRun(
     dirty = true
   }
 
-  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
+  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], actions: Seq[Action]) {
     _data = Some(Data(realPlots))
-    _data.foreach(_.append(mirrorables, plotActions))
+    _data.foreach(_.append(mirrorables, actions))
   }
 
-  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], plotActionSeqs: Seq[Seq[PlotAction]]) {
-    val deltas = (rawMirroredUpdates, plotActionSeqs).zipped.map(Delta(_, _))
+  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], actionSeqs: Seq[Seq[Action]]) {
+    val deltas = (rawMirroredUpdates, actionSeqs).zipped.map(Delta(_, _))
     _data = Some(Data(realPlots, deltas))
     stillRecording = false
   }
@@ -59,19 +60,18 @@ class ModelRun(
   }
   case class Frame private (
     mirroredState: Mirroring.State,
-    plots: Seq[Plot])
-    extends PlotActionRunner {
-
-    override def getPlot(name: String) =
-      plots.find(_.name.equalsIgnoreCase(name))
-    override def getPlotPen(plotName: String, penName: String) =
-      getPlot(plotName).flatMap(_.getPen(penName))
+    plots: Seq[Plot]) {
 
     def applyDelta(delta: Delta): Frame = {
       val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
-      val newFrame = Frame(newMirroredState, plots.map(_.clone))
-      delta.plotActions.foreach(newFrame.run)
-      newFrame
+      val newPlots = plots.map(_.clone)
+      val plotActionRunner = new BasicPlotActionRunner(newPlots)
+
+      delta.actions.foreach {
+        case pa: PlotAction    => plotActionRunner.run(pa)
+        case da: DrawingAction => // TODO
+      }
+      Frame(newMirroredState, newPlots)
     }
 
     def ticks: Option[Double] =
@@ -82,12 +82,12 @@ class ModelRun(
   }
 
   object Delta {
-    def apply(mirroredUpdate: Update, plotActions: Seq[PlotAction]): Delta =
-      Delta(Serializer.toBytes(mirroredUpdate), plotActions)
+    def apply(mirroredUpdate: Update, actions: Seq[Action]): Delta =
+      Delta(Serializer.toBytes(mirroredUpdate), actions)
   }
   case class Delta(
     val rawMirroredUpdate: Array[Byte],
-    val plotActions: Seq[PlotAction]) {
+    val actions: Seq[Action]) {
     def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
   }
 
@@ -128,10 +128,10 @@ class ModelRun(
       else frameCache.get(index)
         .orElse(frame(index - 1).map(_.applyDelta(deltas(index))))
 
-    def append(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
+    def append(mirrorables: Iterable[Mirrorable], actions: Seq[Action]) {
       val (newMirroredState, mirroredUpdate) =
         Mirroring.diffs(lastFrame.mirroredState, mirrorables)
-      val delta = Delta(mirroredUpdate, plotActions)
+      val delta = Delta(mirroredUpdate, actions)
       appendFrame(delta)
       _dirty = true
     }

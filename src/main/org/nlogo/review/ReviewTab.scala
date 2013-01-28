@@ -20,6 +20,8 @@ import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBo
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
 import org.nlogo.plot.PlotAction
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.mirror.ActionBuffer
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -57,8 +59,11 @@ class ReviewTab(
    * recording or not. This is important because if we want to start
    * recording at some point, we need to mirror all actions from the
    * start to bring the plots to their actual state. NP 2012-11-29
+   * Same logic goes for the drawingActionBuffer. NP 2013-01-28.
    */
-  private val plotActionBuffer = new ActionBuffer[PlotAction](ws.plotManager)
+  private val plotActionBuffer = new ActionBuffer(ws.plotManager)
+  private val drawingActionBuffer = new ActionBuffer(ws.drawingActionBroker)
+  private val actionBuffers = Seq(plotActionBuffer, drawingActionBuffer)
 
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
@@ -74,7 +79,7 @@ class ReviewTab(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
         if (ws.world.ticks == -1) {
-          plotActionBuffer.clear()
+          actionBuffers.foreach(_.clear())
         } else {
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
@@ -151,10 +156,10 @@ class ReviewTab(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        val plotActions = plotActionBuffer.grab()
+        val actions = actionBuffers.flatMap(_.grab())
         run.data match {
-          case None       => run.start(ws.plotManager.plots, mirrorables, plotActions)
-          case Some(data) => data.append(mirrorables, plotActions)
+          case None       => run.start(ws.plotManager.plots, mirrorables, actions)
+          case Some(data) => data.append(mirrorables, actions)
         }
       } catch {
         case e: java.lang.OutOfMemoryError =>
@@ -559,7 +564,7 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(ReviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
-    plotActionBuffer.clear() // make sure object is constructed and subscribed
+    actionBuffers.foreach(_.clear()) // make sure object is constructed and subscribed
     refreshInterface()
   }
 

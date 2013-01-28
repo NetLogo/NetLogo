@@ -3,13 +3,12 @@
 package org.nlogo.mirror
 
 import java.io.{ InputStream, ObjectOutputStream, OutputStream }
-
 import scala.Option.option2Iterable
-
 import org.nlogo.api.{ ModelReader, ModelSection }
 import org.nlogo.plot.{ Plot, PlotAction, PlotLoader }
-
 import javax.imageio.ImageIO
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.api.Action
 
 trait SavableRun {
   self: ModelRun =>
@@ -27,14 +26,14 @@ trait SavableRun {
     }
     val deltas = data.toSeq.flatMap(_.deltas)
     val rawMirroredUpdates = deltas.map(_.rawMirroredUpdate)
-    val plotActionFrames = deltas.map(_.plotActions)
+    val actionFrames = deltas.map(_.actions)
     val thingsToSave = Seq(
       name,
       modelString,
       viewAreaShape,
       imageBytes,
       rawMirroredUpdates,
-      plotActionFrames,
+      actionFrames,
       generalNotes)
     thingsToSave.foreach(out.writeObject)
     out.close()
@@ -50,14 +49,14 @@ object ModelRunIO {
     val viewShape = read[java.awt.Shape]()
     val imageBytes = read[Array[Byte]]()
     val rawMirroredUpdates = read[Seq[Array[Byte]]]()
-    val plotActionFrames = read[Seq[Seq[PlotAction]]]()
+    val actionFrames = read[Seq[Seq[Action]]]()
     val generalNotes = read[String]()
     in.close()
     val viewArea = new java.awt.geom.Area(viewShape)
     val backgroundImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
     val run = new ModelRun(name, modelString, viewArea, backgroundImage, generalNotes)
     val plots = parsePlots(modelString)
-    run.load(plots, rawMirroredUpdates, plotActionFrames)
+    run.load(plots, rawMirroredUpdates, actionFrames)
     run
   }
 

@@ -77,3 +77,10 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
       } plot.currentPen = pen
   }
 }
+
+class BasicPlotActionRunner(plots: Seq[Plot]) extends PlotActionRunner {
+  override def getPlot(name: String) =
+    plots.find(_.name.equalsIgnoreCase(name))
+  override def getPlotPen(plotName: String, penName: String) =
+    getPlot(plotName).flatMap(_.getPen(penName))
+}
