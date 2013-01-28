@@ -21,3 +21,4 @@ unless Random
   Random = {}
   Random.nextInt = (limit) -> Math.floor(Math.random() * limit)
   Random.nextLong = Random.nextInt
+  Random.nextDouble = (limit) -> Math.random() * limit

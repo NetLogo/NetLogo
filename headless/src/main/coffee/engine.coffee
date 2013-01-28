@@ -73,6 +73,11 @@ class Turtle
     @keepHeadingInRange()
     updated(this, "heading")
     return
+  setxy: (x, y) ->
+    @xcor = x
+    @ycor = y
+    updated(this, "xcor", "ycor")
+    return
   die: ->
     if (@id != -1)
       world.removeTurtle(@id)
@@ -191,8 +196,11 @@ Prims =
   bk: (n) -> AgentSet.self().fd(-n)
   right: (n) -> AgentSet.self().right(n)
   left: (n) -> AgentSet.self().right(-n)
+  setxy: (x, y) -> AgentSet.self().setxy(x, y)
   getNeighbors: -> AgentSet.self().getNeighbors()
   patch: (x, y) -> world.getPatchAt(x, y)
+  randomxcor: -> world.minPxcor - 0.5 + Random.nextDouble() * (world.maxPxcor - world.minPxcor + 1)
+  randomycor: -> world.minPycor - 0.5 + Random.nextDouble() * (world.maxPycor - world.minPycor + 1)
 
 Globals =
   vars: []

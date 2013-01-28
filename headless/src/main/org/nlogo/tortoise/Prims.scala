@@ -25,12 +25,14 @@ object Prims {
   object NormalReporter {
     def unapply(r: nvm.Reporter): Option[String] =
       PartialFunction.condOpt(r) {
-        case _: prim.etc._self  => "AgentSet.self"
-        case _: prim._patch     => "world.getPatchAt"
-        case _: prim._turtles   => "world.turtles"
-        case _: prim._patches   => "world.patches"
-        case _: prim._count     => "AgentSet.count"
-        case _: prim._random    => "Random.nextLong"
+        case _: prim.etc._self       => "AgentSet.self"
+        case _: prim._patch          => "world.getPatchAt"
+        case _: prim._turtles        => "world.turtles"
+        case _: prim._patches        => "world.patches"
+        case _: prim._count          => "AgentSet.count"
+        case _: prim._random         => "Random.nextLong"
+        case _: prim.etc._randomxcor => "Prims.randomxcor"
+        case _: prim.etc._randomycor => "Prims.randomycor"
       }
   }
 
@@ -45,6 +47,7 @@ object Prims {
         case _: prim._bk                   => "Prims.bk"
         case _: prim.etc._left             => "Prims.left"
         case _: prim.etc._right            => "Prims.right"
+        case _: prim.etc._setxy            => "Prims.setxy"
         case _: prim.etc._die              => "AgentSet.die"
         case _: prim.etc._randomseed       => "Random.setSeed"
       }
