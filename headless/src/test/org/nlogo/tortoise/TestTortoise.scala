@@ -201,6 +201,11 @@ class TestTortoise extends FunSuite {
     compareCommands("random-seed 0 output-print random 100000")
   }
 
+  tester("crt") {
+    compareCommands("random-seed 0 crt 10")
+    compareCommands("__ask-sorted turtles [ output-print color output-print heading ]")
+  }
+
   tester("ask") {
     compareCommands("cro 3")
     compareCommands("__ask-sorted turtles [ output-print 0 ]")

@@ -147,11 +147,14 @@ class World
       t.die()
     _nextId = 0
     return
-  createturtle: (x, y, heading, color) ->
+  createturtle: (x, y, color, heading) ->
     _turtles.push(new Turtle((_nextId++), color, heading, x, y))
     return
   createorderedturtles: (n) ->
-    (@createturtle(0, 0, num * (360 / n), (num * 10 + 5) % 140) for num in [0..n-1])
+    (@createturtle(0, 0, (num * 10 + 5) % 140, num * (360 / n)) for num in [0..n-1])
+    return
+  createturtles: (n) ->
+    (@createturtle(0, 0, 5 + 10 * Random.nextInt(14), Random.nextInt(360)) for num in [0..n-1])
     return
   getNeighbors: (pxcor, pycor) -> @topology().getNeighbors(pxcor, pycor)
 
