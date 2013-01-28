@@ -13,6 +13,7 @@ import org.nlogo.hotlink.dialogs.ShapeIcon;
 import org.nlogo.shape.VectorShape;
 import org.nlogo.shape.editor.ImportDialog;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -22,6 +23,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -359,8 +361,6 @@ public strictfp class BreedBlock
         return breed.getTraitsArrayList();
     }
 
-
-
     public String[] getVariationTypes(String traitName) {
         String [] variations = null;
         for (Trait trait : breed.getTraitsArrayList()) {
@@ -371,7 +371,6 @@ public strictfp class BreedBlock
         }
         return variations;
     }
-
 
     private final javax.swing.Action pickBreedShape =
             new javax.swing.AbstractAction() {
@@ -392,27 +391,17 @@ public strictfp class BreedBlock
 
         public InspectSpeciesButton(BreedBlock bBlock) {
             setPreferredSize(new Dimension(20, 20));
-            //setAction(inspectSpecies);
-            setBorder(null);
+            try {
+            Image img = ImageIO.read(getClass().getResource("/images/magnify.gif"));
+            setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
             setForeground(java.awt.Color.gray);
-            setBorderPainted(false);
+            setBorderPainted(true);
             setMargin(new java.awt.Insets(1, 1, 1, 1));
             this.myParent = bBlock;
         }
-
-
-
-//        private final javax.swing.Action inspectSpecies =
-//                new javax.swing.AbstractAction("Inspect") {
-//                    public void actionPerformed(java.awt.event.ActionEvent e) {
-//                        JFrame jFrame = new JFrame("Species Inspector");
-//                        SpeciesInspectorPanel speciesInspector = new SpeciesInspectorPanel(myParent, jFrame);
-//                        // TODO add a way to close window (setDefaultCloseOperation) - A. (jan 21, 2013)
-//                        speciesInspector.addPanels(jFrame.getContentPane());
-//                        jFrame.pack();
-//                        jFrame.setVisible(true);
-//                    }
-//                };
     }
 
     // when clicks on shape selection -a.

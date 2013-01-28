@@ -3,6 +3,7 @@ package org.nlogo.deltatick.buttons;
 import ch.randelshofer.quaqua.util.Images;
 import org.nlogo.api.Property;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,8 +53,7 @@ public class EditButton extends AbstractCellEditor
 
     @Override
 	public Component getTableCellEditorComponent(
-		JTable table, Object value, boolean isSelected, int row, int column)
-	{
+		JTable table, Object value, boolean isSelected, int row, int column) {
 		if (value == null)
 		{
 			editButton.setText( "" );
@@ -81,9 +82,14 @@ public class EditButton extends AbstractCellEditor
 
     public Component getTableCellRendererComponent(
 		JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        //renderButton.setIcon(new javax.swing.ImageIcon("/Users/aditiwagh/Documents/NetLogo/resources/images/edit.gif"));
-        renderButton.setText("Edit");
-        return renderButton;
+        try {
+            Image img = ImageIO.read(getClass().getResource("/images/edit.gif"));
+            editButton.setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
+        //renderButton.setText("Edit");
+        return editButton;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -116,6 +122,8 @@ public class EditButton extends AbstractCellEditor
     public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
+
+
 
 }
 

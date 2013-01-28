@@ -6,7 +6,10 @@ import org.nlogo.deltatick.xml.Variation;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,13 +37,16 @@ public class TraitDisplayPanel extends JPanel {
             row[0] = new String(key);
             row[1] = new String(var.value);
             row[2] = new String(var.color);
-            row[3] = new EditButton(traitInfoTable, traitTableModel.editAction, 3);
+            row[3] = new String("Edit");
+            //row[3] = new EditButton(traitInfoTable, traitTableModel.editAction, 3);
             tempTableData.add(row);
         } // for map
 
-
         traitTableModel.setTableData(tempTableData);
         traitInfoTable.setModel(traitTableModel);
+        traitInfoTable.getColumn("Edit").setCellRenderer(new ButtonRenderer());
+        traitInfoTable.getColumn("Edit").setCellEditor(
+        new ButtonEditor(new JCheckBox()));
         this.add(traitInfoTable);
     }
 
@@ -68,7 +74,8 @@ public class TraitDisplayPanel extends JPanel {
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return flagData.get(rowIndex)[columnIndex];              //locating cell, and getting flag data -(Jan 26, 2013)
+            //return flagData.get(rowIndex)[columnIndex];              //locating cell, and getting flag data -(Jan 26, 2013)
+            return true;
         }
 
         public void setValueAt(Object value, int row, int col) {
@@ -102,3 +109,78 @@ public class TraitDisplayPanel extends JPanel {
         }};
     }
 }
+
+class ButtonRenderer extends JButton implements TableCellRenderer {
+
+  public ButtonRenderer() {
+    setOpaque(true);
+  }
+
+  public Component getTableCellRendererComponent(JTable table, Object value,
+      boolean isSelected, boolean hasFocus, int row, int column) {
+    if (isSelected) {
+      setForeground(table.getSelectionForeground());
+      setBackground(table.getSelectionBackground());
+    } else {
+      setForeground(table.getForeground());
+      setBackground(UIManager.getColor("Button.background"));
+    }
+    setText((value == null) ? "" : value.toString());
+    return this;
+  }
+}
+
+class ButtonEditor extends DefaultCellEditor {
+  protected JButton button;
+
+  private String label;
+
+  private boolean isPushed;
+
+  public ButtonEditor(JCheckBox checkBox) {
+    super(checkBox);
+    button = new JButton();
+    button.setOpaque(true);
+    button.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        fireEditingStopped();
+      }
+    });
+  }
+    public Component getTableCellEditorComponent(JTable table, Object value,
+          boolean isSelected, int row, int column) {
+        if (isSelected) {
+          button.setForeground(table.getSelectionForeground());
+          button.setBackground(table.getSelectionBackground());
+        } else {
+          button.setForeground(table.getForeground());
+          button.setBackground(table.getBackground());
+        }
+        label = (value == null) ? "" : value.toString();
+        button.setText(label);
+        isPushed = true;
+        return button;
+      }
+
+      public Object getCellEditorValue() {
+        if (isPushed) {
+          // add Action here
+        }
+        isPushed = false;
+        return new String(label);
+      }
+
+      public boolean stopCellEditing() {
+        isPushed = false;
+        return super.stopCellEditing();
+      }
+
+      protected void fireEditingStopped() {
+        super.fireEditingStopped();
+      }
+    }
+
+
+
+
+
