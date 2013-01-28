@@ -62,8 +62,10 @@ class Turtle
     return
   vars: -> @_vars
   fd: (amount) ->
-    @xcor += amount * Trig.sin(@heading)
-    @ycor += amount * Trig.cos(@heading)
+    @xcor = world.topology().wrap(@xcor + amount * Trig.sin(@heading),
+        world.minPxcor - 0.5, world.maxPxcor + 0.5)
+    @ycor = world.topology().wrap(@ycor + amount * Trig.cos(@heading),
+        world.minPycor - 0.5, world.maxPycor + 0.5)
     updated(this, "xcor", "ycor")
     return
   right: (amount) ->
@@ -237,6 +239,19 @@ Trig =
 
 class Torus
   constructor: (@minPxcor, @maxPxcor, @minPycor, @maxPycor) ->
+
+  # based on agent.Topology.wrap()
+  wrap: (pos, min, max) ->
+    if (pos >= max)
+      (min + ((pos - max) % (max - min)))
+    else if (pos < min)
+      result = max - ((min - pos) % (max - min))
+      if (result < max)
+        result
+      else
+        min
+    else
+      pos
 
   getNeighbors: (pxcor, pycor) ->
     if (pxcor == @maxPxcor && pxcor == @minPxcor)

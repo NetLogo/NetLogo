@@ -406,8 +406,9 @@ class TestTortoise extends FunSuite {
   tester("turtle motion") {
     defineProcedures("", -5, 5, -5, 5)
     compareCommands("random-seed 0 crt 100")
-    compareCommands("__ask-sorted turtles [ setxy 0.6 * random-xcor 0.6 * random-ycor ]")
-    compareCommands("__ask-sorted turtles [ fd 1 ]")
+    compareCommands("__ask-sorted turtles [ setxy random-xcor random-ycor ]")
+    for (_ <- 1 to 10)
+      compareCommands("__ask-sorted turtles [ fd 1 ]")
   }
 
 /*
