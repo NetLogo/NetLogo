@@ -351,6 +351,22 @@ class TestTortoise extends FunSuite {
     compareCommands("__ask-sorted patches [ output-print self output-print foo ]")
   }
 
+  tester("clear-all clears globals") {
+    defineProcedures("globals [g1 g2]")
+    compareCommands("set g1 88 set g2 99")
+    compareCommands("output-print (word g1 g2)")
+    compareCommands("clear-all")
+    compareCommands("output-print (word g1 g2)")
+  }
+
+  tester("clear-all clears patches") {
+    defineProcedures("patches-own [p]")
+    compareCommands("ask patches [ set p 123 ]")
+    compareCommands("ask patches [ set pcolor green ]")
+    compareCommands("clear-all")
+    compareCommands("output-print count patches with [pcolor = green]")
+  }
+
   tester("life") {
     val lifeSrc =
       """

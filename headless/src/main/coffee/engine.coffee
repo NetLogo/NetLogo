@@ -127,6 +127,8 @@ class World
     collectUpdates()
     width = (@maxPxcor - @minPxcor) + 1
     _topology = new Torus(@minPxcor, @maxPxcor, @minPycor, @maxPycor)
+    @createPatches()
+  createPatches: ->
     nested =
       for y in [@maxPycor..@minPycor]
         for x in [@minPxcor..@maxPxcor]
@@ -146,8 +148,10 @@ class World
     _turtles = @turtles().filter (t) -> t.id != id
     return
   clearall: ->
+    Globals.init(Globals.vars.length)
     for t in @turtles()
       t.die()
+    @createPatches()
     _nextId = 0
     return
   createturtle: (x, y, color, heading) ->
