@@ -336,21 +336,25 @@ class TestTortoise extends FunSuite {
         |
         |to setup
         |  clear-all
-        |  ask patches [set living? false]
-        |  ask patch  0  0 [ set living? true ]
-        |  ask patch -1  0 [ set living? true ]
-        |  ask patch  0 -1 [ set living? true ]
-        |  ask patch  0  1 [ set living? true ]
-        |  ask patch  1  1 [ set living? true ]
+        |  ask patches [ celldeath ]
+        |  ask patch  0  0 [ cellbirth ]
+        |  ask patch -1  0 [ cellbirth ]
+        |  ask patch  0 -1 [ cellbirth ]
+        |  ask patch  0  1 [ cellbirth ]
+        |  ask patch  1  1 [ cellbirth ]
         |end
         |
         |to cellbirth set living? true  set pcolor white end
-        |to celldeath set living? false set pcolor 0.0 end
+        |to celldeath set living? false set pcolor black end
         |
         |to go
         |  ask patches [
         |    set live-neighbors count neighbors with [living?] ]
-        |  ask patches [ ifelse live-neighbors = 3 [ cellbirth ] [ if live-neighbors != 2 [ celldeath ] ] ]
+        |  ask patches [
+        |    ifelse live-neighbors = 3
+        |      [ cellbirth ]
+        |      [ if live-neighbors != 2
+        |        [ celldeath ] ] ]
         |end
       """.stripMargin
     defineProcedures(lifeSrc, -5, 5, -5, 5)
