@@ -124,6 +124,18 @@ class TestTortoise extends FunSuite {
     compare(""""hello" = "hello"""")
   }
 
+  tester("word 0") {
+    compare("(word)")
+  }
+
+  tester("word 1") {
+    compare("(word 1)")
+  }
+
+  tester("word") {
+    compare("(word 1 2 3)") // 123, and hopefully not, god forbid, 6
+  }
+
   tester("empty commands") {
     compareCommands("")
   }

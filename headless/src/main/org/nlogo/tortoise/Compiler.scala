@@ -112,7 +112,7 @@ object Compiler {
         s"AgentSet.getTurtleVariable($vn)"
       case pv: prim._patchvariable          => s"AgentSet.getPatchVariable(${pv.vn})"
       case ov: prim._observervariable       => s"Globals.getGlobal(${ov.vn})"
-      case s: prim._word                    => argsSep(" + ")
+      case s: prim._word                    => "\"\" + " + argsSep(" + ")
       case w: prim._with =>
         val agents = arg(0)
         val filter = genReporterBlock(r.args(1))
