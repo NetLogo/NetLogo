@@ -1,10 +1,10 @@
-###
-### stuff in this file papers over differences between Rhino and other
-### JS implementations such as Node as the ones in browsers.
-###
-### on Rhino, the goal is precisely bit-for-bit identical results as
-### JVM NetLogo.  on other JS impls, "close enough" is close enough
-###
+##
+## stuff in this file papers over differences between Rhino and other
+## JS implementations such as Node as the ones in browsers.
+##
+## on Rhino, the goal is precisely bit-for-bit identical results as
+## JVM NetLogo.  on other JS impls, "close enough" is close enough
+##
 
 # from: http://coffeescriptcookbook.com/chapters/arrays/filtering-arrays
 # this works with the coffee command, but is absent in Rhino.
