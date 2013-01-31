@@ -51,46 +51,6 @@ class ModelRun(
 
   override def toString = (if (dirty) "* " else "") + name
 
-  object Frame {
-    def apply(realPlots: Seq[Plot]) = {
-      val plots = realPlots.map(_.clone)
-      plots.foreach(_.clear())
-      new Frame(Map(), plots)
-    }
-  }
-  case class Frame private (
-    mirroredState: Mirroring.State,
-    plots: Seq[Plot]) {
-
-    def applyDelta(delta: Delta): Frame = {
-      val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
-      val newPlots = plots.map(_.clone)
-      val plotActionRunner = new BasicPlotActionRunner(newPlots)
-
-      delta.actions.foreach {
-        case pa: PlotAction    => plotActionRunner.run(pa)
-        case da: DrawingAction => // TODO
-      }
-      Frame(newMirroredState, newPlots)
-    }
-
-    def ticks: Option[Double] =
-      for {
-        entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
-        ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
-      } yield ticks.asInstanceOf[Double]
-  }
-
-  object Delta {
-    def apply(mirroredUpdate: Update, actions: Seq[Action]): Delta =
-      Delta(Serializer.toBytes(mirroredUpdate), actions)
-  }
-  case class Delta(
-    val rawMirroredUpdate: Array[Byte],
-    val actions: Seq[Action]) {
-    def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
-  }
-
   object Data {
     def apply(realPlots: Seq[Plot]) = new Data(realPlots)
     def apply(realPlots: Seq[Plot], deltas: Seq[Delta]) = {
@@ -102,7 +62,7 @@ class ModelRun(
 
   class Data private (val realPlots: Seq[Plot]) {
 
-    private var _deltas = Seq[Delta]()
+    private var _deltas = IndexedSeq[Delta]()
     def deltas = _deltas
     def size = _deltas.length
 
@@ -111,22 +71,16 @@ class ModelRun(
     def dirty_=(value: Boolean) { _dirty = value }
 
     def lastFrameIndex = size - 1
-    private def lastFrame = frame(lastFrameIndex).getOrElse(Frame(realPlots))
+    private def lastFrame = frameCache.get(lastFrameIndex).getOrElse(Frame(realPlots))
 
-    private var frameCache = Map[Int, Frame]()
+    private val frameCache = new FrameCache(deltas _, 10)
+    def frame(index: Int) = frameCache.get(index)
+
     private def appendFrame(delta: Delta) {
       val newFrame = lastFrame.applyDelta(delta)
-      // TODO make interval definable elsewhere
-      if (lastFrameIndex % 5 != 0) frameCache -= lastFrameIndex
-      frameCache += size -> newFrame
+      frameCache.add(size, newFrame)
       _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
     }
-
-    def frame(index: Int): Option[Frame] =
-      if (!_deltas.isDefinedAt(index))
-        None
-      else frameCache.get(index)
-        .orElse(frame(index - 1).map(_.applyDelta(deltas(index))))
 
     def append(mirrorables: Iterable[Mirrorable], actions: Seq[Action]) {
       val (newMirroredState, mirroredUpdate) =
@@ -135,7 +89,47 @@ class ModelRun(
       appendFrame(delta)
       _dirty = true
     }
+  }
+}
 
+object Delta {
+  def apply(mirroredUpdate: Update, actions: Seq[Action]): Delta =
+    Delta(Serializer.toBytes(mirroredUpdate), actions)
+}
+
+case class Delta(
+  val rawMirroredUpdate: Array[Byte],
+  val actions: Seq[Action]) {
+  def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
+}
+
+object Frame {
+  def apply(realPlots: Seq[Plot]) = {
+    val plots = realPlots.map(_.clone)
+    plots.foreach(_.clear())
+    new Frame(Map(), plots)
+  }
+}
+
+case class Frame private (
+  mirroredState: Mirroring.State,
+  plots: Seq[Plot]) {
+
+  def applyDelta(delta: Delta): Frame = {
+    val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
+    val newPlots = plots.map(_.clone)
+    val plotActionRunner = new BasicPlotActionRunner(newPlots)
+
+    delta.actions.foreach {
+      case pa: PlotAction    => plotActionRunner.run(pa)
+      case da: DrawingAction => // TODO
+    }
+    Frame(newMirroredState, newPlots)
   }
 
+  def ticks: Option[Double] =
+    for {
+      entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
+      ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
+    } yield ticks.asInstanceOf[Double]
 }
