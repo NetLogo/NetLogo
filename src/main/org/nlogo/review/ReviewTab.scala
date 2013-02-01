@@ -10,7 +10,7 @@ import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ ActionBuffer, FakeWorld, Mirrorables, ModelRun, ModelRunIO }
+import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
 import org.nlogo.plot.PlotPainter
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
@@ -21,7 +21,6 @@ import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentL
 import javax.swing.filechooser.FileNameExtensionFilter
 import org.nlogo.plot.PlotAction
 import org.nlogo.drawing.DrawingAction
-import org.nlogo.mirror.ActionBuffer
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -61,8 +60,8 @@ class ReviewTab(
    * start to bring the plots to their actual state. NP 2012-11-29
    * Same logic goes for the drawingActionBuffer. NP 2013-01-28.
    */
-  private val plotActionBuffer = new ActionBuffer(ws.plotManager)
-  private val drawingActionBuffer = new ActionBuffer(ws.drawingActionBroker)
+  private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
+  private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Seq(plotActionBuffer, drawingActionBuffer)
 
   private def userConfirms(title: String, message: String) =
