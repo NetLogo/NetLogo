@@ -4,11 +4,11 @@ patchBuiltins = ["pxcor", "pycor", "pcolor", "plabel", "plabelcolor"]
 Updates = []
 
 collectUpdates = ->
-  result = JSON.stringify(
+  result =
     if (Updates.length == 0)
       [turtles: {}, patches: {}]
     else
-      Updates)
+      Updates
   Updates = []
   result
 
