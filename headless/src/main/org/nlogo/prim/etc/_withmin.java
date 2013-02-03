@@ -49,9 +49,8 @@ public final strictfp class _withmin
         result.add(tester);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.kind(),
-            result.toArray(new Agent[result.size()]),
-            world);
+    return org.nlogo.agent.ArrayAgentSet.fromArray
+      (sourceSet.kind(), world,
+       result.toArray(new Agent[result.size()]));
   }
 }

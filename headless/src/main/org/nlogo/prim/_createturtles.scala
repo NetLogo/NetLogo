@@ -21,7 +21,7 @@ class _createturtles(val breedName: String) extends Command with CustomAssembled
   override def perform(context: Context) {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
-      val agentset = new ArrayAgentSet(AgentKind.Turtle, count, false, world)
+      val agentset = ArrayAgentSet.withCapacity(AgentKind.Turtle, world, count)
       val breed =
         if(breedName.isEmpty) world.turtles
         else world.getBreed(breedName)

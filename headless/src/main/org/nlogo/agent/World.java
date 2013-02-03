@@ -90,7 +90,7 @@ public strictfp class World
     _linkShapeList = new ShapeList(AgentKindJ.Link());
 
     _observer = createObserver();
-    _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false, this);
+    _observers = ArrayAgentSet.fromAgent(_observer);
 
     linkManager = new LinkManager(this);
     tieManager = new TieManager(this, linkManager);
@@ -98,7 +98,6 @@ public strictfp class World
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
 
-    _observers.add(_observer);
     changeTopology(true, true);
     // create patches in the constructor, it's necessary in case
     // the first model we load is 1x1 since when we do create patches
@@ -116,11 +115,11 @@ public strictfp class World
   /// empty agentsets
 
   private final AgentSet _noTurtles =
-    new ArrayAgentSet(AgentKindJ.Turtle(), 0, false, this);
+    ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), this, 0);
   private final AgentSet _noPatches =
-    new ArrayAgentSet(AgentKindJ.Patch(), 0, false, this);
+    ArrayAgentSet.withCapacity(AgentKindJ.Patch(), this, 0);
   private final AgentSet _noLinks =
-    new ArrayAgentSet(AgentKindJ.Link(), 0, false, this);
+    ArrayAgentSet.withCapacity(AgentKindJ.Link(), this, 0);
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -730,8 +729,8 @@ public strictfp class World
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES", this);
-    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), this, "TURTLES");
+    _links = new TreeAgentSet(AgentKindJ.Link(), this, "LINKS");
 
     int x = minPxcor;
     int y = maxPycor;
@@ -753,7 +752,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches", this);
+    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), this, patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

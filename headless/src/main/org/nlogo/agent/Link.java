@@ -532,7 +532,8 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds = new ArrayAgentSet(AgentKindJ.Turtle(), 2, false, world);
+    AgentSet bothEnds =
+      ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), world, 2);
     bothEnds.add(end1);
     bothEnds.add(end2);
     return bothEnds;

@@ -36,7 +36,7 @@ class _otherwith extends Reporter {
                 displayName, Dump.logoObject(tester), Dump.logoObject(x)))
         }
     }
-    new ArrayAgentSet(sourceSet.kind, result.toArray, world)
+    ArrayAgentSet.fromArray(sourceSet.kind, world, result.toArray)
   }
 
 }

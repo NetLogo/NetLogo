@@ -220,10 +220,7 @@ strictfp class CommandLine
                     false, true).raise(this);
           }
           if (agent != null) {
-            org.nlogo.agent.AgentSet agentSet =
-                new org.nlogo.agent.ArrayAgentSet(kind(), 1, false, agent.world());
-            agentSet.add(agent);
-            agents(agentSet);
+            agents(org.nlogo.agent.ArrayAgentSet.fromAgent(agent));
           }
           new org.nlogo.window.Events.AddJobEvent(this, agents(), procedure())
               .raise(this);

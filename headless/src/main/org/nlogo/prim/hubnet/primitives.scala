@@ -273,9 +273,7 @@ class _hubnetclearoverride extends Command {
     val varName = argEvalString(context, 2)
     val set = target match {
       case agent: Agent =>
-        val set = new ArrayAgentSet(agent.kind, 1, false, world)
-        set.add(agent)
-        set
+        ArrayAgentSet.fromAgent(agent)
       case set: AgentSet =>
         set
     }

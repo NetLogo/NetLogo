@@ -14,7 +14,7 @@ import
 // we get different results after an import and export. since we don't
 // know the order that the turtles entered the breed agentset.
 
-class TreeAgentSet(kind: AgentKind, printName: String, world: World)
+class TreeAgentSet(kind: AgentKind, world: World, printName: String)
 extends AgentSet(kind, world, printName, true, false, false) {
 
   private val _agents = new java.util.TreeMap[AnyRef, Agent]

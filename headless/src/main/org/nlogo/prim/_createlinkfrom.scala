@@ -39,11 +39,8 @@ class _createlinkfrom(val breedName: String) extends Command with CustomAssemble
       if (src.id != -1 && dest.id != -1) {
         val link = world.linkManager.createLink(src, dest, breed)
         workspace.joinForeverButtons(link)
-        if (offset - context.ip > 2) {
-          val edgeset = new ArrayAgentSet(AgentKind.Link, 1, false, world)
-          edgeset.add(link)
-          context.runExclusiveJob(edgeset, next)
-        }
+        if (offset - context.ip > 2)
+          context.runExclusiveJob(ArrayAgentSet.fromAgent(link), next)
       }
     }
     context.ip = offset

@@ -41,9 +41,7 @@ class _ask extends Command with CustomAssembled {
           throw new EngineException(
             context, this, I18N.errors.getN(
               "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-        val agents = new ArrayAgentSet(agent.kind, 1, false, world)
-        agents.add(agent)
-        agents
+        ArrayAgentSet.fromAgent(agent)
       case _ =>
         throw new ArgumentTypeException(
           context, this, 0, Syntax.AgentsetType | Syntax.AgentType, target)
@@ -72,9 +70,7 @@ class _ask extends Command with CustomAssembled {
       throw new EngineException(
         context, this, I18N.errors.getN(
           "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-    val agents = new ArrayAgentSet(agent.kind, 1, false, world)
-    agents.add(agent)
-    context.runExclusiveJob(agents, next)
+    context.runExclusiveJob(ArrayAgentSet.fromAgent(agent), next)
     context.ip = offset
   }
 

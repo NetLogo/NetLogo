@@ -24,8 +24,8 @@ class _breedhere(breedName: String) extends Reporter {
       case p: Patch =>
         p
     }
-    val agents = new ArrayAgentSet(
-      AgentKind.Turtle, patch.turtleCount, false, world);
+    val agents = ArrayAgentSet.withCapacity(
+      AgentKind.Turtle, world, patch.turtleCount)
     val breed = world.getBreed(breedName)
     val iter = patch.turtlesHere.iterator
     while(iter.hasNext) {

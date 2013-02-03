@@ -135,9 +135,8 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
     }
 
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
-    val agentset = new ArrayAgentSet(agent.kind, 1, false, workspace.world)
-    agentset.add(agent)
-    val procedure = invokeCompiler(source, Some(owner.displayName), command, agentset.kind)
+    val agentset = ArrayAgentSet.fromAgent(agent)
+    val procedure = invokeCompiler(source, Some(owner.displayName), command, agent.kind)
     procedure.topLevel = false
   }
 

@@ -241,9 +241,8 @@ object AbstractWorkspaceTraits {
     }
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
                          waitForCompletion: Boolean) {
-      val agents = new ArrayAgentSet(agent.kind, 1, false, world)
-      agents.add(agent)
-      evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
+      evaluator.evaluateCommands(owner, source,
+        ArrayAgentSet.fromAgent(agent), waitForCompletion)
     }
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
                          waitForCompletion: Boolean) {
@@ -252,9 +251,8 @@ object AbstractWorkspaceTraits {
     def evaluateReporter(owner: JobOwner, source: String) =
       evaluator.evaluateReporter(owner, source, world.observers)
     def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
-      val agents = new ArrayAgentSet(agent.kind, 1, false, world)
-      agents.add(agent)
-      evaluator.evaluateReporter(owner, source, agents)
+      evaluator.evaluateReporter(owner, source,
+        ArrayAgentSet.fromAgent(agent))
     }
     def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
       evaluator.evaluateReporter(owner, source, agents)

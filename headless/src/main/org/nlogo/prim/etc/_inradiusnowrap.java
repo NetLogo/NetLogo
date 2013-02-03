@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Syntax;
@@ -42,9 +43,8 @@ public final strictfp class _inradiusnowrap
     }
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, false);
-    return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.kind(),
-            result.toArray(new Agent[result.size()]),
-            world);
+    return ArrayAgentSet.fromArray
+      (sourceSet.kind(), world,
+       result.toArray(new Agent[result.size()]));
   }
 }

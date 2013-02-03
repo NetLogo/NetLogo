@@ -4,6 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Link;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
@@ -52,10 +53,9 @@ public final strictfp class _linkset
             (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
-      AgentKindJ.Link(),
-        resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]),
-        world);
+    return ArrayAgentSet.fromArray(
+      AgentKindJ.Link(), world,
+      resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Link> result) {

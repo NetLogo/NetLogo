@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.I18N;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.EngineException;
@@ -57,8 +58,8 @@ public final strictfp class _minnof
       resultList.add(tester);
     }
 
-    AgentSet resultSet = new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.kind(), n, false, world);
+    AgentSet resultSet = ArrayAgentSet.withCapacity
+        (sourceSet.kind(), world, n);
 
     for (Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator();
          n > 0 && iter.hasNext();) {

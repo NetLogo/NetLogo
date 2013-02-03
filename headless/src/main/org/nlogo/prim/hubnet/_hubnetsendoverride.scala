@@ -20,10 +20,7 @@ class _hubnetsendoverride extends Command {
     val varName = argEvalString(context, 2)
 
     val set = target match {
-      case a: Agent =>
-        val aas = new ArrayAgentSet(a.kind, 1, false, world)
-        aas.add(a)
-        aas
+      case a: Agent => ArrayAgentSet.fromAgent(a)
       case as: AgentSet => as
       case _ => throw new IllegalStateException("cant happen...")
     }

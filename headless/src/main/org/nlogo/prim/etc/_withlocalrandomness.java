@@ -3,6 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -27,10 +28,7 @@ public final strictfp class _withlocalrandomness
   }
 
   public void perform_1(final Context context) {
-    AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet
-            (context.agent.kind(), 1, false, world);
-    agentset.add(context.agent);
+    AgentSet agentset = ArrayAgentSet.fromAgent(context.agent);
     org.nlogo.util.MersenneTwisterFast random = context.job.random;
     context.job.random = world.mainRNG().clone();
     context.runExclusiveJob(agentset, next);

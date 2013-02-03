@@ -251,9 +251,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
         // we have the observer agentset. make sure that's all we have...
         val closeBrace = tokens.next()
         cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
-        val agentset = new ArrayAgentSet(api.AgentKind.Observer, 1, false, world)
-        agentset.add(world.observer)
-        agentset
+        ArrayAgentSet.fromAgent(world.observer)
       }
       else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
         val token = tokens.next()
@@ -278,7 +276,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_turtles]) {
       // we have an agentset of turtles. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Turtle, world)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         val value = readLiteralPrefix(token, tokens)
@@ -290,7 +288,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_links]) {
       // we have an agentset of links. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Link, 1, false, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Link, world)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
@@ -310,7 +308,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_patches]) {
       // we have an agentset of patches. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Patch, 1, false, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Patch, world)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)

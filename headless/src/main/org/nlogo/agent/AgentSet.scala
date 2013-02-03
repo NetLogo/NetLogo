@@ -74,7 +74,7 @@ extends api.AgentSet {
         case _ =>
           randomSubsetGeneral(resultSize, precomputedCount, rng)
       }
-    new ArrayAgentSet(kind, array, world)
+    ArrayAgentSet.fromArray(kind, world, array)
   }
 
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.AgentSet
+import org.nlogo.agent.{ AgentSet, ArrayAgentSet }
 import org.nlogo.api.{ Let, LogoException, Syntax }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
@@ -25,9 +25,7 @@ class _carefully extends Command with CustomAssembled {
   }
 
   def perform_1(context: Context) {
-    val agentset = new org.nlogo.agent.ArrayAgentSet(
-      context.agent.kind, 1, false, world)
-    agentset.add(context.agent)
+    val agentset = ArrayAgentSet.fromAgent(context.agent)
     try {
       // start new job that skips over the _goto command
       context.runExclusiveJob(agentset, next + 1)

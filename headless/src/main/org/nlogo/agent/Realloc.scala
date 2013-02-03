@@ -23,11 +23,11 @@ object Realloc {
     for(breedName <- program.breeds.keys)
       world.breedAgents.put(breedName,
         Option(world.breedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(api.AgentKind.Turtle, breedName.toUpperCase, world)))
+          new TreeAgentSet(api.AgentKind.Turtle, world, breedName.toUpperCase)))
     for(breedName <- program.linkBreeds.keys)
       world.linkBreedAgents.put(breedName,
         Option(world.linkBreedAgents.get(breedName)).getOrElse(
-          new TreeAgentSet(api.AgentKind.Link, breedName.toUpperCase, world)))
+          new TreeAgentSet(api.AgentKind.Link, world, breedName.toUpperCase)))
     // make sure directednesses are up-to-date
     for((name, breed) <- program.linkBreeds)
       world.linkBreedAgents.get(name).setDirected(breed.isDirected)
