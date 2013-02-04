@@ -21,13 +21,18 @@ extends AgentSet(kind, printName, false, false, false) {
   /// conversions
 
   override def toLogoList = {
-    val result = collection.mutable.ArrayBuffer[Agent]()
-    val iter = iterator
-    while (iter.hasNext)
-      result += iter.next()
-    val resultArray = result.toArray
-    java.util.Arrays.sort(resultArray.asInstanceOf[Array[AnyRef]])
-    api.LogoList.fromIterator(resultArray.iterator)
+    val freshArray =
+      if (!kind.mortal)
+        array.clone
+      else {
+        val buf = collection.mutable.ArrayBuffer[Agent]()
+        val iter = iterator
+        while (iter.hasNext)
+          buf += iter.next()
+        buf.toArray
+      }
+    java.util.Arrays.sort(freshArray.asInstanceOf[Array[AnyRef]])
+    api.LogoList.fromIterator(freshArray.iterator)
   }
 
   /// counting
