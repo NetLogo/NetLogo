@@ -98,9 +98,9 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
     // the file format has separate entries for name and display name,
     // but at least at present, they are always equal, so we just
     // write out the name twice - ST 6/3/02
-    if (name != null && name.trim.nonEmpty) {
-      s ++= name + "\n"
-      s ++= name + "\n"
+    if (name() != null && name().trim.nonEmpty) {
+      s ++= name() + "\n"
+      s ++= name() + "\n"
     }
     else {
       s ++= "NIL\n"
