@@ -46,8 +46,8 @@ import java.util.Map;
  */
 
 public class ModelingCommons {
-  private static final String HOST = "http://localhost:3000";
-  //private static final String HOST = "http://modelingcommons.org";
+  //private static final String HOST = "http://localhost:3000";
+  private static final String HOST = "http://modelingcommons.org";
   private static HttpClient http = new DefaultHttpClient();
   private JSONParser json = new JSONParser();
   private static Person person = null;
