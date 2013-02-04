@@ -30,19 +30,6 @@ extends AgentSet(kind, printName, false, false, false) {
     api.LogoList.fromIterator(resultArray.iterator)
   }
 
-  override def toString = {
-    val s = new StringBuilder("AgentSet")
-    s ++= "\n...... kind: "
-    s ++= kind.toString
-    s ++= "\n...... size: " + array.size
-    s ++= "\n...... count: " + count
-    s ++= "\n...... agents: "
-    val iter = iterator
-    while (iter.hasNext)
-      s ++= "\n" + iter.next()
-    s.toString
-  }
-
   /// counting
 
   override def isEmpty =

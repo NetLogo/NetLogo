@@ -147,18 +147,6 @@ extends AgentSet(kind, printName, true, false, false) {
   override def toLogoList =
     LogoList.fromJava(_agents.values)
 
-  override def toString = {
-    val s = new StringBuilder("TreeAgentSet")
-    s ++= "\n...... kind: "
-    s ++= kind.toString
-    s ++= "\n...... count(): " + count
-    s ++= "\n...... agents: "
-    val it = iterator
-    while (it.hasNext)
-      s ++= "\n" + it.next().toString
-    s.toString
-  }
-
   // parent enumeration class
   class Iterator extends AgentIterator {
     val iter = _agents.values.iterator
