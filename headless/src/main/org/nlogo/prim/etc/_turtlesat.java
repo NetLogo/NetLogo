@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -31,13 +31,13 @@ public final strictfp class _turtlesat
     if (patch == null) {
       return world.noTurtles();
     }
-    AgentSet agentset = ArrayAgentSet.withCapacity(
+    AgentSetBuilder builder = new AgentSetBuilder(
       AgentKindJ.Turtle(), patch.turtleCount());
     for (org.nlogo.agent.Turtle turtle : patch.turtlesHere()) {
       if (turtle != null) {
-        agentset.add(turtle);
+        builder.add(turtle);
       }
     }
-    return agentset;
+    return builder.build();
   }
 }

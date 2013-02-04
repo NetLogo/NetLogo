@@ -5,7 +5,6 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
@@ -50,7 +49,7 @@ public final strictfp class _withmin
         result.add(tester);
       }
     }
-    return ArrayAgentSet.fromArray(
+    return AgentSet.fromArray(
       sourceSet.kind(),
       result.toArray(new Agent[result.size()]));
   }

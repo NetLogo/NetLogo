@@ -61,7 +61,7 @@ extends AgentSet(kind, printName, true, false, false) {
    * It is the caller's responsibility not to add an agent that
    * is already in the set.
    */
-  override def add(agent: Agent) {
+  def add(agent: Agent) {
     require(kind == agent.kind)
     _agents.put(agent.agentKey, agent)
     nextIndex = nextIndex max (agent.id + 1)

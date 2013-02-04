@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
@@ -84,7 +83,7 @@ public final strictfp class _atpoints
       }
 
     }
-    return ArrayAgentSet.fromArray(
+    return AgentSet.fromArray(
       sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 

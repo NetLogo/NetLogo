@@ -13,42 +13,11 @@ import
 // happen, so the contents of the array may be any mixture of live agents, dead agents, and nulls.
 // - ST 7/24/07
 
-object ArrayAgentSet {
-
-  def apply(kind: api.AgentKind) =
-    new ArrayAgentSet(kind, 0, null, 0, Array())
-
-  def withCapacity(kind: api.AgentKind, initialCapacity: Int, printName: String = null) =
-    new ArrayAgentSet(kind, initialCapacity, printName, 0,
-      new Array[Agent](initialCapacity))
-
-  // for use from Java since Java doesn't understand default args
-  def withCapacity(kind: api.AgentKind, initialCapacity: Int) =
-    new ArrayAgentSet(kind, initialCapacity, null, 0,
-      new Array[Agent](initialCapacity))
-
-  def fromAgent(agent: Agent) =
-    fromArray(agent.kind, Array(agent))
-
-  def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null) =
-    new ArrayAgentSet(kind, agents.size, printName, agents.size, agents)
-
-  // for use from Java since Java doesn't understand default args
-  def fromArray(kind: api.AgentKind, agents: Array[Agent]) =
-    new ArrayAgentSet(kind, agents.size, null, agents.size, agents)
-}
-
-class ArrayAgentSet private (
+private class ArrayAgentSet(
   kind: api.AgentKind,
-  initialCapacity: Int,
   printName: String,
-  private var size: Int,
-  private var array: Array[Agent])
+  private val array: Array[Agent])
 extends AgentSet(kind, printName, false, false, false) {
-
-  /// data
-
-  private var capacity = initialCapacity
 
   /// conversions
 
@@ -68,9 +37,8 @@ extends AgentSet(kind, printName, false, false, false) {
     val s = new StringBuilder("AgentSet")
     s ++= "\n...... kind: "
     s ++= kind.toString
-    s ++= "\n...... size: " + size
-    s ++= "\n...... count(): " + count
-    s ++= "\n...... capacity: " + capacity
+    s ++= "\n...... size: " + array.size
+    s ++= "\n...... count: " + count
     s ++= "\n...... agents: "
     val iter = iterator
     while (iter.hasNext)
@@ -78,18 +46,18 @@ extends AgentSet(kind, printName, false, false, false) {
     s.toString
   }
 
-  /// size
+  /// counting
 
   override def isEmpty =
-    if (kind == api.AgentKind.Turtle || kind == api.AgentKind.Link)
-      // some of the turtles might be dead, so we need to actually scan - ST 2/27/03
-      !iterator.hasNext
+    if (!kind.mortal)
+      array.isEmpty
     else
-      size == 0
+      !iterator.hasNext
 
   override def count =
-    if (kind == api.AgentKind.Turtle || kind == api.AgentKind.Link) {
-      // some of the turtles might be dead, so we need to actually count - ST 2/27/03
+    if (!kind.mortal)
+      array.size
+    else {
       var result = 0
       val iter = iterator
       while(iter.hasNext) {
@@ -98,7 +66,6 @@ extends AgentSet(kind, printName, false, false, false) {
       }
       result
     }
-    else size
 
   /// equality
 
@@ -116,7 +83,9 @@ extends AgentSet(kind, printName, false, false, false) {
 
   override def agent(l: Long): Agent = {
     val i = l.toInt
-    if (kind == api.AgentKind.Turtle || kind == api.AgentKind.Link) {
+    if (!kind.mortal)
+      array(i)
+    else {
       val agent = array(i)
       if (agent.id == -1) {
         array(i) = null
@@ -124,7 +93,6 @@ extends AgentSet(kind, printName, false, false, false) {
       }
       else agent
     }
-    else array(i)
   }
 
   override def getAgent(id: AnyRef) =
@@ -138,20 +106,6 @@ extends AgentSet(kind, printName, false, false, false) {
     false
   }
 
-  /// mutation
-
-  override def add(agent: Agent) = {
-    if (size >= capacity) {
-      val newCapacity = capacity * 2 + 1
-      val newArray = new Array[Agent](newCapacity)
-      System.arraycopy(array, 0, newArray, 0, capacity)
-      array = newArray
-      capacity = newCapacity
-    }
-    array(size) = agent
-    size += 1
-  }
-
   /// random selection
 
   // the next few methods take precomputedCount as an argument since we want to avoid _randomoneof
@@ -160,7 +114,7 @@ extends AgentSet(kind, printName, false, false, false) {
 
   // assume agentset is nonempty, since _randomoneof.java checks for that
   override def randomOne(precomputedCount: Int, random: Int) =
-    if (size == capacity && kind != api.AgentKind.Turtle && kind != api.AgentKind.Link)
+    if (!kind.mortal)
       array(random)
     else {
       val iter = iterator
@@ -182,7 +136,7 @@ extends AgentSet(kind, printName, false, false, false) {
         (ran1, ran2 + 1)
       else
         (ran2, ran1)
-    if (size == capacity && kind != api.AgentKind.Turtle && kind != api.AgentKind.Link)
+    if (!kind.mortal)
       Array(
         array(random1),
         array(random2))
@@ -208,7 +162,7 @@ extends AgentSet(kind, printName, false, false, false) {
 
   override def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, random: MersenneTwisterFast) = {
     val result = new Array[Agent](resultSize)
-    if (precomputedCount == capacity) {
+    if (precomputedCount == array.size) {
       var i, j = 0
       while (j < resultSize) {
         if (random.nextInt(precomputedCount - i) < resultSize - j) {
@@ -237,10 +191,10 @@ extends AgentSet(kind, printName, false, false, false) {
 
   // returns an Iterator object of the appropriate class
   override def iterator: AgentIterator =
-    if (kind != api.AgentKind.Turtle && kind != api.AgentKind.Link)
+    if (!kind.mortal)
       new Iterator
     else
-      new IteratorWithDead
+      new ReapingIterator
 
   // shuffling iterator = shufflerator! (Google hits: 0)
   // Update: Now 5 Google hits, the first 4 of which are NetLogo related,
@@ -257,7 +211,7 @@ extends AgentSet(kind, printName, false, false, false) {
 
   private class Iterator extends AgentIterator {
     protected var index = 0
-    override def hasNext = index < size
+    override def hasNext = index < array.size
     override def next() = {
       val result = array(index)
       index += 1
@@ -266,24 +220,23 @@ extends AgentSet(kind, printName, false, false, false) {
   }
 
   // extended to skip dead agents
-  private class IteratorWithDead extends Iterator {
+  private class ReapingIterator extends Iterator {
     // skip initial dead agents
-    while (index < size && array(index).id == -1)
+    while (index < array.size && array(index).id == -1)
       index += 1
     override def next() = {
       var resultIndex = index
       // skip to next live agent
       do index += 1
-      while (index < size && array(index).id == -1)
+      while (index < array.size && array(index).id == -1)
       array(resultIndex)
     }
   }
 
   private class Shufflerator(rng: MersenneTwisterFast) extends Iterator {
     private[this] var i = 0
-    private[this] val copy = new Array[Agent](size)
+    private[this] val copy = array.clone
     private[this] var nextOne: Agent = null
-    System.arraycopy(array, 0, copy, 0, size)
     while (i < copy.length && copy(i) == null)
       i += 1
     fetch()
@@ -311,7 +264,7 @@ extends AgentSet(kind, printName, false, false, false) {
         // having to do both checks, but I'm not
         // sure it's really worth the effort - ST 3/15/06
         if (nextOne == null || nextOne.id == -1)
-          fetch();
+          fetch()
       }
     }
   }

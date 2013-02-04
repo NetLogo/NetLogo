@@ -54,7 +54,7 @@ public strictfp class Patch
   }
 
   public AgentSet turtlesHereAgentSet() {
-   return ArrayAgentSet.fromArray(
+   return AgentSet.fromArray(
      AgentKindJ.Turtle(),
      _turtlesHere.toArray(new Agent[_turtlesHere.size()]));
   }

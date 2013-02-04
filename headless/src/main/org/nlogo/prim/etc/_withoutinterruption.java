@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.agent.ArrayAgentSet;
+import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -28,7 +28,7 @@ public final strictfp class _withoutinterruption
 
   public void perform_1(final Context context) {
     context.runExclusiveJob(
-      ArrayAgentSet.fromAgent(context.agent), next);
+      AgentSet.fromAgent(context.agent), next);
     context.ip = offset;
   }
 

@@ -90,7 +90,7 @@ public strictfp class World
     _linkShapeList = new ShapeList(AgentKindJ.Link());
 
     _observer = createObserver();
-    _observers = ArrayAgentSet.fromAgent(_observer);
+    _observers = AgentSet.fromAgent(_observer);
 
     linkManager = new LinkManager(this);
     tieManager = new TieManager(this, linkManager);
@@ -115,11 +115,11 @@ public strictfp class World
   /// empty agentsets
 
   private final AgentSet _noTurtles =
-    ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), 0);
+    AgentSet.fromArray(AgentKindJ.Turtle(), new Agent[]{});
   private final AgentSet _noPatches =
-    ArrayAgentSet.withCapacity(AgentKindJ.Patch(), 0);
+    AgentSet.fromArray(AgentKindJ.Patch(), new Agent[]{});
   private final AgentSet _noLinks =
-    ArrayAgentSet.withCapacity(AgentKindJ.Link(), 0);
+    AgentSet.fromArray(AgentKindJ.Link(), new Agent[]{});
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -752,7 +752,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

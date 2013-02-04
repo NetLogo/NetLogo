@@ -94,10 +94,10 @@ public strictfp class Link
     this.id = world.newLinkId();
 
     variables[VAR_BREED] = breed;
-    world.links().add(this);
+    world._links.add(this);
 
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
 
     for (int i = LAST_PREDEFINED_VAR + 1; i < variables.length; i++) {
@@ -532,11 +532,9 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds =
-      ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), 2);
-    bothEnds.add(end1);
-    bothEnds.add(end2);
-    return bothEnds;
+    return AgentSet.fromArray(
+      AgentKindJ.Turtle(),
+      new Agent[]{end1, end2});
   }
 
   @Override
@@ -619,7 +617,7 @@ public strictfp class Link
       }
     }
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED] = breed;
     shape(world.linkBreedShapes.breedShape(breed));

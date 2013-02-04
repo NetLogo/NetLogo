@@ -214,7 +214,7 @@ with org.nlogo.window.Events.JobRemovedEventHandler
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
         workspace.world.observers()
       else
-        org.nlogo.agent.ArrayAgentSet.fromAgent(agent)
+        AgentSet.fromAgent(agent)
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
   }

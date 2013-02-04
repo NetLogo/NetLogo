@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ World, Agent, Observer, AbstractExporter, AgentSet }
 import org.nlogo.api.{ AgentKind, PlotInterface, Dump, CommandLogoThunk, ReporterLogoThunk,
                        CompilerException, LogoException, JobOwner, SimpleJobOwner, Token, ModelType}
 import org.nlogo.nvm.{ CompilerInterface, FileManager, Instruction, EngineException, Context,
@@ -242,7 +242,7 @@ object AbstractWorkspaceTraits {
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
                          waitForCompletion: Boolean) {
       evaluator.evaluateCommands(owner, source,
-        ArrayAgentSet.fromAgent(agent), waitForCompletion)
+        AgentSet.fromAgent(agent), waitForCompletion)
     }
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
                          waitForCompletion: Boolean) {
@@ -252,7 +252,7 @@ object AbstractWorkspaceTraits {
       evaluator.evaluateReporter(owner, source, world.observers)
     def evaluateReporter(owner: JobOwner, source: String, agent: Agent) = {
       evaluator.evaluateReporter(owner, source,
-        ArrayAgentSet.fromAgent(agent))
+        AgentSet.fromAgent(agent))
     }
     def evaluateReporter(owner: JobOwner, source: String, agents: AgentSet) =
       evaluator.evaluateReporter(owner, source, agents)

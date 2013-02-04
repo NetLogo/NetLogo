@@ -3,7 +3,6 @@
 package org.nlogo.workspace
 
 import java.util.ArrayList
-import org.nlogo.agent.ArrayAgentSet
 import org.nlogo.agent.{Agent, AgentSet, Observer, Turtle, Patch, Link}
 import org.nlogo.api.{AgentKind, CompilerException, JobOwner, LogoException, ReporterLogoThunk, CommandLogoThunk}
 import org.nlogo.nvm.{ExclusiveJob, Activation, Context, Procedure, Reporter}
@@ -135,7 +134,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
     }
 
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean) {
-    val agentset = ArrayAgentSet.fromAgent(agent)
+    val agentset = AgentSet.fromAgent(agent)
     val procedure = invokeCompiler(source, Some(owner.displayName), command, agent.kind)
     procedure.topLevel = false
   }

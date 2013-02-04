@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.I18N;
@@ -54,7 +53,7 @@ public final strictfp class _incone
     }
     List<Agent> result =
         world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, true);
-    return ArrayAgentSet.fromArray
+    return AgentSet.fromArray
       (sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

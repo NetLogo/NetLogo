@@ -4,7 +4,6 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
-import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
@@ -55,7 +54,7 @@ public final strictfp class _patchset
             (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
       }
     }
-    return ArrayAgentSet.fromArray(
+    return AgentSet.fromArray(
       AgentKindJ.Patch(),
       resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }

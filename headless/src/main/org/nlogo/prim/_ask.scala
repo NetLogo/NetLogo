@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.{ Syntax, I18N }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant,
                        EngineException, ArgumentTypeException }
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet, Observer }
+import org.nlogo.agent.{ Agent, AgentSet, Observer }
 
 class _ask extends Command with CustomAssembled {
 
@@ -41,7 +41,7 @@ class _ask extends Command with CustomAssembled {
           throw new EngineException(
             context, this, I18N.errors.getN(
               "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-        ArrayAgentSet.fromAgent(agent)
+        AgentSet.fromAgent(agent)
       case _ =>
         throw new ArgumentTypeException(
           context, this, 0, Syntax.AgentsetType | Syntax.AgentType, target)
@@ -70,7 +70,7 @@ class _ask extends Command with CustomAssembled {
       throw new EngineException(
         context, this, I18N.errors.getN(
           "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
-    context.runExclusiveJob(ArrayAgentSet.fromAgent(agent), next)
+    context.runExclusiveJob(AgentSet.fromAgent(agent), next)
     context.ip = offset
   }
 

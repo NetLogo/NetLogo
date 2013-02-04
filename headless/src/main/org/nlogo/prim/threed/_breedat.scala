@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.threed
 
-import org.nlogo.agent.{ Agent3D, AgentSet, ArrayAgentSet, Turtle }
+import org.nlogo.agent.{ Agent3D, AgentSet, AgentSetBuilder, Turtle }
 import org.nlogo.api.{ AgentException, AgentKind, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 
@@ -28,16 +28,15 @@ class _breedat(breedName: String) extends Reporter {
     if (patch == null)
       world.noTurtles
     else {
-      val agentset = ArrayAgentSet.withCapacity(
-        AgentKind.Turtle, patch.turtleCount)
+      val builder = new AgentSetBuilder(AgentKind.Turtle, patch.turtleCount)
       val breed = world.getBreed(breedName)
       val it = patch.turtlesHere.iterator
       while(it.hasNext) {
         val turtle = it.next()
         if (turtle != null && (turtle.getBreed eq breed))
-          agentset.add(turtle)
+          builder.add(turtle)
       }
-      agentset
+      builder.build()
     }
   }
 }
