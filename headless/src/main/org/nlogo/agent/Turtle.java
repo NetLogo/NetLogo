@@ -132,12 +132,12 @@ public strictfp class Turtle
     world.linkManager.cleanup(this);
     Patch patch = getPatchHere();
     patch.removeTurtle(this);
-    AgentSet breed = getBreed();
+    TreeAgentSet breed = (TreeAgentSet) variables[VAR_BREED];
     if (breed != world.turtles()) {
       breed.remove(agentKey());
     }
     world.removeLineThickness(this);
-    world.turtles().remove(agentKey());
+    world._turtles.remove(agentKey());
     id(-1);
     Observer observer = world.observer();
     if (this == observer.targetAgent()) {
@@ -1157,7 +1157,7 @@ public strictfp class Turtle
         return;
       }
       if (oldBreed != world.turtles()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED]).remove(agentKey());
       }
     }
     if (breed != world.turtles()) {

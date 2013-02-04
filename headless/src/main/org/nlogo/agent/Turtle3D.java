@@ -999,7 +999,7 @@ public final strictfp class Turtle3D
         return;
       }
       if (oldBreed != world.turtles()) {
-        ((AgentSet) variables[VAR_BREED3D]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED3D]).remove(agentKey());
       }
     }
     if (breed != world.turtles()) {

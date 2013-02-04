@@ -21,8 +21,6 @@ extends api.AgentSet {
   def agent(id: Long): Agent
   def getAgent(id: AnyRef): Agent
   def add(agent: Agent)
-  def remove(key: AnyRef)
-  def clear()
   def randomOne(precomputedCount: Int, random: Int): Agent
   def randomTwo(precomputedCount: Int, random1: Int, random2: Int): Array[Agent]
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: util.MersenneTwisterFast): Array[Agent]

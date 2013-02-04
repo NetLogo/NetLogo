@@ -137,10 +137,10 @@ public strictfp class World
 
   // careful, these are HashMap not LinkedHashMap, order is arbitrary.
   // if order matters just look up, don't traverse. - ST 7/13/12
-  public java.util.Map<String, AgentSet> breedAgents =
-    new java.util.HashMap<String, AgentSet>();
-  public java.util.Map<String, AgentSet> linkBreedAgents =
-    new java.util.HashMap<String, AgentSet>();
+  public java.util.Map<String, TreeAgentSet> breedAgents =
+    new java.util.HashMap<String, TreeAgentSet>();
+  public java.util.Map<String, TreeAgentSet> linkBreedAgents =
+    new java.util.HashMap<String, TreeAgentSet>();
 
   ///
 
@@ -426,13 +426,13 @@ public strictfp class World
     return _patches;
   }
 
-  AgentSet _turtles = null;
+  TreeAgentSet _turtles = null;
 
   public AgentSet turtles() {
     return _turtles;
   }
 
-  AgentSet _links = null;
+  TreeAgentSet _links = null;
 
   public AgentSet links() {
     return _links;
@@ -722,10 +722,10 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    for(AgentSet agents : breedAgents.values()) {
+    for(TreeAgentSet agents : breedAgents.values()) {
         agents.clear();
     }
-    for(AgentSet agents : linkBreedAgents.values()) {
+    for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
 
@@ -821,7 +821,7 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    for(AgentSet agents : breedAgents.values()) {
+    for(TreeAgentSet agents : breedAgents.values()) {
         agents.clear();
     }
     for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
@@ -839,7 +839,7 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    for(AgentSet agents : linkBreedAgents.values()) {
+    for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
     for (AgentIterator iter = _links.iterator(); iter.hasNext();) {

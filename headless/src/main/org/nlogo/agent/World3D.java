@@ -228,10 +228,10 @@ public final strictfp class World3D
     _maxPycorBoxed = Double.valueOf(_maxPycor);
     _maxPzcorBoxed = Double.valueOf(_maxPzcor);
 
-    for(AgentSet agents : breedAgents.values()) {
+    for(TreeAgentSet agents : breedAgents.values()) {
         agents.clear();
     }
-    for(AgentSet agents : linkBreedAgents.values()) {
+    for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
 

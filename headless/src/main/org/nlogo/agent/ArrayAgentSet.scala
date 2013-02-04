@@ -153,12 +153,6 @@ extends AgentSet(kind, world, printName, false, false, false) {
     size += 1
   }
 
-  override def remove(id: AnyRef): Unit =
-    throw new UnsupportedOperationException
-
-  override def clear(): Unit =
-    throw new UnsupportedOperationException
-
   /// random selection
 
   // the next few methods take precomputedCount as an argument since we want to avoid _randomoneof

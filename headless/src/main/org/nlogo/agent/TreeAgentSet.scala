@@ -68,11 +68,11 @@ extends AgentSet(kind, world, printName, true, false, false) {
   }
 
   // made public for mutable agentset operations
-  override def remove(key: AnyRef) {
+  def remove(key: AnyRef) {
     _agents.remove(key)
   }
 
-  override def clear() {
+  def clear() {
     _agents.clear()
   }
 

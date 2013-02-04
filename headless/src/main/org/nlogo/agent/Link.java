@@ -109,8 +109,8 @@ public strictfp class Link
     if (id == -1) {
       return;
     }
-    AgentSet breed = getBreed();
-    world.links().remove(agentKey());
+    TreeAgentSet breed = (TreeAgentSet) variables[VAR_BREED];
+    world._links.remove(agentKey());
     if (breed != world.links()) {
       breed.remove(agentKey());
     }
@@ -608,14 +608,14 @@ public strictfp class Link
   }
 
   public void setBreed(AgentSet breed) {
-    AgentSet oldBreed = null;
+    TreeAgentSet oldBreed = (TreeAgentSet) variables[VAR_BREED];
     if (variables[VAR_BREED] instanceof AgentSet) {
-      oldBreed = (AgentSet) variables[VAR_BREED];
+      oldBreed = (TreeAgentSet) variables[VAR_BREED];
       if (breed == oldBreed) {
         return;
       }
       if (oldBreed != world.links()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED]).remove(agentKey());
       }
     }
     if (breed != world.links()) {
