@@ -31,10 +31,17 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A])
   override def notify(pub: Publisher[A], action: A) {
     buffer += action
   }
+
+  /** Removes all actions in the buffer */
   def clear() { buffer.clear() }
+
+  /** Returns a list of actions in the buffer and clears the buffer */
   def grab(): List[A] = {
     val actions = buffer.toList
     clear()
     actions
   }
+
+  /** Returns a list of actions contained in the buffer without clearing it */
+  def list: List[A] = buffer.toList
 }
