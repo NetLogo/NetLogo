@@ -13,7 +13,7 @@ import
 // happen, so the contents of the array may be any mixture of live agents, dead agents, and nulls.
 // - ST 7/24/07
 
-private class ArrayAgentSet(
+class ArrayAgentSet(
   kind: api.AgentKind,
   printName: String,
   private val array: Array[Agent])
