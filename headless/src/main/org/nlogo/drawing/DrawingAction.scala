@@ -8,11 +8,6 @@ sealed trait DrawingAction extends Action
 
 object DrawingAction {
 
-  // TODO: these will need to be serialized, and I should take
-  // take into account wrt the case class members
-  // That means replacing api.Agent with an AgentKey,
-  // and penColor needs to be addressed too
-
   case class DrawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,
     penColor: AnyRef, penSize: Double, penMode: String)
