@@ -96,8 +96,8 @@ object Depend {
       "swing" -> List("awt"),
       "util" -> Nil,
       "widget" -> List("window"),
-      "window" -> List("editor","log","shape","swing","workspace", "drawing"),
-      "workspace" -> List("nvm", "plot"))
+      "window" -> List("editor","log","shape","swing","workspace"),
+      "workspace" -> List("nvm", "plot", "drawing"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }
