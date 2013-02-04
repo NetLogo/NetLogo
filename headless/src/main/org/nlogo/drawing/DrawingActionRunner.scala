@@ -27,6 +27,8 @@ class DrawingActionRunner(
     }
     case CreateDrawing(dirty: Boolean) =>
       trailDrawer.getAndCreateDrawing(dirty)
+    case ImportDrawing(filePath: String) =>
+      trailDrawer.importDrawing(new api.LocalFile(filePath))
     case ClearDrawing() =>
       trailDrawer.clearDrawing()
     case RescaleDrawing() =>

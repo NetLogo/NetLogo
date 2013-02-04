@@ -16,6 +16,7 @@ object DrawingAction {
   case class SendPixels(dirty: Boolean) extends DrawingAction
   case class Stamp(agentKind: String, agentId: Long, erase: Boolean) extends DrawingAction
   case class CreateDrawing(dirty: Boolean) extends DrawingAction
+  case class ImportDrawing(filePath: String) extends DrawingAction
   case class ClearDrawing() extends DrawingAction
   case class RescaleDrawing() extends DrawingAction
   case class MarkClean() extends DrawingAction
