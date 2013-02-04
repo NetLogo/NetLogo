@@ -2911,11 +2911,12 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 3
           ASTORE 4
          L5
-          GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
+          NEW org/nlogo/agent/AgentSetBuilder
+          DUP
           GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtleCount ()I
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;I)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/api/AgentKind;I)V
           ASTORE 8
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
@@ -2940,10 +2941,11 @@ procedure CATCH-SHEEP:[]{-T--}:
           IF_ACMPNE L7
           ALOAD 8
           ALOAD 7
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L7
          L8
           ALOAD 8
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/AgentSet;
           GOTO L9
          L6
           NEW scala/MatchError
@@ -3143,9 +3145,9 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-          GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 4
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
           ASTORE 5
          L7
           ALOAD 1
