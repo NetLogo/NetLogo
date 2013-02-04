@@ -158,7 +158,7 @@ public final strictfp class World3D
         + xc - _minPxcor);
 
 
-    return (Patch) _patches.toArray()[patchid];
+    return (Patch) _patches.agent(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc, int zc) {
@@ -172,9 +172,9 @@ public final strictfp class World3D
   }
 
   public Patch fastGetPatchAt(int xc, int yc, int zc) {
-    return (Patch) _patches.toArray()[((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
-        (_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor)];
+    return (Patch) _patches.agent(((_worldWidth * _worldHeight * (_maxPzcor - zc)) +
+                                   (_worldWidth * (_maxPycor - yc))
+                                   + xc - _minPxcor));
   }
 
   @Override
@@ -263,7 +263,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = (ArrayAgentSet) AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -382,7 +382,7 @@ public final strictfp class World3D
         (_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
 
-    return (Patch3D) _patches.toArray()[id];
+    return (Patch3D) _patches.agent(id);
   }
 
   @Override

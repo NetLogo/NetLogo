@@ -420,7 +420,7 @@ public strictfp class World
     return _observer;
   }
 
-  AgentSet _patches = null;
+  ArrayAgentSet _patches = null;
 
   public AgentSet patches() {
     return _patches;
@@ -530,7 +530,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.toArray()[id];
+    return (Patch) _patches.agent(id);
   }
 
   public Patch getPatchAt(double x, double y)
@@ -539,7 +539,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.toArray()[id];
+    return (Patch) _patches.agent(id);
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -564,7 +564,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.toArray()[patchid];
+    return (Patch) _patches.agent(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -576,12 +576,12 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.toArray()[(_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor];
+    return (Patch) _patches.agent((_worldWidth * (_maxPycor - yc))
+                                  + xc - _minPxcor);
   }
 
   public Turtle getTurtle(long id) {
-    return (Turtle) _turtles.getAgent(Double.valueOf(id));
+    return (Turtle) _turtles.agent(id);
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
@@ -752,7 +752,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
+    _patches = (ArrayAgentSet) AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

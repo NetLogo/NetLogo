@@ -147,9 +147,6 @@ extends AgentSet(kind, printName, true, false, false) {
   override def toLogoList =
     LogoList.fromJava(_agents.values)
 
-  override def toArray =
-    _agents.values.toArray(new Array[Agent](_agents.size))
-
   override def toString = {
     val s = new StringBuilder("TreeAgentSet")
     s ++= "\n...... kind: "
