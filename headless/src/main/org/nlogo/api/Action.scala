@@ -17,6 +17,19 @@ trait ActionBroker[A <: Action]
     super.publish(action)
     runner.run(action)
   }
+
+  /**
+   * Normally, you would not want to do that. The one use case we
+   * have is the Stamp drawing action which, when recorded through
+   * an ActionBroker, calls trailDrawer.stamp() directly and grabs
+   * a bitmap that will be stored in the Action. No need, then, to
+   * re-import that bitmap through the runner. But this is very much
+   * a hack and I wish we had another way of handling stamping so we
+   * could (amongst other things) get rid of this method. NP 2013-02-04
+   */
+  def publishWithoutRunning(action: A) {
+    super.publish(action)
+  }
 }
 
 /**

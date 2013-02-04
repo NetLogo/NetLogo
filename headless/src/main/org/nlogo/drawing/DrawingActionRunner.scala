@@ -17,13 +17,9 @@ class DrawingActionRunner(
       trailDrawer.setColors(colors)
     case SendPixels(dirty) =>
       trailDrawer.sendPixels(dirty)
-    case Stamp(agentKind, agentId, erase) => {
-      val agentSet = agentKind match {
-        case "Turtle" => world.turtles
-        case "Link"   => world.links
-      }
-      for (agent <- agentSet.agents.asScala.find(_.id == agentId))
-        trailDrawer.stamp(agent, erase)
+    case ReadImage(imageBytes) => {
+      val inputStream = new java.io.ByteArrayInputStream(imageBytes)
+      trailDrawer.readImage(inputStream)
     }
     case CreateDrawing(dirty: Boolean) =>
       trailDrawer.getAndCreateDrawing(dirty)
