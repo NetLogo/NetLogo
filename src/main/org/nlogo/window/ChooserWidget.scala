@@ -92,22 +92,22 @@ class ChooserWidget(compiler: CompilerServices) extends Chooser(compiler) with E
   }
 
   def save: String = {
-    var s: StringBuilder = new StringBuilder
-    s.append("CHOOSER\n")
-    s.append(getBoundsString)
+    val s = new StringBuilder
+    s ++= "CHOOSER\n"
+    s ++= getBoundsString
     // the file format has separate entries for name and display name,
     // but at least at present, they are always equal, so we just
     // write out the name twice - ST 6/3/02
-    if ((null != name()) && (!name().trim.equals(""))) {
-      s.append(name() + "\n")
-      s.append(name() + "\n")
+    if (name != null && name.trim.nonEmpty) {
+      s ++= name + "\n"
+      s ++= name + "\n"
     }
     else {
-      s.append("NIL\n")
-      s.append("NIL\n")
+      s ++= "NIL\n"
+      s ++= "NIL\n"
     }
-    s.append(choicesWrapper.trim.replaceAll("\n", " ") + "\n")
-    s.append(index() + "\n")
+    s ++= choicesWrapper.trim.replaceAll("\n", " ") + "\n"
+    s ++= index() + "\n"
     s.toString
   }
 }

@@ -67,15 +67,15 @@ extends AgentSet(kind, world, printName, false, false, false) {
 
   override def toString = {
     val s = new StringBuilder("AgentSet")
-    s.append("\n...... kind: ")
-    s.append(kind.toString)
-    s.append("\n...... size: " + size)
-    s.append("\n...... count(): " + count)
-    s.append("\n...... capacity: " + capacity)
-    s.append("\n...... agents: ")
+    s ++= "\n...... kind: "
+    s ++= kind.toString
+    s ++= "\n...... size: " + size
+    s ++= "\n...... count(): " + count
+    s ++= "\n...... capacity: " + capacity
+    s ++= "\n...... agents: "
     val iter = iterator
     while (iter.hasNext)
-      s.append("\n" + iter.next())
+      s ++= "\n" + iter.next()
     s.toString
   }
 

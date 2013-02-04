@@ -151,14 +151,14 @@ extends AgentSet(kind, world, printName, true, false, false) {
     _agents.values.toArray(new Array[Agent](_agents.size))
 
   override def toString = {
-    var s = new StringBuilder("TreeAgentSet")
-    s = s.append("\n...... kind: ")
-    s = s.append(kind.toString)
-    s = s.append("\n...... count(): " + count)
-    s = s.append("\n...... agents: ")
+    val s = new StringBuilder("TreeAgentSet")
+    s ++= "\n...... kind: "
+    s ++= kind.toString
+    s ++= "\n...... count(): " + count
+    s ++= "\n...... agents: "
     val it = iterator
     while (it.hasNext)
-      s = s.append("\n" + it.next().toString)
+      s ++= "\n" + it.next().toString
     s.toString
   }
 
