@@ -29,7 +29,7 @@ class _breedat(breedName: String) extends Reporter {
       world.noTurtles
     else {
       val agentset = ArrayAgentSet.withCapacity(
-        AgentKind.Turtle, world, patch.turtleCount)
+        AgentKind.Turtle, patch.turtleCount)
       val breed = world.getBreed(breedName)
       val it = patch.turtlesHere.iterator
       while(it.hasNext) {

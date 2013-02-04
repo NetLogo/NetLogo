@@ -320,37 +320,37 @@ final strictfp class Box
     if (xLoc == world.maxPxcor()) {
       if (xLoc == world.minPxcor()) {
         if (yLoc == world.maxPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchSouth(source)});
         } else if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchSouth(source)});
         }
       } else {
         if (yLoc == world.maxPycor()) {
           if (yLoc == world.minPycor()) {
-            return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+            return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{
                                        getPatchWest(source)});
           } else {
-            return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+            return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{
                                        getPatchSouth(source),
                                        getPatchWest(source),
                                        getPatchSouthWest(source)});
           }
         } else if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{
                                      getPatchNorth(source),
                                      getPatchWest(source),
                                      getPatchNorthWest(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{
                                      getPatchNorth(source),
                                      getPatchSouth(source),
@@ -362,21 +362,21 @@ final strictfp class Box
     } else if (xLoc == world.minPxcor()) {
       if (yLoc == world.maxPycor()) {
         if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchEast(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
               new Agent[]{getPatchEast(source),
                           getPatchSouth(source),
                           getPatchSouthEast(source)});
         }
       } else if (yLoc == world.minPycor()) {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchNorth(source),
                                              getPatchEast(source),
                                              getPatchNorthEast(source)});
       } else {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{
                                    getPatchNorth(source),
                                    getPatchEast(source),
@@ -386,23 +386,23 @@ final strictfp class Box
       }
     } else if (yLoc == world.maxPycor()) {
       if (yLoc == world.minPycor()) {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{
                                    getPatchEast(source),
                                    getPatchWest(source)});
       } else {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
             new Agent[]{getPatchEast(source), getPatchSouth(source),
                         getPatchWest(source), getPatchSouthEast(source),
                         getPatchSouthWest(source)});
       }
     } else if (yLoc == world.minPycor()) {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                new Agent[]{getPatchNorth(source), getPatchEast(source),
                                            getPatchWest(source), getPatchNorthEast(source),
                                            getPatchNorthWest(source)});
     } else {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                new Agent[]{getPatchNorth(source), getPatchEast(source),
                                            getPatchSouth(source), getPatchWest(source),
                                            getPatchNorthEast(source), getPatchSouthEast(source),
@@ -422,33 +422,33 @@ final strictfp class Box
           if (yLoc == world.minPycor()) {
             return world.noPatches();
           } else {
-            return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+            return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{getPatchSouth(source)});
           }
         } else if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchSouth(source)});
         }
       } else {
         if (yLoc == world.maxPycor()) {
           if (yLoc == world.minPycor()) {
-            return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+            return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{getPatchWest(source)});
           } else {
-            return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+            return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{getPatchSouth(source),
                                                  getPatchWest(source)});
           }
         } else if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchWest(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchSouth(source),
                                                getPatchWest(source)});
@@ -457,41 +457,41 @@ final strictfp class Box
     } else if (xLoc == world.minPxcor()) {
       if (yLoc == world.maxPycor()) {
         if (yLoc == world.minPycor()) {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchEast(source)});
         } else {
-          return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+          return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchEast(source),
                                                getPatchSouth(source)});
         }
       } else if (yLoc == world.minPycor()) {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchNorth(source),
                                              getPatchEast(source)});
       } else {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchNorth(source),
                                              getPatchEast(source),
                                              getPatchSouth(source)});
       }
     } else if (yLoc == world.maxPycor()) {
       if (yLoc == world.minPycor()) {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source),
                                              getPatchWest(source)});
       } else {
-        return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+        return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source),
                                              getPatchSouth(source),
                                              getPatchWest(source)});
       }
     } else if (yLoc == world.minPycor()) {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source),
                       getPatchEast(source),
                       getPatchWest(source)});
     } else {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
                                new Agent[]{getPatchNorth(source), getPatchEast(source),
                                            getPatchSouth(source), getPatchWest(source)});
     }

@@ -3606,11 +3606,9 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurecheckforcollision_setturtlevariable_1.world : Lorg/nlogo/agent/World;
           ALOAD 2
           INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;I)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;I)Lorg/nlogo/agent/ArrayAgentSet;
           ASTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
@@ -12598,15 +12596,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_2.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2
@@ -12867,15 +12863,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_5.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2
@@ -13136,15 +13130,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_8.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2
@@ -13494,15 +13486,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_15.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2
@@ -13763,15 +13753,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_18.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2
@@ -14032,15 +14020,13 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
             ALOAD 2
             INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-            ALOAD 0
-            GETFIELD org/nlogo/prim/_asm_proceduredohistograms_turtlevariableof_21.world : Lorg/nlogo/agent/World;
             ALOAD 9
             GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
             LDC Lorg/nlogo/agent/Agent;.class
             INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
             INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
             CHECKCAST [Lorg/nlogo/agent/Agent;
-            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+            INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
            L10
             ASTORE 2
            L2

@@ -85,7 +85,7 @@ public final strictfp class _atpoints
 
     }
     return ArrayAgentSet.fromArray(
-      sourceSet.kind(), world, result.toArray(new Agent[result.size()]));
+      sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 
   private boolean validateListEntry(Object entry) {

@@ -235,8 +235,8 @@ public final strictfp class World3D
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), this, "TURTLES");
-    _links = new TreeAgentSet(AgentKindJ.Link(), this, "LINKS");
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = _minPxcor;
     int y = _maxPycor;
@@ -263,7 +263,7 @@ public final strictfp class World3D
       }
       patchArray[i] = patch;
     }
-    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), this, patchArray, "patches");
+    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

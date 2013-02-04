@@ -276,7 +276,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_turtles]) {
       // we have an agentset of turtles. parse arguments...
-      val agentset = ArrayAgentSet(api.AgentKind.Turtle, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Turtle)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         val value = readLiteralPrefix(token, tokens)
@@ -288,7 +288,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_links]) {
       // we have an agentset of links. parse arguments...
-      val agentset = ArrayAgentSet(api.AgentKind.Link, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Link)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
@@ -308,7 +308,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_patches]) {
       // we have an agentset of patches. parse arguments...
-      val agentset = ArrayAgentSet(api.AgentKind.Patch, world)
+      val agentset = ArrayAgentSet(api.AgentKind.Patch)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)

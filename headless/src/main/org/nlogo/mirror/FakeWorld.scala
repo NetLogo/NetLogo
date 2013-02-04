@@ -53,7 +53,6 @@ class FakeWorld(state: State) extends api.World {
     override val isUndirected: Boolean = !isDirected
     override def isEmpty = agentSeq.isEmpty
     override def count = agentSeq.size
-    override def world: api.World = FakeWorld.this
     override def equalAgentSets(other: api.AgentSet) = unsupported
     override val agents = (agentSeq: Iterable[api.Agent]).asJava
     override def printName = unsupported

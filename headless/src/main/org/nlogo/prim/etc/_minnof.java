@@ -58,8 +58,7 @@ public final strictfp class _minnof
       resultList.add(tester);
     }
 
-    AgentSet resultSet = ArrayAgentSet.withCapacity
-        (sourceSet.kind(), world, n);
+    AgentSet resultSet = ArrayAgentSet.withCapacity(sourceSet.kind(), n);
 
     for (Iterator<LinkedList<Agent>> iter = resultAgents.values().iterator();
          n > 0 && iter.hasNext();) {

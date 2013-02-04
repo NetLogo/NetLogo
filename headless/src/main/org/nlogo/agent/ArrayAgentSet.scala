@@ -15,37 +15,36 @@ import
 
 object ArrayAgentSet {
 
-  def apply(kind: api.AgentKind, world: World) =
-    new ArrayAgentSet(kind, world, 0, null, 0, Array())
+  def apply(kind: api.AgentKind) =
+    new ArrayAgentSet(kind, 0, null, 0, Array())
 
-  def withCapacity(kind: api.AgentKind, world: World, initialCapacity: Int, printName: String = null) =
-    new ArrayAgentSet(kind, world, initialCapacity, printName, 0,
+  def withCapacity(kind: api.AgentKind, initialCapacity: Int, printName: String = null) =
+    new ArrayAgentSet(kind, initialCapacity, printName, 0,
       new Array[Agent](initialCapacity))
 
   // for use from Java since Java doesn't understand default args
-  def withCapacity(kind: api.AgentKind, world: World, initialCapacity: Int) =
-    new ArrayAgentSet(kind, world, initialCapacity, null, 0,
+  def withCapacity(kind: api.AgentKind, initialCapacity: Int) =
+    new ArrayAgentSet(kind, initialCapacity, null, 0,
       new Array[Agent](initialCapacity))
 
   def fromAgent(agent: Agent) =
-    fromArray(agent.kind, agent.world, Array(agent))
+    fromArray(agent.kind, Array(agent))
 
-  def fromArray(kind: api.AgentKind, world: World, agents: Array[Agent], printName: String = null) =
-    new ArrayAgentSet(kind, world, agents.size, printName, agents.size, agents)
+  def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null) =
+    new ArrayAgentSet(kind, agents.size, printName, agents.size, agents)
 
   // for use from Java since Java doesn't understand default args
-  def fromArray(kind: api.AgentKind, world: World, agents: Array[Agent]) =
-    new ArrayAgentSet(kind, world, agents.size, null, agents.size, agents)
+  def fromArray(kind: api.AgentKind, agents: Array[Agent]) =
+    new ArrayAgentSet(kind, agents.size, null, agents.size, agents)
 }
 
 class ArrayAgentSet private (
   kind: api.AgentKind,
-  world: World,
   initialCapacity: Int,
   printName: String,
   private var size: Int,
   private var array: Array[Agent])
-extends AgentSet(kind, world, printName, false, false, false) {
+extends AgentSet(kind, printName, false, false, false) {
 
   /// data
 

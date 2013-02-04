@@ -76,7 +76,7 @@ class _breedon(breedName: String) extends Reporter {
           Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType,
           arg0)
     }
-    ArrayAgentSet.fromArray(AgentKind.Turtle, world, result.toArray)
+    ArrayAgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
   def report_2(context: Context, sourceSet: AgentSet): AgentSet = {
@@ -109,7 +109,7 @@ class _breedon(breedName: String) extends Reporter {
           Syntax.TurtlesetType | Syntax.PatchsetType,
           sourceSet)
     }
-    ArrayAgentSet.fromArray(AgentKind.Turtle, world, result.toArray)
+    ArrayAgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
   def report_3(context: Context, agent: Agent): AgentSet = {
@@ -140,7 +140,7 @@ class _breedon(breedName: String) extends Reporter {
           Syntax.TurtleType | Syntax.PatchType,
           agent)
     }
-    ArrayAgentSet.fromArray(AgentKind.Turtle, world, result.toArray)
+    ArrayAgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
   def report_4(context: Context, turtle: Turtle): AgentSet = {
@@ -156,7 +156,7 @@ class _breedon(breedName: String) extends Reporter {
       if (t.getBreed eq breed)
         result += t
     }
-    ArrayAgentSet.fromArray(AgentKind.Turtle, world, result.toArray)
+    ArrayAgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
   def report_5(context: Context, patch: Patch): AgentSet = {
@@ -168,7 +168,7 @@ class _breedon(breedName: String) extends Reporter {
       if (t.getBreed eq breed)
         result += t
     }
-    ArrayAgentSet.fromArray(AgentKind.Turtle, world, result.toArray)
+    ArrayAgentSet.fromArray(AgentKind.Turtle, result.toArray)
   }
 
 }

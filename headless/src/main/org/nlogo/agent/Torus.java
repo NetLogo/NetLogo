@@ -69,15 +69,15 @@ strictfp class Torus
         return world.noPatches();
       } else {
         return ArrayAgentSet.fromArray
-          (AgentKindJ.Patch(), world,
-                new Agent[]{getPatchNorth(source), getPatchSouth(source)});
+          (AgentKindJ.Patch(), new Agent[]{getPatchNorth(source),
+                                           getPatchSouth(source)});
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
       return ArrayAgentSet.fromArray
-        (AgentKindJ.Patch(), world,
+        (AgentKindJ.Patch(),
               new Agent[]{getPatchEast(source), getPatchWest(source)});
     } else {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
                       getPatchSouth(source), getPatchWest(source),
                       getPatchNorthEast(source), getPatchSouthEast(source),
@@ -92,15 +92,15 @@ strictfp class Torus
         return world.noPatches();
       } else {
         return ArrayAgentSet.fromArray
-          (AgentKindJ.Patch(), world,
+          (AgentKindJ.Patch(),
            new Agent[]{getPatchNorth(source), getPatchSouth(source)});
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
       return ArrayAgentSet.fromArray
-        (AgentKindJ.Patch(), world,
+        (AgentKindJ.Patch(),
               new Agent[]{getPatchEast(source), getPatchWest(source)});
     } else {
-      return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+      return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
                       getPatchSouth(source), getPatchWest(source)});
     }

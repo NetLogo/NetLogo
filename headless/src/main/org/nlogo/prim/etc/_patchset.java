@@ -56,7 +56,7 @@ public final strictfp class _patchset
       }
     }
     return ArrayAgentSet.fromArray(
-      AgentKindJ.Patch(), world,
+      AgentKindJ.Patch(),
       resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }
 

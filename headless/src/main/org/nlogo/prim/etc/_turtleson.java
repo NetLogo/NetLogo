@@ -55,9 +55,9 @@ public final strictfp class _turtleson
           (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
     return ArrayAgentSet.fromArray(
-      AgentKindJ.Turtle(), world,
-       resultList.toArray
-       (new Turtle[resultList.size()]));
+      AgentKindJ.Turtle(),
+      resultList.toArray(
+        new Turtle[resultList.size()]));
   }
 
   private void addAll(List<Turtle> turtles, Iterable<Turtle> moreTurtles) {

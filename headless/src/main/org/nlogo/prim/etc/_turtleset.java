@@ -57,8 +57,9 @@ public final strictfp class _turtleset
       }
     }
     return ArrayAgentSet.fromArray(
-      AgentKindJ.Turtle(), world,
-      resultSet.toArray(new org.nlogo.agent.Turtle[resultSet.size()]));
+      AgentKindJ.Turtle(),
+      resultSet.toArray(
+        new org.nlogo.agent.Turtle[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Turtle> result) {

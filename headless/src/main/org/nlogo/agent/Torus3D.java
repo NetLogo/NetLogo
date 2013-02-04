@@ -125,7 +125,7 @@ public final strictfp class Torus3D
   }
 
   public AgentSet getNeighbors3d(Patch3D source) {
-    return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+    return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchNorthEast(source), getPatchSouthEast(source),
@@ -143,7 +143,7 @@ public final strictfp class Torus3D
   }
 
   public AgentSet getNeighbors6(Patch3D source) {
-    return ArrayAgentSet.fromArray(AgentKindJ.Patch(), world,
+    return ArrayAgentSet.fromArray(AgentKindJ.Patch(),
         new Agent[]{getPatchNorth(source), getPatchEast(source),
             getPatchSouth(source), getPatchWest(source),
             getPatchUp(source), getPatchDown(source)

@@ -6,7 +6,6 @@ import org.nlogo.{ api, util }
 
 abstract class AgentSet(
   val kind: api.AgentKind,
-  val world: World,
   val printName: String,
   val removableAgents: Boolean,
   // yuck, vars
@@ -72,7 +71,7 @@ extends api.AgentSet {
         case _ =>
           randomSubsetGeneral(resultSize, precomputedCount, rng)
       }
-    ArrayAgentSet.fromArray(kind, world, array)
+    ArrayAgentSet.fromArray(kind, array)
   }
 
 }

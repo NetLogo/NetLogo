@@ -18,7 +18,7 @@ class _other extends Reporter {
 
   def report_1(context: Context, sourceSet: AgentSet): AgentSet = {
     val result = ArrayAgentSet.withCapacity(
-      sourceSet.kind, world, sourceSet.count)
+      sourceSet.kind, sourceSet.count)
     val it = sourceSet.iterator
     while(it.hasNext) {
       val otherAgent = it.next()

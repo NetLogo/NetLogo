@@ -26,7 +26,7 @@ class _turtlesat extends Reporter {
       world.noTurtles
     else {
       val agentset = ArrayAgentSet.withCapacity(
-        AgentKind.Turtle, world, patch.turtleCount)
+        AgentKind.Turtle, patch.turtleCount)
       val it = patch.turtlesHere.iterator
       while(it.hasNext) {
         val turtle = it.next()

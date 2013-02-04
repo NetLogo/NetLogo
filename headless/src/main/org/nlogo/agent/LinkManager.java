@@ -132,7 +132,7 @@ public strictfp class LinkManager {
     List<Link> fromList = srcMap.get(src);
     if (fromList != null) {
       AgentSet nodeset =
-        ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), world, fromList.size());
+        ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), fromList.size());
       addLinkNeighborsFrom(nodeset, fromList, sourceSet, true);
       return nodeset;
     } else {
@@ -144,7 +144,7 @@ public strictfp class LinkManager {
     List<Link> fromList = destMap.get(target);
     if (fromList != null) {
       AgentSet nodeset =
-        ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), world, fromList.size());
+        ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), fromList.size());
       addLinkNeighborsTo(nodeset, fromList, sourceSet, true);
       return nodeset;
     } else {
@@ -160,7 +160,7 @@ public strictfp class LinkManager {
       return world.noTurtles();
     }
     AgentSet nodeset =
-      ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), world, size);
+      ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), size);
     if (toList != null) {
       addLinkNeighborsTo(nodeset, toList, sourceSet, false);
     }
@@ -227,8 +227,7 @@ public strictfp class LinkManager {
 
   public AgentSet findLinksFrom(Turtle src, AgentSet breed) {
     List<Link> fromList = srcMap.get(src);
-    AgentSet linkset =
-      ArrayAgentSet.apply(AgentKindJ.Link(), world);
+    AgentSet linkset = ArrayAgentSet.apply(AgentKindJ.Link());
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
@@ -242,8 +241,7 @@ public strictfp class LinkManager {
 
   public AgentSet findLinksTo(Turtle target, AgentSet breed) {
     List<Link> fromList = destMap.get(target);
-    AgentSet linkset =
-      ArrayAgentSet.apply(AgentKindJ.Link(), world);
+    AgentSet linkset = ArrayAgentSet.apply(AgentKindJ.Link());
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
@@ -266,8 +264,7 @@ public strictfp class LinkManager {
       totalList.addAll(toList);
     }
     boolean isAllLinks = breed == world.links();
-    AgentSet linkset =
-      ArrayAgentSet.apply(AgentKindJ.Link(), world);
+    AgentSet linkset = ArrayAgentSet.apply(AgentKindJ.Link());
     for (Link link : totalList) {
       if (isAllLinks || link.getBreed() == breed) {
         linkset.add(link);

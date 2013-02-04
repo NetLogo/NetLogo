@@ -28,7 +28,7 @@ public final strictfp class _layouttutte
     AgentSet linkset = argEvalAgentSet(context, 1, AgentKindJ.Link());
     double radius = argEvalDoubleValue(context, 2);
     try {
-      org.nlogo.agent.Layouts.tutte(nodeset, linkset, radius,
+      org.nlogo.agent.Layouts.tutte(world, nodeset, linkset, radius,
           context.job.random);
     } catch (AgentException e) {
       throw new EngineException(context, this, e.getMessage());

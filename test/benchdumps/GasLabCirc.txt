@@ -2879,11 +2879,9 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurecheckforparticlecollision_ask_5.world : Lorg/nlogo/agent/World;
           ALOAD 2
           INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;I)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;I)Lorg/nlogo/agent/ArrayAgentSet;
           ASTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
@@ -12874,15 +12872,13 @@ procedure MAKE-BOX:[]{OTPL}:
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduremakebox_ask_0.world : Lorg/nlogo/agent/World;
           ALOAD 9
           GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
           LDC Lorg/nlogo/agent/Agent;.class
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
          L6
           ASTORE 2
           ALOAD 1
@@ -13657,15 +13653,13 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurearrange_call_5.world : Lorg/nlogo/agent/World;
           ALOAD 9
           GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
           LDC Lorg/nlogo/agent/Agent;.class
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
          L10
           AASTORE
           ALOAD 1
@@ -14021,15 +14015,13 @@ reporter procedure OVERLAPPING?:[]{-T--}:
           ASTORE 5
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedureoverlapping_report_0.world : Lorg/nlogo/agent/World;
           ALOAD 5
           ALOAD 5
           INVOKEINTERFACE java/util/List.size ()I
           ANEWARRAY org/nlogo/agent/Agent
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKESTATIC org/nlogo/agent/ArrayAgentSet.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKESTATIC org/nlogo/agent/ArrayAgentSet.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
          L13
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureoverlapping_report_0.keptinstr10 : Lorg/nlogo/prim/_asm_procedureoverlapping_lessthan_1;

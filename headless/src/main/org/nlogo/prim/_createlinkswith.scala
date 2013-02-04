@@ -28,7 +28,7 @@ class _createlinkswith(val breedName: String) extends Command with CustomAssembl
     checkForBreedCompatibility(breed, context)
     if (breed eq world.links)
       breed.setDirected(false)
-    val edgeset = ArrayAgentSet.withCapacity(AgentKind.Link, world, agentset.count);
+    val edgeset = ArrayAgentSet.withCapacity(AgentKind.Link, agentset.count);
     val src = context.agent.asInstanceOf[Turtle]
     // We have to shuffle here in order for who number assignment to be random! - ST 3/15/06
     val iter = agentset.shufflerator(context.job.random)

@@ -14,7 +14,7 @@ class _patchrow extends Reporter {
 
   override def report(context: Context): AnyRef = {
     val result = ArrayAgentSet.withCapacity(
-      AgentKind.Patch, world, world.worldHeight)
+      AgentKind.Patch, world.worldHeight)
     val yDouble = argEvalDoubleValue(context, 0)
     val y = yDouble.toInt
     if (y == yDouble && y >= world.minPycor && y <= world.maxPycor) {

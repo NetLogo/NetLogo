@@ -55,7 +55,6 @@ public final strictfp class _incone
     List<Agent> result =
         world.inRadiusOrCone.inCone((Turtle) context.agent, sourceSet, radius, angle, true);
     return ArrayAgentSet.fromArray
-      (sourceSet.kind(), world,
-       result.toArray(new Agent[result.size()]));
+      (sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

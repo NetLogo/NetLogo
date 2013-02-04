@@ -54,7 +54,7 @@ public final strictfp class _linkset
       }
     }
     return ArrayAgentSet.fromArray(
-      AgentKindJ.Link(), world,
+      AgentKindJ.Link(),
       resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
   }
 

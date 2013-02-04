@@ -44,7 +44,6 @@ public final strictfp class _inradius
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, true);
     return ArrayAgentSet.fromArray
-      (sourceSet.kind(), world,
-       result.toArray(new Agent[result.size()]));
+      (sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

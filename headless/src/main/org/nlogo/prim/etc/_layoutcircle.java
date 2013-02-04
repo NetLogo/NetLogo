@@ -37,7 +37,7 @@ public final strictfp class _layoutcircle
               (context, this,
                   I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
         }
-        org.nlogo.agent.Layouts.circle(set, radius, context.job.random);
+        org.nlogo.agent.Layouts.circle(world, set, radius, context.job.random);
       }
     } catch (org.nlogo.api.AgentException e) {
       throw new EngineException(context, this, e.getMessage());

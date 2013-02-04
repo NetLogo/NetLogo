@@ -22,7 +22,7 @@ class _hatch(val breedName: String) extends Command with CustomAssembled {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val parent = context.agent.asInstanceOf[Turtle]
-      val agentset = ArrayAgentSet.withCapacity(AgentKind.Turtle, world, count)
+      val agentset = ArrayAgentSet.withCapacity(AgentKind.Turtle, count)
       val breed =
         if (breedName.isEmpty) parent.getBreed
         else world.getBreed(breedName)

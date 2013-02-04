@@ -115,11 +115,11 @@ public strictfp class World
   /// empty agentsets
 
   private final AgentSet _noTurtles =
-    ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), this, 0);
+    ArrayAgentSet.withCapacity(AgentKindJ.Turtle(), 0);
   private final AgentSet _noPatches =
-    ArrayAgentSet.withCapacity(AgentKindJ.Patch(), this, 0);
+    ArrayAgentSet.withCapacity(AgentKindJ.Patch(), 0);
   private final AgentSet _noLinks =
-    ArrayAgentSet.withCapacity(AgentKindJ.Link(), this, 0);
+    ArrayAgentSet.withCapacity(AgentKindJ.Link(), 0);
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -729,8 +729,8 @@ public strictfp class World
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), this, "TURTLES");
-    _links = new TreeAgentSet(AgentKindJ.Link(), this, "LINKS");
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = minPxcor;
     int y = maxPycor;
@@ -752,7 +752,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), this, patchArray, "patches");
+    _patches = ArrayAgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;

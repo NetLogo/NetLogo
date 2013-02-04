@@ -27,10 +27,9 @@ public final strictfp class Layouts3D {
   // THIS CODE IS ALMOST ALL THE SAME AS Layouts.spring2D();
   // GOOD CHANCE THAT ANY EDITS MADE HERE SHOULD BE MADE THERE
   // AS WELL.  ~Forrest (12/5/2006)
-  public static void spring3D(AgentSet nodeset, AgentSet linkset,
+  public static void spring3D(World3D world, AgentSet nodeset, AgentSet linkset,
                               double spr, double len, double rep,
                               org.nlogo.util.MersenneTwisterFast random) {
-    World3D world = (World3D) nodeset.world();
     int nodeCount = nodeset.count();
     if (nodeCount == 0) {
       return;

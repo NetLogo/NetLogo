@@ -899,15 +899,13 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurego_setprocedurevariable_8.world : Lorg/nlogo/agent/World;
           ALOAD 9
           GETSTATIC scala/reflect/ClassTag$.MODULE$ : Lscala/reflect/ClassTag$;
           LDC Lorg/nlogo/agent/Agent;.class
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/ArrayAgentSet;
          L9
           ASTORE 2
           ALOAD 1

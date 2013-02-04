@@ -2913,11 +2913,9 @@ procedure CATCH-SHEEP:[]{-T--}:
          L5
           GETSTATIC org/nlogo/agent/ArrayAgentSet$.MODULE$ : Lorg/nlogo/agent/ArrayAgentSet$;
           GETSTATIC org/nlogo/api/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/api/AgentKind$Turtle$;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtleCount ()I
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;Lorg/nlogo/agent/World;I)Lorg/nlogo/agent/ArrayAgentSet;
+          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet$.withCapacity (Lorg/nlogo/api/AgentKind;I)Lorg/nlogo/agent/ArrayAgentSet;
           ASTORE 8
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;

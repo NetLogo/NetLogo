@@ -32,7 +32,7 @@ public final strictfp class _turtlesat
       return world.noTurtles();
     }
     AgentSet agentset = ArrayAgentSet.withCapacity(
-      AgentKindJ.Turtle(), world, patch.turtleCount());
+      AgentKindJ.Turtle(), patch.turtleCount());
     for (org.nlogo.agent.Turtle turtle : patch.turtlesHere()) {
       if (turtle != null) {
         agentset.add(turtle);
