@@ -5,9 +5,11 @@
       <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/compile" />
       <root url="file://$PROJECT_DIR$/project/boot/scala-2.9.2/lib" />
       <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/compile" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/test" recursive="false" />

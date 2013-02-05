@@ -3,7 +3,6 @@
 package org.nlogo.app;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.nlogo.api.I18N;
@@ -13,6 +12,7 @@ import org.nlogo.awt.UserCancelException;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
 import org.nlogo.api.ModelSectionJ;
+import org.nlogo.modelingcommons.ModelingCommons;
 
 /*
  * note that multiple instances of this class may exist
@@ -42,6 +42,8 @@ public strictfp class FileMenu
     addMenuItem('S', new SaveAction());
     addMenuItem(new SaveAsAction());
     addMenuItem(new SaveAppletAction());
+    addMenuItem(new SaveModelingCommonsAction());
+
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
@@ -178,6 +180,21 @@ public strictfp class FileMenu
     }
   }
 
+    private class SaveModelingCommonsAction extends FileMenuAction {
+      SaveModelingCommonsAction(String title) {
+      super(title);
+      }
+      SaveModelingCommonsAction() {
+        this("Upload To Modeling Commons");
+      }
+
+        @Override
+        void action() throws UserCancelException {
+          checkWithUserBeforeSavingModelFromOldVersion();
+          ModelingCommons communicator = new ModelingCommons(modelSaver, org.nlogo.awt.Hierarchy.getFrame(FileMenu.this), app);
+          communicator.saveToModelingCommons();
+        }
+    }
   private class SaveAction extends FileMenuAction {
     SaveAction() {
       super(I18N.guiJ().get("menu.file.save"));
@@ -201,6 +218,7 @@ public strictfp class FileMenu
       saveAs();
     }
   }
+
 
   private class SaveAppletAction extends FileMenuAction {
     SaveAppletAction(String title) {

@@ -44,6 +44,13 @@ trait Libraries extends DefaultProject {
   // HTTP stuff for remote logging
   val apache = "org.apache.httpcomponents" % "httpclient" % "4.2"
 
+  val apacheHttpMime = "org.apache.httpcomponents" % "httpmime" % "4.2"
+
+  //Java JSON library
+  val json = "com.googlecode.json-simple" % "json-simple" % "1.1.1"
+
+  val intellijForm = "com.intellij" % "forms_rt" % "7.0.3"
+
   /// native libraries for JOGL and Quaqua
   private val libs_mac = Seq("lib" / "Mac OS X" / "libjogl.jnilib",
                              "lib" / "Mac OS X" / "libjogl_awt.jnilib",
