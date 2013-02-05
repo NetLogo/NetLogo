@@ -37,9 +37,6 @@ class FakeWorld(state: State) extends api.World {
         classOf[api.RendererInterface],
         "org.nlogo.render.Renderer", Array(this))
     renderer.resetCache(settings.patchSize)
-    for(drawing <- trailDrawing)
-      renderer.trailDrawer.readImage(
-        new java.io.ByteArrayInputStream(drawing))
     renderer
   }
 
@@ -204,8 +201,6 @@ class FakeWorld(state: State) extends api.World {
   def wrappingAllowedInX = worldVar[Boolean](wvWrappingAllowedInX)
   def wrappingAllowedInY = worldVar[Boolean](wvWrappingAllowedInY)
   def patchesAllBlack = worldVar[Boolean](wvPatchesAllBlack)
-
-  def trailDrawing = worldVar[Option[Array[Byte]]](wvTrailDrawing)
 
   def program = {
     def makeBreedMap(breedsVar: Int) =

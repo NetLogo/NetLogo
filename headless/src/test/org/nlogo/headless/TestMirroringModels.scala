@@ -9,6 +9,7 @@ import mirror._
 import Mirroring._
 import Mirrorables._
 import TestMirroring.withWorkspace
+import org.nlogo.drawing.DrawingActionRunner
 
 class TestMirroringModels extends FunSuite with SlowTest {
 
@@ -18,8 +19,11 @@ class TestMirroringModels extends FunSuite with SlowTest {
 
   def modelRenderingTest(path: String) {
     withWorkspace { (ws, mirrorables) =>
+      val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
+
       ws.open(path)
       Checksummer.initModelForChecksumming(ws)
+
       val (m0, u0) = diffs(Map(), mirrorables())
       var state = Mirroring.merge(
         Map(),
@@ -29,6 +33,10 @@ class TestMirroringModels extends FunSuite with SlowTest {
       val dummy = new FakeWorld(state)
       val renderer = dummy.newRenderer(ws)
       renderer.renderLabelsAsRectangles_=(true)
+
+      val runner = new DrawingActionRunner(renderer.trailDrawer, dummy)
+      drawingActionBuffer.grab().foreach(runner.run)
+
       val realChecksum =
         Checksummer.calculateGraphicsChecksum(ws.renderer, ws)
       val mirrorChecksum =
@@ -50,12 +58,16 @@ class TestMirroringModels extends FunSuite with SlowTest {
     }
   }
 
-  if (!api.Version.is3D)
-    for (path <- TestChecksums.checksums.values.map(_.path))
-      // exclude 1 model for now, failing & we don't know why yet
-      if (!path.endsWith("Diffusion on a Directed Network.nlogo"))
-        test("Mirroring: " + path) {
-          modelRenderingTest(path)
-        }
-
+  if (!api.Version.is3D) {
+    val exclusions = Seq(
+      "Diffusion on a Directed Network", // link shapes don't work properly
+      "GIS General Examples", // the GIS ext. bypasses the trailDrawer
+      "GIS Gradient Example")
+    for {
+      path <- TestChecksums.checksums.values.map(_.path)
+      if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
+    } test("Mirroring: " + path) {
+      modelRenderingTest(path)
+    }
+  }
 }
