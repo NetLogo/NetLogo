@@ -35,7 +35,6 @@ class FrameCache(
         .take(minSize)
       cache = cache.filterKeys(keepers.contains)
     }
-    println(cache.keys.toSeq.sorted)
   }
 
   /**
