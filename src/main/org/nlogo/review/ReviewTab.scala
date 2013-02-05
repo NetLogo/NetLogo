@@ -198,7 +198,10 @@ class ReviewTab(
         try {
           g2d.setClip(paintArea)
           g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-          fakeWorld.newRenderer.paint(g2d, FakeViewSettings)
+          val renderer = fakeWorld.newRenderer
+          val image = new java.io.ByteArrayInputStream(frame.drawingImageBytes)
+          renderer.trailDrawer.readImage(image)
+          renderer.paint(g2d, FakeViewSettings)
         } finally {
           g2d.dispose()
         }

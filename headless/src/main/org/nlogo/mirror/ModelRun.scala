@@ -3,10 +3,13 @@
 package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
+
 import org.nlogo.api
-import org.nlogo.drawing.DrawingAction
-import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
 import org.nlogo.api.Action
+import org.nlogo.drawing.{ DrawingActionRunner, imageToBytes }
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.drawing.DrawingAction.ReadImage
+import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
 
 class ModelRun(
   var name: String,
@@ -107,24 +110,30 @@ object Frame {
   def apply(realPlots: Seq[Plot]) = {
     val plots = realPlots.map(_.clone)
     plots.foreach(_.clear())
-    new Frame(Map(), plots)
+    new Frame(Map(), plots, Array[Byte]())
   }
 }
 
 case class Frame private (
   mirroredState: Mirroring.State,
-  plots: Seq[Plot]) {
+  plots: Seq[Plot],
+  drawingImageBytes: Array[Byte]) {
 
   def applyDelta(delta: Delta): Frame = {
     val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
     val newPlots = plots.map(_.clone)
     val plotActionRunner = new BasicPlotActionRunner(newPlots)
 
+    val trailDrawer = new FakeWorld(newMirroredState).trailDrawer
+    val drawingActionRunner = new DrawingActionRunner(trailDrawer)
+    drawingActionRunner.run(ReadImage(drawingImageBytes))
+
     delta.actions.foreach {
       case pa: PlotAction    => plotActionRunner.run(pa)
-      case da: DrawingAction => // TODO
+      case da: DrawingAction => drawingActionRunner.run(da)
     }
-    Frame(newMirroredState, newPlots)
+    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
+    Frame(newMirroredState, newPlots, imageToBytes(image))
   }
 
   def ticks: Option[Double] =
