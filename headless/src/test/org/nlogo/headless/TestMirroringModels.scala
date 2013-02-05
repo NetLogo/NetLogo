@@ -34,7 +34,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
       val renderer = dummy.newRenderer(ws)
       renderer.renderLabelsAsRectangles_=(true)
 
-      val runner = new DrawingActionRunner(renderer.trailDrawer, dummy)
+      val runner = new DrawingActionRunner(renderer.trailDrawer)
       drawingActionBuffer.grab().foreach(runner.run)
 
       val realChecksum =

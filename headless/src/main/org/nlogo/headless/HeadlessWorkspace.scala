@@ -112,7 +112,7 @@ with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
 
-  val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer, world)
+  val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)
 
   val defaultOwner =

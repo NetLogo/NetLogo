@@ -5,9 +5,9 @@ package org.nlogo.drawing
 import org.nlogo.api
 import DrawingAction._
 import scala.collection.JavaConverters._
+
 class DrawingActionRunner(
-  val trailDrawer: api.TrailDrawerInterface,
-  val world: api.World)
+  val trailDrawer: api.TrailDrawerInterface)
   extends api.ActionRunner[DrawingAction] {
 
   override def run(action: DrawingAction) = action match {

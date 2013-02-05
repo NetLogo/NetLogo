@@ -8,12 +8,11 @@ import DrawingAction._
 import org.nlogo.api.ActionBroker
 
 class DrawingActionBroker(
-  val trailDrawer: api.TrailDrawerInterface,
-  val world: api.World)
+  val trailDrawer: api.TrailDrawerInterface)
   extends ActionBroker[DrawingAction]
   with api.TrailDrawerInterface {
 
-  override val runner = new DrawingActionRunner(trailDrawer, world)
+  override val runner = new DrawingActionRunner(trailDrawer)
 
   override def drawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,
