@@ -31,14 +31,15 @@ class FakeWorld(state: State) extends api.World {
       groups.getOrElse(Link, Seq())) // there might be no links
   }
 
-  def newRenderer(settings: api.ViewSettings): api.RendererInterface = {
+  def newRenderer: api.RendererInterface = {
     val renderer =
       util.Femto.get(
         classOf[api.RendererInterface],
         "org.nlogo.render.Renderer", Array(this))
-    renderer.resetCache(settings.patchSize)
+    renderer.resetCache(patchSize)
     renderer
   }
+
 
   def patchColors: Array[Int] =
     patches.agentSeq
@@ -254,6 +255,8 @@ class FakeWorld(state: State) extends api.World {
       if (StrictMath.abs(y2 - y1) > StrictMath.abs(yprime - y1)) yprime else y2
     } else y2
 
+  def trailDrawer: api.TrailDrawerInterface = newRenderer.trailDrawer
+
   def getPatchAt(x: Double, y: Double): api.Patch = unsupported
   def fastGetPatchAt(x: Int, y: Int): api.Patch = unsupported
   def followOffsetX: Double = unsupported
@@ -275,7 +278,6 @@ class FakeWorld(state: State) extends api.World {
   def turtlesOwnNameAt(i: Int): String = unsupported
   def breedsOwnNameAt(breed: api.AgentSet, i: Int): String = unsupported
   def allStoredValues: Iterator[AnyRef] = unsupported
-  def trailDrawer: api.TrailDrawerInterface = unsupported
   def mayHavePartiallyTransparentObjects: Boolean = unsupported
   def timer: api.Timer = unsupported
   def setObserverVariableByName(variableName: String, value: AnyRef): Unit = unsupported

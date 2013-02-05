@@ -198,7 +198,7 @@ class ReviewTab(
         try {
           g2d.setClip(paintArea)
           g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-          fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
+          fakeWorld.newRenderer.paint(g2d, FakeViewSettings)
         } finally {
           g2d.dispose()
         }
