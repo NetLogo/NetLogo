@@ -119,21 +119,30 @@ case class Frame private (
   plots: Seq[Plot],
   drawingImageBytes: Array[Byte]) {
 
+  private def newPlots(delta: Delta): Seq[Plot] = {
+    val plotActions = delta.actions.collect { case pa: PlotAction => pa }
+    val clonedPlots = plots.map(_.clone)
+    if (plotActions.nonEmpty) {
+      val plotActionRunner = new BasicPlotActionRunner(clonedPlots)
+      plotActions.foreach(plotActionRunner.run)
+    }
+    clonedPlots
+  }
+
+  private def newImageBytes(delta: Delta, state: Mirroring.State): Array[Byte] = {
+    val drawingActions = delta.actions.collect { case da: DrawingAction => da }
+    if (drawingActions.nonEmpty) {
+      val trailDrawer = new FakeWorld(state).trailDrawer
+      val drawingActionRunner = new DrawingActionRunner(trailDrawer)
+      drawingActionRunner.run(ReadImage(drawingImageBytes))
+      val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
+      imageToBytes(image)
+    } else drawingImageBytes
+  }
+
   def applyDelta(delta: Delta): Frame = {
     val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
-    val newPlots = plots.map(_.clone)
-    val plotActionRunner = new BasicPlotActionRunner(newPlots)
-
-    val trailDrawer = new FakeWorld(newMirroredState).trailDrawer
-    val drawingActionRunner = new DrawingActionRunner(trailDrawer)
-    drawingActionRunner.run(ReadImage(drawingImageBytes))
-
-    delta.actions.foreach {
-      case pa: PlotAction    => plotActionRunner.run(pa)
-      case da: DrawingAction => drawingActionRunner.run(da)
-    }
-    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
-    Frame(newMirroredState, newPlots, imageToBytes(image))
+    Frame(newMirroredState, newPlots(delta), newImageBytes(delta, newMirroredState))
   }
 
   def ticks: Option[Double] =
