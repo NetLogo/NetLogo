@@ -118,7 +118,6 @@ public class NewUserDialog extends JDialog {
           profilePictureFilePath = FileDialog.show(frame, "Select image to use as profile picture", java.awt.FileDialog.LOAD);
           String toSet = profilePictureFilePath;
           FontMetrics metrics = selectedFileLabel.getFontMetrics(selectedFileLabel.getFont());
-          System.out.println("" + selectedFileLabel.getMaximumSize().width);
           while (metrics.stringWidth(toSet) > selectedFileLabel.getMaximumSize().width) {
             toSet = "\u2026" + toSet.substring(2);
           }
@@ -224,7 +223,6 @@ public class NewUserDialog extends JDialog {
       sex = Sex.MALE;
     }
     String country = (String) (countryComboBox.getSelectedObject());
-    System.out.println(country);
     Integer birthdayYear = (Integer) (birthdayYearComboBox.getSelectedItem());
     Month birthdayMonth = (Month) (birthdayMonthComboBox.getSelectedItem());
     Integer birthdayDay = (Integer) (birthdayDayComboBox.getSelectedItem());
@@ -236,7 +234,6 @@ public class NewUserDialog extends JDialog {
     Image profilePicture = null;
     if (imageFromFileRadioButton.isSelected()) {
       profilePicture = new FileImage(profilePictureFilePath);
-      System.out.println(profilePictureFilePath);
     }
 
     ModelingCommons.CreateUserRequest request = communicator.new CreateUserRequest(

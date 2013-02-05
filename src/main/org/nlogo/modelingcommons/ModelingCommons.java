@@ -76,7 +76,6 @@ public class ModelingCommons {
     }
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onLogin("CONNECTION_ERROR");
@@ -121,7 +120,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onLogout("CONNECTION_ERROR");
@@ -131,7 +129,6 @@ public class ModelingCommons {
       try {
         JSONObject obj = (JSONObject)(json.parse(response));
         String status = (String)(obj.get("status"));
-        System.out.println("Status: " + status);
         if(status.equals("SUCCESS") || status.equals("NOT_LOGGED_IN")) {
           person = null;
         }
@@ -200,7 +197,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onCreateUser("CONNECTION_ERROR");
@@ -209,7 +205,6 @@ public class ModelingCommons {
       try {
         JSONObject obj = (JSONObject)(json.parse(response));
         String status = (String)(obj.get("status"));
-        System.out.println("Status: " + status);
         if(status.equals("SUCCESS")) {
           JSONObject personObj = (JSONObject)(obj.get("person"));
           person = new Person(
@@ -275,7 +270,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onUploaded("CONNECTION_ERROR");
@@ -284,7 +278,6 @@ public class ModelingCommons {
       try {
         JSONObject obj = (JSONObject)(json.parse(response));
         String status = (String)(obj.get("status"));
-        System.out.println("Status: " + status);
         if(status.equals("SUCCESS")) {
           JSONObject model = ((JSONObject)(obj.get("model")));
           uploadedModelURL = (String)(model.get("url"));
@@ -312,8 +305,6 @@ public class ModelingCommons {
 
 
   String uploadModel(final String modelName, final Group group, final Permission visibility, final Permission changeability, final Image previewImage) {
-    System.out.println("uploading model");
-
     try {
 
       HttpPost post = new HttpPost(HOST + "/upload/create_model");
@@ -349,12 +340,10 @@ public class ModelingCommons {
       HttpResponse response =  http.execute(post);
       HttpEntity entity = response.getEntity();
       String responseStr = EntityUtils.toString(response.getEntity());
-      System.out.println(responseStr);
       EntityUtils.consume(entity);
       try {
         JSONObject obj = (JSONObject)(json.parse(responseStr));
         String status = (String)(obj.get("status"));
-        System.out.println("Status: " + status);
         if(status.equals("SUCCESS")) {
           JSONObject model = ((JSONObject)(obj.get("model")));
           this.uploadedModelURL = (String)(model.get("url"));
@@ -403,7 +392,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onUploaded("CONNECTION_ERROR");
@@ -440,8 +428,6 @@ public class ModelingCommons {
 
 
   String updateModel(final int existingModelId, final String newModelName, final String description, final NewModelType newModelType) {
-    System.out.println("updating model");
-
     if(!(newModelType == NewModelType.NEW_VERSION || newModelType == NewModelType.CHILD)) {
       throw new IllegalArgumentException("Invalid upload type - must be child or new version");
     }
@@ -472,7 +458,6 @@ public class ModelingCommons {
       HttpResponse response =  http.execute(post);
       HttpEntity entity = response.getEntity();
       String responseStr = EntityUtils.toString(response.getEntity());
-      System.out.println(responseStr);
       EntityUtils.consume(entity);
       try {
         JSONObject obj = (JSONObject)(json.parse(responseStr));
@@ -522,7 +507,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onDownloaded("CONNECTION_ERROR", null);
@@ -564,7 +548,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
       loadingDialog.dispose();
       if(response == null) {
         onDownloaded("CONNECTION_ERROR", null, null, null);
@@ -621,14 +604,11 @@ public class ModelingCommons {
 
   void abortSearchForModels() {
     if(searchForModelsRequest != null) {
-      System.out.println("Aborting existing request");
       searchForModelsRequest.abort();
     }
   }
 
   List<Model> searchForModels(String queryString, int count, boolean changeability) throws ParseException, IOException {
-
-    System.out.println("Creating http request for search " + queryString);
     List<Model> out = new ArrayList<Model>();
     HttpPost post = new HttpPost(HOST + "/account/models");
     post.addHeader("Accept", "application/json");
@@ -649,7 +629,6 @@ public class ModelingCommons {
     HttpEntity entity = response.getEntity();
     String responseStr = EntityUtils.toString(response.getEntity());
     EntityUtils.consume(entity);
-    System.out.println(responseStr);
     JSONObject obj = (JSONObject)(json.parse(responseStr));
     JSONArray models = (JSONArray)(obj.get("models"));
     Iterator iterator = models.iterator();
@@ -659,7 +638,6 @@ public class ModelingCommons {
       int modelId = ((Number)(model.get("id"))).intValue();
       out.add(new Model(modelId, modelName));
     }
-    System.out.println("Search for " + queryString + " returned " + out.size() + " results");
     return out;
   }
 
@@ -677,8 +655,6 @@ public class ModelingCommons {
 
     @Override
     protected void onReturn(String response) {
-      System.out.println(response);
-
       if(response == null) {
         return;
       }
@@ -821,13 +797,11 @@ public class ModelingCommons {
          JobOwner jobOwner = new SimpleJobOwner("Modeling Commons Preview Image", headless.mainRNG(), Observer.class);
          headless.runCompiledCommands(jobOwner, procedure);*/
           String command = "random-seed 0 " + headless.previewCommands();
-          System.out.println("Autogeneration command: " + command);
           headless.command(command);
           BufferedImage image = headless.exportView();
           headless.dispose();
           return image;
         } catch(InterruptedException e) {
-          System.out.println("Interrupted exception " + e.getMessage());
         } catch (Exception e) {
           throw new ImageException("Could not autogenerate preview image: " + e.getMessage());
 

@@ -93,6 +93,5 @@ public abstract class Request {
 
   public void abort() {
     request.abort();
-    System.out.println("Attempting to abort request");
   }
 }
