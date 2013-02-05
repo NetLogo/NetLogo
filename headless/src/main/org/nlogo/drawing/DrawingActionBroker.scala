@@ -67,9 +67,6 @@ class DrawingActionBroker(
     trailDrawer.exportDrawingToCSV(writer)
 
   /** Converts a java.awt.image.BufferedImage to a ReadImage drawing action. */
-  private def imageToAction(image: java.awt.image.BufferedImage): ReadImage = {
-    val outputStream = new java.io.ByteArrayOutputStream
-    javax.imageio.ImageIO.write(image, "png", outputStream)
-    ReadImage(outputStream.toByteArray())
-  }
+  private def imageToAction(image: java.awt.image.BufferedImage): ReadImage =
+    ReadImage(imageToBytes(image))
 }
