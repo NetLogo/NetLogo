@@ -49,7 +49,7 @@ object ModelRunIO {
     val viewShape = read[java.awt.Shape]()
     val imageBytes = read[Array[Byte]]()
     val rawMirroredUpdates = read[Seq[Array[Byte]]]()
-    val actionFrames = read[Seq[Seq[Action]]]()
+    val actionFrames = read[Seq[IndexedSeq[Action]]]()
     val generalNotes = read[String]()
     in.close()
     val viewArea = new java.awt.geom.Area(viewShape)

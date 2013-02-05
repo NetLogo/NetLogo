@@ -41,12 +41,12 @@ class ModelRun(
     dirty = true
   }
 
-  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], actions: Seq[Action]) {
+  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]) {
     _data = Some(Data(realPlots))
     _data.foreach(_.append(mirrorables, actions))
   }
 
-  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], actionSeqs: Seq[Seq[Action]]) {
+  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], actionSeqs: Seq[IndexedSeq[Action]]) {
     val deltas = (rawMirroredUpdates, actionSeqs).zipped.map(Delta(_, _))
     _data = Some(Data(realPlots, deltas))
     stillRecording = false
@@ -76,7 +76,7 @@ class ModelRun(
     def lastFrameIndex = size - 1
     private def lastFrame = frameCache.get(lastFrameIndex).getOrElse(Frame(realPlots))
 
-    private val frameCache = new FrameCache(deltas _, 10)
+    private val frameCache = new FrameCache(deltas _, 10, 20)
     def frame(index: Int) = frameCache.get(index)
 
     private def appendFrame(delta: Delta) {
@@ -85,7 +85,7 @@ class ModelRun(
       _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
     }
 
-    def append(mirrorables: Iterable[Mirrorable], actions: Seq[Action]) {
+    def append(mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]) {
       val (newMirroredState, mirroredUpdate) =
         Mirroring.diffs(lastFrame.mirroredState, mirrorables)
       val delta = Delta(mirroredUpdate, actions)
@@ -96,14 +96,15 @@ class ModelRun(
 }
 
 object Delta {
-  def apply(mirroredUpdate: Update, actions: Seq[Action]): Delta =
+  def apply(mirroredUpdate: Update, actions: IndexedSeq[Action]): Delta =
     Delta(Serializer.toBytes(mirroredUpdate), actions)
 }
 
 case class Delta(
   val rawMirroredUpdate: Array[Byte],
-  val actions: Seq[Action]) {
+  val actions: IndexedSeq[Action]) {
   def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
+  def size = rawMirroredUpdate.size + actions.size // used in FrameCache cost calculations
 }
 
 object Frame {

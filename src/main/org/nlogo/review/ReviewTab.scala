@@ -62,7 +62,7 @@ class ReviewTab(
    */
   private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
-  private val actionBuffers = Seq(plotActionBuffer, drawingActionBuffer)
+  private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
 
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,

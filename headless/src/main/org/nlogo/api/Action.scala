@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import scala.collection.mutable.{ Buffer, Publisher, Subscriber }
+import scala.collection.mutable.{ ArrayBuffer, Publisher, Subscriber }
 
 trait Action
 
@@ -40,7 +40,7 @@ trait ActionBroker[A <: Action]
 class ActionBuffer[A <: Action](broker: ActionBroker[A])
   extends Subscriber[A, Publisher[A]] {
   broker.subscribe(this)
-  private val buffer = Buffer[A]()
+  private val buffer = ArrayBuffer[A]()
   override def notify(pub: Publisher[A], action: A) {
     buffer += action
   }
@@ -48,13 +48,13 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A])
   /** Removes all actions in the buffer */
   def clear() { buffer.clear() }
 
-  /** Returns a list of actions in the buffer and clears the buffer */
-  def grab(): List[A] = {
-    val actions = buffer.toList
+  /** Returns a vector of actions in the buffer and clears the buffer */
+  def grab(): Vector[A] = {
+    val actions = buffer.toVector
     clear()
     actions
   }
 
-  /** Returns a list of actions contained in the buffer without clearing it */
-  def list: List[A] = buffer.toList
+  /** Returns a vector of actions contained in the buffer without clearing it */
+  def list: Vector[A] = buffer.toVector
 }
