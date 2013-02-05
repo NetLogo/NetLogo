@@ -137,6 +137,7 @@ case class Frame private (
       val drawingActionRunner = new DrawingActionRunner(trailDrawer)
       drawingActionRunner.run(ReadImage(drawingImageBytes))
       val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
+      drawingActions.foreach(drawingActionRunner.run)
       imageToBytes(image)
     } else drawingImageBytes
   }
