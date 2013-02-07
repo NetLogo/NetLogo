@@ -8,9 +8,6 @@
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
           <value />
         </option>
-        <ScalaCodeStyleSettings>
-          <option name="IMPORTS_MEMBERS_USING_UNDERSCORE" value="false" />
-        </ScalaCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>

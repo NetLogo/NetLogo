@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App Spanish" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="org.nlogo.app.App" />
     <option name="VM_PARAMETERS" value="-Duser.language=es -Duser.region=ES -Dfile.encoding=UTF-8" />
     <option name="PROGRAM_PARAMETERS" value="" />
