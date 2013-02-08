@@ -1,6 +1,5 @@
 package org.nlogo.modelingcommons;
 
-import ch.epfl.lamp.util.ByteArray;
 import org.apache.http.Consts;
 import org.apache.http.client.HttpClient;
 import org.apache.http.entity.mime.HttpMultipartMode;
