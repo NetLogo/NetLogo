@@ -25,7 +25,7 @@ extends javax.swing.JPanel {
   }
   private val motionAdapter = new MouseMotionAdapter {
     override def mouseDragged(e: MouseEvent) {
-      val dragAbsLoc = 
+      val dragAbsLoc =
         convertPointToScreen(e.getPoint, WindowResizer.this)
       window.setSize(
         sizeWhenPressed.width + (dragAbsLoc.x - mousePressAbsLoc.x),

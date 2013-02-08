@@ -7,7 +7,7 @@ import org.nlogo.api.{ Turtle, Turtle3D, Patch, Patch3D, World, World3D,
                        Agent, AgentException, Perspective, DrawingInterface }
 
 private class WorldRenderer3D(world: World3D, patchRenderer: PatchRenderer3D,
-                              drawing: DrawingInterface, turtleRenderer: TurtleRenderer3D, 
+                              drawing: DrawingInterface, turtleRenderer: TurtleRenderer3D,
                               linkRenderer: LinkRenderer3D, settings: GLViewSettings)
 extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRenderer, settings) {
 
@@ -48,7 +48,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
         x = x - distance * math.sin(math.toRadians(heading))
         y = y - distance * math.cos(math.toRadians(heading))
         z = distance * 0.5
-        pitch = 
+        pitch =
           try -world.protractor.towardsPitch(x, y, z, oldx, oldy, oldz, false)
           catch { case ex: AgentException => 0 }
         roll = 0
@@ -56,12 +56,12 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
     }
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)
-    gl.glRotated(pitch, 
-                 math.cos(math.toRadians(heading)), 
+    gl.glRotated(pitch,
+                 math.cos(math.toRadians(heading)),
                  -math.sin(math.toRadians(heading)), 0.0)
     gl.glRotated(-roll, -dx, -dy, dz)
-    gl.glTranslated(-(x * Renderer.WORLD_SCALE), 
-                    -(y * Renderer.WORLD_SCALE), 
+    gl.glTranslated(-(x * Renderer.WORLD_SCALE),
+                    -(y * Renderer.WORLD_SCALE),
                     -(z * Renderer.WORLD_SCALE))
   }
 

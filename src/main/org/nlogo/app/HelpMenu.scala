@@ -14,7 +14,7 @@ class HelpMenu(app: App, colorizer: Colorizer[_])
         extends org.nlogo.swing.Menu(I18N.gui.get("menu.help"))
 {
   implicit val i18nName = I18N.Prefix("menu.help")
-  
+
   def action(name: String, fn: () => Unit) =
     new javax.swing.AbstractAction(name) {
       def actionPerformed(e:java.awt.event.ActionEvent) {

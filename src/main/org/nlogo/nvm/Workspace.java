@@ -216,12 +216,6 @@ public interface Workspace
 
   void changeLanguage();
 
-  void openIndex();
-
-  void openNext();
-
-  void openPrevious();
-
   void startLogging(String properties);
 
   void zipLogFiles(String filename);

@@ -28,8 +28,15 @@ tmp/
 /src/main/org/nlogo/lex/TokenLexer.java
 /src/main/org/nlogo/window/Events.java
 
+# Eclipse
+/.classpath
+/.project
+/.cache
+/.settings
+
 # other
 /.ensime
+/.ensime_lucene/
 /build/
 /.idea/workspace.xml
 /.idea/highlighting.xml
@@ -39,8 +46,6 @@ tmp/
 /docs/infotab.html
 /lib/
 /out/
-/project/boot/
-/project/plugins/project/
 /resources/Errors_??.properties
 /resources/GUI_Strings_??.properties
 /resources/system/dict.txt

@@ -7,6 +7,12 @@ import collection.JavaConverters._
 
 object ModelReader {
 
+  val modelSuffix =
+    if(Version.is3D) "nlogo3d" else "nlogo"
+
+  val emptyModelPath =
+    "/system/empty." + modelSuffix
+
   type ModelMap = java.util.Map[ModelSection, Array[String]]
 
   val SEPARATOR = "@#$#@#$#@"
@@ -40,7 +46,7 @@ object ModelReader {
     sectionDone()
     map.asJava
   }
-  
+
   def parseVersion(map: ModelMap): String =
     map.get(ModelSection.Version)(0)
 
@@ -68,17 +74,21 @@ object ModelReader {
       case c => c.toString
     }
 
-  def restoreLines(s: String): String =
-    if(s.size < 2)
-      s
-    else if(s.head == '\\')
-      s.tail.head match {
-        case 'n' => '\n' + restoreLines(s.tail.tail)
-        case '\\' => '\\' + restoreLines(s.tail.tail)
-        case '"' => '"' + restoreLines(s.tail.tail)
-        case _ =>
-          sys.error("invalid escape sequence in \"" + s + "\"")
-      }
-    else s.head + restoreLines(s.tail)
+  def restoreLines(s: String): String = {
+    @scala.annotation.tailrec
+    def loop(acc: Vector[Char], rest: String): Vector[Char] = {
+      if (rest.size < 2)
+        acc ++ rest
+      else if (rest.head == '\\')
+        rest.tail.head match {
+          case 'n'  => loop(acc :+ '\n', rest.tail.tail)
+          case '\\' => loop(acc :+ '\\', rest.tail.tail)
+          case '"'  => loop(acc :+ '"', rest.tail.tail)
+          case _    => sys.error("invalid escape sequence in \"" + s + "\"")
+        }
+      else loop(acc :+ rest.head, rest.tail)
+    }
+    loop(Vector(), s).mkString
+  }
 
 }

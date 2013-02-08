@@ -163,12 +163,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   }
 
   @Override
-  public void importDrawing(java.io.InputStream is)
-      throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(is);
-  }
-
-  @Override
   public void importWorld(String filename) throws java.io.IOException {
     super.importWorld(filename);
     new org.nlogo.window.Events.TickStateChangeEvent(true).raiseLater(this);
@@ -178,6 +172,12 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void importWorld(java.io.Reader reader) throws java.io.IOException {
     super.importWorld(reader);
     new org.nlogo.window.Events.TickStateChangeEvent(true).raiseLater(this);
+  }
+
+  @Override
+  public void importDrawing(java.io.InputStream is)
+      throws java.io.IOException {
+    view.renderer.trailDrawer().importDrawing(is);
   }
 
   @Override
@@ -395,28 +395,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   @Override
   public void openString(String modelContents) {
     throw new UnsupportedOperationException();
-  }
-
-  // called from the job thread
-  public void openIndex() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_INDEX, new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openNext() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_NEXT,
-            new Object[]{})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void openPrevious() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.OPEN_PREVIOUS, new Object[]{})
-        .raiseLater(this);
   }
 
   // called from the job thread
@@ -1011,11 +989,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
 
   public java.awt.image.BufferedImage exportView() {
     return viewManager.getPrimary().exportView();
-  }
-
-  @Override
-  public void writeGraphicsData(java.io.PrintWriter writer) {
-    writer.print(view.exportView().getData());
   }
 
   public void exportView(String filename, String format)

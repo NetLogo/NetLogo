@@ -127,7 +127,7 @@ error while observer running /
 
   val code =
     "to-report foo report bar end " +
-    "to-report bar report __boom end"         
+    "to-report bar report __boom end"
 
   testModel("error inside run", Model(code)) {
     intercept[LogoException] {observer >> "__ignore runresult \"foo\""}
@@ -165,5 +165,5 @@ error while observer running __BOOM
   called by procedure __EVALUATOR""")
   }
 */
-  
+
 }

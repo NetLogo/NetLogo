@@ -75,6 +75,11 @@ class ExtensionManager(val workspace: AbstractWorkspace) extends org.nlogo.api.E
     workspace.profilingEnabled
   }
 
+  override def loadedExtensions : java.lang.Iterable[ClassManager] = {
+    import scala.collection.JavaConverters._
+    jars.values.map(_.classManager).asJava
+  }
+
   override def getSource(filename: String): String = {
     workspace.getSource(filename)
   }

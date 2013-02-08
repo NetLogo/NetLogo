@@ -8,6 +8,7 @@ import java.io.PrintWriter
 
 object Checksummer {
   def initModelForChecksumming(workspace: HeadlessWorkspace) {
+    workspace.renderer.renderLabelsAsRectangles_=(true)
     if(workspace.previewCommands.containsSlice("need-to-manually-make-preview-for-this-model"))
       workspace.previewCommands = AbstractWorkspaceScala.DefaultPreviewCommands
     workspace.command("random-seed 0")
@@ -16,7 +17,11 @@ object Checksummer {
   def calculateWorldChecksum(workspace: HeadlessWorkspace): String =
     calculateChecksum(workspace.exportWorld _)
   def calculateGraphicsChecksum(workspace: HeadlessWorkspace): String =
-    calculateChecksum(workspace.writeGraphicsData _)
+    calculateChecksum{writer =>
+      val raster = workspace.renderer.exportView(workspace)
+      raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int])
+        .foreach(writer.println)
+    }
   // public for testing - ST 7/15/10
   def calculateChecksum(fn: PrintWriter => Unit): String = {
     val output = {

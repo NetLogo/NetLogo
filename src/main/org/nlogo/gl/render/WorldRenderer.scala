@@ -5,9 +5,9 @@ package org.nlogo.gl.render
 import javax.media.opengl.GL
 import org.nlogo.api.{ World, Agent, Patch, Patch3D, Turtle, Perspective, DrawingInterface, AgentException }
 
-private class WorldRenderer(world: World, patchRenderer: PatchRenderer, 
-                            drawing: DrawingInterface, turtleRenderer: TurtleRenderer, 
-                            linkRenderer: LinkRenderer, settings: GLViewSettings) {    
+private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
+                            drawing: DrawingInterface, turtleRenderer: TurtleRenderer,
+                            linkRenderer: LinkRenderer, settings: GLViewSettings) {
 
   val observer = world.observer
   val drawingRenderer = createDrawingRenderer(world, drawing, turtleRenderer, linkRenderer)
@@ -16,9 +16,9 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
   def createDrawingRenderer(world: World, drawing: DrawingInterface,
                             turtleRenderer: TurtleRenderer, linkRenderer: LinkRenderer): DrawingRendererInterface =
     new DrawingRenderer(world, drawing)
-  
+
   def init(gl: GL, shapeManager: ShapeManager) {
-    this.shapeManager = shapeManager          
+    this.shapeManager = shapeManager
     drawingRenderer.init(gl)
   }
 
@@ -46,22 +46,22 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     }
     gl.glRotated(90, -1.0, 0.0, 0.0)
     gl.glRotated(heading, 0.0, 0.0, 1.0)
-    gl.glRotated(pitch, 
-                 math.cos(math.toRadians(heading)), 
+    gl.glRotated(pitch,
+                 math.cos(math.toRadians(heading)),
                  -math.sin(math.toRadians(heading)), 0.0)
-    gl.glTranslated(-x * Renderer.WORLD_SCALE, 
-                    -y * Renderer.WORLD_SCALE, 
+    gl.glTranslated(-x * Renderer.WORLD_SCALE,
+                    -y * Renderer.WORLD_SCALE,
                     -z * Renderer.WORLD_SCALE)
   }
-  
+
   def getXYandZ(turtle: Turtle) =
     Array[Double](turtle.xcor, turtle.ycor, 0)
 
   def getOrientation(turtle: Turtle) =
     Array[Double](turtle.heading, 0, 0)
-  
+
   /// crosshairs
-  
+
   var showCrossHairs = false
 
   def getCrosshairCoords =
@@ -75,9 +75,9 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
       val perspective = observer.perspective
       if(perspective != Perspective.Follow && perspective != Perspective.Ride) {
         val dist = observer.dist
-        coords(0) += dist * observer.dx 
-        coords(1) += dist * observer.dy 
-        coords(2) -= dist * observer.dz 
+        coords(0) += dist * observer.dx
+        coords(1) += dist * observer.dy
+        coords(2) -= dist * observer.dz
       }
       coords(0) *= Renderer.WORLD_SCALE
       coords(1) *= Renderer.WORLD_SCALE
@@ -101,16 +101,16 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
   def renderIndividualPatchShapes(gl: GL, patch: Patch3D, outlineAgent: Agent,
                                   fontSize: Int, patchSize: Double) {
     outlineAgent match {
-      case p: Patch => 
+      case p: Patch =>
         patchRenderer.renderOutline(gl, p)
       case _ =>
-    }  
+    }
     patchRenderer.renderIndividualLabels(gl, patch, fontSize, patchSize)
   }
 
   def renderPatchShapes(gl: GL, outlineAgent: Agent, fontSize: Int, patchSize: Double) {
     outlineAgent match {
-      case p: Patch => 
+      case p: Patch =>
         patchRenderer.renderOutline(gl, p)
       case _ =>
     }

@@ -656,7 +656,7 @@ to setup
     [ ask patch-at 1 0            ;; ...to ask patch to the east
       [ set pcolor red ] ]        ;; ...to become red
   ask turtle 0                    ;; tell the first turtle...
-    [ create-link-with turtle 1 ] ;; ...make a link with the second 
+    [ create-link-with turtle 1 ] ;; ...make a link with the second
   ask link 0 1                    ;; tell the link between turtle 0 and 1
     [ set color blue ]            ;; ...to become blue
   reset-ticks
@@ -664,14 +664,16 @@ end
 </pre>
     <p>
       Every turtle created has a who number. The first turtle created is
-      number 0, the second turtle number 1, and so forth. The <a href=
-      "dictionary.html#turtle"><tt>turtle</tt></a> primitive reporter takes
-      a who number as an input, and reports the turtle with that who
-      number. The <a href="dictionary.html#patch"><tt>patch</tt></a>
-      primitive reporter takes values for pxcor and pycor and reports the
-      patch with those coordinates. The <a href=
-      "dictionary.html#link"><tt>link</tt></a> primitive takes two inputs,
-      the who numbers of the two turtles it connects. And the <a href=
+      number 0, the second turtle number 1, and so forth.
+    <p>
+      The <a href="dictionary.html#turtle"><tt>turtle</tt></a> primitive
+      reporter takes a who number as an input, and reports the turtle with
+      that who number. The <a href=
+      "dictionary.html#patch"><tt>patch</tt></a> primitive reporter takes
+      values for pxcor and pycor and reports the patch with those
+      coordinates. The <a href="dictionary.html#link"><tt>link</tt></a>
+      primitive takes two inputs, the who numbers of the two turtles it
+      connects. And the <a href=
       "dictionary.html#patch-at"><tt>patch-at</tt></a> primitive reporter
       takes <i>offsets</i>: distances, in the x and y directions,
       <i>from</i> the first agent. In the example above, the turtle with
@@ -968,6 +970,10 @@ ask one-of wolves [ set breed sheep ]
       primitive is useful for associating certain turtle shapes with
       certain breeds. See the section on shapes <a href=
       "#shapes">below</a>.
+    <p>
+      Who numbers are assigned irrespective of breeds. If you already have
+      a <tt>frog 0</tt>, then the first mouse will be <tt>mouse 1</tt>, not
+      <tt>mouse 0</tt>, since the who number 0 is already taken.
     <p>
       Here is a quick example of using breeds:
     <pre>
@@ -1683,9 +1689,9 @@ show cos 90
       it can be reproduced by others.
     <p>
       Here's how it works. NetLogo's random number generator can be
-      started with a certain seed value, which must be an integer in the range
-      -2147483648 to 2147483647. Once the
-      generator has been &quot;seeded&quot; with the <tt><a href=
+      started with a certain seed value, which must be an integer in the
+      range -2147483648 to 2147483647. Once the generator has been
+      &quot;seeded&quot; with the <tt><a href=
       "dictionary.html#random-seed">random-seed</a></tt> command, it always
       generates the same sequence of random numbers from then on. For
       example, if you run these commands:
@@ -1937,8 +1943,8 @@ ask turtles [ set shape one-of shapes ]
       them see model states they aren't supposed to see, which may be
       misleading.
       <li>Increased speed. Updating the view takes time, so if one update
-      per tick is enough, then enforcing there is only one update per
-      tick will make your model faster.
+      per tick is enough, then enforcing there is only one update per tick
+      will make your model faster.
       <li>Since <tt>setup</tt> buttons don't advance the tick counter,
       they are unaffected by the speed slider; this is normally the desired
       behavior.
@@ -1976,11 +1982,11 @@ ask turtles [ set shape one-of shapes ]
       frequency of updates.
     <p>
       With tick-based updates, the setting is a <i>ceiling</i> on how many
-      updates per second you get. If the frame rate is 30, then
-      NetLogo will ensure that the model never runs faster than that when
-      the speed slider is in the default position. If any frame takes less
-      than 1/30 of a second to compute and display, NetLogo will pause and
-      wait until the full 1/30 of a second has passed before continuing.
+      updates per second you get. If the frame rate is 30, then NetLogo
+      will ensure that the model never runs faster than that when the speed
+      slider is in the default position. If any frame takes less than 1/30
+      of a second to compute and display, NetLogo will pause and wait until
+      the full 1/30 of a second has passed before continuing.
     <p>
       The frame rate settings lets you set what you consider to be a normal
       speed for your model. Then you, or the user of your model, can use
@@ -2568,8 +2574,8 @@ file-close
 setup
 movie-start &quot;out.mov&quot;
 movie-grab-view ;; show the initial state
-repeat 30 
-[ go 
+repeat 30
+[ go
   movie-grab-view ]
 movie-close
 </pre>
@@ -3037,19 +3043,14 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       Task primitives
     </h3>
     <p>
-      The new primitives associated with tasks are <tt>task</tt>,
+      Primitives specific to tasks are <tt>task</tt>,
       <tt>is-command-task?</tt>, and <tt>is-reporter-task?</tt>.
     <p>
-      The <tt>run</tt> command now accepts command tasks as well as
+      The <tt>run</tt> command accepts command tasks as well as
       strings.
     <p>
-      The <tt>runresult</tt> reporter now accepts reporter tasks as well as
+      The <tt>runresult</tt> reporter accepts reporter tasks as well as
       strings.
-    <p>
-      These primitives also accept tasks: <tt>foreach</tt>, <tt>map</tt>,
-      <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
-      <tt>sort-by</tt>. (The syntax is backward-compatible with existing
-      code from previous NetLogo versions.)
     <p>
       The <tt>task</tt> primitive creates a task. The task it reports might
       be a command task or a reporter task, depending on what kind of block
@@ -3057,6 +3058,17 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
       task, because <tt>fd</tt> is a command, while <tt>task [ count
       turtles ]</tt> reports a reporter task, because <tt>count</tt> is a
       reporter.
+    <p>
+      These primitives require tasks as input: <tt>foreach</tt>, <tt>map</tt>,
+      <tt>reduce</tt>, <tt>filter</tt>, <tt>n-values</tt>,
+      <tt>sort-by</tt>.  When calling these primitives, the <tt>task</tt>
+      primitive is optional,
+      so for example one may write simply <tt>foreach mylist [ print ? ]</tt>
+      instead of <tt>foreach mylist task [ print ? ]</tt>, though the latter
+      is also accepted.
+      (Because <tt>task</tt> is optional, the syntax for these primitives
+      is backward-compatible with existing code from previous NetLogo
+      versions.)
     <h3>
       Task inputs
     </h3>
@@ -3078,8 +3090,8 @@ ifelse patch-at (new-x - xcor) (new-y - ycor) = nobody
     </h3>
     <p>
       Simple uses of <tt>foreach</tt>, <tt>map</tt>, <tt>reduce</tt>,
-      <tt>filter</tt>, <tt>n-values</tt>, and <tt>sort-by</tt> can now be
-      written with a more concise syntax. You can now write:
+      <tt>filter</tt>, <tt>n-values</tt>, and <tt>sort-by</tt> can be
+      written with an especially concise syntax. You can write:
     <pre>
 map abs [1 -2 3 -4] =&gt; [1 2 3 4]
 reduce + [1 2 3 4] =&gt; 10
@@ -3145,9 +3157,14 @@ foreach [1 2 3 4] [ print ? ]
       blocks. Only the primitives listed above accept tasks as input.
       Control primitives such as <tt>ifelse</tt> and <tt>while</tt> and
       agent primitives such as <tt>of</tt> and <tt>with</tt> don't
-      accept tasks. So for example if I have a reporter task r and two
-      command tasks c1 and c2, I can't write <tt>ifelse r c1 c2</tt>, I
+      accept tasks. So for example if I have a reporter task <tt>r</tt> and two
+      command tasks <tt>c1</tt> and <tt>c2</tt>, I can't write <tt>ifelse r c1 c2</tt>, I
       must write <tt>ifelse runresult r [ run c1 ] [ run c2 ]</tt>.
+      <li>The concise syntax where <tt>task</tt> may be omitted is
+      only available to primitives and extension primitives, not
+      ordinary procedures. So for example if I have a procedure <tt>p</tt>
+      that accepts a task as input, it must be called as e.g.
+      <tt>p task [ ... ]</tt> not <tt>p [ ... ]</tt>.
       </ul>
     <h3>
       Code example
@@ -3439,7 +3456,8 @@ while [any? turtles with [steps &gt; 0]] [
       "dictionary.html#breed"><tt>breed</tt></a>, <a href=
       "dictionary.html#turtles-own"><tt>turtles-own</tt></a>, <a href=
       "dictionary.html#patches-own"><tt>patches-own</tt></a>, <a href=
-      "dictionary.html#breeds-own"><tt>&lt;BREED&gt;-own</tt></a>) in any
+      "dictionary.html#breeds-own"><tt>&lt;BREED&gt;-own</tt></a>, <a href=
+      "dictionary.html#extensions"><tt>extensions</tt></a>) in any
       order, followed by zero or more procedure definitions. Multiple
       breeds may be declared with separate <a href=
       "dictionary.html#breed"><tt>breed</tt></a> declarations; the other

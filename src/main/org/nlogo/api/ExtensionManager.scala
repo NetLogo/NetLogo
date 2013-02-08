@@ -35,12 +35,12 @@ trait ExtensionManager {
    * During compilation, we reach the extensions [ ... ] block.
    * When that happens, the compiler tells the ExtensionManager that it needs to
    * forget what extensions are in the extensions [ ... ] block, by calling this method.
-   * 
+   *
    * The compiler will then call the importExtension method for each extension in the block.
    * Among other things, this lets the ExtensionManager know each extension that is
    * "live", or currently in the block, so that its primitives are available for use
    * elsewhere in the model.
-   * 
+   *
    * See the top of {@link org.nlogo.workspace.ExtensionManager} for full details.
    */
   def startFullCompilation()
@@ -49,13 +49,16 @@ trait ExtensionManager {
    * Instructs any extensions which haven't been re-imported during the
    * current compile to shut down. Should be called during each full
    * re-compile.
-   * 
+   *
    * See the top of {@link org.nlogo.workspace.ExtensionManager} for full details.
    */
   def finishFullCompilation()
 
   /** Returns true if any extensions have been imported in the current model. */
   def anyExtensionsLoaded: Boolean
+
+  /** uses java.lang.Iterable for easy access from Java */
+  def loadedExtensions: java.lang.Iterable[ClassManager]
 
   /** Returns the identifier "name" by its imported implementation, if any, or null if not. */
   def replaceIdentifier(name: String): Option[Primitive]
@@ -80,7 +83,7 @@ trait ExtensionManager {
   def dumpExtensionPrimitives(): String
 
   @throws(classOf[java.io.IOException])
-  def getSource(filename: String): String 
+  def getSource(filename: String): String
 
   def addToLibraryPath(classManager: AnyRef, directory: String)
 

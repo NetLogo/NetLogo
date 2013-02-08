@@ -1,28 +1,28 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app 
+package org.nlogo.app
 
 class IncludesMenu(target: ProceduresTab)
 extends org.nlogo.swing.ToolBarMenu("Includes")
-with org.nlogo.window.Events.CompiledEvent.Handler 
+with org.nlogo.window.Events.CompiledEvent.Handler
 {
-  
+
   // If we're empty, we have no size, are invisible and don't affect our parent's layout
   private var isEmpty = true
 
   private var includesTable: Map[String, String] = null
-  
+
   def handle(e: org.nlogo.window.Events.CompiledEvent) {
     if(e.sourceOwner.isInstanceOf[ProceduresTab])
       updateVisibility()
   }
-  
+
   def updateVisibility() {
     isEmpty = target.getIncludesTable.isEmpty
     revalidate()
     super.doLayout()
   }
-  
+
   override def populate(menu: javax.swing.JPopupMenu) {
     import collection.JavaConverters._
     includesTable = target.getIncludesTable.asScala.toMap
@@ -50,12 +50,12 @@ with org.nlogo.window.Events.CompiledEvent.Handler
     menu.add(new javax.swing.JMenuItem(new NewSourceEditorAction))
     menu.add(new javax.swing.JMenuItem(new OpenSourceEditorAction))
   }
-  
+
   override def getMinimumSize =
     if (isEmpty) new java.awt.Dimension(0, 0)
     else super.getMinimumSize
-  
-  override def getPreferredSize = 
+
+  override def getPreferredSize =
     if (isEmpty) new java.awt.Dimension(0, 0)
     else super.getPreferredSize
 
@@ -89,6 +89,6 @@ with org.nlogo.window.Events.CompiledEvent.Handler
     override def actionPerformed(e: java.awt.event.ActionEvent) {
       App.app.tabs.newTemporaryFile()
     }
-  }    
+  }
 
 }

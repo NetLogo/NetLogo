@@ -3,9 +3,9 @@
 package org.nlogo.agent;
 
 /* The "general contract" between Object.hashCode() and Object.equals(..) is
-   for any Objects a & b, a.hashCode() == b.hashCode() must be true when 
-   a.equals(b)/b.equals(a) and vice versa. 
-   
+   for any Objects a & b, a.hashCode() == b.hashCode() must be true when
+   a.equals(b)/b.equals(a) and vice versa.
+
    Having said that. Object wrapped with this type will pass their equality
    tests off to World.recursivelyEqual( Object, Object ), any changes
    to recursivelyEqual will need to be made to this class's hashCode()
@@ -63,9 +63,13 @@ the same values, as well as a dead turtle and a Nobody. - JMD 10/28/03*/
           ? ZERO_CODE
           : sourceObject.hashCode();
     }
-    // these next two cases are sneaky -- NetLogo considers dead turtles to be
-    // equal to each other, and to nobody.  Dead turtles have an id of minus one,
-    // so that's what makes the next two cases work.  - ST 10/28/03*/
+    // these next three cases are sneaky -- NetLogo considers dead agents to be
+    // equal to each other, and to nobody.  Dead agents have an id of minus one,
+    // so that's what makes these cases work.  - ST 10/28/03, 11/20/12 */
+    else if (sourceObject instanceof Link) {
+      return Long.valueOf
+          (((Link) sourceObject).id).hashCode();
+    }
     else if (sourceObject instanceof Turtle) {
       return Long.valueOf
           (((Turtle) sourceObject).id).hashCode();

@@ -24,7 +24,7 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
           doPopupMenu()}})
   // get right appearance on Mac - ST 10/4/05
   putClientProperty("Quaqua.Button.style", "square")
-  
+
   override def getInsets = new java.awt.Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
 
   private def doPopupMenu() {
@@ -73,5 +73,5 @@ class HistoryPrompt(commandLine: CommandLine) extends javax.swing.JButton {
     }
     popMenu.show(this, getWidth / 2, getHeight / 2)
   }
-  
+
 }

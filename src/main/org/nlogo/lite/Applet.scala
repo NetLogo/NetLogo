@@ -39,7 +39,7 @@ with org.nlogo.window.Events.CompiledEvent.Handler {
     add(panel)
     // where our resources are
     panel.setPrefix(getCodeBase)
-  }     
+  }
 
   def go(path: String) {
     import org.nlogo.util.Utils.{ unescapeSpacesInURL, url2String }
@@ -99,6 +99,6 @@ with org.nlogo.window.Events.CompiledEvent.Handler {
     val pane = new JOptionPane(message)
     val dialog = pane.createDialog(new JFrame, "Model File Not Found")
     dialog.setVisible(true)
-  }     
+  }
 
 }

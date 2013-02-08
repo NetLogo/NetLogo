@@ -5,7 +5,7 @@ package org.nlogo.generator
 /**
  * This class's purpose is to catch one specific inefficient pattern of bytecode that the inliner
  * generates -- the needless GOTO [next instruction].  When it finds this pattern:
- *  GOTO labelA 
+ *  GOTO labelA
  *  (labelB)     // optional extra label
  *  labelA
  * it removes the GOTO. ~Forrest (6/19/2006), ST 2/25/10

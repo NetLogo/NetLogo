@@ -9,8 +9,8 @@ import org.nlogo.shape.LinkShape
 private class GLLinkShape3D(shape: LinkShape, directionIndicator: GLShape)
 extends GLLinkShape(shape, directionIndicator) {
 
-  override def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer, 
-                                        x1: Double, y1: Double, z1: Double, 
+  override def renderDirectionIndicator(gl: GL, shapeRenderer: ShapeRenderer,
+                                        x1: Double, y1: Double, z1: Double,
                                         x2: Double, y2: Double, z2: Double,
                                         link: Link, color: java.awt.Color, outline: Boolean,
                                         stroke: Float, world: World) {

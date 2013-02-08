@@ -9,7 +9,7 @@ package org.nlogo.swing
 import javax.swing.{ JTextField, UIManager }
 
 // add spaces because (on windows) the left char might get cut if font is bold
-class SelectableJLabel(str: String) extends JTextField(" " + str + " ") {  
+class SelectableJLabel(str: String) extends JTextField(" " + str + " ") {
   setEditable(false)
   setOpaque(false) // so it's transparent
   setBorder(null) // get rid of the box around it

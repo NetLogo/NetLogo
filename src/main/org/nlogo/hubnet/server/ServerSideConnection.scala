@@ -102,7 +102,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
       case EnterMessage => server.putClientData(EnterMessageEnvelope(clientId))
       // TODO
       // its possible that the server doesnt even know who this client is!
-      // they might not have sent a proper handshake yet. 
+      // they might not have sent a proper handshake yet.
       case m: ActivityCommand => server.putClientData(ActivityMessageEnvelope(clientId, m.tag, m.content))
       // my guess on notifyClient=false here is that the client is requesting the exit
       // so theres no reason to notify them. JC 1/3/11

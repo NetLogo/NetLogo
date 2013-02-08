@@ -9,62 +9,71 @@
 // - install conscript if you don't have it already:
 //   curl https://raw.github.com/n8han/conscript/master/setup.sh | sh
 // - install sbt (and the scalas script) through conscript:
-//   cs harrah/xsbt --branch v0.11.2
+//   cs harrah/xsbt --branch v0.12.0
 // - edit ~/.conscript/harrah/xsbt/scalas/launchconfig
-//    and ~/.conscript/harrah/xsbt/sbt/launchconfig
-//   and remove the entire [organization] section
-//   from both files
+//   and change the Scala version from `auto` to `2.9.2`
+//   and change the cross-versioned settings from `true` to `false`
 // - ensure that ~/bin is included in your `PATH` environment variable
 //   (this is where Conscript places the scripts that it manages)
 // - note: if you run the script for the first time and it appears non-responsive, do not fear;
 //         wait at least a few minutes for it to try downloading the dependencies before panicking!
-
-// We're using Dispatch Reboot here, even though it's still in alpha, instead of just using the old,
-// stable Dispatch.  It's not for any pragmatic reason -- just wanted to give the reboot version
-// a try. - ST 4/25/12
 
 /***
 scalaVersion := "2.9.2"
 
 onLoadMessage := ""
 
-libraryDependencies ~= { seq =>
-    val vers = "0.9.0-alpha5"
-    seq ++ Seq("net.databinder.dispatch" % "core_2.9.1" % vers,
-               "net.liftweb" % "lift-json_2.9.1" % "2.4",
-               "org.slf4j" % "slf4j-nop" % "1.6.0")
-}
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
+
+libraryDependencies ++= Seq(
+  "net.databinder.dispatch" %% "dispatch-core" % "0.9.3",
+  "org.json4s" %% "json4s-native" % "3.0.0",
+  "org.slf4j" % "slf4j-nop" % "1.6.0")
 */
 
 import dispatch._
-import net.liftweb.json.JsonParser
-import net.liftweb.json.JsonAST._
+import org.json4s.JsonAST._
+import org.json4s.native.JsonParser
 
 object Issue {
   def fromJson(j: JValue): Issue = {
     val JInt(n) = j \ "number"
     val JString(title) = j \ "title"
-    Issue(n.toInt, title)
+    val JArray(labels) = j \ "labels"
+    Issue(n.toInt, title,
+          labels.map(_ \ "name").collect{case JString(s) => s})
   }
 }
-case class Issue(number: Int, title: String)
+case class Issue(number: Int, title: String, labels: List[String])
 
 val host = :/("api.github.com").secure
 val base = host / "repos" / "NetLogo" / "NetLogo" / "issues"
-val req = base <<? Map("milestone" -> "11",
-                       "state" -> "closed",
-                       "per_page" -> "1000")
-val stream = Http(req > As(_.getResponseBodyAsStream)).apply
-val parsed = JsonParser.parse(new java.io.InputStreamReader(stream))
-val issues: List[Issue] =
-  (for {
-    JArray(objs) <- parsed
-    obj <- objs
-  } yield Issue.fromJson(obj)).toList
 
-println(issues.size + " issues fixed!")
-for(Issue(n, title) <- issues.sortBy(_.number))
-  println(" * " + title + " ([#" + n + "]" +
-          "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+def getIssues(state: String): List[Issue] = {
+  val req = base <<? Map("milestone" -> "15",
+                         "state" -> state,
+                         "per_page" -> "1000")
+  // println(req.build.getRawUrl)  useful for debugging
+  val stream = Http(req OK as.Response(_.getResponseBodyAsStream)).apply
+  val JArray(array) = JsonParser.parse(new java.io.InputStreamReader(stream))
+  for (item <- array)
+  yield Issue.fromJson(item)
+}
+
+def report(state: String) {
+  val issues = getIssues(state)
+  println(issues.size + " issues with state = " + state)
+  for(Issue(n, title, labels) <- issues.sortBy(_.number).sortBy(_.labels.mkString)) {
+    val labelsString =
+      if (labels.isEmpty) ""
+      else labels.mkString("", ", ", ": ")
+    println(" * " + labelsString + title + " ([#" + n + "]" +
+            "(https://github.com/NetLogo/NetLogo/issues/" + n + "))")
+  }
+}
+
+report("closed")
+println()
+report("open")
 
 Http.shutdown()

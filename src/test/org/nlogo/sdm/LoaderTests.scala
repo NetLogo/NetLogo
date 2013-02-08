@@ -29,7 +29,7 @@ class LoaderTests extends FunSuite {
        |
        |;; Initializes the system dynamics model.
        |;; Call this in your model's SETUP procedure.
-       |to system-dynamics-setup 
+       |to system-dynamics-setup
        |  reset-ticks
        |  set dt 1.0E-4
        |  ;; initialize stock values
@@ -100,7 +100,7 @@ class LoaderTests extends FunSuite {
        |
        |;; Initializes the system dynamics model.
        |;; Call this in your model's SETUP procedure.
-       |to system-dynamics-setup 
+       |to system-dynamics-setup
        |  reset-ticks
        |  set dt 0.01
        |  ;; initialize stock values

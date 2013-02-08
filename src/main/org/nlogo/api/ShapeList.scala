@@ -9,7 +9,7 @@ object ShapeList {
   val DefaultShapeName = "default"
   def isDefaultShapeName(name: String) =
     name == DefaultShapeName
-  def sortShapes(unsortedShapes: JList[Shape]): JList[Shape] = 
+  def sortShapes(unsortedShapes: JList[Shape]): JList[Shape] =
     collection.mutable.ArrayBuffer(unsortedShapes.asScala: _*)
       .sortBy(_.getName)
       .asJava

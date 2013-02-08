@@ -60,7 +60,7 @@ public strictfp class BrowserLauncher {
           desktopClass.getMethod("browse", java.net.URI.class).invoke(desktop, new java.net.URI(url));
           return;
         }
-      } catch (Exception e) { } // ignore NOPMD        
+      } catch (Exception e) { } // ignore NOPMD
       // fall back on stuff that works on Java 5
       if (osName.startsWith("Windows")) {
         Runtime.getRuntime().exec(

@@ -45,7 +45,7 @@ with org.nlogo.window.Event.LinkParent
 
   def closeTopMonitor() {
     for(topMonitor <- monitorList.headOption.map(monitorWindows)) {
-      topMonitor.setVisible(false) 
+      topMonitor.setVisible(false)
       topMonitor.dispose()
       remove(topMonitor)
     }
@@ -152,7 +152,7 @@ with org.nlogo.window.Event.LinkParent
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable() { def run() { frame.requestFocus() }})
   }
-  
+
   def showAll() { showOrHideAll(show = true) }
   def hideAll() { showOrHideAll(show = false) }
 

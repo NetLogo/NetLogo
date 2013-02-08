@@ -63,7 +63,7 @@ private class ManagerDialog(manager: LabManager,
     buttonPanel.setBorder(new javax.swing.border.EmptyBorder(8, 0, 8, 0))
     listLabel.setBorder(new javax.swing.border.EmptyBorder(8, 0, 0, 0))
     getContentPane.setLayout(new java.awt.BorderLayout(0, 10))
-    getContentPane.add(listLabel, java.awt.BorderLayout.NORTH) 
+    getContentPane.add(listLabel, java.awt.BorderLayout.NORTH)
     getContentPane.add(new JScrollPane(jlist), java.awt.BorderLayout.CENTER)
     getContentPane.add(buttonPanel, java.awt.BorderLayout.SOUTH)
     pack()
@@ -106,7 +106,7 @@ private class ManagerDialog(manager: LabManager,
   private def duplicate() { editProtocol(selectedProtocol, true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: Protocol, isNew: Boolean) {
-    val editable = new ProtocolEditable(protocol, manager.workspace.getFrame, 
+    val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world)
     if(!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get

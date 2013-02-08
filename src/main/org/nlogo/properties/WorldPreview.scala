@@ -54,19 +54,19 @@ class WorldPreview(width: Int, height: Int)
   c.gridx = 0
   c.gridy = 2
   worldPanel.add(new BlankAreaCanvas(5, 5), c)
-  
+
   c.weighty = 1.0
   c.anchor = java.awt.GridBagConstraints.NORTH
   c.gridx = 1
   c.gridy = 2
   worldPanel.add(bottomY, c)
-  
+
   c.weighty = 1.0
   c.anchor = java.awt.GridBagConstraints.NORTH
   c.gridx = 2
   c.gridy = 2
   worldPanel.add(new BlankAreaCanvas(5, 5), c)
-  
+
   add(worldPanel, java.awt.BorderLayout.NORTH)
 
   add(shapeLabel, java.awt.BorderLayout.CENTER)
@@ -90,7 +90,7 @@ class WorldPreview(width: Int, height: Int)
     if(field == "wrappingX") {
       wrapX = asBoolean
       updateLabel()
-    } 
+    }
     else if(field == "wrappingY") {
       wrapY = asBoolean
       updateLabel()
@@ -112,7 +112,7 @@ class WorldPreview(width: Int, height: Int)
       updateLabel()
     }
   }
-  
+
   private def updateLabel() {
     val text = (wrapX, wrapY) match {
       case (true, true) => "Torus"
@@ -133,7 +133,7 @@ class WorldPreview(width: Int, height: Int)
   private class WorldPreviewCanvas(width: Int, height: Int) extends java.awt.Canvas {
     val TO_LEFT, TO_BOTTOM = -1
     val TO_RIGHT, TO_TOP = 1
-    val AT_ORIGIN = 0 
+    val AT_ORIGIN = 0
     val PAD = 5
 
     private var minPxcor, maxPxcor, minPycor, maxPycor = 0
@@ -141,7 +141,7 @@ class WorldPreview(width: Int, height: Int)
 
     private val monoFont = org.nlogo.awt.Fonts.platformMonospacedFont
 
-    setSize(width, height)     
+    setSize(width, height)
     setBackground(java.awt.Color.black)
     repaint()  // necessary? - ST 2/18/10
 
@@ -160,7 +160,7 @@ class WorldPreview(width: Int, height: Int)
     override def paint(g: java.awt.Graphics) {
       if(minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0)
         paintError(g.asInstanceOf[java.awt.Graphics2D],
-                   "Invalid world dimensions. " + 
+                   "Invalid world dimensions. " +
                    "The origin (0,0) must be inside the dimensions of the world.")
       else {
         xOrigin =
@@ -196,7 +196,7 @@ class WorldPreview(width: Int, height: Int)
     def paintOrigin(g: java.awt.Graphics2D, pad: Int) {
       g.setColor(java.awt.Color.RED)
       g.fillOval(xOrigin - 4, yOrigin - 4, 8, 8)
-      paintOriginLabel(g, xOrigin, yOrigin, 5, AT_ORIGIN, AT_ORIGIN)     
+      paintOriginLabel(g, xOrigin, yOrigin, 5, AT_ORIGIN, AT_ORIGIN)
     }
 
     def paintOriginLabel(g: java.awt.Graphics2D, x: Int, y: Int,
@@ -261,12 +261,12 @@ class WorldPreview(width: Int, height: Int)
       else if(txtHorizOrient == TO_RIGHT && txtVertOrient == TO_BOTTOM) {
         label = "(" + maxPxcor + "," + minPycor + ")"
         xTextOff = -4 - fm.getStringBounds(label, g).getWidth.toInt
-        yTextOff = -4 
+        yTextOff = -4
       }
       else if(txtHorizOrient == TO_LEFT && txtVertOrient == TO_BOTTOM) {
         label = "(" + minPxcor + "," + minPycor + ")"
         xTextOff = 4
-        yTextOff = -4 
+        yTextOff = -4
       }
       else {
         xTextOff = 13
@@ -308,7 +308,7 @@ class WorldPreview(width: Int, height: Int)
         g.setColor(java.awt.Color.black)
         for(i <- 0 to 16)
           g.fillRect(width / 4, (i * height) / 16, width / 2, 2)
-      } 
+      }
       else {
         g.setColor(java.awt.Color.red)
         g.fillRect(width / 4, 0, width / 2, height)

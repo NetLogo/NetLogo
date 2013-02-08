@@ -21,7 +21,7 @@ object SysInfo
   }
   def isLibgcj =
     getVMInfoString.indexOf("libgcj") != -1
-  def getOSInfoString = 
+  def getOSInfoString =
     "operating system: " + getProperty("os.name") +
       " " + getProperty("os.version") +
       " ("  + getProperty("os.arch") + " processor)"
@@ -37,8 +37,8 @@ object SysInfo
       " MB, max = " + max +
       " MB"
   }
-  var getJOGLInfoString = "JOGL: (3D View not initialized)" 
-  var getGLInfoString = "OpenGL Graphics: (3D View not initialized)" 
+  var getJOGLInfoString = "JOGL: (3D View not initialized)"
+  var getGLInfoString = "OpenGL Graphics: (3D View not initialized)"
   def getBrowserInfoString =
     try {
       var nulls = 0

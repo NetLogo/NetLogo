@@ -26,7 +26,7 @@ object LogMessage {
                          createSliderParameterMessage())
     msg.elements(0).data = "changed"
     msg
-  }     
+  }
   def createButtonMessage(): LogMessage = {
     val msg = new LogMessage("event")
     msg.attributes = Array(Array("type", "button"))

@@ -21,7 +21,7 @@ public final strictfp class _inconenowrap
     int[] right = {Syntax.NumberType(), Syntax.NumberType()};
     int ret = Syntax.AgentsetType();
     return Syntax.reporterSyntax(left, right, ret, org.nlogo.api.Syntax.NormalPrecedence() + 2,
-        false, "OTPL", "-T--");
+        false, "-T--", null);
   }
 
   @Override

@@ -270,7 +270,7 @@ private class Builtins(gl: GL, glu: GLU, quadric: GLUquadric) {
 
       // inner-circle (used by stencil buffer)
       glColorMask(false, false, false, false)
-      // use SMOOTHNESS * 2 for halo polygons because it looks better 
+      // use SMOOTHNESS * 2 for halo polygons because it looks better
       // and since there's only 1 halo, doesn't cost much - AZS 7/7/05
       gluDisk(quadric, 0f, 0.255f, SMOOTHNESS * 2, 1)
       glColorMask(true, true, true, true)

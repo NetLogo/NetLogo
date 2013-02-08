@@ -1,17 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.headless
+
 import org.nlogo.api.WorldDimensions
-import org.nlogo.api.{APIVersion,Version}
+import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.nvm.LabInterface.Settings
+
 object Main {
-  def main(args:Array[String]) {
+  def main(args: Array[String]) {
     AbstractWorkspace.isApplet(false)
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
   }
-  def runExperiment(settings:Settings) {
+  def runExperiment(settings: Settings) {
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.open(settings.model)
@@ -30,21 +32,21 @@ object Main {
     if(System.getProperty(p) == null)
       System.setProperty(p, "true")
   }
-  private def parseArgs(args:Array[String]):Option[Settings] = {
-    var model:Option[String] = None
-    var minPxcor:Option[String] = None
-    var maxPxcor:Option[String] = None
-    var minPycor:Option[String] = None
-    var maxPycor:Option[String] = None
-    var setupFile:Option[java.io.File] = None
-    var experiment:Option[String] = None
-    var tableWriter:Option[java.io.PrintWriter] = None
-    var spreadsheetWriter:Option[java.io.PrintWriter] = None
+  private def parseArgs(args: Array[String]): Option[Settings] = {
+    var model: Option[String] = None
+    var minPxcor: Option[String] = None
+    var maxPxcor: Option[String] = None
+    var minPycor: Option[String] = None
+    var maxPycor: Option[String] = None
+    var setupFile: Option[java.io.File] = None
+    var experiment: Option[String] = None
+    var tableWriter: Option[java.io.PrintWriter] = None
+    var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
-    def die(msg:String) { System.err.println(msg); System.exit(1) }
-    def path2writer(path:String) =
+    def die(msg: String) { System.err.println(msg); System.exit(1) }
+    def path2writer(path: String) =
       if(path == "-")
         new java.io.PrintWriter(System.out) {
           // don't close System.out - ST 6/9/09

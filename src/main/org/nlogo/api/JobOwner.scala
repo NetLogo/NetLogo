@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.util.MersenneTwisterFast 
+import org.nlogo.util.MersenneTwisterFast
 
 trait JobOwner extends SourceOwner {
   def displayName: String

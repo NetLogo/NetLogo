@@ -14,20 +14,20 @@ class DefaultCompilerServices(compiler: CompilerInterface) extends CompilerServi
   def readNumberFromString(source: String) =
     compiler.readNumberFromString(source, null, null, false)
   def checkReporterSyntax(source: String) =
-    compiler.checkReporterSyntax(source, new Program(false), 
+    compiler.checkReporterSyntax(source, new Program(false),
                                  new java.util.HashMap[String,Procedure],
                                  null, false)
   def checkCommandSyntax(source: String) =
-    compiler.checkCommandSyntax(source, new Program(false), 
+    compiler.checkCommandSyntax(source, new Program(false),
                                 new java.util.HashMap[String,Procedure],
                                 null, true)
   def readFromString(source: String) =
     compiler.readFromString(source, false)
-  def isConstant(s: String) = 
+  def isConstant(s: String) =
     compiler.isValidIdentifier(s, false)
-  def isValidIdentifier(s: String) = 
+  def isValidIdentifier(s: String) =
     compiler.isValidIdentifier(s, false)
-  def isReporter(s: String) = 
+  def isReporter(s: String) =
     compiler.isReporter(s, new Program(false), new java.util.HashMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager)
   def tokenizeForColorization(source: String) =

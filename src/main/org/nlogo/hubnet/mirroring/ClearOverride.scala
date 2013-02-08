@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.hubnet.mirroring 
+package org.nlogo.hubnet.mirroring
 
 @SerialVersionUID(0)
 class ClearOverride(agentClass: Class[_ <: org.nlogo.api.Agent], varName:String, var agents: Seq[java.lang.Long])

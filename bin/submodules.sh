@@ -1,6 +1,6 @@
 #!/bin/sh -ev
 
-# Normally "git submodule update --init", invoked by the Makefile, clones
+# Normally "git submodule update --init", run by the sbt extensions task, clones
 # our submodules from read-only URLs.  But if you are a NetLogo committer,
 # you want to clone from URLs that you have push access to.  Running this
 # script after cloning the main repo will override the URLs in .git/config

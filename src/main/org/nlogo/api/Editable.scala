@@ -12,7 +12,7 @@ trait Editable {
   def error(key: Object, e: Exception): Unit
   // could be null
   def error(key: Object): Exception
-  
+
   // it's kind of lame to put this here but it'll require a bunch of changes all over the properties
   // package otherwise it seems not worth the effort ev 6/10/08
   def sourceOffset: Int

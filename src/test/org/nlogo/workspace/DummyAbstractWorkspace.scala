@@ -30,9 +30,6 @@ extends AbstractWorkspaceScala(
   override def openString(modelContents: String) = unsupported
   override def magicOpen(name: String) = unsupported
   override def changeLanguage() = unsupported
-  override def openIndex(): Unit = unsupported
-  override def openNext(): Unit = unsupported
-  override def openPrevious(): Unit = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.Importer.ErrorHandler = unsupported
@@ -44,7 +41,6 @@ extends AbstractWorkspaceScala(
   override def exportView(filename: String, format: String) = unsupported
   override def exportView: java.awt.image.BufferedImage = unsupported
   override def exportInterface(filename: String) = unsupported
-  override def writeGraphicsData(writer: java.io.PrintWriter) = unsupported
   override def patchSize(patchSize: Double) = unsupported
   override def patchSize: Double = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported

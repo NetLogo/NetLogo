@@ -21,7 +21,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with org.nlogo.window.Events.LoadBeginEvent.Handler
   with org.nlogo.window.Events.EditWidgetEvent.Handler
   with java.awt.event.ActionListener {
-  
+
   private val selectedObjects = new collection.mutable.HashSet[Widget]
   private val editAction = new EditAction()
   private val editButton = new JButton(editAction)
@@ -131,7 +131,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       deleteAction.setEnabled(!deleteableObjects.isEmpty)
     }
   }
-  
+
   def handle(e: org.nlogo.window.Events.WidgetAddedEvent) {
     for(i <- widgetMenu.items) i.setEnabled(wPanel.canAddWidget(i.getText))
     widgetMenu.updateSelected()
@@ -155,7 +155,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
     deleteAction.setEnabled(!deleteableObjects.isEmpty)
   }
-  
+
   def handle(e: org.nlogo.window.Events.WidgetForegroundedEvent) {
     editTarget = Some(e.widget.getEditable).collect{case editable: Editable => editable}
     editAction.setEnabled(editTarget.isDefined)

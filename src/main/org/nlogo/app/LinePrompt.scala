@@ -16,7 +16,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
     addMouseListener(this)
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
-  
+
   private[this] var enabled = true
   override def setEnabled(enabled: Boolean) { this.enabled = enabled; repaint() }
 
@@ -48,7 +48,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
     }
     if(enabled) doPopupMenu()
   }
-  
+
   override def paintComponent(g: Graphics) {
     g.asInstanceOf[Graphics2D].setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
@@ -80,7 +80,7 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
       drawAgentSymbol(g)
     }
   }
-  
+
   override def getPreferredSize = getMinimumSize
   override def getMinimumSize = {
     val fm = getFontMetrics(getFont)

@@ -100,7 +100,7 @@ trait EditDialog extends javax.swing.JDialog {
   EditDialog.lastLocation match {
     case Some(location) =>
       setLocation(location)
-    case None =>  
+    case None =>
       org.nlogo.awt.Positioning.center(this, window)
       EditDialog.lastLocation = Some(getLocation)
   }
@@ -116,14 +116,14 @@ trait EditDialog extends javax.swing.JDialog {
       bye()
     }
   }
-  
+
   private def bye() {
     EditDialog.lastLocation = Some(getLocation)
     setVisible(false)
     dispose()
   }
 
-  def limit(dim: java.awt.Dimension) = 
+  def limit(dim: java.awt.Dimension) =
     new java.awt.Dimension(
       dim.width max 400,
       dim.height min getGraphicsConfiguration.getBounds.height)

@@ -19,7 +19,7 @@ trait NetLogoListener extends java.util.EventListener {
 
   /**
    * Called when the user presses a button in the NetLogo model.
-   * 
+   *
    * Note that the button may take some time to run and therefore may not pop back up until some
    * later.  Use <code>buttonStopped()</code> if you need to know when the button's action has
    * completed.

@@ -159,7 +159,7 @@ object TestParser {
         else if (err startsWith "STACKTRACE")
           CommandWithStackTrace(agentType, command, err.substring("STACKTRACE".length + 1).replace("\\n", "\n"))
         else
-          sys.error("error missing!")
+          sys.error("error missing!: " + err)
       case ReporterRegex(reporter, result) =>
         if (result startsWith "ERROR")
           ReporterWithError(reporter, result.substring("ERROR".length + 1))
@@ -199,7 +199,7 @@ class TestParser extends FunSuite {
     "[link-set self] of link 0 2 => ERROR some message" -> ReporterWithError("[link-set self] of link 0 2", "some message"),
 
     "to p1 repeat 5 [ crt 1 __ignore p2 ] end" -> Proc("to p1 repeat 5 [ crt 1 __ignore p2 ] end"),
-  
+
     "to-report p2 foreach [1 2 3] [ report 0 ] end" -> Proc("to-report p2 foreach [1 2 3] [ report 0 ] end"),
 
     "extensions [ array ]" -> Proc("extensions [ array ]")
@@ -208,7 +208,7 @@ class TestParser extends FunSuite {
     test("parse: " + input) {
       assert(TestParser.parse(input) === output)
     }
-  
+
   // test entire path
   test("parse a simple test") {
     val code = """

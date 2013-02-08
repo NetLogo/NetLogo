@@ -122,10 +122,10 @@ end
       this case it's called listen clients:
     <pre>
 to listen-clients
-  while [ hubnet-message-waiting? ] 
+  while [ hubnet-message-waiting? ]
   [
     hubnet-fetch-message
-    ifelse hubnet-enter-message? 
+    ifelse hubnet-enter-message?
     [ create-new-student ]
     [
       ifelse hubnet-exit-message?
@@ -166,7 +166,7 @@ end
 to create-new-student
   create-students 1
   [
-    set user-id hubnet-message-source 
+    set user-id hubnet-message-source
     set label user-id
     set step-size 1
     send-info-to-clients
@@ -422,7 +422,7 @@ every 0.1
     <pre>
 if hubnet-message-tag = &quot;View&quot;
 [
-  ask patches with [ pxcor = (round item 0 hubnet-message) and 
+  ask patches with [ pxcor = (round item 0 hubnet-message) and
                      pycor = (round item 1 hubnet-message) ]
   [ set pcolor red ]
 ]

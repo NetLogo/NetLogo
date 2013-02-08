@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.api.CompilerException
 
-class LoggerTests extends FunSuite { 
+class LoggerTests extends FunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
   val logger = new Logger("esther")
   DOMConfigurator.configure("dist/netlogo_logging.xml")
@@ -21,7 +21,7 @@ class LoggerTests extends FunSuite {
     val file = logger.filenames.get(0)
     val log = org.nlogo.api.FileIO.file2String(file).replaceAll("\r\n", "\n" )
     val timestamp = log.substring(log.indexOf("timestamp=\"") + 11, log.indexOf("\" level"))
-    val expected = 
+    val expected =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE eventSet PUBLIC \"netlogo_logging.dtd\" \"" +
       file + "\">\n<eventSet username=\""+ System.getProperty( "user.name" ) +
       "\" name=\"esther\" ipaddress=\"" + logger.getIPAddress +

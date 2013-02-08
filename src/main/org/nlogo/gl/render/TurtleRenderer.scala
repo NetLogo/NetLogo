@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.gl.render 
+package org.nlogo.gl.render
 
 import javax.media.opengl.GL
 import javax.media.opengl.glu.GLU
@@ -11,7 +11,7 @@ extends AgentRenderer(world, shapeRenderer) {
 
   private def lineScale = {
     val distance =
-      if(world.observer.perspective == Perspective.Follow || 
+      if(world.observer.perspective == Perspective.Follow ||
          world.observer.perspective == Perspective.Ride)
         world.observer.followDistance
       else
@@ -32,7 +32,7 @@ extends AgentRenderer(world, shapeRenderer) {
         renderWrappedTurtle(gl, turtle, fontSize, patchSize, outlineAgent == turtle, lineScale)
   }
 
-  def renderWrappedTurtle(gl: GL, turtle: Turtle, fontSize: Int, 
+  def renderWrappedTurtle(gl: GL, turtle: Turtle, fontSize: Int,
                           patchSize: Double, outline: Boolean, lineScale: Double) {
     val shape3D = shapeRenderer.getShape(turtle.shape)
     val height = shapeRenderer.getShapeHeight(turtle.shape, shape3D, turtle.size)
@@ -40,7 +40,7 @@ extends AgentRenderer(world, shapeRenderer) {
     shapeRenderer.renderWrappedAgent(
       gl, shape3D, turtle.size, org.nlogo.api.Color.getColor(turtle.color),
       turtle.labelString, turtle.labelColor, coords(0), coords(1), coords(2),
-      height, patchSize, fontSize, outline, lineScale * turtle.lineThickness, 
+      height, patchSize, fontSize, outline, lineScale * turtle.lineThickness,
       getOrientation(turtle))
   }
 
@@ -62,11 +62,11 @@ extends AgentRenderer(world, shapeRenderer) {
           dist * cos * Renderer.WORLD_SCALE,
           0)
   }
-  
+
   def getAgentCoords(agent: Agent, height: Double): Array[Double] = {
     val turtle = agent.asInstanceOf[Turtle]
-    val coords = Array(world.wrappedObserverX(turtle.xcor), 
-                       world.wrappedObserverY(turtle.ycor),  
+    val coords = Array(world.wrappedObserverX(turtle.xcor),
+                       world.wrappedObserverY(turtle.ycor),
                        (height - 1) /  2)
     if(turtle.shape == "default")
       coords(2) /= 2

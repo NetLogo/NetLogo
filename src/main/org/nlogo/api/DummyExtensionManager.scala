@@ -13,10 +13,11 @@ class DummyExtensionManager extends ExtensionManager {
   def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = unsupported
   def readFromString(src: String): AnyRef = unsupported
   def reset() = unsupported
-  def startFullCompilation() { } 
+  def startFullCompilation() { }
   def finishFullCompilation() { }
   def anyExtensionsLoaded() = false
   def replaceIdentifier(name: String): Option[Primitive] = None
+  def loadedExtensions = java.util.Collections.emptyList[ClassManager]
   def importExtension(jarPath: String, errors: ErrorSource) = unsupported
   def resolvePath(path: String): String = unsupported
   def resolvePathAsURL(path: String): String = unsupported

@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import org.nlogo.window.Events._
+import org.nlogo.api
 
 object DirtyMonitor {
   val autoSaveFileName = {
@@ -10,7 +11,7 @@ object DirtyMonitor {
                                             java.util.Locale.US)
     System.getProperty("java.io.tmpdir") +
       System.getProperty("file.separator") + "autosave_" +
-      df.format(new java.util.Date()) + "." + FileMenu.modelSuffix
+      df.format(new java.util.Date()) + "." + api.ModelReader.modelSuffix
   }
 }
 
@@ -38,7 +39,7 @@ with ModelSavedEvent.Handler
   }
   def handle(e: AboutToQuitEvent) {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
-  }             
+  }
   private var lastTimeAutoSaved = 0L
   private def doAutoSave() {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
@@ -47,13 +48,13 @@ with ModelSavedEvent.Handler
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
-      org.nlogo.api.FileIO.writeFile(DirtyMonitor.autoSaveFileName,
-                                     new ModelSaver(App.app).save)
+      api.FileIO.writeFile(DirtyMonitor.autoSaveFileName,
+                           new ModelSaver(App.app).save)
     }
     catch {
       case ex: java.io.IOException =>
         // not sure what the right thing to do here is we probably
-        // don't want to be telling the user all the time that they 
+        // don't want to be telling the user all the time that they
         // the auto save failed. ev 8/22/06
         org.nlogo.util.Exceptions.ignore(ex)
     }
@@ -71,7 +72,7 @@ with ModelSavedEvent.Handler
     dirty(false)
     loading = false
   }
-  
+
   /// how we get dirty
   def handle(e: DirtyEvent) {
     dirty(true)

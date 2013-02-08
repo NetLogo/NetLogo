@@ -40,7 +40,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
   getContentPane.setLayout(new java.awt.BorderLayout)
   getContentPane.add(monitor, java.awt.BorderLayout.CENTER)
   getContentPane.add(dragger, java.awt.BorderLayout.NORTH)
-  getContentPane.add(new org.nlogo.swing.WindowResizer(this), 
+  getContentPane.add(new org.nlogo.swing.WindowResizer(this),
                      java.awt.BorderLayout.SOUTH)
   setFocusTraversalPolicy(
     new javax.swing.LayoutFocusTraversalPolicy() {
@@ -66,7 +66,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
       }})
   agentChangeNotify(null)
   pack()
-  
+
   override def requestFocus() {
     monitor.requestFocus()
   }
@@ -129,7 +129,7 @@ with org.nlogo.window.Events.LoadBeginEvent.Handler
 
   def handle(e: org.nlogo.window.Events.LoadBeginEvent) { close() }
   def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) { refresh() }
-  def handle(e: org.nlogo.window.Events.PatchesCreatedEvent) { 
+  def handle(e: org.nlogo.window.Events.PatchesCreatedEvent) {
     if(!agent.isInstanceOf[Observer])
       close()
   }

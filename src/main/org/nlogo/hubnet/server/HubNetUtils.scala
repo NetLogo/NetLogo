@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 /**
- * Static utility methods and constants for the HubNet server. 
+ * Static utility methods and constants for the HubNet server.
  **/
 object HubNetUtils {
 

@@ -85,16 +85,16 @@ object HeadlessWorkspace {
 
 /**
  * The primary class for headless (no GUI) operation of NetLogo.
- * 
+ *
  * You may create more than one HeadlessWorkspace object.  Multiple
  * instances can operate separately and independently.  (Behind the
  * scenes, this is supported by creating a separate thread for each
  * instance.)
- * 
+ *
  * When you are done using a HeadlessWorkspace, you should call its
  * dispose() method.  This will shut down the thread associated with
  * the workspace and allow resources to be freed.
- * 
+ *
  * See the "Controlling" section of the NetLogo User Manual
  * for example code.
  *
@@ -400,10 +400,6 @@ with org.nlogo.api.ViewSettings {
    */
   override def exportInterface(filename: String) = unsupported
 
-  override def writeGraphicsData(writer: java.io.PrintWriter) {
-    writer.print(renderer.exportView(this).getData)
-  }
-
   /**
    * Internal use only. Called from job thread.
    */
@@ -457,21 +453,6 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only.
    */
-  def openIndex() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openNext() = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def openPrevious() = unsupported
-
-  /**
-   * Internal use only.
-   */
   def startLogging(properties: String) = unsupported
 
   /**
@@ -495,6 +476,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override var lastLogoException: LogoException = null
+  override def clearLastLogoException() { lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -523,6 +505,9 @@ with org.nlogo.api.ViewSettings {
    *
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
+  @throws(classOf[java.io.IOException])
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   override def open(path: String) {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
@@ -566,6 +551,8 @@ with org.nlogo.api.ViewSettings {
    *                       if the code fails to compile
    * @throws LogoException if the code fails to run
    */
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   def command(source: String) {
     evaluateCommands(defaultOwner, source, true)
     if (lastLogoException != null) {
@@ -586,6 +573,8 @@ with org.nlogo.api.ViewSettings {
    *                       if the code fails to compile
    * @throws LogoException if the code fails to run
    */
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   def report(source: String): AnyRef = {
     val result = evaluateReporter(defaultOwner, source, world.observer)
     if (lastLogoException != null) {

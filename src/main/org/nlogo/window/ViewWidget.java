@@ -354,7 +354,7 @@ public strictfp class ViewWidget
 
   public void handle(org.nlogo.window.Events.LoadBeginEvent e) {
     tickCounter.setText("");
-    tickCounterLabel = I18N.guiJ().get("tabs.run.view.ticks");
+    tickCounterLabel = "ticks";
     tickCounter.setVisible(true);
   }
 
