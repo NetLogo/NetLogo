@@ -1,8 +1,12 @@
 package org.nlogo.util
 
-import collection.mutable.ArrayBuffer
-import java.util.zip.{GZIPInputStream, ZipEntry, ZipFile}
-import java.io.ByteArrayInputStream
+import
+  collection.mutable.ArrayBuffer
+
+import
+  java.{ io, util },
+    io.{ ByteArrayInputStream, ByteArrayOutputStream, File, FileOutputStream },
+    util.zip.{ GZIPInputStream, GZIPOutputStream, ZipEntry, ZipFile }
 
 object ZipUtils {
 
@@ -10,8 +14,8 @@ object ZipUtils {
   val DefaultByteEncoding = "ISO-8859-1"
 
   def gzip(data: String, encoding: String = DefaultByteEncoding): Array[Byte] = {
-    val inner = new java.io.ByteArrayOutputStream()
-    val outer = new java.util.zip.GZIPOutputStream(inner)
+    val inner = new ByteArrayOutputStream()
+    val outer = new GZIPOutputStream(inner)
     outer.write(data.getBytes(encoding))
     outer.close()
     inner.toByteArray
@@ -49,16 +53,16 @@ object ZipUtils {
     
     val zipFile = new ZipFile(jarpath)
     val entries = Option(zipFile.entries) map (_.asScala filter (entryFilter)) getOrElse (Iterator[ZipEntry]())
-    
-    // Sort by name size so we always get directories created before trying to write their children
-    entries.toList sortBy (_.getName.size) foreach (extractFileFromZip(dest, _, zipFile))
-    new java.io.File(dest).listFiles.toList
+    val sorted  = entries.toList sortBy (_.getName.size)  // Sort by name size so we always get directories created before trying to write their children
+
+    sorted foreach (extractFileFromZip(dest, _, zipFile))
+    new File(dest).listFiles.toList
     
   }
 
   def extractFileFromZip(dest: String, entry: ZipEntry, zipFile: ZipFile) {
 
-    val target = new java.io.File(dest + entry.getName)
+    val target = new File(dest + entry.getName)
 
     if (entry.isDirectory)
       target.mkdir
@@ -67,7 +71,7 @@ object ZipUtils {
       target.getParentFile.mkdirs()
 
       val inStream = zipFile.getInputStream(entry)
-      val outStream = new java.io.FileOutputStream(target)
+      val outStream = new FileOutputStream(target)
       val buffer = new ArrayBuffer[Byte]()
 
       while (inStream.available > 0)
