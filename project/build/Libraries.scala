@@ -41,14 +41,16 @@ trait Libraries extends DefaultProject {
     "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar"
   val knockoff = "com.tristanhunt" %% "knockoff" % "0.8.1"
 
-  // HTTP stuff for remote logging
+  // HTTP stuff for remote logging and Modeling Commons
   val apache = "org.apache.httpcomponents" % "httpclient" % "4.2"
-
+  
+  //HTTP stuff for Modeling Commons communication
   val apacheHttpMime = "org.apache.httpcomponents" % "httpmime" % "4.2"
 
-  //Java JSON library
+  //Java JSON library used only for Modeling Commons
   val json = "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 
+  //IntelliJ form library used only for Modeling Commons dialog boxes
   val intellijForm = "com.intellij" % "forms_rt" % "7.0.3"
 
   /// native libraries for JOGL and Quaqua
