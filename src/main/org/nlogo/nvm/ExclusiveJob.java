@@ -53,7 +53,9 @@ public strictfp class ExclusiveJob
       }
       context.ip = address;
       context.finished = false;
+      scala.collection.immutable.List<LetBinding> oldLets = context.letBindings;
       context.runExclusive();
+      context.letBindings = oldLets;
     }
   }
 

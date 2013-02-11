@@ -8,12 +8,16 @@
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
           <value />
         </option>
-        <ScalaCodeStyleSettings>
-          <option name="IMPORTS_MEMBERS_USING_UNDERSCORE" value="false" />
-        </ScalaCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
+        <codeStyleSettings language="JAVA">
+          <indentOptions>
+            <option name="INDENT_SIZE" value="2" />
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
+            <option name="TAB_SIZE" value="2" />
+          </indentOptions>
+        </codeStyleSettings>
         <codeStyleSettings language="Scala">
           <indentOptions>
             <option name="CONTINUATION_INDENT_SIZE" value="8" />

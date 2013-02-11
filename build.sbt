@@ -39,7 +39,9 @@ mainClass in (Compile, run) := Some("org.nlogo.app.App")
 
 mainClass in (Compile, packageBin) := Some("org.nlogo.app.App")
 
-sourceGenerators in Compile <+= Autogen.sourceGeneratorTask
+sourceGenerators in Compile <+= EventsGenerator.task
+
+sourceGenerators in Compile <+= JFlexRunner.task
 
 resourceGenerators in Compile <+= I18n.resourceGeneratorTask
 
@@ -76,7 +78,11 @@ libraryDependencies ++= Seq(
   "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
   "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-  "org.scalatest" %% "scalatest" % "1.8" % "test"
+  "org.scalatest" %% "scalatest" % "1.8" % "test",
+  "org.apache.httpcomponents" % "httpclient" % "4.2",
+  "org.apache.httpcomponents" % "httpmime" % "4.2",
+  "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+  "com.intellij" % "forms_rt" % "7.0.3"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>

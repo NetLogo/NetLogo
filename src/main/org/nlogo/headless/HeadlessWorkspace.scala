@@ -469,6 +469,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   override var lastLogoException: LogoException = null
+  override def clearLastLogoException() { lastLogoException = null }
 
   // this is a blatant hack that makes it possible to test the new stack trace stuff.
   // lastErrorReport gives more information than the regular exception that gets thrown from the
@@ -497,6 +498,9 @@ with org.nlogo.api.ViewSettings {
    *
    * @param path the path (absolute or relative) of the NetLogo model to open.
    */
+  @throws(classOf[java.io.IOException])
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   override def open(path: String) {
     setModelPath(path)
     val modelContents = org.nlogo.api.FileIO.file2String(path)
@@ -540,6 +544,8 @@ with org.nlogo.api.ViewSettings {
    *                       if the code fails to compile
    * @throws LogoException if the code fails to run
    */
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   def command(source: String) {
     evaluateCommands(defaultOwner, source, true)
     if (lastLogoException != null) {
@@ -560,6 +566,8 @@ with org.nlogo.api.ViewSettings {
    *                       if the code fails to compile
    * @throws LogoException if the code fails to run
    */
+  @throws(classOf[CompilerException])
+  @throws(classOf[LogoException])
   def report(source: String): AnyRef = {
     val result = evaluateReporter(defaultOwner, source, world.observer)
     if (lastLogoException != null) {
