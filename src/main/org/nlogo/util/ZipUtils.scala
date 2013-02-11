@@ -64,6 +64,8 @@ object ZipUtils {
       target.mkdir
     else {
 
+      target.getParentFile.mkdirs()
+
       val inStream = zipFile.getInputStream(entry)
       val outStream = new java.io.FileOutputStream(target)
       val buffer = new ArrayBuffer[Byte]()
