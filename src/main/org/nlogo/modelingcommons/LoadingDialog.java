@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import javax.swing.JButton;
@@ -6,16 +8,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.KeyStroke;
 import java.awt.Frame;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class LoadingDialog extends JDialog {
+
   private JPanel contentPane;
   private JLabel label;
   private JProgressBar progressBar;
@@ -29,12 +26,9 @@ public class LoadingDialog extends JDialog {
     this.setResizable(false);
     this.setUndecorated(true);
     this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
     label.setText(text);
-
     this.pack();
     this.setLocationRelativeTo(frame);
-
   }
 
   {

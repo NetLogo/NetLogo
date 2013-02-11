@@ -1,10 +1,10 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.nlogo.swing.BrowserLauncher;
-import org.nlogo.swing.ModalProgressTask;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -12,10 +12,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -28,6 +26,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 public class LoginDialog extends JDialog {
+
   private JPanel contentPane;
   private JButton cancelButton;
   private JButton loginButton;
@@ -44,44 +43,46 @@ public class LoginDialog extends JDialog {
     this.frame = frame;
     setContentPane(contentPane);
     getRootPane().setDefaultButton(loginButton);
-
     errorLabel.setText(errorLabelText);
-
     createAccountButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         dispose();
         communicator.promptForCreateAccount();
       }
-    });
 
+    });
     loginButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onOK();
       }
-    });
 
+    });
     cancelButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
+
     });
-
-
     //call onCancel() when cross is clicked
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new WindowAdapter() {
+
       public void windowClosing(WindowEvent e) {
         onCancel();
       }
-    });
 
-    // call onCancel() on ESCAPE
+    });
+    //call onCancel() on ESCAPE
     contentPane.registerKeyboardAction(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
     this.setResizable(false);
@@ -93,8 +94,8 @@ public class LoginDialog extends JDialog {
     final String password = new String(passwordArr);
     Arrays.fill(passwordArr, (char) 0);
     dispose();
-
     ModelingCommons.LoginRequest request = communicator.new LoginRequest(emailAddress, password) {
+
       @Override
       protected void onLogin(String status) {
         if (status.equals("INVALID_CREDENTIALS")) {
@@ -111,8 +112,10 @@ public class LoginDialog extends JDialog {
       }
 
     };
-    //Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the dialog
-    //is modal.
+    /*
+     * Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the dialog
+     * is modal.
+     */
     request.execute();
   }
 

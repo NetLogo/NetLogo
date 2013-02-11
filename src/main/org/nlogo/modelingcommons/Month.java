@@ -1,6 +1,5 @@
 package org.nlogo.modelingcommons;
 
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;

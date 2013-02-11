@@ -5,7 +5,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import org.nlogo.awt.UserCancelException;
 import org.nlogo.swing.FileDialog;
-import org.nlogo.swing.ModalProgressTask;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -20,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.Color;

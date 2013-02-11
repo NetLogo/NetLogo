@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import org.apache.http.Consts;
@@ -37,16 +39,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Ben
- * Date: 10/25/12
- * Time: 1:19 AM
- * To change this template use File | Settings | File Templates.
- */
-
 public class ModelingCommons {
-  //private static final String HOST = "http://localhost:3000";
+
   private static final String HOST = "http://modelingcommons.org";
   private static HttpClient http = new DefaultHttpClient();
   private JSONParser json = new JSONParser();
@@ -56,18 +50,21 @@ public class ModelingCommons {
   private String newUserAgreement;
   private List<String> priorityCountries;
   private List<String> unpriorityCountries;
-
   private ModelSaver modelSaver;
   private Frame frame;
   private App app;
   private List<Group> groups = null;
 
   public ModelingCommons(ModelSaver modelSaver, Frame frame, App app) {
+
     this.modelSaver = modelSaver;
     this.frame = frame;
     this.app = app;
+
   }
+
   public abstract class LoginRequest extends PostRequest {
+
     private JDialog loadingDialog;
     public LoginRequest(String email, String password) {
       super(http, HOST + "/account/login_action");
