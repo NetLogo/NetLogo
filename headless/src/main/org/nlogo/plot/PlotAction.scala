@@ -17,9 +17,6 @@ object PlotAction {
   case class PlotXY(plotName: String, penName: String, x: Double, y: Double)
     extends PlotAction
 
-  case class Histogram(plotName: String, penName: String, values: Seq[Double])
-    extends PlotAction
-
   case class AutoPlot(plotName: String, on: Boolean)
     extends PlotAction
 
@@ -32,7 +29,10 @@ object PlotAction {
   case class HidePen(plotName: String, penName: String, hidden: Boolean)
     extends PlotAction
 
-  case class ResetPen(plotName: String, penName: String)
+  case class HardResetPen(plotName: String, penName: String)
+    extends PlotAction
+
+  case class SoftResetPen(plotName: String, penName: String)
     extends PlotAction
 
   case class SetPenInterval(plotName: String, penName: String, interval: Double)

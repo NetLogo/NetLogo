@@ -23,15 +23,6 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
         plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } plot.plot(pen, x, y)
-    case PlotAction.Histogram(plotName, penName, values) =>
-      for {
-        plot <- getPlot(plotName)
-        pen <- plot.getPen(penName)
-      } {
-        plot.beginHistogram(pen)
-        values.foreach(plot.nextHistogramValue)
-        plot.endHistogram(pen)
-      }
     case PlotAction.AutoPlot(plotName, on) =>
       for { plot <- getPlot(plotName) }
         plot.state = plot.state.copy(autoPlotOn = on)
@@ -52,11 +43,16 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
         plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.state = pen.state.copy(hidden = hidden)
-    case PlotAction.ResetPen(plotName, penName) =>
+    case PlotAction.HardResetPen(plotName, penName) =>
       for {
         plot <- getPlot(plotName)
         pen <- plot.getPen(penName)
       } pen.hardReset()
+    case PlotAction.SoftResetPen(plotName, penName) =>
+      for {
+        plot <- getPlot(plotName)
+        pen <- plot.getPen(penName)
+      } pen.softReset()
     case PlotAction.SetPenInterval(plotName, penName, interval) =>
       for {
         plot <- getPlot(plotName)

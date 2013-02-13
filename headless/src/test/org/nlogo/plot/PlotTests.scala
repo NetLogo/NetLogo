@@ -73,16 +73,19 @@ class PlotTests extends SimplePlotTest {
     expectResult(18.8)(plot.state.xMax)
     expectResult(11.0)(plot.state.yMax)
   }
+
   /// histogram tests
   // we already have TestHistogram for basic histogram testing,
   // so these just need to test the extra histogram code in
   // Plot itself - ST 2/23/06
-  testPlot("Histogram") { plot =>
+  // Modified to use histogramActions - NP 2013-02-12
+  testPlot("HistogramActions") { plot =>
     val pen = plot.createPlotPen("test", false)
-    plot.beginHistogram(pen)
     // 0 1 4 9 16 25 36 49 64 81 100 121
-    (0 to 11).map(i => (i * i) % 10).foreach(plot.nextHistogramValue(_))
-    plot.endHistogram(pen)
+    val values = (0 to 11).map(i => ((i * i) % 10).toDouble)
+    val actions = plot.histogramActions(pen, values)
+    val runner = new BasicPlotActionRunner(Seq(plot))
+    actions.foreach(runner.run)
     expectResult(6)(pen.points.size)
     expectResult(0.0)(pen.points(0).x)
     expectResult(1.0)(pen.points(1).x)
@@ -97,22 +100,26 @@ class PlotTests extends SimplePlotTest {
     expectResult(2.0)(pen.points(4).y)
     expectResult(2.0)(pen.points(5).y)
   }
-  testPlot("HistogramGrowHeight") { plot =>
+
+  testPlot("HistogramActionsGrowHeight") { plot =>
     plot.state = plot.state.copy(yMax = 5)
     val pen = plot.createPlotPen("test", false)
-    plot.beginHistogram(pen)
-    (0 until 5).foreach(_ => plot.nextHistogramValue(0))
-    plot.endHistogram(pen)
+    val runner = new BasicPlotActionRunner(Seq(plot))
+    def zeros = Stream.continually(0.0)
+    plot
+      .histogramActions(pen, zeros.take(5))
+      .foreach(runner.run)
     expectResult(5.0)(plot.state.yMax)
-    plot.beginHistogram(pen)
-    (0 until 10).foreach(_ => plot.nextHistogramValue(0))
-    plot.endHistogram(pen)
+    plot
+      .histogramActions(pen, zeros.take(10))
+      .foreach(runner.run)
     expectResult(10.0)(plot.state.yMax)
     plot.clear()
     plot.state = plot.state.copy(yMax = 5)
     plot.plot(pen, 0, 10)
     expectResult(11.0)(plot.state.yMax)
   }
+
   testPlot("Iterator") { plot =>
     plot.pens = Nil
     val pen1 = plot.createPlotPen("pen1", false)
