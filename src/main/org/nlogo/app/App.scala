@@ -491,7 +491,11 @@ class App extends
 
   private def generateWebStartAppender: Appender = {
 
+    // Ignored; we simply default to "One-Off Mode", at Corey's request
+    /*
+
     import annotation.tailrec
+
     @tailrec
     def untilValid[T](resultGiver: () => T, validationCondition: T => Boolean) : T = {
       val result = resultGiver()
@@ -519,6 +523,9 @@ class App extends
     )
 
     val loggingMode = nameModePairs(result)._2
+    */
+
+    val loggingMode = LogSendingMode.AfterLoggingCompletes
     val url = new java.net.URL(System.getProperty("jnlp.connectpath"))
     new WebStartXMLWriterAppender(loggingMode, url)
 
@@ -526,9 +533,12 @@ class App extends
 
   def startLogging(properties:String) {
     if(new java.io.File(properties).exists) {
-      val username =
-        JOptionPane.showInputDialog(null, "Enter your name:", "",
-          JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
+      val username = {
+        if (isWebStart)
+          System.getProperty("netlogo.user_id", "<redacted>")
+        else
+          JOptionPane.showInputDialog(null, "Enter your name:", "", JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
+      }
       if(username != null) {
         logger = new Logger(username)
         listenerManager.addListener(logger)
@@ -811,6 +821,8 @@ class App extends
 
     }
 
+    // Ignored; we treat all logs as valid and wanted, and we close them up properly (at Corey's request)
+    /*
     def requestRemoteLogDeletion() {
       Option(logger) foreach (_.requestRemoteLogDeletion())
     }
@@ -829,6 +841,9 @@ class App extends
     )
 
     if (result >= 0) textFuncPairs(result)._2() // Run the function associated with the selection
+    */
+
+    finalizeWebStartLoggingSession()
 
   }
 
