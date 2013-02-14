@@ -31,12 +31,13 @@ class ReviewTab(
   with window.ReviewTabInterface
   with window.Events.BeforeLoadEventHandler {
 
-  def loadedRuns: Seq[api.ModelRun] = tabState.runs
-  def loadRun(inputStream: java.io.InputStream): Unit = {
+  override def loadedRuns: Seq[api.ModelRun] = tabState.runs
+  override def loadRun(inputStream: java.io.InputStream): Unit = {
     val run = ModelRunIO.load(inputStream)
     tabState.addRun(run)
     loadModelIfNeeded(run.modelString)
   }
+  override def currentRun: Option[api.ModelRun] = tabState.currentRun
 
   private def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
