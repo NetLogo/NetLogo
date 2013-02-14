@@ -139,8 +139,8 @@ class ReviewTab(
     val image = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
-    val name = Option(ws.getModelFileName)
-      .map(path => tabState.uniqueName(nameFromPath(path)))
+    val name = Option(ws.getModelFileName).map(nameFromPath)
+      .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
     val run = new ModelRun(name, saveModel(), viewArea, image, "", Map())
     tabState.addRun(run)
@@ -445,8 +445,7 @@ class ReviewTab(
         .asInstanceOf[String])
       if answer.nonEmpty
     } {
-      run.name = "" // not to interfere with uniqueName
-      run.name = tabState.uniqueName(answer)
+      run.name = answer
       refreshInterface()
     }
   }

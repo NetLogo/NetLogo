@@ -40,11 +40,6 @@ class ReviewTabState(
     }
   }
 
-  def uniqueName(name: String) =
-    (name +: Stream.from(1).map(i => name + " (" + i + ")"))
-      .find(str => _runs.forall(_.name != str))
-      .get
-
   def addRun(run: ModelRun) = {
     _runs :+= run
     setCurrentRun(run)
