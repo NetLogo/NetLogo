@@ -4,7 +4,9 @@ package org.nlogo.plot
 
 import org.nlogo.api.Action
 
-sealed trait PlotAction extends Action
+sealed trait PlotAction extends Action {
+  val plotName: String
+}
 
 object PlotAction {
 

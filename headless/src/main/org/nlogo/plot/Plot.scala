@@ -22,6 +22,7 @@ extends PlotInterface {
   import Plot._
 
   var state = defaultState
+  var dirty = true
 
   override def toString = "Plot(" + name + ")"
 
@@ -174,6 +175,7 @@ extends PlotInterface {
     newPlot.legendIsOpen = legendIsOpen
     newPlot.setupCode = setupCode
     newPlot.updateCode = updateCode
+    // newPlot.dirty will be true by default, which is fine
     newPlot
   }
 

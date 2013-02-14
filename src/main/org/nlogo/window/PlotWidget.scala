@@ -56,8 +56,11 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
     RichJMenuItem("Clear"){ clear() }
   )
 
-  def repaintIfNeeded(){
-    canvas.repaintIfNeeded()
-    refreshGUI()
+  def repaintIfNeeded() {
+    if (plot.dirty) {
+      canvas.repaintIfNeeded()
+      refreshGUI()
+      plot.dirty = false
+    }
   }
 }

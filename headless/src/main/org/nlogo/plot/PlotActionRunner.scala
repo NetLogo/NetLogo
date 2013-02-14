@@ -22,79 +22,88 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
       pen <- plot.getPen(penName)
     } f(plot, pen)
 
-  override def run(action: PlotAction) = action match {
+  override def run(action: PlotAction) = {
 
-    case ClearPlot(plotName) =>
-      withPlot(plotName) {
-        _.clear()
-      }
+    // any action on a plot makes it dirty
+    withPlot(action.plotName) {
+      _.dirty = true
+    }
 
-    case PlotY(plotName, penName, y) =>
-      withPlotAndPen(plotName, penName) {
-        _.plot(_, y)
-      }
+    action match {
 
-    case PlotXY(plotName, penName, x, y) =>
-      withPlotAndPen(plotName, penName) {
-        _.plot(_, x, y)
-      }
+      case ClearPlot(plotName) =>
+        withPlot(plotName) {
+          _.clear()
+        }
 
-    case AutoPlot(plotName, on) =>
-      withPlot(plotName) { plot =>
-        plot.state = plot.state.copy(autoPlotOn = on)
-      }
+      case PlotY(plotName, penName, y) =>
+        withPlotAndPen(plotName, penName) {
+          _.plot(_, y)
+        }
 
-    case SetRange(plotName, isX, min, max) =>
-      withPlot(plotName) { plot =>
-        plot.state =
-          if (isX)
-            plot.state.copy(xMin = min, xMax = max)
-          else
-            plot.state.copy(yMin = min, yMax = max)
-      }
+      case PlotXY(plotName, penName, x, y) =>
+        withPlotAndPen(plotName, penName) {
+          _.plot(_, x, y)
+        }
 
-    case PenDown(plotName, penName, down) =>
-      withPen(plotName, penName) { pen =>
-        pen.state = pen.state.copy(isDown = down)
-      }
+      case AutoPlot(plotName, on) =>
+        withPlot(plotName) { plot =>
+          plot.state = plot.state.copy(autoPlotOn = on)
+        }
 
-    case HidePen(plotName, penName, hidden) =>
-      withPen(plotName, penName) { pen =>
-        pen.state = pen.state.copy(hidden = hidden)
-      }
+      case SetRange(plotName, isX, min, max) =>
+        withPlot(plotName) { plot =>
+          plot.state =
+            if (isX)
+              plot.state.copy(xMin = min, xMax = max)
+            else
+              plot.state.copy(yMin = min, yMax = max)
+        }
 
-    case HardResetPen(plotName, penName) =>
-      withPen(plotName, penName) {
-        _.hardReset()
-      }
+      case PenDown(plotName, penName, down) =>
+        withPen(plotName, penName) { pen =>
+          pen.state = pen.state.copy(isDown = down)
+        }
 
-    case SoftResetPen(plotName, penName) =>
-      withPen(plotName, penName) {
-        _.softReset()
-      }
+      case HidePen(plotName, penName, hidden) =>
+        withPen(plotName, penName) { pen =>
+          pen.state = pen.state.copy(hidden = hidden)
+        }
 
-    case SetPenInterval(plotName, penName, interval) =>
-      withPen(plotName, penName) { pen =>
-        pen.state = pen.state.copy(interval = interval)
-      }
+      case HardResetPen(plotName, penName) =>
+        withPen(plotName, penName) {
+          _.hardReset()
+        }
 
-    case SetPenMode(plotName, penName, mode) =>
-      withPen(plotName, penName) { pen =>
-        pen.state = pen.state.copy(mode = mode)
-      }
+      case SoftResetPen(plotName, penName) =>
+        withPen(plotName, penName) {
+          _.softReset()
+        }
 
-    case SetPenColor(plotName, penName, color) =>
-      withPen(plotName, penName) { pen =>
-        pen.state = pen.state.copy(color = color)
-      }
+      case SetPenInterval(plotName, penName, interval) =>
+        withPen(plotName, penName) { pen =>
+          pen.state = pen.state.copy(interval = interval)
+        }
 
-    case CreateTemporaryPen(plotName, penName) =>
-      withPlot(plotName) { plot =>
-        plot.currentPen = plot
-          .getPen(penName)
-          .getOrElse(plot.createPlotPen(penName, true))
-      }
+      case SetPenMode(plotName, penName, mode) =>
+        withPen(plotName, penName) { pen =>
+          pen.state = pen.state.copy(mode = mode)
+        }
+
+      case SetPenColor(plotName, penName, color) =>
+        withPen(plotName, penName) { pen =>
+          pen.state = pen.state.copy(color = color)
+        }
+
+      case CreateTemporaryPen(plotName, penName) =>
+        withPlot(plotName) { plot =>
+          plot.currentPen = plot
+            .getPen(penName)
+            .getOrElse(plot.createPlotPen(penName, true))
+        }
+    }
   }
+
 }
 
 class BasicPlotActionRunner(plots: Seq[Plot]) extends PlotActionRunner {
