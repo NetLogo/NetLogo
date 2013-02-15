@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -21,64 +23,74 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class UploadSuccessDialog extends JDialog {
+
+  //GUI form members
   private JPanel contentPane;
   private JButton OKButton;
   private JButton openModelButton;
   private JLabel successLabel;
   private JLabel errorLabel;
+
+  //Data members
   private Frame frame;
   private ModelingCommons communicator;
+  private String uploadedModelName;
+  private String uploadedModelURL;
 
-  UploadSuccessDialog(Frame frame, ModelingCommons communicator, String errorLabelText) {
+  //Dialog should only be invoked from ModelingCommons class
+  UploadSuccessDialog(Frame frame, ModelingCommons communicator, String errorLabelText, String uploadedModelURL, String uploadedModelName) {
     super(frame, "Upload To Modeling Commons Successful", true);
-
     this.frame = frame;
     this.communicator = communicator;
-    successLabel.setText("Model '" + communicator.getUploadedModelName() + "' created successfully");
+    this.uploadedModelURL = uploadedModelURL;
+    this.uploadedModelName = uploadedModelName;
+    successLabel.setText(String.format("Model '%s' created successfully", uploadedModelName));
     errorLabel.setText(errorLabelText);
     setContentPane(contentPane);
     setModal(true);
     getRootPane().setDefaultButton(OKButton);
-
     openModelButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onOpenModel();
       }
-    });
 
+    });
     OKButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onClose();
       }
-    });
 
-// call onCancel() when cross is clicked
+    });
+    //call onCancel() when cross is clicked
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new WindowAdapter() {
+
       public void windowClosing(WindowEvent e) {
         onClose();
       }
-    });
 
-// call onCancel() on ESCAPE
+    });
+    //call onCancel() on ESCAPE
     contentPane.registerKeyboardAction(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onClose();
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
     this.setResizable(false);
   }
 
   private void onOpenModel() {
-    BrowserLauncher.openURL(frame, communicator.getUploadedModelURL(), false);
+    BrowserLauncher.openURL(frame, uploadedModelURL, false);
     dispose();
   }
 
   private void onClose() {
-// add your code here if necessary
     dispose();
   }
 

@@ -14,8 +14,6 @@ import static org.nlogo.api.ModelReader.modelSuffix;
 import static org.nlogo.api.ModelReader.emptyModelPath;
 import org.nlogo.awt.UserCancelException;
 
-import org.nlogo.modelingcommons.ModelingCommons;
-
 /*
  * note that multiple instances of this class may exist
  * as there are now multiple frames that each have their own menu bar
@@ -172,21 +170,19 @@ public strictfp class FileMenu
     }
   }
 
-    private class SaveModelingCommonsAction extends FileMenuAction {
-      SaveModelingCommonsAction(String title) {
-      super(title);
-      }
-      SaveModelingCommonsAction() {
-        this("Upload To Modeling Commons");
-      }
+private class SaveModelingCommonsAction extends FileMenuAction {
+  SaveModelingCommonsAction() {
+    super("Upload To Modeling Commons");
+  }
 
-        @Override
-        void action() throws UserCancelException {
-          checkWithUserBeforeSavingModelFromOldVersion();
-          ModelingCommons communicator = new ModelingCommons(modelSaver, org.nlogo.awt.Hierarchy.getFrame(FileMenu.this), app);
-          communicator.saveToModelingCommons();
-        }
-    }
+  @Override
+  void action() throws UserCancelException {
+    //Very verbosely named method, this is called in doSave before calling modelSaver.doSave
+    //so we call it here before saving to Modeling Commons as well
+    checkWithUserBeforeSavingModelFromOldVersion();
+    app.modelingCommons().saveToModelingCommons();
+  }
+}
   private class SaveAction extends FileMenuAction {
     SaveAction() {
       super(I18N.guiJ().get("menu.file.save"));
@@ -210,7 +206,6 @@ public strictfp class FileMenu
       saveAs();
     }
   }
-
 
   private class SaveAppletAction extends FileMenuAction {
     SaveAppletAction(String title) {

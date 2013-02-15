@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -5,7 +7,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import org.nlogo.awt.UserCancelException;
 import org.nlogo.swing.FileDialog;
-import org.nlogo.swing.ModalProgressTask;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -20,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.Color;
@@ -36,14 +36,9 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Calendar;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Ben
- * Date: 12/11/12
- * Time: 4:23 PM
- * To change this template use File | Settings | File Templates.
- */
 public class NewUserDialog extends JDialog {
+
+  //GUI form members
   private JButton loginButton;
   private JButton createAccountButton;
   private JButton cancelButton;
@@ -66,71 +61,68 @@ public class NewUserDialog extends JDialog {
   private JScrollPane userAgreementScrollPane;
   private JRadioButton imageFromFileRadioButton;
   private JRadioButton noProfilePictureRadioButton;
+
+  //Data members
   private String profilePictureFilePath;
   private ModelingCommons communicator;
   private Frame frame;
 
-
+  //Dialog should only be invoked from ModelingCommons class
   NewUserDialog(final Frame frame, final ModelingCommons communicator, final String errorLabelText) {
     super(frame, "Register As A New User", true);
     this.communicator = communicator;
     this.frame = frame;
     errorLabel.setText(errorLabelText);
-
     setContentPane(contentPane);
     setModal(true);
     getRootPane().setDefaultButton(createAccountButton);
-
-    for (String country : communicator.getPriorityCountries()) {
+    for(String country : communicator.getPriorityCountries()) {
       countryComboBox.addItem(country, true);
     }
     countryComboBox.addItem("--------", false);
-    for (String country : communicator.getUnpriorityCountries()) {
+    for(String country : communicator.getUnpriorityCountries()) {
       countryComboBox.addItem(country, true);
     }
-
     femaleRadioButton.setSelected(true);
-
     userAgreementTextPane.setText(communicator.getNewUserAgreement());
     userAgreementTextPane.setCaretPosition(0);
-
     int startYear = 1930;
     birthdayYearComboBox.addItem(null);
-    for (int y = Calendar.getInstance().get(Calendar.YEAR); y >= startYear; y--) {
+    for(int y = Calendar.getInstance().get(Calendar.YEAR); y >= startYear; y--) {
       birthdayYearComboBox.addItem(y);
     }
-
-
     birthdayMonthComboBox.addItem(null);
-    for (Month month : Month.getMonths()) {
+    for(Month month : Month.getMonths()) {
       birthdayMonthComboBox.addItem(month);
     }
-
     birthdayDayComboBox.addItem(null);
-    for (int d = 1; d <= 31; d++) {
+    for(int d = 1; d <= 31; d++) {
       birthdayDayComboBox.addItem(d);
     }
-
     selectFileButton.addActionListener(new ActionListener() {
+
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         try {
           profilePictureFilePath = FileDialog.show(frame, "Select image to use as profile picture", java.awt.FileDialog.LOAD);
           String toSet = profilePictureFilePath;
           FontMetrics metrics = selectedFileLabel.getFontMetrics(selectedFileLabel.getFont());
-          while (metrics.stringWidth(toSet) > selectedFileLabel.getMaximumSize().width) {
+          while(metrics.stringWidth(toSet) > selectedFileLabel.getMaximumSize().width) {
             toSet = "\u2026" + toSet.substring(2);
           }
           selectedFileLabel.setText(toSet);
-        } catch (UserCancelException e) {
+        } catch(UserCancelException e) {
+          //If the user cancels adding a file, we don't really care, we don't need to do anything
         }
       }
+
     });
 
     imageFromFileRadioButton.addChangeListener(new ChangeListener() {
+
       @Override
       public void stateChanged(ChangeEvent changeEvent) {
-        if (imageFromFileRadioButton.isSelected()) {
+        if(imageFromFileRadioButton.isSelected()) {
           selectFileButton.setEnabled(true);
           selectedFileLabel.setEnabled(true);
         } else {
@@ -138,130 +130,135 @@ public class NewUserDialog extends JDialog {
           selectedFileLabel.setEnabled(false);
         }
       }
+
     });
     imageFromFileRadioButton.setSelected(true);
     createAccountButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onOK();
       }
-    });
 
+    });
     cancelButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
-    });
 
+    });
     loginButton.addActionListener(new ActionListener() {
+
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         dispose();
         communicator.promptForLogin();
       }
-    });
 
-    // call onCancel() when cross is clicked
+    });
+    //call onCancel() when cross is clicked
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new WindowAdapter() {
+
       public void windowClosing(WindowEvent e) {
         onCancel();
       }
-    });
 
-// call onCancel() on ESCAPE
+    });
+    //call onCancel() on ESCAPE
     contentPane.registerKeyboardAction(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
     this.setResizable(false);
   }
 
   private boolean isValidInput() {
-    if (firstNameField.getText().length() == 0) {
+    if(firstNameField.getText().length() == 0) {
       errorLabel.setText("First name cannot be blank");
       return false;
     }
-    if (lastNameField.getText().length() == 0) {
+    if(lastNameField.getText().length() == 0) {
       errorLabel.setText("Last name cannot be blank");
       return false;
     }
-    if (emailAddressField.getText().length() == 0) {
+    if(emailAddressField.getText().length() == 0) {
       errorLabel.setText("Email address cannot be blank");
       //Probably should do actual email address validation here
       return false;
     }
-    if (passwordField.getPassword().length == 0) {
+    if(passwordField.getPassword().length == 0) {
       errorLabel.setText("Password cannot be blank");
       return false;
     }
-    if (!(Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()))) {
+    if(!(Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()))) {
       errorLabel.setText("Passwords do not match");
       return false;
     }
-
-
     return true;
   }
 
   private void onOK() {
-    if (!isValidInput()) {
+    if(!isValidInput()) {
       return;
     }
     dispose();
-
     String firstName = firstNameField.getText().trim();
     String lastName = lastNameField.getText().trim();
     String emailAddress = emailAddressField.getText().trim();
-    Sex sex;
-    if (femaleRadioButton.isSelected()) {
-      sex = Sex.FEMALE;
+    SexOfPerson sexOfPerson;
+    if(femaleRadioButton.isSelected()) {
+      sexOfPerson = SexOfPerson.FEMALE;
     } else {
-      sex = Sex.MALE;
+      sexOfPerson = SexOfPerson.MALE;
     }
-    String country = (String) (countryComboBox.getSelectedObject());
-    Integer birthdayYear = (Integer) (birthdayYearComboBox.getSelectedItem());
-    Month birthdayMonth = (Month) (birthdayMonthComboBox.getSelectedItem());
-    Integer birthdayDay = (Integer) (birthdayDayComboBox.getSelectedItem());
-
+    String country = (String) countryComboBox.getSelectedObject();
+    Integer birthdayYear = (Integer) birthdayYearComboBox.getSelectedItem();
+    Month birthdayMonth = (Month) birthdayMonthComboBox.getSelectedItem();
+    Integer birthdayDay = (Integer) birthdayDayComboBox.getSelectedItem();
     char[] passwordArr = passwordField.getPassword();
     String password = new String(passwordArr);
     Arrays.fill(passwordArr, (char) 0);
-
     Image profilePicture = null;
-    if (imageFromFileRadioButton.isSelected()) {
+    if(imageFromFileRadioButton.isSelected()) {
       profilePicture = new FileImage(profilePictureFilePath);
     }
-
-    ModelingCommons.CreateUserRequest request = communicator.new CreateUserRequest(
-        firstName,
-        lastName,
-        emailAddress,
-        sex,
-        country,
-        birthdayYear,
-        birthdayMonth,
-        birthdayDay,
-        password,
-        profilePicture
+    Request request = new CreateUserRequest(
+      communicator.getHttpClient(),
+      frame,
+      firstName,
+      lastName,
+      emailAddress,
+      sexOfPerson,
+      country,
+      birthdayYear,
+      birthdayMonth,
+      birthdayDay,
+      password,
+      profilePicture
     ) {
+
       @Override
-      protected void onCreateUser(String status) {
-        if (status.equals("INVALID_PROFILE_PICTURE")) {
+      protected void onCreateUser(String status, Person person) {
+        if(status.equals("INVALID_PROFILE_PICTURE")) {
           communicator.promptForCreateAccount("Invalid profile picture");
-        } else if (status.equals("ERROR_CREATING_USER")) {
+        } else if(status.equals("ERROR_CREATING_USER")) {
           communicator.promptForCreateAccount("Error creating user");
-        } else if (status.equals("CONNECTION_ERROR")) {
+        } else if(status.equals("CONNECTION_ERROR")) {
           communicator.promptForCreateAccount("Error connecting to Modeling Commons");
-        } else if (status.equals("SUCCESS")) {
+        } else if(status.equals("SUCCESS")) {
+          communicator.setPerson(person);
           communicator.promptForUpload();
         } else {
           communicator.promptForCreateAccount("Unknown server error");
         }
       }
+
     };
     request.execute();
   }

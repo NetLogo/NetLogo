@@ -1,10 +1,10 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.nlogo.swing.BrowserLauncher;
-import org.nlogo.swing.ModalProgressTask;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -12,10 +12,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -28,6 +26,8 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 public class LoginDialog extends JDialog {
+
+  //GUI form members
   private JPanel contentPane;
   private JButton cancelButton;
   private JButton loginButton;
@@ -35,53 +35,58 @@ public class LoginDialog extends JDialog {
   private JTextField emailField;
   private JLabel errorLabel;
   private JButton createAccountButton;
+
+  //Data members
   private Frame frame;
   private ModelingCommons communicator;
 
+  //Dialog should only be invoked from ModelingCommons class
   LoginDialog(Frame frame, final ModelingCommons communicator, String errorLabelText) {
     super(frame, "Login To Modeling Commons", true);
     this.communicator = communicator;
     this.frame = frame;
     setContentPane(contentPane);
     getRootPane().setDefaultButton(loginButton);
-
     errorLabel.setText(errorLabelText);
-
     createAccountButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         dispose();
         communicator.promptForCreateAccount();
       }
-    });
 
+    });
     loginButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onOK();
       }
-    });
 
+    });
     cancelButton.addActionListener(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
+
     });
-
-
     //call onCancel() when cross is clicked
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new WindowAdapter() {
+
       public void windowClosing(WindowEvent e) {
         onCancel();
       }
-    });
 
+    });
     // call onCancel() on ESCAPE
     contentPane.registerKeyboardAction(new ActionListener() {
+
       public void actionPerformed(ActionEvent e) {
         onCancel();
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
     this.setResizable(false);
@@ -93,17 +98,18 @@ public class LoginDialog extends JDialog {
     final String password = new String(passwordArr);
     Arrays.fill(passwordArr, (char) 0);
     dispose();
+    LoginRequest request = new LoginRequest(communicator.getHttpClient(), frame, emailAddress, password) {
 
-    ModelingCommons.LoginRequest request = communicator.new LoginRequest(emailAddress, password) {
       @Override
-      protected void onLogin(String status) {
-        if (status.equals("INVALID_CREDENTIALS")) {
+      protected void onLogin(String status, Person person) {
+        if(status.equals("INVALID_CREDENTIALS")) {
           communicator.promptForLogin("Invalid email address or password");
-        } else if (status.equals("MISSING_PARAMETERS")) {
+        } else if(status.equals("MISSING_PARAMETERS")) {
           communicator.promptForLogin("Missing email address or password");
-        } else if (status.equals("CONNECTION_ERROR")) {
+        } else if(status.equals("CONNECTION_ERROR")) {
           communicator.promptForLogin("Error connecting to Modeling Commons");
-        } else if (status.equals("SUCCESS")) {
+        } else if(status.equals("SUCCESS")) {
+          communicator.setPerson(person);
           communicator.promptForUpload();
         } else {
           communicator.promptForLogin("Unknown server error");
@@ -111,8 +117,8 @@ public class LoginDialog extends JDialog {
       }
 
     };
-    //Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the dialog
-    //is modal.
+    //Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the
+    //dialog is modal (which it is).
     request.execute();
   }
 

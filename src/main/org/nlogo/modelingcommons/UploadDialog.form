@@ -95,20 +95,20 @@
               <text value="New model"/>
             </properties>
           </component>
-          <component id="8a6ad" class="javax.swing.JRadioButton" binding="childOfExisitingModelRadioButton" default-binding="true">
+          <component id="8a6ad" class="javax.swing.JRadioButton" binding="childOfExistingModelRadioButton" default-binding="true">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Child of exisiting model"/>
+              <text value="Child of existing model"/>
             </properties>
           </component>
-          <component id="6c665" class="javax.swing.JRadioButton" binding="newVersionOfExisitingRadioButton" default-binding="true">
+          <component id="6c665" class="javax.swing.JRadioButton" binding="newVersionOfExistingRadioButton" default-binding="true">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="New version of exisiting model"/>
+              <text value="New version of existing model"/>
             </properties>
           </component>
           <component id="590ac" class="javax.swing.JComboBox" binding="groupComboBox">
@@ -223,12 +223,12 @@
               <text value="New Model Name"/>
             </properties>
           </component>
-          <component id="f98cd" class="javax.swing.JLabel" binding="exisitingModelNameLabel">
+          <component id="f98cd" class="javax.swing.JLabel" binding="existingModelNameLabel">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Exisiting Model Name"/>
+              <text value="Existing Model Name"/>
             </properties>
           </component>
           <component id="e1814" class="javax.swing.JTextField" binding="modelNameField">
@@ -239,7 +239,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="bc375" class="javax.swing.JTextField" binding="exisitingModelNameSearchField">
+          <component id="bc375" class="javax.swing.JTextField" binding="existingModelNameSearchField">
             <constraints>
               <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -247,7 +247,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="e7d6b" class="org.nlogo.modelingcommons.DisableableComboBox" binding="exisitingModelNameComboBox">
+          <component id="e7d6b" class="org.nlogo.modelingcommons.DisableableComboBox" binding="existingModelNameComboBox">
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>

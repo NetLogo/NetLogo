@@ -1,15 +1,10 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Ben
- * Date: 12/11/12
- * Time: 2:37 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ImageException extends Exception {
-  public ImageException() {
-  }
+
+  public ImageException() {}
 
   public ImageException(String s) {
     super(s);
@@ -22,4 +17,5 @@ public class ImageException extends Exception {
   public ImageException(Throwable throwable) {
     super(throwable);
   }
+
 }

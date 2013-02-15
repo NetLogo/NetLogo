@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.modelingcommons;
 
 import javax.imageio.ImageIO;
@@ -5,15 +7,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Ben
- * Date: 1/15/13
- * Time: 5:18 PM
- * To change this template use File | Settings | File Templates.
- */
 public class FileImage implements Image {
+
   private String filePath;
+
   public FileImage(String filePath) {
     this.filePath = filePath;
   }
@@ -26,10 +23,10 @@ public class FileImage implements Image {
     File file = new File(filePath);
     BufferedImage image = null;
     try {
-      image = ImageIO.read(file);
+      return ImageIO.read(file);
     } catch(IOException e) {
       throw new ImageException("Invalid image file");
     }
-    return image;
   }
+
 }
