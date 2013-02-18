@@ -95,15 +95,25 @@ class ReviewTab(
       }
     })
 
+  def updateMonitors() {
+    widgetHooks
+      .collect { case WidgetHook(m: window.MonitorWidget, _) => m }
+      .foreach(updateMonitor)
+  }
+
   // only callable from the job thread, and only once evaluator.withContext(...) has properly
   // set up ProcedureRunner's execution context. it would be problematic to try to trigger
   // monitors to update from the event thread, because the event thread is not allowed to
   // block waiting for the job thread. - ST 10/12/12
-  def updateMonitors() {
+  def updateMonitor(monitor: MonitorWidget) {
     for {
-      monitor <- widgetHooks.collect { case WidgetHook(m: window.MonitorWidget, _) => m }
       reporter <- monitor.reporter
-    } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
+      result = try {
+        ws.evaluator.ProcedureRunner.report(reporter)
+      } catch {
+        case _: api.LogoException => "N/A"
+      }
+    } monitor.value(result)
   }
 
   def startRecording() {
