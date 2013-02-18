@@ -45,7 +45,7 @@ class CSV(dump: Any => String) {
     val MaxColumns = 2
     var i = 0
     while(i < text.size) {
-      var line = new StringBuilder
+      val line = new StringBuilder
       var k = 0
       while(k < MaxColumns && i < text.size) {
         val end = (i + CellWidth) min text.size

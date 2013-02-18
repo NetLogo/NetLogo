@@ -90,7 +90,7 @@ public strictfp class World
     _linkShapeList = new ShapeList(AgentKindJ.Link());
 
     _observer = createObserver();
-    _observers = new ArrayAgentSet(AgentKindJ.Observer(), 1, "observers", false, this);
+    _observers = AgentSet.fromAgent(_observer);
 
     linkManager = new LinkManager(this);
     tieManager = new TieManager(this, linkManager);
@@ -98,7 +98,6 @@ public strictfp class World
     inRadiusOrCone = new InRadiusOrCone(this);
     _protractor = new Protractor(this);
 
-    _observers.add(_observer);
     changeTopology(true, true);
     // create patches in the constructor, it's necessary in case
     // the first model we load is 1x1 since when we do create patches
@@ -116,11 +115,11 @@ public strictfp class World
   /// empty agentsets
 
   private final AgentSet _noTurtles =
-    new ArrayAgentSet(AgentKindJ.Turtle(), 0, false, this);
+    AgentSet.fromArray(AgentKindJ.Turtle(), new Agent[]{});
   private final AgentSet _noPatches =
-    new ArrayAgentSet(AgentKindJ.Patch(), 0, false, this);
+    AgentSet.fromArray(AgentKindJ.Patch(), new Agent[]{});
   private final AgentSet _noLinks =
-    new ArrayAgentSet(AgentKindJ.Link(), 0, false, this);
+    AgentSet.fromArray(AgentKindJ.Link(), new Agent[]{});
 
   public AgentSet noTurtles() {
     return _noTurtles;
@@ -138,10 +137,10 @@ public strictfp class World
 
   // careful, these are HashMap not LinkedHashMap, order is arbitrary.
   // if order matters just look up, don't traverse. - ST 7/13/12
-  public java.util.Map<String, AgentSet> breedAgents =
-    new java.util.HashMap<String, AgentSet>();
-  public java.util.Map<String, AgentSet> linkBreedAgents =
-    new java.util.HashMap<String, AgentSet>();
+  public java.util.Map<String, TreeAgentSet> breedAgents =
+    new java.util.HashMap<String, TreeAgentSet>();
+  public java.util.Map<String, TreeAgentSet> linkBreedAgents =
+    new java.util.HashMap<String, TreeAgentSet>();
 
   ///
 
@@ -421,19 +420,19 @@ public strictfp class World
     return _observer;
   }
 
-  AgentSet _patches = null;
+  ArrayAgentSet _patches = null;
 
   public AgentSet patches() {
     return _patches;
   }
 
-  AgentSet _turtles = null;
+  TreeAgentSet _turtles = null;
 
   public AgentSet turtles() {
     return _turtles;
   }
 
-  AgentSet _links = null;
+  TreeAgentSet _links = null;
 
   public AgentSet links() {
     return _links;
@@ -531,7 +530,7 @@ public strictfp class World
   }
 
   public Patch getPatch(int id) {
-    return (Patch) _patches.toArray()[id];
+    return (Patch) _patches.agent(id);
   }
 
   public Patch getPatchAt(double x, double y)
@@ -540,7 +539,7 @@ public strictfp class World
     int yc = roundY(y);
     int id = ((_worldWidth * (_maxPycor - yc))
         + xc - _minPxcor);
-    return (Patch) _patches.toArray()[id];
+    return (Patch) _patches.agent(id);
   }
 
   // this procedure is the same as calling getPatchAt when the topology is a torus
@@ -565,7 +564,7 @@ public strictfp class World
       yc = (fractPart > 0.5) ? intPart - 1 : intPart;
     }
     int patchid = ((_worldWidth * (_maxPycor - yc)) + xc - _minPxcor);
-    return (Patch) _patches.toArray()[patchid];
+    return (Patch) _patches.agent(patchid);
   }
 
   public boolean validPatchCoordinates(int xc, int yc) {
@@ -577,12 +576,12 @@ public strictfp class World
   }
 
   public Patch fastGetPatchAt(int xc, int yc) {
-    return (Patch) _patches.toArray()[(_worldWidth * (_maxPycor - yc))
-        + xc - _minPxcor];
+    return (Patch) _patches.agent((_worldWidth * (_maxPycor - yc))
+                                  + xc - _minPxcor);
   }
 
   public Turtle getTurtle(long id) {
-    return (Turtle) _turtles.getAgent(Double.valueOf(id));
+    return (Turtle) _turtles.agent(id);
   }
 
   public Link getLink(Object end1, Object end2, AgentSet breed) {
@@ -723,15 +722,15 @@ public strictfp class World
     _maxPxcorBoxed = Double.valueOf(_maxPxcor);
     _maxPycorBoxed = Double.valueOf(_maxPycor);
 
-    for(AgentSet agents : breedAgents.values()) {
+    for(TreeAgentSet agents : breedAgents.values()) {
         agents.clear();
     }
-    for(AgentSet agents : linkBreedAgents.values()) {
+    for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
 
-    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES", this);
-    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS", this);
+    _turtles = new TreeAgentSet(AgentKindJ.Turtle(), "TURTLES");
+    _links = new TreeAgentSet(AgentKindJ.Link(), "LINKS");
 
     int x = minPxcor;
     int y = maxPycor;
@@ -753,7 +752,7 @@ public strictfp class World
       }
       patchArray[i] = patch;
     }
-    _patches = new ArrayAgentSet(AgentKindJ.Patch(), patchArray, "patches", this);
+    _patches = (ArrayAgentSet) AgentSet.fromArray(AgentKindJ.Patch(), patchArray, "patches");
     patchesWithLabels = 0;
     patchesAllBlack = true;
     mayHavePartiallyTransparentObjects = false;
@@ -822,7 +821,7 @@ public strictfp class World
   }
 
   public void clearTurtles() {
-    for(AgentSet agents : breedAgents.values()) {
+    for(TreeAgentSet agents : breedAgents.values()) {
         agents.clear();
     }
     for (AgentIterator iter = _turtles.iterator(); iter.hasNext();) {
@@ -840,7 +839,7 @@ public strictfp class World
   }
 
   public void clearLinks() {
-    for(AgentSet agents : linkBreedAgents.values()) {
+    for(TreeAgentSet agents : linkBreedAgents.values()) {
         agents.clear();
     }
     for (AgentIterator iter = _links.iterator(); iter.hasNext();) {

@@ -53,11 +53,10 @@ public final strictfp class _turtleson
       throw new ArgumentTypeException
           (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
-    return new org.nlogo.agent.ArrayAgentSet
-      (AgentKindJ.Turtle(),
-            resultList.toArray
-                (new Turtle[resultList.size()]),
-            world);
+    return AgentSet.fromArray(
+      AgentKindJ.Turtle(),
+      resultList.toArray(
+        new Turtle[resultList.size()]));
   }
 
   private void addAll(List<Turtle> turtles, Iterable<Turtle> moreTurtles) {

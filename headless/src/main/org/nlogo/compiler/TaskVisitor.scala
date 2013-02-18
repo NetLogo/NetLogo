@@ -27,11 +27,11 @@ private class TaskVisitor extends DefaultAstVisitor {
             cAssert(procedure.get.isTask,
                     I18N.errors.get("compiler.TaskVisitor.notDefined"), expr)
             val formal: Let = procedure.get.getTaskFormal(lv.varNumber, lv.token)
-            expr.reporter = new _letvariable(formal, formal.name)
+            expr.reporter = new _letvariable(formal)
             expr.reporter.token(lv.token)
           case Some(l: _reportertask) =>
             val formal: Let = l.getFormal(lv.varNumber)
-            expr.reporter = new _letvariable(formal, formal.name)
+            expr.reporter = new _letvariable(formal)
             expr.reporter.token(lv.token)
         }
       case _ =>

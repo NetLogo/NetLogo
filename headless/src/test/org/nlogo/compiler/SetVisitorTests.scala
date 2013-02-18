@@ -4,7 +4,7 @@ package org.nlogo.compiler
 
 import org.scalatest.FunSuite
 import org.nlogo.agent.{ Link, Patch, Turtle }
-import org.nlogo.api.CompilerException
+import org.nlogo.api.{ CompilerException, Let }
 import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
 
@@ -18,7 +18,7 @@ class SetVisitorTests extends FunSuite {
       stmt.toString)
   }
   test("test1") { tester(new _turtlevariable(Turtle.VAR_HEADING), Turtle.VAR_HEADING.toString, classOf[_setturtlevariable]) }
-  test("test2") { tester(new _letvariable(null, "FOO"), "FOO", classOf[_setletvariable]) }
+  test("test2") { tester(new _letvariable(new Let("FOO", 0, 0)), "FOO", classOf[_setletvariable]) }
   test("test3") { tester(new _turtleorlinkvariable("SHAPE"), "SHAPE", classOf[_setturtleorlinkvariable]) }
   test("test4") { tester(new _patchvariable(Patch.VAR_PCOLOR), Patch.VAR_PCOLOR.toString, classOf[_setpatchvariable]) }
   test("test5") { tester(new _observervariable(3), "3", classOf[_setobservervariable]) }

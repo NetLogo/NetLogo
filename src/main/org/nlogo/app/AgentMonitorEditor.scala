@@ -213,12 +213,8 @@ with org.nlogo.window.Events.JobRemovedEventHandler
         // this is so you can still enter expressions into the who field of dead/empty turtle
         // monitors and the pxcor/pycor fields of empty patch monitors - ST 8/17/03
         workspace.world.observers()
-      else {
-        val agentset = new org.nlogo.agent.ArrayAgentSet(
-          agent.kind, 1, false, workspace.world)
-        agentset.add(agent)
-        agentset
-      }
+      else
+        AgentSet.fromAgent(agent)
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
   }

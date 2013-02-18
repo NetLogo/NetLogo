@@ -4,9 +4,18 @@ package org.nlogo.agent
 
 import org.nlogo.{ api, util }
 
+object AgentSet {
+  def fromAgent(agent: Agent): AgentSet =
+    new ArrayAgentSet(agent.kind, null, Array(agent))
+  // for convenience from Java, overload instead of using default arguments
+  def fromArray(kind: api.AgentKind, agents: Array[Agent], printName: String = null): AgentSet =
+    new ArrayAgentSet(kind, printName, agents)
+  def fromArray(kind: api.AgentKind, agents: Array[Agent]): AgentSet =
+    new ArrayAgentSet(kind, null, agents)
+}
+
 abstract class AgentSet(
   val kind: api.AgentKind,
-  val world: World,
   val printName: String,
   val removableAgents: Boolean,
   // yuck, vars
@@ -20,14 +29,10 @@ extends api.AgentSet {
   def shufflerator(rng: util.MersenneTwisterFast): AgentIterator
   def agent(id: Long): Agent
   def getAgent(id: AnyRef): Agent
-  def add(agent: Agent)
-  def remove(key: AnyRef)
-  def clear()
   def randomOne(precomputedCount: Int, random: Int): Agent
   def randomTwo(precomputedCount: Int, random1: Int, random2: Int): Array[Agent]
   def randomSubsetGeneral(resultSize: Int, precomputedCount: Int, rng: util.MersenneTwisterFast): Array[Agent]
   def toLogoList: api.LogoList
-  def toArray: Array[Agent]
 
   ///
 
@@ -74,7 +79,7 @@ extends api.AgentSet {
         case _ =>
           randomSubsetGeneral(resultSize, precomputedCount, rng)
       }
-    new ArrayAgentSet(kind, array, world)
+    AgentSet.fromArray(kind, array)
   }
 
 }

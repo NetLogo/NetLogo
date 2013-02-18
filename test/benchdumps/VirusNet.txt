@@ -296,7 +296,7 @@ procedure SETUP:[]{O---}:
           ATHROW
          L2
           ALOAD 3
-          ASTORE 6
+          ASTORE 5
           GOTO L4
          L1
           ALOAD 2
@@ -330,24 +330,13 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 4
-          INVOKEINTERFACE org/nlogo/api/Agent.kind ()Lorg/nlogo/api/AgentKind;
-          ICONST_1
-          ICONST_0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetup_ask_2.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;IZLorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
           ASTORE 5
-          ALOAD 5
-          ALOAD 4
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
-          ALOAD 5
-          ASTORE 6
          L4
           ALOAD 1
-          ALOAD 6
+          ALOAD 5
           ICONST_5
           INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
           ALOAD 1
@@ -983,7 +972,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ATHROW
          L5
           ALOAD 3
-          ASTORE 6
+          ASTORE 5
           GOTO L7
          L4
           ALOAD 2
@@ -1017,24 +1006,13 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 4
-          INVOKEINTERFACE org/nlogo/api/Agent.kind ()Lorg/nlogo/api/AgentKind;
-          ICONST_1
-          ICONST_0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_ask_2.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;IZLorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
           ASTORE 5
-          ALOAD 5
-          ALOAD 4
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
-          ALOAD 5
-          ASTORE 6
          L7
           ALOAD 1
-          ALOAD 6
+          ALOAD 5
           ICONST_3
           INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
           ALOAD 1
@@ -1271,8 +1249,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               POP
               GOTO L2
              L3
-              NEW org/nlogo/agent/ArrayAgentSet
-              DUP
+              GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
               ALOAD 9
@@ -1281,9 +1258,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
               INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
               INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
               CHECKCAST [Lorg/nlogo/agent/Agent;
-              ALOAD 0
-              GETFIELD org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_otherwith_4.world : Lorg/nlogo/agent/World;
-              INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+              INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
              L9
               ARETURN
         _asm_proceduresetupspatiallyclusterednetwork_distance_6 "distance myself" Agent => double
@@ -2588,7 +2563,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           ATHROW
          L2
           ALOAD 3
-          ASTORE 6
+          ASTORE 5
           GOTO L4
          L1
           ALOAD 2
@@ -2622,24 +2597,13 @@ procedure BECOME-RESISTANT:[]{-T--}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 4
-          INVOKEINTERFACE org/nlogo/api/Agent.kind ()Lorg/nlogo/api/AgentKind;
-          ICONST_1
-          ICONST_0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebecomeresistant_ask_3.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;IZLorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
           ASTORE 5
-          ALOAD 5
-          ALOAD 4
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
-          ALOAD 5
-          ASTORE 6
          L4
           ALOAD 1
-          ALOAD 6
+          ALOAD 5
           ICONST_4
           INVOKEVIRTUAL org/nlogo/nvm/Context.runExclusiveJob (Lorg/nlogo/agent/AgentSet;I)V
           ALOAD 1
@@ -2821,8 +2785,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 9
@@ -2831,9 +2794,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L6
           ASTORE 2
           ALOAD 1
@@ -3049,8 +3010,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 9
@@ -3059,9 +3019,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurespreadvirus_ask_2.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L8
           ASTORE 2
           ALOAD 1
@@ -3424,8 +3382,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
+          GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 9
@@ -3434,9 +3391,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           INVOKEVIRTUAL scala/reflect/ClassTag$.apply (Ljava/lang/Class;)Lscala/reflect/ClassTag;
           INVOKEINTERFACE scala/collection/TraversableOnce.toArray (Lscala/reflect/ClassTag;)Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_proceduredoviruschecks_ask_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L6
           ASTORE 2
           ALOAD 1

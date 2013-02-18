@@ -94,10 +94,10 @@ public strictfp class Link
     this.id = world.newLinkId();
 
     variables[VAR_BREED] = breed;
-    world.links().add(this);
+    world._links.add(this);
 
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
 
     for (int i = LAST_PREDEFINED_VAR + 1; i < variables.length; i++) {
@@ -109,8 +109,8 @@ public strictfp class Link
     if (id == -1) {
       return;
     }
-    AgentSet breed = getBreed();
-    world.links().remove(agentKey());
+    TreeAgentSet breed = (TreeAgentSet) variables[VAR_BREED];
+    world._links.remove(agentKey());
     if (breed != world.links()) {
       breed.remove(agentKey());
     }
@@ -532,10 +532,9 @@ public strictfp class Link
   }
 
   public AgentSet bothEnds() {
-    AgentSet bothEnds = new ArrayAgentSet(AgentKindJ.Turtle(), 2, false, world);
-    bothEnds.add(end1);
-    bothEnds.add(end2);
-    return bothEnds;
+    return AgentSet.fromArray(
+      AgentKindJ.Turtle(),
+      new Agent[]{end1, end2});
   }
 
   @Override
@@ -607,18 +606,18 @@ public strictfp class Link
   }
 
   public void setBreed(AgentSet breed) {
-    AgentSet oldBreed = null;
+    TreeAgentSet oldBreed = (TreeAgentSet) variables[VAR_BREED];
     if (variables[VAR_BREED] instanceof AgentSet) {
-      oldBreed = (AgentSet) variables[VAR_BREED];
+      oldBreed = (TreeAgentSet) variables[VAR_BREED];
       if (breed == oldBreed) {
         return;
       }
       if (oldBreed != world.links()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED]).remove(agentKey());
       }
     }
     if (breed != world.links()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED] = breed;
     shape(world.linkBreedShapes.breedShape(breed));

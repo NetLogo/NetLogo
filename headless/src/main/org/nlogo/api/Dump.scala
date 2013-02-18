@@ -125,51 +125,46 @@ object Dump {
     else {
       val buf = new StringBuilder
       buf += '{'
-      val printName = as.printName
-      as.kind match {
-        case AgentKind.Turtle =>
-          if (printName != null) {
-            buf ++=
-              (if (as eq as.world.turtles)
-                 "all-"
-               else
-                 "breed ")
-            buf ++= printName.toLowerCase
-          }
-          else {
-            val ids = as.agents.asScala.map(_.id.toString).toSeq
-            buf ++= ("turtles" +: ids).mkString(" ")
-          }
-        case AgentKind.Link =>
-          if (printName != null) {
-            buf ++=
-              (if (as eq as.world.links)
-                 "all-"
-               else
-                 "breed ")
-            buf ++= printName.toLowerCase
-          }
-          else {
-            def linkString(link: Link) =
-              "[" + link.end1.id + " " + link.end2.id + " " + agentset(link.getBreed, true) + "]"
-            val ids = as.agents.asScala.map(a => linkString(a.asInstanceOf[Link])).toSeq
-            buf ++= ("links" +: ids).mkString(" ")
-          }
-        case AgentKind.Patch =>
-          if (printName != null) {
-            buf ++= "all-"
-            buf ++= printName.toLowerCase
-          }
-          else {
-            def patchString(p: Patch) =
-              "[" + p.pxcor + " " + p.pycor + "]"
-            val ids = as.agents.asScala.map(a => patchString(a.asInstanceOf[Patch])).toSeq
-            buf ++= ("patches" +: ids).mkString(" ")
-          }
-        case AgentKind.Observer =>
-          buf ++= "observer"
-      }
-      buf.append("}")
+      buf ++=
+        (as.kind match {
+          case AgentKind.Turtle =>
+            Option(as.printName).map(_.toLowerCase) match {
+              case None =>
+                val ids = as.agents.asScala.map(_.id.toString).toSeq
+                ("turtles" +: ids).mkString(" ")
+              case Some("turtles") =>
+                "all-turtles"
+              case Some(breed) =>
+                "breed " + breed
+            }
+          case AgentKind.Link =>
+            Option(as.printName).map(_.toLowerCase) match {
+              case None =>
+                def linkString(link: Link) =
+                  "[" + link.end1.id + " " + link.end2.id + " " + agentset(link.getBreed, true) + "]"
+                val ids = as.agents.asScala.map(a => linkString(a.asInstanceOf[Link])).toSeq
+                ("links" +: ids).mkString(" ")
+              case Some("links") =>
+                "all-links"
+              case Some(breed) =>
+                "breed " + breed
+            }
+          case AgentKind.Patch =>
+            Option(as.printName).map(_.toLowerCase) match {
+              case None =>
+                def patchString(p: Patch) =
+                  "[" + p.pxcor + " " + p.pycor + "]"
+                val ids = as.agents.asScala.map(a => patchString(a.asInstanceOf[Patch])).toSeq
+                ("patches" +: ids).mkString(" ")
+              case Some("patches") =>
+                "all-patches"
+              case Some(x) =>
+                x
+            }
+          case AgentKind.Observer =>
+            "observer"
+        })
+      buf ++= "}"
       buf.toString
     }
 

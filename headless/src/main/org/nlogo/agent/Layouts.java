@@ -44,12 +44,11 @@ public final strictfp class Layouts {
     }
   }
 
-  public static void circle(AgentSet nodes, double radius,
+  public static void circle(World world, AgentSet nodes, double radius,
                             org.nlogo.util.MersenneTwisterFast random)
       throws AgentException {
     int i = 0;
     int n = nodes.count();
-    World world = nodes.world();
     int midx = world.minPxcor() + (int) StrictMath.floor(world.worldWidth() / 2);
     int midy = world.minPycor() + (int) StrictMath.floor(world.worldHeight() / 2);
     for (AgentIterator it = nodes.shufflerator(random); it.hasNext(); i++) {
@@ -64,24 +63,22 @@ public final strictfp class Layouts {
   }
 
   /// spring
-  public static void spring(AgentSet nodeset, AgentSet linkset,
+  public static void spring(World world, AgentSet nodeset, AgentSet linkset,
                             double spr, double len, double rep,
                             org.nlogo.util.MersenneTwisterFast random) {
-    World world = nodeset.world();
     if (world.program().is3D()) {
-      Layouts3D.spring3D(nodeset, linkset, spr, len, rep, random);
+      Layouts3D.spring3D((World3D) world, nodeset, linkset, spr, len, rep, random);
     } else {
-      spring2D(nodeset, linkset, spr, len, rep, random);
+      spring2D(world, nodeset, linkset, spr, len, rep, random);
     }
   }
 
   // THIS CODE IS ALMOST ALL THE SAME AS Layouts3D.spring;
   // GOOD CHANCE THAT ANY EDITS MADE HERE SHOULD BE MADE THERE
   // AS WELL.  ~Forrest (12/5/2006)
-  public static void spring2D(AgentSet nodeset, AgentSet linkset,
+  public static void spring2D(World world, AgentSet nodeset, AgentSet linkset,
                               double spr, double len, double rep,
                               org.nlogo.util.MersenneTwisterFast random) {
-    World world = nodeset.world();
     int nodeCount = nodeset.count();
     if (nodeCount == 0) {
       return;
@@ -237,10 +234,9 @@ public final strictfp class Layouts {
 
   /// Tutte
 
-  public static void tutte(AgentSet nodeset, AgentSet linkset,
+  public static void tutte(World world, AgentSet nodeset, AgentSet linkset,
                            double radius, org.nlogo.util.MersenneTwisterFast random)
       throws AgentException {
-    World world = nodeset.world();
     java.util.ArrayList<Turtle> anchors = new java.util.ArrayList<Turtle>();
     for (AgentIterator iter = linkset.iterator();
          iter.hasNext();) {

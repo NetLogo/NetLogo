@@ -68,7 +68,7 @@ public final strictfp class Turtle3D
     variables = new Object[world.getVariablesArraySize(this, breed)];
     if (getId) {
       id(world.newTurtleId());
-      world.turtles().add(this);
+      world._turtles.add(this);
     }
     initvars(xcor, ycor, breed);
 
@@ -76,7 +76,7 @@ public final strictfp class Turtle3D
       variables[i] = World.ZERO;
     }
     if (breed != world.turtles()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
 
     variables[VAR_PITCH3D] = World.ZERO;
@@ -97,7 +97,7 @@ public final strictfp class Turtle3D
         World.ZERO, World.ZERO, World.ZERO,
         false);
     id(id);
-    world.turtles().add(this);
+    world._turtles.add(this);
   }
 
   @Override
@@ -109,12 +109,12 @@ public final strictfp class Turtle3D
     child.zcor = zcor;
     child.variables = variables.clone();
     child.id(world.newTurtleId());
-    world.turtles().add(child);
+    world._turtles.add(child);
     if (breed != getBreed()) {
       child.setBreed(breed);
     }
     else if (breed != world.turtles()) {
-      getBreed().add(child);
+      ((TreeAgentSet) getBreed()).add(child);
     }
     child.getPatchHere().addTurtle(child);
     return child;
@@ -999,11 +999,11 @@ public final strictfp class Turtle3D
         return;
       }
       if (oldBreed != world.turtles()) {
-        ((AgentSet) variables[VAR_BREED3D]).remove(agentKey());
+        ((TreeAgentSet) variables[VAR_BREED3D]).remove(agentKey());
       }
     }
     if (breed != world.turtles()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED3D] = breed;
     shape(world.turtleBreedShapes.breedShape(breed));

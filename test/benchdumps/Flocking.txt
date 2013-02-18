@@ -885,8 +885,6 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ICONST_1
           INVOKEVIRTUAL org/nlogo/agent/InRadiusOrCone.inRadius (Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/AgentSet;DZ)Ljava/util/List;
           ASTORE 5
-          NEW org/nlogo/agent/ArrayAgentSet
-          DUP
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 5
@@ -895,21 +893,16 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           ANEWARRAY org/nlogo/agent/Agent
           INVOKEINTERFACE java/util/List.toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
           CHECKCAST [Lorg/nlogo/agent/Agent;
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;Lorg/nlogo/agent/World;)V
+          INVOKESTATIC org/nlogo/agent/AgentSet.fromArray (Lorg/nlogo/api/AgentKind;[Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/AgentSet;
          L11
           ASTORE 2
-          NEW org/nlogo/agent/ArrayAgentSet
+          NEW org/nlogo/agent/AgentSetBuilder
           DUP
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/api/AgentKind;
           ALOAD 2
           INVOKEINTERFACE org/nlogo/api/AgentSet.count ()I
-          ICONST_0
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurefindflockmates_setturtlevariable_0.world : Lorg/nlogo/agent/World;
-          INVOKESPECIAL org/nlogo/agent/ArrayAgentSet.<init> (Lorg/nlogo/api/AgentKind;IZLorg/nlogo/agent/World;)V
+          INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/api/AgentKind;I)V
           ASTORE 3
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
@@ -927,10 +920,11 @@ procedure FIND-FLOCKMATES:[]{-T--}:
           IF_ACMPEQ L12
           ALOAD 3
           ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/ArrayAgentSet.add (Lorg/nlogo/agent/Agent;)V
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L12
          L13
           ALOAD 3
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/AgentSet;
          L14
           ASTORE 2
          L2
