@@ -440,6 +440,8 @@ class ReviewTab(
         userConfirms("Close current run",
           "The current run has unsaved data. Are you sure you want to close the current run?")) {
         tabState.closeCurrentRun()
+        // select the new current run if there is one:
+        tabState.currentRun.foreach(RunList.setSelectedValue(_, true))
         refreshInterface()
       }
     }

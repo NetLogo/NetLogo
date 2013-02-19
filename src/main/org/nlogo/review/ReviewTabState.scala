@@ -6,7 +6,7 @@ import javax.swing.AbstractListModel
 import org.nlogo.mirror.ModelRun
 
 class ReviewTabState(
-  private var _runs: Seq[ModelRun] = Seq(),
+  private var _runs: IndexedSeq[ModelRun] = IndexedSeq.empty,
   private var _currentRun: Option[ModelRun] = None,
   private var _recordingEnabled: Boolean = false)
   extends AbstractListModel {
@@ -27,7 +27,7 @@ class ReviewTabState(
 
   def reset() {
     val lastIndex = _runs.size - 1
-    _runs = Seq[ModelRun]()
+    _runs = IndexedSeq[ModelRun]()
     _currentRun = None
     fireIntervalRemoved(this, 0, lastIndex)
   }
@@ -36,6 +36,9 @@ class ReviewTabState(
     for (run <- currentRun) {
       val index = _runs.indexOf(run)
       _runs = _runs.filterNot(_ == run)
+      _currentRun = _runs
+        .lift(index) // keep same index if possible
+        .orElse(_runs.lastOption) // or use last (or None if empty)
       fireIntervalRemoved(this, index, index)
     }
   }
