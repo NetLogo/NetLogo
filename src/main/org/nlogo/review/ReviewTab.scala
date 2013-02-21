@@ -21,6 +21,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentL
 import javax.swing.filechooser.FileNameExtensionFilter
 import org.nlogo.plot.PlotAction
 import org.nlogo.drawing.DrawingAction
+import org.nlogo.mirror.Frame
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -289,22 +290,11 @@ class ReviewTab(
   }
 
   object Scrubber extends JSlider {
-    def border(s: String) {
-      setBorder(BorderFactory.createTitledBorder(s))
-    }
-    def updateBorder() {
-      val newBorder = for {
-        frame <- tabState.currentFrame
-        ticks <- frame.ticks
-      } yield "Ticks: " + api.Dump.number(StrictMath.floor(ticks))
-      border(newBorder.getOrElse(""))
-    }
     setValue(0)
-    border("")
     addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
         tabState.currentRun.foreach(_.currentFrameIndex = getValue)
-        updateBorder()
+        TickPanel.updateValues
         InterfacePanel.repaint()
       }
     })
@@ -349,7 +339,7 @@ class ReviewTab(
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(NotesArea, renameButton, closeCurrentButton, closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
-    Scrubber.updateBorder()
+    TickPanel.updateValues()
     Scrubber.repaint()
     RunList.repaint()
     InterfacePanel.repaint()
@@ -539,14 +529,36 @@ class ReviewTab(
     add(new JScrollPane(NotesArea), BorderLayout.CENTER)
   }
 
+  object TickPanel extends JPanel {
+    add(new JLabel("Frame:"))
+    val frame = new JLabel("-")
+    val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
+    frame.setFont(bold)
+    add(frame)
+    add(new JLabel("Tick:"))
+    val tick = new JLabel("-")
+    tick.setFont(bold)
+    add(tick)
+    def updateValues() {
+      frame.setText(tabState
+        .currentFrameIndex
+        .map(_.toString)
+        .getOrElse("-"))
+      tick.setText(tabState
+        .currentFrame
+        .flatMap(_.ticks)
+        .map(api.Dump.number)
+        .getOrElse("-"))
+    }
+  }
   object ScrubberPanel extends JPanel {
     setLayout(new BorderLayout)
     add(ScrubberButtonsPanel, BorderLayout.WEST)
     add(Scrubber, BorderLayout.CENTER)
+    add(TickPanel, BorderLayout.EAST)
   }
 
   object RunListPanel extends JPanel {
-    setPreferredSize(new Dimension(200, 0))
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
   }
@@ -564,7 +576,9 @@ class ReviewTab(
   object PrimarySplitPane extends JSplitPane(
     JSplitPane.HORIZONTAL_SPLIT,
     RunListPanel,
-    SecondarySplitPane)
+    SecondarySplitPane) {
+    setDividerLocation(200)
+  }
 
   object SecondarySplitPane extends JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
