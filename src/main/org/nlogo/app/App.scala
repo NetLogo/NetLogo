@@ -330,6 +330,7 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   private val ImportWorldURLProp = "netlogo.world_state_url"
+  private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -590,13 +591,41 @@ class App extends
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
         java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
-      Option(System.getProperty(ImportWorldURLProp)) foreach {
+
+      import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
+      Option(System.getProperty(ImportRawWorldURLProp)) map {
         url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
           import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
-          workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-          workspace.view.dirty()
-          workspace.view.repaint()
-      }
+          EventQueue.invokeLater {
+            () =>
+              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+              workspace.view.dirty()
+              workspace.view.repaint()
+          }
+      } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
+        url =>
+
+          import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+
+          val source = Source.fromURL(url)(Codec.ISO8859)
+          val bytes  = source.map(_.toByte).toArray
+          val bais   = new ByteArrayInputStream(bytes)
+          val gis    = new GZIPInputStream(bais)
+          val reader = new InputStreamReader(gis)
+
+          EventQueue.invokeLater {
+            () => {
+              workspace.importWorld(reader)
+              workspace.view.dirty()
+              workspace.view.repaint()
+              source.close()
+              bais.close()
+              gis.close()
+              reader.close()
+            }
+          }
+
+      })
     }
     else fileMenu.newModel()
   }
