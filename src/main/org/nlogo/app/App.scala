@@ -120,7 +120,7 @@ object App{
             new ComponentParameter()))
     val saveFunc = new ModelSaver(pico.getComponent(classOf[App])).save _
     pico.add(classOf[ModelingCommonsInterface],
-          "org.nlogo.modelingcommons.ModelingCommons",
+          "org.nlogo.mc.ModelingCommons",
           Array[Parameter] (
             new ConstantParameter(saveFunc),
             new ComponentParameter(classOf[AppFrame]),
