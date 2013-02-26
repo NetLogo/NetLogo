@@ -44,9 +44,7 @@ public class UploadSuccessDialog extends JDialog {
     this.communicator = communicator;
     this.uploadedModelURL = uploadedModelURL;
     this.uploadedModelName = uploadedModelName;
-
     initializeGUIComponents();
-
     successLabel.setText(String.format("Model '%s' created successfully", uploadedModelName));
     errorLabel.setText(errorLabelText);
     getRootPane().setDefaultButton(OKButton);
@@ -96,6 +94,10 @@ public class UploadSuccessDialog extends JDialog {
     dispose();
   }
 
+  private void setMaxHeightToPreferredHeight(JComponent component) {
+    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
+  }
+
   private void initializeGUIComponents() {
     topLevelContainer = new JPanel();
     topLevelContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -129,10 +131,6 @@ public class UploadSuccessDialog extends JDialog {
     buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
     buttonsPanel.add(OKButton);
     setMaxHeightToPreferredHeight(buttonsPanel);
-  }
-
-  private void setMaxHeightToPreferredHeight(JComponent component) {
-    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
   }
 
 }

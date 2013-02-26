@@ -48,9 +48,7 @@ public class LoginDialog extends JDialog {
     super(frame, "Login To Modeling Commons", true);
     this.communicator = communicator;
     this.frame = frame;
-
     initializeGUIComponents();
-
     getRootPane().setDefaultButton(loginButton);
     errorLabel.setText(errorLabelText);
     createAccountButton.addActionListener(new ActionListener() {
@@ -95,6 +93,44 @@ public class LoginDialog extends JDialog {
     this.pack();
     this.setLocationRelativeTo(frame);
     this.setResizable(true);
+  }
+
+  private void onOK() {
+    final String emailAddress = emailField.getText();
+    char[] passwordArr = passwordField.getPassword();
+    final String password = new String(passwordArr);
+    Arrays.fill(passwordArr, (char) 0);
+    dispose();
+    LoginRequest request = new LoginRequest(communicator.getHttpClient(), frame, emailAddress, password) {
+
+      @Override
+      protected void onLogin(String status, Person person) {
+        if(status.equals("INVALID_CREDENTIALS")) {
+          communicator.promptForLogin("Invalid email address or password");
+        } else if(status.equals("MISSING_PARAMETERS")) {
+          communicator.promptForLogin("Missing email address or password");
+        } else if(status.equals("CONNECTION_ERROR")) {
+          communicator.promptForLogin("Error connecting to Modeling Commons");
+        } else if(status.equals("SUCCESS")) {
+          communicator.setPerson(person);
+          communicator.promptForUpload();
+        } else {
+          communicator.promptForLogin("Unknown server error");
+        }
+      }
+
+    };
+    //Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the
+    //dialog is modal (which it is).
+    request.execute();
+  }
+
+  private void onCancel() {
+    dispose();
+  }
+
+  private void setMaxHeightToPreferredHeight(JComponent component) {
+    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
   }
 
   private void initializeGUIComponents() {
@@ -157,44 +193,6 @@ public class LoginDialog extends JDialog {
     buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
     buttonsPanel.add(loginButton);
     setMaxHeightToPreferredHeight(buttonsPanel);
-  }
-
-  private void onOK() {
-    final String emailAddress = emailField.getText();
-    char[] passwordArr = passwordField.getPassword();
-    final String password = new String(passwordArr);
-    Arrays.fill(passwordArr, (char) 0);
-    dispose();
-    LoginRequest request = new LoginRequest(communicator.getHttpClient(), frame, emailAddress, password) {
-
-      @Override
-      protected void onLogin(String status, Person person) {
-        if(status.equals("INVALID_CREDENTIALS")) {
-          communicator.promptForLogin("Invalid email address or password");
-        } else if(status.equals("MISSING_PARAMETERS")) {
-          communicator.promptForLogin("Missing email address or password");
-        } else if(status.equals("CONNECTION_ERROR")) {
-          communicator.promptForLogin("Error connecting to Modeling Commons");
-        } else if(status.equals("SUCCESS")) {
-          communicator.setPerson(person);
-          communicator.promptForUpload();
-        } else {
-          communicator.promptForLogin("Unknown server error");
-        }
-      }
-
-    };
-    //Request.execute MUST come before the call to JDialog.setVisible because the setVisible call does not return if the
-    //dialog is modal (which it is).
-    request.execute();
-  }
-
-  private void onCancel() {
-    dispose();
-  }
-
-  private void setMaxHeightToPreferredHeight(JComponent component) {
-    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
   }
 
 }

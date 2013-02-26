@@ -81,8 +81,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "1.8" % "test",
   "org.apache.httpcomponents" % "httpclient" % "4.2",
   "org.apache.httpcomponents" % "httpmime" % "4.2",
-  "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-  "com.intellij" % "forms_rt" % "7.0.3"
+  "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>

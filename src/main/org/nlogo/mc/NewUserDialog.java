@@ -154,6 +154,101 @@ public class NewUserDialog extends JDialog {
     setResizable(true);
   }
 
+  private boolean isValidInput() {
+    if(firstNameField.getText().length() == 0) {
+      errorLabel.setText("First name cannot be blank");
+      return false;
+    }
+    if(lastNameField.getText().length() == 0) {
+      errorLabel.setText("Last name cannot be blank");
+      return false;
+    }
+    if(emailAddressField.getText().length() == 0) {
+      errorLabel.setText("Email address cannot be blank");
+      //Probably should do actual email address validation here
+      return false;
+    }
+    if(passwordField.getPassword().length == 0) {
+      errorLabel.setText("Password cannot be blank");
+      return false;
+    }
+    if(!(Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()))) {
+      errorLabel.setText("Passwords do not match");
+      return false;
+    }
+    return true;
+  }
+
+  private void onOK() {
+    if(!isValidInput()) {
+      return;
+    }
+    dispose();
+    String firstName = firstNameField.getText().trim();
+    String lastName = lastNameField.getText().trim();
+    String emailAddress = emailAddressField.getText().trim();
+    SexOfPerson sexOfPerson;
+    if(femaleRadioButton.isSelected()) {
+      sexOfPerson = SexOfPerson.FEMALE;
+    } else {
+      sexOfPerson = SexOfPerson.MALE;
+    }
+    String country = (String) countryComboBox.getSelectedObject();
+    Integer birthdayYear = (Integer) birthdayYearComboBox.getSelectedItem();
+    Month birthdayMonth = (Month) birthdayMonthComboBox.getSelectedItem();
+    Integer birthdayDay = (Integer) birthdayDayComboBox.getSelectedItem();
+    char[] passwordArr = passwordField.getPassword();
+    String password = new String(passwordArr);
+    Arrays.fill(passwordArr, (char) 0);
+    Image profilePicture = null;
+    if(imageFromFileRadioButton.isSelected()) {
+      if(fileSelector.getFilePath() != null) {
+        profilePicture = new FileImage(fileSelector.getFilePath());
+      }
+    }
+    Request request = new CreateUserRequest(
+        communicator.getHttpClient(),
+        frame,
+        firstName,
+        lastName,
+        emailAddress,
+        sexOfPerson,
+        country,
+        birthdayYear,
+        birthdayMonth,
+        birthdayDay,
+        password,
+        profilePicture
+    ) {
+
+      @Override
+      protected void onCreateUser(String status, Person person) {
+        if(status.equals("INVALID_PROFILE_PICTURE")) {
+          communicator.promptForCreateAccount("Invalid profile picture");
+        } else if(status.equals("ERROR_CREATING_USER")) {
+          communicator.promptForCreateAccount("Error creating user");
+        } else if(status.equals("CONNECTION_ERROR")) {
+          communicator.promptForCreateAccount("Error connecting to Modeling Commons");
+        } else if(status.equals("SUCCESS")) {
+          communicator.setPerson(person);
+          communicator.promptForUpload();
+        } else {
+          communicator.promptForCreateAccount("Unknown server error");
+        }
+      }
+
+    };
+    request.execute();
+  }
+
+  private void onCancel() {
+    dispose();
+  }
+
+  private void setMaxHeightToPreferredHeight(JComponent component) {
+    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
+  }
+
   private void initializeGUIComponents() {
     topLevelContainer = new JPanel();
     topLevelContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -302,101 +397,6 @@ public class NewUserDialog extends JDialog {
     ButtonGroup profilePictureButtonGroup = new ButtonGroup();
     profilePictureButtonGroup.add(imageFromFileRadioButton);
     profilePictureButtonGroup.add(noProfilePictureRadioButton);
-  }
-
-  private boolean isValidInput() {
-    if(firstNameField.getText().length() == 0) {
-      errorLabel.setText("First name cannot be blank");
-      return false;
-    }
-    if(lastNameField.getText().length() == 0) {
-      errorLabel.setText("Last name cannot be blank");
-      return false;
-    }
-    if(emailAddressField.getText().length() == 0) {
-      errorLabel.setText("Email address cannot be blank");
-      //Probably should do actual email address validation here
-      return false;
-    }
-    if(passwordField.getPassword().length == 0) {
-      errorLabel.setText("Password cannot be blank");
-      return false;
-    }
-    if(!(Arrays.equals(passwordField.getPassword(), passwordConfirmField.getPassword()))) {
-      errorLabel.setText("Passwords do not match");
-      return false;
-    }
-    return true;
-  }
-
-  private void onOK() {
-    if(!isValidInput()) {
-      return;
-    }
-    dispose();
-    String firstName = firstNameField.getText().trim();
-    String lastName = lastNameField.getText().trim();
-    String emailAddress = emailAddressField.getText().trim();
-    SexOfPerson sexOfPerson;
-    if(femaleRadioButton.isSelected()) {
-      sexOfPerson = SexOfPerson.FEMALE;
-    } else {
-      sexOfPerson = SexOfPerson.MALE;
-    }
-    String country = (String) countryComboBox.getSelectedObject();
-    Integer birthdayYear = (Integer) birthdayYearComboBox.getSelectedItem();
-    Month birthdayMonth = (Month) birthdayMonthComboBox.getSelectedItem();
-    Integer birthdayDay = (Integer) birthdayDayComboBox.getSelectedItem();
-    char[] passwordArr = passwordField.getPassword();
-    String password = new String(passwordArr);
-    Arrays.fill(passwordArr, (char) 0);
-    Image profilePicture = null;
-    if(imageFromFileRadioButton.isSelected()) {
-      if(fileSelector.getFilePath() != null) {
-        profilePicture = new FileImage(fileSelector.getFilePath());
-      }
-    }
-    Request request = new CreateUserRequest(
-        communicator.getHttpClient(),
-        frame,
-        firstName,
-        lastName,
-        emailAddress,
-        sexOfPerson,
-        country,
-        birthdayYear,
-        birthdayMonth,
-        birthdayDay,
-        password,
-        profilePicture
-    ) {
-
-      @Override
-      protected void onCreateUser(String status, Person person) {
-        if(status.equals("INVALID_PROFILE_PICTURE")) {
-          communicator.promptForCreateAccount("Invalid profile picture");
-        } else if(status.equals("ERROR_CREATING_USER")) {
-          communicator.promptForCreateAccount("Error creating user");
-        } else if(status.equals("CONNECTION_ERROR")) {
-          communicator.promptForCreateAccount("Error connecting to Modeling Commons");
-        } else if(status.equals("SUCCESS")) {
-          communicator.setPerson(person);
-          communicator.promptForUpload();
-        } else {
-          communicator.promptForCreateAccount("Unknown server error");
-        }
-      }
-
-    };
-    request.execute();
-  }
-
-  private void onCancel() {
-    dispose();
-  }
-
-  private void setMaxHeightToPreferredHeight(JComponent component) {
-    component.setMaximumSize(new Dimension((int) component.getMaximumSize().getWidth(), (int) component.getPreferredSize().getHeight()));
   }
 
 }

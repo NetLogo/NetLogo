@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ModelingCommons implements ModelingCommonsInterface {
 
-  public static final String HOST = "http://mc.org";
+  public static final String HOST = "http://modelingcommons.org";
   private static HttpClient http = new DefaultHttpClient();
   private Person person;
   private String newUserAgreement;
@@ -123,9 +123,9 @@ public class ModelingCommons implements ModelingCommonsInterface {
           JDialog createAccountDialog = new NewUserDialog(frame, ModelingCommons.this, error);
           createAccountDialog.setVisible(true);
         } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
-          MessageDialog.show("Error connecting to Modeling Commons", "Invalid response from Modeling Commons");
+          promptForLogin("Invalid response from Modeling Commons");
         } else if(status.equals("CONNECTION_ERROR")) {
-          MessageDialog.show("Error connecting to Modeling Commons", "Could not connect to Modeling Commons");
+          promptForLogin("Could not connect to Modeling Commons");
         }
       }
     };
