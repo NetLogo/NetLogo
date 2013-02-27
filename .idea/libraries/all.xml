@@ -34,7 +34,6 @@
       <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib_managed/jars/com.intellij/forms_rt/forms_rt-7.0.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
