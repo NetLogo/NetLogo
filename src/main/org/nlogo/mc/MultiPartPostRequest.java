@@ -23,9 +23,10 @@ public abstract class MultiPartPostRequest extends Request {
   public void addStringParam(String name, String value) {
     try {
       entity.addPart(name, new StringBody(value, "text/plain", Consts.UTF_8));
-    } catch (UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException unsupportedEncodingException) {
       //UTF8 is required to be supported by Java
-      //This will never be thrown
+      //This will never be thrown, but in case it is, don't suppress it
+      throw new RuntimeException("UTF-8 is not supported on this system; UTF-8 is required by the Java standard.", unsupportedEncodingException);
     }
   }
 
@@ -38,9 +39,10 @@ public abstract class MultiPartPostRequest extends Request {
         }
 
       });
-    } catch (UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException unsupportedEncodingException) {
       //UTF8 is required to be supported by Java
-      //This will never be thrown
+      //This will never be thrown, but in case it is, don't suppress it
+      throw new RuntimeException("UTF-8 is not supported on this system; UTF-8 is required by the Java standard.", unsupportedEncodingException);
     }
   }
 
