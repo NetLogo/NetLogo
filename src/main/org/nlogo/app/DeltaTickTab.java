@@ -16,6 +16,7 @@ import org.nlogo.plot.PlotManager;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,6 +57,7 @@ public class DeltaTickTab
     JPanel libraryPanel;
     BuildPanel buildPanel;
     SpeciesInspectorPanel speciesInspectorPanel;
+    HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
 
     JPanel libraryPanel2;
 
@@ -166,17 +168,6 @@ public class DeltaTickTab
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         contentPanel.add(libraryPanel, gridBagConstraints);
 
-
-        /*
-        gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        //gridBagConstraints.weightx = 1.0;
-        //gridBagConstraints.weighty = 0;
-        contentPanel.add(librarySeparator, gridBagConstraints);
-        */
-
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -209,14 +200,12 @@ public class DeltaTickTab
 
     public void addTrait( TraitBlock tBlock ) {
         new TraitDropTarget(tBlock);
-        tBlock.numberAgents();
+        //tBlock.numberAgents();
     }
-
 
     public void addOperator ( OperatorBlock oBlock ) {
         new OperatorDropTarget (oBlock);
     }
-
 
     private final javax.swing.Action loadAction =
 		new javax.swing.AbstractAction( "Load Behavior Library" ) {
@@ -233,7 +222,9 @@ public class DeltaTickTab
                     addBreed.setEnabled(true);
                     //addTraits.setEnabled(false);
                     addEnvt.setEnabled(true);
-
+                    if (buildPanel.getMyBreeds().size() == 0) {
+                        //TODO: Add note saying "Add species to start building model!"
+                    }
                     deltaTickTab.contentPanel.validate();
                     count ++;
                 }
@@ -251,11 +242,10 @@ public class DeltaTickTab
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 BreedBlock newBreed = new BreedBlock();
-                //addTraits.setEnabled(true);
+                buildPanel.removeRect();
 
                 // if more than 1 breed available in XML -A. (oct 5)
-                // can remove the next line of code because there will always be more than one type of available breeds
-                // (feb 4)
+
                 if( buildPanel.availBreeds().size() > 1 ) {
                     breedTypeSelector.showMe(buildPanel.getBgInfo());
                     if (breedTypeSelector.typedBreedType() != null) {
@@ -265,6 +255,7 @@ public class DeltaTickTab
                         userInput.addBreed(newBreed.plural());
                         newBreed.getParent().setComponentZOrder(newBreed, 0 );
                         new BreedDropTarget(newBreed, deltaTickTab);
+                        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
                     }
                 }
                     else if( breedTypeSelector.selectedBreedType() != null ) {
@@ -277,6 +268,7 @@ public class DeltaTickTab
                                 userInput.addBreed(newBreed.plural());
                                 newBreed.getParent().setComponentZOrder(newBreed, 0 );
                                 new BreedDropTarget(newBreed, deltaTickTab);
+                                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
                             }
                         }
                 } else {
@@ -291,8 +283,9 @@ public class DeltaTickTab
                     userInput.addBreed(newBreed.plural());
                     newBreed.getParent().setComponentZOrder(newBreed, 0 );
                     new BreedDropTarget(newBreed, deltaTickTab);
+                    newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
                 }
-                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+                //newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
 
                 contentPanel.validate();
             }
@@ -301,20 +294,25 @@ public class DeltaTickTab
 
     class SpeciesButtonListener implements ActionListener {
         BreedBlock myParent;
+        JFrame jFrame;
 
         SpeciesButtonListener(BreedBlock myParent) {
             this.myParent = myParent;
         }
 
         public void actionPerformed(ActionEvent e) {
-            JFrame jFrame = new JFrame("Species Inspector");
-            jFrame.setPreferredSize(new Dimension(650, 500));
-
             if (myParent.getHasSpeciesInspector()) {
+                speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+                speciesInspectorPanel.updateText();
                 speciesInspectorPanel.getMyFrame().setVisible(true);
             }
             else {
+                jFrame = new JFrame("Species Inspector");
+                jFrame.setPreferredSize(new Dimension(650, 500));
                 speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
+
+                //speciesInspectorPanelMap.put(myParent.plural(), speciesInspectorPanel);
+                speciesInspectorPanelMap.put(myParent, speciesInspectorPanel);
                 speciesInspectorPanel.addPanels(jFrame.getContentPane());
                 speciesInspectorPanel.populateTraitTabs();
                 speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
@@ -333,8 +331,10 @@ public class DeltaTickTab
         }
 
         public void actionPerformed(ActionEvent e) {
-            myParent.myBreed().setOwnVarMaxReporter("age", speciesInspectorPanel.getEndListSpan());
-            myParent.myBreed().setOwnVarMaxReporter("energy", speciesInspectorPanel.getHighestEnergy());
+            myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
+            myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
+            //myParent.myBreed().setOwnVarMaxReporter("age", speciesInspectorPanel.getEndListSpan());
+            //myParent.myBreed().setOwnVarMaxReporter("energy", speciesInspectorPanel.getHighestEnergy());
             speciesInspectorPanel.getMyFrame().setVisible(false);
 
             ArrayList<TraitBlock> removeBlocks = new ArrayList<TraitBlock>();
@@ -355,7 +355,8 @@ public class DeltaTickTab
 
             for (Trait trait : speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
                 TraitBlock newTraitBlock;
-                newTraitBlock = new TraitBlock(myParent, trait, trait.getVariationHashMap());
+                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
+                newTraitBlock = new TraitBlock(myParent, trait, trait.getVariationHashMap(), trait.getVariationsValuesList());
                 userInput.addTraitAndVariations(myParent.getName(), trait.getNameTrait(), trait.getVariationsList());
                 buildPanel.addTrait(newTraitBlock);
                 libraryHolder.addTraittoTab(newTraitBlock, buildPanel.getMyTraits().size());
@@ -365,27 +366,6 @@ public class DeltaTickTab
             }
         }
     }
-
-
-
-    private final javax.swing.Action addTraitsAction =
-		new javax.swing.AbstractAction( "Add Traits" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                TraitBlock newTraitBlock;
-                traitTypeSelector.showMe(buildPanel, buildPanel.getBgInfo());
-
-                newTraitBlock = new TraitBlock(traitTypeSelector.getSelectedBreedBlock(), traitTypeSelector.getSelectedTrait(),
-                        traitTypeSelector.getSelectedTrait().getVariationHashMap());
-                userInput.addTraitAndVariations( traitTypeSelector.getSelectedBreed(), traitTypeSelector.getSelectedTraitName(),
-                        traitTypeSelector.getSelectedTrait().getVariationsList());
-                buildPanel.addTrait(newTraitBlock);
-                libraryHolder.addTraittoTab(newTraitBlock, buildPanel.getMyTraits().size());
-                deltaTickTab.addDragSource(newTraitBlock);
-                new TraitDropTarget(newTraitBlock);
-                contentPanel.validate();
-            }
-        };
-
 
 
     private final javax.swing.Action addPlotAction =
@@ -418,16 +398,13 @@ public class DeltaTickTab
                 for ( Envt envt: buildPanel.getBgInfo().getEnvts() ) {
                     if ( envtTypeSelector.selectedEnvt() != null ) {
                         if ( envtTypeSelector.selectedEnvt() == envt.nameEnvt()) {
-
                             newEnvt = new EnvtBlock (envt);
                             new EnvtDropTarget( newEnvt, deltaTickTab );
-
-                        buildPanel.addEnvt(newEnvt);
-                }
+                            buildPanel.addEnvt(newEnvt);
+                        }
                         contentPanel.validate();
-
-    };
-        };
+                    };
+                };
             }
         };
 
@@ -439,15 +416,6 @@ public class DeltaTickTab
                 hBlock.getParent().setComponentZOrder(hBlock, 0 );
                 new PlotDropTarget(hBlock);
                 contentPanel.validate();
-
-                /*   commented out to combine histo and plot blocks - Aditi (Jan 15, 2013)
-                HistogramBlock newHisto = new HistogramBlock();
-                buildPanel.addHisto( newHisto );
-                newHisto.getParent().setComponentZOrder(newHisto, 0);
-                new HistoDropTarget(newHisto);
-                contentPanel.validate();
-                */
-
         }
     };
 
@@ -466,8 +434,6 @@ public class DeltaTickTab
                     }
                 }
             };
-
-
 
 
     public void populateProcedures() {
@@ -524,8 +490,6 @@ public class DeltaTickTab
             chooser.setChoices(choicesList.toLogoList());
 
         }
-
-
             interfaceCount++;
         }
     }
@@ -554,7 +518,7 @@ public class DeltaTickTab
                     plotBlock.setNetLogoPlot(newPlot);
                 } else { // otherwise it has a plot already, update that guy
                     //enters this when the plot block already exists, but another quantity block is added
-                    System.out.println("n time I'm going to interface");
+
                     plotBlock.getNetLogoPlot().name( plotBlock.getName() );
                     // additional pens needed?
                     for( QuantityBlock quantBlock : plotBlock.getMyBlocks() ) {
@@ -584,20 +548,23 @@ public class DeltaTickTab
         try {
            for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
                org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
-               WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 5, 50, true, false);
+               WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + (((int) interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
                plotWidget.displayName(plotBlock.getName());
                org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
-               plotWrappers.put("plot" + (interfacePlotCount + 1), ww);
+               plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
+               interfacePlotCount++;
+
+               //System.out.println("deltatick ln 586 interfaceplotcount " + interfacePlotCount);
 
                for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                             if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
-
                                 PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false);
                                 plotPen.updateCode(quantBlock.getPenUpdateCode());
                             }
                }
-               interfacePlotCount++;
+               //interfacePlotCount++;
            }
+
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
                 for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
                     if (workspace.plotManager().getPlot(plotBlock.getName()).getPen(qBlock.getName()).toString().equals("None")) {
@@ -606,34 +573,8 @@ public class DeltaTickTab
                         //newPlotPen._hidden = true;
 
                     }
-
                 }
             }
-
-
-           /*
-            for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
-                for (Widget w : interfacePanel.getWidgetsForSaving()) {
-                    System.out.println("DTT ln 588 " + w.getDisplayName());
-                    if (w.getDisplayName().equals(plotBlock.getName())) {
-                        for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
-                            if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
-                                PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false);
-                                plotPen.updateCode(quantBlock.getPenUpdateCode());
-                            }
-                            //else if (newPlot.getPen(quantBlock.getName()).toString().matches())
-                        }
-                    }
-                }
-                for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
-                    if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
-                        PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false);
-                        plotPen.updateCode(quantBlock.getPenUpdateCode());
-                    }
-                }
-                interfacePlotCount++;
-            }
-            */
 
             for (HistogramBlock hBlock : buildPanel.getMyHisto().subList(interfaceHistoCount, buildPanel.getMyHisto().size())) {
                 org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
@@ -652,28 +593,27 @@ public class DeltaTickTab
         catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+
         revalidate();
     }
 
     public void removePlots() {
+
         try {
-            for (Widget widget : interfacePanel.getWidgetsForSaving()) {
-                if (widget instanceof PlotWidget) {
-                    for (Map.Entry<String, WidgetWrapper> entry : plotWrappers.entrySet()) {
-                    String p = entry.getKey();
-                    WidgetWrapper w = entry.getValue();
-                        if (buildPanel.getMyPlot(p) == false) {
-                            interfacePanel.removeWidget(w);
-                            interfacePlotCount--;
-                        }
-                    }
+            for (Map.Entry<String, WidgetWrapper> entry : plotWrappers.entrySet()) {
+                String p = entry.getKey();
+                WidgetWrapper w = entry.getValue();
+                if (buildPanel.getMyPlot(p) == false) {
+                    interfacePanel.removeWidget(w);
+                    interfacePlotCount--;
+                    plotWrappers.remove(p);
                 }
             }
         }
         catch ( Exception ex ) {
             System.out.println(ex.getMessage());
         }
-        revalidate() ;
+        revalidate();
     }
 
     public void removePlotPens() {
@@ -803,7 +743,7 @@ public class DeltaTickTab
 
                     //histoBlock.getNetLogoPlot().name( histoBlock.getName() );
                     histoBlock.getName();
-                    System.out.println("DTT ln 692 " + histoBlock.getName());
+
                     // additional pens needed?
                     for( QuantityBlock quantBlock : histoBlock.getMyBlocks() ) {
                         String penName = "";
@@ -916,7 +856,7 @@ public class DeltaTickTab
                 addBreed = new JButton( addBreedAction );
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
-               // addTraits = new JButton ( addTraitsAction );
+                //addTraits = new JButton ( addTraitsAction );
                 //addTraits.setEnabled(false);
                 //this.add(addTraits);
                 addPlot = new JButton( addPlotAction );

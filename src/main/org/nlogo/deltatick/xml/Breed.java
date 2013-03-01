@@ -62,7 +62,6 @@ public class Breed {
 
     public void setTraitsArrayList(ArrayList <Trait> traits) {
         this.traits = traits;
-
     }
 
     public ArrayList<Trait> getTraitsArrayList() {

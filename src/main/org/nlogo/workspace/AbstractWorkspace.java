@@ -417,7 +417,8 @@ public abstract strictfp class AbstractWorkspace
   /// misc
 
   // we shouldn't need "Workspace." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 4/6/09
-  private Workspace.UpdateMode updateMode = Workspace.UpdateMode.CONTINUOUS;
+    //changed to tick-based for DeltaTick - Aditi (Feb 14, 2013)
+    private Workspace.UpdateMode updateMode = UpdateMode.TICK_BASED;
 
   public Workspace.UpdateMode updateMode() {
     return updateMode;

@@ -21,20 +21,26 @@ public class SpeciesInspector {
     String highestEnergy;
     ArrayList<Trait> traitsList = new ArrayList<Trait>();
     ArrayList<Trait> selectedTraitsList = new ArrayList<Trait>();
-    HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
+    HashMap<Trait, Variation> selectedVariationHashMap = new HashMap<Trait, Variation>();
+    HashMap<String, String> selectedTraitValues = new HashMap<String, String>();
+    HashMap<String, String> selectedTraitVariations = new HashMap<String, String>();
+
     //TODO send values from SpeciesInspectorPanel to this object to separate GUI from data
 
     public SpeciesInspector() {
 
-
         }
 
     public ArrayList<Trait> getSelectedTraitsList() {
-            return selectedTraitsList;
+        return selectedTraitsList;
     }
 
     public void addToSelectedTraitsList(Trait trait) {
         selectedTraitsList.add(trait);
+    }
+
+    public void addtoSelectedVariations(Trait string, Variation variation) {
+        selectedVariationHashMap.put(string, variation);
     }
 
 

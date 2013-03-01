@@ -5,6 +5,7 @@
       <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.1/compile" />
       <root url="file://$PROJECT_DIR$/project/boot/scala-2.9.1/lib" />
       <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$USER_HOME$/Downloads/jfreechart-1.0.14" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
@@ -12,5 +13,6 @@
     <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.1/compile" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.1/test" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/project/boot/scala-2.9.1/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/jfreechart-1.0.14" recursive="false" />
   </library>
 </component>

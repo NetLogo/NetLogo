@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.List;
 
 import org.nlogo.deltatick.dialogs.TraitSelectorOld;
+import sun.jvm.hotspot.code.CodeBlob;
 
 // BreedBlock contains code for how whatever happens in BreedBlock is converted into NetLogo code -A. (aug 25)
 
@@ -51,6 +52,9 @@ public strictfp class BreedBlock
     HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
+    String maxAge;
+    String maxEnergy;
+    String colorName = new String("gray");
     //ShapeSelector myShapeSelector;
     int id;
     transient String trait;
@@ -75,6 +79,8 @@ public strictfp class BreedBlock
         this.setLocation(0, 0);
         this.setForeground(color);
         this.breed = breed;
+        this.maxAge = breed.getOwnVarMaxReporter("age");
+        this.maxEnergy = breed.getOwnVarMaxReporter("energy");
         number.setText(breed.getStartQuant());
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
@@ -132,7 +138,7 @@ public strictfp class BreedBlock
         block.repaint();
         if (block instanceof TraitBlock) {
             myUsedTraits.add(((TraitBlock) block).getTraitName());
-            ((TraitBlock) block).makeNumberActive();
+            //((TraitBlock) block).makeNumberActive();
             ((TraitBlock) block).enableDropDown();
             ((TraitBlock) block).colorButton.setEnabled(true);
             ((TraitBlock) block).addRect();
@@ -189,14 +195,19 @@ public strictfp class BreedBlock
             }
             for (OwnVar var : breed.getOwnVars()) {
                 if (var.setupReporter != null) {
-                    if (var.name.equalsIgnoreCase("energy") || var.name.equalsIgnoreCase("age")) {
-                        code += "set " + var.name + " " + "random" + " " + var.maxReporter + "\n";
+                    if (var.name.equalsIgnoreCase("energy")) {
+                        code += "set " + var.name + " " + "random" + " " + maxEnergy + "\n";
                     }
-                    else {
-                        code += "set " + var.name + " " + var.setupReporter + "\n";
+                    if (var.name.equalsIgnoreCase("age")) {
+                        code += "set " + var.name + " " + "random" + " " + maxAge + "\n";
                     }
+//                    else {
+//                        code += "set " + var.name + " " + var.setupReporter + "\n";
+//                    }
                 }
             }
+
+            code += "set color " + colorName + '\n';
             code += "]\n";
             code += setBreedShape();
             int i;
@@ -243,7 +254,6 @@ public strictfp class BreedBlock
                 startValue = endValue;
             }
         }
-
     return code;
 
     }
@@ -277,6 +287,26 @@ public strictfp class BreedBlock
         return plural.getText();
     }
 
+    public void setMaxAge(String age) {
+        maxAge = age;
+    }
+    public String getMaxAge() {
+        return maxAge;
+    }
+
+
+    public void setMaxEnergy(String energy) {
+        maxEnergy = energy;
+    }
+    public String getMaxEnergy() {
+        return maxEnergy;
+    }
+
+    public void setColorName(String color) {
+        System.out.println("BreedBlock " + colorName);
+        colorName = color;
+    }
+
 
     public Object getTransferData(DataFlavor dataFlavor)
             throws UnsupportedFlavorException {
@@ -306,6 +336,9 @@ public strictfp class BreedBlock
 
         passBack += "ask " + plural() + " [\n";
         for (CodeBlock block : myBlocks) {
+            if ((CodeBlock) block instanceof TraitBlock) {
+
+            }
             passBack += block.unPackAsCode();
         }
         passBack += "]\n";
@@ -382,7 +415,8 @@ public strictfp class BreedBlock
         breedShapeButton = new JButton(new ShapeIcon(org.nlogo.shape.VectorShape.getDefaultShape()));
         breedShapeButton.setActionCommand(this.getName());
         breedShapeButton.addActionListener(this);
-        breedShapeButton.setSize(40, 40);
+        breedShapeButton.setSize(30, 30);
+        breedShapeButton.setToolTipText("Change shape");
         return breedShapeButton;
     }
 
@@ -390,7 +424,7 @@ public strictfp class BreedBlock
         BreedBlock myParent;
 
         public InspectSpeciesButton(BreedBlock bBlock) {
-            setPreferredSize(new Dimension(20, 20));
+            setPreferredSize(new Dimension(30, 30));
             try {
             Image img = ImageIO.read(getClass().getResource("/images/magnify.gif"));
             setIcon(new ImageIcon(img));
@@ -400,6 +434,7 @@ public strictfp class BreedBlock
             setForeground(java.awt.Color.gray);
             setBorderPainted(true);
             setMargin(new java.awt.Insets(1, 1, 1, 1));
+            setToolTipText("Inspect species");
             this.myParent = bBlock;
         }
     }

@@ -26,6 +26,9 @@ public class Trait {
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
 
 
+    public Trait() {
+
+    }
     public Trait(Node traitNode) {
         traitName = traitNode.getAttributes().getNamedItem("name").getTextContent();
 
@@ -37,14 +40,13 @@ public class Trait {
 
             if (traitNodes.item(i).getNodeName() == "variation") {
                 Node variationNode = traitNodes.item(i);
+                String trait = traitName;
                 String name = variationNode.getAttributes().getNamedItem("name").getTextContent();
                 String value = variationNode.getAttributes().getNamedItem("value").getTextContent();
                 String setupNumber = variationNode.getAttributes().getNamedItem("setupNumber").getTextContent();
-                Variation variation = new Variation(name, value, Integer.parseInt(setupNumber));
+                Variation variation = new Variation(trait, name, value, Integer.parseInt(setupNumber));
 
                 variationHashMap.put(name, variation);
-
-
                 variationsValuesList.put(name, value);
                 variationsNumbersList.put(name, setupNumber);
                 valuesNumbersList.put(value, setupNumber);
@@ -55,10 +57,6 @@ public class Trait {
                 setupCode = traitNodes.item(i).getTextContent();
             }
         }
-    }
-
-    public Trait() {
-
     }
 
     public String getNameTrait() {

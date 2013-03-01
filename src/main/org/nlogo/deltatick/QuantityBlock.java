@@ -1,17 +1,10 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.app.WidgetWrapper;
-import org.nlogo.deltatick.dnd.ColorButton;
-import org.nlogo.window.Widget;
+import org.nlogo.deltatick.dialogs.ColorButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
 import java.util.Map;
 //import org.nlogo.deltatick.xml.Breed;
 

@@ -15,11 +15,13 @@ import java.io.Serializable;
 
 public class Variation implements Serializable {
     public String name;
+    public String trait;
     public String value;
     public int number;
     public String color;
 
-    public Variation(String name, String value, int number) {
+    public Variation(String trait, String name, String value, int number) {
+        this.trait = trait;
         this.name = name;
         this.value = value;
         this.number = number;

@@ -46,7 +46,6 @@ public class VariationSelector
     public void showMe() {
         variationList.clear();
         numberList.clear();
-        //numberInputList.clear();
         thisDialog.setVisible(true);
     }
 

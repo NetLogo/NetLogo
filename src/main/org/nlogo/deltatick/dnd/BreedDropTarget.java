@@ -34,23 +34,15 @@ public class BreedDropTarget
                 return true;
             }
             else if (o instanceof TraitBlock) {
-                //JComboBox comboBox = ((TraitBlock) block).getDropDownList();
-            //QuaquaComboPopup popup = (QuaquaComboPopup) comboBox.getAccessibleContext().getAccessibleChild(0);
-            //popup.requestFocus(false);
-            //popup.setBorder(null);
-            //System.out.println("BDD dropping");
                 addCodeBlock((TraitBlock) o);
                 ((TraitBlock) o).setMyParent((BreedBlock) block);
                 deltaTickTab.addTrait((TraitBlock) o);
-
                 return true;
             } else if (o instanceof OperatorBlock) {
                 addCodeBlock((OperatorBlock) o);
                 deltaTickTab.addOperator((OperatorBlock) o);
                 return true;
             }
-
-
             //commented this out because I don't need patchBlocks to be dropped into breedBlocks -A. (Nov 27)
             //else if( o instanceof PatchBlock ) {
             //  addCodeBlock( (PatchBlock) o);

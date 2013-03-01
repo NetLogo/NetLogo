@@ -7,6 +7,7 @@ import org.nlogo.deltatick.xml.ModelBackgroundInfo2;
 import org.nlogo.window.GUIWorkspace;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,9 +40,7 @@ public class BuildPanel
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
     ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
-    //UserInput userInput = new UserInput();
-
-
+    JPanel rectPanel = new JPanel();
 
 
     //DataFlavor"[]" is an array - A. (sept 8)
@@ -82,17 +81,17 @@ public class BuildPanel
                 for ( TraitBlock traitBlock : myTraits ) {
                     if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
                         allTraits.add(traitBlock.getName());
-                        //passBack += traitBlock.getMyTraitName();
 
                     }
                 }
             }
-            if ( breedBlock.myUsedBehaviorInputs.size() > 0) {
-                for (String behInput : breedBlock.myUsedBehaviorInputs) {
-                    allTraits.add(behInput);
-
-                }
-            }
+            //commented out because I don't want beh inputs to appear as fixed values for variables when there are no traits -Aditi (feb 22, 2013)
+//            if ( breedBlock.myUsedBehaviorInputs.size() > 0) {
+//                for (String behInput : breedBlock.myUsedBehaviorInputs) {
+//                    allTraits.add(behInput);
+//
+//                }
+//            }
             for ( String string : allTraits ) {
                 passBack += string + "\n";
             }
@@ -185,7 +184,6 @@ public class BuildPanel
         for (TraitBlock traitBlock : myTraits) {
             passBack += traitBlock.getTraitName();
         }
-
 
         passBack += "\n";
 
@@ -285,7 +283,7 @@ public class BuildPanel
                         0,
                         block.getPreferredSize().width,
                         block.getPreferredSize().height);
-        block.dropdownList.setEnabled(false);
+        //block.dropdownList.setEnabled(false);
         block.colorButton.setEnabled(false);
         block.doLayout();
         block.validate();
@@ -542,5 +540,23 @@ public class BuildPanel
             tmp = tBlock.varList;
         }
         return tmp;
+    }
+
+    public void addRect() {
+        rectPanel = new JPanel();
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setLocation(0, 0);
+
+        rectPanel.setPreferredSize(new Dimension(40, 40));
+        JLabel label = new JLabel();
+        label.setText("Add a species to start building your model!");
+
+        rectPanel.add(label);
+        add(rectPanel);
+
+    }
+
+    public void removeRect() {
+        this.remove(rectPanel);
     }
 }

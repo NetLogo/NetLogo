@@ -32,8 +32,8 @@ public class VariationDropDown extends JComboBox {
     private final javax.swing.Action updateTraitLabel =
             new javax.swing.AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                   myParent.newLabel();
-                    myParent.updateNumber();
+                  // myParent.newLabel();
+                    //myParent.updateNumber();
                 }
 };
 

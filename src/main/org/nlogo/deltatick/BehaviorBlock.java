@@ -22,8 +22,6 @@ public strictfp class BehaviorBlock
                 CodeBlock.behaviorBlockFlavor,
                 CodeBlock.codeBlockFlavor,
         };
-
-
     }
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.
 
@@ -37,33 +35,29 @@ public strictfp class BehaviorBlock
     //extracting the argument to be passed after name of procedure (March 2)
     public String unPackAsProcedure() {
         String passBack = "";
-        //passBack += "to " + getName() + " " + agentInput();
         passBack += "to " + getName() + " ";
 
-        if (agentInputs.size()  > 0 || inputs.size() > 0 ) {
+        if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0) ) {
             passBack += "[ ";
         }
-
         if (inputs.size() > 0) {
             for (String input : inputs.keySet()) {
                 passBack += input + " ";
-
             }
         }
-
         if (agentInputs.size() > 0) {
             for (String s : agentInputs.keySet()) {
                 passBack += s + " ";
             }
         }
-
-
-        if (agentInputs.size()  > 0 || inputs.size() > 0 ) {
+        if (behaviorInputs.size() > 0) {
+            for (String s : behaviorInputs.keySet()) {
+                passBack += s + " ";
+            }
+        }
+        if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0) ) {
             passBack += " ]";
         }
-
-
-
         if ( ifCode != null ) {
         passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
         }
@@ -72,7 +66,6 @@ public strictfp class BehaviorBlock
         else {
             passBack += "\n" + code + "\n";
         }
-
 
         if (energyInputs.size() > 0) {
             for (JTextField inputName : energyInputs.values()) {
@@ -95,17 +88,21 @@ public strictfp class BehaviorBlock
         for (JTextField agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
+        for (JTextField behaviorInput :behaviorInputs.values()) {
+            passBack += behaviorInput.getText() + " ";
+        }
 
         passBack += "\n";
-        if (myParent instanceof BreedBlock) {
-            for (String name : ((BreedBlock) myParent).myUsedBehaviorInputs) {
-                for (String s : behaviorInputs.keySet()) {
-                    if (name.equals(s)) {
-                        passBack += "set " + name + " " + behaviorInputs.get(name).getText().toString() + "\n";
-                    }
-                }
-                }
-            }
+        //Commented out because I don't want a fixed value to be set for a variable that's not a trait -Aditi (Feb 22, 2013)
+//        if (myParent instanceof BreedBlock) {
+//            for (String name : ((BreedBlock) myParent).myUsedBehaviorInputs) {
+//                for (String s : behaviorInputs.keySet()) {
+//                    if (name.equals(s)) {
+//                        passBack += "set " + name + " " + behaviorInputs.get(name).getText().toString() + "\n";
+//                    }
+//                }
+//                }
+//            }
         return passBack;
     }
 
@@ -120,11 +117,8 @@ public strictfp class BehaviorBlock
             Variation tmp = hashMap.get(selectedVariationName);
 
             String value = tmp.value;
-
-            //String newValue = new String();
             for ( String s : behaviorInputs.keySet()) {
                 if (s.equals(trait)) {
-                    //newValue = behaviorInputs.get(s).getText().toString();
                     JTextField textField = behaviorInputs.get(s);
                     textField.setText(value);
                 }

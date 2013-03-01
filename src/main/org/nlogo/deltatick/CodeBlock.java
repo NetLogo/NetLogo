@@ -104,6 +104,11 @@ public abstract class CodeBlock
         label.add(removeButton);
         removeButton.setVisible(false);
         label.setBackground(getBackground());
+        if (this instanceof TraitBlock) {
+            JLabel condition = new JLabel();
+            condition.setText("If");
+            label.add(condition);
+        }
         label.add(name);
     }
 
@@ -527,7 +532,9 @@ public abstract class CodeBlock
         }
         if (parent instanceof BuildPanel) {
             if (this instanceof BreedBlock) {
+                //((BreedBlock) this).inspectSpeciesButton.
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
+
                 for (Component child : getComponents()) {
                     if (child instanceof TraitBlock) {
                         ((BreedBlock) this).removeTraitBlock((TraitBlock) child);

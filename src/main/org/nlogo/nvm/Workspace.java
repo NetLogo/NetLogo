@@ -36,14 +36,15 @@ public interface Workspace
     }
 
     public static UpdateMode load(int mode) {
-      switch (mode) {
-        case 0:
-          return CONTINUOUS;
-        case 1:
-          return TICK_BASED;
-        default:
-          throw new IllegalStateException();
-      }
+//      switch (mode) {      //commented out on Feb 14, 2013
+//        case 0:
+//          return CONTINUOUS;
+//        case 1:
+//          return TICK_BASED;
+//        default:
+//          throw new IllegalStateException();
+//      }
+        return TICK_BASED;
     }
   }
 

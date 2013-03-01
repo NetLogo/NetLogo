@@ -209,7 +209,6 @@ public class LibraryReader {
         }
 
         block.disableInputs();
-        //deltaTickTab.getLibraryPanel().add(block);
         deltaTickTab.getLibraryHolder().addBlock( block );
         deltaTickTab.addDragSource(block);
         // the line above is what makes the blocks drag-able (Feb 14, 2012)

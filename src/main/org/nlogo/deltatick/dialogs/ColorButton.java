@@ -1,14 +1,17 @@
-package org.nlogo.deltatick.dnd;
+package org.nlogo.deltatick.dialogs;
 
+import org.nlogo.deltatick.BreedBlock;
 import org.nlogo.deltatick.CodeBlock;
 import org.nlogo.deltatick.QuantityBlock;
 import org.nlogo.deltatick.TraitBlock;
 import org.nlogo.window.ColorDialog;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +23,7 @@ import java.awt.event.ActionListener;
 public class ColorButton extends JButton {
     TraitBlock myParentTrait;
     QuantityBlock myParentQuantity;
+    BreedBlock myParent;
     transient Frame myFrame;
     String selectedColor;
     ColorDialog colorDialog;
@@ -31,14 +35,26 @@ public class ColorButton extends JButton {
         this.myParentTrait = myParent;
 
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        setPreferredSize(new Dimension(30, 30));
+            try {
+            Image img = ImageIO.read(getClass().getResource("/images/rgb.gif"));
+            setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
+        setForeground(java.awt.Color.gray);
         setBorderPainted(true);
-        //setMargin(new java.awt.Insets(2, 2, 2, 2));
-        this.setMaximumSize(new Dimension(3, 4));
-        this.setMinimumSize(new Dimension(3, 4));
-        this.getPreferredSize();
-        this.setText("color");
+        setMargin(new java.awt.Insets(1, 1, 1, 1));
         checkForColor = false;
 
+    }
+
+    public ColorButton (Frame myFrame, BreedBlock myParent) {
+        this.myFrame = myFrame;
+        this.myParent = myParent;
+        this.setAction(pickColorActionBreed);
+        setText("Pick color");
+        checkForColor = false;
     }
 
     public ColorButton (Frame myFrame, QuantityBlock myParent) {
@@ -56,9 +72,24 @@ public class ColorButton extends JButton {
 
     }
 
+    //action for color button on breedblock - Aditi (Feb 22, 2013)
+    private final Action pickColorActionBreed =
+            new AbstractAction("Pick color") {
+                public void actionPerformed(ActionEvent e) {
+                    colorDialog = new ColorDialog(myFrame, true);
+                    colorDialog.showDialog();
+                    color = colorDialog.getSelectedColor();
+                    myParent.setColorName(colorDialog.getSelectedColorString());
+                    changeColor();
+
+                    checkForColor = true;
+                }
+            };
+
+
     // action for color button on traitBlock -Aditi (Jan 17, 2013)
     private final javax.swing.Action pickColorAction =
-            new javax.swing.AbstractAction("C") {
+            new javax.swing.AbstractAction("Pick color") {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     colorDialog = new ColorDialog(myFrame, true);
                     colorDialog.showDialog();
@@ -72,7 +103,6 @@ public class ColorButton extends JButton {
             };
 
     //action for color button on Quantity Block - Aditi (Jan 17, 2013)
-
     private final javax.swing.Action pickColorActionQuantity =
             new javax.swing.AbstractAction("C") {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -104,20 +134,13 @@ public class ColorButton extends JButton {
 
     }
 
-
-    /*
-    public void changeButtonColor(Color color) {
-        myParent.setButtonColor(color);
+    public void changeColor() {
+        setOpaque(true);
+        setBackground(colorDialog.getSelectedColor());
 
     }
 
-    public void updateColor() {
-        myParent.getDropDownList().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                myParent.newLabel();
-            }
-        });
-    }
-    */
+
+
 
 }

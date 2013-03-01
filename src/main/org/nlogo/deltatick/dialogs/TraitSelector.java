@@ -1,10 +1,15 @@
 package org.nlogo.deltatick.dialogs;
 
+import apple.laf.JRSUIConstants;
 import com.ibm.media.bean.multiplayer.RelatedLink;
 import org.jdesktop.layout.*;
 import org.jdesktop.layout.LayoutStyle;
+import org.jdesktop.swingx.MultiSplitLayout;
+import org.jdesktop.swingx.MultiSplitPane;
+import org.nlogo.api.Property;
 import org.nlogo.deltatick.TraitBlock;
 import org.nlogo.deltatick.TraitDisplayPanel;
+import org.nlogo.deltatick.TraitDistribution;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
@@ -12,13 +17,26 @@ import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import org.jdesktop.swingx.MultiSplitLayout.Split;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JButton;
+import org.jdesktop.swingx.MultiSplitLayout;
+import org.jdesktop.swingx.MultiSplitLayout.Leaf;
+import org.jdesktop.swingx.MultiSplitLayout.Divider;
+import org.jdesktop.swingx.MultiSplitLayout.Split;
+import org.jdesktop.swingx.MultiSplitPane;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,41 +46,50 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class TraitSelector extends JDialog {
-
         //Buttons & text
         private javax.swing.JButton cancel;
         private javax.swing.JButton add;
-        //private javax.swing.JLabel breedText;
         private JLabel traitText;
         private JLabel variationText;
-
+        private JLabel variationValueText;
+        boolean isTraitSelected;
 
         private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList myTraitsList;
+        private javax.swing.JList myTraitsList;
         private String selectedTrait;
         private JList myVariationsList;
         HashMap<String, TraitBlock> breedTraitHashMap = new HashMap<String, TraitBlock>();
         //to store breed and corresponding trait
-
         ListSelectionModel listSelectionModel;
         JTable traitInfoTable;
+        TraitDistribution traitDistribution;
 
         ArrayList<Trait> traitsList = new ArrayList<Trait>();
         public static final int NUMBER_COLUMNS = 4;
 
         private javax.swing.JDialog thisDialog = this;
 
-
         public TraitSelector() {
-
             initComponents();
+            add.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {//
+                                isTraitSelected = true;
+                                thisDialog.setVisible(false);
+                            }
+                        });
+                        cancel.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                isTraitSelected = false;
+                                thisDialog.setVisible(false);
+                            }
+                        });
+
             this.setPreferredSize(new Dimension(600, 250));
             this.setVisible(false);
         }
 
         public void setTraits(ArrayList<Trait> list) {
             this.traitsList = list;
-            //((TraitTableModel)traitInfoTable).setTableData();
         }
 
          private String [] getTraitTypes() {
@@ -71,10 +98,13 @@ public class TraitSelector extends JDialog {
             for (Trait trait : traitsList) {
             traitTypes[i] = trait.getNameTrait();
             i++;
-        }
-        return traitTypes;
-
+            }
+             return traitTypes;
          }
+
+        public boolean getIsTraitSelected() {
+            return isTraitSelected;
+        }
 
         public void showMe() {
             final String[] traitStrings = getTraitTypes();
@@ -95,7 +125,6 @@ public class TraitSelector extends JDialog {
             listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             listSelectionModel.addListSelectionListener(
                     new TraitListSelectionHandler());
-
             this.setVisible(true);
         }
 
@@ -120,9 +149,11 @@ public class TraitSelector extends JDialog {
 
                                 row[0] = new String(key);
                                 row[1] = new String(var.value);
-                                row[2] = new String(var.color);
-                                row[3] = new String("EDIT");
-
+                                row[2] = new Boolean(false);
+                                //row[2] = new JRadioButton("add");
+                                //row[2] = new String(var.color);
+                                String s = String.valueOf(var.number);
+                                row[3] = new String(s + "%");
                                 tempTableData.add(row);
 
                             } // for map
@@ -136,15 +167,35 @@ public class TraitSelector extends JDialog {
                     traitTableModel.setTraitData(tempTableData);
                     traitInfoTable.setModel(traitTableModel);
 
+                    traitTableModel.addTableModelListener(new TableModelListener() {
+                        @Override
+                        public void tableChanged(TableModelEvent e) {
+                            //int row = e.getFirstRow();
+                            int column = e.getColumn();
+                            TableModel model = (TableModel)e.getSource();
+                            String columnName = model.getColumnName(column);
+                            //Object data = model.getValueAt(row, column);
+
+                            ArrayList<String> selectedVariations = new ArrayList<String>();
+                            for (int row = 0; row < model.getRowCount(); row++) {
+                              if ((Boolean) model.getValueAt(row, 2) == true) {
+                                selectedVariations.add((String) model.getValueAt(row, 0));
+                              }
+                            } // for
+                            //TraitDistribution traitDistribution = new TraitDistribution("breed", selectedTrait, selectedVariations);
+                            //traitDistribution.initComponents("breed", selectedTrait, selectedVariations);
+                        }
+                    }); // Listener
+
                     final String[] variationStrings = getVariationTypes(getSelectedTraitName()) ;
                         myVariationsList.setModel(new javax.swing.AbstractListModel() {
                         public int getSize() {
                             return variationStrings.length;
                         }
-                    public Object getElementAt(int i) {
-                        return variationStrings[i];
-                    }
-                });
+                        public Object getElementAt(int i) {
+                            return variationStrings[i];
+                        }
+                    });
                 }
             }
         }
@@ -161,14 +212,17 @@ public class TraitSelector extends JDialog {
             return variations;
         }
 
-
         public void activateButtons() {
-            add.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                    TraitDisplayPanel traitDisplayPanel = new TraitDisplayPanel(getSelectedTrait());
-                    thisDialog.setVisible(false);
-                }
-            });
+//            add.addActionListener(new java.awt.event.ActionListener() {
+//                public void actionPerformed(java.awt.event.ActionEvent evt) {//
+//                    thisDialog.setVisible(false);
+//                }
+//            });
+//            cancel.addActionListener(new ActionListener() {
+//                public void actionPerformed(ActionEvent e) {
+//                    thisDialog.setVisible(false);
+//                }
+//            });
         }
 
         public String getSelectedTraitName() {
@@ -189,18 +243,23 @@ public class TraitSelector extends JDialog {
         public void initComponents() {
             traitText = new JLabel("Pick a trait");
             traitText.setPreferredSize(new Dimension(20, 100));
-            variationText = new JLabel("Available variations");
             add = new JButton("Add");
 
             jScrollPane1 = new JScrollPane();
             jScrollPane1.setPreferredSize(new Dimension(150, 75));
 
-            cancel = new JButton();
-            traitInfoTable = new JTable(new TraitTableModel());
-            traitInfoTable.setPreferredScrollableViewportSize(new Dimension(350, 150));
-            traitInfoTable.setPreferredSize(new Dimension(350, 150));
-            initColumnSizes(traitInfoTable);
+            cancel = new JButton("Cancel");
 
+            traitInfoTable = new JTable(new TraitTableModel());
+
+            traitDistribution = new TraitDistribution();
+
+            //traitDistribution.initComponents();
+
+            traitInfoTable.setPreferredScrollableViewportSize(new Dimension(350, 250));
+            traitInfoTable.setPreferredSize(new Dimension(350, 250));
+            JTableHeader header = traitInfoTable.getTableHeader();
+            initColumnSizes(traitInfoTable);
             activateButtons();
 
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -208,63 +267,41 @@ public class TraitSelector extends JDialog {
             org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
             getContentPane().setLayout(layout);
 
-//            layout.setHorizontalGroup(
-//                    layout.createSequentialGroup()
-//                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)// org.jdesktop.layout.GroupLayout.LEADING)
-//                                    .add(traitText)
-//                                            //.add(jScrollPane1)
-//                                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 199, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-//                            )
-//                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-//                                    .add(variationText)
-//                                    .add(layout.createSequentialGroup()
-//                                            .add(add)
-//                                    ))
-//                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.HORIZONTAL)
-//                                    .add(variationText)
-//                                    .add(traitInfoTable, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 199, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-//                    //.add(traitInfoTable)
-//            );
-
             layout.setHorizontalGroup(
                     layout.createParallelGroup()
-                        .add(layout.createSequentialGroup()
-                            .add(layout.createParallelGroup()
-                                 .add(traitText)
-                                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(layout.createParallelGroup()
-                                 .add(variationText)
-                                 .add(traitInfoTable, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(add))
+                            .add(layout.createSequentialGroup()
+                                    .add(layout.createParallelGroup()
+                                            .add(traitText)
+                                            .add(jScrollPane1)
+
+                                    )
+                                    .add(layout.createParallelGroup()
+                                            .add(header)
+                                            .add(traitInfoTable)
+                                    ))
+                                    .add(traitDistribution)
+                                    .add(layout.createSequentialGroup()
+                                            .add(add)
+                                            .add(cancel)
+                                    )
             );
-
-
-//            layout.setVerticalGroup(
-//                    layout.createSequentialGroup()
-//                            .add(layout.createParallelGroup()
-//                                    .add(traitText)
-//                                    //.add(variationText)
-//                                    .add(variationText))
-//                            .add(layout.createParallelGroup()
-//                                    .add(jScrollPane1)
-//                                    .add(traitInfoTable))
-//                            .add(layout.createParallelGroup()
-//                                    .add(add)
-//                            )
-//            );
 
             layout.setVerticalGroup(
                     layout.createSequentialGroup()
                             .add(layout.createParallelGroup()
-                                    .add(layout.createSequentialGroup()
-                                            .add(traitText)
-                                            .add(jScrollPane1))
-                                    .add(layout.createSequentialGroup()
-                                            .add(variationText)
-                                            .add(traitInfoTable)))
-                            .add(add)
+                                    .add(traitText)
+                                    .add(header)
+                            )
+                            .add(layout.createParallelGroup()
+                                    .add(jScrollPane1)
+                                    .add(traitInfoTable)
+                            )
+                            .add(traitDistribution)
+                            .add(layout.createParallelGroup()
+                                    .add(cancel)
+                                    .add(add)
+                            )
             );
-
             pack();
         }
 
@@ -274,33 +311,23 @@ public class TraitSelector extends JDialog {
         Component comp = null;
         int headerWidth = 0;
         int cellWidth = 0;
-        //Object[] longValues = model.longValues;
         TableCellRenderer headerRenderer =
             table.getTableHeader().getDefaultRenderer();
 
         for (int i = 0; i < NUMBER_COLUMNS; i++) {
             column = table.getColumnModel().getColumn(i);
-
-            comp = headerRenderer.getTableCellRendererComponent(
-                                 null, column.getHeaderValue(),
-                                 false, false, 0, 0);
-            headerWidth = comp.getPreferredSize().width;
             headerWidth = 100;
-
-            comp = table.getDefaultRenderer(model.getColumnClass(i)).
-                             getTableCellRendererComponent(
-                                 table, "               ",
-                                 false, false, 0, i);
-            cellWidth = comp.getPreferredSize().width;
             cellWidth = 100;
             column.setPreferredWidth(Math.max(headerWidth, cellWidth));
         }
     }
 
+
     class TraitTableModel extends AbstractTableModel {
-        private String[] columnNames = {"Variation name", "Value", "Color", "Edit"};
+        private String[] columnNames = {"Variation name", "Value", "Add variation?", "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
+
 
 
 
@@ -308,26 +335,36 @@ public class TraitSelector extends JDialog {
             // Clear previous data
             tableData.clear();
 
-            for (int i = 0; i < source.size(); i++) {
-                // Clear the row (must start with empty row)
-                Object[] row = new Object[NUMBER_COLUMNS];
-                // Generate the row
-                for (int j = 0; j < NUMBER_COLUMNS; j++) {
+            for (int i = 0; i < source.size(); i++) { // Clear the row (must start with empty row)
+                Object[] row = new Object[NUMBER_COLUMNS];         // Generate the row
+                for (int j = 0; j < NUMBER_COLUMNS; j++) {  // for j, Add the row to tableData
                     row[j] = source.get(i)[j];
-                } // for j
-                // Add the row to tableData
+                }
                 tableData.add(row);
             } // for i
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex){
-            //return columnIndex == 0; //Or whatever column index you want to be editable
+            if (columnIndex == 2) {
+                return true;
+            }
+            else {
             return false;
+            }
         }
 
         public void setValueAt(Object value, int row, int col) {
             tableData.get(row)[col] = value;
             fireTableCellUpdated(row, col);
+        }
+        /*
+         * JTable uses this method to determine the default renderer/
+         * editor for each cell.  If we didn't implement this method,
+         * then the last column would contain text ("true"/"false"),
+         * rather than a check box.
+         */
+       public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
         }
 
         public int getColumnCount() {
@@ -345,6 +382,16 @@ public class TraitSelector extends JDialog {
         public Object getValueAt(int row, int col) {
             return tableData.get(row)[col];
         }
+
+
+
+        public void displayColorButton(int row, int col) {
+            if (getValueAt(row, 2).equals(false)) {
+                setValueAt("color", row, 3);
+            }
+        }
+
+
     }
     }
 

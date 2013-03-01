@@ -12,6 +12,7 @@ import org.nlogo.shape.editor.ShapeCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class ShapeSelector
     //final ManagerDialog manager ;
     final DrawableList list;
     ShapeSelector myself = this;
+    ColorButton colorButton;
+    BreedBlock shapeParser;
 
     public ShapeSelector(java.awt.Frame frame,
                          String[] shapes,
@@ -37,6 +40,7 @@ public class ShapeSelector
         // the JDialog constructor, hence the necessity of passing in the frame instead - ST 3/24/02
         super(frame, "Change shape for " + shapeParser.getName(), true);
         //this.manager = manager;
+        this.shapeParser = shapeParser;
 
         List<Shape> importedShapes = shapeParser.parseShapes(shapes, null);
         if (importedShapes == null) {
@@ -58,16 +62,24 @@ public class ShapeSelector
             list.setCellRenderer(new ShapeCellRenderer(list));
             list.update();
         }
+        colorButton = new ColorButton(frame, shapeParser);
+        colorButton.setVisible(false);
 
+
+
+         //TODO: Change layout so it looks better (feb 22, 2013)
         // Create the buttons
         javax.swing.JButton importButton =
                 new javax.swing.JButton("Use this shape");
         importButton.addActionListener
                 (new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
-                        myself.setVisible(false);
+                        //myself.setVisible(false);
+                        colorButton.setVisible(true);
+                        getRootPane().setDefaultButton(colorButton);
                     }
                 });
+
         javax.swing.Action cancelAction =
                 new javax.swing.AbstractAction("Cancel") {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -75,6 +87,15 @@ public class ShapeSelector
                     }
                 };
         javax.swing.JButton cancelButton = new javax.swing.JButton(cancelAction);
+
+        javax.swing.Action okayAction =
+                new javax.swing.AbstractAction("Okay") {
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        dispose();
+                    }
+                };
+        javax.swing.JButton okayButton = new javax.swing.JButton(okayAction);
+
         org.nlogo.swing.Utils.addEscKeyAction
                 (this, cancelAction);
 
@@ -90,7 +111,8 @@ public class ShapeSelector
 
         // Setup the panel
         javax.swing.JPanel panel = new org.nlogo.swing.ButtonPanel
-                (new javax.swing.JButton[]{importButton, cancelButton});
+                (new javax.swing.JButton[]{importButton, colorButton, okayButton, cancelButton});
+
 
         // Create the scroll pane where the list will be displayed
         javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(list);
@@ -147,4 +169,18 @@ public class ShapeSelector
     public int getChosenValue() {
         return list.getSelectedIndex();
     }
+
+    public void setColorName(String name) {
+        shapeParser.setColorName(name);
+    }
+
+    public Color getSelectedColor() {
+        return colorButton.getSelectedColor();
+    }
+
+    public String getSelectedColorName() {
+        return colorButton.getSelectedColorName();
+    }
+
+
 }

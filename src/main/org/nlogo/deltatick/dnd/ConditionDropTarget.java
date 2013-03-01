@@ -24,7 +24,6 @@ public class ConditionDropTarget
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
-
                 return true;
             }
             if (o instanceof ConditionBlock) {
