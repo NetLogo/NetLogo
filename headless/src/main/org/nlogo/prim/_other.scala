@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Agent, AgentSet, AgentSetBuilder }
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Reporter, Context }
 
@@ -17,15 +17,14 @@ class _other extends Reporter {
     report_1(context, argEvalAgentSet(context, 0))
 
   def report_1(context: Context, sourceSet: AgentSet): AgentSet = {
-    val result = new ArrayAgentSet(
-      sourceSet.kind, sourceSet.count, false, world)
+    val builder = new AgentSetBuilder(sourceSet.kind, sourceSet.count)
     val it = sourceSet.iterator
     while(it.hasNext) {
       val otherAgent = it.next()
       if (context.agent ne otherAgent)
-        result.add(otherAgent)
+        builder.add(otherAgent)
     }
-    result
+    builder.build()
   }
 
 }

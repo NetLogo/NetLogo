@@ -80,7 +80,7 @@ public strictfp class Turtle
     variables = new Object[world.getVariablesArraySize(this, breed)];
     if (getId) {
       id(world.newTurtleId());
-      world.turtles().add(this);
+      world._turtles.add(this);
     }
     initvars(xcor, ycor, breed);
 
@@ -88,7 +88,7 @@ public strictfp class Turtle
       variables[i] = World.ZERO;
     }
     if (breed != world.turtles()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     getPatchHere().addTurtle(this);
   }
@@ -99,7 +99,7 @@ public strictfp class Turtle
   Turtle(World world, long id) {
     this(world, world.turtles(), World.ZERO, World.ZERO, false);
     id(id);
-    world.turtles().add(this);
+    world._turtles.add(this);
   }
 
 
@@ -114,12 +114,12 @@ public strictfp class Turtle
     child.ycor = ycor;
     child.variables = variables.clone();
     child.id(world.newTurtleId());
-    world.turtles().add(child);
+    world._turtles.add(child);
     if (breed != getBreed()) {
       child.setBreed(breed);
     }
     else if (breed != world.turtles()) {
-      getBreed().add(child);
+      ((TreeAgentSet) getBreed()).add(child);
     }
     child.getPatchHere().addTurtle(child);
     return child;
@@ -132,12 +132,12 @@ public strictfp class Turtle
     world.linkManager.cleanup(this);
     Patch patch = getPatchHere();
     patch.removeTurtle(this);
-    AgentSet breed = getBreed();
+    TreeAgentSet breed = (TreeAgentSet) getBreed();
     if (breed != world.turtles()) {
       breed.remove(agentKey());
     }
     world.removeLineThickness(this);
-    world.turtles().remove(agentKey());
+    world._turtles.remove(agentKey());
     id(-1);
     Observer observer = world.observer();
     if (this == observer.targetAgent()) {
@@ -1150,18 +1150,18 @@ public strictfp class Turtle
    * allowed to change breed).
    */
   public void setBreed(AgentSet breed) {
-    AgentSet oldBreed = null;
+    TreeAgentSet oldBreed = null;
     if (variables[VAR_BREED] instanceof AgentSet) {
-      oldBreed = (AgentSet) variables[VAR_BREED];
+      oldBreed = (TreeAgentSet) variables[VAR_BREED];
       if (breed == oldBreed) {
         return;
       }
       if (oldBreed != world.turtles()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+        oldBreed.remove(agentKey());
       }
     }
     if (breed != world.turtles()) {
-      breed.add(this);
+      ((TreeAgentSet) breed).add(this);
     }
     variables[VAR_BREED] = breed;
     shape(world.turtleBreedShapes.breedShape(breed));

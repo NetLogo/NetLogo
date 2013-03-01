@@ -4,18 +4,16 @@ package org.nlogo.plot
 
 import scala.collection.mutable
 import org.nlogo.api.{CompilerException, LogoThunkFactory, CommandLogoThunk}
+import org.nlogo.api.ActionBroker
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
 class PlotManager(factory: LogoThunkFactory)
   extends PlotManagerInterface
-  with PlotRunner
-  with mutable.Publisher[PlotAction] {
+  with PlotActionRunner
+  with ActionBroker[PlotAction] {
 
-  override def publish(action: PlotAction) {
-    super.publish(action)
-    run(action)
-  }
+  override val runner = this // we act as both broker and runner
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()

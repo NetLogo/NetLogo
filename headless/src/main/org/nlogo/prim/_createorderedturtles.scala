@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Turtle, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Turtle, AgentSet, AgentSetBuilder }
 import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
@@ -21,7 +21,7 @@ class _createorderedturtles(val breedName: String) extends Command with CustomAs
   override def perform(context: Context) {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
-      val agentset = new ArrayAgentSet(AgentKind.Turtle, count, false, world)
+      val builder = new AgentSetBuilder(AgentKind.Turtle, count)
       val breed =
         if(breedName.isEmpty) world.turtles
         else world.getBreed(breedName)
@@ -31,11 +31,11 @@ class _createorderedturtles(val breedName: String) extends Command with CustomAs
         val turtle = world.createTurtle(breed)
         turtle.colorDouble(Double.box(10.0 * i + 5.0))
         turtle.heading((360.0 * i) / count)
-        agentset.add(turtle)
+        builder.add(turtle)
         workspace.joinForeverButtons(turtle)
         i += 1
       }
-      context.runExclusiveJob(agentset, next)
+      context.runExclusiveJob(builder.build(), next)
     }
     context.ip = offset
   }

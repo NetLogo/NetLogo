@@ -113,7 +113,6 @@ object Mirrorables {
       wvTurtleBreeds,
       wvLinkBreeds,
       wvUnbreededLinksAreDirected,
-      wvTrailDrawing,
       wvNbInterfaceGlobals,
       _*) = Stream.from(0)
   }
@@ -142,13 +141,6 @@ object Mirrorables {
       (wvTurtleBreeds, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
       (wvLinkBreeds, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
       (wvUnbreededLinksAreDirected, Boolean.box(world.links.isDirected)),
-      (wvTrailDrawing,
-        (if (world.trailDrawer.isDirty) {
-          val outputStream = new java.io.ByteArrayOutputStream
-          val img = world.trailDrawer.getDrawing.asInstanceOf[java.awt.image.BufferedImage]
-          javax.imageio.ImageIO.write(img, "png", outputStream)
-          Some(outputStream.toByteArray())
-        } else None)),
       (wvNbInterfaceGlobals, Int.box(world.program.interfaceGlobals.size)))
   }
 

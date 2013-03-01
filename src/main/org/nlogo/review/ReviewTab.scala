@@ -5,24 +5,23 @@ package org.nlogo.review
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 import java.awt.Dimension
-
 import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.collection.mutable.{ ListBuffer, Subscriber }
-
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO, ModelRunInterface }
-import org.nlogo.plot.{ PlotAction, PlotManager, PlotPainter }
+import org.nlogo.mirror.{ FakeWorld, Mirrorables, ModelRun, ModelRunIO }
+import org.nlogo.plot.PlotPainter
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ InvalidVersionException, MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
-
+import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
 import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSlider, JSplitPane, JTextArea, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.nlogo.plot.PlotAction
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.mirror.Frame
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -30,17 +29,16 @@ class ReviewTab(
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
   extends JPanel
+  with window.ReviewTabInterface
   with window.Events.BeforeLoadEventHandler {
 
-  object API {
-    def loadedRuns: Seq[ModelRunInterface] = tabState.runs
-    def loadRun(inputStream: java.io.InputStream, name: String): Unit = {
-      val uniqueName = tabState.uniqueName(nameFromPath(name))
-      val run = ModelRunIO.load(inputStream, uniqueName)
-      tabState.addRun(run)
-      loadModelIfNeeded(run.modelString)
-    }
+  override def loadedRuns: Seq[api.ModelRun] = tabState.runs
+  override def loadRun(inputStream: java.io.InputStream): Unit = {
+    val run = ModelRunIO.load(inputStream)
+    tabState.addRun(run)
+    loadModelIfNeeded(run.modelString)
   }
+  override def currentRun: Option[api.ModelRun] = tabState.currentRun
 
   private def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
@@ -62,23 +60,11 @@ class ReviewTab(
    * recording or not. This is important because if we want to start
    * recording at some point, we need to mirror all actions from the
    * start to bring the plots to their actual state. NP 2012-11-29
+   * Same logic goes for the drawingActionBuffer. NP 2013-01-28.
    */
-  object PlotActionBuffer
-    extends Subscriber[PlotAction, PlotManager#Pub] {
-
-    ws.plotManager.subscribe(this)
-
-    val buffer = new ListBuffer[PlotAction]
-    def notify(pub: PlotManager#Pub, action: PlotAction) {
-      buffer += action
-    }
-    def clear() = buffer.clear()
-    def grab() = {
-      val actions = buffer.toSeq
-      clear()
-      actions
-    }
-  }
+  private val plotActionBuffer = new api.ActionBuffer(ws.plotManager)
+  private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
+  private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
 
   private def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
@@ -94,7 +80,7 @@ class ReviewTab(
     new api.NetLogoAdapter {
       override def tickCounterChanged(ticks: Double) {
         if (ws.world.ticks == -1) {
-          PlotActionBuffer.clear()
+          actionBuffers.foreach(_.clear())
         } else {
           if (tabState.recordingEnabled) { // checkMemory may turn off recording
             if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
@@ -110,15 +96,25 @@ class ReviewTab(
       }
     })
 
+  def updateMonitors() {
+    widgetHooks
+      .collect { case WidgetHook(m: window.MonitorWidget, _) => m }
+      .foreach(updateMonitor)
+  }
+
   // only callable from the job thread, and only once evaluator.withContext(...) has properly
   // set up ProcedureRunner's execution context. it would be problematic to try to trigger
   // monitors to update from the event thread, because the event thread is not allowed to
   // block waiting for the job thread. - ST 10/12/12
-  def updateMonitors() {
+  def updateMonitor(monitor: MonitorWidget) {
     for {
-      monitor <- widgetHooks.collect { case WidgetHook(m: window.MonitorWidget, _) => m }
       reporter <- monitor.reporter
-    } monitor.value(ws.evaluator.ProcedureRunner.report(reporter))
+      result = try {
+        ws.evaluator.ProcedureRunner.report(reporter)
+      } catch {
+        case _: api.LogoException => "N/A"
+      }
+    } monitor.value(result)
   }
 
   def startRecording() {
@@ -155,8 +151,8 @@ class ReviewTab(
     val image = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
-    val name = Option(ws.getModelFileName)
-      .map(path => tabState.uniqueName(nameFromPath(path)))
+    val name = Option(ws.getModelFileName).map(nameFromPath)
+      .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
     val run = new ModelRun(name, saveModel(), viewArea, image, "", Map())
     tabState.addRun(run)
@@ -171,10 +167,10 @@ class ReviewTab(
           .map(_.valueStringGetter.apply)
           .zipWithIndex
         val mirrorables = Mirrorables.allMirrorables(ws.world, widgetValues)
-        val plotActions = PlotActionBuffer.grab()
+        val actions = actionBuffers.flatMap(_.grab())
         run.data match {
-          case None       => run.start(ws.plotManager.plots, mirrorables, plotActions)
-          case Some(data) => data.append(mirrorables, plotActions)
+          case None       => run.start(ws.plotManager.plots, mirrorables, actions)
+          case Some(data) => data.append(mirrorables, actions)
         }
       } catch {
         case e: java.lang.OutOfMemoryError =>
@@ -214,7 +210,10 @@ class ReviewTab(
         try {
           g2d.setClip(paintArea)
           g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-          fakeWorld.newRenderer(FakeViewSettings).paint(g2d, FakeViewSettings)
+          val renderer = fakeWorld.newRenderer
+          val image = new java.io.ByteArrayInputStream(frame.drawingImageBytes)
+          renderer.trailDrawer.readImage(image)
+          renderer.paint(g2d, FakeViewSettings)
         } finally {
           g2d.dispose()
         }
@@ -291,22 +290,11 @@ class ReviewTab(
   }
 
   object Scrubber extends JSlider {
-    def border(s: String) {
-      setBorder(BorderFactory.createTitledBorder(s))
-    }
-    def updateBorder() {
-      val newBorder = for {
-        frame <- tabState.currentFrame
-        ticks <- frame.ticks
-      } yield "Ticks: " + api.Dump.number(StrictMath.floor(ticks))
-      border(newBorder.getOrElse(""))
-    }
     setValue(0)
-    border("")
     addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
         tabState.currentRun.foreach(_.currentFrameIndex = getValue)
-        updateBorder()
+        TickPanel.updateValues
         InterfacePanel.repaint()
       }
     })
@@ -351,7 +339,7 @@ class ReviewTab(
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
     Seq(NotesArea, renameButton, closeCurrentButton, closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
-    Scrubber.updateBorder()
+    TickPanel.updateValues()
     Scrubber.repaint()
     RunList.repaint()
     InterfacePanel.repaint()
@@ -375,9 +363,7 @@ class ReviewTab(
         // Load a run from `path` and returns either the loaded run
         // in case of success or the path in case of failure
         try {
-          val in = new java.io.FileInputStream(path)
-          val name = nameFromPath(path)
-          API.loadRun(in, name)
+          loadRun(new java.io.FileInputStream(path))
           val run = tabState.runs.last
           Right(run)
         } catch {
@@ -444,6 +430,8 @@ class ReviewTab(
         userConfirms("Close current run",
           "The current run has unsaved data. Are you sure you want to close the current run?")) {
         tabState.closeCurrentRun()
+        // select the new current run if there is one:
+        tabState.currentRun.foreach(RunList.setSelectedValue(_, true))
         refreshInterface()
       }
     }
@@ -460,8 +448,7 @@ class ReviewTab(
         .asInstanceOf[String])
       if answer.nonEmpty
     } {
-      run.name = "" // not to interfere with uniqueName
-      run.name = tabState.uniqueName(answer)
+      run.name = answer
       refreshInterface()
     }
   }
@@ -542,14 +529,36 @@ class ReviewTab(
     add(new JScrollPane(NotesArea), BorderLayout.CENTER)
   }
 
+  object TickPanel extends JPanel {
+    add(new JLabel("Frame:"))
+    val frame = new JLabel("-")
+    val bold = frame.getFont.deriveFont(frame.getFont.getStyle | java.awt.Font.BOLD)
+    frame.setFont(bold)
+    add(frame)
+    add(new JLabel("Tick:"))
+    val tick = new JLabel("-")
+    tick.setFont(bold)
+    add(tick)
+    def updateValues() {
+      frame.setText(tabState
+        .currentFrameIndex
+        .map(_.toString)
+        .getOrElse("-"))
+      tick.setText(tabState
+        .currentFrame
+        .flatMap(_.ticks)
+        .map(api.Dump.number)
+        .getOrElse("-"))
+    }
+  }
   object ScrubberPanel extends JPanel {
     setLayout(new BorderLayout)
     add(ScrubberButtonsPanel, BorderLayout.WEST)
     add(Scrubber, BorderLayout.CENTER)
+    add(TickPanel, BorderLayout.EAST)
   }
 
   object RunListPanel extends JPanel {
-    setPreferredSize(new Dimension(200, 0))
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
   }
@@ -567,7 +576,9 @@ class ReviewTab(
   object PrimarySplitPane extends JSplitPane(
     JSplitPane.HORIZONTAL_SPLIT,
     RunListPanel,
-    SecondarySplitPane)
+    SecondarySplitPane) {
+    setDividerLocation(200)
+  }
 
   object SecondarySplitPane extends JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
@@ -581,7 +592,7 @@ class ReviewTab(
     setLayout(new BorderLayout)
     add(ReviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
-    PlotActionBuffer.clear() // make sure object is constructed and subscribed
+    actionBuffers.foreach(_.clear()) // make sure object is constructed and subscribed
     refreshInterface()
   }
 

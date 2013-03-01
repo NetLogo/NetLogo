@@ -25,9 +25,7 @@ class _carefully extends Command with CustomAssembled {
   }
 
   def perform_1(context: Context) {
-    val agentset = new org.nlogo.agent.ArrayAgentSet(
-      context.agent.kind, 1, false, world)
-    agentset.add(context.agent)
+    val agentset = AgentSet.fromAgent(context.agent)
     try {
       // start new job that skips over the _goto command
       context.runExclusiveJob(agentset, next + 1)

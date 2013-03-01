@@ -66,23 +66,22 @@ strictfp class Torus
   AgentSet getNeighbors(Patch source) {
     if (source.pxcor == world.maxPxcor() && source.pxcor == world.minPxcor()) {
       if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-        return new ArrayAgentSet(AgentKindJ.Patch(), new Agent[]{}, world);
+        return world.noPatches();
       } else {
-        return new ArrayAgentSet
-            (AgentKindJ.Patch(),
-                new Agent[]{getPatchNorth(source), getPatchSouth(source)}, world);
+        return AgentSet.fromArray
+          (AgentKindJ.Patch(), new Agent[]{getPatchNorth(source),
+                                           getPatchSouth(source)});
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-      return new ArrayAgentSet
-          (AgentKindJ.Patch(),
-              new Agent[]{getPatchEast(source), getPatchWest(source)}, world);
+      return AgentSet.fromArray
+        (AgentKindJ.Patch(),
+              new Agent[]{getPatchEast(source), getPatchWest(source)});
     } else {
-      return new ArrayAgentSet(AgentKindJ.Patch(),
+      return AgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
-              getPatchSouth(source), getPatchWest(source),
-              getPatchNorthEast(source), getPatchSouthEast(source),
-              getPatchSouthWest(source), getPatchNorthWest(source)},
-          world);
+                      getPatchSouth(source), getPatchWest(source),
+                      getPatchNorthEast(source), getPatchSouthEast(source),
+                      getPatchSouthWest(source), getPatchNorthWest(source)});
     }
   }
 
@@ -90,21 +89,20 @@ strictfp class Torus
   AgentSet getNeighbors4(Patch source) {
     if (source.pxcor == world.maxPxcor() && source.pxcor == world.minPxcor()) {
       if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-        return new ArrayAgentSet(AgentKindJ.Patch(), new Agent[]{}, world);
+        return world.noPatches();
       } else {
-        return new ArrayAgentSet
-            (AgentKindJ.Patch(),
-                new Agent[]{getPatchNorth(source), getPatchSouth(source)}, world);
+        return AgentSet.fromArray
+          (AgentKindJ.Patch(),
+           new Agent[]{getPatchNorth(source), getPatchSouth(source)});
       }
     } else if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-      return new ArrayAgentSet
-          (AgentKindJ.Patch(),
-              new Agent[]{getPatchEast(source), getPatchWest(source)}, world);
+      return AgentSet.fromArray
+        (AgentKindJ.Patch(),
+              new Agent[]{getPatchEast(source), getPatchWest(source)});
     } else {
-      return new ArrayAgentSet(AgentKindJ.Patch(),
+      return AgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source), getPatchEast(source),
-              getPatchSouth(source), getPatchWest(source)},
-          world);
+                      getPatchSouth(source), getPatchWest(source)});
     }
   }
 

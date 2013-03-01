@@ -2,12 +2,15 @@
 
 package org.nlogo.api
 
-sealed trait AgentKind
+sealed trait AgentKind {
+  def mortal: Boolean
+}
+
 object AgentKind {
-  case object Observer extends AgentKind
-  case object Turtle extends AgentKind
-  case object Patch extends AgentKind
-  case object Link extends AgentKind
+  case object Observer extends AgentKind { def mortal = false }
+  case object Turtle   extends AgentKind { def mortal = true }
+  case object Patch    extends AgentKind { def mortal = false }
+  case object Link     extends AgentKind { def mortal = true }
 }
 
 /**

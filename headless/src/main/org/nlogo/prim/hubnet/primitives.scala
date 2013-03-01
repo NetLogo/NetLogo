@@ -267,15 +267,13 @@ class _hubnetclearoverride extends Command {
                         StringType),
                   "OTPL", "?", false)
   override def perform(context: Context) {
-    import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+    import org.nlogo.agent.{ Agent, AgentSet }
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)
     val set = target match {
       case agent: Agent =>
-        val set = new ArrayAgentSet(agent.kind, 1, false, world)
-        set.add(agent)
-        set
+        AgentSet.fromAgent(agent)
       case set: AgentSet =>
         set
     }

@@ -4,13 +4,12 @@ package org.nlogo.mirror
 
 import java.awt.image.BufferedImage
 
-import org.nlogo.plot.{ Plot, PlotAction, PlotRunner }
-
-trait ModelRunInterface {
-  self: ModelRun =>
-  def name: String
-  def save(outputStream: java.io.OutputStream): Unit
-}
+import org.nlogo.api
+import org.nlogo.api.Action
+import org.nlogo.drawing.{ DrawingActionRunner, imageToBytes }
+import org.nlogo.drawing.DrawingAction
+import org.nlogo.drawing.DrawingAction.ReadImage
+import org.nlogo.plot.{ BasicPlotActionRunner, Plot, PlotAction }
 
 class ModelRun(
   var name: String,
@@ -19,7 +18,7 @@ class ModelRun(
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
   private var _annotations: Map[Int, String] = Map())
-  extends ModelRunInterface
+  extends api.ModelRun
   with SavableRun {
   var stillRecording = true
 
@@ -42,59 +41,18 @@ class ModelRun(
     dirty = true
   }
 
-  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
+  def start(realPlots: Seq[Plot], mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]) {
     _data = Some(Data(realPlots))
-    _data.foreach(_.append(mirrorables, plotActions))
+    _data.foreach(_.append(mirrorables, actions))
   }
 
-  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], plotActionSeqs: Seq[Seq[PlotAction]]) {
-    val deltas = (rawMirroredUpdates, plotActionSeqs).zipped.map(Delta(_, _))
+  def load(realPlots: Seq[Plot], rawMirroredUpdates: Seq[Array[Byte]], actionSeqs: Seq[IndexedSeq[Action]]) {
+    val deltas = (rawMirroredUpdates, actionSeqs).zipped.map(Delta(_, _))
     _data = Some(Data(realPlots, deltas))
     stillRecording = false
   }
 
   override def toString = (if (dirty) "* " else "") + name
-
-  object Frame {
-    def apply(realPlots: Seq[Plot]) = {
-      val plots = realPlots.map(_.clone)
-      plots.foreach(_.clear())
-      new Frame(Map(), plots)
-    }
-  }
-  case class Frame private (
-    mirroredState: Mirroring.State,
-    plots: Seq[Plot])
-    extends PlotRunner {
-
-    override def getPlot(name: String) =
-      plots.find(_.name.equalsIgnoreCase(name))
-    override def getPlotPen(plotName: String, penName: String) =
-      getPlot(plotName).flatMap(_.getPen(penName))
-
-    def applyDelta(delta: Delta): Frame = {
-      val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
-      val newFrame = Frame(newMirroredState, plots.map(_.clone))
-      delta.plotActions.foreach(newFrame.run)
-      newFrame
-    }
-
-    def ticks: Option[Double] =
-      for {
-        entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
-        ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
-      } yield ticks.asInstanceOf[Double]
-  }
-
-  object Delta {
-    def apply(mirroredUpdate: Update, plotActions: Seq[PlotAction]): Delta =
-      Delta(Serializer.toBytes(mirroredUpdate), plotActions)
-  }
-  case class Delta(
-    val rawMirroredUpdate: Array[Byte],
-    val plotActions: Seq[PlotAction]) {
-    def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
-  }
 
   object Data {
     def apply(realPlots: Seq[Plot]) = new Data(realPlots)
@@ -107,7 +65,7 @@ class ModelRun(
 
   class Data private (val realPlots: Seq[Plot]) {
 
-    private var _deltas = Seq[Delta]()
+    private var _deltas = IndexedSeq[Delta]()
     def deltas = _deltas
     def size = _deltas.length
 
@@ -116,31 +74,82 @@ class ModelRun(
     def dirty_=(value: Boolean) { _dirty = value }
 
     def lastFrameIndex = size - 1
-    private def lastFrame = frame(lastFrameIndex).getOrElse(Frame(realPlots))
+    private def lastFrame = frameCache.get(lastFrameIndex).getOrElse(Frame(realPlots))
 
-    private var frameCache = Map[Int, Frame]()
+    private val frameCache = new FrameCache(deltas _, 10, 20)
+    def frame(index: Int) = frameCache.get(index)
+
     private def appendFrame(delta: Delta) {
       val newFrame = lastFrame.applyDelta(delta)
-      // TODO make interval definable elsewhere
-      if (lastFrameIndex % 5 != 0) frameCache -= lastFrameIndex
-      frameCache += size -> newFrame
+      frameCache.add(size, newFrame)
       _deltas :+= delta // added at the end not to mess up lastFrameIndex and size
     }
 
-    def frame(index: Int): Option[Frame] =
-      if (!_deltas.isDefinedAt(index))
-        None
-      else frameCache.get(index)
-        .orElse(frame(index - 1).map(_.applyDelta(deltas(index))))
-
-    def append(mirrorables: Iterable[Mirrorable], plotActions: Seq[PlotAction]) {
+    def append(mirrorables: Iterable[Mirrorable], actions: IndexedSeq[Action]) {
       val (newMirroredState, mirroredUpdate) =
         Mirroring.diffs(lastFrame.mirroredState, mirrorables)
-      val delta = Delta(mirroredUpdate, plotActions)
+      val delta = Delta(mirroredUpdate, actions)
       appendFrame(delta)
       _dirty = true
     }
+  }
+}
 
+object Delta {
+  def apply(mirroredUpdate: Update, actions: IndexedSeq[Action]): Delta =
+    Delta(Serializer.toBytes(mirroredUpdate), actions)
+}
+
+case class Delta(
+  val rawMirroredUpdate: Array[Byte],
+  val actions: IndexedSeq[Action]) {
+  def mirroredUpdate: Update = Serializer.fromBytes(rawMirroredUpdate)
+  def size = rawMirroredUpdate.size + actions.size // used in FrameCache cost calculations
+}
+
+object Frame {
+  def apply(realPlots: Seq[Plot]) = {
+    val plots = realPlots.map(_.clone)
+    plots.foreach(_.clear())
+    new Frame(Map(), plots, Array[Byte]())
+  }
+}
+
+case class Frame private (
+  mirroredState: Mirroring.State,
+  plots: Seq[Plot],
+  drawingImageBytes: Array[Byte]) {
+
+  private def newPlots(delta: Delta): Seq[Plot] = {
+    val plotActions = delta.actions.collect { case pa: PlotAction => pa }
+    val clonedPlots = plots.map(_.clone)
+    if (plotActions.nonEmpty) {
+      val plotActionRunner = new BasicPlotActionRunner(clonedPlots)
+      plotActions.foreach(plotActionRunner.run)
+    }
+    clonedPlots
   }
 
+  private def newImageBytes(delta: Delta, state: Mirroring.State): Array[Byte] = {
+    val drawingActions = delta.actions.collect { case da: DrawingAction => da }
+    if (drawingActions.nonEmpty) {
+      val trailDrawer = new FakeWorld(state).trailDrawer
+      val drawingActionRunner = new DrawingActionRunner(trailDrawer)
+      drawingActionRunner.run(ReadImage(drawingImageBytes))
+      val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
+      drawingActions.foreach(drawingActionRunner.run)
+      imageToBytes(image)
+    } else drawingImageBytes
+  }
+
+  def applyDelta(delta: Delta): Frame = {
+    val newMirroredState = Mirroring.merge(mirroredState, delta.mirroredUpdate)
+    Frame(newMirroredState, newPlots(delta), newImageBytes(delta, newMirroredState))
+  }
+
+  def ticks: Option[Double] =
+    for {
+      entry <- mirroredState.get(AgentKey(Mirrorables.World, 0))
+      ticks <- entry.lift(Mirrorables.MirrorableWorld.wvTicks)
+    } yield ticks.asInstanceOf[Double]
 }

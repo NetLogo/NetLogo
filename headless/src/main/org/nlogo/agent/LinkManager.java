@@ -131,10 +131,10 @@ public strictfp class LinkManager {
   public AgentSet findLinkedFrom(Turtle src, AgentSet sourceSet) {
     List<Link> fromList = srcMap.get(src);
     if (fromList != null) {
-      AgentSet nodeset =
-        new ArrayAgentSet(AgentKindJ.Turtle(), fromList.size(), false, world);
-      addLinkNeighborsFrom(nodeset, fromList, sourceSet, true);
-      return nodeset;
+      AgentSetBuilder builder =
+        new AgentSetBuilder(AgentKindJ.Turtle(), fromList.size());
+      addLinkNeighborsFrom(builder, fromList, sourceSet, true);
+      return builder.build();
     } else {
       return world.noTurtles();
     }
@@ -143,10 +143,10 @@ public strictfp class LinkManager {
   public AgentSet findLinkedTo(Turtle target, AgentSet sourceSet) {
     List<Link> fromList = destMap.get(target);
     if (fromList != null) {
-      AgentSet nodeset =
-        new ArrayAgentSet(AgentKindJ.Turtle(), fromList.size(), false, world);
-      addLinkNeighborsTo(nodeset, fromList, sourceSet, true);
-      return nodeset;
+      AgentSetBuilder builder =
+        new AgentSetBuilder(AgentKindJ.Turtle(), fromList.size());
+      addLinkNeighborsTo(builder, fromList, sourceSet, true);
+      return builder.build();
     } else {
       return world.noTurtles();
     }
@@ -159,15 +159,15 @@ public strictfp class LinkManager {
     if (size == 0) {
       return world.noTurtles();
     }
-    AgentSet nodeset =
-      new ArrayAgentSet(AgentKindJ.Turtle(), size, false, world);
+    AgentSetBuilder builder =
+      new AgentSetBuilder(AgentKindJ.Turtle(), size);
     if (toList != null) {
-      addLinkNeighborsTo(nodeset, toList, sourceSet, false);
+      addLinkNeighborsTo(builder, toList, sourceSet, false);
     }
     if (fromList != null) {
-      addLinkNeighborsFrom(nodeset, fromList, sourceSet, false);
+      addLinkNeighborsFrom(builder, fromList, sourceSet, false);
     }
-    return nodeset;
+    return builder.build();
   }
 
   // the next two methods are essentially the same but are separate for
@@ -175,7 +175,7 @@ public strictfp class LinkManager {
   // these are used in two cases, either for link-neighbors in which case
   // sourceSet will always be a breed. but layout-radial also uses it
   // and it might be any agentset.  ev 4/6/07
-  private void addLinkNeighborsFrom(AgentSet nodeset,
+  private void addLinkNeighborsFrom(AgentSetBuilder builder,
                                     List<Link> links,
                                     AgentSet sourceSet,
                                     boolean directed) {
@@ -186,14 +186,14 @@ public strictfp class LinkManager {
       if ((!isBreed && sourceSet.contains(link)) ||
           (isAllLinks && (unbreededLinks ||
               (directed == link.getBreed().isDirected()
-                  && !nodeset.contains(link.end1())))) ||
+                  && !builder.contains(link.end1())))) ||
           (link.getBreed() == sourceSet)) {
-        nodeset.add(link.end2());
+        builder.add(link.end2());
       }
     }
   }
 
-  private void addLinkNeighborsTo(AgentSet nodeset,
+  private void addLinkNeighborsTo(AgentSetBuilder builder,
                                   List<Link> links,
                                   AgentSet sourceSet,
                                   boolean directed) {
@@ -208,11 +208,11 @@ public strictfp class LinkManager {
       if ((!isBreed && sourceSet.contains(link)) ||
           (isAllLinks && (unbreededLinks ||
               (directed == link.getBreed().isDirected()
-                  && !nodeset.contains(link.end1())))) ||
+                  && !builder.contains(link.end1())))) ||
           (link.getBreed() == sourceSet))
 
       {
-        nodeset.add(link.end1());
+        builder.add(link.end1());
       }
     }
   }
@@ -227,32 +227,30 @@ public strictfp class LinkManager {
 
   public AgentSet findLinksFrom(Turtle src, AgentSet breed) {
     List<Link> fromList = srcMap.get(src);
-    AgentSet linkset =
-      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
+    AgentSetBuilder builder = new AgentSetBuilder(AgentKindJ.Link());
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
         if (isAllLinks || link.getBreed() == breed) {
-          linkset.add(link);
+          builder.add(link);
         }
       }
     }
-    return linkset;
+    return builder.build();
   }
 
   public AgentSet findLinksTo(Turtle target, AgentSet breed) {
     List<Link> fromList = destMap.get(target);
-    AgentSet linkset =
-      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
+    AgentSetBuilder builder = new AgentSetBuilder(AgentKindJ.Link());
     boolean isAllLinks = breed == world.links();
     if (fromList != null) {
       for (Link link : fromList) {
         if (isAllLinks || link.getBreed() == breed) {
-          linkset.add(link);
+          builder.add(link);
         }
       }
     }
-    return linkset;
+    return builder.build();
   }
 
   public AgentSet findLinksWith(Turtle target, AgentSet breed) {
@@ -266,14 +264,13 @@ public strictfp class LinkManager {
       totalList.addAll(toList);
     }
     boolean isAllLinks = breed == world.links();
-    AgentSet linkset =
-      new ArrayAgentSet(AgentKindJ.Link(), 1, false, world);
+    AgentSetBuilder builder = new AgentSetBuilder(AgentKindJ.Link());
     for (Link link : totalList) {
       if (isAllLinks || link.getBreed() == breed) {
-        linkset.add(link);
+        builder.add(link);
       }
     }
-    return linkset;
+    return builder.build();
   }
 
   /// cleaning up after dead turtles

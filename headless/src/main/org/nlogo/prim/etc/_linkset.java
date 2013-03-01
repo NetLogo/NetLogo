@@ -52,10 +52,9 @@ public final strictfp class _linkset
             (context, this, i, Syntax.LinkType() | Syntax.LinksetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
+    return AgentSet.fromArray(
       AgentKindJ.Link(),
-        resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]),
-        world);
+      resultSet.toArray(new org.nlogo.agent.Link[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Link> result) {

@@ -24,9 +24,6 @@ trait AgentSet {
   /** Returns the type of agents in the AgentSet. */
   def kind: AgentKind
 
-  /** Returns the world object that this AgentSet is associated with. */
-  def world: World
-
   /** Returns an iterable that cn be used to iterate through the agents in this set. */
   def agents: java.lang.Iterable[Agent]
 

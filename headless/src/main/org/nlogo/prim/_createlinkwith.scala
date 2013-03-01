@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Turtle, ArrayAgentSet }
+import org.nlogo.agent.{ Turtle, AgentSet }
 import org.nlogo.api.{ Syntax, I18N, AgentKind }
 import org.nlogo.nvm.{ Command, Context, EngineException,
                        CustomAssembled, AssemblerAssistant }
@@ -44,11 +44,8 @@ class _createlinkwith(val breedName: String) extends Command with CustomAssemble
       if (src.id != -1 && dest.id != -1) {
         val link = world.linkManager.createLink(src, dest, breed)
         workspace.joinForeverButtons(link)
-        if (offset - context.ip > 2) {
-          val edgeset = new ArrayAgentSet(AgentKind.Link, 1, false, world)
-          edgeset.add(link)
-          context.runExclusiveJob(edgeset, next)
-        }
+        if (offset - context.ip > 2)
+          context.runExclusiveJob(AgentSet.fromAgent(link), next)
       }
     }
     context.ip = offset

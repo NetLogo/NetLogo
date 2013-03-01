@@ -55,10 +55,10 @@ public final strictfp class _turtleset
             (context, this, i, Syntax.TurtleType() | Syntax.TurtlesetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
+    return AgentSet.fromArray(
       AgentKindJ.Turtle(),
-        resultSet.toArray(new org.nlogo.agent.Turtle[resultSet.size()]),
-        world);
+      resultSet.toArray(
+        new org.nlogo.agent.Turtle[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Turtle> result) {

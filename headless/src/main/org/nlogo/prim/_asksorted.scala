@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.api.Syntax
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
-import org.nlogo.agent.{ Agent, ArrayAgentSet }
+import org.nlogo.agent.{ Agent, AgentSet }
 
 class _asksorted extends Command with CustomAssembled {
 
@@ -24,8 +24,7 @@ class _asksorted extends Command with CustomAssembled {
         .scalaIterator
         .collect{case agent: Agent => agent}
     for(agent <- sortedAgents) {
-      val set = new ArrayAgentSet(agents.kind, 1, false, world)
-      set.add(agent)
+      val set = AgentSet.fromAgent(agent)
       context.runExclusiveJob(set, next)
     }
     context.ip = offset

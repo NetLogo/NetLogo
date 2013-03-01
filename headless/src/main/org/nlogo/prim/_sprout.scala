@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Turtle, Patch, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Turtle, Patch, AgentSet, AgentSetBuilder }
 import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ AssemblerAssistant, Command, CustomAssembled, Context }
 
@@ -23,18 +23,18 @@ class _sprout(val breedName: String) extends Command with CustomAssembled {
     val count = argEvalIntValue(context, 0)
     val random = context.job.random
     if (count > 0) {
-      val agentset = new ArrayAgentSet(AgentKind.Turtle, count, false, world)
+      val builder = new AgentSetBuilder(AgentKind.Turtle, count)
       val breed =
         if (breedName.isEmpty) world.turtles
         else world.getBreed(breedName)
       var i = 0
       while (i < count) {
         val child = parent.sprout(random.nextInt(14), random.nextInt(360), breed)
-        agentset.add(child)
+        builder.add(child)
         workspace.joinForeverButtons(child)
         i += 1
       }
-      context.runExclusiveJob(agentset, next)
+      context.runExclusiveJob(builder.build(), next)
     }
     context.ip = offset
   }
