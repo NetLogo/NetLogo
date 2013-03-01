@@ -16,11 +16,6 @@ object Mirrorables {
   case object World extends Kind
   case object WidgetValue extends Kind
 
-  sealed trait Variable {
-    def name: String
-    def index: Int
-  }
-
   implicit def agentKindToMirrorKind(agentKind: api.AgentKind) = agentKind match {
     case api.AgentKind.Observer => Observer
     case api.AgentKind.Turtle   => Turtle
@@ -99,51 +94,55 @@ object Mirrorables {
   }
 
   object MirrorableWorld {
-    case object Ticks extends Variable { override val name = "ticks"; override val index = 0 }
-    case object PatchesWithLabels extends Variable { override val name = "patchesWithLabels"; override val index = 1 }
-    case object TurtleShapeList extends Variable { override val name = "turtleShapeList"; override val index = 2 }
-    case object LinkShapeList extends Variable { override val name = "linkShapeList"; override val index = 3 }
-    case object PatchSize extends Variable { override val name = "patchSize"; override val index = 4 }
-    case object WorldWidth extends Variable { override val name = "worldWidth"; override val index = 5 }
-    case object WorldHeight extends Variable { override val name = "worldHeight"; override val index = 6 }
-    case object MinPxcor extends Variable { override val name = "minPxcor"; override val index = 7 }
-    case object MinPycor extends Variable { override val name = "minPycor"; override val index = 8 }
-    case object MaxPxcor extends Variable { override val name = "maxPxcor"; override val index = 9 }
-    case object MaxPycor extends Variable { override val name = "maxPycor"; override val index = 10 }
-    case object WrappingAllowedInX extends Variable { override val name = "wrappingAllowedInX"; override val index = 11 }
-    case object WrappingAllowedInY extends Variable { override val name = "wrappingAllowedInY"; override val index = 12 }
-    case object PatchesAllBlack extends Variable { override val name = "patchesAllBlack"; override val index = 13 }
-    case object TurtleBreeds extends Variable { override val name = "turtleBreeds"; override val index = 14 }
-    case object LinkBreeds extends Variable { override val name = "linkBreeds"; override val index = 15 }
-    case object UnbreededLinksAreDirected extends Variable { override val name = "unbreededLinksAreDirected"; override val index = 16 }
-    case object NbInterfaceGlobals extends Variable { override val name = "nbInterfaceGlobals"; override val index = 17 }
+    object WorldVar extends Enumeration {
+      type WorldVar = Value
+      val Ticks = Value("ticks")
+      val PatchesWithLabels = Value("patchesWithLabels")
+      val TurtleShapeList = Value("turtleShapeList")
+      val LinkShapeList = Value("linkShapeList")
+      val PatchSize = Value("patchSize")
+      val WorldWidth = Value("worldWidth")
+      val WorldHeight = Value("worldHeight")
+      val MinPxcor = Value("minPxcor")
+      val MinPycor = Value("minPycor")
+      val MaxPxcor = Value("maxPxcor")
+      val MaxPycor = Value("maxPycor")
+      val WrappingAllowedInX = Value("wrappingAllowedInX")
+      val WrappingAllowedInY = Value("wrappingAllowedInY")
+      val PatchesAllBlack = Value("patchesAllBlack")
+      val TurtleBreeds = Value("turtleBreeds")
+      val LinkBreeds = Value("linkBreeds")
+      val UnbreededLinksAreDirected = Value("unbreededLinksAreDirected")
+      val NbInterfaceGlobals = Value("nbInterfaceGlobals")
+    }
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {
     import MirrorableWorld._
+    import WorldVar._
     override def kind = World
     override def agentKey = AgentKey(kind, 0) // dummy id for the one and unique world
     // pending resolution of https://issues.scala-lang.org/browse/SI-6723
     // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/9/13
     override val variables = Map(
-      (Ticks.index, Double.box(world.ticks)),
-      (PatchesWithLabels.index, Int.box(world.patchesWithLabels)),
-      (TurtleShapeList.index, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
-      (LinkShapeList.index, world.linkShapeList),
-      (PatchSize.index, Double.box(world.patchSize)),
-      (WorldWidth.index, Int.box(world.worldWidth)),
-      (WorldHeight.index, Int.box(world.worldHeight)),
-      (MinPxcor.index, Int.box(world.minPxcor)),
-      (MinPycor.index, Int.box(world.minPycor)),
-      (MaxPxcor.index, Int.box(world.maxPxcor)),
-      (MaxPycor.index, Int.box(world.maxPycor)),
-      (WrappingAllowedInX.index, Boolean.box(world.wrappingAllowedInX)),
-      (WrappingAllowedInY.index, Boolean.box(world.wrappingAllowedInY)),
-      (PatchesAllBlack.index, Boolean.box(world.patchesAllBlack)),
-      (TurtleBreeds.index, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (LinkBreeds.index, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (UnbreededLinksAreDirected.index, Boolean.box(world.links.isDirected)),
-      (NbInterfaceGlobals.index, Int.box(world.program.interfaceGlobals.size)))
+      (Ticks.id, Double.box(world.ticks)),
+      (PatchesWithLabels.id, Int.box(world.patchesWithLabels)),
+      (TurtleShapeList.id, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
+      (LinkShapeList.id, world.linkShapeList),
+      (PatchSize.id, Double.box(world.patchSize)),
+      (WorldWidth.id, Int.box(world.worldWidth)),
+      (WorldHeight.id, Int.box(world.worldHeight)),
+      (MinPxcor.id, Int.box(world.minPxcor)),
+      (MinPycor.id, Int.box(world.minPycor)),
+      (MaxPxcor.id, Int.box(world.maxPxcor)),
+      (MaxPycor.id, Int.box(world.maxPycor)),
+      (WrappingAllowedInX.id, Boolean.box(world.wrappingAllowedInX)),
+      (WrappingAllowedInY.id, Boolean.box(world.wrappingAllowedInY)),
+      (PatchesAllBlack.id, Boolean.box(world.patchesAllBlack)),
+      (TurtleBreeds.id, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (LinkBreeds.id, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (UnbreededLinksAreDirected.id, Boolean.box(world.links.isDirected)),
+      (NbInterfaceGlobals.id, Int.box(world.program.interfaceGlobals.size)))
   }
 
   object MirrorableWidgetValue {
