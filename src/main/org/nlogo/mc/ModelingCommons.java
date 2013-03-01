@@ -148,16 +148,20 @@ public class ModelingCommons implements ModelingCommonsInterface {
     return new Image() {
       @Override
       public BufferedImage getImage() throws ImageException {
+        BufferedImage image = null;
         try {
           HeadlessWorkspace headless = HeadlessWorkspace.newInstance();
           headless.openString(saveModel.apply());
           String command = "random-seed 0 " + headless.previewCommands();
           headless.command(command);
-          BufferedImage image = headless.exportView();
+          image = headless.exportView();
           headless.dispose();
           return image;
         } catch(InterruptedException e) {
-          //When headless thread used to auto generated preview image is interrupted.  Probably should not happen
+          //headless.dispose method can potentially throw an InterruptedException
+          //It doesn't matter if this occurs since we will only reach the dispose line once the image has been
+          //generated
+          return image;
         } catch(CompilerException compilerException) {
           //Thrown when the code in variable command is invalid Netlogo code and cannot be compiled
           //Should not happen, indicates above code is bad
@@ -167,7 +171,6 @@ public class ModelingCommons implements ModelingCommonsInterface {
           //defined.  This shouldn't happen since previous checks should ensure that setup and go are defined
           throw new ImageException("Could not auto-generate preview image since setup and go procedures are not defined", logoException);
         }
-        return null;
       }
     };
   }
