@@ -7,7 +7,6 @@ import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.api
 import org.nlogo.plot
 import collection.JavaConverters._
-
 object Mirrorables {
 
   case object Patch extends Kind
@@ -16,6 +15,11 @@ object Mirrorables {
   case object Observer extends Kind
   case object World extends Kind
   case object WidgetValue extends Kind
+
+  sealed trait Variable {
+    def name: String
+    def index: Int
+  }
 
   implicit def agentKindToMirrorKind(agentKind: api.AgentKind) = agentKind match {
     case api.AgentKind.Observer => Observer
@@ -95,26 +99,24 @@ object Mirrorables {
   }
 
   object MirrorableWorld {
-    val Seq(
-      wvTicks,
-      wvPatchesWithLabels,
-      wvTurtleShapeList,
-      wvLinkShapeList,
-      wvPatchSize,
-      wvWorldWidth,
-      wvWorldHeight,
-      wvMinPxcor,
-      wvMinPycor,
-      wvMaxPxcor,
-      wvMaxPycor,
-      wvWrappingAllowedInX,
-      wvWrappingAllowedInY,
-      wvPatchesAllBlack,
-      wvTurtleBreeds,
-      wvLinkBreeds,
-      wvUnbreededLinksAreDirected,
-      wvNbInterfaceGlobals,
-      _*) = Stream.from(0)
+    case object Ticks extends Variable { override val name = "ticks"; override val index = 0 }
+    case object PatchesWithLabels extends Variable { override val name = "patchesWithLabels"; override val index = 1 }
+    case object TurtleShapeList extends Variable { override val name = "turtleShapeList"; override val index = 2 }
+    case object LinkShapeList extends Variable { override val name = "linkShapeList"; override val index = 3 }
+    case object PatchSize extends Variable { override val name = "patchSize"; override val index = 4 }
+    case object WorldWidth extends Variable { override val name = "worldWidth"; override val index = 5 }
+    case object WorldHeight extends Variable { override val name = "worldHeight"; override val index = 6 }
+    case object MinPxcor extends Variable { override val name = "minPxcor"; override val index = 7 }
+    case object MinPycor extends Variable { override val name = "minPycor"; override val index = 8 }
+    case object MaxPxcor extends Variable { override val name = "maxPxcor"; override val index = 9 }
+    case object MaxPycor extends Variable { override val name = "maxPycor"; override val index = 10 }
+    case object WrappingAllowedInX extends Variable { override val name = "wrappingAllowedInX"; override val index = 11 }
+    case object WrappingAllowedInY extends Variable { override val name = "wrappingAllowedInY"; override val index = 12 }
+    case object PatchesAllBlack extends Variable { override val name = "patchesAllBlack"; override val index = 13 }
+    case object TurtleBreeds extends Variable { override val name = "turtleBreeds"; override val index = 14 }
+    case object LinkBreeds extends Variable { override val name = "linkBreeds"; override val index = 15 }
+    case object UnbreededLinksAreDirected extends Variable { override val name = "unbreededLinksAreDirected"; override val index = 16 }
+    case object NbInterfaceGlobals extends Variable { override val name = "nbInterfaceGlobals"; override val index = 17 }
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {
@@ -124,24 +126,24 @@ object Mirrorables {
     // pending resolution of https://issues.scala-lang.org/browse/SI-6723
     // we avoid the `a -> b` syntax in favor of `(a, b)` - ST 1/9/13
     override val variables = Map(
-      (wvTicks, Double.box(world.ticks)),
-      (wvPatchesWithLabels, Int.box(world.patchesWithLabels)),
-      (wvTurtleShapeList, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
-      (wvLinkShapeList, world.linkShapeList),
-      (wvPatchSize, Double.box(world.patchSize)),
-      (wvWorldWidth, Int.box(world.worldWidth)),
-      (wvWorldHeight, Int.box(world.worldHeight)),
-      (wvMinPxcor, Int.box(world.minPxcor)),
-      (wvMinPycor, Int.box(world.minPycor)),
-      (wvMaxPxcor, Int.box(world.maxPxcor)),
-      (wvMaxPycor, Int.box(world.maxPycor)),
-      (wvWrappingAllowedInX, Boolean.box(world.wrappingAllowedInX)),
-      (wvWrappingAllowedInY, Boolean.box(world.wrappingAllowedInY)),
-      (wvPatchesAllBlack, Boolean.box(world.patchesAllBlack)),
-      (wvTurtleBreeds, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (wvLinkBreeds, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
-      (wvUnbreededLinksAreDirected, Boolean.box(world.links.isDirected)),
-      (wvNbInterfaceGlobals, Int.box(world.program.interfaceGlobals.size)))
+      (Ticks.index, Double.box(world.ticks)),
+      (PatchesWithLabels.index, Int.box(world.patchesWithLabels)),
+      (TurtleShapeList.index, world.turtleShapeList), // probably not good enough to just pass the shapelists like that..
+      (LinkShapeList.index, world.linkShapeList),
+      (PatchSize.index, Double.box(world.patchSize)),
+      (WorldWidth.index, Int.box(world.worldWidth)),
+      (WorldHeight.index, Int.box(world.worldHeight)),
+      (MinPxcor.index, Int.box(world.minPxcor)),
+      (MinPycor.index, Int.box(world.minPycor)),
+      (MaxPxcor.index, Int.box(world.maxPxcor)),
+      (MaxPycor.index, Int.box(world.maxPycor)),
+      (WrappingAllowedInX.index, Boolean.box(world.wrappingAllowedInX)),
+      (WrappingAllowedInY.index, Boolean.box(world.wrappingAllowedInY)),
+      (PatchesAllBlack.index, Boolean.box(world.patchesAllBlack)),
+      (TurtleBreeds.index, world.program.breeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (LinkBreeds.index, world.program.linkBreeds.map { case (breedName, breed) => breedName -> breed.isDirected }),
+      (UnbreededLinksAreDirected.index, Boolean.box(world.links.isDirected)),
+      (NbInterfaceGlobals.index, Int.box(world.program.interfaceGlobals.size)))
   }
 
   object MirrorableWidgetValue {

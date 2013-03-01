@@ -148,7 +148,7 @@ class FakeWorld(state: State) extends api.World {
     val agentSeq = linkStates
       .map { case (id, vars) => new FakeLink(id, vars) }
       .sortBy(_.id)
-    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](wvUnbreededLinksAreDirected)) {
+    new FakeAgentSet(api.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.index)) {
       override val agents =
         (agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
     }
@@ -187,20 +187,20 @@ class FakeWorld(state: State) extends api.World {
 
   private def worldVar[T](i: Int) = worldVars(i).asInstanceOf[T]
 
-  def ticks = worldVar[Double](wvTicks)
-  def patchesWithLabels = worldVar[Int](wvPatchesWithLabels)
-  def turtleShapeList = worldVar[api.ShapeList](wvTurtleShapeList)
-  def linkShapeList = worldVar[api.ShapeList](wvLinkShapeList)
-  def patchSize = worldVar[Double](wvPatchSize)
-  def worldWidth = worldVar[Int](wvWorldWidth)
-  def worldHeight = worldVar[Int](wvWorldHeight)
-  def minPxcor = worldVar[Int](wvMinPxcor)
-  def minPycor = worldVar[Int](wvMinPycor)
-  def maxPxcor = worldVar[Int](wvMaxPxcor)
-  def maxPycor = worldVar[Int](wvMaxPycor)
-  def wrappingAllowedInX = worldVar[Boolean](wvWrappingAllowedInX)
-  def wrappingAllowedInY = worldVar[Boolean](wvWrappingAllowedInY)
-  def patchesAllBlack = worldVar[Boolean](wvPatchesAllBlack)
+  def ticks = worldVar[Double](Ticks.index)
+  def patchesWithLabels = worldVar[Int](PatchesWithLabels.index)
+  def turtleShapeList = worldVar[api.ShapeList](TurtleShapeList.index)
+  def linkShapeList = worldVar[api.ShapeList](LinkShapeList.index)
+  def patchSize = worldVar[Double](PatchSize.index)
+  def worldWidth = worldVar[Int](WorldWidth.index)
+  def worldHeight = worldVar[Int](WorldHeight.index)
+  def minPxcor = worldVar[Int](MinPxcor.index)
+  def minPycor = worldVar[Int](MinPycor.index)
+  def maxPxcor = worldVar[Int](MaxPxcor.index)
+  def maxPycor = worldVar[Int](MaxPycor.index)
+  def wrappingAllowedInX = worldVar[Boolean](WrappingAllowedInX.index)
+  def wrappingAllowedInY = worldVar[Boolean](WrappingAllowedInY.index)
+  def patchesAllBlack = worldVar[Boolean](PatchesAllBlack.index)
 
   def program = {
     def makeBreedMap(breedsVar: Int) =
@@ -208,8 +208,8 @@ class FakeWorld(state: State) extends api.World {
         case (breedName, isDirected) => breedName -> api.Breed(breedName, "", Seq(), isDirected)
       }
     api.Program.empty(FakeWorld.is3D).copy(
-      breeds = makeBreedMap(wvTurtleBreeds),
-      linkBreeds = makeBreedMap(wvLinkBreeds))
+      breeds = makeBreedMap(TurtleBreeds.index),
+      linkBreeds = makeBreedMap(LinkBreeds.index))
   }
 
   private def makeBreeds[A <: FakeAgent](
@@ -230,7 +230,7 @@ class FakeWorld(state: State) extends api.World {
   def getPatch(i: Int): api.Patch = patches.agentSeq(i)
 
   override lazy val observer: api.Observer =
-    new FakeObserver(observerVars, worldVar[Int](wvNbInterfaceGlobals))
+    new FakeObserver(observerVars, worldVar[Int](NbInterfaceGlobals.index))
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     // This is basically copied from org.nlogo.agent.Topology to avoid a dependency to the latter.
