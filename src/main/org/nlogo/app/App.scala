@@ -288,7 +288,7 @@ class App extends
   var colorDialog: ColorDialog = null
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
-  var modelingCommons: ModelingCommonsInterface = null
+  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -385,8 +385,6 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, tabs.proceduresTab))
     frame.addLinkComponent(listenerManager)
-
-    modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
 
     org.nlogo.util.Exceptions.setHandler(this)
 
