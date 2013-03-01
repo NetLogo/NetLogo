@@ -29,6 +29,12 @@
       <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-all" />
       <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm" />
       <root url="file://$PROJECT_DIR$/lib_managed/bundles/log4j/log4j" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
