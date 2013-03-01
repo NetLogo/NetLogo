@@ -15,18 +15,18 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
         """|{
            |  "turtles":{
            |    "0":{
-           |      "WHO":0.0,
-           |      "COLOR":5.0,
-           |      "HEADING":0.0,
-           |      "XCOR":0.0,
-           |      "YCOR":0.0,
+           |      "WHO":0,
+           |      "COLOR":5,
+           |      "HEADING":0,
+           |      "XCOR":0,
+           |      "YCOR":0,
            |      "SHAPE":"default",
            |      "LABEL":"",
            |      "LABEL-COLOR":9.9,
            |      "BREED":"TURTLES",
            |      "HIDDEN?":false,
-           |      "SIZE":1.0,
-           |      "PEN-SIZE":1.0,
+           |      "SIZE":1,
+           |      "PEN-SIZE":1,
            |      "PEN-MODE":"up"
            |    }
            |  },
@@ -38,7 +38,7 @@ class TestJSONSerializer extends FunSuite with ShouldMatchers {
         """|{
            |  "turtles":{
            |    "0":{
-           |      "YCOR":1.0
+           |      "YCOR":1
            |    }
            |  },
            |  "patches":{
