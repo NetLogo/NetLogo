@@ -24,8 +24,8 @@ public class FileImage implements Image {
     BufferedImage image = null;
     try {
       return ImageIO.read(file);
-    } catch(IOException e) {
-      throw new ImageException("Invalid image file");
+    } catch(IOException ioException) {
+      throw new ImageException("Invalid image file", ioException);
     }
   }
 
