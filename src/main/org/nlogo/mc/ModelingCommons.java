@@ -158,14 +158,14 @@ public class ModelingCommons implements ModelingCommonsInterface {
           return image;
         } catch(InterruptedException e) {
           //When headless thread used to auto generated preview image is interrupted.  Probably should not happen
-        } catch(CompilerException e) {
+        } catch(CompilerException compilerException) {
           //Thrown when the code in variable command is invalid Netlogo code and cannot be compiled
           //Should not happen, indicates above code is bad
-          throw new ImageException("Could not auto-generate preview image due to invalid auto-generate Netlogo code");
-        } catch(LogoException e) {
+          throw new ImageException("Could not auto-generate preview image due to invalid auto-generate Netlogo code", compilerException);
+        } catch(LogoException logoException) {
           //Thrown when the generated code could not be run.  This could happen if setup and go procedures are not
           //defined.  This shouldn't happen since previous checks should ensure that setup and go are defined
-          throw new ImageException("Could not auto-generate preview image since setup and go procedures are not defined");
+          throw new ImageException("Could not auto-generate preview image since setup and go procedures are not defined", logoException);
         }
         return null;
       }

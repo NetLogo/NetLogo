@@ -244,36 +244,45 @@ public class UploadDialog extends JDialog {
   private void executeModelSearch() {
     boolean ensureChangeabilityPermission = getSelectedUploadType() == NewModelType.NEW_VERSION;
     currentModelSearchRequest = new SearchForModelsRequest(communicator.getHttpClient(), nextModelSearchString, 10, ensureChangeabilityPermission) {
-
       @Override
-      protected void onSearchResults(List<Model> models) {
-        existingModelNameComboBox.removeAllItems();
-        if(models.size() > 0) {
-          for(Model model : models) {
-            existingModelNameComboBox.addItem(model, true);
-          }
-          boolean currentFocus = existingModelNameSearchField.hasFocus();
-          existingModelNameComboBox.showPopup();
-          if(currentFocus) {
-            existingModelNameSearchField.requestFocus();
-          }
-        } else {
-          existingModelNameComboBox.addItem("No existing models found", false);
-        }
-        currentModelSearchRequest = null;
-        nextModelSearchString = null;
-      }
+      protected void onSearchResults(String status, List<Model> models) {
+        if(status.equals("ABORTED_OR_CONNECTION_ERROR")) {
+          //Start the next search after the current search finishes aborting
+          if(nextModelSearchString != null) {
+            executeModelSearch();
+          } else {
+            //If we get an aborted or connection error and we don't have another search queued, then
+            //we know that there was a connection error since abortions only happen when a search is queued
+            //while an existing search is still executing
+            currentModelSearchRequest = null;
+            clearExistingModelNameComboBox();
+            existingModelNameComboBox.addItem("Error connecting to Modeling Commons", false);
 
-      @Override
-      protected void onSearchAborted() {
-        if(nextModelSearchString != null) {
-          executeModelSearch();
-        } else {
+          }
+        } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+          clearExistingModelNameComboBox();
+          existingModelNameComboBox.addItem("Invalid response from Modeling Commons", false);
+        } else if(status.equals("SUCCESS")) {
+          existingModelNameComboBox.removeAllItems();
+          if(models.size() > 0) {
+            for(Model model : models) {
+              existingModelNameComboBox.addItem(model, true);
+            }
+            boolean currentFocus = existingModelNameSearchField.hasFocus();
+            existingModelNameComboBox.showPopup();
+            if(currentFocus) {
+              existingModelNameSearchField.requestFocus();
+            }
+          } else {
+            existingModelNameComboBox.addItem("No existing models found", false);
+          }
           currentModelSearchRequest = null;
+          nextModelSearchString = null;
         }
       }
 
     };
+    nextModelSearchString = null;
     currentModelSearchRequest.execute();
   }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class SearchForModelsRequest extends PostRequest {
 
   public SearchForModelsRequest(HttpClient http, String queryString, int count, boolean changeability) {
-    super(http, ModelingCommons.HOST + "/account/models");
+    super(http, ModelingCommons.HOST/*"localhost:3000"*/ + "/account/models");
     addStringParam("query", queryString);
     addStringParam("count", "" + count);
     if(changeability) {
@@ -27,7 +27,7 @@ public abstract class SearchForModelsRequest extends PostRequest {
   @Override
   protected void onReturn(String response) {
     if(response == null) {
-      onSearchAborted();
+      onSearchResults("ABORTED_OR_CONNECTION_ERROR", null);
     } else {
       JSONParser json = new JSONParser();
       try {
@@ -40,15 +40,13 @@ public abstract class SearchForModelsRequest extends PostRequest {
           int modelId = ((Number) model.get("id")).intValue();
           out.add(new Model(modelId, modelName));
         }
-        onSearchResults(out);
+        onSearchResults("SUCCESS", out);
       } catch(ParseException e) {
-        //If the response is invalid JSON (server error), then do nothing for now
-        //Not sure if we should do nothing (show no models) or display an error
+        onSearchResults("INVALID_RESPONSE_FROM_SERVER", null);
       }
     }
   }
 
-  protected abstract void onSearchResults(List<Model> models);
-  protected abstract void onSearchAborted();
+  protected abstract void onSearchResults(String status, List<Model> models);
 
 }
