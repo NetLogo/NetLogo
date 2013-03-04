@@ -13,7 +13,7 @@
     <module name="NetLogo" />
     <envs />
     <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="59252" />
+      <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
