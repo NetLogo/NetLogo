@@ -7,7 +7,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelingCommonsInterface;
-import org.nlogo.headless.HeadlessWorkspace;
+import org.nlogo.api.Observer;
+import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 import org.nlogo.swing.MessageDialog;
 import scala.Function0;
@@ -15,6 +17,7 @@ import scala.Function0;
 import javax.swing.JDialog;
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class ModelingCommons implements ModelingCommonsInterface {
@@ -148,15 +151,25 @@ public class ModelingCommons implements ModelingCommonsInterface {
     return new Image() {
       @Override
       public BufferedImage getImage() throws ImageException {
+
         BufferedImage image = null;
+
         try {
-          HeadlessWorkspace headless = HeadlessWorkspace.newInstance();
-          headless.openString(saveModel.apply());
-          String command = "random-seed 0 " + headless.previewCommands();
-          headless.command(command);
-          image = headless.exportView();
-          headless.dispose();
+
+          Workspace ws = (Workspace) Class.forName("org.nlogo.headless.HeadlessWorkspace").getMethod("newInstance").invoke(null);
+          ws.openString(saveModel.apply());
+
+          String         command = "random-seed 0 " + ws.previewCommands();
+          SimpleJobOwner owner   = new SimpleJobOwner("PreviewGetter", ws.world().mainRNG, Observer.class);
+          Procedure      proc    = ws.compileCommands(command);
+          ws.runCompiledCommands(owner, proc);
+
+          image = ws.exportView();
+
+          ws.dispose();
+
           return image;
+
         } catch(InterruptedException e) {
           //headless.dispose method can potentially throw an InterruptedException
           //It doesn't matter if this occurs since we will only reach the dispose line once the image has been
@@ -170,7 +183,16 @@ public class ModelingCommons implements ModelingCommonsInterface {
           //Thrown when the generated code could not be run.  This could happen if setup and go procedures are not
           //defined.  This shouldn't happen since previous checks should ensure that setup and go are defined
           throw new ImageException("Could not auto-generate preview image since setup and go procedures are not defined", logoException);
+        } catch(ClassNotFoundException ex) {
+          throw new ImageException("Could not auto-generate preview image due to failure to locate the `HeadlessWorkspace` class", ex);
+        } catch(NoSuchMethodException ex) {
+          throw new ImageException("Could not auto-generate preview image due to failure to create `HeadlessWorkspace`", ex);
+        } catch(IllegalAccessException ex) {
+          throw new ImageException("Could not auto-generate preview image due to illegal method invocation on `HeadlessWorkspace`", ex);
+        } catch(InvocationTargetException ex) {
+            throw new ImageException("Could not auto-generate preview image due to failed method invocation on `HeadlessWorkspace`", ex);
         }
+
       }
     };
   }
