@@ -118,39 +118,13 @@ object App{
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter()))
-
-    val saveFunc     = new ModelSaver(pico.getComponent(classOf[App])).save _
-    val getImageFunc = () => {
-
-      val headless = Class.forName("org.nlogo.headless.HeadlessWorkspace").getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-
-      headless.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
-      val command = "random-seed 0 " + headless.previewCommands
-      val proc    = headless.compileCommands(command)
-      val owner   = new SimpleJobOwner("PreviewGetter", headless.world.mainRNG, classOf[Observer])
-      headless.runCompiledCommands(owner, proc)
-      val image = headless.exportView()
-
-      try {
-        headless.dispose()
-        image
-      }
-      catch {
-        case ex: InterruptedException =>
-          //It doesn't matter if this occurs since we will only reach the dispose line once the image has been generated
-          org.nlogo.util.Exceptions.ignore(ex)
-          image
-      }
-
-    }
-
+    val saveFunc = new ModelSaver(pico.getComponent(classOf[App])).save _
     pico.add(classOf[ModelingCommonsInterface],
-      "org.nlogo.mc.ModelingCommons",
-      Array[Parameter] (
-        new ConstantParameter(saveFunc),
-        new ConstantParameter(getImageFunc),
-        new ComponentParameter(classOf[AppFrame]),
-        new ComponentParameter()))
+          "org.nlogo.mc.ModelingCommons",
+          Array[Parameter] (
+            new ConstantParameter(saveFunc),
+            new ComponentParameter(classOf[AppFrame]),
+            new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
