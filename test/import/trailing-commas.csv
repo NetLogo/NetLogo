@@ -49,10 +49,6 @@ who,color,heading,xcor,ycor,shape,pen-down?,label,label-color,breed,hidden?,size
 38,55,309.5160555,15.64835801,-9.797559612,"""default""",FALSE,,9.9999,{breed particles},FALSE,1,10,2,nobody
 39,55,34.98447322,17.13922582,-9.586564182,"""default""",FALSE,,9.9999,{breed particles},FALSE,1,10,2,nobody
 
-TURTLE_SHAPES
-"turtles"
-"default"
-
 PATCHES,,,,,,,,,,,,,,
 pxcor,pycor,pcolor,plabel,plabel-color,,,,,,,,,,
 -35,35,0,,9.9999,,,,,,,,,,

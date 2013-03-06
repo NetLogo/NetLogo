@@ -146,20 +146,10 @@ public strictfp class Importer
 
       importAgents(Observer.class);
       importAgents(Turtle.class);
-
-      if (nextLine != null && nextLine.contains("TURTLE_SHAPES"))
-        importTurtleShapes();
-
       importAgents(Patch.class);
       checkForBlankTurtles();
-
       if (importLinks) {
-
         importAgents(Link.class);
-
-        if (nextLine != null && nextLine.contains("LINK_SHAPES"))
-          importLinkShapes();
-
       }
       if (nextLine != null && nextLine.indexOf("DRAWING") != -1) {
         importDrawing();
@@ -413,67 +403,6 @@ public strictfp class Importer
     } catch (java.io.IOException e) {
       errorHandler.showError("Error Importing Extension Data", e.getMessage(), false);
     }
-  }
-
-  // This is gross, and I apologize for its terrible-ocity --JAB (2/28/13)
-  void importTurtleShapes() throws java.io.IOException {
-
-    if (hasMoreLines(false)) {
-
-      String[] breedNames = nextLine();
-
-      if (hasMoreLines(false)) {
-
-        for (int i = 0; i < breedNames.length; i++) {
-
-          String breedName = breedNames[i].toUpperCase();
-          AgentSet agents  = null;
-
-          if (world.turtles().printName().equals(breedName))
-            agents = world.turtles();
-          else
-            agents = world.getBreed(breedName);
-
-          world.turtleBreedShapes.setBreedShape(agents, nextLine()[i]);
-
-        }
-
-        hasMoreLines(false);
-
-      }
-
-    }
-
-  }
-
-  void importLinkShapes() throws java.io.IOException {
-
-    if (hasMoreLines(false)) {
-
-      String[] breedNames = nextLine();
-
-      if (hasMoreLines(false)) {
-
-        for (int i = 0; i < breedNames.length; i++) {
-
-          String breedName = breedNames[i].toUpperCase();
-          AgentSet agents  = null;
-
-          if (world.links().printName().equals(breedName))
-            agents = world.links();
-          else
-            agents = world.getLinkBreed(breedName);
-
-          world.linkBreedShapes.setBreedShape(agents, nextLine()[i]);
-
-        }
-
-        hasMoreLines(false);
-
-      }
-
-    }
-
   }
 
   void importAgents(Class<? extends Agent> agentClass)
@@ -1262,8 +1191,8 @@ public strictfp class Importer
   int lineNum = 0;
   String nextLine;  //the next line of input from the import file
   private String[] nextLineFields;
-  private static final List<Integer> requiredSections = new ArrayList<Integer>(java.util.Arrays.asList(new Integer[]{ 0, 1, 3 }));
-  private final String[] sentinels = {"GLOBALS", "TURTLES", "TURTLE_SHAPES", "PATCHES", "LINKS", "LINK_SHAPES", "DRAWING", "OUTPUT", "PLOTS", "EXTENSIONS", "DONE",};
+  private static final int REQUIRED_SECTIONS = 3;
+  private final String[] sentinels = {"GLOBALS", "TURTLES", "PATCHES", "LINKS", "DRAWING", "OUTPUT", "PLOTS", "EXTENSIONS", "DONE",};
   private final int numSentinels = sentinels.length - 1;
   private int currentSentinel = 0;
 
@@ -1286,14 +1215,11 @@ public strictfp class Importer
         // Also, not all exports are going to have an output area, CLB /7/15/05
         // old exports will not have LINKS sections either -- CLB 12/28/2005
         // ooh, plots too. ev 7/7/06
-        // Jason's throwing in on this!  Won't have a `LINK_SHAPES` or `TURTLE_SHAPES` section, either --JAB 2/28/13
         if (sentinels[currentSentinel].equals("DRAWING") ||
             sentinels[currentSentinel].equals("LINKS") ||
             sentinels[currentSentinel].equals("OUTPUT") ||
             sentinels[currentSentinel].equals("PLOTS") ||
-            sentinels[currentSentinel].equals("EXTENSIONS") ||
-            sentinels[currentSentinel].equals("LINK_SHAPES") ||
-            sentinels[currentSentinel].equals("TURTLE_SHAPES")) {
+            sentinels[currentSentinel].equals("EXTENSIONS")) {
           currentSentinel++;
           return false;
         }
@@ -1310,7 +1236,10 @@ public strictfp class Importer
       // changing the rules a little it's possible
       // to use blank lines as subsection delimiters
       // if you choose
-      return !returnBlankLines && hasMoreLines(false);
+      if (returnBlankLines) {
+        return false;
+      }
+      return hasMoreLines(false);
     }
     try {
       nextLineFields = ImportLexer.lex(nextLine);
@@ -1330,10 +1259,10 @@ public strictfp class Importer
       currentSentinel++;
       return false;
     } else {
-      if (anotherSentinelEquals(nextLineFields[0])) {
+      if (anotherSentinelEquals(nextLineFields[0].toUpperCase())) {
         // only throw an error if we are still in the required sections
         // phase of the import file
-        if (requiredSections.contains(currentSentinel)) {
+        if (currentSentinel < REQUIRED_SECTIONS) {
           String abortingError = "The agents are in the wrong order in the import file. " +
               "The global variables should be first, followed by the turtles, " +
               "followed by the patches.  Found " + nextLineFields[0] +

@@ -8,10 +8,6 @@
 "TURTLES"
 "who","color","heading","xcor","ycor","shape","label","label-color","breed","hidden?","size","pen-size","pen-mode"
 
-TURTLE_SHAPES
-"turtles"
-"default"
-
 "GLOBALS"
 "min-pxcor","max-pxcor","min-pycor","max-pycor","perspective","subject","nextIndex","nextLinkIndex","directed-links",
 "-16","16","-16","16","0","nobody","0","0","""NEITHER"""
@@ -1111,10 +1107,6 @@ TURTLE_SHAPES
 "LINKS"
 "who","color","end1","end2","label","label-color","hidden?","breed","thickness"
 
-
-LINK_SHAPES
-"links"
-"default"
 
 "PLOTS"
 ""

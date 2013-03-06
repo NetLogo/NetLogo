@@ -12,10 +12,6 @@
 "TURTLES"
 "who","color","heading","xcor","ycor","shape","label","label-color","breed","hidden?","size","pen-size","pen-mode"
 
-TURTLE_SHAPES
-"turtles"
-"default"
-
 "PATCHES"
 "pxcor","pycor","pcolor","plabel","plabel-color"
 "-16","16","0","""""","9.9"
@@ -1111,10 +1107,6 @@ TURTLE_SHAPES
 "LINKS"
 "who","color","end1","end2","label","label-color","hidden?","breed","thickness"
 
-
-LINK_SHAPES
-"links"
-"default"
 
 "PLOTS"
 ""

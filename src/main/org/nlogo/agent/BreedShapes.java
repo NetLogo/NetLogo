@@ -28,10 +28,6 @@ public strictfp class BreedShapes {
     this.genericBreedName = genericBreedName;
   }
 
-  public Map<String, String> getShapes() {
-    return new HashMap<String, String>(shapes);
-  }
-
   public void setUpBreedShapes(boolean clear, Map<String, Object> breeds) {
     synchronized (lock) {
       if (clear || shapes == null) {

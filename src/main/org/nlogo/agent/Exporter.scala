@@ -21,10 +21,8 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     exportGlobals()
     if(full) {
       exportTurtles()
-      exportDefaultTurtleShapes()
       exportPatches()
       exportLinks()
-      exportDefaultLinkShapes()
     }
   }
 
@@ -204,25 +202,6 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
       println()
     }
     println()
-  }
-
-  private def exportDefaultTurtleShapes() {
-    exportDefaultShapes("TURTLE", world.turtleBreedShapes)
-  }
-
-  private def exportDefaultLinkShapes() {
-    exportDefaultShapes("LINK", world.linkBreedShapes)
-  }
-
-  private def exportDefaultShapes(agentTypeName: String, shapes: BreedShapes) {
-
-    val (keysRow, valuesRow) = csv.generateMapRows(shapes.getShapes.asScala.toMap)
-
-    println(agentTypeName.toUpperCase + "_SHAPES")
-    println(keysRow.toLowerCase)
-    println(valuesRow)
-    println()
-
   }
 
   protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]) {

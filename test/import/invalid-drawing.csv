@@ -13,10 +13,6 @@
 "who","color","heading","xcor","ycor","shape","label","label-color","breed","hidden?","size","pen-size","pen-mode"
 "0","5.0","0.0","0.0","3.0","""default""","","9.9999","{all-turtles}","false","1.0","1.0","""down"""
 
-TURTLE_SHAPES
-"turtles"
-"default"
-
 "PATCHES"
 "pxcor","pycor","pcolor","plabel","plabel-color"
 "-5","5","0.0","","9.9999"

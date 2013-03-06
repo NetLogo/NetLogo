@@ -470,7 +470,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
                   + "be ignored for this section.")(
                   errorDetails)
               case 1 =>
-                expect("Error Importing at Line 58: There are a total of "
+                expect("Error Importing at Line 54: There are a total of "
                   + "5 Patch variables declared in this model "
                   + "(including built-in variables).  The import-world "
                   + "file has at least one agent in the PATCHES section "

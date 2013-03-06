@@ -64,9 +64,4 @@ class CSV(dump: Any => String) {
     v.asScala.map(encode(_).toLowerCase).mkString(",")
   }
 
-  def generateMapRows(map: Map[String, String]): (String, String) = {
-    def rowify(xs: Iterable[String]) = xs.map(encode(_).toLowerCase).mkString(",")
-    (rowify(map.keys), rowify(map.values))
-  }
-
 }
