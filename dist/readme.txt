@@ -76,7 +76,7 @@ Northwestern University, Evanston, IL.
 For HubNet, cite: Wilensky, U. & Stroup, W., 1999. HubNet.
 http://ccl.northwestern.edu/netlogo/hubnet.html. Center for
 Connected Learning and Computer-Based Modeling, Northwestern
-University. Evanston, IL.
+Institute on Complex Systems, Northwestern University. Evanston, IL.
 
 For models in the Models Library, the correct citation is included in
 the "Credits and References" section of each model's Info tab.
