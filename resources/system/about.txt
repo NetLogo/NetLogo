@@ -12,9 +12,9 @@ The CCL gratefully acknowledges almost two decades of support for our NetLogo wo
 
 If you use or refer to NetLogo, HubNet or a model from the NetLogo models library in a publication, we ask that you cite it. The correct citations are:
 
-For NetLogo: Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern Institute on Complex Systems, Northwestern University, Evanston, IL.
+For NetLogo: Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-For HubNet: Wilensky, U. & Stroup, W., 1999. HubNet. http://ccl.northwestern.edu/netlogo/hubnet.html. Center for Connected Learning and Computer-Based Modeling, Northwestern Institute on Complex Systems, Northwestern University. Evanston, IL.
+For HubNet: Wilensky, U. & Stroup, W., 1999. HubNet. http://ccl.northwestern.edu/netlogo/hubnet.html. Center for Connected Learning and Computer-Based Modeling, Northwestern University. Evanston, IL.
 
 For models in the Models Library, the correct citation is included in the "Credits and References" section of each model's Info tab.
 
