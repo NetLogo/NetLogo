@@ -46,6 +46,7 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
           + "Please cite as:<br>"
           + "Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>"
           + "Center for Connected Learning and Computer-Based Modeling,<br>"
+          + "Northwestern Institute on Complex Systems,<br>"
           + "Northwestern University. Evanston, IL."
           + "</center> </html>"
        )
