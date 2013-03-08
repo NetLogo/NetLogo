@@ -17,14 +17,14 @@ public class Variation implements Serializable {
     public String name;
     public String trait;
     public String value;
-    public int number;
+    public int percent;
     public String color;
 
-    public Variation(String trait, String name, String value, int number) {
+    public Variation(String trait, String name, String value, int percent) {
         this.trait = trait;
         this.name = name;
         this.value = value;
-        this.number = number;
+        this.percent = percent;
         color = "gray";
     }
 }

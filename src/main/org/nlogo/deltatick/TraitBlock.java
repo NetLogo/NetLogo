@@ -34,13 +34,13 @@ public strictfp class TraitBlock
 {
     JTextField textName;
     ArrayList<String> varList;
-    ArrayList<String> numList;
     LinkedList<Variation> variationList = new LinkedList<Variation>();
     String breedName;
     String traitName;
     JLabel name = new JLabel();
 
     transient Trait trait;
+    transient TraitState traitState;
     transient Frame parentFrame;
     Variation variation;
     JList TraitsList;
@@ -52,8 +52,9 @@ public strictfp class TraitBlock
     ColorButton colorButton = new ColorButton(parentFrame, this);
     VariationDropDown dropdownList;
 
-    JPanel rectPanel;
+    JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
+    JLabel rectPanelLabel = new JLabel();
 
     //variables for second constructor
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
@@ -64,7 +65,35 @@ public strictfp class TraitBlock
     HashMap<String, Color> varColor = new HashMap<String, Color>();
 
 
+    public TraitBlock (BreedBlock breedBlock, TraitState traitState) {//, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
+        super (traitState.getNameTrait(), Color.lightGray);
+        flavors = new DataFlavor[]{
+                DataFlavor.stringFlavor,
+                traitBlockFlavor,
+                CodeBlock.codeBlockFlavor};
+        this.breedName = breedBlock.plural();
+        this.traitState = traitState;
+        this.variationHashMap = traitState.getVariationHashMap();//variationHashMap;
+        this.traitName = traitState.getNameTrait();
+        this.variationNamesValues = traitState.getVariationsValuesList();//variationValues;
+        dropdownList = new VariationDropDown(traitState.getVariationsList(), this);
+        dropdownList.setEnabled(false);
+        java.util.List<Component> componentList = new ArrayList<Component>(2);
+        name.setText(" of " + breedBlock.plural());
+        componentList.add(name);
+        componentList.add(dropdownList);
+
+        int y = 0;
+        for (Component c : componentList) {
+          label.add(c);
+          y += c.getPreferredSize().getHeight();
+        }
+        label.setPreferredSize(new Dimension(100, y + 11));
+        //newLabel();
+        this.revalidate();
+    }
     // this constructor is called when traits are selected from the library
+    //not being used any more -March 5, 2013
     public TraitBlock (BreedBlock breedBlock, Trait trait, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues) {
         super(trait.getNameTrait(), Color.lightGray);
         flavors = new DataFlavor[]{
@@ -73,7 +102,6 @@ public strictfp class TraitBlock
                 CodeBlock.codeBlockFlavor};
         this.breedName = breedBlock.plural();
         this.trait = trait;
-        this.traitName = trait.getNameTrait();
         this.variationHashMap = variationHashMap;
         this.variationNamesValues = variationValues;
 
@@ -87,15 +115,13 @@ public strictfp class TraitBlock
         dropdownList.setEnabled(false);
         java.util.List<Component> componentList = new ArrayList<Component>(5);
         componentList.add(name); componentList.add(dropdownList);
-        //componentList.add(number);
-        int y = 0;
 
+        int y = 0;
         for (Component c : componentList) {
           label.add(c);
           y += c.getPreferredSize().getHeight();
         }
 
-        //label.add(colorButton);
         label.setPreferredSize(new Dimension(100, y + 11));
         newLabel();
         this.revalidate();
@@ -168,7 +194,7 @@ public strictfp class TraitBlock
     public void updateNumber() {
         String name = dropdownList.getSelectedItem().toString();
         Variation tmp = variationHashMap.get(name);
-        tmp.number = Integer.parseInt(number.getText());
+        tmp.percent = Integer.parseInt(number.getText());
         variationHashMap.put(name, tmp);
     }
 
@@ -187,6 +213,7 @@ public strictfp class TraitBlock
         String passBack = "";
         String variation = dropdownList.getSelectedVariation();
         String value = variationNamesValues.get(variation);
+                //traitState.getVariationsValuesList().get(variation);
         passBack += "if " + this.getTraitName() + " = " + value + " [\n";
         for (CodeBlock block : myBlocks) {
             passBack += block.unPackAsCode();
@@ -258,13 +285,12 @@ public strictfp class TraitBlock
 //        }
     }
 
-    public void addRect() {
-        rectPanel = new JPanel();
+    public void addRect(String text) {
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
-        JLabel label = new JLabel();
-        label.setText("Add blocks here");
-        rectPanel.add(label);
+        rectPanelLabel.setText(" ");
+        rectPanelLabel.setText(text);
+        rectPanel.add(rectPanelLabel);
         add(rectPanel);
     }
 

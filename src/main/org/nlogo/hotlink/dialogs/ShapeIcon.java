@@ -20,6 +20,7 @@ public class ShapeIcon implements javax.swing.Icon, Serializable {
 	DrawableShape shape;
     int size = 20;
     java.awt.Color bgColor = java.awt.Color.white;
+    java.awt.Color fgColor = org.nlogo.api.Color.getColor( (Double) 5.0 );
 
     public ShapeIcon( DrawableShape shape ) {
         super();
@@ -32,6 +33,7 @@ public class ShapeIcon implements javax.swing.Icon, Serializable {
 		super();
 		this.shape = shape;
         this.size = size;
+
 	}
 
 	public ShapeIcon( DrawableShape shape , int size , java.awt.Color color )
@@ -42,7 +44,7 @@ public class ShapeIcon implements javax.swing.Icon, Serializable {
         this.bgColor = color;
 	}
 
-	public ShapeIcon( DrawableShape shape , java.awt.Color color )
+    public ShapeIcon( DrawableShape shape , java.awt.Color color )
 	{
 		super();
 		this.shape = shape;
@@ -62,13 +64,16 @@ public class ShapeIcon implements javax.swing.Icon, Serializable {
 
 		shape.paint(
             new org.nlogo.api.Graphics2DWrapper( g2 ) ,
-			org.nlogo.api.Color.getColor( (Double) 5.0 ) ,
+			fgColor ,
 			x , 
             y ,
             size ,
             0
         );
-		
 	}
+
+    public void setColor ( java.awt.Color color ) {
+        fgColor = color;
+    }
 		
 }		

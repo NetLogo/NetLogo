@@ -1,55 +1,164 @@
 package org.nlogo.deltatick.reps;
 
-import com.objectplanet.chart.Chart;
-import com.objectplanet.chart.PieChart;
+import org.jfree.chart.*;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.nlogo.deltatick.TraitDisplay;
+import org.nlogo.deltatick.TraitPreview;
+import org.nlogo.deltatick.xml.Variation;
+import org.nlogo.headless.Shell;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
  * User: aditiwagh
- * Date: 2/25/13
- * Time: 11:05 AM
+ * Date: 2/26/13
+ * Time: 9:57 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Piechart {
+public class Piechart extends JPanel {
 
-    public Piechart() {
-        double[] sampleValues = new double[] {643,257,825,829,376};
-        //Color[] sampleColors = new Color[] {new Color(0x63639c), new Color(0x6363ff), new Color(0x639cff), new Color(0xc6c6c6), new Color(0x31319c)};
-        //Color[] colors = new Color[] {new Color(Black)};
-        String[] legendLabels = new String[] {"Monday","Tuesday","Wednesday","Thursday","Friday"};
-        initComponents();
+
+    HashMap<String, Double> selectedVariationsPerc = new HashMap<String, Double>();
+    String trait;
+    ChartPanel chartPanel;
+    JFreeChart chart;
+    DefaultPieDataset dataset;
+    TraitDisplay.PaintSupplier paintSupplier;
+
+//    public Piechart() {
+//        this.dummy = new HashMap<String, String>();
+//        this.trait = new String("");
+//        dataset = (DefaultPieDataset) createDataset();
+//        chart = createChart(dataset);
+//        chartPanel = new ChartPanel(chart);
+//        chartPanel.setVisible(false);
+//        chartPanel.setPreferredSize(new Dimension(200, 200));
+//        this.setVisible(false);
+//        this.validate();
+//    }
+//
+//    public Piechart(HashMap<String, String> map, String trait) {
+//        this.dummy = map;
+//        this.trait = trait;
+//        dataset = (DefaultPieDataset) createDataset();
+//        chart = createChart(dataset);
+//        chartPanel = new ChartPanel(chart);
+//        chartPanel.setPreferredSize(new Dimension(200, 200));
+//        this.setVisible(true);
+//        this.validate();
+//    }
+
+    public Piechart(String traitName, TraitDisplay.PaintSupplier paintSupplier) {
+        trait = traitName;
+        this.paintSupplier = paintSupplier;
+        dataset = new DefaultPieDataset();
+        selectedVariationsPerc = new HashMap<String, Double>();
+        dataset = (DefaultPieDataset) createDataset();
+        chart = createChart(dataset);
+
+        chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(250, 250));
+        this.setVisible(true);
+        this.validate();
     }
 
-        public void initComponents() {
-        PieChart chart = new PieChart();
-        chart.setTitleOn(true);
-        chart.setTitleOn(true);
-        chart.setTitle("Weekly Distribution");
-        chart.setFont("titleFont", new Font("Serif", Font.BOLD, 20));
-        //chart.setSampleCount(sampleValues.length);
-        //chart.setSampleColors(sampleColors);
-        //chart.setSampleValues(0, sampleValues);
-        chart.setValueLabelsOn(true);
-        chart.setValueLabelStyle(Chart.INSIDE);
-        chart.setFont("insideLabelFont", new Font("Serif", Font.BOLD, 14));
-        chart.setLegendOn(true);
-        //chart.setLegendLabels(legendLabels);
-        chart.setFont("legendFont", new Font("Serif", Font.PLAIN, 13));
-        //chart.setSliceSeperatorColor(Color);
-        //chart.setBackground(Color.white);
+    //used to be "static", changed it because i will have more than one dataset -Aditi (feb 27, 2013)?
+    private PieDataset createDataset() {
+        dataset.clear();
+        for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
+            dataset.setValue((String) entry.getKey(), (Double) entry.getValue());
+        }
 
-//        com.objectplanet.chart.NonFlickerPanel p = new com.objectplanet.chart.NonFlickerPanel(new BorderLayout());
-//        p.add("Center", chart);
-//        Frame f = new Frame();
-//        f.add("Center", p);
-//        f.setSize(450,320);
-//        f.show();
-
+//        for (Map.Entry<String, String> map : dummy.entrySet() ) {
+//            String variation = map.getKey();
+//            double perc = Double.parseDouble(map.getValue());
+//            selectedVariationsPerc.put(variation, perc);
+//            dataset.setValue(variation, perc);
+//        }
+        return dataset;
     }
 
+    // public static
+    private JFreeChart createChart(PieDataset dataset) {
+        //JFreeChart
+         chart = ChartFactory.createPieChart(
+            trait,  // chart title
+            dataset,             // data
+            //true,               // include legend
+            false,
+            true,
+            false
+        );
+
+        chart.setBorderVisible(false);
+        chart.setBackgroundPaint(Color.WHITE);
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setSectionOutlinesVisible(false);
+        plot.setIgnoreZeroValues(true);
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        plot.setNoDataMessage("No data available");
+        plot.setCircular(false);
+        plot.setLabelGap(0.02);
+        plot.setBackgroundPaint(Color.white);
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
+        plot.setShadowPaint(Color.WHITE);
+
+        paintSupplier.reset();
+        for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
+            plot.setSectionPaint((String) entry.getKey(), paintSupplier.getNextPaint());
+        }
+
+        // Set Colors
+
+        return chart;
     }
 
 
+    public JPanel getChartPanel() {
+        return chartPanel;
+    }
 
+    public void updateChart(String trait, HashMap<String, String> varPercent) {
+
+        this.selectedVariationsPerc.clear();
+        for(Map.Entry entry: varPercent.entrySet()) {
+            if ((int) Math.round(Double.parseDouble((String) entry.getValue())) > 0) {
+                selectedVariationsPerc.put((String) entry.getKey(), Double.parseDouble((String) entry.getValue()));
+            }
+        } // for
+
+
+        this.trait = trait;
+        PieDataset dataset = createDataset();
+
+        chart = createChart(dataset);
+//        chart.setTitle(this.trait);
+//        ((PiePlot) chart.getPlot()).setDataset(dataset);
+
+        chartPanel.setChart(chart);
+        //chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(250, 250));
+        //chartPanel.setBackground(Color.white);
+
+        if (varPercent.size() > 0) {
+            chartPanel.setVisible(true);
+        }
+        else {
+            chartPanel.setVisible(false);
+        }
+
+        chartPanel.revalidate();
+
+        this.setVisible(true);
+        this.validate();
+    }
+}

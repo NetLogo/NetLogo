@@ -85,6 +85,34 @@ public strictfp class PlotBlock
         return new java.awt.Dimension( 250 , 275 );
     }                  */
 
+    public void addBlock (CodeBlock block) {
+        System.out.println(myBlocks.size());
+        if (myBlocks.size() >= 1) {
+            String message = "You can only use one block here";
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            myBlocks.add(block);
+            this.add(block);
+            block.enableInputs();
+
+            block.showRemoveButton();
+            this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+            block.setMyParent(this);
+            block.doLayout();
+            block.validate();
+            block.repaint();
+
+            doLayout();
+            validate();
+            repaint();
+
+            this.getParent().doLayout();
+            this.getParent().validate();
+            this.getParent().repaint();
+        }
+    }
+
     public List<QuantityBlock> getMyBlocks() {
         List<QuantityBlock> blocks = new ArrayList<QuantityBlock>();
 
@@ -176,5 +204,4 @@ public strictfp class PlotBlock
     public void getPlotPen () {
         netLogoPlot.createPlotPen(plotNameField.getText(), false);
     }
-
 }

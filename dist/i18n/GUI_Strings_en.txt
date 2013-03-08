@@ -97,7 +97,7 @@ menu.help.netLogoDictionary = NetLogo Dictionary
 menu.help.netLogoUsersGroup = NetLogo Users Group
 menu.help.donate = Donate
 
-tabs.run = Interface
+tabs.run = Run your Model
 tabs.run.editButton = Edit
 tabs.run.editButton.tooltip = edit selected interface items
 tabs.run.deleteButton = Delete

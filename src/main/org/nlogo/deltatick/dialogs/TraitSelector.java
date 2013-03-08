@@ -152,7 +152,7 @@ public class TraitSelector extends JDialog {
                                 row[2] = new Boolean(false);
                                 //row[2] = new JRadioButton("add");
                                 //row[2] = new String(var.color);
-                                String s = String.valueOf(var.number);
+                                String s = String.valueOf(var.percent);
                                 row[3] = new String(s + "%");
                                 tempTableData.add(row);
 

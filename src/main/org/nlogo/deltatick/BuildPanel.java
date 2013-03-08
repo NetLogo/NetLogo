@@ -39,8 +39,8 @@ public class BuildPanel
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
-    ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
-    JPanel rectPanel = new JPanel();
+    //ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
+    JLabel label;
 
 
     //DataFlavor"[]" is an array - A. (sept 8)
@@ -258,9 +258,6 @@ public class BuildPanel
         return bgInfo;
     }
 
-    public ModelBackgroundInfo2 getBgInfo2() {
-        return bgInfo2;
-    }
 
     // find method in DeltaTicktab to add actors -a.
     public void addBreed(BreedBlock block) {
@@ -542,21 +539,22 @@ public class BuildPanel
         return tmp;
     }
 
-    public void addRect() {
-        rectPanel = new JPanel();
-        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-        rectPanel.setLocation(0, 0);
+    public void addRect(String text) {
+        label = new JLabel();
+        label.setText(text);
+        label.setBackground(Color.GRAY);
+        label.setBounds(20, 40, 350, 30);
+//        label.setBounds(20,
+//                30,
+//                this.getWidth() - 40,
+//                40);
+        add(label);
+        validate();
 
-        rectPanel.setPreferredSize(new Dimension(40, 40));
-        JLabel label = new JLabel();
-        label.setText("Add a species to start building your model!");
-
-        rectPanel.add(label);
-        add(rectPanel);
 
     }
 
     public void removeRect() {
-        this.remove(rectPanel);
+        this.remove(label);
     }
 }

@@ -1,10 +1,13 @@
 package org.nlogo.deltatick;
 
+import org.nlogo.agent.TreeAgentSet;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +40,16 @@ public class SpeciesInspector {
 
     public void addToSelectedTraitsList(Trait trait) {
         selectedTraitsList.add(trait);
+    }
+
+    public void removeTrait(String traitName) {
+        Iterator it = selectedTraitsList.iterator();
+        while(it.hasNext()) {
+            Trait t = (Trait) it.next();
+            if (traitName.equalsIgnoreCase(t.getNameTrait())) {
+                it.remove();
+            }
+        }
     }
 
     public void addtoSelectedVariations(Trait string, Variation variation) {

@@ -19,16 +19,22 @@ public class Trait {
     String traitName;
     String setupCode;
     String setupReporter;
-    HashMap<String, String> variationsValuesList = new HashMap<String,String>();
-    ArrayList<String> variationsList = new ArrayList<String>();
-    HashMap<String, String> variationsNumbersList = new HashMap<String, String>();
-    HashMap<String, String> valuesNumbersList = new HashMap<String, String>();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
 
 
     public Trait() {
 
     }
+
+    // Copy Constructor
+    // Copy all members
+    public Trait(Trait trait) {
+        traitName = new String(trait.traitName);
+        setupCode = new String(trait.setupCode);
+        setupReporter = new String(trait.setupReporter);
+        variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
+    }
+
     public Trait(Node traitNode) {
         traitName = traitNode.getAttributes().getNamedItem("name").getTextContent();
 
@@ -37,20 +43,13 @@ public class Trait {
             if (traitNodes.item(i).getNodeName() == "setupReporter") {
                 setupReporter = traitNodes.item(i).getTextContent();
             }
-
             if (traitNodes.item(i).getNodeName() == "variation") {
                 Node variationNode = traitNodes.item(i);
-                String trait = traitName;
                 String name = variationNode.getAttributes().getNamedItem("name").getTextContent();
                 String value = variationNode.getAttributes().getNamedItem("value").getTextContent();
                 String setupNumber = variationNode.getAttributes().getNamedItem("setupNumber").getTextContent();
-                Variation variation = new Variation(trait, name, value, Integer.parseInt(setupNumber));
-
+                Variation variation = new Variation(traitName, name, value, Integer.parseInt(setupNumber));
                 variationHashMap.put(name, variation);
-                variationsValuesList.put(name, value);
-                variationsNumbersList.put(name, setupNumber);
-                valuesNumbersList.put(value, setupNumber);
-                variationsList.add(name);
             }
 
             if (traitNodes.item(i).getNodeName() == "setupCode") {
@@ -76,18 +75,33 @@ public class Trait {
     }
 
     public HashMap<String, String> getVariationsValuesList() {
+        HashMap<String, String> variationsValuesList = new HashMap<String, String>();
+        for (Variation variation : variationHashMap.values()) {
+            variationsValuesList.put(variation.name, variation.value);
+        }
         return variationsValuesList;
     }
 
     public HashMap<String, String> getVariationsNumbersList() {
-        return variationsNumbersList;
+        HashMap<String, String> variationsPercentList = new HashMap<String, String>();
+        for (Variation variation : variationHashMap.values()) {
+            String percent = Integer.toString(variation.percent);
+            variationsPercentList.put(variation.name, percent);
+        }
+        return variationsPercentList;
     }
 
-    public HashMap<String, String> getValuesNumbersList() {
-        return valuesNumbersList;
+    public HashMap<String, String> getValuesPercentList() {
+        HashMap<String, String> valuesPercentList = new HashMap<String, String>();
+        for (Variation variation : variationHashMap.values()) {
+            String percent = Integer.toString(variation.percent);
+            valuesPercentList.put(variation.value, percent);
+        }
+        return valuesPercentList;
     }
 
     public ArrayList<String> getVariationsList() {
+        ArrayList<String> variationsList = new ArrayList<String>(variationHashMap.keySet());
         return variationsList;
     }
 }

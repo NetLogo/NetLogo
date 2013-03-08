@@ -140,5 +140,8 @@ public class LibraryHolder extends JPanel {
         //traits.clear();
 
     }
+    public List<TraitBlock> getTraitBlocks() {
+        return traits;
+    }
 
 }

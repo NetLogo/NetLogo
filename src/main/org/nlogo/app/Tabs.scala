@@ -36,9 +36,11 @@ class Tabs(val workspace: GUIWorkspace,
     addTab("Build", deltaTickTab)
     //addTab("Record", plotTab)
     // addTab(I18N.gui.get("tabs.info"), infoTab)
-    addTab(I18N.gui.get("tabs.code"), proceduresTab)
-    addTab(I18N.gui.get("tabs.run"), interfaceTab)
+    //addTab(I18N.gui.get("tabs.run"), interfaceTab)    // commented out to change name of Interface panel (Aditi, March 5, 2013)
+    addTab("Run your model", interfaceTab)
     interfaceTab.setEnabled(false)
+    addTab(I18N.gui.get("tabs.code"), proceduresTab)
+
     for((name, tab) <- moreTabs)
       addTab(name, tab)
     tabsMenu = new org.nlogo.swing.TabsMenu(I18N.gui.get("menu.tabs"), this)

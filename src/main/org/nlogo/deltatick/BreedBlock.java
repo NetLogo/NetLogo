@@ -4,6 +4,7 @@ import com.sun.java.swing.plaf.nimbus.LoweredBorder;
 import org.nlogo.api.Shape;
 import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
+import org.nlogo.deltatick.dialogs.Warning;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -49,7 +50,7 @@ public strictfp class BreedBlock
     public transient JButton inspectSpeciesButton;
     transient PrettyInput number;
     transient PrettyInput plural;
-    HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
+    // HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
     String maxAge;
@@ -62,6 +63,7 @@ public strictfp class BreedBlock
     transient String variation;
     HashSet<String> myUsedTraits = new HashSet<String>();
     boolean hasSpeciesInspector;
+    ArrayList<String> traitLabels = new ArrayList<String>();
 
     JPanel rectPanel;
     boolean removedRectPanel = false;
@@ -121,6 +123,10 @@ public strictfp class BreedBlock
     }
 
     public void addBlock(CodeBlock block) {
+        if (block instanceof TraitBlock) {
+            addTraitBlock(block);
+        }
+        else {
         myBlocks.add(block);
         this.add(block);
         block.enableInputs();
@@ -136,15 +142,10 @@ public strictfp class BreedBlock
         block.doLayout();
         block.validate();
         block.repaint();
-        if (block instanceof TraitBlock) {
-            myUsedTraits.add(((TraitBlock) block).getTraitName());
-            //((TraitBlock) block).makeNumberActive();
-            ((TraitBlock) block).enableDropDown();
-            ((TraitBlock) block).colorButton.setEnabled(true);
-            ((TraitBlock) block).addRect();
-
-        }
-        else if (block instanceof BehaviorBlock) {
+//        if (block instanceof TraitBlock) {
+//            addTraitBlock(block);
+//        }
+        if (block instanceof BehaviorBlock) {
             String tmp = ((BehaviorBlock) block).getBehaviorInputName();
             addBehaviorInputToList(tmp);
             String s = ((BehaviorBlock) block).getAgentInputName();
@@ -165,7 +166,41 @@ public strictfp class BreedBlock
         this.getParent().validate();
         this.getParent().repaint();
     }
+    }
 
+
+    public void addTraitBlock(CodeBlock block) {
+        if (((TraitBlock) block).breedName.equalsIgnoreCase(this.plural()) == false) {// if traitBlock is put in a breedBlock that it's not defined for
+
+            String message = new String(((TraitBlock) block).getTraitName() + " is not a trait of " + this.getName());
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            myUsedTraits.add(((TraitBlock) block).getTraitName());
+            ((TraitBlock) block).enableDropDown();
+            ((TraitBlock) block).colorButton.setEnabled(true);
+            ((TraitBlock) block).addRect("Add blocks here");
+            myBlocks.add(block);
+            this.add(block);
+            block.enableInputs();
+            block.showRemoveButton();
+            this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+            block.setMyParent(this);
+            block.doLayout();
+            block.validate();
+            block.repaint();
+            if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
+            remove(rectPanel);
+            removedRectPanel = true;
+            }
+            doLayout();
+            validate();
+            repaint();
+            this.getParent().doLayout();
+            this.getParent().validate();
+            this.getParent().repaint();
+        }
+    }
 
     //TODO: Figure out how breed declaration always shows up first in code
     public String declareBreed() {
@@ -211,51 +246,91 @@ public strictfp class BreedBlock
             code += "]\n";
             code += setBreedShape();
             int i;
-            for (CodeBlock block : myBlocks) {
-                if (block instanceof TraitBlock) {
-                    String activeVariation = ((TraitBlock) block).getActiveVariation();
-                    HashMap<String, Variation> tmpHashMap = ((TraitBlock) block).getVariationHashMap();
-                    if (breedVariationHashMap.isEmpty()) {
-                        breedVariationHashMap.putAll(tmpHashMap);
-                    }
-                    else {
-                        breedVariationHashMap.put(activeVariation, tmpHashMap.get(activeVariation));
-                    }
-                }
-            }
+//            for (CodeBlock block : myBlocks) {
+//                if (block instanceof TraitBlock) {
+//
+//
+//                    String activeVariation = ((TraitBlock) block).getActiveVariation();
+//                    HashMap<String, Variation> tmpHashMap = ((TraitBlock) block).getVariationHashMap();
+//                    if (breedVariationHashMap.isEmpty()) {
+//                        breedVariationHashMap.putAll(tmpHashMap);
+//                    }
+//                    else {
+//                        breedVariationHashMap.put(activeVariation, tmpHashMap.get(activeVariation));
+//                    }
+//                }
+//            }
             code += setupTrait();
+            code += setupTraitLabels();
         }
         return code;
     }
 
     public String setupTrait() {
         String code = "";
+        ArrayList<String> setTraits = new ArrayList<String>();  // to make sure setupTrait is called only once
 
-        for (String traitName : myUsedTraits) {
+        //for (String traitName : myUsedTraits) {
+        for (CodeBlock block: myBlocks) {
+            if (block instanceof TraitBlock) {
+                String traitName =  ((TraitBlock) block).getTraitName();
+                if (setTraits.contains(traitName) != true) {
             code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
+                    setTraits.add(traitName);
 
             int i = 0;
             int startValue = 0;
             int endValue = 0;
 
-            for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
+            //for (Map.Entry<String, Variation> entry : breedVariationHashMap.entrySet()) {
+            for (Map.Entry<String, Variation> entry : ((TraitBlock) block).getVariationHashMap().entrySet()) {
                 String variationType = entry.getKey();
                 Variation variation = entry.getValue();
 
-                int k = variation.number;
-                endValue = startValue + k;
+                // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
+                //int k = variation.percent;
+                int k =  (int) Math.round(((double) variation.percent/100) * Double.parseDouble(number.getText()));
+
+                endValue = startValue + k - 1;
+
+                if (endValue > (Integer.parseInt(number.getText()) - 1)) {
+                    endValue = Integer.parseInt(number.getText()) - 1;
+                }
 
                 code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
                         " " + startValue + " " + endValue + "\n";
                 code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
-                code += " set color " + variation.color + " ]] \n";
+                //code += " set color " + variation.color + " ]] \n";    //commented out because variations not differ by color now - march 6, 2013
+                code += " ]] \n";
 
                 i++;
-                startValue = endValue;
+                startValue = endValue + 1;
             }
+
+            }
+            }// if
         }
     return code;
 
+    }
+
+    public String setupTraitLabels() {
+        String code = "";
+        //int i = 0;
+        if (traitLabels.size() >= 1) {
+            code += "ask " + plural() + "[";
+            code += "set label (word ";
+            for (int i = 0; i < traitLabels.size(); i++) {
+                code += traitLabels.get(i);
+                if (traitLabels.size() > 1) {
+//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+                    code += "\"-\"";
+                    i--;
+                }
+            }
+            code += " )] \n";
+        }
+         return code;
     }
 
     // moves Update Code from XML file to procedures tab - A. (feb 14., 2012)
@@ -294,7 +369,6 @@ public strictfp class BreedBlock
         return maxAge;
     }
 
-
     public void setMaxEnergy(String energy) {
         maxEnergy = energy;
     }
@@ -305,6 +379,14 @@ public strictfp class BreedBlock
     public void setColorName(String color) {
         System.out.println("BreedBlock " + colorName);
         colorName = color;
+    }
+
+    public void addToTraitLabels(String trait) {
+        traitLabels.add(trait);
+    }
+
+    public ArrayList<String> getTraitLabels() {
+        return traitLabels;
     }
 
 
@@ -424,6 +506,7 @@ public strictfp class BreedBlock
         BreedBlock myParent;
 
         public InspectSpeciesButton(BreedBlock bBlock) {
+            this.myParent = bBlock;
             setPreferredSize(new Dimension(30, 30));
             try {
             Image img = ImageIO.read(getClass().getResource("/images/magnify.gif"));
@@ -434,8 +517,7 @@ public strictfp class BreedBlock
             setForeground(java.awt.Color.gray);
             setBorderPainted(true);
             setMargin(new java.awt.Insets(1, 1, 1, 1));
-            setToolTipText("Inspect species");
-            this.myParent = bBlock;
+            setToolTipText("Edit species");
         }
     }
 
@@ -443,8 +525,12 @@ public strictfp class BreedBlock
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         ShapeSelector myShapeSelector = new ShapeSelector(parentFrame, allShapes(), this);
         myShapeSelector.setVisible(true);
-        breedShapeButton.setIcon(new ShapeIcon(myShapeSelector.getShape()));
-        breedShape = myShapeSelector.getChosenShape();
+        if (myShapeSelector.getChosenValue() >= 0) {
+            ShapeIcon shapeIcon = new ShapeIcon(myShapeSelector.getShape());
+            shapeIcon.setColor(myShapeSelector.getSelectedColor());
+            breedShapeButton.setIcon(shapeIcon);
+            breedShape = myShapeSelector.getChosenShape();
+        }
     }
 
     // getting shapes from NL -a.
@@ -544,6 +630,7 @@ public strictfp class BreedBlock
 
     public void removeTraitBlock(TraitBlock traitBlock) {
         remove(traitBlock);
+//        breedVariationHashMap.clear(); // Added March 2, 2013
     }
 
     public boolean getHasSpeciesInspector () {

@@ -13,6 +13,7 @@ import org.nlogo.window.*;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPen;
 import org.nlogo.plot.PlotManager;
+import org.parboiled.errors.ActionError;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
 import javax.swing.*;
@@ -59,15 +60,13 @@ public class DeltaTickTab
     SpeciesInspectorPanel speciesInspectorPanel;
     HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
 
-    JPanel libraryPanel2;
 
     LibraryHolder libraryHolder;
 
     JButton addBreed;
-    //JButton addTraits;
     JButton addPlot;
     JButton addHisto;
-    JButton addEnvt;
+    //JButton addEnvt;
     JButton buildBlock;
     JButton Not;
 
@@ -95,8 +94,9 @@ public class DeltaTickTab
     //constructor -A. (sept 8)
     public DeltaTickTab( GUIWorkspace workspace , ProceduresTab pt, InterfacePanel interfacePanel) {
         this.workspace = workspace;
-        this.pt = pt;
         this.interfacePanel = interfacePanel;
+        this.pt = pt;
+
 
         this.plotManager = workspace.plotManager();
         
@@ -125,9 +125,6 @@ public class DeltaTickTab
         libraryPanel = new JPanel();
         //libraryPanel.setLayout(new GridLayout(10,1));        // (int rows, int columns)
         libraryPanel.setLayout( new BoxLayout (libraryPanel, BoxLayout.Y_AXIS));
-
-        libraryPanel2 = new JPanel();
-        libraryPanel2.setLayout(new GridLayout(3, 1));
 
         //second line is making the entire buildPanel ready for stuff to be dragged -A. (sept 8)
         buildPanel = new BuildPanel( workspace );
@@ -172,9 +169,8 @@ public class DeltaTickTab
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = GridBagConstraints.VERTICAL;
-        contentPanel.add(libraryPanel2);
-        libraryPanel2.setForeground(Color.green);
-        libraryPanel2.setVisible(true);
+
+        buildPanel.addRect("Click on Load behavior library to get started!");
 
         //contentPanel.pack();
 
@@ -220,10 +216,11 @@ public class DeltaTickTab
                     addPlot.setEnabled(true);
                     addHisto.setEnabled(true);
                     addBreed.setEnabled(true);
-                    //addTraits.setEnabled(false);
-                    addEnvt.setEnabled(true);
+                    buildPanel.removeRect();
                     if (buildPanel.getMyBreeds().size() == 0) {
-                        //TODO: Add note saying "Add species to start building model!"
+                        buildPanel.addRect("Click Add species to start building your model!");
+                        buildPanel.repaint();
+                        buildPanel.validate();
                     }
                     deltaTickTab.contentPanel.validate();
                     count ++;
@@ -308,14 +305,15 @@ public class DeltaTickTab
             }
             else {
                 jFrame = new JFrame("Species Inspector");
-                jFrame.setPreferredSize(new Dimension(650, 500));
+                jFrame.setPreferredSize(new Dimension(1000, 700));
                 speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
 
                 //speciesInspectorPanelMap.put(myParent.plural(), speciesInspectorPanel);
                 speciesInspectorPanelMap.put(myParent, speciesInspectorPanel);
                 speciesInspectorPanel.addPanels(jFrame.getContentPane());
-                speciesInspectorPanel.populateTraitTabs();
+                //speciesInspectorPanel.populateTraitTabs();
                 speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
+                speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(myParent));
                 myParent.setHasSpeciesInspector(true);
                 jFrame.pack();
                 jFrame.setVisible(true);
@@ -351,19 +349,62 @@ public class DeltaTickTab
                 libraryHolder.removeTraitBlock(tBlock);
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+                speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
+                System.out.println("DTT ln 357 " + tBlock.getTraitName() + " " + tBlock.getBreedName());
             }
 
-            for (Trait trait : speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
-                TraitBlock newTraitBlock;
-                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
-                newTraitBlock = new TraitBlock(myParent, trait, trait.getVariationHashMap(), trait.getVariationsValuesList());
-                userInput.addTraitAndVariations(myParent.getName(), trait.getNameTrait(), trait.getVariationsList());
-                buildPanel.addTrait(newTraitBlock);
-                libraryHolder.addTraittoTab(newTraitBlock, buildPanel.getMyTraits().size());
-                deltaTickTab.addDragSource(newTraitBlock);
-                new TraitDropTarget(newTraitBlock);
+            for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
+                TraitBlock traitBlock;
+                traitBlock = new TraitBlock(myParent, traitState);//, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
+                userInput.addTraitAndVariations(myParent.getName(), traitState.getNameTrait(), traitState.getVariationsList());
+                buildPanel.addTrait(traitBlock);
+                libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
+                deltaTickTab.addDragSource(traitBlock);
+                traitBlock.addRect("Drag to Species Block");
+                new TraitDropTarget(traitBlock);
                 contentPanel.validate();
+
             }
+            myParent.getTraitLabels().clear();
+            for (Map.Entry<String, JCheckBox> map : speciesInspectorPanel.getTraitPreview().getLabelPanel().getCheckBoxes().entrySet()) {
+                String trait = map.getKey();
+                JCheckBox checkBox = map.getValue();
+                if (checkBox.isSelected()) {
+                    myParent.addToTraitLabels(trait);
+                }
+//                else if (checkBox.isSelected() == false) {
+//                    if (myParent.getTraitLabels().contains(trait)) {
+//                        myParent.getTraitLabels().remove(trait);
+//                        System.out.println("deltatick tab " + trait + " " + myParent.getTraitLabels().size());
+//                    }
+//                }
+            }
+
+//            for (Trait trait : speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
+//                TraitBlock newTraitBlock;
+//                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
+//
+//                newTraitBlock = new TraitBlock(myParent, trait, trait.getVariationHashMap(), trait.getVariationsValuesList());
+//                userInput.addTraitAndVariations(myParent.getName(), trait.getNameTrait(), trait.getVariationsList());
+//                buildPanel.addTrait(newTraitBlock);
+//                libraryHolder.addTraittoTab(newTraitBlock, buildPanel.getMyTraits().size());
+//                deltaTickTab.addDragSource(newTraitBlock);
+//                new TraitDropTarget(newTraitBlock);
+//                contentPanel.validate();
+//            }
+        }
+    }
+
+    class SpeciesPanelCancelListener implements ActionListener {
+        BreedBlock myParent;
+
+        SpeciesPanelCancelListener(BreedBlock myParent) {
+            this.myParent = myParent;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
 
@@ -386,6 +427,9 @@ public class DeltaTickTab
                 addBreed.setEnabled(true);
                 clearPlots();
                 variationSelector.getVariationList().clear();
+                for (TraitBlock tBlock : libraryHolder.getTraitBlocks()) {
+                    libraryHolder.removeTraitBlock(tBlock);
+                }
                 contentPanel.repaint();
         }
     };
@@ -865,9 +909,9 @@ public class DeltaTickTab
                 addHisto = new JButton( addHistoAction );
                 addHisto.setEnabled(false);
                 this.add(addHisto) ;
-                addEnvt = new JButton ( chgEnvtAction );
-                addEnvt.setEnabled(false);
-                this.add(addEnvt) ;
+                //addEnvt = new JButton ( chgEnvtAction );
+                //addEnvt.setEnabled(false);
+                //this.add(addEnvt) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 buildBlock = new JButton( toBuildBlock );
                 this.add( buildBlock );
@@ -883,10 +927,6 @@ public class DeltaTickTab
     //(Feb 16, 2012)
     public JPanel getLibraryPanel() {
         return libraryPanel;
-    }
-
-    public JPanel getLibraryPanel2() {
-        return libraryPanel2;
     }
 
     public BuildPanel getBuildPanel() {
@@ -947,14 +987,6 @@ public class DeltaTickTab
         libraryPanel.repaint();
     }
 
-    public void clearLibrary2() {
-        libraryPanel2.removeAll();
-        buildPanel.clear();
-        clearPlots();
-        buildPanel.getBgInfo().clear();
-        //breedTypeSelector.clear();
-        libraryPanel2.repaint();
-    }
 
     public void clearPlots() {
         workspace.plotManager().forgetAll();

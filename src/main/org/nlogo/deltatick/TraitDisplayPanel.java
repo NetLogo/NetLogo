@@ -21,6 +21,9 @@ import java.util.Map;
  * Time: 9:08 PM
  * To change this template use File | Settings | File Templates.
  */
+
+// Not in use any more
+
 public class TraitDisplayPanel extends JPanel {
     String traitName; //name of tab
     public static final int NUMBER_COLUMNS = 4;

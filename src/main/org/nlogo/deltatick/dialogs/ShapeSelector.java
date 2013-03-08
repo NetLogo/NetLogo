@@ -64,6 +64,7 @@ public class ShapeSelector
         }
         colorButton = new ColorButton(frame, shapeParser);
         colorButton.setVisible(false);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
 
@@ -181,6 +182,7 @@ public class ShapeSelector
     public String getSelectedColorName() {
         return colorButton.getSelectedColorName();
     }
+
 
 
 }

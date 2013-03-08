@@ -1,8 +1,6 @@
 package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.TraitSelector;
-import org.nlogo.deltatick.reps.Piechart;
-import org.nlogo.deltatick.reps.Piechart1;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
@@ -13,6 +11,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,23 +27,20 @@ public class SpeciesInspectorPanel extends JPanel {
     JPanel midPanel = new JPanel();
     JPanel sidePanel = new JPanel(true);
     JPanel bottomPanel = new JPanel();
-    JLabel lifeSpanLabel = new JLabel("What is the max age?"); //TODO add myParent.plural()
+    JLabel lifeSpanLabel = new JLabel();
     JTextField lifeSpanBlank = new JTextField();
     JLabel energyLabel = new JLabel("What is the max energy?"); //TODO add myParent.plural()
     JTextField energyBlank = new JTextField();
-    JButton cancelButton = new JButton("Cancel");
-    JButton okayButton = new JButton("Okay"); // placeholder button to test sending values - A. (Jan 22, 2013)
-    JButton addTrait = new JButton("add trait");
+    JButton cancelButton = new JButton("Cancel"); //actionListener in deltaticktab - March 2, 2013
+    JButton okayButton = new JButton("Okay"); // actionListener in deltaticktab -March 2, 2013
 
     JFrame myFrame;
-
-    JTabbedPane traitsTabbedPane;
-    TraitSelector traitSelector;
-    int countTabs = 1;
 
     SpeciesInspector speciesInspector = new SpeciesInspector();
     TraitPreview traitPreview;
     TraitDisplay traitDisplay = new TraitDisplay();
+    LabelPanel labelPanel;
+
 
     public SpeciesInspectorPanel(BreedBlock myParent, JFrame myFrame) {
         this.myParent = myParent;
@@ -52,7 +48,9 @@ public class SpeciesInspectorPanel extends JPanel {
         energyBlank.setMaximumSize(new Dimension(20, 30));
         lifeSpanBlank.setMaximumSize(new Dimension(20, 30));
         updateText();
-        activateButtons();
+        //activateButtons();
+
+
     }
 
     public void updateText() {
@@ -73,17 +71,17 @@ public class SpeciesInspectorPanel extends JPanel {
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(topPanel)
                         .addGroup(layout.createSequentialGroup()
-                        .addComponent(midPanel)
-                        .addComponent(sidePanel))
-                //.addComponent(bottomPanel)
+                                .addComponent(midPanel)
+                                .addComponent(sidePanel))
+                .addComponent(bottomPanel)
                 );
         layout.setVerticalGroup(
                 layout.createSequentialGroup()
                 .addComponent(topPanel)
                 .addGroup(layout.createParallelGroup()
-                .addComponent(midPanel)
-                .addComponent(sidePanel))
-                //.addComponent(bottomPanel)
+                        .addComponent(midPanel)
+                        .addComponent(sidePanel))
+                .addComponent(bottomPanel)
         );
         validate();
     }
@@ -96,6 +94,8 @@ public class SpeciesInspectorPanel extends JPanel {
         TitledBorder titleTopPanel;
         titleTopPanel = BorderFactory.createTitledBorder("Set up");
         topPanel.setBorder(titleTopPanel);
+
+        lifeSpanLabel.setText("How old do " + myParent.plural() + " live to be?");
 
         GroupLayout layout = new GroupLayout(topPanel);
         topPanel.setLayout(layout);
@@ -135,36 +135,41 @@ public class SpeciesInspectorPanel extends JPanel {
         TitledBorder titleSidePanel;
         titleSidePanel = BorderFactory.createTitledBorder("Display");
         sidePanel.setBorder(titleSidePanel);
-        traitDisplay = new TraitDisplay();
-        //traitDisplay.add((new Piechart1()).getChartPanel());
+        traitDisplay = new TraitDisplay(sidePanel, myFrame);
         sidePanel.add(traitDisplay);
         sidePanel.validate();
     }
 
     public void setupMidPanel() {
+        midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
+        midPanel.setPreferredSize(new Dimension(500, 200));
+
         TitledBorder titleMidPanel;
         titleMidPanel = BorderFactory.createTitledBorder("Preview Traits");
         midPanel.setBorder(titleMidPanel);
-        traitPreview = new TraitPreview(myParent.plural(), traitDisplay);
+        labelPanel = new LabelPanel();
+        TitledBorder titleLabelPanel;
+        titleLabelPanel = BorderFactory.createTitledBorder("Set Labels");
+
+        labelPanel.setBorder(titleLabelPanel);
+        traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
+        //labelPanel.initiComponents();
+
         midPanel.add(traitPreview);
+        midPanel.add(labelPanel);
         traitPreview.setTraits(myParent.getTraits());
+
+        midPanel.add(traitPreview);
         traitPreview.showMe();
+        midPanel.validate();
     }
 
     public void setupBottomPanel() {
-        TitledBorder titleBottomPanel;
-        Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-        titleBottomPanel = BorderFactory.createTitledBorder(loweredetched, "Traits");
-        bottomPanel.setBorder(titleBottomPanel);
-
         GroupLayout layout = new GroupLayout(bottomPanel);
         bottomPanel.setLayout(layout);
-        traitsTabbedPane = new JTabbedPane();
 
         layout.setVerticalGroup(
                 layout.createSequentialGroup()
-                .addComponent(addTrait)
-                .addComponent(traitsTabbedPane)
                 .addGap(10)
                 .addGroup(layout.createParallelGroup()
                 .addComponent(cancelButton)
@@ -173,48 +178,14 @@ public class SpeciesInspectorPanel extends JPanel {
 
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                .addComponent(addTrait)
-                .addComponent(traitsTabbedPane)
                 .addGroup(layout.createSequentialGroup()
-                	.addGap(165)
-                	.addComponent(cancelButton)
-                	.addGap(10)
-                	.addComponent(okayButton))
+                        .addGap(165)
+                        .addComponent(cancelButton)
+                        .addGap(10)
+                        .addComponent(okayButton))
         );
         layout.linkSize(SwingConstants.HORIZONTAL, cancelButton, okayButton);
         validate();
-
-        if (countTabs == 1) {
-            JPanel panel1 = new JPanel();
-        }
-    }
-
-    public void populateTraitTabs() {
-        for (Trait trait : speciesInspector.getSelectedTraitsList()) {
-            TraitDisplayPanel traitDisplayPanel = new TraitDisplayPanel(trait);
-        }
-    }
-
-    public void activateButtons() {
-        addTrait.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                traitSelector = new TraitSelector();
-                traitSelector.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                traitSelector.setTraits(myParent.getTraits());
-                traitSelector.showMe();
-                if (traitSelector.getIsTraitSelected() == true) {
-                speciesInspector.selectedTraitsList.add(traitSelector.getSelectedTrait());
-                TraitDisplayPanel traitDisplayPanel = new TraitDisplayPanel(traitSelector.getSelectedTrait());
-                traitDisplayPanel.setPreferredSize(new Dimension(500,150));
-                traitsTabbedPane.addTab(traitSelector.getSelectedTrait().getNameTrait(), traitDisplayPanel);
-                }
-            }
-        });
-        okayButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
     }
 
     public String getEndListSpan() {
@@ -233,6 +204,10 @@ public class SpeciesInspectorPanel extends JPanel {
         return okayButton;
     }
 
+    public JButton getCancelButton() {
+        return cancelButton;
+    }
+
     public JFrame getMyFrame() {
         return myFrame;
     }
@@ -248,4 +223,13 @@ public class SpeciesInspectorPanel extends JPanel {
     public void setSelectedVariations(Trait trait, Variation variation) {
         speciesInspector.addtoSelectedVariations(trait, variation);
     }
+
+    public HashMap<String, TraitState> getTraitStateMap() {
+        return traitPreview.getTraitStateMap();
+    }
+
+    public TraitPreview getTraitPreview() {
+        return traitPreview;
+    }
+
 }

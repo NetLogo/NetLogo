@@ -43,18 +43,18 @@ class InterfaceTab(workspace: GUIWorkspace,
   splitPane.setOneTouchExpandable(true)
   splitPane.setResizeWeight(1) // give the InterfacePanel all
   add(splitPane, BorderLayout.CENTER)
-  locally {
-    import WidgetInfo._
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
-    add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
-      override def addControls() {
-        super.addControls()
-        add(new org.nlogo.swing.ToolBar.Separator)
-        viewUpdatePanel = new org.nlogo.window.ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, true)
-        add(viewUpdatePanel)
-      }
-    }, BorderLayout.NORTH)
-  }
+//  locally {
+//    import WidgetInfo._
+//    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
+//    add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
+//      override def addControls() {
+//        super.addControls()
+//        add(new org.nlogo.swing.ToolBar.Separator)
+//        viewUpdatePanel = new org.nlogo.window.ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, true)
+//        add(viewUpdatePanel)
+//      }
+//    }, BorderLayout.NORTH)
+//  }
   org.nlogo.swing.Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {

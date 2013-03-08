@@ -39,6 +39,8 @@ public class TraitDistribution
         //this.selectedVariations.add("No variations selected");
 
         //initComponents(breed, trait, selectedVariations);
+        this.setPreferredSize(new Dimension(350, 30));
+        this.validate();
     }
 
     public TraitDistribution(String breed, String trait, ArrayList<String> selectedVariations) {
@@ -46,14 +48,16 @@ public class TraitDistribution
         this.trait = trait;
         this.selectedVariations = selectedVariations;
         initComponents(breed, trait, selectedVariations);
-
-//    List children =
-//                    Arrays.asList(new MultiSplitLayout.Leaf("left"), new MultiSplitLayout.Divider(), new MultiSplitLayout.Leaf("right"));
-//            //MultiSplitLayout.Split modelRoot = new MultiSplitLayout.Split();
-//            modelRoot.setChildren(children);//
-//            multiSplitPane.add(new JLabel("Left Column"), "left");//
-//            multiSplitPane.add(new JLabel("Right Column"), "right");
     }
+
+    public TraitDistribution(String breed, String trait, ArrayList<String> selectedVariations, HashMap<String, String>selectedVariationsPercent) {
+        this.breed = breed;
+        this.trait = trait;
+        this.selectedVariations = selectedVariations;
+        this.selectedVariationsPercent.putAll(selectedVariationsPercent);
+        initComponents(breed, trait, selectedVariations);
+    }
+
 
     public void setBreed(String breed) {
         this.breed = breed;
@@ -98,6 +102,11 @@ public class TraitDistribution
             //totalWeightStr = Float.toString(totalWeight);
             //weightsStr = Float.toString(weights);
 
+            if (selectedVariationsPercent.size() == selectedVariations.size()) {
+                weights = Double.parseDouble(selectedVariationsPercent.get(variation)) / 100.0;
+            }
+
+
             if (totalWeight + weights > 1.0) {
                 weights = 1.0 - totalWeight;
                 System.out.println("error");
@@ -121,17 +130,24 @@ public class TraitDistribution
             for (String variation : selectedVariations) {
                 //leaf.setWeight(1.0);
                 if (addDummy) {
-                    JButton leaf = new JButton("all " + breed + " have " + variation + " " + trait);
+
+                    JLabel leaf = new JLabel("all " + breed + " have " + variation + " " + trait);//JButton("all " + breed + " have " + variation + " " + trait);
+                    //leaf.setEnabled(false);
+                    //Slider leaf = new Slider("all " + breed + " have " + variation + " " + trait);
                     this.add(leaf, variation);
-                    JButton dummy = new JButton("dummy");
+                    //JButton dummy = new JButton("dummy");
+                    JLabel dummy = new JLabel("dummy");
                     //leaf.setPreferredSize(this.getMaximumSize());
                     dummy.setPreferredSize(new Dimension(0, 0));
-                    //dummy = new MultiSplitLayout.Leaf("dummy");
-                    //dummy.setWeight(0);
+
                     List children = Arrays.asList(leaf, new MultiSplitLayout.Divider(), dummy);
                 }
                 else {
-                    JButton leaf = new JButton(variation + " " + breed);
+                    //JButton leaf = new JButton(variation + " " + breed);
+                    JLabel leaf = new JLabel(variation + " " + breed);
+                    leaf.setPreferredSize(new Dimension(5,5));
+                    //leaf.setMargin(new Insets(0,0,0,0));
+                    leaf.setBounds(0, 0, 0, 0);
                     this.add(leaf, variation);
                 }
             }
@@ -172,6 +188,38 @@ public class TraitDistribution
         }
     }
 
+    // This function is called when the divider is clicked-and-dragged to change widths
+    // See TraitPreview. MouseMotionListener on traitDistribution
+    public void updatePercentages() {
+        this.revalidate();
+        if (this.getMultiSplitLayout().getModel().getParent() != null) {
+            MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
+
+            for (MultiSplitLayout.Node node : split.getChildren()) {
+                if (node instanceof MultiSplitLayout.Leaf) {
+                    if (((MultiSplitLayout.Leaf) node).getName() != "dummy") {  //why is it entering dummy?
+                        float totalDivider;
+                        if (this.getVariations().size() > 1) {
+                            totalDivider = (this.getVariations().size() - 1);
+                        }
+                        else {
+                            totalDivider = 0;
+                        }
+                        Rectangle rect = node.getBounds();
+                        float width = rect.width;
+                        float percentage = (width/ (350 - totalDivider)) * 100;
+                        BigDecimal per = new BigDecimal(percentage);
+                        BigDecimal p = per.setScale(3, BigDecimal.ROUND_HALF_EVEN);
+                        String perc = p.toString();
+                        this.savePercentages(((MultiSplitLayout.Leaf) node).getName(), perc);
+                        //System.out.println("ln 178 " + p + " " + percentage + " ");
+                    }
+                }
+            }
+        }
+
+    } // updatePercentages
+
     public void savePercentages(String variation, String percentage) {
         selectedVariationsPercent.put(variation, percentage);
     }
@@ -179,4 +227,32 @@ public class TraitDistribution
     public HashMap<String, String> getSelectedVariationsPercent() {
         return selectedVariationsPercent;
     }
-}
+
+    class Slider extends JButton {
+        public Slider(String text) {
+
+        }
+
+            public void paintComponent (Graphics g) {
+                    Rectangle r = getBounds();
+                    int x = r.x + 20;
+                    int y = r.y + 20;
+                    int width = r.width - 40;
+                    int height = r.height- 40;
+                    g.setColor(Color.BLACK);
+                    g.fillOval(x, y, width, height);
+                    x += 2;
+                    y += 2;
+                    width -= 4;
+                    height -= 4;
+                    g.setColor(getBackground());
+                    g.fillOval(x, y, width, height);
+                    g.setColor(getForeground());
+                    y += (height / 2) - 10;
+                    g.drawString(getText(), x, y);
+                }
+
+
+        }
+    }
+
