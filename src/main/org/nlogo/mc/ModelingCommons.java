@@ -4,6 +4,7 @@ package org.nlogo.mc;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.ModelingCommonsInterface;
@@ -35,7 +36,7 @@ public class ModelingCommons implements ModelingCommonsInterface {
 
   public ModelingCommons(Function0<String> saveModel, Frame frame, Workspace workspace) {
     this.frame = frame;
-    this.saveModel  = saveModel;
+    this.saveModel = saveModel;
     this.workspace = workspace;
   }
 
@@ -88,7 +89,7 @@ public class ModelingCommons implements ModelingCommonsInterface {
       protected void onDownloaded(String status, List<Group> groups) {
         if(status.equals("SUCCESS")) {
           ModelingCommons.this.groups = groups;
-          boolean enableAutoGeneratePreviewImage = workspace.getProcedures().get("SETUP") != null && workspace.getProcedures().get("GO") != null;
+          boolean enableAutoGeneratePreviewImage = workspace.procedures().get("SETUP") != null && workspace.procedures().get("GO") != null;
           JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
           uploadDialog.setVisible(true);
         } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
@@ -160,7 +161,7 @@ public class ModelingCommons implements ModelingCommonsInterface {
           ws.openString(saveModel.apply());
 
           String         command = "random-seed 0 " + ws.previewCommands();
-          SimpleJobOwner owner   = new SimpleJobOwner("PreviewGetter", ws.world().mainRNG, Observer.class);
+          SimpleJobOwner owner   = new SimpleJobOwner("PreviewGetter", ws.world().mainRNG(), AgentKindJ.Observer());
           Procedure      proc    = ws.compileCommands(command);
           ws.runCompiledCommands(owner, proc);
 
