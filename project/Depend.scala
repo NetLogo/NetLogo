@@ -76,6 +76,7 @@ object Depend {
       "lite" -> List("window"),
       "log" -> List("api"),
       "mirror" -> List("plot", "shape"),
+      "mc" -> List("nvm", "swing"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),

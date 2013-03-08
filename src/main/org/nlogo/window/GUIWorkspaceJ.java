@@ -178,6 +178,12 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   @Override
+  public void importDrawing(java.io.InputStream is)
+      throws java.io.IOException {
+    view.renderer.trailDrawer().importDrawing(is);
+  }
+
+  @Override
   public void importDrawing(org.nlogo.api.File file)
       throws java.io.IOException {
     view.renderer.trailDrawer().importDrawing(file);

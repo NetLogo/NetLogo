@@ -2,6 +2,8 @@
 
 package org.nlogo.app;
 
+import java.util.Map;
+
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelReader;
 import org.nlogo.api.ModelSection;
@@ -163,6 +165,19 @@ public strictfp class FileMenu
     }
   }
 
+private class SaveModelingCommonsAction extends FileMenuAction {
+  SaveModelingCommonsAction() {
+    super("Upload To Modeling Commons");
+  }
+
+  @Override
+  void action() throws UserCancelException {
+    //Very verbosely named method, this is called in doSave before calling modelSaver.doSave
+    //so we call it here before saving to Modeling Commons as well
+    checkWithUserBeforeSavingModelFromOldVersion();
+    app.modelingCommons().saveToModelingCommons();
+  }
+}
   private class SaveAction extends FileMenuAction {
     SaveAction() {
       super(I18N.guiJ().get("menu.file.save"));

@@ -1,16 +1,75 @@
 <component name="libraryTable">
   <library name="all">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/test" />
-      <root url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/compile" />
-      <root url="file://$PROJECT_DIR$/project/boot/scala-2.9.2/lib" />
-      <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/steveroy/mrjadapter" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.scalatest/scalatest_2.9.2" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.scalacheck/scalacheck_2.9.2" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.scala-tools.testing/test-interface" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.picocontainer/picocontainer" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.pegdown/pegdown" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.parboiled/parboiled-java" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.parboiled/parboiled-core" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.objenesis/objenesis" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.jogl/jogl" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock-legacy" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock-junit4" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.jhotdraw/jhotdraw" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-library" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-core" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.gluegen-rt/gluegen-rt" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/junit/junit-dep" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/javax.media/jmf" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/ch.randelshofer/swing-layout" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/ch.randelshofer/quaqua" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/cglib/cglib-nodep" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-util" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-tree" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-analysis" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-all" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm" />
+      <root url="file://$PROJECT_DIR$/lib_managed/bundles/log4j/log4j" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
-    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/compile" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/scala_2.9.2/test" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/project/boot/scala-2.9.2/lib" recursive="false" />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-library" />
+      <root url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-core" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/bundles/log4j/log4j" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-all" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-analysis" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-tree" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/asm/asm-util" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/cglib/cglib-nodep" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/ch.randelshofer/quaqua" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/ch.randelshofer/swing-layout" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/javax.media/jmf" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/junit/junit-dep" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.gluegen-rt/gluegen-rt" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-core" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-library" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.jhotdraw/jhotdraw" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock-junit4" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.jmock/jmock-legacy" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.jogl/jogl" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.objenesis/objenesis" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.parboiled/parboiled-core" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.parboiled/parboiled-java" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.pegdown/pegdown" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.picocontainer/picocontainer" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.scala-tools.testing/test-interface" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.scalacheck/scalacheck_2.9.2" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.scalatest/scalatest_2.9.2" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/steveroy/mrjadapter" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-core" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib_managed/jars/org.hamcrest/hamcrest-library" recursive="false" type="SOURCES" />
   </library>
 </component>
