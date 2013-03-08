@@ -118,39 +118,13 @@ object App{
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter()))
-
-    val saveFunc     = new ModelSaver(pico.getComponent(classOf[App])).save _
-    val getImageFunc = () => {
-
-      val headless = Class.forName("org.nlogo.headless.HeadlessWorkspace").getMethod("newInstance").invoke(null).asInstanceOf[Workspace]
-
-      headless.openString(new ModelSaver(pico.getComponent(classOf[App])).save)
-      val command = "random-seed 0 " + headless.previewCommands
-      val proc    = headless.compileCommands(command)
-      val owner   = new SimpleJobOwner("PreviewGetter", headless.world.mainRNG, classOf[Observer])
-      headless.runCompiledCommands(owner, proc)
-      val image = headless.exportView()
-
-      try {
-        headless.dispose()
-        image
-      }
-      catch {
-        case ex: InterruptedException =>
-          //It doesn't matter if this occurs since we will only reach the dispose line once the image has been generated
-          org.nlogo.util.Exceptions.ignore(ex)
-          image
-      }
-
-    }
-
+    val saveFunc = new ModelSaver(pico.getComponent(classOf[App])).save _
     pico.add(classOf[ModelingCommonsInterface],
-      "org.nlogo.mc.ModelingCommons",
-      Array[Parameter] (
-        new ConstantParameter(saveFunc),
-        new ConstantParameter(getImageFunc),
-        new ComponentParameter(classOf[AppFrame]),
-        new ComponentParameter()))
+          "org.nlogo.mc.ModelingCommons",
+          Array[Parameter] (
+            new ConstantParameter(saveFunc),
+            new ComponentParameter(classOf[AppFrame]),
+            new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -315,6 +289,8 @@ class App extends
   var labManager:LabManagerInterface = null
   private val listenerManager = new NetLogoListenerManager
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
+  private val ImportWorldURLProp = "netlogo.world_state_url"
+  private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -525,10 +501,46 @@ class App extends
     }
     else if (commandLineMagic != null)
       workspace.magicOpen(commandLineMagic)
-    else if (commandLineURL != null)
+    else if (commandLineURL != null) {
       fileMenu.openFromSource(
         org.nlogo.util.Utils.url2String(commandLineURL),
-        null, "Starting...", ModelType.Library)
+        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
+
+      import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
+      Option(System.getProperty(ImportRawWorldURLProp)) map {
+        url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
+          import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
+          EventQueue.invokeLater {
+            () =>
+              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+              workspace.view.dirty()
+              workspace.view.repaint()
+          }
+      } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
+        url =>
+
+          import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+
+          val source = Source.fromURL(url)(Codec.ISO8859)
+          val bytes  = source.map(_.toByte).toArray
+          val bais   = new ByteArrayInputStream(bytes)
+          val gis    = new GZIPInputStream(bais)
+          val reader = new InputStreamReader(gis)
+
+          EventQueue.invokeLater {
+            () => {
+              workspace.importWorld(reader)
+              workspace.view.dirty()
+              workspace.view.repaint()
+              source.close()
+              bais.close()
+              gis.close()
+              reader.close()
+            }
+          }
+
+      })
+    }
     else fileMenu.newModel()
   }
 

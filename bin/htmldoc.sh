@@ -1,4 +1,5 @@
 #!/bin/sh
+cd ../docs/
 htmldoc \
   --strict \
   --duplex \
@@ -28,6 +29,7 @@ htmldoc \
   systemdynamics.html \
   hubnet.html \
   hubnet-authoring.html \
+  modelingcommons.html \
   logging.html \
   controlling.html \
   mathematica.html \
