@@ -502,44 +502,57 @@ class App extends
     else if (commandLineMagic != null)
       workspace.magicOpen(commandLineMagic)
     else if (commandLineURL != null) {
-      fileMenu.openFromSource(
-        org.nlogo.util.Utils.url2String(commandLineURL),
-        java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
 
-      import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
-      Option(System.getProperty(ImportRawWorldURLProp)) map {
-        url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
-          import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
-          EventQueue.invokeLater {
-            () =>
-              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-              workspace.view.dirty()
-              workspace.view.repaint()
-          }
-      } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
-        url =>
+      try {
 
-          import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+        val modelStr = org.nlogo.util.Utils.url2String(commandLineURL)
+        fileMenu.openFromSource(
+          modelStr,
+          java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
 
-          val source = Source.fromURL(url)(Codec.ISO8859)
-          val bytes  = source.map(_.toByte).toArray
-          val bais   = new ByteArrayInputStream(bytes)
-          val gis    = new GZIPInputStream(bais)
-          val reader = new InputStreamReader(gis)
-
-          EventQueue.invokeLater {
-            () => {
-              workspace.importWorld(reader)
-              workspace.view.dirty()
-              workspace.view.repaint()
-              source.close()
-              bais.close()
-              gis.close()
-              reader.close()
+        import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
+        Option(System.getProperty(ImportRawWorldURLProp)) map {
+          url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
+            import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
+            EventQueue.invokeLater {
+              () =>
+                workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+                workspace.view.dirty()
+                workspace.view.repaint()
             }
-          }
+        } getOrElse (Option(System.getProperty(ImportWorldURLProp)) map {
+          url =>
 
-      })
+            import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
+
+            val source = Source.fromURL(url)(Codec.ISO8859)
+            val bytes  = source.map(_.toByte).toArray
+            val bais   = new ByteArrayInputStream(bytes)
+            val gis    = new GZIPInputStream(bais)
+            val reader = new InputStreamReader(gis)
+
+            EventQueue.invokeLater {
+              () => {
+                workspace.importWorld(reader)
+                workspace.view.dirty()
+                workspace.view.repaint()
+                source.close()
+                bais.close()
+                gis.close()
+                reader.close()
+              }
+            }
+
+        })
+      }
+      catch {
+        case ex: java.net.ConnectException =>
+          fileMenu.newModel()
+          JOptionPane.showConfirmDialog(null,
+            "Could not obtain NetLogo model from URL '%s'.\nNetLogo will instead start without any model loaded.".format(commandLineURL),
+            "Connection Failed", JOptionPane.DEFAULT_OPTION)
+      }
+
     }
     else fileMenu.newModel()
   }
