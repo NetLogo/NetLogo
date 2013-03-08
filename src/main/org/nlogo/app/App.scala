@@ -524,7 +524,7 @@ class App extends
         val modelStr = org.nlogo.util.Utils.url2String(commandLineURL)
         fileMenu.openFromSource(
           modelStr,
-          java.net.URLDecoder.decode(commandLineURL.reverse takeWhile (_ != '/') reverse, "UTF-8"), "Starting...", ModelType.Library)
+          java.net.URLDecoder.decode(commandLineURL.reverse.takeWhile(_ != '/').reverse, "UTF-8"), "Starting...", ModelType.Library)
 
         import org.nlogo.awt.EventQueue, org.nlogo.swing.Implicits.thunk2runnable
         Option(System.getProperty(ImportRawWorldURLProp)) map {
