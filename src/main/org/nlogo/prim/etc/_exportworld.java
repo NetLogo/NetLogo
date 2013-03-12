@@ -37,6 +37,14 @@ public final strictfp class _exportworld
                   (context, _exportworld.this,
                       token().name() +
                           ": " + ex.getMessage());
+            } catch (java.lang.IllegalStateException ex) {
+                // This exception is thrown when `DefaultFileManager.relativeToAbsolute` takes an `IOException` and wraps it up on failure.
+                // It's hard to judge what ramifications it would have to avoid wrapping that exception, so we'll just catch it here.
+                // --JAB (1/9/13)
+                throw new EngineException
+                    (context, _exportworld.this,
+                        token().name() +
+                            ": " + ex.getMessage());
             }
           }
         });
