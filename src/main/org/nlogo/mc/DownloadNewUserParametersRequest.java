@@ -13,7 +13,7 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DownloadNewUserParametersRequest extends PostRequest {
+public abstract strictfp class DownloadNewUserParametersRequest extends PostRequest {
 
   private JDialog loadingDialog;
   private Frame frame;
@@ -63,3 +63,4 @@ public abstract class DownloadNewUserParametersRequest extends PostRequest {
   protected abstract void onDownloaded(String status, String newUserAgreement, List<String> priorityCountries, List<String> unpriorityCountries);
 
 }
+

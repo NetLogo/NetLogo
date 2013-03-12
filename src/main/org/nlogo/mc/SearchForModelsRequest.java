@@ -13,7 +13,7 @@ import java.util.List;
 
 //Calls onSearchResults on a successful, but possibly 0-sized request
 //Calls onSearchAborted if the request is aborted, or if the request returns an error
-public abstract class SearchForModelsRequest extends PostRequest {
+public abstract strictfp class SearchForModelsRequest extends PostRequest {
 
   public SearchForModelsRequest(HttpClient http, String queryString, int count, boolean changeability) {
     super(http, ModelingCommons.HOST/*"localhost:3000"*/ + "/account/models");
@@ -50,3 +50,4 @@ public abstract class SearchForModelsRequest extends PostRequest {
   protected abstract void onSearchResults(String status, List<Model> models);
 
 }
+

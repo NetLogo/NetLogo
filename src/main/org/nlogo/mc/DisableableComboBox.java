@@ -8,7 +8,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.Component;
 
-public class DisableableComboBox extends JComboBox {
+public strictfp class DisableableComboBox extends JComboBox {
 
   private class Item {
 
@@ -90,3 +90,4 @@ public class DisableableComboBox extends JComboBox {
   }
 
 }
+
