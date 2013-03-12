@@ -35,7 +35,7 @@ XARGS=xargs
 
 # other
 SCALA_JAR=$HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
-IJVERSION=5.0.11
+IJVERSION=5.1.5
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_33_server
 
@@ -72,7 +72,7 @@ if [ $WINDOWS -eq 1 ]; then
     exit 1
   fi
   # check install 4j version
-  DESIRED_VERSION="install4j version 5.0.11 (build 5442), built on 2012-01-13"
+  DESIRED_VERSION="install4j version 5.1.5 (build 5568)"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
