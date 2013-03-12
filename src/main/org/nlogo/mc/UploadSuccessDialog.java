@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class UploadSuccessDialog extends JDialog {
+public strictfp class UploadSuccessDialog extends JDialog {
 
   //GUI form members
   private JPanel topLevelContainer;
@@ -134,3 +134,4 @@ public class UploadSuccessDialog extends JDialog {
   }
 
 }
+

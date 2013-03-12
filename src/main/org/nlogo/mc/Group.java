@@ -2,7 +2,7 @@
 
 package org.nlogo.mc;
 
-public class Group {
+public strictfp class Group {
 
   private int id;
   private String name;
@@ -25,3 +25,4 @@ public class Group {
   }
 
 }
+

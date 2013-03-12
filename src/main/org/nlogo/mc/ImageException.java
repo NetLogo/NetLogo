@@ -2,7 +2,7 @@
 
 package org.nlogo.mc;
 
-public class ImageException extends Exception {
+public strictfp class ImageException extends Exception {
 
   public ImageException() {}
 
@@ -19,3 +19,4 @@ public class ImageException extends Exception {
   }
 
 }
+

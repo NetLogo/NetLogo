@@ -13,7 +13,7 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DownloadGroupsRequest extends PostRequest {
+public abstract strictfp class DownloadGroupsRequest extends PostRequest {
 
   private Frame frame;
   private JDialog loadingDialog;
@@ -57,3 +57,4 @@ public abstract class DownloadGroupsRequest extends PostRequest {
   protected abstract void onDownloaded(String status, List<Group> groups);
 
 }
+

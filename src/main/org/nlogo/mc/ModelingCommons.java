@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class ModelingCommons implements ModelingCommonsInterface {
+public strictfp class ModelingCommons implements ModelingCommonsInterface {
 
   public static final String HOST = "http://modelingcommons.org";
   private static HttpClient http = new DefaultHttpClient();
@@ -212,3 +212,4 @@ public class ModelingCommons implements ModelingCommonsInterface {
   }
 
 }
+

@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public abstract class UploadModelRequest extends MultiPartPostRequest {
+public abstract strictfp class UploadModelRequest extends MultiPartPostRequest {
 
   private JDialog loadingDialog;
   private String invalid;
@@ -88,3 +88,4 @@ public abstract class UploadModelRequest extends MultiPartPostRequest {
   protected abstract void onUploaded(String status, String uploadedModelURL, String uploadedModelName);
 
 }
+
