@@ -178,6 +178,12 @@ $CP -p \
   ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
   ../../lib_managed/jars/org.jogl/jogl/jogl-1.1.1.jar \
   ../../lib_managed/jars/org.gluegen-rt/gluegen-rt/gluegen-rt-1.1.1.jar \
+  ../../lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar \
+  ../../lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar \
+  ../../lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.2.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.2.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.2.jar \
   lib
 $CP -p $SCALA_JAR lib/scala-library.jar
 
