@@ -226,6 +226,7 @@ NLReport
 NLStart
 NONINFRINGEMENT
 NT
+NTXPVista
 NVS
 NaN
 NetLogo
@@ -238,7 +239,6 @@ NonCommercial
 Nonlocal
 Notepad
 Nowrap
-NTXPVista
 NumberType
 OLS
 OS's
@@ -384,6 +384,7 @@ XP
 XT
 Xm
 Xmx
+ZigBee
 abc
 abs
 acos
@@ -452,6 +453,7 @@ carnivore
 ccl
 cct
 cd
+cdc
 centroid
 centroids
 cern
@@ -500,6 +502,7 @@ dd
 ddoffscreen
 det
 dev
+devel
 digitizer
 dimensionally
 dir
