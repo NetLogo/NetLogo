@@ -79,7 +79,7 @@ fi
 TOOL_CLASSPATH=""
 if [ -z "$TOOL_CLASSPATH" ] ; then
     # hardcode this - ST 8/9/11
-    for ext in "$HOME"/.sbt/boot/scala-2.10.0/lib/* ; do
+    for ext in "$HOME"/.sbt/boot/scala-2.10.1/lib/* ; do
         if [ -z "$TOOL_CLASSPATH" ] ; then
             TOOL_CLASSPATH="$ext"
         else
