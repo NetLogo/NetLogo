@@ -382,7 +382,7 @@ $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
-$FIND dmg -name "*.app"     -print0 | $XARGS -0 codesign --force -s $OSXSIGNAME
+$FIND dmg -name "*.app"     -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
 $HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
