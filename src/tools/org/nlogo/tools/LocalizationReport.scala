@@ -193,7 +193,7 @@ object LocalizationReport {
               println("translated '" + kaa.key + "' with args: (" + kaa.args.mkString(",") + ")")
               if (exp.isDefined) println("\texpected english: " + exp.get)
               println("\t(en,US): " + engRes)
-              println("\t" + (otherLanguageLocale.getLanguage, otherLanguageLocale.getCountry) + ": " + otherRes)
+              println("\t" + ((otherLanguageLocale.getLanguage, otherLanguageLocale.getCountry)) + ": " + otherRes)
             }
           }
         }

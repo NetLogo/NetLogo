@@ -54,13 +54,13 @@ private object MethodSelector {
     else if (isConversionPossible(typeFrom, typeTo)) Some(100000000L)
     else None
   private def isBoxingConversion(typeFrom: Class[_], typeTo: Class[_]) =
-    (typeFrom, typeTo) == (java.lang.Boolean.TYPE, classOf[java.lang.Boolean]) ||
-      (typeFrom, typeTo) == (java.lang.Boolean.TYPE, classOf[Object]) ||
-      (typeFrom, typeTo) == (java.lang.Double.TYPE, classOf[java.lang.Double]) ||
-      (typeFrom, typeTo) == (java.lang.Double.TYPE, classOf[Object])
+    (typeFrom, typeTo) == ((java.lang.Boolean.TYPE, classOf[java.lang.Boolean])) ||
+      (typeFrom, typeTo) == ((java.lang.Boolean.TYPE, classOf[Object])) ||
+      (typeFrom, typeTo) == ((java.lang.Double.TYPE, classOf[java.lang.Double])) ||
+      (typeFrom, typeTo) == ((java.lang.Double.TYPE, classOf[Object]))
   private def isUnboxingConversion(typeFrom: Class[_], typeTo: Class[_]) =
-    (typeFrom, typeTo) == (classOf[java.lang.Double], java.lang.Double.TYPE) ||
-      (typeFrom, typeTo) == (classOf[java.lang.Boolean], java.lang.Boolean.TYPE)
+    (typeFrom, typeTo) == ((classOf[java.lang.Double], java.lang.Double.TYPE)) ||
+      (typeFrom, typeTo) == ((classOf[java.lang.Boolean], java.lang.Boolean.TYPE))
   private def isConversionPossible(typeFrom: Class[_], typeTo: Class[_]) =
     typeFrom.isAssignableFrom(typeTo) ||
       isBoxingConversion(typeTo, typeFrom) ||

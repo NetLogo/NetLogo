@@ -39,7 +39,7 @@ private class StructureParserExtras(tokenizer: TokenizerInterface) {
               if(token.tpe == TokenType.KEYWORD && token.value == "END")
                 done = true
             }
-            result += name -> (name, toPos, nameToken.startPos, token.endPos)
+            result += name -> ((name, toPos, nameToken.startPos, token.endPos))
           }
         }
       }
