@@ -73,7 +73,7 @@ if [ $WINDOWS -eq 1 ]; then
     exit 1
   fi
   # check install 4j version
-  DESIRED_VERSION="install4j version 5.1.5 (build 5568), built on 2013-01-15"
+  DESIRED_VERSION="install4j version 5.1.5 (build 5568)"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
