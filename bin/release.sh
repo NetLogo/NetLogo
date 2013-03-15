@@ -25,6 +25,7 @@ MAKE=make
 MKDIR=mkdir
 MV=mv
 OPEN=open
+OSXSIGNAME="Developer ID Application"
 PACK200=pack200
 PERL=perl
 RM=rm
@@ -35,7 +36,7 @@ XARGS=xargs
 
 # other
 SCALA_JAR=$HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
-IJVERSION=5.1.5
+IJVERSION=5.0.11
 IJDIR="/Applications/install4j 5"
 VM=windows-x86-1.6.0_33_server
 
@@ -72,7 +73,7 @@ if [ $WINDOWS -eq 1 ]; then
     exit 1
   fi
   # check install 4j version
-  DESIRED_VERSION="install4j version 5.1.5 (build 5568)"
+  DESIRED_VERSION="install4j version 5.1.5 (build 5568), built on 2013-01-15"
   pushd "$IJDIR" > /dev/null
   FOUND_VERSION=`./$IJ --version`
   popd > /dev/null
@@ -178,6 +179,12 @@ $CP -p \
   ../../lib_managed/jars/ch.randelshofer/swing-layout/swing-layout-7.3.4.jar \
   ../../lib_managed/jars/org.jogl/jogl/jogl-1.1.1.jar \
   ../../lib_managed/jars/org.gluegen-rt/gluegen-rt/gluegen-rt-1.1.1.jar \
+  ../../lib_managed/bundles/com.googlecode.json-simple/json-simple/json-simple-1.1.1.jar \
+  ../../lib_managed/jars/commons-codec/commons-codec/commons-codec-1.6.jar \
+  ../../lib_managed/jars/commons-logging/commons-logging/commons-logging-1.1.1.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.2.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.2.jar \
+  ../../lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.2.jar \
   lib
 $CP -p $SCALA_JAR lib/scala-library.jar
 
@@ -375,6 +382,7 @@ $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
+$FIND dmg -name "*.app"     -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
 $HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
