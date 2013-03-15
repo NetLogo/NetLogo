@@ -417,7 +417,7 @@ $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
 
 if [ $SIGN_MAC -eq 1 ]; then
   $FIND dmg -name "*.app" -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
-else
+fi
 
 $HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
