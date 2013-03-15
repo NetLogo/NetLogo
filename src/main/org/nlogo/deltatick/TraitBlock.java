@@ -50,7 +50,7 @@ public strictfp class TraitBlock
     PrettyInput number;
     String color;
     ColorButton colorButton = new ColorButton(parentFrame, this);
-    transient VariationDropDown dropdownList;
+    VariationDropDown dropdownList;
 
     //CodeBlock myParent;
 

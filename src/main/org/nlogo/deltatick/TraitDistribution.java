@@ -42,6 +42,7 @@ public class TraitDistribution
         //initComponents(breed, trait, selectedVariations);
         this.setPreferredSize(new Dimension(350, 30));
         this.validate();
+
     }
 
     public TraitDistribution(String breed, String trait, ArrayList<String> selectedVariations) {
@@ -173,7 +174,8 @@ public class TraitDistribution
                 else if ((addDummy == false) &&
                          (node instanceof MultiSplitLayout.Divider)) {
                     this.getDividerPainter().paint(this.getGraphics(), (MultiSplitLayout.Divider) node);
-                    System.out.println("TD 167: Setting Divider Paint");
+
+                    //System.out.println("TD 167: Setting Divider Paint");
                 }
             }
             //calculatePercentage();

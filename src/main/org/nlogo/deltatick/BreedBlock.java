@@ -5,6 +5,7 @@ import org.nlogo.api.Shape;
 import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
 import org.nlogo.deltatick.dialogs.Warning;
+import org.nlogo.deltatick.dnd.PrettierInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -49,7 +50,8 @@ public strictfp class BreedBlock
     transient JButton breedShapeButton;
     public transient JButton inspectSpeciesButton;
     transient PrettyInput number;
-    transient PrettyInput plural;
+    //transient PrettyInput plural;
+    transient PrettierInput plural;
     // HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
@@ -437,7 +439,8 @@ public strictfp class BreedBlock
         number.setText("100");
         label.add(number);
 
-        plural = new PrettyInput(this);
+        //plural = new PrettyInput(this);
+        plural = new PrettierInput(this);
         plural.setText(getName());
         label.add(plural);
 

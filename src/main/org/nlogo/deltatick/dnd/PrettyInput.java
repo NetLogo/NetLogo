@@ -21,6 +21,7 @@ public class PrettyInput extends javax.swing.JTextField {
         //setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
+
     }
 
 }
