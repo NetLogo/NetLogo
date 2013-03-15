@@ -31,11 +31,12 @@ public class ColorButton extends JButton {
     Boolean checkForColor;
 
     public ColorButton (Frame myFrame, TraitBlock myParent) {
+        System.out.println("Constr 1");
         this.setAction(pickColorAction);
         this.myParentTrait = myParent;
 
-        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        setPreferredSize(new Dimension(30, 30));
+        //setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        setPreferredSize(new Dimension(20, 20));
             try {
             Image img = ImageIO.read(getClass().getResource("/images/rgb.gif"));
             setIcon(new ImageIcon(img));
@@ -50,6 +51,7 @@ public class ColorButton extends JButton {
     }
 
     public ColorButton (Frame myFrame, BreedBlock myParent) {
+        System.out.println("Constr 2");
         this.myFrame = myFrame;
         this.myParent = myParent;
         this.setAction(pickColorActionBreed);
@@ -57,17 +59,16 @@ public class ColorButton extends JButton {
         checkForColor = false;
     }
 
+    //constructor being used
     public ColorButton (Frame myFrame, QuantityBlock myParent) {
+        System.out.println("Constr 3");
         this.setAction(pickColorActionQuantity);
         this.myParentQuantity = myParent;
 
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         setBorderPainted(true);
-        //setMargin(new java.awt.Insets(2, 2, 2, 2));
-        this.setMaximumSize(new Dimension(3, 4));
-        this.setMinimumSize(new Dimension(3, 4));
-        this.getPreferredSize();
-        this.setText("color");
+        setPreferredSize(new Dimension(20, 20));
+        this.setText("C");
         checkForColor = false;
 
     }

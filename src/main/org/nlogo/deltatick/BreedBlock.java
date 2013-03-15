@@ -170,7 +170,7 @@ public strictfp class BreedBlock
 
 
     public void addTraitBlock(CodeBlock block) {
-        if (((TraitBlock) block).breedName.equalsIgnoreCase(this.plural()) == false) {// if traitBlock is put in a breedBlock that it's not defined for
+        if (((TraitBlock) block).getBreedName().equalsIgnoreCase(this.plural()) == false) {// if traitBlock is put in a breedBlock that it's not defined for
 
             String message = new String(((TraitBlock) block).getTraitName() + " is not a trait of " + this.getName());
             JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
@@ -299,7 +299,7 @@ public strictfp class BreedBlock
 
                 code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
                         " " + startValue + " " + endValue + "\n";
-                code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
+                code += "foreach " + traitName + i + " [ ask ? [ set " + plural() + "-" + traitName + " " + variation.value + " \n";
                 //code += " set color " + variation.color + " ]] \n";    //commented out because variations not differ by color now - march 6, 2013
                 code += " ]] \n";
 
@@ -377,7 +377,6 @@ public strictfp class BreedBlock
     }
 
     public void setColorName(String color) {
-        System.out.println("BreedBlock " + colorName);
         colorName = color;
     }
 

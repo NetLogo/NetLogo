@@ -79,8 +79,9 @@ public class BuildPanel
                                                                         //-A. (Aug 10, 2012)
             if ( myTraits.size() > 0 ) {
                 for ( TraitBlock traitBlock : myTraits ) {
-                    if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
-                        allTraits.add(traitBlock.getName());
+                    if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {       // TODO check if works March 8, 2013
+                    //if ( traitBlock.getBreedName().equals(breedBlock.plural()) ) {
+                        allTraits.add(breedBlock.plural() + "-" + traitBlock.getName());
 
                     }
                 }

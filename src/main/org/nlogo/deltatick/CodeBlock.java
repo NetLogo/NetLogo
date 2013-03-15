@@ -7,11 +7,13 @@ import org.nlogo.deltatick.dnd.EnergyInput;
 import org.nlogo.deltatick.dnd.PrettyInput;
 
 //swing is for GUI components -A. (sept 10)
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -104,6 +106,9 @@ public abstract class CodeBlock
         label.add(removeButton);
         removeButton.setVisible(false);
         label.setBackground(getBackground());
+        if (this instanceof QuantityBlock) {
+            ((QuantityBlock)this).setLabelImage();
+        }
         if (this instanceof TraitBlock) {
             JLabel condition = new JLabel();
             condition.setText("If");
@@ -289,7 +294,6 @@ public abstract class CodeBlock
         BehaviorInput behaviorInput = new BehaviorInput(this);
         behaviorInput.setName(inputName);
         behaviorInput.setText(defaultValue);
-
         behaviorInputs.put(inputName, behaviorInput);
         label.add(behaviorInput);
     }
@@ -316,8 +320,6 @@ public abstract class CodeBlock
         DistanceInput distanceInput = new DistanceInput(this);
         distanceInput.setName(inputName);
         distanceInput.setText(defaultValue);
-
-        //behaviorInputs.put(inputName, distanceInput);
         label.add(distanceInput);
     }
 
@@ -341,6 +343,7 @@ public abstract class CodeBlock
     // List<CodeBlock> myBlocks = new LinkedList<CodeBlock>() [myBlocks is a linked list]
     //any block that goes into Breed, Plot or Envt block becomes part of this myBlocks -A. (sept 9)
     public void addBlock(CodeBlock block) {
+
         myBlocks.add(block);
         this.add(block);
         block.enableInputs();

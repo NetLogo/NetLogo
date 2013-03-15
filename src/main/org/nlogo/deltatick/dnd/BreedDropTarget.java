@@ -3,6 +3,7 @@ package org.nlogo.deltatick.dnd;
 import ch.randelshofer.quaqua.QuaquaComboPopup;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
+import org.nlogo.deltatick.xml.Trait;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,9 +35,14 @@ public class BreedDropTarget
                 return true;
             }
             else if (o instanceof TraitBlock) {
+//                ((TraitBlock) o).setMyParent((BreedBlock) block);
+//                TraitBlock tBlock = new TraitBlock((TraitBlock) o);
+//                addCodeBlock(tBlock);
+                //((TraitBlock) tBlock).setMyParent((BreedBlock) block);
+                //deltaTickTab.addTrait((TraitBlock) tBlock);
                 addCodeBlock((TraitBlock) o);
                 ((TraitBlock) o).setMyParent((BreedBlock) block);
-                deltaTickTab.addTrait((TraitBlock) o);
+                deltaTickTab.addTrait((TraitBlock)o);
                 return true;
             } else if (o instanceof OperatorBlock) {
                 addCodeBlock((OperatorBlock) o);

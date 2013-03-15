@@ -5,6 +5,7 @@ import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
+import org.nlogo.deltatick.PopupMenu;
 import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
@@ -16,11 +17,12 @@ import org.nlogo.plot.PlotManager;
 import org.parboiled.errors.ActionError;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +68,9 @@ public class DeltaTickTab
     JButton addBreed;
     JButton addPlot;
     JButton addHisto;
+    JButton addTrackSpecies;
+    PopupMenu popup;
+
     //JButton addEnvt;
     JButton buildBlock;
     JButton Not;
@@ -213,6 +218,7 @@ public class DeltaTickTab
 
                     new LibraryReader( workspace.getFrame() , deltaTickTab );
                     libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+                    //addTrackSpecies.setEnabled(true);
                     addPlot.setEnabled(true);
                     addHisto.setEnabled(true);
                     addBreed.setEnabled(true);
@@ -350,18 +356,21 @@ public class DeltaTickTab
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
                 speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
-                System.out.println("DTT ln 357 " + tBlock.getTraitName() + " " + tBlock.getBreedName());
+
             }
 
             for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
                 TraitBlock traitBlock;
-                traitBlock = new TraitBlock(myParent, traitState);//, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                //traitBlock = new TraitBlock(myParent, traitState);//, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                traitBlock = new TraitBlock(myParent, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+                //traitBlock = new TraitBlock(myParent)
+                traitBlock.setMyParent(myParent);
                 speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
                 userInput.addTraitAndVariations(myParent.getName(), traitState.getNameTrait(), traitState.getVariationsList());
                 buildPanel.addTrait(traitBlock);
                 libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
                 deltaTickTab.addDragSource(traitBlock);
-                traitBlock.addRect("Drag to Species Block");
+                //traitBlock.addRect("Drag to Species Block");
                 new TraitDropTarget(traitBlock);
                 contentPanel.validate();
 
@@ -373,26 +382,8 @@ public class DeltaTickTab
                 if (checkBox.isSelected()) {
                     myParent.addToTraitLabels(trait);
                 }
-//                else if (checkBox.isSelected() == false) {
-//                    if (myParent.getTraitLabels().contains(trait)) {
-//                        myParent.getTraitLabels().remove(trait);
-//                        System.out.println("deltatick tab " + trait + " " + myParent.getTraitLabels().size());
-//                    }
-//                }
             }
-
-//            for (Trait trait : speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
-//                TraitBlock newTraitBlock;
-//                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
-//
-//                newTraitBlock = new TraitBlock(myParent, trait, trait.getVariationHashMap(), trait.getVariationsValuesList());
-//                userInput.addTraitAndVariations(myParent.getName(), trait.getNameTrait(), trait.getVariationsList());
-//                buildPanel.addTrait(newTraitBlock);
-//                libraryHolder.addTraittoTab(newTraitBlock, buildPanel.getMyTraits().size());
-//                deltaTickTab.addDragSource(newTraitBlock);
-//                new TraitDropTarget(newTraitBlock);
-//                contentPanel.validate();
-//            }
+                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
     }
 
@@ -407,6 +398,46 @@ public class DeltaTickTab
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
+
+    private final javax.swing.Action addTrackSpeciesAction =
+		new javax.swing.AbstractAction( "Track change in species" ) {
+            public void actionPerformed( java.awt.event.ActionEvent e ) {
+                popup = new PopupMenu();
+//                JMenuItem menuItem = new JMenuItem("Add line graph");
+//                menuItem.addActionListener(addPlotAction);
+//                popupMenu.add(menuItem);
+//                menuItem = new JMenuItem("Add histogram");
+//                //menuItem.addActionListener(addHistoAction);
+//                popupMenu.add(menuItem);
+//
+////                MouseListener popupListener = new PopupListener(popupMenu);
+////                addTrackSpecies.addMouseListener(popupListener);
+//            }
+//        };
+//
+//            class PopupListener extends MouseAdapter {
+//                JPopupMenu popup;
+//
+//                PopupListener(JPopupMenu popupMenu) {
+//                    popup = popupMenu;
+//                }
+//
+//                public void mousePressed(MouseEvent e) {
+//                    maybeShowPopup(e);
+//                }
+//
+//                public void mouseReleased(MouseEvent e) {
+//                    maybeShowPopup(e);
+//                }
+//
+//                private void maybeShowPopup(MouseEvent e) {
+//                    if (e.isPopupTrigger()) {
+//                        popup.show(e.getComponent(),
+//                           e.getX(), e.getY());
+//                    }
+//                }
+            }
+        };
 
 
     private final javax.swing.Action addPlotAction =
@@ -509,31 +540,32 @@ public class DeltaTickTab
             button.setForeverOn();
         }
 
-        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
-            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
-                org.nlogo.window.ButtonWidget button =
-                    (org.nlogo.window.ButtonWidget) drawWidget;
-                button.displayName("draw");
-                button.wrapSource("draw");
-                button.setForeverOn();
-
-        }
-
-        org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
-        interfacePanel.addWidget(envtChooserWidget, 0, 100, true, false);
-        //org.nlogo.window.ButtonWidget buttonWidget = interface
-        if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
-          org.nlogo.window.ChooserWidget chooser =
-              (org.nlogo.window.ChooserWidget) envtChooserWidget;
-            chooser.displayName("environment");
-            chooser.nameWrapper("environment");
-            LogoListBuilder choicesList = new LogoListBuilder();
-            choicesList.add("grass");
-            choicesList.add("water");
-            chooser.setChoices(choicesList.toLogoList());
-
-        }
+            //Commented out because I don't want "draw" and "envtChooser" any more -Aditi (March 9, 2013)
+//        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
+//            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
+//            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
+//                org.nlogo.window.ButtonWidget button =
+//                    (org.nlogo.window.ButtonWidget) drawWidget;
+//                button.displayName("draw");
+//                button.wrapSource("draw");
+//                button.setForeverOn();
+//
+//        }
+//
+//        org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
+//        interfacePanel.addWidget(envtChooserWidget, 0, 100, true, false);
+//        //org.nlogo.window.ButtonWidget buttonWidget = interface
+//        if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
+//          org.nlogo.window.ChooserWidget chooser =
+//              (org.nlogo.window.ChooserWidget) envtChooserWidget;
+//            chooser.displayName("environment");
+//            chooser.nameWrapper("environment");
+//            LogoListBuilder choicesList = new LogoListBuilder();
+//            choicesList.add("grass");
+//            choicesList.add("water");
+//            chooser.setChoices(choicesList.toLogoList());
+//
+//        }
             interfaceCount++;
         }
     }
@@ -680,9 +712,7 @@ public class DeltaTickTab
 
                         }
                         newPen = newPlot.createPlotPen( penName , false, "setup ", penUpdate );
-
                         //workspace.plotManager().compilePlot(newPlot);
-
                     }
 
                     //interfacePanel.makePlotWidget(plotManager, newPlot, newPen);
@@ -694,37 +724,6 @@ public class DeltaTickTab
                     //workspace.plotManager().compilePlot(newPlot);
 
                     plotBlock.setNetLogoPlot(newPlot);
-
-                   // TODO: think about this
-                //org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot",false);
-                 //org.nlogo.window.plotWidget_$eq
-                    //org.nlogo.
-                   // org.nlogo.window.Widget plotWidget = new plotWidget("Plot", false);
-
-
-
-                //interfacePanel.addWidget(plotWidget, 10, 30, true, false);
-                    //plotWidget.plot_$eq(workspace.plotManager().newPlot(plotBlock.getName()));
-
-
-
-                   // PlotPen newPen = plotWidget.createPlotPen( "Adi" , false );
-
-
-                /*
-                if (plotWidget instanceof org.nlogo.window.PlotWidget) {
-                    org.nlogo.window.PlotWidget plot =
-                    (org.nlogo.window.PlotWidget) plotWidget;
-                    plot.displayName(plotBlock.getName());
-                    //plot.wrapSource("setup");
-        }
-        */
-               // if( plotBlock.getNetLogoPlot() == null ) {
-
-
-
-
-
                 } else { // otherwise it has a plot already, update that guy
                     //enters this when the plot block already exists, but another quantity block is added
 
@@ -900,9 +899,16 @@ public class DeltaTickTab
                 addBreed = new JButton( addBreedAction );
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
-                //addTraits = new JButton ( addTraitsAction );
-                //addTraits.setEnabled(false);
-                //this.add(addTraits);
+                //JPopupMenu popupMenu = new JPopupMenu();
+                //MouseListener popupListener = new PopupListener(popupMenu);
+                //addTrackSpecies.addMouseListener(popupListener);
+                //addTrackSpecies = new JButton (addTrackSpeciesAction);
+                //addTrackSpecies = new JButton ("Add tracking");
+                //PopupListener newPopupListener = new PopupListener(popup);
+                //addTrackSpecies.addMouseListener();
+                //addTrackSpecies.addActionListener(addTrackSpeciesAction);
+                //addTrackSpecies.setEnabled(true);
+                //this.add(addTrackSpecies);
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
                 this.add(addPlot) ;
@@ -1011,6 +1017,34 @@ public class DeltaTickTab
 
 
 
+class PopupListener extends MouseAdapter {
+    JPopupMenu popup;
+    JMenuItem menuItem;
+
+    PopupListener(JPopupMenu popupMenu) {
+        popup = popupMenu;
+        menuItem = new JMenuItem("ice");
+        popup.add(menuItem);
+        JPanel panel = new JPanel();
+        panel.add(popup);
+
+    }
+
+      public void mousePressed(MouseEvent ev) {
+        if (ev.isPopupTrigger()) {
+          popup.show(ev.getComponent(), ev.getX(), ev.getY());
+        }
+      }
+
+      public void mouseReleased(MouseEvent ev) {
+        if (ev.isPopupTrigger()) {
+          popup.show(ev.getComponent(), ev.getX(), ev.getY());
+        }
+      }
+
+      public void mouseClicked(MouseEvent ev) {
+      }
+    }
 }
 
 

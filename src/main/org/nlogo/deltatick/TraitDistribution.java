@@ -30,11 +30,12 @@ public class TraitDistribution
     String trait;
     ArrayList<String> selectedVariations = new ArrayList<String>();
     HashMap<String, String> selectedVariationsPercent = new HashMap<String, String>();
+    MultiSplitLayout.Divider dDiv;
 
     public TraitDistribution() {
         this.breed = "filler";
         this.trait = "filler_trait";
-        this.selectedVariations.toString();//??
+        this.selectedVariations.toString();
         //this.selectedVariations.add("All " + breed);
         //this.selectedVariations.add("No variations selected");
 
@@ -128,10 +129,9 @@ public class TraitDistribution
             this.getMultiSplitLayout().setModel(modelRoot);
 
             for (String variation : selectedVariations) {
-                //leaf.setWeight(1.0);
                 if (addDummy) {
-
                     JLabel leaf = new JLabel("all " + breed + " have " + variation + " " + trait);//JButton("all " + breed + " have " + variation + " " + trait);
+                    leaf.setHorizontalAlignment(SwingConstants.CENTER);
                     //leaf.setEnabled(false);
                     //Slider leaf = new Slider("all " + breed + " have " + variation + " " + trait);
                     this.add(leaf, variation);
@@ -140,33 +140,54 @@ public class TraitDistribution
                     //leaf.setPreferredSize(this.getMaximumSize());
                     dummy.setPreferredSize(new Dimension(0, 0));
 
-                    List children = Arrays.asList(leaf, new MultiSplitLayout.Divider(), dummy);
+                    ////dDiv = new MultiSplitLayout.Divider();
+                    ////List children = Arrays.asList(leaf, dDiv, dummy);
+
+                    ///List children = Arrays.asList(leaf, new MultiSplitLayout.Divider(), dummy);
+
+                    // For dummy, make divider zero-size
+                    this.getMultiSplitLayout().setDividerSize(0);
                 }
                 else {
                     //JButton leaf = new JButton(variation + " " + breed);
                     JLabel leaf = new JLabel(variation + " " + breed);
+                    leaf.setHorizontalAlignment(SwingConstants.CENTER);
                     leaf.setPreferredSize(new Dimension(5,5));
                     //leaf.setMargin(new Insets(0,0,0,0));
                     leaf.setBounds(0, 0, 0, 0);
                     this.add(leaf, variation);
+
+                    // More than one variation
+                    this.getMultiSplitLayout().setDividerSize(2);
                 }
             }
-            this.getMultiSplitLayout().setDividerSize(2);
-            this.setVisible(true);
-            this.revalidate();
+            ////this.getDividerPainter().paint(this.getGraphics(), dDiv);
+
+
 
             MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
             for (MultiSplitLayout.Node node : split.getChildren()){
                 if (node instanceof MultiSplitLayout.Leaf) {
                     Rectangle rect = node.getBounds();
                 }
+                else if ((addDummy == false) &&
+                         (node instanceof MultiSplitLayout.Divider)) {
+                    this.getDividerPainter().paint(this.getGraphics(), (MultiSplitLayout.Divider) node);
+                    System.out.println("TD 167: Setting Divider Paint");
+                }
             }
             //calculatePercentage();
+            this.setVisible(true);
+            this.revalidate();
+
+
         }
         else {
             this.setVisible(false);
         }
     }
+
+
 
     //not used
     public void calculatePercentage(Rectangle rect, List<MultiSplitLayout.Node> nodeList) {

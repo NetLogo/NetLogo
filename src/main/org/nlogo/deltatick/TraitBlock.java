@@ -50,7 +50,9 @@ public strictfp class TraitBlock
     PrettyInput number;
     String color;
     ColorButton colorButton = new ColorButton(parentFrame, this);
-    VariationDropDown dropdownList;
+    transient VariationDropDown dropdownList;
+
+    //CodeBlock myParent;
 
     JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
@@ -64,19 +66,53 @@ public strictfp class TraitBlock
     HashMap<String, String> varColorName = new HashMap<String, String>();
     HashMap<String, Color> varColor = new HashMap<String, Color>();
 
+    // trying copy-constructor to work around dnd jcombobox bug -March 9, 2013
+    public TraitBlock (TraitBlock tBlock) {
+        super (tBlock.traitName, Color.lightGray);
+        flavors = new DataFlavor[]{
+                DataFlavor.stringFlavor,
+                traitBlockFlavor,
+                CodeBlock.codeBlockFlavor};
+        this.breedName = tBlock.getMyParent().plural();
+        this.myParent = tBlock.getMyParent();
+        //this.traitState = new TraitState(tBlock.traitState);
+        this.traitName = tBlock.traitName;
 
-    public TraitBlock (BreedBlock breedBlock, TraitState traitState) {//, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
+        this.variationHashMap = new HashMap<String, Variation>(tBlock.variationHashMap);
+        this.variationNamesValues = new HashMap<String, String>(tBlock.variationNamesValues);
+        dropdownList = new VariationDropDown(new ArrayList<String>(variationHashMap.keySet()), this);
+        //dropdownList.setEnabled(false);
+        java.util.List<Component> componentList = new ArrayList<Component>(2);
+        name.setText(" of " + tBlock.getMyParent().plural());
+        componentList.add(name);
+        componentList.add(dropdownList);
+
+        int y = 0;
+        for (Component c : componentList) {
+          label.add(c);
+          y += c.getPreferredSize().getHeight();
+        }
+        label.setPreferredSize(new Dimension(100, y + 11));
+        //newLabel();
+        this.revalidate();
+
+
+    }
+
+    public TraitBlock (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
         super (traitState.getNameTrait(), Color.lightGray);
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
         this.breedName = breedBlock.plural();
-        this.traitState = traitState;
-        this.variationHashMap = traitState.getVariationHashMap();//variationHashMap;
-        this.traitName = traitState.getNameTrait();
-        this.variationNamesValues = traitState.getVariationsValuesList();//variationValues;
-        dropdownList = new VariationDropDown(traitState.getVariationsList(), this);
+        this.traitState = new TraitState(traitState);
+        //this.variationHashMap = this.traitState.getVariationHashMap();//variationHashMap;
+        this.traitName = this.traitState.getNameTrait();
+        //this.variationNamesValues = this.traitState.getVariationsValuesList();//variationValues;
+        this.variationHashMap = variationHashMap;
+        this.variationNamesValues = variationValues;
+        dropdownList = new VariationDropDown(this.traitState.getVariationsList(), this);
         dropdownList.setEnabled(false);
         java.util.List<Component> componentList = new ArrayList<Component>(2);
         name.setText(" of " + breedBlock.plural());
@@ -100,7 +136,7 @@ public strictfp class TraitBlock
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
-        this.breedName = breedBlock.plural();
+        //this.breedName = breedBlock.plural();
         this.trait = trait;
         this.variationHashMap = variationHashMap;
         this.variationNamesValues = variationValues;
@@ -208,13 +244,17 @@ public strictfp class TraitBlock
         return passback;
     }
 
+    public BreedBlock getMyParent() {
+        return ((BreedBlock) myParent);
+    }
+
 
     public String unPackAsCommand() {
         String passBack = "";
         String variation = dropdownList.getSelectedVariation();
         String value = variationNamesValues.get(variation);
                 //traitState.getVariationsValuesList().get(variation);
-        passBack += "if " + this.getTraitName() + " = " + value + " [\n";
+        passBack += "if " + this.getMyParent().plural() + "-" + this.getTraitName() + " = " + value + " [\n";
         for (CodeBlock block : myBlocks) {
             passBack += block.unPackAsCode();
         }
@@ -337,6 +377,7 @@ public strictfp class TraitBlock
 
     public String getBreedName() {
         return breedName;
+        //return ((BreedBlock) myParent).plural();
     }
 
 }

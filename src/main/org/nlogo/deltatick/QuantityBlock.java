@@ -2,9 +2,11 @@ package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.io.IOException;
 import java.util.Map;
 //import org.nlogo.deltatick.xml.Breed;
 
@@ -22,7 +24,15 @@ public strictfp class QuantityBlock
     String penSetUpCode;
     String penUpdateCode;
     String penColorString;
-    ColorButton colorButton = new ColorButton(parent, this);
+    ColorButton colorButton;
+
+    JLabel image;
+    Image histoImage;
+    ImageIcon histoImageIcon;
+    Image lineImage;
+    ImageIcon lineImageIcon;
+
+
 
     public QuantityBlock(String name, boolean histo, String bars, String trait) {
         super(name, ColorSchemer.getColor(2));
@@ -33,10 +43,10 @@ public strictfp class QuantityBlock
                 DataFlavor.stringFlavor,
                 quantityBlockFlavor
         };
-        //label.add(makeBreedShapeButton());
-        // - quantity block need not have shape change -A. (sept 30)
-        label.add(colorButton);
-        colorButton.setPreferredSize(new Dimension(30, 30));
+
+        //colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
+        //label.add(colorButton);
+        updateLabelImage();
     }
 
     public String unPackAsCode() {
@@ -136,6 +146,43 @@ public strictfp class QuantityBlock
 
     public Map<String, JTextField> getInputs() {
         return inputs;
+    }
+
+    public void setLabelImage() {
+        try {
+            image = new JLabel();
+            histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
+            histoImageIcon = new ImageIcon(histoImage);
+
+            lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
+            lineImageIcon = new ImageIcon(lineImage);
+            if (histo == true) {
+                image.setIcon(histoImageIcon);
+                label.add(image);
+            }
+            else if (histo == false) {
+                image.setIcon(lineImageIcon);
+                label.add(image);
+            }
+        }
+        catch (IOException ex) {
+             }
+    }
+
+    public void updateLabelImage() {
+        try {
+            histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
+            histoImageIcon = new ImageIcon(histoImage);
+        if (histo == true) {
+            image.setIcon(histoImageIcon);
+            image.revalidate();
+
+        }
+
+        }
+        catch (IOException ex) {
+             }
+
     }
 
     public void setButtonColor( Color color ) {
