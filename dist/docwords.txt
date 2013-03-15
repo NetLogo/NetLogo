@@ -110,6 +110,7 @@ GEOGCS
 GIF
 GIS
 GPL
+GPS
 GTK
 GasLab
 GeForce
@@ -133,6 +134,7 @@ HeadlessWorkspace
 Heatbugs
 Hester
 Histo
+Hotelling's
 HttpClient
 HubNet
 HubNetHeadlessServerExample
@@ -222,6 +224,7 @@ NLReport
 NLStart
 NONINFRINGEMENT
 NT
+NTXPVista
 NVS
 NaN
 NetLogo
@@ -377,6 +380,7 @@ XP
 XT
 Xm
 Xmx
+ZigBee
 abc
 abs
 acos
@@ -443,6 +447,7 @@ carnivore
 ccl
 cct
 cd
+cdc
 centroid
 centroids
 cern
@@ -491,6 +496,7 @@ dd
 ddoffscreen
 det
 dev
+devel
 digitizer
 dimensionally
 dir

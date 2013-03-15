@@ -11,7 +11,7 @@ import org.apache.http.util.EntityUtils;
 import javax.swing.SwingUtilities;
 import java.io.IOException;
 
-public abstract class Request {
+public abstract strictfp class Request {
 
   protected HttpPost request;
   private HttpClient http;
@@ -58,3 +58,4 @@ public abstract class Request {
   }
 
 }
+

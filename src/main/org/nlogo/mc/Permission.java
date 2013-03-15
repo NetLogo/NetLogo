@@ -5,7 +5,7 @@ package org.nlogo.mc;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Permission {
+public strictfp class Permission {
 
   private String id;
   private String name;
@@ -41,3 +41,4 @@ public class Permission {
   }
 
 }
+

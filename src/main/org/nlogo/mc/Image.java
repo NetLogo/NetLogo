@@ -9,3 +9,4 @@ public interface Image {
   public BufferedImage getImage() throws ImageException;
 
 }
+

@@ -11,7 +11,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PostRequest extends Request {
+public abstract strictfp class PostRequest extends Request {
 
   private List<NameValuePair> params;
 
@@ -32,3 +32,4 @@ public abstract class PostRequest extends Request {
   }
 
 }
+
