@@ -135,6 +135,7 @@ public class SpeciesInspectorPanel extends JPanel {
         TitledBorder titleSidePanel;
         titleSidePanel = BorderFactory.createTitledBorder("Display");
         sidePanel.setBorder(titleSidePanel);
+        sidePanel.setPreferredSize(new Dimension(300,200));
         traitDisplay = new TraitDisplay(sidePanel, myFrame);
         sidePanel.add(traitDisplay);
         sidePanel.validate();

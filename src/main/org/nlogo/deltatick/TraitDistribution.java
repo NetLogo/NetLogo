@@ -159,10 +159,10 @@ public class TraitDistribution
                     this.add(leaf, variation);
 
                     // More than one variation
-                    this.getMultiSplitLayout().setDividerSize(2);
+                    ////this.getMultiSplitLayout().setDividerSize(2);
                 }
             }
-            ////this.getDividerPainter().paint(this.getGraphics(), dDiv);
+
 
 
 
