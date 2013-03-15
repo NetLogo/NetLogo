@@ -94,6 +94,20 @@ if [ $WINDOWS -eq 1 ]; then
   tar tzf "$IJDIR/jres/$VM.tar.gz" > /dev/null
 fi
 
+# Ask if they want to sign the Mac OS files
+# You can only do this if you have a Developer ID Application certificate
+until [ -n "$SIGN_MAC" ]
+do
+  read -p "Sign Mac '.app' files? " -n 1 ANSWER
+  echo
+  if [ "$ANSWER" == "y" ] || [ "$ANSWER" == "Y" ]; then
+    SIGN_MAC=1
+  fi
+  if [ "$ANSWER" == "n" ] || [ "$ANSWER" == "N" ]; then
+    SIGN_MAC=0
+  fi
+done
+
 until [ -n "$REQUIRE_PREVIEWS" ]
 do
   read -p "Require model preview images be present? " -n 1 ANSWER
@@ -382,7 +396,11 @@ $CP -rp netlogo-$COMPRESSEDVERSION dmg/NetLogo\ "$VERSION"
 $FIND dmg -name Windows     -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-amd64 -print0 | $XARGS -0 $RM -rf
 $FIND dmg -name Linux-x86   -print0 | $XARGS -0 $RM -rf
-$FIND dmg -name "*.app"     -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
+
+if [ $SIGN_MAC -eq 1 ]; then
+  $FIND dmg -name "*.app" -print0 | $XARGS -0 codesign --force -s "$OSXSIGNAME"
+else
+
 $HDIUTIL create -quiet NetLogo\ "$VERSION".dmg -srcfolder dmg -volname NetLogo\ "$VERSION" -ov
 $HDIUTIL internet-enable -quiet -yes NetLogo\ "$VERSION".dmg
 $DU -h NetLogo\ "$VERSION".dmg
