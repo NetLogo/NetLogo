@@ -208,7 +208,6 @@ public strictfp class TraitBlock
         tmp = ((BreedBlock) myParent).number.getText().toString();
         totalAgents = Integer.parseInt(tmp);
 
-
             for (Map.Entry<String, String> entry : varPercentage.entrySet()) {
                 String variationType = entry.getKey();
                 String numberType = entry.getValue();
