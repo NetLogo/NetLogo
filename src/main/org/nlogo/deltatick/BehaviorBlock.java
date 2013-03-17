@@ -108,9 +108,7 @@ public strictfp class BehaviorBlock
 
     public void updateBehaviorInput() {
         Container parent = getParent();
-
         if (parent instanceof TraitBlock) {
-
             HashMap<String, Variation> hashMap = ((TraitBlock) parent).variationHashMap;
             String selectedVariationName = ((TraitBlock) parent).getDropdownList().getSelectedItem().toString();
             String trait = ((TraitBlock) parent).getName();

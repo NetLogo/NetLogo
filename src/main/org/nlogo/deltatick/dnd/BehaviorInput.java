@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.dnd;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -22,7 +23,11 @@ public class BehaviorInput extends javax.swing.JTextField {
         setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-        //this.setToolTipText("Who?");
+        this.setToolTipText("Who?");
+        this.createToolTip().setForeground(Color.blue);
+
+        //JToolTip tTip = this.createToolTip();
+
 
         //this.getDocument().addDocumentListener(new myDocumentListener);
 

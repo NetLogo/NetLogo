@@ -21,7 +21,7 @@ public class VariationBlock
     BehaviorBlock myParent;
 
     public VariationBlock (String traitName, String myName, BehaviorBlock bBlock) {
-        super(traitName, ColorSchemer.getColor(4));
+        super(myName, ColorSchemer.getColor(4));
         this.variationName = myName;
         this.traitName = traitName;
         this.myParent = bBlock;
@@ -36,12 +36,14 @@ public class VariationBlock
             }
         }
         if (myParent.getAgentInputs().size() > 0) {
-            this.addAgentInput(myParent.getAgentInputs().keySet().toString(), myParent.getAgentInputs().values().toString());
+            for (Map.Entry<String, JTextField> entry: myParent.getAgentInputs().entrySet()) {
+                this.addAgentInput(entry.getKey(), entry.getValue().getText());
+            }
         }
         if (myParent.getInputs().size() > 0) {
-            this.addInput(myParent.getInputs().keySet().toString(), myParent.getInputs().values().toString());
+            for (Map.Entry<String, JTextField> entry : myParent.getInputs().entrySet()) {
+                this.addInput(entry.getKey(), entry.getValue().getText());
+            }
         }
     }
-
-
 }

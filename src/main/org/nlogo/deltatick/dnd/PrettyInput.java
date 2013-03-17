@@ -1,5 +1,8 @@
 package org.nlogo.deltatick.dnd;
 
+import com.sun.media.ui.ToolTip;
+
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -10,6 +13,7 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class PrettyInput extends javax.swing.JTextField {
+    private JToolTip toolTip;
 
     public PrettyInput(Component parent) {
         super();
@@ -18,10 +22,17 @@ public class PrettyInput extends javax.swing.JTextField {
                 new javax.swing.border.LineBorder(parent.getBackground().darker()),
                 javax.swing.BorderFactory.createEmptyBorder(1, 2, 0, 0)
         ));
-        //setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-
     }
 
+    public JToolTip createToolTip() {
+        toolTip = super.createToolTip();
+        toolTip.setForeground(Color.white);
+        return toolTip;
+    }
+
+    public JToolTip getToolTip() {
+        return toolTip;
+    }
 }
