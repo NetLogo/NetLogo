@@ -35,6 +35,7 @@ public class BuildPanel
 
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
     List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
+    List<TraitBlockNew> myTraitsNew = new LinkedList<TraitBlockNew>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
@@ -276,18 +277,19 @@ public class BuildPanel
 
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
-    public void addTrait(TraitBlock block) {
+    //public void addTrait(TraitBlock block) {
+    public void addTrait(TraitBlockNew block) {
         block.setBounds(0,
                         0,
                         block.getPreferredSize().width,
                         block.getPreferredSize().height);
-        //block.dropdownList.setEnabled(false);
-        block.colorButton.setEnabled(false);
+
+        //block.colorButton.setEnabled(false);
         block.doLayout();
         block.validate();
         block.repaint();
-        // try revalidate
-        myTraits.add(block);
+        //myTraits.add(block);
+        myTraitsNew.add(block);
     }
 
     public void addOperator(OperatorBlock oBlock) {

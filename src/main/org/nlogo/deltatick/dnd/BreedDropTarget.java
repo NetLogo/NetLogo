@@ -32,6 +32,7 @@ public class BreedDropTarget
                 return true;
             } else if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
+                new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
             else if (o instanceof TraitBlock) {

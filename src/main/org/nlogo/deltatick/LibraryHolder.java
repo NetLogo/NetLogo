@@ -38,7 +38,8 @@ public class LibraryHolder extends JPanel {
     int newPolicy;
     // should eventually have an array of panels that you can add to and remove from (Feb 21, 2012)
     Tab tab;
-    List<TraitBlock> traits = new LinkedList<TraitBlock>();;
+    List<TraitBlock> traits = new LinkedList<TraitBlock>();
+    List<TraitBlockNew> traitsNew = new LinkedList<TraitBlockNew>();
     List<OperatorBlock> operatorBlocksList = new LinkedList<OperatorBlock>();
     ArrayList<String> variations;
 
@@ -57,7 +58,20 @@ public class LibraryHolder extends JPanel {
 
      // This is called only for TraitBlock & operatorBlock
       //TODo This changes the name of the tab to "panel" (March 9)
-    public void addTraittoTab( TraitBlock block, int numberTraits ) {
+    //Commented out to try TraitBlockNew (March 16, 2013)
+//    public void addTraittoTab( TraitBlock block, int numberTraits ) {
+//        String tabName = new String("Your blocks" + numberTraits);
+//
+//        if (numberTraits == 1) {
+//            panel = (JComponent) new JPanel();
+//            panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
+//        }
+//        panel.add(block);
+//        tabbedPane.addTab(tabName , panel);
+//        traits.add(block);
+//    }
+
+    public void addTraittoTab( TraitBlockNew block, int numberTraits ) {
         String tabName = new String("Your blocks" + numberTraits);
 
         if (numberTraits == 1) {
@@ -66,7 +80,7 @@ public class LibraryHolder extends JPanel {
         }
         panel.add(block);
         tabbedPane.addTab(tabName , panel);
-        traits.add(block);
+        traitsNew.add(block);
     }
 
     public void removeTraitBlock ( TraitBlock tBlock ) {
