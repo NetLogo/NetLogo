@@ -17,8 +17,11 @@ import java.io.IOException;
 public class BehaviorDropTarget
         extends DropTarget {
 
+    BehaviorBlock behBlock;
+
     public BehaviorDropTarget(BehaviorBlock bBlock) {
         super(bBlock);
+        this.behBlock = bBlock;
     }
 
     protected boolean dropComponent(Transferable transferable)
@@ -27,7 +30,7 @@ public class BehaviorDropTarget
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
                 for (String name : ((TraitBlockNew) o).getVariationHashMap().keySet()) {
-                    VariationBlock vBlock = new VariationBlock(((TraitBlockNew) o).getTraitName(), name);
+                    VariationBlock vBlock = new VariationBlock(((TraitBlockNew) o).getTraitName(), name, behBlock);
                     addCodeBlock((VariationBlock) vBlock);
                 }
 

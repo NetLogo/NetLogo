@@ -307,6 +307,10 @@ public abstract class CodeBlock
         label.add(agentInput);
     }
 
+    public Map<String, JTextField> getInputs() {
+        return inputs;
+    }
+
     public Map<String, JTextField> getBehaviorInputs() {
         return behaviorInputs;
     }
