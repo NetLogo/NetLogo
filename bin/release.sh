@@ -38,7 +38,7 @@ XARGS=xargs
 SCALA_JAR=$HOME/.sbt/boot/scala-2.9.2/lib/scala-library.jar
 IJVERSION=5.0.11
 IJDIR="/Applications/install4j 5"
-VM=windows-x86-1.6.0_33_server
+VM=windows-x86-1.6.0_41_server
 
 # make sure we have proper versions of tools
 # ("brew install htmldoc"; or if you don't want to involve homebrew,
