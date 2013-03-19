@@ -5499,9 +5499,9 @@ show netlogo-version
         nobody back in situations where you were expecting a single agent,
         not a whole agentset.
       <pre>
-set other one-of other turtles-here
-if other != nobody
-  [ ask other [ set color red ] ]
+set target one-of other turtles-here
+if target != nobody
+  [ ask target [ set color red ] ]
 </pre>
     </div>
     <div class="dict_entry">

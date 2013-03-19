@@ -35,7 +35,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UploadDialog extends JDialog {
+public strictfp class UploadDialog extends JDialog {
 
   //GUI form members
   private JLabel personNameLabel;
@@ -690,3 +690,4 @@ public class UploadDialog extends JDialog {
   }
 
 }
+
