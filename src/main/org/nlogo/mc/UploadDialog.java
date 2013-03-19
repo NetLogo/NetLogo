@@ -226,7 +226,7 @@ public strictfp class UploadDialog extends JDialog {
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
-    this.setResizable(true);
+    this.setResizable(false);
   }
 
   //BEGIN model search functions
@@ -382,8 +382,10 @@ public strictfp class UploadDialog extends JDialog {
             communicator.promptForUpload("Missing model name");
           } else if(status.equals("MODEL_NOT_SAVED")) {
             communicator.promptForUpload("Server error");
+          } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+            communicator.promptForUpload("Invalid response from Modeling Commons", false);
           } else if(status.equals("CONNECTION_ERROR")) {
-            communicator.promptForUpload("Error connecting to Modeling Commons");
+            communicator.promptForUpload("Could not connect to Modeling Commons", false);
           } else if(status.equals("SUCCESS")) {
             communicator.promptForSuccess(uploadedModelURL, uploadedModelName);
           } else if(status.equals("INVALID_PREVIEW_IMAGE")) {
@@ -391,7 +393,7 @@ public strictfp class UploadDialog extends JDialog {
           } else if(status.equals("SUCCESS_PREVIEW_NOT_SAVED")) {
             communicator.promptForSuccess("The model was uploaded, but the preview image was not saved", uploadedModelURL, uploadedModelName);
           } else {
-            communicator.promptForUpload("Unknown server error");
+            communicator.promptForUpload("Unknown server error", false);
           }
         }
 
@@ -416,12 +418,14 @@ public strictfp class UploadDialog extends JDialog {
             communicator.promptForUpload("Missing parameters");
           } else if(status.equals("MODEL_NOT_SAVED")) {
             communicator.promptForUpload("Server error");
+          } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+            communicator.promptForUpload("Invalid response from Modeling Commons", false);
           } else if(status.equals("CONNECTION_ERROR")) {
-            communicator.promptForUpload("Error connecting to Modeling Commons");
+            communicator.promptForUpload("Could not connect to Modeling Commons", false);
           } else if(status.equals("SUCCESS")) {
             communicator.promptForSuccess(uploadedModelURL, uploadedModelName);
           } else {
-            communicator.promptForUpload("Unknown server error");
+            communicator.promptForUpload("Unknown server error", false);
           }
         }
 

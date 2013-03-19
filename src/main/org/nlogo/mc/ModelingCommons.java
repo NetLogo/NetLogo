@@ -81,29 +81,43 @@ public strictfp class ModelingCommons implements ModelingCommonsInterface {
     promptForLogin(" ");
   }
 
-  public void promptForUpload(final String error) {
-    Request request = new DownloadGroupsRequest(getHttpClient(), frame) {
-
-      @Override
-      protected void onDownloaded(String status, List<Group> groups) {
-        if(status.equals("SUCCESS")) {
-          ModelingCommons.this.groups = groups;
-          boolean enableAutoGeneratePreviewImage = workspace.getProcedures().get("SETUP") != null && workspace.getProcedures().get("GO") != null;
-          JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
-          uploadDialog.setVisible(true);
-        } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
-          MessageDialog.show("Error connecting to Modeling Commons", "Invalid response from Modeling Commons");
-        } else if(status.equals("CONNECTION_ERROR")) {
-          MessageDialog.show("Error connecting to Modeling Commons", "Could not connect to Modeling Commons");
-        }
-      }
-
-    };
-    request.execute();
+  public void promptForUpload(String error) {
+    promptForUpload(error, true);
   }
 
   public void promptForUpload() {
-    promptForUpload(" ");
+    promptForUpload(" ", true);
+  }
+
+  //This is only used for the uploadDialog
+  //If an upload fails due to a bad connection, we want to show the upload dialog again
+  //But since there is a bad connection, we can't redownload groups
+  //Normally you should call promptForUpload(String error) or promptForUpload()
+  void promptForUpload(final String error, boolean downloadGroups) {
+    if(downloadGroups) {
+      Request request = new DownloadGroupsRequest(getHttpClient(), frame) {
+
+        @Override
+        protected void onDownloaded(String status, List<Group> groups) {
+          if(status.equals("SUCCESS")) {
+            ModelingCommons.this.groups = groups;
+            boolean enableAutoGeneratePreviewImage = workspace.getProcedures().get("SETUP") != null && workspace.getProcedures().get("GO") != null;
+            JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
+            uploadDialog.setVisible(true);
+          } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+            promptForLogin("Invalid response from Modeling Commons");
+          } else if(status.equals("CONNECTION_ERROR")) {
+            promptForLogin("Could not connect to Modeling Commons");
+          }
+        }
+
+      };
+      request.execute();
+    } else {
+      boolean enableAutoGeneratePreviewImage = workspace.getProcedures().get("SETUP") != null && workspace.getProcedures().get("GO") != null;
+      JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
+      uploadDialog.setVisible(true);
+    }
   }
 
   public void promptForSuccess(String error, String uploadedModelURL, String uploadedModelName) {

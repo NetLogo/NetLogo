@@ -33,8 +33,9 @@ public abstract strictfp class LogoutRequest extends PostRequest {
       String status = (String)(obj.get("status"));
       if(status.equals("SUCCESS") || status.equals("NOT_LOGGED_IN")) {
         onLogout("SUCCESS", true);
+      } else {
+        onLogout(status, false);
       }
-      onLogout(status, false);
     } catch(ParseException e) {
       onLogout("INVALID_RESPONSE_FROM_SERVER", false);
     }
