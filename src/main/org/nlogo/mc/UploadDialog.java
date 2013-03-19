@@ -226,7 +226,7 @@ public strictfp class UploadDialog extends JDialog {
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     this.pack();
     this.setLocationRelativeTo(frame);
-    this.setResizable(true);
+    this.setResizable(false);
   }
 
   //BEGIN model search functions
