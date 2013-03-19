@@ -1,5 +1,5 @@
-NetLogo 5.0.4-RC2
-March 14, 2013
+NetLogo 5.0.4
+March 19, 2013
 NetLogo 5.0
 NetLogo 4.
 NetLogo 3.
