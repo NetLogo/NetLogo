@@ -175,6 +175,7 @@ public class TraitDistribution
                          (node instanceof MultiSplitLayout.Divider)) {
                     this.getDividerPainter().paint(this.getGraphics(), (MultiSplitLayout.Divider) node);
 
+
                     //System.out.println("TD 167: Setting Divider Paint");
                 }
             }

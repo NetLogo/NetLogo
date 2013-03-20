@@ -22,6 +22,7 @@ public strictfp class BehaviorBlock
                 CodeBlock.behaviorBlockFlavor,
                 CodeBlock.codeBlockFlavor,
         };
+
     }
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.
 
@@ -37,7 +38,7 @@ public strictfp class BehaviorBlock
         String passBack = "";
         passBack += "to " + getName() + " ";
 
-        if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0) ) {
+        if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) ) {
             passBack += "[ ";
         }
         if (inputs.size() > 0) {
@@ -55,7 +56,12 @@ public strictfp class BehaviorBlock
                 passBack += s + " ";
             }
         }
-        if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0) ) {
+        if (percentInputs.size() > 0) {
+            for (String s : percentInputs.keySet()) {
+                passBack += s + " ";
+            }
+        }
+        if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || (percentInputs.size() > 0)) ) {
             passBack += " ]";
         }
         if ( ifCode != null ) {
@@ -88,8 +94,11 @@ public strictfp class BehaviorBlock
         for (JTextField agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
-        for (JTextField behaviorInput :behaviorInputs.values()) {
+        for (JTextField behaviorInput : behaviorInputs.values()) {
             passBack += behaviorInput.getText() + " ";
+        }
+        for (JTextField percentInput : percentInputs.values()) {
+            passBack += percentInput.getText() + " ";
         }
 
         passBack += "\n";
@@ -139,5 +148,13 @@ public strictfp class BehaviorBlock
             agentInputName = s;
             }
         return agentInputName;
+    }
+
+    public String getPercentInputName() {
+        String percentInputName = new String();
+        for ( String s : percentInputs.keySet()) {
+            percentInputName = s;
+            }
+        return percentInputName;
     }
 }

@@ -55,6 +55,7 @@ public strictfp class BreedBlock
     // HashMap<String, Variation> breedVariationHashMap = new HashMap<String, Variation>(); // assuming single trait -A. (Aug 8, 2012)
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
+    List<String>myUsedPercentInputs = new ArrayList<String>();
     String maxAge;
     String maxEnergy;
     String colorName = new String("gray");
@@ -152,6 +153,8 @@ public strictfp class BreedBlock
             addBehaviorInputToList(tmp);
             String s = ((BehaviorBlock) block).getAgentInputName();
             addAgentInputToList(s);
+            String p = ((BehaviorBlock) block).getPercentInputName();
+            addPercentInputToList(p);
         }
         else if (block instanceof ConditionBlock) {
             String tmp = ((ConditionBlock) block).getBehaviorInputName();

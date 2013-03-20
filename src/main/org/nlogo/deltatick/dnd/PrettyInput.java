@@ -24,15 +24,29 @@ public class PrettyInput extends javax.swing.JTextField {
         ));
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
+
+        // Create the tooltip
+        toolTip = super.createToolTip();
+        toolTip.setForeground(Color.white);
+
     }
 
     public JToolTip createToolTip() {
         toolTip = super.createToolTip();
-        toolTip.setForeground(Color.white);
+        toolTip.setBackground(Color.white);
+        toolTip.setForeground(Color.black);
         return toolTip;
     }
 
     public JToolTip getToolTip() {
         return toolTip;
     }
+
+//    public void setToolTipText(String text) {
+//
+//        toolTip.setToolTipText(text);
+//        toolTip.setTipText(text);
+//        toolTip.setVisible(true);
+//
+//    }
 }

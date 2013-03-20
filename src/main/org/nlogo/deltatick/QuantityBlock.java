@@ -6,6 +6,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Map;
 //import org.nlogo.deltatick.xml.Breed;
@@ -27,9 +29,9 @@ public strictfp class QuantityBlock
     ColorButton colorButton;
 
     JLabel image;
-    Image histoImage;
+    //Image histoImage;
     ImageIcon histoImageIcon;
-    Image lineImage;
+    //Image lineImage;
     ImageIcon lineImageIcon;
 
 
@@ -44,9 +46,10 @@ public strictfp class QuantityBlock
                 quantityBlockFlavor
         };
 
-        //colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
-        //label.add(colorButton);
+        colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
+        label.add(colorButton);
         updateLabelImage();
+
     }
 
     public String unPackAsCode() {
@@ -151,11 +154,32 @@ public strictfp class QuantityBlock
     public void setLabelImage() {
         try {
             image = new JLabel();
-            histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
-            histoImageIcon = new ImageIcon(histoImage);
+              //trying new stuff here to make this work
+            image.setTransferHandler(new TransferHandler("button"));
+            image.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent evt) {
+                    JComponent comp = (JComponent) evt.getSource();
+                    TransferHandler th = comp.getTransferHandler();
+                    th.exportAsDrag(comp, evt, TransferHandler.COPY);
+                }
+            });
 
-            lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
-            lineImageIcon = new ImageIcon(lineImage);
+            ////histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
+            ////histoImageIcon = new ImageIcon(histoImage);
+
+
+            histoImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png")));
+
+
+//            lineImageIcon = new ImageIcon(lineImage);
+//            lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
+
+            //lineImage = ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png"));
+            lineImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/line-graph.png")));
+            image.setTransferHandler(new TransferHandler("image"));
+
+
+
             if (histo == true) {
                 image.setIcon(histoImageIcon);
                 label.add(image);
@@ -171,8 +195,11 @@ public strictfp class QuantityBlock
 
     public void updateLabelImage() {
         try {
-            histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
-            histoImageIcon = new ImageIcon(histoImage);
+            ////histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
+            ////histoImageIcon = new ImageIcon(histoImage);
+
+            histoImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png")));
+
         if (histo == true) {
             image.setIcon(histoImageIcon);
             image.revalidate();

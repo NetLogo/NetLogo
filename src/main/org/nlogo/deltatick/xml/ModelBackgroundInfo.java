@@ -108,7 +108,7 @@ public class ModelBackgroundInfo {
     //will have to insert setup code for patches here as well -A. (sept 13)
     public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlock> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
         String code = "to setup\n";
-        code += "  clear-all\n";
+        code += "  clear-all\n" + "ask patches [set pcolor white]\n";
         if (setup != null) {
             code += setup;
         }

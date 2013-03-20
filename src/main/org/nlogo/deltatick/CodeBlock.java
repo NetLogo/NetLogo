@@ -1,10 +1,7 @@
 package org.nlogo.deltatick;
 
 
-import org.nlogo.deltatick.dnd.AgentInput;
-import org.nlogo.deltatick.dnd.BehaviorInput;
-import org.nlogo.deltatick.dnd.EnergyInput;
-import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.dnd.*;
 
 //swing is for GUI components -A. (sept 10)
 import javax.imageio.ImageIO;
@@ -43,6 +40,7 @@ public abstract class CodeBlock
     Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> behaviorInputs = new LinkedHashMap<String, JTextField>();
     Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, JTextField> percentInputs = new LinkedHashMap<String, JTextField>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
     //BoxLayout either stacks components on top of each other, or in a row -A. (sept 9)
@@ -127,7 +125,8 @@ public abstract class CodeBlock
             setPreferredSize(new Dimension(10, 10));
             setAction(deleteAction);
             setBorder(null);
-            setForeground(java.awt.Color.gray);
+            //setForeground(java.awt.Color.gray);
+            setForeground(Color.DARK_GRAY);
             setBorderPainted(false);
             setMargin(new java.awt.Insets(5, 5, 5, 5));
         }
@@ -279,6 +278,25 @@ public abstract class CodeBlock
         label.add(input);
     }
 
+    public void addPercentInput(String inputName, String defaultValue) {
+        PercentInput input = new PercentInput(this);
+        input.setName(inputName);
+        input.setText(defaultValue);
+
+        //inputs is a linked hashmap <String, JTextField> (march 2)
+        percentInputs.put(inputName, input);
+        label.add(input);
+        updatePercentLabel();
+    }
+
+    public void updatePercentLabel() {
+        if (percentInputs.size() > 0) {
+            JLabel percent = new JLabel("%");
+            System.out.println("I need a %");
+            label.add(percent);
+        }
+    }
+
 
     public void addInputEnergy(String inputName, String defaultValue) {
         EnergyInput energyInput = new EnergyInput(this);
@@ -290,10 +308,12 @@ public abstract class CodeBlock
     }
 
 
-    public void addBehaviorInput(String inputName, String defaultValue) {
+    public void addBehaviorInput(String inputName, String defaultValue, String toolTipString) {
         BehaviorInput behaviorInput = new BehaviorInput(this);
         behaviorInput.setName(inputName);
         behaviorInput.setText(defaultValue);
+        //behaviorInput.getToolTip().setToolTipText(toolTipString);
+        behaviorInput.setToolTipText(toolTipString);
         behaviorInputs.put(inputName, behaviorInput);
         label.add(behaviorInput);
     }
@@ -388,6 +408,16 @@ public abstract class CodeBlock
         }
         else {
             ((BreedBlock) this).myUsedAgentInputs.add(agentInputName);
+
+        }
+    }
+
+    public void addPercentInputToList(String percentInputName) {
+        if (myParent != null) {
+            myParent.addAgentInputToList(percentInputName);
+        }
+        else {
+            ((BreedBlock) this).myUsedPercentInputs.add(percentInputName);
 
         }
     }

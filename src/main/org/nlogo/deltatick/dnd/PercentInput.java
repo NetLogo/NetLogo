@@ -1,22 +1,16 @@
 package org.nlogo.deltatick.dnd;
 
-import org.nlogo.deltatick.TraitBlock;
-
 import java.awt.*;
-import java.util.HashMap;
-import org.nlogo.deltatick.TraitBlock;
-import org.nlogo.deltatick.xml.Variation;
 
 /**
  * Created by IntelliJ IDEA.
  * User: aditiwagh
- * Date: 2/21/12
- * Time: 5:10 PM
+ * Date: 3/19/13
+ * Time: 3:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class EnergyInput extends PrettyInput {
-
-    public EnergyInput(Component parent) {
+public class PercentInput extends PrettyInput {
+    public PercentInput(Component parent) {
         super(parent);
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(
@@ -26,8 +20,7 @@ public class EnergyInput extends PrettyInput {
         setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-        //this.setToolTipText("How fast?");
-    }
-
-
+        this.createToolTip();
+        this.setToolTipText("What percent");
+}
 }

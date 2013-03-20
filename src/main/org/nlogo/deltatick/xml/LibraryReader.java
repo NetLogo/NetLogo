@@ -196,7 +196,8 @@ public class LibraryReader {
             */
             else if (behaviorInfo.item(j).getNodeName() == "behaviorInput") {
                 block.addBehaviorInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
+                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent(),
+                        behaviorInfo.item(j).getAttributes().getNamedItem("tooltip").getTextContent());
             }
             else if (behaviorInfo.item(j).getNodeName() == "distanceInput") {
                 block.addDistanceInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
@@ -204,6 +205,10 @@ public class LibraryReader {
             }
             else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
                 block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
+                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
+            }
+            else if (behaviorInfo.item(j).getNodeName() == "percentInput") {
+                block.addPercentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
         }
