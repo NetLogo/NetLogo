@@ -16,7 +16,7 @@ object DrawingAction {
   case class SendPixels(dirty: Boolean) extends DrawingAction
   case class ReadImage(imageBytes: Array[Byte]) extends DrawingAction
   case class CreateDrawing(dirty: Boolean) extends DrawingAction
-  case class ImportDrawing(filePath: String) extends DrawingAction
+  case class ImportDrawing(filePath: String) extends DrawingAction // TODO: store actual image
   case class ClearDrawing() extends DrawingAction
   case class RescaleDrawing() extends DrawingAction
   case class MarkClean() extends DrawingAction

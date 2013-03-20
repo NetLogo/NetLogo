@@ -77,10 +77,11 @@ object ChecksumsAndPreviews {
     def okPath(path: String) =
       !List("HUBNET", "/CURRICULAR MODELS/")
             .exists(path.toUpperCase.containsSlice(_)) &&
-        (if(List("/GAMES/FROGGER.NLOGO", "/ART/SOUND MACHINES.NLOGO", "/CODE EXAMPLES/SOUND/")
+        (if(List("/GAMES/FROGGER.NLOGO", "/ART/SOUND MACHINES.NLOGO", "/CODE EXAMPLES/SOUND/",
+          "VORONOI - EMERGENT", "ARTIFICIAL NEURAL NET - ")
            .exists(path.toUpperCase.containsSlice(_))) {
           println("SKIPPING MODEL: " +  path)
-          println("  because it uses the sound extension")
+          println("  because it uses the sound extension") // Not always true - NP 2013-03-12
           false
         }
         else true)

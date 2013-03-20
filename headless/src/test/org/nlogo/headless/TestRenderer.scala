@@ -161,7 +161,7 @@ class TestColorRendering extends AbstractTestRenderer {
       for (i <- 5 until image.getSampleModel.getWidth - 5; j <- 5 until image.getSampleModel.getHeight - 5) {
         val pixelColor = java.awt.Color.decode(image.getRGB(i, j).toString)
         //println((i, j) + " " + (pixelColor.getRed,pixelColor.getGreen,pixelColor.getBlue,pixelColor.getAlpha))
-        assert((pixelColor.getRed, pixelColor.getGreen, pixelColor.getBlue, pixelColor.getAlpha) === (r, g, b, a))
+        assert((pixelColor.getRed, pixelColor.getGreen, pixelColor.getBlue, pixelColor.getAlpha) === ((r, g, b, a)))
       }
     }
     // for sanity only, dump the world to an image in order to look at it.

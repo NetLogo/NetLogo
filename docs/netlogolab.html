@@ -501,9 +501,11 @@ plot (gogo:sensor 1)
       Primitives
     </h2>
     <p>
-      <a href="#gogo:burst-value">gogo:burst-value</a> <a href=
-      "#gogo:close">gogo:close</a> <a href="#gogo:open">gogo:open</a>
-      <a href="#gogo:openp">gogo:open?</a> <a href=
+      <a href="#gogo:beep">gogo:beep</a> <a href="#gogo:burst-value">gogo:burst-value</a> <a href=
+      "#gogo:close">gogo:close</a> <a href="#gogo:install">gogo:install</a> <a href=
+      "#gogo:led-off">gogo:led-off</a> <a href= "#gogo:led-on">gogo:led-on</a> <a href=
+      "#gogo:open">gogo:open</a> <a href=
+      "#gogo:openp">gogo:open?</a> <a href=
       "#gogo:ports">gogo:ports</a> <a href=
       "#gogo:output-port-coast">gogo:output-port-coast</a> <a href=
       "#gogo:output-port-off">gogo:output-port-off</a> <a href=
@@ -513,9 +515,23 @@ plot (gogo:sensor 1)
       <!-- <a href="#read-sensors">read-sensors</a> -->
        <a href="#gogo:sensor">gogo:sensor</a> <a href=
       "#gogo:set-burst-mode">gogo:set-burst-mode</a> <a href=
-      "#gogo:set-output-port-power">gogo:set-output-port-power</a> <a href=
+      "#gogo:set-output-port-power">gogo:set-output-port-power</a>
+      <a href="#gogo:set-servo">gogo:set-servo</a> <a href=
       "#gogo:stop-burst-mode">gogo:stop-burst-mode</a> <a href=
       "#gogo:talk-to-output-ports">gogo:talk-to-output-ports</a>
+    <h3>
+      <a name="gogo:beep" id="gogo:beep">gogo:beep</a>
+    </h3>
+    <h4>
+      gogo:beep
+    </h4>
+    <p>
+      Sends a signal to the GoGo Board to make it emit an audible beep.  Useful for a testing purposes.
+    <p>
+      Example:
+    <pre>
+gogo:beep
+</pre>
     <h3>
       <a name="gogo:burst-value" id="gogo:burst-value">gogo:burst-value</a>
     </h3>
@@ -539,6 +555,49 @@ plot (gogo:sensor 1)
     <p>
       See also <a href="gogo:open"><tt>gogo:open</tt></a> and <a href=
       "gogo:openp"><tt>gogo:open?</tt></a>.
+    <h3>
+      <a name="gogo:install" id="gogo:install">gogo:install</a>
+    </h3>
+    <h4>
+      gogo:install
+    </h4>
+    <p>
+      If on a Windows system, attempt to force-run the Windows driver installer.
+    <p>
+      Example:
+    <pre>
+gogo:install
+</pre>
+    <h3>
+      <a name="gogo:led-off" id="gogo:led-off">gogo:led-off</a>
+    </h3>
+    <h4>
+      gogo:led-off
+    </h4>
+    <p>
+      Sends the signal to the GoGo Board to turn off the LED.
+    <p>
+      Example:
+    <pre>
+gogo:led-off
+</pre>
+    <p>
+      See also <a href="gogo:led-on"><tt>gogo:led-on</tt></a>.
+    <h3>
+      <a name="gogo:led-on" id="gogo:led-on">gogo:led-on</a>
+    </h3>
+    <h4>
+      gogo:led-on
+    </h4>
+    <p>
+      Sends the signal to the GoGo Board to turn on the LED.
+    <p>
+      Example:
+    <pre>
+gogo:led-on
+</pre>
+    <p>
+      See also <a href="gogo:led-off"><tt>gogo:led-off</tt></a>.
     <h3>
       <a name="gogo:open" id="gogo:open">gogo:open</a>
     </h3>
@@ -795,6 +854,21 @@ loop [if gogo:sensor 1 &lt; 500 [ ask turtles [ fd 10 ] ] ]<br>;; will continuou
 gogo:talk-to-motors [&quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;]
 gogo:set-motor-power 4
 ;; will lower the power of all output ports by half of the full power .
+</pre>
+    <h3>
+      <a name="gogo:set-servo" id="gogo:set-servo">gogo:set-servo</a>
+    </h3>
+    <h4>
+      gogo:set-servo <i>servo-position</i>
+    </h4>
+    <p>
+      Set the servo position to the value given by <i>servo-position</i>.
+    <p>
+      <i>servo-position</i> must be between 20 and 40 (inclusive).
+    <p>
+      Example:
+    <pre>
+gogo:set-servo 25
 </pre>
     <h3>
       <a name="gogo:stop-burst-mode" id=

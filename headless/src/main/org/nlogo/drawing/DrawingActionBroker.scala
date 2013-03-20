@@ -49,6 +49,9 @@ class DrawingActionBroker(
   override def importDrawing(file: org.nlogo.api.File): Unit =
     publish(ImportDrawing(file.getPath))
 
+  override def importDrawing(is: java.io.InputStream): Unit =
+    trailDrawer.importDrawing(is) // TODO: serialize image into action for both importDrawing methods
+
   override def readImage(is: java.io.InputStream): Unit =
     publish(imageToAction(javax.imageio.ImageIO.read(is)))
 

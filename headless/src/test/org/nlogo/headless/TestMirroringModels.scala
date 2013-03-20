@@ -61,6 +61,7 @@ class TestMirroringModels extends FunSuite with SlowTest {
   if (!api.Version.is3D) {
     val exclusions = Seq(
       "Diffusion on a Directed Network", // link shapes don't work properly
+      "Link Breeds Example", // link shapes don't work properly
       "GIS General Examples", // the GIS ext. bypasses the trailDrawer
       "GIS Gradient Example")
     for {

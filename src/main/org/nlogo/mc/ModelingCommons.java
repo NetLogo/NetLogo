@@ -1,0 +1,216 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.mc;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.nlogo.api.AgentKindJ;
+import org.nlogo.api.CompilerException;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.ModelingCommonsInterface;
+import org.nlogo.api.Observer;
+import org.nlogo.api.SimpleJobOwner;
+import org.nlogo.nvm.Procedure;
+import org.nlogo.nvm.Workspace;
+import org.nlogo.swing.MessageDialog;
+import scala.Function0;
+
+import javax.swing.JDialog;
+import java.awt.Frame;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
+public strictfp class ModelingCommons implements ModelingCommonsInterface {
+
+  public static final String HOST = "http://modelingcommons.org";
+  private static HttpClient http = new DefaultHttpClient();
+  private Person person;
+  private String newUserAgreement;
+  private List<String> priorityCountries;
+  private List<String> unpriorityCountries;
+  private List<Group> groups;
+  private Function0<String> saveModel;
+  private Frame frame;
+  private Workspace workspace;
+
+  public ModelingCommons(Function0<String> saveModel, Frame frame, Workspace workspace) {
+    this.frame = frame;
+    this.saveModel = saveModel;
+    this.workspace = workspace;
+  }
+
+  public boolean isLoggedIn() {
+    return person != null;
+  }
+
+  public List<Group> getGroups() {
+    return groups;
+  }
+
+  public List<String> getPriorityCountries() {
+    return priorityCountries;
+  }
+
+  public List<String> getUnpriorityCountries() {
+    return unpriorityCountries;
+  }
+
+  public String getNewUserAgreement() {
+    return newUserAgreement;
+  }
+
+  public Person getPerson() {
+    return person;
+  }
+
+  public String getModelBody() {
+    return saveModel.apply();
+  }
+
+  //Only login dialog should be able to set this
+  void setPerson(Person person) {
+    this.person = person;
+  }
+
+  public void promptForLogin(final String error) {
+    JDialog loginDialog = new LoginDialog(frame, this, error);
+    loginDialog.setVisible(true);
+  }
+
+  public void promptForLogin() {
+    promptForLogin(" ");
+  }
+
+  public void promptForUpload(final String error) {
+    Request request = new DownloadGroupsRequest(getHttpClient(), frame) {
+
+      @Override
+      protected void onDownloaded(String status, List<Group> groups) {
+        if(status.equals("SUCCESS")) {
+          ModelingCommons.this.groups = groups;
+          boolean enableAutoGeneratePreviewImage = workspace.procedures().get("SETUP") != null && workspace.procedures().get("GO") != null;
+          JDialog uploadDialog = new UploadDialog(frame, ModelingCommons.this, error, enableAutoGeneratePreviewImage);
+          uploadDialog.setVisible(true);
+        } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+          MessageDialog.show("Error connecting to Modeling Commons", "Invalid response from Modeling Commons");
+        } else if(status.equals("CONNECTION_ERROR")) {
+          MessageDialog.show("Error connecting to Modeling Commons", "Could not connect to Modeling Commons");
+        }
+      }
+
+    };
+    request.execute();
+  }
+
+  public void promptForUpload() {
+    promptForUpload(" ");
+  }
+
+  public void promptForSuccess(String error, String uploadedModelURL, String uploadedModelName) {
+    JDialog successDialog = new UploadSuccessDialog(frame, this, error, uploadedModelURL, uploadedModelName);
+    successDialog.setVisible(true);
+  }
+
+  public void promptForSuccess(String uploadedModelURL, String uploadedModelName) {
+    promptForSuccess(" ", uploadedModelURL, uploadedModelName);
+  }
+
+  public void promptForCreateAccount(final String error) {
+    Request request = new DownloadNewUserParametersRequest(getHttpClient(), frame) {
+      @Override
+      protected void onDownloaded(String status, String newUserAgreement, List<String> priorityCountries, List<String> unpriorityCountries) {
+        if(status.equals("SUCCESS")) {
+          ModelingCommons.this.newUserAgreement = newUserAgreement;
+          ModelingCommons.this.priorityCountries = priorityCountries;
+          ModelingCommons.this.unpriorityCountries = unpriorityCountries;
+          JDialog createAccountDialog = new NewUserDialog(frame, ModelingCommons.this, error);
+          createAccountDialog.setVisible(true);
+        } else if(status.equals("INVALID_RESPONSE_FROM_SERVER")) {
+          promptForLogin("Invalid response from Modeling Commons");
+        } else if(status.equals("CONNECTION_ERROR")) {
+          promptForLogin("Could not connect to Modeling Commons");
+        }
+      }
+    };
+    request.execute();
+  }
+
+  public void promptForCreateAccount() {
+    promptForCreateAccount(" ");
+  }
+
+  public void saveToModelingCommons() {
+    if(!isLoggedIn()) {
+      promptForLogin();
+    } else {
+      promptForUpload();
+    }
+  }
+
+  public Image getAutoGeneratedModelImage() {
+    return new Image() {
+      @Override
+      public BufferedImage getImage() throws ImageException {
+
+        BufferedImage image = null;
+
+        try {
+
+          Workspace ws = (Workspace) Class.forName("org.nlogo.headless.HeadlessWorkspace").getMethod("newInstance").invoke(null);
+          ws.openString(saveModel.apply());
+
+          String         command = "random-seed 0 " + ws.previewCommands();
+          SimpleJobOwner owner   = new SimpleJobOwner("PreviewGetter", ws.world().mainRNG(), AgentKindJ.Observer());
+          Procedure      proc    = ws.compileCommands(command);
+          ws.runCompiledCommands(owner, proc);
+
+          image = ws.exportView();
+
+          ws.dispose();
+
+          return image;
+
+        } catch(InterruptedException e) {
+          //headless.dispose method can potentially throw an InterruptedException
+          //It doesn't matter if this occurs since we will only reach the dispose line once the image has been
+          //generated
+          return image;
+        } catch(CompilerException compilerException) {
+          //Thrown when the code in variable command is invalid Netlogo code and cannot be compiled
+          //Should not happen, indicates above code is bad
+          throw new ImageException("Could not auto-generate preview image due to invalid auto-generate Netlogo code", compilerException);
+        } catch(LogoException logoException) {
+          //Thrown when the generated code could not be run.  This could happen if setup and go procedures are not
+          //defined.  This shouldn't happen since previous checks should ensure that setup and go are defined
+          throw new ImageException("Could not auto-generate preview image since setup and go procedures are not defined", logoException);
+        } catch(ClassNotFoundException ex) {
+          throw new ImageException("Could not auto-generate preview image due to failure to locate the `HeadlessWorkspace` class", ex);
+        } catch(NoSuchMethodException ex) {
+          throw new ImageException("Could not auto-generate preview image due to failure to create `HeadlessWorkspace`", ex);
+        } catch(IllegalAccessException ex) {
+          throw new ImageException("Could not auto-generate preview image due to illegal method invocation on `HeadlessWorkspace`", ex);
+        } catch(InvocationTargetException ex) {
+            throw new ImageException("Could not auto-generate preview image due to failed method invocation on `HeadlessWorkspace`", ex);
+        }
+
+      }
+    };
+  }
+
+  public Image getCurrentModelViewImage() {
+    return new Image() {
+      @Override
+      public BufferedImage getImage() throws ImageException {
+        return workspace.exportView();
+      }
+    };
+  }
+
+  //For use only in Modeling Commons requests
+  HttpClient getHttpClient() {
+    return http;
+  }
+
+}
+
