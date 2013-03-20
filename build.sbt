@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.0"
+scalaVersion in ThisBuild := "2.10.1"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
@@ -87,7 +87,10 @@ libraryDependencies ++= Seq(
   "ch.randelshofer" % "quaqua" % "7.3.4" from "http://ccl.northwestern.edu/devel/quaqua-7.3.4.jar",
   "ch.randelshofer" % "swing-layout" % "7.3.4" from "http://ccl.northwestern.edu/devel/swing-layout-7.3.4.jar",
   "org.jogl" % "jogl" % "1.1.1" from "http://ccl.northwestern.edu/devel/jogl-1.1.1.jar",
-  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar"
+  "org.gluegen-rt" % "gluegen-rt" % "1.1.1" from "http://ccl.northwestern.edu/devel/gluegen-rt-1.1.1.jar",
+  "org.apache.httpcomponents" % "httpclient" % "4.2",
+  "org.apache.httpcomponents" % "httpmime" % "4.2",
+  "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 )
 
 all <<= (baseDirectory, streams) map { (base, s) =>
