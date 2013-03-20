@@ -117,12 +117,12 @@ class ReviewTab(
     } monitor.value(result)
   }
 
-  def startRecording() {
+  def enableRecording() {
     tabState.recordingEnabled = true
     Enabled.setSelected(tabState.recordingEnabled)
   }
 
-  def stopRecording() {
+  def disableRecording() {
     tabState.recordingEnabled = false
     Enabled.setSelected(tabState.recordingEnabled)
   }
@@ -177,7 +177,7 @@ class ReviewTab(
           JOptionPane.showMessageDialog(this,
             "Not enough memory. Turning off recording.",
             "Low memory", JOptionPane.WARNING_MESSAGE)
-          stopRecording()
+          disableRecording()
       }
       refreshInterface()
     }
