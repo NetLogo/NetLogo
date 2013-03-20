@@ -74,17 +74,21 @@ object ChecksumsAndPreviews {
       override def toString = List(path, worldSum, graphicsSum, revision).mkString(" - ")
     }
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
-    def okPath(path: String) =
-      !List("HUBNET", "/CURRICULAR MODELS/")
-            .exists(path.toUpperCase.containsSlice(_)) &&
-        (if(List("/GAMES/FROGGER.NLOGO", "/ART/SOUND MACHINES.NLOGO", "/CODE EXAMPLES/SOUND/",
-          "VORONOI - EMERGENT", "ARTIFICIAL NEURAL NET - ")
-           .exists(path.toUpperCase.containsSlice(_))) {
-          println("SKIPPING MODEL: " +  path)
-          println("  because it uses the sound extension") // Not always true - NP 2013-03-12
-          false
-        }
-        else true)
+
+    def okPath(path: String) = (for {
+      (message, slices) <- Seq(
+        None -> List("HUBNET", "/CURRICULAR MODELS/"),
+        Some("it contains ` - ` in file name") -> List(" - "),
+        Some("it uses the sound extension") -> List(
+          "/GAMES/FROGGER.NLOGO",
+          "/ART/SOUND MACHINES.NLOGO",
+          "/CODE EXAMPLES/SOUND/"))
+      slice <- slices
+      if path.toUpperCase.containsSlice(slice)
+    } yield {
+      for (msg <- message) println("SKIPPING MODEL: " + path + "  because " + msg)
+    }).isEmpty
+
     def update(paths: List[String]) {
       val path = if(Version.is3D) "models/test/checksums3d.txt"
                  else "models/test/checksums.txt"
