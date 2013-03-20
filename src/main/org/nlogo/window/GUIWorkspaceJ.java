@@ -21,6 +21,7 @@ import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.UpdateMode;
 import org.nlogo.api.UpdateModeJ;
+import org.nlogo.drawing.DrawingActionBroker;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
@@ -55,6 +56,7 @@ public abstract strictfp class GUIWorkspaceJ
   private final java.awt.Component linkParent;
   public final ViewWidget viewWidget;
   public final View view;
+  public final DrawingActionBroker drawingActionBroker;
   private WidgetContainer widgetContainer = null;
   public GLViewManagerInterface glView = null;
   public ViewManager viewManager = new ViewManager();
@@ -82,6 +84,7 @@ public abstract strictfp class GUIWorkspaceJ
 
     viewWidget = new ViewWidget((GUIWorkspace) this);
     view = viewWidget.view;
+    drawingActionBroker = new DrawingActionBroker(view.renderer.trailDrawer());
     viewManager.setPrimary(view);
 
     PeriodicUpdater periodicUpdater = new PeriodicUpdater(jobManager);
@@ -158,8 +161,8 @@ public abstract strictfp class GUIWorkspaceJ
   public abstract RendererInterface newRenderer();
 
   public void stamp(org.nlogo.api.Agent agent, boolean erase) {
-    view.renderer.prepareToPaint(view, view.renderer.trailDrawer().getWidth(), view.renderer.trailDrawer().getHeight());
-    view.renderer.trailDrawer().stamp(agent, erase);
+    view.renderer.prepareToPaint(view, drawingActionBroker.getWidth(), drawingActionBroker.getHeight());
+    drawingActionBroker.stamp(agent, erase);
     if (hubNetManager() != null) {
       hubNetManager().sendStamp(agent, erase);
     }
@@ -186,7 +189,7 @@ public abstract strictfp class GUIWorkspaceJ
   @Override
   public void importDrawing(org.nlogo.api.File file)
       throws java.io.IOException {
-    view.renderer.trailDrawer().importDrawing(file);
+    drawingActionBroker.importDrawing(file);
   }
 
   public void exportDrawing(String filename, String format)
@@ -194,7 +197,7 @@ public abstract strictfp class GUIWorkspaceJ
     java.io.FileOutputStream stream =
         new java.io.FileOutputStream(new java.io.File(filename));
     javax.imageio.ImageIO.write
-        (view.renderer.trailDrawer().getAndCreateDrawing(true), format, stream);
+        (drawingActionBroker.getAndCreateDrawing(true), format, stream);
     stream.close();
   }
 
@@ -203,24 +206,24 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public java.awt.image.BufferedImage getAndCreateDrawing(boolean dirty) {
-    return view.renderer.trailDrawer().getAndCreateDrawing(dirty);
+    return drawingActionBroker.getAndCreateDrawing(dirty);
   }
 
   @Override
   public void clearDrawing() {
     world().clearDrawing();
-    view.renderer.trailDrawer().clearDrawing();
+    drawingActionBroker.clearDrawing();
     if (hubNetManager() != null) {
       hubNetManager().sendClear();
     }
   }
 
   public boolean sendPixels() {
-    return view.renderer.trailDrawer().sendPixels();
+    return drawingActionBroker.sendPixels();
   }
 
   public void sendPixels(boolean dirty) {
-    view.renderer.trailDrawer().sendPixels(dirty);
+    drawingActionBroker.sendPixels(dirty);
   }
 
   // I'm not sure that our superclass's implementation wouldn't
@@ -637,44 +640,44 @@ public abstract strictfp class GUIWorkspaceJ
 
   // DrawingInterface for 3D renderer
   public int[] colors() {
-    return view.renderer.trailDrawer().colors();
+    return drawingActionBroker.colors();
   }
 
   public boolean isDirty() {
-    return view.renderer.trailDrawer().isDirty();
+    return drawingActionBroker.isDirty();
   }
 
   public boolean isBlank() {
-    return view.renderer.trailDrawer().isBlank();
+    return drawingActionBroker.isBlank();
   }
 
   public void markClean() {
-    view.renderer.trailDrawer().markClean();
+    drawingActionBroker.markClean();
   }
 
   public void markDirty() {
-    view.renderer.trailDrawer().markDirty();
+    drawingActionBroker.markDirty();
   }
 
   public int getWidth() {
-    return view.renderer.trailDrawer().getWidth();
+    return drawingActionBroker.getWidth();
   }
 
   public int getHeight() {
-    return view.renderer.trailDrawer().getHeight();
+    return drawingActionBroker.getHeight();
   }
 
   public void readImage(java.io.InputStream is) throws java.io.IOException {
-    view.renderer.trailDrawer().readImage(is);
+    drawingActionBroker.readImage(is);
   }
 
   public void rescaleDrawing() {
-    view.renderer.trailDrawer().rescaleDrawing();
+    drawingActionBroker.rescaleDrawing();
   }
 
   public void drawLine(double x0, double y0, double x1, double y1,
                        Object color, double size, String mode) {
-    view.renderer.trailDrawer().drawLine
+    drawingActionBroker.drawLine
         (x0, y0, x1, y1, color, size, mode);
     if (hubNetManager() != null) {
       hubNetManager().sendLine(x0, y0, x1, y1, color, size, mode);
@@ -682,11 +685,11 @@ public abstract strictfp class GUIWorkspaceJ
   }
 
   public void setColors(int[] colors) {
-    view.renderer.trailDrawer().setColors(colors);
+    drawingActionBroker.setColors(colors);
   }
 
   public Object getDrawing() {
-    return view.renderer.trailDrawer().getDrawing();
+    return drawingActionBroker.getDrawing();
   }
 
   // called on job thread, but without world lock - ST 9/12/07
@@ -928,7 +931,7 @@ public abstract strictfp class GUIWorkspaceJ
 
   @Override
   public void exportDrawingToCSV(java.io.PrintWriter writer) {
-    view.renderer.trailDrawer().exportDrawingToCSV(writer);
+    drawingActionBroker.exportDrawingToCSV(writer);
   }
 
   @Override

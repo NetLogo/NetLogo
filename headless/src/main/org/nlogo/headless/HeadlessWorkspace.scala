@@ -18,6 +18,7 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala }
 import org.nlogo.util.Pico
 import org.picocontainer.Parameter
 import org.picocontainer.parameters.ComponentParameter
+import org.nlogo.drawing.DrawingActionBroker
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -110,7 +111,10 @@ with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
 
   AbstractWorkspace.isApplet(false)
-  world.trailDrawer(renderer.trailDrawer)
+
+  val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
+  world.trailDrawer(drawingActionBroker)
+
   val defaultOwner =
     new SimpleJobOwner("HeadlessWorkspace", world.mainRNG)
 
@@ -270,7 +274,7 @@ with org.nlogo.api.ViewSettings {
   override def patchSize(patchSize: Double) {
     world.patchSize(patchSize)
     renderer.resetCache(patchSize)
-    renderer.trailDrawer.rescaleDrawing()
+    drawingActionBroker.rescaleDrawing()
   }
   override def patchSize = world.patchSize
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) {
@@ -298,22 +302,22 @@ with org.nlogo.api.ViewSettings {
     }
   }
   override def getAndCreateDrawing =
-    renderer.trailDrawer.getAndCreateDrawing(true)
+    drawingActionBroker.getAndCreateDrawing(true)
   override def importDrawing(file: org.nlogo.api.File) {
-    renderer.trailDrawer.importDrawing(file)
+    drawingActionBroker.importDrawing(file)
   }
   override def clearDrawing() {
     world.clearDrawing()
-    renderer.trailDrawer.clearDrawing()
+    drawingActionBroker.clearDrawing()
   }
   override def exportDrawing(filename: String, format: String) {
     val stream = new java.io.FileOutputStream(new java.io.File(filename))
     javax.imageio.ImageIO.write(
-      renderer.trailDrawer.getAndCreateDrawing(true), format, stream)
+      drawingActionBroker.getAndCreateDrawing(true), format, stream)
     stream.close()
   }
   override def exportDrawingToCSV(writer: java.io.PrintWriter) {
-    renderer.trailDrawer.exportDrawingToCSV(writer)
+    drawingActionBroker.exportDrawingToCSV(writer)
   }
 
   def exportOutput(filename: String) {

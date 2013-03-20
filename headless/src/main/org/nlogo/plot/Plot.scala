@@ -3,6 +3,10 @@
 package org.nlogo.plot
 
 import org.nlogo.api.{ PlotInterface, PlotPenInterface, PlotState }
+import org.nlogo.plot.PlotAction.PlotXY
+import org.nlogo.plot.PlotAction.SoftResetPen
+import scala.collection.immutable
+import scala.collection.immutable.VectorBuilder
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -18,6 +22,7 @@ extends PlotInterface {
   import Plot._
 
   var state = defaultState
+  var dirty = true
 
   override def toString = "Plot(" + name + ")"
 
@@ -111,7 +116,7 @@ extends PlotInterface {
     }
   }
 
-  private def growRanges(x: Double, y: Double, extraRoom: Boolean) {
+  def growRanges(x: Double, y: Double, extraRoom: Boolean) {
     def adjust(d: Double, factor: Double) =
       d * (if(extraRoom) factor else 1)
     if(x > state.xMax){
@@ -132,24 +137,11 @@ extends PlotInterface {
     }
   }
 
-  /// histograms
-
-  var histogram: Option[Histogram] = None
-
-  def beginHistogram(pen:PlotPen) {
-    histogram = Some(new Histogram(state.xMin, state.xMax, pen.state.interval))
-  }
-
-  def beginHistogram(pen:PlotPen, bars: Array[Int]){
-    histogram = Some(new Histogram(state.xMin, pen.state.interval, bars))
-  }
-
-  def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
-
-  // this leaves the pen down, regardless of its previous state
-  // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
-  def endHistogram(pen:PlotPen){
-    pen.softReset()
+  def histogramActions(pen: PlotPen, values: Seq[Double]): immutable.Seq[PlotAction] = {
+    val histogram = new Histogram(state.xMin, state.xMax, pen.state.interval)
+    values.foreach(histogram.nextValue)
+    val actions = new VectorBuilder[PlotAction]
+    actions += SoftResetPen(this.name, pen.name)
     if (state.autoPlotOn)
       // note that we pass extraRoom as false; we know the exact height
       // of the histogram so there's no point in leaving any extra empty
@@ -157,19 +149,20 @@ extends PlotInterface {
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(state.xMin, histogram.get.ceiling, false)
-    for((bar, barNumber) <- histogram.get.bars.zipWithIndex) {
+      growRanges(state.xMin, histogram.ceiling, false)
+    actions ++= (for {
+      (barHeight, barNumber) <- histogram.bars.zipWithIndex
       // there is a design decision here not to generate points corresponding to empty bins.  not
       // sure what the right thing is in general, but in the GasLab models we use the histogram
       // command three times to produce a histogram with three different bar colors, and it looks
       // funny in that model if the bars we aren't histogramming have a horizontal line along the
       // axis - ST 2/24/06
-      if(bar > 0)
-        // compute the x coordinates by multiplication instead of repeated adding so that floating
-        // point error doesn't accumulate - ST 2/23/06
-        pen.plot(state.xMin + barNumber * pen.state.interval, bar)
-    }
-    histogram = None
+      if (barHeight > 0)
+      // compute the x coordinates by multiplication instead of repeated adding so that floating
+      // point error doesn't accumulate - ST 2/23/06
+      x = state.xMin + barNumber * pen.state.interval
+    } yield PlotXY(this.name, pen.name, x, barHeight))
+    actions.result
   }
 
   override def clone = {
@@ -182,7 +175,7 @@ extends PlotInterface {
     newPlot.legendIsOpen = legendIsOpen
     newPlot.setupCode = setupCode
     newPlot.updateCode = updateCode
-    newPlot.histogram = histogram.map(_.clone)
+    // newPlot.dirty will be true by default, which is fine
     newPlot
   }
 
