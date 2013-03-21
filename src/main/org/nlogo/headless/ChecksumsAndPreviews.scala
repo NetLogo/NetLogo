@@ -68,17 +68,17 @@ object ChecksumsAndPreviews {
   /// checksums
 
   object Checksums {
+    val separator = " * " // used to separate fields in checksums.txt
     case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
         path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-      override def toString = List(path, worldSum, graphicsSum, revision).mkString(" - ")
+      override def toString = List(path, worldSum, graphicsSum, revision).mkString(separator)
     }
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
 
     def okPath(path: String) = (for {
       (message, slices) <- Seq(
         None -> List("HUBNET", "/CURRICULAR MODELS/"),
-        Some("it contains ` - ` in file name") -> List(" - "),
         Some("it uses the sound extension") -> List(
           "/GAMES/FROGGER.NLOGO",
           "/ART/SOUND MACHINES.NLOGO",
@@ -130,14 +130,14 @@ object ChecksumsAndPreviews {
         else "* Changed"
       m.put(model, newEntry)
       if(action != "Didn't change")
-        println(action + ": \"" + model + " - " + newCheckSum
-                + " - " + newGraphicsChecksum + " - " + revision + "\"")
+        println(action + ": \"" + model + separator + newCheckSum
+                + separator + newGraphicsChecksum + separator + revision + "\"")
     }
     def load(path: String): ChecksumMap = {
       val m = new ChecksumMap
       for(line <- io.Source.fromFile(path).getLines.map(_.trim))
         if(!line.startsWith("#") && !line.isEmpty) {
-          val strs = line.split(" - ")
+          val strs = line.split(java.util.regex.Pattern.quote(separator))
           if(strs.size != 4)
             throw new IllegalStateException("bad line: " + line)
           m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3)))
