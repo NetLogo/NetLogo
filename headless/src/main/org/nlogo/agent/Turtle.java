@@ -603,7 +603,7 @@ public strictfp class Turtle
 
   public void color(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[varIndex] = rgb;
     if(rgb.size() > 3) {
       world.mayHavePartiallyTransparentObjects = true;
@@ -1116,7 +1116,7 @@ public strictfp class Turtle
 
   public void labelColor(LogoList rgb, int valueIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[valueIndex] = rgb;
   }
 

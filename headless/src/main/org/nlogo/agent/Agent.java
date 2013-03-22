@@ -114,33 +114,6 @@ public abstract strictfp class Agent
         classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)));
   }
 
-  void validRGBList(LogoList rgb, boolean allowAlpha)
-      throws AgentException {
-    if (rgb.size() == 3 || (allowAlpha && rgb.size() == 4)) {
-      try {
-        for (int i = 0; i < rgb.size(); i++) {
-          validRGB(((Double) rgb.get(i)).intValue());
-        }
-        return;
-      } catch (ClassCastException e) {
-        // just fall through and throw the error below
-        org.nlogo.util.Exceptions.ignore(e);
-      }
-    }
-    String key =
-        allowAlpha
-            ? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
-            : "org.nlogo.agent.Agent.rgbListSizeError.3";
-    throw new AgentException(I18N.errorsJ().get(key));
-  }
-
-  private void validRGB(int c)
-      throws AgentException {
-    if (c < 0 || c > 255) {
-      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Agent.rgbValueError"));
-    }
-  }
-
   public abstract String classDisplayName();
 
   public abstract int agentBit();

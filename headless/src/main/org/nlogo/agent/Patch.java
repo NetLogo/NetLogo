@@ -424,7 +424,7 @@ public strictfp class Patch
 
   public void pcolor(LogoList rgb, int varIndex, boolean allowAlpha)
       throws AgentException {
-    validRGBList(rgb, allowAlpha);
+    org.nlogo.api.Color.validRGBList(rgb, allowAlpha);
     pcolor = Double.NaN;
 
     if (!(variables[varIndex] instanceof LogoList) || !rgb.equals(variables[varIndex])) {
@@ -495,7 +495,7 @@ public strictfp class Patch
 
   public void labelColor(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[varIndex] = rgb;
   }
 

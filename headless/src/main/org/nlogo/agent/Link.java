@@ -524,7 +524,7 @@ public strictfp class Link
 
   public void color(LogoList rgb)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[VAR_COLOR] = rgb;
     if(rgb.size() > 3) {
       world.mayHavePartiallyTransparentObjects = true;
@@ -583,7 +583,7 @@ public strictfp class Link
 
   public void labelColor(LogoList rgb)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[VAR_LABELCOLOR] = rgb;
   }
 
