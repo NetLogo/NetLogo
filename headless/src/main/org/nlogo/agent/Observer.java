@@ -103,6 +103,15 @@ public strictfp class Observer
     setObserverVariable(vn, value);
   }
 
+  ValueConstraint[] variableConstraints = null;
+
+  public ValueConstraint variableConstraint(int vn) {
+    return variableConstraints[vn];
+  }
+
+  public void variableConstraint(int vn, ValueConstraint con) {
+    variableConstraints[vn] = con;
+  }
 
   public void assertVariableConstraint(int vn, Object value)
       throws AgentException {

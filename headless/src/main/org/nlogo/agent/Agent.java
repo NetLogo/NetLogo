@@ -8,7 +8,6 @@ import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.ValueConstraint;
 
 import java.util.Observable;
 
@@ -30,7 +29,6 @@ public abstract strictfp class Agent
 
   public Object[] variables() { return variables; }
   public Object[] variables = null; // public ONLY for __fire
-  ValueConstraint[] variableConstraints = null;
 
   Object agentKey() {
     return Double.valueOf(id);
@@ -59,14 +57,6 @@ public abstract strictfp class Agent
 
   public abstract void setVariable(int vn, Object value)
       throws AgentException;
-
-  public ValueConstraint variableConstraint(int vn) {
-    return variableConstraints[vn];
-  }
-
-  public void variableConstraint(int vn, ValueConstraint con) {
-    variableConstraints[vn] = con;
-  }
 
   public abstract Object getObserverVariable(int vn);
 
