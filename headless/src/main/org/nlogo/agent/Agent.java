@@ -16,7 +16,7 @@ public abstract strictfp class Agent
     return world;
   }
 
-  public long id = 0;
+  long id = 0;
 
   public long id() {
     return id;

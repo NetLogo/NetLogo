@@ -24,7 +24,7 @@ public strictfp class AgentMonitorView
 
   @Override
   public boolean isDead() {
-    return (agent != null && agent.id == -1);
+    return (agent != null && agent.id() == -1);
   }
 
   private Agent agent;
