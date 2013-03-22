@@ -32,8 +32,8 @@ object Realloc {
     for((name, breed) <- program.linkBreeds)
       world.linkBreedAgents.get(name).setDirected(breed.isDirected)
     // call Agent.realloc() on all the turtles
-    val doomedAgents = collection.mutable.Buffer[Agent]()
     if (world.turtles != null) {
+      val doomedAgents = collection.mutable.Buffer[Agent]()
       val iter = world.turtles.iterator
       while(iter.hasNext) {
         val agt = iter.next()
@@ -41,10 +41,10 @@ object Realloc {
           doomedAgents += agt
       }
       doomedAgents.foreach(_.asInstanceOf[Turtle].die())
-      doomedAgents.clear()
     }
     // call Agent.realloc() on all links
     if (world.links != null) {
+      val doomedAgents = collection.mutable.Buffer[Agent]()
       val iter = world.links.iterator
       while(iter.hasNext) {
         val agt = iter.next()
@@ -52,7 +52,6 @@ object Realloc {
           doomedAgents += agt
       }
       doomedAgents.foreach(_.asInstanceOf[Link].die())
-      doomedAgents.clear()
     }
     // call Agent.realloc() on all the patches
     // Note: we only need to realloc() if the patch variables have changed.
