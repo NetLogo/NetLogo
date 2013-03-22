@@ -458,7 +458,7 @@ public class Renderer
 
         for (Agent agent : world.turtles().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -468,7 +468,7 @@ public class Renderer
 
         for (Agent agent : world.patches().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -478,7 +478,7 @@ public class Renderer
 
         for (Agent agent : world.links().agents()) {
           if (agentIsVisible(agent)) {
-            if (agent.isPartiallyTransparent()) {
+            if (isPartiallyTransparent(agent)) {
               transparentAgents.add(agent);
             } else {
               opaqueAgents.add(agent);
@@ -496,7 +496,7 @@ public class Renderer
           // Link stamps
           for (org.nlogo.api.Link stamp : ((Drawing3D) world.getDrawing()).linkStamps()) {
             if (agentIsVisible(stamp)) {
-              if (stamp.isPartiallyTransparent()) {
+              if (isPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -507,7 +507,7 @@ public class Renderer
           // Turtle stamps
           for (org.nlogo.api.Turtle stamp : ((Drawing3D) world.getDrawing()).turtleStamps()) {
             if (agentIsVisible(stamp)) {
-              if (stamp.isPartiallyTransparent()) {
+              if (isPartiallyTransparent(stamp)) {
                 transparentAgents.add(stamp);
               } else {
                 opaqueAgents.add(stamp);
@@ -584,6 +584,11 @@ public class Renderer
         }
       }
     }
+  }
+
+  private boolean isPartiallyTransparent(Agent agent) {
+    int alpha = agent.alpha();
+    return alpha > 0 && alpha < 255;
   }
 
   void renderAgent(GL gl, Agent agent, Double lineScale) {

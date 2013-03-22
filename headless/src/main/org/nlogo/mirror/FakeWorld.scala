@@ -65,7 +65,6 @@ class FakeWorld(state: State) extends api.World {
     def alpha = unsupported
     def getVariable(vn: Int) = unsupported
     def setVariable(vn: Int, value: AnyRef) = unsupported
-    def isPartiallyTransparent = unsupported
   }
 
   class FakeTurtle(agentId: Long, val vars: Seq[AnyRef])
