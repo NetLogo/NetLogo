@@ -39,6 +39,7 @@ public strictfp class FileMenu
     addSeparator();
     addMenuItem('S', new SaveAction());
     addMenuItem('S', true, new SaveAsAction());
+    addMenuItem(new SaveModelingCommonsAction());
     addSeparator();
     addMenuItem(I18N.guiJ().get("menu.file.print"), 'P', app.tabs().printAction());
     addSeparator();
