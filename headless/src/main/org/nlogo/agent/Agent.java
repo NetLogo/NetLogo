@@ -7,10 +7,7 @@ import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
 
-import java.util.Observable;
-
 public abstract strictfp class Agent
-    extends Observable
     implements org.nlogo.api.Agent, Comparable<Agent> {
 
   final World world;
