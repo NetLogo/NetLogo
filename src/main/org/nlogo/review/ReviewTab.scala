@@ -78,20 +78,29 @@ class ReviewTab(
 
   ws.listenerManager.addListener(
     new api.NetLogoAdapter {
+      override def requestedDisplayUpdate() {
+        if (tabState.currentlyRecording) {
+          updateMonitors()
+          // switch from job thread to event thread
+          ws.waitFor(() => grab())
+          refreshInterface()
+        }
+      }
+      override def modelOpened(name: String) {
+        // clearing the ticks doesn't send tickCounterChanged if the ticks
+        // were already at -1.0, so we make sure to clear the actions of a
+        // potentially "tickless" model when we open a new one.
+        actionBuffers.foreach(_.clear())
+        tabState.currentRun.foreach(_.stillRecording = false)
+      }
       override def tickCounterChanged(ticks: Double) {
-        if (ws.world.ticks == -1) {
-          actionBuffers.foreach(_.clear())
-        } else {
-          if (tabState.recordingEnabled) { // checkMemory may turn off recording
-            if (tabState.currentRun.isEmpty || ws.world.ticks == 0)
-              ws.waitFor(() => startNewRun())
-            if (tabState.currentlyRecording) {
-              updateMonitors()
-              // switch from job thread to event thread
-              ws.waitFor(() => grab())
-              refreshInterface()
-            }
-          }
+        ticks match {
+          case -1.0 =>
+            actionBuffers.foreach(_.clear())
+            tabState.currentRun.foreach(_.stillRecording = false)
+          case 0.0 =>
+            ws.waitFor(() => startNewRun())
+          case _ => // requestedDisplayUpdate() takes care of the rest
         }
       }
     })
@@ -109,8 +118,10 @@ class ReviewTab(
   def updateMonitor(monitor: MonitorWidget) {
     for {
       reporter <- monitor.reporter
+      runner = ws.evaluator.ProcedureRunner
+      if runner.hasContext
       result = try {
-        ws.evaluator.ProcedureRunner.report(reporter)
+        runner.report(reporter)
       } catch {
         case _: api.LogoException => "N/A"
       }

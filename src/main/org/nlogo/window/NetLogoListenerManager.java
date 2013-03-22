@@ -117,6 +117,12 @@ public strictfp class NetLogoListenerManager
     }
   }
 
+  public void requestedDisplayUpdate() {
+    for (NetLogoListener listener : listeners) {
+      listener.requestedDisplayUpdate();
+    }
+  }
+
   public void addListener(NetLogoListener listener) {
     listeners.add(listener);
   }

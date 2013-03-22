@@ -568,6 +568,9 @@ public abstract strictfp class GUIWorkspaceJ
     }
     updateDisplay(true); // haveWorldLockAlready = true
     notifyListeners(context);
+    // We call listenerManager.requestedDisplayUpdate() only from here and not from
+    // notifyListeners, because the latter is called more often. NP 2013-03-18.
+    listenerManager.requestedDisplayUpdate();
   }
 
   protected double lastTicksListenersHeard = -1.0;

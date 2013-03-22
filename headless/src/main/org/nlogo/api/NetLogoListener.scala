@@ -99,4 +99,6 @@ trait NetLogoListener extends java.util.EventListener {
    */
   def possibleViewUpdate()
 
+  def requestedDisplayUpdate()
+
 }

@@ -225,4 +225,6 @@ class NoisyListener extends NetLogoListener {
     hey("tickCounterChanged", ticks)
   override def possibleViewUpdate() =
     hey("possibleViewUpdate")
+  override def requestedDisplayUpdate() =
+    hey("requestedDisplayUpdate")
 }

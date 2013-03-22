@@ -58,6 +58,7 @@ class Evaluator(workspace: AbstractWorkspaceScala) {
 
   object ProcedureRunner {
     private[Evaluator] var context: Context = null
+    def hasContext = context != null
     def report(reporter: Reporter, a: Agent = workspace.world.observer) =
       context.evaluateReporter(a, reporter)
     def run(p: Procedure): Boolean = {

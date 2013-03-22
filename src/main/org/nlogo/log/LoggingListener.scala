@@ -10,6 +10,8 @@ trait LoggingListener extends NetLogoListener {
   // logging this would be excessive - ST 11/11/10
   override def possibleViewUpdate() {}
 
+  override def requestedDisplayUpdate() {}
+
   // no clue why we do nothing with these two - ST 8/6/11
   override def buttonPressed(buttonName: String) {}
   override def buttonStopped(buttonName: String) {}
