@@ -31,6 +31,7 @@ trait SavableRun {
       name,
       modelString,
       viewAreaShape,
+      fixedViewSettings,
       imageBytes,
       rawMirroredUpdates,
       actionFrames,
@@ -47,6 +48,7 @@ object ModelRunIO {
     val name = read[String]()
     val modelString = read[String]()
     val viewShape = read[java.awt.Shape]()
+    val fixedViewSettings = read[FixedViewSettings]
     val imageBytes = read[Array[Byte]]()
     val rawMirroredUpdates = read[Seq[Array[Byte]]]()
     val actionFrames = read[Seq[IndexedSeq[Action]]]()
@@ -54,7 +56,7 @@ object ModelRunIO {
     in.close()
     val viewArea = new java.awt.geom.Area(viewShape)
     val backgroundImage = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes))
-    val run = new ModelRun(name, modelString, viewArea, backgroundImage, generalNotes)
+    val run = new ModelRun(name, modelString, viewArea, fixedViewSettings, backgroundImage, generalNotes)
     val plots = parsePlots(modelString)
     run.load(plots, rawMirroredUpdates, actionFrames)
     run

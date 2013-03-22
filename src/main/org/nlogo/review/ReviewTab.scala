@@ -22,6 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import org.nlogo.plot.PlotAction
 import org.nlogo.drawing.DrawingAction
 import org.nlogo.mirror.Frame
+import org.nlogo.mirror.FixedViewSettings
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -159,13 +160,15 @@ class ReviewTab(
       widgetArea = new java.awt.geom.Area(bounds)
     } viewArea.subtract(widgetArea)
 
+    val viewSettings = FixedViewSettings(ws.view)
+
     val image = org.nlogo.awt.Images.paintToImage(
       ws.viewWidget.findWidgetContainer.asInstanceOf[java.awt.Component])
 
     val name = Option(ws.getModelFileName).map(nameFromPath)
       .orElse(tabState.currentRun.map(_.name))
       .getOrElse("Untitled")
-    val run = new ModelRun(name, saveModel(), viewArea, image, "", Map())
+    val run = new ModelRun(name, saveModel(), viewArea, viewSettings, image, "", Map())
     tabState.addRun(run)
     RunList.setSelectedValue(run, true)
     refreshInterface()
@@ -198,25 +201,13 @@ class ReviewTab(
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
       for {
-        frame <- tabState.currentFrame
+        run <- tabState.currentRun
+        frame <- run.currentFrame
         fakeWorld = new FakeWorld(frame.mirroredState)
         paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
+        viewSettings = run.fixedViewSettings
         g2d = g.create.asInstanceOf[java.awt.Graphics2D]
       } {
-        object FakeViewSettings extends api.ViewSettings {
-          // disregard spotlight/perspective settings in the
-          // "real" view, but delegate other methods to it
-          def fontSize = ws.view.fontSize
-          def patchSize = ws.view.patchSize
-          def viewWidth = ws.view.viewWidth
-          def viewHeight = ws.view.viewHeight
-          def viewOffsetX = ws.view.viewOffsetX
-          def viewOffsetY = ws.view.viewOffsetY
-          def drawSpotlight = false
-          def renderPerspective = false
-          def perspective = api.Perspective.Observe
-          def isHeadless = ws.view.isHeadless
-        }
         paintArea.intersect(viewArea) // avoid spilling outside interface panel
         try {
           g2d.setClip(paintArea)
@@ -224,7 +215,7 @@ class ReviewTab(
           val renderer = fakeWorld.newRenderer
           val image = new java.io.ByteArrayInputStream(frame.drawingImageBytes)
           renderer.trailDrawer.readImage(image)
-          renderer.paint(g2d, FakeViewSettings)
+          renderer.paint(g2d, viewSettings)
         } finally {
           g2d.dispose()
         }

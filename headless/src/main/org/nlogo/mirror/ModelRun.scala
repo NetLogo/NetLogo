@@ -15,6 +15,7 @@ class ModelRun(
   var name: String,
   val modelString: String,
   val viewArea: java.awt.geom.Area,
+  val fixedViewSettings: FixedViewSettings,
   val backgroundImage: BufferedImage,
   private var _generalNotes: String = "",
   private var _annotations: Map[Int, String] = Map())
