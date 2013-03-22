@@ -349,8 +349,7 @@ public strictfp class Patch
     return child;
   }
 
-  // this is only used by the _fire prim ev 6/28/07
-  double pcolor = 0;
+  protected double pcolor = 0;
 
   public double pcolorDouble() {
     if (variables[VAR_PCOLOR] == null || variables[VAR_PCOLOR] instanceof Double) {

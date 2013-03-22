@@ -27,8 +27,8 @@ public abstract strictfp class Agent
     return id;
   }
 
+  Object[] variables = null;
   public Object[] variables() { return variables; }
-  public Object[] variables = null; // public ONLY for __fire
 
   Object agentKey() {
     return Double.valueOf(id);
