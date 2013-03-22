@@ -166,16 +166,11 @@ public strictfp class Turtle
   }
 
   @Override
-  boolean realloc(boolean compiling) {
-    return realloc(compiling, null);
+  void realloc(boolean compiling) {
+    realloc(compiling, null);
   }
 
-  boolean realloc(boolean compiling, AgentSet oldBreed) {
-    // first check if we recompiled and our breed disappeared!
-    if (compiling && getBreed() != world.turtles() &&
-        world.getBreed(getBreed().printName()) == null) {
-      return true;
-    }
+  void realloc(boolean compiling, AgentSet oldBreed) {
 
     // stage 0: get ready
     Object[] oldvars = variables;
@@ -214,8 +209,6 @@ public strictfp class Turtle
         oldvars[oldpos] = null;
       }
     }
-
-    return false;
   }
 
   // note this is very similar to

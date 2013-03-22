@@ -104,7 +104,7 @@ public strictfp class Patch
   }
 
   @Override
-  boolean realloc(boolean forRecompile) {
+  void realloc(boolean forRecompile) {
     Object[] oldvars = variables;
     Object[] newvars = new Object[world.getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
@@ -125,7 +125,6 @@ public strictfp class Patch
       }
     }
     variables = newvars;
-    return false;
   }
 
   @Override

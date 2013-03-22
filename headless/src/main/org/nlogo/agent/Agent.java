@@ -44,7 +44,7 @@ public abstract strictfp class Agent
         : (id > otherId ? 1 : 0);
   }
 
-  abstract boolean realloc(boolean forRecompile);
+  abstract void realloc(boolean forRecompile);
 
   public abstract Object getVariable(int vn);
 

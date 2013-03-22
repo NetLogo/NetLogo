@@ -21,7 +21,7 @@ public strictfp class Observer
   public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
-  boolean realloc(boolean forRecompile) {
+  void realloc(boolean forRecompile) {
     Object[] oldvars = variables;
     Object[] newvars = new Object[world.getVariablesArraySize(this)];
     ValueConstraint[] newcons = new ValueConstraint[world.getVariablesArraySize(this)];
@@ -44,7 +44,6 @@ public strictfp class Observer
     }
     variables = newvars;
     variableConstraints = newcons;
-    return false;
   }
 
   @Override
