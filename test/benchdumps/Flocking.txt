@@ -621,7 +621,7 @@ procedure FLOCK:[]{-T--}:
           ATHROW
          L7
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L8
@@ -1026,7 +1026,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
               ATHROW
              L4
               ALOAD 2
-              GETFIELD org/nlogo/agent/Agent.id : J
+              INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
               LDC -1
               LCMP
               IFNE L5
@@ -1150,7 +1150,7 @@ procedure SEPARATE:[]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L10

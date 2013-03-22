@@ -1911,7 +1911,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   CHECKCAST org/nlogo/agent/Agent
                   ASTORE 3
                   ALOAD 3
-                  GETFIELD org/nlogo/agent/Agent.id : J
+                  INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
                   LDC -1
                   LCMP
                   IFNE L7
@@ -3739,7 +3739,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L16
@@ -4184,7 +4184,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L12
@@ -4333,7 +4333,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L12
@@ -4482,7 +4482,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L12
@@ -7913,7 +7913,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L9
@@ -9676,7 +9676,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L9
@@ -9850,7 +9850,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L9
@@ -10095,7 +10095,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L7
@@ -10220,7 +10220,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 3
           ALOAD 3
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L9
@@ -10465,7 +10465,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L7
@@ -10626,7 +10626,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L7
@@ -12651,7 +12651,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12
@@ -12918,7 +12918,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12
@@ -13185,7 +13185,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12
@@ -13543,7 +13543,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12
@@ -13810,7 +13810,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12
@@ -14077,7 +14077,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             CHECKCAST org/nlogo/agent/Agent
             ASTORE 3
             ALOAD 3
-            GETFIELD org/nlogo/agent/Agent.id : J
+            INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
             LDC -1
             LCMP
             IFNE L12

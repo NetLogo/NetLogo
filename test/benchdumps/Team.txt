@@ -2809,7 +2809,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L7
@@ -3476,7 +3476,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ASTORE 2
              L0
               ALOAD 2
-              GETFIELD org/nlogo/agent/Agent.id : J
+              INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
               LDC -1
               LCMP
               IFNE L12
@@ -3544,7 +3544,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ASTORE 2
              L5
               ALOAD 2
-              GETFIELD org/nlogo/agent/Agent.id : J
+              INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
               LDC -1
               LCMP
               IFNE L18
@@ -3827,7 +3827,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 2
          L0
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L12
@@ -3895,7 +3895,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 2
          L5
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L18
@@ -4026,7 +4026,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 2
          L0
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L12
@@ -4094,7 +4094,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 2
          L5
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L18
@@ -6269,7 +6269,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           CHECKCAST org/nlogo/agent/Agent
           ASTORE 4
           ALOAD 4
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L7

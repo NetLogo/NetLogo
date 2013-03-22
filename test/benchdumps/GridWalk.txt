@@ -319,7 +319,7 @@ procedure SETUP:[]{O---}:
           ATHROW
          L10
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L11
@@ -541,7 +541,7 @@ procedure GO:[]{O---}:
           ATHROW
          L10
           ALOAD 2
-          GETFIELD org/nlogo/agent/Agent.id : J
+          INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
           LDC -1
           LCMP
           IFNE L11
