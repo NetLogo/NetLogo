@@ -47,10 +47,6 @@ public abstract strictfp class Agent
   abstract Agent realloc(boolean forRecompile)
       throws AgentException;
 
-  public int getVariableCount() {
-    return variables.length;
-  }
-
   public abstract Object getVariable(int vn);
 
   public abstract void setVariable(int vn, Object value)
