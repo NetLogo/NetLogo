@@ -121,15 +121,15 @@ public strictfp class Link
   ///
 
   @Override
-  Agent realloc(boolean compiling) {
+  boolean realloc(boolean compiling) {
     return realloc(compiling, null);
   }
 
-  Agent realloc(boolean compiling, AgentSet oldBreed) {
+  boolean realloc(boolean compiling, AgentSet oldBreed) {
     // first check if we recompiled and our breed disappeared!
     if (compiling && getBreed() != world.links() &&
         world.getLinkBreed(getBreed().printName()) == null) {
-      return this;
+      return true;
     }
 
     // stage 0: get ready
@@ -169,7 +169,7 @@ public strictfp class Link
         oldvars[oldpos] = null;
       }
     }
-    return null;
+    return false;
   }
 
   @Override

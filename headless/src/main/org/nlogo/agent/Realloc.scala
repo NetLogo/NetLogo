@@ -36,8 +36,8 @@ object Realloc {
     if (world.turtles != null) {
       val iter = world.turtles.iterator
       while(iter.hasNext) {
-        val agt = iter.next().realloc(true)
-        if (agt != null)
+        val agt = iter.next()
+        if (agt.realloc(true))
           doomedAgents += agt
       }
       doomedAgents.foreach(_.asInstanceOf[Turtle].die())
@@ -47,8 +47,8 @@ object Realloc {
     if (world.links != null) {
       val iter = world.links.iterator
       while(iter.hasNext) {
-        val agt = iter.next().realloc(true)
-        if (agt != null)
+        val agt = iter.next()
+        if (agt.realloc(true))
           doomedAgents += agt
       }
       doomedAgents.foreach(_.asInstanceOf[Link].die())

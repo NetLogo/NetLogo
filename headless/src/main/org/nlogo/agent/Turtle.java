@@ -166,15 +166,15 @@ public strictfp class Turtle
   }
 
   @Override
-  Agent realloc(boolean compiling) {
+  boolean realloc(boolean compiling) {
     return realloc(compiling, null);
   }
 
-  Agent realloc(boolean compiling, AgentSet oldBreed) {
+  boolean realloc(boolean compiling, AgentSet oldBreed) {
     // first check if we recompiled and our breed disappeared!
     if (compiling && getBreed() != world.turtles() &&
         world.getBreed(getBreed().printName()) == null) {
-      return this;
+      return true;
     }
 
     // stage 0: get ready
@@ -215,7 +215,7 @@ public strictfp class Turtle
       }
     }
 
-    return null;
+    return false;
   }
 
   // note this is very similar to
