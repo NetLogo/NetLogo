@@ -183,11 +183,6 @@ public strictfp class Link
   }
 
   @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
-  }
-
-  @Override
   public Object getLinkVariable(int vn) {
     return variables[vn];
   }

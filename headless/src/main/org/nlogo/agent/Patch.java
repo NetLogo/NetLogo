@@ -128,11 +128,6 @@ public strictfp class Patch
   }
 
   @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
-  }
-
-  @Override
   public Object getTurtleVariable(int vn)
       throws AgentException {
     throw new AgentException

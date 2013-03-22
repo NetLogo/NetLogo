@@ -52,11 +52,6 @@ public strictfp class Observer
   }
 
   @Override
-  public Object getObserverVariable(int vn) {
-    return variables[vn];
-  }
-
-  @Override
   public Object getTurtleVariable(int vn)
       throws AgentException {
     throw new AgentException("the observer can't access a turtle variable without specifying which turtle");

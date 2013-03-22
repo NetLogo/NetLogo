@@ -270,11 +270,6 @@ public strictfp class Turtle
   }
 
   @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
-  }
-
-  @Override
   public Object getTurtleOrLinkVariable(String varName) {
     return getTurtleVariable(world.program().turtlesOwn().indexOf(varName));
   }

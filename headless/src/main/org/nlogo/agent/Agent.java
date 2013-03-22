@@ -48,8 +48,6 @@ public abstract strictfp class Agent
   public abstract void setVariable(int vn, Object value)
       throws AgentException;
 
-  public abstract Object getObserverVariable(int vn);
-
   public abstract Object getTurtleVariable(int vn)
       throws AgentException;
 

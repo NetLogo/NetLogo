@@ -125,7 +125,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.encode(Dump.number(world.tickCounter.ticks)))
     for(g <- sortedGlobals.asScala) {
       print(",")
-      print(csv.data(world.observer.getObserverVariable(
+      print(csv.data(world.observer.getVariable(
         globalVarIndices.get(g).intValue)))
     }
     println()
