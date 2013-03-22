@@ -18,7 +18,7 @@ else
       export JAVA_HOME=/usr
     fi
   fi
-  JH = $JAVA_HOME
+  JH=$JAVA_HOME
 fi
 
 export PATH=$JH/bin:$PATH
