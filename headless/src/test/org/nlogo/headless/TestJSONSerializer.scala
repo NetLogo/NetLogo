@@ -1,14 +1,14 @@
-package org.nlogo.mirror
+package org.nlogo.headless
 
 import org.json4s.JsonDSL.string2jvalue
 import org.json4s.native.JsonMethods.{ compact, pretty, parse, render }
 import org.json4s.string2JsonInput
+import org.nlogo.mirror.{ JSONSerializer, Mirroring }
 import org.nlogo.api.Version
-import org.nlogo.headless.TestMirroring.withWorkspace
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 
-class JSONSerializerTests extends FunSuite with ShouldMatchers {
+class TestJSONSerializer extends FunSuite with ShouldMatchers {
 
   if (!Version.is3D)
     test("JSONSerializer basic commands") {
@@ -63,7 +63,7 @@ class JSONSerializerTests extends FunSuite with ShouldMatchers {
             (cmd, render(parse(json)))
         }
 
-      withWorkspace { (ws, mirrorables) =>
+      TestMirroring.withWorkspace { (ws, mirrorables) =>
         ws.initForTesting(1)
         val (initialState, _) = Mirroring.diffs(Map(), mirrorables())
         commands.foldLeft(initialState) {
