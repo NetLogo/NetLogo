@@ -145,7 +145,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     for((g, i) <- globals.zipWithIndex) {
       print(",")
       print(csv.data
-                   (world.observer().getObserverVariable
+                   (world.observer().getVariable
                     (globalVarIndices.get(sortedGlobals.get(i)).intValue())
                   ))
     }

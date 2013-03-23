@@ -21,7 +21,7 @@ public strictfp class Observer
   public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
-  Agent realloc(boolean forRecompile) {
+  void realloc(boolean forRecompile) {
     Object[] oldvars = variables;
     Object[] newvars = new Object[world.getVariablesArraySize(this)];
     ValueConstraint[] newcons = new ValueConstraint[world.getVariablesArraySize(this)];
@@ -44,17 +44,10 @@ public strictfp class Observer
     }
     variables = newvars;
     variableConstraints = newcons;
-
-    return null;
   }
 
   @Override
   public Object getVariable(int vn) {
-    return variables[vn];
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
     return variables[vn];
   }
 
@@ -103,6 +96,15 @@ public strictfp class Observer
     setObserverVariable(vn, value);
   }
 
+  ValueConstraint[] variableConstraints = null;
+
+  public ValueConstraint variableConstraint(int vn) {
+    return variableConstraints[vn];
+  }
+
+  public void variableConstraint(int vn, ValueConstraint con) {
+    variableConstraints[vn] = con;
+  }
 
   public void assertVariableConstraint(int vn, Object value)
       throws AgentException {

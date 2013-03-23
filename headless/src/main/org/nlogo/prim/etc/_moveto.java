@@ -21,7 +21,7 @@ public final strictfp class _moveto
   @Override
   public void perform(final org.nlogo.nvm.Context context) {
     Agent otherAgent = argEvalAgent(context, 0);
-    if (otherAgent.id == -1) {
+    if (otherAgent.id() == -1) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", otherAgent.classDisplayName()));
     }

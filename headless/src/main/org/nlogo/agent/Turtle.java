@@ -166,16 +166,11 @@ public strictfp class Turtle
   }
 
   @Override
-  Agent realloc(boolean compiling) {
-    return realloc(compiling, null);
+  void realloc(boolean compiling) {
+    realloc(compiling, null);
   }
 
-  Agent realloc(boolean compiling, AgentSet oldBreed) {
-    // first check if we recompiled and our breed disappeared!
-    if (compiling && getBreed() != world.turtles() &&
-        world.getBreed(getBreed().printName()) == null) {
-      return this;
-    }
+  void realloc(boolean compiling, AgentSet oldBreed) {
 
     // stage 0: get ready
     Object[] oldvars = variables;
@@ -214,8 +209,6 @@ public strictfp class Turtle
         oldvars[oldpos] = null;
       }
     }
-
-    return null;
   }
 
   // note this is very similar to
@@ -274,11 +267,6 @@ public strictfp class Turtle
   public void setVariable(int vn, Object value)
       throws AgentException {
     setTurtleVariable(vn, value);
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
   }
 
   @Override
@@ -603,7 +591,7 @@ public strictfp class Turtle
 
   public void color(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[varIndex] = rgb;
     if(rgb.size() > 3) {
       world.mayHavePartiallyTransparentObjects = true;
@@ -1116,7 +1104,7 @@ public strictfp class Turtle
 
   public void labelColor(LogoList rgb, int valueIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[valueIndex] = rgb;
   }
 

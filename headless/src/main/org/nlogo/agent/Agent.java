@@ -3,34 +3,12 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.api.AgentKind;
-import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Dump;
 import org.nlogo.api.I18N;
 import org.nlogo.api.LogoList;
-import org.nlogo.api.ValueConstraint;
-
-import java.util.Observable;
 
 public abstract strictfp class Agent
-    extends Observable
     implements org.nlogo.api.Agent, Comparable<Agent> {
-
-  // for old code that isn't up to speed with the new AgentKind stuff
-  // yet - ST 7/22/12
-  public static Class<? extends Agent> kindToClass(AgentKind kind) {
-    if(kind == AgentKindJ.Observer()) {
-      return Observer.class;
-    } else if(kind == AgentKindJ.Turtle()) {
-      return Turtle.class;
-    } else if(kind == AgentKindJ.Patch()) {
-      return Patch.class;
-    } else if(kind == AgentKindJ.Link()) {
-      return Link.class;
-    } else {
-      throw new IllegalArgumentException("unknown kind: " + kind);
-    }
-  }
 
   final World world;
 
@@ -38,15 +16,14 @@ public abstract strictfp class Agent
     return world;
   }
 
-  public long id = 0;
+  long id = 0;
 
   public long id() {
     return id;
   }
 
+  Object[] variables = null;
   public Object[] variables() { return variables; }
-  public Object[] variables = null; // public ONLY for __fire
-  ValueConstraint[] variableConstraints = null;
 
   Object agentKey() {
     return Double.valueOf(id);
@@ -64,27 +41,12 @@ public abstract strictfp class Agent
         : (id > otherId ? 1 : 0);
   }
 
-  abstract Agent realloc(boolean forRecompile)
-      throws AgentException;
-
-  public int getVariableCount() {
-    return variables.length;
-  }
+  abstract void realloc(boolean forRecompile);
 
   public abstract Object getVariable(int vn);
 
   public abstract void setVariable(int vn, Object value)
       throws AgentException;
-
-  public ValueConstraint variableConstraint(int vn) {
-    return variableConstraints[vn];
-  }
-
-  public void variableConstraint(int vn, ValueConstraint con) {
-    variableConstraints[vn] = con;
-  }
-
-  public abstract Object getObserverVariable(int vn);
 
   public abstract Object getTurtleVariable(int vn)
       throws AgentException;
@@ -142,40 +104,8 @@ public abstract strictfp class Agent
         classDisplayName(), name, Dump.typeName(expectedClass), Dump.logoObject(value)));
   }
 
-  void validRGBList(LogoList rgb, boolean allowAlpha)
-      throws AgentException {
-    if (rgb.size() == 3 || (allowAlpha && rgb.size() == 4)) {
-      try {
-        for (int i = 0; i < rgb.size(); i++) {
-          validRGB(((Double) rgb.get(i)).intValue());
-        }
-        return;
-      } catch (ClassCastException e) {
-        // just fall through and throw the error below
-        org.nlogo.util.Exceptions.ignore(e);
-      }
-    }
-    String key =
-        allowAlpha
-            ? "org.nlogo.agent.Agent.rgbListSizeError.3or4"
-            : "org.nlogo.agent.Agent.rgbListSizeError.3";
-    throw new AgentException(I18N.errorsJ().get(key));
-  }
-
-  private void validRGB(int c)
-      throws AgentException {
-    if (c < 0 || c > 255) {
-      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Agent.rgbValueError"));
-    }
-  }
-
   public abstract String classDisplayName();
 
   public abstract int agentBit();
-
-  public boolean isPartiallyTransparent() {
-    int alpha = alpha();
-    return alpha > 0 && alpha < 255;
-  }
 
 }

@@ -117,13 +117,6 @@ object App{
             new ComponentParameter(), new ComponentParameter(classOf[AppFrame]),
             new ComponentParameter(), new ComponentParameter(),
             new ComponentParameter()))
-    val saveFunc = new ModelSaver(pico.getComponent(classOf[App])).save _
-    pico.add(classOf[ModelingCommonsInterface],
-          "org.nlogo.mc.ModelingCommons",
-          Array[Parameter] (
-            new ConstantParameter(saveFunc),
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter()))
     pico.add("org.nlogo.lab.gui.LabManager")
     pico.add("org.nlogo.properties.EditDialogFactory")
     // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -412,6 +405,16 @@ class App extends
   }
 
   private def finishStartup() {
+    pico.add(classOf[ModelingCommonsInterface],
+          "org.nlogo.mc.ModelingCommons",
+          Array[Parameter] (
+            new ConstantParameter(new ModelSaver(pico.getComponent(classOf[App])).save _),
+            new ComponentParameter(classOf[AppFrame]),
+            new ConstantParameter(() => workspace.exportView()),
+            new ConstantParameter(() => Boolean.box(
+              workspace.procedures.isDefinedAt("SETUP") &&
+                workspace.procedures.isDefinedAt("GO"))),
+            new ComponentParameter()))
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)

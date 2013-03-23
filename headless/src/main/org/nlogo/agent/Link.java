@@ -121,16 +121,11 @@ public strictfp class Link
   ///
 
   @Override
-  Agent realloc(boolean compiling) {
-    return realloc(compiling, null);
+  void realloc(boolean compiling) {
+    realloc(compiling, null);
   }
 
-  Agent realloc(boolean compiling, AgentSet oldBreed) {
-    // first check if we recompiled and our breed disappeared!
-    if (compiling && getBreed() != world.links() &&
-        world.getLinkBreed(getBreed().printName()) == null) {
-      return this;
-    }
+  void realloc(boolean compiling, AgentSet oldBreed) {
 
     // stage 0: get ready
     Object[] oldvars = variables;
@@ -169,7 +164,6 @@ public strictfp class Link
         oldvars[oldpos] = null;
       }
     }
-    return null;
   }
 
   @Override
@@ -186,11 +180,6 @@ public strictfp class Link
   public void setVariable(int vn, Object value)
       throws AgentException {
     setLinkVariable(vn, value);
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
   }
 
   @Override
@@ -524,7 +513,7 @@ public strictfp class Link
 
   public void color(LogoList rgb)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[VAR_COLOR] = rgb;
     if(rgb.size() > 3) {
       world.mayHavePartiallyTransparentObjects = true;
@@ -583,7 +572,7 @@ public strictfp class Link
 
   public void labelColor(LogoList rgb)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[VAR_LABELCOLOR] = rgb;
   }
 

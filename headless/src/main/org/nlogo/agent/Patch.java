@@ -104,7 +104,7 @@ public strictfp class Patch
   }
 
   @Override
-  Agent realloc(boolean forRecompile) {
+  void realloc(boolean forRecompile) {
     Object[] oldvars = variables;
     Object[] newvars = new Object[world.getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
@@ -125,13 +125,6 @@ public strictfp class Patch
       }
     }
     variables = newvars;
-
-    return null;
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
   }
 
   @Override
@@ -349,8 +342,7 @@ public strictfp class Patch
     return child;
   }
 
-  // this is only used by the _fire prim ev 6/28/07
-  double pcolor = 0;
+  protected double pcolor = 0;
 
   public double pcolorDouble() {
     if (variables[VAR_PCOLOR] == null || variables[VAR_PCOLOR] instanceof Double) {
@@ -425,7 +417,7 @@ public strictfp class Patch
 
   public void pcolor(LogoList rgb, int varIndex, boolean allowAlpha)
       throws AgentException {
-    validRGBList(rgb, allowAlpha);
+    org.nlogo.api.Color.validRGBList(rgb, allowAlpha);
     pcolor = Double.NaN;
 
     if (!(variables[varIndex] instanceof LogoList) || !rgb.equals(variables[varIndex])) {
@@ -496,7 +488,7 @@ public strictfp class Patch
 
   public void labelColor(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
+    org.nlogo.api.Color.validRGBList(rgb, true);
     variables[varIndex] = rgb;
   }
 

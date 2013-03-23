@@ -22,7 +22,7 @@ public final strictfp class _follow
   @Override
   public void perform(final Context context) {
     Turtle turtle = argEvalTurtle(context, 0);
-    if (turtle.id == -1) {
+    if (turtle.id() == -1) {
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }
