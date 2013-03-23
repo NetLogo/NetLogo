@@ -5,12 +5,10 @@ C __done _done
 C __edit etc._edit
 C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
-C __fire etc._fire
 C __foreverbuttonend etc._foreverbuttonend
 C __git etc._git
 C __ignore etc._ignore
 C __let _let
-C __life etc._life
 C __linkcode etc._linkcode
 C __make-preview etc._makepreview
 C __mkdir etc._mkdir

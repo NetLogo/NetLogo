@@ -159,11 +159,12 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_5.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_3
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           ALOAD 1
           BIPUSH 7
@@ -182,174 +183,6 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
          L5
           RETURN
 [7]_asm_procedurebenchmark_return_6 "" => void
-         L0
-          ALOAD 1
-          INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.stopping : Z
-         L1
-          RETURN
-
-procedure BENCHMARK-__FIRE:[_repeatlocal:0]{O---}:
-[0]_asm_procedurebenchmarkfire_randomseed_0 "random-seed 362" double => void
-      _constdouble:362.0 => double
-         L0
-          LDC 362.0
-         L1
-          DSTORE 2
-          DLOAD 2
-          D2L
-          LSTORE 4
-          LLOAD 4
-          LDC -2147483648
-          LCMP
-          IFLT L2
-          LLOAD 4
-          LDC 2147483647
-          LCMP
-          IFLE L3
-         L2
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          NEW scala/collection/mutable/StringBuilder
-          DUP
-          INVOKESPECIAL scala/collection/mutable/StringBuilder.<init> ()V
-          GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
-          DLOAD 2
-          INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.append (Ljava/lang/Object;)Lscala/collection/mutable/StringBuilder;
-          INVOKEVIRTUAL scala/collection/mutable/StringBuilder.toString ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L3
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
-          GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/util/MersenneTwisterFast;
-          LLOAD 4
-          L2I
-          I2L
-          INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.setSeed (J)V
-          ALOAD 1
-          ICONST_1
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L4
-          RETURN
-[1]_resettimer
-[2]_asm_procedurebenchmarkfire_call_1 "setup"
-         L0
-          NEW org/nlogo/nvm/Activation
-          DUP
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmarkfire_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ICONST_3
-          INVOKESPECIAL org/nlogo/nvm/Activation.<init> (Lorg/nlogo/nvm/Procedure;Lorg/nlogo/nvm/Activation;I)V
-          ALOAD 1
-          SWAP
-          PUTFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          ALOAD 1
-          ICONST_0
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L1
-          RETURN
-[3]_asm_procedurebenchmarkfire_repeatlocal_2 "" double => void
-      _constdouble:100.0 => double
-         L0
-          LDC 100.0
-         L1
-          DSTORE 2
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_0
-          NEW org/nlogo/nvm/MutableLong
-          DUP
-          ALOAD 0
-          DLOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/Instruction.validLong (D)J
-          INVOKESPECIAL org/nlogo/nvm/MutableLong.<init> (J)V
-          AASTORE
-          ALOAD 1
-          ICONST_5
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L2
-          RETURN
-[4]_fire
-[5]_asm_procedurebenchmarkfire_repeatlocalinternal_3 "" => void
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-          INVOKEVIRTUAL org/nlogo/nvm/Activation.args ()[Ljava/lang/Object;
-          ICONST_0
-          AALOAD
-          CHECKCAST org/nlogo/nvm/MutableLong
-          ASTORE 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
-          LCONST_0
-          LCMP
-          IFGT L1
-          ALOAD 1
-          BIPUSH 6
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L2
-         L1
-          ALOAD 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value ()J
-          LCONST_1
-          LSUB
-          INVOKEVIRTUAL org/nlogo/nvm/MutableLong.value_$eq (J)V
-          ALOAD 1
-          ICONST_4
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-         L2
-          RETURN
-[6]_asm_procedurebenchmarkfire_setobservervariable_4 "set result timer" Object => void
-      _timer => double
-          TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
-         L3
-          ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebenchmarkfire_setobservervariable_4.world : Lorg/nlogo/agent/World;
-          INVOKEVIRTUAL org/nlogo/agent/World.timer ()Lorg/nlogo/api/Timer;
-          INVOKEVIRTUAL org/nlogo/api/Timer.read ()D
-         L4
-          DSTORE 2
-          NEW java/lang/Double
-          DUP
-          DLOAD 2
-          INVOKESPECIAL java/lang/Double.<init> (D)V
-          ASTORE 2
-         L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ICONST_3
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
-         L1
-          ALOAD 1
-          BIPUSH 7
-          PUTFIELD org/nlogo/nvm/Context.ip : I
-          GOTO L5
-         L2
-          ASTORE 3
-          NEW org/nlogo/nvm/EngineException
-          DUP
-          ALOAD 1
-          ALOAD 0
-          ALOAD 3
-          INVOKEVIRTUAL java/lang/Throwable.getMessage ()Ljava/lang/String;
-          INVOKESPECIAL org/nlogo/nvm/EngineException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-          ATHROW
-         L5
-          RETURN
-[7]_asm_procedurebenchmarkfire_return_5 "" => void
          L0
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.returnFromProcedure ()V
@@ -535,10 +368,11 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_if_3.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_0
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           ASTORE 4
           DSTORE 2
@@ -930,11 +764,12 @@ procedure SETUP:[]{O---}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_9.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           ALOAD 1
           BIPUSH 12
@@ -961,11 +796,12 @@ procedure SETUP:[]{O---}:
          L4
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_11.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           ALOAD 1
           BIPUSH 13
@@ -1682,10 +1518,11 @@ procedure GO:[]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_setobservervariable_12.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L6
           ASTORE 2
          L0
@@ -1720,11 +1557,12 @@ procedure GO:[]{O---}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
          L2
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurego_setobservervariable_12.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L3
           ALOAD 1
           BIPUSH 12
@@ -2141,10 +1979,11 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
         _observervariable:INITIAL-TREES => Object
         _constdouble:0.0 => double
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurepercentburned_ifelse_0.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L1
           DCONST_0
          L2
@@ -2217,10 +2056,11 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurepercentburned_report_1.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L5
           ASTORE 2
          L0
@@ -2240,10 +2080,11 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L6
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurepercentburned_report_1.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L7
           ASTORE 2
          L2

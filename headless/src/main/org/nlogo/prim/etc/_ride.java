@@ -21,7 +21,7 @@ public final strictfp class _ride
   @Override
   public void perform(final org.nlogo.nvm.Context context) {
     Turtle turtle = argEvalTurtle(context, 0);
-    if (turtle.id == -1) {
+    if (turtle.id() == -1) {
       throw new EngineException(context, this,
         I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
     }

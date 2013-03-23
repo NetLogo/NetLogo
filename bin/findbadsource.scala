@@ -11,6 +11,7 @@ import sys.process.Process
 import collection.mutable.Buffer
 
 def ignore(path: String) =
+  path.contains("/target/") ||
   path.contains("/src_managed/") ||
   path.contains("/tmp/") ||
   path.endsWith("Lexer.java") ||

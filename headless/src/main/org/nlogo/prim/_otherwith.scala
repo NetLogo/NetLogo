@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, Dump, I18N }
 import org.nlogo.nvm.{ Reporter, Context, EngineException }
-import org.nlogo.agent.{ Agent, AgentSet, ArrayAgentSet }
+import org.nlogo.agent.{ Agent, AgentSet }
 
 class _otherwith extends Reporter {
 
@@ -36,7 +36,7 @@ class _otherwith extends Reporter {
                 displayName, Dump.logoObject(tester), Dump.logoObject(x)))
         }
     }
-    new ArrayAgentSet(sourceSet.kind, result.toArray, world)
+    AgentSet.fromArray(sourceSet.kind, result.toArray)
   }
 
 }

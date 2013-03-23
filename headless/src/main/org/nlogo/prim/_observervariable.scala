@@ -24,9 +24,9 @@ class _observervariable(_vn: Int) extends Reporter {
     new Reference(AgentKind.Observer, _vn, this)
 
   override def report(context: Context) =
-    context.agent.getObserverVariable(_vn)
+    world.observer.getVariable(_vn)
 
   def report_1(context: Context) =
-    context.agent.getObserverVariable(_vn)
+    world.observer.getVariable(_vn)
 
 }

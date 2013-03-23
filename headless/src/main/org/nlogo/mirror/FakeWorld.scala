@@ -26,17 +26,15 @@ class FakeWorld(state: State) extends api.World {
       groups.getOrElse(Link, Seq())) // there might be no links
   }
 
-  def newRenderer(settings: api.ViewSettings): api.RendererInterface = {
+  def newRenderer: api.RendererInterface = {
     val renderer =
       util.Femto.get(
         classOf[api.RendererInterface],
         "org.nlogo.render.Renderer", Array(this))
-    renderer.resetCache(settings.patchSize)
-    for(drawing <- trailDrawing)
-      renderer.trailDrawer.readImage(
-        new java.io.ByteArrayInputStream(drawing))
+    renderer.resetCache(patchSize)
     renderer
   }
+
 
   def patchColors: Array[Int] =
     patches.agentSeq
@@ -48,7 +46,6 @@ class FakeWorld(state: State) extends api.World {
     override val isUndirected: Boolean = !isDirected
     override def isEmpty = agentSeq.isEmpty
     override def count = agentSeq.size
-    override def world: api.World = FakeWorld.this
     override def equalAgentSets(other: api.AgentSet) = unsupported
     override val agents = (agentSeq: Iterable[api.Agent]).asJava
     override def printName = unsupported
@@ -63,7 +60,6 @@ class FakeWorld(state: State) extends api.World {
     def alpha = unsupported
     def getVariable(vn: Int) = unsupported
     def setVariable(vn: Int, value: AnyRef) = unsupported
-    def isPartiallyTransparent = unsupported
   }
 
   class FakeTurtle(agentId: Long, val vars: Seq[AnyRef])
@@ -200,8 +196,6 @@ class FakeWorld(state: State) extends api.World {
   def wrappingAllowedInY = worldVar[Boolean](wvWrappingAllowedInY)
   def patchesAllBlack = worldVar[Boolean](wvPatchesAllBlack)
 
-  def trailDrawing = worldVar[Option[Array[Byte]]](wvTrailDrawing)
-
   def program = {
     def makeBreedMap(breedsVar: Int) =
       worldVar[collection.immutable.ListMap[String, Boolean]](breedsVar).map {
@@ -254,6 +248,8 @@ class FakeWorld(state: State) extends api.World {
       if (StrictMath.abs(y2 - y1) > StrictMath.abs(yprime - y1)) yprime else y2
     } else y2
 
+  def trailDrawer: api.TrailDrawerInterface = newRenderer.trailDrawer
+
   def getPatchAt(x: Double, y: Double): api.Patch = unsupported
   def fastGetPatchAt(x: Int, y: Int): api.Patch = unsupported
   def followOffsetX: Double = unsupported
@@ -275,7 +271,6 @@ class FakeWorld(state: State) extends api.World {
   def turtlesOwnNameAt(i: Int): String = unsupported
   def breedsOwnNameAt(breed: api.AgentSet, i: Int): String = unsupported
   def allStoredValues: Iterator[AnyRef] = unsupported
-  def trailDrawer: api.TrailDrawerInterface = unsupported
   def mayHavePartiallyTransparentObjects: Boolean = unsupported
   def timer: api.Timer = unsupported
   def setObserverVariableByName(variableName: String, value: AnyRef): Unit = unsupported

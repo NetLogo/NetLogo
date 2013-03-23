@@ -55,12 +55,13 @@ object Depend {
       "agent" -> List("api"),
       "api" -> List("util"),
       "compiler" -> List("prim"),
+      "drawing" -> List("api"),
       "generator" -> List("prim"),
       "headless" -> List("mirror","workspace"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
       "lex" -> List("api"),
-      "mirror" -> List("plot", "shape"),
+      "mirror" -> List("drawing", "plot", "shape"),
       "nvm" -> List("agent"),
       "plot" -> List("api"),
       "prim" -> List("nvm"),
@@ -71,7 +72,7 @@ object Depend {
       "review" -> List("mirror", "window"),
       "shape" -> List("api"),
       "util" -> Nil,
-      "workspace" -> List("nvm", "plot"))
+      "workspace" -> List("nvm", "plot", "drawing"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }

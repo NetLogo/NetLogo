@@ -42,9 +42,7 @@ public final strictfp class _inradiusnowrap
     }
     List<Agent> result =
         world.inRadiusOrCone.inRadius(context.agent, sourceSet, radius, false);
-    return new org.nlogo.agent.ArrayAgentSet
-        (sourceSet.kind(),
-            result.toArray(new Agent[result.size()]),
-            world);
+    return AgentSet.fromArray
+      (sourceSet.kind(), result.toArray(new Agent[result.size()]));
   }
 }

@@ -323,7 +323,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_fileshow anything,OTPL,null,0,1,1
                     |_filetype anything,OTPL,null,0,1,1
                     |_filewrite number or TRUE/FALSE or string or list or NOBODY,OTPL,null,0,1,1
-                    |_fire ,O---,null,0,0,0 *
                     |_follow turtle,O---,null,0,1,1 *
                     |_followme ,-T--,null,0,0,0 *
                     |_foreach list/command task,OTPL,null,0,2,2
@@ -349,7 +348,6 @@ class TestAllSyntaxes extends FunSuite {
                     |_layouttutte turtle agentset/link agentset/number,OTPL,null,0,3,3 *
                     |_left number,-T--,null,0,1,1 *
                     |_let anything/anything,OTPL,null,0,2,2
-                    |_life ,O---,null,0,0,0 *
                     |_linkcode ,---L,null,0,0,0
                     |_loop command block,OTPL,null,0,1,1
                     |_makepreview ,O---,null,0,0,0

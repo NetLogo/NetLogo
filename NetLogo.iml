@@ -3,14 +3,16 @@
   <component name="FacetManager">
     <facet type="scala" name="Scala">
       <configuration>
-        <option name="compilerLibraryLevel" value="Project" />
-        <option name="compilerLibraryName" value="all" />
-        <option name="compilerOptions" value="-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation" />
+        <option name="compilerLibraryLevel" value="Global" />
+        <option name="compilerLibraryName" value="Scala 2.9.2" />
+        <option name="compilerOptions" value="-deprecation -unchecked -Xfatal-warnings -Xcheckinit -encoding us-ascii" />
         <option name="fsc" value="true" />
+        <option name="languageLevel" value="Scala 2.9" />
+        <option name="maximumHeapSize" value="1024" />
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/out/production" />
     <output-test url="file://$MODULE_DIR$/out/test" />
     <exclude-output />
@@ -28,8 +30,27 @@
       <excludeFolder url="file://$MODULE_DIR$/project/build/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.6 (Oracle)" jdkType="JavaSDK" />
+    <orderEntry type="library" name="Scala 2.9.2" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/target/resource_managed" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/dist/i18n" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>

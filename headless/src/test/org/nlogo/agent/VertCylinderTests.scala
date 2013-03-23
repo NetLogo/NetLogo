@@ -12,7 +12,7 @@ class VertCylinderTests extends FunSuite {
   val random = new Random()
 
   for(worldType <- WorldType.all; x <- List(0, 1, 2, 3, 10, 100); y <- List(0, 1, 2, 3, 10, 100)){
-    test("diffuse, worldType: " + worldType + ", worldSize: " + (x,y)){
+    test("diffuse, worldType: " + worldType + ", worldSize: " + ((x, y))){
       val world = new World
       world.createPatches(-x, x, -y, y)
       for(a <- world.patches.agents.asScala)

@@ -3,7 +3,7 @@
 package org.nlogo.compiler
 
 import org.nlogo.compiler.Fail.{ cAssert, exception }
-import org.nlogo.agent.{ AgentSet, ArrayAgentSet, Link, Observer, Patch, Turtle, World }
+import org.nlogo.agent.{ AgentSet, AgentSetBuilder, Link, Observer, Patch, Turtle, World }
 import org.nlogo.nvm.Reporter
 import org.nlogo.prim._
 import org.nlogo.api
@@ -245,9 +245,7 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
         // we have the observer agentset. make sure that's all we have...
         val closeBrace = tokens.next()
         cAssert(closeBrace.tpe == TokenType.CLOSE_BRACE, EXPECTED_CLOSE_BRACE, closeBrace)
-        val agentset = new ArrayAgentSet(api.AgentKind.Observer, 1, false, world)
-        agentset.add(world.observer)
-        agentset
+        AgentSet.fromAgent(world.observer)
       }
       else if(world.program.breeds.values.exists(_.singular == agentsetTypeString.toUpperCase)) {
         val token = tokens.next()
@@ -272,19 +270,19 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
     }
     else if(token.value.isInstanceOf[_turtles]) {
       // we have an agentset of turtles. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Turtle, 1, false, world)
+      val builder = new AgentSetBuilder(api.AgentKind.Turtle)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         val value = readLiteralPrefix(token, tokens)
         cAssert(value.isInstanceOf[java.lang.Double], BAD_TURTLE_SET_ARGS, token)
-        agentset.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
+        builder.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
         token = tokens.next()
       }
-      agentset
+      builder.build()
     }
     else if(token.value.isInstanceOf[_links]) {
       // we have an agentset of links. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Link, 1, false, world)
+      val builder = new AgentSetBuilder(api.AgentKind.Link)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_LINK_SET_ARGS, token)
@@ -297,31 +295,31 @@ private class LiteralParser(world: World = null, extensionManager: ExtensionMana
         val link = world.getOrCreateLink(listVal.get(0).asInstanceOf[java.lang.Double],
                                          listVal.get(1).asInstanceOf[java.lang.Double],
                                          listVal.get(2).asInstanceOf[AgentSet])
-        if(link != null) agentset.add(link)
+        if(link != null) builder.add(link)
         token = tokens.next()
       }
-      agentset
+      builder.build()
     }
     else if(token.value.isInstanceOf[_patches]) {
       // we have an agentset of patches. parse arguments...
-      val agentset = new ArrayAgentSet(api.AgentKind.Patch, 1, false, world)
+      val builder = new AgentSetBuilder(api.AgentKind.Patch)
       var token = tokens.next()
       while(token.tpe != TokenType.CLOSE_BRACE) {
         cAssert(token.tpe == TokenType.OPEN_BRACKET, BAD_PATCH_SET_ARGS, token)
         val listVal = readLiteralPrefix(token, tokens).asInstanceOf[LogoList]
         cAssert(listVal.size == 2 && listVal.scalaIterator.forall(_.isInstanceOf[java.lang.Double]),
                 BAD_PATCH_SET_ARGS, token)
-        try {
-          agentset.add(world.getPatchAt(listVal.get(0).asInstanceOf[java.lang.Double].intValue,
-                                        listVal.get(1).asInstanceOf[java.lang.Double].intValue))
-        }
+        try
+          builder.add(
+            world.getPatchAt(listVal.get(0).asInstanceOf[java.lang.Double].intValue,
+              listVal.get(1).asInstanceOf[java.lang.Double].intValue))
         catch {
           case _: org.nlogo.api.AgentException =>
             exception("Invalid patch coordinates in one of the agents of this set.", token)
         }
         token = tokens.next()
       }
-      agentset
+      builder.build()
     }
     else if(List(classOf[_turtle], classOf[_patch], classOf[_link])
             .contains(token.value.getClass)) {

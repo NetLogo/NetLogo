@@ -28,8 +28,8 @@ public final strictfp class _layoutspring
     double springLength = argEvalDoubleValue(context, 3);
     double repulsionConstant = argEvalDoubleValue(context, 4);
     org.nlogo.agent.Layouts.spring
-        (nodeset, linkset, springConstant, springLength, repulsionConstant,
-            context.job.random);
+      (world, nodeset, linkset, springConstant, springLength, repulsionConstant,
+       context.job.random);
     context.ip = next;
   }
 }

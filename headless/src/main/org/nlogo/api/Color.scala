@@ -380,4 +380,30 @@ object Color {
       (rgb(2) + 0.5f) % 1.0f)
   }
 
+  @throws(classOf[AgentException])
+  def validRGBList(rgb: LogoList, allowAlpha: Boolean) {
+    def validRGB(c: Int) {
+      if (c < 0 || c > 255)
+        throw new AgentException(I18N.errors.get(
+          "org.nlogo.agent.Agent.rgbValueError"))
+    }
+    if (rgb.size == 3 || (allowAlpha && rgb.size == 4))
+      try {
+        var i = 0
+        while (i < rgb.size) {
+          validRGB(rgb.get(i).asInstanceOf[java.lang.Double].intValue)
+          i += 1
+        }
+        return
+      }
+      catch { case e: ClassCastException =>
+        // just fall through and throw the error below
+        org.nlogo.util.Exceptions.ignore(e)
+      }
+    val key = "org.nlogo.agent.Agent." +
+      (if (allowAlpha) "rgbListSizeError.3or4"
+       else "rgbListSizeError.3")
+    throw new AgentException(I18N.errors.get(key))
+  }
+
 }

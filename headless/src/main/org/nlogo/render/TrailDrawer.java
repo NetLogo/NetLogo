@@ -150,7 +150,7 @@ public strictfp class TrailDrawer
     drawingDirty = true;
   }
 
-  public void importDrawing(org.nlogo.api.File file)
+  public void importDrawing(java.io.InputStream is)
       throws java.io.IOException {
     if (drawingImage == null) {
       setUpDrawingImage();
@@ -159,12 +159,10 @@ public strictfp class TrailDrawer
 
       java.awt.image.BufferedImage image;
 
-      image = javax.imageio.ImageIO.read(file.getInputStream());
-
+      image = javax.imageio.ImageIO.read(is);
 
       if (image == null) {
-        throw new javax.imageio.IIOException("The following file is not in a supported image format: " +
-            file.getPath());
+        throw new javax.imageio.IIOException("Unsupported image format.");
       }
       float scalex = (float) getWidth() / (float) image.getWidth();
       float scaley = (float) getHeight() / (float) image.getHeight();
@@ -187,9 +185,7 @@ public strictfp class TrailDrawer
         // implementations. -- CLB
         if (image.getColorModel().getColorSpace().getType() == java.awt.color.ColorSpace.TYPE_GRAY
             && !image.getColorModel().hasAlpha()) {
-          scaledImage =
-              trans.createCompatibleDestImage(image,
-                  image.getColorModel());
+          scaledImage = trans.createCompatibleDestImage(image, image.getColorModel());
           trans.filter(image, scaledImage);
         } else {
           scaledImage = trans.filter(image, null);
@@ -206,6 +202,16 @@ public strictfp class TrailDrawer
 
     }
     sendPixels = true;
+  }
+
+  public void importDrawing(org.nlogo.api.File file)
+      throws java.io.IOException {
+    try {
+      importDrawing(file.getInputStream());
+    }
+    catch (javax.imageio.IIOException ex) {
+      throw new javax.imageio.IIOException("Unsupported image format: " + file.getPath(), ex);
+    }
   }
 
   public void exportDrawingToCSV(java.io.PrintWriter writer) {

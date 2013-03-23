@@ -7,7 +7,7 @@ package org.nlogo.agent
 // methods from ImporterJ to here. - ST 7/11/12
 
 import org.nlogo.api
-import api.{ AgentKind, AgentVariables, Breed, ImporterUser, PlotInterface }
+import api.{ AgentKind, AgentVariables, Breed, ImporterUser, PlotInterface, PlotPenInterface }
 import collection.immutable.ListMap
 import collection.JavaConverters._
 import ImporterJ.Junk
@@ -158,20 +158,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
                 // there may be blank fields in the list of points
                 // since some pens may have more points than others.
                 if (data(i * 4).nonEmpty)
-                  try {
-                    pen.state = pen.state.copy(
-                      color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
-                        readNumber(data(i * 4 + 2)).toInt),
-                      isDown = readBoolean(data(i * 4 + 3)))
-                    plot.plot(
-                      x = readNumber(data(i * 4)),
-                      y = readNumber(data(i * 4 + 1)))
-                  }
-                  catch { case e: ClassCastException =>
-                    errorHandler.showError("Import Error",
-                        "Error while importing " + plot.name +
-                            ", this point will be skipped.", false)
-                  }
+                  importPointHelper(plot, pen, data, i)
               case None =>
                 errorHandler.showError(
                   "Error Importing Plots",
@@ -179,6 +166,23 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
             }
           }
         }
+    }
+  }
+
+  private def importPointHelper(plot: PlotInterface, pen: PlotPenInterface, data: Array[String], i: Int) {
+    try {
+      pen.state = pen.state.copy(
+        color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(
+          readNumber(data(i * 4 + 2)).toInt),
+        isDown = readBoolean(data(i * 4 + 3)))
+      plot.plot(
+        x = readNumber(data(i * 4)),
+        y = readNumber(data(i * 4 + 1)))
+    }
+    catch { case e: ClassCastException =>
+        errorHandler.showError("Import Error",
+          "Error while importing " + plot.name +
+            ", this point will be skipped.", false)
     }
   }
 

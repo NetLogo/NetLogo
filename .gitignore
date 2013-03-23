@@ -30,3 +30,6 @@ tmp/
 /out/
 /docs/
 /resources/system/dict.txt
+
+# ignore nw extension until bundled
+/extensions/nw

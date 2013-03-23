@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App English" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="org.nlogo.app.App" />
     <option name="VM_PARAMETERS" value="-Duser.language=en -Duser.region=US -Dorg.nlogo.noGenerator=true -Dfile.encoding=UTF-8" />
     <option name="PROGRAM_PARAMETERS" value="" />
@@ -12,7 +13,7 @@
     <module name="NetLogo" />
     <envs />
     <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="59252" />
+      <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>

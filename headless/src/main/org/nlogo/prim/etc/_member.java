@@ -39,7 +39,7 @@ public final strictfp class _member
       Agent agent = argEvalAgent(context, 0);
       AgentSet agentset = (AgentSet) obj;
       if (agent instanceof Turtle) {
-        if (agent.id == -1) {
+        if (agent.id() == -1) {
           return Boolean.FALSE;
         }
         if (agentset.kind() != AgentKindJ.Turtle()) {
@@ -55,7 +55,7 @@ public final strictfp class _member
         }
       }
       if (agent instanceof Link) {
-        if (agent.id == -1) {
+        if (agent.id() == -1) {
           return Boolean.FALSE;
         }
         if (agentset.kind() != AgentKindJ.Link()) {

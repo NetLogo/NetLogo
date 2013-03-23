@@ -94,7 +94,7 @@ private class IdentifierParser(program: Program,
     else if(ident == "RANDOM-OR-RANDOM-FLOAT")
       exception(RandomOrRandomFloatError, tok)
     else if(getLetFromArg(procedure, ident, tokPos).isDefined)
-      newToken(new prim._letvariable(getLetFromArg(procedure, ident, tokPos).get, ident),
+      newToken(new prim._letvariable(getLetFromArg(procedure, ident, tokPos).get),
                ident, TokenType.REPORTER, tok.startPos, tok.endPos, tok.fileName)
     else if(procedure.args.contains(ident))
       newToken(new prim._procedurevariable(procedure.args.indexOf(ident), ident),
