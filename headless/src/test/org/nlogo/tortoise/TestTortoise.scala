@@ -74,14 +74,15 @@ class TestTortoise extends FunSuite {
   }
 
   def tester(testName: String)(body: => Unit) {
-    test(testName) {
-      ws = headless.HeadlessWorkspace.newInstance
-      ws.silent = true
-      defineProcedures("")
-      state = Map()
-      compareCommands("clear-all")
-      body
-    }
+    if (!api.Version.is3D) // Tortoise is 2D-only
+      test(testName) {
+        ws = headless.HeadlessWorkspace.newInstance
+        ws.silent = true
+        defineProcedures("")
+        state = Map()
+        compareCommands("clear-all")
+        body
+      }
   }
 
   ///
