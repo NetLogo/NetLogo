@@ -5,10 +5,9 @@ package org.nlogo.prim
 import org.nlogo.api.{ Syntax, Let }
 import org.nlogo.nvm.{ Command, Context }
 
-class _setletvariable(let: Let) extends Command {
+class _setletvariable(val let: Let) extends Command {
   def this(original: _letvariable) =
     this(original.let)
-  def name = let.name
   override def syntax =
     Syntax.commandSyntax(
       Array(Syntax.WildcardType))
