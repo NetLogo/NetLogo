@@ -21,6 +21,6 @@ extends Link(world, DummyLink.toTurtle(_end1),
   variables(Link.VAR_END2) = end2
   override def toString =
     world.getLinkBreedSingular(getBreed).toLowerCase + " " +
-    Option(end1).map(_.id()).getOrElse("?") + " " +
-    Option(end2).map(_.id()).getOrElse("?")
+    Option(end1).map(_.id).getOrElse("?") + " " +
+    Option(end2).map(_.id).getOrElse("?")
 }

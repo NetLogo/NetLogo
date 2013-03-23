@@ -21,18 +21,18 @@ public strictfp class Observer
   public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
-  void realloc(boolean forRecompile) {
-    Object[] oldvars = variables;
-    Object[] newvars = new Object[world.getVariablesArraySize(this)];
-    ValueConstraint[] newcons = new ValueConstraint[world.getVariablesArraySize(this)];
+  public void realloc(boolean forRecompile) {
+    Object[] oldvars = variables();
+    Object[] newvars = new Object[world().getVariablesArraySize(this)];
+    ValueConstraint[] newcons = new ValueConstraint[world().getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
       newvars[i] = World.ZERO;
       newcons[i] = null;
     }
     if (oldvars != null && forRecompile) {
-      for (int i = 0; i < oldvars.length && i < world.oldProgram.globals().size(); i++) {
-        String name = world.oldProgram.globals().apply(i);
-        int newpos = world.observerOwnsIndexOf(name);
+      for (int i = 0; i < oldvars.length && i < world().oldProgram.globals().size(); i++) {
+        String name = world().oldProgram.globals().apply(i);
+        int newpos = world().observerOwnsIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];
           // We do not populate the value constraints again.  When the widgets get compiled
@@ -42,13 +42,13 @@ public strictfp class Observer
         }
       }
     }
-    variables = newvars;
+    _variables_$eq(newvars);
     variableConstraints = newcons;
   }
 
   @Override
   public Object getVariable(int vn) {
-    return variables[vn];
+    return variables()[vn];
   }
 
   @Override
@@ -94,7 +94,7 @@ public strictfp class Observer
   public void setVariable(int vn, Object value)
       throws AgentException {
     assertVariableConstraint(vn, value);
-    variables[vn] = value;
+    variables()[vn] = value;
   }
 
   ValueConstraint[] variableConstraints = null;
@@ -220,14 +220,14 @@ public strictfp class Observer
 
   public double followOffsetX() {
     if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
-      return _oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
+      return _oxcor - ((world().minPxcor() - 0.5) + world().worldWidth() / 2.0);
     }
     return 0.0;
   }
 
   public double followOffsetY() {
     if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
-      return _oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
+      return _oycor - ((world().minPycor() - 0.5) + world().worldHeight() / 2.0);
     }
     return 0.0;
   }
@@ -339,12 +339,12 @@ public strictfp class Observer
 
   public void face(org.nlogo.api.Agent agent) {
     try {
-      heading(world.protractor().towards(this, agent, false));
+      heading(world().protractor().towards(this, agent, false));
     } catch (AgentException ex) {
       heading(0.0);
     }
     try {
-      pitch(-world.protractor().towardsPitch(this, agent, false));
+      pitch(-world().protractor().towardsPitch(this, agent, false));
     } catch (AgentException ex) {
       pitch(0.0);
     }
@@ -354,12 +354,12 @@ public strictfp class Observer
 
   public void face(double x, double y) {
     try {
-      heading(world.protractor().towards(this, x, y, false));
+      heading(world().protractor().towards(this, x, y, false));
     } catch (AgentException ex) {
       heading(0.0);
     }
     try {
-      pitch(-world.protractor().towardsPitch(this, x, y, 0, false));
+      pitch(-world().protractor().towardsPitch(this, x, y, 0, false));
     } catch (AgentException ex) {
       pitch(0.0);
     }
@@ -434,7 +434,7 @@ public strictfp class Observer
       x = ((Turtle) agent).xcor();
       y = ((Turtle) agent).ycor();
     } else if (agent instanceof Link) {
-      return world.protractor().distance(agent, _oxcor, _oycor, true);
+      return world().protractor().distance(agent, _oxcor, _oycor, true);
     } else {
       x = ((Patch) agent).pxcor;
       y = ((Patch) agent).pycor;
@@ -460,9 +460,9 @@ public strictfp class Observer
   }
 
   public void home() {
-    _oxcor = world.minPxcor() + ((world.maxPxcor() - world.minPxcor()) / 2.0);
-    _oycor = world.minPycor() + ((world.maxPycor() - world.minPycor()) / 2.0);
-    _ozcor = StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5;
+    _oxcor = world().minPxcor() + ((world().maxPxcor() - world().minPxcor()) / 2.0);
+    _oycor = world().minPycor() + ((world().maxPycor() - world().minPycor()) / 2.0);
+    _ozcor = StrictMath.max(world().worldWidth(), world().worldHeight()) * 1.5;
     heading = 0;
     pitch = 90;
     roll = 0;
@@ -476,7 +476,7 @@ public strictfp class Observer
   // This is a hack for now, there is prob. a better way of doing this - jrn 6/9/05
   public boolean atHome3D() {
     return (perspective == PerspectiveJ.OBSERVE()) && (_oxcor == 0) && (_oycor == 0) &&
-        (_ozcor == StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5) &&
+        (_ozcor == StrictMath.max(world().worldWidth(), world().worldHeight()) * 1.5) &&
         (heading == 0) && (pitch == 90) && (roll == 0) &&
         (rotationPoint.x() == 0 && rotationPoint.y() == 0 && rotationPoint.z() == 0);
   }
@@ -484,7 +484,7 @@ public strictfp class Observer
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    return world.getPatchAt(dx, dy);
+    return world().getPatchAt(dx, dy);
   }
 
   @Override

@@ -809,7 +809,7 @@ public strictfp class World
       patch.labelColor(Color.BoxedWhite());
       try {
         for (int j = patch.NUMBER_PREDEFINED_VARS;
-             j < patch.variables.length;
+             j < patch.variables().length;
              j++) {
           patch.setPatchVariable(j, ZERO);
         }
@@ -828,7 +828,7 @@ public strictfp class World
       Turtle turtle = (Turtle) iter.next();
       lineThicknesses.remove(turtle);
       linkManager.cleanup(turtle);
-      turtle.id(-1);
+      turtle._id_$eq(-1);
     }
     _turtles.clear();
     for (AgentIterator iter = _patches.iterator(); iter.hasNext();) {
@@ -844,7 +844,7 @@ public strictfp class World
     }
     for (AgentIterator iter = _links.iterator(); iter.hasNext();) {
       Link link = (Link) iter.next();
-      link.id = -1;
+      link._id_$eq(-1);
     }
     _links.clear();
     nextLinkIndex = 0;
@@ -853,7 +853,7 @@ public strictfp class World
 
   public void clearGlobals() {
     for (int j = _program.interfaceGlobals().size();
-         j < _observer.variables.length;
+         j < _observer.variables().length;
          j++) {
       try {
         ValueConstraint con = _observer.variableConstraint(j);
@@ -1220,8 +1220,8 @@ public strictfp class World
 
   public Object getObserverVariableByName(String var) {
     int index = _program.globals().indexOf(var.toUpperCase());
-    if (index >= 0 && index < _observer.variables.length) {
-      return _observer.variables[index];
+    if (index >= 0 && index < _observer.variables().length) {
+      return _observer.variables()[index];
     }
     throw new IllegalArgumentException
         ("\"" + var + "\" not found");
@@ -1232,7 +1232,7 @@ public strictfp class World
     var = var.toUpperCase();
     if (_program.globals().contains(var)) {
       int index = _program.globals().indexOf(var);
-      if (-1 != index && index < _observer.variables.length) {
+      if (-1 != index && index < _observer.variables().length) {
         _observer.setVariable(index, value);
         return;
       }
