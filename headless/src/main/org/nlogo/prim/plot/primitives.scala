@@ -226,19 +226,21 @@ class _plotxy extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
       argEvalDoubleValue(context, 1))
 }
 
-class _histogram extends PlotActionCommand(Syntax.ListType) {
-  override def action(context: Context) = {
+class _histogram extends PlotCommand(Syntax.ListType) {
+  override def perform(context: Context) {
     val list = argEvalList(context, 0)
     val pen = currentPen(context)
-    if(pen.state.interval <= 0)
+    if (pen.state.interval <= 0)
       throw new EngineException(context, this,
         "You cannot histogram with a plot-pen-interval of " + api.Dump.number(pen.state.interval) + ".")
-    val values = list.scalaIterator.collect{
-        case d: java.lang.Double =>
-          d.doubleValue
-      }.toSeq
-    PlotAction.Histogram(
-      currentPlot(context).name, pen.name, values)
+    val values = list.scalaIterator.collect {
+      case d: java.lang.Double =>
+        d.doubleValue
+    }.toSeq
+    currentPlot(context)
+      .histogramActions(pen, values)
+      .foreach(plotManager.publish)
+    context.ip = next
   }
 }
 
@@ -293,7 +295,7 @@ class _plotpenhide extends PlotActionCommand() {
 }
 class _plotpenreset extends PlotActionCommand() {
   override def action(context: Context) =
-    PlotAction.ResetPen(
+    PlotAction.HardResetPen(
       currentPlot(context).name,
       currentPen(context).name)
 }

@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.api.{ Syntax, AgentKind }
-import org.nlogo.agent.{ Patch, ArrayAgentSet }
+import org.nlogo.agent.{ Patch, AgentSetBuilder }
 import org.nlogo.nvm.{ Reporter, Context }
 
 class _patchrow extends Reporter {
@@ -13,19 +13,18 @@ class _patchrow extends Reporter {
                           Syntax.PatchsetType)
 
   override def report(context: Context): AnyRef = {
-    val result = new ArrayAgentSet(
-      AgentKind.Patch, world.worldHeight, false, world)
+    val builder = new AgentSetBuilder(AgentKind.Patch, world.worldHeight)
     val yDouble = argEvalDoubleValue(context, 0)
     val y = yDouble.toInt
     if (y == yDouble && y >= world.minPycor && y <= world.maxPycor) {
       val xMax = world.maxPxcor
       var x = world.minPxcor
       while(x <= xMax) {
-        result.add(world.fastGetPatchAt(x, y))
+        builder.add(world.fastGetPatchAt(x, y))
         x += 1
       }
     }
-    result
+    builder.build()
   }
 
 }

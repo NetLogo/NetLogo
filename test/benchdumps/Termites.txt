@@ -172,11 +172,12 @@ procedure BENCHMARK:[]{O---}:
           INVOKESPECIAL java/lang/Double.<init> (D)V
           ASTORE 2
          L0
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_7.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_2
           ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/Agent.setObserverVariable (ILjava/lang/Object;)V
+          INVOKEVIRTUAL org/nlogo/agent/Observer.setVariable (ILjava/lang/Object;)V
          L1
           ALOAD 1
           BIPUSH 9
@@ -271,10 +272,11 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL org/nlogo/util/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
-          ALOAD 1
-          GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+          ALOAD 0
+          GETFIELD org/nlogo/prim/_asm_proceduresetup_if_1.world : Lorg/nlogo/agent/World;
+          INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_1
-          INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
          L2
           ASTORE 4
           DSTORE 2
@@ -377,10 +379,11 @@ procedure SETUP:[]{O---}:
 [5]_crofast:
       _asm_proceduresetup_observervariable_4 "number" => Object
            L0
-            ALOAD 1
-            GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
+            ALOAD 0
+            GETFIELD org/nlogo/prim/_asm_proceduresetup_observervariable_4.world : Lorg/nlogo/agent/World;
+            INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
             ICONST_0
-            INVOKEVIRTUAL org/nlogo/agent/Agent.getObserverVariable (I)Ljava/lang/Object;
+            INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
            L1
             ARETURN
 [6]_asm_proceduresetup_ask_5 "ask turtles" AgentSet => void

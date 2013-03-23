@@ -26,7 +26,7 @@ public final strictfp class _distancenowrap extends Reporter {
       throw new EngineException
           (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
     }
-    if (arg0.id == -1) {
+    if (arg0.id() == -1) {
       throw new EngineException(context, this,
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", arg0.classDisplayName()));
     }

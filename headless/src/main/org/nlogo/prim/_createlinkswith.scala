@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Turtle, ArrayAgentSet }
+import org.nlogo.agent.{ Turtle, AgentSetBuilder }
 import org.nlogo.api.{ Syntax, I18N, AgentKind }
 import org.nlogo.nvm.{ Command, Context, EngineException,
                        CustomAssembled, AssemblerAssistant }
@@ -28,7 +28,7 @@ class _createlinkswith(val breedName: String) extends Command with CustomAssembl
     checkForBreedCompatibility(breed, context)
     if (breed eq world.links)
       breed.setDirected(false)
-    val edgeset = new ArrayAgentSet(AgentKind.Link, agentset.count, false, world);
+    val builder = new AgentSetBuilder(AgentKind.Link, agentset.count)
     val src = context.agent.asInstanceOf[Turtle]
     // We have to shuffle here in order for who number assignment to be random! - ST 3/15/06
     val iter = agentset.shufflerator(context.job.random)
@@ -45,11 +45,12 @@ class _createlinkswith(val breedName: String) extends Command with CustomAssembl
               world.linkManager.createLink(dest, src, breed);
             else
               world.linkManager.createLink(src, dest, breed);
-          edgeset.add(link)
+          builder.add(link)
           workspace.joinForeverButtons(link)
         }
       }
     }
+    val edgeset = builder.build()
     if (offset - context.ip > 2 && edgeset.count > 0)
       context.runExclusiveJob(edgeset, next)
     context.ip = offset

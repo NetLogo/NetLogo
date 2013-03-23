@@ -54,10 +54,9 @@ public strictfp class Patch
   }
 
   public AgentSet turtlesHereAgentSet() {
-    return new ArrayAgentSet
-      (AgentKindJ.Turtle(),
-            _turtlesHere.toArray(new Agent[_turtlesHere.size()]),
-            world);
+   return AgentSet.fromArray(
+     AgentKindJ.Turtle(),
+     _turtlesHere.toArray(new Agent[_turtlesHere.size()]));
   }
 
   // 0 because user might never create any turtles!
@@ -72,27 +71,27 @@ public strictfp class Patch
 
   Patch(World world, int id, int pxcor, int pycor, int numVariables) {
     super(world);
-    this.id = id;
+    _id_$eq(id);
     this.pxcor = pxcor;
     this.pycor = pycor;
-    variables = new Object[numVariables];
+    _variables_$eq(new Object[numVariables]);
 
     for (int i = 0; i < numVariables; i++) {
       switch (i) {
         case VAR_PXCOR:
-          variables[i] = Double.valueOf(pxcor);
+          variables()[i] = Double.valueOf(pxcor);
           break;
         case VAR_PYCOR:
-          variables[i] = Double.valueOf(pycor);
+          variables()[i] = Double.valueOf(pycor);
           break;
         case VAR_PLABEL:
-          variables[i] = "";
+          variables()[i] = "";
           break;
         case VAR_PLABELCOLOR:
-          variables[i] = Color.BoxedWhite();
+          variables()[i] = Color.BoxedWhite();
           break;
         default:
-          variables[i] = World.ZERO;
+          variables()[i] = World.ZERO;
           break;
       }
     }
@@ -105,9 +104,9 @@ public strictfp class Patch
   }
 
   @Override
-  Agent realloc(boolean forRecompile) {
-    Object[] oldvars = variables;
-    Object[] newvars = new Object[world.getVariablesArraySize(this)];
+  public void realloc(boolean forRecompile) {
+    Object[] oldvars = variables();
+    Object[] newvars = new Object[world().getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
       if (i < NUMBER_PREDEFINED_VARS) {
         newvars[i] = oldvars[i];
@@ -117,22 +116,15 @@ public strictfp class Patch
     }
     // Keep Variables Across Recompile
     if (forRecompile) {
-      for (int i = NUMBER_PREDEFINED_VARS; i < oldvars.length && i < world.oldProgram.patchesOwn().size(); i++) {
-        String name = world.oldProgram.patchesOwn().apply(i);
-        int newpos = world.patchesOwnIndexOf(name);
+      for (int i = NUMBER_PREDEFINED_VARS; i < oldvars.length && i < world().oldProgram.patchesOwn().size(); i++) {
+        String name = world().oldProgram.patchesOwn().apply(i);
+        int newpos = world().patchesOwnIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];
         }
       }
     }
-    variables = newvars;
-
-    return null;
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
+    _variables_$eq(newvars);
   }
 
   @Override
@@ -173,12 +165,6 @@ public strictfp class Patch
   @Override
   public Object getVariable(int vn) {
     return getPatchVariable(vn);
-  }
-
-  @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    world.observer().setObserverVariable(vn, value);
   }
 
   @Override
@@ -237,7 +223,7 @@ public strictfp class Patch
   public void setPatchVariable(int vn, Object value)
       throws AgentException {
     if (vn > LAST_PREDEFINED_VAR) {
-      variables[vn] = value;
+      variables()[vn] = value;
     } else {
       switch (vn) {
         case VAR_PCOLOR:
@@ -292,10 +278,10 @@ public strictfp class Patch
   @Override
   public Object getPatchVariable(int vn) {
     if (vn == VAR_PCOLOR &&
-        variables[VAR_PCOLOR] == null) {
-      variables[VAR_PCOLOR] = Double.valueOf(pcolor);
+        variables()[VAR_PCOLOR] == null) {
+      variables()[VAR_PCOLOR] = Double.valueOf(pcolor);
     }
-    return variables[vn];
+    return variables()[vn];
   }
 
   public double getPatchVariableDouble(int vn) {
@@ -313,7 +299,7 @@ public strictfp class Patch
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = world.getTopology().getPatchAt(pxcor + dx, pycor + dy);
+    Patch target = world().getTopology().getPatchAt(pxcor + dx, pycor + dy);
     if (target == null) {
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
     }
@@ -321,19 +307,19 @@ public strictfp class Patch
   }
 
   public Patch fastGetPatchAt(int x, int y) {
-    return world.fastGetPatchAt(x, y);
+    return world().fastGetPatchAt(x, y);
   }
 
   public AgentSet getNeighbors() {
     if (patchNeighbors == null) {
-      patchNeighbors = world.getTopology().getNeighbors(this);
+      patchNeighbors = world().getTopology().getNeighbors(this);
     }
     return patchNeighbors;
   }
 
   public AgentSet getNeighbors4() {
     if (patchNeighbors4 == null) {
-      patchNeighbors4 = world.getTopology().getNeighbors4(this);
+      patchNeighbors4 = world().getTopology().getNeighbors4(this);
     }
     return patchNeighbors4;
   }
@@ -341,30 +327,29 @@ public strictfp class Patch
   ///
 
   public Turtle sprout(int c, int heading, AgentSet breed) {
-    Turtle child = new Turtle(world, breed,
-        (Double) variables[VAR_PXCOR],
-        (Double) variables[VAR_PYCOR]);
+    Turtle child = new Turtle(world(), breed,
+        (Double) variables()[VAR_PXCOR],
+        (Double) variables()[VAR_PYCOR]);
     double color = 5 + 10 * c;
     child.colorDoubleUnchecked(Double.valueOf(color));
     child.heading(heading);
     return child;
   }
 
-  // this is only used by the _fire prim ev 6/28/07
-  double pcolor = 0;
+  protected double pcolor = 0;
 
   public double pcolorDouble() {
-    if (variables[VAR_PCOLOR] == null || variables[VAR_PCOLOR] instanceof Double) {
+    if (variables()[VAR_PCOLOR] == null || variables()[VAR_PCOLOR] instanceof Double) {
       return pcolor;
     }
     throw new IllegalStateException(I18N.errorsJ().get("org.nlogo.agent.Patch.pcolorNotADouble"));
   }
 
   public Object pcolor() {
-    if (variables[VAR_PCOLOR] == null) {
-      variables[VAR_PCOLOR] = Double.valueOf(pcolor);
+    if (variables()[VAR_PCOLOR] == null) {
+      variables()[VAR_PCOLOR] = Double.valueOf(pcolor);
     }
-    return variables[VAR_PCOLOR];
+    return variables()[VAR_PCOLOR];
   }
 
   public void pcolor(double pcolor) {
@@ -373,11 +358,11 @@ public strictfp class Patch
     }
     if (this.pcolor != pcolor) {
       this.pcolor = pcolor;
-      variables[VAR_PCOLOR] = null;
-      world.patchColors[(int) id] = Color.getARGBbyPremodulatedColorNumber(pcolor);
-      world.patchColorsDirty = true;
+      variables()[VAR_PCOLOR] = null;
+      world().patchColors[(int) id()] = Color.getARGBbyPremodulatedColorNumber(pcolor);
+      world().patchColorsDirty = true;
       if (pcolor != 0.0) {
-        world.patchesAllBlack = false;
+        world().patchesAllBlack = false;
       }
     }
   }
@@ -388,20 +373,20 @@ public strictfp class Patch
       color = Color.modulateDouble(color);
       if (pcolor != color) {
         pcolor = color;
-        variables[VAR_PCOLOR] = null;
-        world.patchColors[(int) id] = Color.getARGBbyPremodulatedColorNumber(pcolor);
-        world.patchColorsDirty = true;
+        variables()[VAR_PCOLOR] = null;
+        world().patchColors[(int) id()] = Color.getARGBbyPremodulatedColorNumber(pcolor);
+        world().patchColorsDirty = true;
         if (pcolor != 0.0) {
-          world.patchesAllBlack = false;
+          world().patchesAllBlack = false;
         }
       }
     } else if (pcolor != color) {
       pcolor = color;
-      variables[VAR_PCOLOR] = boxedColor;
-      world.patchColors[(int) id] = Color.getARGBbyPremodulatedColorNumber(pcolor);
-      world.patchColorsDirty = true;
+      variables()[VAR_PCOLOR] = boxedColor;
+      world().patchColors[(int) id()] = Color.getARGBbyPremodulatedColorNumber(pcolor);
+      world().patchColorsDirty = true;
       if (pcolor != 0.0) {
-        world.patchesAllBlack = false;
+        world().patchesAllBlack = false;
       }
     }
   }
@@ -410,11 +395,11 @@ public strictfp class Patch
     double color = boxedColor.doubleValue();
     if (color != pcolor) {
       pcolor = color;
-      variables[VAR_PCOLOR] = boxedColor;
-      world.patchColors[(int) id] = Color.getARGBbyPremodulatedColorNumber(color);
-      world.patchColorsDirty = true;
+      variables()[VAR_PCOLOR] = boxedColor;
+      world().patchColors[(int) id()] = Color.getARGBbyPremodulatedColorNumber(color);
+      world().patchColorsDirty = true;
       if (color != 0.0) {
-        world.patchesAllBlack = false;
+        world().patchesAllBlack = false;
       }
     }
   }
@@ -426,18 +411,18 @@ public strictfp class Patch
 
   public void pcolor(LogoList rgb, int varIndex, boolean allowAlpha)
       throws AgentException {
-    validRGBList(rgb, allowAlpha);
+    org.nlogo.api.Color.validRGBList(rgb, allowAlpha);
     pcolor = Double.NaN;
 
-    if (!(variables[varIndex] instanceof LogoList) || !rgb.equals(variables[varIndex])) {
-      variables[varIndex] = rgb;
-      world.patchColors[(int) id] = Color.getRGBInt(((Double) rgb.get(0)).intValue(),
+    if (!(variables()[varIndex] instanceof LogoList) || !rgb.equals(variables()[varIndex])) {
+      variables()[varIndex] = rgb;
+      world().patchColors[(int) id()] = Color.getRGBInt(((Double) rgb.get(0)).intValue(),
           ((Double) rgb.get(1)).intValue(),
           ((Double) rgb.get(2)).intValue());
-      world.patchColorsDirty = true;
-      world.patchesAllBlack = false;
+      world().patchColorsDirty = true;
+      world().patchesAllBlack = false;
       if(rgb.size() > 3) {
-        world.mayHavePartiallyTransparentObjects = true;
+        world().mayHavePartiallyTransparentObjects = true;
       }
     }
   }
@@ -457,7 +442,7 @@ public strictfp class Patch
   }
 
   public Object label() {
-    return variables[VAR_PLABEL];
+    return variables()[VAR_PLABEL];
   }
 
   public boolean hasLabel() {
@@ -466,39 +451,39 @@ public strictfp class Patch
   }
 
   public String labelString() {
-    return Dump.logoObject(variables[VAR_PLABEL]);
+    return Dump.logoObject(variables()[VAR_PLABEL]);
   }
 
   public void label(Object label) {
     if (label instanceof String &&
         ((String) label).length() == 0) {
       if (hasLabel()) {
-        world.patchesWithLabels--;
+        world().patchesWithLabels--;
       }
     } else {
       if (!hasLabel()) {
-        world.patchesWithLabels++;
+        world().patchesWithLabels++;
       }
     }
-    variables[VAR_PLABEL] = label;
+    variables()[VAR_PLABEL] = label;
   }
 
   public Object labelColor() {
-    return variables[VAR_PLABELCOLOR];
+    return variables()[VAR_PLABELCOLOR];
   }
 
   public void labelColor(double labelColor) {
-    variables[VAR_PLABELCOLOR] = Double.valueOf(Color.modulateDouble(labelColor));
+    variables()[VAR_PLABELCOLOR] = Double.valueOf(Color.modulateDouble(labelColor));
   }
 
   public void labelColor(Double labelColor) {
-    variables[VAR_PLABELCOLOR] = labelColor;
+    variables()[VAR_PLABELCOLOR] = labelColor;
   }
 
   public void labelColor(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
-    variables[varIndex] = rgb;
+    org.nlogo.api.Color.validRGBList(rgb, true);
+    variables()[varIndex] = rgb;
   }
 
   @Override
@@ -528,35 +513,35 @@ public strictfp class Patch
 
   /// getPatch<DIRECTION> methods -- we pass these off to the topology's methods
   public Patch getPatchNorth() {
-    return world.getTopology().getPN(this);
+    return world().getTopology().getPN(this);
   }
 
   public Patch getPatchSouth() {
-    return world.getTopology().getPS(this);
+    return world().getTopology().getPS(this);
   }
 
   public Patch getPatchEast() {
-    return world.getTopology().getPE(this);
+    return world().getTopology().getPE(this);
   }
 
   public Patch getPatchWest() {
-    return world.getTopology().getPW(this);
+    return world().getTopology().getPW(this);
   }
 
   public Patch getPatchNorthWest() {
-    return world.getTopology().getPNW(this);
+    return world().getTopology().getPNW(this);
   }
 
   public Patch getPatchSouthWest() {
-    return world.getTopology().getPSW(this);
+    return world().getTopology().getPSW(this);
   }
 
   public Patch getPatchSouthEast() {
-    return world.getTopology().getPSE(this);
+    return world().getTopology().getPSE(this);
   }
 
   public Patch getPatchNorthEast() {
-    return world.getTopology().getPNE(this);
+    return world().getTopology().getPNE(this);
   }
 
   public int alpha() {

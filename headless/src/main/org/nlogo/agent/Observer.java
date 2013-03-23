@@ -20,18 +20,18 @@ public strictfp class Observer
   public AgentKind kind() { return AgentKindJ.Observer(); }
 
   @Override
-  Agent realloc(boolean forRecompile) {
-    Object[] oldvars = variables;
-    Object[] newvars = new Object[world.getVariablesArraySize(this)];
-    ValueConstraint[] newcons = new ValueConstraint[world.getVariablesArraySize(this)];
+  public void realloc(boolean forRecompile) {
+    Object[] oldvars = variables();
+    Object[] newvars = new Object[world().getVariablesArraySize(this)];
+    ValueConstraint[] newcons = new ValueConstraint[world().getVariablesArraySize(this)];
     for (int i = 0; newvars.length != i; i++) {
       newvars[i] = World.ZERO;
       newcons[i] = null;
     }
     if (oldvars != null && forRecompile) {
-      for (int i = 0; i < oldvars.length && i < world.oldProgram.globals().size(); i++) {
-        String name = world.oldProgram.globals().apply(i);
-        int newpos = world.observerOwnsIndexOf(name);
+      for (int i = 0; i < oldvars.length && i < world().oldProgram.globals().size(); i++) {
+        String name = world().oldProgram.globals().apply(i);
+        int newpos = world().observerOwnsIndexOf(name);
         if (newpos != -1) {
           newvars[newpos] = oldvars[i];
           // We do not populate the value constraints again.  When the widgets get compiled
@@ -41,20 +41,13 @@ public strictfp class Observer
         }
       }
     }
-    variables = newvars;
+    _variables_$eq(newvars);
     variableConstraints = newcons;
-
-    return null;
   }
 
   @Override
   public Object getVariable(int vn) {
-    return variables[vn];
-  }
-
-  @Override
-  public Object getObserverVariable(int vn) {
-    return variables[vn];
+    return variables()[vn];
   }
 
   @Override
@@ -99,9 +92,19 @@ public strictfp class Observer
   @Override
   public void setVariable(int vn, Object value)
       throws AgentException {
-    setObserverVariable(vn, value);
+    assertVariableConstraint(vn, value);
+    variables()[vn] = value;
   }
 
+  ValueConstraint[] variableConstraints = null;
+
+  public ValueConstraint variableConstraint(int vn) {
+    return variableConstraints[vn];
+  }
+
+  public void variableConstraint(int vn, ValueConstraint con) {
+    variableConstraints[vn] = con;
+  }
 
   public void assertVariableConstraint(int vn, Object value)
       throws AgentException {
@@ -109,13 +112,6 @@ public strictfp class Observer
     if (con != null) {
       con.assertConstraint(value);
     }
-  }
-
-  @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    assertVariableConstraint(vn, value);
-    variables[vn] = value;
   }
 
   @Override
@@ -223,14 +219,14 @@ public strictfp class Observer
 
   public double followOffsetX() {
     if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
-      return _oxcor - ((world.minPxcor() - 0.5) + world.worldWidth() / 2.0);
+      return _oxcor - ((world().minPxcor() - 0.5) + world().worldWidth() / 2.0);
     }
     return 0.0;
   }
 
   public double followOffsetY() {
     if (perspective == PerspectiveJ.FOLLOW() || perspective == PerspectiveJ.RIDE()) {
-      return _oycor - ((world.minPycor() - 0.5) + world.worldHeight() / 2.0);
+      return _oycor - ((world().minPycor() - 0.5) + world().worldHeight() / 2.0);
     }
     return 0.0;
   }
@@ -312,7 +308,7 @@ public strictfp class Observer
       x = ((Turtle) agent).xcor();
       y = ((Turtle) agent).ycor();
     } else if (agent instanceof Link) {
-      return world.protractor().distance(agent, _oxcor, _oycor, true);
+      return world().protractor().distance(agent, _oxcor, _oycor, true);
     } else {
       x = ((Patch) agent).pxcor;
       y = ((Patch) agent).pycor;
@@ -338,9 +334,9 @@ public strictfp class Observer
   }
 
   public void home() {
-    _oxcor = world.minPxcor() + ((world.maxPxcor() - world.minPxcor()) / 2.0);
-    _oycor = world.minPycor() + ((world.maxPycor() - world.minPycor()) / 2.0);
-    _ozcor = StrictMath.max(world.worldWidth(), world.worldHeight()) * 1.5;
+    _oxcor = world().minPxcor() + ((world().maxPxcor() - world().minPxcor()) / 2.0);
+    _oycor = world().minPycor() + ((world().maxPycor() - world().minPycor()) / 2.0);
+    _ozcor = StrictMath.max(world().worldWidth(), world().worldHeight()) * 1.5;
     heading = 0;
     pitch = 90;
     roll = 0;
@@ -353,7 +349,7 @@ public strictfp class Observer
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    return world.getPatchAt(dx, dy);
+    return world().getPatchAt(dx, dy);
   }
 
   @Override

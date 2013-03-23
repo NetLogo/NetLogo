@@ -2,6 +2,8 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.agent.AgentSet;
+import org.nlogo.agent.AgentSetBuilder;
 import org.nlogo.api.AgentKindJ;
 import org.nlogo.api.Syntax;
 import org.nlogo.nvm.Context;
@@ -24,22 +26,18 @@ public final strictfp class _turtlesat
     try {
       patch = context.agent.getPatchAtOffsets(dx, dy);
     } catch (org.nlogo.api.AgentException e) {
-      return new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), 0,
-          false, world);
+      return world.noTurtles();
     }
     if (patch == null) {
-      return new org.nlogo.agent.ArrayAgentSet(AgentKindJ.Turtle(), 0,
-          false, world);
+      return world.noTurtles();
     }
-    org.nlogo.agent.AgentSet agentset =
-        new org.nlogo.agent.ArrayAgentSet
-      (AgentKindJ.Turtle(), patch.turtleCount(),
-                false, world);
+    AgentSetBuilder builder = new AgentSetBuilder(
+      AgentKindJ.Turtle(), patch.turtleCount());
     for (org.nlogo.agent.Turtle turtle : patch.turtlesHere()) {
       if (turtle != null) {
-        agentset.add(turtle);
+        builder.add(turtle);
       }
     }
-    return agentset;
+    return builder.build();
   }
 }

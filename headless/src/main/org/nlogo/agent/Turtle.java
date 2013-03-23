@@ -24,9 +24,11 @@ import java.util.Set;
 public strictfp class Turtle
     extends Agent
     implements org.nlogo.api.Turtle {
-  void id(long id) {
-    this.id = id;
-    variables[VAR_WHO] = Double.valueOf(id);
+
+  @Override
+  public void _id_$eq(long id) {
+    super._id_$eq(id);
+    variables()[VAR_WHO] = Double.valueOf(id);
   }
 
   public AgentKind kind() { return AgentKindJ.Turtle(); }
@@ -54,21 +56,21 @@ public strictfp class Turtle
 
 
   void initvars(Double xcor, Double ycor, AgentSet breed) {
-    variables[VAR_COLOR] = Color.BoxedBlack();
+    variables()[VAR_COLOR] = Color.BoxedBlack();
     heading = 0;
-    variables[VAR_HEADING] = World.ZERO;
+    variables()[VAR_HEADING] = World.ZERO;
     this.xcor = xcor.doubleValue();
-    variables[VAR_XCOR] = xcor;
+    variables()[VAR_XCOR] = xcor;
     this.ycor = ycor.doubleValue();
-    variables[VAR_YCOR] = ycor;
-    variables[VAR_SHAPE] = world.turtleBreedShapes.breedShape(breed);
-    variables[VAR_LABEL] = "";
-    variables[VAR_LABELCOLOR] = Color.BoxedWhite();
-    variables[VAR_BREED] = breed;
-    variables[VAR_HIDDEN] = Boolean.FALSE;
-    variables[VAR_SIZE] = World.ONE;
-    variables[VAR_PENSIZE] = World.ONE;
-    variables[VAR_PENMODE] = PEN_UP;
+    variables()[VAR_YCOR] = ycor;
+    variables()[VAR_SHAPE] = world().turtleBreedShapes.breedShape(breed);
+    variables()[VAR_LABEL] = "";
+    variables()[VAR_LABELCOLOR] = Color.BoxedWhite();
+    variables()[VAR_BREED] = breed;
+    variables()[VAR_HIDDEN] = Boolean.FALSE;
+    variables()[VAR_SIZE] = World.ONE;
+    variables()[VAR_PENSIZE] = World.ONE;
+    variables()[VAR_PENMODE] = PEN_UP;
   }
 
   public Turtle(World world, AgentSet breed, Double xcor, Double ycor) {
@@ -77,18 +79,18 @@ public strictfp class Turtle
 
   private Turtle(World world, AgentSet breed, Double xcor, Double ycor, boolean getId) {
     super(world);
-    variables = new Object[world.getVariablesArraySize(this, breed)];
+    _variables_$eq(new Object[world().getVariablesArraySize(this, breed)]);
     if (getId) {
-      id(world.newTurtleId());
-      world.turtles().add(this);
+      _id_$eq(world().newTurtleId());
+      world()._turtles.add(this);
     }
     initvars(xcor, ycor, breed);
 
-    for (int i = LAST_PREDEFINED_VAR + 1; i < variables.length; i++) {
-      variables[i] = World.ZERO;
+    for (int i = LAST_PREDEFINED_VAR + 1; i < variables().length; i++) {
+      variables()[i] = World.ZERO;
     }
-    if (breed != world.turtles()) {
-      breed.add(this);
+    if (breed != world().turtles()) {
+      ((TreeAgentSet) breed).add(this);
     }
     getPatchHere().addTurtle(this);
   }
@@ -98,8 +100,8 @@ public strictfp class Turtle
   // that the slot is open.  --mas 12/18/01
   Turtle(World world, long id) {
     this(world, world.turtles(), World.ZERO, World.ZERO, false);
-    id(id);
-    world.turtles().add(this);
+    _id_$eq(id);
+    world._turtles.add(this);
   }
 
 
@@ -108,42 +110,42 @@ public strictfp class Turtle
   }
 
   public Turtle hatch(AgentSet breed) {
-    Turtle child = new Turtle(world);
+    Turtle child = new Turtle(world());
     child.heading = heading;
     child.xcor = xcor;
     child.ycor = ycor;
-    child.variables = variables.clone();
-    child.id(world.newTurtleId());
-    world.turtles().add(child);
+    child._variables_$eq(variables().clone());
+    child._id_$eq(world().newTurtleId());
+    world()._turtles.add(child);
     if (breed != getBreed()) {
       child.setBreed(breed);
     }
-    else if (breed != world.turtles()) {
-      getBreed().add(child);
+    else if (breed != world().turtles()) {
+      ((TreeAgentSet) getBreed()).add(child);
     }
     child.getPatchHere().addTurtle(child);
     return child;
   }
 
   public void die() {
-    if (id == -1) {
+    if (id() == -1) {
       return;
     }
-    world.linkManager.cleanup(this);
+    world().linkManager.cleanup(this);
     Patch patch = getPatchHere();
     patch.removeTurtle(this);
-    AgentSet breed = getBreed();
-    if (breed != world.turtles()) {
+    TreeAgentSet breed = (TreeAgentSet) getBreed();
+    if (breed != world().turtles()) {
       breed.remove(agentKey());
     }
-    world.removeLineThickness(this);
-    world.turtles().remove(agentKey());
-    id(-1);
+    world().removeLineThickness(this);
+    world()._turtles.remove(agentKey());
+    _id_$eq(-1);
   }
 
   public double lineThickness() {
-    if (world != null) {
-      return world.lineThickness(this);
+    if (world() != null) {
+      return world().lineThickness(this);
     }
     return 0.0;
   }
@@ -153,7 +155,7 @@ public strictfp class Turtle
   @Override
   public Patch getPatchAtOffsets(double dx, double dy)
       throws AgentException {
-    Patch target = world.getTopology().getPatchAt(xcor + dx, ycor + dy);
+    Patch target = world().getTopology().getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
@@ -162,56 +164,49 @@ public strictfp class Turtle
   }
 
   @Override
-  Agent realloc(boolean compiling) {
-    return realloc(compiling, null);
+  public void realloc(boolean compiling) {
+    realloc(compiling, null);
   }
 
-  Agent realloc(boolean compiling, AgentSet oldBreed) {
-    // first check if we recompiled and our breed disappeared!
-    if (compiling && getBreed() != world.turtles() &&
-        world.getBreed(getBreed().printName()) == null) {
-      return this;
-    }
+  void realloc(boolean compiling, AgentSet oldBreed) {
 
     // stage 0: get ready
-    Object[] oldvars = variables;
-    variables = new Object[world.getVariablesArraySize(this, getBreed())];
-    int turtlesOwnSize = world.getVariablesArraySize((Turtle) null, world.turtles());
+    Object[] oldvars = variables();
+    _variables_$eq(new Object[world().getVariablesArraySize(this, getBreed())]);
+    int turtlesOwnSize = world().getVariablesArraySize((Turtle) null, world().turtles());
 
     // stage 1: use arraycopy to copy over as many variables as possible
     // (if compiling it's just the predefined ones, if not compiling it's turtles-own too!)
     int numberToCopyDirectly = compiling ? NUMBER_PREDEFINED_VARS : turtlesOwnSize;
-    System.arraycopy(oldvars, 0, variables, 0, numberToCopyDirectly);
+    System.arraycopy(oldvars, 0, variables(), 0, numberToCopyDirectly);
 
     // stage 2: shift the turtles-own variables into their new positions
     // (unless we already did turtles-own during stage 1)
     if (compiling) {
       for (int i = NUMBER_PREDEFINED_VARS; i < turtlesOwnSize; i++) {
-        String name = world.turtlesOwnNameAt(i);
-        int oldpos = world.oldTurtlesOwnIndexOf(name);
+        String name = world().turtlesOwnNameAt(i);
+        int oldpos = world().oldTurtlesOwnIndexOf(name);
         if (oldpos == -1) {
-          variables[i] = World.ZERO;
+          variables()[i] = World.ZERO;
         } else {
-          variables[i] = oldvars[oldpos];
+          variables()[i] = oldvars[oldpos];
           oldvars[oldpos] = null;
         }
       }
     }
 
     // stage 3: handle the BREED-own variables
-    for (int i = turtlesOwnSize; i < variables.length; i++) {
-      String name = world.breedsOwnNameAt(getBreed(), i);
-      int oldpos = compiling ? world.oldBreedsOwnIndexOf(getBreed(), name)
-          : world.breedsOwnIndexOf(oldBreed, name);
+    for (int i = turtlesOwnSize; i < variables().length; i++) {
+      String name = world().breedsOwnNameAt(getBreed(), i);
+      int oldpos = compiling ? world().oldBreedsOwnIndexOf(getBreed(), name)
+          : world().breedsOwnIndexOf(oldBreed, name);
       if (oldpos == -1) {
-        variables[i] = World.ZERO;
+        variables()[i] = World.ZERO;
       } else {
-        variables[i] = oldvars[oldpos];
+        variables()[i] = oldvars[oldpos];
         oldvars[oldpos] = null;
       }
     }
-
-    return null;
   }
 
   // note this is very similar to
@@ -240,21 +235,21 @@ public strictfp class Turtle
     if (h < 0 || h >= 360) {
       h = ((h % 360) + 360) % 360;
     }
-    return world.protractor().getPatchAtHeadingAndDistance(this, h, distance);
+    return world().protractor().getPatchAtHeadingAndDistance(this, h, distance);
   }
 
   public Patch getPatchHere() {
     if (currentPatch == null) {
       //turtles cannot leave the world, so xcor and ycor will always be valid
       //so assume we dont have to access the Topologies
-      currentPatch = world.getPatchAtWrap(xcor, ycor);
+      currentPatch = world().getPatchAtWrap(xcor, ycor);
     }
     return currentPatch;
   }
 
   private void mustOwn(String name)
       throws AgentException {
-    if (name != null && !world.breedOwns(getBreed(), name)) {
+    if (name != null && !world().breedOwns(getBreed(), name)) {
       throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
           getBreed().printName(), name));
     }
@@ -273,40 +268,35 @@ public strictfp class Turtle
   }
 
   @Override
-  public Object getObserverVariable(int vn) {
-    return world.observer().getObserverVariable(vn);
-  }
-
-  @Override
   public Object getTurtleOrLinkVariable(String varName) {
-    return getTurtleVariable(world.program().turtlesOwn().indexOf(varName));
+    return getTurtleVariable(world().program().turtlesOwn().indexOf(varName));
   }
 
   @Override
   public Object getTurtleVariable(int vn) {
     if (vn == VAR_WHO) {
-      if (variables[VAR_WHO] == null) {
-        variables[VAR_WHO] = Double.valueOf(id);
+      if (variables()[VAR_WHO] == null) {
+        variables()[VAR_WHO] = Double.valueOf(id());
       }
     } else if (vn == VAR_HEADING) {
-      if (variables[VAR_HEADING] == null) {
-        variables[VAR_HEADING] = Double.valueOf(heading);
+      if (variables()[VAR_HEADING] == null) {
+        variables()[VAR_HEADING] = Double.valueOf(heading);
       }
     } else if (vn == VAR_XCOR) {
-      if (variables[VAR_XCOR] == null) {
-        variables[VAR_XCOR] = Double.valueOf(xcor);
+      if (variables()[VAR_XCOR] == null) {
+        variables()[VAR_XCOR] = Double.valueOf(xcor);
       }
-    } else if (vn == VAR_YCOR && variables[VAR_YCOR] == null) {
-      variables[VAR_YCOR] = Double.valueOf(ycor);
+    } else if (vn == VAR_YCOR && variables()[VAR_YCOR] == null) {
+      variables()[VAR_YCOR] = Double.valueOf(ycor);
     }
 
-    return variables[vn];
+    return variables()[vn];
   }
 
   public double getTurtleVariableDouble(int vn) {
     switch (vn) {
       case VAR_WHO:
-        return id;
+        return id();
       case VAR_HEADING:
         return heading;
       case VAR_XCOR:
@@ -334,16 +324,16 @@ public strictfp class Turtle
   public Object getBreedVariable(String name)
       throws AgentException {
     mustOwn(name);
-    int vn = world.breedsOwnIndexOf(getBreed(), name);
+    int vn = world().breedsOwnIndexOf(getBreed(), name);
     return getTurtleVariable(vn);
   }
 
   public boolean ownsVariable(String name) {
-    int vn = world.breedsOwnIndexOf(getBreed(), name);
+    int vn = world().breedsOwnIndexOf(getBreed(), name);
     if (vn != -1) {
       return true;
     }
-    vn = world.turtlesOwnIndexOf(name);
+    vn = world().turtlesOwnIndexOf(name);
     if (vn != -1) {
       return true;
     }
@@ -352,9 +342,9 @@ public strictfp class Turtle
 
   public Object getVariable(String name)
       throws AgentException {
-    int vn = world.breedsOwnIndexOf(getBreed(), name);
+    int vn = world().breedsOwnIndexOf(getBreed(), name);
     if (vn == -1) {
-      vn = world.turtlesOwnIndexOf(name);
+      vn = world().turtlesOwnIndexOf(name);
     }
     if (vn != -1) {
       return getTurtleVariable(vn);
@@ -375,15 +365,9 @@ public strictfp class Turtle
   }
 
   @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    world.observer().setObserverVariable(vn, value);
-  }
-
-  @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
-    setTurtleVariable(world.program().turtlesOwn().indexOf(varName), value);
+    setTurtleVariable(world().program().turtlesOwn().indexOf(varName), value);
   }
 
   @Override
@@ -419,7 +403,7 @@ public strictfp class Turtle
   public void setTurtleVariable(int vn, Object value)
       throws AgentException {
     if (vn > LAST_PREDEFINED_VAR) {
-      variables[vn] = value;
+      variables()[vn] = value;
     } else {
       switch (vn) {
         case VAR_COLOR:
@@ -458,7 +442,7 @@ public strictfp class Turtle
           break;
         case VAR_SHAPE:
           if (value instanceof String) {
-            String newShape = world.checkTurtleShapeName((String) value);
+            String newShape = world().checkTurtleShapeName((String) value);
             if (newShape == null) {
               throw new AgentException
                   (I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
@@ -485,7 +469,7 @@ public strictfp class Turtle
         case VAR_BREED:
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
-            if (breed != world.turtles() && !world.isBreed(breed)) {
+            if (breed != world().turtles() && !world().isBreed(breed)) {
               throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
             }
             setBreed(breed);
@@ -541,7 +525,7 @@ public strictfp class Turtle
   public void setBreedVariable(String name, Object value)
       throws AgentException {
     mustOwn(name);
-    int vn = world.breedsOwnIndexOf(getBreed(), name);
+    int vn = world().breedsOwnIndexOf(getBreed(), name);
     setTurtleVariable(vn, value);
   }
 
@@ -581,7 +565,7 @@ public strictfp class Turtle
   ///
 
   public Object color() {
-    return variables[VAR_COLOR];
+    return variables()[VAR_COLOR];
   }
 
   public void colorDouble(Double boxedColor) {
@@ -590,19 +574,19 @@ public strictfp class Turtle
       c = Color.modulateDouble(c);
       boxedColor = Double.valueOf(c);
     }
-    variables[VAR_COLOR] = boxedColor;
+    variables()[VAR_COLOR] = boxedColor;
   }
 
   public void colorDoubleUnchecked(Double boxedColor) {
-    variables[VAR_COLOR] = boxedColor;
+    variables()[VAR_COLOR] = boxedColor;
   }
 
   public void color(LogoList rgb, int varIndex)
       throws AgentException {
-    validRGBList(rgb, true);
-    variables[varIndex] = rgb;
+    org.nlogo.api.Color.validRGBList(rgb, true);
+    variables()[varIndex] = rgb;
     if(rgb.size() > 3) {
-      world.mayHavePartiallyTransparentObjects = true;
+      world().mayHavePartiallyTransparentObjects = true;
     }
   }
 
@@ -622,8 +606,8 @@ public strictfp class Turtle
   public void heading(double heading) {
     double originalHeading = this.heading;
     headingHelper(heading);
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleTurned(this, heading, originalHeading);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleTurned(this, heading, originalHeading);
     }
   }
 
@@ -632,8 +616,8 @@ public strictfp class Turtle
   public void heading(double heading, Set<Turtle> seenTurtles) {
     double originalHeading = this.heading;
     headingHelper(heading);
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleTurned(this, heading, originalHeading, seenTurtles);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleTurned(this, heading, originalHeading, seenTurtles);
     }
   }
 
@@ -642,7 +626,7 @@ public strictfp class Turtle
       heading = ((heading % 360) + 360) % 360;
     }
     this.heading = heading;
-    variables[VAR_HEADING] = null;
+    variables()[VAR_HEADING] = null;
   }
 
   public void heading(Double heading) {
@@ -656,12 +640,12 @@ public strictfp class Turtle
     }
     this.heading = wrapped;
     if (h == wrapped) {
-      variables[VAR_HEADING] = heading;
+      variables()[VAR_HEADING] = heading;
     } else {
-      variables[VAR_HEADING] = null;
+      variables()[VAR_HEADING] = null;
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleTurned(this, h, originalHeading);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleTurned(this, h, originalHeading);
     }
   }
 
@@ -669,7 +653,7 @@ public strictfp class Turtle
 
   void drawLine(double x0, double y0, double x1, double y1) {
     if (!penMode().equals(PEN_UP) && (x0 != x1 || y0 != y1)) {
-      world.drawLine(x0, y0, x1, y1, variables[VAR_COLOR], penSize(), penMode());
+      world().drawLine(x0, y0, x1, y1, variables()[VAR_COLOR], penSize(), penMode());
     }
   }
 
@@ -701,7 +685,7 @@ public strictfp class Turtle
 
     // wrap the coords (we do this first in case we're trying to move outside
     // the world we want to trigger the exception.)
-    y = world.wrapY(y);
+    y = world().wrapY(y);
 
     double yprime;
 
@@ -709,9 +693,9 @@ public strictfp class Turtle
     // could we just be undoing what we just did? yes.
     // but do we really want to try and figure that out?
     if (y > ycor) {
-      yprime = y - world.worldHeight();
+      yprime = y - world().worldHeight();
     } else {
-      yprime = y + world.worldHeight();
+      yprime = y + world().worldHeight();
     }
 
     // techincally we're not supposed to check these
@@ -719,7 +703,7 @@ public strictfp class Turtle
     // do here since we don't want to change the values
     // just make sure that we're obeying the topology if
     // we were to use one of these paths.
-    if (!world.wrappingAllowedInY()) {
+    if (!world().wrappingAllowedInY()) {
       yprime = y;
     }
 
@@ -736,17 +720,17 @@ public strictfp class Turtle
       return x;
     }
 
-    x = world.wrapX(x);
+    x = world().wrapX(x);
 
     double xprime;
 
     if (x > xcor) {
-      xprime = x - world.worldWidth();
+      xprime = x - world().worldWidth();
     } else {
-      xprime = x + world.worldWidth();
+      xprime = x + world().worldWidth();
     }
 
-    if (!world.wrappingAllowedInX()) {
+    if (!world().wrappingAllowedInX()) {
       xprime = x;
     }
 
@@ -771,17 +755,17 @@ public strictfp class Turtle
 
     drawLine(this.xcor, ycor, shortestPathX(xcor), ycor);
 
-    this.xcor = world.wrapX(xcor);
+    this.xcor = world().wrapX(xcor);
 
-    variables[VAR_XCOR] = null;
+    variables()[VAR_XCOR] = null;
     currentPatch = null;
     Patch targetPatch = getPatchHere();
     if (originalPatch != targetPatch) {
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved
           (this, xcor, ycor, oldX, ycor);
     }
   }
@@ -792,15 +776,15 @@ public strictfp class Turtle
     double x = xcor.doubleValue();
     double oldX = this.xcor;
 
-    double wrapped = world.wrapX(x);
+    double wrapped = world().wrapX(x);
 
     drawLine(this.xcor, ycor, shortestPathX(x), ycor);
 
     this.xcor = wrapped;
     if (x == wrapped) {
-      variables[VAR_XCOR] = xcor;
+      variables()[VAR_XCOR] = xcor;
     } else {
-      variables[VAR_XCOR] = null;
+      variables()[VAR_XCOR] = null;
     }
     currentPatch = null;
     Patch targetPatch = getPatchHere();
@@ -808,8 +792,8 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved
           (this, x, ycor, oldX, ycor);
     }
   }
@@ -828,17 +812,17 @@ public strictfp class Turtle
 
     drawLine(xcor, this.ycor, xcor, shortestPathY(ycor));
 
-    this.ycor = world.wrapY(ycor);
+    this.ycor = world().wrapY(ycor);
 
-    variables[VAR_YCOR] = null;
+    variables()[VAR_YCOR] = null;
     currentPatch = null;
     Patch targetPatch = getPatchHere();
     if (originalPatch != targetPatch) {
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved(this, xcor, ycor, xcor, oldY);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved(this, xcor, ycor, xcor, oldY);
     }
   }
 
@@ -847,15 +831,15 @@ public strictfp class Turtle
     Patch originalPatch = getPatchHere();
     double y = ycor.doubleValue();
     double oldY = this.ycor;
-    double wrapped = world.wrapY(y);
+    double wrapped = world().wrapY(y);
 
     drawLine(xcor, this.ycor, xcor, shortestPathY(y));
 
     this.ycor = wrapped;
     if (y == wrapped) {
-      variables[VAR_YCOR] = ycor;
+      variables()[VAR_YCOR] = ycor;
     } else {
-      variables[VAR_YCOR] = null;
+      variables()[VAR_YCOR] = null;
     }
     currentPatch = null;
     Patch targetPatch = getPatchHere();
@@ -863,8 +847,8 @@ public strictfp class Turtle
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved(this, xcor, y, xcor, oldY);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved(this, xcor, y, xcor, oldY);
     }
   }
 
@@ -873,8 +857,8 @@ public strictfp class Turtle
     double oldX = this.xcor;
     double oldY = this.ycor;
     xandycorHelper(xcor, ycor);
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved(this, xcor, ycor, oldX, oldY);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved(this, xcor, ycor, oldX, oldY);
     }
   }
 
@@ -885,8 +869,8 @@ public strictfp class Turtle
     double oldX = this.xcor;
     double oldY = this.ycor;
     xandycorHelper(xcor, ycor);
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved(this, xcor, ycor, oldX, oldY, seenTurtles);
     }
   }
 
@@ -894,16 +878,16 @@ public strictfp class Turtle
       throws AgentException {
     Patch originalPatch = getPatchHere();
 
-    double newX = world.wrapX(xcor);
-    double newY = world.wrapY(ycor);
+    double newX = world().wrapX(xcor);
+    double newY = world().wrapY(ycor);
 
     drawLine(this.xcor, this.ycor, xcor, ycor);
 
     this.xcor = newX;
     this.ycor = newY;
 
-    variables[VAR_XCOR] = null;
-    variables[VAR_YCOR] = null;
+    variables()[VAR_XCOR] = null;
+    variables()[VAR_YCOR] = null;
     currentPatch = null;
     Patch targetPatch = getPatchHere();
     if (originalPatch != targetPatch) {
@@ -921,23 +905,23 @@ public strictfp class Turtle
     double oldX = this.xcor;
     double oldY = this.ycor;
 
-    double wrappedX = world.wrapX(x);
-    double wrappedY = world.wrapY(y);
+    double wrappedX = world().wrapX(x);
+    double wrappedY = world().wrapY(y);
 
     drawLine(this.xcor, this.ycor, x, y);
 
     this.xcor = wrappedX;
     this.ycor = wrappedY;
-    variables[VAR_XCOR] = (x == wrappedX) ? xcor : null;
-    variables[VAR_YCOR] = (y == wrappedY) ? ycor : null;
+    variables()[VAR_XCOR] = (x == wrappedX) ? xcor : null;
+    variables()[VAR_YCOR] = (y == wrappedY) ? ycor : null;
     currentPatch = null;
     Patch targetPatch = getPatchHere();
     if (originalPatch != targetPatch) {
       originalPatch.removeTurtle(this);
       targetPatch.addTurtle(this);
     }
-    if (world.tieManager.tieCount > 0) {
-      world.tieManager.turtleMoved(this, x, y, oldX, oldY);
+    if (world().tieManager.tieCount > 0) {
+      world().tieManager.turtleMoved(this, x, y, oldX, oldY);
     }
   }
 
@@ -951,17 +935,17 @@ public strictfp class Turtle
     if (x != oldX || y != oldY) {
       this.xcor = x;
       this.ycor = y;
-      variables[VAR_XCOR] = p.variables[Patch.VAR_PXCOR];
-      variables[VAR_YCOR] = p.variables[Patch.VAR_PYCOR];
-      if (world.tieManager.tieCount > 0) {
-        world.tieManager.turtleMoved(this, x, y, oldX, oldY);
+      variables()[VAR_XCOR] = p.variables()[Patch.VAR_PXCOR];
+      variables()[VAR_YCOR] = p.variables()[Patch.VAR_PYCOR];
+      if (world().tieManager.tieCount > 0) {
+        world().tieManager.turtleMoved(this, x, y, oldX, oldY);
       }
     }
   }
 
   public void face(Agent agent, boolean wrap) {
     try {
-      heading(world.protractor().towards(this, agent, wrap));
+      heading(world().protractor().towards(this, agent, wrap));
     } catch (AgentException ex) {
       // AgentException here means we tried to calculate the heading from
       // an agent to itself, or to an agent at the exact same position.
@@ -973,7 +957,7 @@ public strictfp class Turtle
 
   public void face(double x, double y, boolean wrap) {
     try {
-      heading(world.protractor().towards(this, x, y, wrap));
+      heading(world().protractor().towards(this, x, y, wrap));
     } catch (AgentException ex) {
       // AgentException here means we tried to calculate the heading from
       // an agent to itself, or to an agent at the exact same position.
@@ -1042,15 +1026,15 @@ public strictfp class Turtle
   }
 
   public String shape() {
-    return (String) variables[VAR_SHAPE];
+    return (String) variables()[VAR_SHAPE];
   }
 
   public void shape(String shape) {
-    variables[VAR_SHAPE] = shape;
+    variables()[VAR_SHAPE] = shape;
   }
 
   public Object label() {
-    return variables[VAR_LABEL];
+    return variables()[VAR_LABEL];
   }
 
   public boolean hasLabel() {
@@ -1059,43 +1043,43 @@ public strictfp class Turtle
   }
 
   public String labelString() {
-    return Dump.logoObject(variables[VAR_LABEL]);
+    return Dump.logoObject(variables()[VAR_LABEL]);
   }
 
   public void label(Object label) {
-    variables[VAR_LABEL] = label;
+    variables()[VAR_LABEL] = label;
   }
 
   public Object labelColor() {
-    return variables[VAR_LABELCOLOR];
+    return variables()[VAR_LABELCOLOR];
   }
 
   public void labelColor(double labelColor) {
-    variables[VAR_LABELCOLOR] = Double.valueOf(Color.modulateDouble(labelColor));
+    variables()[VAR_LABELCOLOR] = Double.valueOf(Color.modulateDouble(labelColor));
   }
 
   public void labelColor(LogoList rgb, int valueIndex)
       throws AgentException {
-    validRGBList(rgb, true);
-    variables[valueIndex] = rgb;
+    org.nlogo.api.Color.validRGBList(rgb, true);
+    variables()[valueIndex] = rgb;
   }
 
   public AgentSet getBreed() {
-    return (AgentSet) variables[VAR_BREED];
+    return (AgentSet) variables()[VAR_BREED];
   }
 
   // returns the index of the breed of this turtle, 0 means just a turtle
   // this is super kludge. is there a better way? -AZS 10/28/04
   public int getBreedIndex() {
     AgentSet mybreed = getBreed();
-    if (mybreed == world.turtles()) {
+    if (mybreed == world().turtles()) {
       return 0;
     }
     int j = 0;
     scala.collection.Iterator<String> iter =
-      world.program().breeds().keys().iterator();
+      world().program().breeds().keys().iterator();
     while(iter.hasNext()) {
-      if (world.breedAgents.get(iter.next()) == mybreed) {
+      if (world().breedAgents.get(iter.next()) == mybreed) {
         return j;
       }
       j++;
@@ -1110,64 +1094,64 @@ public strictfp class Turtle
    * allowed to change breed).
    */
   public void setBreed(AgentSet breed) {
-    AgentSet oldBreed = null;
-    if (variables[VAR_BREED] instanceof AgentSet) {
-      oldBreed = (AgentSet) variables[VAR_BREED];
+    TreeAgentSet oldBreed = null;
+    if (variables()[VAR_BREED] instanceof AgentSet) {
+      oldBreed = (TreeAgentSet) variables()[VAR_BREED];
       if (breed == oldBreed) {
         return;
       }
-      if (oldBreed != world.turtles()) {
-        ((AgentSet) variables[VAR_BREED]).remove(agentKey());
+      if (oldBreed != world().turtles()) {
+        oldBreed.remove(agentKey());
       }
     }
-    if (breed != world.turtles()) {
-      breed.add(this);
+    if (breed != world().turtles()) {
+      ((TreeAgentSet) breed).add(this);
     }
-    variables[VAR_BREED] = breed;
-    shape(world.turtleBreedShapes.breedShape(breed));
+    variables()[VAR_BREED] = breed;
+    shape(world().turtleBreedShapes.breedShape(breed));
     realloc(false, oldBreed);
   }
 
   public boolean hidden() {
-    return ((Boolean) variables[VAR_HIDDEN]).booleanValue();
+    return ((Boolean) variables()[VAR_HIDDEN]).booleanValue();
   }
 
   public void hidden(boolean hidden) {
-    variables[VAR_HIDDEN] = hidden ? Boolean.TRUE : Boolean.FALSE;
+    variables()[VAR_HIDDEN] = hidden ? Boolean.TRUE : Boolean.FALSE;
   }
 
   public double size() {
-    return ((Double) variables[VAR_SIZE]).doubleValue();
+    return ((Double) variables()[VAR_SIZE]).doubleValue();
   }
 
   public void size(double size) {
-    variables[VAR_SIZE] = Double.valueOf(size);
+    variables()[VAR_SIZE] = Double.valueOf(size);
   }
 
   public double penSize() {
-    return ((Double) variables[VAR_PENSIZE]).doubleValue();
+    return ((Double) variables()[VAR_PENSIZE]).doubleValue();
   }
 
   public void penSize(double penSize) {
-    variables[VAR_PENSIZE] = Double.valueOf(penSize);
+    variables()[VAR_PENSIZE] = Double.valueOf(penSize);
   }
 
   public String penMode() {
-    return (String) variables[VAR_PENMODE];
+    return (String) variables()[VAR_PENMODE];
   }
 
   public void penMode(String penMode) {
-    variables[VAR_PENMODE] = penMode;
+    variables()[VAR_PENMODE] = penMode;
   }
 
   @Override
   public String toString() {
-    return world.getBreedSingular(getBreed()).toLowerCase() + " " + id;
+    return world().getBreedSingular(getBreed()).toLowerCase() + " " + id();
   }
 
   @Override
   public String classDisplayName() {
-    return world.getBreedSingular(getBreed()).toLowerCase();
+    return world().getBreedSingular(getBreed()).toLowerCase();
   }
 
   public static final int BIT = AgentBit.apply(AgentKindJ.Turtle());

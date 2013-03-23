@@ -54,10 +54,9 @@ public final strictfp class _patchset
             (context, this, i, Syntax.PatchType() | Syntax.PatchsetType(), elt);
       }
     }
-    return new org.nlogo.agent.ArrayAgentSet(
+    return AgentSet.fromArray(
       AgentKindJ.Patch(),
-        resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]),
-        world);
+      resultSet.toArray(new org.nlogo.agent.Patch[resultSet.size()]));
   }
 
   private void descendList(Context context, LogoList tempList, Set<Patch> result) {

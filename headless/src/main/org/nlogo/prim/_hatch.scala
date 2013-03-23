@@ -2,7 +2,7 @@
 
 package org.nlogo.prim
 
-import org.nlogo.agent.{ Turtle, ArrayAgentSet }
+import org.nlogo.agent.{ Turtle, AgentSetBuilder }
 import org.nlogo.api.{ Syntax, AgentKind }
 import org.nlogo.nvm.{ Command, Context, CustomAssembled, AssemblerAssistant }
 
@@ -22,18 +22,18 @@ class _hatch(val breedName: String) extends Command with CustomAssembled {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val parent = context.agent.asInstanceOf[Turtle]
-      val agentset = new ArrayAgentSet(AgentKind.Turtle, count, false, world)
+      val builder = new AgentSetBuilder(AgentKind.Turtle, count)
       val breed =
         if (breedName.isEmpty) parent.getBreed
         else world.getBreed(breedName)
       var i = 0
       while(i < count) {
         val child = parent.hatch(breed)
-        agentset.add(child)
+        builder.add(child)
         workspace.joinForeverButtons(child)
         i += 1
       }
-      context.runExclusiveJob(agentset, next)
+      context.runExclusiveJob(builder.build(), next)
     }
     context.ip = offset
   }

@@ -2,7 +2,7 @@
 /// ThisBuild -- applies to subprojects too
 ///
 
-scalaVersion in ThisBuild := "2.10.0"
+scalaVersion in ThisBuild := "2.10.1"
 
 scalacOptions in ThisBuild ++=
   "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.6 -optimize -Xfatal-warnings -Ywarn-adapted-args -Yinline-warnings"
@@ -60,8 +60,6 @@ unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "resources" }
 unmanagedResourceDirectories in Compile <+= baseDirectory { _ / "headless" / "resources" }
 
 mainClass in Compile := Some("org.nlogo.app.App")
-
-aggregate in runMain := false
 
 sourceGenerators in Compile <+= EventsGenerator.task
 

@@ -57,7 +57,7 @@ class ExpressionParserTests extends FunSuite {
       val start = node.start - PREAMBLE.length
       val end = node.end - PREAMBLE.length
       val text = try { "'" + source.substring(start, end) + "'" }
-      catch { case ex: StringIndexOutOfBoundsException => "out of bounds: " + (start, end) }
+      catch { case ex: StringIndexOutOfBoundsException => "out of bounds: " + ((start, end)) }
       buf.append(node.getClass.getSimpleName + " " + text + " ")
     }
   }
