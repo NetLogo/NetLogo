@@ -95,6 +95,7 @@ object Depend {
       "shape" -> List("api"),
       "shape/editor" -> List("shape","swing"),
       "swing" -> List("awt"),
+      "tortoise" -> List("headless", "compiler", "prim/etc"),
       "util" -> Nil,
       "widget" -> List("window"),
       "window" -> List("editor","log","shape","swing","workspace"),
@@ -169,7 +170,7 @@ check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
 [Quaqua-free-zone] = org.nlogo.* excluding org.nlogo.swing.Utils
 check [Quaqua-free-zone] directlyIndependentOf ch.randelshofer.*
 
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
+[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless] [tortoise]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 
 """
