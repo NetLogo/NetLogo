@@ -367,12 +367,6 @@ public strictfp class Turtle
   }
 
   @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    world.observer().setObserverVariable(vn, value);
-  }
-
-  @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
     setTurtleVariable(world.program().turtlesOwn().indexOf(varName), value);

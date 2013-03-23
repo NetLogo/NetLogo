@@ -66,9 +66,6 @@ public abstract strictfp class Agent
   public abstract Object getTurtleOrLinkVariable(String varName)
       throws AgentException;
 
-  public abstract void setObserverVariable(int vn, Object value)
-      throws AgentException;
-
   public abstract void setTurtleVariable(int vn, Object value)
       throws AgentException;
 

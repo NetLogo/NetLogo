@@ -858,9 +858,9 @@ public strictfp class World
       try {
         ValueConstraint con = _observer.variableConstraint(j);
         if (con != null) {
-          _observer.setObserverVariable(j, con.defaultValue());
+          _observer.setVariable(j, con.defaultValue());
         } else {
-          _observer.setObserverVariable(j, ZERO);
+          _observer.setVariable(j, ZERO);
         }
       } catch (AgentException ex) {
         throw new IllegalStateException(ex);
@@ -1233,7 +1233,7 @@ public strictfp class World
     if (_program.globals().contains(var)) {
       int index = _program.globals().indexOf(var);
       if (-1 != index && index < _observer.variables.length) {
-        _observer.setObserverVariable(index, value);
+        _observer.setVariable(index, value);
         return;
       }
     }

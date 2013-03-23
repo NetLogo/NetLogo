@@ -168,12 +168,6 @@ public strictfp class Patch
   }
 
   @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    world.observer().setObserverVariable(vn, value);
-  }
-
-  @Override
   public void setTurtleVariable(int vn, Object value)
       throws AgentException {
     throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));

@@ -93,7 +93,8 @@ public strictfp class Observer
   @Override
   public void setVariable(int vn, Object value)
       throws AgentException {
-    setObserverVariable(vn, value);
+    assertVariableConstraint(vn, value);
+    variables[vn] = value;
   }
 
   ValueConstraint[] variableConstraints = null;
@@ -112,13 +113,6 @@ public strictfp class Observer
     if (con != null) {
       con.assertConstraint(value);
     }
-  }
-
-  @Override
-  public void setObserverVariable(int vn, Object value)
-      throws AgentException {
-    assertVariableConstraint(vn, value);
-    variables[vn] = value;
   }
 
   @Override
