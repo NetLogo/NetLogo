@@ -7,7 +7,7 @@ import org.nlogo.headless.TestMirroring.withWorkspace
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 
-class TestJSONSerializer extends FunSuite with ShouldMatchers {
+class JSONSerializerTests extends FunSuite with ShouldMatchers {
 
   test("JSONSerializer basic commands") {
     val commands = Seq(
