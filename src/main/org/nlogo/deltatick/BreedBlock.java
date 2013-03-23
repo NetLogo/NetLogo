@@ -435,7 +435,9 @@ public strictfp class BreedBlock
     public void makeLabel() {
         JPanel label = new JPanel();
         // TODO: This is a hard coded hack for now. Fix it.
-        label.add(removeButton);
+//        label.add(removeButton);
+        this.showRemoveButton();
+
         label.add(new JLabel("Ask"));
 
         number = new PrettyInput(this); // number of turtles of a breed starting with -a.

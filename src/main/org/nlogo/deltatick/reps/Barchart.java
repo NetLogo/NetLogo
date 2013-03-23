@@ -96,12 +96,12 @@ public class Barchart extends JPanel {
 
         // Set Background white
         chart.setBorderVisible(false);
-        chart.setBackgroundPaint(Color.WHITE);
+        chart.setBackgroundPaint(null);
 
         // Get reference to plot for further customizaiton
 
         final CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.WHITE);
+        plot.setBackgroundPaint(null);
         plot.setDomainGridlinePaint(Color.GRAY);
 
 
@@ -113,7 +113,7 @@ public class Barchart extends JPanel {
         // disable bar outlines...
         final BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-        renderer.setMaximumBarWidth(0.10); // 10%
+        renderer.setMaximumBarWidth(0.25); // 25% of total width
         renderer.setShadowVisible(false);
         renderer.setBarPainter(new StandardBarPainter());
 

@@ -321,6 +321,7 @@ public class DeltaTickTab
                 speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(myParent));
                 speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(myParent));
                 myParent.setHasSpeciesInspector(true);
+                jFrame.setResizable(true);
                 jFrame.pack();
                 jFrame.setVisible(true);
             }
@@ -639,7 +640,8 @@ public class DeltaTickTab
 
                for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                             if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
-                                PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false);
+                                // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
+                                PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
                                 plotPen.updateCode(quantBlock.getPenUpdateCode());
                             }
                }
@@ -688,6 +690,7 @@ public class DeltaTickTab
                     interfacePanel.removeWidget(w);
                     interfacePlotCount--;
                     plotWrappers.remove(p);
+                    workspace.plotManager().forgetPlot(workspace.plotManager().getPlot(p));
                 }
             }
         }

@@ -32,6 +32,7 @@ public class Piechart extends JPanel {
     JFreeChart chart;
     DefaultPieDataset dataset;
     TraitDisplay.PaintSupplier paintSupplier;
+    double startAngle;
 
 //    public Piechart() {
 //        this.dummy = new HashMap<String, String>();
@@ -59,13 +60,15 @@ public class Piechart extends JPanel {
     public Piechart(String traitName, TraitDisplay.PaintSupplier paintSupplier) {
         trait = traitName;
         this.paintSupplier = paintSupplier;
+        startAngle = Math.random() * 360.0;
         dataset = new DefaultPieDataset();
         selectedVariationsPerc = new HashMap<String, Double>();
         dataset = (DefaultPieDataset) createDataset();
         chart = createChart(dataset);
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
+        chartPanel.setPreferredSize(new Dimension(300, 250));
+        //chartPanel.setMaximumSize(new Dimension(250,250));
         this.setVisible(true);
         this.validate();
     }
@@ -99,18 +102,22 @@ public class Piechart extends JPanel {
         );
 
         chart.setBorderVisible(false);
-        chart.setBackgroundPaint(Color.WHITE);
+        chart.setBackgroundPaint(null);
+        chart.setBorderVisible(false);
 
         PiePlot plot = (PiePlot) chart.getPlot();
+
         plot.setSectionOutlinesVisible(false);
         plot.setIgnoreZeroValues(true);
         plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 13));
         plot.setNoDataMessage("No data available");
         plot.setCircular(false);
         plot.setLabelGap(0.02);
-        plot.setBackgroundPaint(Color.white);
+        plot.setBackgroundPaint(null);
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
-        plot.setShadowPaint(Color.WHITE);
+        plot.setShadowPaint(null);
+        plot.setStartAngle(startAngle);
+        plot.setOutlineVisible(false);
 
         paintSupplier.reset();
         for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
@@ -145,9 +152,9 @@ public class Piechart extends JPanel {
 //        ((PiePlot) chart.getPlot()).setDataset(dataset);
 
         chartPanel.setChart(chart);
-        //chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
-        //chartPanel.setBackground(Color.white);
+
+        //chartPanel.setPreferredSize(new Dimension(300, 250));
+
 
         if (varPercent.size() > 0) {
             chartPanel.setVisible(true);

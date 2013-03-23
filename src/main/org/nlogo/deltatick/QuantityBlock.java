@@ -47,9 +47,8 @@ public strictfp class QuantityBlock
         };
 
         colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
-        label.add(colorButton);
+        //label.add(colorButton);
         updateLabelImage();
-
     }
 
     public String unPackAsCode() {
@@ -114,7 +113,8 @@ public strictfp class QuantityBlock
         */
 
         if (parent instanceof PlotBlock) {
-            passBack += "  set-current-plot-pen \"" + this.getName() + "\" \n";
+            //passBack += "  set-current-plot-pen \"" + this.getName() + "\" \n"; // commented 20130319
+            passBack += "  set-current-plot-pen \"" + this.getPenName() + "\" \n";
             if (colorButton.gotColor() == true) {
                 passBack += "set-plot-pen-color " + colorButton.getSelectedColorName() + "\n";
             }
@@ -212,12 +212,25 @@ public strictfp class QuantityBlock
 
     }
 
+    public void addColorButton() {
+
+        label.add(colorButton);
+    }
+
     public void setButtonColor( Color color ) {
         colorButton.setBackground(color);
         colorButton.setOpaque(true);
         colorButton.setBorderPainted(false);
     }
 
+    public String getPenName() {
+        String passBack = new String();
+        passBack += getName();
+        for (JTextField input : inputs.values()) {
+            passBack += "-" + input.getText();
+        }
+        return passBack;
+    }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {
     }

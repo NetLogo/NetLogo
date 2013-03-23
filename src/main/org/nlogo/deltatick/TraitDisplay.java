@@ -19,6 +19,7 @@ public class TraitDisplay extends JPanel {
 
     HashMap<String, ChartsPanel>chartsPanelMap;
     PaintSupplier paintSupplier;
+    static int defaultPaintIndex = 0;
     JRadioButton button;
     JPanel sidePanel;
     JFrame myFrame;
@@ -45,6 +46,7 @@ public class TraitDisplay extends JPanel {
 
         }
         else {
+            if (varPercent.size() > 0) {
             // Trait not previously present
             // Create corresponding charts
             ChartsPanel chartsPanel = new ChartsPanel(traitName, varPercent);
@@ -52,11 +54,13 @@ public class TraitDisplay extends JPanel {
 
             this.add(chartsPanelMap.get(traitName));
             this.validate();
+            }
 
         }
 
         // Check is trait is to be removed
-        if (varPercent.size() == 0) {
+        if ((varPercent.size() == 0) &&
+             (chartsPanelMap.containsKey(traitName))) {
             // Remove corresponding panel
             this.remove(chartsPanelMap.get(traitName));
             this.validate();
@@ -71,7 +75,7 @@ public class TraitDisplay extends JPanel {
         HashMap<String, Piechart> selectedTraitPieChart = new HashMap<String, Piechart>();
         HashMap<String, Barchart> selectedTraitBarChart = new HashMap<String, Barchart>();
 
-        Color[] COLORS;
+
 
         public ChartsPanel(String traitName, HashMap<String, String> varPercent) {
 
@@ -81,11 +85,11 @@ public class TraitDisplay extends JPanel {
 
             // Trait+Variation selected for the first time, i.e. no previously selected variation
             // Create new chart and add to hashmap and panel
-            Piechart piechart = new Piechart(traitName, new PaintSupplier());
+            Piechart piechart = new Piechart(traitName, new PaintSupplier(defaultPaintIndex));
             piechart.updateChart(traitName, varPercent);
             selectedTraitPieChart.put(traitName, piechart);
             // Create the corresponding barchart
-            Barchart barchart = new Barchart(traitName, new PaintSupplier());
+            Barchart barchart = new Barchart(traitName, new PaintSupplier(defaultPaintIndex));
             barchart.updateChart(traitName, varPercent);
             selectedTraitBarChart.put(traitName, barchart);
 
@@ -95,14 +99,9 @@ public class TraitDisplay extends JPanel {
             this.add(selectedTraitBarChart.get(traitName).getChartPanel());
             this.validate();
 
-//            this.repaint();
-//            sidePanel.setMinimumSize(this.getPreferredSize());
-//            sidePanel.setMaximumSize(this.getMaximumSize());
-//            sidePanel.revalidate();
-//            sidePanel.repaint();
-//            //myFrame.getContentPane().setPreferredSize();
-//            myFrame.pack();
             this.setVisible(true);
+            defaultPaintIndex += 3;
+
         }
 
         public void updateChart(String traitName, HashMap<String, String> varPercent) {
@@ -132,19 +131,28 @@ public class TraitDisplay extends JPanel {
 
     public class PaintSupplier {
         ArrayList<Color> COLORS;
+        int resetIndex;
         int paintIndex;
 
-        public PaintSupplier() {
+        public PaintSupplier(int defaultIndex) {
 
-            paintIndex = 0;
             // Set up colors
-            COLORS = new ArrayList<Color>(6);
+            COLORS = new ArrayList<Color>();
             COLORS.add(new Color(0xFF, 0x66, 0x66)); // RED
-            COLORS.add(new Color(0x66, 0x66, 0xFF)); // BLUE
+            COLORS.add(new Color(0x66, 0x66, 0xFF)); // PURPLEBLUE
             COLORS.add(new Color(0x66, 0xFF, 0x66)); // GREEN
             COLORS.add(new Color(0xFF, 0xFF, 0x66)); // YELLOW
+            COLORS.add(new Color(0x66, 0x00, 0xFF)); // PURPLE
             COLORS.add(new Color(0x66, 0xFF, 0xFF)); // CYAN
+            COLORS.add(new Color(0x00, 0x66, 0x00)); // DARK GREEN
             COLORS.add(new Color(0xFF, 0x66, 0xFF)); // PINK
+            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
+            COLORS.add(new Color(0x66, 0x66, 0x00)); // OLIVE
+            COLORS.add(new Color(0x00, 0x00, 0xFF)); // BLUE
+            COLORS.add(new Color(0xFF, 0x66, 0x00)); // ORANGE
+
+            resetIndex = defaultIndex % COLORS.size();
+            paintIndex = resetIndex;
         }
 
         public Paint getNextPaint() {
@@ -154,7 +162,7 @@ public class TraitDisplay extends JPanel {
         }
 
         public void reset() {
-            paintIndex = 0;
+            paintIndex = resetIndex;
         }
 
     } // Paint Supplier

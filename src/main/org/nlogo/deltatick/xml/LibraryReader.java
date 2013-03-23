@@ -122,9 +122,8 @@ public class LibraryReader {
                     bars = quantity.getAttributes().getNamedItem("bars").getTextContent();
                 }
                 block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait);
-
-
                 seekAndAttachInfo(quantity);
+                ((QuantityBlock) block).addColorButton();
             }
 
             NodeList breeds = library.getElementsByTagName("breed");

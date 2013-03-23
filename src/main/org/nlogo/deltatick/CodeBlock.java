@@ -53,6 +53,7 @@ public abstract class CodeBlock
     Color color;
 
     JPanel label = new JPanel();
+    JPanel removeButtonPanel = new JPanel();
     RemoveButton removeButton = new RemoveButton(this);
     //constructor of RemoveButton takes a CodeBlock as parameter hence "this" -A. (Sept 10)
 
@@ -61,6 +62,13 @@ public abstract class CodeBlock
     }
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
     public CodeBlock(String name, Color color) {
+
+        removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        removeButtonPanel.add(removeButton);
+        //removeButton.setBounds(5, 5, 16, 16);
+        removeButton.setVisible(false);
+        //add(removeButtonPanel);
+
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(myLayout);
         this.color = color;
@@ -68,6 +76,7 @@ public abstract class CodeBlock
         this.setForeground(color);
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         setName(name);
+        add(removeButtonPanel);
         makeLabel();
         add(label);
     }
@@ -101,8 +110,9 @@ public abstract class CodeBlock
         name.setFont(new java.awt.Font("Arial", font.getStyle(), 11));
          // for PC
 
-        label.add(removeButton);
-        removeButton.setVisible(false);
+//        label.add(removeButton);
+//        removeButton.setVisible(false);
+
         label.setBackground(getBackground());
         if (this instanceof QuantityBlock) {
             ((QuantityBlock)this).setLabelImage();
@@ -125,14 +135,20 @@ public abstract class CodeBlock
             setPreferredSize(new Dimension(10, 10));
             setAction(deleteAction);
             setBorder(null);
+            try {
+            Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
+            setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
             //setForeground(java.awt.Color.gray);
-            setForeground(Color.DARK_GRAY);
-            setBorderPainted(false);
-            setMargin(new java.awt.Insets(5, 5, 5, 5));
+            //setForeground(Color.DARK_GRAY);
+            //setBorderPainted(false);
+            setMargin(new java.awt.Insets(0, 0, 0, 0));
         }
 
         private final javax.swing.Action deleteAction =
-                new javax.swing.AbstractAction("X") {
+                new javax.swing.AbstractAction() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         myParent.die();
                     }

@@ -124,8 +124,8 @@ public strictfp class ConditionBlock
         JLabel name = new JLabel("if " + getName());
         java.awt.Font font = name.getFont();
         name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
-        label.add(removeButton);
-        removeButton.setVisible(false);
+        ////label.add(removeButton);
+        ////removeButton.setVisible(false);
         label.setBackground(getBackground());
         label.add(name);
     }

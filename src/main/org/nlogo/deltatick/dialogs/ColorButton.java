@@ -31,19 +31,18 @@ public class ColorButton extends JButton {
     Boolean checkForColor;
 
     public ColorButton (Frame myFrame, TraitBlock myParent) {
-        System.out.println("Constr 1");
         this.setAction(pickColorAction);
         this.myParentTrait = myParent;
 
         //setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        setPreferredSize(new Dimension(20, 20));
-            try {
-            Image img = ImageIO.read(getClass().getResource("/images/rgb.gif"));
+        setPreferredSize(new Dimension(16, 16));
+        try {
+            Image img = ImageIO.read(getClass().getResource("/images/deltatick/brush_16.png"));
             setIcon(new ImageIcon(img));
-            }
-            catch (IOException ex) {
-             }
-        setForeground(java.awt.Color.gray);
+        }
+        catch (IOException ex) {
+        }
+        //setForeground(java.awt.Color.gray);
         setBorderPainted(true);
         setMargin(new java.awt.Insets(1, 1, 1, 1));
         checkForColor = false;
@@ -61,14 +60,19 @@ public class ColorButton extends JButton {
 
     //constructor being used
     public ColorButton (Frame myFrame, QuantityBlock myParent) {
-        System.out.println("Constr 3");
         this.setAction(pickColorActionQuantity);
         this.myParentQuantity = myParent;
 
-        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        setBorderPainted(true);
-        setPreferredSize(new Dimension(20, 20));
-        this.setText("C");
+        //setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        //setBorderPainted(true);
+        setPreferredSize(new Dimension(16, 16));
+        try {
+            Image img = ImageIO.read(getClass().getResource("/images/deltatick/brush_16.png"));
+            setIcon(new ImageIcon(img));
+        }
+        catch (IOException ex) {
+        }
+        setMargin(new java.awt.Insets(0, 0, 0, 0));
         checkForColor = false;
 
     }
@@ -105,7 +109,7 @@ public class ColorButton extends JButton {
 
     //action for color button on Quantity Block - Aditi (Jan 17, 2013)
     private final javax.swing.Action pickColorActionQuantity =
-            new javax.swing.AbstractAction("C") {
+            new javax.swing.AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     colorDialog = new ColorDialog(myFrame, true);
                     colorDialog.showDialog();

@@ -46,7 +46,8 @@ public strictfp class PlotBlock
         super("plot", ColorSchemer.getColor(3));
         this.isHisto = histo;
 
-        label.add(removeButton);
+        //label.add(removeButton);
+
         if (this.isHisto == true) {
             label.add(new JLabel("Histogram of "));
         }
@@ -87,7 +88,7 @@ public strictfp class PlotBlock
 
     public void addBlock (CodeBlock block) {
         System.out.println(myBlocks.size());
-        if (myBlocks.size() >= 1) {
+        if (myBlocks.size() < 0) {
             String message = "You can only use one block here";
             JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -128,7 +129,8 @@ public strictfp class PlotBlock
 
     public void makeLabel() {
         plotNameField = new PrettyInput(this);
-        label.add(removeButton);
+        ////label.add(removeButton);
+        this.showRemoveButton();
         label.add(plotNameField);
         label.setBackground(getBackground());
     }
