@@ -44,7 +44,7 @@ public strictfp class TieManager3D
       // add my links to seen turtles
       while (i.hasNext()) {
         Turtle3D t = (Turtle3D) i.next();
-        if (t.id == -1
+        if (t.id() == -1
             || seenTurtles.contains(t)) {
           i.remove(); // removes seen turtles from myTies
           continue;
@@ -100,7 +100,7 @@ public strictfp class TieManager3D
       // add my links to seen turtles
       while (i.hasNext()) {
         Turtle3D t = (Turtle3D) i.next();
-        if (t.id == -1
+        if (t.id() == -1
             || seenTurtles.contains(t)) {
           i.remove(); // removes seen turtles from myTies
           continue;
