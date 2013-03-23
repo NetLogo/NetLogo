@@ -12,7 +12,7 @@ class TestTortoise extends FunSuite {
   var ws: headless.HeadlessWorkspace = null
   val owner = new api.SimpleJobOwner("Tortoise", new MersenneTwisterFast)
   def mirrorables: Iterable[mirror.Mirrorable] =
-    mirror.Mirrorables.allMirrorables(ws.world)
+    mirror.Mirrorables.allMirrorables(ws.world, Seq())
   var state: mirror.Mirroring.State = Map()
 
   def compare(logo: String) {

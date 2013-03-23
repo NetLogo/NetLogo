@@ -159,11 +159,11 @@ class TestMirroring extends FunSuite {
       ws.command("reset-ticks tick")
       val (m1, u1) = diffs(m0, mirrorables())
       expectResult((3, (0, 0, 1))) { (m1.size, sizes(u1)) }
-      expectResult(1.0)(m1(AgentKey(World, 0))(MirrorableWorld.WorldVar.Ticks.id))
+      expectResult(1.0)(m1(AgentKey(World, 0))(MirrorableWorld.wvTicks))
       ws.command("tick-advance 0.1")
       val (m2, u2) = diffs(m1, mirrorables())
       expectResult((3, (0, 0, 1))) { (m2.size, sizes(u2)) }
-      expectResult(1.1)(m2(AgentKey(World, 0))(MirrorableWorld.WorldVar.Ticks.id))
+      expectResult(1.1)(m2(AgentKey(World, 0))(MirrorableWorld.wvTicks))
     }
   }
 
