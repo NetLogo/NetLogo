@@ -65,11 +65,11 @@ abstract class Topology(val world: World) {
 
   @throws(classOf[AgentException])
   @throws(classOf[PatchException])
-  def diffuse(diffuseparam: Double, vn: Int)
+  def diffuse(amount: Double, vn: Int)
 
   @throws(classOf[AgentException])
   @throws(classOf[PatchException])
-  def diffuse4(diffuseparam: Double, vn: Int)
+  def diffuse4(amount: Double, vn: Int)
 
   // getPatch methods.  These are here so they can be called by subclasses in their implementations
   // of getPN, getPS, etc.  They provide the usual torus-style behavior.  It's a little odd that

@@ -141,7 +141,7 @@ strictfp class Torus
   }
 
   @Override
-  public void diffuse(double diffuseparam, int vn)
+  public void diffuse(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int xx2 = xx * 2;
@@ -177,8 +177,8 @@ strictfp class Torus
         sum += scratch[(x + 1) % xx][(y + 1) % yy];
         double oldval = scratch[x - xx][y - yy];
         double newval =
-            oldval * (1.0 - diffuseparam)
-                + (sum / 8) * diffuseparam;
+            oldval * (1.0 - amount)
+                + (sum / 8) * amount;
         if (newval != oldval) {
           world().getPatchAt(x - xx, y - yy)
               .setPatchVariable(vn, Double.valueOf(newval));
@@ -188,7 +188,7 @@ strictfp class Torus
   }
 
   @Override
-  public void diffuse4(double diffuseparam, int vn)
+  public void diffuse4(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int yy = world().worldHeight();
@@ -218,7 +218,7 @@ strictfp class Torus
         sum += scratch[(x + xx + 1) % xx][(y + yy) % yy];  // right patch
         sum += scratch[(x + xx) % xx][(y + yy - 1) % yy];  // bottom patch
 
-        double newval = scratch[x][y] * (1 - diffuseparam) + sum * diffuseparam / 4;
+        double newval = scratch[x][y] * (1 - amount) + sum * amount / 4;
         if (newval != scratch[x][y]) {
           world().getPatchAt(x, y).setPatchVariable(vn, Double.valueOf(newval));
         }

@@ -91,7 +91,7 @@ final strictfp class VertCylinder
   }
 
   @Override
-  public void diffuse(double diffuseparam, int vn)
+  public void diffuse(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int yy = world().worldHeight();
@@ -121,7 +121,7 @@ final strictfp class VertCylinder
     for (y = yy; y < yy2; y++) {
       for (x = xx; x < xx2; x++) {
 
-        double diffuseVal = (scratch[x - xx][y - yy] / 8) * diffuseparam;
+        double diffuseVal = (scratch[x - xx][y - yy] / 8) * amount;
 
         if (y > yy && y < yy2 - 1) {
           scratch2[x - xx][y - yy] += scratch[x - xx][y - yy] - (8 * diffuseVal);
@@ -162,7 +162,7 @@ final strictfp class VertCylinder
   }
 
   @Override
-  public void diffuse4(double diffuseparam, int vn)
+  public void diffuse4(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int yy = world().worldHeight();
@@ -192,7 +192,7 @@ final strictfp class VertCylinder
     for (y = yy; y < yy2; y++) {
       for (x = xx; x < xx2; x++) {
 
-        double diffuseVal = (scratch[x - xx][y - yy] / 4) * diffuseparam;
+        double diffuseVal = (scratch[x - xx][y - yy] / 4) * amount;
 
         if (y > yy && y < yy2 - 1) {
           scratch2[x - xx][y - yy] += scratch[x - xx][y - yy] - (4 * diffuseVal);

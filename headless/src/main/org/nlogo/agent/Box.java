@@ -80,7 +80,7 @@ final strictfp class Box
   }
 
   @Override
-  public void diffuse(double diffuseparam, int vn)
+  public void diffuse(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int yy = world().worldHeight();
@@ -108,7 +108,7 @@ final strictfp class Box
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
 
-        double diffuseVal = (scratch[x][y] / 8) * diffuseparam;
+        double diffuseVal = (scratch[x][y] / 8) * amount;
         if (y > 0 && y < yy - 1 && x > 0 && x < xx - 1) {
           scratch2[x][y] += scratch[x][y] - (8 * diffuseVal);
           scratch2[x - 1][y - 1] += diffuseVal;
@@ -190,7 +190,7 @@ final strictfp class Box
   }
 
   @Override
-  public void diffuse4(double diffuseparam, int vn)
+  public void diffuse4(double amount, int vn)
       throws AgentException, PatchException {
     int xx = world().worldWidth();
     int yy = world().worldHeight();
@@ -218,7 +218,7 @@ final strictfp class Box
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
 
-        double diffuseVal = (scratch[x][y] / 4) * diffuseparam;
+        double diffuseVal = (scratch[x][y] / 4) * amount;
 
         if (y > 0 && y < yy - 1 && x > 0 && x < xx - 1) {
           scratch2[x][y] += scratch[x][y] - (4 * diffuseVal);

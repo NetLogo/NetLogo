@@ -50,7 +50,7 @@ public final strictfp class Torus3D
   }
 
   @Override
-  public void diffuse(double diffuseparam, int vn)
+  public void diffuse(double amount, int vn)
       throws AgentException, PatchException {
     World3D w = (World3D) world();
 
@@ -113,8 +113,8 @@ public final strictfp class Torus3D
 
           double oldval = scratch[x - xx][y - yy][z - zz];
           double newval =
-              oldval * (1.0 - diffuseparam)
-                  + (sum / 26) * diffuseparam;
+              oldval * (1.0 - amount)
+                  + (sum / 26) * amount;
           if (newval != oldval) {
             w.getPatchAt(x - xx, y - yy, z - zz)
                 .setPatchVariable(vn, Double.valueOf(newval));
