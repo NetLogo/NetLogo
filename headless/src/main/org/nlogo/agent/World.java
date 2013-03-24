@@ -158,7 +158,7 @@ public strictfp class World
   }
 
   public void changeTopology(boolean xWrapping, boolean yWrapping) {
-    topology = Topology.getTopology(this, xWrapping, yWrapping);
+    topology = Topology.get(this, xWrapping, yWrapping);
     if (_patches != null) // is null during initialization
     {
       for (AgentIterator it = _patches.iterator(); it.hasNext();) {

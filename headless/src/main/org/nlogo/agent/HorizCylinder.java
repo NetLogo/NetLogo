@@ -15,10 +15,10 @@ final strictfp class HorizCylinder
   //wrapping coordinates
 
   @Override
-  double wrapX(double x)
+  public double wrapX(double x)
       throws AgentException {
-    double max = world.maxPxcor() + 0.5;
-    double min = world.minPxcor() - 0.5;
+    double max = world().maxPxcor() + 0.5;
+    double min = world().minPxcor() - 0.5;
     if (x >= max || x < min) {
       throw new AgentException("Cannot move turtle beyond the world's edge.");
     }
@@ -26,23 +26,23 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  double wrapY(double y) {
-    return wrap(y, world.minPycor() - 0.5, world.maxPycor() + 0.5);
+  public double wrapY(double y) {
+    return wrap(y, world().minPycor() - 0.5, world().maxPycor() + 0.5);
   }
 
   @Override
-  double distanceWrap(double dx, double dy, double x1, double y1, double x2, double y2) {
-    double dy2 = y1 > y2 ? (y2 + world.worldHeight()) - y1 :
-        (y2 - world.worldHeight()) - y1;
+  public double distanceWrap(double dx, double dy, double x1, double y1, double x2, double y2) {
+    double dy2 = y1 > y2 ? (y2 + world().worldHeight()) - y1 :
+        (y2 - world().worldHeight()) - y1;
     dy = StrictMath.abs(dy2) < StrictMath.abs(dy) ? dy2 : dy;
 
-    return world.rootsTable.gridRoot(dx * dx + dy * dy);
+    return world().rootsTable.gridRoot(dx * dx + dy * dy);
   }
 
   @Override
-  double towardsWrap(double headingX, double headingY) {
-    headingY = wrap(headingY, (-(double) world.worldHeight() / 2.0),
-        (world.worldHeight() / 2.0));
+  public double towardsWrap(double headingX, double headingY) {
+    headingY = wrap(headingY, (-(double) world().worldHeight() / 2.0),
+        (world().worldHeight() / 2.0));
 
     if (headingY == 0) {
       return headingX > 0 ? 90 : 270;
@@ -57,29 +57,29 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPatchAt(double xc, double yc)
+  public Patch getPatchAt(double xc, double yc)
       throws AgentException {
-    if ((xc > world.maxPxcor() + 0.5) ||
-        (xc < world.minPxcor() - 0.5)) {
+    if ((xc > world().maxPxcor() + 0.5) ||
+        (xc < world().minPxcor() - 0.5)) {
       return null;
     } else {
-      return world.getPatchAt(xc, yc);
+      return world().getPatchAt(xc, yc);
     }
   }
 
   @Override
-  double shortestPathX(double x1, double x2) {
+  public double shortestPathX(double x1, double x2) {
     return x2;
   }
 
   @Override
-  double shortestPathY(double y1, double y2) {
+  public double shortestPathY(double y1, double y2) {
     double yprime;
 
     if (y1 > y2) {
-      yprime = y2 + world.worldHeight();
+      yprime = y2 + world().worldHeight();
     } else {
-      yprime = y2 - world.worldHeight();
+      yprime = y2 - world().worldHeight();
     }
 
     if (StrictMath.abs(y2 - y1) > StrictMath.abs(yprime - y1)) {
@@ -90,30 +90,30 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  void diffuse(double diffuseparam, int vn)
+  public void diffuse(double diffuseparam, int vn)
       throws AgentException, PatchException {
-    int xx = world.worldWidth();
-    int yy = world.worldHeight();
+    int xx = world().worldWidth();
+    int yy = world().worldHeight();
     int xx2 = xx * 2;
     int yy2 = yy * 2;
-    double[][] scratch = world.getPatchScratch();
+    double[][] scratch = world().getPatchScratch();
     double[][] scratch2 = new double[xx][yy];
     int x = 0, y = 0;
-    int minx = world.minPxcor();
-    int miny = world.minPycor();
+    int minx = world().minPxcor();
+    int miny = world().minPycor();
 
     try {
       for (y = 0; y < yy; y++) {
         for (x = 0; x < xx; x++) {
           scratch[x][y] =
-              ((Double) world.fastGetPatchAt(x + minx, y + miny)
+              ((Double) world().fastGetPatchAt(x + minx, y + miny)
                   .getPatchVariable(vn))
                   .doubleValue();
           scratch2[x][y] = 0;
         }
       }
     } catch (ClassCastException ex) {
-      throw new PatchException(world.fastGetPatchAt
+      throw new PatchException(world().fastGetPatchAt
           ((int) wrapX(x), (int) wrapY(y)));
     }
 
@@ -153,7 +153,7 @@ final strictfp class HorizCylinder
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
         if (scratch2[x][y] != scratch[x][y]) {
-          world.getPatchAtWrap(x + minx, y + miny)
+          world().getPatchAtWrap(x + minx, y + miny)
               .setPatchVariable(vn, Double.valueOf(scratch2[x][y]));
         }
       }
@@ -162,30 +162,30 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  void diffuse4(double diffuseparam, int vn)
+  public void diffuse4(double diffuseparam, int vn)
       throws AgentException, PatchException {
-    int xx = world.worldWidth();
-    int yy = world.worldHeight();
+    int xx = world().worldWidth();
+    int yy = world().worldHeight();
     int xx2 = xx * 2;
     int yy2 = yy * 2;
-    double[][] scratch = world.getPatchScratch();
+    double[][] scratch = world().getPatchScratch();
     double[][] scratch2 = new double[xx][yy];
     int x = 0, y = 0;
-    int minx = world.minPxcor();
-    int miny = world.minPycor();
+    int minx = world().minPxcor();
+    int miny = world().minPycor();
 
     try {
       for (y = 0; y < yy; y++) {
         for (x = 0; x < xx; x++) {
           scratch[x][y] =
-              ((Double) world.fastGetPatchAt(x + minx, y + miny)
+              ((Double) world().fastGetPatchAt(x + minx, y + miny)
                   .getPatchVariable(vn))
                   .doubleValue();
           scratch2[x][y] = 0;
         }
       }
     } catch (ClassCastException ex) {
-      throw new PatchException(world.fastGetPatchAt
+      throw new PatchException(world().fastGetPatchAt
           ((int) wrapX(x), (int) wrapY(y)));
     }
 
@@ -217,7 +217,7 @@ final strictfp class HorizCylinder
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
         if (scratch2[x][y] != scratch[x][y]) {
-          world.getPatchAtWrap(x + minx, y + miny)
+          world().getPatchAtWrap(x + minx, y + miny)
               .setPatchVariable(vn, Double.valueOf(scratch2[x][y]));
         }
       }
@@ -226,28 +226,28 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  double observerX() {
+  public double observerX() {
     return 0.0;
   }
 
   @Override
-  double followOffsetX() {
+  public double followOffsetX() {
     return 0.0;
   }
 
   @Override
-  AgentSet getNeighbors(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
-      if (source.pxcor == world.minPxcor()) {
-        if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-          return world.noPatches();
+  public AgentSet getNeighbors(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
+      if (source.pxcor == world().minPxcor()) {
+        if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
+          return world().noPatches();
         } else {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchSouth(source)});
         }
       } else {
-        if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+        if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchWest(source)});
         } else {
@@ -257,8 +257,8 @@ final strictfp class HorizCylinder
                           getPatchNorthWest(source)});
         }
       }
-    } else if (source.pxcor == world.minPxcor()) {
-      if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+    } else if (source.pxcor == world().minPxcor()) {
+      if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source)});
       } else {
@@ -268,7 +268,7 @@ final strictfp class HorizCylinder
                         getPatchSouthEast(source)});
       }
     } else {
-      if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+      if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source),
                                              getPatchWest(source)});
@@ -283,18 +283,18 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  AgentSet getNeighbors4(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
-      if (source.pxcor == world.minPxcor()) {
-        if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
-          return world.noPatches();
+  public AgentSet getNeighbors4(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
+      if (source.pxcor == world().minPxcor()) {
+        if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
+          return world().noPatches();
         } else {
           return AgentSet.fromArray(AgentKindJ.Patch(),
               new Agent[]{getPatchNorth(source),
                           getPatchSouth(source)});
         }
       } else {
-        if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+        if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchWest(source)});
         } else {
@@ -304,8 +304,8 @@ final strictfp class HorizCylinder
                                                getPatchWest(source)});
         }
       }
-    } else if (source.pxcor == world.minPxcor()) {
-      if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+    } else if (source.pxcor == world().minPxcor()) {
+      if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source)});
       } else {
@@ -315,7 +315,7 @@ final strictfp class HorizCylinder
                                              getPatchSouth(source)});
       }
     } else {
-      if (source.pycor == world.maxPycor() && source.pycor == world.minPycor()) {
+      if (source.pycor == world().maxPycor() && source.pycor == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source),
                                              getPatchWest(source)});
@@ -330,13 +330,13 @@ final strictfp class HorizCylinder
   //get patch
 
   @Override
-  Patch getPN(Patch source) {
+  public Patch getPN(Patch source) {
     return getPatchNorth(source);
   }
 
   @Override
-  Patch getPE(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
+  public Patch getPE(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
       return null;
     }
 
@@ -344,13 +344,13 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPS(Patch source) {
+  public Patch getPS(Patch source) {
     return getPatchSouth(source);
   }
 
   @Override
-  Patch getPW(Patch source) {
-    if (source.pxcor == world.minPxcor()) {
+  public Patch getPW(Patch source) {
+    if (source.pxcor == world().minPxcor()) {
       return null;
     }
 
@@ -358,8 +358,8 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPNE(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
+  public Patch getPNE(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
       return null;
     }
 
@@ -367,8 +367,8 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPSE(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
+  public Patch getPSE(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
       return null;
     }
 
@@ -376,8 +376,8 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPSW(Patch source) {
-    if (source.pxcor == world.minPxcor()) {
+  public Patch getPSW(Patch source) {
+    if (source.pxcor == world().minPxcor()) {
       return null;
     }
 
@@ -385,8 +385,8 @@ final strictfp class HorizCylinder
   }
 
   @Override
-  Patch getPNW(Patch source) {
-    if (source.pxcor == world.minPxcor()) {
+  public Patch getPNW(Patch source) {
+    if (source.pxcor == world().minPxcor()) {
       return null;
     }
 

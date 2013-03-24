@@ -15,10 +15,10 @@ final strictfp class Box
   //wrapping coordinates
 
   @Override
-  double wrapX(double x)
+  public double wrapX(double x)
       throws AgentException {
-    double max = world.maxPxcor() + 0.5;
-    double min = world.minPxcor() - 0.5;
+    double max = world().maxPxcor() + 0.5;
+    double min = world().minPxcor() - 0.5;
     if (x >= max || x < min) {
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
     }
@@ -26,10 +26,10 @@ final strictfp class Box
   }
 
   @Override
-  double wrapY(double y)
+  public double wrapY(double y)
       throws AgentException {
-    double max = world.maxPycor() + 0.5;
-    double min = world.minPycor() - 0.5;
+    double max = world().maxPycor() + 0.5;
+    double min = world().minPycor() - 0.5;
     if (y >= max || y < min) {
       throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Box.cantMoveTurtleBeyondWorldEdge"));
     }
@@ -37,12 +37,12 @@ final strictfp class Box
   }
 
   @Override
-  double distanceWrap(double dx, double dy, double x1, double y1, double x2, double y2) {
-    return world.rootsTable.gridRoot(dx * dx + dy * dy);
+  public double distanceWrap(double dx, double dy, double x1, double y1, double x2, double y2) {
+    return world().rootsTable.gridRoot(dx * dx + dy * dy);
   }
 
   @Override
-  double towardsWrap(double headingX, double headingY) {
+  public double towardsWrap(double headingX, double headingY) {
     if (headingX == 0) {
       return headingY > 0 ? 0 : 180;
     }
@@ -55,53 +55,53 @@ final strictfp class Box
   }
 
   @Override
-  Patch getPatchAt(double xc, double yc)
+  public Patch getPatchAt(double xc, double yc)
       throws AgentException {
-    if ((yc > world.maxPycor() + 0.5) ||
-        (yc < world.minPycor() - 0.5)) {
+    if ((yc > world().maxPycor() + 0.5) ||
+        (yc < world().minPycor() - 0.5)) {
       return null;
     }
 
-    if ((xc > world.maxPxcor() + 0.5) ||
-        (xc < world.minPxcor() - 0.5)) {
+    if ((xc > world().maxPxcor() + 0.5) ||
+        (xc < world().minPxcor() - 0.5)) {
       return null;
     }
-    return world.getPatchAt(xc, yc);
+    return world().getPatchAt(xc, yc);
   }
 
   @Override
-  double shortestPathX(double x1, double x2) {
+  public double shortestPathX(double x1, double x2) {
     return x2;
   }
 
   @Override
-  double shortestPathY(double y1, double y2) {
+  public double shortestPathY(double y1, double y2) {
     return y2;
   }
 
   @Override
-  void diffuse(double diffuseparam, int vn)
+  public void diffuse(double diffuseparam, int vn)
       throws AgentException, PatchException {
-    int xx = world.worldWidth();
-    int yy = world.worldHeight();
-    double[][] scratch = world.getPatchScratch();
+    int xx = world().worldWidth();
+    int yy = world().worldHeight();
+    double[][] scratch = world().getPatchScratch();
     double[][] scratch2 = new double[xx][yy];
     int x = 0, y = 0;
-    int minx = world.minPxcor();
-    int miny = world.minPycor();
+    int minx = world().minPxcor();
+    int miny = world().minPycor();
 
     try {
       for (y = 0; y < yy; y++) {
         for (x = 0; x < xx; x++) {
           scratch[x][y] =
-              ((Double) world.fastGetPatchAt(x + minx, y + miny)
+              ((Double) world().fastGetPatchAt(x + minx, y + miny)
                   .getPatchVariable(vn))
                   .doubleValue();
           scratch2[x][y] = 0;
         }
       }
     } catch (ClassCastException ex) {
-      throw new PatchException(world.fastGetPatchAt
+      throw new PatchException(world().fastGetPatchAt
           ((int) wrapX(x), (int) wrapY(y)));
     }
 
@@ -182,7 +182,7 @@ final strictfp class Box
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
         if (scratch2[x][y] != scratch[x][y]) {
-          world.getPatchAtWrap(x + minx, y + miny)
+          world().getPatchAtWrap(x + minx, y + miny)
               .setPatchVariable(vn, Double.valueOf(scratch2[x][y]));
         }
       }
@@ -190,28 +190,28 @@ final strictfp class Box
   }
 
   @Override
-  void diffuse4(double diffuseparam, int vn)
+  public void diffuse4(double diffuseparam, int vn)
       throws AgentException, PatchException {
-    int xx = world.worldWidth();
-    int yy = world.worldHeight();
-    double[][] scratch = world.getPatchScratch();
+    int xx = world().worldWidth();
+    int yy = world().worldHeight();
+    double[][] scratch = world().getPatchScratch();
     double[][] scratch2 = new double[xx][yy];
     int x = 0, y = 0;
-    int minx = world.minPxcor();
-    int miny = world.minPycor();
+    int minx = world().minPxcor();
+    int miny = world().minPycor();
 
     try {
       for (y = 0; y < yy; y++) {
         for (x = 0; x < xx; x++) {
           scratch[x][y] =
-              ((Double) world.fastGetPatchAt(x + minx, y + miny)
+              ((Double) world().fastGetPatchAt(x + minx, y + miny)
                   .getPatchVariable(vn))
                   .doubleValue();
           scratch2[x][y] = 0;
         }
       }
     } catch (ClassCastException ex) {
-      throw new PatchException(world.fastGetPatchAt
+      throw new PatchException(world().fastGetPatchAt
           ((int) wrapX(x), (int) wrapY(y)));
     }
 
@@ -277,7 +277,7 @@ final strictfp class Box
     for (y = 0; y < yy; y++) {
       for (x = 0; x < xx; x++) {
         if (scratch2[x][y] != scratch[x][y]) {
-          world.getPatchAtWrap(x + minx, y + miny)
+          world().getPatchAtWrap(x + minx, y + miny)
               .setPatchVariable(vn, Double.valueOf(scratch2[x][y]));
         }
       }
@@ -286,43 +286,43 @@ final strictfp class Box
   }
 
   @Override
-  double observerX() {
+  public double observerX() {
     return 0.0;
   }
 
   @Override
-  double observerY() {
+  public double observerY() {
     return 0.0;
   }
 
   @Override
-  double followOffsetX() {
+  public double followOffsetX() {
     return 0.0;
   }
 
   @Override
-  double followOffsetY() {
+  public double followOffsetY() {
     return 0.0;
   }
 
   @Override
-  AgentSet getNeighbors(Patch source) {
+  public AgentSet getNeighbors(Patch source) {
     //added to reduce method calls (dont know if it is neccessary or not)
     double xLoc = source.pxcor;
     double yLoc = source.pycor;
 
     // special cases when we only have one patch in the world
-    if (xLoc == world._maxPxcor && xLoc == world._minPxcor &&
-        yLoc == world._maxPycor && yLoc == world._minPycor) {
-      return world.noPatches();
+    if (xLoc == world()._maxPxcor && xLoc == world()._minPxcor &&
+        yLoc == world()._maxPycor && yLoc == world()._minPycor) {
+      return world().noPatches();
     }
 
-    if (xLoc == world.maxPxcor()) {
-      if (xLoc == world.minPxcor()) {
-        if (yLoc == world.maxPycor()) {
+    if (xLoc == world().maxPxcor()) {
+      if (xLoc == world().minPxcor()) {
+        if (yLoc == world().maxPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchSouth(source)});
-        } else if (yLoc == world.minPycor()) {
+        } else if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source)});
         } else {
@@ -331,8 +331,8 @@ final strictfp class Box
                                                getPatchSouth(source)});
         }
       } else {
-        if (yLoc == world.maxPycor()) {
-          if (yLoc == world.minPycor()) {
+        if (yLoc == world().maxPycor()) {
+          if (yLoc == world().minPycor()) {
             return AgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{
                                        getPatchWest(source)});
@@ -343,7 +343,7 @@ final strictfp class Box
                                        getPatchWest(source),
                                        getPatchSouthWest(source)});
           }
-        } else if (yLoc == world.minPycor()) {
+        } else if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{
                                      getPatchNorth(source),
@@ -359,9 +359,9 @@ final strictfp class Box
                                      getPatchNorthWest(source)});
         }
       }
-    } else if (xLoc == world.minPxcor()) {
-      if (yLoc == world.maxPycor()) {
-        if (yLoc == world.minPycor()) {
+    } else if (xLoc == world().minPxcor()) {
+      if (yLoc == world().maxPycor()) {
+        if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchEast(source)});
         } else {
@@ -370,7 +370,7 @@ final strictfp class Box
                           getPatchSouth(source),
                           getPatchSouthEast(source)});
         }
-      } else if (yLoc == world.minPycor()) {
+      } else if (yLoc == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchNorth(source),
                                              getPatchEast(source),
@@ -384,8 +384,8 @@ final strictfp class Box
                                    getPatchNorthEast(source),
                                    getPatchSouthEast(source)});
       }
-    } else if (yLoc == world.maxPycor()) {
-      if (yLoc == world.minPycor()) {
+    } else if (yLoc == world().maxPycor()) {
+      if (yLoc == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{
                                    getPatchEast(source),
@@ -396,7 +396,7 @@ final strictfp class Box
                         getPatchWest(source), getPatchSouthEast(source),
                         getPatchSouthWest(source)});
       }
-    } else if (yLoc == world.minPycor()) {
+    } else if (yLoc == world().minPycor()) {
       return AgentSet.fromArray(AgentKindJ.Patch(),
                                new Agent[]{getPatchNorth(source), getPatchEast(source),
                                            getPatchWest(source), getPatchNorthEast(source),
@@ -411,21 +411,21 @@ final strictfp class Box
   }
 
   @Override
-  AgentSet getNeighbors4(Patch source) {
+  public AgentSet getNeighbors4(Patch source) {
     //added to reduce method calls (dont know if it is neccessary or not)
     int xLoc = source.pxcor;
     int yLoc = source.pycor;
 
-    if (xLoc == world.maxPxcor()) {
-      if (xLoc == world.minPxcor()) {
-        if (yLoc == world.maxPycor()) {
-          if (yLoc == world.minPycor()) {
-            return world.noPatches();
+    if (xLoc == world().maxPxcor()) {
+      if (xLoc == world().minPxcor()) {
+        if (yLoc == world().maxPycor()) {
+          if (yLoc == world().minPycor()) {
+            return world().noPatches();
           } else {
             return AgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{getPatchSouth(source)});
           }
-        } else if (yLoc == world.minPycor()) {
+        } else if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source)});
         } else {
@@ -434,8 +434,8 @@ final strictfp class Box
                                                getPatchSouth(source)});
         }
       } else {
-        if (yLoc == world.maxPycor()) {
-          if (yLoc == world.minPycor()) {
+        if (yLoc == world().maxPycor()) {
+          if (yLoc == world().minPycor()) {
             return AgentSet.fromArray(AgentKindJ.Patch(),
                                      new Agent[]{getPatchWest(source)});
           } else {
@@ -443,7 +443,7 @@ final strictfp class Box
                                      new Agent[]{getPatchSouth(source),
                                                  getPatchWest(source)});
           }
-        } else if (yLoc == world.minPycor()) {
+        } else if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchNorth(source),
                                                getPatchWest(source)});
@@ -454,9 +454,9 @@ final strictfp class Box
                                                getPatchWest(source)});
         }
       }
-    } else if (xLoc == world.minPxcor()) {
-      if (yLoc == world.maxPycor()) {
-        if (yLoc == world.minPycor()) {
+    } else if (xLoc == world().minPxcor()) {
+      if (yLoc == world().maxPycor()) {
+        if (yLoc == world().minPycor()) {
           return AgentSet.fromArray(AgentKindJ.Patch(),
                                    new Agent[]{getPatchEast(source)});
         } else {
@@ -464,7 +464,7 @@ final strictfp class Box
                                    new Agent[]{getPatchEast(source),
                                                getPatchSouth(source)});
         }
-      } else if (yLoc == world.minPycor()) {
+      } else if (yLoc == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchNorth(source),
                                              getPatchEast(source)});
@@ -474,8 +474,8 @@ final strictfp class Box
                                              getPatchEast(source),
                                              getPatchSouth(source)});
       }
-    } else if (yLoc == world.maxPycor()) {
-      if (yLoc == world.minPycor()) {
+    } else if (yLoc == world().maxPycor()) {
+      if (yLoc == world().minPycor()) {
         return AgentSet.fromArray(AgentKindJ.Patch(),
                                  new Agent[]{getPatchEast(source),
                                              getPatchWest(source)});
@@ -485,7 +485,7 @@ final strictfp class Box
                                              getPatchSouth(source),
                                              getPatchWest(source)});
       }
-    } else if (yLoc == world.minPycor()) {
+    } else if (yLoc == world().minPycor()) {
       return AgentSet.fromArray(AgentKindJ.Patch(),
           new Agent[]{getPatchNorth(source),
                       getPatchEast(source),
@@ -500,68 +500,68 @@ final strictfp class Box
   //get patch
 
   @Override
-  Patch getPN(Patch source) {
-    if (source.pycor == world.maxPycor()) {
+  public Patch getPN(Patch source) {
+    if (source.pycor == world().maxPycor()) {
       return null;
     }
     return getPatchNorth(source);
   }
 
   @Override
-  Patch getPE(Patch source) {
-    if (source.pxcor == world.maxPxcor()) {
+  public Patch getPE(Patch source) {
+    if (source.pxcor == world().maxPxcor()) {
       return null;
     }
     return getPatchEast(source);
   }
 
   @Override
-  Patch getPS(Patch source) {
-    if (source.pycor == world.minPycor()) {
+  public Patch getPS(Patch source) {
+    if (source.pycor == world().minPycor()) {
       return null;
     }
     return getPatchSouth(source);
   }
 
   @Override
-  Patch getPW(Patch source) {
-    if (source.pxcor == world.minPxcor()) {
+  public Patch getPW(Patch source) {
+    if (source.pxcor == world().minPxcor()) {
       return null;
     }
     return getPatchWest(source);
   }
 
   @Override
-  Patch getPNE(Patch source) {
-    if (source.pxcor == world.maxPxcor() ||
-        source.pycor == world.maxPycor()) {
+  public Patch getPNE(Patch source) {
+    if (source.pxcor == world().maxPxcor() ||
+        source.pycor == world().maxPycor()) {
       return null;
     }
     return getPatchNorthEast(source);
   }
 
   @Override
-  Patch getPSE(Patch source) {
-    if (source.pxcor == world.maxPxcor() ||
-        source.pycor == world.minPycor()) {
+  public Patch getPSE(Patch source) {
+    if (source.pxcor == world().maxPxcor() ||
+        source.pycor == world().minPycor()) {
       return null;
     }
     return getPatchSouthEast(source);
   }
 
   @Override
-  Patch getPSW(Patch source) {
-    if (source.pxcor == world.minPxcor() ||
-        source.pycor == world.minPycor()) {
+  public Patch getPSW(Patch source) {
+    if (source.pxcor == world().minPxcor() ||
+        source.pycor == world().minPycor()) {
       return null;
     }
     return getPatchSouthWest(source);
   }
 
   @Override
-  Patch getPNW(Patch source) {
-    if (source.pxcor == world.minPxcor() ||
-        source.pycor == world.maxPycor()) {
+  public Patch getPNW(Patch source) {
+    if (source.pxcor == world().minPxcor() ||
+        source.pycor == world().maxPycor()) {
       return null;
     }
     return getPatchNorthWest(source);

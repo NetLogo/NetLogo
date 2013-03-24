@@ -15,30 +15,30 @@ public final strictfp class Torus3D
   public double distanceWrap(double dx, double dy, double dz,
                              double x1, double y1, double z1,
                              double x2, double y2, double z2) {
-    double dx2 = x1 > x2 ? (x2 + world.worldWidth()) - x1 :
-        (x2 - world.worldWidth()) - x1;
+    double dx2 = x1 > x2 ? (x2 + world().worldWidth()) - x1 :
+        (x2 - world().worldWidth()) - x1;
     dx = StrictMath.abs(dx2) < StrictMath.abs(dx) ? dx2 : dx;
 
-    double dy2 = y1 > y2 ? (y2 + world.worldHeight()) - y1 :
-        (y2 - world.worldHeight()) - y1;
+    double dy2 = y1 > y2 ? (y2 + world().worldHeight()) - y1 :
+        (y2 - world().worldHeight()) - y1;
     dy = StrictMath.abs(dy2) < StrictMath.abs(dy) ? dy2 : dy;
 
-    double dz2 = z1 > z2 ? (z2 + ((World3D) world).worldDepth()) - z1 :
-        (z2 - ((World3D) world).worldDepth()) - z1;
+    double dz2 = z1 > z2 ? (z2 + ((World3D) world()).worldDepth()) - z1 :
+        (z2 - ((World3D) world()).worldDepth()) - z1;
     dz = StrictMath.abs(dz2) < StrictMath.abs(dz) ? dz2 : dz;
 
     return StrictMath.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
   public double towardsPitchWrap(double dx, double dy, double dz) {
-    dx = wrap(dx, (-(double) world.worldWidth() / 2.0),
-        (world.worldWidth() / 2.0));
+    dx = wrap(dx, (-(double) world().worldWidth() / 2.0),
+        (world().worldWidth() / 2.0));
 
-    dy = wrap(dy, (-(double) world.worldHeight() / 2.0),
-        (world.worldHeight() / 2.0));
+    dy = wrap(dy, (-(double) world().worldHeight() / 2.0),
+        (world().worldHeight() / 2.0));
 
-    dz = wrap(dz, (-(double) ((World3D) world).worldDepth() / 2.0),
-        (((World3D) world).worldDepth() / 2.0));
+    dz = wrap(dz, (-(double) ((World3D) world()).worldDepth() / 2.0),
+        (((World3D) world()).worldDepth() / 2.0));
 
     return ((360 + StrictMath.toDegrees
         (StrictMath.atan(dz / StrictMath.sqrt(dx * dx + dy * dy)))) % 360);
@@ -46,13 +46,13 @@ public final strictfp class Torus3D
 
   public Patch getPatchAt(double xc, double yc, double zc)
       throws AgentException {
-    return ((World3D) world).getPatchAt(xc, yc, zc);
+    return ((World3D) world()).getPatchAt(xc, yc, zc);
   }
 
   @Override
   public void diffuse(double diffuseparam, int vn)
       throws AgentException, PatchException {
-    World3D w = (World3D) world;
+    World3D w = (World3D) world();
 
     int xx = w.worldWidth();
     int xx2 = xx * 2;
@@ -216,16 +216,16 @@ public final strictfp class Torus3D
 
 
   public double observerZ() {
-    return world.observer().ozcor();
+    return world().observer().ozcor();
   }
 
   public double wrapZ(double z) {
-    World3D w = (World3D) world;
+    World3D w = (World3D) world();
     return wrap(z, w.minPzcor() - 0.5, w.maxPzcor() + 0.5);
   }
 
   Patch getPatchUp(Patch3D source) {
-    World3D w = (World3D) world;
+    World3D w = (World3D) world();
 
     if (source.pzcor == w.maxPzcor()) {
       return w.fastGetPatchAt(source.pxcor, source.pycor, w.minPzcor());
@@ -235,7 +235,7 @@ public final strictfp class Torus3D
   }
 
   Patch getPatchDown(Patch3D source) {
-    World3D w = (World3D) world;
+    World3D w = (World3D) world();
 
     if (source.pzcor == w.minPzcor()) {
       return w.fastGetPatchAt(source.pxcor, source.pycor, w.maxPzcor());
@@ -246,7 +246,7 @@ public final strictfp class Torus3D
 
   public double shortestPathZ(double z1, double z2) {
     double zprime;
-    double depth = ((World3D) world).worldDepth();
+    double depth = ((World3D) world()).worldDepth();
     if (z1 > z2) {
       zprime = z2 + depth;
     } else {
