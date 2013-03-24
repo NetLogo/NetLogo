@@ -53,7 +53,6 @@ public class TraitDisplay extends JPanel {
             chartsPanelMap.put(traitName, chartsPanel);
 
             this.add(chartsPanelMap.get(traitName));
-            this.validate();
             }
 
         }
@@ -63,10 +62,13 @@ public class TraitDisplay extends JPanel {
              (chartsPanelMap.containsKey(traitName))) {
             // Remove corresponding panel
             this.remove(chartsPanelMap.get(traitName));
-            this.validate();
 
             chartsPanelMap.remove(traitName);
         }
+
+        this.validate();
+        this.setPreferredSize(new Dimension(600, 250*chartsPanelMap.size()));
+        //myFrame.pack();
 
     }
 
@@ -81,6 +83,7 @@ public class TraitDisplay extends JPanel {
 
             // Set up this panel
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            this.setPreferredSize(new Dimension(600, 250));
             this.setVisible(true);
 
             // Trait+Variation selected for the first time, i.e. no previously selected variation

@@ -311,7 +311,7 @@ public class DeltaTickTab
             }
             else {
                 jFrame = new JFrame("Species Inspector");
-                jFrame.setPreferredSize(new Dimension(1000, 700));
+                //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
                 speciesInspectorPanel = new SpeciesInspectorPanel(myParent, jFrame);
 
                 //speciesInspectorPanelMap.put(myParent.plural(), speciesInspectorPanel);
@@ -927,9 +927,9 @@ public class DeltaTickTab
                 //addEnvt.setEnabled(false);
                 //this.add(addEnvt) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
-                buildBlock = new JButton( toBuildBlock );
-                this.add( buildBlock );
-                this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
+                //buildBlock = new JButton( toBuildBlock );
+                //this.add( buildBlock );
+                //this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 this.add( new JButton( clearAction ) ) ;
                 //this.add( new JButton( procedureAction ) ) ;
             }

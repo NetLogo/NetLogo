@@ -8,10 +8,17 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -135,9 +142,11 @@ public class SpeciesInspectorPanel extends JPanel {
         TitledBorder titleSidePanel;
         titleSidePanel = BorderFactory.createTitledBorder("Display");
         sidePanel.setBorder(titleSidePanel);
-        sidePanel.setPreferredSize(new Dimension(600,200));
+        //sidePanel.setPreferredSize(new Dimension(600, 200));
         traitDisplay = new TraitDisplay(sidePanel, myFrame);
+
         sidePanel.add(traitDisplay);
+        sidePanel.setVisible(false); // testing jframe size
         sidePanel.validate();
     }
 
@@ -154,16 +163,15 @@ public class SpeciesInspectorPanel extends JPanel {
         labelPanel.setBorder(titleLabelPanel);
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
         //labelPanel.initiComponents();
-
         midPanel.add(traitPreview);
-        midPanel.add(labelPanel);
         traitPreview.setTraits(myParent.getTraits());
-
-        //midPanel.add(traitPreview);
-        traitPreview.showMe();
-
-        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        //traitPreview.showMe();
+        traitPreview.setTraitsListListener(new TraitListSelectionHandler());
         traitPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        midPanel.add(labelPanel);
+        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 
         midPanel.validate();
     }
@@ -235,5 +243,37 @@ public class SpeciesInspectorPanel extends JPanel {
     public TraitPreview getTraitPreview() {
         return traitPreview;
     }
+
+
+    class TraitListSelectionHandler implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            //sidePanel.setVisible(true);
+            traitPreview.updateTraitSelection(e, new traitTableModelListener());
+            //traitDisplay.validate();
+            //sidePanel.validate();
+            myFrame.pack();
+
+        } // valueChanged
+    } // TraitListSelectionHandler
+
+    class traitTableModelListener implements TableModelListener {
+        public void tableChanged(TableModelEvent e) {
+
+            traitPreview.updateVariationSelection(e);
+            traitDisplay.validate();
+
+            sidePanel.validate();
+            if (traitPreview.getTraitStateMap().size() == 0) {
+                sidePanel.setVisible(false);
+            }
+            else {
+                sidePanel.setVisible(true);
+            }
+            sidePanel.validate();
+
+            myFrame.pack();
+        }
+    }
+
 
 }

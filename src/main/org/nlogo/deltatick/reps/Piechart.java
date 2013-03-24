@@ -123,9 +123,7 @@ public class Piechart extends JPanel {
         for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
             plot.setSectionPaint((String) entry.getKey(), paintSupplier.getNextPaint());
         }
-
         // Set Colors
-
         return chart;
     }
 
