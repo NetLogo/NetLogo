@@ -18,7 +18,7 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
 
-import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JLabel, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, JTextArea, ListSelectionModel }
+import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.filechooser.FileNameExtensionFilter
 
@@ -205,6 +205,19 @@ class ReviewTab(
     }
   })
 
+  val notesPanel = new NotesPanel(tabState)
+  notesPanel.notesArea.getDocument.addDocumentListener(new DocumentListener {
+    private def updateNotesInRun() {
+      for (run <- tabState.currentRun) {
+        run.generalNotes = notesPanel.notesArea.getText
+        saveButton.setEnabled(run.dirty)
+      }
+    }
+    def insertUpdate(e: DocumentEvent) { updateNotesInRun() }
+    def removeUpdate(e: DocumentEvent) { updateNotesInRun() }
+    def changedUpdate(e: DocumentEvent) { updateNotesInRun() }
+  })
+
   object InterfacePanel extends JPanel {
 
     def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
@@ -334,9 +347,9 @@ class ReviewTab(
       value = run.map(_.currentFrameIndex).getOrElse(0),
       max = data.map(_.lastFrameIndex).getOrElse(0),
       enabled = data.filter(_.size > 1).isDefined)
-    NotesArea.setText(run.map(_.generalNotes).getOrElse(""))
+    notesPanel.notesArea.setText(run.map(_.generalNotes).getOrElse(""))
     saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    Seq(NotesArea, renameButton, closeCurrentButton, closeAllButton)
+    Seq(notesPanel.notesArea, renameButton, closeCurrentButton, closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
     RunList.repaint()
     InterfacePanel.repaint()
@@ -466,35 +479,6 @@ class ReviewTab(
     new JButton(new ReviewAction(name, icon, fn))
   }
 
-  object NotesArea extends JTextArea("") {
-    setLineWrap(true)
-    setRows(3)
-    override def setText(text: String) {
-      for {
-        run <- tabState.currentRun
-        if getText != run.generalNotes
-      } super.setText(text)
-    }
-    object NotesListener extends DocumentListener {
-      private def updateNotesInRun() {
-        for (run <- tabState.currentRun) {
-          run.generalNotes = NotesArea.getText
-          saveButton.setEnabled(run.dirty)
-        }
-      }
-      def insertUpdate(e: DocumentEvent) { updateNotesInRun() }
-      def removeUpdate(e: DocumentEvent) { updateNotesInRun() }
-      def changedUpdate(e: DocumentEvent) { updateNotesInRun() }
-    }
-    getDocument.addDocumentListener(NotesListener)
-  }
-
-  object NotesPanel extends JPanel {
-    setLayout(new BorderLayout)
-    add(new JLabel("General notes on current run"), BorderLayout.NORTH)
-    add(new JScrollPane(NotesArea), BorderLayout.CENTER)
-  }
-
   object RunListPanel extends JPanel {
     setLayout(new BorderLayout)
     add(new JScrollPane(RunList), BorderLayout.CENTER)
@@ -520,7 +504,7 @@ class ReviewTab(
   object SecondarySplitPane extends JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
     RunPanel,
-    NotesPanel) {
+    notesPanel) {
     setResizeWeight(1.0)
     setDividerLocation(1.0)
   }
