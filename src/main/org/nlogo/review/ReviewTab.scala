@@ -5,7 +5,6 @@ package org.nlogo.review
 import java.awt.BorderLayout
 import java.awt.Color.{ GRAY, WHITE }
 
-import scala.Array.fallbackCanBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 
@@ -18,9 +17,8 @@ import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
 import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
 
-import javax.swing.{ AbstractAction, BorderFactory, ImageIcon, JButton, JCheckBox, JFileChooser, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, ListSelectionModel }
+import javax.swing.{ BorderFactory, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
-import javax.swing.filechooser.FileNameExtensionFilter
 
 class ReviewTab(
   ws: window.GUIWorkspace,
@@ -65,11 +63,11 @@ class ReviewTab(
   private val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
   private val actionBuffers = Vector(plotActionBuffer, drawingActionBuffer)
 
-  private def userConfirms(title: String, message: String) =
+  def userConfirms(title: String, message: String) =
     JOptionPane.showConfirmDialog(ReviewTab.this, message,
       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
 
-  private def nameFromPath(path: String) =
+  def nameFromPath(path: String) =
     new java.io.File(path).getName
       .replaceAll("\\.[^.]*$", "") // remove extension
 
@@ -129,12 +127,12 @@ class ReviewTab(
 
   def enableRecording() {
     tabState.recordingEnabled = true
-    Enabled.setSelected(tabState.recordingEnabled)
+    reviewToolBar.enabledCheckBox.setSelected(tabState.recordingEnabled)
   }
 
   def disableRecording() {
     tabState.recordingEnabled = false
-    Enabled.setSelected(tabState.recordingEnabled)
+    reviewToolBar.enabledCheckBox.setSelected(tabState.recordingEnabled)
   }
 
   def startNewRun() {
@@ -198,6 +196,9 @@ class ReviewTab(
   val scrubberPanel = new ScrubberPanel(
     () => tabState.currentFrameIndex,
     () => tabState.currentFrame.flatMap(_.ticks))
+  val notesPanel = new NotesPanel(tabState)
+  val reviewToolBar = new ReviewToolBar(this)
+
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
     def stateChanged(evt: ChangeEvent) {
       tabState.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
@@ -205,12 +206,11 @@ class ReviewTab(
     }
   })
 
-  val notesPanel = new NotesPanel(tabState)
   notesPanel.notesArea.getDocument.addDocumentListener(new DocumentListener {
     private def updateNotesInRun() {
       for (run <- tabState.currentRun) {
         run.generalNotes = notesPanel.notesArea.getText
-        saveButton.setEnabled(run.dirty)
+        reviewToolBar.saveButton.setEnabled(run.dirty)
       }
     }
     def insertUpdate(e: DocumentEvent) { updateNotesInRun() }
@@ -312,34 +312,6 @@ class ReviewTab(
     }
   }
 
-  object EnabledAction extends AbstractAction("Recording") {
-    def actionPerformed(e: java.awt.event.ActionEvent) {
-      tabState.recordingEnabled = !tabState.recordingEnabled
-    }
-  }
-
-  object Enabled extends JCheckBox(EnabledAction) {
-    setSelected(tabState.recordingEnabled)
-  }
-
-  val saveButton = actionButton("Save", "save") { () =>
-    for (run <- tabState.currentRun) {
-      ignoring(classOf[UserCancelException]) {
-        val path = org.nlogo.swing.FileDialog.show(
-          ReviewTab.this, "Save Run", java.awt.FileDialog.SAVE,
-          run.name + ".nlrun")
-        if (new java.io.File(path).exists &&
-          !userConfirms("Save Model Run", "The file " + path +
-            " already exists. Do you want to overwrite it?"))
-          throw new UserCancelException
-        run.save(new java.io.FileOutputStream(path))
-        run.name = nameFromPath(path)
-        tabState.undirty(run)
-        refreshInterface()
-      }
-    }
-  }
-
   def refreshInterface() {
     val run = tabState.currentRun
     val data = tabState.currentRunData
@@ -348,53 +320,11 @@ class ReviewTab(
       max = data.map(_.lastFrameIndex).getOrElse(0),
       enabled = data.filter(_.size > 1).isDefined)
     notesPanel.notesArea.setText(run.map(_.generalNotes).getOrElse(""))
-    saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
-    Seq(notesPanel.notesArea, renameButton, closeCurrentButton, closeAllButton)
+    reviewToolBar.saveButton.setEnabled(run.map(_.dirty).getOrElse(false))
+    Seq(notesPanel.notesArea, reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
     RunList.repaint()
     InterfacePanel.repaint()
-  }
-
-  def chooseFiles: Seq[String] = {
-    val fc = new JFileChooser()
-    fc.setDialogTitle("Open NetLogo Model Run(s)")
-    fc.setFileFilter(new FileNameExtensionFilter(
-      "NetLogo Model Runs (*.nlrun)", "nlrun"))
-    fc.setMultiSelectionEnabled(true)
-    if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-      fc.getSelectedFiles.map(_.getPath())
-    else
-      Seq()
-  }
-
-  val loadButton = actionButton("Load", "open") { () =>
-    val results: Seq[Either[String, ModelRun]] =
-      chooseFiles.map { path =>
-        // Load a run from `path` and returns either the loaded run
-        // in case of success or the path in case of failure
-        try {
-          loadRun(new java.io.FileInputStream(path))
-          val run = tabState.runs.last
-          Right(run)
-        } catch {
-          case ex: Exception => Left(path)
-        }
-      }
-    val loadedRuns = results.flatMap(_.right.toOption)
-    // select the last loaded run if we have one:
-    loadedRuns.lastOption.foreach { run =>
-      RunList.setSelectedValue(run, true)
-    }
-    val errors = results.flatMap(_.left.toOption)
-    if (errors.nonEmpty) {
-      val (notStr, fileStr) =
-        if (errors.size > 1) ("they are not", "files")
-        else ("it is not a", "file")
-      val msg = "Something went wrong while trying to load the following " +
-        fileStr + ":\n\n" + errors.mkString("\n") + "\n\n" +
-        "Maybe " + notStr + " proper NetLogo Model Run " + fileStr + "?"
-      JOptionPane.showMessageDialog(this, msg, "NetLogo", JOptionPane.ERROR_MESSAGE);
-    }
   }
 
   def loadModelIfNeeded(modelString: String) {
@@ -423,60 +353,6 @@ class ReviewTab(
           }
         }
       })
-  }
-
-  val closeAllButton = actionButton("Close all", "close-all") { () =>
-    if (!tabState.dirty ||
-      userConfirms("Close all runs",
-        "Some runs have unsaved data. Are you sure you want to close all runs?")) {
-      tabState.reset()
-      refreshInterface()
-    }
-  }
-
-  val closeCurrentButton = actionButton("Close", "close") { () =>
-    for (run <- tabState.currentRun) {
-      if (!run.dirty ||
-        userConfirms("Close current run",
-          "The current run has unsaved data. Are you sure you want to close the current run?")) {
-        tabState.closeCurrentRun()
-        // select the new current run if there is one:
-        tabState.currentRun.foreach(RunList.setSelectedValue(_, true))
-        refreshInterface()
-      }
-    }
-  }
-
-  val renameButton = actionButton("Rename", "edit") { () =>
-    for {
-      run <- tabState.currentRun
-      icon = new ImageIcon(classOf[ReviewTab].getResource("/images/edit.gif"))
-      answer <- Option(JOptionPane.showInputDialog(this,
-        "Please enter new name:",
-        "Rename run",
-        JOptionPane.PLAIN_MESSAGE, icon, null, run.name)
-        .asInstanceOf[String])
-      if answer.nonEmpty
-    } {
-      run.name = answer
-      refreshInterface()
-    }
-  }
-
-  object ReviewToolBar extends org.nlogo.swing.ToolBar {
-    override def addControls() {
-      add(saveButton)
-      add(loadButton)
-      add(renameButton)
-      add(closeCurrentButton)
-      add(closeAllButton)
-      add(new org.nlogo.swing.ToolBar.Separator)
-      add(Enabled)
-    }
-  }
-
-  def actionButton(name: String, icon: String)(fn: () => Unit) = {
-    new JButton(new ReviewAction(name, icon, fn))
   }
 
   object RunListPanel extends JPanel {
@@ -511,7 +387,7 @@ class ReviewTab(
 
   locally {
     setLayout(new BorderLayout)
-    add(ReviewToolBar, BorderLayout.NORTH)
+    add(reviewToolBar, BorderLayout.NORTH)
     add(PrimarySplitPane, BorderLayout.CENTER)
     actionBuffers.foreach(_.clear()) // make sure object is constructed and subscribed
     refreshInterface()
