@@ -3,25 +3,23 @@
 package org.nlogo.review
 
 import java.awt.BorderLayout
-import java.awt.Color.{ GRAY, WHITE }
 
 import scala.Option.option2Iterable
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 import org.nlogo.api
 import org.nlogo.awt.UserCancelException
-import org.nlogo.mirror.{ FakeWorld, FixedViewSettings, Mirrorables, ModelRun, ModelRunIO }
-import org.nlogo.plot.PlotPainter
+import org.nlogo.mirror.{ FixedViewSettings, Mirrorables, ModelRun, ModelRunIO }
 import org.nlogo.swing.Implicits.thunk2runnable
 import org.nlogo.util.Exceptions.ignoring
 import org.nlogo.window
-import org.nlogo.window.{ MonitorWidget, PlotWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ MonitorWidget, Widget, WidgetWrapperInterface }
 
 import javax.swing.{ BorderFactory, JList, JOptionPane, JPanel, JScrollPane, JSplitPane, ListSelectionModel }
 import javax.swing.event.{ ChangeEvent, ChangeListener, DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 
 class ReviewTab(
-  ws: window.GUIWorkspace,
+  val ws: window.GUIWorkspace,
   saveModel: () => String,
   offerSave: () => Unit,
   selectReviewTab: () => Unit)
@@ -37,7 +35,7 @@ class ReviewTab(
   }
   override def currentRun: Option[api.ModelRun] = tabState.currentRun
 
-  private def workspaceWidgets =
+  def workspaceWidgets =
     Option(ws.viewWidget.findWidgetContainer)
       .toSeq.flatMap(_.getWidgetsForSaving.asScala)
 
@@ -45,12 +43,9 @@ class ReviewTab(
     val widget: Widget,
     val valueStringGetter: () => String)
 
-  private def widgetHooks = workspaceWidgets
+  def widgetHooks = workspaceWidgets
     .collect { case m: MonitorWidget => m }
     .map(m => WidgetHook(m, () => m.valueString))
-
-  private def plotWidgets = workspaceWidgets
-    .collect { case pw: PlotWidget => pw }
 
   /**
    * The PlotActionBuffer logs all plotting actions, whether we are
@@ -198,11 +193,12 @@ class ReviewTab(
     () => tabState.currentFrame.flatMap(_.ticks))
   val notesPanel = new NotesPanel(tabState)
   val reviewToolBar = new ReviewToolBar(this)
+  val interfacePanel = new InterfacePanel(this)
 
   scrubberPanel.scrubber.addChangeListener(new ChangeListener {
     def stateChanged(evt: ChangeEvent) {
       tabState.currentRun.foreach(_.currentFrameIndex = scrubberPanel.scrubber.getValue)
-      InterfacePanel.repaint()
+      interfacePanel.repaint()
     }
   })
 
@@ -218,100 +214,6 @@ class ReviewTab(
     def changedUpdate(e: DocumentEvent) { updateNotesInRun() }
   })
 
-  object InterfacePanel extends JPanel {
-
-    def repaintView(g: java.awt.Graphics, viewArea: java.awt.geom.Area) {
-      for {
-        run <- tabState.currentRun
-        frame <- run.currentFrame
-        fakeWorld = new FakeWorld(frame.mirroredState)
-        paintArea = new java.awt.geom.Area(InterfacePanel.getBounds())
-        viewSettings = run.fixedViewSettings
-        g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-      } {
-        paintArea.intersect(viewArea) // avoid spilling outside interface panel
-        try {
-          g2d.setClip(paintArea)
-          g2d.translate(viewArea.getBounds.x, viewArea.getBounds.y)
-          val renderer = fakeWorld.newRenderer
-          val image = new java.io.ByteArrayInputStream(frame.drawingImageBytes)
-          renderer.trailDrawer.readImage(image)
-          renderer.paint(g2d, viewSettings)
-        } finally {
-          g2d.dispose()
-        }
-      }
-    }
-
-    def repaintWidgets(g: java.awt.Graphics) {
-      for {
-        frame <- tabState.currentFrame
-        values = frame.mirroredState
-          .filterKeys(_.kind == org.nlogo.mirror.Mirrorables.WidgetValue)
-          .toSeq
-          .sortBy { case (agentKey, vars) => agentKey.id } // should be z-order
-          .map { case (agentKey, vars) => vars(0).asInstanceOf[String] }
-        (w, v) <- widgetHooks.map(_.widget) zip values
-      } {
-        val g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-        try {
-          val container = ws.viewWidget.findWidgetContainer
-          val bounds = container.getUnzoomedBounds(w)
-          g2d.setRenderingHint(
-            java.awt.RenderingHints.KEY_ANTIALIASING,
-            java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-          g2d.setFont(w.getFont)
-          g2d.clipRect(bounds.x, bounds.y, w.getSize().width, w.getSize().height) // make sure text doesn't overflow
-          g2d.translate(bounds.x, bounds.y)
-          w match {
-            case m: window.MonitorWidget =>
-              window.MonitorPainter.paint(
-                g2d, m.getSize, m.getForeground, m.displayName, v)
-            case _ => // ignore for now
-          }
-        } finally {
-          g2d.dispose()
-        }
-      }
-    }
-
-    def repaintPlots(g: java.awt.Graphics) {
-      for {
-        frame <- tabState.currentFrame
-        container = ws.viewWidget.findWidgetContainer
-        widgets = plotWidgets
-          .map { pw => pw.plotName -> pw }
-          .toMap
-        plot <- frame.plots
-        widget <- widgets.get(plot.name)
-        widgetBounds = container.getUnzoomedBounds(widget)
-        canvasBounds = widget.canvas.getBounds()
-        g2d = g.create.asInstanceOf[java.awt.Graphics2D]
-        painter = new PlotPainter(plot)
-      } {
-        g2d.translate(
-          widgetBounds.x + canvasBounds.x,
-          widgetBounds.y + canvasBounds.y)
-        painter.setupOffscreenImage(canvasBounds.width, canvasBounds.height)
-        painter.drawImage(g2d)
-      }
-    }
-
-    override def paintComponent(g: java.awt.Graphics) {
-      super.paintComponent(g)
-      g.setColor(if (tabState.currentRun.isDefined) WHITE else GRAY)
-      g.fillRect(0, 0, getWidth, getHeight)
-      for {
-        run <- tabState.currentRun
-      } {
-        g.drawImage(run.backgroundImage, 0, 0, null)
-        repaintView(g, run.viewArea)
-        repaintWidgets(g)
-        repaintPlots(g)
-      }
-    }
-  }
-
   def refreshInterface() {
     val run = tabState.currentRun
     val data = tabState.currentRunData
@@ -324,7 +226,7 @@ class ReviewTab(
     Seq(notesPanel.notesArea, reviewToolBar.renameButton, reviewToolBar.closeCurrentButton, reviewToolBar.closeAllButton)
       .foreach(_.setEnabled(run.isDefined))
     RunList.repaint()
-    InterfacePanel.repaint()
+    interfacePanel.repaint()
   }
 
   def loadModelIfNeeded(modelString: String) {
@@ -361,7 +263,7 @@ class ReviewTab(
   }
 
   object InterfaceScrollPane extends JScrollPane {
-    setViewportView(InterfacePanel)
+    setViewportView(interfacePanel)
   }
 
   object RunPanel extends JPanel {
